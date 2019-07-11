@@ -1,0 +1,6 @@
+{
+	"forgemarker": 1,
+    "variants": {
+		"": { "model": "create:block/symmetry_tripleplane" }
+	}
+}

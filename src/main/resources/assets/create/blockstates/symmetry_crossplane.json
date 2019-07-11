@@ -1,0 +1,7 @@
+{
+	"forgemarker": 1,
+    "variants": {
+		"align=y": { "model": "create:block/symmetry_crossplane"},
+        "align=d": { "model": "create:block/symmetry_crossplane_diagonal"}
+	}
+}
