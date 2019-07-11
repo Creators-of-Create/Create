@@ -24,7 +24,7 @@ public class SimiButton extends AbstractSimiWidget {
 			this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 			
 			GuiResources button = 
-					(pressed) ? button = GuiResources.BUTTON_DOWN : 
+					(pressed || !active) ? button = GuiResources.BUTTON_DOWN : 
 						(isHovered) ? GuiResources.BUTTON_HOVER : 
 							GuiResources.BUTTON;
 			

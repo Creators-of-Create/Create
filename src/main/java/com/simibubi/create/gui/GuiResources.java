@@ -10,11 +10,9 @@ public enum GuiResources {
 	
 	// Inventories
 	PLAYER_INVENTORY("player_inventory.png", 176, 108),
-	COMPOSER("composer.png", 256, 58),
-	PALETTES("palette_picker.png", 256, 236),
-	EXPORTER("design_exporter.png", 200, 111),
-	THEME_EDITOR("theme_editor.png", 200, 187),
 	WAND_SYMMETRY("wand_symmetry.png", 207, 58),
+	SCHEMATIC_TABLE("schematic_table.png", 207, 89),
+	SCHEMATIC_TABLE_PROGRESS("schematic_table.png", 209, 0, 24, 17),
 
 	// Widgets
 	PALETTE_BUTTON("palette_picker.png", 0, 236, 20, 20),
@@ -28,11 +26,6 @@ public enum GuiResources {
 	INDICATOR_YELLOW("widgets.png", 18, 23, 18, 5),
 	INDICATOR_RED("widgets.png", 36, 23, 18, 5),
 	GRAY("background.png", 0, 0, 16, 16),
-	
-	SCROLLBAR_AXIS("widgets.png", 224, 0, 32, 256),
-	SCROLLBAR_CAP("widgets.png", 0, 87, 40, 6),
-	SCROLLBAR_INDICATOR("widgets.png", 0, 75, 40, 12),
-	SCROLLBAR_BACKGROUND("widgets.png", 0, 93, 40, 16),
 	
 	// Icons
 	ICON_NONE("icons.png", 16, 16, 16, 16),

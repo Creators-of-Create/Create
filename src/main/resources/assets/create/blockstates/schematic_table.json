@@ -1,0 +1,6 @@
+{
+	"forgemarker": 1,
+    "variants": {
+		"": { "model": "block/crafting_table" }
+	}
+}

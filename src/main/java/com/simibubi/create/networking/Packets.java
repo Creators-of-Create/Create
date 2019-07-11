@@ -8,14 +8,19 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class Packets {
 
-	public static final SimpleChannel channel = NetworkRegistry.newSimpleChannel(
-			new ResourceLocation(Create.ID, "simple_channel"), () -> "1", v -> v.equals("1"), v -> v.equals("1"));
+	private static final String PROTOCOL_VERSION = "1";
 
+	public static final SimpleChannel channel = NetworkRegistry.newSimpleChannel(
+			new ResourceLocation(Create.ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals,
+			PROTOCOL_VERSION::equals);
+	
 	public static void registerPackets() {
 		int i = 0;
 
 		channel.registerMessage(i++, PacketNbt.class, PacketNbt::toBytes, PacketNbt::new,
 				PacketNbt::handle);
+		channel.registerMessage(i++, PacketSchematicUpload.class, PacketSchematicUpload::toBytes, PacketSchematicUpload::new,
+				PacketSchematicUpload::handle);
 		channel.registerMessage(i++, PacketSymmetryEffect.class, PacketSymmetryEffect::toBytes, PacketSymmetryEffect::new,
 				PacketSymmetryEffect::handle);
 	}

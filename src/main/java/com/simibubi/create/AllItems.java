@@ -9,7 +9,9 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllItems {
 	
-	SYMMETRY_WAND(new ItemWandSymmetry(standardProperties()));
+	SYMMETRY_WAND(new ItemWandSymmetry(standardProperties())),
+	EMPTY_BLUEPRINT(new Item(standardProperties().maxStackSize(1))),
+	BLUEPRINT(new Item(standardProperties().maxStackSize(1)));
 
 	public Item item;
 
