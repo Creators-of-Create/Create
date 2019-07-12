@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.simibubi.create.item.ItemBlueprint;
 import com.simibubi.create.item.ItemWandSymmetry;
 
 import net.minecraft.item.Item;
@@ -11,7 +12,7 @@ public enum AllItems {
 	
 	SYMMETRY_WAND(new ItemWandSymmetry(standardProperties())),
 	EMPTY_BLUEPRINT(new Item(standardProperties().maxStackSize(1))),
-	BLUEPRINT(new Item(standardProperties().maxStackSize(1)));
+	BLUEPRINT(new ItemBlueprint(standardProperties()));
 
 	public Item item;
 

@@ -25,8 +25,6 @@ public class SchematicTableScreen extends ContainerScreen<SchematicTableContaine
 	private SimiButton button;
 	private DynamicLabel label;
 
-	private boolean isUploading;
-	private String uploadingSchematic;
 	private float progress;
 	private float lastProgress;
 
@@ -75,7 +73,10 @@ public class SchematicTableScreen extends ContainerScreen<SchematicTableContaine
 		GuiResources.SCHEMATIC_TABLE.draw(this, xMainWindow, yMainWindow);
 		GuiResources.PLAYER_INVENTORY.draw(this, x, y + 20);
 
-		font.drawString("Choose a Schematic", xMainWindow + 50, yMainWindow + 10, GuiResources.FONT_COLOR);
+		if (container.isUploading) 
+			font.drawString("Uploading...", xMainWindow + 76, yMainWindow + 10, GuiResources.FONT_COLOR);
+		else
+			font.drawString("Choose a Schematic", xMainWindow + 50, yMainWindow + 10, GuiResources.FONT_COLOR);
 		font.drawString("Inventory", x + 7, y + 26, 0x666666);
 
 		if (schematics == null) {
@@ -111,9 +112,17 @@ public class SchematicTableScreen extends ContainerScreen<SchematicTableContaine
 	@Override
 	public void tick() {
 		super.tick();
-		if (isUploading) {
+		if (container.isUploading) {
 			lastProgress = progress;
-			progress = Create.cSchematicLoader.getProgress(uploadingSchematic);
+			progress = Create.cSchematicLoader.getProgress(container.schematicUploading);
+			label.colored(0xCCDDFF);
+			button.active = false;
+			
+		} else {
+			progress = 0;
+			lastProgress = 0;
+			label.colored(0xFFFFFF);
+			button.active = true;
 		}
 	}
 
@@ -126,9 +135,8 @@ public class SchematicTableScreen extends ContainerScreen<SchematicTableContaine
 
 			List<String> availableSchematics = Create.cSchematicLoader.getAvailableSchematics();
 			lastProgress = progress = 0;
-			uploadingSchematic = availableSchematics.get(schematics.getState());
-			isUploading = true;
-			Create.cSchematicLoader.startNewUpload(uploadingSchematic);
+			String schematic = availableSchematics.get(schematics.getState());
+			Create.cSchematicLoader.startNewUpload(schematic);
 		}
 
 		return super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);

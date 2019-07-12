@@ -66,7 +66,7 @@ public class ClientSchematicLoader {
 			Create.logger.fatal("Missing Schematic file: " + path.toString());
 			return;
 		}
-
+		
 		InputStream in;
 		try {
 			in = Files.newInputStream(path, StandardOpenOption.READ);
@@ -108,7 +108,7 @@ public class ClientSchematicLoader {
 			activeUploads.remove(schematic);
 		}
 	}
-
+	
 	public void refresh() {
 		FilesHelper.createFolderIfMissing("schematics");
 		availableSchematics.clear();

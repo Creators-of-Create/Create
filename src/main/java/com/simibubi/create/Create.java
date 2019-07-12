@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.simibubi.create.networking.Packets;
+import com.simibubi.create.schematic.SchematicHologram;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -50,6 +51,7 @@ public class Create {
 		AllTileEntities.registerRenderers();
 		cSchematicLoader = new ClientSchematicLoader();
 		sSchematicLoader = new ServerSchematicLoader();
+		new SchematicHologram();
 //		ScrollFixer.init();
 	}
 

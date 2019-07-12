@@ -21,7 +21,7 @@ import net.minecraft.util.text.TextFormatting;
 
 public class ServerSchematicLoader {
 
-	private static final String PATH = "schematics/uploaded";
+	public static final String PATH = "schematics/uploaded";
 	private Map<String, OutputStream> activeDownloads;
 	private Map<String, DimensionPos> activeTables;
 
@@ -38,6 +38,9 @@ public class ServerSchematicLoader {
 
 		FilesHelper.createFolderIfMissing(playerPath);
 
+		if (activeDownloads.containsKey(playerSchematicId))
+			return;
+
 		try {
 			Files.deleteIfExists(Paths.get(PATH, playerSchematicId));
 			OutputStream writer = Files.newOutputStream(Paths.get(PATH, playerSchematicId),
@@ -45,6 +48,15 @@ public class ServerSchematicLoader {
 			Create.logger.info("Receiving New Schematic: " + playerSchematicId);
 			activeDownloads.put(playerSchematicId, writer);
 			activeTables.put(playerSchematicId, dimensionPos);
+
+			if (player.openContainer instanceof SchematicTableContainer) {
+				SchematicTableContainer c = (SchematicTableContainer) player.openContainer;
+				c.schematicUploading = schematic;
+				c.isUploading = true;
+				c.sendSchematicUpdate = true;
+				player.openContainer.detectAndSendChanges();
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -53,11 +65,14 @@ public class ServerSchematicLoader {
 	public void handleWriteRequest(ServerPlayerEntity player, String schematic, byte[] data) {
 		String playerSchematicId = player.getName().getFormattedText() + "/" + schematic;
 		if (activeDownloads.containsKey(playerSchematicId)) {
+
 			try {
 				activeDownloads.get(playerSchematicId).write(data);
 				Create.logger.info("Writing to Schematic: " + playerSchematicId);
 			} catch (IOException e) {
 				e.printStackTrace();
+				activeDownloads.remove(playerSchematicId);
+				activeTables.remove(playerSchematicId);
 			}
 		}
 	}
@@ -68,12 +83,26 @@ public class ServerSchematicLoader {
 		if (activeDownloads.containsKey(playerSchematicId)) {
 			try {
 				activeDownloads.get(playerSchematicId).close();
+				activeDownloads.remove(playerSchematicId);
 				Create.logger.info("Finished receiving Schematic: " + playerSchematicId);
 
 				DimensionPos dimpos = activeTables.remove(playerSchematicId);
+
+				if (dimpos == null)
+					return;
+
 				BlockState blockState = dimpos.world.getBlockState(dimpos.pos);
 				if (!AllBlocks.SCHEMATIC_TABLE.typeOf(blockState))
 					return;
+
+				if (player.openContainer instanceof SchematicTableContainer) {
+					SchematicTableContainer c = (SchematicTableContainer) player.openContainer;
+					c.isUploading = false;
+					c.schematicUploading = null;
+					c.progress = 0;
+					c.sendSchematicUpdate = true;
+					c.detectAndSendChanges();
+				}
 
 				SchematicTableTileEntity tileEntity = (SchematicTableTileEntity) dimpos.world.getTileEntity(dimpos.pos);
 				if (tileEntity.inputStack.isEmpty())
@@ -82,15 +111,19 @@ public class ServerSchematicLoader {
 					return;
 
 				tileEntity.inputStack = ItemStack.EMPTY;
-				tileEntity.outputStack = new ItemStack(AllItems.BLUEPRINT.get());
-				tileEntity.outputStack
-						.setDisplayName(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.WHITE
-								+ "Blueprint (" + TextFormatting.GOLD + schematic + TextFormatting.WHITE + ")"));
-				tileEntity.markDirty();
+				ItemStack blueprint = new ItemStack(AllItems.BLUEPRINT.get());
+				blueprint.setDisplayName(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.WHITE
+						+ "Blueprint (" + TextFormatting.GOLD + schematic + TextFormatting.WHITE + ")"));
+				blueprint.getTag().putString("Owner", player.getName().getFormattedText());
+				blueprint.getTag().putString("File", schematic);				
+				
+				tileEntity.outputStack = blueprint;
+
 				dimpos.world.notifyBlockUpdate(dimpos.pos, blockState, blockState, 3);
+
 				if (player.openContainer instanceof SchematicTableContainer) {
-					((SchematicTableContainer) player.openContainer).updateContent();
-					player.openContainer.detectAndSendChanges();
+					SchematicTableContainer c = (SchematicTableContainer) player.openContainer;
+					c.updateContent();
 				}
 
 			} catch (IOException e) {

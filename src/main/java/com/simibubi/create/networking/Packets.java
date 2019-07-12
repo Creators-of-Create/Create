@@ -13,16 +13,17 @@ public class Packets {
 	public static final SimpleChannel channel = NetworkRegistry.newSimpleChannel(
 			new ResourceLocation(Create.ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals,
 			PROTOCOL_VERSION::equals);
-	
+
 	public static void registerPackets() {
 		int i = 0;
 
-		channel.registerMessage(i++, PacketNbt.class, PacketNbt::toBytes, PacketNbt::new,
-				PacketNbt::handle);
-		channel.registerMessage(i++, PacketSchematicUpload.class, PacketSchematicUpload::toBytes, PacketSchematicUpload::new,
-				PacketSchematicUpload::handle);
-		channel.registerMessage(i++, PacketSymmetryEffect.class, PacketSymmetryEffect::toBytes, PacketSymmetryEffect::new,
-				PacketSymmetryEffect::handle);
+		channel.registerMessage(i++, PacketNbt.class, PacketNbt::toBytes, PacketNbt::new, PacketNbt::handle);
+		channel.registerMessage(i++, PacketSchematicTableContainer.class, PacketSchematicTableContainer::toBytes,
+				PacketSchematicTableContainer::new, PacketSchematicTableContainer::handle);
+		channel.registerMessage(i++, PacketSchematicUpload.class, PacketSchematicUpload::toBytes,
+				PacketSchematicUpload::new, PacketSchematicUpload::handle);
+		channel.registerMessage(i++, PacketSymmetryEffect.class, PacketSymmetryEffect::toBytes,
+				PacketSymmetryEffect::new, PacketSymmetryEffect::handle);
 	}
 
 }

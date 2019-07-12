@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -16,10 +17,13 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
-public class SchematicTableTileEntity extends TileEntitySynced implements ITickableTileEntity, INamedContainerProvider {
+public class SchematicTableTileEntity extends TileEntitySynced implements ITickableTileEntity, INamedContainerProvider, IContainerListener {
 
 	public ItemStack inputStack;
 	public ItemStack outputStack;
+	
+	public String uploadingSchematic;
+	public float uploadingProgress;
 	
 	public SchematicTableTileEntity() {
 		this(AllTileEntities.SchematicTable.type);
@@ -68,6 +72,26 @@ public class SchematicTableTileEntity extends TileEntitySynced implements ITicka
 	@Override
 	public ITextComponent getDisplayName() {
 		return new StringTextComponent(getType().getRegistryName().toString());
+	}
+
+	@Override
+	public void sendAllContents(Container containerToSend, NonNullList<ItemStack> itemsList) {
+		inputStack = itemsList.get(0);
+		outputStack = itemsList.get(1);
+	}
+
+	@Override
+	public void sendSlotContents(Container containerToSend, int slotInd, ItemStack stack) {
+		if (slotInd == 0) {
+			inputStack = stack;
+		} 
+		if (slotInd == 1) {
+			outputStack = stack;
+		}
+	}
+
+	@Override
+	public void sendWindowProperty(Container containerIn, int varToUpdate, int newValue) {
 	}
 	
 }
