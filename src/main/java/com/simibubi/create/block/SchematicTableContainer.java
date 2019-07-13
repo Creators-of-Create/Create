@@ -45,14 +45,14 @@ public class SchematicTableContainer extends Container {
 		this.player = inv.player;
 		this.te = te;
 
-		inputSlot = new Slot(tableInventory, 0, 31, 15) {
+		inputSlot = new Slot(tableInventory, 0, -9, 15) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return AllItems.EMPTY_BLUEPRINT.typeOf(stack);
 			}
 		};
 
-		outputSlot = new Slot(tableInventory, 1, 115, 15) {
+		outputSlot = new Slot(tableInventory, 1, 75, 15) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return false;

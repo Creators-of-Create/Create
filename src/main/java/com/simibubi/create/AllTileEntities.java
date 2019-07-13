@@ -3,13 +3,16 @@ package com.simibubi.create;
 import java.util.function.Supplier;
 
 import com.simibubi.create.block.SchematicTableTileEntity;
+import com.simibubi.create.block.SchematicannonRenderer;
 import com.simibubi.create.block.SchematicannonTileEntity;
 
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
@@ -40,10 +43,11 @@ public enum AllTileEntities {
 	}
 
 	public static void registerRenderers() {
+		bind(SchematicannonTileEntity.class, new SchematicannonRenderer());
 	}
 
-//	private static <T extends TileEntity> void bind(Class<T> clazz, TileEntityRenderer<? super T> renderer) {
-//		ClientRegistry.bindTileEntitySpecialRenderer(clazz, renderer);
-//	}
+	private static <T extends TileEntity> void bind(Class<T> clazz, TileEntityRenderer<? super T> renderer) {
+		ClientRegistry.bindTileEntitySpecialRenderer(clazz, renderer);
+	}
 
 }

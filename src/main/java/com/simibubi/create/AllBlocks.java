@@ -1,6 +1,8 @@
 package com.simibubi.create;
 
+import com.simibubi.create.block.CreativeCrateBlock;
 import com.simibubi.create.block.IJustForRendering;
+import com.simibubi.create.block.RenderingBlock;
 import com.simibubi.create.block.SchematicTableBlock;
 import com.simibubi.create.block.SchematicannonBlock;
 import com.simibubi.create.block.symmetry.BlockSymmetryCrossPlane;
@@ -16,6 +18,10 @@ import net.minecraftforge.registries.IForgeRegistry;
 public enum AllBlocks {
 
 	SCHEMATICANNON(new SchematicannonBlock()),
+	SCHEMATICANNON_CONNECTOR(new RenderingBlock()),
+	SCHEMATICANNON_PIPE(new RenderingBlock()),
+	CREATIVE_CRATE(new CreativeCrateBlock()),
+	
 	SCHEMATIC_TABLE(new SchematicTableBlock()),
 	
 	SYMMETRY_PLANE(new BlockSymmetryPlane()),

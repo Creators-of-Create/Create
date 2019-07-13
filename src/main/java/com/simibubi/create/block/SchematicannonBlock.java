@@ -34,6 +34,12 @@ public class SchematicannonBlock extends Block {
 	}
 	
 	@Override
+	public boolean isSolid(BlockState state) {
+		return false;
+	}
+
+	
+	@Override
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		((SchematicannonTileEntity) world.getTileEntity(pos)).findInventories();
 		super.onNeighborChange(state, world, pos, neighbor);

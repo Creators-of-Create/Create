@@ -1,6 +1,6 @@
 {
 	"forgemarker": 1,
     "variants": {
-		"": { "model": "block/dropper_vertical" }
+		"": { "model": "create:block/schematicannon_base" }
 	}
 }

@@ -1,6 +1,12 @@
 {
 	"forgemarker": 1,
+	"defaults": {
+		"model": "create:block/schematic_table"
+	},
     "variants": {
-		"": { "model": "block/crafting_table" }
+        "facing=north": { "model": "create:block/schematic_table", "y": 180 },
+		"facing=south": { "model": "create:block/schematic_table" },
+        "facing=east": { "model": "create:block/schematic_table", "y": 270 },
+        "facing=west": { "model": "create:block/schematic_table", "y": 90 }
 	}
 }
