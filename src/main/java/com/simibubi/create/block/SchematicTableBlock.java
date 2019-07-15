@@ -1,12 +1,9 @@
 package com.simibubi.create.block;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -19,8 +16,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-@SuppressWarnings("deprecation")
-public class SchematicTableBlock extends HorizontalBlock implements ITileEntityProvider {
+public class SchematicTableBlock extends HorizontalBlock {
 
 	public SchematicTableBlock() {
 		super(Properties.from(Blocks.OAK_PLANKS));
@@ -43,17 +39,18 @@ public class SchematicTableBlock extends HorizontalBlock implements ITileEntityP
 	}
 
 	@Override
-	public boolean hasTileEntity() {
+	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
+		
 		if (worldIn.isRemote) {
 			return true;
 		} else {
-			INamedContainerProvider inamedcontainerprovider = this.getContainer(state, worldIn, pos);
+			INamedContainerProvider inamedcontainerprovider = (INamedContainerProvider) worldIn.getTileEntity(pos);
 			if (inamedcontainerprovider != null) {
 				player.openContainer(inamedcontainerprovider);
 			}
@@ -61,9 +58,9 @@ public class SchematicTableBlock extends HorizontalBlock implements ITileEntityP
 			return true;
 		}
 	}
-
+	
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn) {
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new SchematicTableTileEntity();
 	}
 
@@ -78,18 +75,6 @@ public class SchematicTableBlock extends HorizontalBlock implements ITileEntityP
 		if (!te.outputStack.isEmpty())
 			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), te.outputStack);
 
-	}
-
-	public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param) {
-		super.eventReceived(state, worldIn, pos, id, param);
-		TileEntity tileentity = worldIn.getTileEntity(pos);
-		return tileentity == null ? false : tileentity.receiveClientEvent(id, param);
-	}
-
-	@Nullable
-	public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-		TileEntity tileentity = worldIn.getTileEntity(pos);
-		return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider) tileentity : null;
 	}
 
 }

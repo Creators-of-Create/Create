@@ -32,6 +32,8 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -262,19 +264,27 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 				anchor = null;
 				reader = null;
 				missingBlock = false;
+				target = getPos().add(1, 0, 0);
+				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_NOTE_BLOCK_BELL,
+						SoundCategory.BLOCKS, 1, .7f);
+				world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 2);
 				return;
 			}
 			state = reader.getBlockState(anchor.add(currentPos));
 		} while (state.getBlock() == Blocks.AIR);
 
 		target = anchor.add(currentPos);
+		missingBlock = false;
 
 		// Update orientation
-		world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 3);
+		world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 2);
+
+		if (target.withinDistance(getPos(), 2f)) {
+			return;
+		}
 
 		if (creative) {
 			launchBlock(currentPos.add(anchor), state);
-			missingBlock = false;
 			return;
 		}
 
@@ -285,7 +295,6 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 
 			// Overwrite in case its rotated
 			launchBlock(target, state);
-			missingBlock = false;
 		}
 
 		// Search for required item

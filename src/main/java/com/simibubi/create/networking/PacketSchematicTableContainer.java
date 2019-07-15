@@ -7,8 +7,6 @@ import com.simibubi.create.block.SchematicTableContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class PacketSchematicTableContainer {
@@ -33,14 +31,12 @@ public class PacketSchematicTableContainer {
 		buffer.writeFloat(progress);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			Container c = Minecraft.getInstance().player.openContainer;
 			if (c != null && c instanceof SchematicTableContainer) {
 				((SchematicTableContainer) c).receiveSchematicInfo(schematic, progress);
 			}
-			
 		});
 		
 	}

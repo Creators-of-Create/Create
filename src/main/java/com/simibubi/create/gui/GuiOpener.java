@@ -2,11 +2,14 @@ package com.simibubi.create.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
-@EventBusSubscriber
+@OnlyIn(Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class GuiOpener {
 
 	private static Screen openedGuiNextTick;

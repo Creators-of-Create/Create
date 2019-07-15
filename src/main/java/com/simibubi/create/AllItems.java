@@ -6,6 +6,8 @@ import com.simibubi.create.item.ItemWandSymmetry;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllItems {
@@ -39,6 +41,7 @@ public enum AllItems {
 		return stack.getItem() == item;
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static void initColorHandlers() {
 	}
 	

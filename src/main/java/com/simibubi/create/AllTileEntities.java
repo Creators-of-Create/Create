@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -42,10 +44,12 @@ public enum AllTileEntities {
 		}
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static void registerRenderers() {
 		bind(SchematicannonTileEntity.class, new SchematicannonRenderer());
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	private static <T extends TileEntity> void bind(Class<T> clazz, TileEntityRenderer<? super T> renderer) {
 		ClientRegistry.bindTileEntitySpecialRenderer(clazz, renderer);
 	}

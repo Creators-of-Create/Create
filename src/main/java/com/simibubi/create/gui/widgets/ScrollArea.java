@@ -2,7 +2,7 @@ package com.simibubi.create.gui.widgets;
 
 import java.util.function.Consumer;
 
-import com.simibubi.create.utility.Keyboard;
+import com.simibubi.create.gui.Keyboard;
 
 import net.minecraft.util.text.TextFormatting;
 

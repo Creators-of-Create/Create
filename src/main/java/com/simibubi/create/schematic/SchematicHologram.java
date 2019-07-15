@@ -28,6 +28,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -36,6 +37,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
+@OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(Dist.CLIENT)
 public class SchematicHologram {
 
@@ -62,6 +64,13 @@ public class SchematicHologram {
 		schematic.addBlocksToWorld(this.schematic, anchor, new PlacementSettings());
 		active = true;
 		changed = true;
+	}
+	
+	public void startHologram(SchematicWorld world) {
+		this.anchor = world.anchor;
+		this.schematic = world;
+		this.active = true;
+		this.changed = true;
 	}
 
 	public static SchematicHologram getInstance() {

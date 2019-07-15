@@ -43,7 +43,7 @@ public class PacketSchematicUpload {
 
 	public PacketSchematicUpload(PacketBuffer buffer) {
 		code = buffer.readInt();
-		schematic = buffer.readString();
+		schematic = buffer.readString(256);
 
 		if (code == WRITE)
 			data = buffer.readByteArray();

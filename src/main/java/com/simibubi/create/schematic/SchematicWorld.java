@@ -45,7 +45,7 @@ public class SchematicWorld implements IWorld {
 
 	private Map<BlockPos, BlockState> blocks;
 	private Cuboid bounds;
-	private BlockPos anchor;
+	public BlockPos anchor;
 	
 	public SchematicWorld(Map<BlockPos, BlockState> blocks, Cuboid bounds, BlockPos anchor) {
 		this.blocks = blocks;

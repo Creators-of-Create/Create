@@ -2,8 +2,6 @@ package com.simibubi.create.gui;
 
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
@@ -18,15 +16,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SchematicTableScreen extends ContainerScreen<SchematicTableContainer>
 		implements IHasContainer<SchematicTableContainer> {
@@ -53,7 +47,7 @@ public class SchematicTableScreen extends ContainerScreen<SchematicTableContaine
 	protected void init() {
 		super.init();
 		xTopLeft = (width - GuiResources.SCHEMATIC_TABLE.width) / 2;
-		yTopLeft = (height - GuiResources.SCHEMATIC_TABLE.height) / 2;
+		yTopLeft = (height - GuiResources.SCHEMATIC_TABLE.height + 50) / 2;
 		xMainWindow = xTopLeft - 40;
 		yMainWindow = yTopLeft - 80;
 		buttons.clear();
@@ -113,21 +107,17 @@ public class SchematicTableScreen extends ContainerScreen<SchematicTableContaine
 		GlStateManager.enableBlend();
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.enableAlphaTest();
+		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.alphaFunc(516, 0.1F);
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		GlStateManager.translated(xTopLeft + 220, yTopLeft + 30, 200);
-		GlStateManager.rotatef(140, -.1f, 1, -.2f);
+		GlStateManager.rotatef(50, -.5f, 1, -.2f);
 		GlStateManager.scaled(50, -50, 50);
 		
 		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		minecraft.getBlockRendererDispatcher().renderBlock(AllBlocks.SCHEMATIC_TABLE.get().getDefaultState(),
-				new BlockPos(0, 0, 0), minecraft.world, buffer, minecraft.world.rand, EmptyModelData.INSTANCE);
-
-		Tessellator.getInstance().draw();
+		minecraft.getBlockRendererDispatcher().renderBlockBrightness(AllBlocks.SCHEMATIC_TABLE.get().getDefaultState(), 1);
 
 		GlStateManager.disableAlphaTest();
 		GlStateManager.disableRescaleNormal();

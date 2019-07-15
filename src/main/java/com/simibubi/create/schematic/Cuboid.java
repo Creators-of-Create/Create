@@ -11,6 +11,10 @@ public class Cuboid {
 	public int height;
 	public int length;
 
+	public Cuboid() {
+		this(BlockPos.ZERO, 0, 0, 0);
+	}
+
 	public Cuboid(BlockPos origin, BlockPos size) {
 		this(origin, size.getX(), size.getY(), size.getZ());
 	}

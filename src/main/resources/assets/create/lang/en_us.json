@@ -1,8 +1,9 @@
 {
 	"item.create.symmetry_wand": "Staff of Symmetry",
-	"item.create.empty_blueprint": "Empty Blueprint",
-	"item.create.blueprint": "Blueprint",
+	"item.create.empty_blueprint": "Empty Schematic",
+	"item.create.blueprint": "Schematic",
 	"block.create.schematicannon": "SchematiCannon 9000",
-	"block.create.schematic_table": "Schematic Planner",
+	"block.create.schematic_table": "Schematic Table",
+	"block.create.creative_crate": "SchematiCannon Creatifier",
 	"itemGroup.create": "Create"
 }

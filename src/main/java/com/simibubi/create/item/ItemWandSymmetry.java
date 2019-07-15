@@ -31,6 +31,9 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class ItemWandSymmetry extends Item {
@@ -41,16 +44,16 @@ public class ItemWandSymmetry extends Item {
 	public ItemWandSymmetry(Properties properties) {
 		super(properties.maxStackSize(1));
 	}
-	
+
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		PlayerEntity player = context.getPlayer();
 		BlockPos pos = context.getPos();
 		player.getCooldownTracker().setCooldown(this, 5);
-		
-		if (context.getWorld().isRemote || context.getHand() != Hand.MAIN_HAND) 
+
+		if (context.getWorld().isRemote || context.getHand() != Hand.MAIN_HAND)
 			return ActionResultType.SUCCESS;
-		
+
 		ItemStack wand = player.getHeldItem(context.getHand());
 		checkNBT(wand);
 		CompoundNBT compound = wand.getTag().getCompound($SYMMETRY);
@@ -68,8 +71,9 @@ public class ItemWandSymmetry extends Item {
 		SymmetryElement newElement = new SymmetryPlane(pos3d);
 
 		if (previousElement instanceof SymmetryEmptySlot) {
-			newElement.setOrientation((player.getHorizontalFacing() == Direction.NORTH
-					|| player.getHorizontalFacing() == Direction.SOUTH) ? SymmetryPlane.Align.XY.ordinal()
+			newElement.setOrientation(
+					(player.getHorizontalFacing() == Direction.NORTH || player.getHorizontalFacing() == Direction.SOUTH)
+							? SymmetryPlane.Align.XY.ordinal()
 							: SymmetryPlane.Align.YZ.ordinal());
 			newElement.enable = true;
 			player.sendStatusMessage(new StringTextComponent(TextFormatting.GREEN + "New Plane created"), true);
@@ -105,10 +109,17 @@ public class ItemWandSymmetry extends Item {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
 		if (worldIn.isRemote) {
-			GuiOpener.open(new GuiWandSymmetry(playerIn.getHeldItem(handIn)));
-			playerIn.getCooldownTracker().setCooldown(this, 5);			
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+				openWandGUI(playerIn.getHeldItem(handIn));
+			});
+			playerIn.getCooldownTracker().setCooldown(this, 5);
 		}
 		return super.onItemRightClick(worldIn, playerIn, handIn);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void openWandGUI(ItemStack wand) {
+		GuiOpener.open(new GuiWandSymmetry(wand));
 	}
 
 	private static void checkNBT(ItemStack wand) {
@@ -136,15 +147,14 @@ public class ItemWandSymmetry extends Item {
 
 		Map<BlockPos, BlockState> blockSet = new HashMap<>();
 		blockSet.put(pos, block);
-		SymmetryElement symmetry = SymmetryElement
-				.fromNBT((CompoundNBT) wand.getTag().getCompound($SYMMETRY));
+		SymmetryElement symmetry = SymmetryElement.fromNBT((CompoundNBT) wand.getTag().getCompound($SYMMETRY));
 
 		Vec3d mirrorPos = symmetry.getPosition();
 		if (mirrorPos.distanceTo(new Vec3d(pos)) > 50)
 			return;
 
 		symmetry.process(blockSet);
-		
+
 		BlockPos to = new BlockPos(mirrorPos);
 		List<BlockPos> targets = new ArrayList<>();
 
@@ -152,11 +162,12 @@ public class ItemWandSymmetry extends Item {
 		for (BlockPos position : blockSet.keySet()) {
 			if (world.func_217350_a(block, position, ISelectionContext.forEntity(player))) {
 				world.setBlockState(position, blockSet.get(position));
-				targets.add(position);				
+				targets.add(position);
 			}
 		}
-		
-		Packets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketSymmetryEffect(to, targets));
+
+		Packets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+				new PacketSymmetryEffect(to, targets));
 	}
 
 	public static void remove(World world, ItemStack wand, PlayerEntity player, BlockPos pos) {
@@ -167,8 +178,7 @@ public class ItemWandSymmetry extends Item {
 
 		Map<BlockPos, BlockState> blockSet = new HashMap<>();
 		blockSet.put(pos, air);
-		SymmetryElement symmetry = SymmetryElement
-				.fromNBT((CompoundNBT) wand.getTag().getCompound($SYMMETRY));
+		SymmetryElement symmetry = SymmetryElement.fromNBT((CompoundNBT) wand.getTag().getCompound($SYMMETRY));
 
 		Vec3d mirrorPos = symmetry.getPosition();
 		if (mirrorPos.distanceTo(new Vec3d(pos)) > 50)
@@ -178,14 +188,15 @@ public class ItemWandSymmetry extends Item {
 
 		BlockPos to = new BlockPos(mirrorPos);
 		List<BlockPos> targets = new ArrayList<>();
-		
+
 		targets.add(pos);
 		for (BlockPos position : blockSet.keySet()) {
 			targets.add(position);
 			world.setBlockState(position, air);
 		}
-		
-		Packets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketSymmetryEffect(to, targets));
+
+		Packets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+				new PacketSymmetryEffect(to, targets));
 	}
-	
+
 }

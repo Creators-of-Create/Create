@@ -10,14 +10,13 @@ import java.util.Map;
 
 import com.simibubi.create.block.SchematicTableContainer;
 import com.simibubi.create.block.SchematicTableTileEntity;
+import com.simibubi.create.item.ItemBlueprint;
 import com.simibubi.create.networking.PacketSchematicUpload.DimensionPos;
 import com.simibubi.create.utility.FilesHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 
 public class ServerSchematicLoader {
 
@@ -111,13 +110,7 @@ public class ServerSchematicLoader {
 					return;
 
 				tileEntity.inputStack = ItemStack.EMPTY;
-				ItemStack blueprint = new ItemStack(AllItems.BLUEPRINT.get());
-				blueprint.setDisplayName(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.WHITE
-						+ "Blueprint (" + TextFormatting.GOLD + schematic + TextFormatting.WHITE + ")"));
-				blueprint.getTag().putString("Owner", player.getName().getFormattedText());
-				blueprint.getTag().putString("File", schematic);				
-				
-				tileEntity.outputStack = blueprint;
+				tileEntity.outputStack = ItemBlueprint.create(schematic, player.getName().getFormattedText());
 
 				dimpos.world.notifyBlockUpdate(dimpos.pos, blockState, blockState, 3);
 

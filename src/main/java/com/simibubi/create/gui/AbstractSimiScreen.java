@@ -8,7 +8,10 @@ import com.simibubi.create.gui.widgets.AbstractSimiWidget;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public abstract class AbstractSimiScreen extends Screen {
 
 	protected int sWidth, sHeight;

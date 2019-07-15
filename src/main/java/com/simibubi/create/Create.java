@@ -3,10 +3,13 @@ package com.simibubi.create;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.simibubi.create.gui.Keyboard;
 import com.simibubi.create.networking.Packets;
+import com.simibubi.create.schematic.BlueprintHandler;
 import com.simibubi.create.schematic.SchematicHologram;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,6 +18,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -37,6 +41,8 @@ public class Create {
 	
 	@OnlyIn(Dist.CLIENT)
 	public static ClientSchematicLoader cSchematicLoader;
+	@OnlyIn(Dist.CLIENT)
+	public static KeyBinding TOOL_MENU;
 	
 	public static ServerSchematicLoader sSchematicLoader;
 
@@ -47,17 +53,24 @@ public class Create {
 	}
 
 	private void clientInit(FMLClientSetupEvent event) {
-		AllItems.initColorHandlers();
-		AllTileEntities.registerRenderers();
-		cSchematicLoader = new ClientSchematicLoader();
-		sSchematicLoader = new ServerSchematicLoader();
-		new SchematicHologram();
-//		ScrollFixer.init();
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			AllItems.initColorHandlers();
+			AllTileEntities.registerRenderers();
+			cSchematicLoader = new ClientSchematicLoader();
+			new SchematicHologram();
+			new BlueprintHandler();
+			ScrollFixer.init();
+			ScrollFixer.addMouseWheelListener(BlueprintHandler.instance::onScroll);
+			
+			TOOL_MENU = new KeyBinding("Tool Menu (Hold)", Keyboard.LALT, NAME);
+			ClientRegistry.registerKeyBinding(TOOL_MENU);
+		});
 	}
 
 	private void init(final FMLCommonSetupEvent event) {
 		Packets.registerPackets();
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> AllContainers::registerScreenFactories);
+		sSchematicLoader = new ServerSchematicLoader();
 	}
 	
 	@OnlyIn(Dist.CLIENT)

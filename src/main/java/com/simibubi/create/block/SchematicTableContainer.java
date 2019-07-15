@@ -45,14 +45,14 @@ public class SchematicTableContainer extends Container {
 		this.player = inv.player;
 		this.te = te;
 
-		inputSlot = new Slot(tableInventory, 0, -9, 15) {
+		inputSlot = new Slot(tableInventory, 0, -9, 40) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return AllItems.EMPTY_BLUEPRINT.typeOf(stack);
 			}
 		};
 
-		outputSlot = new Slot(tableInventory, 1, 75, 15) {
+		outputSlot = new Slot(tableInventory, 1, 75, 40) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return false;
@@ -72,12 +72,12 @@ public class SchematicTableContainer extends Container {
 		tableInventory.openInventory(inv.player);
 		for (int l = 0; l < 3; ++l) {
 			for (int j1 = 0; j1 < 9; ++j1) {
-				this.addSlot(new Slot(inv, j1 + l * 9 + 9, -8 + j1 * 18, 77 + l * 18));
+				this.addSlot(new Slot(inv, j1 + l * 9 + 9, -8 + j1 * 18, 102 + l * 18));
 			}
 		}
 
 		for (int i1 = 0; i1 < 9; ++i1) {
-			this.addSlot(new Slot(inv, i1, -8 + i1 * 18, 135));
+			this.addSlot(new Slot(inv, i1, -8 + i1 * 18, 160));
 		}
 	}
 	

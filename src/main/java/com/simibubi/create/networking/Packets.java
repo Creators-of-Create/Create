@@ -10,12 +10,13 @@ public class Packets {
 
 	private static final String PROTOCOL_VERSION = "1";
 
-	public static final SimpleChannel channel = NetworkRegistry.newSimpleChannel(
-			new ResourceLocation(Create.ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals,
-			PROTOCOL_VERSION::equals);
+	public static SimpleChannel channel;
 
 	public static void registerPackets() {
 		int i = 0;
+
+		channel = NetworkRegistry.newSimpleChannel(new ResourceLocation(Create.ID, "main"), () -> PROTOCOL_VERSION,
+				PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
 		channel.registerMessage(i++, PacketNbt.class, PacketNbt::toBytes, PacketNbt::new, PacketNbt::handle);
 		channel.registerMessage(i++, PacketSchematicTableContainer.class, PacketSchematicTableContainer::toBytes,

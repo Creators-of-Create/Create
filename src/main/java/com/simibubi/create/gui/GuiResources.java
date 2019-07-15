@@ -27,6 +27,8 @@ public enum GuiResources {
 	INDICATOR_RED("widgets.png", 36, 23, 18, 5),
 	GRAY("background.png", 0, 0, 16, 16),
 	
+	BLUEPRINT_SLOT("widgets.png", 90, 0, 24, 24),
+	
 	// Icons
 	ICON_NONE("icons.png", 16, 16, 16, 16),
 	ICON_ADD("icons.png", 16, 16),

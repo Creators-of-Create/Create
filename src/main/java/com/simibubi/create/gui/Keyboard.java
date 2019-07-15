@@ -1,7 +1,8 @@
-package com.simibubi.create.utility;
+package com.simibubi.create.gui;
+
+import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,7 +25,7 @@ public class Keyboard {
 	public static final int G = 71;
 
 	public static boolean isKeyDown(int key) {
-		return InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), key);
+		return GLFW.glfwGetKey(Minecraft.getInstance().mainWindow.getHandle(), key) != 0;
 	}
 	
 }
