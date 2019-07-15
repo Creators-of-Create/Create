@@ -66,6 +66,8 @@ public abstract class AbstractSimiScreen extends Screen {
 			if (widget.charTyped(character, code))
 				return true;
 		}
+		if (character == 'e')
+			onClose();
 		return super.charTyped(character, code);
 	}
 

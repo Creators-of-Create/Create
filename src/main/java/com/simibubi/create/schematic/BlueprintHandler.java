@@ -80,8 +80,8 @@ public class BlueprintHandler {
 		if (stack == null) {
 			instance.active = false;
 			instance.syncCooldown = 0;
-			instance.slot = 0;
 			if (instance.item != null && itemLost(player)) {
+				instance.slot = 0;
 				instance.item = null;
 				SchematicHologram.reset();
 			}
@@ -99,7 +99,7 @@ public class BlueprintHandler {
 				if (toolBefore != null) {
 					instance.selectionScreen.setSelectedElement(toolBefore);
 					instance.equip(toolBefore);
-				}
+				} 
 			}
 			else
 				instance.selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), instance::equip);
@@ -122,6 +122,8 @@ public class BlueprintHandler {
 	public static void onRenderWorld(RenderWorldLastEvent event) {
 		if (!instance.active)
 			return;
+		if (Minecraft.getInstance().player.isSneaking())
+			return;
 
 		TessellatorHelper.prepareForDrawing();
 		instance.currentTool.getTool().renderTool();
@@ -130,10 +132,11 @@ public class BlueprintHandler {
 
 	@SubscribeEvent
 	public static void onRenderOverlay(RenderGameOverlayEvent event) {
+		if (instance.item != null)
+			instance.overlay.renderOn(instance.slot);
 		if (!instance.active)
 			return;
 
-		instance.overlay.renderOn(instance.slot);
 		instance.currentTool.getTool().renderOverlay();
 		instance.selectionScreen.renderPassive(event.getPartialTicks());
 	}
@@ -147,6 +150,8 @@ public class BlueprintHandler {
 		if (event.getButton() != 1)
 			return;
 		if (!instance.active)
+			return;
+		if (Minecraft.getInstance().player.isSneaking())
 			return;
 
 		instance.currentTool.getTool().handleRightClick();
@@ -175,6 +180,8 @@ public class BlueprintHandler {
 
 	public boolean onScroll(double delta) {
 		if (!active)
+			return false;
+		if (Minecraft.getInstance().player.isSneaking())
 			return false;
 		if (selectionScreen.focused) {
 			selectionScreen.cycle((int) delta);
@@ -301,6 +308,18 @@ public class BlueprintHandler {
 		Minecraft.getInstance().player.sendStatusMessage(
 				new StringTextComponent("Rotation: " + cachedSettings.getRotation().toString()), true);
 
+		markDirty();
+	}
+	
+	public void setMirror(Mirror mirror) {
+		cachedSettings.setMirror(mirror);
+		item.getTag().putString("Mirror", cachedSettings.getMirror().name());
+		markDirty();
+	}
+	
+	public void setRotation(Rotation rotation) {
+		cachedSettings.setRotation(rotation);
+		item.getTag().putString("Rotation", cachedSettings.getRotation().name());
 		markDirty();
 	}
 

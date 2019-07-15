@@ -13,6 +13,7 @@ public enum GuiResources {
 	WAND_SYMMETRY("wand_symmetry.png", 207, 58),
 	SCHEMATIC_TABLE("schematic_table.png", 207, 89),
 	SCHEMATIC_TABLE_PROGRESS("schematic_table.png", 209, 0, 24, 17),
+	SCHEMATIC("schematic.png", 207, 95),
 
 	// Widgets
 	PALETTE_BUTTON("palette_picker.png", 0, 236, 20, 20),
