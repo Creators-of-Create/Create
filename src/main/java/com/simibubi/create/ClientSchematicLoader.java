@@ -18,6 +18,7 @@ import com.simibubi.create.networking.PacketSchematicUpload;
 import com.simibubi.create.networking.Packets;
 import com.simibubi.create.utility.FilesHelper;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,7 +26,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ClientSchematicLoader {
 
 	public static final int PACKET_DELAY = 10;
-	public static final int PACKET_SIZE = 500;
+	public static final int PACKET_SIZE = 2048;
 	
 	private List<String> availableSchematics;
 	private Map<String, InputStream> activeUploads;
@@ -92,7 +93,12 @@ public class ClientSchematicLoader {
 					data = Arrays.copyOf(data, status);
 				}
 				
-				Packets.channel.sendToServer(PacketSchematicUpload.write(schematic, data));
+				if (Minecraft.getInstance().world != null)
+					Packets.channel.sendToServer(PacketSchematicUpload.write(schematic, data));
+				else {
+					activeUploads.remove(schematic);
+					return;
+				}
 				
 				if (status < PACKET_SIZE)
 					finishUpload(schematic);

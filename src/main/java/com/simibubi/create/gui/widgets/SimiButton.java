@@ -12,7 +12,7 @@ public class SimiButton extends AbstractSimiWidget {
 	protected boolean pressed;
 	
 	public SimiButton(int x, int y, GuiResources icon) {
-		super(x, y, 16, 16);
+		super(x, y, 18, 18);
 		this.icon = icon;
 	}
 	

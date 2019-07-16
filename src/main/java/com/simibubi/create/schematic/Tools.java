@@ -8,12 +8,12 @@ import com.simibubi.create.gui.GuiResources;
 
 public enum Tools {
 
-	Deploy(new SchematicDeployTool(), "Deploy", GuiResources.ICON_3x3),
+	Deploy(new SchematicDeployTool(), "Deploy", GuiResources.ICON_TOOL_DEPLOY),
 	
-	Move(new SchematicMoveTool(), "Move XZ", GuiResources.ICON_3x3),
-	MoveY(new SchematicMoveVerticalTool(), "Move Y", GuiResources.ICON_3x3),
-	Rotate(new SchematicRotateTool(), "Rotate", GuiResources.ICON_3x3),
-	Flip(new SchematicFlipTool(), "Flip", GuiResources.ICON_3x3);
+	Move(new SchematicMoveTool(), "Move XZ", GuiResources.ICON_TOOL_MOVE_XZ),
+	MoveY(new SchematicMoveVerticalTool(), "Move Y", GuiResources.ICON_TOOL_MOVE_Y),
+	Rotate(new SchematicRotateTool(), "Rotate", GuiResources.ICON_TOOL_ROTATE),
+	Flip(new SchematicFlipTool(), "Flip", GuiResources.ICON_TOOL_MIRROR);
 	
 	private ISchematicTool tool;
 	private String displayName;

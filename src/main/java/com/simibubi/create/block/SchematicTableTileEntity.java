@@ -5,25 +5,33 @@ import com.simibubi.create.utility.TileEntitySynced;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class SchematicTableTileEntity extends TileEntitySynced implements ITickableTileEntity, INamedContainerProvider, IContainerListener {
+public class SchematicTableTileEntity extends TileEntitySynced implements ITickableTileEntity, INamedContainerProvider {
 
-	public ItemStack inputStack;
-	public ItemStack outputStack;
-	
+	public SchematicTableInventory inventory;
 	public String uploadingSchematic;
 	public float uploadingProgress;
+	
+	public class SchematicTableInventory extends ItemStackHandler {
+		public SchematicTableInventory() {
+			super(2);
+		}
+		
+		@Override
+		protected void onContentsChanged(int slot) {
+			super.onContentsChanged(slot);
+			markDirty();
+		}
+	}
 	
 	public SchematicTableTileEntity() {
 		this(AllTileEntities.SchematicTable.type);
@@ -31,31 +39,36 @@ public class SchematicTableTileEntity extends TileEntitySynced implements ITicka
 	
 	public SchematicTableTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
-		inputStack = ItemStack.EMPTY;
-		outputStack = ItemStack.EMPTY;
+		inventory = new SchematicTableInventory();
+		uploadingSchematic = null;
+		uploadingProgress = 0;
+	}
+	
+	public void sendToContainer(PacketBuffer buffer) {
+		buffer.writeBlockPos(getPos());
+		buffer.writeCompoundTag(getUpdateTag());
 	}
 	
 	@Override
 	public void read(CompoundNBT compound) {
-		NonNullList<ItemStack> stacks = NonNullList.create();
-		ItemStackHelper.loadAllItems(compound, stacks);
-		
-		if (!stacks.isEmpty()) {
-			inputStack = stacks.get(0);
-			outputStack = stacks.get(1);
+		inventory.deserializeNBT(compound.getCompound("Inventory"));
+		if (compound.contains("Schematic")) {
+			uploadingSchematic = compound.getString("Schematic");
+			uploadingProgress = compound.getFloat("Progress");
+		} else {
+			uploadingSchematic = null;
+			uploadingProgress = 0;
 		}
-		
 		super.read(compound);
 	}
 	
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		NonNullList<ItemStack> stacks = NonNullList.create();
-
-		stacks.add(inputStack);
-		stacks.add(outputStack);
-		
-		ItemStackHelper.saveAllItems(compound, stacks);
+		compound.put("Inventory", inventory.serializeNBT());
+		if (uploadingSchematic != null) {
+			compound.putString("Schematic", uploadingSchematic);
+			compound.putFloat("Progress", uploadingProgress);
+		}
 		return super.write(compound);
 	}
 
@@ -74,24 +87,4 @@ public class SchematicTableTileEntity extends TileEntitySynced implements ITicka
 		return new StringTextComponent(getType().getRegistryName().toString());
 	}
 
-	@Override
-	public void sendAllContents(Container containerToSend, NonNullList<ItemStack> itemsList) {
-		inputStack = itemsList.get(0);
-		outputStack = itemsList.get(1);
-	}
-
-	@Override
-	public void sendSlotContents(Container containerToSend, int slotInd, ItemStack stack) {
-		if (slotInd == 0) {
-			inputStack = stack;
-		} 
-		if (slotInd == 1) {
-			outputStack = stack;
-		}
-	}
-
-	@Override
-	public void sendWindowProperty(Container containerIn, int varToUpdate, int newValue) {
-	}
-	
 }

@@ -5,26 +5,21 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.networking.PacketSchematicTableContainer;
 import com.simibubi.create.networking.Packets;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class SchematicTableContainer extends Container {
-
-	private final IInventory tableInventory = new Inventory(2) {
-		public void markDirty() {
-			super.markDirty();
-			onCraftMatrixChanged(this);
-		}
-	};
 
 	private SchematicTableTileEntity te;
 	private Slot inputSlot;
@@ -36,23 +31,31 @@ public class SchematicTableContainer extends Container {
 	public float progress;
 	public boolean sendSchematicUpdate;
 
-	public SchematicTableContainer(int id, PlayerInventory inv) {
-		this(id, inv, null);
+	public SchematicTableContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
+		super(AllContainers.SchematicTable.type, id);
+		player = inv.player;
+		ClientWorld world = Minecraft.getInstance().world;
+		this.te = (SchematicTableTileEntity) world.getTileEntity(extraData.readBlockPos());
+		this.te.handleUpdateTag(extraData.readCompoundTag());
+		init();
 	}
 
 	public SchematicTableContainer(int id, PlayerInventory inv, SchematicTableTileEntity te) {
 		super(AllContainers.SchematicTable.type, id);
 		this.player = inv.player;
 		this.te = te;
+		init();
+	}
 
-		inputSlot = new Slot(tableInventory, 0, -9, 40) {
+	protected void init() {
+		inputSlot = new SlotItemHandler(te.inventory, 0, -9, 40) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return AllItems.EMPTY_BLUEPRINT.typeOf(stack);
 			}
 		};
 
-		outputSlot = new Slot(tableInventory, 1, 75, 40) {
+		outputSlot = new SlotItemHandler(te.inventory, 1, 75, 40) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return false;
@@ -61,28 +64,32 @@ public class SchematicTableContainer extends Container {
 
 		addSlot(inputSlot);
 		addSlot(outputSlot);
-
-		updateContent();
 		
-		if (te != null) {
-			this.addListener(te);
-		}
-
 		// player Slots
-		tableInventory.openInventory(inv.player);
-		for (int l = 0; l < 3; ++l) {
-			for (int j1 = 0; j1 < 9; ++j1) {
-				this.addSlot(new Slot(inv, j1 + l * 9 + 9, -8 + j1 * 18, 102 + l * 18));
+		for (int row = 0; row < 3; ++row) {
+			for (int col = 0; col < 9; ++col) {
+				this.addSlot(new Slot(player.inventory, col + row * 9 + 9, -8 + col * 18, 102 + row * 18));
 			}
 		}
 
-		for (int i1 = 0; i1 < 9; ++i1) {
-			this.addSlot(new Slot(inv, i1, -8 + i1 * 18, 160));
+		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot) {
+			this.addSlot(new Slot(player.inventory, hotbarSlot, -8 + hotbarSlot * 18, 160));
 		}
+		
+		detectAndSendChanges();
 	}
-	
+
 	@Override
 	public void detectAndSendChanges() {
+		if (te.uploadingSchematic != null) {
+			schematicUploading = te.uploadingSchematic;
+			progress = te.uploadingProgress;
+			isUploading = true;
+		} else {
+			schematicUploading = null;
+			progress = 0;
+			isUploading = false;
+		}
 		super.detectAndSendChanges();
 		sendSchematicInfo();
 	}
@@ -122,16 +129,6 @@ public class SchematicTableContainer extends Container {
 		return ItemStack.EMPTY;
 	}
 
-	public void updateContent() {
-		if (te != null) {
-			inputSlot.putStack(te.inputStack);
-			outputSlot.putStack(te.outputStack);
-			schematicUploading = te.uploadingSchematic;
-			progress = te.uploadingProgress;
-			sendSchematicUpdate = true;
-		}
-	}
-
 	public void sendSchematicInfo() {
 		if (player instanceof ServerPlayerEntity) {
 			if (sendSchematicUpdate) {
@@ -158,12 +155,6 @@ public class SchematicTableContainer extends Container {
 
 	@Override
 	public void onContainerClosed(PlayerEntity playerIn) {
-		if (te != null) {
-			te.inputStack = inputSlot.getStack();
-			te.outputStack = outputSlot.getStack();
-			te.markDirty();
-		}
-
 		super.onContainerClosed(playerIn);
 	}
 

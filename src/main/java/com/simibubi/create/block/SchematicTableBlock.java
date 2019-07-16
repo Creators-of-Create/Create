@@ -5,8 +5,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class SchematicTableBlock extends HorizontalBlock {
 
@@ -27,7 +28,7 @@ public class SchematicTableBlock extends HorizontalBlock {
 		builder.add(HORIZONTAL_FACING);
 		super.fillStateContainer(builder);
 	}
-	
+
 	@Override
 	public boolean isSolid(BlockState state) {
 		return false;
@@ -46,19 +47,17 @@ public class SchematicTableBlock extends HorizontalBlock {
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-		
+
 		if (worldIn.isRemote) {
 			return true;
 		} else {
-			INamedContainerProvider inamedcontainerprovider = (INamedContainerProvider) worldIn.getTileEntity(pos);
-			if (inamedcontainerprovider != null) {
-				player.openContainer(inamedcontainerprovider);
-			}
-
+			SchematicTableTileEntity te = (SchematicTableTileEntity) worldIn.getTileEntity(pos);
+			if (te != null)
+				NetworkHooks.openGui((ServerPlayerEntity) player, te, te::sendToContainer);
 			return true;
 		}
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new SchematicTableTileEntity();
@@ -70,10 +69,14 @@ public class SchematicTableBlock extends HorizontalBlock {
 			return;
 
 		SchematicTableTileEntity te = (SchematicTableTileEntity) worldIn.getTileEntity(pos);
-		if (!te.inputStack.isEmpty())
-			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), te.inputStack);
-		if (!te.outputStack.isEmpty())
-			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), te.outputStack);
+		for (int slot = 0; slot < te.inventory.getSlots(); slot++) {
+			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
+					te.inventory.getStackInSlot(slot));
+		}
+
+		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			worldIn.removeTileEntity(pos);
+		}
 
 	}
 

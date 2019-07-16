@@ -13,6 +13,11 @@ public abstract class TileEntitySynced extends TileEntity {
 	}
 	
 	@Override
+	public CompoundNBT getTileData() {
+		return super.getTileData();
+	}
+	
+	@Override
 	public CompoundNBT getUpdateTag() {
 		return write(new CompoundNBT());
 	}
@@ -24,12 +29,22 @@ public abstract class TileEntitySynced extends TileEntity {
 	
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket(){
-	    return new SUpdateTileEntityPacket(getPos(), 1, write(new CompoundNBT()));
+	    return new SUpdateTileEntityPacket(getPos(), 1, writeToClient(new CompoundNBT()));
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt){
-	    read(pkt.getNbtCompound());
+		readClientUpdate(pkt.getNbtCompound());
+	}
+	
+	// Special handling for client update packets
+	public void readClientUpdate(CompoundNBT tag) {
+		read(tag);
+	}
+	
+	// Special handling for client update packets
+	public CompoundNBT writeToClient(CompoundNBT tag) {
+		return write(tag);
 	}
 
 }

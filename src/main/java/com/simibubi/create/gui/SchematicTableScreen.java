@@ -147,24 +147,23 @@ public class SchematicTableScreen extends ContainerScreen<SchematicTableContaine
 			progress = Create.cSchematicLoader.getProgress(container.schematicUploading);
 			label.colored(0xCCDDFF);
 			button.active = false;
+			schematics.visible = false;
 
 		} else {
 			progress = 0;
 			lastProgress = 0;
 			label.colored(0xFFFFFF);
 			button.active = true;
+			schematics.visible = true;
 		}
 	}
 
 	@Override
 	public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-		if (button.isHovered() && ((SchematicTableContainer) container).canWrite() && schematics != null) {
-			button.active = false;
-			schematics.active = false;
-			label.colored(0xCCDDFF);
-
-			List<String> availableSchematics = Create.cSchematicLoader.getAvailableSchematics();
+		if (button.active && button.isHovered() && ((SchematicTableContainer) container).canWrite() && schematics != null) {
+			
 			lastProgress = progress = 0;
+			List<String> availableSchematics = Create.cSchematicLoader.getAvailableSchematics();
 			String schematic = availableSchematics.get(schematics.getState());
 			Create.cSchematicLoader.startNewUpload(schematic);
 		}

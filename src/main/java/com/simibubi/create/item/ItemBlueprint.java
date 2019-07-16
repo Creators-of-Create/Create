@@ -8,16 +8,11 @@ import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.IOUtils;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.block.SchematicannonTileEntity;
 import com.simibubi.create.gui.BlueprintEditScreen;
 import com.simibubi.create.gui.GuiOpener;
-import com.simibubi.create.schematic.SchematicHologram;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -56,7 +51,7 @@ public class ItemBlueprint extends Item {
 		tag.putString("Rotation", Rotation.NONE.name());
 		tag.putString("Mirror", Mirror.NONE.name());
 		blueprint.setTag(tag);
-		
+
 		writeSize(blueprint);
 		blueprint.setDisplayName(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.WHITE
 				+ "Blueprint (" + TextFormatting.GOLD + schematic + TextFormatting.WHITE + ")"));
@@ -70,10 +65,10 @@ public class ItemBlueprint extends Item {
 		tag.put("Bounds", NBTUtil.writeBlockPos(t.getSize()));
 		blueprint.setTag(tag);
 	}
-	
+
 	public static PlacementSettings getSettings(ItemStack blueprint) {
 		CompoundNBT tag = blueprint.getTag();
-		
+
 		PlacementSettings settings = new PlacementSettings();
 		settings.setRotation(Rotation.valueOf(tag.getString("Rotation")));
 		settings.setMirror(Mirror.valueOf(tag.getString("Mirror")));
@@ -85,10 +80,10 @@ public class ItemBlueprint extends Item {
 		Template t = new Template();
 		String owner = blueprint.getTag().getString("Owner");
 		String schematic = blueprint.getTag().getString("File");
-		
+
 		String filepath = "";
-		
-		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER) 
+
+		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER)
 			filepath = "schematics/uploaded/" + owner + "/" + schematic;
 		else
 			filepath = "schematics/" + schematic;
@@ -111,38 +106,14 @@ public class ItemBlueprint extends Item {
 
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
-
 		if (context.isPlacerSneaking() && context.getHand() == Hand.MAIN_HAND) {
 			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 				GuiOpener.open(new BlueprintEditScreen());
 			});
 			return ActionResultType.SUCCESS;
 		}
-		
-		World world = context.getWorld();
-		CompoundNBT tag = context.getItem().getTag();
-		if (tag.contains("File")) {
 
-			BlockPos pos = context.getPos();
-			BlockState blockState = world.getBlockState(pos);
-			if (AllBlocks.SCHEMATICANNON.typeOf(blockState)) {
-				if (world.isRemote) {
-					SchematicHologram.reset();
-					return ActionResultType.SUCCESS;
-				}
-				if (!tag.contains("Anchor"))
-					return ActionResultType.FAIL;
-
-				SchematicannonTileEntity te = (SchematicannonTileEntity) world.getTileEntity(pos);
-				te.schematicToPrint = tag.getString("Owner") + "/" + tag.getString("File");
-				te.anchor = NBTUtil.readBlockPos(tag.getCompound("Anchor"));
-				context.getPlayer().setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
-				return ActionResultType.SUCCESS;
-			}
-		}
-
-		context.getPlayer().getCooldownTracker().setCooldown(this, 10);
-		return ActionResultType.SUCCESS;
+		return super.onItemUse(context);
 	}
 
 	@Override
@@ -153,8 +124,7 @@ public class ItemBlueprint extends Item {
 			});
 			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
 		}
-		
-		
+
 		return super.onItemRightClick(worldIn, playerIn, handIn);
 	}
 

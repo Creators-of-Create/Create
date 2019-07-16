@@ -31,7 +31,7 @@ public class ServerSchematicLoader {
 		FilesHelper.createFolderIfMissing(PATH);
 	}
 
-	public void handleNewUpload(ServerPlayerEntity player, String schematic, DimensionPos dimensionPos) {
+	public void handleNewUpload(ServerPlayerEntity player, String schematic, DimensionPos dimPos) {
 		String playerPath = PATH + "/" + player.getName().getFormattedText();
 		String playerSchematicId = player.getName().getFormattedText() + "/" + schematic;
 
@@ -46,14 +46,19 @@ public class ServerSchematicLoader {
 					StandardOpenOption.CREATE_NEW);
 			Create.logger.info("Receiving New Schematic: " + playerSchematicId);
 			activeDownloads.put(playerSchematicId, writer);
-			activeTables.put(playerSchematicId, dimensionPos);
+			activeTables.put(playerSchematicId, dimPos);
+
+			SchematicTableTileEntity tileEntity = (SchematicTableTileEntity) dimPos.world
+					.getTileEntity(dimPos.pos);
+			tileEntity.uploadingSchematic = schematic;
+			tileEntity.uploadingProgress = 0;
+			BlockState blockState = dimPos.world.getBlockState(dimPos.pos);
+			dimPos.world.notifyBlockUpdate(dimPos.pos, blockState, blockState, 6);
 
 			if (player.openContainer instanceof SchematicTableContainer) {
 				SchematicTableContainer c = (SchematicTableContainer) player.openContainer;
-				c.schematicUploading = schematic;
-				c.isUploading = true;
 				c.sendSchematicUpdate = true;
-				player.openContainer.detectAndSendChanges();
+				c.detectAndSendChanges();
 			}
 
 		} catch (IOException e) {
@@ -94,29 +99,19 @@ public class ServerSchematicLoader {
 				if (!AllBlocks.SCHEMATIC_TABLE.typeOf(blockState))
 					return;
 
+				SchematicTableTileEntity tileEntity = (SchematicTableTileEntity) dimpos.world.getTileEntity(dimpos.pos);
+
+				tileEntity.inventory.setStackInSlot(0, ItemStack.EMPTY);
+				tileEntity.inventory.setStackInSlot(1,
+						ItemBlueprint.create(schematic, player.getName().getFormattedText()));
+				tileEntity.uploadingSchematic = null;
+				tileEntity.uploadingProgress = 0;
+				dimpos.world.notifyBlockUpdate(dimpos.pos, blockState, blockState, 3);
+				
 				if (player.openContainer instanceof SchematicTableContainer) {
 					SchematicTableContainer c = (SchematicTableContainer) player.openContainer;
-					c.isUploading = false;
-					c.schematicUploading = null;
-					c.progress = 0;
 					c.sendSchematicUpdate = true;
 					c.detectAndSendChanges();
-				}
-
-				SchematicTableTileEntity tileEntity = (SchematicTableTileEntity) dimpos.world.getTileEntity(dimpos.pos);
-				if (tileEntity.inputStack.isEmpty())
-					return;
-				if (!tileEntity.outputStack.isEmpty())
-					return;
-
-				tileEntity.inputStack = ItemStack.EMPTY;
-				tileEntity.outputStack = ItemBlueprint.create(schematic, player.getName().getFormattedText());
-
-				dimpos.world.notifyBlockUpdate(dimpos.pos, blockState, blockState, 3);
-
-				if (player.openContainer instanceof SchematicTableContainer) {
-					SchematicTableContainer c = (SchematicTableContainer) player.openContainer;
-					c.updateContent();
 				}
 
 			} catch (IOException e) {

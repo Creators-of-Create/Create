@@ -226,12 +226,14 @@ public class BlueprintHandler {
 		Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent("Syncing..."), true);
 		Packets.channel.sendToServer(new PacketNbt(item, slot));
 
-		SchematicWorld w = new SchematicWorld(new HashMap<>(), new Cuboid(), anchor);
-		PlacementSettings settings = cachedSettings.copy();
-		settings.setBoundingBox(null);
-		ItemBlueprint.getSchematic(item).addBlocksToWorld(w, anchor, settings);
-
-		new SchematicHologram().startHologram(w);
+		if (deployed) {
+			SchematicWorld w = new SchematicWorld(new HashMap<>(), new Cuboid(), anchor);
+			PlacementSettings settings = cachedSettings.copy();
+			settings.setBoundingBox(null);
+			ItemBlueprint.getSchematic(item).addBlocksToWorld(w, anchor, settings);
+			
+			new SchematicHologram().startHologram(w);
+		}
 	}
 
 	public void equip(Tools tool) {
