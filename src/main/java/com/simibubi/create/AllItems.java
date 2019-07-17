@@ -3,6 +3,7 @@ package com.simibubi.create;
 import com.simibubi.create.item.ItemBlueprint;
 import com.simibubi.create.item.ItemBlueprintAndQuill;
 import com.simibubi.create.item.ItemWandSymmetry;
+import com.simibubi.create.supertree.ItemTreeFertilizer;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;
@@ -13,6 +14,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllItems {
 	
+	TREE_FERTILIZER(new ItemTreeFertilizer(standardProperties())),
 	SYMMETRY_WAND(new ItemWandSymmetry(standardProperties())),
 	EMPTY_BLUEPRINT(new Item(standardProperties().maxStackSize(1))),
 	BLUEPRINT_AND_QUILL(new ItemBlueprintAndQuill(standardProperties().maxStackSize(1))),
