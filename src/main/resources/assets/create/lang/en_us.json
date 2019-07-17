@@ -1,9 +1,10 @@
 {
 	"item.create.symmetry_wand": "Staff of Symmetry",
 	"item.create.empty_blueprint": "Empty Schematic",
+	"item.create.blueprint_and_quill": "Schematic and Quill",
 	"item.create.blueprint": "Schematic",
-	"block.create.schematicannon": "SchematiCannon 9000",
+	"block.create.schematicannon": "Schematicannon",
 	"block.create.schematic_table": "Schematic Table",
-	"block.create.creative_crate": "SchematiCannon Creatifier",
+	"block.create.creative_crate": "Schematicannon Creatifier",
 	"itemGroup.create": "Create"
 }

@@ -40,7 +40,7 @@ public class SchematicTableContainer extends Container {
 		inputSlot = new SlotItemHandler(te.inventory, 0, -9, 40) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				return AllItems.EMPTY_BLUEPRINT.typeOf(stack);
+				return AllItems.EMPTY_BLUEPRINT.typeOf(stack) || AllItems.BLUEPRINT_AND_QUILL.typeOf(stack);
 			}
 		};
 
@@ -53,7 +53,7 @@ public class SchematicTableContainer extends Container {
 
 		addSlot(inputSlot);
 		addSlot(outputSlot);
-		
+
 		// player Slots
 		for (int row = 0; row < 3; ++row) {
 			for (int col = 0; col < 9; ++col) {
@@ -64,7 +64,7 @@ public class SchematicTableContainer extends Container {
 		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot) {
 			this.addSlot(new Slot(player.inventory, hotbarSlot, 12 + hotbarSlot * 18, 160));
 		}
-		
+
 		detectAndSendChanges();
 	}
 
@@ -86,9 +86,9 @@ public class SchematicTableContainer extends Container {
 		ItemStack stack = clickedSlot.getStack();
 		if (index < 2)
 			mergeItemStack(stack, 2, inventorySlots.size(), false);
-		else 
+		else
 			mergeItemStack(stack, 0, 1, false);
-		
+
 		return ItemStack.EMPTY;
 	}
 

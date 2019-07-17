@@ -592,6 +592,10 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 			return false;
 		if (!replaceTileEntities && toReplace.hasTileEntity())
 			return false;
+		
+		// Block doesnt have a mapping (Water, lava, etc)
+		if (getItemForBlock(state).getItem() == Items.AIR && state.getBlock() != Blocks.AIR)
+			return false;
 
 		if (replaceMode == 3)
 			return true;
@@ -611,7 +615,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		for (LaunchedBlock b : flyingBlocks) {
 			b.update();
 			if (b.ticksRemaining <= 0 && !world.isRemote) {
-				world.setBlockState(b.target, b.state);
+				world.setBlockState(b.target, b.state, 18);
 				toRemove.add(b);
 			}
 		}
@@ -709,6 +713,8 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 				if (!shouldPlace(pos.add(schematicAnchor), required))
 					continue;
 				ItemStack requiredItem = getItemForBlock(required);
+				if (requiredItem.isEmpty())
+					continue;
 				checklist.require(requiredItem.getItem());
 				blocksToPlace++;
 			}
