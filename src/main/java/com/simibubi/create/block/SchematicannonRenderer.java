@@ -1,11 +1,14 @@
 package com.simibubi.create.block;
 
+import java.util.Random;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -50,7 +53,7 @@ public class SchematicannonRenderer extends TileEntityRenderer<SchematicannonTil
 
 				if (block.ticksRemaining == 0)
 					continue;
-				
+
 				// Calculate position of flying block
 				Vec3d start = new Vec3d(tileEntityIn.getPos().add(.5f, 1, .5f));
 				Vec3d target = new Vec3d(block.target).add(-.5, 0, 1);
@@ -84,13 +87,27 @@ public class SchematicannonRenderer extends TileEntityRenderer<SchematicannonTil
 				Minecraft.getInstance().getBlockRendererDispatcher().renderBlockBrightness(block.state, 1);
 				GlStateManager.popMatrix();
 
-//				Minecraft.getInstance().world.addParticle(ParticleTypes.END_ROD, blockLocation.x, blockLocation.y,
-//						blockLocation.z, 0, 0, 0);
-
 				// Apply Recoil if block was just launched
 				if ((block.ticksRemaining + 1 - partialTicks) > block.totalTicks - 10) {
 					recoil = Math.max(recoil, (block.ticksRemaining + 1 - partialTicks) - block.totalTicks + 10);
 				}
+
+				// Render particles for launch
+				if (block.ticksRemaining == block.totalTicks && tileEntityIn.firstRenderTick) {
+					tileEntityIn.firstRenderTick = false;
+					for (int i = 0; i < 10; i++) {
+						Random r = tileEntityIn.getWorld().getRandom();
+						double sX = cannonOffset.x * .01f;
+						double sY = (cannonOffset.y + 1) * .01f;
+						double sZ = cannonOffset.z * .01f;
+						double rX = r.nextFloat()  - sX * 40;
+						double rY = r.nextFloat() - sY * 40;
+						double rZ = r.nextFloat() - sZ * 40;
+						tileEntityIn.getWorld().addParticle(ParticleTypes.CLOUD, start.x + rX, start.y + rY, start.z + rZ,
+								sX, sY, sZ);
+					}
+				}
+
 			}
 		}
 

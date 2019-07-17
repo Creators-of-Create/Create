@@ -23,8 +23,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @EventBusSubscriber(bus = Bus.FORGE)
@@ -71,6 +73,16 @@ public class Create {
 		Packets.registerPackets();
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> AllContainers::registerScreenFactories);
 		sSchematicLoader = new ServerSchematicLoader();
+	}
+	
+	@SubscribeEvent
+	public static void onTick(ServerTickEvent event) {
+		sSchematicLoader.tick();
+	}
+	
+	@SubscribeEvent
+	public static void onServerClose(FMLServerStoppingEvent event) {
+		sSchematicLoader.shutdown();
 	}
 	
 	@OnlyIn(Dist.CLIENT)

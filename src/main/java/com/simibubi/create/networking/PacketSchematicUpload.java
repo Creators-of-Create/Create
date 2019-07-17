@@ -18,6 +18,7 @@ public class PacketSchematicUpload {
 	public static final int FINISH = 2;
 
 	private int code;
+	private long size;
 	private String schematic;
 	private byte[] data;
 
@@ -26,8 +27,9 @@ public class PacketSchematicUpload {
 		this.schematic = schematic;
 	}
 
-	public static PacketSchematicUpload begin(String schematic) {
+	public static PacketSchematicUpload begin(String schematic, long size) {
 		PacketSchematicUpload pkt = new PacketSchematicUpload(BEGIN, schematic);
+		pkt.size = size;
 		return pkt;
 	}
 
@@ -45,6 +47,8 @@ public class PacketSchematicUpload {
 		code = buffer.readInt();
 		schematic = buffer.readString(256);
 
+		if (code == BEGIN)
+			size = buffer.readLong();
 		if (code == WRITE)
 			data = buffer.readByteArray();
 	}
@@ -53,6 +57,8 @@ public class PacketSchematicUpload {
 		buffer.writeInt(code);
 		buffer.writeString(schematic);
 
+		if (code == BEGIN)
+			buffer.writeLong(size);
 		if (code == WRITE)
 			buffer.writeByteArray(data);
 	}
@@ -62,7 +68,7 @@ public class PacketSchematicUpload {
 			ServerPlayerEntity player = context.get().getSender();
 			if (code == BEGIN) {
 				BlockPos pos = ((SchematicTableContainer) player.openContainer).getTileEntity().getPos();
-				Create.sSchematicLoader.handleNewUpload(player, schematic, new DimensionPos(player, pos));
+				Create.sSchematicLoader.handleNewUpload(player, schematic, size, new DimensionPos(player, pos));
 			}
 			if (code == WRITE) {
 				Create.sSchematicLoader.handleWriteRequest(player, schematic, data);

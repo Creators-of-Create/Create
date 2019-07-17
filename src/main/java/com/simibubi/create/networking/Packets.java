@@ -21,8 +21,6 @@ public class Packets {
 		channel.registerMessage(i++, PacketNbt.class, PacketNbt::toBytes, PacketNbt::new, PacketNbt::handle);
 		channel.registerMessage(i++, PacketConfigureSchematicannon.class, PacketConfigureSchematicannon::toBytes,
 				PacketConfigureSchematicannon::new, PacketConfigureSchematicannon::handle);
-		channel.registerMessage(i++, PacketSchematicTableContainer.class, PacketSchematicTableContainer::toBytes,
-				PacketSchematicTableContainer::new, PacketSchematicTableContainer::handle);
 		channel.registerMessage(i++, PacketSchematicUpload.class, PacketSchematicUpload::toBytes,
 				PacketSchematicUpload::new, PacketSchematicUpload::handle);
 		channel.registerMessage(i++, PacketSymmetryEffect.class, PacketSymmetryEffect::toBytes,

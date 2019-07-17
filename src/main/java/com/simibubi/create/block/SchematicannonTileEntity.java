@@ -9,12 +9,12 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.item.ItemBlueprint;
 import com.simibubi.create.schematic.Cuboid;
+import com.simibubi.create.schematic.MaterialChecklist;
 import com.simibubi.create.schematic.SchematicWorld;
 import com.simibubi.create.utility.TileEntitySynced;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -35,10 +35,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -49,9 +47,12 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class SchematicannonTileEntity extends TileEntitySynced implements ITickableTileEntity, INamedContainerProvider {
 
+	public static final int NEIGHBOUR_CHECKING = 100;
 	public static final int PLACEMENT_DELAY = 10;
 	public static final float FUEL_PER_GUNPOWDER = .2f;
-	public static final float FUEL_USAGE_RATE = .0001f;
+	public static final float FUEL_USAGE_RATE = .0005f;
+	public static final int SKIPS_PER_TICK = 10;
+	public static final int MAX_ANCHOR_DISTANCE = 256;
 
 	public enum State {
 		STOPPED, PAUSED, RUNNING;
@@ -62,6 +63,8 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 
 	// Sync
 	public boolean sendUpdate;
+	public boolean dontUpdateChecklist;
+	public int neighbourCheckCooldown;
 
 	// Printer
 	private SchematicWorld blockReader;
@@ -69,25 +72,34 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 	public BlockPos schematicAnchor;
 	public boolean schematicLoaded;
 	public boolean missingBlock;
+	public boolean blockNotLoaded;
 	public boolean hasCreativeCrate;
 	private int printerCooldown;
+	private int skipsLeft;
+	private boolean blockSkipped;
 
 	public BlockPos target;
 	public BlockPos previousTarget;
 	public List<IItemHandler> attachedInventories;
 	public List<LaunchedBlock> flyingBlocks;
+	public MaterialChecklist checklist;
 
 	// Gui information
 	public float fuelLevel;
-	public float paperPrintingProgress;
+	public float bookPrintingProgress;
 	public float schematicProgress;
 	public String statusMsg;
 	public State state;
+	public int blocksPlaced;
+	public int blocksToPlace;
 
 	// Settings
 	public int replaceMode;
 	public boolean skipMissing;
 	public boolean replaceTileEntities;
+
+	// Render
+	public boolean firstRenderTick;
 
 	public class SchematicannonInventory extends ItemStackHandler {
 		public SchematicannonInventory() {
@@ -107,8 +119,8 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 				return AllItems.BLUEPRINT.typeOf(stack);
 			case 1: // Blueprint output
 				return false;
-			case 2: // Paper input
-				return stack.getItem() == Items.PAPER;
+			case 2: // Book input
+				return stack.getItem() == Items.BOOK || stack.getItem() == Items.WRITTEN_BOOK;
 			case 3: // Material List output
 				return false;
 			case 4: // Gunpowder
@@ -168,11 +180,17 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		statusMsg = "Idle";
 		state = State.STOPPED;
 		replaceMode = 2;
+		neighbourCheckCooldown = NEIGHBOUR_CHECKING;
+		checklist = new MaterialChecklist();
 	}
 
 	public void findInventories() {
 		hasCreativeCrate = false;
+		attachedInventories.clear();
 		for (Direction facing : Direction.values()) {
+
+			if (!world.isBlockPresent(pos.offset(facing)))
+				continue;
 
 			if (AllBlocks.CREATIVE_CRATE.typeOf(world.getBlockState(pos.offset(facing)))) {
 				hasCreativeCrate = true;
@@ -192,18 +210,12 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 	@Override
 	public void read(CompoundNBT compound) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		
+
 		if (compound.contains("Running"))
 			currentPos = NBTUtil.readBlockPos(compound.getCompound("CurrentPos"));
-		
+
 		readClientUpdate(compound);
 		super.read(compound);
-	}
-	
-	@Override
-	public void onLoad() {
-		findInventories();
-		super.onLoad();
 	}
 
 	@Override
@@ -212,9 +224,11 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		// Gui information
 		statusMsg = compound.getString("Status");
 		schematicProgress = compound.getFloat("Progress");
-		paperPrintingProgress = compound.getFloat("PaperProgress");
+		bookPrintingProgress = compound.getFloat("PaperProgress");
 		fuelLevel = compound.getFloat("Fuel");
 		state = State.valueOf(compound.getString("State"));
+		blocksPlaced = compound.getInt("AmountPlaced");
+		blocksToPlace = compound.getInt("AmountToPlace");
 
 		// Settings
 		CompoundNBT options = compound.getCompound("Options");
@@ -271,12 +285,12 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.put("Inventory", inventory.serializeNBT());
-		
+
 		if (state == State.RUNNING) {
 			compound.putBoolean("Running", true);
 			compound.put("CurrentPos", NBTUtil.writeBlockPos(currentPos));
 		}
-		
+
 		writeToClient(compound);
 		return super.write(compound);
 	}
@@ -286,10 +300,12 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 
 		// Gui information
 		compound.putFloat("Progress", schematicProgress);
-		compound.putFloat("PaperProgress", paperPrintingProgress);
+		compound.putFloat("PaperProgress", bookPrintingProgress);
 		compound.putFloat("Fuel", fuelLevel);
 		compound.putString("Status", statusMsg);
 		compound.putString("State", state.name());
+		compound.putInt("AmountPlaced", blocksPlaced);
+		compound.putInt("AmountToPlace", blocksToPlace);
 
 		// Settings
 		CompoundNBT options = new CompoundNBT();
@@ -317,6 +333,12 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 
 	@Override
 	public void tick() {
+		if (neighbourCheckCooldown-- <= 0) {
+			neighbourCheckCooldown = NEIGHBOUR_CHECKING;
+			findInventories();
+		}
+
+		firstRenderTick = true;
 		previousTarget = target;
 		tickFlyingBlocks();
 
@@ -328,7 +350,15 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		refillFuelIfPossible();
 
 		// Update Printer
-		tickPrinter();
+		skipsLeft = SKIPS_PER_TICK;
+		blockSkipped = true;
+
+		while (blockSkipped && skipsLeft-- > 0)
+			tickPrinter();
+
+		schematicProgress = 0;
+		if (blocksToPlace > 0)
+			schematicProgress = (float) blocksPlaced / blocksToPlace;
 
 		// Update Client Tile
 		if (sendUpdate) {
@@ -339,6 +369,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 
 	protected void tickPrinter() {
 		ItemStack blueprint = inventory.getStackInSlot(0);
+		blockSkipped = false;
 
 		// Skip if not Active
 		if (state == State.STOPPED) {
@@ -346,8 +377,6 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 				resetPrinter();
 			return;
 		}
-		if (state == State.PAUSED && !missingBlock && fuelLevel > FUEL_USAGE_RATE)
-			return;
 
 		if (blueprint.isEmpty()) {
 			state = State.STOPPED;
@@ -356,31 +385,12 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 			return;
 		}
 
+		if (state == State.PAUSED && !blockNotLoaded && !missingBlock && fuelLevel > FUEL_USAGE_RATE)
+			return;
+
 		// Initialize Printer
 		if (!schematicLoaded) {
-			if (!blueprint.hasTag()) {
-				state = State.STOPPED;
-				statusMsg = "Invalid Blueprint";
-				sendUpdate = true;
-				return;
-			}
-
-			if (!blueprint.getTag().getBoolean("Deployed")) {
-				state = State.STOPPED;
-				statusMsg = "Blueprint not Deployed";
-				sendUpdate = true;
-				return;
-			}
-
-			currentPos = currentPos != null ? currentPos.west() : BlockPos.ZERO.west();
-			schematicAnchor = NBTUtil.readBlockPos(blueprint.getTag().getCompound("Anchor"));
-
-			// Load blocks into reader
-			Template activeTemplate = ItemBlueprint.getSchematic(blueprint);
-			blockReader = new SchematicWorld(new HashMap<>(), new Cuboid(), schematicAnchor);
-			activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, ItemBlueprint.getSettings(blueprint));
-			schematicLoaded = true;
-			sendUpdate = true;
+			initializePrinter(blueprint);
 			return;
 		}
 
@@ -400,7 +410,13 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		}
 
 		// Update Target
-		if (!missingBlock) {
+		if (hasCreativeCrate) {
+			if (missingBlock) {
+				missingBlock = false;
+				state = State.RUNNING;
+			}
+		}
+		if (!missingBlock && !blockNotLoaded) {
 			advanceCurrentPos();
 
 			// End reached
@@ -412,15 +428,31 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		}
 
 		// Check block
-		BlockState blockState = blockReader.getBlockState(target);
-		if (!shouldPlace(target, blockState))
+		if (!getWorld().isAreaLoaded(target, 0)) {
+			blockNotLoaded = true;
+			statusMsg = "Block is not loaded";
+			state = State.PAUSED;
 			return;
+		} else {
+			if (blockNotLoaded) {
+				blockNotLoaded = false;
+				state = State.RUNNING;
+			}
+		}
+		
+		BlockState blockState = blockReader.getBlockState(target);
+		if (!shouldPlace(target, blockState)) {
+			statusMsg = "Searching";
+			blockSkipped = true;
+			return;
+		}
 
 		// Find Item
 		ItemStack requiredItem = getItemForBlock(blockState);
 		if (!findItemInAttachedInventories(requiredItem)) {
 			if (skipMissing) {
 				statusMsg = "Skipping";
+				blockSkipped = true;
 				if (missingBlock) {
 					missingBlock = false;
 					state = State.RUNNING;
@@ -436,12 +468,60 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 
 		// Success
 		state = State.RUNNING;
-		statusMsg = "Running...";
+		if (blockState.getBlock() != Blocks.AIR)
+			statusMsg = "Placing: " + blocksPlaced + " / " + blocksToPlace;
+		else
+			statusMsg = "Clearing Blocks";
 		launchBlock(target, blockState);
 		printerCooldown = PLACEMENT_DELAY;
 		fuelLevel -= FUEL_USAGE_RATE;
 		sendUpdate = true;
 		missingBlock = false;
+	}
+
+	protected void initializePrinter(ItemStack blueprint) {
+		if (!blueprint.hasTag()) {
+			state = State.STOPPED;
+			statusMsg = "Invalid Blueprint";
+			sendUpdate = true;
+			return;
+		}
+
+		if (!blueprint.getTag().getBoolean("Deployed")) {
+			state = State.STOPPED;
+			statusMsg = "Blueprint not Deployed";
+			sendUpdate = true;
+			return;
+		}
+
+		// Load blocks into reader
+		Template activeTemplate = ItemBlueprint.getSchematic(blueprint);
+		BlockPos anchor = NBTUtil.readBlockPos(blueprint.getTag().getCompound("Anchor"));
+		
+		if (activeTemplate.getSize().equals(BlockPos.ZERO)) {
+			state = State.STOPPED;
+			statusMsg = "Schematic File Expired";
+			inventory.setStackInSlot(0, ItemStack.EMPTY);
+			inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_BLUEPRINT.get()));
+			return;
+		}
+		
+		if (!anchor.withinDistance(getPos(), MAX_ANCHOR_DISTANCE)) {
+			state = State.STOPPED;
+			statusMsg = "Target too Far Away";
+			return;
+		}
+		
+		schematicAnchor = anchor;
+		blockReader = new SchematicWorld(new HashMap<>(), new Cuboid(), schematicAnchor);
+		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, ItemBlueprint.getSettings(blueprint));
+		schematicLoaded = true;
+		state = State.PAUSED;
+		statusMsg = "Ready";
+		updateChecklist();
+		sendUpdate = true;
+		blocksToPlace += blocksPlaced;
+		currentPos = currentPos != null ? currentPos.west() : blockReader.getBounds().getOrigin().west();
 	}
 
 	protected ItemStack getItemForBlock(BlockState blockState) {
@@ -467,18 +547,18 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 	protected void advanceCurrentPos() {
 		BlockPos size = blockReader.getBounds().getSize();
 		currentPos = currentPos.offset(Direction.EAST);
+		BlockPos posInBounds = currentPos.subtract(blockReader.getBounds().getOrigin());
 
-		schematicProgress += 1d / (size.getX() * size.getY() * size.getZ());
-		
-		if (currentPos.getX() > size.getX())
-			currentPos = new BlockPos(0, currentPos.getY(), currentPos.getZ() + 1);
-		if (currentPos.getZ() > size.getZ())
-			currentPos = new BlockPos(currentPos.getX(), currentPos.getY() + 1, 0);
+		if (posInBounds.getX() > size.getX())
+			currentPos = new BlockPos(blockReader.getBounds().x, currentPos.getY(), currentPos.getZ() + 1).west();
+		if (posInBounds.getZ() > size.getZ())
+			currentPos = new BlockPos(currentPos.getX(), currentPos.getY() + 1, blockReader.getBounds().z).west();
 
 		// End reached
 		if (currentPos.getY() > size.getY()) {
 			inventory.setStackInSlot(0, ItemStack.EMPTY);
-			inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_BLUEPRINT.get()));
+			inventory.setStackInSlot(1,
+					new ItemStack(AllItems.EMPTY_BLUEPRINT.get(), inventory.getStackInSlot(1).getCount() + 1));
 			state = State.STOPPED;
 			statusMsg = "Finished";
 			resetPrinter();
@@ -498,6 +578,8 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		missingBlock = false;
 		sendUpdate = true;
 		schematicProgress = 0;
+		blocksPlaced = 0;
+		blocksToPlace = 0;
 	}
 
 	protected boolean shouldPlace(BlockPos pos, BlockState state) {
@@ -548,37 +630,52 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 	}
 
 	protected void tickPaperPrinter() {
-		int PaperInput = 2;
-		int PaperOutput = 3;
+		int BookInput = 2;
+		int BookOutput = 3;
 
-		ItemStack paper = inventory.extractItem(PaperInput, 1, true);
-		boolean outputFull = inventory.getStackInSlot(PaperOutput).getCount() == inventory.getSlotLimit(PaperOutput);
+		ItemStack blueprint = inventory.getStackInSlot(0);
+		ItemStack paper = inventory.extractItem(BookInput, 1, true);
+		boolean outputFull = inventory.getStackInSlot(BookOutput).getCount() == inventory.getSlotLimit(BookOutput);
 
 		if (paper.isEmpty() || outputFull) {
-			if (paperPrintingProgress != 0)
+			if (bookPrintingProgress != 0)
 				sendUpdate = true;
-			paperPrintingProgress = 0;
+			bookPrintingProgress = 0;
+			dontUpdateChecklist = false;
 			return;
 		}
 
-		if (paperPrintingProgress >= 1) {
-			paperPrintingProgress = 0;
-			inventory.extractItem(PaperInput, 1, false);
-			inventory.setStackInSlot(PaperOutput,
-					new ItemStack(Items.PAPER, inventory.getStackInSlot(PaperOutput).getCount() + 1));
+		if (!schematicLoaded) {
+			if (!blueprint.isEmpty())
+				initializePrinter(blueprint);
+			return;
+		}
+
+		if (bookPrintingProgress >= 1) {
+			bookPrintingProgress = 0;
+
+			if (!dontUpdateChecklist)
+				updateChecklist();
+
+			dontUpdateChecklist = true;
+			inventory.extractItem(BookInput, 1, false);
+			ItemStack stack = checklist.createItem();
+			stack.setCount(inventory.getStackInSlot(BookOutput).getCount() + 1);
+			inventory.setStackInSlot(BookOutput, stack);
 			sendUpdate = true;
 			return;
 		}
 
-		paperPrintingProgress += 0.05f;
+		bookPrintingProgress += 0.05f;
 		sendUpdate = true;
 	}
 
 	protected void launchBlock(BlockPos target, BlockState state) {
+		if (state.getBlock() != Blocks.AIR)
+			blocksPlaced++;
 		flyingBlocks.add(new LaunchedBlock(target, state));
-		Vec3d explosionPos = new Vec3d(pos).add(new Vec3d(target.subtract(pos)).normalize());
-		this.world.createExplosion((Entity) null, explosionPos.x, explosionPos.y + 1.5f, explosionPos.z, 0,
-				Explosion.Mode.NONE);
+		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS,
+				.1f, 1.1f);
 	}
 
 	public void sendToContainer(PacketBuffer buffer) {
@@ -594,6 +691,38 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 	@Override
 	public ITextComponent getDisplayName() {
 		return new StringTextComponent(getType().getRegistryName().toString());
+	}
+
+	public void updateChecklist() {
+		checklist.required.clear();
+		checklist.blocksNotLoaded = false;
+		
+		if (schematicLoaded) {
+			blocksToPlace = blocksPlaced;
+			for (BlockPos pos : blockReader.getAllPositions()) {
+				BlockState required = blockReader.getBlockState(pos.add(schematicAnchor));
+				
+				if (!getWorld().isAreaLoaded(pos.add(schematicAnchor), 0)) {
+					checklist.warnBlockNotLoaded();
+					continue;
+				}
+				if (!shouldPlace(pos.add(schematicAnchor), required))
+					continue;
+				ItemStack requiredItem = getItemForBlock(required);
+				checklist.require(requiredItem.getItem());
+				blocksToPlace++;
+			}
+		}
+		checklist.gathered.clear();
+		for (IItemHandler inventory : attachedInventories) {
+			for (int slot = 0; slot < inventory.getSlots(); slot++) {
+				ItemStack stackInSlot = inventory.getStackInSlot(slot);
+				if (inventory.extractItem(slot, 1, true).isEmpty())
+					continue;
+				checklist.collect(stackInSlot);
+			}
+		}
+		sendUpdate = true;
 	}
 
 }

@@ -18,63 +18,97 @@ import net.minecraftforge.items.ItemStackHandler;
 public class SchematicTableTileEntity extends TileEntitySynced implements ITickableTileEntity, INamedContainerProvider {
 
 	public SchematicTableInventory inventory;
+	public boolean isUploading;
 	public String uploadingSchematic;
 	public float uploadingProgress;
-	
+	public boolean sendUpdate;
+
 	public class SchematicTableInventory extends ItemStackHandler {
 		public SchematicTableInventory() {
 			super(2);
 		}
-		
+
 		@Override
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
 			markDirty();
 		}
 	}
-	
+
 	public SchematicTableTileEntity() {
 		this(AllTileEntities.SchematicTable.type);
 	}
-	
+
 	public SchematicTableTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		inventory = new SchematicTableInventory();
 		uploadingSchematic = null;
 		uploadingProgress = 0;
 	}
-	
+
 	public void sendToContainer(PacketBuffer buffer) {
 		buffer.writeBlockPos(getPos());
 		buffer.writeCompoundTag(getUpdateTag());
 	}
-	
+
 	@Override
 	public void read(CompoundNBT compound) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		if (compound.contains("Schematic")) {
+		readClientUpdate(compound);
+		super.read(compound);
+	}
+
+	@Override
+	public void readClientUpdate(CompoundNBT compound) {
+		if (compound.contains("Uploading")) {
+			isUploading = true;
 			uploadingSchematic = compound.getString("Schematic");
 			uploadingProgress = compound.getFloat("Progress");
 		} else {
+			isUploading = false;
 			uploadingSchematic = null;
 			uploadingProgress = 0;
 		}
-		super.read(compound);
 	}
-	
+
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.put("Inventory", inventory.serializeNBT());
-		if (uploadingSchematic != null) {
-			compound.putString("Schematic", uploadingSchematic);
-			compound.putFloat("Progress", uploadingProgress);
-		}
+		writeToClient(compound);
 		return super.write(compound);
 	}
 
 	@Override
+	public CompoundNBT writeToClient(CompoundNBT compound) {
+		if (isUploading) {
+			compound.putBoolean("Uploading", true);
+			compound.putString("Schematic", uploadingSchematic);
+			compound.putFloat("Progress", uploadingProgress);
+		}
+		return compound;
+	}
+
+	@Override
 	public void tick() {
-		
+		// Update Client Tile
+		if (sendUpdate) {
+			sendUpdate = false;
+			world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 6);
+		}
+	}
+	
+	public void startUpload(String schematic) {
+		isUploading = true;
+		uploadingProgress = 0;
+		uploadingSchematic = schematic;
+		sendUpdate = true;
+	}
+	
+	public void finishUpload() {
+		isUploading = false;
+		uploadingProgress = 0;
+		uploadingSchematic = null;
+		sendUpdate = true;
 	}
 
 	@Override

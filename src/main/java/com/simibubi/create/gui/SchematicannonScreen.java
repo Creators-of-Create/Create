@@ -30,6 +30,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	protected SimiButton skipMissingButton;
 	protected GuiIndicator skipMissingIndicator;
+	protected SimiButton skipTilesButton;
+	protected GuiIndicator skipTilesIndicator;
 
 	protected SimiButton playButton;
 	protected GuiIndicator playIndicator;
@@ -54,12 +56,12 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		widgets.clear();
 
 		// Play Pause Stop
-		playButton = new SimiButton(x + 69, y + 55, GuiResources.ICON_PLAY);
-		playIndicator = new GuiIndicator(x + 69, y + 50, "");
+		playButton = new SimiButton(x + 70, y + 55, GuiResources.ICON_PLAY);
+		playIndicator = new GuiIndicator(x + 70, y + 50, "");
 		pauseButton = new SimiButton(x + 88, y + 55, GuiResources.ICON_PAUSE);
 		pauseIndicator = new GuiIndicator(x + 88, y + 50, "");
-		resetButton = new SimiButton(x + 107, y + 55, GuiResources.ICON_STOP);
-		resetIndicator = new GuiIndicator(x + 107, y + 50, "Not Running");
+		resetButton = new SimiButton(x + 106, y + 55, GuiResources.ICON_STOP);
+		resetIndicator = new GuiIndicator(x + 106, y + 50, "Not Running");
 		resetIndicator.state = State.RED;
 		Collections.addAll(widgets, playButton, playIndicator, pauseButton, pauseIndicator, resetButton,
 				resetIndicator);
@@ -73,18 +75,23 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 				"Replace Solid with Any", "Replace Solid with Empty");
 
 		for (int i = 0; i < 4; i++) {
-			replaceLevelIndicators.add(new GuiIndicator(x + 12 + i * 18, y + 96, ""));
-			replaceLevelButtons.add(new SimiButton(x + 12 + i * 18, y + 101, icons.get(i)));
+			replaceLevelIndicators.add(new GuiIndicator(x + 16 + i * 18, y + 96, ""));
+			replaceLevelButtons.add(new SimiButton(x + 16 + i * 18, y + 101, icons.get(i)));
 			replaceLevelButtons.get(i).setToolTip(toolTips.get(i));
 		}
 		widgets.addAll(replaceLevelButtons);
 		widgets.addAll(replaceLevelIndicators);
 
 		// Other Settings
-		skipMissingButton = new SimiButton(x + 107, y + 101, GuiResources.ICON_SKIP_MISSING);
+		skipMissingButton = new SimiButton(x + 106, y + 101, GuiResources.ICON_SKIP_MISSING);
 		skipMissingButton.setToolTip("Skip missing Blocks");
-		skipMissingIndicator = new GuiIndicator(x + 107, y + 96, "");
+		skipMissingIndicator = new GuiIndicator(x + 106, y + 96, "");
 		Collections.addAll(widgets, skipMissingButton, skipMissingIndicator);
+		
+		skipTilesButton = new SimiButton(x + 124, y + 101, GuiResources.ICON_SKIP_TILES);
+		skipTilesButton.setToolTip("Protect Tile Entities");
+		skipTilesIndicator = new GuiIndicator(x + 124, y + 96, "");
+		Collections.addAll(widgets, skipTilesButton, skipTilesIndicator);
 
 		tick();
 	}
@@ -97,6 +104,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			replaceLevelIndicators.get(replaceMode).state = replaceMode <= te.replaceMode ? State.ON : State.OFF;
 
 		skipMissingIndicator.state = te.skipMissing ? State.ON : State.OFF;
+		skipTilesIndicator.state = !te.replaceTileEntities ? State.ON : State.OFF;
 
 		playIndicator.state = State.OFF;
 		pauseIndicator.state = State.OFF;
@@ -149,6 +157,14 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 				tip.add(TextFormatting.GRAY + "a required Block for placement, it");
 				tip.add(TextFormatting.GRAY + "will continue at the next Location.");
 			}
+			if (skipTilesButton.isHovered()) {
+				List<String> tip = skipTilesButton.getToolTip();
+				tip.remove(1);
+				tip.add(TextFormatting.BLUE
+						+ (skipTilesIndicator.state == State.ON ? "Currently Enabled" : "Currently Disabled"));
+				tip.add(TextFormatting.GRAY + "The Schematicannon will avoid replacing");
+				tip.add(TextFormatting.GRAY + "data holding blocks such as Chests.");
+			}
 			if (replaceLevelButtons.get(0).isHovered()) {
 				List<String> tip = replaceLevelButtons.get(0).getToolTip();
 				tip.remove(1);
@@ -199,7 +215,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		SchematicannonTileEntity te = container.getTileEntity();
 		renderPrintingProgress(te.schematicProgress);
 		renderFuelBar(te.fuelLevel);
-		renderChecklistPrinterProgress(te.paperPrintingProgress);
+		renderChecklistPrinterProgress(te.bookPrintingProgress);
 
 		if (!te.inventory.getStackInSlot(0).isEmpty())
 			renderBlueprintHighlight();
@@ -241,6 +257,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 	protected void renderPrintingProgress(float progress) {
+		progress = Math.min(progress, 1);
 		GuiResources sprite = GuiResources.SCHEMATICANNON_PROGRESS;
 		minecraft.getTextureManager().bindTexture(sprite.location);
 		blit(guiLeft + 20 + 39, guiTop + 36, sprite.startX, sprite.startY, (int) (sprite.width * progress),
@@ -299,6 +316,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		if (skipMissingButton.isHovered()) 
 			sendOptionUpdate(Option.SKIP_MISSING, !container.getTileEntity().skipMissing);
+		if (skipTilesButton.isHovered()) 
+			sendOptionUpdate(Option.SKIP_TILES, !container.getTileEntity().replaceTileEntities);
 
 		if (playButton.isHovered() && playButton.active) 
 			sendOptionUpdate(Option.PLAY, true);

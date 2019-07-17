@@ -15,7 +15,7 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 public class PacketConfigureSchematicannon {
 
 	public static enum Option {
-		DONT_REPLACE, REPLACE_SOLID, REPLACE_ANY, REPLACE_EMPTY, SKIP_MISSING, PLAY, PAUSE, STOP;
+		DONT_REPLACE, REPLACE_SOLID, REPLACE_ANY, REPLACE_EMPTY, SKIP_MISSING, SKIP_TILES, PLAY, PAUSE, STOP;
 	}
 
 	private Option option;
@@ -65,6 +65,9 @@ public class PacketConfigureSchematicannon {
 					break;
 				case SKIP_MISSING:
 					te.skipMissing = set;
+					break;
+				case SKIP_TILES:
+					te.replaceTileEntities = set;
 					break;
 					
 				case PLAY:

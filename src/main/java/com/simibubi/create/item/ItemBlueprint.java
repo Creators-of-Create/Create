@@ -31,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
@@ -95,7 +96,7 @@ public class ItemBlueprint extends Item {
 			t.read(nbt);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			// Player/Server doesnt have schematic saved
 		} finally {
 			if (stream != null)
 				IOUtils.closeQuietly(stream);
@@ -108,7 +109,7 @@ public class ItemBlueprint extends Item {
 	public ActionResultType onItemUse(ItemUseContext context) {
 		if (context.isPlacerSneaking() && context.getHand() == Hand.MAIN_HAND) {
 			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-				GuiOpener.open(new BlueprintEditScreen());
+				displayBlueprintScreen();
 			});
 			return ActionResultType.SUCCESS;
 		}
@@ -116,11 +117,16 @@ public class ItemBlueprint extends Item {
 		return super.onItemUse(context);
 	}
 
+	@OnlyIn(value = Dist.CLIENT)
+	protected void displayBlueprintScreen() {
+		GuiOpener.open(new BlueprintEditScreen());
+	}
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
 		if (playerIn.isSneaking() && handIn == Hand.MAIN_HAND) {
 			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-				GuiOpener.open(new BlueprintEditScreen());
+				displayBlueprintScreen();
 			});
 			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
 		}

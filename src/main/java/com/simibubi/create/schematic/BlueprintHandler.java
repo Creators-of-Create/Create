@@ -29,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -38,7 +39,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
-@EventBusSubscriber(bus = Bus.FORGE)
+@EventBusSubscriber(value = Dist.CLIENT, bus = Bus.FORGE)
 public class BlueprintHandler {
 
 	public static BlueprintHandler instance;
@@ -227,11 +228,15 @@ public class BlueprintHandler {
 		Packets.channel.sendToServer(new PacketNbt(item, slot));
 
 		if (deployed) {
+			Template schematic = ItemBlueprint.getSchematic(item);
+			
+			if (schematic.getSize().equals(BlockPos.ZERO))
+				return;
+			
 			SchematicWorld w = new SchematicWorld(new HashMap<>(), new Cuboid(), anchor);
 			PlacementSettings settings = cachedSettings.copy();
 			settings.setBoundingBox(null);
-			ItemBlueprint.getSchematic(item).addBlocksToWorld(w, anchor, settings);
-			
+			schematic.addBlocksToWorld(w, anchor, settings);
 			new SchematicHologram().startHologram(w);
 		}
 	}
