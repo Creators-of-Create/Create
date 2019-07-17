@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.gui.BlueprintHotbarOverlay;
@@ -20,10 +21,12 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
@@ -37,6 +40,8 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.FORGE)
@@ -71,6 +76,38 @@ public class BlueprintHandler {
 	}
 
 	@SubscribeEvent
+	public static void onPaperCrafted(ItemCraftedEvent event) {
+		if (event.isCanceled())
+			return;
+		if (event.getCrafting().getItem() == Items.PAPER) {
+			event.getPlayer()
+					.unlockRecipes(new ResourceLocation[] { AllItems.EMPTY_BLUEPRINT.get().getRegistryName() });
+		}
+		if (event.getCrafting().getItem() == Items.BONE_MEAL) {
+			event.getPlayer()
+					.unlockRecipes(new ResourceLocation[] { AllItems.TREE_FERTILIZER.get().getRegistryName() });
+		}
+		if (event.getCrafting().getItem() == Items.END_ROD) {
+			event.getPlayer().unlockRecipes(new ResourceLocation[] { AllItems.SYMMETRY_WAND.get().getRegistryName() });
+		}
+		if (AllItems.EMPTY_BLUEPRINT.typeOf(event.getCrafting())) {
+			event.getPlayer()
+					.unlockRecipes(new ResourceLocation[] { AllItems.BLUEPRINT_AND_QUILL.get().getRegistryName(),
+							AllBlocks.SCHEMATIC_TABLE.get().getRegistryName(),
+							AllBlocks.SCHEMATICANNON.get().getRegistryName() });
+		}
+	}
+
+	@SubscribeEvent
+	public static void onItemPickup(ItemPickupEvent event) {
+		if (event.isCanceled())
+			return;
+		if (event.getStack().getItem() == Items.END_ROD) {
+			event.getPlayer().unlockRecipes(new ResourceLocation[] { AllItems.SYMMETRY_WAND.get().getRegistryName() });
+		}
+	}
+	
+	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event) {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
@@ -100,9 +137,8 @@ public class BlueprintHandler {
 				if (toolBefore != null) {
 					instance.selectionScreen.setSelectedElement(toolBefore);
 					instance.equip(toolBefore);
-				} 
-			}
-			else
+				}
+			} else
 				instance.selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), instance::equip);
 			instance.sync();
 		}
@@ -229,10 +265,10 @@ public class BlueprintHandler {
 
 		if (deployed) {
 			Template schematic = ItemBlueprint.getSchematic(item);
-			
+
 			if (schematic.getSize().equals(BlockPos.ZERO))
 				return;
-			
+
 			SchematicWorld w = new SchematicWorld(new HashMap<>(), new Cuboid(), anchor);
 			PlacementSettings settings = cachedSettings.copy();
 			settings.setBoundingBox(null);
@@ -317,13 +353,13 @@ public class BlueprintHandler {
 
 		markDirty();
 	}
-	
+
 	public void setMirror(Mirror mirror) {
 		cachedSettings.setMirror(mirror);
 		item.getTag().putString("Mirror", cachedSettings.getMirror().name());
 		markDirty();
 	}
-	
+
 	public void setRotation(Rotation rotation) {
 		cachedSettings.setRotation(rotation);
 		item.getTag().putString("Rotation", cachedSettings.getRotation().name());

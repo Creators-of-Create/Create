@@ -1,0 +1,15 @@
+{
+    "type": "crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "create:empty_blueprint"
+		},
+		{
+			"item": "minecraft:feather"
+		}
+	],
+	"result": {
+		"item": "create:blueprint_and_quill",
+		"count": 1
+	}
+}

@@ -14,13 +14,16 @@ import com.simibubi.create.item.symmetry.SymmetryPlane;
 import com.simibubi.create.networking.PacketSymmetryEffect;
 import com.simibubi.create.networking.Packets;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -144,6 +147,8 @@ public class ItemWandSymmetry extends Item {
 		checkNBT(wand);
 		if (!isEnabled(wand))
 			return;
+		if (!BlockItem.BLOCK_TO_ITEM.containsKey(block.getBlock()))
+			return;
 
 		Map<BlockPos, BlockState> blockSet = new HashMap<>();
 		blockSet.put(pos, block);
@@ -161,8 +166,24 @@ public class ItemWandSymmetry extends Item {
 		targets.add(pos);
 		for (BlockPos position : blockSet.keySet()) {
 			if (world.func_217350_a(block, position, ISelectionContext.forEntity(player))) {
-				world.setBlockState(position, blockSet.get(position));
-				targets.add(position);
+				Item required = BlockItem.BLOCK_TO_ITEM.get(block.getBlock());
+
+				if (player.isCreative()) {
+					world.setBlockState(position, blockSet.get(position));
+					targets.add(position);
+					continue;
+				}
+				
+				for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+					ItemStack itemstack = player.inventory.getStackInSlot(i);
+					if (itemstack.getItem() == required && itemstack.getCount() > 0) {
+						player.inventory.setInventorySlotContents(i,
+								new ItemStack(itemstack.getItem(), itemstack.getCount() - 1));
+						world.setBlockState(position, blockSet.get(position));
+						targets.add(position);
+						break;
+					}
+				}
 			}
 		}
 
@@ -172,6 +193,7 @@ public class ItemWandSymmetry extends Item {
 
 	public static void remove(World world, ItemStack wand, PlayerEntity player, BlockPos pos) {
 		BlockState air = Blocks.AIR.getDefaultState();
+		BlockState ogBlock = world.getBlockState(pos);
 		checkNBT(wand);
 		if (!isEnabled(wand))
 			return;
@@ -191,8 +213,26 @@ public class ItemWandSymmetry extends Item {
 
 		targets.add(pos);
 		for (BlockPos position : blockSet.keySet()) {
-			targets.add(position);
-			world.setBlockState(position, air);
+			if (!player.isCreative() && ogBlock.getBlock() != world.getBlockState(position).getBlock())
+				continue;
+			if (position.equals(pos))
+				continue;
+
+			BlockState blockstate = world.getBlockState(position);
+			if (blockstate.isAir(world, position)) {
+				continue;
+			} else {
+				targets.add(position);
+				world.playEvent(2001, pos, Block.getStateId(blockstate));
+				world.setBlockState(position, air, 3);
+				
+				if (!player.isCreative()) {
+					if (!player.getHeldItemMainhand().isEmpty())
+						player.getHeldItemMainhand().onBlockDestroyed(world, blockstate, position, player);
+					TileEntity tileentity = blockstate.hasTileEntity() ? world.getTileEntity(position) : null;
+					Block.spawnDrops(blockstate, world, pos, tileentity);
+				}
+			}
 		}
 
 		Packets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),

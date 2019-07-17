@@ -3,7 +3,7 @@
     "textures": {
         "0": "block/white_stained_glass",
         "1": "block/obsidian",
-        "2": "block/blue_terracotta"
+        "2": "block/light_blue_concrete_powder"
     },
     "elements": [
         {

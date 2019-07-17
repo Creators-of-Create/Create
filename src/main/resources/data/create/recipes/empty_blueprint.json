@@ -1,0 +1,15 @@
+{
+    "type": "crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "minecraft:paper"
+		},
+		{
+			"item": "minecraft:light_blue_dye"
+		}
+	],
+	"result": {
+		"item": "create:empty_blueprint",
+		"count": 1
+	}
+}
