@@ -35,6 +35,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -58,13 +59,17 @@ public class BlueprintAndQuillHandler {
 				&& Minecraft.getInstance().currentScreen == null && !Minecraft.getInstance().player.isSneaking();
 	}
 
-	public static boolean onScroll(double delta) {
+	@SubscribeEvent
+	// TODO: This is a fabricated event call by ScrollFixer until a proper event exists
+	public static void onMouseScrolled(MouseScrollEvent.Post event) {
+		if (event.getGui() != null)
+			return;
 		if (!active())
-			return false;
+			return;
 		if (!Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
-			return false;
-		range = (int) MathHelper.clamp(range + delta, 1, 100);
-		return true;
+			return;
+		range = (int) MathHelper.clamp(range + event.getScrollDelta(), 1, 100);
+		event.setCanceled(true);
 	}
 
 	@SubscribeEvent

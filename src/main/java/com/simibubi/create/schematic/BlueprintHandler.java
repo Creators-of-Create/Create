@@ -37,6 +37,7 @@ import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -215,6 +216,15 @@ public class BlueprintHandler {
 			toolSelection.focused = true;
 	}
 
+	@SubscribeEvent
+	// TODO: This is a fabricated event call by ScrollFixer until a proper event exists
+	public static void onMouseScrolled(MouseScrollEvent.Post event) {
+		if (event.getGui() != null)
+			return;
+		if (instance.onScroll(event.getScrollDelta()))
+			event.setCanceled(true);
+	}
+	
 	public boolean onScroll(double delta) {
 		if (!active)
 			return false;

@@ -2,8 +2,8 @@ package com.simibubi.create;
 
 import com.simibubi.create.item.ItemBlueprint;
 import com.simibubi.create.item.ItemBlueprintAndQuill;
+import com.simibubi.create.item.ItemTreeFertilizer;
 import com.simibubi.create.item.ItemWandSymmetry;
-import com.simibubi.create.supertree.ItemTreeFertilizer;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;

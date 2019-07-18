@@ -1,4 +1,4 @@
-package com.simibubi.create.supertree;
+package com.simibubi.create.item;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -68,6 +68,9 @@ public class ItemTreeFertilizer extends Item {
 
 				context.getWorld().setBlockState(actualPos, world.getBlockState(pos));
 			}
+			
+			if (!context.getPlayer().isCreative())
+				context.getItem().shrink(1);
 			return ActionResultType.SUCCESS;
 
 		}

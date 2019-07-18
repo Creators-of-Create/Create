@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.simibubi.create.gui.Keyboard;
 import com.simibubi.create.networking.Packets;
-import com.simibubi.create.schematic.BlueprintAndQuillHandler;
 import com.simibubi.create.schematic.BlueprintHandler;
 import com.simibubi.create.schematic.SchematicHologram;
 
@@ -63,9 +62,6 @@ public class Create {
 			new SchematicHologram();
 			new BlueprintHandler();
 			ScrollFixer.init();
-			ScrollFixer.addMouseWheelListener(BlueprintHandler.instance::onScroll);
-			ScrollFixer.addMouseWheelListener(BlueprintAndQuillHandler::onScroll);
-			
 			TOOL_MENU = new KeyBinding("Tool Menu (Hold)", Keyboard.LALT, NAME);
 			ClientRegistry.registerKeyBinding(TOOL_MENU);
 		});

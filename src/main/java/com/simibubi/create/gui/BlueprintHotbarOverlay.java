@@ -12,9 +12,9 @@ public class BlueprintHotbarOverlay extends AbstractGui {
 		MainWindow mainWindow = Minecraft.getInstance().mainWindow;
 		int x = mainWindow.getScaledWidth() / 2 - 92;
 		int y = mainWindow.getScaledHeight() - 23;
-		GlStateManager.enableBlend();
 		GlStateManager.enableAlphaTest();
 		GuiResources.BLUEPRINT_SLOT.draw(this, x + 20 * slot, y);
+		GlStateManager.disableAlphaTest();
 	}
 
 }
