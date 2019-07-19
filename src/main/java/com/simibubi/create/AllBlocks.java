@@ -1,13 +1,13 @@
 package com.simibubi.create;
 
 import com.simibubi.create.block.CreativeCrateBlock;
-import com.simibubi.create.block.IJustForRendering;
 import com.simibubi.create.block.RenderingBlock;
 import com.simibubi.create.block.SchematicTableBlock;
 import com.simibubi.create.block.SchematicannonBlock;
-import com.simibubi.create.block.symmetry.BlockSymmetryCrossPlane;
-import com.simibubi.create.block.symmetry.BlockSymmetryPlane;
-import com.simibubi.create.block.symmetry.BlockSymmetryTriplePlane;
+import com.simibubi.create.block.symmetry.CrossPlaneSymmetryBlock;
+import com.simibubi.create.block.symmetry.PlaneSymmetryBlock;
+import com.simibubi.create.block.symmetry.TriplePlaneSymmetryBlock;
+import com.simibubi.create.utility.IJustForRendering;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -24,9 +24,9 @@ public enum AllBlocks {
 	
 	SCHEMATIC_TABLE(new SchematicTableBlock()),
 	
-	SYMMETRY_PLANE(new BlockSymmetryPlane()),
-	SYMMETRY_CROSSPLANE(new BlockSymmetryCrossPlane()),
-	SYMMETRY_TRIPLEPLANE(new BlockSymmetryTriplePlane());
+	SYMMETRY_PLANE(new PlaneSymmetryBlock()),
+	SYMMETRY_CROSSPLANE(new CrossPlaneSymmetryBlock()),
+	SYMMETRY_TRIPLEPLANE(new TriplePlaneSymmetryBlock());
 
 	public Block block;
 

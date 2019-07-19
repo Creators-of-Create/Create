@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.schematic.Tools;
+import com.simibubi.create.Create;
+import com.simibubi.create.schematic.tools.Tools;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -33,7 +35,7 @@ public class ToolSelectionScreen extends Screen {
 		
 		callback.accept(tools.get(selection));
 
-		w = tools.size() * 50 + 30;
+		w = Math.max(tools.size() * 50 + 30, 220);
 		h = 30;
 	}
 	
@@ -55,16 +57,46 @@ public class ToolSelectionScreen extends Screen {
 		int y = mainWindow.getScaledHeight() - h - 75;
 		
 		GlStateManager.pushMatrix();
-		GlStateManager.translatef(0, -yOffset, 0);
+		GlStateManager.translatef(0, -yOffset, focused? 100 : 0);
 		
-		GuiResources gray = GuiResources.GRAY;
+		ScreenResources gray = ScreenResources.GRAY;
 		GlStateManager.enableBlend();
-		GlStateManager.enableAlphaTest();
 		GlStateManager.color4f(1, 1, 1, focused? 7 / 8f : 1 / 2f);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(gray.location);
 		blit(x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
+		
+		float toolTipAlpha = yOffset / 10;
+		FontRenderer font = minecraft.fontRenderer;
+		List<String> toolTip = tools.get(selection).getDescription();
+		int stringAlphaComponent = ((int) (toolTipAlpha * 0xFF)) << 24;
+		
+		if (toolTipAlpha > 0.25f) {
+			GlStateManager.color4f(.7f, .7f, .8f, toolTipAlpha);
+			blit(x - 15, y + 33, gray.startX, gray.startY, w, h + 22, gray.width, gray.height);
+			GlStateManager.color4f(1, 1, 1, 1);
+			
+			if (toolTip.size() > 0)
+				drawString(font, toolTip.get(0), x - 10, y + 38, 0xEEEEEE + stringAlphaComponent);
+			if (toolTip.size() > 1)
+				drawString(font, toolTip.get(1), x - 10, y + 50, 0xCCDDFF + stringAlphaComponent);
+			if (toolTip.size() > 2)
+				drawString(font, toolTip.get(2), x - 10, y + 60, 0xCCDDFF + stringAlphaComponent);
+			if (toolTip.size() > 3)
+				drawString(font, toolTip.get(3), x - 10, y + 72, 0xCCCCDD + stringAlphaComponent);
+		}
+		
 		GlStateManager.color4f(1, 1, 1, 1);
+		if (tools.size() > 1) {
+			String translationKey = Create.TOOL_MENU.getLocalizedName().toUpperCase();
+			int width = minecraft.mainWindow.getScaledWidth();
+			if (!focused)
+				drawCenteredString(minecraft.fontRenderer, "Hold [" + translationKey + "] to focus", width/2, y - 10, 0xCCDDFF);
+			else
+				drawCenteredString(minecraft.fontRenderer, "[SCROLL] to Cycle", width/2, y - 10, 0xCCDDFF);
+		} else {
+			x += 65;
+		}
 		
 		for (int i = 0; i < tools.size(); i++) {
 			GlStateManager.pushMatrix();

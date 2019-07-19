@@ -1,9 +1,9 @@
 package com.simibubi.create;
 
-import com.simibubi.create.item.ItemBlueprint;
-import com.simibubi.create.item.ItemBlueprintAndQuill;
-import com.simibubi.create.item.ItemTreeFertilizer;
-import com.simibubi.create.item.ItemWandSymmetry;
+import com.simibubi.create.item.BlueprintItem;
+import com.simibubi.create.item.BlueprintAndQuillItem;
+import com.simibubi.create.item.TreeFertilizerItem;
+import com.simibubi.create.item.SymmetryWandItem;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;
@@ -14,11 +14,11 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllItems {
 	
-	TREE_FERTILIZER(new ItemTreeFertilizer(standardProperties())),
-	SYMMETRY_WAND(new ItemWandSymmetry(standardProperties())),
+	TREE_FERTILIZER(new TreeFertilizerItem(standardProperties())),
+	SYMMETRY_WAND(new SymmetryWandItem(standardProperties())),
 	EMPTY_BLUEPRINT(new Item(standardProperties().maxStackSize(1))),
-	BLUEPRINT_AND_QUILL(new ItemBlueprintAndQuill(standardProperties().maxStackSize(1))),
-	BLUEPRINT(new ItemBlueprint(standardProperties()));
+	BLUEPRINT_AND_QUILL(new BlueprintAndQuillItem(standardProperties().maxStackSize(1))),
+	BLUEPRINT(new BlueprintItem(standardProperties()));
 
 	public Item item;
 

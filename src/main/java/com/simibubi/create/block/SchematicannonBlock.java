@@ -1,10 +1,14 @@
 package com.simibubi.create.block;
 
+import java.util.List;
+
 import com.simibubi.create.AllItems;
+import com.simibubi.create.utility.Keyboard;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -14,10 +18,15 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class SchematicannonBlock extends Block {
@@ -34,6 +43,19 @@ public class SchematicannonBlock extends Block {
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new SchematicannonTileEntity();
+	}
+	
+	@Override
+	@OnlyIn(value = Dist.CLIENT)
+	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
+			ITooltipFlag flagIn) {
+		if (Keyboard.isKeyDown(Keyboard.LSHIFT)) {
+			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Prints a deployed " + TextFormatting.BLUE + "Schematic"));
+			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "into the world using blocks from inventories"));
+			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "placed right next to it."));
+		} else 
+			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "< Hold Shift >"));
+		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 	
 	@Override

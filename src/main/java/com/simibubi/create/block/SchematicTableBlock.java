@@ -1,20 +1,31 @@
 package com.simibubi.create.block;
 
+import java.util.List;
+
+import com.simibubi.create.utility.Keyboard;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class SchematicTableBlock extends HorizontalBlock {
@@ -32,6 +43,18 @@ public class SchematicTableBlock extends HorizontalBlock {
 	@Override
 	public boolean isSolid(BlockState state) {
 		return false;
+	}
+	
+	@Override
+	@OnlyIn(value = Dist.CLIENT)
+	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
+			ITooltipFlag flagIn) {
+		if (Keyboard.isKeyDown(Keyboard.LSHIFT)) {
+			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Writes saved Schematics onto"));
+			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "an " + TextFormatting.BLUE + "Empty Schematic"));
+		} else 
+			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "< Hold Shift >"));
+		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 
 	@Override

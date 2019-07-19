@@ -9,11 +9,12 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.gui.BlueprintHotbarOverlay;
-import com.simibubi.create.gui.Keyboard;
 import com.simibubi.create.gui.ToolSelectionScreen;
-import com.simibubi.create.item.ItemBlueprint;
-import com.simibubi.create.networking.PacketNbt;
-import com.simibubi.create.networking.Packets;
+import com.simibubi.create.item.BlueprintItem;
+import com.simibubi.create.networking.NbtPacket;
+import com.simibubi.create.networking.AllPackets;
+import com.simibubi.create.schematic.tools.Tools;
+import com.simibubi.create.utility.Keyboard;
 import com.simibubi.create.utility.TessellatorHelper;
 
 import net.minecraft.client.Minecraft;
@@ -36,6 +37,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -169,11 +171,13 @@ public class BlueprintHandler {
 	}
 
 	@SubscribeEvent
-	public static void onRenderOverlay(RenderGameOverlayEvent event) {
-		if (instance.item != null)
-			instance.overlay.renderOn(instance.slot);
+	public static void onRenderOverlay(RenderGameOverlayEvent.Post event) {
 		if (!instance.active)
 			return;
+		if (event.getType() != ElementType.HOTBAR)
+			return;
+		if (instance.item != null)
+			instance.overlay.renderOn(instance.slot);
 
 		instance.currentTool.getTool().renderOverlay();
 		instance.selectionScreen.renderPassive(event.getPartialTicks());
@@ -271,10 +275,10 @@ public class BlueprintHandler {
 
 	public void sync() {
 		Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent("Syncing..."), true);
-		Packets.channel.sendToServer(new PacketNbt(item, slot));
+		AllPackets.channel.sendToServer(new NbtPacket(item, slot));
 
 		if (deployed) {
-			Template schematic = ItemBlueprint.getSchematic(item);
+			Template schematic = BlueprintItem.getSchematic(item);
 
 			if (schematic.getSize().equals(BlockPos.ZERO))
 				return;

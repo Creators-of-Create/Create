@@ -13,7 +13,7 @@ public class BlueprintHotbarOverlay extends AbstractGui {
 		int x = mainWindow.getScaledWidth() / 2 - 92;
 		int y = mainWindow.getScaledHeight() - 23;
 		GlStateManager.enableAlphaTest();
-		GuiResources.BLUEPRINT_SLOT.draw(this, x + 20 * slot, y);
+		ScreenResources.BLUEPRINT_SLOT.draw(this, x + 20 * slot, y);
 		GlStateManager.disableAlphaTest();
 	}
 

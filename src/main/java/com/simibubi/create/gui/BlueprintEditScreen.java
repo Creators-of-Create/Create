@@ -6,9 +6,9 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.gui.widgets.DynamicLabel;
-import com.simibubi.create.gui.widgets.OptionScrollArea;
-import com.simibubi.create.gui.widgets.ScrollArea;
+import com.simibubi.create.gui.widgets.Label;
+import com.simibubi.create.gui.widgets.SelectionScrollInput;
+import com.simibubi.create.gui.widgets.ScrollInput;
 import com.simibubi.create.schematic.BlueprintHandler;
 
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -27,12 +27,12 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 			"Clockwise 270");
 	private static final List<String> mirrorOptions = ImmutableList.of("None", "Left-Right", "Front-Back");
 
-	private ScrollArea rotationArea;
-	private ScrollArea mirrorArea;
+	private ScrollInput rotationArea;
+	private ScrollInput mirrorArea;
 
 	@Override
 	protected void init() {
-		setWindowSize(GuiResources.SCHEMATIC.width + 50, GuiResources.SCHEMATIC.height);
+		setWindowSize(ScreenResources.SCHEMATIC.width + 50, ScreenResources.SCHEMATIC.height);
 		int x = topLeftX;
 		int y = topLeftY;
 		BlueprintHandler bh = BlueprintHandler.instance;
@@ -70,12 +70,12 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 			});
 		}
 
-		DynamicLabel labelR = new DynamicLabel(x + 99, y + 52, "").withShadow();
-		rotationArea = new OptionScrollArea(x + 96, y + 49, 94, 14).forOptions(rotationOptions).titled("Rotation")
+		Label labelR = new Label(x + 99, y + 52, "").withShadow();
+		rotationArea = new SelectionScrollInput(x + 96, y + 49, 94, 14).forOptions(rotationOptions).titled("Rotation")
 				.setState(bh.cachedSettings.getRotation().ordinal()).writingTo(labelR);
 
-		DynamicLabel labelM = new DynamicLabel(x + 99, y + 72, "").withShadow();
-		mirrorArea = new OptionScrollArea(x + 96, y + 69, 94, 14).forOptions(mirrorOptions).titled("Mirror")
+		Label labelM = new Label(x + 99, y + 72, "").withShadow();
+		mirrorArea = new SelectionScrollInput(x + 96, y + 69, 94, 14).forOptions(mirrorOptions).titled("Mirror")
 				.setState(bh.cachedSettings.getMirror().ordinal()).writingTo(labelM);
 
 		Collections.addAll(widgets, xInput, yInput, zInput);
@@ -118,15 +118,15 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
 		int x = topLeftX;
 		int y = topLeftY;
-		GuiResources.SCHEMATIC.draw(this, x, y);
+		ScreenResources.SCHEMATIC.draw(this, x, y);
 		BlueprintHandler bh = BlueprintHandler.instance;
 
 		font.drawStringWithShadow(bh.cachedSchematicName, x + 103 - font.getStringWidth(bh.cachedSchematicName) / 2,
 				y + 10, 0xDDEEFF);
 
-		font.drawString("Position", x + 10, y + 32, GuiResources.FONT_COLOR);
-		font.drawString("Rotation", x + 10, y + 52, GuiResources.FONT_COLOR);
-		font.drawString("Mirror", x + 10, y + 72, GuiResources.FONT_COLOR);
+		font.drawString("Position", x + 10, y + 32, ScreenResources.FONT_COLOR);
+		font.drawString("Rotation", x + 10, y + 52, ScreenResources.FONT_COLOR);
+		font.drawString("Mirror", x + 10, y + 72, ScreenResources.FONT_COLOR);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translated(topLeftX + 220, topLeftY + 20, 0);

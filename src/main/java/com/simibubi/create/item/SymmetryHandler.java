@@ -51,7 +51,7 @@ public class SymmetryHandler {
 		PlayerInventory inv = player.inventory;
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			if (!inv.getStackInSlot(i).isEmpty() && inv.getStackInSlot(i).getItem() == AllItems.SYMMETRY_WAND.get()) {
-				ItemWandSymmetry.apply(player.world, inv.getStackInSlot(i), player, event.getPos(),
+				SymmetryWandItem.apply(player.world, inv.getStackInSlot(i), player, event.getPos(),
 						event.getPlacedBlock());
 			}
 		}
@@ -66,7 +66,7 @@ public class SymmetryHandler {
 		PlayerInventory inv = player.inventory;
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			if (!inv.getStackInSlot(i).isEmpty() && AllItems.SYMMETRY_WAND.typeOf(inv.getStackInSlot(i))) {
-				ItemWandSymmetry.remove(player.world, inv.getStackInSlot(i), player, event.getPos());
+				SymmetryWandItem.remove(player.world, inv.getStackInSlot(i), player, event.getPos());
 			}
 		}
 	}
@@ -82,8 +82,8 @@ public class SymmetryHandler {
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			ItemStack stackInSlot = player.inventory.getStackInSlot(i);
 			if (stackInSlot != null && AllItems.SYMMETRY_WAND.typeOf(stackInSlot)
-					&& ItemWandSymmetry.isEnabled(stackInSlot)) {
-				SymmetryElement mirror = ItemWandSymmetry.getMirror(stackInSlot);
+					&& SymmetryWandItem.isEnabled(stackInSlot)) {
+				SymmetryElement mirror = SymmetryWandItem.getMirror(stackInSlot);
 				if (mirror instanceof SymmetryEmptySlot)
 					continue;
 
@@ -128,9 +128,9 @@ public class SymmetryHandler {
 				ItemStack stackInSlot = player.inventory.getStackInSlot(i);
 
 				if (stackInSlot != null && AllItems.SYMMETRY_WAND.typeOf(stackInSlot)
-						&& ItemWandSymmetry.isEnabled(stackInSlot)) {
+						&& SymmetryWandItem.isEnabled(stackInSlot)) {
 
-					SymmetryElement mirror = ItemWandSymmetry.getMirror(stackInSlot);
+					SymmetryElement mirror = SymmetryWandItem.getMirror(stackInSlot);
 					if (mirror instanceof SymmetryEmptySlot)
 						continue;
 

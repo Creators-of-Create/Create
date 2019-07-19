@@ -9,12 +9,12 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.block.SchematicannonContainer;
 import com.simibubi.create.block.SchematicannonTileEntity;
-import com.simibubi.create.gui.widgets.GuiIndicator;
-import com.simibubi.create.gui.widgets.GuiIndicator.State;
-import com.simibubi.create.gui.widgets.SimiButton;
-import com.simibubi.create.networking.PacketConfigureSchematicannon;
-import com.simibubi.create.networking.PacketConfigureSchematicannon.Option;
-import com.simibubi.create.networking.Packets;
+import com.simibubi.create.gui.widgets.Indicator;
+import com.simibubi.create.gui.widgets.Indicator.State;
+import com.simibubi.create.gui.widgets.IconButton;
+import com.simibubi.create.networking.ConfigureSchematicannonPacket;
+import com.simibubi.create.networking.ConfigureSchematicannonPacket.Option;
+import com.simibubi.create.networking.AllPackets;
 
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.RenderHelper;
@@ -25,20 +25,20 @@ import net.minecraft.util.text.TextFormatting;
 
 public class SchematicannonScreen extends AbstractSimiContainerScreen<SchematicannonContainer> {
 
-	protected Vector<GuiIndicator> replaceLevelIndicators;
-	protected Vector<SimiButton> replaceLevelButtons;
+	protected Vector<Indicator> replaceLevelIndicators;
+	protected Vector<IconButton> replaceLevelButtons;
 
-	protected SimiButton skipMissingButton;
-	protected GuiIndicator skipMissingIndicator;
-	protected SimiButton skipTilesButton;
-	protected GuiIndicator skipTilesIndicator;
+	protected IconButton skipMissingButton;
+	protected Indicator skipMissingIndicator;
+	protected IconButton skipTilesButton;
+	protected Indicator skipTilesIndicator;
 
-	protected SimiButton playButton;
-	protected GuiIndicator playIndicator;
-	protected SimiButton pauseButton;
-	protected GuiIndicator pauseIndicator;
-	protected SimiButton resetButton;
-	protected GuiIndicator resetIndicator;
+	protected IconButton playButton;
+	protected Indicator playIndicator;
+	protected IconButton pauseButton;
+	protected Indicator pauseIndicator;
+	protected IconButton resetButton;
+	protected Indicator resetIndicator;
 
 	public SchematicannonScreen(SchematicannonContainer container, PlayerInventory inventory,
 			ITextComponent p_i51105_3_) {
@@ -47,7 +47,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	@Override
 	protected void init() {
-		setWindowSize(GuiResources.SCHEMATICANNON.width + 50, GuiResources.SCHEMATICANNON.height + 80);
+		setWindowSize(ScreenResources.SCHEMATICANNON.width + 50, ScreenResources.SCHEMATICANNON.height + 80);
 		super.init();
 
 		int x = guiLeft + 20;
@@ -56,12 +56,12 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		widgets.clear();
 
 		// Play Pause Stop
-		playButton = new SimiButton(x + 70, y + 55, GuiResources.ICON_PLAY);
-		playIndicator = new GuiIndicator(x + 70, y + 50, "");
-		pauseButton = new SimiButton(x + 88, y + 55, GuiResources.ICON_PAUSE);
-		pauseIndicator = new GuiIndicator(x + 88, y + 50, "");
-		resetButton = new SimiButton(x + 106, y + 55, GuiResources.ICON_STOP);
-		resetIndicator = new GuiIndicator(x + 106, y + 50, "Not Running");
+		playButton = new IconButton(x + 70, y + 55, ScreenResources.ICON_PLAY);
+		playIndicator = new Indicator(x + 70, y + 50, "");
+		pauseButton = new IconButton(x + 88, y + 55, ScreenResources.ICON_PAUSE);
+		pauseIndicator = new Indicator(x + 88, y + 50, "");
+		resetButton = new IconButton(x + 106, y + 55, ScreenResources.ICON_STOP);
+		resetIndicator = new Indicator(x + 106, y + 50, "Not Running");
 		resetIndicator.state = State.RED;
 		Collections.addAll(widgets, playButton, playIndicator, pauseButton, pauseIndicator, resetButton,
 				resetIndicator);
@@ -69,28 +69,28 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		// Replace settings
 		replaceLevelButtons = new Vector<>(4);
 		replaceLevelIndicators = new Vector<>(4);
-		List<GuiResources> icons = ImmutableList.of(GuiResources.ICON_DONT_REPLACE, GuiResources.ICON_REPLACE_SOLID,
-				GuiResources.ICON_REPLACE_ANY, GuiResources.ICON_REPLACE_EMPTY);
+		List<ScreenResources> icons = ImmutableList.of(ScreenResources.ICON_DONT_REPLACE, ScreenResources.ICON_REPLACE_SOLID,
+				ScreenResources.ICON_REPLACE_ANY, ScreenResources.ICON_REPLACE_EMPTY);
 		List<String> toolTips = ImmutableList.of("Don't Replace Solid Blocks", "Replace Solid with Solid",
 				"Replace Solid with Any", "Replace Solid with Empty");
 
 		for (int i = 0; i < 4; i++) {
-			replaceLevelIndicators.add(new GuiIndicator(x + 16 + i * 18, y + 96, ""));
-			replaceLevelButtons.add(new SimiButton(x + 16 + i * 18, y + 101, icons.get(i)));
+			replaceLevelIndicators.add(new Indicator(x + 16 + i * 18, y + 96, ""));
+			replaceLevelButtons.add(new IconButton(x + 16 + i * 18, y + 101, icons.get(i)));
 			replaceLevelButtons.get(i).setToolTip(toolTips.get(i));
 		}
 		widgets.addAll(replaceLevelButtons);
 		widgets.addAll(replaceLevelIndicators);
 
 		// Other Settings
-		skipMissingButton = new SimiButton(x + 106, y + 101, GuiResources.ICON_SKIP_MISSING);
+		skipMissingButton = new IconButton(x + 106, y + 101, ScreenResources.ICON_SKIP_MISSING);
 		skipMissingButton.setToolTip("Skip missing Blocks");
-		skipMissingIndicator = new GuiIndicator(x + 106, y + 96, "");
+		skipMissingIndicator = new Indicator(x + 106, y + 96, "");
 		Collections.addAll(widgets, skipMissingButton, skipMissingIndicator);
 		
-		skipTilesButton = new SimiButton(x + 124, y + 101, GuiResources.ICON_SKIP_TILES);
+		skipTilesButton = new IconButton(x + 124, y + 101, ScreenResources.ICON_SKIP_TILES);
 		skipTilesButton.setToolTip("Protect Tile Entities");
-		skipTilesIndicator = new GuiIndicator(x + 124, y + 96, "");
+		skipTilesIndicator = new Indicator(x + 124, y + 96, "");
 		Collections.addAll(widgets, skipTilesButton, skipTilesIndicator);
 
 		tick();
@@ -140,10 +140,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	protected void handleTooltips() {
 		for (Widget w : widgets)
-			if (w instanceof SimiButton)
-				if (!((SimiButton) w).getToolTip().isEmpty()) {
-					((SimiButton) w).setToolTip(((SimiButton) w).getToolTip().get(0));
-					((SimiButton) w).getToolTip()
+			if (w instanceof IconButton)
+				if (!((IconButton) w).getToolTip().isEmpty()) {
+					((IconButton) w).setToolTip(((IconButton) w).getToolTip().get(0));
+					((IconButton) w).getToolTip()
 							.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + "[Ctrl] for more Info");
 				}
 
@@ -209,8 +209,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
-		GuiResources.PLAYER_INVENTORY.draw(this, guiLeft - 10, guiTop + 145);
-		GuiResources.SCHEMATICANNON.draw(this, guiLeft + 20, guiTop);
+		ScreenResources.PLAYER_INVENTORY.draw(this, guiLeft - 10, guiTop + 145);
+		ScreenResources.SCHEMATICANNON.draw(this, guiLeft + 20, guiTop);
 
 		SchematicannonTileEntity te = container.getTileEntity();
 		renderPrintingProgress(te.schematicProgress);
@@ -222,7 +222,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		
 		renderCannon();
 
-		font.drawString("Schematicannon", guiLeft + 80, guiTop + 10, GuiResources.FONT_COLOR);
+		font.drawString("Schematicannon", guiLeft + 80, guiTop + 10, ScreenResources.FONT_COLOR);
 
 		String msg = te.statusMsg;
 		int stringWidth = font.getStringWidth(msg);
@@ -231,7 +231,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		else 
 			font.drawSplitString(msg, guiLeft + 20 + 45, guiTop + 24, 120, 0xCCDDFF);
 		
-		font.drawString("Placement Settings", guiLeft + 20 + 13, guiTop + 84, GuiResources.FONT_COLOR);
+		font.drawString("Placement Settings", guiLeft + 20 + 13, guiTop + 84, ScreenResources.FONT_COLOR);
 		font.drawString("Inventory", guiLeft - 10 + 7, guiTop + 145 + 6, 0x666666);
 	}
 
@@ -253,26 +253,26 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 	protected void renderBlueprintHighlight() {
-		GuiResources.SCHEMATICANNON_HIGHLIGHT.draw(this, guiLeft + 20 + 8, guiTop + 31);
+		ScreenResources.SCHEMATICANNON_HIGHLIGHT.draw(this, guiLeft + 20 + 8, guiTop + 31);
 	}
 
 	protected void renderPrintingProgress(float progress) {
 		progress = Math.min(progress, 1);
-		GuiResources sprite = GuiResources.SCHEMATICANNON_PROGRESS;
+		ScreenResources sprite = ScreenResources.SCHEMATICANNON_PROGRESS;
 		minecraft.getTextureManager().bindTexture(sprite.location);
 		blit(guiLeft + 20 + 39, guiTop + 36, sprite.startX, sprite.startY, (int) (sprite.width * progress),
 				sprite.height);
 	}
 
 	protected void renderChecklistPrinterProgress(float progress) {
-		GuiResources sprite = GuiResources.SCHEMATICANNON_PROGRESS_2;
+		ScreenResources sprite = ScreenResources.SCHEMATICANNON_PROGRESS_2;
 		minecraft.getTextureManager().bindTexture(sprite.location);
 		blit(guiLeft + 20 + 222, guiTop + 42, sprite.startX, sprite.startY, sprite.width,
 				(int) (sprite.height * progress));
 	}
 
 	protected void renderFuelBar(float amount) {
-		GuiResources sprite = GuiResources.SCHEMATICANNON_FUEL;
+		ScreenResources sprite = ScreenResources.SCHEMATICANNON_FUEL;
 		minecraft.getTextureManager().bindTexture(sprite.location);
 		blit(guiLeft + 20 + 73, guiTop + 135, sprite.startX, sprite.startY, (int) (sprite.width * amount),
 				sprite.height);
@@ -281,8 +281,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	@Override
 	protected void renderWindowForeground(int mouseX, int mouseY, float partialTicks) {
 		int fuelX = guiLeft + 20 + 73, fuelY = guiTop + 135;
-		if (mouseX >= fuelX && mouseY >= fuelY && mouseX <= fuelX + GuiResources.SCHEMATICANNON_FUEL.width
-				&& mouseY <= fuelY + GuiResources.SCHEMATICANNON_FUEL.height) {
+		if (mouseX >= fuelX && mouseY >= fuelY && mouseX <= fuelX + ScreenResources.SCHEMATICANNON_FUEL.width
+				&& mouseY <= fuelY + ScreenResources.SCHEMATICANNON_FUEL.height) {
 			container.getTileEntity();
 			SchematicannonTileEntity te = container.getTileEntity();
 			int shotsLeft = (int) (te.fuelLevel / SchematicannonTileEntity.FUEL_USAGE_RATE);
@@ -331,8 +331,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 	protected void sendOptionUpdate(Option option, boolean set) {
-		Packets.channel
-				.sendToServer(PacketConfigureSchematicannon.setOption(container.getTileEntity().getPos(), option, set));
+		AllPackets.channel
+				.sendToServer(ConfigureSchematicannonPacket.setOption(container.getTileEntity().getPos(), option, set));
 	}
 
 }

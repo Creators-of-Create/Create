@@ -16,8 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import com.simibubi.create.networking.PacketSchematicUpload;
-import com.simibubi.create.networking.Packets;
+import com.simibubi.create.networking.SchematicUploadPacket;
+import com.simibubi.create.networking.AllPackets;
 import com.simibubi.create.utility.FilesHelper;
 
 import net.minecraft.client.Minecraft;
@@ -76,7 +76,7 @@ public class ClientSchematicLoader {
 
 			in = Files.newInputStream(path, StandardOpenOption.READ);
 			activeUploads.put(schematic, in);
-			Packets.channel.sendToServer(PacketSchematicUpload.begin(schematic, size));
+			AllPackets.channel.sendToServer(SchematicUploadPacket.begin(schematic, size));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -92,7 +92,7 @@ public class ClientSchematicLoader {
 				}
 
 				if (Minecraft.getInstance().world != null)
-					Packets.channel.sendToServer(PacketSchematicUpload.write(schematic, data));
+					AllPackets.channel.sendToServer(SchematicUploadPacket.write(schematic, data));
 				else {
 					activeUploads.remove(schematic);
 					return;
@@ -108,7 +108,7 @@ public class ClientSchematicLoader {
 
 	private void finishUpload(String schematic) {
 		if (activeUploads.containsKey(schematic)) {
-			Packets.channel.sendToServer(PacketSchematicUpload.finish(schematic));
+			AllPackets.channel.sendToServer(SchematicUploadPacket.finish(schematic));
 			activeUploads.remove(schematic);
 		}
 	}

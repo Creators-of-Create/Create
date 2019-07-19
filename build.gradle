@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.0.1'
+version = '0.0.2'
 group = 'com.simibubi.create' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'create'
 

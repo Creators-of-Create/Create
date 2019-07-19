@@ -7,7 +7,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.item.ItemBlueprint;
+import com.simibubi.create.item.BlueprintItem;
 import com.simibubi.create.schematic.Cuboid;
 import com.simibubi.create.schematic.MaterialChecklist;
 import com.simibubi.create.schematic.SchematicWorld;
@@ -495,7 +495,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		}
 
 		// Load blocks into reader
-		Template activeTemplate = ItemBlueprint.getSchematic(blueprint);
+		Template activeTemplate = BlueprintItem.getSchematic(blueprint);
 		BlockPos anchor = NBTUtil.readBlockPos(blueprint.getTag().getCompound("Anchor"));
 		
 		if (activeTemplate.getSize().equals(BlockPos.ZERO)) {
@@ -514,7 +514,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		
 		schematicAnchor = anchor;
 		blockReader = new SchematicWorld(new HashMap<>(), new Cuboid(), schematicAnchor);
-		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, ItemBlueprint.getSettings(blueprint));
+		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, BlueprintItem.getSettings(blueprint));
 		schematicLoaded = true;
 		state = State.PAUSED;
 		statusMsg = "Ready";

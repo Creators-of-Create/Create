@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.block.symmetry.BlockSymmetryCrossPlane;
+import com.simibubi.create.block.symmetry.CrossPlaneSymmetryBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
@@ -84,7 +84,7 @@ public class SymmetryCrossPlane extends SymmetryElement {
 
 	@Override
 	public BlockState getModel() {
-		return AllBlocks.SYMMETRY_CROSSPLANE.block.getDefaultState().with(BlockSymmetryCrossPlane.align,
+		return AllBlocks.SYMMETRY_CROSSPLANE.block.getDefaultState().with(CrossPlaneSymmetryBlock.align,
 				(Align) orientation);
 	}
 

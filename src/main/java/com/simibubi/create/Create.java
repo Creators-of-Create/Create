@@ -3,10 +3,10 @@ package com.simibubi.create;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.simibubi.create.gui.Keyboard;
-import com.simibubi.create.networking.Packets;
+import com.simibubi.create.networking.AllPackets;
 import com.simibubi.create.schematic.BlueprintHandler;
 import com.simibubi.create.schematic.SchematicHologram;
+import com.simibubi.create.utility.Keyboard;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
@@ -35,7 +35,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.0.1";
+	public static final String VERSION = "0.0.2";
 
 	public static Logger logger = LogManager.getLogger();
 
@@ -68,7 +68,7 @@ public class Create {
 	}
 
 	private void init(final FMLCommonSetupEvent event) {
-		Packets.registerPackets();
+		AllPackets.registerPackets();
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> AllContainers::registerScreenFactories);
 		sSchematicLoader = new ServerSchematicLoader();
 	}
