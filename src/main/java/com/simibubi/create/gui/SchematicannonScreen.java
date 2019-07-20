@@ -19,6 +19,7 @@ import com.simibubi.create.networking.AllPackets;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -69,8 +70,9 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		// Replace settings
 		replaceLevelButtons = new Vector<>(4);
 		replaceLevelIndicators = new Vector<>(4);
-		List<ScreenResources> icons = ImmutableList.of(ScreenResources.ICON_DONT_REPLACE, ScreenResources.ICON_REPLACE_SOLID,
-				ScreenResources.ICON_REPLACE_ANY, ScreenResources.ICON_REPLACE_EMPTY);
+		List<ScreenResources> icons = ImmutableList.of(ScreenResources.ICON_DONT_REPLACE,
+				ScreenResources.ICON_REPLACE_SOLID, ScreenResources.ICON_REPLACE_ANY,
+				ScreenResources.ICON_REPLACE_EMPTY);
 		List<String> toolTips = ImmutableList.of("Don't Replace Solid Blocks", "Replace Solid with Solid",
 				"Replace Solid with Any", "Replace Solid with Empty");
 
@@ -87,7 +89,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		skipMissingButton.setToolTip("Skip missing Blocks");
 		skipMissingIndicator = new Indicator(x + 106, y + 96, "");
 		Collections.addAll(widgets, skipMissingButton, skipMissingIndicator);
-		
+
 		skipTilesButton = new IconButton(x + 124, y + 101, ScreenResources.ICON_SKIP_TILES);
 		skipTilesButton.setToolTip("Protect Tile Entities");
 		skipTilesIndicator = new Indicator(x + 124, y + 96, "");
@@ -219,18 +221,22 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		if (!te.inventory.getStackInSlot(0).isEmpty())
 			renderBlueprintHighlight();
-		
+
 		renderCannon();
 
 		font.drawString("Schematicannon", guiLeft + 80, guiTop + 10, ScreenResources.FONT_COLOR);
 
 		String msg = te.statusMsg;
 		int stringWidth = font.getStringWidth(msg);
-		if (stringWidth < 120)
-			font.drawStringWithShadow(msg, guiLeft + 20 + 96 - stringWidth / 2, guiTop + 30, 0xCCDDFF);
-		else 
-			font.drawSplitString(msg, guiLeft + 20 + 45, guiTop + 24, 120, 0xCCDDFF);
-		
+
+		if (te.missingBlock != null) {
+			stringWidth += 15;
+			itemRenderer.renderItemIntoGUI(new ItemStack(BlockItem.BLOCK_TO_ITEM.get(te.missingBlock.getBlock())),
+					guiLeft + 145, guiTop + 25);
+		}
+
+		font.drawStringWithShadow(msg, guiLeft + 20 + 96 - stringWidth / 2, guiTop + 30, 0xCCDDFF);
+
 		font.drawString("Placement Settings", guiLeft + 20 + 13, guiTop + 84, ScreenResources.FONT_COLOR);
 		font.drawString("Inventory", guiLeft - 10 + 7, guiTop + 145 + 6, 0x666666);
 	}
@@ -281,10 +287,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	@Override
 	protected void renderWindowForeground(int mouseX, int mouseY, float partialTicks) {
 		int fuelX = guiLeft + 20 + 73, fuelY = guiTop + 135;
+		SchematicannonTileEntity te = container.getTileEntity();
 		if (mouseX >= fuelX && mouseY >= fuelY && mouseX <= fuelX + ScreenResources.SCHEMATICANNON_FUEL.width
 				&& mouseY <= fuelY + ScreenResources.SCHEMATICANNON_FUEL.height) {
 			container.getTileEntity();
-			SchematicannonTileEntity te = container.getTileEntity();
 			int shotsLeft = (int) (te.fuelLevel / SchematicannonTileEntity.FUEL_USAGE_RATE);
 			int shotsLeftWithItems = (int) (shotsLeft + te.inventory.getStackInSlot(4).getCount()
 					* (SchematicannonTileEntity.FUEL_PER_GUNPOWDER / SchematicannonTileEntity.FUEL_USAGE_RATE));
@@ -293,6 +299,14 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 							TextFormatting.GRAY + "Shots left: " + TextFormatting.BLUE + shotsLeft,
 							TextFormatting.GRAY + "With backup: " + TextFormatting.BLUE + shotsLeftWithItems),
 					mouseX, mouseY);
+		}
+
+		if (te.missingBlock != null) {
+			int missingBlockX = guiLeft + 145, missingBlockY = guiTop + 25;
+			if (mouseX >= missingBlockX && mouseY >= missingBlockY && mouseX <= missingBlockX + 16
+					&& mouseY <= missingBlockY + 16) {
+				renderTooltip(new ItemStack(BlockItem.BLOCK_TO_ITEM.get(te.missingBlock.getBlock())), mouseX, mouseY);
+			}
 		}
 
 		int paperX = guiLeft + 20 + 202, paperY = guiTop + 20;
@@ -314,18 +328,17 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			sendOptionUpdate(Option.values()[replaceMode], true);
 		}
 
-		if (skipMissingButton.isHovered()) 
+		if (skipMissingButton.isHovered())
 			sendOptionUpdate(Option.SKIP_MISSING, !container.getTileEntity().skipMissing);
-		if (skipTilesButton.isHovered()) 
+		if (skipTilesButton.isHovered())
 			sendOptionUpdate(Option.SKIP_TILES, !container.getTileEntity().replaceTileEntities);
 
-		if (playButton.isHovered() && playButton.active) 
+		if (playButton.isHovered() && playButton.active)
 			sendOptionUpdate(Option.PLAY, true);
-		if (pauseButton.isHovered() && pauseButton.active) 
+		if (pauseButton.isHovered() && pauseButton.active)
 			sendOptionUpdate(Option.PAUSE, true);
-		if (resetButton.isHovered() && resetButton.active) 
+		if (resetButton.isHovered() && resetButton.active)
 			sendOptionUpdate(Option.STOP, true);
-
 
 		return super.mouseClicked(x, y, button);
 	}

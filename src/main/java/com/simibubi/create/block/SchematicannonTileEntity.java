@@ -71,7 +71,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 	public BlockPos currentPos;
 	public BlockPos schematicAnchor;
 	public boolean schematicLoaded;
-	public boolean missingBlock;
+	public BlockState missingBlock;
 	public boolean blockNotLoaded;
 	public boolean hasCreativeCrate;
 	private int printerCooldown;
@@ -229,6 +229,11 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		state = State.valueOf(compound.getString("State"));
 		blocksPlaced = compound.getInt("AmountPlaced");
 		blocksToPlace = compound.getInt("AmountToPlace");
+		
+		if (compound.contains("MissingBlock")) 
+			missingBlock = NBTUtil.readBlockState(compound.getCompound("MissingBlock"));
+		else
+			missingBlock = null;
 
 		// Settings
 		CompoundNBT options = compound.getCompound("Options");
@@ -306,6 +311,9 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		compound.putString("State", state.name());
 		compound.putInt("AmountPlaced", blocksPlaced);
 		compound.putInt("AmountToPlace", blocksToPlace);
+		
+		if (missingBlock != null)
+			compound.put("MissingBlock", NBTUtil.writeBlockState(missingBlock));
 
 		// Settings
 		CompoundNBT options = new CompoundNBT();
@@ -385,7 +393,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 			return;
 		}
 
-		if (state == State.PAUSED && !blockNotLoaded && !missingBlock && fuelLevel > FUEL_USAGE_RATE)
+		if (state == State.PAUSED && !blockNotLoaded && missingBlock == null && fuelLevel > FUEL_USAGE_RATE)
 			return;
 
 		// Initialize Printer
@@ -411,12 +419,13 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 
 		// Update Target
 		if (hasCreativeCrate) {
-			if (missingBlock) {
-				missingBlock = false;
+			if (missingBlock != null) {
+				missingBlock = null;
 				state = State.RUNNING;
 			}
 		}
-		if (!missingBlock && !blockNotLoaded) {
+		
+		if (missingBlock == null && !blockNotLoaded) {
 			advanceCurrentPos();
 
 			// End reached
@@ -439,7 +448,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 				state = State.RUNNING;
 			}
 		}
-		
+
 		BlockState blockState = blockReader.getBlockState(target);
 		if (!shouldPlace(target, blockState)) {
 			statusMsg = "Searching";
@@ -453,16 +462,16 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 			if (skipMissing) {
 				statusMsg = "Skipping";
 				blockSkipped = true;
-				if (missingBlock) {
-					missingBlock = false;
+				if (missingBlock != null) {
+					missingBlock = null;
 					state = State.RUNNING;
 				}
 				return;
 			}
 
-			missingBlock = true;
+			missingBlock = blockState;
 			state = State.PAUSED;
-			statusMsg = "Missing " + blockState.getBlock().getNameTextComponent().getFormattedText();
+			statusMsg = "Missing Block: ";
 			return;
 		}
 
@@ -476,7 +485,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		printerCooldown = PLACEMENT_DELAY;
 		fuelLevel -= FUEL_USAGE_RATE;
 		sendUpdate = true;
-		missingBlock = false;
+		missingBlock = null;
 	}
 
 	protected void initializePrinter(ItemStack blueprint) {
@@ -497,7 +506,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		// Load blocks into reader
 		Template activeTemplate = BlueprintItem.getSchematic(blueprint);
 		BlockPos anchor = NBTUtil.readBlockPos(blueprint.getTag().getCompound("Anchor"));
-		
+
 		if (activeTemplate.getSize().equals(BlockPos.ZERO)) {
 			state = State.STOPPED;
 			statusMsg = "Schematic File Expired";
@@ -505,13 +514,13 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 			inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_BLUEPRINT.get()));
 			return;
 		}
-		
+
 		if (!anchor.withinDistance(getPos(), MAX_ANCHOR_DISTANCE)) {
 			state = State.STOPPED;
 			statusMsg = "Target too Far Away";
 			return;
 		}
-		
+
 		schematicAnchor = anchor;
 		blockReader = new SchematicWorld(new HashMap<>(), new Cuboid(), schematicAnchor);
 		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, BlueprintItem.getSettings(blueprint));
@@ -575,7 +584,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		schematicAnchor = null;
 		currentPos = null;
 		blockReader = null;
-		missingBlock = false;
+		missingBlock = null;
 		sendUpdate = true;
 		schematicProgress = 0;
 		blocksPlaced = 0;
@@ -592,7 +601,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 			return false;
 		if (!replaceTileEntities && toReplace.hasTileEntity())
 			return false;
-		
+
 		// Block doesnt have a mapping (Water, lava, etc)
 		if (getItemForBlock(state).getItem() == Items.AIR && state.getBlock() != Blocks.AIR)
 			return false;
@@ -678,8 +687,8 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		if (state.getBlock() != Blocks.AIR)
 			blocksPlaced++;
 		flyingBlocks.add(new LaunchedBlock(target, state));
-		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS,
-				.1f, 1.1f);
+		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE,
+				SoundCategory.BLOCKS, .1f, 1.1f);
 	}
 
 	public void sendToContainer(PacketBuffer buffer) {
@@ -700,12 +709,12 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 	public void updateChecklist() {
 		checklist.required.clear();
 		checklist.blocksNotLoaded = false;
-		
+
 		if (schematicLoaded) {
 			blocksToPlace = blocksPlaced;
 			for (BlockPos pos : blockReader.getAllPositions()) {
 				BlockState required = blockReader.getBlockState(pos.add(schematicAnchor));
-				
+
 				if (!getWorld().isAreaLoaded(pos.add(schematicAnchor), 0)) {
 					checklist.warnBlockNotLoaded();
 					continue;
