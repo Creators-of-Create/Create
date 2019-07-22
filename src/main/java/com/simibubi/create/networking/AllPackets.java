@@ -19,6 +19,8 @@ public class AllPackets {
 				PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
 		channel.registerMessage(i++, NbtPacket.class, NbtPacket::toBytes, NbtPacket::new, NbtPacket::handle);
+		channel.registerMessage(i++, SchematicPlacePacket.class, SchematicPlacePacket::toBytes,
+				SchematicPlacePacket::new, SchematicPlacePacket::handle);
 		channel.registerMessage(i++, ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket::toBytes,
 				ConfigureSchematicannonPacket::new, ConfigureSchematicannonPacket::handle);
 		channel.registerMessage(i++, SchematicUploadPacket.class, SchematicUploadPacket::toBytes,

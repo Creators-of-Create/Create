@@ -7,6 +7,8 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.gui.ScreenResources;
 
+import net.minecraft.util.text.TextFormatting;
+
 public enum Tools {
 
 	Deploy(new DeployTool(), "Deploy", ScreenResources.ICON_TOOL_DEPLOY, ImmutableList.of(
@@ -26,6 +28,11 @@ public enum Tools {
 	Rotate(new RotateTool(), "Rotate", ScreenResources.ICON_TOOL_ROTATE, ImmutableList.of(
 			"Rotates the Schematic around its center.",
 			"[CTRL]-Scroll to rotate by 90 Degrees"
+			)),
+	Print(new PlaceTool(), "Print", ScreenResources.ICON_CONFIRM, ImmutableList.of(
+			"Instantly places the structure in the world",
+			"[Right-Click] to confirm placement at the current location.",
+			TextFormatting.ITALIC + "(Creative only)"
 			)),
 	Flip(new FlipTool(), "Flip", ScreenResources.ICON_TOOL_MIRROR, ImmutableList.of(
 			"Flips the Schematic along the face you select.",
@@ -56,9 +63,11 @@ public enum Tools {
 		return icon;
 	}
 
-	public static List<Tools> getTools() {
+	public static List<Tools> getTools(boolean creative) {
 		List<Tools> tools = new ArrayList<>();
 		Collections.addAll(tools, Move, MoveY, Deploy, Rotate, Flip);
+		if (creative)
+			tools.add(Print);
 		return tools;
 	}
 

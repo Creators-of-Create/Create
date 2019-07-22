@@ -14,7 +14,7 @@ loaderVersion="[26,)" #mandatory (26 is current forge version)
 # The modid of the mod
 modId="create" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="0.0.2" #mandatory
+version="0.0.3" #mandatory
  # A display name for the mod
 displayName="Create" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
@@ -25,8 +25,7 @@ displayName="Create" #mandatory
 authors="simibubi" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A handful of additions to aid the creative survivalist.
-'''
+A handful of additions to aid the creative survivalist.'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.examplemod]] #optional
     # the modid of the dependency

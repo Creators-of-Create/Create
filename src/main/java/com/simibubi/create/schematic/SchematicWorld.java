@@ -1,7 +1,6 @@
 package com.simibubi.create.schematic;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -51,19 +50,8 @@ public class SchematicWorld implements IWorld {
 		this.blocks = blocks;
 		this.setBounds(bounds);
 		this.anchor = anchor;
-		updateBlockstates();
 	}
 	
-	private void updateBlockstates() {
-		Set<BlockPos> keySet = new HashSet<>(blocks.keySet());
-		keySet.forEach(pos -> {
-			BlockState blockState = blocks.get(pos);
-			if (blockState == null)
-				return;
-			blockState.updateNeighbors(this, pos.add(anchor), 16);
-		});
-	}
-
 	public Set<BlockPos> getAllPositions() {
 		return blocks.keySet();
 	}
@@ -76,6 +64,11 @@ public class SchematicWorld implements IWorld {
 	@Override
 	public BlockState getBlockState(BlockPos globalPos) {
 		BlockPos pos = globalPos.subtract(anchor);
+		
+		if (pos.getY() - bounds.y == -1) {
+			return Blocks.GRASS_BLOCK.getDefaultState();
+		}
+		
 		if (getBounds().contains(pos) && blocks.containsKey(pos)) {
 			return blocks.get(pos);
 		} else {

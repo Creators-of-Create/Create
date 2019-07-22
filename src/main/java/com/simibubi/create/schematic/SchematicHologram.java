@@ -10,7 +10,9 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -65,7 +67,7 @@ public class SchematicHologram {
 		active = true;
 		changed = true;
 	}
-	
+
 	public void startHologram(SchematicWorld world) {
 		this.anchor = world.anchor;
 		this.schematic = world;
@@ -76,11 +78,6 @@ public class SchematicHologram {
 	public static SchematicHologram getInstance() {
 		return instance;
 	}
-
-//	public static void display(Schematic schematic) {
-//		instance = new SchematicHologram();
-//		instance.startHologram(schematic);
-//	}
 
 	public static void reset() {
 		instance = null;
@@ -119,7 +116,7 @@ public class SchematicHologram {
 		for (BlockPos localPos : BlockPos.getAllInBoxMutable(blockAccess.getBounds().getOrigin(),
 				blockAccess.getBounds().getOrigin().add(blockAccess.getBounds().getSize()))) {
 			BlockPos pos = localPos.add(instance.anchor);
-			final BlockState state = blockAccess.getBlockState(pos);
+			BlockState state = blockAccess.getBlockState(pos);
 			for (BlockRenderLayer blockRenderLayer : BlockRenderLayer.values()) {
 				if (!state.getBlock().canRenderInLayer(state, blockRenderLayer)) {
 					continue;
@@ -137,6 +134,12 @@ public class SchematicHologram {
 				// OptiFine Shaders compatibility
 				// if (Config.isShaders()) SVertexBuilder.pushEntity(state, pos,
 				// blockAccess, bufferBuilder);
+				
+				// Block transformations
+				if (state.getBlock() instanceof BedBlock) {
+					state = Blocks.QUARTZ_SLAB.getDefaultState();
+				}
+				
 				usedBlockRenderLayers[blockRenderLayerId] |= blockRendererDispatcher.renderBlock(state, pos,
 						blockAccess, bufferBuilder, minecraft.world.rand, EmptyModelData.INSTANCE);
 				blockstates.add(state);
@@ -205,7 +208,7 @@ public class SchematicHologram {
 				bytebuffer.position(vertexformat.getOffset(index));
 				usage.preDraw(vertexformat, index, size, bytebuffer);
 			}
-			
+
 			GlStateManager.drawArrays(bufferBuilder.getDrawMode(), 0, bufferBuilder.getVertexCount());
 
 			for (int index = 0; index < list.size(); ++index) {

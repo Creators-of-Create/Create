@@ -15,6 +15,7 @@ import com.simibubi.create.utility.TileEntitySynced;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.PistonHeadBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -26,6 +27,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.state.properties.BedPart;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -229,8 +233,8 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		state = State.valueOf(compound.getString("State"));
 		blocksPlaced = compound.getInt("AmountPlaced");
 		blocksToPlace = compound.getInt("AmountToPlace");
-		
-		if (compound.contains("MissingBlock")) 
+
+		if (compound.contains("MissingBlock"))
 			missingBlock = NBTUtil.readBlockState(compound.getCompound("MissingBlock"));
 		else
 			missingBlock = null;
@@ -311,7 +315,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		compound.putString("State", state.name());
 		compound.putInt("AmountPlaced", blocksPlaced);
 		compound.putInt("AmountToPlace", blocksToPlace);
-		
+
 		if (missingBlock != null)
 			compound.put("MissingBlock", NBTUtil.writeBlockState(missingBlock));
 
@@ -424,7 +428,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 				state = State.RUNNING;
 			}
 		}
-		
+
 		if (missingBlock == null && !blockNotLoaded) {
 			advanceCurrentPos();
 
@@ -602,8 +606,7 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		if (!replaceTileEntities && toReplace.hasTileEntity())
 			return false;
 
-		// Block doesnt have a mapping (Water, lava, etc)
-		if (getItemForBlock(state).getItem() == Items.AIR && state.getBlock() != Blocks.AIR)
+		if (shouldIgnoreBlockState(state))
 			return false;
 
 		if (replaceMode == 3)
@@ -619,12 +622,37 @@ public class SchematicannonTileEntity extends TileEntitySynced implements ITicka
 		return false;
 	}
 
+	protected boolean shouldIgnoreBlockState(BlockState state) {
+		// Block doesnt have a mapping (Water, lava, etc)
+		if (getItemForBlock(state).getItem() == Items.AIR && state.getBlock() != Blocks.AIR)
+			return true;
+		
+		// Block doesnt need to be placed twice (Doors, beds, double plants)
+		if (state.has(BlockStateProperties.DOUBLE_BLOCK_HALF)
+				&& state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
+			return true;
+		if (state.has(BlockStateProperties.BED_PART)
+				&& state.get(BlockStateProperties.BED_PART) == BedPart.HEAD)
+			return true;
+		if (state.getBlock() instanceof PistonHeadBlock)
+			return true;
+		
+		return false;
+	}
+
 	protected void tickFlyingBlocks() {
 		List<LaunchedBlock> toRemove = new LinkedList<>();
 		for (LaunchedBlock b : flyingBlocks) {
 			b.update();
 			if (b.ticksRemaining <= 0 && !world.isRemote) {
+				
+				// Piston
+				if (b.state.has(BlockStateProperties.EXTENDED)) {
+					b.state = b.state.with(BlockStateProperties.EXTENDED, false);
+				}
+				
 				world.setBlockState(b.target, b.state, 18);
+				b.state.getBlock().onBlockPlacedBy(world, b.target, b.state, null, getItemForBlock(b.state));
 				toRemove.add(b);
 			}
 		}

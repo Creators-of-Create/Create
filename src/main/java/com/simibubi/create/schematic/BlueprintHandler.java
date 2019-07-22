@@ -12,6 +12,7 @@ import com.simibubi.create.gui.BlueprintHotbarOverlay;
 import com.simibubi.create.gui.ToolSelectionScreen;
 import com.simibubi.create.item.BlueprintItem;
 import com.simibubi.create.networking.NbtPacket;
+import com.simibubi.create.networking.SchematicPlacePacket;
 import com.simibubi.create.networking.AllPackets;
 import com.simibubi.create.schematic.tools.Tools;
 import com.simibubi.create.utility.Keyboard;
@@ -109,7 +110,7 @@ public class BlueprintHandler {
 			event.getPlayer().unlockRecipes(new ResourceLocation[] { AllItems.SYMMETRY_WAND.get().getRegistryName() });
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event) {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
@@ -136,7 +137,8 @@ public class BlueprintHandler {
 			instance.active = true;
 			if (instance.deployed) {
 				Tools toolBefore = instance.currentTool;
-				instance.selectionScreen = new ToolSelectionScreen(Tools.getTools(), instance::equip);
+				instance.selectionScreen = new ToolSelectionScreen(Tools.getTools(player.isCreative()),
+						instance::equip);
 				if (toolBefore != null) {
 					instance.selectionScreen.setSelectedElement(toolBefore);
 					instance.equip(toolBefore);
@@ -221,14 +223,15 @@ public class BlueprintHandler {
 	}
 
 	@SubscribeEvent
-	// TODO: This is a fabricated event call by ScrollFixer until a proper event exists
+	// TODO: This is a fabricated event call by ScrollFixer until a proper event
+	// exists
 	public static void onMouseScrolled(MouseScrollEvent.Post event) {
 		if (event.getGui() != null)
 			return;
 		if (instance.onScroll(event.getScrollDelta()))
 			event.setCanceled(true);
 	}
-	
+
 	public boolean onScroll(double delta) {
 		if (!active)
 			return false;
@@ -382,13 +385,23 @@ public class BlueprintHandler {
 
 	public void moveTo(BlockPos anchor) {
 		if (!deployed)
-			instance.selectionScreen = new ToolSelectionScreen(Tools.getTools(), instance::equip);
+			instance.selectionScreen = new ToolSelectionScreen(
+					Tools.getTools(Minecraft.getInstance().player.isCreative()), instance::equip);
 
 		deployed = true;
 		this.anchor = anchor;
 		item.getTag().putBoolean("Deployed", true);
 		item.getTag().put("Anchor", NBTUtil.writeBlockPos(anchor));
 		markDirty();
+	}
+	
+	public void printInstantly() {
+		AllPackets.channel.sendToServer(new SchematicPlacePacket(item.copy()));
+		CompoundNBT nbt = item.getTag();
+		nbt.putBoolean("Deployed", false);
+		item.setTag(nbt);
+		SchematicHologram.reset();
+		active = false;
 	}
 
 	public BlockPos getTransformedSize() {
