@@ -2,9 +2,9 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.block.SchematicTableTileEntity;
-import com.simibubi.create.block.SchematicannonRenderer;
-import com.simibubi.create.block.SchematicannonTileEntity;
+import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
+import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
+import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.tileentity.TileEntity;

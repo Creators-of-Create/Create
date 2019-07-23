@@ -3,10 +3,11 @@ package com.simibubi.create;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.simibubi.create.networking.AllPackets;
-import com.simibubi.create.schematic.BlueprintHandler;
-import com.simibubi.create.schematic.SchematicHologram;
-import com.simibubi.create.utility.Keyboard;
+import com.simibubi.create.foundation.utility.KeyboardHelper;
+import com.simibubi.create.modules.schematics.ClientSchematicLoader;
+import com.simibubi.create.modules.schematics.ServerSchematicLoader;
+import com.simibubi.create.modules.schematics.client.BlueprintHandler;
+import com.simibubi.create.modules.schematics.client.SchematicHologram;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
@@ -62,7 +63,7 @@ public class Create {
 			new SchematicHologram();
 			new BlueprintHandler();
 			ScrollFixer.init();
-			TOOL_MENU = new KeyBinding("Tool Menu (Hold)", Keyboard.LALT, NAME);
+			TOOL_MENU = new KeyBinding("Tool Menu (Hold)", KeyboardHelper.LALT, NAME);
 			ClientRegistry.registerKeyBinding(TOOL_MENU);
 		});
 	}

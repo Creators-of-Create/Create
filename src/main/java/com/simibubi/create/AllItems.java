@@ -1,9 +1,9 @@
 package com.simibubi.create;
 
-import com.simibubi.create.item.BlueprintItem;
-import com.simibubi.create.item.BlueprintAndQuillItem;
-import com.simibubi.create.item.TreeFertilizerItem;
-import com.simibubi.create.item.SymmetryWandItem;
+import com.simibubi.create.modules.curiosities.item.TreeFertilizerItem;
+import com.simibubi.create.modules.schematics.item.BlueprintAndQuillItem;
+import com.simibubi.create.modules.schematics.item.BlueprintItem;
+import com.simibubi.create.modules.symmetry.SymmetryWandItem;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;

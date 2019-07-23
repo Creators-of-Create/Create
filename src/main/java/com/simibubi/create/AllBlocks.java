@@ -1,13 +1,13 @@
 package com.simibubi.create;
 
-import com.simibubi.create.block.CreativeCrateBlock;
-import com.simibubi.create.block.RenderingBlock;
-import com.simibubi.create.block.SchematicTableBlock;
-import com.simibubi.create.block.SchematicannonBlock;
-import com.simibubi.create.block.symmetry.CrossPlaneSymmetryBlock;
-import com.simibubi.create.block.symmetry.PlaneSymmetryBlock;
-import com.simibubi.create.block.symmetry.TriplePlaneSymmetryBlock;
-import com.simibubi.create.utility.IJustForRendering;
+import com.simibubi.create.foundation.block.IRenderUtilityBlock;
+import com.simibubi.create.foundation.block.RenderUtilityBlock;
+import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
+import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
+import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
+import com.simibubi.create.modules.symmetry.block.CrossPlaneSymmetryBlock;
+import com.simibubi.create.modules.symmetry.block.PlaneSymmetryBlock;
+import com.simibubi.create.modules.symmetry.block.TriplePlaneSymmetryBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,8 +18,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 public enum AllBlocks {
 
 	SCHEMATICANNON(new SchematicannonBlock()),
-	SCHEMATICANNON_CONNECTOR(new RenderingBlock()),
-	SCHEMATICANNON_PIPE(new RenderingBlock()),
+	SCHEMATICANNON_CONNECTOR(new RenderUtilityBlock()),
+	SCHEMATICANNON_PIPE(new RenderUtilityBlock()),
 	CREATIVE_CRATE(new CreativeCrateBlock()),
 	
 	SCHEMATIC_TABLE(new SchematicTableBlock()),
@@ -43,7 +43,7 @@ public enum AllBlocks {
 
 	public static void registerItemBlocks(IForgeRegistry<Item> registry) {
 		for (AllBlocks block : values()) {
-			if (block.get() instanceof IJustForRendering)
+			if (block.get() instanceof IRenderUtilityBlock)
 				continue;
 
 			registry.register(new BlockItem(block.get(), AllItems.standardProperties())

@@ -1,0 +1,114 @@
+package com.simibubi.create.modules.schematics.block;
+
+import java.util.List;
+
+import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.utility.KeyboardHelper;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
+
+public class SchematicannonBlock extends Block {
+
+	public SchematicannonBlock() {
+		super(Properties.from(Blocks.DISPENSER));
+	}
+
+	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
+	}
+	
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return new SchematicannonTileEntity();
+	}
+	
+	@Override
+	@OnlyIn(value = Dist.CLIENT)
+	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
+			ITooltipFlag flagIn) {
+		if (KeyboardHelper.isKeyDown(KeyboardHelper.LSHIFT)) {
+			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Prints a deployed " + TextFormatting.BLUE + "Schematic"));
+			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "into the world using blocks from inventories"));
+			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "placed right next to it."));
+		} else 
+			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "< Hold Shift >"));
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+	}
+	
+	@Override
+	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+			BlockPos currentPos, BlockPos facingPos) {
+		((SchematicannonTileEntity) worldIn.getTileEntity(currentPos)).findInventories();
+		return stateIn;
+	}
+	
+	@Override
+	public boolean isSolid(BlockState state) {
+		return false;
+	}
+
+	@Override
+	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+		((SchematicannonTileEntity) world.getTileEntity(pos)).findInventories();
+		super.onNeighborChange(state, world, pos, neighbor);
+	}
+	
+	@Override
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+			BlockRayTraceResult hit) {
+		
+		if (worldIn.isRemote) {
+			return true;
+		} else {
+			SchematicannonTileEntity te = (SchematicannonTileEntity) worldIn.getTileEntity(pos);
+			if (te != null)
+				if (AllItems.BLUEPRINT.typeOf(player.getHeldItemMainhand()) && te.inventory.getStackInSlot(0).isEmpty()) {
+					te.inventory.setStackInSlot(0, player.getHeldItemMainhand());
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+				}
+				NetworkHooks.openGui((ServerPlayerEntity) player, te, te::sendToContainer);
+			return true;
+		}
+	}
+	
+	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (worldIn.getTileEntity(pos) == null)
+			return;
+
+		SchematicannonTileEntity te = (SchematicannonTileEntity) worldIn.getTileEntity(pos);
+		for (int slot = 0; slot < te.inventory.getSlots(); slot++) {
+			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
+					te.inventory.getStackInSlot(slot));
+		}
+
+		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			worldIn.removeTileEntity(pos);
+		}
+
+	}
+	
+}

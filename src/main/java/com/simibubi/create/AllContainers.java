@@ -1,9 +1,9 @@
 package com.simibubi.create;
 
-import com.simibubi.create.block.SchematicTableContainer;
-import com.simibubi.create.block.SchematicannonContainer;
-import com.simibubi.create.gui.SchematicTableScreen;
-import com.simibubi.create.gui.SchematicannonScreen;
+import com.simibubi.create.modules.schematics.block.SchematicTableContainer;
+import com.simibubi.create.modules.schematics.block.SchematicTableScreen;
+import com.simibubi.create.modules.schematics.block.SchematicannonContainer;
+import com.simibubi.create.modules.schematics.block.SchematicannonScreen;
 
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.ScreenManager;
