@@ -1,0 +1,24 @@
+{
+    "type": "create:placement_handgun_upgrade",
+        "pattern": [
+            "SE",
+            "BS"
+        ],
+        "key": {
+            "B": {
+                "item": "create:blaze_brass_cube"
+            },
+			"S": {
+                "item": "minecraft:sugar"
+            },
+            "E": {
+                "item": "create:placement_handgun"
+            }
+        },
+	"result": {
+		"item": "create:placement_handgun",
+		"count": 1
+	},
+	"component": "Accelerator",
+	"tier": "BlazeBrass"
+}

@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.packet.NbtPacket;
+import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunBeamPacket;
 import com.simibubi.create.modules.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.modules.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.modules.schematics.packet.SchematicUploadPacket;
@@ -12,25 +13,29 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class AllPackets {
 
-	private static final String PROTOCOL_VERSION = "1";
-
+	public static final ResourceLocation CHANNEL_NAME = new ResourceLocation(Create.ID, "network");
+	public static final String NETWORK_VERSION = new ResourceLocation(Create.ID, "1").toString();
 	public static SimpleChannel channel;
 
 	public static void registerPackets() {
 		int i = 0;
 
-		channel = NetworkRegistry.newSimpleChannel(new ResourceLocation(Create.ID, "main"), () -> PROTOCOL_VERSION,
-				PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
+		channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME).serverAcceptedVersions(s -> true)
+				.clientAcceptedVersions(s -> true).networkProtocolVersion(() -> NETWORK_VERSION).simpleChannel();
 
-		channel.registerMessage(i++, NbtPacket.class, NbtPacket::toBytes, NbtPacket::new, NbtPacket::handle);
-		channel.registerMessage(i++, SchematicPlacePacket.class, SchematicPlacePacket::toBytes,
-				SchematicPlacePacket::new, SchematicPlacePacket::handle);
-		channel.registerMessage(i++, ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket::toBytes,
-				ConfigureSchematicannonPacket::new, ConfigureSchematicannonPacket::handle);
-		channel.registerMessage(i++, SchematicUploadPacket.class, SchematicUploadPacket::toBytes,
-				SchematicUploadPacket::new, SchematicUploadPacket::handle);
-		channel.registerMessage(i++, SymmetryEffectPacket.class, SymmetryEffectPacket::toBytes,
-				SymmetryEffectPacket::new, SymmetryEffectPacket::handle);
+		channel.messageBuilder(NbtPacket.class, i++).decoder(NbtPacket::new).encoder(NbtPacket::toBytes)
+				.consumer(NbtPacket::handle).add();
+		channel.messageBuilder(SchematicPlacePacket.class, i++).decoder(SchematicPlacePacket::new)
+				.encoder(SchematicPlacePacket::toBytes).consumer(SchematicPlacePacket::handle).add();
+		channel.messageBuilder(ConfigureSchematicannonPacket.class, i++).decoder(ConfigureSchematicannonPacket::new)
+				.encoder(ConfigureSchematicannonPacket::toBytes).consumer(ConfigureSchematicannonPacket::handle).add();
+		channel.messageBuilder(SchematicUploadPacket.class, i++).decoder(SchematicUploadPacket::new)
+				.encoder(SchematicUploadPacket::toBytes).consumer(SchematicUploadPacket::handle).add();
+		channel.messageBuilder(SymmetryEffectPacket.class, i++).decoder(SymmetryEffectPacket::new)
+				.encoder(SymmetryEffectPacket::toBytes).consumer(SymmetryEffectPacket::handle).add();
+		channel.messageBuilder(BuilderGunBeamPacket.class, i++).decoder(BuilderGunBeamPacket::new)
+				.encoder(BuilderGunBeamPacket::toBytes).consumer(BuilderGunBeamPacket::handle).add();
+
 	}
 
 }

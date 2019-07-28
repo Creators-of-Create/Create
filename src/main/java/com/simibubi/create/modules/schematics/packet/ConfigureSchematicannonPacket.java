@@ -92,6 +92,7 @@ public class ConfigureSchematicannonPacket {
 
 			return;
 		});
+		context.get().setPacketHandled(true);
 	}
 
 }

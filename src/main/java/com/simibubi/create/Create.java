@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
@@ -36,17 +37,17 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.0.3";
+	public static final String VERSION = "0.0.4";
 
 	public static Logger logger = LogManager.getLogger();
 
 	public static ItemGroup creativeTab = new CreateItemGroup();
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static ClientSchematicLoader cSchematicLoader;
 	@OnlyIn(Dist.CLIENT)
 	public static KeyBinding TOOL_MENU;
-	
+
 	public static ServerSchematicLoader sSchematicLoader;
 
 	public Create() {
@@ -57,7 +58,6 @@ public class Create {
 
 	private void clientInit(FMLClientSetupEvent event) {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			AllItems.initColorHandlers();
 			AllTileEntities.registerRenderers();
 			cSchematicLoader = new ClientSchematicLoader();
 			new SchematicHologram();
@@ -73,17 +73,17 @@ public class Create {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> AllContainers::registerScreenFactories);
 		sSchematicLoader = new ServerSchematicLoader();
 	}
-	
+
 	@SubscribeEvent
 	public static void onTick(ServerTickEvent event) {
 		sSchematicLoader.tick();
 	}
-	
+
 	@SubscribeEvent
 	public static void onServerClose(FMLServerStoppingEvent event) {
 		sSchematicLoader.shutdown();
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event) {
@@ -103,5 +103,11 @@ public class Create {
 		public static void registerBlocks(RegistryEvent.Register<Block> event) {
 			AllBlocks.registerBlocks(event.getRegistry());
 		}
+
+		@SubscribeEvent
+		public static void registerCustomRecipes(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+			AllRecipes.register(event);
+		}
+
 	}
 }

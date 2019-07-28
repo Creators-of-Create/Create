@@ -11,6 +11,7 @@ public enum ScreenResources {
 	// Inventories
 	PLAYER_INVENTORY("player_inventory.png", 176, 108),
 	WAND_SYMMETRY("wand_symmetry.png", 207, 58),
+	PLACEMENT_GUN("placement_handgun.png", 217, 70),
 	
 	SCHEMATIC_TABLE("schematic_table.png", 207, 89),
 	SCHEMATIC_TABLE_PROGRESS("schematic_table.png", 209, 0, 24, 17),
@@ -64,7 +65,16 @@ public enum ScreenResources {
 	
 	ICON_PLAY("icons.png", 0, 80, 16, 16),
 	ICON_PAUSE("icons.png", 16, 80, 16, 16),
-	ICON_STOP("icons.png", 32, 80, 16, 16);
+	ICON_STOP("icons.png", 32, 80, 16, 16),
+	
+	ICON_PATTERN_SOLID("icons.png", 0, 96, 16, 16),
+	ICON_PATTERN_CHECKERED("icons.png", 16, 96, 16, 16),
+	ICON_PATTERN_CHECKERED_INVERSED("icons.png", 32, 96, 16, 16),
+	ICON_PATTERN_CHANCE_25("icons.png", 48, 96, 16, 16),
+	ICON_PATTERN_CHANCE_50("icons.png", 0, 112, 16, 16),
+	ICON_PATTERN_CHANCE_75("icons.png", 16, 112, 16, 16),
+	ICON_FOLLOW_DIAGONAL("icons.png", 32, 112, 16, 16),
+	ICON_FOLLOW_MATERIAL("icons.png", 48, 112, 16, 16);
 	
 	public static final int FONT_COLOR = 0x575F7A;
 	

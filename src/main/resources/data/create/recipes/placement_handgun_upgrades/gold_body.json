@@ -1,0 +1,22 @@
+{
+    "type": "create:placement_handgun_upgrade",
+        "pattern": [
+            " B ",
+            "BEB",
+            " B "
+        ],
+        "key": {
+            "B": {
+                "item": "create:blaze_brass_cube"
+            },
+            "E": {
+                "item": "create:placement_handgun"
+            }
+        },
+	"result": {
+		"item": "create:placement_handgun",
+		"count": 1
+	},
+	"component": "Body",
+	"tier": "BlazeBrass"
+}

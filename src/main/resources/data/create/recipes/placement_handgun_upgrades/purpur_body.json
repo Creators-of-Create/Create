@@ -1,0 +1,22 @@
+{
+    "type": "create:placement_handgun_upgrade",
+        "pattern": [
+            " B ",
+            "BEB",
+            " B "
+        ],
+        "key": {
+            "B": {
+                "item": "create:chorus_chrome_cube"
+            },
+            "E": {
+                "item": "create:placement_handgun"
+            }
+        },
+	"result": {
+		"item": "create:placement_handgun",
+		"count": 1
+	},
+	"component": "Body",
+	"tier": "ChorusChrome"
+}

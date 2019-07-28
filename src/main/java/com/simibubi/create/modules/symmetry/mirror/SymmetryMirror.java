@@ -14,9 +14,9 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -156,67 +156,11 @@ public abstract class SymmetryMirror {
 	}
 
 	protected BlockState flipD1(BlockState in) {
-		for (IProperty<?> property : in.getProperties()) {
-
-			if (property == BlockStateProperties.AXIS || property == BlockStateProperties.HORIZONTAL_AXIS) {
-				Axis axis = ((Axis) in.get(property));
-				if (axis.isVertical())
-					return in;
-				Axis value = axis == Axis.X ? Axis.Z : Axis.X;
-				if (property == BlockStateProperties.AXIS) 
-					return in.with(BlockStateProperties.AXIS, value);
-				return in.with(BlockStateProperties.HORIZONTAL_AXIS, value);
-			}
-
-			if (property instanceof DirectionProperty) {
-				switch ((Direction) in.get(property)) {
-				case EAST:
-					return in.with((DirectionProperty) property, Direction.NORTH);
-				case NORTH:
-					return in.with((DirectionProperty) property, Direction.EAST);
-				case SOUTH:
-					return in.with((DirectionProperty) property, Direction.WEST);
-				case WEST:
-					return in.with((DirectionProperty) property, Direction.SOUTH);
-				default:
-					break;
-				}
-			}
-
-		}
-		return in;
+		return in.rotate(Rotation.COUNTERCLOCKWISE_90).mirror(Mirror.FRONT_BACK);
 	}
 
 	protected BlockState flipD2(BlockState in) {
-		for (IProperty<?> property : in.getProperties()) {
-
-			if (property == BlockStateProperties.AXIS || property == BlockStateProperties.HORIZONTAL_AXIS) {
-				Axis axis = ((Axis) in.get(property));
-				if (axis.isVertical())
-					return in;
-				Axis value = axis == Axis.X ? Axis.Z : Axis.X;
-				if (property == BlockStateProperties.AXIS) 
-					return in.with(BlockStateProperties.AXIS, value);
-				return in.with(BlockStateProperties.HORIZONTAL_AXIS, value);
-			}
-
-			if (property instanceof DirectionProperty) {
-				switch ((Direction) in.get(property)) {
-				case EAST:
-					return in.with((DirectionProperty) property, Direction.SOUTH);
-				case NORTH:
-					return in.with((DirectionProperty) property, Direction.WEST);
-				case SOUTH:
-					return in.with((DirectionProperty) property, Direction.EAST);
-				case WEST:
-					return in.with((DirectionProperty) property, Direction.NORTH);
-				default:
-					break;
-				}
-			}
-
-		}
-		return in;
+		return in.rotate(Rotation.COUNTERCLOCKWISE_90).mirror(Mirror.LEFT_RIGHT);
 	}
 
 	protected BlockPos flipX(BlockPos position) {

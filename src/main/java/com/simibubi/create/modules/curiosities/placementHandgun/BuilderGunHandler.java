@@ -1,0 +1,216 @@
+package com.simibubi.create.modules.curiosities.placementHandgun;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.utility.TessellatorHelper;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.FirstPersonRenderer;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderSpecificHandEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+
+@SuppressWarnings("deprecation")
+@EventBusSubscriber(value = Dist.CLIENT)
+public class BuilderGunHandler {
+
+	private static List<LaserBeam> cachedBeams;
+	private static float leftHandAnimation;
+	private static float rightHandAnimation;
+	private static float lastLeftHandAnimation;
+	private static float lastRightHandAnimation;
+
+	public static class LaserBeam {
+		float itensity;
+		Vec3d start;
+		Vec3d end;
+
+		public LaserBeam(Vec3d start, Vec3d end) {
+			this.start = start;
+			this.end = end;
+			itensity = 1;
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public static void onBlockBroken(BreakEvent event) {
+		PlayerEntity player = event.getPlayer();
+		if (player == null)
+			return;
+		if (!AllItems.PLACEMENT_HANDGUN.typeOf(player.getHeldItemMainhand()))
+			return;
+
+		if (event.getState().isNormalCube(player.world, event.getPos())) {
+			player.getHeldItemMainhand().getTag().put("BlockUsed", NBTUtil.writeBlockState(event.getState()));
+		}
+		event.setCanceled(true);
+	}
+
+	@SubscribeEvent
+	public static void onClientTick(ClientTickEvent event) {
+		if (cachedBeams == null)
+			cachedBeams = new LinkedList<>();
+		ClientWorld world = Minecraft.getInstance().world;
+		if (world == null)
+			return;
+		ClientPlayerEntity player = Minecraft.getInstance().player;
+		if (player == null)
+			return;
+		cachedBeams.removeIf(b -> b.itensity < .1f);
+		cachedBeams.forEach(b -> b.itensity *= .7f);
+
+		lastLeftHandAnimation = leftHandAnimation;
+		lastRightHandAnimation = rightHandAnimation;
+		leftHandAnimation *= 0.8f;
+		rightHandAnimation *= 0.8f;
+	}
+
+	@SubscribeEvent
+	public static void onRenderWorld(RenderWorldLastEvent event) {
+		if (cachedBeams == null || cachedBeams.isEmpty())
+			return;
+
+		cachedBeams.forEach(beam -> {
+			TessellatorHelper.prepareForDrawing();
+			GlStateManager.disableTexture();
+			GlStateManager.lineWidth(beam.itensity * 40);
+
+			BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+			bufferBuilder.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+			bufferBuilder.pos(beam.start.x, beam.start.y, beam.start.z).endVertex();
+			bufferBuilder.pos(beam.end.x, beam.end.y, beam.end.z).endVertex();
+			Tessellator.getInstance().draw();
+
+			GlStateManager.lineWidth(1);
+			GlStateManager.enableTexture();
+			TessellatorHelper.cleanUpAfterDrawing();
+		});
+	}
+
+	public static void shoot(Hand hand) {
+		ClientPlayerEntity player = Minecraft.getInstance().player;
+		boolean rightHand = hand == Hand.MAIN_HAND ^ player.getPrimaryHand() == HandSide.LEFT;
+		if (rightHand)
+			rightHandAnimation = .2f;
+		else
+			leftHandAnimation = .2f;
+		playSound(hand, player.getPosition());
+	}
+
+	public static void playSound(Hand hand, BlockPos position) {
+		float pitch = hand == Hand.MAIN_HAND ? 2f : 0.9f;
+		SoundEvent sound = SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM;
+		Minecraft.getInstance().world.playSound(position, sound, SoundCategory.BLOCKS, 0.8f, pitch, false);
+	}
+
+	public static void addBeam(LaserBeam beam) {
+		Vec3d step = beam.end.subtract(beam.start).normalize();
+		int steps = (int) (beam.end.squareDistanceTo(beam.start) / step.lengthSquared());
+		for (int i = 0; i <= steps; i++) {
+			Vec3d pos = beam.start.add(step.scale(i));
+			Minecraft.getInstance().world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, 0, -15000, 0);
+		}
+		cachedBeams.add(beam);
+	}
+	
+	@SubscribeEvent
+	public static void onRenderPlayerHand(RenderSpecificHandEvent event) {
+		if (AllItems.PLACEMENT_HANDGUN.typeOf(event.getItemStack())) {
+			Minecraft mc = Minecraft.getInstance();
+			boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ mc.player.getPrimaryHand() == HandSide.LEFT;
+
+			GlStateManager.pushMatrix();
+
+			float recoil = rightHand
+					? MathHelper.lerp(event.getPartialTicks(), lastRightHandAnimation, rightHandAnimation)
+					: MathHelper.lerp(event.getPartialTicks(), lastLeftHandAnimation, leftHandAnimation);
+
+			float equipProgress = event.getEquipProgress();
+
+			if (rightHand && rightHandAnimation > .01f)
+				equipProgress = 0;
+			if (!rightHand && leftHandAnimation > .01f)
+				equipProgress = 0;
+
+			// Render arm
+			float f = rightHand ? 1.0F : -1.0F;
+			float f1 = MathHelper.sqrt(event.getSwingProgress());
+			float f2 = -0.3F * MathHelper.sin(f1 * (float) Math.PI);
+			float f3 = 0.4F * MathHelper.sin(f1 * ((float) Math.PI * 2F));
+			float f4 = -0.4F * MathHelper.sin(event.getSwingProgress() * (float) Math.PI);
+			GlStateManager.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
+					f4 + -0.71999997F + .3f + recoil);
+			GlStateManager.rotatef(f * 75.0F, 0.0F, 1.0F, 0.0F);
+			float f5 = MathHelper.sin(event.getSwingProgress() * event.getSwingProgress() * (float) Math.PI);
+			float f6 = MathHelper.sin(f1 * (float) Math.PI);
+			GlStateManager.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
+			AbstractClientPlayerEntity abstractclientplayerentity = mc.player;
+			mc.getTextureManager().bindTexture(abstractclientplayerentity.getLocationSkin());
+			GlStateManager.translatef(f * -1.0F, 3.6F, 3.5F);
+			GlStateManager.rotatef(f * 120.0F, 0.0F, 0.0F, 1.0F);
+			GlStateManager.rotatef(200.0F, 1.0F, 0.0F, 0.0F);
+			GlStateManager.rotatef(f * -135.0F, 0.0F, 1.0F, 0.0F);
+			GlStateManager.translatef(f * 5.6F, 0.0F, 0.0F);
+			GlStateManager.rotatef(f * 40.0F, 0.0F, 1.0F, 0.0F);
+			PlayerRenderer playerrenderer = mc.getRenderManager().getRenderer(abstractclientplayerentity);
+			GlStateManager.disableCull();
+			if (rightHand) {
+				playerrenderer.renderRightArm(abstractclientplayerentity);
+			} else {
+				playerrenderer.renderLeftArm(abstractclientplayerentity);
+			}
+			GlStateManager.enableCull();
+			GlStateManager.popMatrix();
+
+			// Render gun
+			GlStateManager.pushMatrix();
+			GlStateManager.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
+					f4 + -0.71999997F - 0.1f + recoil);
+			GlStateManager.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
+
+			GlStateManager.translatef(f * -0.1f, 0.1f, -0.4f);
+			GlStateManager.rotatef(f * 5.0F, 0.0F, 1.0F, 0.0F);
+
+			FirstPersonRenderer firstPersonRenderer = mc.getFirstPersonRenderer();
+			firstPersonRenderer.renderItemSide(mc.player, event.getItemStack(),
+					rightHand ? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
+							: ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
+					!rightHand);
+			GlStateManager.popMatrix();
+
+			event.setCanceled(true);
+		}
+	}
+	
+}

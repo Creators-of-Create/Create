@@ -79,6 +79,16 @@ public abstract class AbstractSimiScreen extends Screen {
 		}
 		return super.mouseScrolled(mouseX, mouseY, delta);
 	}
+	
+	@Override
+	public boolean mouseReleased(double x, double y, int button) {
+		boolean result = false;
+		for (Widget widget : widgets) {
+			if (widget.mouseReleased(x, y, button))
+				result = true;
+		}
+		return result | super.mouseReleased(x, y, button);
+	}
 
 	@Override
 	public boolean shouldCloseOnEsc() {

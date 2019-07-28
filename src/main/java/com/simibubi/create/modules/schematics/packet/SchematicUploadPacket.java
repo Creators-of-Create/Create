@@ -77,6 +77,7 @@ public class SchematicUploadPacket {
 				Create.sSchematicLoader.handleFinishedUpload(player, schematic);
 			}
 		});
+		context.get().setPacketHandled(true);
 	}
 
 }

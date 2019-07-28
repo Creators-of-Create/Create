@@ -1,0 +1,25 @@
+{
+    "type": "create:placement_handgun_upgrade",
+        "pattern": [
+			"BR",
+            "E ",
+            "BR"
+        ],
+        "key": {
+            "B": {
+                "item": "create:chorus_chrome_cube"
+            },
+			"R": {
+                "item": "minecraft:end_rod"
+            },
+            "E": {
+                "item": "create:placement_handgun"
+            }
+        },
+	"result": {
+		"item": "create:placement_handgun",
+		"count": 1
+	},
+	"component": "Amplifier",
+	"tier": "ChorusChrome"
+}

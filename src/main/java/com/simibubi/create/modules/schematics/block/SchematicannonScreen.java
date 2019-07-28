@@ -146,10 +146,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 				if (!((IconButton) w).getToolTip().isEmpty()) {
 					((IconButton) w).setToolTip(((IconButton) w).getToolTip().get(0));
 					((IconButton) w).getToolTip()
-							.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + "[Ctrl] for more Info");
+							.add(TextFormatting.DARK_GRAY + "< Hold Shift >");
 				}
 
-		if (hasControlDown()) {
+		if (hasShiftDown()) {
 			if (skipMissingButton.isHovered()) {
 				List<String> tip = skipMissingButton.getToolTip();
 				tip.remove(1);

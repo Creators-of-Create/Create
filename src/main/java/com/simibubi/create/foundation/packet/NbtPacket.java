@@ -43,12 +43,21 @@ public class NbtPacket {
 				return;
 			}
 			
+			if (slot == -2) {
+				ItemStack heldItem = player.getHeldItemOffhand();
+				if (heldItem.getItem() == stack.getItem()) {
+					heldItem.setTag(stack.getTag());
+				}
+				return;
+			}
+			
 			ItemStack heldInSlot = player.inventory.getStackInSlot(slot);
 			if (heldInSlot.getItem() == stack.getItem()) {
 				heldInSlot.setTag(stack.getTag());
 			}
 			
 		});
+		context.get().setPacketHandled(true);
 	}
 
 }

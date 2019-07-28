@@ -1,7 +1,11 @@
 {
 	"item.create.symmetry_wand": "Staff of Symmetry",
+	"item.create.placement_handgun": "Handheld Blockzapper",
 	"item.create.tree_fertilizer": "Tree Fertilizer",
 	"item.create.empty_blueprint": "Empty Schematic",
+	"item.create.andesite_alloy_cube": "Andesite Alloy",
+	"item.create.blaze_brass_cube": "Blaze Brass",
+	"item.create.chorus_chrome_cube": "Chorus Chrome",
 	"item.create.blueprint_and_quill": "Schematic and Quill",
 	"item.create.blueprint": "Schematic",
 	"block.create.schematicannon": "Schematicannon",

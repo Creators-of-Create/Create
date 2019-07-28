@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.KeyboardHelper;
 import com.simibubi.create.modules.symmetry.mirror.CrossPlaneMirror;
 import com.simibubi.create.modules.symmetry.mirror.EmptyMirror;
@@ -48,8 +49,7 @@ public class SymmetryWandItem extends Item {
 	public SymmetryWandItem(Properties properties) {
 		super(properties.maxStackSize(1));
 	}
-	
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
@@ -57,13 +57,14 @@ public class SymmetryWandItem extends Item {
 			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Perfectly mirrors your Block placement"));
 			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "across the configured planes."));
 			tooltip.add(new StringTextComponent(""));
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "> [Right-Click] on ground to place mirror"));
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "> [Right-Click] in air to configure mirror"));
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "> [Shift-Right-Click] to toggle"));
+			tooltip.add(
+					new StringTextComponent(TextFormatting.GRAY + "> [Right-Click] on ground to place/move mirror"));
+			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "> [Right-Click] in air to remove mirror"));
+			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "> [Shift-Right-Click] to configure"));
 			tooltip.add(new StringTextComponent(""));
 			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "Active while held in the Hotbar"));
-			
-		} else 
+
+		} else
 			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "< Hold Shift >"));
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
@@ -73,22 +74,28 @@ public class SymmetryWandItem extends Item {
 		PlayerEntity player = context.getPlayer();
 		BlockPos pos = context.getPos();
 		player.getCooldownTracker().setCooldown(this, 5);
+		ItemStack wand = player.getHeldItem(context.getHand());
+		checkNBT(wand);
+
+		// Shift -> open GUI
+		if (player.isSneaking()) {
+			if (player.world.isRemote) {
+				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+					openWandGUI(wand);
+				});
+				player.getCooldownTracker().setCooldown(this, 5);
+			}
+			return ActionResultType.SUCCESS;
+		}
 
 		if (context.getWorld().isRemote || context.getHand() != Hand.MAIN_HAND)
 			return ActionResultType.SUCCESS;
 
-		ItemStack wand = player.getHeldItem(context.getHand());
-		checkNBT(wand);
 		CompoundNBT compound = wand.getTag().getCompound($SYMMETRY);
 		pos = pos.offset(context.getFace());
 		SymmetryMirror previousElement = SymmetryMirror.fromNBT(compound);
 
-		if (player.isSneaking()) {
-			if (!(previousElement instanceof EmptyMirror))
-				wand.getTag().putBoolean($ENABLE, !isEnabled(wand));
-			return ActionResultType.SUCCESS;
-		}
-
+		// No Shift -> Make / Move Mirror
 		wand.getTag().putBoolean($ENABLE, true);
 		Vec3d pos3d = new Vec3d(pos.getX(), pos.getY(), pos.getZ());
 		SymmetryMirror newElement = new PlaneMirror(pos3d);
@@ -131,13 +138,23 @@ public class SymmetryWandItem extends Item {
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		if (worldIn.isRemote) {
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-				openWandGUI(playerIn.getHeldItem(handIn));
-			});
-			playerIn.getCooldownTracker().setCooldown(this, 5);
+		ItemStack wand = playerIn.getHeldItem(handIn);
+		checkNBT(wand);
+
+		// Shift -> Open GUI
+		if (playerIn.isSneaking()) {
+			if (worldIn.isRemote) {
+				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+					openWandGUI(playerIn.getHeldItem(handIn));
+				});
+				playerIn.getCooldownTracker().setCooldown(this, 5);
+			}
+			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, wand);
 		}
-		return super.onItemRightClick(worldIn, playerIn, handIn);
+
+		// No Shift -> Clear Mirror
+		wand.getTag().putBoolean($ENABLE, false);
+		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, wand);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -179,31 +196,36 @@ public class SymmetryWandItem extends Item {
 			return;
 
 		symmetry.process(blockSet);
-
 		BlockPos to = new BlockPos(mirrorPos);
 		List<BlockPos> targets = new ArrayList<>();
-
 		targets.add(pos);
+
 		for (BlockPos position : blockSet.keySet()) {
+			if (position.equals(pos))
+				continue;
+			
 			if (world.func_217350_a(block, position, ISelectionContext.forEntity(player))) {
-				Item required = BlockItem.BLOCK_TO_ITEM.get(block.getBlock());
+				BlockState blockState = blockSet.get(position);
+				for (Direction face : Direction.values())
+					blockState = blockState.updatePostPlacement(face, world.getBlockState(position.offset(face)), world,
+							position, position.offset(face));
 
 				if (player.isCreative()) {
-					world.setBlockState(position, blockSet.get(position));
+					world.setBlockState(position, blockState);
 					targets.add(position);
 					continue;
 				}
+
+				BlockState toReplace = world.getBlockState(position);
+				if (!toReplace.getMaterial().isReplaceable())
+					continue;
+				if (toReplace.getBlockHardness(world, position) == -1)
+					continue;
+				if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
+					continue;
 				
-				for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-					ItemStack itemstack = player.inventory.getStackInSlot(i);
-					if (itemstack.getItem() == required && itemstack.getCount() > 0) {
-						player.inventory.setInventorySlotContents(i,
-								new ItemStack(itemstack.getItem(), itemstack.getCount() - 1));
-						world.setBlockState(position, blockSet.get(position));
-						targets.add(position);
-						break;
-					}
-				}
+				world.setBlockState(position, blockState);
+				targets.add(position);
 			}
 		}
 
@@ -245,7 +267,7 @@ public class SymmetryWandItem extends Item {
 				targets.add(position);
 				world.playEvent(2001, pos, Block.getStateId(blockstate));
 				world.setBlockState(position, air, 3);
-				
+
 				if (!player.isCreative()) {
 					if (!player.getHeldItemMainhand().isEmpty())
 						player.getHeldItemMainhand().onBlockDestroyed(world, blockstate, position, player);

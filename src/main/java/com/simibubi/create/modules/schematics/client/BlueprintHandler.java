@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
@@ -24,29 +23,25 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Mirror;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.FORGE)
@@ -78,38 +73,6 @@ public class BlueprintHandler {
 		currentTool = Tools.Deploy;
 		overlay = new BlueprintHotbarOverlay();
 		selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
-	}
-
-	@SubscribeEvent
-	public static void onPaperCrafted(ItemCraftedEvent event) {
-		if (event.isCanceled())
-			return;
-		if (event.getCrafting().getItem() == Items.PAPER) {
-			event.getPlayer()
-					.unlockRecipes(new ResourceLocation[] { AllItems.EMPTY_BLUEPRINT.get().getRegistryName() });
-		}
-		if (event.getCrafting().getItem() == Items.BONE_MEAL) {
-			event.getPlayer()
-					.unlockRecipes(new ResourceLocation[] { AllItems.TREE_FERTILIZER.get().getRegistryName() });
-		}
-		if (event.getCrafting().getItem() == Items.END_ROD) {
-			event.getPlayer().unlockRecipes(new ResourceLocation[] { AllItems.SYMMETRY_WAND.get().getRegistryName() });
-		}
-		if (AllItems.EMPTY_BLUEPRINT.typeOf(event.getCrafting())) {
-			event.getPlayer()
-					.unlockRecipes(new ResourceLocation[] { AllItems.BLUEPRINT_AND_QUILL.get().getRegistryName(),
-							AllBlocks.SCHEMATIC_TABLE.get().getRegistryName(),
-							AllBlocks.SCHEMATICANNON.get().getRegistryName() });
-		}
-	}
-
-	@SubscribeEvent
-	public static void onItemPickup(ItemPickupEvent event) {
-		if (event.isCanceled())
-			return;
-		if (event.getStack().getItem() == Items.END_ROD) {
-			event.getPlayer().unlockRecipes(new ResourceLocation[] { AllItems.SYMMETRY_WAND.get().getRegistryName() });
-		}
 	}
 
 	@SubscribeEvent

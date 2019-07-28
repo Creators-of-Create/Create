@@ -34,6 +34,7 @@ public class SchematicPlacePacket {
 			t.addBlocksToWorld(player.getServerWorld(), NBTUtil.readBlockPos(stack.getTag().getCompound("Anchor")),
 					BlueprintItem.getSettings(stack));
 		});
+		context.get().setPacketHandled(true);
 	}
 
 }

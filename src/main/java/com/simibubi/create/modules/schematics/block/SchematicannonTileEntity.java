@@ -30,6 +30,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.state.properties.BedPart;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.state.properties.SlabType;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -462,6 +463,11 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 		// Find Item
 		ItemStack requiredItem = getItemForBlock(blockState);
+
+		if (blockState.has(BlockStateProperties.SLAB_TYPE)
+				&& blockState.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE)
+			requiredItem.setCount(2);
+
 		if (!findItemInAttachedInventories(requiredItem)) {
 			if (skipMissing) {
 				statusMsg = "Skipping";
@@ -545,13 +551,34 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		if (hasCreativeCrate)
 			return true;
 
+		boolean two = requiredItem.getCount() == 2;
+		int lastSlot = -1;
+
 		for (IItemHandler iItemHandler : attachedInventories) {
 			for (int slot = 0; slot < iItemHandler.getSlots(); slot++) {
 				ItemStack stackInSlot = iItemHandler.getStackInSlot(slot);
 				if (!stackInSlot.isItemEqual(requiredItem))
 					continue;
-				if (!iItemHandler.extractItem(slot, 1, false).isEmpty())
+				if (!two && !iItemHandler.extractItem(slot, 1, false).isEmpty())
 					return true;
+
+				// Two Items required (Double slabs)
+				if (two) {
+					int count = iItemHandler.extractItem(slot, 2, true).getCount();
+					if (count == 2) {
+						iItemHandler.extractItem(slot, 2, false);
+						return true;
+					} else if (count == 1) {
+						if (lastSlot == -1)
+							lastSlot = slot;
+						else {
+							iItemHandler.extractItem(lastSlot, 1, false);
+							iItemHandler.extractItem(slot, 1, false);
+							return true;
+						}
+					}
+				}
+
 			}
 		}
 		return false;
@@ -628,17 +655,16 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		// Block doesnt have a mapping (Water, lava, etc)
 		if (getItemForBlock(state).getItem() == Items.AIR && state.getBlock() != Blocks.AIR)
 			return true;
-		
+
 		// Block doesnt need to be placed twice (Doors, beds, double plants)
 		if (state.has(BlockStateProperties.DOUBLE_BLOCK_HALF)
 				&& state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
 			return true;
-		if (state.has(BlockStateProperties.BED_PART)
-				&& state.get(BlockStateProperties.BED_PART) == BedPart.HEAD)
+		if (state.has(BlockStateProperties.BED_PART) && state.get(BlockStateProperties.BED_PART) == BedPart.HEAD)
 			return true;
 		if (state.getBlock() instanceof PistonHeadBlock)
 			return true;
-		
+
 		return false;
 	}
 
@@ -647,12 +673,12 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		for (LaunchedBlock b : flyingBlocks) {
 			b.update();
 			if (b.ticksRemaining <= 0 && !world.isRemote) {
-				
+
 				// Piston
 				if (b.state.has(BlockStateProperties.EXTENDED)) {
 					b.state = b.state.with(BlockStateProperties.EXTENDED, false);
 				}
-				
+
 				world.setBlockState(b.target, b.state, 18);
 				b.state.getBlock().onBlockPlacedBy(world, b.target, b.state, null, getItemForBlock(b.state));
 				toRemove.add(b);
@@ -754,6 +780,12 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 				ItemStack requiredItem = getItemForBlock(required);
 				if (requiredItem.isEmpty())
 					continue;
+
+				// Two items for double slabs
+				if (required.has(BlockStateProperties.SLAB_TYPE)
+						&& required.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE)
+					checklist.require(requiredItem.getItem());
+
 				checklist.require(requiredItem.getItem());
 				blocksToPlace++;
 			}

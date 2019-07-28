@@ -1,0 +1,24 @@
+{
+    "type": "create:placement_handgun_upgrade",
+        "pattern": [
+            "E ",
+            "BR"
+        ],
+        "key": {
+            "B": {
+                "item": "create:blaze_brass_cube"
+            },
+			"R": {
+                "item": "minecraft:end_rod"
+            },
+            "E": {
+                "item": "create:placement_handgun"
+            }
+        },
+	"result": {
+		"item": "create:placement_handgun",
+		"count": 1
+	},
+	"component": "Amplifier",
+	"tier": "BlazeBrass"
+}

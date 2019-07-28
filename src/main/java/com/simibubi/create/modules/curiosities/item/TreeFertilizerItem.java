@@ -42,13 +42,13 @@ public class TreeFertilizerItem extends Item {
 	public TreeFertilizerItem(Properties properties) {
 		super(properties);
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		if (KeyboardHelper.isKeyDown(KeyboardHelper.LSHIFT))
 			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Tree won't grow? Try this on it."));
-		else 
+		else
 			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "< Hold Shift >"));
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
@@ -58,12 +58,12 @@ public class TreeFertilizerItem extends Item {
 		BlockState state = context.getWorld().getBlockState(context.getPos());
 		Block block = state.getBlock();
 		if (block instanceof SaplingBlock) {
-			
+
 			if (context.getWorld().isRemote) {
 				BoneMealItem.spawnBonemealParticles(context.getWorld(), context.getPos(), 100);
 				return ActionResultType.SUCCESS;
 			}
-			
+
 			TreesDreamWorld world = new TreesDreamWorld(context.getWorld());
 			BlockPos saplingPos = context.getPos();
 
@@ -77,6 +77,9 @@ public class TreeFertilizerItem extends Item {
 			for (BlockPos pos : world.blocksAdded.keySet()) {
 				BlockPos actualPos = pos.add(saplingPos).down(10);
 
+				// Don't replace Bedrock
+				if (context.getWorld().getBlockState(pos).getBlockHardness(context.getWorld(), pos) == -1)
+					continue;
 				// Don't replace solid blocks with leaves
 				if (!world.getBlockState(pos).isNormalCube(world, pos)
 						&& context.getWorld().getBlockState(actualPos).isNormalCube(context.getWorld(), actualPos))
@@ -87,7 +90,7 @@ public class TreeFertilizerItem extends Item {
 
 				context.getWorld().setBlockState(actualPos, world.getBlockState(pos));
 			}
-			
+
 			if (!context.getPlayer().isCreative())
 				context.getItem().shrink(1);
 			return ActionResultType.SUCCESS;
