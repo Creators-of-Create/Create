@@ -14,7 +14,6 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.KeyboardHelper;
-import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunHandler.LaserBeam;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -23,6 +22,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -38,6 +38,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -207,29 +208,30 @@ public class BuilderGunItem extends Item {
 		// Find exact position of gun barrel for VFX
 		float yaw = (float) ((player.rotationYaw) / -180 * Math.PI);
 		float pitch = (float) ((player.rotationPitch) / -180 * Math.PI);
-		Vec3d barrelPosNoTransform = new Vec3d(mainHand ? -.35f : .35f, -0.1f, 1);
+		Vec3d barrelPosNoTransform = new Vec3d(mainHand == (player.getPrimaryHand() == HandSide.RIGHT) ? -.35f : .35f, -0.1f, 1);
 		Vec3d barrelPos = start.add(barrelPosNoTransform.rotatePitch(pitch).rotateYaw(yaw));
 
 		// Client side - Shoot visual laser
 		if (world.isRemote) {
-			BuilderGunHandler.addBeam(new LaserBeam(barrelPos, raytrace.getHitVec()));
-
-			if (getTier(Components.Amplifier, item) == ComponentTier.BlazeBrass) {
-				BuilderGunHandler.addBeam(new LaserBeam(
-						start.add(barrelPosNoTransform.add(-.09f, -.08f, 0).rotatePitch(pitch).rotateYaw(yaw)),
-						raytrace.getHitVec()));
-			}
-			if (getTier(Components.Amplifier, item) == ComponentTier.ChorusChrome) {
-				BuilderGunHandler.addBeam(new LaserBeam(
-						start.add(barrelPosNoTransform.add(-.09f, -.08f, 0).rotatePitch(pitch).rotateYaw(yaw)),
-						raytrace.getHitVec()));
-				BuilderGunHandler.addBeam(new LaserBeam(
-						start.add(barrelPosNoTransform.add(.09f, -.08f, 0).rotatePitch(pitch).rotateYaw(yaw)),
-						raytrace.getHitVec()));
-			}
-
-			BuilderGunHandler.shoot(hand);
-			applyCooldown(player, item, gunInOtherHand);
+//			BuilderGunHandler.addBeam(new LaserBeam(barrelPos, raytrace.getHitVec()));
+//
+//			if (getTier(Components.Amplifier, item) == ComponentTier.BlazeBrass) {
+//				BuilderGunHandler.addBeam(new LaserBeam(
+//						start.add(barrelPosNoTransform.add(-.09f, -.08f, 0).rotatePitch(pitch).rotateYaw(yaw)),
+//						raytrace.getHitVec()));
+//			}
+//			if (getTier(Components.Amplifier, item) == ComponentTier.ChorusChrome) {
+//				BuilderGunHandler.addBeam(new LaserBeam(
+//						start.add(barrelPosNoTransform.add(-.09f, -.08f, 0).rotatePitch(pitch).rotateYaw(yaw)),
+//						raytrace.getHitVec()));
+//				BuilderGunHandler.addBeam(new LaserBeam(
+//						start.add(barrelPosNoTransform.add(.09f, -.08f, 0).rotatePitch(pitch).rotateYaw(yaw)),
+//						raytrace.getHitVec()));
+//			}
+//
+//			BuilderGunHandler.shoot(hand);
+//			applyCooldown(player, item, gunInOtherHand);
+			BuilderGunHandler.dontAnimateItem(hand);
 			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
 		}
 
@@ -268,7 +270,9 @@ public class BuilderGunItem extends Item {
 
 		applyCooldown(player, item, gunInOtherHand);
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> player),
-				new BuilderGunBeamPacket(barrelPos, raytrace.getHitVec(), hand));
+				new BuilderGunBeamPacket(barrelPos, raytrace.getHitVec(), hand, false));
+		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player),
+				new BuilderGunBeamPacket(barrelPos, raytrace.getHitVec(), hand, true));
 
 		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
 
@@ -316,6 +320,8 @@ public class BuilderGunItem extends Item {
 			return true;
 		if (newState.has(BlockStateProperties.STAIRS_SHAPE))
 			newState = newState.with(BlockStateProperties.STAIRS_SHAPE, StairsShape.STRAIGHT);
+		if (newState.has(BlockStateProperties.PERSISTENT))
+			newState = newState.with(BlockStateProperties.PERSISTENT, true);
 
 		if (stack.getTag().contains("BlockUsed")
 				&& NBTUtil.readBlockState(stack.getTag().getCompound("BlockUsed")) == newState)
@@ -495,9 +501,9 @@ public class BuilderGunItem extends Item {
 	public static int getCooldownDelay(ItemStack stack) {
 		ComponentTier tier = getTier(Components.Accelerator, stack);
 		if (tier == ComponentTier.None)
-			return 8;
+			return 10;
 		if (tier == ComponentTier.BlazeBrass)
-			return 5;
+			return 6;
 		if (tier == ComponentTier.ChorusChrome)
 			return 2;
 

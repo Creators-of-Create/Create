@@ -19,6 +19,20 @@ public class BlockHelper {
 		if (needsTwo)
 			amount *= 2;
 
+		{
+			// Try held Item first
+			int preferredSlot = player.inventory.currentItem;
+			ItemStack itemstack = player.inventory.getStackInSlot(preferredSlot);
+			int count = itemstack.getCount();
+			if (itemstack.getItem() == required && count > 0) {
+				int taken = Math.min(count, amount - amountFound);
+				player.inventory.setInventorySlotContents(preferredSlot,
+						new ItemStack(itemstack.getItem(), count - taken));
+				amountFound += taken;
+			}
+		}
+
+		// Search inventory
 		for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
 			if (amountFound == amount)
 				break;
@@ -31,15 +45,14 @@ public class BlockHelper {
 				amountFound += taken;
 			}
 		}
-		
-		
+
 		if (needsTwo) {
 			// Give back 1 if uneven amount was removed
 			if (amountFound % 2 != 0)
 				player.inventory.addItemStackToInventory(new ItemStack(required));
 			amountFound /= 2;
 		}
-		
+
 		return amountFound;
 	}
 

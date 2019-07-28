@@ -194,6 +194,8 @@ public class SymmetryWandItem extends Item {
 		Vec3d mirrorPos = symmetry.getPosition();
 		if (mirrorPos.distanceTo(new Vec3d(pos)) > 50)
 			return;
+		if (!player.isCreative() && BlockHelper.findAndRemoveInInventory(block, player, 1) == 0)
+			return;
 
 		symmetry.process(blockSet);
 		BlockPos to = new BlockPos(mirrorPos);
@@ -203,7 +205,7 @@ public class SymmetryWandItem extends Item {
 		for (BlockPos position : blockSet.keySet()) {
 			if (position.equals(pos))
 				continue;
-			
+
 			if (world.func_217350_a(block, position, ISelectionContext.forEntity(player))) {
 				BlockState blockState = blockSet.get(position);
 				for (Direction face : Direction.values())
@@ -223,7 +225,7 @@ public class SymmetryWandItem extends Item {
 					continue;
 				if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
 					continue;
-				
+
 				world.setBlockState(position, blockState);
 				targets.add(position);
 			}

@@ -2,6 +2,8 @@ package com.simibubi.create.modules.curiosities.placementHandgun;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
+import java.util.function.Supplier;
 
 import org.lwjgl.opengl.GL11;
 
@@ -49,16 +51,45 @@ public class BuilderGunHandler {
 	private static float lastLeftHandAnimation;
 	private static float lastRightHandAnimation;
 
+	private static boolean dontReequipLeft;
+	private static boolean dontReequipRight;
+
 	public static class LaserBeam {
 		float itensity;
 		Vec3d start;
 		Vec3d end;
+		boolean follow;
+		boolean mainHand;
 
 		public LaserBeam(Vec3d start, Vec3d end) {
 			this.start = start;
 			this.end = end;
 			itensity = 1;
 		}
+
+		public LaserBeam followPlayer(boolean follow, boolean mainHand) {
+			this.follow = follow;
+			this.mainHand = mainHand;
+			return this;
+		}
+
+		public Vec3d getStart() {
+			if (follow)
+				return getExactBarrelPos(mainHand);
+			return start;
+		}
+	}
+
+	public static Vec3d getExactBarrelPos(boolean mainHand) {
+		float partialTicks = Minecraft.getInstance().getRenderPartialTicks();
+		ClientPlayerEntity player = Minecraft.getInstance().player;
+		float yaw = (float) ((player.getYaw(partialTicks)) / -180 * Math.PI);
+		float pitch = (float) ((player.getPitch(partialTicks)) / -180 * Math.PI);
+		Vec3d barrelPosNoTransform = new Vec3d(mainHand == (player.getPrimaryHand() == HandSide.RIGHT) ? -.35f : .35f,
+				-0.1f, 1);
+		Vec3d barrelPos = player.getEyePosition(partialTicks)
+				.add(barrelPosNoTransform.rotatePitch(pitch).rotateYaw(yaw));
+		return barrelPos;
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -106,7 +137,7 @@ public class BuilderGunHandler {
 
 			BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 			bufferBuilder.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-			bufferBuilder.pos(beam.start.x, beam.start.y, beam.start.z).endVertex();
+			bufferBuilder.pos(beam.getStart().x, beam.getStart().y, beam.getStart().z).endVertex();
 			bufferBuilder.pos(beam.end.x, beam.end.y, beam.end.z).endVertex();
 			Tessellator.getInstance().draw();
 
@@ -119,10 +150,13 @@ public class BuilderGunHandler {
 	public static void shoot(Hand hand) {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		boolean rightHand = hand == Hand.MAIN_HAND ^ player.getPrimaryHand() == HandSide.LEFT;
-		if (rightHand)
+		if (rightHand) {
 			rightHandAnimation = .2f;
-		else
+			dontReequipRight = false;
+		} else {
 			leftHandAnimation = .2f;
+			dontReequipLeft = false;
+		}
 		playSound(hand, player.getPosition());
 	}
 
@@ -133,15 +167,22 @@ public class BuilderGunHandler {
 	}
 
 	public static void addBeam(LaserBeam beam) {
-		Vec3d step = beam.end.subtract(beam.start).normalize();
-		int steps = (int) (beam.end.squareDistanceTo(beam.start) / step.lengthSquared());
-		for (int i = 0; i <= steps; i++) {
-			Vec3d pos = beam.start.add(step.scale(i));
-			Minecraft.getInstance().world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, 0, -15000, 0);
+		Random r = new Random();
+		double x = beam.end.x;
+		double y = beam.end.y;
+		double z = beam.end.z;
+		ClientWorld world = Minecraft.getInstance().world;
+		Supplier<Double> randomSpeed = () -> (r.nextDouble() - .5d) * .2f;
+		Supplier<Double> randomOffset = () -> (r.nextDouble() - .5d) * .2f;
+		for (int i = 0; i < 10; i++) {
+			world.addParticle(ParticleTypes.END_ROD, x, y, z, randomSpeed.get(), randomSpeed.get(), randomSpeed.get());
+			world.addParticle(ParticleTypes.FIREWORK, x + randomOffset.get(), y + randomOffset.get(),
+					z + randomOffset.get(), 0, 0, 0);
 		}
+
 		cachedBeams.add(beam);
 	}
-	
+
 	@SubscribeEvent
 	public static void onRenderPlayerHand(RenderSpecificHandEvent event) {
 		if (AllItems.PLACEMENT_HANDGUN.typeOf(event.getItemStack())) {
@@ -156,9 +197,9 @@ public class BuilderGunHandler {
 
 			float equipProgress = event.getEquipProgress();
 
-			if (rightHand && rightHandAnimation > .01f)
+			if (rightHand && (rightHandAnimation > .01f || dontReequipRight))
 				equipProgress = 0;
-			if (!rightHand && leftHandAnimation > .01f)
+			if (!rightHand && (leftHandAnimation > .01f || dontReequipLeft))
 				equipProgress = 0;
 
 			// Render arm
@@ -212,5 +253,11 @@ public class BuilderGunHandler {
 			event.setCanceled(true);
 		}
 	}
-	
+
+	public static void dontAnimateItem(Hand hand) {
+		boolean rightHand = hand == Hand.MAIN_HAND ^ Minecraft.getInstance().player.getPrimaryHand() == HandSide.LEFT;
+		dontReequipRight |= rightHand;
+		dontReequipLeft |= !rightHand;
+	}
+
 }

@@ -173,7 +173,7 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 		int j = topLeftY;
 		ScreenResources.PLACEMENT_GUN.draw(this, i, j);
 
-		font.drawStringWithShadow("Placement Handgun", i + 8, j + 10, 0xCCDDFF);
+		font.drawStringWithShadow("Handheld Blockzapper", i + 8, j + 10, 0xCCDDFF);
 		font.drawString("Patterns", i + 148, j + 11, ScreenResources.FONT_COLOR);
 
 		minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);

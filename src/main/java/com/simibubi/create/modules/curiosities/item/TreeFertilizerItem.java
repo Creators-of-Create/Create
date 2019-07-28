@@ -78,7 +78,7 @@ public class TreeFertilizerItem extends Item {
 				BlockPos actualPos = pos.add(saplingPos).down(10);
 
 				// Don't replace Bedrock
-				if (context.getWorld().getBlockState(pos).getBlockHardness(context.getWorld(), pos) == -1)
+				if (context.getWorld().getBlockState(actualPos).getBlockHardness(context.getWorld(), actualPos) == -1)
 					continue;
 				// Don't replace solid blocks with leaves
 				if (!world.getBlockState(pos).isNormalCube(world, pos)
