@@ -125,11 +125,12 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 			case 1: // Blueprint output
 				return false;
 			case 2: // Book input
-				return stack.getItem() == Items.BOOK || stack.getItem() == Items.WRITTEN_BOOK;
+				return stack.isItemEqual(new ItemStack(Items.BOOK))
+						|| stack.isItemEqual(new ItemStack(Items.WRITTEN_BOOK));
 			case 3: // Material List output
 				return false;
 			case 4: // Gunpowder
-				return stack.getItem() == Items.GUNPOWDER;
+				return stack.isItemEqual(new ItemStack(Items.GUNPOWDER));
 			default:
 				return super.isItemValid(slot, stack);
 			}
