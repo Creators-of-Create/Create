@@ -163,7 +163,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	public SchematicannonTileEntity() {
-		this(AllTileEntities.Schematicannon.type);
+		this(AllTileEntities.SCHEMATICANNON.type);
 	}
 
 	@Override

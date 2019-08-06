@@ -1,0 +1,11 @@
+{
+	"forgemarker": 1,
+	"defaults": {
+		"model": "create:block/axis"
+	},
+    "variants": {
+		"axis=y": { "model": "create:block/axis" },
+        "axis=z": { "model": "create:block/axis", "x": 90 },
+        "axis=x": { "model": "create:block/axis", "x": 90, "y": 90 }
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"forgemarker": 1,
+	"defaults": {
+		"model": "create:block/axis_tunnel"
+	},
+    "variants": {
+		"axis=y": { "model": "create:block/axis_tunnel", "x": 90 },
+        "axis=z": { "model": "create:block/axis_tunnel" },
+        "axis=x": { "model": "create:block/axis_tunnel", "y": 90 }
+	}
+}
