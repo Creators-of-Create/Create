@@ -12,7 +12,7 @@ public class AdvancementListener {
 
 	@SubscribeEvent
 	public static void onAdvancementGet(AdvancementEvent event) {
-		PlayerEntity player = event.getEntityPlayer();
+		PlayerEntity player = event.getPlayer();
 		if (player == null)
 			return;
 		if (player.getServer() == null)
@@ -36,9 +36,9 @@ public class AdvancementListener {
 	}
 
 	private static void unlockWhen(String advancement, ResourceLocation recipe, AdvancementEvent event) {
-		AdvancementManager advancements = event.getEntityPlayer().getServer().getAdvancementManager();
+		AdvancementManager advancements = event.getPlayer().getServer().getAdvancementManager();
 		if (event.getAdvancement() == advancements.getAdvancement(new ResourceLocation(advancement)))
-			event.getEntityPlayer().unlockRecipes(new ResourceLocation[] { recipe });
+			event.getPlayer().unlockRecipes(new ResourceLocation[] { recipe });
 	}
 	
 	private static ResourceLocation recipeOf(AllItems item) {

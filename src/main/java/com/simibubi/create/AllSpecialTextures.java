@@ -5,7 +5,9 @@ import net.minecraft.util.ResourceLocation;
 
 public enum AllSpecialTextures {
 
-	Selection("selection.png");
+	Selection("selection.png"),
+	
+	;
 
 	public static final String ASSET_PATH = "textures/special/";
 	private ResourceLocation location;

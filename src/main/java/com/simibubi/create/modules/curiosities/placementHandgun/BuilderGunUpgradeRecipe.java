@@ -102,4 +102,9 @@ public class BuilderGunUpgradeRecipe implements ICraftingRecipe {
 		
 	}
 
+	@Override
+	public boolean canFit(int width, int height) {
+		return recipe.canFit(width, height);
+	}
+
 }

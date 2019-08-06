@@ -39,10 +39,11 @@ import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.FORGE)
 public class BlueprintHandler {
@@ -77,6 +78,8 @@ public class BlueprintHandler {
 
 	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event) {
+		if (event.phase == Phase.START)
+			return;
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
 		if (player == null)

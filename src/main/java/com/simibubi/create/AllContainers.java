@@ -25,7 +25,9 @@ import net.minecraftforge.fml.network.IContainerFactory;
 public enum AllContainers {
 
 	SchematicTable(SchematicTableContainer::new), 
-	Schematicannon(SchematicannonContainer::new);
+	Schematicannon(SchematicannonContainer::new),
+	
+	;
 
 	public ContainerType<? extends Container> type;
 	private IFactory<?> factory;

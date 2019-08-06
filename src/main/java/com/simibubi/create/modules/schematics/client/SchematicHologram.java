@@ -36,10 +36,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(Dist.CLIENT)
@@ -91,6 +92,8 @@ public class SchematicHologram {
 
 	@SubscribeEvent
 	public static void onClientTickEvent(final ClientTickEvent event) {
+		if (event.phase == Phase.START)
+			return;
 		if (instance != null && instance.active) {
 			final Minecraft minecraft = Minecraft.getInstance();
 			if (event.phase != TickEvent.Phase.END)
