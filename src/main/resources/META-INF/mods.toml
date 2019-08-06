@@ -4,7 +4,7 @@ loaderVersion="[28,)"
 
 [[mods]] 
 modId="create"
-version="0.0.4"
+version="0.0.5"
 displayName="Create" 
 #updateJSONURL=""
 authors="simibubi" 

@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.0.5'
+version = 'mc1.14.4_v0.0.5'
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
@@ -22,19 +22,8 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 minecraft {
     mappings channel: 'snapshot', version: '20190806-1.14.3'
     
-    runs {
-        createDev {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                create {
-                    source sourceSets.main
-                }
-            }
-        }
-		
-		createSimi {
+    runs {		
+		client {
             workingDirectory project.file('run')
             property 'forge.logging.console.level', 'info'
             mods {
@@ -44,7 +33,7 @@ minecraft {
             }
         }
 
-        createServer {
+        server {
             workingDirectory project.file('run')
             property 'forge.logging.console.level', 'info'
             mods {
@@ -54,7 +43,7 @@ minecraft {
             }
         }
 
-        createData {
+        data {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -77,7 +66,7 @@ jar {
         attributes([
             "Specification-Title": "create",
             "Specification-Vendor": "simibubi",
-            "Specification-Version": "1", // We are version 1 of ourselves
+            "Specification-Version": "1",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"simibubi",

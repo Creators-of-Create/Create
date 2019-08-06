@@ -120,7 +120,7 @@ public class BuilderGunHandler {
 		if (player == null)
 			return;
 		cachedBeams.removeIf(b -> b.itensity < .1f);
-		cachedBeams.forEach(b -> b.itensity *= .7f);
+		cachedBeams.forEach(b -> b.itensity *= .4f);
 
 		lastLeftHandAnimation = leftHandAnimation;
 		lastRightHandAnimation = rightHandAnimation;
