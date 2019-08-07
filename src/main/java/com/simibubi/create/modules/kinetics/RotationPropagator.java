@@ -34,124 +34,73 @@ public class RotationPropagator {
 		final IRotate definitionFrom = (IRotate) stateFrom.getBlock();
 		final IRotate definitionTo = (IRotate) stateTo.getBlock();
 		final BlockPos diff = to.getPos().subtract(from.getPos());
-		final Direction facingFromTo = Direction.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ());
+		final Direction direction = Direction.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ());
 		final World world = from.getWorld();
+		
 		IProperty<Axis> axisProperty = BlockStateProperties.AXIS;
-		boolean connectedByAxis = definitionFrom.isAxisTowards(world, from.getPos(), stateFrom, facingFromTo)
-				&& definitionTo.isAxisTowards(world, to.getPos(), stateTo, facingFromTo.getOpposite());
+		boolean connectedByAxis = definitionFrom.isAxisTowards(world, from.getPos(), stateFrom, direction)
+				&& definitionTo.isAxisTowards(world, to.getPos(), stateTo, direction.getOpposite());
+		boolean connectedByGears = definitionFrom.isGearTowards(world, from.getPos(), stateFrom, direction)
+				&& definitionTo.isGearTowards(world, to.getPos(), stateTo, direction.getOpposite());
 
 		// Gearbox <-> Gearbox
 		if (from instanceof GearboxTileEntity && to instanceof GearboxTileEntity)
 			return 0;
 
-		// Gearbox -> Axis
-		if (from instanceof GearboxTileEntity) {
-			if (!connectedByAxis)
-				return 0;
-			if (!from.hasSource())
-				return 1;
-
-			Direction sourceFacing = from.getSourceFacing();
-			if (facingFromTo.getAxis() == sourceFacing.getAxis())
-				return facingFromTo == sourceFacing ? 1 : -1;
-			else
-				return facingFromTo.getAxisDirection() == sourceFacing.getAxisDirection() ? -1 : 1;
-		}
-
-		// Axis -> Gearbox
-		if (to instanceof GearboxTileEntity) {
-			if (!connectedByAxis)
-				return 0;
-			if (!to.hasSource())
-				return 1;
-
-			Direction sourceFacing = to.getSourceFacing();
-			if (facingFromTo.getAxis() == sourceFacing.getAxis())
-				return facingFromTo.getOpposite() == sourceFacing ? 1 : -1;
-			else
-				return facingFromTo.getAxisDirection() == sourceFacing.getAxisDirection() ? 1 : -1;
-		}
-
-		if (from instanceof GearshifterTileEntity) {
-			if (!connectedByAxis)
-				return 0;
-
-			// Gearshifter -> Gearshifter
-			if (to instanceof GearshifterTileEntity) {
-				int fromReversed = from.hasSource() && from.getSourceFacing() != facingFromTo
-						&& stateFrom.get(BlockStateProperties.POWERED) ? -1 : 1;
-				int toReversed = to.hasSource() && to.getSourceFacing() != facingFromTo.getOpposite()
-						&& stateTo.get(BlockStateProperties.POWERED) ? -1 : 1;
-				return fromReversed * toReversed;
-			}
-
-			// Gearshifter -> Axis
-			if (!from.hasSource())
-				return 1;
-
-			Direction sourceFacing = from.getSourceFacing();
-			return sourceFacing == facingFromTo ? 1 : stateFrom.get(BlockStateProperties.POWERED) ? -1 : 1;
-		}
-
-		// Axis -> Gearshifter
-		if (to instanceof GearshifterTileEntity) {
-			if (!connectedByAxis)
-				return 0;
-			if (!to.hasSource())
-				return 1;
-
-			Direction sourceFacing = to.getSourceFacing();
-			return sourceFacing == facingFromTo.getOpposite() ? 1 : stateTo.get(BlockStateProperties.POWERED) ? -1 : 1;
-		}
-
 		// Axis <-> Axis
-		if (connectedByAxis)
-			return 1;
-
-		// Large Gear -> Gear
-		if (AllBlocks.LARGE_GEAR.typeOf(from.getBlockState()) && AllBlocks.GEAR.typeOf(to.getBlockState())) {
-			Axis axisFrom = stateFrom.get(axisProperty);
-			if (axisFrom == stateTo.get(axisProperty)) {
-				if (axisFrom.getCoordinate(diff.getX(), diff.getY(), diff.getZ()) == 0) {
-					for (Axis axis : Axis.values()) {
-						if (axis == axisFrom)
-							continue;
-						if (Math.abs(axis.getCoordinate(diff.getX(), diff.getY(), diff.getZ())) != 1)
-							return 0;
-					}
-					return -2f;
-				}
-			}
+		if (connectedByAxis) {
+			return getAxisModifier(from, direction) * getAxisModifier(to, direction.getOpposite());
 		}
 
-		// Gear -> Large Gear
-		if (AllBlocks.GEAR.typeOf(from.getBlockState()) && AllBlocks.LARGE_GEAR.typeOf(to.getBlockState())) {
-			Axis axisFrom = stateFrom.get(axisProperty);
-			if (axisFrom == stateTo.get(axisProperty)) {
-				if (axisFrom.getCoordinate(diff.getX(), diff.getY(), diff.getZ()) == 0) {
-					for (Axis axis : Axis.values()) {
-						if (axis == axisFrom)
-							continue;
-						if (Math.abs(axis.getCoordinate(diff.getX(), diff.getY(), diff.getZ())) != 1)
-							return 0;
-					}
-					return -.5f;
-				}
-			}
-		}
+		// Gear <-> Large Gear
+		if (isLargeToSmallGear(stateFrom, stateTo, diff))
+			return -2f;
+		if (isLargeToSmallGear(stateTo, stateFrom, diff))
+			return -.5f;
 
 		// Gear <-> Gear
-		if (definitionFrom.isGearTowards(world, from.getPos(), stateFrom, facingFromTo)
-				&& definitionTo.isGearTowards(world, to.getPos(), stateTo, facingFromTo.getOpposite())) {
+		if (connectedByGears) {
 			if (diff.manhattanDistance(BlockPos.ZERO) != 1)
 				return 0;
-			if (AllBlocks.LARGE_GEAR.typeOf(to.getBlockState()))
+			if (AllBlocks.LARGE_GEAR.typeOf(stateTo))
 				return 0;
 			if (stateFrom.get(axisProperty) == stateTo.get(axisProperty))
 				return -1;
 		}
 
 		return 0;
+	}
+
+	private static int getAxisModifier(KineticTileEntity te, Direction direction) {
+		if (!te.hasSource())
+			return 1;
+		Direction source = te.getSourceFacing();
+
+		if (te instanceof GearboxTileEntity)
+			return direction.getAxis() == source.getAxis() ? direction == source ? 1 : -1
+					: direction.getAxisDirection() == source.getAxisDirection() ? -1 : 1;
+
+		if (te instanceof GearshifterTileEntity)
+			return source == direction ? 1 : te.getBlockState().get(BlockStateProperties.POWERED) ? -1 : 1;
+
+		return 1;
+	}
+
+	private static boolean isLargeToSmallGear(BlockState from, BlockState to, final BlockPos diff) {
+		if (!AllBlocks.LARGE_GEAR.typeOf(from) || !AllBlocks.GEAR.typeOf(to))
+			return false;
+		Axis axisFrom = from.get(BlockStateProperties.AXIS);
+		if (axisFrom != to.get(BlockStateProperties.AXIS))
+			return false;
+		if (axisFrom.getCoordinate(diff.getX(), diff.getY(), diff.getZ()) != 0)
+			return false;
+		for (Axis axis : Axis.values()) {
+			if (axis == axisFrom)
+				continue;
+			if (Math.abs(axis.getCoordinate(diff.getX(), diff.getY(), diff.getZ())) != 1)
+				return false;
+		}
+		return true;
 	}
 
 	/**
