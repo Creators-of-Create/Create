@@ -42,6 +42,7 @@ public class SelectionScrollInput extends ScrollInput {
 				result.append(TextFormatting.GRAY).append("> ").append(options.get(i));
 			toolTip.add(result.toString());
 		}
+		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + "Scroll to Select");
 	}
 
 }

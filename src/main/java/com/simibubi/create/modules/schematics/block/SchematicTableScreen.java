@@ -52,8 +52,9 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		Create.cSchematicLoader.refresh();
 		List<String> availableSchematics = Create.cSchematicLoader.getAvailableSchematics();
 
+		schematicsLabel = new Label(mainLeft + 36, mainTop + 26, "").withShadow();
+		schematicsLabel.text = "";
 		if (!availableSchematics.isEmpty()) {
-			schematicsLabel = new Label(mainLeft + 36, mainTop + 26, "").withShadow();
 			schematicsArea = new SelectionScrollInput(mainLeft + 33, mainTop + 23, 134, 14).forOptions(availableSchematics)
 					.titled("Available Schematics").writingTo(schematicsLabel);
 			widgets.add(schematicsArea);
@@ -186,9 +187,15 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			Create.cSchematicLoader.refresh();
 			List<String> availableSchematics = Create.cSchematicLoader.getAvailableSchematics();
 			widgets.remove(schematicsArea);
-			schematicsArea = new SelectionScrollInput(guiLeft - 56 + 33, guiTop - 16 + 23, 134, 14).forOptions(availableSchematics)
-					.titled("Available Schematics").writingTo(schematicsLabel);
-			widgets.add(schematicsArea);
+			
+			if (!availableSchematics.isEmpty()) {
+				schematicsArea = new SelectionScrollInput(guiLeft - 56 + 33, guiTop - 16 + 23, 134, 14).forOptions(availableSchematics)
+						.titled("Available Schematics").writingTo(schematicsLabel);
+				widgets.add(schematicsArea);
+			} else {
+				schematicsArea = null;
+				schematicsLabel.text = "";
+			}
 		}
 
 		return super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);

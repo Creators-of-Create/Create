@@ -102,7 +102,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	public void tick() {
 
 		SchematicannonTileEntity te = container.getTileEntity();
-		for (int replaceMode = 0; replaceMode < replaceLevelButtons.size(); replaceMode++)
+		replaceLevelIndicators.get(0).state = te.replaceMode == 0 ? State.ON : State.OFF;
+		for (int replaceMode = 1; replaceMode < replaceLevelButtons.size(); replaceMode++)
 			replaceLevelIndicators.get(replaceMode).state = replaceMode <= te.replaceMode ? State.ON : State.OFF;
 
 		skipMissingIndicator.state = te.skipMissing ? State.ON : State.OFF;

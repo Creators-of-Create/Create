@@ -39,7 +39,9 @@ public enum AllItems {
 	TREE_FERTILIZER(new TreeFertilizerItem(standardProperties())),
 	EMPTY_BLUEPRINT(new Item(standardProperties().maxStackSize(1))),
 	BLUEPRINT_AND_QUILL(new BlueprintAndQuillItem(standardProperties().maxStackSize(1))),
-	BLUEPRINT(new BlueprintItem(standardProperties()));
+	BLUEPRINT(new BlueprintItem(standardProperties())),
+	
+	;
 
 	public Item item;
 

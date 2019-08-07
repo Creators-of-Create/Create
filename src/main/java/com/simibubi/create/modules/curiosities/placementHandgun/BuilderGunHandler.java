@@ -35,11 +35,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderSpecificHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @SuppressWarnings("deprecation")
 @EventBusSubscriber(value = Dist.CLIENT)
@@ -108,6 +109,8 @@ public class BuilderGunHandler {
 
 	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event) {
+		if (event.phase == Phase.START)
+			return;
 		if (cachedBeams == null)
 			cachedBeams = new LinkedList<>();
 		ClientWorld world = Minecraft.getInstance().world;
@@ -117,7 +120,7 @@ public class BuilderGunHandler {
 		if (player == null)
 			return;
 		cachedBeams.removeIf(b -> b.itensity < .1f);
-		cachedBeams.forEach(b -> b.itensity *= .7f);
+		cachedBeams.forEach(b -> b.itensity *= .4f);
 
 		lastLeftHandAnimation = leftHandAnimation;
 		lastRightHandAnimation = rightHandAnimation;

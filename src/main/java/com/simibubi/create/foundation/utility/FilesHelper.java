@@ -44,7 +44,7 @@ public class FilesHelper {
 	}
 
 	public static String slug(String name) {
-		return name.toLowerCase().replace(' ', '_');
+		return name.toLowerCase().replace(' ', '_').replace('!', '_').replace('?', '_');
 	}
 
 	public static boolean saveTagCompoundAsJson(CompoundNBT compound, String path) {

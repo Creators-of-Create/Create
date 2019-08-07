@@ -17,8 +17,8 @@ import com.simibubi.create.foundation.gui.TextInputPromptScreen;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.KeyboardHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
+import com.simibubi.create.foundation.utility.TessellatorHelper;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -46,10 +46,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.FORGE)
 public class BlueprintAndQuillHandler {
@@ -257,6 +258,8 @@ public class BlueprintAndQuillHandler {
 
 	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event) {
+		if (event.phase == Phase.START)
+			return;
 		if (!active())
 			return;
 		ClientPlayerEntity player = Minecraft.getInstance().player;

@@ -10,7 +10,9 @@ import net.minecraftforge.event.RegistryEvent;
 
 public enum AllRecipes {
 
-	Placement_Handgun_Upgrade(BuilderGunUpgradeRecipe.Serializer::new);
+	Placement_Handgun_Upgrade(BuilderGunUpgradeRecipe.Serializer::new),
+	
+	;
 
 	public IRecipeSerializer<?> serializer;
 	public Supplier<IRecipeSerializer<?>> supplier;

@@ -17,6 +17,9 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -24,8 +27,6 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -37,7 +38,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.0.4";
+	public static final String VERSION = "0.0.5";
 
 	public static Logger logger = LogManager.getLogger();
 
@@ -76,6 +77,8 @@ public class Create {
 
 	@SubscribeEvent
 	public static void onTick(ServerTickEvent event) {
+		if (event.phase == Phase.START)
+			return;
 		sSchematicLoader.tick();
 	}
 
@@ -87,6 +90,11 @@ public class Create {
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event) {
+		if (event.phase == Phase.START)
+			return;
+		if (cSchematicLoader == null)
+			return;
+		
 		cSchematicLoader.tick();
 	}
 

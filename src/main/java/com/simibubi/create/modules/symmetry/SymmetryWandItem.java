@@ -267,7 +267,7 @@ public class SymmetryWandItem extends Item {
 				continue;
 			} else {
 				targets.add(position);
-				world.playEvent(2001, pos, Block.getStateId(blockstate));
+				world.playEvent(2001, position, Block.getStateId(blockstate));
 				world.setBlockState(position, air, 3);
 
 				if (!player.isCreative()) {
