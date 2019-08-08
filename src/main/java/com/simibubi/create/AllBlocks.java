@@ -7,6 +7,7 @@ import com.simibubi.create.modules.kinetics.generators.MotorBlock;
 import com.simibubi.create.modules.kinetics.receivers.TurntableBlock;
 import com.simibubi.create.modules.kinetics.relays.AxisBlock;
 import com.simibubi.create.modules.kinetics.relays.AxisTunnelBlock;
+import com.simibubi.create.modules.kinetics.relays.BeltPulleyBlock;
 import com.simibubi.create.modules.kinetics.relays.CogWheelBlock;
 import com.simibubi.create.modules.kinetics.relays.GearboxBlock;
 import com.simibubi.create.modules.kinetics.relays.GearshifterBlock;
@@ -40,6 +41,8 @@ public enum AllBlocks {
 	LARGE_GEAR(new CogWheelBlock(true)),
 	AXIS_TUNNEL(new AxisTunnelBlock()),
 	GEARSHIFTER(new GearshifterBlock()),
+	BELT_PULLEY(new BeltPulleyBlock()),
+	BELT(new RenderUtilityBlock()),
 	
 	TURNTABLE(new TurntableBlock()),
 	HALF_AXIS(new HalfAxisBlock()),

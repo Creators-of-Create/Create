@@ -4,6 +4,8 @@ import com.simibubi.create.modules.curiosities.item.TreeFertilizerItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItemRenderer;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
+import com.simibubi.create.modules.kinetics.relays.BeltItem;
+import com.simibubi.create.modules.kinetics.relays.BeltPulleyTileEntityRenderer;
 import com.simibubi.create.modules.schematics.item.BlueprintAndQuillItem;
 import com.simibubi.create.modules.schematics.item.BlueprintItem;
 import com.simibubi.create.modules.symmetry.SymmetryWandItem;
@@ -12,11 +14,13 @@ import com.simibubi.create.modules.symmetry.client.SymmetryWandModel;
 
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -40,7 +44,9 @@ public enum AllItems {
 	EMPTY_BLUEPRINT(new Item(standardProperties().maxStackSize(1))),
 	BLUEPRINT_AND_QUILL(new BlueprintAndQuillItem(standardProperties().maxStackSize(1))),
 	BLUEPRINT(new BlueprintItem(standardProperties())),
-	
+
+	BELT(new BeltItem(standardProperties())),
+
 	;
 
 	public Item item;
@@ -88,6 +94,9 @@ public enum AllItems {
 		ModelResourceLocation handgunLocation = getModelLocation(PLACEMENT_HANDGUN);
 		template = event.getModelRegistry().get(handgunLocation);
 		event.getModelRegistry().put(handgunLocation, new BuilderGunModel(template).loadPartials(event));
+
+		BeltPulleyTileEntityRenderer.beltModel = event.getModelLoader()
+				.func_217845_a(new ResourceLocation(Create.ID, "block/belt"), ModelRotation.X0_Y0);
 	}
 
 	protected static ModelResourceLocation getModelLocation(AllItems item) {

@@ -27,6 +27,11 @@ public abstract class KineticTileEntity extends SyncedTileEntity {
 	}
 	
 	@Override
+	public boolean hasFastRenderer() {
+		return true;
+	}
+	
+	@Override
 	public void onLoad() {
 		if (!hasWorld())
 			return;

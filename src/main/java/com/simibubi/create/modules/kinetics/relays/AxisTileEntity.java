@@ -9,9 +9,4 @@ public class AxisTileEntity extends KineticTileEntity {
 		super(AllTileEntities.AXIS.type);
 	}
 	
-	@Override
-	public boolean hasFastRenderer() {
-		return true;
-	}
-	
 }

@@ -1,0 +1,11 @@
+{
+	"forgemarker": 1,
+	"defaults": {
+		"model": "block/dirt"
+	},
+    "variants": {
+		"axis=y": { "model": "block/dirt" },
+        "axis=z": { "model": "block/dirt", "x": 90 },
+        "axis=x": { "model": "block/dirt", "x": 90, "y": 90 }
+	}
+}

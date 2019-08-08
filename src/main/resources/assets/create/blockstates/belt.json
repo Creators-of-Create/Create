@@ -1,0 +1,9 @@
+{
+	"forgemarker": 1,
+	"defaults": {
+		"model": "create:block/belt"
+	},
+    "variants": {
+		"": { "model": "create:block/belt" }
+	}
+}
