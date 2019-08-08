@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
+import com.simibubi.create.modules.shopping.ShopShelfBlock;
 import com.simibubi.create.modules.symmetry.block.CrossPlaneSymmetryBlock;
 import com.simibubi.create.modules.symmetry.block.PlaneSymmetryBlock;
 import com.simibubi.create.modules.symmetry.block.TriplePlaneSymmetryBlock;
@@ -26,7 +27,11 @@ public enum AllBlocks {
 	
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),
 	SYMMETRY_CROSSPLANE(new CrossPlaneSymmetryBlock()),
-	SYMMETRY_TRIPLEPLANE(new TriplePlaneSymmetryBlock());
+	SYMMETRY_TRIPLEPLANE(new TriplePlaneSymmetryBlock()),
+	
+	SHOP_SHELF(new ShopShelfBlock()),
+	
+	;
 
 	public Block block;
 

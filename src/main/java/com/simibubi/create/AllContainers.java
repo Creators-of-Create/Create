@@ -4,6 +4,8 @@ import com.simibubi.create.modules.schematics.block.SchematicTableContainer;
 import com.simibubi.create.modules.schematics.block.SchematicTableScreen;
 import com.simibubi.create.modules.schematics.block.SchematicannonContainer;
 import com.simibubi.create.modules.schematics.block.SchematicannonScreen;
+import com.simibubi.create.modules.shopping.ShopShelfContainer;
+import com.simibubi.create.modules.shopping.ShopShelfScreen;
 
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.ScreenManager;
@@ -26,6 +28,8 @@ public enum AllContainers {
 
 	SchematicTable(SchematicTableContainer::new), 
 	Schematicannon(SchematicannonContainer::new),
+	
+	ShopShelf(ShopShelfContainer::new),
 	
 	;
 
@@ -50,6 +54,7 @@ public enum AllContainers {
 	public static void registerScreenFactories() {
 		bind(SchematicTable, SchematicTableScreen::new);
 		bind(Schematicannon, SchematicannonScreen::new);
+		bind(ShopShelf, ShopShelfScreen::new);
 	}
 
 	@OnlyIn(Dist.CLIENT)

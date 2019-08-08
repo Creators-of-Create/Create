@@ -11,5 +11,6 @@
 	"block.create.schematicannon": "Schematicannon",
 	"block.create.schematic_table": "Schematic Table",
 	"block.create.creative_crate": "Schematicannon Creatifier",
+	"block.create.shop_shelf": "Shelf",
 	"itemGroup.create": "Create"
 }

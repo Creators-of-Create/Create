@@ -23,6 +23,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
@@ -47,7 +48,7 @@ public class SymmetryWandItem extends Item {
 	private static final String $ENABLE = "enable";
 
 	public SymmetryWandItem(Properties properties) {
-		super(properties.maxStackSize(1));
+		super(properties.maxStackSize(1).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override

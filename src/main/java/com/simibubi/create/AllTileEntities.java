@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
+import com.simibubi.create.modules.shopping.ShopShelfTileEntity;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +22,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 @Mod.EventBusSubscriber(bus = Bus.MOD)
 public enum AllTileEntities {
 
+	ShopShelfTileEntity(ShopShelfTileEntity::new, AllBlocks.SHOP_SHELF),
+	
 	Schematicannon(SchematicannonTileEntity::new, AllBlocks.SCHEMATICANNON),
 	SchematicTable(SchematicTableTileEntity::new, AllBlocks.SCHEMATIC_TABLE);
 
