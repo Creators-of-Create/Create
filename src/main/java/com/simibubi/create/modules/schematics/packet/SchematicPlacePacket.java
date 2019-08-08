@@ -2,6 +2,7 @@ package com.simibubi.create.modules.schematics.packet;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.modules.schematics.item.BlueprintItem;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -11,7 +12,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class SchematicPlacePacket {
+public class SchematicPlacePacket extends SimplePacketBase {
 
 	public ItemStack stack;
 
@@ -23,7 +24,7 @@ public class SchematicPlacePacket {
 		stack = buffer.readItemStack();
 	}
 
-	public void toBytes(PacketBuffer buffer) {
+	public void write(PacketBuffer buffer) {
 		buffer.writeItemStack(stack);
 	}
 

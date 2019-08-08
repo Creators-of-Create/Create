@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class NbtPacket {
+public class NbtPacket extends SimplePacketBase {
 
 	public ItemStack stack;
 	public int slot;
@@ -25,8 +25,8 @@ public class NbtPacket {
 		stack = buffer.readItemStack();
 		slot = buffer.readInt();
 	}
-
-	public void toBytes(PacketBuffer buffer) {
+	
+	public void write(PacketBuffer buffer) {
 		buffer.writeItemStack(stack);
 		buffer.writeInt(slot);
 	}

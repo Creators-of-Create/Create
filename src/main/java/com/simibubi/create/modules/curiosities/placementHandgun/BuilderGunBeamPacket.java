@@ -2,6 +2,7 @@ package com.simibubi.create.modules.curiosities.placementHandgun;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunHandler.LaserBeam;
 
 import net.minecraft.client.Minecraft;
@@ -13,7 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class BuilderGunBeamPacket {
+public class BuilderGunBeamPacket extends SimplePacketBase {
 
 	public Vec3d start;
 	public Vec3d target;
@@ -34,7 +35,7 @@ public class BuilderGunBeamPacket {
 		self = buffer.readBoolean();
 	}
 
-	public void toBytes(PacketBuffer buffer) {
+	public void write(PacketBuffer buffer) {
 		buffer.writeDouble(start.x);
 		buffer.writeDouble(start.y);
 		buffer.writeDouble(start.z);

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.packet.SimplePacketBase;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
@@ -12,7 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class SymmetryEffectPacket {
+public class SymmetryEffectPacket extends SimplePacketBase {
 
 	private BlockPos mirror;
 	private List<BlockPos> positions;
@@ -31,7 +33,7 @@ public class SymmetryEffectPacket {
 		}
 	}
 
-	public void toBytes(PacketBuffer buffer) {
+	public void write(PacketBuffer buffer) {
 		buffer.writeBlockPos(mirror);
 		buffer.writeInt(positions.size());
 		for (BlockPos blockPos : positions) {

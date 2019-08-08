@@ -3,6 +3,7 @@ package com.simibubi.create.modules.schematics.packet;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.foundation.type.DimensionPos;
 import com.simibubi.create.modules.schematics.block.SchematicTableContainer;
 
@@ -11,7 +12,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class SchematicUploadPacket {
+public class SchematicUploadPacket extends SimplePacketBase {
 
 	public static final int BEGIN = 0;
 	public static final int WRITE = 1;
@@ -53,7 +54,7 @@ public class SchematicUploadPacket {
 			data = buffer.readByteArray();
 	}
 
-	public void toBytes(PacketBuffer buffer) {
+	public void write(PacketBuffer buffer) {
 		buffer.writeInt(code);
 		buffer.writeString(schematic);
 
