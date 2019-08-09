@@ -31,7 +31,7 @@ public class GearshifterTileEntityRenderer extends KineticTileEntityRenderer {
 				continue;
 
 			BlockState state = defaultState.with(BlockStateProperties.FACING, direction);
-			cacheIfMissing(state);
+			cacheIfMissing(state, BlockModelSpinner::new);
 
 			float offset = getRotationOffsetForPosition(te, pos, axis);
 			float angle = (time * te.getSpeed()) % 360;

@@ -6,6 +6,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.kinetics.base.IRotate;
 import com.simibubi.create.modules.kinetics.base.KineticTileEntity;
+import com.simibubi.create.modules.kinetics.relays.BeltTileEntity;
 import com.simibubi.create.modules.kinetics.relays.GearboxTileEntity;
 import com.simibubi.create.modules.kinetics.relays.GearshifterTileEntity;
 
@@ -42,6 +43,11 @@ public class RotationPropagator {
 				&& definitionTo.isAxisTowards(world, to.getPos(), stateTo, direction.getOpposite());
 		boolean connectedByGears = definitionFrom.isGearTowards(world, from.getPos(), stateFrom, direction)
 				&& definitionTo.isGearTowards(world, to.getPos(), stateTo, direction.getOpposite());
+
+		// Belt <-> Belt
+		if (from instanceof BeltTileEntity && to instanceof BeltTileEntity && !connectedByAxis) {
+			return ((BeltTileEntity) from).getController().equals(((BeltTileEntity) to).getController()) ? 1 : 0;
+		}
 
 		// Gearbox <-> Gearbox
 		if (from instanceof GearboxTileEntity && to instanceof GearboxTileEntity)
@@ -273,14 +279,15 @@ public class RotationPropagator {
 		if (!te.getWorld().isAreaLoaded(te.getPos(), 1))
 			return neighbours;
 
-		for (Direction facing : Direction.values()) {
+		for (Direction facing : Direction.values())
 			neighbours.add(te.getPos().offset(facing));
-		}
 
-		// gears can interface diagonally
+		// Some Blocks can interface diagonally
 		BlockState blockState = te.getBlockState();
-		if (AllBlocks.GEAR.typeOf(blockState) || AllBlocks.LARGE_GEAR.typeOf(blockState)) {
-			Axis axis = blockState.get(BlockStateProperties.AXIS);
+		if (AllBlocks.GEAR.typeOf(blockState) || AllBlocks.LARGE_GEAR.typeOf(blockState)
+				|| AllBlocks.BELT.typeOf(blockState)) {
+			Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
+
 			BlockPos.getAllInBox(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1)).forEach(offset -> {
 				if (axis.getCoordinate(offset.getX(), offset.getY(), offset.getZ()) != 0)
 					return;

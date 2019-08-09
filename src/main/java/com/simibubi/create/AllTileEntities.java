@@ -9,8 +9,8 @@ import com.simibubi.create.modules.kinetics.receivers.TurntableTileEntity;
 import com.simibubi.create.modules.kinetics.relays.AxisTileEntity;
 import com.simibubi.create.modules.kinetics.relays.AxisTunnelTileEntity;
 import com.simibubi.create.modules.kinetics.relays.AxisTunnelTileEntityRenderer;
-import com.simibubi.create.modules.kinetics.relays.BeltPulleyTileEntity;
-import com.simibubi.create.modules.kinetics.relays.BeltPulleyTileEntityRenderer;
+import com.simibubi.create.modules.kinetics.relays.BeltTileEntity;
+import com.simibubi.create.modules.kinetics.relays.BeltTileEntityRenderer;
 import com.simibubi.create.modules.kinetics.relays.GearboxTileEntity;
 import com.simibubi.create.modules.kinetics.relays.GearboxTileEntityRenderer;
 import com.simibubi.create.modules.kinetics.relays.GearshifterTileEntity;
@@ -46,7 +46,7 @@ public enum AllTileEntities {
 	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
 	AXIS_TUNNEL(AxisTunnelTileEntity::new, AllBlocks.AXIS_TUNNEL),
 	GEARSHIFTER(GearshifterTileEntity::new, AllBlocks.GEARSHIFTER),
-	BELT_PULLEY(BeltPulleyTileEntity::new, AllBlocks.BELT_PULLEY),
+	BELT(BeltTileEntity::new, AllBlocks.BELT),
 	
 	;
 	
@@ -83,7 +83,7 @@ public enum AllTileEntities {
 		bind(AxisTunnelTileEntity.class, new AxisTunnelTileEntityRenderer());
 		bind(GearboxTileEntity.class, new GearboxTileEntityRenderer());
 		bind(GearshifterTileEntity.class, new GearshifterTileEntityRenderer());
-		bind(BeltPulleyTileEntity.class, new BeltPulleyTileEntityRenderer());
+		bind(BeltTileEntity.class, new BeltTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

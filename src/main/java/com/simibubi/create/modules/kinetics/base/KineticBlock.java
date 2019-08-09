@@ -59,7 +59,10 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 	@Override
 	public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
-		RotationPropagator.handleAdded(worldIn.getWorld(), pos, (KineticTileEntity) worldIn.getTileEntity(pos));
+		KineticTileEntity tileEntity = (KineticTileEntity) worldIn.getTileEntity(pos);
+		if (tileEntity == null)
+			return;
+		RotationPropagator.handleAdded(worldIn.getWorld(), pos, tileEntity);
 	}
 
 	@Override

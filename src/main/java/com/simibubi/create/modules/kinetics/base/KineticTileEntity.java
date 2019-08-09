@@ -21,8 +21,8 @@ public abstract class KineticTileEntity extends SyncedTileEntity {
 
 	public KineticTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
-		setSpeed(0);
-		setForce(0);
+		speed = 0;
+		force = 0;
 		source = Optional.empty();
 	}
 	
@@ -86,15 +86,8 @@ public abstract class KineticTileEntity extends SyncedTileEntity {
 	}
 
 	public void setSpeed(float speed) {
-
-//		if (hasWorld())
-//			Minecraft.getInstance().player.sendStatusMessage(
-//					new StringTextComponent((getWorld().isRemote ? TextFormatting.RED : TextFormatting.GREEN)
-//							+ "" + getClass().getSimpleName() + getPos().toString() + " to " + speed),
-//					false);
-
 		this.speed = speed;
-		if (hasWorld() && speed != 0) {
+		if (hasWorld() && speed != 0 && world.isRemote) {
 			Random r = getWorld().rand;
 			for (int i = 0; i < 10; i++) {
 				float x = getPos().getX() + (r.nextFloat() - .5f) / 2f + .5f;

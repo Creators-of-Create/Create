@@ -1,13 +1,13 @@
 package com.simibubi.create;
 
-import com.simibubi.create.foundation.block.IRenderUtilityBlock;
+import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.modules.kinetics.base.HalfAxisBlock;
 import com.simibubi.create.modules.kinetics.generators.MotorBlock;
 import com.simibubi.create.modules.kinetics.receivers.TurntableBlock;
 import com.simibubi.create.modules.kinetics.relays.AxisBlock;
 import com.simibubi.create.modules.kinetics.relays.AxisTunnelBlock;
-import com.simibubi.create.modules.kinetics.relays.BeltPulleyBlock;
+import com.simibubi.create.modules.kinetics.relays.BeltBlock;
 import com.simibubi.create.modules.kinetics.relays.CogWheelBlock;
 import com.simibubi.create.modules.kinetics.relays.GearboxBlock;
 import com.simibubi.create.modules.kinetics.relays.GearshifterBlock;
@@ -41,8 +41,8 @@ public enum AllBlocks {
 	LARGE_GEAR(new CogWheelBlock(true)),
 	AXIS_TUNNEL(new AxisTunnelBlock()),
 	GEARSHIFTER(new GearshifterBlock()),
-	BELT_PULLEY(new BeltPulleyBlock()),
-	BELT(new RenderUtilityBlock()),
+	BELT(new BeltBlock()),
+	BELT_ANIMATION(new RenderUtilityBlock()),
 	
 	TURNTABLE(new TurntableBlock()),
 	HALF_AXIS(new HalfAxisBlock()),
@@ -71,7 +71,7 @@ public enum AllBlocks {
 
 	public static void registerItemBlocks(IForgeRegistry<Item> registry) {
 		for (AllBlocks block : values()) {
-			if (block.get() instanceof IRenderUtilityBlock)
+			if (block.get() instanceof IWithoutBlockItem)
 				continue;
 
 			registry.register(new BlockItem(block.get(), AllItems.standardProperties())

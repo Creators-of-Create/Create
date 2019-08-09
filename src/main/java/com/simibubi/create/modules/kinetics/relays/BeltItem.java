@@ -1,14 +1,23 @@
 package com.simibubi.create.modules.kinetics.relays;
 
-import com.simibubi.create.AllBlocks;
+import java.util.LinkedList;
+import java.util.List;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.modules.kinetics.base.KineticTileEntity;
+import com.simibubi.create.modules.kinetics.relays.BeltBlock.Part;
+import com.simibubi.create.modules.kinetics.relays.BeltBlock.Slope;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -50,11 +59,8 @@ public class BeltItem extends Item {
 				return ActionResultType.FAIL;
 
 			if (!firstPulley.equals(pos)) {
-				makePulley(world, firstPulley);
-				makePulley(world, pos);
-				connectPulley(world, firstPulley, pos, true);
-				connectPulley(world, pos, firstPulley, false);
-				
+				createBelts(world, firstPulley, pos);
+
 				if (!context.getPlayer().isCreative())
 					context.getItem().shrink(1);
 			}
@@ -73,17 +79,79 @@ public class BeltItem extends Item {
 		return ActionResultType.SUCCESS;
 	}
 
-	private void makePulley(World world, BlockPos pos) {
-		world.setBlockState(pos, AllBlocks.BELT_PULLEY.get().getDefaultState().with(BlockStateProperties.AXIS,
-				world.getBlockState(pos).get(BlockStateProperties.AXIS)));
-	}
-	
-	private void connectPulley(World world, BlockPos pos, BlockPos target, boolean controller) {
-		BeltPulleyTileEntity te = (BeltPulleyTileEntity) world.getTileEntity(pos);
-		if (te != null) {
-			te.setController(controller);
-			te.setTarget(target);
+	private void createBelts(World world, BlockPos start, BlockPos end) {
+
+		BeltBlock.Slope slope = getSlopeBetween(start, end);
+		Direction facing = getFacingFromTo(start, end);
+
+		BlockPos diff = end.subtract(start);
+		if (diff.getX() == diff.getZ())
+			facing = Direction.getFacingFromAxis(facing.getAxisDirection(),
+					world.getBlockState(start).get(BlockStateProperties.AXIS) == Axis.X ? Axis.Z : Axis.X);
+
+		List<BlockPos> beltsToCreate = getBeltChainBetween(start, end, slope, facing);
+		BlockState beltBlock = AllBlocks.BELT.get().getDefaultState();
+
+		for (BlockPos pos : beltsToCreate) {
+			BeltBlock.Part part = pos.equals(start) ? Part.START : pos.equals(end) ? Part.END : Part.MIDDLE;
+			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope).with(BeltBlock.PART, part)
+					.with(BeltBlock.HORIZONTAL_FACING, facing), 3);
+			connectBelt(world, pos, start);
 		}
+	}
+
+	private Direction getFacingFromTo(BlockPos start, BlockPos end) {
+		Axis beltAxis = start.getX() == end.getX() ? Axis.Z : Axis.X;
+		BlockPos diff = end.subtract(start);
+		AxisDirection axisDirection = AxisDirection.POSITIVE;
+
+		if (diff.getX() == 0 && diff.getZ() == 0)
+			axisDirection = diff.getY() > 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
+		else
+			axisDirection = beltAxis.getCoordinate(diff.getX(), 0, diff.getZ()) > 0 ? AxisDirection.POSITIVE
+					: AxisDirection.NEGATIVE;
+
+		return Direction.getFacingFromAxis(axisDirection, beltAxis);
+	}
+
+	private Slope getSlopeBetween(BlockPos start, BlockPos end) {
+		BlockPos diff = end.subtract(start);
+
+		if (diff.getY() != 0) {
+			if (diff.getZ() != 0 || diff.getX() != 0)
+				return diff.getY() > 0 ? Slope.UPWARD : Slope.DOWNWARD;
+			return Slope.VERTICAL;
+		}
+		return Slope.HORIZONTAL;
+	}
+
+	private List<BlockPos> getBeltChainBetween(BlockPos start, BlockPos end, Slope slope, Direction direction) {
+		List<BlockPos> positions = new LinkedList<>();
+		int limit = 1000;
+		BlockPos current = start;
+
+		do {
+			positions.add(current);
+
+			if (slope == Slope.VERTICAL) {
+				current = current.up(direction.getAxisDirection() == AxisDirection.POSITIVE ? 1 : -1);
+				continue;
+			}
+
+			current = current.offset(direction);
+			if (slope != Slope.HORIZONTAL)
+				current = current.up(slope == Slope.UPWARD ? 1 : -1);
+
+		} while (!current.equals(end) && limit-- > 0);
+
+		positions.add(end);
+		return positions;
+	}
+
+	private void connectBelt(World world, BlockPos pos, BlockPos target) {
+		BeltTileEntity te = (BeltTileEntity) world.getTileEntity(pos);
+		if (te != null)
+			te.setController(target);
 	}
 
 	private boolean canConnect(World world, BlockPos first, BlockPos second) {
@@ -96,12 +164,25 @@ public class BeltItem extends Item {
 
 		BlockPos diff = second.subtract(first);
 		Axis axis = world.getBlockState(first).get(BlockStateProperties.AXIS);
-		
-		if (axis.getCoordinate(diff.getX(), diff.getY(), diff.getZ()) != 0)
+
+		int x = diff.getX();
+		int y = diff.getY();
+		int z = diff.getZ();
+		int sames = ((Math.abs(x) == Math.abs(y)) ? 1 : 0) + ((Math.abs(y) == Math.abs(z)) ? 1 : 0)
+				+ ((Math.abs(z) == Math.abs(x)) ? 1 : 0);
+
+		if (axis.getCoordinate(x, y, z) != 0)
+			return false;
+		if (sames != 1)
 			return false;
 		if (axis != world.getBlockState(second).get(BlockStateProperties.AXIS))
 			return false;
 		
+		float speed1 = ((KineticTileEntity) world.getTileEntity(first)).getSpeed();
+		float speed2 = ((KineticTileEntity) world.getTileEntity(second)).getSpeed();
+		if (speed1 != speed2 && speed1 != 0 && speed2 != 0)
+			return false;
+
 		return true;
 	}
 
@@ -109,6 +190,8 @@ public class BeltItem extends Item {
 		if (!world.isAreaLoaded(pos, 1))
 			return false;
 		if (!AllBlocks.AXIS.typeOf(world.getBlockState(pos)))
+			return false;
+		if (world.getBlockState(pos).get(BlockStateProperties.AXIS) == Axis.Y)
 			return false;
 		return true;
 	}
