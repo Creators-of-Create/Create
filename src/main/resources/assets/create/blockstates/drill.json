@@ -1,0 +1,17 @@
+{
+    "variants": {
+        "fixated=false,facing=up": { "model": "create:block/drill", "x": 90 },
+		"fixated=false,facing=down": { "model": "create:block/drill", "x": 270 },
+        "fixated=false,facing=north": { "model": "create:block/drill", "y": 180 },
+		"fixated=false,facing=south": { "model": "create:block/drill" },
+        "fixated=false,facing=east": { "model": "create:block/drill", "y": 270 },
+        "fixated=false,facing=west": { "model": "create:block/drill", "y": 90 },
+		
+		"fixated=true,facing=up": { "model": "create:block/drill_fixated", "x": 90 },
+		"fixated=true,facing=down": { "model": "create:block/drill_fixated", "x": 270 },
+        "fixated=true,facing=north": { "model": "create:block/drill_fixated", "y": 180 },
+		"fixated=true,facing=south": { "model": "create:block/drill_fixated" },
+        "fixated=true,facing=east": { "model": "create:block/drill_fixated", "y": 270 },
+        "fixated=true,facing=west": { "model": "create:block/drill_fixated", "y": 90 }
+	}
+}

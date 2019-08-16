@@ -2,19 +2,23 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.modules.kinetics.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.kinetics.generators.MotorTileEntity;
-import com.simibubi.create.modules.kinetics.generators.MotorTileEntityRenderer;
-import com.simibubi.create.modules.kinetics.receivers.TurntableTileEntity;
-import com.simibubi.create.modules.kinetics.relays.AxisTileEntity;
-import com.simibubi.create.modules.kinetics.relays.AxisTunnelTileEntity;
-import com.simibubi.create.modules.kinetics.relays.AxisTunnelTileEntityRenderer;
-import com.simibubi.create.modules.kinetics.relays.BeltTileEntity;
-import com.simibubi.create.modules.kinetics.relays.BeltTileEntityRenderer;
-import com.simibubi.create.modules.kinetics.relays.GearboxTileEntity;
-import com.simibubi.create.modules.kinetics.relays.GearboxTileEntityRenderer;
-import com.simibubi.create.modules.kinetics.relays.GearshifterTileEntity;
-import com.simibubi.create.modules.kinetics.relays.GearshifterTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.generators.MotorTileEntity;
+import com.simibubi.create.modules.contraptions.generators.MotorTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.CrushingWheelTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.AxisTileEntity;
+import com.simibubi.create.modules.contraptions.relays.AxisTunnelTileEntity;
+import com.simibubi.create.modules.contraptions.relays.AxisTunnelTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.BeltTileEntity;
+import com.simibubi.create.modules.contraptions.relays.BeltTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.GearboxTileEntity;
+import com.simibubi.create.modules.contraptions.relays.GearboxTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntity;
+import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntityRenderer;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
@@ -41,15 +45,16 @@ public enum AllTileEntities {
 
 	// Kinetics
 	AXIS(AxisTileEntity::new, AllBlocks.AXIS, AllBlocks.GEAR, AllBlocks.LARGE_GEAR, AllBlocks.AXIS_TUNNEL),
-	MOTOR(MotorTileEntity::new, AllBlocks.MOTOR),
-	GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
+	MOTOR(MotorTileEntity::new, AllBlocks.MOTOR), GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
 	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
-	AXIS_TUNNEL(AxisTunnelTileEntity::new, AllBlocks.AXIS_TUNNEL),
-	GEARSHIFTER(GearshifterTileEntity::new, AllBlocks.GEARSHIFTER),
-	BELT(BeltTileEntity::new, AllBlocks.BELT),
-	
+	AXIS_TUNNEL(AxisTunnelTileEntity::new, AllBlocks.AXIS_TUNNEL, AllBlocks.ENCASED_BELT),
+	GEARSHIFTER(GearshifterTileEntity::new, AllBlocks.GEARSHIFTER), BELT(BeltTileEntity::new, AllBlocks.BELT),
+	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
+	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
+	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
+
 	;
-	
+
 	private Supplier<? extends TileEntity> supplier;
 	public TileEntityType<?> type;
 	private AllBlocks[] blocks;
@@ -66,7 +71,7 @@ public enum AllTileEntities {
 			Block[] blocks = new Block[tileEntity.blocks.length];
 			for (int i = 0; i < blocks.length; i++)
 				blocks[i] = tileEntity.blocks[i].block;
-			
+
 			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, tileEntity.name().toLowerCase());
 			tileEntity.type = TileEntityType.Builder.create(tileEntity.supplier, blocks).build(null)
 					.setRegistryName(resourceLocation);
@@ -84,6 +89,9 @@ public enum AllTileEntities {
 		bind(GearboxTileEntity.class, new GearboxTileEntityRenderer());
 		bind(GearshifterTileEntity.class, new GearshifterTileEntityRenderer());
 		bind(BeltTileEntity.class, new BeltTileEntityRenderer());
+		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());
+		bind(DrillTileEntity.class, new KineticTileEntityRenderer());
+		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -1,0 +1,11 @@
+{
+	"forgemarker": 1,
+	"defaults": {
+		"model": "create:block/construct_relocating"
+	},
+    "variants": {
+		"axis=y": { "model": "create:block/construct_relocating" },
+        "axis=z": { "model": "create:block/construct_relocating", "x": 90 },
+        "axis=x": { "model": "create:block/construct_relocating", "x": 90, "y": 90 }
+	}
+}

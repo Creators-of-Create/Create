@@ -1,0 +1,48 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "block/anvil",
+        "0": "block/smooth_stone",
+        "1": "block/polished_andesite",
+        "2": "block/anvil",
+        "3": "block/stonecutter_saw"
+    },
+    "elements": [
+        {
+            "name": "Connector",
+            "from": [ 1.0, 4.0, 0.0 ], 
+            "to": [ 15.0, 12.0, 4.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 1.0, 4.0, 15.0, 12.0 ] },
+                "east": { "texture": "#1", "uv": [ 0.0, 4.0, 4.0, 12.0 ], "rotation": 180 },
+                "south": { "texture": "#1", "uv": [ 1.0, 4.0, 15.0, 12.0 ] },
+                "west": { "texture": "#1", "uv": [ 0.0, 4.0, 4.0, 12.0 ] },
+                "up": { "texture": "#1", "uv": [ 1.0, 0.0, 15.0, 4.0 ] },
+                "down": { "texture": "#1", "uv": [ 1.0, 0.0, 15.0, 4.0 ], "rotation": 180 }
+            }
+        },
+        {
+            "name": "Body",
+            "from": [ 0.0, 6.0, 2.0 ], 
+            "to": [ 16.0, 10.0, 6.0 ], 
+            "faces": {
+                "north": { "texture": "#2", "uv": [ 0.0, 0.0, 16.0, 4.0 ] },
+                "east": { "texture": "#2", "uv": [ 0.0, 0.0, 4.0, 4.0 ] },
+                "south": { "texture": "#2", "uv": [ 0.0, 0.0, 16.0, 4.0 ] },
+                "west": { "texture": "#2", "uv": [ 0.0, 0.0, 4.0, 4.0 ] },
+                "up": { "texture": "#2", "uv": [ 0.0, 0.0, 16.0, 4.0 ] },
+                "down": { "texture": "#2", "uv": [ 0.0, 0.0, 16.0, 4.0 ] }
+            }
+        },
+        {
+            "name": "Saw",
+            "from": [ 1.0, 8.0, 6.0 ], 
+            "to": [ 15.0, 8.100000001490116, 13.0 ], 
+            "faces": {
+                "up": { "texture": "#3", "uv": [ 1.0, 9.0, 15.0, 16.0 ], "rotation": 180 },
+                "down": { "texture": "#3", "uv": [ 1.0, 9.0, 15.0, 16.0 ] }
+            }
+        }
+    ]
+}

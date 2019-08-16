@@ -1,0 +1,112 @@
+package com.simibubi.create.modules.contraptions.receivers.constructs;
+
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.DirectionalBlock;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+
+public class PistonPoleBlock extends DirectionalBlock {
+
+	public PistonPoleBlock() {
+		super(Properties.from(Blocks.PISTON_HEAD));
+		setDefaultState(getDefaultState().with(FACING, Direction.UP));
+	}
+
+	@Override
+	public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+		Axis axis = state.get(FACING).getAxis();
+		Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
+		BlockPos pistonHead = null;
+		BlockPos pistonBase = null;
+
+		for (int modifier : new int[] { 1, -1 }) {
+			for (int offset = modifier; modifier * offset < Construct.MAX_EXTENSIONS; offset += modifier) {
+				BlockPos currentPos = pos.offset(direction, offset);
+				BlockState block = worldIn.getBlockState(currentPos);
+
+				if (AllBlocks.PISTON_POLE.typeOf(block) && axis == block.get(FACING).getAxis())
+					continue;
+
+				if ((AllBlocks.MECHANICAL_PISTON.typeOf(block) || AllBlocks.STICKY_MECHANICAL_PISTON.typeOf(block))
+						&& block.get(BlockStateProperties.FACING).getAxis() == axis) {
+					pistonBase = currentPos;
+				}
+
+				if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(block)
+						&& block.get(BlockStateProperties.FACING).getAxis() == axis) {
+					pistonHead = currentPos;
+				}
+
+				break;
+			}
+		}
+
+		if (pistonHead != null && pistonBase != null
+				&& worldIn.getBlockState(pistonHead).get(BlockStateProperties.FACING) == worldIn
+						.getBlockState(pistonBase).get(BlockStateProperties.FACING)) {
+			
+			final BlockPos basePos = pistonBase;
+			BlockPos.getAllInBox(pistonBase, pistonHead).filter(p -> !p.equals(pos) && !p.equals(basePos))
+					.forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
+			worldIn.setBlockState(basePos,
+					worldIn.getBlockState(basePos).with(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
+		}
+
+		super.onBlockHarvested(worldIn, pos, state, player);
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+
+		switch (state.get(FACING).getAxis()) {
+		case X:
+			return MechanicalPistonHeadBlock.AXIS_SHAPE_X;
+		case Y:
+			return MechanicalPistonHeadBlock.AXIS_SHAPE_Y;
+		case Z:
+			return MechanicalPistonHeadBlock.AXIS_SHAPE_Z;
+		}
+
+		return VoxelShapes.empty();
+	}
+	
+	@Override
+	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+		super.fillStateContainer(builder);
+	}
+	
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		return getDefaultState().with(FACING, context.getFace().getOpposite());
+	}
+	
+	@Override
+	public BlockState rotate(BlockState state, Rotation rot) {
+		return state.with(FACING, rot.rotate(state.get(FACING)));
+	}
+
+	@Override
+	public BlockState mirror(BlockState state, Mirror mirrorIn) {
+		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+	}
+
+}

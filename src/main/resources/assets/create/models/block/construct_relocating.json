@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/construct",
+    "textures": {
+        "inner": "block/purpur_pillar"
+    }
+}

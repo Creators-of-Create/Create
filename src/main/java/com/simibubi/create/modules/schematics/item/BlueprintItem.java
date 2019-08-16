@@ -144,9 +144,10 @@ public class BlueprintItem extends Item {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
 		if (playerIn.isSneaking() && handIn == Hand.MAIN_HAND) {
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-				displayBlueprintScreen();
-			});
+			if (playerIn.getHeldItem(handIn).hasTag())
+				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+					displayBlueprintScreen();
+				});
 			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
 		}
 
