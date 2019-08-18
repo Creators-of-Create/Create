@@ -2,12 +2,12 @@ package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
+import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
@@ -23,7 +23,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class MechanicalPistonHeadBlock extends DirectionalBlock implements IWithoutBlockItem {
+public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements IWithoutBlockItem {
 
 	public static final EnumProperty<PistonType> TYPE = BlockStateProperties.PISTON_TYPE;
 
@@ -49,7 +49,7 @@ public class MechanicalPistonHeadBlock extends DirectionalBlock implements IWith
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(TYPE, FACING);
+		builder.add(TYPE);
 		super.fillStateContainer(builder);
 	}
 

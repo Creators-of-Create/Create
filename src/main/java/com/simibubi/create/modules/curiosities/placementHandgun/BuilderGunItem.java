@@ -12,19 +12,21 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.ItemWithToolTip;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.KeyboardHelper;
+import com.simibubi.create.foundation.utility.ItemDescription;
+import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.IFluidState;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -59,10 +61,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class BuilderGunItem extends Item {
+public class BuilderGunItem extends ItemWithToolTip {
 
 	public static enum ComponentTier {
-		None, BlazeBrass, ChorusChrome
+		None(TextFormatting.DARK_GRAY + "Andesite Alloy"), BlazeBrass(TextFormatting.GOLD + "Blaze Brass"),
+		ChorusChrome(TextFormatting.LIGHT_PURPLE + "Chorus Chrome"),
+
+		;
+
+		protected String displayName;
+
+		private ComponentTier(String displayName) {
+			this.displayName = displayName;
+		}
 	}
 
 	public static enum Components {
@@ -79,38 +90,37 @@ public class BuilderGunItem extends Item {
 	}
 
 	@Override
+	protected ItemDescription getDescription() {
+		Palette palette = Palette.Purple;
+		return new ItemDescription(palette).withSummary("Novel gadget for placing or exchanging blocks at a distance.")
+				.withControl("L-Click at Block", "Sets blocks placed by the tool to the targeted block.")
+				.withControl("R-Click at Block",
+						h("Places", palette) + " or " + h("Replaces", palette) + " the targeted block.")
+				.withControl("R-Click while Sneaking", "Opens the " + h("Configuration", palette) + " Interface")
+				.createTabs();
+	}
+
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		if (KeyboardHelper.isKeyDown(KeyboardHelper.LSHIFT)) {
-			if (stack.getOrCreateTag().contains("BlockUsed")) {
-				BlockState state = NBTUtil.readBlockState(stack.getTag().getCompound("BlockUsed"));
-				tooltip.add(new StringTextComponent(TextFormatting.BLUE + "Using Block: " + TextFormatting.WHITE
-						+ new TranslationTextComponent(state.getBlock().getTranslationKey()).getFormattedText()));
-			} else {
-				tooltip.add(new StringTextComponent(TextFormatting.BLUE + "Hit a Block to set the material."));
-			}
-			tooltip.add(new StringTextComponent(""));
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Places or Replaces Blocks at a range."));
-			tooltip.add(new StringTextComponent(
-					TextFormatting.GRAY + "> [Left-Click] to set the material used by the gun"));
-			tooltip.add(new StringTextComponent(
-					TextFormatting.GRAY + "> [Right-Click] to place/replace blocks with the material"));
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "> [Shift-Right-Click] to configure"));
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Craft with components to upgrade."));
-			tooltip.add(new StringTextComponent(""));
+		if (stack.hasTag() && stack.getTag().contains("BlockUsed")) {
+			String usedblock = NBTUtil.readBlockState(stack.getTag().getCompound("BlockUsed")).getBlock()
+					.getTranslationKey();
+			ItemDescription.add(tooltip, TextFormatting.DARK_GRAY + "Using: " + TextFormatting.GRAY
+					+ new TranslationTextComponent(usedblock).getFormattedText());
+		}
+
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+
+		Palette palette = Palette.Purple;
+		if (Screen.hasShiftDown()) {
+			ItemDescription.add(tooltip, palette.color + "Component Tiers:");
 
 			for (Components c : Components.values()) {
 				ComponentTier tier = getTier(c, stack);
-				tooltip.add(new StringTextComponent(
-						TextFormatting.AQUA + "" + TextFormatting.ITALIC + c.name() + ": " + TextFormatting.GRAY
-								+ (tier == ComponentTier.None ? (c == Components.Body ? "Andesite Alloy" : "Missing")
-										: tier.name())));
+				ItemDescription.add(tooltip, "> " + TextFormatting.GRAY + c.name() + ": " + tier.displayName);
 			}
-
-		} else {
-			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "< Hold Shift >"));
 		}
-		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 
 	@Override
@@ -208,7 +218,8 @@ public class BuilderGunItem extends Item {
 		// Find exact position of gun barrel for VFX
 		float yaw = (float) ((player.rotationYaw) / -180 * Math.PI);
 		float pitch = (float) ((player.rotationPitch) / -180 * Math.PI);
-		Vec3d barrelPosNoTransform = new Vec3d(mainHand == (player.getPrimaryHand() == HandSide.RIGHT) ? -.35f : .35f, -0.1f, 1);
+		Vec3d barrelPosNoTransform = new Vec3d(mainHand == (player.getPrimaryHand() == HandSide.RIGHT) ? -.35f : .35f,
+				-0.1f, 1);
 		Vec3d barrelPos = start.add(barrelPosNoTransform.rotatePitch(pitch).rotateYaw(yaw));
 
 		// Client side - Shoot visual laser

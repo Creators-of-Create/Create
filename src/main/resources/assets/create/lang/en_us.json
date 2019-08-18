@@ -58,6 +58,8 @@
 	"block.create.schematicannon": "Schematicannon",
 	"block.create.schematic_table": "Schematic Table",
 	"block.create.creative_crate": "Schematicannon Creatifier",
+
+	"block.create.cocoa_log": "Cocoa Jungle Log",
 	
 	"itemGroup.create": "Create"
 }

@@ -1,10 +1,10 @@
 package com.simibubi.create;
 
 import com.simibubi.create.modules.contraptions.relays.BeltItem;
-import com.simibubi.create.modules.curiosities.item.TreeFertilizerItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItemRenderer;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
+import com.simibubi.create.modules.gardens.TreeFertilizerItem;
 import com.simibubi.create.modules.schematics.item.BlueprintAndQuillItem;
 import com.simibubi.create.modules.schematics.item.BlueprintItem;
 import com.simibubi.create.modules.symmetry.SymmetryWandItem;

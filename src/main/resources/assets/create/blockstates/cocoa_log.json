@@ -1,0 +1,15 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "age": {
+      "0": { "model": "create:block/cocoa_log_0" },
+      "1": { "model": "create:block/cocoa_log_1" },
+      "2": { "model": "create:block/cocoa_log_2" }
+    },
+    "axis": {
+      "y": {},
+      "x": { "x": 90, "y": 90 },
+      "z": { "x": 90 }
+    }
+  }
+}

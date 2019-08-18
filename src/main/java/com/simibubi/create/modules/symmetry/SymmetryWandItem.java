@@ -7,8 +7,10 @@ import java.util.Map;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.ItemWithToolTip;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.KeyboardHelper;
+import com.simibubi.create.foundation.utility.ItemDescription;
+import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 import com.simibubi.create.modules.symmetry.mirror.CrossPlaneMirror;
 import com.simibubi.create.modules.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.modules.symmetry.mirror.PlaneMirror;
@@ -17,10 +19,8 @@ import com.simibubi.create.modules.symmetry.mirror.SymmetryMirror;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,7 +32,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -41,7 +40,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SymmetryWandItem extends Item {
+public class SymmetryWandItem extends ItemWithToolTip {
 
 	public static final String $SYMMETRY = "symmetry";
 	private static final String $ENABLE = "enable";
@@ -51,22 +50,16 @@ public class SymmetryWandItem extends Item {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		if (KeyboardHelper.isKeyDown(KeyboardHelper.LSHIFT)) {
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Perfectly mirrors your Block placement"));
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "across the configured planes."));
-			tooltip.add(new StringTextComponent(""));
-			tooltip.add(
-					new StringTextComponent(TextFormatting.GRAY + "> [Right-Click] on ground to place/move mirror"));
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "> [Right-Click] in air to remove mirror"));
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "> [Shift-Right-Click] to configure"));
-			tooltip.add(new StringTextComponent(""));
-			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "Active while held in the Hotbar"));
-
-		} else
-			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "< Hold Shift >"));
-		super.addInformation(stack, worldIn, tooltip, flagIn);
+	protected ItemDescription getDescription() {
+		Palette palette = Palette.Purple;
+		return new ItemDescription(palette)
+				.withSummary("Perfectly mirrors your Block placement across the configured planes.")
+				.withBehaviour("When in Hotbar", "Stays Active")
+				.withControl("R-Click on Ground",
+						h("Creates", palette) + " or " + h("Moves", palette) + " the Mirror")
+				.withControl("R-Click in the Air", h("Removes", palette) + " the active Mirror")
+				.withControl("R-Click while Sneaking", "Opens the " + h("Configuration Screen", palette))
+				.createTabs();
 	}
 
 	@Override

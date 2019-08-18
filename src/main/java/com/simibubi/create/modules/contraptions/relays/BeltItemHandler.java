@@ -22,8 +22,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -33,7 +33,7 @@ public class BeltItemHandler {
 	private static Random r = new Random();
 
 	@SubscribeEvent
-	public static void onRenderTick(RenderTickEvent event) {
+	public static void onClientTick(ClientTickEvent event) {
 		if (event.phase == Phase.START)
 			return;
 
@@ -41,6 +41,8 @@ public class BeltItemHandler {
 		World world = Minecraft.getInstance().world;
 
 		if (player == null || world == null)
+			return;
+		if (Minecraft.getInstance().currentScreen != null)
 			return;
 
 		for (Hand hand : Hand.values()) {
@@ -56,7 +58,7 @@ public class BeltItemHandler {
 				continue;
 
 			BlockPos first = NBTUtil.readBlockPos(tag.getCompound("FirstPulley"));
-			
+
 			if (!world.getBlockState(first).has(BlockStateProperties.AXIS))
 				continue;
 			Axis axis = world.getBlockState(first).get(BlockStateProperties.AXIS);
@@ -91,6 +93,7 @@ public class BeltItemHandler {
 			double x = Math.abs(diff.x);
 			double y = Math.abs(diff.y);
 			double z = Math.abs(diff.z);
+			float length = (float) Math.max(x, Math.max(y, z));
 			Vec3d step = diff.normalize();
 
 			int sames = ((x == y) ? 1 : 0) + ((y == z) ? 1 : 0) + ((z == x) ? 1 : 0);
@@ -115,12 +118,13 @@ public class BeltItemHandler {
 					}
 				}
 				step = validDiffs.get(closestIndex);
-				
+
 			}
 
-			for (float f = 0; f < actualDiff.length(); f += .25f) {
+			step = new Vec3d(Math.signum(step.x), Math.signum(step.y), Math.signum(step.z));
+			for (float f = 0; f < length; f += .0625f) {
 				Vec3d position = start.add(step.scale(f));
-				if (r.nextInt(100) == 0) {
+				if (r.nextInt(10) == 0) {
 					world.addParticle(new RedstoneParticleData(canConnect ? .3f : .9f, canConnect ? .9f : .3f, .5f, 1),
 							position.x + .5f, position.y + .5f, position.z + .5f, 0, 0, 0);
 				}

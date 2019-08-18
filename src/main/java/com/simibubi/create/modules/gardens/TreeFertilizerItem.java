@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.curiosities.item;
+package com.simibubi.create.modules.gardens;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -6,19 +6,18 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
-import com.simibubi.create.foundation.utility.KeyboardHelper;
+import com.simibubi.create.foundation.item.ItemWithToolTip;
+import com.simibubi.create.foundation.utility.ItemDescription;
+import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SaplingBlock;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BoneMealItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.scoreboard.Scoreboard;
@@ -27,30 +26,22 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EmptyTickList;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class TreeFertilizerItem extends Item {
+public class TreeFertilizerItem extends ItemWithToolTip {
 
 	public TreeFertilizerItem(Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		if (KeyboardHelper.isKeyDown(KeyboardHelper.LSHIFT))
-			tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Tree won't grow? Try this on it."));
-		else
-			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "< Hold Shift >"));
-		super.addInformation(stack, worldIn, tooltip, flagIn);
+	protected ItemDescription getDescription() {
+		return new ItemDescription(Palette.Green)
+				.withSummary("A powerful combination of minerals suitable for common tree types.")
+				.withBehaviour("When used on Sapling", "Grows Trees regardless of their spacing Conditions").createTabs();
 	}
 
 	@Override

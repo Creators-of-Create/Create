@@ -3,27 +3,25 @@ package com.simibubi.create.modules.contraptions.redstone;
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.DirectionalBlock;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 
-public class ContactBlock extends DirectionalBlock implements IHaveMovementBehavior {
+public class ContactBlock extends ProperDirectionalBlock implements IHaveMovementBehavior {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -34,7 +32,7 @@ public class ContactBlock extends DirectionalBlock implements IHaveMovementBehav
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(FACING, POWERED);
+		builder.add(POWERED);
 		super.fillStateContainer(builder);
 	}
 
@@ -83,16 +81,6 @@ public class ContactBlock extends DirectionalBlock implements IHaveMovementBehav
 	public static boolean hasValidContact(IWorld world, BlockPos pos, Direction direction) {
 		BlockState blockState = world.getBlockState(pos.offset(direction));
 		return AllBlocks.CONTACT.typeOf(blockState) && blockState.get(FACING) == direction.getOpposite();
-	}
-
-	@Override
-	public BlockState rotate(BlockState state, Rotation rot) {
-		return state.with(FACING, rot.rotate(state.get(FACING)));
-	}
-
-	@Override
-	public BlockState mirror(BlockState state, Mirror mirrorIn) {
-		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import com.simibubi.create.modules.contraptions.relays.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.GearboxBlock;
 import com.simibubi.create.modules.contraptions.relays.GearshifterBlock;
+import com.simibubi.create.modules.gardens.CocoaLogBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
@@ -80,6 +81,9 @@ public enum AllBlocks {
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),
 	SYMMETRY_CROSSPLANE(new CrossPlaneSymmetryBlock()),
 	SYMMETRY_TRIPLEPLANE(new TriplePlaneSymmetryBlock()),
+	
+	// Gardens
+	COCOA_LOG(new CocoaLogBlock()),
 	
 	// Palettes
 	ANDESITE_BRICKS(new Block(Properties.from(Blocks.ANDESITE))),
