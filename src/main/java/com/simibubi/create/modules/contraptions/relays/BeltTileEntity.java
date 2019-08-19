@@ -25,6 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -120,14 +121,10 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		TileEntity te = world.getTileEntity(pos);
 		TileEntity tileEntityBelowPassenger = world.getTileEntity(entityIn.getPosition());
 		BlockState blockState = info.lastCollidedState;
-
-		boolean onEndingBelt = blockState.getBlock() instanceof BeltBlock && BeltBlock.isUpperEnd(blockState, speed);
 		Direction movementFacing = Direction.getFacingFromAxisDirection(
 				blockState.get(BlockStateProperties.HORIZONTAL_FACING).getAxis(),
 				speed < 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE);
 
-		boolean hasBeltAdjacent = onEndingBelt
-				&& AllBlocks.BELT.typeOf(world.getBlockState(pos.offset(movementFacing)));
 		boolean collidedWithBelt = te instanceof BeltTileEntity;
 		boolean betweenBelts = tileEntityBelowPassenger instanceof BeltTileEntity && tileEntityBelowPassenger != te;
 
@@ -143,7 +140,7 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 			return;
 
 		if (entityIn instanceof LivingEntity) {
-			((LivingEntity) entityIn).setIdleTime(20);
+			((LivingEntity) entityIn).setIdleTime(101);
 		}
 
 		final Direction beltFacing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
@@ -175,7 +172,7 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 			movingDown = movingUp;
 			movingUp = b;
 		}
-		
+
 		if (movingUp)
 			movement = movement.add(0, Math.abs(axis.getCoordinate(movement.x, movement.y, movement.z)), 0);
 		if (movingDown)
@@ -184,17 +181,21 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		Vec3d centering = new Vec3d(centeringDirection).scale(diffCenter * Math.min(Math.abs(movementSpeed), .1f) * 4);
 		movement = movement.add(centering);
 
-		if (info.ticksSinceLastCollision > 0 && !betweenBelts && onEndingBelt && !hasBeltAdjacent) {
-			entityIn.setPosition(entityIn.posX, entityIn.posY + movement.y, entityIn.posZ);
-			float verticalMultiplier = entityIn instanceof ItemEntity ? .25f : 1;
-			if (movementSpeed > .25f)
-				movement = movement.add(0, Math.abs(movementSpeed) * verticalMultiplier, 0);
-			entityIn.setMotion(movement);
-			return;
-		}
-
 		float step = entityIn.stepHeight;
 		entityIn.stepHeight = 1;
+
+		if (Math.abs(movementSpeed) < .5f) {
+			Vec3d checkDistance = movement.scale(2f).add(movement.normalize().scale(.5));
+			AxisAlignedBB bb = entityIn.getBoundingBox();
+			AxisAlignedBB checkBB = new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
+			if (!world
+					.getEntitiesWithinAABBExcludingEntity(entityIn, checkBB.offset(checkDistance)
+							.grow(-Math.abs(checkDistance.x), -Math.abs(checkDistance.y), -Math.abs(checkDistance.z)))
+					.isEmpty()) {
+				entityIn.setMotion(0, 0, 0);
+				return;
+			}
+		}
 
 		if (movingUp) {
 			float minVelocity = entityIn instanceof ItemEntity ? .09f : .13f;
@@ -209,7 +210,11 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		}
 		entityIn.stepHeight = step;
 
-		if (!betweenBelts && onEndingBelt && !hasBeltAdjacent) {
+		boolean movedPastEndingSlope = onSlope && AllBlocks.BELT.typeOf(world.getBlockState(entityIn.getPosition()))
+				|| AllBlocks.BELT.typeOf(world.getBlockState(entityIn.getPosition().down()));
+
+		if (movedPastEndingSlope && !movingDown && Math.abs(movementSpeed) > .25f) {
+			entityIn.setPosition(entityIn.posX, entityIn.posY + movement.y, entityIn.posZ);
 			entityIn.setMotion(movement);
 		}
 	}

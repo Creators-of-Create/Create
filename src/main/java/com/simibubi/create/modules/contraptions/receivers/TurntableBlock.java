@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
@@ -13,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -40,37 +42,51 @@ public class TurntableBlock extends KineticBlock {
 	}
 
 	@Override
-	public void onLanded(IBlockReader worldIn, Entity e) {
-		TileEntity te = worldIn.getTileEntity(e.getPosition());
+	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity e) {
+		TileEntity te = worldIn.getTileEntity(pos);
 		if (!(te instanceof KineticTileEntity))
+			return;
+		if (!e.onGround)
+			return;
+		if (e.getMotion().y > 0)
 			return;
 
 		float speed = ((KineticTileEntity) te).getSpeed() / 20;
 		World world = e.getEntityWorld();
 
-		if (speed == 0) {
-			super.onLanded(worldIn, e);
+		if (speed == 0) 
 			return;
-		}
-		if (world.isRemote) {
-			super.onLanded(worldIn, e);
+		if (e.posY < pos.getY() + .5f)
 			return;
-		}
-		if ((e instanceof PlayerEntity)) {
-			super.onLanded(worldIn, e);
+		
+		Vec3d origin = VecHelper.getCenterOf(pos);
+		Vec3d offset = e.getPositionVec().subtract(origin);
+		
+		if (!world.isRemote && (e instanceof PlayerEntity)) 
 			return;
+		
+		if (offset.length() > 1/16f) {
+			offset = VecHelper.rotate(offset, speed / 1f, Axis.Y);
+			Vec3d movement = origin.add(offset).subtract(e.getPositionVec());
+			e.setMotion(e.getMotion().add(movement));
+			e.velocityChanged = true;
 		}
+		
+		if (world.isRemote)
+			return;
+		if ((e instanceof PlayerEntity)) 
+			return;
 		if ((e instanceof LivingEntity)) {
-			float offset = e.getRotationYawHead() - speed;
-			e.setRenderYawOffset(offset);
-			e.setRotationYawHead(offset);
-			super.onLanded(worldIn, e);
+			float diff = e.getRotationYawHead() - speed;
+			((LivingEntity) e).setIdleTime(20);
+			e.setRenderYawOffset(diff);
+			e.setRotationYawHead(diff);
 			return;
 		}
 
+		
 		e.rotationYaw -= speed;
 
-		super.onLanded(worldIn, e);
 	}
 
 	// IRotate:
