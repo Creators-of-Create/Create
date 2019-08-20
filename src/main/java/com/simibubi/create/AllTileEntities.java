@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.generators.MotorTileEntity;
 import com.simibubi.create.modules.contraptions.generators.MotorTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.generators.WaterWheelTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
@@ -52,6 +53,7 @@ public enum AllTileEntities {
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
+	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
 
 	;
 
@@ -92,6 +94,7 @@ public enum AllTileEntities {
 		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());
 		bind(DrillTileEntity.class, new KineticTileEntityRenderer());
 		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());
+		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

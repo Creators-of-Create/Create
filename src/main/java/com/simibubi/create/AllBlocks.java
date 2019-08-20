@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.modules.contraptions.base.HalfAxisBlock;
 import com.simibubi.create.modules.contraptions.generators.MotorBlock;
+import com.simibubi.create.modules.contraptions.generators.WaterWheelBlock;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelBlock;
 import com.simibubi.create.modules.contraptions.receivers.DrillBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock;
@@ -60,6 +61,7 @@ public enum AllBlocks {
 	BELT_ANIMATION(new RenderUtilityBlock()),
 	
 	MOTOR(new MotorBlock()),
+	WATER_WHEEL(new WaterWheelBlock()),
 	
 	TURNTABLE(new TurntableBlock()),
 	HALF_AXIS(new HalfAxisBlock()),

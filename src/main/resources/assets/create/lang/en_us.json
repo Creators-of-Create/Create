@@ -24,6 +24,7 @@
 	"block.create.drill": "Mechanical Drill",
 	"block.create.harvester": "Mechanical Harvester",
 	"block.create.contact": "Redstone Contact",
+	"block.create.water_wheel": "Water Wheel",
 	
 	"block.create.sticky_mechanical_piston": "Sticky Mechanical Piston",
 	"block.create.mechanical_piston": "Mechanical Piston",
