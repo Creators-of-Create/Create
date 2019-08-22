@@ -1,0 +1,16 @@
+{
+    "type": "create:crushing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:cornflower"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:blue_dye",
+			"count": 2
+		}
+	],
+	"processingTime": 50
+}

@@ -1,14 +1,6 @@
 package com.simibubi.create.modules.contraptions.generators;
 
-import static net.minecraft.util.Direction.DOWN;
-import static net.minecraft.util.Direction.EAST;
-import static net.minecraft.util.Direction.NORTH;
-import static net.minecraft.util.Direction.SOUTH;
-import static net.minecraft.util.Direction.UP;
-import static net.minecraft.util.Direction.WEST;
-
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -47,7 +39,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 	protected boolean hasStaticPart() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		for (Direction direction : Direction.values()) {

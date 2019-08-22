@@ -1,0 +1,16 @@
+{
+    "type": "create:crushing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:cobblestone"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:gravel",
+			"count": 1
+		}
+	],
+	"processingTime": 50
+}

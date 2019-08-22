@@ -1,6 +1,6 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
-    "parent": "block/cube",
+    "parent": "create:block/large_wheels",
     "textures": {
     	"axis": "create:block/axis",
     	"axis_top": "create:block/axis_top",

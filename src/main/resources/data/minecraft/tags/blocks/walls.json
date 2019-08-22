@@ -1,6 +1,6 @@
 {
 	"replace": false,
 	"values": [
-		"create:belt"
+		"create:belt", "create:crushing_wheel"
 	]
 }

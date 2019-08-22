@@ -59,10 +59,10 @@ public class WaterWheelTileEntity extends KineticTileEntity {
 			speed += i;
 
 		if (this.speed != speed) {
+			RotationPropagator.handleRemoved(world, pos, this);
 			this.setSpeed(speed);
 			hasFlows = speed != 0;
 			notifyBlockUpdate();
-			RotationPropagator.handleRemoved(world, pos, this);
 			RotationPropagator.handleAdded(world, pos, this);
 		}
 

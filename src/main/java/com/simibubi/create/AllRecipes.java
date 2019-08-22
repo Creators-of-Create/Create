@@ -2,23 +2,48 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.modules.contraptions.base.ProcessingRecipeSerializer;
+import com.simibubi.create.modules.contraptions.receivers.CrushingRecipe;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunUpgradeRecipe;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.event.RegistryEvent;
 
 public enum AllRecipes {
 
-	Placement_Handgun_Upgrade(BuilderGunUpgradeRecipe.Serializer::new),
-	
+	Placement_Handgun_Upgrade(BuilderGunUpgradeRecipe.Serializer::new, IRecipeType.CRAFTING),
+
+	Crushing(() -> {
+		return new ProcessingRecipeSerializer<>(CrushingRecipe::new);
+	}, Types.CRUSHING),
+
 	;
+
+	public static class Types {
+		public static IRecipeType<CrushingRecipe> CRUSHING = register("crushing");
+
+		static <T extends IRecipe<?>> IRecipeType<T> register(final String key) {
+			return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(key), new IRecipeType<T>() {
+				public String toString() {
+					return key;
+				}
+			});
+		}
+	}
 
 	public IRecipeSerializer<?> serializer;
 	public Supplier<IRecipeSerializer<?>> supplier;
+	public IRecipeType<? extends IRecipe<? extends IInventory>> type;
 
-	private AllRecipes(Supplier<IRecipeSerializer<?>> supplier) {
+	private AllRecipes(Supplier<IRecipeSerializer<?>> supplier,
+			IRecipeType<? extends IRecipe<? extends IInventory>> type) {
 		this.supplier = supplier;
+		this.type = type;
 	}
 
 	public static void register(RegistryEvent.Register<IRecipeSerializer<?>> event) {

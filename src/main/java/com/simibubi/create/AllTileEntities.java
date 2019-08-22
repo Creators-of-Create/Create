@@ -6,6 +6,7 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.generators.MotorTileEntity;
 import com.simibubi.create.modules.contraptions.generators.MotorTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.generators.WaterWheelTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
@@ -53,6 +54,7 @@ public enum AllTileEntities {
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
+	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
 
 	;

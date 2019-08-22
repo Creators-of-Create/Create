@@ -1,0 +1,17 @@
+{
+    "type": "create:crushing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:grass"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:wheat_seeds",
+			"count": 1,
+			"chance": 0.25
+		}
+	],
+	"processingTime": 50
+}

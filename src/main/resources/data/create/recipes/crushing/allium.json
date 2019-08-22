@@ -1,0 +1,26 @@
+{
+    "type": "create:crushing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:allium"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:magenta_dye",
+			"count": 2
+		},
+		{
+			"item": "minecraft:purple_dye",
+			"count": 2,
+			"chance": 0.1
+		},
+		{
+			"item": "minecraft:pink_dye",
+			"count": 1,
+			"chance": 0.1
+		}
+	],
+	"processingTime": 50
+}

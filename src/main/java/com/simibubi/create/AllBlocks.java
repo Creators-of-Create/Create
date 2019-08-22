@@ -7,6 +7,7 @@ import com.simibubi.create.modules.contraptions.base.HalfAxisBlock;
 import com.simibubi.create.modules.contraptions.generators.MotorBlock;
 import com.simibubi.create.modules.contraptions.generators.WaterWheelBlock;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelBlock;
+import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerBlock;
 import com.simibubi.create.modules.contraptions.receivers.DrillBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.receivers.TurntableBlock;
@@ -66,6 +67,7 @@ public enum AllBlocks {
 	TURNTABLE(new TurntableBlock()),
 	HALF_AXIS(new HalfAxisBlock()),
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
+	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
 	
 	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
 	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
