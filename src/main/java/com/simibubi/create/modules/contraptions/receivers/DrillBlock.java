@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.receivers;
 
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
@@ -165,6 +166,16 @@ public class DrillBlock extends DirectionalKineticBlock implements IHaveMovement
 		}
 
 		return false;
+	}
+
+	@Override
+	public ItemDescription getDescription() {
+		return new ItemDescription(color)
+				.withSummary("Using Rotational Force, this component can break blocks in front of it.")
+				.withBehaviour("When Rotated", h("Breaks blocks", color) + " right in front of it.")
+				.withBehaviour("When being pushed by Mechanical Piston",
+						h("Breaks the Blocks", color) + " it is being pushed into.")
+				.createTabs();
 	}
 
 }

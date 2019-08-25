@@ -6,6 +6,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
+import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.BeltTileEntity.TransportedEntityInfo;
 
@@ -208,6 +209,8 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
+		
+		boolean endWasDestroyed = state.get(PART) == Part.END;
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 		if (tileEntity == null)
 			return;
@@ -242,6 +245,9 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 				}
 
 				if (destroyedBlock.get(PART) == Part.END)
+					break;
+			} else {
+				if (endWasDestroyed)
 					break;
 			}
 
@@ -362,6 +368,11 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 							buildingBlock.withOffset(x * segment / 16f, y * segment / 16f, z * segment / 16f),
 							IBooleanFunction.AND));
 		return shape;
+	}
+	
+	@Override
+	public ItemDescription getDescription() {
+		return new ItemDescription(color);
 	}
 
 }

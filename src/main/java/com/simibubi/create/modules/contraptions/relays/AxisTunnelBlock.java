@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays;
 
+import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -28,7 +29,7 @@ public class AxisTunnelBlock extends RotatedPillarKineticBlock {
 	protected boolean hasStaticPart() {
 		return true;
 	}
-	
+
 	@Override
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.PUSH_ONLY;
@@ -49,6 +50,12 @@ public class AxisTunnelBlock extends RotatedPillarKineticBlock {
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(AXIS);
+	}
+
+	@Override
+	public ItemDescription getDescription() {
+		return new ItemDescription(color)
+				.withSummary("Relays a rotation through its block, similar to an exposed Axle.").createTabs();
 	}
 
 }

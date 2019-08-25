@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
-import com.simibubi.create.foundation.item.ItemWithToolTip;
+import com.simibubi.create.foundation.item.InfoItem;
 import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 
@@ -31,19 +31,19 @@ import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 
-public class TreeFertilizerItem extends ItemWithToolTip {
+public class TreeFertilizerItem extends InfoItem {
 
 	public TreeFertilizerItem(Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	protected ItemDescription getDescription() {
+	public ItemDescription getDescription() {
 		return new ItemDescription(Palette.Green)
 				.withSummary("A powerful combination of minerals suitable for common tree types.")
 				.withBehaviour("When used on Sapling", "Grows Trees regardless of their spacing Conditions").createTabs();
 	}
-
+	
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		BlockState state = context.getWorld().getBlockState(context.getPos());

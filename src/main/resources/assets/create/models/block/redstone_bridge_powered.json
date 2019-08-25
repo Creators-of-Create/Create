@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/redstone_bridge",
+    "textures": {
+    	"redstone_antenna": "create:block/redstone_antenna_powered",
+        "redstone_bridge": "create:block/redstone_bridge_powered"
+    }
+}

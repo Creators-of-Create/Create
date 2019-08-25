@@ -12,7 +12,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.item.ItemWithToolTip;
+import com.simibubi.create.foundation.item.InfoItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.foundation.utility.ItemDescription.Palette;
@@ -61,10 +61,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class BuilderGunItem extends ItemWithToolTip {
+public class BuilderGunItem extends InfoItem {
 
 	public static enum ComponentTier {
-		None(TextFormatting.DARK_GRAY + "Andesite Alloy"), BlazeBrass(TextFormatting.GOLD + "Blaze Brass"),
+		None(TextFormatting.DARK_GRAY + "Andesite Alloy"),
+		BlazeBrass(TextFormatting.GOLD + "Blaze Brass"),
 		ChorusChrome(TextFormatting.LIGHT_PURPLE + "Chorus Chrome"),
 
 		;
@@ -90,7 +91,7 @@ public class BuilderGunItem extends ItemWithToolTip {
 	}
 
 	@Override
-	protected ItemDescription getDescription() {
+	public ItemDescription getDescription() {
 		Palette palette = Palette.Purple;
 		return new ItemDescription(palette).withSummary("Novel gadget for placing or exchanging blocks at a distance.")
 				.withControl("L-Click at Block", "Sets blocks placed by the tool to the targeted block.")

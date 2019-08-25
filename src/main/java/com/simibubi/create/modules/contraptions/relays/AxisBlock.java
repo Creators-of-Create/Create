@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays;
 
+import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -59,6 +60,12 @@ public class AxisBlock extends RotatedPillarKineticBlock {
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(AXIS);
+	}
+
+	@Override
+	public ItemDescription getDescription() {
+		return new ItemDescription(color).withSummary("A straight connection for rotating blocks along its axis.")
+				.createTabs();
 	}
 
 }

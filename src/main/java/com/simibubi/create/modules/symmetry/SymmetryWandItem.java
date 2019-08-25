@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.item.ItemWithToolTip;
+import com.simibubi.create.foundation.item.InfoItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.foundation.utility.ItemDescription.Palette;
@@ -40,17 +40,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SymmetryWandItem extends ItemWithToolTip {
+public class SymmetryWandItem extends InfoItem {
 
 	public static final String $SYMMETRY = "symmetry";
 	private static final String $ENABLE = "enable";
-
+	
 	public SymmetryWandItem(Properties properties) {
 		super(properties.maxStackSize(1));
 	}
 
 	@Override
-	protected ItemDescription getDescription() {
+	public ItemDescription getDescription() {
 		Palette palette = Palette.Purple;
 		return new ItemDescription(palette)
 				.withSummary("Perfectly mirrors your Block placement across the configured planes.")

@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.generators;
 
+import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -47,5 +48,14 @@ public class MotorBlock extends HorizontalKineticBlock {
 	@Override
 	protected boolean hasStaticPart() {
 		return true;
+	}
+
+	// IToolTip
+
+	@Override
+	public ItemDescription getDescription() {
+		return new ItemDescription(color).withSummary("Provides Rotational Power.").withControl("When R-Clicked",
+				"Opens the " + h("Configuration Screen", color)).createTabs();
+
 	}
 }

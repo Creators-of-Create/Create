@@ -3,6 +3,10 @@ package com.simibubi.create.modules.contraptions.receivers;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.ITooltip;
+import com.simibubi.create.foundation.utility.ItemDescription;
+import com.simibubi.create.foundation.utility.ItemDescription.Palette;
+import com.simibubi.create.foundation.utility.TooltipHolder;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
 
@@ -12,6 +16,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.SugarCaneBlock;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -26,20 +31,24 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 
-public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBehavior {
+public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBehavior, ITooltip {
 
 	public static final VoxelShape SHAPE_SOUTH = makeCuboidShape(0, 4, 0, 16, 12, 6),
 			SHAPE_NORTH = makeCuboidShape(0, 4, 10, 16, 12, 16), SHAPE_WEST = makeCuboidShape(10, 4, 0, 16, 12, 16),
 			SHAPE_EAST = makeCuboidShape(0, 4, 0, 6, 12, 16);
 
+	private TooltipHolder info;
+
 	public HarvesterBlock() {
 		super(Properties.from(Blocks.IRON_BLOCK));
+		info = new TooltipHolder(this);
 	}
 
 	@Override
@@ -197,6 +206,22 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 		}
 
 		return Blocks.AIR.getDefaultState();
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
+			ITooltipFlag flagIn) {
+		info.addInformation(tooltip);
+	}
+
+	@Override
+	public ItemDescription getDescription() {
+		Palette color = Palette.Red;
+		return new ItemDescription(color).withSummary("Ideal for cutting crops using Mechanical Constructs.")
+				.withBehaviour("When pushed by Mechanical Piston",
+						"Cuts Crops to their initial growth state and drops their harvest.")
+				.createTabs();
+
 	}
 
 }

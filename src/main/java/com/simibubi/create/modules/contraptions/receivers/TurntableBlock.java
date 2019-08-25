@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
+import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -54,27 +55,27 @@ public class TurntableBlock extends KineticBlock {
 		float speed = ((KineticTileEntity) te).getSpeed() / 20;
 		World world = e.getEntityWorld();
 
-		if (speed == 0) 
+		if (speed == 0)
 			return;
 		if (e.posY < pos.getY() + .5f)
 			return;
-		
+
 		Vec3d origin = VecHelper.getCenterOf(pos);
 		Vec3d offset = e.getPositionVec().subtract(origin);
-		
-		if (!world.isRemote && (e instanceof PlayerEntity)) 
+
+		if (!world.isRemote && (e instanceof PlayerEntity))
 			return;
-		
-		if (offset.length() > 1/16f) {
+
+		if (offset.length() > 1 / 16f) {
 			offset = VecHelper.rotate(offset, speed / 1f, Axis.Y);
 			Vec3d movement = origin.add(offset).subtract(e.getPositionVec());
 			e.setMotion(e.getMotion().add(movement));
 			e.velocityChanged = true;
 		}
-		
+
 		if (world.isRemote)
 			return;
-		if ((e instanceof PlayerEntity)) 
+		if ((e instanceof PlayerEntity))
 			return;
 		if ((e instanceof LivingEntity)) {
 			float diff = e.getRotationYawHead() - speed;
@@ -84,7 +85,6 @@ public class TurntableBlock extends KineticBlock {
 			return;
 		}
 
-		
 		e.rotationYaw -= speed;
 
 	}
@@ -104,6 +104,12 @@ public class TurntableBlock extends KineticBlock {
 	@Override
 	protected boolean hasStaticPart() {
 		return false;
+	}
+
+	@Override
+	public ItemDescription getDescription() {
+		return new ItemDescription(color).withSummary("Turns rotational Force into raw Motion Sickness.")
+				.withBehaviour("When Rotated", "Rotates any Entities standing on top.").createTabs();
 	}
 
 }

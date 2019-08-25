@@ -21,6 +21,9 @@ import com.simibubi.create.modules.contraptions.relays.GearboxTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntityRenderer;
+import com.simibubi.create.modules.logistics.FlexCrateTileEntity;
+import com.simibubi.create.modules.logistics.RedstoneBridgeTileEntity;
+import com.simibubi.create.modules.logistics.StockpileSwitchTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
@@ -57,6 +60,11 @@ public enum AllTileEntities {
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
 
+	// Logistics
+	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
+	STOCKPILE_SWITCH(StockpileSwitchTileEntity::new, AllBlocks.STOCKPILE_SWITCH),
+	FLEX_CRATE(FlexCrateTileEntity::new, AllBlocks.FLEX_CRATE),
+	
 	;
 
 	private Supplier<? extends TileEntity> supplier;

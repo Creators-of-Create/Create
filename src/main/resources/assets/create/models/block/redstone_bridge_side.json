@@ -1,0 +1,51 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+    "parent": "block/block",
+    "textures": {
+        "redstone_antenna": "create:block/redstone_antenna",
+        "redstone_bridge_side": "create:block/redstone_bridge_side",
+        "particle": "#redstone_bridge_side"
+    },
+    "elements": [
+        {
+            "name": "Controller",
+            "from": [ 3, 1, -1 ], 
+            "to": [ 13, 15, 2 ], 
+            "faces": {
+                "north": { "texture": "#redstone_bridge_side", "uv": [ 0, 0, 10, 14 ] },
+                "east": { "texture": "#redstone_bridge_side", "uv": [ 10, 0, 13, 14 ] },
+                "south": { "texture": "#redstone_bridge_side", "uv": [ 0, 0, 10, 14 ] },
+                "west": { "texture": "#redstone_bridge_side", "uv": [ 10, 0, 13, 14 ], "rotation": 180 },
+                "up": { "texture": "#redstone_bridge_side", "uv": [ 13, 0, 16, 10 ], "rotation": 270 },
+                "down": { "texture": "#redstone_bridge_side", "uv": [ 13, 0, 16, 10 ], "rotation": 90 }
+            }
+        },
+        {
+            "name": "AntennaX",
+            "from": [ 3, 11, 2 ], 
+            "to": [ 6, 21, 3 ], 
+            "faces": {
+                "north": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ] },
+                "south": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ] },
+                "down": { "texture": "#redstone_antenna", "uv": [ 0, 9, 3, 10 ] }
+            }
+        },
+        {
+            "name": "AntennaZ",
+            "from": [ 4, 11, 1 ], 
+            "to": [ 5, 21, 4 ], 
+            "faces": {
+                "east": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ] },
+                "west": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ] }
+            }
+        },
+        {
+            "name": "AntennaTop",
+            "from": [ 4, 19, 2 ], 
+            "to": [ 5, 20, 3 ], 
+            "faces": {
+                "up": { "texture": "#redstone_antenna", "uv": [ 1, 1, 2, 2 ] }
+            }
+        }
+    ]
+}

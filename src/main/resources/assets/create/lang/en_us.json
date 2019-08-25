@@ -23,7 +23,6 @@
 	"block.create.crushing_wheel": "Crushing Wheel",
 	"block.create.drill": "Mechanical Drill",
 	"block.create.harvester": "Mechanical Harvester",
-	"block.create.contact": "Redstone Contact",
 	"block.create.water_wheel": "Water Wheel",
 	
 	"block.create.sticky_mechanical_piston": "Sticky Mechanical Piston",
@@ -33,6 +32,11 @@
 	"block.create.construct": "Movement Chassis",
 	"block.create.sticky_construct": "Sticky Chassis",
 	"block.create.relocation_construct": "Relocation Chassis",
+
+	"block.create.contact": "Redstone Contact",
+	"block.create.redstone_bridge": "Redstone Bridge",
+	"block.create.stockpile_switch": "Stockpile Switch",
+	"block.create.flex_crate": "FlexCrate",
 	
 	"block.create.andesite_bricks": "Andesite Bricks",
 	"block.create.diorite_bricks": "Diorite Bricks",

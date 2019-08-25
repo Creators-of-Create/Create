@@ -1,0 +1,17 @@
+{
+    "variants": {
+        "powered=false,facing=up": { "model": "create:block/redstone_bridge" },
+		"powered=false,facing=down": { "model": "create:block/redstone_bridge", "x": 180 },
+        "powered=false,facing=south": { "model": "create:block/redstone_bridge_side"},
+		"powered=false,facing=north": { "model": "create:block/redstone_bridge_side", "y": 180 },
+        "powered=false,facing=west": { "model": "create:block/redstone_bridge_side", "y": 90 },
+        "powered=false,facing=east": { "model": "create:block/redstone_bridge_side", "y": 270 },
+		
+		"powered=true,facing=up": { "model": "create:block/redstone_bridge_powered" },
+		"powered=true,facing=down": { "model": "create:block/redstone_bridge_powered", "x": 180 },
+        "powered=true,facing=south": { "model": "create:block/redstone_bridge_side_powered"},
+		"powered=true,facing=north": { "model": "create:block/redstone_bridge_side_powered", "y": 180 },
+        "powered=true,facing=west": { "model": "create:block/redstone_bridge_side_powered", "y": 90 },
+        "powered=true,facing=east": { "model": "create:block/redstone_bridge_side_powered", "y": 270 }
+	}
+}

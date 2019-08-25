@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
+import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.modules.contraptions.base.HalfAxisBlock;
@@ -24,6 +25,9 @@ import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.GearboxBlock;
 import com.simibubi.create.modules.contraptions.relays.GearshifterBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
+import com.simibubi.create.modules.logistics.FlexCrateBlock;
+import com.simibubi.create.modules.logistics.RedstoneBridgeBlock;
+import com.simibubi.create.modules.logistics.StockpileSwitchBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
@@ -35,7 +39,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FenceBlock;
+import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.RotatedPillarBlock;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.block.WallBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -60,15 +68,15 @@ public enum AllBlocks {
 	BELT(new BeltBlock()),
 	BELT_PULLEY(new RenderUtilityAxisBlock()),
 	BELT_ANIMATION(new RenderUtilityBlock()),
-	
+
 	MOTOR(new MotorBlock()),
 	WATER_WHEEL(new WaterWheelBlock()),
-	
+
 	TURNTABLE(new TurntableBlock()),
 	HALF_AXIS(new HalfAxisBlock()),
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
-	
+
 	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
 	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
 	MECHANICAL_PISTON_HEAD(new MechanicalPistonHeadBlock()),
@@ -76,58 +84,74 @@ public enum AllBlocks {
 	CONSTRUCT(new ChassisBlock(ChassisBlock.Type.NORMAL)),
 	STICKY_CONSTRUCT(new ChassisBlock(ChassisBlock.Type.STICKY)),
 	RELOCATION_CONSTRUCT(new ChassisBlock(ChassisBlock.Type.RELOCATING)),
-	
+
 	DRILL(new DrillBlock()),
 	HARVESTER(new HarvesterBlock()),
 	CONTACT(new ContactBlock()),
-	
+
+	// Logistics
+	REDSTONE_BRIDGE(new RedstoneBridgeBlock()),
+	STOCKPILE_SWITCH(new StockpileSwitchBlock()),
+	FLEX_CRATE(new FlexCrateBlock()),
+
 	// Symmetry
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),
 	SYMMETRY_CROSSPLANE(new CrossPlaneSymmetryBlock()),
 	SYMMETRY_TRIPLEPLANE(new TriplePlaneSymmetryBlock()),
-	
+
 	// Gardens
 	COCOA_LOG(new CocoaLogBlock()),
-	
+
 	// Palettes
 	ANDESITE_BRICKS(new Block(Properties.from(Blocks.ANDESITE))),
 	DIORITE_BRICKS(new Block(Properties.from(Blocks.DIORITE))),
 	GRANITE_BRICKS(new Block(Properties.from(Blocks.GRANITE))),
 
 	GABBRO(new Block(Properties.from(Blocks.ANDESITE))),
-	POLISHED_GABBRO(new Block(Properties.from(GABBRO.block))),	
-	GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),	
-	PAVED_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),	
-	INDENTED_GABBRO(new Block(Properties.from(GABBRO.block))),	
-	SLIGHTLY_MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),	
-	MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),	
-	
+	POLISHED_GABBRO(new Block(Properties.from(GABBRO.block))),
+	GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
+	PAVED_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
+	INDENTED_GABBRO(new Block(Properties.from(GABBRO.block))),
+	SLIGHTLY_MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
+	MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
+
 	LIMESTONE(new Block(Properties.from(Blocks.SANDSTONE))),
 	POLISHED_LIMESTONE(new Block(Properties.from(LIMESTONE.block))),
 	LIMESTONE_BRICKS(new Block(Properties.from(LIMESTONE.block))),
 	LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(LIMESTONE.block))),
-	
+
 	QUARTZIORITE(new Block(Properties.from(Blocks.QUARTZ_BLOCK))),
 	QUARTZIORITE_BRICKS(new Block(Properties.from(QUARTZIORITE.block))),
 	POLISHED_QUARTZIORITE(new Block(Properties.from(QUARTZIORITE.block))),
-	
+
 	DOLOMITE(new Block(Properties.from(Blocks.GRANITE))),
 	DOLOMITE_BRICKS(new Block(Properties.from(DOLOMITE.block))),
 	POLISHED_DOLOMITE(new Block(Properties.from(DOLOMITE.block))),
 	DOLOMITE_PILLAR(new RotatedPillarBlock(Properties.from(DOLOMITE.block))),
-	
+
 	;
 
-	public Block block;
+	private enum ComesWith {
+		WALL, FENCE, FENCE_GATE, SLAB, STAIRS;
+	}
 
-	private AllBlocks(Block block) {
+	public Block block;
+	public Block[] alsoRegistered;
+
+	private AllBlocks(Block block, ComesWith... comesWith) {
 		this.block = block;
 		this.block.setRegistryName(Create.ID, this.name().toLowerCase());
+
+		alsoRegistered = new Block[comesWith.length];
+		for (int i = 0; i < comesWith.length; i++)
+			alsoRegistered[i] = makeRelatedBlock(block, comesWith[i]);
 	}
 
 	public static void registerBlocks(IForgeRegistry<Block> registry) {
 		for (AllBlocks block : values()) {
 			registry.register(block.block);
+			for (Block extra : block.alsoRegistered)
+				registry.register(extra);
 		}
 	}
 
@@ -136,9 +160,15 @@ public enum AllBlocks {
 			if (block.get() instanceof IWithoutBlockItem)
 				continue;
 
-			registry.register(new BlockItem(block.get(), AllItems.standardProperties())
-					.setRegistryName(block.get().getRegistryName()));
+			registerAsItem(registry, block.get());
+			for (Block extra : block.alsoRegistered)
+				registerAsItem(registry, extra);
 		}
+	}
+
+	private static void registerAsItem(IForgeRegistry<Item> registry, Block blockIn) {
+		registry.register(
+				new BlockItem(blockIn, AllItems.standardProperties()).setRegistryName(blockIn.getRegistryName()));
 	}
 
 	public Block get() {
@@ -147,6 +177,34 @@ public enum AllBlocks {
 
 	public boolean typeOf(BlockState state) {
 		return state.getBlock() == block;
+	}
+
+	private Block makeRelatedBlock(Block block, ComesWith feature) {
+		Properties properties = Properties.from(block);
+		Block featured = null;
+
+		switch (feature) {
+		case FENCE:
+			featured = new FenceBlock(properties);
+			break;
+		case SLAB:
+			featured = new SlabBlock(properties);
+			break;
+		case STAIRS:
+			featured = new ProperStairsBlock(block);
+			break;
+		case WALL:
+			featured = new WallBlock(properties);
+			break;
+		case FENCE_GATE:
+			featured = new FenceGateBlock(properties);
+			break;
+		default:
+			return null;
+		}
+
+		return featured.setRegistryName(Create.ID,
+				block.getRegistryName().getPath() + "_" + feature.name().toLowerCase());
 	}
 
 }

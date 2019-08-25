@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays;
 
 import com.google.common.base.Predicates;
+import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.Block;
@@ -39,11 +40,11 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	public boolean isSolid(BlockState state) {
 		return false;
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = getDefaultState().with(AXIS, context.getNearestLookingDirection().getAxis());
-				
+
 		for (Direction face : Direction.values()) {
 			BlockState neighbour = context.getWorld().getBlockState(context.getPos().offset(face));
 			if (neighbour.getBlock() != this || neighbour.get(CONNECTED))
@@ -101,6 +102,15 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	@Override
 	protected boolean hasStaticPart() {
 		return true;
+	}
+
+	@Override
+	public ItemDescription getDescription() {
+		return new ItemDescription(color)
+				.withSummary("Relays rotation through its block and to an attached Encased Belt.")
+				.withBehaviour("When Attached to other Encased Belt",
+						"Attached Block will have the exact same rotation speed and direction. Attached Belts do not have to face the same way.")
+				.createTabs();
 	}
 
 }
