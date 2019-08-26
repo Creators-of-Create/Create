@@ -1,10 +1,10 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
-    "parent": "block/block",
+	"parent": "block/block",
     "textures": {
         "redstone_antenna": "create:block/redstone_antenna",
         "redstone_bridge_side": "create:block/redstone_bridge_side",
-        "particle": "create:block/redstone_bridge_side"
+		"particle": "create:block/redstone_bridge_side"
     },
     "elements": [
         {
@@ -55,6 +55,15 @@
             "to": [ 5, 4, -3 ], 
             "faces": {
                 "north": { "texture": "#redstone_antenna", "uv": [ 1, 1, 2, 2 ] }
+            }
+        },
+        {
+            "name": "Dish",
+            "from": [ 2, 1, -1 ], 
+            "to": [ 7, 6, -1 ], 
+            "faces": {
+                "north": { "texture": "#redstone_antenna", "uv": [ 4, 0, 9, 5 ] },
+                "south": { "texture": "#redstone_antenna", "uv": [ 4, 0, 9, 5 ] }
             }
         }
     ]

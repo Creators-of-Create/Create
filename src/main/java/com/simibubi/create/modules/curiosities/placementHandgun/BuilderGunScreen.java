@@ -62,8 +62,8 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 		animationProgress = 0;
 		setWindowSize(ScreenResources.PLACEMENT_GUN.width + 40, ScreenResources.PLACEMENT_GUN.height);
 		super.init();
-		int i = topLeftX - 20;
-		int j = topLeftY;
+		int i = guiLeft - 20;
+		int j = guiTop;
 
 		CompoundNBT nbt = item.getOrCreateTag();
 
@@ -169,8 +169,8 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
-		int i = topLeftX - 20;
-		int j = topLeftY;
+		int i = guiLeft - 20;
+		int j = guiTop;
 		ScreenResources.PLACEMENT_GUN.draw(this, i, j);
 
 		font.drawStringWithShadow("Handheld Blockzapper", i + 8, j + 10, 0xCCDDFF);
@@ -213,7 +213,7 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 		GlStateManager.pushMatrix();
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		GlStateManager.translated(topLeftX + 1.7f, topLeftY - 49, 120);
+		GlStateManager.translated(guiLeft + 1.7f, guiTop - 49, 120);
 		GlStateManager.rotatef(-30f, .5f, .9f, -.1f);
 		GlStateManager.scaled(20, -20, 20);
 

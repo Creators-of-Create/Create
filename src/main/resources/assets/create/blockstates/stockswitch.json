@@ -1,0 +1,23 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "create:block/stockpile_switch"
+  },
+  "variants": {
+    "indicator": {
+      "0": { "model": "create:block/stockpile_switch" },
+      "1": { "model": "create:block/stockpile_switch_1" },
+      "2": { "model": "create:block/stockpile_switch_2" },
+      "3": { "model": "create:block/stockpile_switch_3" },
+      "4": { "model": "create:block/stockpile_switch_4" },
+      "5": { "model": "create:block/stockpile_switch_5" },
+      "6": { "model": "create:block/stockpile_switch_6" }
+    },
+    "facing": {
+      "south": { "y": 270 },
+      "east": { "y": 180 },
+      "north": { "y": 90 },
+      "west": { "y": 0 }
+    }
+  }
+}

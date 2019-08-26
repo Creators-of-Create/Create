@@ -1,5 +1,5 @@
 {
-	"parent": "create:block/redstone_bridge",
+	"parent": "create:block/redstone_bridge_receiver",
     "textures": {
     	"redstone_antenna": "create:block/redstone_antenna_powered",
         "redstone_bridge": "create:block/redstone_bridge_powered",

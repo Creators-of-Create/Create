@@ -34,8 +34,8 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 	@Override
 	protected void init() {
 		setWindowSize(ScreenResources.SCHEMATIC.width + 50, ScreenResources.SCHEMATIC.height);
-		int x = topLeftX;
-		int y = topLeftY;
+		int x = guiLeft;
+		int y = guiTop;
 		BlueprintHandler bh = BlueprintHandler.instance;
 
 		xInput = new TextFieldWidget(font, x + 75, y + 32, 32, 10, "");
@@ -117,8 +117,8 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
-		int x = topLeftX;
-		int y = topLeftY;
+		int x = guiLeft;
+		int y = guiTop;
 		ScreenResources.SCHEMATIC.draw(this, x, y);
 		BlueprintHandler bh = BlueprintHandler.instance;
 
@@ -130,7 +130,7 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 		font.drawString("Mirror", x + 10, y + 72, ScreenResources.FONT_COLOR);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translated(topLeftX + 220, topLeftY + 20, 0);
+		GlStateManager.translated(guiLeft + 220, guiTop + 20, 0);
 		GlStateManager.scaled(3, 3, 3);
 		itemRenderer.renderItemIntoGUI(new ItemStack(AllItems.BLUEPRINT.get()), 0, 0);
 		GlStateManager.popMatrix();

@@ -20,7 +20,7 @@ archivesBaseName = 'create'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190816-1.14.3'
+    mappings channel: 'snapshot', version: '20190825-1.14.3'
     
     runs {		
 		client {
@@ -58,7 +58,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.49'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.55'
 }
 
 jar {

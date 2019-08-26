@@ -1,0 +1,22 @@
+{
+	"parent": "block/block",
+    "textures": {
+        "particle": "create:block/flex_crate",
+        "flex_crate": "create:block/flex_crate"
+    },
+    "elements": [
+        {
+            "name": "Crate",
+            "from": [ 1, 0, 1 ], 
+            "to": [ 15, 14, 15 ], 
+            "faces": {
+                "north": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] },
+                "east": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] },
+                "south": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] },
+                "west": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] },
+                "up": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] },
+                "down": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] }
+            }
+        }
+    ]
+}

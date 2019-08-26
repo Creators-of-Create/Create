@@ -35,8 +35,8 @@
 
 	"block.create.contact": "Redstone Contact",
 	"block.create.redstone_bridge": "Redstone Bridge",
-	"block.create.stockpile_switch": "Stockpile Switch",
-	"block.create.flex_crate": "FlexCrate",
+	"block.create.stockswitch": "Stockpile Switch",
+	"block.create.flexcrate": "FlexCrate",
 	
 	"block.create.andesite_bricks": "Andesite Bricks",
 	"block.create.diorite_bricks": "Diorite Bricks",

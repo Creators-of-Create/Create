@@ -52,6 +52,15 @@
             "faces": {
                 "up": { "texture": "#redstone_antenna", "uv": [ 1, 1, 2, 2 ] }
             }
+        },
+        {
+            "name": "Dish",
+            "from": [ -1, 7, 2 ], 
+            "to": [ 4, 7, 7 ], 
+            "faces": {
+                "up": { "texture": "#redstone_antenna", "uv": [ 4, 0, 9, 5 ] },
+                "down": { "texture": "#redstone_antenna", "uv": [ 4, 0, 9, 5 ] }
+            }
         }
     ]
 }

@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public abstract class AbstractSimiScreen extends Screen {
 
 	protected int sWidth, sHeight;
-	protected int topLeftX, topLeftY;
+	protected int guiLeft, guiTop;
 	protected List<Widget> widgets;
 
 	protected AbstractSimiScreen() {
@@ -26,8 +26,8 @@ public abstract class AbstractSimiScreen extends Screen {
 	protected void setWindowSize(int width, int height) {
 		sWidth = width;
 		sHeight = height;
-		topLeftX = (this.width - sWidth) / 2;
-		topLeftY = (this.height - sHeight) / 2;
+		guiLeft = (this.width - sWidth) / 2;
+		guiTop = (this.height - sHeight) / 2;
 	}
 
 	@Override

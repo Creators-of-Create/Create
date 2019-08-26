@@ -172,14 +172,15 @@ public class TreeFertilizerItem extends InfoItem {
 		}
 
 		@Override
-		public MapData func_217406_a(String p_217406_1_) {
-			return wrapped.func_217406_a(p_217406_1_);
+		public MapData getMapData(String mapName) {
+			return wrapped.getMapData(mapName);
 		}
 
 		@Override
-		public void func_217399_a(MapData p_217399_1_) {
+		public void registerMapData(MapData mapDataIn) {
+			wrapped.registerMapData(mapDataIn);
 		}
-
+		
 		@Override
 		public int getNextMapId() {
 			return 0;

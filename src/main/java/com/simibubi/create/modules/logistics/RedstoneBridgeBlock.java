@@ -1,17 +1,28 @@
 package com.simibubi.create.modules.logistics;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.ITooltip;
 import com.simibubi.create.foundation.utility.ItemDescription;
-import com.simibubi.create.foundation.utility.TooltipHolder;
 import com.simibubi.create.foundation.utility.ItemDescription.Palette;
+import com.simibubi.create.foundation.utility.TessellatorHelper;
+import com.simibubi.create.foundation.utility.TooltipHolder;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
@@ -20,37 +31,126 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+@EventBusSubscriber(value = Dist.CLIENT)
 public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITooltip {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+	public static final BooleanProperty RECEIVER = BooleanProperty.create("receiver");
+	private static final List<Pair<Vec3d, Vec3d>> itemPositions = new ArrayList<>(Direction.values().length);
 
 	public static final VoxelShape UP_SHAPE = makeCuboidShape(2, 0, 2, 14, 3, 14),
 			DOWN_SHAPE = makeCuboidShape(2, 13, 2, 14, 16, 14);
 
-	public static final VoxelShape SOUTH_SHAPE = makeCuboidShape(3, 1, -1, 13, 15, 2),
-			NORTH_SHAPE = makeCuboidShape(3, 1, 14, 13, 15, 17), EAST_SHAPE = makeCuboidShape(-1, 1, 3, 2, 15, 13),
-			WEST_SHAPE = makeCuboidShape(14, 1, 3, 17, 15, 13);
+	public static final VoxelShape 
+			SOUTH_SHAPE = makeCuboidShape(3, 1, -1, 13, 15, 3),
+			NORTH_SHAPE = makeCuboidShape(3, 1, 13, 13, 15, 17), 
+			EAST_SHAPE = makeCuboidShape(-1, 1, 3, 3, 15, 13),
+			WEST_SHAPE = makeCuboidShape(13, 1, 3, 17, 15, 13);
 
 	private TooltipHolder info;
 
 	public RedstoneBridgeBlock() {
 		super(Properties.from(Blocks.DARK_OAK_LOG));
 		info = new TooltipHolder(this);
+		cacheItemPositions();
+		setDefaultState(getDefaultState().with(POWERED, false).with(RECEIVER, false));
+	}
+
+	@Override
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+			boolean isMoving) {
+		Direction blockFacing = state.get(FACING);
+
+		if (fromPos.equals(pos.offset(blockFacing.getOpposite()))) {
+			if (!isValidPosition(state, worldIn, pos)) {
+				worldIn.destroyBlock(pos, true);
+				return;
+			}
+		}
+
+		if (worldIn.isRemote)
+			return;
+		if (state.get(RECEIVER))
+			return;
+
+		boolean previouslyPowered = state.get(POWERED);
+		if (previouslyPowered != worldIn.isBlockPowered(pos.offset(blockFacing.getOpposite()))) {
+			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
+
+			RedstoneBridgeTileEntity te = (RedstoneBridgeTileEntity) worldIn.getTileEntity(pos);
+			if (te == null)
+				return;
+			te.blockChanged();
+		}
+	}
+
+	@Override
+	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+			BlockPos currentPos, BlockPos facingPos) {
+		boolean shouldPower = false;
+		Direction blockFacing = stateIn.get(FACING);
+
+		if (worldIn.getWorld().isRemote)
+			return stateIn;
+		if (stateIn.get(RECEIVER))
+			return stateIn;
+		
+		shouldPower = worldIn.getWorld().isBlockPowered(currentPos.offset(blockFacing.getOpposite()))
+				|| worldIn.getWorld().isBlockPowered(currentPos);
+		if (stateIn.get(POWERED) != shouldPower) {
+			
+			RedstoneBridgeTileEntity te = (RedstoneBridgeTileEntity) worldIn.getTileEntity(currentPos);
+			if (te == null)
+				return stateIn;
+			te.blockChanged();
+			
+			return stateIn.with(POWERED, shouldPower);
+		}
+		return stateIn;
+	}
+
+	@Override
+	public boolean canProvidePower(BlockState state) {
+		return state.get(POWERED) && state.get(RECEIVER);
+	}
+
+	@Override
+	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		if (side != blockState.get(FACING))
+			return 0;
+		return getWeakPower(blockState, blockAccess, pos, side);
+	}
+
+	@Override
+	public int getWeakPower(BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		if (!state.get(RECEIVER))
+			return 0;
+		return state.get(POWERED) ? 15 : 0;
 	}
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(POWERED);
+		builder.add(POWERED, RECEIVER);
 		super.fillStateContainer(builder);
 	}
 
@@ -62,6 +162,107 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITool
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new RedstoneBridgeTileEntity();
+	}
+
+	@Override
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+			BlockRayTraceResult hit) {
+		Direction facing = state.get(FACING);
+		Pair<Vec3d, Vec3d> positions = itemPositions.get(facing.getIndex());
+		ItemStack stack = player.getHeldItem(handIn);
+		RedstoneBridgeTileEntity te = (RedstoneBridgeTileEntity) worldIn.getTileEntity(pos);
+
+		if (te == null)
+			return false;
+
+		if (player.isSneaking()) {
+			if (!worldIn.isRemote) {
+				worldIn.setBlockState(pos, state.cycle(RECEIVER));
+				te.blockChanged();
+			}
+			return true;
+		}
+
+		Vec3d vec = new Vec3d(pos);
+		Vec3d first = positions.getLeft().add(vec);
+		Vec3d second = positions.getRight().add(vec);
+
+		if (new AxisAlignedBB(first, first).grow(2 / 16f).contains(hit.getHitVec())) {
+			if (worldIn.isRemote)
+				return true;
+			te.setFrequency(true, stack);
+			return true;
+		}
+
+		if (new AxisAlignedBB(second, second).grow(2 / 16f).contains(hit.getHitVec())) {
+			if (worldIn.isRemote)
+				return true;
+			te.setFrequency(false, stack);
+			return true;
+		}
+
+		return false;
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
+		if (event.getTarget() == null || !(event.getTarget() instanceof BlockRayTraceResult))
+			return;
+
+		BlockRayTraceResult result = (BlockRayTraceResult) event.getTarget();
+		ClientWorld world = Minecraft.getInstance().world;
+		BlockPos pos = result.getPos();
+		BlockState state = world.getBlockState(pos);
+
+		if (!AllBlocks.REDSTONE_BRIDGE.typeOf(state))
+			return;
+
+		Direction facing = state.get(FACING);
+		Pair<Vec3d, Vec3d> positions = itemPositions.get(facing.getIndex());
+		RedstoneBridgeTileEntity te = (RedstoneBridgeTileEntity) world.getTileEntity(pos);
+
+		if (te == null)
+			return;
+
+		Vec3d vec = new Vec3d(pos);
+		Vec3d first = positions.getLeft().add(vec);
+		Vec3d second = positions.getRight().add(vec);
+
+		AxisAlignedBB firstBB = new AxisAlignedBB(first, first).grow(2 / 16f);
+		AxisAlignedBB secondBB = new AxisAlignedBB(second, second).grow(2 / 16f);
+
+		TessellatorHelper.prepareForDrawing();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+				GlStateManager.DestFactor.ZERO);
+		GlStateManager.disableTexture();
+		GlStateManager.depthMask(false);
+		GlStateManager.matrixMode(5889);
+
+		if (firstBB.contains(result.getHitVec())) {
+			GlStateManager.lineWidth(2);
+			WorldRenderer.drawSelectionBoundingBox(firstBB.grow(1 / 128f), 1, 1, .5f, 1f);
+		} else {
+			GlStateManager.lineWidth(2);
+			WorldRenderer.drawSelectionBoundingBox(firstBB.grow(1 / 128f), .5f, .5f, .2f, 1f);
+		}
+
+		if (secondBB.contains(result.getHitVec())) {
+			GlStateManager.lineWidth(2);
+			WorldRenderer.drawSelectionBoundingBox(secondBB.grow(1 / 128f), 1, 1, .5f, 1f);
+		} else {
+			GlStateManager.lineWidth(2);
+			WorldRenderer.drawSelectionBoundingBox(secondBB.grow(1 / 128f), .5f, .5f, .2f, 1f);
+		}
+
+		GlStateManager.matrixMode(5888);
+		GlStateManager.depthMask(true);
+		GlStateManager.enableTexture();
+		GlStateManager.disableBlend();
+		GlStateManager.lineWidth(1);
+		TessellatorHelper.cleanUpAfterDrawing();
 	}
 
 	@Override
@@ -108,6 +309,47 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITool
 		return VoxelShapes.empty();
 	}
 
+	private void cacheItemPositions() {
+		if (!itemPositions.isEmpty())
+			return;
+
+		Vec3d first = Vec3d.ZERO;
+		Vec3d second = Vec3d.ZERO;
+		Vec3d shift = VecHelper.getCenterOf(BlockPos.ZERO);
+		float zFightOffset = 1 / 128f;
+
+		for (Direction facing : Direction.values()) {
+			if (facing.getAxis().isHorizontal()) {
+				first = new Vec3d(10 / 16f, 5.5f / 16f, 2f / 16f + zFightOffset);
+				second = new Vec3d(10 / 16f, 10.5f / 16f, 2f / 16f + zFightOffset);
+
+				float angle = facing.getHorizontalAngle();
+				if (facing.getAxis() == Axis.X)
+					angle = -angle;
+
+				first = VecHelper.rotate(first.subtract(shift), angle, Axis.Y).add(shift);
+				second = VecHelper.rotate(second.subtract(shift), angle, Axis.Y).add(shift);
+
+			} else {
+				first = new Vec3d(10 / 16f, 2f / 16f + zFightOffset, 5.5f / 16f);
+				second = new Vec3d(10 / 16f, 2f / 16f + zFightOffset, 10.5f / 16f);
+
+				if (facing == Direction.DOWN) {
+					first = VecHelper.rotate(first.subtract(shift), 180, Axis.X).add(shift);
+					second = VecHelper.rotate(second.subtract(shift), 180, Axis.X).add(shift);
+				}
+			}
+
+			itemPositions.add(Pair.of(first, second));
+		}
+
+	}
+
+	public static Pair<Vec3d, Vec3d> getFrequencyItemPositions(BlockState state) {
+		Direction facing = state.get(FACING);
+		return itemPositions.get(facing.getIndex());
+	}
+
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
 	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
@@ -128,6 +370,8 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITool
 						"Sets the " + h("Frequency", color) + " to that item. A total of "
 								+ h("two different items", color)
 								+ " can be used in combination for defining a Frequency.")
+				.withControl("When R-Clicked while Sneaking",
+						"Toggles between " + h("Receiver", color) + " and " + h("Transmitter", color) + " Mode. ")
 				.createTabs();
 	}
 

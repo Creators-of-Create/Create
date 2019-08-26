@@ -25,9 +25,9 @@ import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.GearboxBlock;
 import com.simibubi.create.modules.contraptions.relays.GearshifterBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
-import com.simibubi.create.modules.logistics.FlexCrateBlock;
+import com.simibubi.create.modules.logistics.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.RedstoneBridgeBlock;
-import com.simibubi.create.modules.logistics.StockpileSwitchBlock;
+import com.simibubi.create.modules.logistics.StockswitchBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
@@ -91,8 +91,8 @@ public enum AllBlocks {
 
 	// Logistics
 	REDSTONE_BRIDGE(new RedstoneBridgeBlock()),
-	STOCKPILE_SWITCH(new StockpileSwitchBlock()),
-	FLEX_CRATE(new FlexCrateBlock()),
+	STOCKSWITCH(new StockswitchBlock()),
+	FLEXCRATE(new FlexcrateBlock()),
 
 	// Symmetry
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),

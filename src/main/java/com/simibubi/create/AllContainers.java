@@ -1,7 +1,7 @@
 package com.simibubi.create;
 
-import com.simibubi.create.modules.logistics.FlexCrateContainer;
-import com.simibubi.create.modules.logistics.FlexCrateScreen;
+import com.simibubi.create.modules.logistics.FlexcrateContainer;
+import com.simibubi.create.modules.logistics.FlexcrateScreen;
 import com.simibubi.create.modules.schematics.block.SchematicTableContainer;
 import com.simibubi.create.modules.schematics.block.SchematicTableScreen;
 import com.simibubi.create.modules.schematics.block.SchematicannonContainer;
@@ -28,7 +28,7 @@ public enum AllContainers {
 
 	SchematicTable(SchematicTableContainer::new), 
 	Schematicannon(SchematicannonContainer::new),
-	FlexCrate(FlexCrateContainer::new),
+	FlexCrate(FlexcrateContainer::new),
 	
 	;
 
@@ -53,7 +53,7 @@ public enum AllContainers {
 	public static void registerScreenFactories() {
 		bind(SchematicTable, SchematicTableScreen::new);
 		bind(Schematicannon, SchematicannonScreen::new);
-		bind(FlexCrate, FlexCrateScreen::new);
+		bind(FlexCrate, FlexcrateScreen::new);
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -21,9 +21,10 @@ import com.simibubi.create.modules.contraptions.relays.GearboxTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntityRenderer;
-import com.simibubi.create.modules.logistics.FlexCrateTileEntity;
+import com.simibubi.create.modules.logistics.FlexcrateTileEntity;
 import com.simibubi.create.modules.logistics.RedstoneBridgeTileEntity;
-import com.simibubi.create.modules.logistics.StockpileSwitchTileEntity;
+import com.simibubi.create.modules.logistics.RedstoneBridgeTileEntityRenderer;
+import com.simibubi.create.modules.logistics.StockswitchTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
@@ -62,8 +63,8 @@ public enum AllTileEntities {
 
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
-	STOCKPILE_SWITCH(StockpileSwitchTileEntity::new, AllBlocks.STOCKPILE_SWITCH),
-	FLEX_CRATE(FlexCrateTileEntity::new, AllBlocks.FLEX_CRATE),
+	STOCKSWITCH(StockswitchTileEntity::new, AllBlocks.STOCKSWITCH),
+	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE),
 	
 	;
 
@@ -105,6 +106,7 @@ public enum AllTileEntities {
 		bind(DrillTileEntity.class, new KineticTileEntityRenderer());
 		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());
 		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());
+		bind(RedstoneBridgeTileEntity.class, new RedstoneBridgeTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

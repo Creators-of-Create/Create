@@ -67,7 +67,7 @@ public class ItemDescription {
 
 	public ItemDescription withBehaviour(String condition, String behaviour) {
 		add(linesOnShift, GRAY + condition);
-		add(linesOnShift, cutString(behaviour, palette.hColor, 1));
+		add(linesOnShift, cutString(behaviour, palette.color, 1));
 		return this;
 	}
 

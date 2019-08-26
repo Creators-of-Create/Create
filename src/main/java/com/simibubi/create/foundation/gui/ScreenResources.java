@@ -23,6 +23,17 @@ public enum ScreenResources {
 	SCHEMATICANNON_HIGHLIGHT("schematicannon.png", 0, 182, 28, 28),
 	SCHEMATICANNON_FUEL("schematicannon.png", 0, 215, 82, 4),
 
+	FLEXCRATE("flex_crate_and_stockpile_switch.png", 125, 129),
+	FLEXCRATE_LOCKED_SLOT("flex_crate_and_stockpile_switch.png", 138, 0, 18, 18),
+	
+	STOCKSWITCH("flex_crate_and_stockpile_switch.png", 0, 129, 205, 93),
+	STOCKSWITCH_INTERVAL("flex_crate_and_stockpile_switch.png", 0, 222, 198, 17),
+	STOCKSWITCH_INTERVAL_END("flex_crate_and_stockpile_switch.png", 0, 239, 198, 17),
+	STOCKSWITCH_CURSOR_ON("flex_crate_and_stockpile_switch.png", 218, 129, 8, 21),
+	STOCKSWITCH_CURSOR_OFF("flex_crate_and_stockpile_switch.png", 226, 129, 8, 21),
+	STOCKSWITCH_BOUND_LEFT("flex_crate_and_stockpile_switch.png", 234, 129, 7, 21),
+	STOCKSWITCH_BOUND_RIGHT("flex_crate_and_stockpile_switch.png", 241, 129, 7, 21),
+	
 	// Widgets
 	PALETTE_BUTTON("palette_picker.png", 0, 236, 20, 20),
 	TEXT_INPUT("widgets.png", 0, 28, 194, 47),
@@ -74,7 +85,9 @@ public enum ScreenResources {
 	ICON_PATTERN_CHANCE_50("icons.png", 0, 112, 16, 16),
 	ICON_PATTERN_CHANCE_75("icons.png", 16, 112, 16, 16),
 	ICON_FOLLOW_DIAGONAL("icons.png", 32, 112, 16, 16),
-	ICON_FOLLOW_MATERIAL("icons.png", 48, 112, 16, 16);
+	ICON_FOLLOW_MATERIAL("icons.png", 48, 112, 16, 16),
+	
+	;
 	
 	public static final int FONT_COLOR = 0x575F7A;
 	
@@ -92,8 +105,12 @@ public enum ScreenResources {
 		this.startX = startX; this.startY = startY;
 	}
 	
-	public void draw(AbstractGui screen, int i, int j) {
+	public void bind() {
 		Minecraft.getInstance().getTextureManager().bindTexture(location);
+	}
+	
+	public void draw(AbstractGui screen, int i, int j) {
+		bind();
 		screen.blit(i, j, startX, startY, width, height);
 	}
 

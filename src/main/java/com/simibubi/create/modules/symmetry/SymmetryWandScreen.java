@@ -56,12 +56,12 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		super.init();
 		this.setWindowSize(ScreenResources.WAND_SYMMETRY.width + 50, ScreenResources.WAND_SYMMETRY.height + 50);
 
-		labelType = new Label(topLeftX + 122, topLeftY + 15, "").colored(0xFFFFFFFF).withShadow();
-		labelAlign = new Label(topLeftX + 122, topLeftY + 35, "").colored(0xFFFFFFFF).withShadow();
+		labelType = new Label(guiLeft + 122, guiTop + 15, "").colored(0xFFFFFFFF).withShadow();
+		labelAlign = new Label(guiLeft + 122, guiTop + 35, "").colored(0xFFFFFFFF).withShadow();
 
 		int state = currentElement instanceof TriplePlaneMirror ? 2
 				: currentElement instanceof CrossPlaneMirror ? 1 : 0;
-		areaType = new SelectionScrollInput(topLeftX + 119, topLeftY + 12, 70, 14)
+		areaType = new SelectionScrollInput(guiLeft + 119, guiTop + 12, 70, 14)
 				.forOptions(SymmetryMirror.TOOLTIP_ELEMENTS).titled("Type of Mirror").writingTo(labelType)
 				.setState(state);
 
@@ -97,7 +97,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 			widgets.remove(areaAlign);
 		}
 
-		areaAlign = new SelectionScrollInput(topLeftX + 119, topLeftY + 32, 70, 14).forOptions(element.getAlignToolTips())
+		areaAlign = new SelectionScrollInput(guiLeft + 119, guiTop + 32, 70, 14).forOptions(element.getAlignToolTips())
 				.titled("Direction").writingTo(labelAlign).setState(element.getOrientationIndex())
 				.calling(element::setOrientation);
 
@@ -112,10 +112,10 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
-		ScreenResources.WAND_SYMMETRY.draw(this, topLeftX, topLeftY);
+		ScreenResources.WAND_SYMMETRY.draw(this, guiLeft, guiTop);
 
-		int x = topLeftX + 63;
-		int y = topLeftY + 15;
+		int x = guiLeft + 63;
+		int y = guiTop + 15;
 
 		font.drawString("Symmetry", x, y, ScreenResources.FONT_COLOR);
 		font.drawString("Direction", x, y + 20, ScreenResources.FONT_COLOR);
@@ -155,7 +155,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		GlStateManager.pushMatrix();
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		GlStateManager.translated(topLeftX + 15, topLeftY - 117, 20);
+		GlStateManager.translated(guiLeft + 15, guiTop - 117, 20);
 		GlStateManager.rotatef(-22.5f, .3f, 1f, 0f);
 		GlStateManager.scaled(32, -32, 32);
 		minecraft.getBlockRendererDispatcher().renderBlock(currentElement.getModel(), new BlockPos(0, -5, 0),

@@ -96,7 +96,7 @@ public class SchematicannonBlock extends InfoBlock {
 	public ItemDescription getDescription() {
 		Palette color = Palette.Blue;
 		return new ItemDescription(color).withSummary("Prints a deployed " + h("Schematic", color)
-				+ "into the world using blocks from inventories placed right next to it.");
+				+ " into the world using blocks from inventories placed right next to it.").createTabs();
 	}
 
 }
