@@ -31,6 +31,7 @@ import com.simibubi.create.modules.logistics.StockswitchBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
+import com.simibubi.create.modules.shopping.ShopShelfBlock;
 import com.simibubi.create.modules.symmetry.block.CrossPlaneSymmetryBlock;
 import com.simibubi.create.modules.symmetry.block.PlaneSymmetryBlock;
 import com.simibubi.create.modules.symmetry.block.TriplePlaneSymmetryBlock;
@@ -101,6 +102,9 @@ public enum AllBlocks {
 
 	// Gardens
 	COCOA_LOG(new CocoaLogBlock()),
+
+	// Economy
+	SHOP_SHELF(new ShopShelfBlock()),
 
 	// Palettes
 	ANDESITE_BRICKS(new Block(Properties.from(Blocks.ANDESITE))),

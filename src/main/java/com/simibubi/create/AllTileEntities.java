@@ -28,6 +28,7 @@ import com.simibubi.create.modules.logistics.StockswitchTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
+import com.simibubi.create.modules.shopping.ShopShelfTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
@@ -66,8 +67,11 @@ public enum AllTileEntities {
 	STOCKSWITCH(StockswitchTileEntity::new, AllBlocks.STOCKSWITCH),
 	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE),
 	
-	;
+	// Economy
+	SHOP_SHELF(ShopShelfTileEntity::new, AllBlocks.SHOP_SHELF),
 
+	;
+	
 	private Supplier<? extends TileEntity> supplier;
 	public TileEntityType<?> type;
 	private AllBlocks[] blocks;

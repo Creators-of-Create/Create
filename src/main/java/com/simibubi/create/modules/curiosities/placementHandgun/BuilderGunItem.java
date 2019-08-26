@@ -30,6 +30,7 @@ import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Rarity;
 import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -82,7 +83,7 @@ public class BuilderGunItem extends InfoItem {
 	}
 
 	public BuilderGunItem(Properties properties) {
-		super(properties.maxStackSize(1));
+		super(properties.maxStackSize(1).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override

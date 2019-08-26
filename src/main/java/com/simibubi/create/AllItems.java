@@ -30,21 +30,25 @@ import net.minecraftforge.registries.IForgeRegistry;
 public enum AllItems {
 
 	SYMMETRY_WAND(new SymmetryWandItem(
-			standardProperties().rarity(Rarity.UNCOMMON).setTEISR(() -> () -> withSpecialRenderer("wand")))),
-	PLACEMENT_HANDGUN(new BuilderGunItem(
-			new Properties().rarity(Rarity.UNCOMMON).setTEISR(() -> () -> withSpecialRenderer("gun")))),
+			standardProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SYMMETRY_WAND)))),
+	
+	PLACEMENT_HANDGUN(
+			new BuilderGunItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN)))),
 
-	ANDESITE_ALLOY_CUBE(new Item(standardProperties())), BLAZE_BRASS_CUBE(new Item(standardProperties())),
+	ANDESITE_ALLOY_CUBE(new Item(standardProperties())), 
+	BLAZE_BRASS_CUBE(new Item(standardProperties())),
 	CHORUS_CHROME_CUBE(new Item(standardProperties().rarity(Rarity.UNCOMMON))),
 
 	TREE_FERTILIZER(new TreeFertilizerItem(standardProperties())),
+	
 	EMPTY_BLUEPRINT(new Item(standardProperties().maxStackSize(1))),
 	BLUEPRINT_AND_QUILL(new BlueprintAndQuillItem(standardProperties().maxStackSize(1))),
 	BLUEPRINT(new BlueprintItem(standardProperties())),
-
 	BELT_CONNECTOR(new BeltItem(standardProperties())),
 
 	;
+
+	// Common
 
 	public Item item;
 
@@ -71,13 +75,23 @@ public enum AllItems {
 		return stack.getItem() == item;
 	}
 
+	// Client
+
+	private enum AllItemRenderers {
+		SYMMETRY_WAND, BUILDER_GUN,;
+	}
+
 	@OnlyIn(Dist.CLIENT)
-	public static ItemStackTileEntityRenderer withSpecialRenderer(String renderer) {
-		if ("wand".equals(renderer))
+	public static ItemStackTileEntityRenderer renderUsing(AllItemRenderers renderer) {
+		switch (renderer) {
+		
+		case SYMMETRY_WAND:
 			return new SymmetryWandItemRenderer();
-		if ("gun".equals(renderer))
+		case BUILDER_GUN:
 			return new BuilderGunItemRenderer();
-		return null;
+		default:
+			return null;
+		}
 	}
 
 	@SubscribeEvent

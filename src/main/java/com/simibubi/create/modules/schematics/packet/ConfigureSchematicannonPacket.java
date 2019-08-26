@@ -2,6 +2,7 @@ package com.simibubi.create.modules.schematics.packet;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity.State;
 
@@ -12,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class ConfigureSchematicannonPacket {
+public class ConfigureSchematicannonPacket extends SimplePacketBase {
 
 	public static enum Option {
 		DONT_REPLACE, REPLACE_SOLID, REPLACE_ANY, REPLACE_EMPTY, SKIP_MISSING, SKIP_TILES, PLAY, PAUSE, STOP;
@@ -39,7 +40,7 @@ public class ConfigureSchematicannonPacket {
 		set = buffer.readBoolean();
 	}
 
-	public void toBytes(PacketBuffer buffer) {
+	public void write(PacketBuffer buffer) {
 		buffer.writeBlockPos(pos);
 		buffer.writeInt(option.ordinal());
 		buffer.writeBoolean(set);
