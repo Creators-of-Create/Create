@@ -5,12 +5,14 @@ import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItemRenderer;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
 import com.simibubi.create.modules.gardens.TreeFertilizerItem;
+import com.simibubi.create.modules.logistics.item.FilterItem;
 import com.simibubi.create.modules.schematics.item.BlueprintAndQuillItem;
 import com.simibubi.create.modules.schematics.item.BlueprintItem;
 import com.simibubi.create.modules.symmetry.SymmetryWandItem;
 import com.simibubi.create.modules.symmetry.client.SymmetryWandItemRenderer;
 import com.simibubi.create.modules.symmetry.client.SymmetryWandModel;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
@@ -45,6 +47,7 @@ public enum AllItems {
 	BLUEPRINT_AND_QUILL(new BlueprintAndQuillItem(standardProperties().maxStackSize(1))),
 	BLUEPRINT(new BlueprintItem(standardProperties())),
 	BELT_CONNECTOR(new BeltItem(standardProperties())),
+	FILTER(new FilterItem(standardProperties())),
 
 	;
 
@@ -81,6 +84,11 @@ public enum AllItems {
 		SYMMETRY_WAND, BUILDER_GUN,;
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	public static void registerColorHandlers() {
+		Minecraft.getInstance().getItemColors().register(new FilterItem.Color(), FILTER.item);
+	}
+	
 	@OnlyIn(Dist.CLIENT)
 	public static ItemStackTileEntityRenderer renderUsing(AllItemRenderers renderer) {
 		switch (renderer) {

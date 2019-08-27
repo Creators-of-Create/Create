@@ -6,6 +6,7 @@
         "brass_casing": "create:block/brass_casing",
         "dark_oak_planks": "minecraft:block/dark_oak_planks",
         "iron_block": "minecraft:block/iron_block",
+        "end": "create:block/stockpile_switch_end",
 		"particle": "create:block/brass_casing"
     },
     "elements": [
@@ -73,7 +74,7 @@
             "faces": {
                 "north": { "texture": "#iron_block", "uv": [ 14, 2, 16, 14 ] },
                 "south": { "texture": "#iron_block", "uv": [ 0, 2, 2, 14 ] },
-                "west": { "texture": "#iron_block", "uv": [ 2, 2, 14, 14 ] },
+                "west": { "texture": "#end", "uv": [ 2, 2, 14, 14 ] },
                 "up": { "texture": "#iron_block", "uv": [ 2, 0, 14, 2 ], "rotation": 270 },
                 "down": { "texture": "#iron_block", "uv": [ 2, 14, 14, 16 ], "rotation": 90 }
             }

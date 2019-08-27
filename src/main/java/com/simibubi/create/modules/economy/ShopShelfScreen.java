@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.shopping;
+package com.simibubi.create.modules.economy;
 
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 

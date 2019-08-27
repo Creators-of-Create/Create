@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics;
+package com.simibubi.create.modules.logistics.block;
 
 import com.simibubi.create.AllContainers;
 
@@ -63,8 +63,10 @@ public class FlexcrateContainer extends Container {
 			return ItemStack.EMPTY;
 
 		ItemStack stack = clickedSlot.getStack();
-		if (index < 16)
+		if (index < 16) {
 			mergeItemStack(stack, 16, inventorySlots.size(), false);
+			te.inventory.onContentsChanged(index);
+		}
 		else
 			mergeItemStack(stack, 0, 15, false);
 

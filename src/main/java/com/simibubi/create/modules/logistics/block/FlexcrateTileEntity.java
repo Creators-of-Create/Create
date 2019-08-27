@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics;
+package com.simibubi.create.modules.logistics.block;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
@@ -17,6 +17,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class FlexcrateTileEntity extends SyncedTileEntity implements INamedContainerProvider {
@@ -46,12 +47,18 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
 			markDirty();
+
+			itemCount = 0;
+			for (int i = 0; i < getSlots(); i++) {
+				itemCount += getStackInSlot(i).getCount();
+			}
 		}
 	}
 
 	public Inv inventory;
 	public int allowedAmount;
 	public int itemCount;
+	protected LazyOptional<IItemHandler> invHandler;
 
 	public FlexcrateTileEntity() {
 		this(AllTileEntities.FLEXCRATE.type);
@@ -62,6 +69,7 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 		allowedAmount = 512;
 		itemCount = 10;
 		inventory = new Inv();
+		invHandler = LazyOptional.of(() -> inventory);
 	}
 
 	@Override
@@ -94,10 +102,15 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 	}
 
 	@Override
+	public void remove() {
+		super.remove();
+		invHandler.invalidate();
+	}
+
+	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return LazyOptional.of(() -> inventory).cast();
-		}
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return invHandler.cast();
 		return super.getCapability(capability, facing);
 	}
 

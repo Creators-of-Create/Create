@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.gui.widgets;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -42,6 +44,7 @@ public class Label extends AbstractSimiWidget {
 		if (text == null || text.isEmpty())
 			return;
 		
+		GlStateManager.color4f(1, 1, 1, 1);
 		if (hasShadow)
 			font.drawStringWithShadow(text + suffix, x, y, color);
 		else

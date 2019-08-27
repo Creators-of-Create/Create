@@ -109,7 +109,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		offset = movingConstruct.initialExtensionProgress;
 		movingPistons.add(this);
 
-		notifyBlockUpdate();
+		sendData();
 		getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66);
 		for (BlockInfo block : movingConstruct.blocks.values()) {
 			BlockPos startPos = block.pos.offset(direction, movingConstruct.initialExtensionProgress);
@@ -148,7 +148,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		running = false;
 		movingPistons.remove(this);
 		movingConstruct = null;
-		notifyBlockUpdate();
+		sendData();
 	}
 
 	@Override

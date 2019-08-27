@@ -1,15 +1,17 @@
-package com.simibubi.create.modules.logistics;
+package com.simibubi.create.modules.logistics.block;
 
 import static com.simibubi.create.foundation.gui.ScreenResources.FLEXCRATE;
 import static com.simibubi.create.foundation.gui.ScreenResources.PLAYER_INVENTORY;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.gui.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
+import com.simibubi.create.modules.logistics.packet.ConfigureFlexcratePacket;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerInventory;
@@ -71,16 +73,21 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 
 		ScreenElementRenderer.renderBlock(this::getRenderedBlock);
 	}
-	
+
+	@Override
+	public void removed() {
+		AllPackets.channel.sendToServer(new ConfigureFlexcratePacket(te.getPos(), allowedItems.getState()));
+	}
+
 	@Override
 	public void tick() {
 		super.tick();
 		if (lastModification >= 0)
 			lastModification++;
-		
+
 		if (lastModification >= 15) {
 			lastModification = -1;
-			
+			AllPackets.channel.sendToServer(new ConfigureFlexcratePacket(te.getPos(), allowedItems.getState()));
 		}
 	}
 

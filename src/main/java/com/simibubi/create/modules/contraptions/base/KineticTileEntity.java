@@ -51,10 +51,6 @@ public abstract class KineticTileEntity extends SyncedTileEntity {
 		super.remove();
 	}
 
-	public void notifyBlockUpdate() {
-		this.world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 2 | 16);
-	}
-
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.putFloat("Speed", getSpeed());

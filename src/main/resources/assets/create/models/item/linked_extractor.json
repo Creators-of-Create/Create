@@ -1,5 +1,5 @@
 {
-	"parent": "create:block/shop_shelf",
+    "parent": "create:block/extractor_wireless_powered",
 	"display": {
         "gui": {
             "rotation": [ 30, 45, 0 ],

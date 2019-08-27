@@ -66,6 +66,7 @@ public class Create {
 			ScrollFixer.init();
 			TOOL_MENU = new KeyBinding("Tool Menu (Hold)", KeyboardHelper.LALT, NAME);
 			ClientRegistry.registerKeyBinding(TOOL_MENU);
+			AllItems.registerColorHandlers();
 		});
 	}
 

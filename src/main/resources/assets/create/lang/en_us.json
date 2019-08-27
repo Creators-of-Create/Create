@@ -9,6 +9,7 @@
 	"item.create.blueprint_and_quill": "Schematic and Quill",
 	"item.create.blueprint": "Schematic",
 	"item.create.belt_connector": "Mechanical Belt",
+	"item.create.filter": "Filter",
 	
 	"block.create.gear": "Cogwheel",
     "block.create.large_gear": "Large Cogwheel",
@@ -37,6 +38,8 @@
 	"block.create.redstone_bridge": "Redstone Bridge",
 	"block.create.stockswitch": "Stockpile Switch",
 	"block.create.flexcrate": "FlexCrate",
+	"block.create.extractor": "Extractor",
+	"block.create.linked_extractor": "Linked Extractor",
 	
 	"block.create.andesite_bricks": "Andesite Bricks",
 	"block.create.diorite_bricks": "Diorite Bricks",

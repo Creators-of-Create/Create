@@ -24,14 +24,16 @@ import com.simibubi.create.modules.contraptions.relays.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.GearboxBlock;
 import com.simibubi.create.modules.contraptions.relays.GearshifterBlock;
+import com.simibubi.create.modules.economy.ShopShelfBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
-import com.simibubi.create.modules.logistics.FlexcrateBlock;
-import com.simibubi.create.modules.logistics.RedstoneBridgeBlock;
-import com.simibubi.create.modules.logistics.StockswitchBlock;
+import com.simibubi.create.modules.logistics.block.ExtractorBlock;
+import com.simibubi.create.modules.logistics.block.FlexcrateBlock;
+import com.simibubi.create.modules.logistics.block.LinkedExtractorBlock;
+import com.simibubi.create.modules.logistics.block.RedstoneBridgeBlock;
+import com.simibubi.create.modules.logistics.block.StockswitchBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
-import com.simibubi.create.modules.shopping.ShopShelfBlock;
 import com.simibubi.create.modules.symmetry.block.CrossPlaneSymmetryBlock;
 import com.simibubi.create.modules.symmetry.block.PlaneSymmetryBlock;
 import com.simibubi.create.modules.symmetry.block.TriplePlaneSymmetryBlock;
@@ -94,6 +96,8 @@ public enum AllBlocks {
 	REDSTONE_BRIDGE(new RedstoneBridgeBlock()),
 	STOCKSWITCH(new StockswitchBlock()),
 	FLEXCRATE(new FlexcrateBlock()),
+	EXTRACTOR(new ExtractorBlock()),
+	LINKED_EXTRACTOR(new LinkedExtractorBlock()),
 
 	// Symmetry
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),

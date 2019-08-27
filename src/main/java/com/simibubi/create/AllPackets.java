@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunBeamPacket;
+import com.simibubi.create.modules.logistics.packet.ConfigureFlexcratePacket;
+import com.simibubi.create.modules.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.modules.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.modules.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.modules.schematics.packet.SchematicUploadPacket;
@@ -23,6 +25,8 @@ public enum AllPackets {
 	// Client to Server
 	NBT(NbtPacket.class, NbtPacket::new),
 	CONFIGURE_SCHEMATICANNON(ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket::new),
+	CONFIGURE_FLEXCRATE(ConfigureFlexcratePacket.class, ConfigureFlexcratePacket::new),
+	CONFIGURE_STOCKSWITCH(ConfigureStockswitchPacket.class, ConfigureStockswitchPacket::new),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new),
 	

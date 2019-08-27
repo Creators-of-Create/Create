@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics;
+package com.simibubi.create.modules.logistics.block;
 
 import com.simibubi.create.foundation.block.InfoBlock;
 import com.simibubi.create.foundation.utility.ItemDescription;

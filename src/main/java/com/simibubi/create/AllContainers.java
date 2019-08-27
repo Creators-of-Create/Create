@@ -1,13 +1,13 @@
 package com.simibubi.create;
 
-import com.simibubi.create.modules.logistics.FlexcrateContainer;
-import com.simibubi.create.modules.logistics.FlexcrateScreen;
+import com.simibubi.create.modules.economy.ShopShelfContainer;
+import com.simibubi.create.modules.economy.ShopShelfScreen;
+import com.simibubi.create.modules.logistics.block.FlexcrateContainer;
+import com.simibubi.create.modules.logistics.block.FlexcrateScreen;
 import com.simibubi.create.modules.schematics.block.SchematicTableContainer;
 import com.simibubi.create.modules.schematics.block.SchematicTableScreen;
 import com.simibubi.create.modules.schematics.block.SchematicannonContainer;
 import com.simibubi.create.modules.schematics.block.SchematicannonScreen;
-import com.simibubi.create.modules.shopping.ShopShelfContainer;
-import com.simibubi.create.modules.shopping.ShopShelfScreen;
 
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.ScreenManager;

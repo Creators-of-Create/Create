@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics;
+package com.simibubi.create.modules.logistics.block;
 
 import org.apache.commons.lang3.tuple.Pair;
 

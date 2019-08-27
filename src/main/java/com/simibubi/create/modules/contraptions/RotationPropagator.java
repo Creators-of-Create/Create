@@ -143,14 +143,14 @@ public class RotationPropagator {
 			if (neighbourTE.hasSource() && neighbourTE.getSource().equals(addedTE.getPos())) {
 				addedTE.setSpeed(neighbourTE.getSpeed() * speedModifier);
 				addedTE.onSpeedChanged();
-				addedTE.notifyBlockUpdate();
+				addedTE.sendData();
 				continue;
 			}
 
 			addedTE.setSpeed(neighbourTE.getSpeed() * speedModifier);
 			addedTE.setSource(neighbourTE.getPos());
 			addedTE.onSpeedChanged();
-			addedTE.notifyBlockUpdate();
+			addedTE.sendData();
 			propagateNewSource(addedTE);
 			return;
 		}
@@ -183,7 +183,7 @@ public class RotationPropagator {
 			neighbourTE.setSpeed(newSpeed);
 			neighbourTE.setSource(updateTE.getPos());
 			neighbourTE.onSpeedChanged();
-			neighbourTE.notifyBlockUpdate();
+			neighbourTE.sendData();
 			propagateNewSource(neighbourTE);
 
 		}
@@ -234,7 +234,7 @@ public class RotationPropagator {
 			final KineticTileEntity currentTE = (KineticTileEntity) world.getTileEntity(pos);
 
 			currentTE.removeSource();
-			currentTE.notifyBlockUpdate();
+			currentTE.sendData();
 
 			for (KineticTileEntity neighbourTE : getConnectedNeighbours(currentTE)) {
 				if (neighbourTE.isSource()) {

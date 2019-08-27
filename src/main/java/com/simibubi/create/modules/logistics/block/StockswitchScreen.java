@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics;
+package com.simibubi.create.modules.logistics.block;
 
 import static com.simibubi.create.foundation.gui.ScreenResources.STOCKSWITCH;
 
@@ -6,11 +6,13 @@ import java.util.Arrays;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.gui.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
+import com.simibubi.create.modules.logistics.packet.ConfigureStockswitchPacket;
 
 import net.minecraft.block.BlockState;
 
@@ -21,10 +23,13 @@ public class StockswitchScreen extends AbstractSimiScreen {
 	private ScrollInput onAbove;
 	private Label onAboveLabel;
 
+	private int lastModification;
 	private StockswitchTileEntity te;
+	private float cursorPos;
 
 	public StockswitchScreen(StockswitchTileEntity te) {
 		this.te = te;
+		lastModification = -1;
 	}
 
 	@Override
@@ -32,11 +37,13 @@ public class StockswitchScreen extends AbstractSimiScreen {
 		setWindowSize(STOCKSWITCH.width + 50, STOCKSWITCH.height);
 		super.init();
 		widgets.clear();
+		cursorPos = te.currentLevel == -1 ? 0 : te.currentLevel;
 
 		offBelowLabel = new Label(guiLeft + 116, guiTop + 72, "").colored(0xD3CBBE).withShadow();
 		offBelow = new ScrollInput(guiLeft + 113, guiTop + 69, 33, 14).withRange(0, 96).titled("Lower Threshold")
 				.calling(state -> {
 					offBelowLabel.text = state + "%";
+					lastModification = 0;
 					if (onAbove.getState() - 4 <= state) {
 						onAbove.setState(state + 5);
 						onAbove.onChanged();
@@ -47,6 +54,7 @@ public class StockswitchScreen extends AbstractSimiScreen {
 		onAbove = new ScrollInput(guiLeft + 113, guiTop + 52, 33, 14).withRange(5, 101).titled("Upper Threshold")
 				.calling(state -> {
 					onAboveLabel.text = state + "%";
+					lastModification = 0;
 					if (offBelow.getState() + 4 >= state) {
 						offBelow.setState(state - 5);
 						offBelow.onChanged();
@@ -74,7 +82,6 @@ public class StockswitchScreen extends AbstractSimiScreen {
 		ScreenResources sprite = ScreenResources.STOCKSWITCH_INTERVAL;
 		float lowerBound = offBelow.getState() / 100f * (sprite.width - 20) + 10;
 		float upperBound = onAbove.getState() / 100f * (sprite.width - 20) + 10;
-		float cursorPos = te.currentLevel * (sprite.width - 20) + 10;
 
 		sprite.bind();
 		blit((int) (guiLeft + lowerBound), guiTop + 26, (int) (sprite.startX + lowerBound), sprite.startY,
@@ -88,11 +95,39 @@ public class StockswitchScreen extends AbstractSimiScreen {
 		ScreenResources.STOCKSWITCH_BOUND_LEFT.draw(this, (int) (guiLeft + lowerBound) - 1, guiTop + 24);
 		ScreenResources.STOCKSWITCH_BOUND_RIGHT.draw(this, (int) (guiLeft + upperBound) - 5, guiTop + 24);
 
-		ScreenResources cursor = te.getWorld().isBlockPowered(te.getPos()) ? ScreenResources.STOCKSWITCH_CURSOR_ON
+		ScreenResources cursor = te.powered ? ScreenResources.STOCKSWITCH_CURSOR_ON
 				: ScreenResources.STOCKSWITCH_CURSOR_OFF;
-		cursor.draw(this, (int) (guiLeft + cursorPos), guiTop + 24);
+		GlStateManager.pushMatrix();
+		GlStateManager.translatef((cursorPos * (sprite.width - 20) + 10), 0, 0);
+		cursor.draw(this, guiLeft - 4, guiTop + 24);
+		GlStateManager.popMatrix();
 
 		ScreenElementRenderer.renderBlock(this::getRenderedBlock);
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		
+		if (te.currentLevel == -1)
+			cursorPos = 0;
+		else
+			cursorPos += (te.currentLevel - cursorPos) / 4;
+		
+		if (lastModification >= 0)
+			lastModification++;
+
+		if (lastModification >= 20) {
+			lastModification = -1;
+			AllPackets.channel.sendToServer(
+					new ConfigureStockswitchPacket(te.getPos(), offBelow.getState() / 100f, onAbove.getState() / 100f));
+		}
+	}
+
+	@Override
+	public void removed() {
+		AllPackets.channel.sendToServer(
+				new ConfigureStockswitchPacket(te.getPos(), offBelow.getState() / 100f, onAbove.getState() / 100f));
 	}
 
 	public BlockState getRenderedBlock() {

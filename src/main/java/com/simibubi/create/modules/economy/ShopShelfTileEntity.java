@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.shopping;
+package com.simibubi.create.modules.economy;
 
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public class ShopShelfTileEntity extends SyncedTileEntity implements INamedConta
 	private UUID owner;
 
 	public ShopShelfTileEntity() {
-		super(AllTileEntities.ShopShelfTileEntity.type);
+		super(AllTileEntities.SHOP_SHELF.type);
 	}
 
 	@Override

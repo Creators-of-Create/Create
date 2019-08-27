@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics;
+package com.simibubi.create.modules.logistics.block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -61,10 +60,8 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITool
 	public static final VoxelShape UP_SHAPE = makeCuboidShape(2, 0, 2, 14, 3, 14),
 			DOWN_SHAPE = makeCuboidShape(2, 13, 2, 14, 16, 14);
 
-	public static final VoxelShape 
-			SOUTH_SHAPE = makeCuboidShape(3, 1, -1, 13, 15, 3),
-			NORTH_SHAPE = makeCuboidShape(3, 1, 13, 13, 15, 17), 
-			EAST_SHAPE = makeCuboidShape(-1, 1, 3, 3, 15, 13),
+	public static final VoxelShape SOUTH_SHAPE = makeCuboidShape(3, 1, -1, 13, 15, 3),
+			NORTH_SHAPE = makeCuboidShape(3, 1, 13, 13, 15, 17), EAST_SHAPE = makeCuboidShape(-1, 1, 3, 3, 15, 13),
 			WEST_SHAPE = makeCuboidShape(13, 1, 3, 17, 15, 13);
 
 	private TooltipHolder info;
@@ -88,45 +85,32 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITool
 			}
 		}
 
+		updateTransmittedSignal(state, worldIn, pos, blockFacing);
+	}
+	
+	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		updateTransmittedSignal(state, worldIn, pos, state.get(FACING));
+	}
+	
+	private void updateTransmittedSignal(BlockState state, World worldIn, BlockPos pos, Direction blockFacing) {
 		if (worldIn.isRemote)
 			return;
 		if (state.get(RECEIVER))
 			return;
-
+		
+		boolean shouldPower = worldIn.getWorld().isBlockPowered(pos.offset(blockFacing.getOpposite()))
+				|| worldIn.getWorld().isBlockPowered(pos);
 		boolean previouslyPowered = state.get(POWERED);
-		if (previouslyPowered != worldIn.isBlockPowered(pos.offset(blockFacing.getOpposite()))) {
+		
+		if (previouslyPowered != shouldPower) {
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
-
+			
 			RedstoneBridgeTileEntity te = (RedstoneBridgeTileEntity) worldIn.getTileEntity(pos);
 			if (te == null)
 				return;
-			te.blockChanged();
+			te.transmit(!previouslyPowered);
 		}
-	}
-
-	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
-		boolean shouldPower = false;
-		Direction blockFacing = stateIn.get(FACING);
-
-		if (worldIn.getWorld().isRemote)
-			return stateIn;
-		if (stateIn.get(RECEIVER))
-			return stateIn;
-		
-		shouldPower = worldIn.getWorld().isBlockPowered(currentPos.offset(blockFacing.getOpposite()))
-				|| worldIn.getWorld().isBlockPowered(currentPos);
-		if (stateIn.get(POWERED) != shouldPower) {
-			
-			RedstoneBridgeTileEntity te = (RedstoneBridgeTileEntity) worldIn.getTileEntity(currentPos);
-			if (te == null)
-				return stateIn;
-			te.blockChanged();
-			
-			return stateIn.with(POWERED, shouldPower);
-		}
-		return stateIn;
 	}
 
 	@Override
@@ -177,8 +161,13 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITool
 
 		if (player.isSneaking()) {
 			if (!worldIn.isRemote) {
-				worldIn.setBlockState(pos, state.cycle(RECEIVER));
-				te.blockChanged();
+				Boolean wasReceiver = state.get(RECEIVER);
+				boolean blockPowered = worldIn.isBlockPowered(pos);
+				worldIn.setBlockState(pos, state.cycle(RECEIVER).with(POWERED, blockPowered), 3);
+				if (wasReceiver) {
+					te.transmit(worldIn.isBlockPowered(pos));
+				} else
+					te.transmit(false);
 			}
 			return true;
 		}
