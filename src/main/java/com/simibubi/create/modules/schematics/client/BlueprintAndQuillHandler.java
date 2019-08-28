@@ -233,7 +233,7 @@ public class BlueprintAndQuillHandler {
 
 				GlStateManager.enableTexture();
 				TessellatorHelper.begin();
-				AllSpecialTextures.Selection.bind();
+				AllSpecialTextures.SELECTION.bind();
 				TessellatorHelper.doubleFace(Tessellator.getInstance().getBuffer(), new BlockPos(faceMin),
 						new BlockPos(faceMax.subtract(faceMin)), 1 / 16f * selectedFace.getAxisDirection().getOffset(),
 						false, false, false);

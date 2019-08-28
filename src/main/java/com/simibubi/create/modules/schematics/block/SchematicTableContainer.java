@@ -21,7 +21,7 @@ public class SchematicTableContainer extends Container {
 	private PlayerEntity player;
 
 	public SchematicTableContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
-		super(AllContainers.SchematicTable.type, id);
+		super(AllContainers.SCHEMATIC_TABLE.type, id);
 		player = inv.player;
 		ClientWorld world = Minecraft.getInstance().world;
 		this.te = (SchematicTableTileEntity) world.getTileEntity(extraData.readBlockPos());
@@ -30,7 +30,7 @@ public class SchematicTableContainer extends Container {
 	}
 
 	public SchematicTableContainer(int id, PlayerInventory inv, SchematicTableTileEntity te) {
-		super(AllContainers.SchematicTable.type, id);
+		super(AllContainers.SCHEMATIC_TABLE.type, id);
 		this.player = inv.player;
 		this.te = te;
 		init();

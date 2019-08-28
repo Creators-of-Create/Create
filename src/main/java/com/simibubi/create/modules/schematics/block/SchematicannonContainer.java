@@ -18,7 +18,7 @@ public class SchematicannonContainer extends Container {
 	private PlayerEntity player;
 
 	public SchematicannonContainer(int id, PlayerInventory inv, PacketBuffer buffer) {
-		super(AllContainers.Schematicannon.type, id);
+		super(AllContainers.SCHEMATICANNON.type, id);
 		player = inv.player;
 		ClientWorld world = Minecraft.getInstance().world;
 		this.te = (SchematicannonTileEntity) world.getTileEntity(buffer.readBlockPos());
@@ -27,7 +27,7 @@ public class SchematicannonContainer extends Container {
 	}
 
 	public SchematicannonContainer(int id, PlayerInventory inv, SchematicannonTileEntity te) {
-		super(AllContainers.Schematicannon.type, id);
+		super(AllContainers.SCHEMATICANNON.type, id);
 		player = inv.player;
 		this.te = te;
 		init();

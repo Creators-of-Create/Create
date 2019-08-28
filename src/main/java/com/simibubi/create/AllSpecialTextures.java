@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(value = Dist.CLIENT)
 public enum AllSpecialTextures {
 
-	Selection("selection.png"),
+	SELECTION("selection.png"),
 	
 	;
 

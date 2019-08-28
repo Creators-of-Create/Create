@@ -9,7 +9,7 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntity;
-import com.simibubi.create.modules.contraptions.relays.SidedAxisTunnelTileEntity;
+import com.simibubi.create.modules.contraptions.relays.SplitShaftTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.state.IProperty;
@@ -77,7 +77,7 @@ public class RotationPropagator {
 		if (connectedByGears) {
 			if (diff.manhattanDistance(BlockPos.ZERO) != 1)
 				return 0;
-			if (AllBlocks.LARGE_GEAR.typeOf(stateTo))
+			if (AllBlocks.LARGE_COGWHEEL.typeOf(stateTo))
 				return 0;
 			if (stateFrom.get(axisProperty) == stateTo.get(axisProperty))
 				return -1;
@@ -95,14 +95,14 @@ public class RotationPropagator {
 			return direction.getAxis() == source.getAxis() ? direction == source ? 1 : -1
 					: direction.getAxisDirection() == source.getAxisDirection() ? -1 : 1;
 
-		if (te instanceof SidedAxisTunnelTileEntity)
-			return ((SidedAxisTunnelTileEntity) te).getRotationSpeedModifier(direction);
+		if (te instanceof SplitShaftTileEntity)
+			return ((SplitShaftTileEntity) te).getRotationSpeedModifier(direction);
 
 		return 1;
 	}
 
 	private static boolean isLargeToSmallGear(BlockState from, BlockState to, final BlockPos diff) {
-		if (!AllBlocks.LARGE_GEAR.typeOf(from) || !AllBlocks.GEAR.typeOf(to))
+		if (!AllBlocks.LARGE_COGWHEEL.typeOf(from) || !AllBlocks.COGWHEEL.typeOf(to))
 			return false;
 		Axis axisFrom = from.get(BlockStateProperties.AXIS);
 		if (axisFrom != to.get(BlockStateProperties.AXIS))
@@ -300,7 +300,7 @@ public class RotationPropagator {
 
 		// Some Blocks can interface diagonally
 		BlockState blockState = te.getBlockState();
-		if (AllBlocks.GEAR.typeOf(blockState) || AllBlocks.LARGE_GEAR.typeOf(blockState)
+		if (AllBlocks.COGWHEEL.typeOf(blockState) || AllBlocks.LARGE_COGWHEEL.typeOf(blockState)
 				|| AllBlocks.BELT.typeOf(blockState)) {
 			Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
 

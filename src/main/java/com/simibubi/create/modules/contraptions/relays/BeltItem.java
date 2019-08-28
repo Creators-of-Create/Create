@@ -202,7 +202,7 @@ public class BeltItem extends Item {
 	public static boolean validateAxis(World world, BlockPos pos) {
 		if (!world.isAreaLoaded(pos, 1))
 			return false;
-		if (!AllBlocks.AXIS.typeOf(world.getBlockState(pos)))
+		if (!AllBlocks.SHAFT.typeOf(world.getBlockState(pos)))
 			return false;
 		if (world.getBlockState(pos).get(BlockStateProperties.AXIS) == Axis.Y)
 			return false;

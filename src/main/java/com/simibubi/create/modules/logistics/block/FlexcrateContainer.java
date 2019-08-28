@@ -18,7 +18,7 @@ public class FlexcrateContainer extends Container {
 	public PlayerInventory playerInventory;
 
 	public FlexcrateContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
-		super(AllContainers.FlexCrate.type, id);
+		super(AllContainers.FLEXCRATE.type, id);
 		ClientWorld world = Minecraft.getInstance().world;
 		this.te = (FlexcrateTileEntity) world.getTileEntity(extraData.readBlockPos());
 		this.te.handleUpdateTag(extraData.readCompoundTag());
@@ -27,7 +27,7 @@ public class FlexcrateContainer extends Container {
 	}
 
 	public FlexcrateContainer(int id, PlayerInventory inv, FlexcrateTileEntity te) {
-		super(AllContainers.FlexCrate.type, id);
+		super(AllContainers.FLEXCRATE.type, id);
 		this.te = te;
 		this.playerInventory = inv;
 		init();

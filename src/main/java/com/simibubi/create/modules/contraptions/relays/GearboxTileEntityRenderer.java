@@ -21,7 +21,7 @@ public class GearboxTileEntityRenderer extends KineticTileEntityRenderer {
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
 		final BlockPos pos = te.getPos();
 		float time = Animation.getWorldTime(Minecraft.getInstance().world, partialTicks);
-		final BlockState defaultState = AllBlocks.HALF_AXIS.get().getDefaultState();
+		final BlockState defaultState = AllBlocks.SHAFT_HALF.get().getDefaultState();
 
 		for (Direction direction : Direction.values()) {
 			final Axis axis = direction.getAxis();

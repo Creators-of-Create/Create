@@ -5,7 +5,7 @@ import com.simibubi.create.AllTileEntities;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 
-public class GearshiftTileEntity extends SidedAxisTunnelTileEntity {
+public class GearshiftTileEntity extends SplitShaftTileEntity {
 
 	public GearshiftTileEntity() {
 		super(AllTileEntities.GEARSHIFT.type);

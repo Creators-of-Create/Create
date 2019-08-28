@@ -13,7 +13,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.animation.Animation;
 
-public class SidedAxisTunnelTileEntityRenderer extends KineticTileEntityRenderer {
+public class SplitShaftTileEntityRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
@@ -21,7 +21,7 @@ public class SidedAxisTunnelTileEntityRenderer extends KineticTileEntityRenderer
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
 		final BlockPos pos = te.getPos();
 		float time = Animation.getWorldTime(Minecraft.getInstance().world, partialTicks);
-		final BlockState defaultState = AllBlocks.HALF_AXIS.get().getDefaultState();
+		final BlockState defaultState = AllBlocks.SHAFT_HALF.get().getDefaultState();
 
 		for (Direction direction : Direction.values()) {
 			final Axis axis = direction.getAxis();
@@ -35,8 +35,8 @@ public class SidedAxisTunnelTileEntityRenderer extends KineticTileEntityRenderer
 			float angle = (time * te.getSpeed()) % 360;
 			float modifier = 1;
 			
-			if (te instanceof SidedAxisTunnelTileEntity)
-				modifier = ((SidedAxisTunnelTileEntity) te).getRotationSpeedModifier(direction);
+			if (te instanceof SplitShaftTileEntity)
+				modifier = ((SplitShaftTileEntity) te).getRotationSpeedModifier(direction);
 
 			angle *= modifier;
 			angle += offset;

@@ -28,11 +28,11 @@ import net.minecraftforge.fml.network.IContainerFactory;
 @EventBusSubscriber(bus = Bus.MOD)
 public enum AllContainers {
 
-	SchematicTable(SchematicTableContainer::new), 
-	Schematicannon(SchematicannonContainer::new),
-	FlexCrate(FlexcrateContainer::new),
+	SCHEMATIC_TABLE(SchematicTableContainer::new), 
+	SCHEMATICANNON(SchematicannonContainer::new),
+	FLEXCRATE(FlexcrateContainer::new),
 	
-	ShopShelf(ShopShelfContainer::new),
+	SHOP_SHELF(ShopShelfContainer::new),
 	
 	;
 
@@ -55,10 +55,10 @@ public enum AllContainers {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void registerScreenFactories() {
-		bind(SchematicTable, SchematicTableScreen::new);
-		bind(Schematicannon, SchematicannonScreen::new);
-		bind(FlexCrate, FlexcrateScreen::new);
-		bind(ShopShelf, ShopShelfScreen::new);
+		bind(SCHEMATIC_TABLE, SchematicTableScreen::new);
+		bind(SCHEMATICANNON, SchematicannonScreen::new);
+		bind(FLEXCRATE, FlexcrateScreen::new);
+		bind(SHOP_SHELF, ShopShelfScreen::new);
 	}
 
 	@OnlyIn(Dist.CLIENT)

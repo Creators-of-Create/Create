@@ -10,7 +10,7 @@ import net.minecraft.util.Rotation;
 
 public class ProperDirectionalBlock extends DirectionalBlock {
 
-	protected ProperDirectionalBlock(Properties p_i48415_1_) {
+	public ProperDirectionalBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
 	}
 	

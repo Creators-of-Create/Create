@@ -96,7 +96,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new AxisTunnelTileEntity();
+		return new EncasedShaftTileEntity();
 	}
 
 	@Override

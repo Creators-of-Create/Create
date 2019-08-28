@@ -65,7 +65,7 @@ public class BuilderGunUpgradeRecipe implements ICraftingRecipe {
 
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
-		return AllRecipes.Placement_Handgun_Upgrade.serializer;
+		return AllRecipes.PLACEMENT_HANDGUN_UPGRADE.serializer;
 	}
 	
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BuilderGunUpgradeRecipe> {

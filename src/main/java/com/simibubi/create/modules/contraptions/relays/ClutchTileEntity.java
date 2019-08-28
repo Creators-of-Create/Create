@@ -5,7 +5,7 @@ import com.simibubi.create.AllTileEntities;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 
-public class ClutchTileEntity extends SidedAxisTunnelTileEntity {
+public class ClutchTileEntity extends SplitShaftTileEntity {
 
 	public ClutchTileEntity() {
 		super(AllTileEntities.CLUTCH.type);

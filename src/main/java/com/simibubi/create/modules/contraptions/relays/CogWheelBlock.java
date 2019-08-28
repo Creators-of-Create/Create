@@ -14,7 +14,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class CogWheelBlock extends AxisBlock {
+public class CogWheelBlock extends ShaftBlock {
 
 	private boolean isLarge;
 
@@ -43,7 +43,7 @@ public class CogWheelBlock extends AxisBlock {
 				continue;
 
 			BlockState blockState = worldIn.getBlockState(pos.offset(facing));
-			if (AllBlocks.LARGE_GEAR.typeOf(blockState) || isLarge && AllBlocks.GEAR.typeOf(blockState))
+			if (AllBlocks.LARGE_COGWHEEL.typeOf(blockState) || isLarge && AllBlocks.COGWHEEL.typeOf(blockState))
 				return false;
 		}
 		return true;

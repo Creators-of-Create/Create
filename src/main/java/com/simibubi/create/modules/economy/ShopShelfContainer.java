@@ -10,11 +10,11 @@ import net.minecraft.network.PacketBuffer;
 public class ShopShelfContainer extends Container {
 
 	public ShopShelfContainer(int id, PlayerInventory inv, ShopShelfTileEntity te) {
-		super(AllContainers.ShopShelf.type, id);
+		super(AllContainers.SHOP_SHELF.type, id);
 	}
 	
 	public ShopShelfContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
-		super(AllContainers.ShopShelf.type, id);
+		super(AllContainers.SHOP_SHELF.type, id);
 	}
 
 	@Override

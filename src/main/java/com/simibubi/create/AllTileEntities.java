@@ -9,19 +9,21 @@ import com.simibubi.create.modules.contraptions.generators.WaterWheelTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.relays.AxisTileEntity;
-import com.simibubi.create.modules.contraptions.relays.AxisTunnelTileEntity;
-import com.simibubi.create.modules.contraptions.relays.AxisTunnelTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.ShaftTileEntity;
+import com.simibubi.create.modules.contraptions.relays.EncasedShaftTileEntity;
+import com.simibubi.create.modules.contraptions.relays.EncasedShaftTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.BeltTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.ClutchTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.GearshiftTileEntity;
-import com.simibubi.create.modules.contraptions.relays.SidedAxisTunnelTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.SplitShaftTileEntityRenderer;
 import com.simibubi.create.modules.economy.ShopShelfTileEntity;
 import com.simibubi.create.modules.logistics.block.ExtractorTileEntity;
 import com.simibubi.create.modules.logistics.block.FlexcrateTileEntity;
@@ -54,10 +56,11 @@ public enum AllTileEntities {
 	SCHEMATICTABLE(SchematicTableTileEntity::new, AllBlocks.SCHEMATIC_TABLE),
 
 	// Kinetics
-	AXIS(AxisTileEntity::new, AllBlocks.AXIS, AllBlocks.GEAR, AllBlocks.LARGE_GEAR, AllBlocks.AXIS_TUNNEL),
+	SHAFT(ShaftTileEntity::new, AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL, AllBlocks.ENCASED_SHAFT),
 	MOTOR(MotorTileEntity::new, AllBlocks.MOTOR), GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
 	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
-	AXIS_TUNNEL(AxisTunnelTileEntity::new, AllBlocks.AXIS_TUNNEL, AllBlocks.ENCASED_BELT),
+	ENCASED_SHAFT(EncasedShaftTileEntity::new, AllBlocks.ENCASED_SHAFT, AllBlocks.ENCASED_BELT),
+	ENCASED_FAN(EncasedFanTileEntity::new, AllBlocks.ENCASED_FAN),
 	CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH), 
 	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT),
 	BELT(BeltTileEntity::new, AllBlocks.BELT),
@@ -105,13 +108,14 @@ public enum AllTileEntities {
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRenderers() {
 		bind(SchematicannonTileEntity.class, new SchematicannonRenderer());
-		bind(AxisTileEntity.class, new KineticTileEntityRenderer());
+		bind(ShaftTileEntity.class, new KineticTileEntityRenderer());
 		bind(TurntableTileEntity.class, new KineticTileEntityRenderer());
 		bind(MotorTileEntity.class, new MotorTileEntityRenderer());
-		bind(AxisTunnelTileEntity.class, new AxisTunnelTileEntityRenderer());
+		bind(EncasedShaftTileEntity.class, new EncasedShaftTileEntityRenderer());
+		bind(EncasedFanTileEntity.class, new EncasedFanTileEntityRenderer());
 		bind(GearboxTileEntity.class, new GearboxTileEntityRenderer());
-		bind(GearshiftTileEntity.class, new SidedAxisTunnelTileEntityRenderer());
-		bind(ClutchTileEntity.class, new SidedAxisTunnelTileEntityRenderer());
+		bind(GearshiftTileEntity.class, new SplitShaftTileEntityRenderer());
+		bind(ClutchTileEntity.class, new SplitShaftTileEntityRenderer());
 		bind(BeltTileEntity.class, new BeltTileEntityRenderer());
 		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());
 		bind(DrillTileEntity.class, new KineticTileEntityRenderer());

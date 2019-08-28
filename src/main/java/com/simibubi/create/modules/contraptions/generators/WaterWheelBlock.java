@@ -134,7 +134,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 
 	@Override
 	public ItemDescription getDescription() {
-		return new ItemDescription(color).withSummary("Creates Rotational Power from " + h("Water flows", color) + " around it.")
+		return new ItemDescription(color).withSummary("Creates Rotational Power from " + h("Water streams", color) + " around it.")
 				.createTabs();
 	}
 

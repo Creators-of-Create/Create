@@ -77,7 +77,7 @@ public class BeltItemHandler {
 
 			if (world.getBlockState(selected).getMaterial().isReplaceable())
 				return;
-			if (!AllBlocks.AXIS.typeOf(world.getBlockState(selected)))
+			if (!AllBlocks.SHAFT.typeOf(world.getBlockState(selected)))
 				selected = selected.offset(((BlockRayTraceResult) rayTrace).getFace());
 			if (!selected.withinDistance(first, BeltItem.MAX_PULLEY_DISTANCE))
 				return;

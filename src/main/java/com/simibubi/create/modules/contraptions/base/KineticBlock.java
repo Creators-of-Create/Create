@@ -67,7 +67,7 @@ public abstract class KineticBlock extends InfoBlock implements IRotate {
 
 	@Override
 	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-		return hasStaticPart() && layer == BlockRenderLayer.SOLID;
+		return hasStaticPart() && layer == getRenderLayer();
 	}
 
 	protected abstract boolean hasStaticPart();

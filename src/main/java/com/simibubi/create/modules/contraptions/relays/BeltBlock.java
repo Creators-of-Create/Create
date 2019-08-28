@@ -238,7 +238,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 				te.remove();
 
 				if (hasPulley) {
-					worldIn.setBlockState(toDestroy, AllBlocks.AXIS.get().getDefaultState()
+					worldIn.setBlockState(toDestroy, AllBlocks.SHAFT.get().getDefaultState()
 							.with(BlockStateProperties.AXIS, getRotationAxis(destroyedBlock)), 3);
 				} else {
 					worldIn.destroyBlock(toDestroy, false);

@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.economy;
 
+import com.simibubi.create.foundation.block.IWithoutBlockItem;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -21,7 +23,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class ShopShelfBlock extends HorizontalBlock {
+public class ShopShelfBlock extends HorizontalBlock implements IWithoutBlockItem {
 
 	public static final VoxelShape TOP_SHAPE = makeCuboidShape(0, 14, 0, 16, 16, 16);
 

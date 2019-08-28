@@ -7,7 +7,7 @@ import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
-import com.simibubi.create.modules.contraptions.relays.AxisBlock;
+import com.simibubi.create.modules.contraptions.relays.ShaftBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -35,9 +35,9 @@ import net.minecraft.world.server.ServerWorld;
 public class DrillBlock extends DirectionalKineticBlock implements IHaveMovementBehavior {
 
 	protected static final VoxelShape CORE_SHAPE = makeCuboidShape(3, 3, 3, 13, 13, 13),
-			DRILL_SHAPE_X = VoxelShapes.or(CORE_SHAPE, AxisBlock.AXIS_X),
-			DRILL_SHAPE_Y = VoxelShapes.or(CORE_SHAPE, AxisBlock.AXIS_Y),
-			DRILL_SHAPE_Z = VoxelShapes.or(CORE_SHAPE, AxisBlock.AXIS_Z);
+			DRILL_SHAPE_X = VoxelShapes.or(CORE_SHAPE, ShaftBlock.AXIS_X),
+			DRILL_SHAPE_Y = VoxelShapes.or(CORE_SHAPE, ShaftBlock.AXIS_Y),
+			DRILL_SHAPE_Z = VoxelShapes.or(CORE_SHAPE, ShaftBlock.AXIS_Z);
 
 	public static final BooleanProperty FIXATED = BooleanProperty.create("fixated");
 

@@ -4,12 +4,12 @@ import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
-import com.simibubi.create.modules.contraptions.base.HalfAxisBlock;
 import com.simibubi.create.modules.contraptions.generators.MotorBlock;
 import com.simibubi.create.modules.contraptions.generators.WaterWheelBlock;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelBlock;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerBlock;
 import com.simibubi.create.modules.contraptions.receivers.DrillBlock;
+import com.simibubi.create.modules.contraptions.receivers.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.receivers.TurntableBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ChassisBlock;
@@ -17,14 +17,15 @@ import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalP
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonHeadBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.PistonPoleBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
-import com.simibubi.create.modules.contraptions.relays.AxisBlock;
-import com.simibubi.create.modules.contraptions.relays.AxisTunnelBlock;
 import com.simibubi.create.modules.contraptions.relays.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
+import com.simibubi.create.modules.contraptions.relays.EncasedShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.GearboxBlock;
 import com.simibubi.create.modules.contraptions.relays.GearshiftBlock;
+import com.simibubi.create.modules.contraptions.relays.ShaftBlock;
+import com.simibubi.create.modules.contraptions.relays.ShaftHalfBlock;
 import com.simibubi.create.modules.economy.ShopShelfBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
 import com.simibubi.create.modules.logistics.block.ExtractorBlock;
@@ -62,10 +63,10 @@ public enum AllBlocks {
 	SCHEMATIC_TABLE(new SchematicTableBlock()),
 
 	// Kinetics
-	AXIS(new AxisBlock(Properties.from(Blocks.ANDESITE))),
-	GEAR(new CogWheelBlock(false)),
-	LARGE_GEAR(new CogWheelBlock(true)),
-	AXIS_TUNNEL(new AxisTunnelBlock()),
+	SHAFT(new ShaftBlock(Properties.from(Blocks.ANDESITE))),
+	COGWHEEL(new CogWheelBlock(false)),
+	LARGE_COGWHEEL(new CogWheelBlock(true)),
+	ENCASED_SHAFT(new EncasedShaftBlock()),
 	ENCASED_BELT(new EncasedBeltBlock()),
 	CLUTCH(new ClutchBlock()),
 	GEARSHIFT(new GearshiftBlock()),
@@ -77,8 +78,10 @@ public enum AllBlocks {
 	MOTOR(new MotorBlock()),
 	WATER_WHEEL(new WaterWheelBlock()),
 
+	ENCASED_FAN(new EncasedFanBlock()),
+	ENCASED_FAN_INNER(new RenderUtilityAxisBlock()),
 	TURNTABLE(new TurntableBlock()),
-	HALF_AXIS(new HalfAxisBlock()),
+	SHAFT_HALF(new ShaftHalfBlock()),
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
 

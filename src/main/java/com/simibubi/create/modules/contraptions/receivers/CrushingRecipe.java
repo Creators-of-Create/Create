@@ -15,7 +15,7 @@ public class CrushingRecipe extends ProcessingRecipe<CrushingWheelControllerTile
 
 	public CrushingRecipe(ResourceLocation id, String group, List<Ingredient> ingredients,
 			List<StochasticOutput> results, int processingDuration) {
-		super(AllRecipes.Crushing, id, group, ingredients, results, processingDuration);
+		super(AllRecipes.CRUSHING, id, group, ingredients, results, processingDuration);
 	}
 
 	@Override

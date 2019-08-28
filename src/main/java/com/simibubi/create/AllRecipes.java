@@ -16,9 +16,9 @@ import net.minecraftforge.event.RegistryEvent;
 
 public enum AllRecipes {
 
-	Placement_Handgun_Upgrade(BuilderGunUpgradeRecipe.Serializer::new, IRecipeType.CRAFTING),
+	PLACEMENT_HANDGUN_UPGRADE(BuilderGunUpgradeRecipe.Serializer::new, IRecipeType.CRAFTING),
 
-	Crushing(() -> {
+	CRUSHING(() -> {
 		return new ProcessingRecipeSerializer<>(CrushingRecipe::new);
 	}, Types.CRUSHING),
 

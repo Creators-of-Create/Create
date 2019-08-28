@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class GearshiftBlock extends AxisTunnelBlock {
+public class GearshiftBlock extends EncasedShaftBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
