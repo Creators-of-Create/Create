@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
+import java.util.Random;
+
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -27,6 +29,11 @@ public class VecHelper {
 
 	public static Vec3d getCenterOf(Vec3i pos) {
 		return new Vec3d(pos).add(.5f, .5f, .5f);
+	}
+
+	public static Vec3d offsetRandomly(Vec3d vec, Random r, float radius) {
+		return new Vec3d(vec.x + (r.nextFloat() - .5f) * 2 * radius, vec.y + (r.nextFloat() - .5f) * 2 * radius,
+				vec.z + (r.nextFloat() - .5f) * 2 * radius);
 	}
 
 }

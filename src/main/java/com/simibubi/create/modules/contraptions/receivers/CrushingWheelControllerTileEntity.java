@@ -60,15 +60,15 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			Inventory inventory = new Inventory();
 			NonNullList<ItemStack> stacks = NonNullList.withSize(10, ItemStack.EMPTY);
 			ItemStackHelper.loadAllItems(nbt, stacks);
-			
+
 			for (int slot = 0; slot < stacks.size(); slot++)
 				inventory.setInventorySlotContents(slot, stacks.get(slot));
-			inventory.processingDuration = nbt.getInt("ProcessingTime"); 
-			inventory.appliedRecipe = nbt.getBoolean("AppliedRecipe"); 
+			inventory.processingDuration = nbt.getInt("ProcessingTime");
+			inventory.appliedRecipe = nbt.getBoolean("AppliedRecipe");
 
 			return inventory;
 		}
-		
+
 		public ItemStackHandler getItems() {
 			return (ItemStackHandler) inv;
 		}
@@ -97,14 +97,14 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 		float speed = crushingspeed / 2.5f;
 
 		if (!hasEntity()) {
-			
-			float processingSpeed = speed / (!contents.appliedRecipe? contents.getStackInSlot(0).getCount() : 1);
+
+			float processingSpeed = speed / (!contents.appliedRecipe ? contents.getStackInSlot(0).getCount() : 1);
 			contents.processingDuration -= processingSpeed;
 			spawnParticles(contents.getStackInSlot(0));
 
 			if (world.isRemote)
 				return;
-			
+
 			if (contents.processingDuration < 20 && !contents.appliedRecipe) {
 				applyRecipe();
 				contents.appliedRecipe = true;
@@ -167,8 +167,9 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			particleData = new ItemParticleData(ParticleTypes.ITEM, stack);
 
 		Random r = world.rand;
-		world.addParticle(particleData, pos.getX() + r.nextFloat(), pos.getY() + r.nextFloat(),
-				pos.getZ() + r.nextFloat(), 0, 0, 0);
+		for (int i = 0; i < 4; i++)
+			world.addParticle(particleData, pos.getX() + r.nextFloat(), pos.getY() + r.nextFloat(),
+					pos.getZ() + r.nextFloat(), 0, 0, 0);
 	}
 
 	private void applyRecipe() {
@@ -178,16 +179,16 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 		if (recipe.isPresent()) {
 			int rolls = contents.getStackInSlot(0).getCount();
 			contents.clear();
-			
+
 			for (int roll = 0; roll < rolls; roll++) {
 				List<ItemStack> rolledResults = recipe.get().rollResults();
-				
+
 				for (int i = 0; i < rolledResults.size(); i++) {
 					ItemStack stack = rolledResults.get(i);
-				
+
 					for (int slot = 0; slot < contents.getSizeInventory(); slot++) {
 						stack = contents.getItems().insertItem(slot, stack, false);
-						
+
 						if (stack.isEmpty())
 							break;
 					}

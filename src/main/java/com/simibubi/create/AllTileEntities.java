@@ -22,9 +22,11 @@ import com.simibubi.create.modules.contraptions.relays.GearboxTileEntityRenderer
 import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntityRenderer;
 import com.simibubi.create.modules.economy.ShopShelfTileEntity;
+import com.simibubi.create.modules.logistics.block.ExtractorTileEntity;
 import com.simibubi.create.modules.logistics.block.FlexcrateTileEntity;
+import com.simibubi.create.modules.logistics.block.LinkedExtractorTileEntity;
 import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntity;
-import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntityRenderer;
+import com.simibubi.create.modules.logistics.block.LinkedTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.StockswitchTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
@@ -66,6 +68,8 @@ public enum AllTileEntities {
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
 	STOCKSWITCH(StockswitchTileEntity::new, AllBlocks.STOCKSWITCH),
 	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE),
+	EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR),
+	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR),
 	
 	// Economy
 	SHOP_SHELF(ShopShelfTileEntity::new, AllBlocks.SHOP_SHELF),
@@ -110,7 +114,8 @@ public enum AllTileEntities {
 		bind(DrillTileEntity.class, new KineticTileEntityRenderer());
 		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());
 		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());
-		bind(RedstoneBridgeTileEntity.class, new RedstoneBridgeTileEntityRenderer());
+		bind(RedstoneBridgeTileEntity.class, new LinkedTileEntityRenderer());
+		bind(LinkedExtractorTileEntity.class, new LinkedTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)
