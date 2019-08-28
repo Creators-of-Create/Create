@@ -20,10 +20,11 @@ import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.AxisBlock;
 import com.simibubi.create.modules.contraptions.relays.AxisTunnelBlock;
 import com.simibubi.create.modules.contraptions.relays.BeltBlock;
+import com.simibubi.create.modules.contraptions.relays.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.GearboxBlock;
-import com.simibubi.create.modules.contraptions.relays.GearshifterBlock;
+import com.simibubi.create.modules.contraptions.relays.GearshiftBlock;
 import com.simibubi.create.modules.economy.ShopShelfBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
 import com.simibubi.create.modules.logistics.block.ExtractorBlock;
@@ -66,7 +67,8 @@ public enum AllBlocks {
 	LARGE_GEAR(new CogWheelBlock(true)),
 	AXIS_TUNNEL(new AxisTunnelBlock()),
 	ENCASED_BELT(new EncasedBeltBlock()),
-	GEARSHIFTER(new GearshifterBlock()),
+	CLUTCH(new ClutchBlock()),
+	GEARSHIFT(new GearshiftBlock()),
 	GEARBOX(new GearboxBlock()),
 	BELT(new BeltBlock()),
 	BELT_PULLEY(new RenderUtilityAxisBlock()),

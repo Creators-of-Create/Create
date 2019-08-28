@@ -13,7 +13,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.animation.Animation;
 
-public class GearshifterTileEntityRenderer extends KineticTileEntityRenderer {
+public class SidedAxisTunnelTileEntityRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
@@ -33,12 +33,12 @@ public class GearshifterTileEntityRenderer extends KineticTileEntityRenderer {
 
 			float offset = getRotationOffsetForPosition(te, pos, axis);
 			float angle = (time * te.getSpeed()) % 360;
+			float modifier = 1;
+			
+			if (te instanceof SidedAxisTunnelTileEntity)
+				modifier = ((SidedAxisTunnelTileEntity) te).getRotationSpeedModifier(direction);
 
-			if (te.hasSource()) {
-				if (direction != te.getSourceFacing() && te.getBlockState().get(BlockStateProperties.POWERED))
-					angle = -angle;
-			}
-
+			angle *= modifier;
 			angle += offset;
 			angle = angle / 180f * (float) Math.PI;
 

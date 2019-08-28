@@ -9,7 +9,7 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntity;
-import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntity;
+import com.simibubi.create.modules.contraptions.relays.SidedAxisTunnelTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.state.IProperty;
@@ -86,7 +86,7 @@ public class RotationPropagator {
 		return 0;
 	}
 
-	private static int getAxisModifier(KineticTileEntity te, Direction direction) {
+	private static float getAxisModifier(KineticTileEntity te, Direction direction) {
 		if (!te.hasSource())
 			return 1;
 		Direction source = te.getSourceFacing();
@@ -95,8 +95,8 @@ public class RotationPropagator {
 			return direction.getAxis() == source.getAxis() ? direction == source ? 1 : -1
 					: direction.getAxisDirection() == source.getAxisDirection() ? -1 : 1;
 
-		if (te instanceof GearshifterTileEntity)
-			return source == direction ? 1 : te.getBlockState().get(BlockStateProperties.POWERED) ? -1 : 1;
+		if (te instanceof SidedAxisTunnelTileEntity)
+			return ((SidedAxisTunnelTileEntity) te).getRotationSpeedModifier(direction);
 
 		return 1;
 	}
@@ -198,6 +198,8 @@ public class RotationPropagator {
 	 */
 	public static void handleRemoved(World worldIn, BlockPos pos, KineticTileEntity removedTE) {
 		if (worldIn.isRemote)
+			return;
+		if (removedTE == null)
 			return;
 		if (removedTE.getSpeed() == 0)
 			return;

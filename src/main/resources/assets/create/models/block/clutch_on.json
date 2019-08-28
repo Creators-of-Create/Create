@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/gearshift_off",
+    "textures": {
+        "0": "create:block/clutch_on",
+		"particle": "create:block/clutch_on"
+    }
+}

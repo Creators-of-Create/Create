@@ -1,0 +1,14 @@
+{
+  "forge_marker": 1,  
+  "variants": {
+    "powered" : {
+      "true": { "model": "create:block/clutch_on" },
+      "false": { "model": "create:block/clutch_off" }
+    },
+    "axis": {
+      "y": { "x": 90 },
+      "x": { "y": 90 },
+      "z": {}
+    }
+  }
+}

@@ -17,16 +17,17 @@ import com.simibubi.create.modules.contraptions.relays.AxisTunnelTileEntity;
 import com.simibubi.create.modules.contraptions.relays.AxisTunnelTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.BeltTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.ClutchTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntity;
-import com.simibubi.create.modules.contraptions.relays.GearshifterTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.GearshiftTileEntity;
+import com.simibubi.create.modules.contraptions.relays.SidedAxisTunnelTileEntityRenderer;
 import com.simibubi.create.modules.economy.ShopShelfTileEntity;
 import com.simibubi.create.modules.logistics.block.ExtractorTileEntity;
 import com.simibubi.create.modules.logistics.block.FlexcrateTileEntity;
 import com.simibubi.create.modules.logistics.block.LinkedExtractorTileEntity;
-import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntity;
 import com.simibubi.create.modules.logistics.block.LinkedTileEntityRenderer;
+import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntity;
 import com.simibubi.create.modules.logistics.block.StockswitchTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
@@ -57,7 +58,9 @@ public enum AllTileEntities {
 	MOTOR(MotorTileEntity::new, AllBlocks.MOTOR), GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
 	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
 	AXIS_TUNNEL(AxisTunnelTileEntity::new, AllBlocks.AXIS_TUNNEL, AllBlocks.ENCASED_BELT),
-	GEARSHIFTER(GearshifterTileEntity::new, AllBlocks.GEARSHIFTER), BELT(BeltTileEntity::new, AllBlocks.BELT),
+	CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH), 
+	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT),
+	BELT(BeltTileEntity::new, AllBlocks.BELT),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
@@ -67,15 +70,14 @@ public enum AllTileEntities {
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
 	STOCKSWITCH(StockswitchTileEntity::new, AllBlocks.STOCKSWITCH),
-	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE),
-	EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR),
+	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE), EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR),
 	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR),
-	
+
 	// Economy
 	SHOP_SHELF(ShopShelfTileEntity::new, AllBlocks.SHOP_SHELF),
 
 	;
-	
+
 	private Supplier<? extends TileEntity> supplier;
 	public TileEntityType<?> type;
 	private AllBlocks[] blocks;
@@ -108,7 +110,8 @@ public enum AllTileEntities {
 		bind(MotorTileEntity.class, new MotorTileEntityRenderer());
 		bind(AxisTunnelTileEntity.class, new AxisTunnelTileEntityRenderer());
 		bind(GearboxTileEntity.class, new GearboxTileEntityRenderer());
-		bind(GearshifterTileEntity.class, new GearshifterTileEntityRenderer());
+		bind(GearshiftTileEntity.class, new SidedAxisTunnelTileEntityRenderer());
+		bind(ClutchTileEntity.class, new SidedAxisTunnelTileEntityRenderer());
 		bind(BeltTileEntity.class, new BeltTileEntityRenderer());
 		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());
 		bind(DrillTileEntity.class, new KineticTileEntityRenderer());

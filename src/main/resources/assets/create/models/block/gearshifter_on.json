@@ -1,8 +1,0 @@
-{
-    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
-	"parent": "create:block/gearshifter_off",
-    "textures": {
-        "0": "create:block/gearshifter_on",
-		"particle": "create:block/gearshifter_on"
-    }
-}

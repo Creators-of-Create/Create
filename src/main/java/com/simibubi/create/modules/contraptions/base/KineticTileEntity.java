@@ -88,7 +88,7 @@ public abstract class KineticTileEntity extends SyncedTileEntity {
 		this.speed = speed;
 		if (hasWorld() && speed != 0 && world.isRemote) {
 			Random r = getWorld().rand;
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 2; i++) {
 				float x = getPos().getX() + (r.nextFloat() - .5f) / 2f + .5f;
 				float y = getPos().getY() + (r.nextFloat() - .5f) / 2f + .5f;
 				float z = getPos().getZ() + (r.nextFloat() - .5f) / 2f + .5f;

@@ -2,9 +2,9 @@
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
 	"parent": "block/cube",
     "textures": {
-        "0": "create:block/gearshifter_off",
+        "0": "create:block/gearshift_off",
         "1": "create:block/gearbox",
-		"particle": "create:block/gearshifter_off"
+		"particle": "create:block/gearshift_off"
     },
     "elements": [
         {
