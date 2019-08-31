@@ -17,7 +17,6 @@ import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalP
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonHeadBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.PistonPoleBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
-import com.simibubi.create.modules.contraptions.relays.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
@@ -26,11 +25,14 @@ import com.simibubi.create.modules.contraptions.relays.GearboxBlock;
 import com.simibubi.create.modules.contraptions.relays.GearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.ShaftHalfBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.economy.ShopShelfBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
+import com.simibubi.create.modules.logistics.block.BeltFunnelBlock;
 import com.simibubi.create.modules.logistics.block.ExtractorBlock;
 import com.simibubi.create.modules.logistics.block.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.block.LinkedExtractorBlock;
+import com.simibubi.create.modules.logistics.block.PulseRepeaterBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneBridgeBlock;
 import com.simibubi.create.modules.logistics.block.StockswitchBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
@@ -98,11 +100,13 @@ public enum AllBlocks {
 	CONTACT(new ContactBlock()),
 
 	// Logistics
+	PULSE_REPEATER(new PulseRepeaterBlock()),
 	REDSTONE_BRIDGE(new RedstoneBridgeBlock()),
 	STOCKSWITCH(new StockswitchBlock()),
 	FLEXCRATE(new FlexcrateBlock()),
 	EXTRACTOR(new ExtractorBlock()),
 	LINKED_EXTRACTOR(new LinkedExtractorBlock()),
+	BELT_FUNNEL(new BeltFunnelBlock()),
 
 	// Symmetry
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),

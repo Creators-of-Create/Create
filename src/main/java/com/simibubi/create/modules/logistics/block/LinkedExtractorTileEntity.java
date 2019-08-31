@@ -22,7 +22,7 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 
 	public LinkedExtractorTileEntity() {
 		super(AllTileEntities.LINKED_EXTRACTOR.type);
-		state = State.WAITING_FOR_ITEM;
+		state = State.WAITING_FOR_INVENTORY;
 		inventory = LazyOptional.empty();
 	}
 

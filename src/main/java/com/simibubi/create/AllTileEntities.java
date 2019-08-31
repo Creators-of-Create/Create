@@ -14,17 +14,18 @@ import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntityRe
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.relays.ShaftTileEntity;
+import com.simibubi.create.modules.contraptions.relays.ClutchTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedShaftTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.relays.BeltTileEntity;
-import com.simibubi.create.modules.contraptions.relays.BeltTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.relays.ClutchTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntity;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.GearshiftTileEntity;
+import com.simibubi.create.modules.contraptions.relays.ShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.SplitShaftTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntityRenderer;
 import com.simibubi.create.modules.economy.ShopShelfTileEntity;
+import com.simibubi.create.modules.logistics.block.BeltFunnelTileEntity;
 import com.simibubi.create.modules.logistics.block.ExtractorTileEntity;
 import com.simibubi.create.modules.logistics.block.FlexcrateTileEntity;
 import com.simibubi.create.modules.logistics.block.LinkedExtractorTileEntity;
@@ -73,8 +74,10 @@ public enum AllTileEntities {
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
 	STOCKSWITCH(StockswitchTileEntity::new, AllBlocks.STOCKSWITCH),
-	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE), EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR),
+	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE), 
+	EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR),
 	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR),
+	BELT_FUNNEL(BeltFunnelTileEntity::new, AllBlocks.BELT_FUNNEL),
 
 	// Economy
 	SHOP_SHELF(ShopShelfTileEntity::new, AllBlocks.SHOP_SHELF),

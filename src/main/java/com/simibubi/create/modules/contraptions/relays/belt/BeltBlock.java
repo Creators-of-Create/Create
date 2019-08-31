@@ -1,14 +1,15 @@
-package com.simibubi.create.modules.contraptions.relays;
+package com.simibubi.create.modules.contraptions.relays.belt;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.modules.contraptions.relays.BeltTileEntity.TransportedEntityInfo;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity.TransportedEntityInfo;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -36,7 +37,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockItem {
+public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockItem, IWithTileEntity<BeltTileEntity> {
 
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
@@ -103,6 +104,8 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 
 		if (controller == null)
 			return;
+		if (controller.passengers == null)
+			return;
 
 		if (controller.passengers.containsKey(entityIn))
 			controller.passengers.get(entityIn).refresh(belt.getPos(), belt.getBlockState());
@@ -132,6 +135,8 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 
 		if (controller == null)
 			return;
+		if (controller.passengers == null)
+			return;
 
 		if (controller.passengers.containsKey(entityIn)) {
 			TransportedEntityInfo transportedEntityInfo = controller.passengers.get(entityIn);
@@ -141,6 +146,13 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 			controller.passengers.put(entityIn, new TransportedEntityInfo(pos, state));
 	}
 
+	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		withTileEntityDo(worldIn, pos, te -> {
+			te.attachmentTracker.findAttachments(te);
+		});
+	}
+	
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(SLOPE, PART);

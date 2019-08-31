@@ -35,13 +35,6 @@ public abstract class KineticTileEntity extends SyncedTileEntity {
 	}
 	
 	@Override
-	public void onLoad() {
-		if (!hasWorld())
-			return;
-		super.onLoad();
-	}
-
-	@Override
 	public void remove() {
 		if (world.isRemote) {
 			super.remove();

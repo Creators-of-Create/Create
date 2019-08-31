@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.relays;
+package com.simibubi.create.modules.contraptions.relays.belt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,8 +8,10 @@ import java.util.Map;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
-import com.simibubi.create.modules.contraptions.relays.BeltBlock.Part;
-import com.simibubi.create.modules.contraptions.relays.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
+import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.Tracker;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -34,6 +36,8 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 
 	protected BlockPos controller;
 	public Map<Entity, TransportedEntityInfo> passengers;
+	public AllBeltAttachments.Tracker attachmentTracker;
+	private CompoundNBT trackerUpdateTag;
 
 	protected static class TransportedEntityInfo {
 		int ticksSinceLastCollision;
@@ -59,18 +63,37 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 	public BeltTileEntity() {
 		super(AllTileEntities.BELT.type);
 		controller = BlockPos.ZERO;
-		passengers = new HashMap<>();
+		attachmentTracker = new Tracker();
+	}
+
+	protected boolean isLastBelt() {
+		if (speed == 0)
+			return false;
+
+		Direction direction = getBlockState().get(BlockStateProperties.HORIZONTAL_FACING);
+		if (getBlockState().get(BeltBlock.SLOPE) == Slope.VERTICAL)
+			return false;
+
+		Part part = getBlockState().get(BeltBlock.PART);
+		if (part == Part.MIDDLE)
+			return false;
+
+		boolean movingPositively = (speed > 0 == (direction.getAxisDirection().getOffset() == 1))
+				^ direction.getAxis() == Axis.X;
+		return part == Part.START ^ movingPositively;
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.put("Controller", NBTUtil.writeBlockPos(controller));
+		attachmentTracker.write(compound);
 		return super.write(compound);
 	}
 
 	@Override
 	public void read(CompoundNBT compound) {
 		controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
+		trackerUpdateTag = compound;
 		super.read(compound);
 	}
 
@@ -94,8 +117,14 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 
 	@Override
 	public void tick() {
+		if (world != null && trackerUpdateTag != null) {
+			attachmentTracker.readAndSearch(trackerUpdateTag, this);
+			trackerUpdateTag = null;
+		}
 		if (!isController())
 			return;
+		if (passengers == null)
+			passengers = new HashMap<>();
 
 		passengers.forEach((entity, info) -> {
 			transportEntity(entity, info);
@@ -110,7 +139,11 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 			}
 			info.tick();
 		});
-		toRemove.forEach(passengers::remove);
+		toRemove.forEach(e -> {
+			if (e instanceof ItemEntity)
+				((ItemEntity) e).setAgeToCreativeDespawnTime();
+			passengers.remove(e);
+		});
 
 		if (speed == 0)
 			return;
@@ -133,7 +166,16 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 			return;
 		}
 
-		if (((KineticTileEntity) te).getSpeed() == 0)
+		if (entityIn instanceof ItemEntity) {
+			if (speed == 0) {
+				((ItemEntity) entityIn).setAgeToCreativeDespawnTime();
+			} else {
+				if (((ItemEntity) entityIn).getAge() > 0)
+					((ItemEntity) entityIn).setNoDespawn();
+			}
+		}
+
+		if (speed == 0)
 			return;
 
 		if (entityIn.posY - .25f < pos.getY())
@@ -141,6 +183,13 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 
 		if (entityIn instanceof LivingEntity) {
 			((LivingEntity) entityIn).setIdleTime(101);
+		}
+
+		BeltTileEntity belt = (BeltTileEntity) te;
+
+		for (BeltAttachmentState state : belt.attachmentTracker.attachments) {
+			if (state.attachment.handleEntity(belt, entityIn, state))
+				return;
 		}
 
 		final Direction beltFacing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);

@@ -41,7 +41,9 @@
 	"block.create.stockswitch": "Stockpile Switch",
 	"block.create.flexcrate": "FlexCrate",
 	"block.create.extractor": "Extractor",
+	"block.create.belt_funnel": "Belt Funnel",
 	"block.create.linked_extractor": "Linked Extractor",
+	"block.create.pulse_repeater": "Pulse Repeater",
 	
 	"block.create.andesite_bricks": "Andesite Bricks",
 	"block.create.diorite_bricks": "Diorite Bricks",
@@ -74,6 +76,8 @@
 	"block.create.shop_shelf": "Shelf",
 
 	"death.attack.create.crush": "%1$s was crushed by a dangerous contraption",
+	"death.attack.create.fan_fire": "%1$s was burnt to death by hot air",
+	"death.attack.create.fan_lava": "%1$s tried to swim up a lava fountain",
 	
 	"itemGroup.create": "Create"
 }

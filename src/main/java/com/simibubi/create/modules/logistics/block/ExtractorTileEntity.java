@@ -14,16 +14,31 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 	private State state;
 	private int cooldown;
 	private LazyOptional<IItemHandler> inventory;
+	private boolean initialize;
 	
 	public ExtractorTileEntity() {
 		super(AllTileEntities.EXTRACTOR.type);
-		state = State.WAITING_FOR_ITEM;
+		state = State.WAITING_FOR_INVENTORY;
 		inventory = LazyOptional.empty();
 	}
 	
 	@Override
 	public State getState() {
 		return state;
+	}
+	
+	@Override
+	public void onLoad() {
+		initialize = true;
+	}
+	
+	@Override
+	public void tick() {
+		if (initialize && hasWorld()) {
+			neighborChanged();
+			initialize = false;
+		}
+		IExtractor.super.tick();
 	}
 	
 	@Override

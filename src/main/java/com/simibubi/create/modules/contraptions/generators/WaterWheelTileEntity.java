@@ -47,12 +47,6 @@ public class WaterWheelTileEntity extends KineticTileEntity {
 		flows.put(direction, speed);
 	}
 	
-	@Override
-	public void onLoad() {
-		super.onLoad();
-//		updateSpeed();
-	}
-
 	public void updateSpeed() {
 		float speed = 0;
 		for (Integer i : flows.values())

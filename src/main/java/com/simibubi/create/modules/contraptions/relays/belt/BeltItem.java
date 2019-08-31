@@ -1,12 +1,12 @@
-package com.simibubi.create.modules.contraptions.relays;
+package com.simibubi.create.modules.contraptions.relays.belt;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
-import com.simibubi.create.modules.contraptions.relays.BeltBlock.Part;
-import com.simibubi.create.modules.contraptions.relays.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;

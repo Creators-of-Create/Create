@@ -1,6 +1,6 @@
 package com.simibubi.create;
 
-import com.simibubi.create.modules.contraptions.relays.BeltItem;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItemRenderer;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;

@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.relays;
+package com.simibubi.create.modules.contraptions.relays.belt;
 
 import java.nio.ByteBuffer;
 

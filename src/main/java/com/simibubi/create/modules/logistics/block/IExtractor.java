@@ -2,27 +2,22 @@ package com.simibubi.create.modules.logistics.block;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 // Its like delegation but better!
-public interface IExtractor extends ITickableTileEntity {
+public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 
 	public static final int EXTRACTOR_COOLDOWN = 20;
 	public static final int EXTRACTION_COUNT = 16;
 
 	public enum State {
-		WAITING_FOR_ITEM, WAITING_FOR_SPACE, RUNNING, ON_COOLDOWN, LOCKED;
+		WAITING_FOR_INVENTORY, WAITING_FOR_ENTITY, RUNNING, ON_COOLDOWN, LOCKED;
 	}
 
 	public State getState();
@@ -30,16 +25,6 @@ public interface IExtractor extends ITickableTileEntity {
 	public void setState(State state);
 
 	public int tickCooldown();
-
-	public World getWorld();
-
-	public BlockPos getPos();
-
-	public BlockPos getInventoryPos();
-
-	public LazyOptional<IItemHandler> getInventory();
-
-	public void setInventory(LazyOptional<IItemHandler> inventory);
 
 	@Override
 	default void tick() {
@@ -62,18 +47,18 @@ public interface IExtractor extends ITickableTileEntity {
 		if (hasSpace && hasInventory)
 			toExtract = extract(true);
 
-		if (state == State.WAITING_FOR_SPACE) {
+		if (state == State.WAITING_FOR_ENTITY) {
 			if (hasSpace)
 				setState(State.RUNNING);
 		}
 
 		if (state == State.RUNNING) {
 			if (!hasSpace) {
-				setState(State.WAITING_FOR_SPACE);
+				setState(State.WAITING_FOR_ENTITY);
 				return;
 			}
 			if (!hasInventory || toExtract.isEmpty()) {
-				setState(State.WAITING_FOR_ITEM);
+				setState(State.WAITING_FOR_INVENTORY);
 				return;
 			}
 
@@ -88,7 +73,7 @@ public interface IExtractor extends ITickableTileEntity {
 	public default void setLocked(boolean locked) {
 		setState(locked ? State.LOCKED : State.ON_COOLDOWN);
 	}
-	
+
 	public default void neighborChanged() {
 		boolean hasSpace = hasSpaceForExtracting();
 		boolean hasInventory = getInventory().isPresent();
@@ -96,8 +81,8 @@ public interface IExtractor extends ITickableTileEntity {
 
 		if (hasSpace && hasInventory)
 			toExtract = extract(true);
-		
-		if (getState() == State.WAITING_FOR_ITEM) {
+
+		if (getState() == State.WAITING_FOR_INVENTORY) {
 			if (!hasInventory) {
 				if (findNewInventory()) {
 					setState(State.RUNNING);
@@ -123,48 +108,27 @@ public interface IExtractor extends ITickableTileEntity {
 			compare.setCount(extracting.getCount());
 			if (!extracting.isEmpty() && !extracting.equals(compare, false))
 				continue;
-			
+
 			if (extracting.isEmpty())
 				extracting = stack.copy();
 			else
 				extracting.grow(stack.getCount());
-			
+
 			if (!simulate)
 				inv.extractItem(slot, stack.getCount(), false);
 			if (extracting.getCount() >= EXTRACTION_COUNT)
 				break;
 		}
-		
+
 		if (!simulate) {
 			World world = getWorld();
 			Vec3d pos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);
 			ItemEntity entityIn = new ItemEntity(world, pos.x, pos.y, pos.z, extracting);
-			entityIn.setMotion(Vec3d.ZERO);			
+			entityIn.setMotion(Vec3d.ZERO);
 			world.addEntity(entityIn);
 		}
 
 		return extracting;
-	}
-
-	default boolean findNewInventory() {
-		BlockPos invPos = getInventoryPos();
-		World world = getWorld();
-
-		if (!world.isBlockPresent(invPos))
-			return false;
-		BlockState invState = world.getBlockState(invPos);
-
-		if (!invState.hasTileEntity())
-			return false;
-		TileEntity invTE = world.getTileEntity(invPos);
-
-		LazyOptional<IItemHandler> inventory = invTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-		setInventory(inventory);
-		if (inventory.isPresent()) {
-			return true;
-		}
-
-		return false;
 	}
 
 }

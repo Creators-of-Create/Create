@@ -6,10 +6,10 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
-import com.simibubi.create.modules.contraptions.relays.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.GearboxTileEntity;
 import com.simibubi.create.modules.contraptions.relays.SplitShaftTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.state.IProperty;
@@ -65,6 +65,12 @@ public class RotationPropagator {
 					&& stateFrom.get(EncasedBeltBlock.CONNECTED_FACE) == direction
 					&& stateTo.get(EncasedBeltBlock.CONNECTED_FACE) == direction.getOpposite();
 			return connected ? 1 : 0;
+		}
+		
+		// Attached Fans
+		if (AllBlocks.ENCASED_FAN.typeOf(stateFrom) && AllBlocks.ENCASED_FAN.typeOf(stateTo)) {
+			if (stateFrom.get(BlockStateProperties.AXIS) == stateTo.get(BlockStateProperties.AXIS))
+				return 1;
 		}
 
 		// Gear <-> Large Gear
