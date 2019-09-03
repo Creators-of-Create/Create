@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.logistics;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.modules.logistics.FrequencyHandler.Frequency;
 
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,9 @@ public interface IHaveWireless {
 	
 	public default boolean isLoaded() {
 		return getWorld().isBlockPresent(getPos());
+	}
+	default FrequencyHandler getHandler() {
+		return Create.frequencyHandler;
 	}
 	
 }

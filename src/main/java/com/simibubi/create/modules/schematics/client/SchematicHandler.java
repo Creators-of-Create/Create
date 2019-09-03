@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.type.Cuboid;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.schematics.SchematicWorld;
 import com.simibubi.create.modules.schematics.client.tools.Tools;
-import com.simibubi.create.modules.schematics.item.BlueprintItem;
+import com.simibubi.create.modules.schematics.item.SchematicItem;
 import com.simibubi.create.modules.schematics.packet.SchematicPlacePacket;
 
 import net.minecraft.client.Minecraft;
@@ -198,7 +198,7 @@ public class SchematicHandler {
 		AllPackets.channel.sendToServer(new NbtPacket(item, slot));
 
 		if (deployed) {
-			Template schematic = BlueprintItem.getSchematic(item);
+			Template schematic = SchematicItem.getSchematic(item);
 
 			if (schematic.getSize().equals(BlockPos.ZERO))
 				return;

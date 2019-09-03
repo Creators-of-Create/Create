@@ -1,0 +1,8 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "create:item/chromatic_compound_0",
+    "layer1": "create:item/chromatic_compound_1",
+    "layer2": "create:item/chromatic_compound_2"
+  }
+}

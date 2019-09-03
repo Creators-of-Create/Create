@@ -6,12 +6,12 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltItemHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
+import net.minecraftforge.client.event.InputEvent.MouseScrollEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
@@ -67,13 +67,12 @@ public class ClientEvents {
 		CreateClient.schematicHandler.onKeyInput(key, pressed);
 	}
 
+	
 	@SubscribeEvent
-	// TODO: This is a fabricated event call by ScrollFixer until a proper event
-	// exists
-	public static void onMouseScrolled(MouseScrollEvent.Post event) {
-		if (event.getGui() != null)
+	public static void onMouseScrolled(MouseScrollEvent event) {
+		if (Minecraft.getInstance().currentScreen != null)
 			return;
-
+		
 		double delta = event.getScrollDelta();
 
 		boolean cancelled = CreateClient.schematicHandler.mouseScrolled(delta)

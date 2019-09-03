@@ -19,7 +19,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.type.DimensionPos;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
-import com.simibubi.create.modules.schematics.item.BlueprintItem;
+import com.simibubi.create.modules.schematics.item.SchematicItem;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -226,7 +226,7 @@ public class ServerSchematicLoader {
 				tileEntity.finishUpload();
 				tileEntity.inventory.setStackInSlot(0, ItemStack.EMPTY);
 				tileEntity.inventory.setStackInSlot(1,
-						BlueprintItem.create(schematic, player.getName().getFormattedText()));
+						SchematicItem.create(schematic, player.getName().getFormattedText()));
 
 			} catch (IOException e) {
 				Create.logger.error("Exception Thrown when finishing Upload: " + playerSchematicId);

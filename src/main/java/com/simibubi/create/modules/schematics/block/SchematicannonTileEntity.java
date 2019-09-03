@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.foundation.type.Cuboid;
 import com.simibubi.create.modules.schematics.MaterialChecklist;
 import com.simibubi.create.modules.schematics.SchematicWorld;
-import com.simibubi.create.modules.schematics.item.BlueprintItem;
+import com.simibubi.create.modules.schematics.item.SchematicItem;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -515,7 +515,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		}
 
 		// Load blocks into reader
-		Template activeTemplate = BlueprintItem.getSchematic(blueprint);
+		Template activeTemplate = SchematicItem.getSchematic(blueprint);
 		BlockPos anchor = NBTUtil.readBlockPos(blueprint.getTag().getCompound("Anchor"));
 
 		if (activeTemplate.getSize().equals(BlockPos.ZERO)) {
@@ -534,7 +534,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 		schematicAnchor = anchor;
 		blockReader = new SchematicWorld(new HashMap<>(), new Cuboid(), schematicAnchor);
-		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, BlueprintItem.getSettings(blueprint));
+		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, SchematicItem.getSettings(blueprint));
 		schematicLoaded = true;
 		state = State.PAUSED;
 		statusMsg = "Ready";

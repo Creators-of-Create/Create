@@ -1,18 +1,20 @@
 package com.simibubi.create;
 
+import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltItem;
+import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItemRenderer;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
 import com.simibubi.create.modules.gardens.TreeFertilizerItem;
-import com.simibubi.create.modules.logistics.item.FilterItem;
-import com.simibubi.create.modules.schematics.item.BlueprintAndQuillItem;
-import com.simibubi.create.modules.schematics.item.BlueprintItem;
+import com.simibubi.create.modules.schematics.item.SchematicAndQuillItem;
+import com.simibubi.create.modules.schematics.item.SchematicItem;
 import com.simibubi.create.modules.symmetry.SymmetryWandItem;
 import com.simibubi.create.modules.symmetry.client.SymmetryWandItemRenderer;
 import com.simibubi.create.modules.symmetry.client.SymmetryWandModel;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
@@ -33,21 +35,26 @@ public enum AllItems {
 
 	SYMMETRY_WAND(new SymmetryWandItem(
 			standardProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SYMMETRY_WAND)))),
-	
+
 	PLACEMENT_HANDGUN(
 			new BuilderGunItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN)))),
 
 	ANDESITE_ALLOY_CUBE(new Item(standardProperties())), 
 	BLAZE_BRASS_CUBE(new Item(standardProperties())),
 	CHORUS_CHROME_CUBE(new Item(standardProperties().rarity(Rarity.UNCOMMON))),
+	CHROMATIC_COMPOUND_CUBE(new ChromaticCompoundCubeItem(standardProperties().rarity(Rarity.UNCOMMON))),
+	SHADOW_STEEL_CUBE(new Item(standardProperties().rarity(Rarity.UNCOMMON))),
+	
+	BLAZING_PICKAXE(new Item(standardProperties())),
+	BLAZING_SHOVEL(new Item(standardProperties())),
+	BLAZING_AXE(new Item(standardProperties())),
+	BLAZING_SWORD(new Item(standardProperties())),
 
 	TREE_FERTILIZER(new TreeFertilizerItem(standardProperties())),
-	
+
 	EMPTY_BLUEPRINT(new Item(standardProperties().maxStackSize(1))),
-	BLUEPRINT_AND_QUILL(new BlueprintAndQuillItem(standardProperties().maxStackSize(1))),
-	BLUEPRINT(new BlueprintItem(standardProperties())),
-	BELT_CONNECTOR(new BeltItem(standardProperties())),
-	FILTER(new FilterItem(standardProperties())),
+	BLUEPRINT_AND_QUILL(new SchematicAndQuillItem(standardProperties().maxStackSize(1))),
+	BLUEPRINT(new SchematicItem(standardProperties())), BELT_CONNECTOR(new BeltItem(standardProperties())),
 
 	;
 
@@ -86,13 +93,18 @@ public enum AllItems {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void registerColorHandlers() {
-		Minecraft.getInstance().getItemColors().register(new FilterItem.Color(), FILTER.item);
+		ItemColors itemColors = Minecraft.getInstance().getItemColors();
+		for (AllItems item : values()) {
+			if (item.item instanceof IItemWithColorHandler) {
+				itemColors.register(((IItemWithColorHandler) item.item).getColorHandler(), item.item);
+			}
+		}
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static ItemStackTileEntityRenderer renderUsing(AllItemRenderers renderer) {
 		switch (renderer) {
-		
+
 		case SYMMETRY_WAND:
 			return new SymmetryWandItemRenderer();
 		case BUILDER_GUN:

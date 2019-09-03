@@ -9,8 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
@@ -30,29 +28,17 @@ public class EncasedFanBlock extends EncasedShaftBlock implements IWithTileEntit
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		Axis axisIn = state.get(AXIS);
-		notifyFanTile(worldIn, pos, Direction.getFacingFromAxisDirection(axisIn, AxisDirection.POSITIVE));
-		notifyFanTile(worldIn, pos, Direction.getFacingFromAxisDirection(axisIn, AxisDirection.NEGATIVE));
+		notifyFanTile(worldIn, pos);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
-		Axis axisIn = state.get(AXIS);
-		notifyFanTile(worldIn, pos, Direction.getFacingFromAxisDirection(axisIn, AxisDirection.POSITIVE));
-		notifyFanTile(worldIn, pos, Direction.getFacingFromAxisDirection(axisIn, AxisDirection.NEGATIVE));
+		notifyFanTile(worldIn, pos);
 	}
 
-	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
-		if (facing.getAxis() == stateIn.get(AXIS))
-			notifyFanTile(worldIn, currentPos, facing);
-		return stateIn;
-	}
-
-	protected void notifyFanTile(IWorld world, BlockPos pos, Direction facing) {
-		withTileEntityDo(world, pos, te -> te.setNeighbour(facing, world.getBlockState(pos.offset(facing))));
+	protected void notifyFanTile(IWorld world, BlockPos pos) {
+		withTileEntityDo(world, pos, EncasedFanTileEntity::updateFrontBlock);
 	}
 
 	@Override

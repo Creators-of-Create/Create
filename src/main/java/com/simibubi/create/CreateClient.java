@@ -24,8 +24,7 @@ public class CreateClient {
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
 		schematicHologram = new SchematicHologram();
-
-		ScrollFixer.init();
+		schematicAndQuillHandler = new SchematicAndQuillHandler();
 
 		AllKeys.register();
 		AllContainers.registerScreenFactories();

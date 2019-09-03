@@ -3,6 +3,8 @@ package com.simibubi.create;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.simibubi.create.modules.logistics.FrequencyHandler;
+import com.simibubi.create.modules.logistics.InWorldItemProcessingHandler;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 
 import net.minecraft.block.Block;
@@ -27,10 +29,15 @@ public class Create {
 	public static Logger logger = LogManager.getLogger();
 	public static ItemGroup creativeTab = new CreateItemGroup();
 	public static ServerSchematicLoader schematicReceiver;
+	public static FrequencyHandler frequencyHandler;
+	public static InWorldItemProcessingHandler itemProcessingHandler;
 
 	@SubscribeEvent
 	public static void init(final FMLCommonSetupEvent event) {
 		schematicReceiver = new ServerSchematicLoader();
+		itemProcessingHandler = new InWorldItemProcessingHandler();
+		frequencyHandler = new FrequencyHandler();
+		
 		AllPackets.registerPackets();
 	}
 

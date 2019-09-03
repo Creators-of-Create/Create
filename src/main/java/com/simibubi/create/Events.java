@@ -1,7 +1,9 @@
 package com.simibubi.create;
 
+import net.minecraft.world.IWorld;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.ServerTickEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -22,5 +24,19 @@ public class Events {
 		Create.shutdown();
 	}
 	
+	@SubscribeEvent
+	public static void onLoadWorld(WorldEvent.Load event) {
+		IWorld world = event.getWorld();
+		Create.itemProcessingHandler.onLoadWorld(world);
+		Create.frequencyHandler.onLoadWorld(world);
+	}
+
+	@SubscribeEvent
+	public static void onUnloadWorld(WorldEvent.Unload event) {
+		IWorld world = event.getWorld();
+		Create.itemProcessingHandler.onUnloadWorld(world);
+		Create.frequencyHandler.onUnloadWorld(world);
+		
+	}
 	
 }

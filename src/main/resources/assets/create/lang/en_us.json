@@ -6,10 +6,17 @@
 	"item.create.andesite_alloy_cube": "Andesite Alloy",
 	"item.create.blaze_brass_cube": "Blaze Brass",
 	"item.create.chorus_chrome_cube": "Chorus Chrome",
+	"item.create.chromatic_compound_cube": "Chromatic Compound",
+	"item.create.shadow_steel_cube": "Shadow Steel",
 	"item.create.blueprint_and_quill": "Schematic and Quill",
 	"item.create.blueprint": "Schematic",
 	"item.create.belt_connector": "Mechanical Belt",
 	"item.create.filter": "Filter",
+	
+	"item.create.blazing_pickaxe": "Blazing Pickaxe",
+	"item.create.blazing_shovel": "Blazing Shovel",
+	"item.create.blazing_axe": "Blazing Axe",
+	"item.create.blazing_sword": "Blazing Longsword",
 	
 	"block.create.cogwheel": "Cogwheel",
     "block.create.large_cogwheel": "Large Cogwheel",

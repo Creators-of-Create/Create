@@ -13,11 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.IWorld;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class FrequencyHandler {
 
 	public static final int RANGE = 128;
@@ -53,23 +49,21 @@ public class FrequencyHandler {
 
 	}
 
-	@SubscribeEvent
-	public static void onLoadWorld(WorldEvent.Load event) {
-		connections.put(event.getWorld(), new HashMap<>());
-		Create.logger.info("Prepared network space for " + event.getWorld().getDimension().getType().getRegistryName());
+	public void onLoadWorld(IWorld world) {
+		connections.put(world, new HashMap<>());
+		Create.logger.info("Prepared network space for " + world.getDimension().getType().getRegistryName());
 	}
 
-	@SubscribeEvent
-	public static void onUnloadWorld(WorldEvent.Unload event) {
-		connections.remove(event.getWorld());
-		Create.logger.info("Removed network space for " + event.getWorld().getDimension().getType().getRegistryName());
+	public void onUnloadWorld(IWorld world) {
+		connections.remove(world);
+		Create.logger.info("Removed network space for " + world.getDimension().getType().getRegistryName());
 	}
 
 	private static Pair<Frequency, Frequency> getNetworkKey(IHaveWireless actor) {
 		return Pair.of(actor.getFrequencyFirst(), actor.getFrequencyLast());
 	}
 
-	public static List<IHaveWireless> getNetworkOf(IHaveWireless actor) {
+	public List<IHaveWireless> getNetworkOf(IHaveWireless actor) {
 		Map<Pair<Frequency, Frequency>, List<IHaveWireless>> networksInWorld = networksIn(actor.getWorld());
 		Pair<Frequency, Frequency> key = getNetworkKey(actor);
 		if (!networksInWorld.containsKey(key))
@@ -77,12 +71,12 @@ public class FrequencyHandler {
 		return networksInWorld.get(key);
 	}
 
-	public static void addToNetwork(IHaveWireless actor) {
+	public void addToNetwork(IHaveWireless actor) {
 		getNetworkOf(actor).add(actor);
 		updateNetworkOf(actor);
 	}
 
-	public static void removeFromNetwork(IHaveWireless actor) {
+	public void removeFromNetwork(IHaveWireless actor) {
 		List<IHaveWireless> network = getNetworkOf(actor);
 		network.remove(actor);
 		if (network.isEmpty()) {
@@ -92,7 +86,7 @@ public class FrequencyHandler {
 		updateNetworkOf(actor);
 	}
 
-	public static void updateNetworkOf(IHaveWireless actor) {
+	public void updateNetworkOf(IHaveWireless actor) {
 		List<IHaveWireless> network = getNetworkOf(actor);
 		boolean powered = false;
 
@@ -119,7 +113,7 @@ public class FrequencyHandler {
 		return from.getPos().withinDistance(to.getPos(), RANGE);
 	}
 
-	public static Map<Pair<Frequency, Frequency>, List<IHaveWireless>> networksIn(IWorld world) {
+	public Map<Pair<Frequency, Frequency>, List<IHaveWireless>> networksIn(IWorld world) {
 		if (!connections.containsKey(world)) {
 			Create.logger.warn(
 					"Tried to Access unprepared network space of " + world.getDimension().getType().getRegistryName());

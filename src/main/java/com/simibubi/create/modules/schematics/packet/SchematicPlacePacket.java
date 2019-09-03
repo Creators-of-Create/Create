@@ -3,7 +3,7 @@ package com.simibubi.create.modules.schematics.packet;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.packet.SimplePacketBase;
-import com.simibubi.create.modules.schematics.item.BlueprintItem;
+import com.simibubi.create.modules.schematics.item.SchematicItem;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -31,9 +31,9 @@ public class SchematicPlacePacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayerEntity player = context.get().getSender();
-			Template t = BlueprintItem.getSchematic(stack);
+			Template t = SchematicItem.getSchematic(stack);
 			t.addBlocksToWorld(player.getServerWorld(), NBTUtil.readBlockPos(stack.getTag().getCompound("Anchor")),
-					BlueprintItem.getSettings(stack));
+					SchematicItem.getSettings(stack));
 		});
 		context.get().setPacketHandled(true);
 	}

@@ -14,16 +14,17 @@ import java.util.UUID;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.logistics.InWorldProcessing;
+import com.simibubi.create.modules.logistics.InWorldProcessing.Type;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
@@ -35,7 +36,6 @@ import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -61,7 +61,6 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 			.setFireDamage();
 
 	protected BlockState frontBlock;
-	protected BlockState backBlock;
 	protected float pushDistance;
 	protected float pullDistance;
 	protected float pushForce;
@@ -70,30 +69,36 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 	protected AxisAlignedBB backBB;
 	protected int blockCheckCooldown;
 	protected boolean findLoadedItems;
+	protected boolean findFrontBlock;
 	public List<ProcessedItem> items;
 
 	public class ProcessedItem {
 		private UUID loadedUUID;
+		private int loadedTime;
 		private ItemEntity entity;
-		private int processingTimeLeft;
 
 		public ProcessedItem(UUID uuid, int timeLeft) {
 			loadedUUID = uuid;
-			processingTimeLeft = timeLeft;
+			loadedTime = timeLeft;
 		}
 
 		public ProcessedItem(ItemEntity item) {
 			entity = item;
-			processingTimeLeft = 100;
 		}
 
 		public void tick() {
-			world.addParticle(new RedstoneParticleData(1, 0, 1, 1), entity.posX, entity.posY, entity.posZ, 0, 0, 0);
-			processingTimeLeft--;
-
-			if (processingTimeLeft <= 0) {
-				entity.setItem(new ItemStack(Items.COAL));
+			if (world.rand.nextInt(4) == 0) {
+				Type processingType = getProcessingType();
+				if (processingType == Type.BLASTING)
+					world.addParticle(ParticleTypes.LARGE_SMOKE, entity.posX, entity.posY + .25f, entity.posZ, 0, 1/16f, 0);
+				if (processingType == Type.SMOKING)
+					world.addParticle(ParticleTypes.CLOUD, entity.posX, entity.posY + .25f, entity.posZ, 0, 1/16f, 0);
 			}
+
+			if (world.isRemote)
+				return;
+
+			Create.itemProcessingHandler.getProcessing(entity).process(entity);
 		}
 
 	}
@@ -147,7 +152,8 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 
 	public EncasedFanTileEntity() {
 		super(AllTileEntities.ENCASED_FAN.type);
-		blockCheckCooldown = BLOCK_CHECK_UPDATE_DELAY;
+		blockCheckCooldown = -1;
+		findFrontBlock = true;
 		frontBB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 		backBB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 		items = new ArrayList<>();
@@ -185,32 +191,25 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 	@Override
 	public void readClientUpdate(CompoundNBT tag) {
 		super.readClientUpdate(tag);
-		pushDistance = tag.getFloat("PushDistance");
-		pullDistance = tag.getFloat("PullDistance");
-		pushForce = tag.getFloat("PushForce");
-		pullForce = tag.getFloat("PullForce");
-		updateBothNeighbours();
+		updateFrontBlock();
 		updateBBs();
 	}
 
 	@Override
 	public CompoundNBT writeToClient(CompoundNBT tag) {
 		super.writeToClient(tag);
-		tag.putFloat("PushDistance", pushDistance);
-		tag.putFloat("PullDistance", pullDistance);
-		tag.putFloat("PushForce", pushForce);
-		tag.putFloat("PullForce", pullForce);
 		return tag;
-	}
-
-	@Override
-	public void onLoad() {
-		blockCheckCooldown = 0;
 	}
 
 	@Override
 	public void read(CompoundNBT compound) {
 		super.read(compound);
+
+		pushDistance = compound.getFloat("PushDistance");
+		pullDistance = compound.getFloat("PullDistance");
+		pushForce = compound.getFloat("PushForce");
+		pullForce = compound.getFloat("PullForce");
+
 		ListNBT itemsNBT = compound.getList("Items", 10);
 		items.clear();
 		for (INBT iNBT : itemsNBT) {
@@ -222,11 +221,16 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
+		compound.putFloat("PushDistance", pushDistance);
+		compound.putFloat("PullDistance", pullDistance);
+		compound.putFloat("PushForce", pushForce);
+		compound.putFloat("PullForce", pullForce);
+
 		ListNBT itemsNBT = new ListNBT();
 		for (ProcessedItem item : items) {
 			CompoundNBT itemNBT = new CompoundNBT();
 			itemNBT.put("UUID", NBTUtil.writeUniqueId(item.entity.getUniqueID()));
-			itemNBT.putInt("TimeLeft", item.processingTimeLeft);
+			itemNBT.putInt("TimeLeft", Create.itemProcessingHandler.getProcessing(item.entity).timeRemaining);
 			itemsNBT.add(itemNBT);
 		}
 		compound.put("Items", itemsNBT);
@@ -287,23 +291,15 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 				.grow(.25f);
 	}
 
-	public void updateBothNeighbours() {
-		Axis axis = getBlockState().get(AXIS);
-		Direction frontFacing = Direction.getFacingFromAxis(POSITIVE, axis);
-		Direction backFacing = Direction.getFacingFromAxis(NEGATIVE, axis);
-		BlockPos front = pos.offset(frontFacing);
-		BlockPos back = pos.offset(backFacing);
+	public void updateFrontBlock() {
+		Direction facing = getAirFlow();
+		if (facing == null) {
+			frontBlock = Blocks.AIR.getDefaultState();
+			return;
+		}
+		BlockPos front = pos.offset(facing);
 		if (world.isBlockPresent(front))
-			setNeighbour(frontFacing, world.getBlockState(front));
-		if (world.isBlockPresent(back))
-			setNeighbour(backFacing, world.getBlockState(back));
-	}
-
-	public void setNeighbour(Direction direction, BlockState neighbourState) {
-		if (direction.getAxisDirection() == NEGATIVE)
-			backBlock = neighbourState;
-		else
-			frontBlock = neighbourState;
+			frontBlock = world.getBlockState(front);
 		updateReachAndForce();
 	}
 
@@ -316,6 +312,7 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 	@Override
 	public void onSpeedChanged() {
 		updateReachAndForce();
+		updateFrontBlock();
 	}
 
 	@Override
@@ -335,59 +332,124 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 					entity.setFire(10);
 					entity.attackEntityFrom(damageSourceLava, 8);
 				}
-			} else {
-				boolean missing = true;
-				for (ProcessedItem processed : items) {
-					if (processed.entity == entity) {
-						processed.tick();
-						missing = false;
-						break;
-					}
-				}
-				if (missing) {
-					items.add(new ProcessedItem((ItemEntity) entity));
-				}
 			}
 		}
+
 		for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(null, backBB)) {
 			moveEntity(entity, false);
 		}
+
+		if (findFrontBlock) {
+			findFrontBlock = false;
+			updateFrontBlock();
+		}
+
+		if (!world.isRemote && blockCheckCooldown-- <= 0) {
+			blockCheckCooldown = BLOCK_CHECK_UPDATE_DELAY;
+			updateReachAndForce();
+		}
+
+		updateProcessedItems(frontEntities);
 
 		if (world.isRemote) {
 			makeParticles();
 			return;
 		}
 
-		if (blockCheckCooldown-- <= 0) {
-			blockCheckCooldown = BLOCK_CHECK_UPDATE_DELAY;
-			updateReachAndForce();
+		discoverEntitiesAfterLoad(frontEntities);
+	}
+
+	public void updateProcessedItems(List<Entity> frontEntities) {
+		ArrayList<ProcessedItem> prevItems = new ArrayList<>(items);
+		Iterator<ProcessedItem> itemIter = prevItems.iterator();
+
+		if (canProcess()) {
+			while (itemIter.hasNext()) {
+				Iterator<Entity> entityIter = frontEntities.iterator();
+				ProcessedItem item = itemIter.next();
+
+				while (entityIter.hasNext()) {
+					Entity e = entityIter.next();
+					if (!(e instanceof ItemEntity)) {
+						entityIter.remove();
+						continue;
+					}
+
+					if (item.entity == e && e.isAlive()) {
+						item.tick();
+						entityIter.remove();
+						itemIter.remove();
+						continue;
+					}
+				}
+			}
+			// Add remaining
+			for (Entity entity : frontEntities) {
+				if (entity instanceof ItemEntity && canProcess((ItemEntity) entity)) {
+					items.add(new ProcessedItem((ItemEntity) entity));
+					if (!world.isRemote)
+						Create.itemProcessingHandler.startProcessing((ItemEntity) entity,
+								new InWorldProcessing(getProcessingType(), 100));
+				}
+			}
 		}
 
+		for (ProcessedItem lostItem : prevItems) {
+			items.remove(lostItem);
+			if (!world.isRemote && lostItem.entity != null)
+				Create.itemProcessingHandler.stopProcessing(lostItem.entity);
+		}
+	}
+
+	public void discoverEntitiesAfterLoad(List<Entity> frontEntities) {
 		if (findLoadedItems) {
 			findLoadedItems = false;
 			Iterator<ProcessedItem> iterator = items.iterator();
 			while (iterator.hasNext()) {
 				ProcessedItem item = iterator.next();
+				if (!canProcess())
+					iterator.remove();
+
 				for (Entity entity : frontEntities) {
 					if (!(entity instanceof ItemEntity))
 						continue;
-					if (entity.getUniqueID().equals(item.loadedUUID))
+					if (entity.getUniqueID().equals(item.loadedUUID)) {
 						item.entity = (ItemEntity) entity;
+						if (!world.isRemote && canProcess((ItemEntity) entity))
+							Create.itemProcessingHandler.startProcessing((ItemEntity) entity,
+									new InWorldProcessing(getProcessingType(), item.loadedTime));
+					}
 				}
 				if (item.entity == null)
 					iterator.remove();
 			}
 		}
+	}
 
-		Iterator<ProcessedItem> iterator = items.iterator();
-		while (iterator.hasNext())
-			if (!iterator.next().entity.getBoundingBox().intersects(frontBB))
-				iterator.remove();
+	protected boolean canProcess() {
+		return getProcessingType() != null;
+	}
 
+	protected boolean canProcess(ItemEntity entity) {
+		return canProcess() && new InWorldProcessing(getProcessingType(), 0).canProcess(entity);
+	}
+
+	protected InWorldProcessing.Type getProcessingType() {
+		Block block = frontBlock.getBlock();
+
+		if (block == Blocks.FIRE)
+			return Type.SMOKING;
+		if (block == Blocks.WATER)
+			return Type.SPLASHING;
+		if (block == Blocks.LAVA)
+			return Type.BLASTING;
+
+		return null;
 	}
 
 	protected void moveEntity(Entity entity, boolean push) {
-		if ((entity instanceof ItemEntity) && AllBlocks.BELT.typeOf(world.getBlockState(entity.getPosition()))) {
+		if ((entity instanceof ItemEntity) && AllBlocks.BELT.typeOf(world.getBlockState(entity.getPosition()))
+				&& getAirFlow() != Direction.UP) {
 			return;
 		}
 
@@ -413,13 +475,6 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 			if (effects.containsKey(frontBlock.getBlock())) {
 				hasFx = true;
 				for (FanEffect fx : effects.get(frontBlock.getBlock()))
-					fx.render(directionVec, true, this);
-			}
-		}
-		if (backBlock != null && !hasFx) {
-			if (effects.containsKey(backBlock.getBlock())) {
-				hasFx = true;
-				for (FanEffect fx : effects.get(backBlock.getBlock()))
 					fx.render(directionVec, true, this);
 			}
 		}

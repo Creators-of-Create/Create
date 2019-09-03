@@ -12,9 +12,9 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-public class BlueprintAndQuillItem extends Item {
+public class SchematicAndQuillItem extends Item {
 
-	public BlueprintAndQuillItem(Properties properties) {
+	public SchematicAndQuillItem(Properties properties) {
 		super(properties);
 	}
 

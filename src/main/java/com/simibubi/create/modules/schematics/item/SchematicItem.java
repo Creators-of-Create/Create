@@ -39,9 +39,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
-public class BlueprintItem extends Item {
+public class SchematicItem extends Item {
 
-	public BlueprintItem(Properties properties) {
+	public SchematicItem(Properties properties) {
 		super(properties.maxStackSize(1));
 	}
 
@@ -59,7 +59,7 @@ public class BlueprintItem extends Item {
 
 		writeSize(blueprint);
 		blueprint.setDisplayName(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.WHITE
-				+ "Blueprint (" + TextFormatting.GOLD + schematic + TextFormatting.WHITE + ")"));
+				+ "Schematic (" + TextFormatting.GOLD + schematic + TextFormatting.WHITE + ")"));
 
 		return blueprint;
 	}

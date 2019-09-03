@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.logistics.block;
 
 import com.simibubi.create.foundation.block.SyncedTileEntity;
-import com.simibubi.create.modules.logistics.FrequencyHandler;
 import com.simibubi.create.modules.logistics.FrequencyHandler.Frequency;
 import com.simibubi.create.modules.logistics.IHaveWireless;
 
@@ -13,19 +12,19 @@ public abstract class LinkedTileEntity extends SyncedTileEntity implements IHave
 
 	public Frequency frequencyFirst;
 	public Frequency frequencyLast;
-	
+
 	public LinkedTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		frequencyFirst = new Frequency(ItemStack.EMPTY);
 		frequencyLast = new Frequency(ItemStack.EMPTY);
 	}
-	
+
 	@Override
 	public void onLoad() {
 		super.onLoad();
 		if (world.isRemote)
 			return;
-		FrequencyHandler.addToNetwork(this);
+		getHandler().addToNetwork(this);
 	}
 
 	@Override
@@ -33,9 +32,9 @@ public abstract class LinkedTileEntity extends SyncedTileEntity implements IHave
 		super.remove();
 		if (world.isRemote)
 			return;
-		FrequencyHandler.removeFromNetwork(this);
+		getHandler().removeFromNetwork(this);
 	}
-	
+
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.put("FrequencyFirst", frequencyFirst.getStack().write(new CompoundNBT()));
@@ -49,7 +48,7 @@ public abstract class LinkedTileEntity extends SyncedTileEntity implements IHave
 		frequencyLast = new Frequency(ItemStack.read(compound.getCompound("FrequencyLast")));
 		super.read(compound);
 	}
-	
+
 	@Override
 	public void setFrequency(boolean first, ItemStack stack) {
 		stack = stack.copy();
@@ -59,7 +58,7 @@ public abstract class LinkedTileEntity extends SyncedTileEntity implements IHave
 				|| !ItemStack.areItemStackTagsEqual(stack, toCompare);
 
 		if (changed)
-			FrequencyHandler.removeFromNetwork(this);
+			getHandler().removeFromNetwork(this);
 
 		if (first)
 			frequencyFirst = new Frequency(stack);
@@ -70,14 +69,14 @@ public abstract class LinkedTileEntity extends SyncedTileEntity implements IHave
 			return;
 
 		sendData();
-		FrequencyHandler.addToNetwork(this);
+		getHandler().addToNetwork(this);
 	}
-	
+
 	@Override
 	public Frequency getFrequencyFirst() {
 		return frequencyFirst;
 	}
-	
+
 	@Override
 	public Frequency getFrequencyLast() {
 		return frequencyLast;
