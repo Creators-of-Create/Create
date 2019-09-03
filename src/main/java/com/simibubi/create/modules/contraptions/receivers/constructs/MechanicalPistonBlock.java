@@ -101,7 +101,7 @@ public class MechanicalPistonBlock extends KineticBlock {
 	}
 
 	@Override
-	public boolean isAxisTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == getRotationAxis(state);
 	}
 

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.Create;
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.modules.schematics.client.tools.Tools;
 
 import net.minecraft.client.MainWindow;
@@ -88,10 +88,10 @@ public class ToolSelectionScreen extends Screen {
 		
 		GlStateManager.color4f(1, 1, 1, 1);
 		if (tools.size() > 1) {
-			String translationKey = Create.TOOL_MENU.getLocalizedName().toUpperCase();
+			String keyName = AllKeys.TOOL_MENU.getBoundKey();
 			int width = minecraft.mainWindow.getScaledWidth();
 			if (!focused)
-				drawCenteredString(minecraft.fontRenderer, "Hold [" + translationKey + "] to focus", width/2, y - 10, 0xCCDDFF);
+				drawCenteredString(minecraft.fontRenderer, "Hold [" + keyName + "] to focus", width/2, y - 10, 0xCCDDFF);
 			else
 				drawCenteredString(minecraft.fontRenderer, "[SCROLL] to Cycle", width/2, y - 10, 0xCCDDFF);
 		} else {

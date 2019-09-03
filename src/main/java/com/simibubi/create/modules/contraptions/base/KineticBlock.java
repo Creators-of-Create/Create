@@ -26,12 +26,12 @@ public abstract class KineticBlock extends InfoBlock implements IRotate {
 	// IRotate
 
 	@Override
-	public boolean isAxisTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return false;
 	}
 
 	@Override
-	public boolean isGearTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasCogsTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return false;
 	}
 

@@ -8,13 +8,14 @@ import java.util.List;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
+import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IHasContainer;
@@ -52,8 +53,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		int mainLeft = guiLeft - 56;
 		int mainTop = guiTop - 16;
 
-		Create.cSchematicLoader.refresh();
-		List<String> availableSchematics = Create.cSchematicLoader.getAvailableSchematics();
+		CreateClient.schematicSender.refresh();
+		List<String> availableSchematics = CreateClient.schematicSender.getAvailableSchematics();
 
 		schematicsLabel = new Label(mainLeft + 36, mainTop + 26, "").withShadow();
 		schematicsLabel.text = "";
@@ -172,13 +173,15 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 	@Override
 	public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+		ClientSchematicLoader schematicSender = CreateClient.schematicSender;
+		
 		if (confirmButton.active && confirmButton.isHovered() && ((SchematicTableContainer) container).canWrite()
 				&& schematicsArea != null) {
 
 			lastChasingProgress = chasingProgress = progress = 0;
-			List<String> availableSchematics = Create.cSchematicLoader.getAvailableSchematics();
+			List<String> availableSchematics = schematicSender.getAvailableSchematics();
 			String schematic = availableSchematics.get(schematicsArea.getState());
-			Create.cSchematicLoader.startNewUpload(schematic);
+			schematicSender.startNewUpload(schematic);
 		}
 
 		if (folderButton.isHovered()) {
@@ -186,8 +189,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		}
 
 		if (refreshButton.isHovered()) {
-			Create.cSchematicLoader.refresh();
-			List<String> availableSchematics = Create.cSchematicLoader.getAvailableSchematics();
+			schematicSender.refresh();
+			List<String> availableSchematics = schematicSender.getAvailableSchematics();
 			widgets.remove(schematicsArea);
 
 			if (!availableSchematics.isEmpty()) {

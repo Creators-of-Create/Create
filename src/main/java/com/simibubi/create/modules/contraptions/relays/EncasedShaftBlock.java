@@ -43,7 +43,7 @@ public class EncasedShaftBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public boolean isAxisTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == state.get(AXIS);
 	}
 

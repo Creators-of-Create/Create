@@ -61,7 +61,7 @@ public class CogWheelBlock extends ShaftBlock {
 	// IRotate
 	
 	@Override
-	public boolean isGearTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasCogsTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return !isLarge && face.getAxis() != state.get(AXIS);
 	}
 

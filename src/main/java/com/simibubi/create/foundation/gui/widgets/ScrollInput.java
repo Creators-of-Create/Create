@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.gui.widgets;
 
 import java.util.function.Consumer;
 
-import com.simibubi.create.foundation.utility.KeyboardHelper;
+import com.simibubi.create.AllKeys;
 
 import net.minecraft.util.text.TextFormatting;
 
@@ -71,7 +71,7 @@ public class ScrollInput extends AbstractSimiWidget {
 			return false;
 
 		int priorState = state;
-		boolean shifted = KeyboardHelper.isKeyDown(KeyboardHelper.LSHIFT);
+		boolean shifted = AllKeys.shiftDown();
 		int step = (int) Math.signum(delta) * (shifted ? shiftStep : 1);
 		state += step;
 		if (shifted)

@@ -21,22 +21,12 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
 public class BeltItemHandler {
 
 	private static Random r = new Random();
 
-	@SubscribeEvent
-	public static void onClientTick(ClientTickEvent event) {
-		if (event.phase == Phase.START)
-			return;
-
+	public static void gameTick() {
 		PlayerEntity player = Minecraft.getInstance().player;
 		World world = Minecraft.getInstance().world;
 

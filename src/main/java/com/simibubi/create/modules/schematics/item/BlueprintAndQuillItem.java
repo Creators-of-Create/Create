@@ -2,7 +2,7 @@ package com.simibubi.create.modules.schematics.item;
 
 import java.util.List;
 
-import com.simibubi.create.foundation.utility.KeyboardHelper;
+import com.simibubi.create.AllKeys;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -20,7 +20,7 @@ public class BlueprintAndQuillItem extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		if (KeyboardHelper.isKeyDown(KeyboardHelper.LSHIFT)) {
+		if (AllKeys.shiftDown()) {
 			TextFormatting gray = TextFormatting.GRAY;
 			TextFormatting blue = TextFormatting.BLUE;
 

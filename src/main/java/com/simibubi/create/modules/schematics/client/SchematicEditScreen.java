@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.Label;
@@ -18,7 +19,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 
-public class BlueprintEditScreen extends AbstractSimiScreen {
+public class SchematicEditScreen extends AbstractSimiScreen {
 
 	private TextFieldWidget xInput;
 	private TextFieldWidget yInput;
@@ -30,22 +31,23 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 
 	private ScrollInput rotationArea;
 	private ScrollInput mirrorArea;
+	private SchematicHandler handler;
 
 	@Override
 	protected void init() {
 		setWindowSize(ScreenResources.SCHEMATIC.width + 50, ScreenResources.SCHEMATIC.height);
 		int x = guiLeft;
 		int y = guiTop;
-		BlueprintHandler bh = BlueprintHandler.instance;
+		handler = CreateClient.schematicHandler;
 
 		xInput = new TextFieldWidget(font, x + 75, y + 32, 32, 10, "");
 		yInput = new TextFieldWidget(font, x + 115, y + 32, 32, 10, "");
 		zInput = new TextFieldWidget(font, x + 155, y + 32, 32, 10, "");
 
-		if (bh.deployed) {
-			xInput.setText("" + bh.anchor.getX());
-			yInput.setText("" + bh.anchor.getY());
-			zInput.setText("" + bh.anchor.getZ());
+		if (handler.deployed) {
+			xInput.setText("" + handler.anchor.getX());
+			yInput.setText("" + handler.anchor.getY());
+			zInput.setText("" + handler.anchor.getZ());
 		} else {
 			BlockPos alt = minecraft.player.getPosition();
 			xInput.setText("" + alt.getX());
@@ -73,11 +75,11 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 
 		Label labelR = new Label(x + 99, y + 52, "").withShadow();
 		rotationArea = new SelectionScrollInput(x + 96, y + 49, 94, 14).forOptions(rotationOptions).titled("Rotation")
-				.setState(bh.cachedSettings.getRotation().ordinal()).writingTo(labelR);
+				.setState(handler.cachedSettings.getRotation().ordinal()).writingTo(labelR);
 
 		Label labelM = new Label(x + 99, y + 72, "").withShadow();
 		mirrorArea = new SelectionScrollInput(x + 96, y + 69, 94, 14).forOptions(mirrorOptions).titled("Mirror")
-				.setState(bh.cachedSettings.getMirror().ordinal()).writingTo(labelM);
+				.setState(handler.cachedSettings.getMirror().ordinal()).writingTo(labelM);
 
 		Collections.addAll(widgets, xInput, yInput, zInput);
 		Collections.addAll(widgets, labelR, labelM, rotationArea, mirrorArea);
@@ -120,10 +122,9 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 		ScreenResources.SCHEMATIC.draw(this, x, y);
-		BlueprintHandler bh = BlueprintHandler.instance;
 
-		font.drawStringWithShadow(bh.cachedSchematicName, x + 103 - font.getStringWidth(bh.cachedSchematicName) / 2,
-				y + 10, 0xDDEEFF);
+		font.drawStringWithShadow(handler.cachedSchematicName,
+				x + 103 - font.getStringWidth(handler.cachedSchematicName) / 2, y + 10, 0xDDEEFF);
 
 		font.drawString("Position", x + 10, y + 32, ScreenResources.FONT_COLOR);
 		font.drawString("Rotation", x + 10, y + 52, ScreenResources.FONT_COLOR);
@@ -138,9 +139,6 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 
 	@Override
 	public void removed() {
-		// notify Blueprinthandler
-		BlueprintHandler bh = BlueprintHandler.instance;
-
 		boolean validCoords = true;
 		BlockPos newLocation = null;
 		try {
@@ -150,10 +148,10 @@ public class BlueprintEditScreen extends AbstractSimiScreen {
 			validCoords = false;
 		}
 
-		if (validCoords) 
-			bh.moveTo(newLocation);
-		bh.setRotation(Rotation.values()[rotationArea.getState()]);
-		bh.setMirror(Mirror.values()[mirrorArea.getState()]);
+		if (validCoords)
+			handler.moveTo(newLocation);
+		handler.setRotation(Rotation.values()[rotationArea.getState()]);
+		handler.setMirror(Mirror.values()[mirrorArea.getState()]);
 	}
 
 }

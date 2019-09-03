@@ -40,10 +40,10 @@ public class RotationPropagator {
 		final World world = from.getWorld();
 
 		IProperty<Axis> axisProperty = BlockStateProperties.AXIS;
-		boolean connectedByAxis = definitionFrom.isAxisTowards(world, from.getPos(), stateFrom, direction)
-				&& definitionTo.isAxisTowards(world, to.getPos(), stateTo, direction.getOpposite());
-		boolean connectedByGears = definitionFrom.isGearTowards(world, from.getPos(), stateFrom, direction)
-				&& definitionTo.isGearTowards(world, to.getPos(), stateTo, direction.getOpposite());
+		boolean connectedByAxis = definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
+				&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
+		boolean connectedByGears = definitionFrom.hasCogsTowards(world, from.getPos(), stateFrom, direction)
+				&& definitionTo.hasCogsTowards(world, to.getPos(), stateTo, direction.getOpposite());
 
 		// Belt <-> Belt
 		if (from instanceof BeltTileEntity && to instanceof BeltTileEntity && !connectedByAxis) {

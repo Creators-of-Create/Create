@@ -36,7 +36,7 @@ public class MotorBlock extends HorizontalKineticBlock {
 	// IRotate:
 
 	@Override
-	public boolean isAxisTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.get(HORIZONTAL_FACING);
 	}
 

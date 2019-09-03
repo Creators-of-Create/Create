@@ -1,9 +1,7 @@
 package com.simibubi.create.modules.schematics.client.tools;
 
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.foundation.utility.KeyboardHelper;
+import com.simibubi.create.AllKeys;
 
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.math.BlockPos;
@@ -20,11 +18,11 @@ public class DeployTool extends PlacementToolBase {
 	
 	@Override
 	public void updateSelection() {
-		if (blueprint.active && selectionRange == -1) {
-			selectionRange = (int) blueprint.size.manhattanDistance(BlockPos.ZERO) / 2;
+		if (schematicHandler.active && selectionRange == -1) {
+			selectionRange = (int) schematicHandler.size.manhattanDistance(BlockPos.ZERO) / 2;
 			selectionRange = MathHelper.clamp(selectionRange, 1, 100);
 		}
-		selectIgnoreBlocks = KeyboardHelper.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL);
+		selectIgnoreBlocks = AllKeys.ACTIVATE_TOOL.isPressed();
 		
 		super.updateSelection();
 	}
@@ -36,12 +34,12 @@ public class DeployTool extends PlacementToolBase {
 		if (selectedPos == null) 
 			return;
 		
-		BlockPos size = blueprint.getTransformedSize();
+		BlockPos size = schematicHandler.getTransformedSize();
 		BlockPos min = selectedPos.add(Math.round(size.getX() * -.5f), 0, Math.round(size.getZ() * -.5f));
 		BlockPos max = min.add(size.getX(), size.getY(), size.getZ());
 		
-		if (blueprint.deployed) {
-			MutableBoundingBox bb = new MutableBoundingBox(min, min.add(blueprint.getTransformedSize()));
+		if (schematicHandler.deployed) {
+			MutableBoundingBox bb = new MutableBoundingBox(min, min.add(schematicHandler.getTransformedSize()));
 			min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 			max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
 		}
@@ -75,8 +73,8 @@ public class DeployTool extends PlacementToolBase {
 		if (selectedPos == null)
 			return super.handleRightClick();
 		
-		BlockPos size = blueprint.getTransformedSize();
-		blueprint.moveTo(selectedPos.add(Math.round(size.getX() * -.5f), 0, Math.round(size.getZ() * -.5f)));
+		BlockPos size = schematicHandler.getTransformedSize();
+		schematicHandler.moveTo(selectedPos.add(Math.round(size.getX() * -.5f), 0, Math.round(size.getZ() * -.5f)));
 		
 		return true;
 	}

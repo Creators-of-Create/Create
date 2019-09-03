@@ -1,12 +1,11 @@
 package com.simibubi.create.modules.schematics.client.tools;
 
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.foundation.utility.KeyboardHelper;
+import com.simibubi.create.AllKeys;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
-import com.simibubi.create.modules.schematics.client.BlueprintHandler;
+import com.simibubi.create.modules.schematics.client.SchematicHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -23,7 +22,7 @@ import net.minecraft.util.math.Vec3d;
 
 public abstract class SchematicToolBase implements ISchematicTool {
 
-	protected BlueprintHandler blueprint;
+	protected SchematicHandler schematicHandler;
 
 	public BlockPos selectedPos;
 	public boolean selectIgnoreBlocks;
@@ -34,7 +33,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	public Direction selectedFace;
 
 	public SchematicToolBase() {
-		blueprint = BlueprintHandler.instance;
+		schematicHandler = CreateClient.schematicHandler;
 	}
 
 	@Override
@@ -49,9 +48,9 @@ public abstract class SchematicToolBase implements ISchematicTool {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
 		// Select Blueprint
-		if (blueprint.deployed) {
-			BlockPos min = blueprint.getTransformedAnchor();
-			MutableBoundingBox bb = new MutableBoundingBox(min, min.add(blueprint.getTransformedSize()));
+		if (schematicHandler.deployed) {
+			BlockPos min = schematicHandler.getTransformedAnchor();
+			MutableBoundingBox bb = new MutableBoundingBox(min, min.add(schematicHandler.getTransformedSize()));
 			PredicateTraceResult result = RaycastHelper.rayTraceUntil(player, 70,
 					pos -> bb.isVecInside(pos));
 			schematicSelected = !result.missed();
@@ -84,20 +83,20 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	@Override
 	public void renderTool() {
 
-		if (blueprint.deployed) {
+		if (schematicHandler.deployed) {
 			GlStateManager.lineWidth(2);
 			GlStateManager.color4f(1, 1, 1, 1);
 			GlStateManager.disableTexture();
 
-			BlockPos min = blueprint.getTransformedAnchor();
-			MutableBoundingBox bb = new MutableBoundingBox(min, min.add(blueprint.getTransformedSize()));
+			BlockPos min = schematicHandler.getTransformedAnchor();
+			MutableBoundingBox bb = new MutableBoundingBox(min, min.add(schematicHandler.getTransformedSize()));
 			min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 			BlockPos max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
 
 			WorldRenderer.drawBoundingBox(min.getX() - 1 / 8d, min.getY() + 1 / 16d, min.getZ() - 1 / 8d,
 					max.getX() + 1 / 8d, max.getY() + 1 / 8d, max.getZ() + 1 / 8d, 1, 1, 1, 1);
 
-			if (schematicSelected && renderSelectedFace && KeyboardHelper.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+			if (schematicSelected && renderSelectedFace && AllKeys.ACTIVATE_TOOL.isPressed()) {
 				Vec3d vec = new Vec3d(selectedFace.getDirectionVec());
 				Vec3d center = new Vec3d(min.add(max)).scale(1 / 2f);
 				Vec3d radii = new Vec3d(max.subtract(min)).scale(1 / 2f);

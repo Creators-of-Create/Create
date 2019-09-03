@@ -8,8 +8,8 @@ import net.minecraft.world.World;
 
 public interface IRotate {
 
-	public boolean isAxisTowards(World world, BlockPos pos, BlockState state, Direction face);
-	public boolean isGearTowards(World world, BlockPos pos, BlockState state, Direction face);
+	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face);
+	public boolean hasCogsTowards(World world, BlockPos pos, BlockState state, Direction face);
 	
 	public Axis getRotationAxis(BlockState state);
 	

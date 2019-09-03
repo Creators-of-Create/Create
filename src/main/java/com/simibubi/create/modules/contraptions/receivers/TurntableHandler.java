@@ -4,20 +4,11 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent.RenderTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
 public class TurntableHandler {
 
-	@SubscribeEvent
-	public static void onRenderTick(RenderTickEvent event) {
+	public static void gameRenderTick() {
 		Minecraft mc = Minecraft.getInstance();
-
-		if (mc.world == null || mc.player == null)
-			return;
 
 		if (!AllBlocks.TURNTABLE.typeOf(mc.world.getBlockState(mc.player.getPosition())))
 			return;

@@ -92,7 +92,7 @@ public class TurntableBlock extends KineticBlock {
 	// IRotate:
 
 	@Override
-	public boolean isAxisTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return face == Direction.DOWN;
 	}
 

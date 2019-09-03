@@ -6,6 +6,7 @@ import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -21,6 +22,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
@@ -81,6 +84,16 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 
 		public ProcessedItem(ItemEntity item) {
 			entity = item;
+			processingTimeLeft = 100;
+		}
+
+		public void tick() {
+			world.addParticle(new RedstoneParticleData(1, 0, 1, 1), entity.posX, entity.posY, entity.posZ, 0, 0, 0);
+			processingTimeLeft--;
+
+			if (processingTimeLeft <= 0) {
+				entity.setItem(new ItemStack(Items.COAL));
+			}
 		}
 
 	}
@@ -322,6 +335,18 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 					entity.setFire(10);
 					entity.attackEntityFrom(damageSourceLava, 8);
 				}
+			} else {
+				boolean missing = true;
+				for (ProcessedItem processed : items) {
+					if (processed.entity == entity) {
+						processed.tick();
+						missing = false;
+						break;
+					}
+				}
+				if (missing) {
+					items.add(new ProcessedItem((ItemEntity) entity));
+				}
 			}
 		}
 		for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(null, backBB)) {
@@ -340,15 +365,25 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 
 		if (findLoadedItems) {
 			findLoadedItems = false;
-			for (ProcessedItem item : items) {
+			Iterator<ProcessedItem> iterator = items.iterator();
+			while (iterator.hasNext()) {
+				ProcessedItem item = iterator.next();
 				for (Entity entity : frontEntities) {
 					if (!(entity instanceof ItemEntity))
 						continue;
 					if (entity.getUniqueID().equals(item.loadedUUID))
 						item.entity = (ItemEntity) entity;
 				}
+				if (item.entity == null)
+					iterator.remove();
 			}
 		}
+
+		Iterator<ProcessedItem> iterator = items.iterator();
+		while (iterator.hasNext())
+			if (!iterator.next().entity.getBoundingBox().intersects(frontBB))
+				iterator.remove();
+
 	}
 
 	protected void moveEntity(Entity entity, boolean push) {

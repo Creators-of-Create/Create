@@ -31,44 +31,27 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@OnlyIn(Dist.CLIENT)
-@EventBusSubscriber(Dist.CLIENT)
 public class SchematicHologram {
 
-	// These buffers are large enough for an entire chunk, consider using
-	// smaller buffers
-	private static final RegionRenderCacheBuilder bufferCache = new RegionRenderCacheBuilder();
-	private static final boolean[] usedBlockRenderLayers = new boolean[BlockRenderLayer.values().length];
-	private static final boolean[] startedBufferBuilders = new boolean[BlockRenderLayer.values().length];
-
-	private static SchematicHologram instance;
+	private final RegionRenderCacheBuilder bufferCache = new RegionRenderCacheBuilder();
+	private final boolean[] usedBlockRenderLayers = new boolean[BlockRenderLayer.values().length];
+	private final boolean[] startedBufferBuilders = new boolean[BlockRenderLayer.values().length];
 	private boolean active;
 	private boolean changed;
 	private SchematicWorld schematic;
 	private BlockPos anchor;
 
 	public SchematicHologram() {
-		instance = this;
 		changed = false;
 	}
 
 	public void startHologram(Template schematic, BlockPos anchor) {
-		this.schematic = new SchematicWorld(new HashMap<>(), new Cuboid(BlockPos.ZERO, BlockPos.ZERO), anchor);
-		this.anchor = anchor;
-		schematic.addBlocksToWorld(this.schematic, anchor, new PlacementSettings());
-		active = true;
-		changed = true;
+		SchematicWorld world = new SchematicWorld(new HashMap<>(), new Cuboid(BlockPos.ZERO, BlockPos.ZERO), anchor);
+		schematic.addBlocksToWorld(world, anchor, new PlacementSettings());
+		startHologram(world);
 	}
 
 	public void startHologram(SchematicWorld world) {
@@ -78,49 +61,40 @@ public class SchematicHologram {
 		this.changed = true;
 	}
 
-	public static SchematicHologram getInstance() {
-		return instance;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
-	public static void reset() {
-		instance = null;
-	}
-
-	public void schematicChanged() {
+	public void update() {
 		changed = true;
 	}
 
-	@SubscribeEvent
-	public static void onClientTickEvent(final ClientTickEvent event) {
-		if (event.phase == Phase.START)
+	public void tick() {
+		if (!active)
 			return;
-		if (instance != null && instance.active) {
-			final Minecraft minecraft = Minecraft.getInstance();
-			if (event.phase != TickEvent.Phase.END)
-				return;
-			if (minecraft.world == null)
-				return;
-			if (minecraft.player == null)
-				return;
-			if (instance.changed) {
-				redraw(minecraft);
-				instance.changed = false;
-			}
+		Minecraft minecraft = Minecraft.getInstance();
+		if (minecraft.world == null)
+			return;
+		if (minecraft.player == null)
+			return;
+		if (changed) {
+			redraw(minecraft);
+			changed = false;
 		}
 	}
 
-	private static void redraw(final Minecraft minecraft) {
+	private void redraw(Minecraft minecraft) {
 		Arrays.fill(usedBlockRenderLayers, false);
 		Arrays.fill(startedBufferBuilders, false);
 
-		final SchematicWorld blockAccess = instance.schematic;
+		final SchematicWorld blockAccess = schematic;
 		final BlockRendererDispatcher blockRendererDispatcher = minecraft.getBlockRendererDispatcher();
 
 		List<BlockState> blockstates = new LinkedList<>();
 
 		for (BlockPos localPos : BlockPos.getAllInBoxMutable(blockAccess.getBounds().getOrigin(),
 				blockAccess.getBounds().getOrigin().add(blockAccess.getBounds().getSize()))) {
-			BlockPos pos = localPos.add(instance.anchor);
+			BlockPos pos = localPos.add(anchor);
 			BlockState state = blockAccess.getBlockState(pos);
 			for (BlockRenderLayer blockRenderLayer : BlockRenderLayer.values()) {
 				if (!state.getBlock().canRenderInLayer(state, blockRenderLayer)) {
@@ -139,12 +113,12 @@ public class SchematicHologram {
 				// OptiFine Shaders compatibility
 				// if (Config.isShaders()) SVertexBuilder.pushEntity(state, pos,
 				// blockAccess, bufferBuilder);
-				
+
 				// Block transformations
 				if (state.getBlock() instanceof BedBlock) {
 					state = Blocks.QUARTZ_SLAB.getDefaultState();
 				}
-				
+
 				usedBlockRenderLayers[blockRenderLayerId] |= blockRendererDispatcher.renderBlock(state, pos,
 						blockAccess, bufferBuilder, minecraft.world.rand, EmptyModelData.INSTANCE);
 				blockstates.add(state);
@@ -163,9 +137,8 @@ public class SchematicHologram {
 		}
 	}
 
-	@SubscribeEvent
-	public static void onRenderWorldLastEvent(final RenderWorldLastEvent event) {
-		if (instance != null && instance.active) {
+	public void render() {
+		if (active) {
 			final Entity entity = Minecraft.getInstance().getRenderViewEntity();
 
 			if (entity == null) {

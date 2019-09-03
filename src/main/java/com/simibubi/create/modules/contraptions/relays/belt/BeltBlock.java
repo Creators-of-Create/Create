@@ -280,7 +280,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	}
 
 	@Override
-	public boolean isAxisTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		if (face.getAxis() != getRotationAxis(state))
 			return false;
 		BeltTileEntity beltEntity = (BeltTileEntity) world.getTileEntity(pos);

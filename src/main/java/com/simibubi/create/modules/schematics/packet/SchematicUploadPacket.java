@@ -69,13 +69,13 @@ public class SchematicUploadPacket extends SimplePacketBase {
 			ServerPlayerEntity player = context.get().getSender();
 			if (code == BEGIN) {
 				BlockPos pos = ((SchematicTableContainer) player.openContainer).getTileEntity().getPos();
-				Create.sSchematicLoader.handleNewUpload(player, schematic, size, new DimensionPos(player, pos));
+				Create.schematicReceiver.handleNewUpload(player, schematic, size, new DimensionPos(player, pos));
 			}
 			if (code == WRITE) {
-				Create.sSchematicLoader.handleWriteRequest(player, schematic, data);
+				Create.schematicReceiver.handleWriteRequest(player, schematic, data);
 			}
 			if (code == FINISH) {
-				Create.sSchematicLoader.handleFinishedUpload(player, schematic);
+				Create.schematicReceiver.handleFinishedUpload(player, schematic);
 			}
 		});
 		context.get().setPacketHandled(true);

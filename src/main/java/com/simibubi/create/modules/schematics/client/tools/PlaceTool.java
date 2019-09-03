@@ -4,7 +4,7 @@ public class PlaceTool extends SchematicToolBase {
 
 	@Override
 	public boolean handleRightClick() {
-		blueprint.printInstantly();
+		schematicHandler.printInstantly();
 		return true;
 	}
 

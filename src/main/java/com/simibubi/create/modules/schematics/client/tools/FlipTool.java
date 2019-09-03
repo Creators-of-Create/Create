@@ -32,7 +32,7 @@ public class FlipTool extends PlacementToolBase {
 
 	private void mirror() {
 		if (schematicSelected && selectedFace.getAxis().isHorizontal()) {
-			blueprint.flip(selectedFace.getAxis());
+			schematicHandler.flip(selectedFace.getAxis());
 		}
 	}
 

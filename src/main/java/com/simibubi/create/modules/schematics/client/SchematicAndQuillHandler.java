@@ -7,15 +7,14 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.IOUtils;
-import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.TextInputPromptScreen;
 import com.simibubi.create.foundation.utility.FilesHelper;
-import com.simibubi.create.foundation.utility.KeyboardHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -42,54 +41,38 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.gen.feature.template.Template;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
-import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = Bus.FORGE)
-public class BlueprintAndQuillHandler {
+public class SchematicAndQuillHandler {
 
-	static BlockPos firstPos;
-	static BlockPos secondPos;
-	static BlockPos selectedPos;
-	static Direction selectedFace;
-	static int range = 10;
+	private BlockPos firstPos;
+	private BlockPos secondPos;
+	private BlockPos selectedPos;
+	private Direction selectedFace;
+	private int range = 10;
 
-	private static boolean active() {
-		return present() && AllItems.BLUEPRINT_AND_QUILL.typeOf(Minecraft.getInstance().player.getHeldItemMainhand());
+	private boolean isActive() {
+		return isPresent() && AllItems.BLUEPRINT_AND_QUILL.typeOf(Minecraft.getInstance().player.getHeldItemMainhand());
 	}
 
-	private static boolean present() {
+	private boolean isPresent() {
 		return Minecraft.getInstance() != null && Minecraft.getInstance().world != null
 				&& Minecraft.getInstance().currentScreen == null;
 	}
 
-	@SubscribeEvent
-	// TODO: This is a fabricated event call by ScrollFixer until a proper event
-	// exists
-	public static void onMouseScrolled(MouseScrollEvent.Post event) {
-		if (event.getGui() != null)
-			return;
-		if (!active())
-			return;
-		if (!KeyboardHelper.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
-			return;
-		int delta = (int) event.getScrollDelta();
+	public boolean mouseScrolled(double delta) {
+		if (!isActive())
+			return false;
+		if (!AllKeys.ctrlDown())
+			return false;
 		if (secondPos == null)
 			range = (int) MathHelper.clamp(range + delta, 1, 100);
 		if (selectedFace != null) {
 			MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
 			Vec3i vec = selectedFace.getDirectionVec();
 
-			int x = vec.getX() * delta;
-			int y = vec.getY() * delta;
-			int z = vec.getZ() * delta;
+			int x = (int) (vec.getX() * delta);
+			int y = (int) (vec.getY() * delta);
+			int z = (int) (vec.getZ() * delta);
 
 			AxisDirection axisDirection = selectedFace.getAxisDirection();
 			if (axisDirection == AxisDirection.NEGATIVE)
@@ -107,17 +90,15 @@ public class BlueprintAndQuillHandler {
 					true);
 		}
 
-		event.setCanceled(true);
+		return true;
 	}
 
-	@SubscribeEvent
-	public static void onClick(MouseInputEvent event) {
-		if (event.getAction() != KeyboardHelper.PRESS)
+	public void onMouseInput(int button, boolean pressed) {
+		if (!pressed || button != 1)
 			return;
-		if (event.getButton() != 1)
+		if (!isActive())
 			return;
-		if (!active())
-			return;
+
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
 		if (player.isSneaking()) {
@@ -128,7 +109,7 @@ public class BlueprintAndQuillHandler {
 		}
 
 		if (secondPos != null) {
-			TextInputPromptScreen guiScreenIn = new TextInputPromptScreen(BlueprintAndQuillHandler::saveSchematic, s -> {
+			TextInputPromptScreen guiScreenIn = new TextInputPromptScreen(this::saveSchematic, s -> {
 			});
 			guiScreenIn.setTitle("Enter a name for the Schematic:");
 			guiScreenIn.setButtonTextConfirm("Save");
@@ -152,7 +133,7 @@ public class BlueprintAndQuillHandler {
 		player.sendStatusMessage(new StringTextComponent(TextFormatting.GREEN + "First position set."), true);
 	}
 
-	public static void saveSchematic(String string) {
+	public void saveSchematic(String string) {
 		Template t = new Template();
 		MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
 		t.takeBlocksFromWorld(Minecraft.getInstance().world, new BlockPos(bb.minX, bb.minY, bb.minZ),
@@ -182,9 +163,8 @@ public class BlueprintAndQuillHandler {
 		Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent("Saved as " + filepath), true);
 	}
 
-	@SubscribeEvent
-	public static void onRenderWorld(RenderWorldLastEvent event) {
-		if (!active())
+	public void render() {
+		if (!isActive())
 			return;
 
 		TessellatorHelper.prepareForDrawing();
@@ -256,16 +236,13 @@ public class BlueprintAndQuillHandler {
 				max.getX() + 1 / 16d, max.getY() + 1 / 16d, max.getZ() + 1 / 16d, red, green, 1, 1);
 	}
 
-	@SubscribeEvent
-	public static void onClientTick(ClientTickEvent event) {
-		if (event.phase == Phase.START)
-			return;
-		if (!active())
+	public void tick() {
+		if (!isActive())
 			return;
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
 		selectedPos = null;
-		if (KeyboardHelper.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+		if (AllKeys.ACTIVATE_TOOL.isPressed()) {
 			selectedPos = new BlockPos(player.getEyePosition(Minecraft.getInstance().getRenderPartialTicks())
 					.add(player.getLookVec().scale(range)));
 		} else {

@@ -2,16 +2,14 @@ package com.simibubi.create.modules.schematics.client;
 
 import java.util.HashMap;
 
-import org.lwjgl.glfw.GLFW;
-
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllPackets;
-import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.ToolSelectionScreen;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.type.Cuboid;
-import com.simibubi.create.foundation.utility.KeyboardHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.schematics.SchematicWorld;
 import com.simibubi.create.modules.schematics.client.tools.Tools;
@@ -32,23 +30,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
-import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
-import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = Bus.FORGE)
-public class BlueprintHandler {
-
-	public static BlueprintHandler instance;
+public class SchematicHandler {
 
 	public Template cachedSchematic;
 	public String cachedSchematicName;
@@ -69,137 +52,104 @@ public class BlueprintHandler {
 
 	private BlueprintHotbarOverlay overlay;
 
-	public BlueprintHandler() {
-		instance = this;
+	public SchematicHandler() {
 		currentTool = Tools.Deploy;
 		overlay = new BlueprintHotbarOverlay();
 		selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
 	}
 
-	@SubscribeEvent
-	public static void onClientTick(ClientTickEvent event) {
-		if (event.phase == Phase.START)
-			return;
+	public void tick() {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-
-		if (player == null)
-			return;
 
 		ItemStack stack = findBlueprintInHand(player);
 		if (stack == null) {
-			instance.active = false;
-			instance.syncCooldown = 0;
-			if (instance.item != null && itemLost(player)) {
-				instance.slot = 0;
-				instance.item = null;
-				SchematicHologram.reset();
+			active = false;
+			syncCooldown = 0;
+			if (item != null && itemLost(player)) {
+				slot = 0;
+				item = null;
+				CreateClient.schematicHologram.setActive(false);
 			}
 			return;
 		}
 
 		// Newly equipped
-		if (!instance.active || !stack.getTag().getString("File").equals(instance.cachedSchematicName)) {
-			instance.loadSettings(stack);
-			instance.cachedSchematicName = stack.getTag().getString("File");
-			instance.active = true;
-			if (instance.deployed) {
-				Tools toolBefore = instance.currentTool;
-				instance.selectionScreen = new ToolSelectionScreen(Tools.getTools(player.isCreative()),
-						instance::equip);
+		if (!active || !stack.getTag().getString("File").equals(cachedSchematicName)) {
+			loadSettings(stack);
+			cachedSchematicName = stack.getTag().getString("File");
+			active = true;
+			if (deployed) {
+				Tools toolBefore = currentTool;
+				selectionScreen = new ToolSelectionScreen(Tools.getTools(player.isCreative()), this::equip);
 				if (toolBefore != null) {
-					instance.selectionScreen.setSelectedElement(toolBefore);
-					instance.equip(toolBefore);
+					selectionScreen.setSelectedElement(toolBefore);
+					equip(toolBefore);
 				}
 			} else
-				instance.selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), instance::equip);
-			instance.sync();
+				selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
+			sync();
 		}
 
-		if (!instance.active)
+		if (!active)
 			return;
 
-		if (instance.syncCooldown > 0)
-			instance.syncCooldown--;
-		if (instance.syncCooldown == 1)
-			instance.sync();
+		if (syncCooldown > 0)
+			syncCooldown--;
+		if (syncCooldown == 1)
+			sync();
 
-		instance.selectionScreen.update();
-		instance.currentTool.getTool().updateSelection();
+		selectionScreen.update();
+		currentTool.getTool().updateSelection();
 	}
 
-	@SubscribeEvent
-	public static void onRenderWorld(RenderWorldLastEvent event) {
-		if (!instance.active)
+	public void render() {
+		if (!active)
 			return;
 		if (Minecraft.getInstance().player.isSneaking())
 			return;
 
 		TessellatorHelper.prepareForDrawing();
-		instance.currentTool.getTool().renderTool();
+		currentTool.getTool().renderTool();
 		TessellatorHelper.cleanUpAfterDrawing();
 	}
 
-	@SubscribeEvent
-	public static void onRenderOverlay(RenderGameOverlayEvent.Post event) {
-		if (!instance.active)
+	public void renderOverlay() {
+		if (!active)
 			return;
-		if (event.getType() != ElementType.HOTBAR)
-			return;
-		if (instance.item != null)
-			instance.overlay.renderOn(instance.slot);
+		if (item != null)
+			overlay.renderOn(slot);
 
-		instance.currentTool.getTool().renderOverlay();
-		instance.selectionScreen.renderPassive(event.getPartialTicks());
+		currentTool.getTool().renderOverlay();
+		selectionScreen.renderPassive(Minecraft.getInstance().getRenderPartialTicks());
 	}
 
-	@SubscribeEvent
-	public static void onClick(MouseInputEvent event) {
-		if (Minecraft.getInstance().currentScreen != null)
+	public void onMouseInput(int button, boolean pressed) {
+		if (!active)
 			return;
-		if (event.getAction() != KeyboardHelper.PRESS)
-			return;
-		if (event.getButton() != 1)
-			return;
-		if (!instance.active)
+		if (!pressed || button != 1)
 			return;
 		if (Minecraft.getInstance().player.isSneaking())
 			return;
 
-		instance.currentTool.getTool().handleRightClick();
+		currentTool.getTool().handleRightClick();
 	}
 
-	@SubscribeEvent
-	public static void onKeyTyped(KeyInputEvent event) {
-		if (Minecraft.getInstance().currentScreen != null)
+	public void onKeyInput(int key, boolean pressed) {
+		if (!active)
 			return;
-		if (event.getKey() != Create.TOOL_MENU.getKey().getKeyCode())
-			return;
-		if (!instance.active)
+		if (key != AllKeys.TOOL_MENU.getBoundCode())
 			return;
 
-		boolean released = event.getAction() == KeyboardHelper.RELEASE;
+		if (pressed && !selectionScreen.focused)
+			selectionScreen.focused = true;
 
-		ToolSelectionScreen toolSelection = instance.selectionScreen;
-		if (released && toolSelection.focused) {
-			toolSelection.focused = false;
-			toolSelection.onClose();
+		if (!pressed && selectionScreen.focused) {
+			selectionScreen.focused = false;
+			selectionScreen.onClose();
 		}
-
-		if (!released && !toolSelection.focused)
-			toolSelection.focused = true;
 	}
 
-	@SubscribeEvent
-	// TODO: This is a fabricated event call by ScrollFixer until a proper event
-	// exists
-	public static void onMouseScrolled(MouseScrollEvent.Post event) {
-		if (event.getGui() != null)
-			return;
-		if (instance.onScroll(event.getScrollDelta()))
-			event.setCanceled(true);
-	}
-
-	public boolean onScroll(double delta) {
+	public boolean mouseScrolled(double delta) {
 		if (!active)
 			return false;
 		if (Minecraft.getInstance().player.isSneaking())
@@ -208,30 +158,30 @@ public class BlueprintHandler {
 			selectionScreen.cycle((int) delta);
 			return true;
 		}
-		if (KeyboardHelper.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+		if (AllKeys.ACTIVATE_TOOL.isPressed()) {
 			return currentTool.getTool().handleMouseWheel(delta);
 		}
 
 		return false;
 	}
 
-	private static ItemStack findBlueprintInHand(PlayerEntity player) {
+	private ItemStack findBlueprintInHand(PlayerEntity player) {
 		ItemStack stack = player.getHeldItemMainhand();
 		if (!AllItems.BLUEPRINT.typeOf(stack))
 			return null;
 		if (!stack.hasTag())
 			return null;
 
-		instance.item = stack;
-		instance.slot = player.inventory.currentItem;
+		item = stack;
+		slot = player.inventory.currentItem;
 		return stack;
 	}
 
-	private static boolean itemLost(PlayerEntity player) {
+	private boolean itemLost(PlayerEntity player) {
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
-			if (!player.inventory.getStackInSlot(i).isItemEqual(instance.item))
+			if (!player.inventory.getStackInSlot(i).isItemEqual(item))
 				continue;
-			if (!ItemStack.areItemStackTagsEqual(player.inventory.getStackInSlot(i), instance.item))
+			if (!ItemStack.areItemStackTagsEqual(player.inventory.getStackInSlot(i), item))
 				continue;
 			return false;
 		}
@@ -240,7 +190,7 @@ public class BlueprintHandler {
 
 	public void markDirty() {
 		syncCooldown = SYNC_DELAY;
-		SchematicHologram.reset();
+		CreateClient.schematicHologram.setActive(false);
 	}
 
 	public void sync() {
@@ -352,8 +302,8 @@ public class BlueprintHandler {
 
 	public void moveTo(BlockPos anchor) {
 		if (!deployed)
-			instance.selectionScreen = new ToolSelectionScreen(
-					Tools.getTools(Minecraft.getInstance().player.isCreative()), instance::equip);
+			selectionScreen = new ToolSelectionScreen(Tools.getTools(Minecraft.getInstance().player.isCreative()),
+					this::equip);
 
 		deployed = true;
 		this.anchor = anchor;
@@ -361,13 +311,13 @@ public class BlueprintHandler {
 		item.getTag().put("Anchor", NBTUtil.writeBlockPos(anchor));
 		markDirty();
 	}
-	
+
 	public void printInstantly() {
 		AllPackets.channel.sendToServer(new SchematicPlacePacket(item.copy()));
 		CompoundNBT nbt = item.getTag();
 		nbt.putBoolean("Deployed", false);
 		item.setTag(nbt);
-		SchematicHologram.reset();
+		CreateClient.schematicHologram.setActive(false);
 		active = false;
 	}
 

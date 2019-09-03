@@ -10,9 +10,9 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.utility.KeyboardHelper;
-import com.simibubi.create.modules.schematics.client.BlueprintEditScreen;
+import com.simibubi.create.modules.schematics.client.SchematicEditScreen;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -67,7 +67,7 @@ public class BlueprintItem extends Item {
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		if (KeyboardHelper.isKeyDown(KeyboardHelper.LSHIFT)) {
+		if (AllKeys.shiftDown()) {
 			TextFormatting gray = TextFormatting.GRAY;
 			tooltip.add(new StringTextComponent(gray + "Holds a structure to be printed"));
 			tooltip.add(new StringTextComponent(gray + "by the Schematicannon."));
@@ -138,7 +138,7 @@ public class BlueprintItem extends Item {
 
 	@OnlyIn(value = Dist.CLIENT)
 	protected void displayBlueprintScreen() {
-		ScreenOpener.open(new BlueprintEditScreen());
+		ScreenOpener.open(new SchematicEditScreen());
 	}
 
 	@Override

@@ -64,8 +64,8 @@ public class GearshiftBlock extends EncasedShaftBlock {
 		}
 	}
 
-	public boolean isAxisTowards(World world, BlockPos pos, BlockState state, Direction face) {
-		return super.isAxisTowards(world, pos, state, face);
+	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+		return super.hasShaftTowards(world, pos, state, face);
 	}
 
 }

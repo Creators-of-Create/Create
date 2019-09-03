@@ -21,8 +21,8 @@ public class MoveTool extends PlacementToolBase {
 	@Override
 	public boolean handleMouseWheel(double delta) {
 		if (schematicSelected && selectedFace.getAxis().isHorizontal()) {
-			blueprint.moveTo(delta < 0 ? blueprint.anchor.add(selectedFace.getDirectionVec())
-					: blueprint.anchor.subtract(selectedFace.getDirectionVec()));
+			schematicHandler.moveTo(delta < 0 ? schematicHandler.anchor.add(selectedFace.getDirectionVec())
+					: schematicHandler.anchor.subtract(selectedFace.getDirectionVec()));
 		}
 		return true;
 	}

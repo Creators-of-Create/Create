@@ -82,7 +82,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IHaveMovement
 	}
 
 	@Override
-	public boolean isAxisTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return !state.get(FIXATED) && face == state.get(FACING).getOpposite();
 	}
 
@@ -96,7 +96,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IHaveMovement
 		BlockPos offsetPos = pos.offset(direction);
 		BlockState blockStateAttached = world.getBlockState(offsetPos);
 		if (blockStateAttached.getBlock() instanceof IRotate && ((IRotate) blockStateAttached.getBlock())
-				.isAxisTowards(world.getWorld(), offsetPos, blockStateAttached, direction.getOpposite())) {
+				.hasShaftTowards(world.getWorld(), offsetPos, blockStateAttached, direction.getOpposite())) {
 			return true;
 		}
 		return false;
