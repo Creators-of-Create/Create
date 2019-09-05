@@ -51,12 +51,12 @@ public class FrequencyHandler {
 
 	public void onLoadWorld(IWorld world) {
 		connections.put(world, new HashMap<>());
-		Create.logger.info("Prepared network space for " + world.getDimension().getType().getRegistryName());
+		Create.logger.info("Prepared Network Space for " + world.getDimension().getType().getRegistryName());
 	}
 
 	public void onUnloadWorld(IWorld world) {
 		connections.remove(world);
-		Create.logger.info("Removed network space for " + world.getDimension().getType().getRegistryName());
+		Create.logger.info("Removed Network Space for " + world.getDimension().getType().getRegistryName());
 	}
 
 	private static Pair<Frequency, Frequency> getNetworkKey(IHaveWireless actor) {

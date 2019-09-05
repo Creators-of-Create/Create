@@ -3,6 +3,7 @@ package com.simibubi.create;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.simibubi.create.modules.contraptions.receivers.constructs.MovingConstructHandler;
 import com.simibubi.create.modules.logistics.FrequencyHandler;
 import com.simibubi.create.modules.logistics.InWorldItemProcessingHandler;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
@@ -31,12 +32,14 @@ public class Create {
 	public static ServerSchematicLoader schematicReceiver;
 	public static FrequencyHandler frequencyHandler;
 	public static InWorldItemProcessingHandler itemProcessingHandler;
+	public static MovingConstructHandler constructHandler;
 
 	@SubscribeEvent
 	public static void init(final FMLCommonSetupEvent event) {
 		schematicReceiver = new ServerSchematicLoader();
 		itemProcessingHandler = new InWorldItemProcessingHandler();
 		frequencyHandler = new FrequencyHandler();
+		constructHandler = new MovingConstructHandler();
 		
 		AllPackets.registerPackets();
 	}

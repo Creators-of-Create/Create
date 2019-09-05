@@ -29,6 +29,7 @@ public class Events {
 		IWorld world = event.getWorld();
 		Create.itemProcessingHandler.onLoadWorld(world);
 		Create.frequencyHandler.onLoadWorld(world);
+		Create.constructHandler.onLoadWorld(world);
 	}
 
 	@SubscribeEvent
@@ -36,7 +37,7 @@ public class Events {
 		IWorld world = event.getWorld();
 		Create.itemProcessingHandler.onUnloadWorld(world);
 		Create.frequencyHandler.onUnloadWorld(world);
-		
+		Create.constructHandler.onUnloadWorld(world);
 	}
 	
 }

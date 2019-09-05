@@ -1,12 +1,11 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.Create;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
 
@@ -24,8 +23,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class MechanicalPistonTileEntity extends KineticTileEntity implements ITickableTileEntity {
-
-	protected static List<MechanicalPistonTileEntity> movingPistons = new ArrayList<>();
 
 	protected Construct movingConstruct;
 	protected float offset;
@@ -107,7 +104,8 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		// Run
 		running = true;
 		offset = movingConstruct.initialExtensionProgress;
-		movingPistons.add(this);
+		if (!world.isRemote)
+			Create.constructHandler.add(this);
 
 		sendData();
 		getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66);
@@ -117,7 +115,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 				continue;
 			getWorld().setBlockState(startPos, Blocks.AIR.getDefaultState(), 67);
 		}
-		
+
 		onBlockVisited(offset);
 	}
 
@@ -146,7 +144,8 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		}
 
 		running = false;
-		movingPistons.remove(this);
+		if (!world.isRemote)
+			Create.constructHandler.remove(this);
 		movingConstruct = null;
 		sendData();
 	}
@@ -171,7 +170,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		Direction movementDirection = getBlockState().get(BlockStateProperties.FACING);
 		float newOffset = offset + movementSpeed;
 
-		ConstructEntityHelper.moveEntities(this, movementSpeed, movementDirection, newOffset);
+		MovingConstructHandler.moveEntities(this, movementSpeed, movementDirection, newOffset);
 
 		if (world.isRemote) {
 			offset = newOffset;
@@ -208,7 +207,8 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 
 		// Other moving Pistons
 		int maxPossibleRange = Construct.MAX_EXTENSIONS + Construct.MAX_CHAINED_BLOCKS + Construct.MAX_CHAINED_CHASSIS;
-		Iterator<MechanicalPistonTileEntity> iterator = movingPistons.iterator();
+		Iterator<MechanicalPistonTileEntity> iterator = Create.constructHandler.getOtherMovingPistonsInWorld(this)
+				.iterator();
 		while (iterator.hasNext()) {
 			MechanicalPistonTileEntity otherPiston = iterator.next();
 
