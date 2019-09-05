@@ -15,10 +15,12 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
 public enum AllBeltAttachments {
 
 	BELT_FUNNEL(AllBlocks.BELT_FUNNEL),
+	BELT_OBSERVER(AllBlocks.ENTITY_DETECTOR),
 
 	;
 
@@ -29,7 +31,7 @@ public enum AllBeltAttachments {
 	}
 
 	public interface IBeltAttachment {
-		public Optional<BlockPos> getValidAttachmentFor(BeltTileEntity te);
+		public List<BlockPos> getPotentialAttachmentLocations(BeltTileEntity te);
 
 		public Optional<BlockPos> getValidBeltPositionFor(IWorld world, BlockPos pos, BlockState state);
 
@@ -80,10 +82,19 @@ public enum AllBeltAttachments {
 
 		public void findAttachments(BeltTileEntity belt) {
 			for (AllBeltAttachments ba : AllBeltAttachments.values()) {
-				Optional<BlockPos> validAttachmentFor = ba.attachment.getValidAttachmentFor(belt);
-				if (validAttachmentFor.isPresent()) {
-					BlockPos pos = validAttachmentFor.get();
-					addAttachment(belt.getWorld(), pos);
+				List<BlockPos> attachmentPositions = ba.attachment.getPotentialAttachmentLocations(belt);
+				World world = belt.getWorld();
+				for (BlockPos potentialPos : attachmentPositions) {
+					if (!world.isBlockPresent(potentialPos))
+						continue;
+					BlockState state = world.getBlockState(potentialPos);
+					if (!(state.getBlock() instanceof IBeltAttachment)) 
+						continue;
+					Optional<BlockPos> validBeltPos = ((IBeltAttachment) state.getBlock()).getValidBeltPositionFor(world, potentialPos, state);
+					if (!validBeltPos.isPresent())
+						continue;
+					if (validBeltPos.get().equals(belt.getPos()))
+						addAttachment(world, potentialPos);
 				}
 			}
 		}

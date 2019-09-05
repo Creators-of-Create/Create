@@ -29,6 +29,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.economy.ShopShelfBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
 import com.simibubi.create.modules.logistics.block.BeltFunnelBlock;
+import com.simibubi.create.modules.logistics.block.EntityDetectorBlock;
 import com.simibubi.create.modules.logistics.block.ExtractorBlock;
 import com.simibubi.create.modules.logistics.block.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.block.LinkedExtractorBlock;
@@ -107,6 +108,7 @@ public enum AllBlocks {
 	EXTRACTOR(new ExtractorBlock()),
 	LINKED_EXTRACTOR(new LinkedExtractorBlock()),
 	BELT_FUNNEL(new BeltFunnelBlock()),
+	ENTITY_DETECTOR(new EntityDetectorBlock()),
 
 	// Symmetry
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),

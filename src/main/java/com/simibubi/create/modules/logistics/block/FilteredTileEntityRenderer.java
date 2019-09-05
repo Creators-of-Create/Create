@@ -1,7 +1,5 @@
 package com.simibubi.create.modules.logistics.block;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 
@@ -10,40 +8,36 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 @SuppressWarnings("deprecation")
-public class LinkedTileEntityRenderer extends TileEntityRenderer<LinkedTileEntity> {
+public class FilteredTileEntityRenderer {
 
-	@Override
-	public void render(LinkedTileEntity tileEntityIn, double x, double y, double z, float partialTicks,
-			int destroyStage) {
+	public <T extends TileEntity & IHaveFilter> void render(T tileEntityIn, double x, double y, double z,
+			float partialTicks, int destroyStage) {
 		BlockState state = tileEntityIn.getBlockState();
-		IBlockWithFrequency block = (IBlockWithFrequency) state.getBlock();
-		Direction facing = block.getFrequencyItemFacing(state);
+		IBlockWithFilter block = (IBlockWithFilter) state.getBlock();
+		Direction facing = block.getFilterFacing(state);
 		float scale = block.getItemHitboxScale();
-		
+
 		TessellatorHelper.prepareForDrawing();
 
-		Pair<Vec3d, Vec3d> itemPositions = block.getFrequencyItemPositions(state);
-		Vec3d first = itemPositions.getLeft();
-		Vec3d second = itemPositions.getRight();
+		Vec3d position = block.getFilterPosition(state);
 		BlockPos pos = tileEntityIn.getPos();
 		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
 
-		renderFrequencyItem(tileEntityIn.frequencyFirst.getStack(), first, facing, scale - 2/16f);
-		renderFrequencyItem(tileEntityIn.frequencyLast.getStack(), second, facing, scale - 2/16f);
+		renderFilterItem(tileEntityIn.getFilter(), position, facing, scale - 2 / 16f);
 
 		TessellatorHelper.cleanUpAfterDrawing();
 
 	}
 
-	private void renderFrequencyItem(ItemStack stack, Vec3d position, Direction facing, float scaleDiff) {
+	private void renderFilterItem(ItemStack stack, Vec3d position, Direction facing, float scaleDiff) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		boolean vertical = facing.getAxis().isVertical();
 
@@ -51,12 +45,12 @@ public class LinkedTileEntityRenderer extends TileEntityRenderer<LinkedTileEntit
 		boolean blockItem = modelWithOverrides.isGui3d();
 
 		float offX = 0;
-		float offY = vertical && !blockItem ? 0 : 0;
-		float offZ = !blockItem ? 1 / 4f + 2 * scaleDiff : 0;
+		float offY = 0;
+		float offZ = !blockItem ? 1 / 4f + 2 * scaleDiff - 1/16f : 1/16f;
 		if (vertical)
 			offZ = -offZ;
 
-		float rotX = vertical ? 90 : 0;
+		float rotX = vertical ? 90 : 0 - (blockItem ? -67.5f : 67.5f);
 		float rotY = vertical ? 0 : facing.getHorizontalAngle() + (blockItem ? 180 : 0);
 		float rotZ = vertical && facing == Direction.DOWN ? 180 : 0;
 		if (facing.getAxis() == Axis.X) {

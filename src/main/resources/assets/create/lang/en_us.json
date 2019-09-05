@@ -12,11 +12,19 @@
 	"item.create.blueprint": "Schematic",
 	"item.create.belt_connector": "Mechanical Belt",
 	"item.create.filter": "Filter",
+	"item.create.rose_quartz": "Rose Quartz",
+	"item.create.refined_rose_quartz": "Refined Rose Quartz",
+	"item.create.refined_radiance_cube": "Refined Radiance",
 	
 	"item.create.blazing_pickaxe": "Blazing Pickaxe",
 	"item.create.blazing_shovel": "Blazing Shovel",
 	"item.create.blazing_axe": "Blazing Axe",
 	"item.create.blazing_sword": "Blazing Longsword",
+	
+	"item.create.rose_quartz_pickaxe": "Gilded Quartz Pickaxe",
+	"item.create.rose_quartz_shovel": "Gilded Quartz Shovel",
+	"item.create.rose_quartz_axe": "Gilded Quartz Axe",
+	"item.create.rose_quartz_sword": "Gilded Quartz Blade",
 	
 	"block.create.cogwheel": "Cogwheel",
     "block.create.large_cogwheel": "Large Cogwheel",
@@ -51,6 +59,7 @@
 	"block.create.belt_funnel": "Belt Funnel",
 	"block.create.linked_extractor": "Linked Extractor",
 	"block.create.pulse_repeater": "Pulse Repeater",
+	"block.create.entity_detector": "Belt Observer",
 	
 	"block.create.andesite_bricks": "Andesite Bricks",
 	"block.create.diorite_bricks": "Diorite Bricks",

@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.logistics.block;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
@@ -7,6 +9,8 @@ import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 
 import net.minecraft.block.Block;
@@ -113,13 +117,8 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 	}
 
 	@Override
-	public Optional<BlockPos> getValidAttachmentFor(BeltTileEntity te) {
-		BlockPos validPos = te.getPos().up();
-		BlockState blockState = te.getWorld().getBlockState(validPos);
-		if (blockState.getBlock() != this
-				|| blockState.get(HORIZONTAL_FACING).getAxis() != te.getBlockState().get(HORIZONTAL_FACING).getAxis())
-			return Optional.empty();
-		return Optional.of(validPos);
+	public List<BlockPos> getPotentialAttachmentLocations(BeltTileEntity te) {
+		return Arrays.asList(te.getPos().up());
 	}
 
 	@Override
@@ -136,7 +135,8 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 	public boolean handleEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
 		if (!(entity instanceof ItemEntity))
 			return false;
-		if (entity.getPositionVec().distanceTo(VecHelper.getCenterOf(te.getPos())) > .4f)
+		boolean slope = te.getBlockState().get(BeltBlock.SLOPE) != Slope.HORIZONTAL;
+		if (entity.getPositionVec().distanceTo(VecHelper.getCenterOf(te.getPos())) > (slope ? .6f : .4f))
 			return false;
 
 		entity.setMotion(Vec3d.ZERO);

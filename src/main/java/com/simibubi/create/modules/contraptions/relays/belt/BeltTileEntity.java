@@ -134,13 +134,13 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		passengers.forEach((entity, info) -> {
 			if (!canTransport(entity))
 				toRemove.add(entity);
-			if (info.ticksSinceLastCollision > 0) {
+			if (info.ticksSinceLastCollision > 1) {
 				toRemove.add(entity);
 			}
 			info.tick();
 		});
 		toRemove.forEach(e -> {
-			if (e instanceof ItemEntity)
+			if (e instanceof ItemEntity && ((ItemEntity) e).getAge() < 0)
 				((ItemEntity) e).setAgeToCreativeDespawnTime();
 			passengers.remove(e);
 		});
@@ -188,8 +188,10 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		BeltTileEntity belt = (BeltTileEntity) te;
 
 		for (BeltAttachmentState state : belt.attachmentTracker.attachments) {
-			if (state.attachment.handleEntity(belt, entityIn, state))
+			if (state.attachment.handleEntity(belt, entityIn, state)) {
+				info.ticksSinceLastCollision--;
 				return;
+			}
 		}
 
 		final Direction beltFacing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
@@ -242,6 +244,7 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 							.grow(-Math.abs(checkDistance.x), -Math.abs(checkDistance.y), -Math.abs(checkDistance.z)))
 					.isEmpty()) {
 				entityIn.setMotion(0, 0, 0);
+				info.ticksSinceLastCollision--;
 				return;
 			}
 		}

@@ -158,7 +158,7 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITool
 			return true;
 		}
 
-		return handleActivated(state, worldIn, pos, player, handIn, hit);
+		return handleActivatedFrequencySlots(state, worldIn, pos, player, handIn, hit);
 	}
 
 	@Override

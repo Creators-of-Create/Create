@@ -44,8 +44,14 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 		boolean hasInventory = getInventory().isPresent();
 		ItemStack toExtract = ItemStack.EMPTY;
 
-		if (hasSpace && hasInventory)
+		if (hasSpace && hasInventory) {
 			toExtract = extract(true);
+
+			ItemStack filter = (this instanceof IHaveFilter) ? filter = ((IHaveFilter) this).getFilter()
+					: ItemStack.EMPTY;
+			if (!filter.isEmpty() && !ItemStack.areItemsEqual(toExtract, filter))
+				toExtract = ItemStack.EMPTY;
+		}
 
 		if (state == State.WAITING_FOR_ENTITY) {
 			if (hasSpace)
@@ -79,8 +85,13 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 		boolean hasInventory = getInventory().isPresent();
 		ItemStack toExtract = ItemStack.EMPTY;
 
-		if (hasSpace && hasInventory)
+		if (hasSpace && hasInventory) {
 			toExtract = extract(true);
+			ItemStack filter = (this instanceof IHaveFilter) ? filter = ((IHaveFilter) this).getFilter()
+					: ItemStack.EMPTY;
+			if (!filter.isEmpty() && !ItemStack.areItemsEqual(toExtract, filter))
+				toExtract = ItemStack.EMPTY;
+		}
 
 		if (getState() == State.WAITING_FOR_INVENTORY) {
 			if (!hasInventory) {
@@ -101,9 +112,11 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 	default ItemStack extract(boolean simulate) {
 		IItemHandler inv = getInventory().orElse(null);
 		ItemStack extracting = ItemStack.EMPTY;
+		ItemStack filter = (this instanceof IHaveFilter) ? filter = ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
+		int extractionCount = filter.isEmpty() ? EXTRACTION_COUNT : filter.getCount();
 
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
-			ItemStack stack = inv.extractItem(slot, EXTRACTION_COUNT - extracting.getCount(), true);
+			ItemStack stack = inv.extractItem(slot, extractionCount - extracting.getCount(), true);
 			ItemStack compare = stack.copy();
 			compare.setCount(extracting.getCount());
 			if (!extracting.isEmpty() && !extracting.equals(compare, false))
@@ -116,7 +129,7 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 
 			if (!simulate)
 				inv.extractItem(slot, stack.getCount(), false);
-			if (extracting.getCount() >= EXTRACTION_COUNT)
+			if (extracting.getCount() >= extractionCount)
 				break;
 		}
 

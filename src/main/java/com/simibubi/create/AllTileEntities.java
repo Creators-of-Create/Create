@@ -26,9 +26,13 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntityRenderer;
 import com.simibubi.create.modules.economy.ShopShelfTileEntity;
 import com.simibubi.create.modules.logistics.block.BeltFunnelTileEntity;
+import com.simibubi.create.modules.logistics.block.EntityDetectorTileEntity;
+import com.simibubi.create.modules.logistics.block.EntityDetectorTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.ExtractorTileEntity;
+import com.simibubi.create.modules.logistics.block.ExtractorTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.FlexcrateTileEntity;
 import com.simibubi.create.modules.logistics.block.LinkedExtractorTileEntity;
+import com.simibubi.create.modules.logistics.block.LinkedExtractorTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.LinkedTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntity;
 import com.simibubi.create.modules.logistics.block.StockswitchTileEntity;
@@ -61,10 +65,8 @@ public enum AllTileEntities {
 	MOTOR(MotorTileEntity::new, AllBlocks.MOTOR), GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
 	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
 	ENCASED_SHAFT(EncasedShaftTileEntity::new, AllBlocks.ENCASED_SHAFT, AllBlocks.ENCASED_BELT),
-	ENCASED_FAN(EncasedFanTileEntity::new, AllBlocks.ENCASED_FAN),
-	CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH), 
-	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT),
-	BELT(BeltTileEntity::new, AllBlocks.BELT),
+	ENCASED_FAN(EncasedFanTileEntity::new, AllBlocks.ENCASED_FAN), CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH),
+	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT), BELT(BeltTileEntity::new, AllBlocks.BELT),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
@@ -74,10 +76,10 @@ public enum AllTileEntities {
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
 	STOCKSWITCH(StockswitchTileEntity::new, AllBlocks.STOCKSWITCH),
-	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE), 
-	EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR),
+	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE), EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR),
 	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR),
 	BELT_FUNNEL(BeltFunnelTileEntity::new, AllBlocks.BELT_FUNNEL),
+	ENTITY_DETECTOR(EntityDetectorTileEntity::new, AllBlocks.ENTITY_DETECTOR),
 
 	// Economy
 	SHOP_SHELF(ShopShelfTileEntity::new, AllBlocks.SHOP_SHELF),
@@ -125,7 +127,9 @@ public enum AllTileEntities {
 		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());
 		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());
 		bind(RedstoneBridgeTileEntity.class, new LinkedTileEntityRenderer());
-		bind(LinkedExtractorTileEntity.class, new LinkedTileEntityRenderer());
+		bind(LinkedExtractorTileEntity.class, new LinkedExtractorTileEntityRenderer());
+		bind(ExtractorTileEntity.class, new ExtractorTileEntityRenderer());
+		bind(EntityDetectorTileEntity.class, new EntityDetectorTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

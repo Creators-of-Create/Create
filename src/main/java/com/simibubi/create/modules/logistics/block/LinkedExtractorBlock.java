@@ -35,12 +35,12 @@ public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFr
 	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT;
 	}
-	
+
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new LinkedExtractorTileEntity();
@@ -60,7 +60,7 @@ public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFr
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		return super.onBlockActivated(state, worldIn, pos, player, handIn, hit)
-				|| handleActivated(state, worldIn, pos, player, handIn, hit);
+				|| handleActivatedFrequencySlots(state, worldIn, pos, player, handIn, hit);
 	}
 
 	private void cacheItemPositions() {
@@ -74,7 +74,7 @@ public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFr
 
 		for (int i = 0; i < 4; i++) {
 			Direction facing = Direction.byHorizontalIndex(i);
-			first = new Vec3d(11.5f / 16f + zFightOffset, 4f / 16f, 14f / 16f );
+			first = new Vec3d(11.5f / 16f + zFightOffset, 4f / 16f, 14f / 16f);
 			second = new Vec3d(11.5f / 16f + zFightOffset, 8f / 16f, 14f / 16f);
 
 			float angle = facing.getHorizontalAngle();
@@ -88,10 +88,10 @@ public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFr
 		}
 
 	}
-	
+
 	@Override
 	public float getItemHitboxScale() {
-		return 3/32f;
+		return 3 / 32f;
 	}
 
 	@Override
@@ -104,5 +104,5 @@ public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFr
 	public Direction getFrequencyItemFacing(BlockState state) {
 		return state.get(HORIZONTAL_FACING).rotateYCCW();
 	}
-	
+
 }

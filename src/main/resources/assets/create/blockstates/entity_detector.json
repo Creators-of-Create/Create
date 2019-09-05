@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "powered=false,belt=false,facing=south": { "model": "create:block/entity_detector", "y": 0 },
+    "powered=false,belt=false,facing=east": { "model": "create:block/entity_detector", "y": 270 },
+    "powered=false,belt=false,facing=north": { "model": "create:block/entity_detector", "y": 180 },
+    "powered=false,belt=false,facing=west": { "model": "create:block/entity_detector", "y": 90 },
+	
+	"powered=true,belt=false,facing=south": { "model": "create:block/entity_detector_powered", "y": 0 },
+    "powered=true,belt=false,facing=east": { "model": "create:block/entity_detector_powered", "y": 270 },
+    "powered=true,belt=false,facing=north": { "model": "create:block/entity_detector_powered", "y": 180 },
+    "powered=true,belt=false,facing=west": { "model": "create:block/entity_detector_powered", "y": 90 },
+	
+	"powered=false,belt=true,facing=south": { "model": "create:block/entity_detector_with_belt", "y": 0 },
+    "powered=false,belt=true,facing=east": { "model": "create:block/entity_detector_with_belt", "y": 270 },
+    "powered=false,belt=true,facing=north": { "model": "create:block/entity_detector_with_belt", "y": 180 },
+    "powered=false,belt=true,facing=west": { "model": "create:block/entity_detector_with_belt", "y": 90 },
+	
+	"powered=true,belt=true,facing=south": { "model": "create:block/entity_detector_with_belt_powered", "y": 0 },
+    "powered=true,belt=true,facing=east": { "model": "create:block/entity_detector_with_belt_powered", "y": 270 },
+    "powered=true,belt=true,facing=north": { "model": "create:block/entity_detector_with_belt_powered", "y": 180 },
+    "powered=true,belt=true,facing=west": { "model": "create:block/entity_detector_with_belt_powered", "y": 90 }
+  }
+}
