@@ -1,0 +1,8 @@
+{
+    "parent": "block/stairs",
+    "textures": {
+        "bottom": "create:block/full_gabbro_bricks",
+        "top": "create:block/full_gabbro_bricks",
+        "side": "create:block/full_gabbro_bricks"
+    }
+}

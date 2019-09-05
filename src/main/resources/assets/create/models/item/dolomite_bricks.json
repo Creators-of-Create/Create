@@ -1,3 +1,8 @@
 {
-    "parent": "create:block/palettes/dolomite_bricks"
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "bottom": "create:block/dolomite",
+        "top": "create:block/polished_dolomite",
+        "side": "create:block/dolomite_bricks"
+    }
 }

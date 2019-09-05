@@ -1,6 +1,8 @@
 {
-    "parent": "block/cube_all",
+    "parent": "block/cube_bottom_top",
     "textures": {
-        "all": "create:block/dolomite_bricks"
+        "bottom": "create:block/dolomite",
+        "top": "create:block/polished_dolomite",
+        "side": "create:block/dolomite_bricks"
     }
 }

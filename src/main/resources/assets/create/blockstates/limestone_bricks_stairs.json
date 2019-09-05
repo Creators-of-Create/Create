@@ -1,0 +1,51 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "uvlock": true
+    },
+    "variants": { 
+        "facing":{
+            "east":{},
+            "west":{"y": 180},
+            "south":{"y": 90},
+            "north":{"y": 270}                        
+        },
+        "half":{
+          "bottom":{},
+          "top":{"x": 180}  
+        },    
+        "shape":{
+            "straight":{"model":"create:block/palettes/limestone_bricks_stairs"},
+            "outer_right":{"model":"create:block/palettes/limestone_bricks_stairs_outer"},
+            "outer_left":{"model":"create:block/palettes/limestone_bricks_stairs_outer"},
+            "inner_right":{"model":"create:block/palettes/limestone_bricks_stairs_inner"},
+            "inner_left":{"model":"create:block/palettes/limestone_bricks_stairs_inner"}
+        },         
+        "facing=east,half=bottom,shape=outer_left":  {"y": 270},
+        "facing=west,half=bottom,shape=outer_left":  {"y": 90},
+        "facing=south,half=bottom,shape=outer_left": {"y": 0},
+        "facing=north,half=bottom,shape=outer_left": {"y": 180},
+        "facing=east,half=bottom,shape=inner_left":  {"y": 270},
+        "facing=west,half=bottom,shape=inner_left":  {"y": 90},
+        "facing=south,half=bottom,shape=inner_left": {"y": 0},
+        "facing=north,half=bottom,shape=inner_left": {"y": 180},
+        "facing=west,half=top,shape=straight":  {"x": 180, "y": 180},
+        "facing=south,half=top,shape=straight": {"x": 180, "y": 90},
+        "facing=north,half=top,shape=straight": {"x": 180, "y": 270},
+        "facing=west,half=top,shape=outer_right":  {"x": 180, "y": 180},
+        "facing=south,half=top,shape=outer_right": {"x": 180, "y": 90},
+        "facing=north,half=top,shape=outer_right": {"x": 180, "y": 270},
+        "facing=east,half=top,shape=outer_left":  {"x": 180, "y": 90},
+        "facing=west,half=top,shape=outer_left":  {"x": 180, "y": 270},
+        "facing=south,half=top,shape=outer_left": {"x": 180, "y": 180},
+        "facing=north,half=top,shape=outer_left": {"x": 180, "y": 0},
+        "facing=east,half=top,shape=inner_right":  {"x": 180, "y": 0},
+        "facing=west,half=top,shape=inner_right":  {"x": 180, "y": 180},
+        "facing=south,half=top,shape=inner_right": {"x": 180, "y": 90},
+        "facing=north,half=top,shape=inner_right": {"x": 180, "y": 270},
+        "facing=east,half=top,shape=inner_left":  {"x": 180, "y": 90},
+        "facing=west,half=top,shape=inner_left":  {"x": 180, "y": 270},
+        "facing=south,half=top,shape=inner_left": {"x": 180, "y": 180},
+        "facing=north,half=top,shape=inner_left": {"x": 180, "y": 0}
+    }
+}

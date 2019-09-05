@@ -1,0 +1,8 @@
+{
+    "parent": "block/slab",
+    "textures": {
+        "bottom": "create:block/dolomite",
+        "top": "create:block/dolomite",
+        "side": "create:block/dolomite"
+    }
+}

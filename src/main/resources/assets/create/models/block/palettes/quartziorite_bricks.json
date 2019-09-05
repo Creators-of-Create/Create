@@ -1,8 +1,0 @@
-{
-    "parent": "block/cube_bottom_top",
-    "textures": {
-        "bottom": "create:block/quartziorite",
-        "top": "create:block/polished_quartziorite",
-        "side": "create:block/quartziorite_bricks"
-    }
-}
