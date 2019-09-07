@@ -1,0 +1,23 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+    "textures": {
+        "particle": "create:block/bearing_side",
+        "bearing_top": "create:block/bearing_top",
+        "bearing_side": "create:block/bearing_side"
+    },
+    "elements": [
+        {
+            "name": "Top",
+            "from": [ 0, 12, 0 ], 
+            "to": [ 16, 16, 16 ], 
+            "faces": {
+                "north": { "texture": "#bearing_side", "uv": [ 0, 0, 16, 4 ] },
+                "east": { "texture": "#bearing_side", "uv": [ 0, 0, 16, 4 ] },
+                "south": { "texture": "#bearing_side", "uv": [ 0, 0, 16, 4 ] },
+                "west": { "texture": "#bearing_side", "uv": [ 0, 0, 16, 4 ] },
+                "up": { "texture": "#bearing_top", "uv": [ 0, 0, 16, 16 ] },
+                "down": { "texture": "#bearing_top", "uv": [ 0, 0, 16, 16 ] }
+            }
+        }
+    ]
+}

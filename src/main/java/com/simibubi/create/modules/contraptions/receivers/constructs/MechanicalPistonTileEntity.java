@@ -14,6 +14,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -24,7 +25,7 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class MechanicalPistonTileEntity extends KineticTileEntity implements ITickableTileEntity {
 
-	protected Construct movingConstruct;
+	protected TranslationConstruct movingConstruct;
 	protected float offset;
 	protected boolean running;
 	protected boolean assembleNextTick;
@@ -65,7 +66,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		running = tag.getBoolean("Running");
 		offset = tag.getFloat("Offset");
 		if (running)
-			movingConstruct = Construct.fromNBT(tag.getCompound("Construct"));
+			movingConstruct = TranslationConstruct.fromNBT(tag.getCompound("Construct"));
 
 		super.read(tag);
 	}
@@ -85,8 +86,9 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		// Collect Construct
-		movingConstruct = getMovementSpeed() < 0 ? Construct.getAttachedForPulling(getWorld(), getPos(), direction)
-				: Construct.getAttachedForPushing(getWorld(), getPos(), direction);
+		movingConstruct = getMovementSpeed() < 0
+				? TranslationConstruct.getAttachedForPulling(getWorld(), getPos(), direction)
+				: TranslationConstruct.getAttachedForPushing(getWorld(), getPos(), direction);
 		if (movingConstruct == null)
 			return;
 
@@ -141,6 +143,10 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 
 			world.destroyBlock(targetPos, world.getBlockState(targetPos).getCollisionShape(world, targetPos).isEmpty());
 			getWorld().setBlockState(targetPos, state, 3);
+			TileEntity tileEntity = world.getTileEntity(targetPos);
+			if (tileEntity != null && block.nbt != null) {
+				((ChassisTileEntity) tileEntity).setRange(block.nbt.getInt("Range"));
+			}
 		}
 
 		running = false;
@@ -206,10 +212,11 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		BlockPos relativePos = BlockPos.ZERO.offset(movementDirection, getModulatedOffset(newOffset));
 
 		// Other moving Pistons
-		int maxPossibleRange = Construct.MAX_EXTENSIONS + Construct.MAX_CHAINED_BLOCKS + Construct.MAX_CHAINED_CHASSIS;
+		int maxPossibleRange = TranslationConstruct.MAX_EXTENSIONS + TranslationConstruct.MAX_CHAINED_BLOCKS
+				+ TranslationConstruct.MAX_CHAINED_CHASSIS;
 		Iterator<MechanicalPistonTileEntity> iterator = Create.constructHandler.getOtherMovingPistonsInWorld(this)
 				.iterator();
-		while (iterator.hasNext()) {
+		pistonLoop: while (iterator.hasNext()) {
 			MechanicalPistonTileEntity otherPiston = iterator.next();
 
 			if (otherPiston == this)
@@ -225,23 +232,31 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 			BlockPos otherRelativePos = BlockPos.ZERO.offset(otherMovementDirection,
 					getModulatedOffset(otherPiston.offset));
 
-			for (AxisAlignedBB thisBB : Arrays.asList(movingConstruct.collisionBoxFront,
+			for (AxisAlignedBB tBB : Arrays.asList(movingConstruct.collisionBoxFront,
 					movingConstruct.collisionBoxBack)) {
-				for (AxisAlignedBB otherBB : Arrays.asList(otherPiston.movingConstruct.collisionBoxFront,
+				for (AxisAlignedBB oBB : Arrays.asList(otherPiston.movingConstruct.collisionBoxFront,
 						otherPiston.movingConstruct.collisionBoxBack)) {
-
-					if (thisBB == null || otherBB == null)
+					if (tBB == null || oBB == null)
 						continue;
-					if (thisBB.offset(relativePos).intersects(otherBB.offset(otherRelativePos))) {
+
+					boolean frontalCollision = otherMovementDirection == movementDirection.getOpposite();
+					BlockPos thisColliderOffset = relativePos.offset(movementDirection,
+							frontalCollision ? (getMovementSpeed() > 0 ? 1 : -1) : 0);
+					AxisAlignedBB thisBB = tBB.offset(thisColliderOffset);
+					AxisAlignedBB otherBB = oBB.offset(otherRelativePos);
+
+					if (thisBB.intersects(otherBB)) {
+						boolean actuallyColliding = false;
+						for (BlockPos colliderPos : movingConstruct.getColliders(world, movementDirection)) {
+							colliderPos = colliderPos.add(thisColliderOffset).subtract(otherRelativePos);
+							if (!otherPiston.movingConstruct.blocks.containsKey(colliderPos))
+								continue;
+							actuallyColliding = true;
+						}
+						if (!actuallyColliding)
+							continue pistonLoop;
 						hadCollisionWithOtherPiston = true;
 						return true;
-					}
-					if (otherMovementDirection == movementDirection.getOpposite()) {
-						if (thisBB.offset(relativePos.offset(movementDirection, getMovementSpeed() > 0 ? 1 : -1))
-								.intersects(otherBB.offset(otherRelativePos))) {
-							hadCollisionWithOtherPiston = true;
-							return true;
-						}
 					}
 
 				}

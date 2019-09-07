@@ -120,7 +120,7 @@ public class MechanicalPistonBlock extends KineticBlock {
 		BlockPos pistonHead = null;
 		BlockPos pistonBase = pos;
 
-		for (int offset = 1; offset < Construct.MAX_EXTENSIONS; offset++) {
+		for (int offset = 1; offset < TranslationConstruct.MAX_EXTENSIONS; offset++) {
 			BlockPos currentPos = pos.offset(direction, offset);
 			BlockState block = worldIn.getBlockState(currentPos);
 
@@ -140,7 +140,7 @@ public class MechanicalPistonBlock extends KineticBlock {
 					.forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
 		}
 
-		for (int offset = 1; offset < Construct.MAX_EXTENSIONS; offset++) {
+		for (int offset = 1; offset < TranslationConstruct.MAX_EXTENSIONS; offset++) {
 			BlockPos currentPos = pos.offset(direction.getOpposite(), offset);
 			BlockState block = worldIn.getBlockState(currentPos);
 

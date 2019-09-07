@@ -65,7 +65,7 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements
 		BlockPos pistonHead = pos;
 		BlockPos pistonBase = null;
 
-		for (int offset = 1; offset < Construct.MAX_EXTENSIONS; offset++) {
+		for (int offset = 1; offset < TranslationConstruct.MAX_EXTENSIONS; offset++) {
 			BlockPos currentPos = pos.offset(direction.getOpposite(), offset);
 			BlockState block = worldIn.getBlockState(currentPos);
 

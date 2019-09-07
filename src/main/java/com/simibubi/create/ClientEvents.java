@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.modules.contraptions.receivers.TurntableHandler;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltItemHandler;
@@ -67,16 +68,16 @@ public class ClientEvents {
 		CreateClient.schematicHandler.onKeyInput(key, pressed);
 	}
 
-	
 	@SubscribeEvent
 	public static void onMouseScrolled(MouseScrollEvent event) {
 		if (Minecraft.getInstance().currentScreen != null)
 			return;
-		
+
 		double delta = event.getScrollDelta();
 
 		boolean cancelled = CreateClient.schematicHandler.mouseScrolled(delta)
-				|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta);
+				|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta)
+				|| IBlockWithScrollableValue.onScroll(delta);
 		event.setCanceled(cancelled);
 	}
 
@@ -96,7 +97,7 @@ public class ClientEvents {
 	public static void onRenderTick(RenderTickEvent event) {
 		if (!isGameActive())
 			return;
-		
+
 		TurntableHandler.gameRenderTick();
 	}
 

@@ -12,6 +12,9 @@ import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.ChassisTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.ClutchTileEntity;
@@ -62,12 +65,17 @@ public enum AllTileEntities {
 
 	// Kinetics
 	SHAFT(ShaftTileEntity::new, AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL, AllBlocks.ENCASED_SHAFT),
-	MOTOR(MotorTileEntity::new, AllBlocks.MOTOR), GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
+	MOTOR(MotorTileEntity::new, AllBlocks.MOTOR),
+	GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
 	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
 	ENCASED_SHAFT(EncasedShaftTileEntity::new, AllBlocks.ENCASED_SHAFT, AllBlocks.ENCASED_BELT),
-	ENCASED_FAN(EncasedFanTileEntity::new, AllBlocks.ENCASED_FAN), CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH),
-	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT), BELT(BeltTileEntity::new, AllBlocks.BELT),
+	ENCASED_FAN(EncasedFanTileEntity::new, AllBlocks.ENCASED_FAN),
+	CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH),
+	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT),
+	BELT(BeltTileEntity::new, AllBlocks.BELT),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
+	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING),
+	CHASSIS(ChassisTileEntity::new, AllBlocks.ROTATION_CHASSIS, AllBlocks.TRANSLATION_CHASSIS),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
@@ -76,7 +84,8 @@ public enum AllTileEntities {
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
 	STOCKSWITCH(StockswitchTileEntity::new, AllBlocks.STOCKSWITCH),
-	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE), EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR),
+	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE),
+	EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR),
 	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR),
 	BELT_FUNNEL(BeltFunnelTileEntity::new, AllBlocks.BELT_FUNNEL),
 	ENTITY_DETECTOR(EntityDetectorTileEntity::new, AllBlocks.ENTITY_DETECTOR),
@@ -123,6 +132,7 @@ public enum AllTileEntities {
 		bind(ClutchTileEntity.class, new SplitShaftTileEntityRenderer());
 		bind(BeltTileEntity.class, new BeltTileEntityRenderer());
 		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());
+		bind(MechanicalBearingTileEntity.class, new MechanicalBearingTileEntityRenderer());
 		bind(DrillTileEntity.class, new KineticTileEntityRenderer());
 		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());
 		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());

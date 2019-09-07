@@ -21,6 +21,10 @@
 	"item.create.blazing_axe": "Blazing Axe",
 	"item.create.blazing_sword": "Blazing Longsword",
 	
+	"item.create.shadow_steel_pickaxe": "Shadow Steel Pickaxe",
+	"item.create.shadow_steel_mattock": "Shadow Steel Garden Mattock",
+	"item.create.shadow_steel_sword": "Shadow Steel Sword",
+	
 	"item.create.rose_quartz_pickaxe": "Gilded Quartz Pickaxe",
 	"item.create.rose_quartz_shovel": "Gilded Quartz Shovel",
 	"item.create.rose_quartz_axe": "Gilded Quartz Axe",
@@ -47,9 +51,9 @@
 	"block.create.mechanical_piston": "Mechanical Piston",
 	"block.create.mechanical_piston_head": "Mechanical Piston Head",
 	"block.create.piston_pole": "Piston Extension Pole",
-	"block.create.construct": "Movement Chassis",
-	"block.create.sticky_construct": "Sticky Chassis",
-	"block.create.relocation_construct": "Relocation Chassis",
+	"block.create.mechanical_bearing": "Mechanical Bearing",
+	"block.create.translation_chassis": "Translation Chassis",
+	"block.create.rotation_chassis": "Rotation Chassis",
 
 	"block.create.contact": "Redstone Contact",
 	"block.create.redstone_bridge": "Redstone Bridge",

@@ -55,7 +55,7 @@ public class PistonPoleBlock extends ProperDirectionalBlock implements ITooltip 
 		BlockPos pistonBase = null;
 
 		for (int modifier : new int[] { 1, -1 }) {
-			for (int offset = modifier; modifier * offset < Construct.MAX_EXTENSIONS; offset += modifier) {
+			for (int offset = modifier; modifier * offset < TranslationConstruct.MAX_EXTENSIONS; offset += modifier) {
 				BlockPos currentPos = pos.offset(direction, offset);
 				BlockState block = worldIn.getBlockState(currentPos);
 

@@ -32,7 +32,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
-public class Construct {
+public class TranslationConstruct {
 
 	public static final int MAX_EXTENSIONS = 20;
 	public static final int MAX_CHAINED_CHASSIS = 12;
@@ -50,7 +50,7 @@ public class Construct {
 	protected int extensionLength;
 	protected int initialExtensionProgress;
 
-	public Construct() {
+	public TranslationConstruct() {
 		blocks = new HashMap<>();
 		actors = new ArrayList<>();
 	}
@@ -79,8 +79,8 @@ public class Construct {
 		return cachedColliders;
 	}
 
-	public static Construct getAttachedForPushing(World world, BlockPos pos, Direction direction) {
-		Construct construct = new Construct();
+	public static TranslationConstruct getAttachedForPushing(World world, BlockPos pos, Direction direction) {
+		TranslationConstruct construct = new TranslationConstruct();
 
 		if (!construct.collectExtensions(world, pos, direction))
 			return null;
@@ -91,8 +91,8 @@ public class Construct {
 		return construct;
 	}
 
-	public static Construct getAttachedForPulling(World world, BlockPos pos, Direction direction) {
-		Construct construct = new Construct();
+	public static TranslationConstruct getAttachedForPulling(World world, BlockPos pos, Direction direction) {
+		TranslationConstruct construct = new TranslationConstruct();
 
 		if (!construct.collectExtensions(world, pos, direction))
 			return null;
@@ -209,9 +209,9 @@ public class Construct {
 						collisionBoxFront = new AxisAlignedBB(blockPos);
 					else
 						collisionBoxFront = collisionBoxFront.union(new AxisAlignedBB(blockPos));
-					
+
 					// Don't collect in front of drills
-					if (AllBlocks.DRILL.typeOf(state) && state.get(FACING) == direction) 
+					if (AllBlocks.DRILL.typeOf(state) && state.get(FACING) == direction)
 						break;
 				}
 			}
@@ -266,19 +266,30 @@ public class Construct {
 			BlockState chassisState = world.getBlockState(currentChassisPos);
 
 			// Not attached to a chassis
-			if (!(chassisState.getBlock() instanceof ChassisBlock))
+			if (!(chassisState.getBlock() instanceof TranslationChassisBlock))
+				continue;
+
+			int chassisRange = ((ChassisTileEntity) world.getTileEntity(currentChassisPos)).getRange();
+			boolean chassisSticky = chassisState
+					.get(((AbstractChassisBlock) chassisState.getBlock()).getGlueableSide(chassisState, direction));
+			
+			// Ignore replaceable Blocks and Air-like
+			if (state.getMaterial().isReplaceable() || state.isAir(world, currentPos))
+				continue;
+			if (state.getCollisionShape(world, currentPos).isEmpty())
 				continue;
 
 			// Too many Blocks
-			if (!currentChassisPos.withinDistance(currentPos, MAX_CHAINED_BLOCKS + 2))
+			if (direction == movementDirection && !currentChassisPos.withinDistance(currentPos, chassisRange + 1))
 				return null;
+			if (direction != movementDirection && !currentChassisPos.withinDistance(currentPos, chassisRange + 1))
+				continue;
 
 			// Skip if pushed column ended already (Except for Relocating Chassis)
-			if (!AllBlocks.RELOCATION_CONSTRUCT.typeOf(chassisState) && !currentPos.equals(currentChassisPos)) {
+			if (!chassisSticky && !currentPos.equals(currentChassisPos)) {
 				boolean skip = false;
 
-				if (movementDirection != direction && !currentChassisPos.withinDistance(currentPos,
-						AllBlocks.STICKY_CONSTRUCT.typeOf(chassisState) ? 2 : 1))
+				if (movementDirection != direction && !currentChassisPos.withinDistance(currentPos, 1))
 					continue;
 
 				for (BlockPos p = currentPos; !p.equals(currentChassisPos); p = p.offset(direction.getOpposite())) {
@@ -293,27 +304,24 @@ public class Construct {
 			}
 
 			// Ignore sand and co.
-			if (AllBlocks.RELOCATION_CONSTRUCT.typeOf(chassisState) && movementDirection != direction
-					&& state.getBlock() instanceof FallingBlock)
-				continue;
-
-			// Ignore replaceable Blocks and Air-like
-			if (state.getMaterial().isReplaceable() || state.isAir(world, currentPos))
-				continue;
-			if (state.getCollisionShape(world, currentPos).isEmpty())
+			if (chassisSticky && movementDirection != direction && state.getBlock() instanceof FallingBlock)
 				continue;
 
 			// Structure is immobile
 			if (!canPush(world, currentPos, movementDirection))
 				return null;
 
-			blocks.add(new BlockInfo(currentPos.offset(direction, -offset), state, null));
+			CompoundNBT nbt = new CompoundNBT();
+			nbt.putInt("Range", chassisRange);
+
+			blocks.add(new BlockInfo(currentPos.offset(direction, -offset), state,
+					AllBlocks.TRANSLATION_CHASSIS.typeOf(state) ? nbt : null));
 			for (Direction facing : Direction.values()) {
 				if (currentChassisPos.equals(currentPos) && facing == direction.getOpposite())
 					continue;
 				if (AllBlocks.DRILL.typeOf(state) && facing == direction)
 					continue;
-				
+
 				frontier.add(currentPos.offset(facing));
 			}
 		}
@@ -322,7 +330,8 @@ public class Construct {
 	}
 
 	private static boolean canPush(World world, BlockPos pos, Direction direction) {
-		return PistonBlock.canPush(world.getBlockState(pos), world, pos, direction, true, direction);
+		return PistonBlock.canPush(world.getBlockState(pos), world, pos, direction, true, direction)
+				|| AllBlocks.TRANSLATION_CHASSIS.typeOf(world.getBlockState(pos));
 	}
 
 	private static boolean canPull(World world, BlockPos pos, Direction direction) {
@@ -343,7 +352,7 @@ public class Construct {
 				continue;
 
 			BlockState blockState = world.getBlockState(current);
-			if (!(blockState.getBlock() instanceof ChassisBlock))
+			if (!(blockState.getBlock() instanceof TranslationChassisBlock))
 				continue;
 			if (blockState.get(BlockStateProperties.AXIS) != direction.getAxis())
 				continue;
@@ -375,6 +384,8 @@ public class Construct {
 			CompoundNBT c = new CompoundNBT();
 			c.put("Block", NBTUtil.writeBlockState(block.state));
 			c.put("Pos", NBTUtil.writeBlockPos(block.pos));
+			if (block.nbt != null)
+				c.put("Data", block.nbt);
 			blocks.add(c);
 		}
 
@@ -412,12 +423,13 @@ public class Construct {
 
 	}
 
-	public static Construct fromNBT(CompoundNBT nbt) {
-		Construct construct = new Construct();
+	public static TranslationConstruct fromNBT(CompoundNBT nbt) {
+		TranslationConstruct construct = new TranslationConstruct();
 		nbt.getList("Blocks", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
 			BlockInfo info = new BlockInfo(NBTUtil.readBlockPos(comp.getCompound("Pos")),
-					NBTUtil.readBlockState(comp.getCompound("Block")), null);
+					NBTUtil.readBlockState(comp.getCompound("Block")),
+					comp.contains("Data") ? comp.getCompound("Data") : null);
 			construct.blocks.put(info.pos, info);
 		});
 		construct.extensionLength = nbt.getInt("ExtensionLength");

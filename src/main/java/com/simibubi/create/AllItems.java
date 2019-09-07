@@ -39,24 +39,35 @@ public enum AllItems {
 	PLACEMENT_HANDGUN(
 			new BuilderGunItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN)))),
 
-	ANDESITE_ALLOY_CUBE(new Item(standardProperties())), BLAZE_BRASS_CUBE(new Item(standardProperties())),
+	ANDESITE_ALLOY_CUBE(new Item(standardProperties())),
+	BLAZE_BRASS_CUBE(new Item(standardProperties())),
 	CHORUS_CHROME_CUBE(new Item(standardProperties().rarity(Rarity.UNCOMMON))),
-	CHROMATIC_COMPOUND_CUBE(new ChromaticCompoundCubeItem(standardProperties().rarity(Rarity.UNCOMMON))),
 	SHADOW_STEEL_CUBE(new Item(standardProperties().rarity(Rarity.UNCOMMON))),
-	ROSE_QUARTZ(new Item(standardProperties())), REFINED_ROSE_QUARTZ(new Item(standardProperties())),
+	ROSE_QUARTZ(new Item(standardProperties())),
+	REFINED_ROSE_QUARTZ(new Item(standardProperties())),
+	CHROMATIC_COMPOUND_CUBE(new ChromaticCompoundCubeItem(standardProperties().rarity(Rarity.UNCOMMON))),
 	REFINED_RADIANCE_CUBE(new Item(standardProperties())),
 
-	BLAZING_PICKAXE(new Item(standardProperties())), BLAZING_SHOVEL(new Item(standardProperties())),
-	BLAZING_AXE(new Item(standardProperties())), BLAZING_SWORD(new Item(standardProperties())),
+	BLAZING_PICKAXE(new Item(standardProperties())),
+	BLAZING_SHOVEL(new Item(standardProperties())),
+	BLAZING_AXE(new Item(standardProperties())),
+	BLAZING_SWORD(new Item(standardProperties())),
 
-	ROSE_QUARTZ_PICKAXE(new Item(standardProperties())), ROSE_QUARTZ_SHOVEL(new Item(standardProperties())),
-	ROSE_QUARTZ_AXE(new Item(standardProperties())), ROSE_QUARTZ_SWORD(new Item(standardProperties())),
+	SHADOW_STEEL_PICKAXE(new Item(standardProperties())),
+	SHADOW_STEEL_MATTOCK(new Item(standardProperties())),
+	SHADOW_STEEL_SWORD(new Item(standardProperties())),
+
+	ROSE_QUARTZ_PICKAXE(new Item(standardProperties())),
+	ROSE_QUARTZ_SHOVEL(new Item(standardProperties())),
+	ROSE_QUARTZ_AXE(new Item(standardProperties())),
+	ROSE_QUARTZ_SWORD(new Item(standardProperties())),
 
 	TREE_FERTILIZER(new TreeFertilizerItem(standardProperties())),
 
 	EMPTY_BLUEPRINT(new Item(standardProperties().maxStackSize(1))),
 	BLUEPRINT_AND_QUILL(new SchematicAndQuillItem(standardProperties().maxStackSize(1))),
-	BLUEPRINT(new SchematicItem(standardProperties())), BELT_CONNECTOR(new BeltItem(standardProperties())),
+	BLUEPRINT(new SchematicItem(standardProperties())),
+	BELT_CONNECTOR(new BeltItem(standardProperties())),
 
 	;
 

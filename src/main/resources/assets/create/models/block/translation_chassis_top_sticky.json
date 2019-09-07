@@ -1,0 +1,6 @@
+{
+    "parent": "create:block/translation_chassis",
+    "textures": {
+        "top": "create:block/translation_chassis_top_sticky"
+    }
+}

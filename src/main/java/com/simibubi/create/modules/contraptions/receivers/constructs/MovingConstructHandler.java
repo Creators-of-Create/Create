@@ -48,7 +48,7 @@ public class MovingConstructHandler {
 			float newOffset) {
 		World world = te.getWorld();
 		Vec3d movementVec = new Vec3d(te.getBlockState().get(BlockStateProperties.FACING).getDirectionVec());
-		Construct construct = te.movingConstruct;
+		TranslationConstruct construct = te.movingConstruct;
 
 		if (world.isRemote) {
 			renderedBBs.clear();
@@ -142,6 +142,7 @@ public class MovingConstructHandler {
 						entity.onGround = true;
 					}
 					entity.setMotion(allowedMovement.subtract(movement.subtract(motion)));
+					entity.velocityChanged = true;
 				}
 
 			}

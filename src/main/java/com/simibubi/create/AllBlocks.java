@@ -12,10 +12,12 @@ import com.simibubi.create.modules.contraptions.receivers.DrillBlock;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.receivers.TurntableBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.ChassisBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonHeadBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.PistonPoleBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.RotationChassisBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.TranslationChassisBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.CogWheelBlock;
@@ -59,38 +61,62 @@ import net.minecraftforge.registries.IForgeRegistry;
 public enum AllBlocks {
 
 	// Schematics
-	SCHEMATICANNON(new SchematicannonBlock()), SCHEMATICANNON_CONNECTOR(new RenderUtilityBlock()),
-	SCHEMATICANNON_PIPE(new RenderUtilityBlock()), CREATIVE_CRATE(new CreativeCrateBlock()),
+	SCHEMATICANNON(new SchematicannonBlock()),
+	SCHEMATICANNON_CONNECTOR(new RenderUtilityBlock()),
+	SCHEMATICANNON_PIPE(new RenderUtilityBlock()),
+	CREATIVE_CRATE(new CreativeCrateBlock()),
 	SCHEMATIC_TABLE(new SchematicTableBlock()),
 
 	// Kinetics
-	SHAFT(new ShaftBlock(Properties.from(Blocks.ANDESITE))), COGWHEEL(new CogWheelBlock(false)),
-	LARGE_COGWHEEL(new CogWheelBlock(true)), ENCASED_SHAFT(new EncasedShaftBlock()),
-	ENCASED_BELT(new EncasedBeltBlock()), CLUTCH(new ClutchBlock()), GEARSHIFT(new GearshiftBlock()),
-	GEARBOX(new GearboxBlock()), BELT(new BeltBlock()), BELT_PULLEY(new RenderUtilityAxisBlock()),
+	SHAFT(new ShaftBlock(Properties.from(Blocks.ANDESITE))),
+	COGWHEEL(new CogWheelBlock(false)),
+	LARGE_COGWHEEL(new CogWheelBlock(true)),
+	ENCASED_SHAFT(new EncasedShaftBlock()),
+	ENCASED_BELT(new EncasedBeltBlock()),
+	CLUTCH(new ClutchBlock()),
+	GEARSHIFT(new GearshiftBlock()),
+	GEARBOX(new GearboxBlock()),
+	BELT(new BeltBlock()),
+	BELT_PULLEY(new RenderUtilityAxisBlock()),
 	BELT_ANIMATION(new RenderUtilityBlock()),
 
-	MOTOR(new MotorBlock()), WATER_WHEEL(new WaterWheelBlock()),
+	MOTOR(new MotorBlock()),
+	WATER_WHEEL(new WaterWheelBlock()),
 
-	ENCASED_FAN(new EncasedFanBlock()), ENCASED_FAN_INNER(new RenderUtilityAxisBlock()),
-	TURNTABLE(new TurntableBlock()), SHAFT_HALF(new ShaftHalfBlock()), CRUSHING_WHEEL(new CrushingWheelBlock()),
+	ENCASED_FAN(new EncasedFanBlock()),
+	ENCASED_FAN_INNER(new RenderUtilityAxisBlock()),
+	TURNTABLE(new TurntableBlock()),
+	SHAFT_HALF(new ShaftHalfBlock()),
+	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
 
-	MECHANICAL_PISTON(new MechanicalPistonBlock(false)), STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
-	MECHANICAL_PISTON_HEAD(new MechanicalPistonHeadBlock()), PISTON_POLE(new PistonPoleBlock()),
-	CONSTRUCT(new ChassisBlock(ChassisBlock.Type.NORMAL)), STICKY_CONSTRUCT(new ChassisBlock(ChassisBlock.Type.STICKY)),
-	RELOCATION_CONSTRUCT(new ChassisBlock(ChassisBlock.Type.RELOCATING)),
-
-	DRILL(new DrillBlock()), HARVESTER(new HarvesterBlock()), CONTACT(new ContactBlock()),
+	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
+	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
+	MECHANICAL_PISTON_HEAD(new MechanicalPistonHeadBlock()),
+	PISTON_POLE(new PistonPoleBlock()),
+	MECHANICAL_BEARING(new MechanicalBearingBlock()),
+	MECHANICAL_BEARING_TOP(new ShaftHalfBlock()),
+	TRANSLATION_CHASSIS(new TranslationChassisBlock()),
+	ROTATION_CHASSIS(new RotationChassisBlock()),
+	
+	// Get rid o' these
+	DRILL(new DrillBlock()),
+	HARVESTER(new HarvesterBlock()),
 
 	// Logistics
-	PULSE_REPEATER(new PulseRepeaterBlock()), REDSTONE_BRIDGE(new RedstoneBridgeBlock()),
-	STOCKSWITCH(new StockswitchBlock()), FLEXCRATE(new FlexcrateBlock()), EXTRACTOR(new ExtractorBlock()),
-	LINKED_EXTRACTOR(new LinkedExtractorBlock()), BELT_FUNNEL(new BeltFunnelBlock()),
+	CONTACT(new ContactBlock()),
+	REDSTONE_BRIDGE(new RedstoneBridgeBlock()),
+	STOCKSWITCH(new StockswitchBlock()),
+	FLEXCRATE(new FlexcrateBlock()),
+	EXTRACTOR(new ExtractorBlock()),
+	LINKED_EXTRACTOR(new LinkedExtractorBlock()),
+	BELT_FUNNEL(new BeltFunnelBlock()),
 	ENTITY_DETECTOR(new EntityDetectorBlock()),
+	PULSE_REPEATER(new PulseRepeaterBlock()),
 
 	// Symmetry
-	SYMMETRY_PLANE(new PlaneSymmetryBlock()), SYMMETRY_CROSSPLANE(new CrossPlaneSymmetryBlock()),
+	SYMMETRY_PLANE(new PlaneSymmetryBlock()),
+	SYMMETRY_CROSSPLANE(new CrossPlaneSymmetryBlock()),
 	SYMMETRY_TRIPLEPLANE(new TriplePlaneSymmetryBlock()),
 
 	// Gardens
@@ -105,13 +131,13 @@ public enum AllBlocks {
 	GRANITE_BRICKS(new Block(Properties.from(Blocks.GRANITE))),
 
 	GABBRO(new Block(Properties.from(Blocks.ANDESITE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	POLISHED_GABBRO(new Block(Properties.from(GABBRO.block))), 
+	POLISHED_GABBRO(new Block(Properties.from(GABBRO.block))),
 	GABBRO_BRICKS(new Block(Properties.from(GABBRO.block)), ComesWith.STAIRS, ComesWith.WALL),
 	PAVED_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block)), ComesWith.SLAB),
 	INDENTED_GABBRO(new Block(Properties.from(GABBRO.block)), ComesWith.SLAB),
 	SLIGHTLY_MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
 	MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
-	
+
 	LIMESTONE(new Block(Properties.from(Blocks.GRANITE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	LIMESTONE_BRICKS(new Block(Properties.from(LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	POLISHED_LIMESTONE(new Block(Properties.from(LIMESTONE.block)), ComesWith.SLAB),
