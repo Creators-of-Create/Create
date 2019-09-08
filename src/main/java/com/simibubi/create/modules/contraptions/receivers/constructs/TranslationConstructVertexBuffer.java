@@ -8,9 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-public class ConstructVertexBuffer extends BufferManipulator {
+public class TranslationConstructVertexBuffer extends BufferManipulator {
 
-	public ConstructVertexBuffer(ByteBuffer original) {
+	public TranslationConstructVertexBuffer(ByteBuffer original) {
 		super(original);
 	}
 

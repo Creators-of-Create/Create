@@ -36,11 +36,6 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	}
 
 	@Override
-	public boolean hasFastRenderer() {
-		return true;
-	}
-
-	@Override
 	public void onSpeedChanged() {
 		super.onSpeedChanged();
 		assembleNextTick = true;

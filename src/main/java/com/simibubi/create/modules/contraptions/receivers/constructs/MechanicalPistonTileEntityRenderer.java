@@ -26,7 +26,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class MechanicalPistonTileEntityRenderer extends KineticTileEntityRenderer {
 
-	protected static Cache<TranslationConstruct, ConstructVertexBuffer> cachedConstructs;
+	protected static Cache<TranslationConstruct, TranslationConstructVertexBuffer> cachedConstructs;
 
 	@Override
 	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
@@ -64,7 +64,7 @@ public class MechanicalPistonTileEntityRenderer extends KineticTileEntityRendere
 		}
 
 		builder.finishDrawing();
-		cachedConstructs.put(c, new ConstructVertexBuffer(builder.getByteBuffer()));
+		cachedConstructs.put(c, new TranslationConstructVertexBuffer(builder.getByteBuffer()));
 	}
 
 	protected void renderConstructFromCache(TranslationConstruct c, MechanicalPistonTileEntity te, double x, double y, double z,
