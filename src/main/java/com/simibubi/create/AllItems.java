@@ -46,21 +46,21 @@ public enum AllItems {
 	ROSE_QUARTZ(new Item(standardProperties())),
 	REFINED_ROSE_QUARTZ(new Item(standardProperties())),
 	CHROMATIC_COMPOUND_CUBE(new ChromaticCompoundCubeItem(standardProperties().rarity(Rarity.UNCOMMON))),
-	REFINED_RADIANCE_CUBE(new Item(standardProperties())),
+	REFINED_RADIANCE_CUBE(new Item(standardProperties().rarity(Rarity.RARE))),
 
-	BLAZING_PICKAXE(new Item(standardProperties())),
-	BLAZING_SHOVEL(new Item(standardProperties())),
-	BLAZING_AXE(new Item(standardProperties())),
-	BLAZING_SWORD(new Item(standardProperties())),
-
-	SHADOW_STEEL_PICKAXE(new Item(standardProperties())),
-	SHADOW_STEEL_MATTOCK(new Item(standardProperties())),
-	SHADOW_STEEL_SWORD(new Item(standardProperties())),
-
-	ROSE_QUARTZ_PICKAXE(new Item(standardProperties())),
-	ROSE_QUARTZ_SHOVEL(new Item(standardProperties())),
-	ROSE_QUARTZ_AXE(new Item(standardProperties())),
-	ROSE_QUARTZ_SWORD(new Item(standardProperties())),
+//	BLAZING_PICKAXE(new BlazingToolItem(1, -2.8F, standardProperties(), PICKAXE)),
+//	BLAZING_SHOVEL(new BlazingToolItem(1.5F, -3.0F, standardProperties(), SHOVEL)),
+//	BLAZING_AXE(new BlazingToolItem(5.0F, -3.0F, standardProperties(), AXE)),
+//	BLAZING_SWORD(new BlazingToolItem(3, -2.4F, standardProperties(), SWORD)),
+//	
+//	ROSE_QUARTZ_PICKAXE(new RoseQuartzToolItem(1, -2.8F, standardProperties(), PICKAXE)),
+//	ROSE_QUARTZ_SHOVEL(new RoseQuartzToolItem(1.5F, -3.0F, standardProperties(), SHOVEL)),
+//	ROSE_QUARTZ_AXE(new RoseQuartzToolItem(5.0F, -3.0F, standardProperties(), AXE)),
+//	ROSE_QUARTZ_SWORD(new RoseQuartzToolItem(3, -2.4F, standardProperties(), SWORD)),
+//
+//	SHADOW_STEEL_PICKAXE(new ShadowSteelToolItem(2.5F, -2.0F, standardProperties(), PICKAXE)),
+//	SHADOW_STEEL_MATTOCK(new ShadowSteelToolItem(2.5F, -1.5F, standardProperties(), SHOVEL, AXE, HOE)),
+//	SHADOW_STEEL_SWORD(new ShadowSteelToolItem(3, -2.0F, standardProperties(), SWORD)),
 
 	TREE_FERTILIZER(new TreeFertilizerItem(standardProperties())),
 

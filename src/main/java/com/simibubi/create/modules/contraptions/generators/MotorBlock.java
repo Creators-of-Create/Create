@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -27,7 +27,7 @@ public class MotorBlock extends HorizontalKineticBlock
 	private static final Vec3d valuePos = new Vec3d(15 / 16f, 5 / 16f, 5 / 16f);
 
 	public MotorBlock() {
-		super(Properties.create(Material.IRON));
+		super(Properties.from(Blocks.IRON_BLOCK));
 	}
 
 	@Override

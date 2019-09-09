@@ -9,6 +9,7 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 
 public class WaterWheelTileEntity extends KineticTileEntity {
 
@@ -30,6 +31,11 @@ public class WaterWheelTileEntity extends KineticTileEntity {
 			for (Direction d : Direction.values())
 				setFlow(d, compound.getCompound("Flows").getInt(d.getName()));
 		}
+	}
+	
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return new AxisAlignedBB(pos).grow(1);
 	}
 
 	@Override

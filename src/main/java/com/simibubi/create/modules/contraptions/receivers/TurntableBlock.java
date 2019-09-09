@@ -7,7 +7,7 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,7 +29,7 @@ public class TurntableBlock extends KineticBlock {
 			Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D));
 
 	public TurntableBlock() {
-		super(Properties.create(Material.ROCK));
+		super(Properties.from(Blocks.STRIPPED_SPRUCE_LOG));
 	}
 
 	@Override

@@ -1,6 +1,9 @@
 package com.simibubi.create.modules.logistics;
 
+import java.util.List;
 import java.util.Optional;
+
+import com.simibubi.create.foundation.utility.ItemHelper;
 
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -108,8 +111,12 @@ public class InWorldProcessing {
 
 	public void applyRecipeOn(ItemEntity entity, IRecipe<?> recipe) {
 		ItemStack out = recipe.getRecipeOutput().copy();
-		out.setCount(entity.getItem().getCount());
-		entity.setItem(out);
+		List<ItemStack> stacks = ItemHelper.multipliedOutput(entity.getItem(), out);
+		if (stacks.isEmpty())
+			return;
+		entity.setItem(stacks.remove(0));
+		for (ItemStack additional : stacks)
+			entity.world.addEntity(new ItemEntity(entity.world, entity.posX, entity.posY, entity.posZ, additional));
 	}
 
 }
