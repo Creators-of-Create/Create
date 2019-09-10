@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.CreateConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -69,7 +70,7 @@ public class BeltItemHandler {
 				return;
 			if (!AllBlocks.SHAFT.typeOf(world.getBlockState(selected)))
 				selected = selected.offset(((BlockRayTraceResult) rayTrace).getFace());
-			if (!selected.withinDistance(first, BeltItem.MAX_PULLEY_DISTANCE))
+			if (!selected.withinDistance(first, CreateConfig.parameters.maxBeltLength.get()))
 				return;
 
 			boolean canConnect = BeltItem.validateAxis(world, selected) && BeltItem.canConnect(world, first, selected);

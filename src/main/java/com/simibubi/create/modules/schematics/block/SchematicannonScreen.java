@@ -146,8 +146,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			if (w instanceof IconButton)
 				if (!((IconButton) w).getToolTip().isEmpty()) {
 					((IconButton) w).setToolTip(((IconButton) w).getToolTip().get(0));
-					((IconButton) w).getToolTip()
-							.add(TextFormatting.DARK_GRAY + "< Hold Shift >");
+					((IconButton) w).getToolTip().add(TextFormatting.DARK_GRAY + "< Hold Shift >");
 				}
 
 		if (hasShiftDown()) {
@@ -292,9 +291,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		if (mouseX >= fuelX && mouseY >= fuelY && mouseX <= fuelX + ScreenResources.SCHEMATICANNON_FUEL.width
 				&& mouseY <= fuelY + ScreenResources.SCHEMATICANNON_FUEL.height) {
 			container.getTileEntity();
-			int shotsLeft = (int) (te.fuelLevel / SchematicannonTileEntity.FUEL_USAGE_RATE);
-			int shotsLeftWithItems = (int) (shotsLeft + te.inventory.getStackInSlot(4).getCount()
-					* (SchematicannonTileEntity.FUEL_PER_GUNPOWDER / SchematicannonTileEntity.FUEL_USAGE_RATE));
+			double fuelUsageRate = te.getFuelUsageRate();
+			int shotsLeft = (int) (te.fuelLevel / fuelUsageRate);
+			int shotsLeftWithItems = (int) (shotsLeft
+					+ te.inventory.getStackInSlot(4).getCount() * (te.getFuelAddedByGunPowder() / fuelUsageRate));
 			renderTooltip(
 					ImmutableList.of("Gunpowder at " + (int) (te.fuelLevel * 100) + "%",
 							TextFormatting.GRAY + "Shots left: " + TextFormatting.BLUE + shotsLeft,

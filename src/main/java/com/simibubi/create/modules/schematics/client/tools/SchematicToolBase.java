@@ -32,12 +32,9 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	public boolean renderSelectedFace;
 	public Direction selectedFace;
 
-	public SchematicToolBase() {
-		schematicHandler = CreateClient.schematicHandler;
-	}
-
 	@Override
 	public void init() {
+		schematicHandler = CreateClient.schematicHandler;
 		selectedPos = null;
 		selectedFace = null;
 		schematicSelected = false;

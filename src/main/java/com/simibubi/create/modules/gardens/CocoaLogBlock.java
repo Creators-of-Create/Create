@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import com.simibubi.create.CreateConfig;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -21,8 +23,6 @@ import net.minecraft.world.World;
 public class CocoaLogBlock extends RotatedPillarBlock implements IGrowable {
 
 	public static IntegerProperty AGE = BlockStateProperties.AGE_0_2;
-
-	private static final int GROWTH_CHANCE = 20;
 
 	public CocoaLogBlock() {
 		super(Properties.from(Blocks.JUNGLE_LOG).tickRandomly());
@@ -53,7 +53,7 @@ public class CocoaLogBlock extends RotatedPillarBlock implements IGrowable {
 
 	@Override
 	public void grow(World world, Random random, BlockPos pos, BlockState state) {
-		if (random.nextInt(100 / GROWTH_CHANCE) != 0)
+		if (random.nextDouble() > CreateConfig.parameters.cocoaLogGrowthSpeed.get() / 100D)
 			return;
 
 		int age = state.get(AGE);

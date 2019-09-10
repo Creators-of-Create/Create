@@ -5,13 +5,13 @@ import com.simibubi.create.modules.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHologram;
 
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD)
+@EventBusSubscriber(bus = Bus.MOD)
 public class CreateClient {
 
 	public static ClientSchematicLoader schematicSender;
@@ -19,17 +19,27 @@ public class CreateClient {
 	public static SchematicHologram schematicHologram;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 
+	public static ModConfig config;
+	
 	@SubscribeEvent
 	public static void clientInit(FMLClientSetupEvent event) {
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
 		schematicHologram = new SchematicHologram();
 		schematicAndQuillHandler = new SchematicAndQuillHandler();
-
+		
 		AllKeys.register();
 		AllContainers.registerScreenFactories();
 		AllTileEntities.registerRenderers();
 		AllItems.registerColorHandlers();
+	}
+	
+	@SubscribeEvent
+	public static void createConfigs(ModConfig.ModConfigEvent event) {
+		if (event.getConfig().getSpec() == CreateConfig.specification)
+			return;
+		
+		config = event.getConfig();
 	}
 
 	public static void gameTick() {

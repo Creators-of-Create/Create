@@ -14,9 +14,11 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 @EventBusSubscriber(bus = Bus.MOD)
@@ -34,13 +36,19 @@ public class Create {
 	public static InWorldItemProcessingHandler itemProcessingHandler;
 	public static MovingConstructHandler constructHandler;
 
+	public static ModConfig config;
+
+	public Create() {
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CreateConfig.specification);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CreateClientConfig.specification);
+	}
+
 	@SubscribeEvent
 	public static void init(final FMLCommonSetupEvent event) {
 		schematicReceiver = new ServerSchematicLoader();
 		itemProcessingHandler = new InWorldItemProcessingHandler();
 		frequencyHandler = new FrequencyHandler();
 		constructHandler = new MovingConstructHandler();
-		
 		AllPackets.registerPackets();
 	}
 
@@ -59,7 +67,15 @@ public class Create {
 	public static void registerRecipes(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 		AllRecipes.register(event);
 	}
-	
+
+	@SubscribeEvent
+	public static void createConfigs(ModConfig.ModConfigEvent event) {
+		if (event.getConfig().getSpec() == CreateClientConfig.specification)
+			return;
+
+		config = event.getConfig();
+	}
+
 	public static void tick() {
 		schematicReceiver.tick();
 	}

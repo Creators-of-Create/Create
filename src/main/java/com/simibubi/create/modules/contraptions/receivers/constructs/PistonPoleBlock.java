@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.receivers.constructs;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.ITooltip;
 import com.simibubi.create.foundation.utility.ItemDescription;
@@ -55,7 +56,8 @@ public class PistonPoleBlock extends ProperDirectionalBlock implements ITooltip 
 		BlockPos pistonBase = null;
 
 		for (int modifier : new int[] { 1, -1 }) {
-			for (int offset = modifier; modifier * offset < TranslationConstruct.MAX_EXTENSIONS; offset += modifier) {
+			for (int offset = modifier; modifier * offset < CreateConfig.parameters.maxPistonPoles
+					.get(); offset += modifier) {
 				BlockPos currentPos = pos.offset(direction, offset);
 				BlockState block = worldIn.getBlockState(currentPos);
 

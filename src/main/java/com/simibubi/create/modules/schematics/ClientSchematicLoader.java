@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.schematics;
 
-import static com.simibubi.create.modules.schematics.ServerSchematicLoader.MAX_PACKET_SIZE;
+import static com.simibubi.create.CreateConfig.parameters;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,12 +66,12 @@ public class ClientSchematicLoader {
 			long size = Files.size(path);
 
 			// Too big
-			if (size > ServerSchematicLoader.MAX_SCHEMATIC_FILE_SIZE) {
+			Integer maxSize = parameters.maxTotalSchematicSize.get();
+			if (size > maxSize * 1000) {
 				Minecraft.getInstance().player
-						.sendMessage(new StringTextComponent("Your schematic is too large (" + size / 1024 + " KB)."));
-				Minecraft.getInstance().player
-						.sendMessage(new StringTextComponent("The maximum allowed schematic file size is: "
-								+ ServerSchematicLoader.MAX_SCHEMATIC_FILE_SIZE / 1024 + " KB"));
+						.sendMessage(new StringTextComponent("Your schematic is too large (" + size / 1000 + " KB)."));
+				Minecraft.getInstance().player.sendMessage(
+						new StringTextComponent("The maximum allowed schematic file size is: " + maxSize + " KB"));
 				return;
 			}
 
@@ -85,10 +85,11 @@ public class ClientSchematicLoader {
 
 	private void continueUpload(String schematic) {
 		if (activeUploads.containsKey(schematic)) {
-			byte[] data = new byte[MAX_PACKET_SIZE];
+			Integer maxPacketSize = parameters.maxSchematicPacketSize.get();
+			byte[] data = new byte[maxPacketSize];
 			try {
 				int status = activeUploads.get(schematic).read(data);
-				if (status < MAX_PACKET_SIZE) {
+				if (status < maxPacketSize) {
 					data = Arrays.copyOf(data, status);
 				}
 
@@ -99,7 +100,7 @@ public class ClientSchematicLoader {
 					return;
 				}
 
-				if (status < MAX_PACKET_SIZE)
+				if (status < maxPacketSize)
 					finishUpload(schematic);
 			} catch (IOException e) {
 				e.printStackTrace();

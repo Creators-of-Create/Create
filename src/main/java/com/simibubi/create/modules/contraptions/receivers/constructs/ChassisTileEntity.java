@@ -11,7 +11,6 @@ import net.minecraft.util.math.MathHelper;
 public class ChassisTileEntity extends SyncedTileEntity implements ITickableTileEntity {
 
 	public static final int MAX_RANGE = 16;
-	public static final int DEFAULT_RANGE = 8;
 	private int range;
 
 	public int newRange;
@@ -19,7 +18,7 @@ public class ChassisTileEntity extends SyncedTileEntity implements ITickableTile
 
 	public ChassisTileEntity() {
 		super(AllTileEntities.CHASSIS.type);
-		newRange = range = DEFAULT_RANGE;
+		newRange = range = MAX_RANGE / 2;
 	}
 
 	@Override

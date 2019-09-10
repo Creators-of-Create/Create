@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.receivers.constructs;
 import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
 import static com.simibubi.create.AllBlocks.PISTON_POLE;
 import static com.simibubi.create.AllBlocks.STICKY_MECHANICAL_PISTON;
+import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import java.util.ArrayList;
@@ -33,10 +34,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class TranslationConstruct {
-
-	public static final int MAX_EXTENSIONS = 20;
-	public static final int MAX_CHAINED_CHASSIS = 12;
-	public static final int MAX_CHAINED_BLOCKS = 8;
 
 	protected Map<BlockPos, BlockInfo> blocks;
 	protected List<BlockInfo> actors;
@@ -120,7 +117,7 @@ public class TranslationConstruct {
 			extensionsInFront++;
 			nextBlock = world.getBlockState(actualStart.offset(direction));
 
-			if (extensionsInFront > MAX_EXTENSIONS)
+			if (extensionsInFront > parameters.maxPistonPoles.get())
 				return false;
 		}
 
@@ -143,7 +140,7 @@ public class TranslationConstruct {
 			extensionsInBack++;
 			nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
 
-			if (extensionsInFront + extensionsInBack > MAX_EXTENSIONS)
+			if (extensionsInFront + extensionsInBack > parameters.maxPistonPoles.get())
 				return false;
 		}
 
@@ -184,7 +181,7 @@ public class TranslationConstruct {
 				collisionBoxFront = new AxisAlignedBB(blockPos);
 
 			} else {
-				for (int distance = 1; distance <= MAX_CHAINED_BLOCKS + 1; distance++) {
+				for (int distance = 1; distance <= parameters.maxChassisRange.get() + 1; distance++) {
 					BlockPos currentPos = pos.offset(direction, distance);
 					BlockState state = world.getBlockState(currentPos);
 
@@ -199,7 +196,7 @@ public class TranslationConstruct {
 						return false;
 
 					// Too many blocks
-					if (distance == MAX_CHAINED_BLOCKS + 1)
+					if (distance == parameters.maxChassisRange.get() + 1)
 						return false;
 
 					BlockPos blockPos = currentPos.offset(direction, -offset);
@@ -272,7 +269,7 @@ public class TranslationConstruct {
 			int chassisRange = ((ChassisTileEntity) world.getTileEntity(currentChassisPos)).getRange();
 			boolean chassisSticky = chassisState
 					.get(((AbstractChassisBlock) chassisState.getBlock()).getGlueableSide(chassisState, direction));
-			
+
 			// Ignore replaceable Blocks and Air-like
 			if (state.getMaterial().isReplaceable() || state.isAir(world, currentPos))
 				continue;
@@ -340,11 +337,11 @@ public class TranslationConstruct {
 
 	private static List<BlockInfo> collectChassis(World world, BlockPos pos, Direction direction, int offset2) {
 		List<BlockPos> search = new LinkedList<>();
-		Set<BlockPos> visited = new HashSet<>(MAX_CHAINED_CHASSIS);
+		Set<BlockPos> visited = new HashSet<>();
 		List<BlockInfo> chassis = new LinkedList<>();
 		search.add(pos.offset(direction));
 		while (!search.isEmpty()) {
-			if (chassis.size() > MAX_CHAINED_CHASSIS)
+			if (chassis.size() > parameters.maxChassisForTranslation.get())
 				return null;
 
 			BlockPos current = search.remove(0);

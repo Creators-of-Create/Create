@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
@@ -23,8 +24,6 @@ import net.minecraft.world.World;
 
 public class BeltItem extends Item {
 
-	public static final int MAX_PULLEY_DISTANCE = 20;
-
 	public BeltItem(Properties properties) {
 		super(properties);
 	}
@@ -35,7 +34,7 @@ public class BeltItem extends Item {
 			context.getItem().setTag(null);
 			return ActionResultType.SUCCESS;
 		}
-		
+
 		World world = context.getWorld();
 		BlockPos pos = context.getPos();
 		boolean validAxis = validateAxis(world, pos);
@@ -164,7 +163,7 @@ public class BeltItem extends Item {
 			return false;
 		if (!world.isAreaLoaded(second, 1))
 			return false;
-		if (!second.withinDistance(first, MAX_PULLEY_DISTANCE))
+		if (!second.withinDistance(first, CreateConfig.parameters.maxBeltLength.get()))
 			return false;
 
 		BlockPos diff = second.subtract(first);

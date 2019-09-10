@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.logistics.block;
 
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.entity.item.ItemEntity;
@@ -12,9 +13,6 @@ import net.minecraftforge.items.IItemHandler;
 
 // Its like delegation but better!
 public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
-
-	public static final int EXTRACTOR_COOLDOWN = 20;
-	public static final int EXTRACTION_COUNT = 16;
 
 	public enum State {
 		WAITING_FOR_INVENTORY, WAITING_FOR_ENTITY, RUNNING, ON_COOLDOWN, LOCKED;
@@ -113,7 +111,7 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 		IItemHandler inv = getInventory().orElse(null);
 		ItemStack extracting = ItemStack.EMPTY;
 		ItemStack filter = (this instanceof IHaveFilter) ? filter = ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
-		int extractionCount = filter.isEmpty() ? EXTRACTION_COUNT : filter.getCount();
+		int extractionCount = filter.isEmpty() ? CreateConfig.parameters.extractorAmount.get() : filter.getCount();
 
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			ItemStack stack = inv.extractItem(slot, extractionCount - extracting.getCount(), true);

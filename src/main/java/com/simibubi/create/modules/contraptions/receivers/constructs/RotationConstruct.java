@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateConfig;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PistonBlock;
@@ -23,8 +24,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class RotationConstruct {
-
-	public static final int MAX_CHAINED_CHASSIS = 10;
 
 	protected Map<BlockPos, BlockInfo> blocks;
 
@@ -52,7 +51,7 @@ public class RotationConstruct {
 		if (chassis.isEmpty()) {
 			BlockPos blockPos = pos.offset(direction);
 			BlockState state = world.getBlockState(pos.offset(direction));
-			
+
 			if (state.getMaterial().isReplaceable() || state.isAir(world, blockPos))
 				return true;
 			if (state.getCollisionShape(world, blockPos).isEmpty())
@@ -62,7 +61,7 @@ public class RotationConstruct {
 
 			blocks.put(blockPos, new BlockInfo(blockPos.subtract(pos), state, null));
 
-		// Get attached blocks by chassis
+			// Get attached blocks by chassis
 		} else {
 			List<BlockInfo> attachedBlocksByChassis = getAttachedBlocksByChassis(world, direction, chassis);
 			if (attachedBlocksByChassis == null)
@@ -78,35 +77,35 @@ public class RotationConstruct {
 	private List<BlockInfo> getAttachedBlocksByChassis(World world, Direction direction, List<BlockInfo> chassis) {
 		List<BlockInfo> blocks = new ArrayList<>();
 		RotationChassisBlock def = (RotationChassisBlock) AllBlocks.ROTATION_CHASSIS.block;
-		
+
 		for (BlockInfo chassisBlock : chassis) {
 			blocks.add(chassisBlock);
 			BlockState state = chassisBlock.state;
 			BlockPos currentPos = chassisBlock.pos;
 			TileEntity tileEntity = world.getTileEntity(currentPos);
-			
+
 			if (!(tileEntity instanceof ChassisTileEntity))
 				return null;
-			
+
 			int chassisRange = ((ChassisTileEntity) tileEntity).getRange();
 			Set<BlockPos> visited = new HashSet<>();
-			
+
 			for (Direction facing : Direction.values()) {
 				if (facing.getAxis() == direction.getAxis())
 					continue;
 				if (!state.get(def.getGlueableSide(state, facing)))
 					continue;
-				
+
 				BlockPos startPos = currentPos.offset(facing);
 				List<BlockPos> frontier = new LinkedList<>();
 				frontier.add(startPos);
 				CompoundNBT nbt = new CompoundNBT();
 				nbt.putInt("Range", chassisRange);
-				
+
 				while (!frontier.isEmpty()) {
 					BlockPos searchPos = frontier.remove(0);
 					BlockState searchedState = world.getBlockState(searchPos);
-					
+
 					if (visited.contains(searchPos))
 						continue;
 					if (!searchPos.withinDistance(currentPos, chassisRange + .5f))
@@ -117,18 +116,18 @@ public class RotationConstruct {
 						continue;
 					if (!canRotate(world, searchPos, direction))
 						return null;
-						
+
 					visited.add(searchPos);
-					
+
 					blocks.add(new BlockInfo(searchPos, searchedState,
 							AllBlocks.ROTATION_CHASSIS.typeOf(searchedState) ? nbt : null));
-					
+
 					for (Direction offset : Direction.values()) {
 						if (offset.getAxis() == direction.getAxis())
 							continue;
 						if (searchPos.equals(currentPos) && offset != facing)
 							continue;
-						
+
 						frontier.add(searchPos.offset(offset));
 					}
 				}
@@ -139,7 +138,7 @@ public class RotationConstruct {
 
 	private List<BlockInfo> collectChassis(World world, BlockPos pos, Direction direction) {
 		List<BlockInfo> chassis = new ArrayList<>();
-		for (int distance = 1; distance <= MAX_CHAINED_CHASSIS; distance++) {
+		for (int distance = 1; distance <= CreateConfig.parameters.maxChassisForRotation.get(); distance++) {
 			BlockPos currentPos = pos.offset(direction, distance);
 			if (!world.isBlockPresent(currentPos))
 				return chassis;

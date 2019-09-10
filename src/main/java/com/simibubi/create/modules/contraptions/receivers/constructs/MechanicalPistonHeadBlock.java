@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
@@ -65,7 +66,7 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements
 		BlockPos pistonHead = pos;
 		BlockPos pistonBase = null;
 
-		for (int offset = 1; offset < TranslationConstruct.MAX_EXTENSIONS; offset++) {
+		for (int offset = 1; offset < CreateConfig.parameters.maxPistonPoles.get(); offset++) {
 			BlockPos currentPos = pos.offset(direction.getOpposite(), offset);
 			BlockState block = worldIn.getBlockState(currentPos);
 

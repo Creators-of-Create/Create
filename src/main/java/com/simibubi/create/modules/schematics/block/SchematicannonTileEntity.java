@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.schematics.block;
 
+import static com.simibubi.create.CreateConfig.parameters;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,12 +55,8 @@ import net.minecraftforge.items.ItemStackHandler;
 public class SchematicannonTileEntity extends SyncedTileEntity implements ITickableTileEntity, INamedContainerProvider {
 
 	public static final int NEIGHBOUR_CHECKING = 100;
-	public static final int PLACEMENT_DELAY = 10;
-	public static final float FUEL_PER_GUNPOWDER = .2f;
-	public static final float FUEL_USAGE_RATE = .0005f;
-	public static final int SKIPS_PER_TICK = 10;
 	public static final int MAX_ANCHOR_DISTANCE = 256;
-
+	
 	public enum State {
 		STOPPED, PAUSED, RUNNING;
 	}
@@ -66,8 +64,8 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 	// Inventory
 	public SchematicannonInventory inventory;
 
-	// Sync
 	public boolean sendUpdate;
+	// Sync
 	public boolean dontUpdateChecklist;
 	public int neighbourCheckCooldown;
 
@@ -364,7 +362,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		refillFuelIfPossible();
 
 		// Update Printer
-		skipsLeft = SKIPS_PER_TICK;
+		skipsLeft = parameters.schematicannonSkips.get();
 		blockSkipped = true;
 
 		while (blockSkipped && skipsLeft-- > 0)
@@ -399,7 +397,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 			return;
 		}
 
-		if (state == State.PAUSED && !blockNotLoaded && missingBlock == null && fuelLevel > FUEL_USAGE_RATE)
+		if (state == State.PAUSED && !blockNotLoaded && missingBlock == null && fuelLevel > getFuelUsageRate())
 			return;
 
 		// Initialize Printer
@@ -493,10 +491,14 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		else
 			statusMsg = "Clearing Blocks";
 		launchBlock(target, blockState);
-		printerCooldown = PLACEMENT_DELAY;
-		fuelLevel -= FUEL_USAGE_RATE;
+		printerCooldown = parameters.schematicannonDelay.get();
+		fuelLevel -= getFuelUsageRate();
 		sendUpdate = true;
 		missingBlock = null;
+	}
+
+	public double getFuelUsageRate() {
+		return parameters.schematicannonFuelUsage.get() / 100f;
 	}
 
 	protected void initializePrinter(ItemStack blueprint) {
@@ -689,14 +691,18 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	protected void refillFuelIfPossible() {
-		if (1 - fuelLevel + 1 / 128f < FUEL_PER_GUNPOWDER)
+		if (1 - fuelLevel + 1 / 128f < getFuelAddedByGunPowder())
 			return;
 		if (inventory.getStackInSlot(4).isEmpty())
 			return;
 
 		inventory.getStackInSlot(4).shrink(1);
-		fuelLevel += FUEL_PER_GUNPOWDER;
+		fuelLevel += getFuelAddedByGunPowder();
 		sendUpdate = true;
+	}
+
+	public double getFuelAddedByGunPowder() {
+		return parameters.schematicannonGunpowderWorth.get() / 100f;
 	}
 
 	protected void tickPaperPrinter() {

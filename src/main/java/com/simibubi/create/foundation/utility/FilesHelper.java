@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
@@ -22,9 +23,13 @@ import net.minecraft.nbt.JsonToNBT;
 public class FilesHelper {
 
 	public static void createFolderIfMissing(String name) {
-		if (!Files.isDirectory(Paths.get(name))) {
+		Path path = Paths.get(name);
+		if (path.getParent() != null)
+			createFolderIfMissing(path.getParent().toString());
+		
+		if (!Files.isDirectory(path)) {
 			try {
-				Files.createDirectory(Paths.get(name));
+				Files.createDirectory(path);
 			} catch (IOException e) {
 				Create.logger.warn("Could not create Folder: " + name);
 			}

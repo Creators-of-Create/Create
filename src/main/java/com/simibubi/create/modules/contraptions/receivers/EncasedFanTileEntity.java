@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
+import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
 import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
@@ -44,30 +45,20 @@ import net.minecraft.util.math.Vec3i;
 
 public class EncasedFanTileEntity extends KineticTileEntity implements ITickableTileEntity {
 
-	public static final int PUSH_DISTANCE_MAX = 20;
-	public static final int PULL_DISTANCE_MAX = 5;
-	public static final int DISTANCE_ARGMAX = 6400;
-
-	public static final float PUSH_FORCE_MAX = 20;
-	public static final float PULL_FORCE_MAX = 10;
-	public static final int FORCE_ARGMAX = 6400;
-
-	public static final int BLOCK_CHECK_UPDATE_DELAY = 100;
 	public static final Map<Block, List<FanEffect>> effects = new HashMap<>();
-
 	private static DamageSource damageSourceFire = new DamageSource("create.fan_fire").setDifficultyScaled()
 			.setFireDamage();
 	private static DamageSource damageSourceLava = new DamageSource("create.fan_lava").setDifficultyScaled()
 			.setFireDamage();
 
-	protected BlockState frontBlock;
 	protected float pushDistance;
 	protected float pullDistance;
-	protected float pushForce;
-	protected float pullForce;
 	protected AxisAlignedBB frontBB;
 	protected AxisAlignedBB backBB;
+	
 	protected int blockCheckCooldown;
+	protected BlockState frontBlock;
+	
 	protected boolean findLoadedItems;
 	protected boolean findFrontBlock;
 	public List<ProcessedItem> items;
@@ -157,7 +148,7 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 		frontBB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 		backBB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 		items = new ArrayList<>();
-		if (effects.isEmpty())
+//		if (effects.isEmpty())
 			initEffects();
 	}
 
@@ -165,8 +156,8 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 		effects.clear();
 
 		List<FanEffect> standardFX = new ArrayList<>(2);
-		standardFX.add(new FanEffect(ParticleTypes.BUBBLE_POP, 1 / 4f, 1 / 8f, 1 / 8f, 1));
-		standardFX.add(new FanEffect(new RedstoneParticleData(1, 1, 1, 1), 1 / 2f, 1 / 32f, 0f, 512f));
+		standardFX.add(new FanEffect(ParticleTypes.BUBBLE_POP, 1 / 4f, 1 / 4f, 1 / 3f, 1));
+		standardFX.add(new FanEffect(new RedstoneParticleData(1, 1, 1, 1), 1 / 2f, 1 / 32f, 1/16f, 512f));
 		effects.put(Blocks.AIR, standardFX);
 
 		List<FanEffect> waterFX = new ArrayList<>(2);
@@ -207,8 +198,6 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 
 		pushDistance = compound.getFloat("PushDistance");
 		pullDistance = compound.getFloat("PullDistance");
-		pushForce = compound.getFloat("PushForce");
-		pullForce = compound.getFloat("PullForce");
 
 		ListNBT itemsNBT = compound.getList("Items", 10);
 		items.clear();
@@ -223,8 +212,6 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.putFloat("PushDistance", pushDistance);
 		compound.putFloat("PullDistance", pullDistance);
-		compound.putFloat("PushForce", pushForce);
-		compound.putFloat("PullForce", pullForce);
 
 		ListNBT itemsNBT = new ListNBT();
 		for (ProcessedItem item : items) {
@@ -244,13 +231,10 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 			return;
 
 		float speed = Math.abs(this.speed);
-		float distanceFactor = Math.min(speed / DISTANCE_ARGMAX, 1);
-		float forceFactor = Math.min(speed / FORCE_ARGMAX, 1);
+		float distanceFactor = Math.min(speed / parameters.fanRotationArgmax.get(), 1);
 
-		pushDistance = MathHelper.lerp(distanceFactor, 3, PUSH_DISTANCE_MAX);
-		pullDistance = MathHelper.lerp(distanceFactor, 1.5f, PULL_DISTANCE_MAX);
-		pushForce = MathHelper.lerp(forceFactor, 1, PUSH_FORCE_MAX);
-		pullForce = MathHelper.lerp(forceFactor, 1, PULL_FORCE_MAX);
+		pushDistance = MathHelper.lerp(distanceFactor, 3, parameters.fanMaxPushDistance.get());
+		pullDistance = MathHelper.lerp(distanceFactor, 1.5f, parameters.fanMaxPullDistance.get());
 
 		Direction direction = getAirFlow();
 		if (speed != 0) {
@@ -345,7 +329,7 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 		}
 
 		if (!world.isRemote && blockCheckCooldown-- <= 0) {
-			blockCheckCooldown = BLOCK_CHECK_UPDATE_DELAY;
+			blockCheckCooldown = parameters.fanBlockCheckRate.get();
 			updateReachAndForce();
 		}
 
@@ -459,9 +443,10 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 		float s = (float) (speed * 1 / modifier
 				/ (entity.getPositionVec().distanceTo(center) / (push ? pushDistance : pullDistance)));
 		Vec3d motion = entity.getMotion();
-		double xIn = flow.getX() * s - motion.x;
-		double yIn = flow.getY() * s - motion.y;
-		double zIn = flow.getZ() * s - motion.z;
+		float maxSpeedModifier = 5;
+		double xIn = MathHelper.clamp(flow.getX() * s - motion.x, -maxSpeedModifier, maxSpeedModifier);
+		double yIn = MathHelper.clamp(flow.getY() * s - motion.y, -maxSpeedModifier, maxSpeedModifier);
+		double zIn = MathHelper.clamp(flow.getZ() * s - motion.z, -maxSpeedModifier, maxSpeedModifier);
 		entity.setMotion(motion.add(new Vec3d(xIn, yIn, zIn).mul(flow.getX(), flow.getY(), flow.getZ()).scale(1 / 8f)));
 		entity.fallDistance = 0;
 	}

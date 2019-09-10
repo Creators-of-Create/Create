@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.symmetry;
 
+import static com.simibubi.create.CreateConfig.parameters;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -186,7 +188,7 @@ public class SymmetryWandItem extends InfoItem {
 		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundNBT) wand.getTag().getCompound($SYMMETRY));
 
 		Vec3d mirrorPos = symmetry.getPosition();
-		if (mirrorPos.distanceTo(new Vec3d(pos)) > 50)
+		if (mirrorPos.distanceTo(new Vec3d(pos)) > parameters.maxSymmetryWandRange.get())
 			return;
 		if (!player.isCreative() && BlockHelper.findAndRemoveInInventory(block, player, 1) == 0)
 			return;
@@ -241,7 +243,7 @@ public class SymmetryWandItem extends InfoItem {
 		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundNBT) wand.getTag().getCompound($SYMMETRY));
 
 		Vec3d mirrorPos = symmetry.getPosition();
-		if (mirrorPos.distanceTo(new Vec3d(pos)) > 50)
+		if (mirrorPos.distanceTo(new Vec3d(pos)) > parameters.maxSymmetryWandRange.get())
 			return;
 
 		symmetry.process(blockSet);

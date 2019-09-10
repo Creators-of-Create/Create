@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 
 import net.minecraft.entity.Entity;
@@ -142,7 +143,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			return;
 
 		if (!(processingEntity instanceof ItemEntity)) {
-			processingEntity.attackEntityFrom(damageSource, 4);
+			processingEntity.attackEntityFrom(damageSource, CreateConfig.parameters.crushingDamage.get());
 			return;
 		}
 

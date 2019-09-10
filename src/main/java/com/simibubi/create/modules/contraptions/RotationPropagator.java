@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions;
 
+import static com.simibubi.create.CreateConfig.parameters;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class RotationPropagator {
 					&& stateTo.get(EncasedBeltBlock.CONNECTED_FACE) == direction.getOpposite();
 			return connected ? 1 : 0;
 		}
-		
+
 		// Attached Fans
 		if (AllBlocks.ENCASED_FAN.typeOf(stateFrom) && AllBlocks.ENCASED_FAN.typeOf(stateTo)) {
 			if (stateFrom.get(BlockStateProperties.AXIS) == stateTo.get(BlockStateProperties.AXIS))
@@ -176,7 +178,7 @@ public class RotationPropagator {
 
 			if ((neighbourTE.isSource())
 					|| neighbourTE.hasSource() && !neighbourTE.getSource().equals(updateTE.getPos())) {
-				if (neighbourTE.getSpeed() != newSpeed) {
+				if (neighbourTE.getSpeed() != newSpeed || Math.abs(newSpeed) > parameters.maxRotationSpeed.get()) {
 					world.destroyBlock(pos, true);
 					return;
 				}

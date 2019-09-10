@@ -3,6 +3,7 @@ package com.simibubi.create.modules.logistics.block;
 import static net.minecraft.state.properties.BlockStateProperties.POWERED;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.logistics.IReceiveWireless;
 
 import net.minecraft.item.ItemStack;
@@ -67,7 +68,7 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 	@Override
 	public void setState(State state) {
 		if (state == State.ON_COOLDOWN)
-			cooldown = EXTRACTOR_COOLDOWN;
+			cooldown = CreateConfig.parameters.extractorDelay.get();
 		this.state = state;
 	}
 

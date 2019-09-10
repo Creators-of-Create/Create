@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 
@@ -120,7 +121,8 @@ public class MechanicalPistonBlock extends KineticBlock {
 		BlockPos pistonHead = null;
 		BlockPos pistonBase = pos;
 
-		for (int offset = 1; offset < TranslationConstruct.MAX_EXTENSIONS; offset++) {
+		Integer maxPoles = CreateConfig.parameters.maxPistonPoles.get();
+		for (int offset = 1; offset < maxPoles; offset++) {
 			BlockPos currentPos = pos.offset(direction, offset);
 			BlockState block = worldIn.getBlockState(currentPos);
 
@@ -140,7 +142,7 @@ public class MechanicalPistonBlock extends KineticBlock {
 					.forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
 		}
 
-		for (int offset = 1; offset < TranslationConstruct.MAX_EXTENSIONS; offset++) {
+		for (int offset = 1; offset < maxPoles; offset++) {
 			BlockPos currentPos = pos.offset(direction.getOpposite(), offset);
 			BlockState block = worldIn.getBlockState(currentPos);
 

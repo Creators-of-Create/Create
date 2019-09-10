@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
+import static com.simibubi.create.CreateConfig.parameters;
+
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -207,8 +209,8 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		BlockPos relativePos = BlockPos.ZERO.offset(movementDirection, getModulatedOffset(newOffset));
 
 		// Other moving Pistons
-		int maxPossibleRange = TranslationConstruct.MAX_EXTENSIONS + TranslationConstruct.MAX_CHAINED_BLOCKS
-				+ TranslationConstruct.MAX_CHAINED_CHASSIS;
+		int maxPossibleRange = parameters.maxPistonPoles.get() + parameters.maxChassisRange.get()
+				+ parameters.maxChassisForTranslation.get();
 		Iterator<MechanicalPistonTileEntity> iterator = Create.constructHandler.getOtherMovingPistonsInWorld(this)
 				.iterator();
 		pistonLoop: while (iterator.hasNext()) {

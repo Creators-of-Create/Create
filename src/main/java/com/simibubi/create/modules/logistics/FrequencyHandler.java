@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.CreateConfig;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,8 +16,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.IWorld;
 
 public class FrequencyHandler {
-
-	public static final int RANGE = 128;
 
 	static Map<IWorld, Map<Pair<Frequency, Frequency>, List<IHaveWireless>>> connections = new HashMap<>();
 
@@ -110,7 +109,7 @@ public class FrequencyHandler {
 	}
 
 	public static boolean withinRange(IHaveWireless from, IHaveWireless to) {
-		return from.getPos().withinDistance(to.getPos(), RANGE);
+		return from.getPos().withinDistance(to.getPos(), CreateConfig.parameters.linkRange.get());
 	}
 
 	public Map<Pair<Frequency, Frequency>, List<IHaveWireless>> networksIn(IWorld world) {
