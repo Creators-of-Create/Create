@@ -1,0 +1,16 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"SS",
+			"SS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:dolomite"
+            }
+        },
+	"result": {
+		"item": "create:polished_dolomite",
+		"count": 4
+	}
+}

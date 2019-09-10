@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "GAG",
+            "PRP",
+			"GPG"
+        ],
+        "key": {
+			"P": {
+                "tag": "minecraft:planks"
+            },
+			"A": {
+                "item": "create:andesite_alloy_cube"
+            },
+			"R": {
+                "item": "minecraft:redstone"
+            },
+			"G": {
+                "item": "minecraft:gold_nugget"
+            }
+        },
+	"result": {
+		"item": "create:contact",
+		"count": 2
+	}
+}

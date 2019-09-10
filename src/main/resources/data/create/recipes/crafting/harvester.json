@@ -1,0 +1,23 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            " I ",
+            "IAI",
+			"CCC"
+        ],
+        "key": {
+			"A": {
+                "item": "create:andesite_alloy_cube"
+            },
+			"I": {
+                "item": "minecraft:iron_nugget"
+            },
+			"C": {
+                "item": "minecraft:cobblestone"
+            }
+        },
+	"result": {
+		"item": "create:harvester",
+		"count": 1
+	}
+}

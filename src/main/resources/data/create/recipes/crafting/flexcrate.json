@@ -1,0 +1,23 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "ABA",
+            "BSB",
+			"ABA"
+        ],
+        "key": {
+            "B": {
+                "tag": "minecraft:planks"
+            },
+			"A": {
+                "item": "minecraft:gold_nugget"
+            },
+			"S": {
+                "item": "minecraft:chest"
+            }
+        },
+	"result": {
+		"item": "create:flexcrate",
+		"count": 1
+	}
+}

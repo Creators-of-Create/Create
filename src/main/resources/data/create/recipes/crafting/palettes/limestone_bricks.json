@@ -1,0 +1,16 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"SS",
+			"SS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:polished_limestone"
+            }
+        },
+	"result": {
+		"item": "create:limestone_bricks",
+		"count": 4
+	}
+}

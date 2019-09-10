@@ -1,0 +1,23 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"N ",
+            "P ",
+			"ND"
+        ],
+        "key": {
+			"D": {
+                "item": "minecraft:dried_kelp"
+            },
+			"N": {
+                "item": "minecraft:gold_nugget"
+            },
+			"P": {
+                "tag": "minecraft:planks"
+            }
+        },
+	"result": {
+		"item": "create:belt_funnel",
+		"count": 1
+	}
+}

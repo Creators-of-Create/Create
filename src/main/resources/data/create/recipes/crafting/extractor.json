@@ -1,0 +1,29 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"GN",
+            "RD",
+			"PN"
+        ],
+        "key": {
+			"G": {
+                "item": "minecraft:gold_ingot"
+            },
+			"R": {
+                "item": "minecraft:redstone"
+            },
+			"D": {
+                "item": "minecraft:dried_kelp"
+            },
+			"N": {
+                "item": "minecraft:gold_nugget"
+            },
+			"P": {
+                "tag": "minecraft:planks"
+            }
+        },
+	"result": {
+		"item": "create:extractor",
+		"count": 1
+	}
+}

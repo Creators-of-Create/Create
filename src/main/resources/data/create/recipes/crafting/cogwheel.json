@@ -1,0 +1,20 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            " B ",
+            "BSB",
+			" B "
+        ],
+        "key": {
+            "B": {
+                "tag": "minecraft:wooden_buttons"
+            },
+			"S": {
+                "item": "create:shaft"
+            }
+        },
+	"result": {
+		"item": "create:cogwheel",
+		"count": 1
+	}
+}

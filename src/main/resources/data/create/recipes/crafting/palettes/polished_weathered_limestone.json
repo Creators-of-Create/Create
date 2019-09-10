@@ -1,0 +1,16 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"SS",
+			"SS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:weathered_limestone"
+            }
+        },
+	"result": {
+		"item": "create:polished_weathered_limestone",
+		"count": 4
+	}
+}

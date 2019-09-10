@@ -1,0 +1,15 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"SSS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:gabbro"
+            }
+        },
+	"result": {
+		"item": "create:gabbro_slab",
+		"count": 6
+	}
+}

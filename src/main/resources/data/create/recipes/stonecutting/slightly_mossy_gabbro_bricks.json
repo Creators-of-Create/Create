@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:gabbro"
+  },
+  "result": "create:slightly_mossy_gabbro_bricks",
+  "count": 1
+}

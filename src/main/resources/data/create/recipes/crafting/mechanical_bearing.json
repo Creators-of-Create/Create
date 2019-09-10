@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "PPP",
+            "CIC",
+			"CGC"
+        ],
+        "key": {
+			"I": {
+                "item": "minecraft:iron_ingot"
+            },
+			"G": {
+                "item": "create:shaft"
+            },
+			"C": {
+                "item": "minecraft:cobblestone"
+            },
+			"P": {
+                "tag": "minecraft:logs"
+            }
+        },
+	"result": {
+		"item": "create:mechanical_bearing",
+		"count": 1
+	}
+}

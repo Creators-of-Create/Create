@@ -1,0 +1,23 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "ABA",
+            "BSB",
+			"ABA"
+        ],
+        "key": {
+            "B": {
+                "tag": "minecraft:planks"
+            },
+			"A": {
+                "item": "minecraft:gold_nugget"
+            },
+			"S": {
+                "item": "minecraft:observer"
+            }
+        },
+	"result": {
+		"item": "create:entity_detector",
+		"count": 1
+	}
+}

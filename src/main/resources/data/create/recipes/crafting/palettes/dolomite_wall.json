@@ -1,0 +1,16 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "SSS",
+			"SSS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:dolomite"
+            }
+        },
+	"result": {
+		"item": "create:dolomite_wall",
+		"count": 12
+	}
+}

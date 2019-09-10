@@ -1,0 +1,29 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "SA ",
+            "ABI",
+			" IO"
+        ],
+        "key": {
+            "B": {
+                "item": "create:blaze_brass_cube"
+            },
+			"A": {
+                "item": "create:andesite_alloy_cube"
+            },
+			"I": {
+                "item": "minecraft:iron_block"
+            },
+			"S": {
+                "item": "create:shaft"
+            },
+			"O": {
+                "item": "minecraft:obsidian"
+            }
+        },
+	"result": {
+		"item": "create:motor",
+		"count": 1
+	}
+}

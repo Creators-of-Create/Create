@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "ABA",
+            "RSR",
+			"ABA"
+        ],
+        "key": {
+            "B": {
+                "item": "minecraft:iron_bars"
+            },
+			"A": {
+                "item": "create:andesite_alloy_cube"
+            },
+			"S": {
+                "item": "create:shaft"
+            },
+			"R": {
+                "tag": "minecraft:logs"
+            }
+        },
+	"result": {
+		"item": "create:encased_fan",
+		"count": 1
+	}
+}

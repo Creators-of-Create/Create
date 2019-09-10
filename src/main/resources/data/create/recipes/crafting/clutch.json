@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "ABA",
+            "RSR",
+			"ABA"
+        ],
+        "key": {
+            "B": {
+                "tag": "minecraft:planks"
+            },
+			"A": {
+                "item": "create:andesite_alloy_cube"
+            },
+			"S": {
+                "item": "create:shaft"
+            },
+			"R": {
+                "item": "minecraft:redstone"
+            }
+        },
+	"result": {
+		"item": "create:clutch",
+		"count": 1
+	}
+}

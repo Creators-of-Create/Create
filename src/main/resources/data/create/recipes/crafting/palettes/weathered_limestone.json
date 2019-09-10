@@ -1,0 +1,20 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"LLL",
+            "LWL",
+			"LLL"
+        ],
+        "key": {
+			"L": {
+                "item": "create:limestone"
+            },
+			"W": {
+                "item": "minecraft:water_bucket"
+            }
+        },
+	"result": {
+		"item": "create:weathered_limestone",
+		"count": 8
+	}
+}

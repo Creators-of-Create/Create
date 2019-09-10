@@ -1,0 +1,16 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "SSS",
+			"SSS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:gabbro"
+            }
+        },
+	"result": {
+		"item": "create:gabbro_wall",
+		"count": 12
+	}
+}
