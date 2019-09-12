@@ -4,5 +4,11 @@
     "item": "minecraft:granite"
   },
   "result": "create:granite_bricks",
-  "count": 1
+  "count": 1,
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

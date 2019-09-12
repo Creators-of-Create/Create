@@ -19,5 +19,11 @@
 	"result": {
 		"item": "create:crushing_wheel",
 		"count": 1
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
 }

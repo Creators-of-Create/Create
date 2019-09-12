@@ -1,7 +1,10 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
+import static com.simibubi.create.CreateConfig.parameters;
+
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -10,15 +13,13 @@ import net.minecraft.util.math.MathHelper;
 
 public class ChassisTileEntity extends SyncedTileEntity implements ITickableTileEntity {
 
-	public static final int MAX_RANGE = 16;
 	private int range;
-
 	public int newRange;
 	public int lastModified;
 
 	public ChassisTileEntity() {
 		super(AllTileEntities.CHASSIS.type);
-		newRange = range = MAX_RANGE / 2;
+		newRange = range = CreateConfig.parameters.maxChassisRange.get() / 2;
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class ChassisTileEntity extends SyncedTileEntity implements ITickableTile
 	}
 
 	public void setRangeLazily(int range) {
-		this.newRange = MathHelper.clamp(range, 1, MAX_RANGE);
+		this.newRange = MathHelper.clamp(range, 1, parameters.maxChassisRange.get());
 		if (newRange == this.range)
 			return;
 		this.lastModified = 0;

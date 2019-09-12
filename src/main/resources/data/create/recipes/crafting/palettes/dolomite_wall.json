@@ -12,5 +12,11 @@
 	"result": {
 		"item": "create:dolomite_wall",
 		"count": 12
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

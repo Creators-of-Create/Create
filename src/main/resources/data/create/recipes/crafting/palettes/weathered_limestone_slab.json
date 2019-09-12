@@ -11,5 +11,11 @@
 	"result": {
 		"item": "create:weathered_limestone_slab",
 		"count": 6
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

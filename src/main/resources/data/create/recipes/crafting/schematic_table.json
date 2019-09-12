@@ -16,5 +16,11 @@
 	"result": {
 		"item": "create:schematic_table",
 		"count": 1
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "schematics"
+		}
+	]
 }

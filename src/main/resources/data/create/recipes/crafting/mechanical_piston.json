@@ -22,5 +22,11 @@
 	"result": {
 		"item": "create:mechanical_piston",
 		"count": 1
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
 }

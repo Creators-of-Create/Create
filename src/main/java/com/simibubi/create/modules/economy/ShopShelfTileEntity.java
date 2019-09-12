@@ -2,7 +2,6 @@ package com.simibubi.create.modules.economy;
 
 import java.util.UUID;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,7 +19,8 @@ public class ShopShelfTileEntity extends SyncedTileEntity implements INamedConta
 	private UUID owner;
 
 	public ShopShelfTileEntity() {
-		super(AllTileEntities.SHOP_SHELF.type);
+		super(null);
+//		super(AllTileEntities.SHOP_SHELF.type);
 	}
 
 	@Override

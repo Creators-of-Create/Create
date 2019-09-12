@@ -12,5 +12,11 @@
 	"result": {
 		"item": "create:polished_dolomite",
 		"count": 4
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

@@ -4,5 +4,11 @@
     "item": "create:limestone"
   },
   "result": "create:polished_limestone",
-  "count": 1
+  "count": 1,
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

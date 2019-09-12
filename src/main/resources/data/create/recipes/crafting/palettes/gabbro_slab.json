@@ -11,5 +11,11 @@
 	"result": {
 		"item": "create:gabbro_slab",
 		"count": 6
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

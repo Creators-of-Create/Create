@@ -11,5 +11,11 @@
   "result": {
     "item": "create:linked_extractor",
     "count": 1
-  }
+  },
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "logistics"
+		}
+	]
 }

@@ -50,7 +50,6 @@ public class ServerSchematicLoader {
 
 	public ServerSchematicLoader() {
 		activeUploads = new HashMap<>();
-		FilesHelper.createFolderIfMissing(getSchematicPath());
 	}
 
 	public String getSchematicPath() {

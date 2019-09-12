@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateConfig;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
@@ -77,6 +78,9 @@ public class TranslationConstruct {
 	}
 
 	public static TranslationConstruct getAttachedForPushing(World world, BlockPos pos, Direction direction) {
+		if (isFrozen())
+			return null;
+		
 		TranslationConstruct construct = new TranslationConstruct();
 
 		if (!construct.collectExtensions(world, pos, direction))
@@ -89,6 +93,9 @@ public class TranslationConstruct {
 	}
 
 	public static TranslationConstruct getAttachedForPulling(World world, BlockPos pos, Direction direction) {
+		if (isFrozen())
+			return null;
+		
 		TranslationConstruct construct = new TranslationConstruct();
 
 		if (!construct.collectExtensions(world, pos, direction))
@@ -443,5 +450,9 @@ public class TranslationConstruct {
 		});
 
 		return construct;
+	}
+	
+	public static boolean isFrozen() {
+		return CreateConfig.parameters.freezePistonConstructs.get();
 	}
 }

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
@@ -133,9 +134,9 @@ public class RotationPropagator {
 	 * @param pos
 	 */
 	public static void handleAdded(World worldIn, BlockPos pos, KineticTileEntity addedTE) {
-		if (worldIn.isRemote)
+		if (worldIn.isRemote || isFrozen())
 			return;
-		if (!worldIn.isAreaLoaded(pos, 1))
+		if (!worldIn.isBlockPresent(pos))
 			return;
 
 		if (addedTE.getSpeed() != 0) {
@@ -205,7 +206,7 @@ public class RotationPropagator {
 	 * @param removedTE
 	 */
 	public static void handleRemoved(World worldIn, BlockPos pos, KineticTileEntity removedTE) {
-		if (worldIn.isRemote)
+		if (worldIn.isRemote || isFrozen())
 			return;
 		if (removedTE == null)
 			return;
@@ -322,6 +323,10 @@ public class RotationPropagator {
 		}
 
 		return neighbours;
+	}
+	
+	public static boolean isFrozen() {
+		return CreateConfig.parameters.freezeRotationPropagator.get();
 	}
 
 }

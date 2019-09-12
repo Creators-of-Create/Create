@@ -3,6 +3,7 @@ package com.simibubi.create.modules.logistics;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.utility.ItemHelper;
 
 import net.minecraft.entity.item.ItemEntity;
@@ -13,6 +14,7 @@ import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.SmokingRecipe;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.BlastFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.SmokerTileEntity;
@@ -24,18 +26,12 @@ public class InWorldProcessing {
 		SMOKING, BLASTING, SPLASHING
 	}
 
-	public Type type;
-	public int processorCount;
-	public int timeRemaining;
-
-	public InWorldProcessing(Type type, int time) {
-		this.timeRemaining = time;
-		this.type = type;
-		processorCount = 1;
-	}
-
-	public boolean canProcess(ItemEntity entity) {
+	public static boolean canProcess(ItemEntity entity, Type type) {
 		World world = entity.world;
+
+		if (entity.getPersistantData().contains("CreateData")
+				&& entity.getPersistantData().getCompound("CreateData").contains("Processing"))
+			return true;
 
 		if (type == Type.BLASTING) {
 			return true;
@@ -56,13 +52,10 @@ public class InWorldProcessing {
 		return false;
 	}
 
-	public void process(ItemEntity entity) {
-		timeRemaining--;
-		if (timeRemaining != 0) {
-			return;
-		}
-
+	public static void process(ItemEntity entity, Type type) {
 		World world = entity.world;
+		if (decrementProcessingTime(entity, type) != 0)
+			return;
 
 		if (type == Type.SPLASHING) {
 			return;
@@ -109,7 +102,28 @@ public class InWorldProcessing {
 
 	}
 
-	public void applyRecipeOn(ItemEntity entity, IRecipe<?> recipe) {
+	private static int decrementProcessingTime(ItemEntity entity, Type type) {
+		CompoundNBT nbt = entity.getPersistantData();
+
+		if (!nbt.contains("CreateData"))
+			nbt.put("CreateData", new CompoundNBT());
+		CompoundNBT createData = nbt.getCompound("CreateData");
+
+		if (!createData.contains("Processing"))
+			createData.put("Processing", new CompoundNBT());
+		CompoundNBT processing = createData.getCompound("Processing");
+
+		if (!processing.contains("Type") || Type.valueOf(processing.getString("Type")) != type) {
+			processing.putString("Type", type.name());
+			processing.putInt("Time", CreateConfig.parameters.inWorldProcessingTime.get() + 1);
+		}
+
+		int value = processing.getInt("Time") - 1;
+		processing.putInt("Time", value);
+		return value;
+	}
+
+	public static void applyRecipeOn(ItemEntity entity, IRecipe<?> recipe) {
 		ItemStack out = recipe.getRecipeOutput().copy();
 		List<ItemStack> stacks = ItemHelper.multipliedOutput(entity.getItem(), out);
 		if (stacks.isEmpty())
@@ -117,6 +131,10 @@ public class InWorldProcessing {
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks)
 			entity.world.addEntity(new ItemEntity(entity.world, entity.posX, entity.posY, entity.posZ, additional));
+	}
+	
+	public static boolean isFrozen() {
+		return CreateConfig.parameters.freezeInWorldProcessing.get();
 	}
 
 }

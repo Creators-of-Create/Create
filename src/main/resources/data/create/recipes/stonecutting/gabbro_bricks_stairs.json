@@ -4,5 +4,11 @@
     "item": "create:gabbro"
   },
   "result": "create:gabbro_bricks_stairs",
-  "count": 1
+  "count": 1,
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

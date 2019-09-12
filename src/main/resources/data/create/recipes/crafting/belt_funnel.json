@@ -19,5 +19,11 @@
 	"result": {
 		"item": "create:belt_funnel",
 		"count": 1
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "logistics"
+		}
+	]
 }

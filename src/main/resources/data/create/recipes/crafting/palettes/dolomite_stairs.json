@@ -13,5 +13,11 @@
 	"result": {
 		"item": "create:dolomite_stairs",
 		"count": 8
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

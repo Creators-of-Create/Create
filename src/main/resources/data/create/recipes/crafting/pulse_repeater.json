@@ -18,5 +18,11 @@
 	"result": {
 		"item": "create:pulse_repeater",
 		"count": 1
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "logistics"
+		}
+	]
 }

@@ -4,5 +4,11 @@
     "item": "create:dolomite"
   },
   "result": "create:dolomite_stairs",
-  "count": 1
+  "count": 1,
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

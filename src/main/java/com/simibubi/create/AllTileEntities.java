@@ -27,7 +27,6 @@ import com.simibubi.create.modules.contraptions.relays.ShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.SplitShaftTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntityRenderer;
-import com.simibubi.create.modules.economy.ShopShelfTileEntity;
 import com.simibubi.create.modules.logistics.block.BeltFunnelTileEntity;
 import com.simibubi.create.modules.logistics.block.EntityDetectorTileEntity;
 import com.simibubi.create.modules.logistics.block.EntityDetectorTileEntityRenderer;
@@ -89,9 +88,6 @@ public enum AllTileEntities {
 	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR),
 	BELT_FUNNEL(BeltFunnelTileEntity::new, AllBlocks.BELT_FUNNEL),
 	ENTITY_DETECTOR(EntityDetectorTileEntity::new, AllBlocks.ENTITY_DETECTOR),
-
-	// Economy
-	SHOP_SHELF(ShopShelfTileEntity::new, AllBlocks.SHOP_SHELF),
 
 	;
 

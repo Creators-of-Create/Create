@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
+import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.generators.MotorBlock;
 import com.simibubi.create.modules.contraptions.generators.WaterWheelBlock;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelBlock;
@@ -28,7 +29,6 @@ import com.simibubi.create.modules.contraptions.relays.GearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.ShaftHalfBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.economy.ShopShelfBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
 import com.simibubi.create.modules.logistics.block.BeltFunnelBlock;
 import com.simibubi.create.modules.logistics.block.EntityDetectorBlock;
@@ -60,14 +60,14 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllBlocks {
 
-	// Schematics
+	__SCHEMATICS__(),
 	SCHEMATICANNON(new SchematicannonBlock()),
 	SCHEMATICANNON_CONNECTOR(new RenderUtilityBlock()),
 	SCHEMATICANNON_PIPE(new RenderUtilityBlock()),
 	CREATIVE_CRATE(new CreativeCrateBlock()),
 	SCHEMATIC_TABLE(new SchematicTableBlock()),
 
-	// Kinetics
+	__CONTRAPTIONS__(),
 	SHAFT(new ShaftBlock(Properties.from(Blocks.ANDESITE))),
 	COGWHEEL(new CogWheelBlock(false)),
 	LARGE_COGWHEEL(new CogWheelBlock(true)),
@@ -79,17 +79,14 @@ public enum AllBlocks {
 	BELT(new BeltBlock()),
 	BELT_PULLEY(new RenderUtilityAxisBlock()),
 	BELT_ANIMATION(new RenderUtilityBlock()),
-
 	MOTOR(new MotorBlock()),
 	WATER_WHEEL(new WaterWheelBlock()),
-
 	ENCASED_FAN(new EncasedFanBlock()),
 	ENCASED_FAN_INNER(new RenderUtilityAxisBlock()),
 	TURNTABLE(new TurntableBlock()),
 	SHAFT_HALF(new ShaftHalfBlock()),
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
-
 	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
 	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
 	MECHANICAL_PISTON_HEAD(new MechanicalPistonHeadBlock()),
@@ -98,12 +95,10 @@ public enum AllBlocks {
 	MECHANICAL_BEARING_TOP(new ShaftHalfBlock()),
 	TRANSLATION_CHASSIS(new TranslationChassisBlock()),
 	ROTATION_CHASSIS(new RotationChassisBlock()),
-	
-	// Get rid o' these
 	DRILL(new DrillBlock()),
 	HARVESTER(new HarvesterBlock()),
 
-	// Logistics
+	__LOGISTICS__(),
 	CONTACT(new ContactBlock()),
 	REDSTONE_BRIDGE(new RedstoneBridgeBlock()),
 	STOCKSWITCH(new StockswitchBlock()),
@@ -114,22 +109,18 @@ public enum AllBlocks {
 	ENTITY_DETECTOR(new EntityDetectorBlock()),
 	PULSE_REPEATER(new PulseRepeaterBlock()),
 
-	// Symmetry
+	__CURIOSITIES__(),
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),
 	SYMMETRY_CROSSPLANE(new CrossPlaneSymmetryBlock()),
 	SYMMETRY_TRIPLEPLANE(new TriplePlaneSymmetryBlock()),
 
-	// Gardens
+	__GARDENS__(),
 	COCOA_LOG(new CocoaLogBlock()),
 
-	// Economy
-	SHOP_SHELF(new ShopShelfBlock()),
-
-	// Palettes
+	__PALETTES__(),
 	ANDESITE_BRICKS(new Block(Properties.from(Blocks.ANDESITE))),
 	DIORITE_BRICKS(new Block(Properties.from(Blocks.DIORITE))),
 	GRANITE_BRICKS(new Block(Properties.from(Blocks.GRANITE))),
-
 	GABBRO(new Block(Properties.from(Blocks.GRANITE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	POLISHED_GABBRO(new Block(Properties.from(GABBRO.block))),
 	GABBRO_BRICKS(new Block(Properties.from(GABBRO.block)), ComesWith.STAIRS, ComesWith.WALL),
@@ -137,18 +128,15 @@ public enum AllBlocks {
 	INDENTED_GABBRO(new Block(Properties.from(GABBRO.block)), ComesWith.SLAB),
 	SLIGHTLY_MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
 	MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
-
 	LIMESTONE(new Block(Properties.from(Blocks.SANDSTONE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	LIMESTONE_BRICKS(new Block(Properties.from(LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	POLISHED_LIMESTONE(new Block(Properties.from(LIMESTONE.block)), ComesWith.SLAB),
 	LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(LIMESTONE.block))),
-
 	WEATHERED_LIMESTONE(new Block(Properties.from(Blocks.ANDESITE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	WEATHERED_LIMESTONE_BRICKS(new Block(Properties.from(WEATHERED_LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB,
 			ComesWith.WALL),
 	POLISHED_WEATHERED_LIMESTONE(new Block(Properties.from(WEATHERED_LIMESTONE.block)), ComesWith.SLAB),
 	WEATHERED_LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(WEATHERED_LIMESTONE.block))),
-
 	DOLOMITE(new Block(Properties.from(Blocks.QUARTZ_BLOCK)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	DOLOMITE_BRICKS(new Block(Properties.from(DOLOMITE.block))),
 	POLISHED_DOLOMITE(new Block(Properties.from(DOLOMITE.block))),
@@ -160,12 +148,27 @@ public enum AllBlocks {
 		WALL, FENCE, FENCE_GATE, SLAB, STAIRS;
 	}
 
+	private static class CategoryTracker {
+		static IModule currentModule;
+	}
+
 	public Block block;
 	public Block[] alsoRegistered;
+	public IModule module;
+
+	private AllBlocks() {
+		CategoryTracker.currentModule = new IModule() {
+			@Override
+			public String getModuleName() {
+				return name().toLowerCase().replaceAll("__", "");
+			}
+		};
+	}
 
 	private AllBlocks(Block block, ComesWith... comesWith) {
 		this.block = block;
 		this.block.setRegistryName(Create.ID, this.name().toLowerCase());
+		this.module = CategoryTracker.currentModule;
 
 		alsoRegistered = new Block[comesWith.length];
 		for (int i = 0; i < comesWith.length; i++)
@@ -174,6 +177,9 @@ public enum AllBlocks {
 
 	public static void registerBlocks(IForgeRegistry<Block> registry) {
 		for (AllBlocks block : values()) {
+			if (block.get() == null)
+				continue;
+
 			registry.register(block.block);
 			for (Block extra : block.alsoRegistered)
 				registry.register(extra);
@@ -182,6 +188,8 @@ public enum AllBlocks {
 
 	public static void registerItemBlocks(IForgeRegistry<Item> registry) {
 		for (AllBlocks block : values()) {
+			if (block.get() == null)
+				continue;
 			if (block.get() instanceof IWithoutBlockItem)
 				continue;
 
@@ -193,7 +201,7 @@ public enum AllBlocks {
 
 	private static void registerAsItem(IForgeRegistry<Item> registry, Block blockIn) {
 		registry.register(
-				new BlockItem(blockIn, AllItems.standardProperties()).setRegistryName(blockIn.getRegistryName()));
+				new BlockItem(blockIn, AllItems.standardItemProperties()).setRegistryName(blockIn.getRegistryName()));
 	}
 
 	public Block get() {

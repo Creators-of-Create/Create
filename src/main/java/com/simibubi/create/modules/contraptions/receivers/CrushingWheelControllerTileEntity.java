@@ -92,7 +92,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 	@Override
 	public void tick() {
-		if (!isOccupied())
+		if (!isOccupied() || isFrozen())
 			return;
 
 		float speed = crushingspeed / 2.5f;
@@ -204,7 +204,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		if (hasEntity())
+		if (hasEntity() && !isFrozen())
 			compound.put("Entity", NBTUtil.writeUniqueId(entityUUID));
 		contents.write(compound);
 		compound.putFloat("Speed", crushingspeed);
@@ -216,7 +216,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	public void read(CompoundNBT compound) {
 		super.read(compound);
 
-		if (compound.contains("Entity")) {
+		if (compound.contains("Entity") && !isFrozen()) {
 			entityUUID = NBTUtil.readUniqueId(compound.getCompound("Entity"));
 
 			List<Entity> search = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()),
@@ -257,6 +257,10 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 	public boolean hasEntity() {
 		return processingEntity != null;
+	}
+	
+	public static boolean isFrozen() {
+		return CreateConfig.parameters.freezeCrushing.get();
 	}
 
 }

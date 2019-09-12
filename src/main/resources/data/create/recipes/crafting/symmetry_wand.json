@@ -25,5 +25,11 @@
 	"result": {
 		"item": "create:symmetry_wand",
 		"count": 1
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "curiosities"
+		}
+	]
 }

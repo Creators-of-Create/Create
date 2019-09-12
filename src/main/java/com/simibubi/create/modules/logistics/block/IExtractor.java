@@ -26,6 +26,9 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 
 	@Override
 	default void tick() {
+		if (isFrozen())
+			return;
+		
 		State state = getState();
 
 		if (state == State.LOCKED)
@@ -79,6 +82,9 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 	}
 
 	public default void neighborChanged() {
+		if (isFrozen())
+			return;
+		
 		boolean hasSpace = hasSpaceForExtracting();
 		boolean hasInventory = getInventory().isPresent();
 		ItemStack toExtract = ItemStack.EMPTY;
@@ -140,6 +146,10 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 		}
 
 		return extracting;
+	}
+	
+	public static boolean isFrozen() {
+		return CreateConfig.parameters.freezeExtractors.get();
 	}
 
 }

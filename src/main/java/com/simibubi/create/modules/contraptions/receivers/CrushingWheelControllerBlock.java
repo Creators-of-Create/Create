@@ -51,7 +51,7 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 	}
 
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		if (!state.get(VALID))
+		if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen())
 			return;
 		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn.getTileEntity(pos);
 		if (te == null)
@@ -63,13 +63,15 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 	@Override
 	public void onLanded(IBlockReader worldIn, Entity entityIn) {
 		super.onLanded(worldIn, entityIn);
+		if (CrushingWheelControllerTileEntity.isFrozen())
+			return;
 		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn
 				.getTileEntity(entityIn.getPosition().down());
 		if (te == null)
 			return;
 		if (te.isOccupied())
 			return;
-		
+
 		te.startCrushing(entityIn);
 	}
 
@@ -93,7 +95,7 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 	}
 
 	public void updateSpeed(BlockState state, World world, BlockPos pos) {
-		if (!state.get(VALID))
+		if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen())
 			return;
 		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) world.getTileEntity(pos);
 		if (te == null)
@@ -123,7 +125,7 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 		if (entity != null) {
 			if (new AxisAlignedBB(pos).contains(entity.getPositionVec()))
 				return VoxelShapes.empty();
-			
+
 			CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn.getTileEntity(pos);
 			if (te == null)
 				return VoxelShapes.fullCube();

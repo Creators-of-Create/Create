@@ -35,7 +35,7 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 	public CompoundNBT write(CompoundNBT tag) {
 		tag.putBoolean("Running", running);
 		tag.putFloat("Angle", angle);
-		if (running)
+		if (running && !RotationConstruct.isFrozen())
 			tag.put("Construct", movingConstruct.writeNBT());
 
 		return super.write(tag);
@@ -45,13 +45,15 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 	public void read(CompoundNBT tag) {
 		running = tag.getBoolean("Running");
 		angle = tag.getFloat("Angle");
-		if (running)
+		if (running && !RotationConstruct.isFrozen())
 			movingConstruct = RotationConstruct.fromNBT(tag.getCompound("Construct"));
 
 		super.read(tag);
 	}
 
 	public float getInterpolatedAngle(float partialTicks) {
+		if (RotationConstruct.isFrozen())
+			return 0;
 		return MathHelper.lerp(partialTicks, angle, angle + getAngularSpeed());
 	}
 
@@ -111,6 +113,9 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 
 	@Override
 	public void tick() {
+		if (running && RotationConstruct.isFrozen())
+			disassembleConstruct();
+		
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {

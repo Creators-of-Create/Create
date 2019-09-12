@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
+import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem;
@@ -33,20 +34,21 @@ import net.minecraftforge.registries.IForgeRegistry;
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD)
 public enum AllItems {
 
+	__CURIOSITIES__(),
 	SYMMETRY_WAND(new SymmetryWandItem(
-			standardProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SYMMETRY_WAND)))),
-
+			standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SYMMETRY_WAND)))),
 	PLACEMENT_HANDGUN(
 			new BuilderGunItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN)))),
 
-	ANDESITE_ALLOY_CUBE(new Item(standardProperties())),
-	BLAZE_BRASS_CUBE(new Item(standardProperties())),
-	CHORUS_CHROME_CUBE(new Item(standardProperties().rarity(Rarity.UNCOMMON))),
-	SHADOW_STEEL_CUBE(new Item(standardProperties().rarity(Rarity.UNCOMMON))),
-	ROSE_QUARTZ(new Item(standardProperties())),
-	REFINED_ROSE_QUARTZ(new Item(standardProperties())),
-	CHROMATIC_COMPOUND_CUBE(new ChromaticCompoundCubeItem(standardProperties().rarity(Rarity.UNCOMMON))),
-	REFINED_RADIANCE_CUBE(new Item(standardProperties().rarity(Rarity.RARE))),
+	__MATERIALS__(),
+	ANDESITE_ALLOY_CUBE(new Item(standardItemProperties())),
+	BLAZE_BRASS_CUBE(new Item(standardItemProperties())),
+	CHORUS_CHROME_CUBE(new Item(standardItemProperties().rarity(Rarity.UNCOMMON))),
+	SHADOW_STEEL_CUBE(new Item(standardItemProperties().rarity(Rarity.UNCOMMON))),
+	ROSE_QUARTZ(new Item(standardItemProperties())),
+	REFINED_ROSE_QUARTZ(new Item(standardItemProperties())),
+	CHROMATIC_COMPOUND_CUBE(new ChromaticCompoundCubeItem(standardItemProperties().rarity(Rarity.UNCOMMON))),
+	REFINED_RADIANCE_CUBE(new Item(standardItemProperties().rarity(Rarity.RARE))),
 
 //	BLAZING_PICKAXE(new BlazingToolItem(1, -2.8F, standardProperties(), PICKAXE)),
 //	BLAZING_SHOVEL(new BlazingToolItem(1.5F, -3.0F, standardProperties(), SHOVEL)),
@@ -62,30 +64,51 @@ public enum AllItems {
 //	SHADOW_STEEL_MATTOCK(new ShadowSteelToolItem(2.5F, -1.5F, standardProperties(), SHOVEL, AXE, HOE)),
 //	SHADOW_STEEL_SWORD(new ShadowSteelToolItem(3, -2.0F, standardProperties(), SWORD)),
 
-	TREE_FERTILIZER(new TreeFertilizerItem(standardProperties())),
+	__GARDENS__(),
+	TREE_FERTILIZER(new TreeFertilizerItem(standardItemProperties())),
 
-	EMPTY_BLUEPRINT(new Item(standardProperties().maxStackSize(1))),
-	BLUEPRINT_AND_QUILL(new SchematicAndQuillItem(standardProperties().maxStackSize(1))),
-	BLUEPRINT(new SchematicItem(standardProperties())),
-	BELT_CONNECTOR(new BeltItem(standardProperties())),
+	__SCHEMATICS__(),
+	EMPTY_BLUEPRINT(new Item(standardItemProperties().maxStackSize(1))),
+	BLUEPRINT_AND_QUILL(new SchematicAndQuillItem(standardItemProperties().maxStackSize(1))),
+	BLUEPRINT(new SchematicItem(standardItemProperties())),
+	
+	__CONTRAPTIONS__(),
+	BELT_CONNECTOR(new BeltItem(standardItemProperties())),
 
 	;
+
+	private static class CategoryTracker {
+		static IModule currentModule;
+	}
 
 	// Common
 
 	public Item item;
+	public IModule module;
+
+	private AllItems() {
+		CategoryTracker.currentModule = new IModule() {
+			@Override
+			public String getModuleName() {
+				return name().toLowerCase().replaceAll("__", "");
+			}
+		};
+	}
 
 	private AllItems(Item item) {
 		this.item = item;
 		this.item.setRegistryName(Create.ID, this.name().toLowerCase());
+		this.module = CategoryTracker.currentModule;
 	}
 
-	public static Properties standardProperties() {
+	public static Properties standardItemProperties() {
 		return new Properties().group(Create.creativeTab);
 	}
 
 	public static void registerItems(IForgeRegistry<Item> iForgeRegistry) {
 		for (AllItems item : values()) {
+			if (item.get() == null)
+				continue;
 			iForgeRegistry.register(item.get());
 		}
 	}

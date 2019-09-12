@@ -19,5 +19,11 @@
 	"result": {
 		"item": "create:gearbox",
 		"count": 2
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
 }

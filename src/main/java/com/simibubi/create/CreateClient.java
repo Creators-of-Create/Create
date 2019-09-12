@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.simibubi.create.modules.contraptions.receivers.EncasedFanParticleHandler;
 import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 import com.simibubi.create.modules.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHandler;
@@ -18,6 +19,7 @@ public class CreateClient {
 	public static SchematicHandler schematicHandler;
 	public static SchematicHologram schematicHologram;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
+	public static EncasedFanParticleHandler fanParticles;
 
 	public static ModConfig config;
 	
@@ -27,6 +29,7 @@ public class CreateClient {
 		schematicHandler = new SchematicHandler();
 		schematicHologram = new SchematicHologram();
 		schematicAndQuillHandler = new SchematicAndQuillHandler();
+		fanParticles = new EncasedFanParticleHandler();
 		
 		AllKeys.register();
 		AllContainers.registerScreenFactories();

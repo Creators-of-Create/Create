@@ -19,5 +19,11 @@
 	"result": {
 		"item": "create:encased_shaft",
 		"count": 2
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
 }

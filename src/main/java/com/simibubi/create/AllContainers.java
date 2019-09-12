@@ -1,7 +1,5 @@
 package com.simibubi.create;
 
-import com.simibubi.create.modules.economy.ShopShelfContainer;
-import com.simibubi.create.modules.economy.ShopShelfScreen;
 import com.simibubi.create.modules.logistics.block.FlexcrateContainer;
 import com.simibubi.create.modules.logistics.block.FlexcrateScreen;
 import com.simibubi.create.modules.schematics.block.SchematicTableContainer;
@@ -32,8 +30,6 @@ public enum AllContainers {
 	SCHEMATICANNON(SchematicannonContainer::new),
 	FLEXCRATE(FlexcrateContainer::new),
 	
-	SHOP_SHELF(ShopShelfContainer::new),
-	
 	;
 
 	public ContainerType<? extends Container> type;
@@ -58,7 +54,6 @@ public enum AllContainers {
 		bind(SCHEMATIC_TABLE, SchematicTableScreen::new);
 		bind(SCHEMATICANNON, SchematicannonScreen::new);
 		bind(FLEXCRATE, FlexcrateScreen::new);
-		bind(SHOP_SHELF, ShopShelfScreen::new);
 	}
 
 	@OnlyIn(Dist.CLIENT)

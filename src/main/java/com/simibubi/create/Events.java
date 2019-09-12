@@ -27,7 +27,6 @@ public class Events {
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
 		IWorld world = event.getWorld();
-		Create.itemProcessingHandler.onLoadWorld(world);
 		Create.frequencyHandler.onLoadWorld(world);
 		Create.constructHandler.onLoadWorld(world);
 	}
@@ -35,7 +34,6 @@ public class Events {
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		IWorld world = event.getWorld();
-		Create.itemProcessingHandler.onUnloadWorld(world);
 		Create.frequencyHandler.onUnloadWorld(world);
 		Create.constructHandler.onUnloadWorld(world);
 	}

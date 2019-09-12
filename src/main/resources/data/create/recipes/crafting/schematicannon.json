@@ -25,5 +25,11 @@
 	"result": {
 		"item": "create:schematicannon",
 		"count": 1
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "schematics"
+		}
+	]
 }

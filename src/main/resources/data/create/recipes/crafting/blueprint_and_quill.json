@@ -11,5 +11,11 @@
 	"result": {
 		"item": "create:blueprint_and_quill",
 		"count": 1
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "schematics"
+		}
+	]
 }

@@ -22,5 +22,11 @@
 	"result": {
 		"item": "create:stockswitch",
 		"count": 1
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "logistics"
+		}
+	]
 }

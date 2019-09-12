@@ -19,5 +19,11 @@
 	"result": {
 		"item": "create:translation_chassis",
 		"count": 4
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
 }

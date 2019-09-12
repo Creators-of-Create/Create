@@ -4,5 +4,11 @@
     "item": "create:dolomite"
   },
   "result": "create:polished_dolomite",
-  "count": 1
+  "count": 1,
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

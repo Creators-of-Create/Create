@@ -4,5 +4,11 @@
     "item": "create:gabbro"
   },
   "result": "create:paved_gabbro_bricks",
-  "count": 1
+  "count": 1,
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

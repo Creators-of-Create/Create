@@ -3,15 +3,16 @@ package com.simibubi.create;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MovingConstructHandler;
 import com.simibubi.create.modules.logistics.FrequencyHandler;
-import com.simibubi.create.modules.logistics.InWorldItemProcessingHandler;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -33,7 +34,6 @@ public class Create {
 	public static ItemGroup creativeTab = new CreateItemGroup();
 	public static ServerSchematicLoader schematicReceiver;
 	public static FrequencyHandler frequencyHandler;
-	public static InWorldItemProcessingHandler itemProcessingHandler;
 	public static MovingConstructHandler constructHandler;
 
 	public static ModConfig config;
@@ -46,9 +46,9 @@ public class Create {
 	@SubscribeEvent
 	public static void init(final FMLCommonSetupEvent event) {
 		schematicReceiver = new ServerSchematicLoader();
-		itemProcessingHandler = new InWorldItemProcessingHandler();
 		frequencyHandler = new FrequencyHandler();
 		constructHandler = new MovingConstructHandler();
+		CraftingHelper.register(new ModuleLoadedCondition.Serializer());
 		AllPackets.registerPackets();
 	}
 

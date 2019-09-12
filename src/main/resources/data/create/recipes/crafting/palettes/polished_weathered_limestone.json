@@ -12,5 +12,11 @@
 	"result": {
 		"item": "create:polished_weathered_limestone",
 		"count": 4
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
 }

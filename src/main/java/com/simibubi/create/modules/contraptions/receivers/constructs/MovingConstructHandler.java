@@ -46,6 +46,9 @@ public class MovingConstructHandler {
 
 	public static void moveEntities(MechanicalPistonTileEntity te, float movementSpeed, Direction movementDirection,
 			float newOffset) {
+		if (TranslationConstruct.isFrozen())
+			return;
+		
 		World world = te.getWorld();
 		Vec3d movementVec = new Vec3d(te.getBlockState().get(BlockStateProperties.FACING).getDirectionVec());
 		TranslationConstruct construct = te.movingConstruct;
@@ -132,8 +135,6 @@ public class MovingConstructHandler {
 					}
 				}
 
-				if (entity instanceof PlayerEntity && !world.isRemote)
-					return;
 
 				if (!allowedMovement.equals(movement)) {
 					if (allowedMovement.y != movement.y) {
@@ -141,6 +142,8 @@ public class MovingConstructHandler {
 						entity.fallDistance = 0;
 						entity.onGround = true;
 					}
+					if (entity instanceof PlayerEntity && !world.isRemote)
+						return;
 					entity.setMotion(allowedMovement.subtract(movement.subtract(motion)));
 					entity.velocityChanged = true;
 				}

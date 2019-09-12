@@ -52,7 +52,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	public CompoundNBT write(CompoundNBT tag) {
 		tag.putBoolean("Running", running);
 		tag.putFloat("Offset", offset);
-		if (running)
+		if (running && !TranslationConstruct.isFrozen())
 			tag.put("Construct", movingConstruct.writeNBT());
 
 		return super.write(tag);
@@ -62,13 +62,16 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	public void read(CompoundNBT tag) {
 		running = tag.getBoolean("Running");
 		offset = tag.getFloat("Offset");
-		if (running)
+		if (running && !TranslationConstruct.isFrozen())
 			movingConstruct = TranslationConstruct.fromNBT(tag.getCompound("Construct"));
 
 		super.read(tag);
 	}
 
 	protected void onBlockVisited(float newOffset) {
+		if (TranslationConstruct.isFrozen())
+			return;
+		
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		for (BlockInfo block : movingConstruct.actors) {
@@ -205,6 +208,9 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	}
 
 	private boolean hasBlockCollisions(float newOffset) {
+		if (TranslationConstruct.isFrozen())
+			return true;
+		
 		Direction movementDirection = getBlockState().get(BlockStateProperties.FACING);
 		BlockPos relativePos = BlockPos.ZERO.offset(movementDirection, getModulatedOffset(newOffset));
 

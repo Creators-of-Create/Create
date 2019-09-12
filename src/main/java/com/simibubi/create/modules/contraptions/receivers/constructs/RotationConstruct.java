@@ -41,7 +41,9 @@ public class RotationConstruct {
 	}
 
 	protected boolean collectAttached(World world, BlockPos pos, Direction direction) {
-
+		if (isFrozen())
+			return false;
+		
 		// Find chassis
 		List<BlockInfo> chassis = collectChassis(world, pos, direction);
 		if (chassis == null)
@@ -188,4 +190,8 @@ public class RotationConstruct {
 				|| AllBlocks.ROTATION_CHASSIS.typeOf(world.getBlockState(pos));
 	}
 
+	public static boolean isFrozen() {
+		return CreateConfig.parameters.freezeRotationConstructs.get();
+	}
+	
 }

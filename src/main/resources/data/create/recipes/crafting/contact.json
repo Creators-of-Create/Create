@@ -22,5 +22,11 @@
 	"result": {
 		"item": "create:contact",
 		"count": 2
-	}
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "logistics"
+		}
+	]
 }
