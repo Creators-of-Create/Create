@@ -1,0 +1,16 @@
+{
+    "type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"tag": "forge:stained_glass"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:glass",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}

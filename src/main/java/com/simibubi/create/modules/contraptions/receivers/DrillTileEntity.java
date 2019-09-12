@@ -9,6 +9,7 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -26,6 +29,7 @@ public class DrillTileEntity extends KineticTileEntity implements ITickableTileE
 
 	private static final AtomicInteger NEXT_DRILL_ID = new AtomicInteger();
 
+	private static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
 	private int ticksUntilNextProgress;
 	private int destroyProgress;
 	private int drillId = -NEXT_DRILL_ID.incrementAndGet();
@@ -74,19 +78,26 @@ public class DrillTileEntity extends KineticTileEntity implements ITickableTileE
 		if (speed == 0)
 			return;
 
-		if (ticksUntilNextProgress < 0)
+		BlockPos posToBreak = pos.offset(getBlockState().get(BlockStateProperties.FACING));
+
+		if (ticksUntilNextProgress < 0) {
+			for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(posToBreak)))
+				if (!(entity instanceof ItemEntity))
+					entity.attackEntityFrom(damageSourceDrill, MathHelper.clamp(Math.abs(speed / 512f) + 1, 0, 20));
 			return;
+		}
 		if (ticksUntilNextProgress-- > 0)
 			return;
 
-		BlockPos posToBreak = pos.offset(getBlockState().get(BlockStateProperties.FACING));
 		BlockState stateToBreak = world.getBlockState(posToBreak);
 		float blockHardness = stateToBreak.getBlockHardness(world, posToBreak);
 
 		if (stateToBreak.getMaterial().isLiquid() || stateToBreak.getBlock() instanceof AirBlock
 				|| blockHardness == -1) {
-			destroyProgress = 0;
-			world.sendBlockBreakProgress(drillId, posToBreak, -1);
+			if (destroyProgress != 0) {
+				destroyProgress = 0;
+				world.sendBlockBreakProgress(drillId, posToBreak, -1);
+			}
 			return;
 		}
 

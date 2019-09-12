@@ -17,6 +17,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
+import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
@@ -116,16 +117,18 @@ public class TranslationConstruct {
 		int extensionsInFront = 0;
 		boolean sticky = STICKY_MECHANICAL_PISTON.typeOf(world.getBlockState(pos));
 
-		while (PISTON_POLE.typeOf(nextBlock) && nextBlock.get(FACING).getAxis() == direction.getAxis()
-				|| MECHANICAL_PISTON_HEAD.typeOf(nextBlock) && nextBlock.get(FACING) == direction) {
-
-			actualStart = actualStart.offset(direction);
-			poles.add(new BlockInfo(actualStart, nextBlock.with(FACING, direction), null));
-			extensionsInFront++;
-			nextBlock = world.getBlockState(actualStart.offset(direction));
-
-			if (extensionsInFront > parameters.maxPistonPoles.get())
-				return false;
+		if (world.getBlockState(pos).get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED) {
+			while (PISTON_POLE.typeOf(nextBlock) && nextBlock.get(FACING).getAxis() == direction.getAxis()
+					|| MECHANICAL_PISTON_HEAD.typeOf(nextBlock) && nextBlock.get(FACING) == direction) {
+				
+				actualStart = actualStart.offset(direction);
+				poles.add(new BlockInfo(actualStart, nextBlock.with(FACING, direction), null));
+				extensionsInFront++;
+				nextBlock = world.getBlockState(actualStart.offset(direction));
+				
+				if (extensionsInFront > parameters.maxPistonPoles.get())
+					return false;
+			}
 		}
 
 		if (extensionsInFront == 0)

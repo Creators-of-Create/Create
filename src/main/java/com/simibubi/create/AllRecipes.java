@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.modules.contraptions.base.ProcessingRecipeSerializer;
 import com.simibubi.create.modules.contraptions.receivers.CrushingRecipe;
+import com.simibubi.create.modules.contraptions.receivers.SplashingRecipe;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunUpgradeRecipe;
 
 import net.minecraft.inventory.IInventory;
@@ -21,11 +22,16 @@ public enum AllRecipes {
 	CRUSHING(() -> {
 		return new ProcessingRecipeSerializer<>(CrushingRecipe::new);
 	}, Types.CRUSHING),
+	
+	SPLASHING(() -> {
+		return new ProcessingRecipeSerializer<>(SplashingRecipe::new);
+	}, Types.SPLASHING),
 
 	;
 
 	public static class Types {
 		public static IRecipeType<CrushingRecipe> CRUSHING = register("crushing");
+		public static IRecipeType<SplashingRecipe> SPLASHING = register("splashing");
 
 		static <T extends IRecipe<?>> IRecipeType<T> register(final String key) {
 			return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(key), new IRecipeType<T>() {

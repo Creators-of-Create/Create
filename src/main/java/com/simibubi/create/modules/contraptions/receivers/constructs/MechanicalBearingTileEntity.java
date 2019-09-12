@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.modules.contraptions.RotationPropagator;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
 import net.minecraft.block.BlockState;
@@ -21,9 +22,11 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 	protected float angle;
 	protected boolean running;
 	protected boolean assembleNextTick;
+	protected boolean isWindmill;
 
 	public MechanicalBearingTileEntity() {
 		super(AllTileEntities.MECHANICAL_BEARING.type);
+		isWindmill = false;
 	}
 
 	@Override
@@ -32,8 +35,54 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 	}
 
 	@Override
+	public boolean isSource() {
+		return isWindmill;
+	}
+
+	public void neighbourChanged() {
+		boolean shouldWindmill = world.isBlockPowered(pos);
+		if (shouldWindmill == isWindmill)
+			return;
+
+		isWindmill = shouldWindmill;
+		if (isWindmill)
+			removeSource();
+		
+		if (isWindmill && !running) {
+			assembleNextTick = true;
+		}
+
+		if (isWindmill && running) {
+			applyNewSpeed(getWindmillSpeed());
+		}
+
+		if (!isWindmill && running) {
+			applyNewSpeed(0);
+			if (speed == 0)
+				disassembleConstruct();
+		}
+
+		sendData();
+	}
+
+	@Override
+	public void remove() {
+		if (!world.isRemote)
+			disassembleConstruct();
+		super.remove();
+	}
+
+	public float getWindmillSpeed() {
+		if (!running)
+			return 0;
+		int sails = movingConstruct.getSailBlocks();
+		return MathHelper.clamp(sails, 0, 128);
+	}
+
+	@Override
 	public CompoundNBT write(CompoundNBT tag) {
 		tag.putBoolean("Running", running);
+		tag.putBoolean("Windmill", isWindmill);
 		tag.putFloat("Angle", angle);
 		if (running && !RotationConstruct.isFrozen())
 			tag.put("Construct", movingConstruct.writeNBT());
@@ -44,6 +93,7 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 	@Override
 	public void read(CompoundNBT tag) {
 		running = tag.getBoolean("Running");
+		isWindmill = tag.getBoolean("Windmill");
 		angle = tag.getFloat("Angle");
 		if (running && !RotationConstruct.isFrozen())
 			movingConstruct = RotationConstruct.fromNBT(tag.getCompound("Construct"));
@@ -62,7 +112,7 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 		super.onSpeedChanged();
 		assembleNextTick = true;
 	}
-	
+
 	public float getAngularSpeed() {
 		return speed / 2048;
 	}
@@ -74,6 +124,8 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 		movingConstruct = RotationConstruct.getAttachedForRotating(getWorld(), getPos(), direction);
 		if (movingConstruct == null)
 			return;
+		if (isWindmill && movingConstruct.getSailBlocks() == 0)
+			return;
 
 		// Run
 		running = true;
@@ -82,6 +134,12 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 
 		for (BlockInfo info : movingConstruct.blocks.values()) {
 			getWorld().setBlockState(info.pos.add(pos), Blocks.AIR.getDefaultState(), 67);
+		}
+
+		if (isWindmill) {
+			RotationPropagator.handleRemoved(world, pos, this);
+			speed = getWindmillSpeed();
+			RotationPropagator.handleAdded(world, pos, this);
 		}
 	}
 
@@ -92,7 +150,7 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 		for (BlockInfo block : movingConstruct.blocks.values()) {
 			BlockPos targetPos = block.pos.add(pos);
 			BlockState state = block.state;
-		
+
 			for (Direction face : Direction.values())
 				state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world, targetPos,
 						targetPos.offset(face));
@@ -115,7 +173,7 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 	public void tick() {
 		if (running && RotationConstruct.isFrozen())
 			disassembleConstruct();
-		
+
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {

@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.PlacementSimulationWorld;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
@@ -30,6 +31,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 public class MechanicalBearingTileEntityRenderer extends KineticTileEntityRenderer {
 
 	protected static Cache<RotationConstruct, RotationConstructVertexBuffer> cachedConstructs;
+	protected static PlacementSimulationWorld renderWorld;
 
 	@Override
 	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
@@ -68,22 +70,28 @@ public class MechanicalBearingTileEntityRenderer extends KineticTileEntityRender
 			cachedConstructs = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.SECONDS).build();
 		if (cachedConstructs.getIfPresent(c) != null)
 			return;
+		if (renderWorld == null || renderWorld.getWorld() != Minecraft.getInstance().world)
+			renderWorld = new PlacementSimulationWorld(Minecraft.getInstance().world);
 
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(0);
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		builder.setTranslation(0, 255, 0);
+		builder.setTranslation(0, 0, 0);
 
-		for (BlockPos localPos : c.blocks.keySet()) {
-			BlockInfo info = c.blocks.get(localPos);
+		for (BlockInfo info : c.blocks.values()) {
+			renderWorld.setBlockState(info.pos, info.state);
+		}
+
+		for (BlockInfo info : c.blocks.values()) {
 			IBakedModel originalModel = dispatcher.getModelForState(info.state);
-			blockRenderer.renderModel(getWorld(), originalModel, info.state, info.pos.down(255), builder, true, random,
-					42, EmptyModelData.INSTANCE);
+			blockRenderer.renderModel(renderWorld, originalModel, info.state, info.pos, builder, true, random, 42,
+					EmptyModelData.INSTANCE);
 		}
 
 		builder.finishDrawing();
+		renderWorld.clear();
 		cachedConstructs.put(c, new RotationConstructVertexBuffer(builder.getByteBuffer()));
 	}
 

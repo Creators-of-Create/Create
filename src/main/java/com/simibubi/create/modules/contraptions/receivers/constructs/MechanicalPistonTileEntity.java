@@ -44,6 +44,14 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	}
 
 	@Override
+	public void remove() {
+		this.removed = true;
+		if (!world.isRemote)
+			disassembleConstruct();
+		super.remove();
+	}
+
+	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}
@@ -71,7 +79,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	protected void onBlockVisited(float newOffset) {
 		if (TranslationConstruct.isFrozen())
 			return;
-		
+
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		for (BlockInfo block : movingConstruct.actors) {
@@ -126,13 +134,14 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 			return;
 
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
-		getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.EXTENDED), 3);
+		if (!removed)
+			getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.EXTENDED), 3);
 
 		for (BlockInfo block : movingConstruct.blocks.values()) {
 			BlockPos targetPos = block.pos.offset(direction, getModulatedOffset(offset));
 			BlockState state = block.state;
 			if (targetPos.equals(pos)) {
-				if (!AllBlocks.PISTON_POLE.typeOf(state))
+				if (!AllBlocks.PISTON_POLE.typeOf(state) && !removed)
 					getWorld().setBlockState(pos,
 							getBlockState().with(MechanicalPistonBlock.STATE, PistonState.RETRACTED), 3);
 				continue;
@@ -154,6 +163,9 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 			Create.constructHandler.remove(this);
 		movingConstruct = null;
 		sendData();
+
+		if (removed)
+			AllBlocks.MECHANICAL_PISTON.get().onBlockHarvested(world, pos, getBlockState(), null);
 	}
 
 	@Override
@@ -210,7 +222,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	private boolean hasBlockCollisions(float newOffset) {
 		if (TranslationConstruct.isFrozen())
 			return true;
-		
+
 		Direction movementDirection = getBlockState().get(BlockStateProperties.FACING);
 		BlockPos relativePos = BlockPos.ZERO.offset(movementDirection, getModulatedOffset(newOffset));
 

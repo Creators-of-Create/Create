@@ -120,6 +120,7 @@ public class MechanicalPistonBlock extends KineticBlock {
 		Direction direction = state.get(FACING);
 		BlockPos pistonHead = null;
 		BlockPos pistonBase = pos;
+		boolean dropBlocks = player == null || !player.isCreative();
 
 		Integer maxPoles = CreateConfig.parameters.maxPistonPoles.get();
 		for (int offset = 1; offset < maxPoles; offset++) {
@@ -139,7 +140,7 @@ public class MechanicalPistonBlock extends KineticBlock {
 
 		if (pistonHead != null && pistonBase != null) {
 			BlockPos.getAllInBox(pistonBase, pistonHead).filter(p -> !p.equals(pos))
-					.forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
+					.forEach(p -> worldIn.destroyBlock(p, dropBlocks));
 		}
 
 		for (int offset = 1; offset < maxPoles; offset++) {
@@ -148,7 +149,7 @@ public class MechanicalPistonBlock extends KineticBlock {
 
 			if (AllBlocks.PISTON_POLE.typeOf(block)
 					&& direction.getAxis() == block.get(BlockStateProperties.FACING).getAxis()) {
-				worldIn.destroyBlock(currentPos, !player.isCreative());
+				worldIn.destroyBlock(currentPos, dropBlocks);
 				continue;
 			}
 

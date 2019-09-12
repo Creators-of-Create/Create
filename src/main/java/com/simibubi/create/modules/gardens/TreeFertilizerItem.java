@@ -1,35 +1,21 @@
 package com.simibubi.create.modules.gardens;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
-import java.util.function.Predicate;
 
 import com.simibubi.create.foundation.item.InfoItem;
 import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.foundation.utility.ItemDescription.Palette;
+import com.simibubi.create.foundation.utility.PlacementSimulationWorld;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SaplingBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.tags.NetworkTagManager;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EmptyTickList;
-import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.MapData;
 
 public class TreeFertilizerItem extends InfoItem {
 
@@ -91,120 +77,19 @@ public class TreeFertilizerItem extends InfoItem {
 		return super.onItemUse(context);
 	}
 
-	private class TreesDreamWorld extends World {
-
-		World wrapped;
-		HashMap<BlockPos, BlockState> blocksAdded;
+	private class TreesDreamWorld extends PlacementSimulationWorld {
 
 		protected TreesDreamWorld(World wrapped) {
-			super(wrapped.getWorldInfo(), wrapped.dimension.getType(), (w, d) -> wrapped.getChunkProvider(),
-					wrapped.getProfiler(), false);
-			this.wrapped = wrapped;
-			blocksAdded = new HashMap<>();
-		}
-
-		@Override
-		public int getMaxHeight() {
-			return 256;
-		}
-
-		@Override
-		public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
-			blocksAdded.put(pos, newState);
-			return true;
-		}
-
-		@Override
-		public boolean setBlockState(BlockPos pos, BlockState state) {
-			return setBlockState(pos, state, 0);
-		}
-
-		@Override
-		public boolean hasBlockState(BlockPos p_217375_1_, Predicate<BlockState> p_217375_2_) {
-			return p_217375_2_.test(getBlockState(p_217375_1_));
+			super(wrapped);
 		}
 
 		@Override
 		public BlockState getBlockState(BlockPos pos) {
-			if (blocksAdded.containsKey(pos))
-				return blocksAdded.get(pos);
 			if (pos.getY() <= 9)
 				return Blocks.GRASS_BLOCK.getDefaultState();
-			return Blocks.AIR.getDefaultState();
-		}
-
-		@Override
-		public ITickList<Block> getPendingBlockTicks() {
-			return EmptyTickList.get();
-		}
-
-		@Override
-		public ITickList<Fluid> getPendingFluidTicks() {
-			return EmptyTickList.get();
-		}
-
-		@Override
-		public void playEvent(PlayerEntity player, int type, BlockPos pos, int data) {
-		}
-
-		@Override
-		public List<? extends PlayerEntity> getPlayers() {
-			return Collections.emptyList();
-		}
-
-		@Override
-		public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
-		}
-
-		@Override
-		public void playSound(PlayerEntity player, double x, double y, double z, SoundEvent soundIn,
-				SoundCategory category, float volume, float pitch) {
-		}
-
-		@Override
-		public void playMovingSound(PlayerEntity p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
-				SoundCategory p_217384_4_, float p_217384_5_, float p_217384_6_) {
-		}
-
-		@Override
-		public Entity getEntityByID(int id) {
-			return null;
-		}
-
-		@Override
-		public MapData getMapData(String mapName) {
-			return wrapped.getMapData(mapName);
-		}
-
-		@Override
-		public void registerMapData(MapData mapDataIn) {
-			wrapped.registerMapData(mapDataIn);
+			return super.getBlockState(pos);
 		}
 		
-		@Override
-		public int getNextMapId() {
-			return 0;
-		}
-
-		@Override
-		public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {
-		}
-
-		@Override
-		public Scoreboard getScoreboard() {
-			return null;
-		}
-
-		@Override
-		public RecipeManager getRecipeManager() {
-			return null;
-		}
-
-		@Override
-		public NetworkTagManager getTags() {
-			return null;
-		}
-
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.logistics.InWorldProcessing;
@@ -49,6 +50,7 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 	protected int blockCheckCooldown;
 	protected boolean findFrontBlock;
 	protected BlockState frontBlock;
+	protected boolean isGenerator;
 
 	public EncasedFanTileEntity() {
 		super(AllTileEntities.ENCASED_FAN.type);
@@ -57,6 +59,7 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 		frontBB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 		backBB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 		particleHandler = CreateClient.fanParticles;
+		isGenerator = false;
 	}
 
 	@Override
@@ -67,23 +70,37 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 	}
 
 	@Override
-	public CompoundNBT writeToClient(CompoundNBT tag) {
-		super.writeToClient(tag);
-		return tag;
-	}
-
-	@Override
 	public void read(CompoundNBT compound) {
 		super.read(compound);
+		isGenerator = compound.getBoolean("Generating");
 		pushDistance = compound.getFloat("PushDistance");
 		pullDistance = compound.getFloat("PullDistance");
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
+		compound.putBoolean("Generating", isGenerator);
 		compound.putFloat("PushDistance", pushDistance);
 		compound.putFloat("PullDistance", pullDistance);
 		return super.write(compound);
+	}
+
+	@Override
+	public boolean isSource() {
+		return isGenerator;
+	}
+
+	public void updateGenerator() {
+		boolean shouldGenerate = world.isBlockPowered(pos) && world.isBlockPresent(pos.down())
+				&& world.getBlockState(pos.down()).getBlock() == Blocks.FIRE;
+		if (shouldGenerate == isGenerator)
+			return;
+
+		isGenerator = shouldGenerate;
+		if (isGenerator)
+			removeSource();
+		applyNewSpeed(isGenerator ? CreateConfig.parameters.generatingFanSpeed.get() : 0);
+		sendData();
 	}
 
 	protected void updateReachAndForce() {
@@ -163,7 +180,7 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 
 	@Override
 	public void tick() {
-		if (speed == 0)
+		if (speed == 0 || isGenerator)
 			return;
 
 		List<Entity> frontEntities = world.getEntitiesWithinAABBExcludingEntity(null, frontBB);
@@ -196,7 +213,7 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 	public void processEntity(Entity entity) {
 		if (InWorldProcessing.isFrozen())
 			return;
-		
+
 		if (entity instanceof ItemEntity) {
 			if (world.rand.nextInt(4) == 0) {
 				Type processingType = getProcessingType();
@@ -205,6 +222,9 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 							1 / 16f, 0);
 				if (processingType == Type.SMOKING)
 					world.addParticle(ParticleTypes.CLOUD, entity.posX, entity.posY + .25f, entity.posZ, 0, 1 / 16f, 0);
+				if (processingType == Type.SPLASHING)
+					world.addParticle(ParticleTypes.BUBBLE_POP, entity.posX + (world.rand.nextFloat() - .5f) * .5f,
+							entity.posY + .25f, entity.posZ + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 16f, 0);
 			}
 
 			if (world.isRemote)
@@ -223,7 +243,7 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 				entity.attackEntityFrom(damageSourceLava, 8);
 			}
 			if (getProcessingType() == Type.SPLASHING) {
-				entity.setFire(0);
+				entity.extinguish();
 				world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 						SoundCategory.NEUTRAL, 0.7F, 1.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.4F);
 			}

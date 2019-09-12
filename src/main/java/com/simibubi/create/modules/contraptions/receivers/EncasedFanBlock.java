@@ -35,8 +35,13 @@ public class EncasedFanBlock extends EncasedShaftBlock implements IWithTileEntit
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
 		notifyFanTile(worldIn, pos);
+		
+		if (worldIn.isRemote || state.get(AXIS).isHorizontal())
+			return;
+		
+		withTileEntityDo(worldIn, pos, EncasedFanTileEntity::updateGenerator);
 	}
-
+	
 	protected void notifyFanTile(IWorld world, BlockPos pos) {
 		withTileEntityDo(world, pos, EncasedFanTileEntity::updateFrontBlock);
 	}

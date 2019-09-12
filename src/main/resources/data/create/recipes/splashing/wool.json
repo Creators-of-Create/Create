@@ -1,0 +1,16 @@
+{
+    "type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"tag": "minecraft:wool"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:white_wool",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}

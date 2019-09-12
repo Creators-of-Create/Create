@@ -79,16 +79,16 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 			PlayerEntity player) {
 		return new ItemStack(AllItems.BELT_CONNECTOR.item);
 	}
-	
+
 	@Override
 	public void onLanded(IBlockReader worldIn, Entity entityIn) {
 		super.onLanded(worldIn, entityIn);
-		
+
 		if (entityIn instanceof PlayerEntity && entityIn.isSneaking())
 			return;
 		if (entityIn instanceof PlayerEntity && ((PlayerEntity) entityIn).moveVertical > 0)
 			return;
-		
+
 		BeltTileEntity belt = null;
 		BlockPos entityPosition = entityIn.getPosition();
 
@@ -124,7 +124,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 			return;
 		if (entityIn instanceof PlayerEntity && ((PlayerEntity) entityIn).moveVertical > 0)
 			return;
-		
+
 		BeltTileEntity belt = null;
 		belt = (BeltTileEntity) worldIn.getTileEntity(pos);
 
@@ -152,7 +152,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 			te.attachmentTracker.findAttachments(te);
 		});
 	}
-	
+
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(SLOPE, PART);
@@ -218,10 +218,19 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	}
 
 	@Override
+	public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+		withTileEntityDo(worldIn, pos, te -> {
+			if (te.hasPulley())
+				Block.spawnDrops(AllBlocks.SHAFT.get().getDefaultState(), worldIn, pos);
+		});
+		super.onBlockHarvested(worldIn, pos, state, player);
+	}
+
+	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
-		
+
 		boolean endWasDestroyed = state.get(PART) == Part.END;
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 		if (tileEntity == null)
@@ -381,7 +390,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 							IBooleanFunction.AND));
 		return shape;
 	}
-	
+
 	@Override
 	public ItemDescription getDescription() {
 		return new ItemDescription(color);

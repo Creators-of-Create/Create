@@ -120,5 +120,19 @@ public abstract class KineticTileEntity extends SyncedTileEntity {
 		setSpeed(0);
 		onSpeedChanged();
 	}
+	
+	public void applyNewSpeed(float speed) {
+		detachKinetics();
+		this.speed = speed;
+		attachKinetics();
+	}
+	
+	public void attachKinetics() {
+		RotationPropagator.handleAdded(world, pos, this);
+	}
+	
+	public void detachKinetics() {
+		RotationPropagator.handleRemoved(world, pos, this);
+	}
 
 }

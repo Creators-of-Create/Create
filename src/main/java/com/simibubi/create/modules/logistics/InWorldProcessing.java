@@ -3,8 +3,10 @@ package com.simibubi.create.modules.logistics;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.AllRecipes;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.utility.ItemHelper;
+import com.simibubi.create.modules.contraptions.receivers.SplashingRecipe;
 
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -19,8 +21,18 @@ import net.minecraft.tileentity.BlastFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.SmokerTileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class InWorldProcessing {
+
+	public static class SplashingInv extends RecipeWrapper {
+		public SplashingInv() {
+			super(new ItemStackHandler(1));
+		}
+	}
+
+	public static SplashingInv splashingInv = new SplashingInv();
 
 	public enum Type {
 		SMOKING, BLASTING, SPLASHING
@@ -46,7 +58,10 @@ public class InWorldProcessing {
 		}
 
 		if (type == Type.SPLASHING) {
-			return false;
+			splashingInv.setInventorySlotContents(0, entity.getItem());
+			Optional<SplashingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.SPLASHING,
+					splashingInv, world);
+			return recipe.isPresent();
 		}
 
 		return false;
@@ -58,6 +73,11 @@ public class InWorldProcessing {
 			return;
 
 		if (type == Type.SPLASHING) {
+			splashingInv.setInventorySlotContents(0, entity.getItem());
+			Optional<SplashingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.SPLASHING,
+					splashingInv, world);
+			if (recipe.isPresent())
+				applyRecipeOn(entity, recipe.get());
 			return;
 		}
 
@@ -132,7 +152,7 @@ public class InWorldProcessing {
 		for (ItemStack additional : stacks)
 			entity.world.addEntity(new ItemEntity(entity.world, entity.posX, entity.posY, entity.posZ, additional));
 	}
-	
+
 	public static boolean isFrozen() {
 		return CreateConfig.parameters.freezeInWorldProcessing.get();
 	}

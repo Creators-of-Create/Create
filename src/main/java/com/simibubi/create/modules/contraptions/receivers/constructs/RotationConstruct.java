@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.simibubi.create.AllBlockTags;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 
@@ -26,9 +27,11 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 public class RotationConstruct {
 
 	protected Map<BlockPos, BlockInfo> blocks;
-
+	protected int sailBlocks;
+	
 	public RotationConstruct() {
 		blocks = new HashMap<>();
+		sailBlocks = 0;
 	}
 
 	public static RotationConstruct getAttachedForRotating(World world, BlockPos pos, Direction direction) {
@@ -39,11 +42,15 @@ public class RotationConstruct {
 
 		return construct;
 	}
+	
+	public int getSailBlocks() {
+		return sailBlocks;
+	}
 
 	protected boolean collectAttached(World world, BlockPos pos, Direction direction) {
 		if (isFrozen())
 			return false;
-		
+
 		// Find chassis
 		List<BlockInfo> chassis = collectChassis(world, pos, direction);
 		if (chassis == null)
@@ -69,6 +76,8 @@ public class RotationConstruct {
 			if (attachedBlocksByChassis == null)
 				return false;
 			attachedBlocksByChassis.forEach(info -> {
+				if (isSailBlock(info.state))
+					sailBlocks++;
 				blocks.put(info.pos, new BlockInfo(info.pos.subtract(pos), info.state, info.nbt));
 			});
 		}
@@ -156,6 +165,10 @@ public class RotationConstruct {
 		return chassis;
 	}
 
+	private static boolean isSailBlock(BlockState state) {
+		return AllBlockTags.WINDMILL_SAILS.matches(state);
+	}
+
 	public CompoundNBT writeNBT() {
 		CompoundNBT nbt = new CompoundNBT();
 		ListNBT blocks = new ListNBT();
@@ -193,5 +206,5 @@ public class RotationConstruct {
 	public static boolean isFrozen() {
 		return CreateConfig.parameters.freezeRotationConstructs.get();
 	}
-	
+
 }
