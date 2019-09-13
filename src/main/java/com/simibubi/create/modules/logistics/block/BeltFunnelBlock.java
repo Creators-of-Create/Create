@@ -35,9 +35,11 @@ import net.minecraft.world.World;
 
 public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment, IWithTileEntity<BeltFunnelTileEntity> {
 
-	public static final VoxelShape SHAPE_NORTH = makeCuboidShape(4, 2, -1, 12, 10, 5),
-			SHAPE_SOUTH = makeCuboidShape(4, 2, 11, 12, 10, 17), SHAPE_WEST = makeCuboidShape(-1, 2, 4, 5, 10, 12),
-			SHAPE_EAST = makeCuboidShape(11, 2, 4, 17, 10, 12);
+	public static final VoxelShape 
+			SHAPE_NORTH = makeCuboidShape(3, -4, -1, 13, 8, 5),
+			SHAPE_SOUTH = makeCuboidShape(3, -4, 11, 13, 8, 17), 
+			SHAPE_WEST = makeCuboidShape(-1, -4, 3, 5, 8, 13),
+			SHAPE_EAST = makeCuboidShape(11, -4, 3, 17, 8, 13);
 
 	public BeltFunnelBlock() {
 		super(Properties.from(Blocks.ANDESITE));

@@ -2,11 +2,11 @@
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
 	"parent": "block/cube",
     "textures": {
-        "particle": "block/stripped_spruce_log",
+        "particle": "block/dark_oak_log",
         "0": "create:block/axis",
         "1": "create:block/axis_top",
-        "2": "block/stripped_spruce_log",
-        "3": "block/stripped_spruce_log_top"
+        "2": "block/dark_oak_log",
+        "3": "block/dark_oak_log"
     },
     "elements": [
         {

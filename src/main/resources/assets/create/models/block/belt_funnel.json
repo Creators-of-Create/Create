@@ -1,23 +1,22 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
-	"parent": "block/block",
     "textures": {
+        "particle": "create:block/belt_funnel",
         "belt_funnel": "create:block/belt_funnel",
-        "belt": "create:block/belt",
-		"particle": "create:block/belt_funnel"
+        "brass_casing": "create:block/brass_casing"
     },
     "elements": [
         {
             "name": "Bottom",
-            "from": [ 3, 0, -1 ], 
-            "to": [ 13, 1, 5 ], 
+            "from": [ 3, -4.1, -1 ], 
+            "to": [ 13, -3.1, 5 ], 
             "faces": {
-                "north": { "texture": "#belt_funnel", "uv": [ 0, 0, 10, 1 ] },
-                "east": { "texture": "#belt_funnel", "uv": [ 9, 8, 10, 14 ], "rotation": 90 },
-                "south": { "texture": "#belt_funnel", "uv": [ 0, 0, 10, 1 ] },
-                "west": { "texture": "#belt_funnel", "uv": [ 0, 8, 1, 14 ], "rotation": 90 },
-                "up": { "texture": "#belt_funnel", "uv": [ 0, 8, 10, 14 ] },
-                "down": { "texture": "#belt_funnel", "uv": [ 0, 8, 10, 14 ] }
+                "north": { "texture": "#belt_funnel", "uv": [ 0, 11, 10, 12 ] },
+                "east": { "texture": "#belt_funnel", "uv": [ 10, 11, 16, 12 ] },
+                "south": { "texture": "#belt_funnel", "uv": [ 0, 11, 10, 12 ] },
+                "west": { "texture": "#belt_funnel", "uv": [ 10, 11, 16, 12 ], "rotation": 180 },
+                "up": { "texture": "#belt_funnel", "uv": [ 10, 0, 16, 13 ], "rotation": 90 },
+                "down": { "texture": "#belt_funnel", "uv": [ 10, 0, 16, 12 ], "rotation": 90 }
             }
         },
         {
@@ -26,44 +25,33 @@
             "to": [ 13, 8, 5 ], 
             "faces": {
                 "north": { "texture": "#belt_funnel", "uv": [ 0, 0, 10, 1 ] },
-                "east": { "texture": "#belt_funnel", "uv": [ 9, 8, 10, 14 ], "rotation": 90 },
+                "east": { "texture": "#belt_funnel", "uv": [ 10, 0, 16, 1 ] },
                 "south": { "texture": "#belt_funnel", "uv": [ 0, 0, 10, 1 ] },
-                "west": { "texture": "#belt_funnel", "uv": [ 0, 8, 1, 14 ], "rotation": 90 },
-                "up": { "texture": "#belt_funnel", "uv": [ 0, 8, 10, 14 ] },
-                "down": { "texture": "#belt_funnel", "uv": [ 0, 8, 10, 14 ] }
+                "west": { "texture": "#belt_funnel", "uv": [ 10, 0, 16, 1 ], "rotation": 180 },
+                "up": { "texture": "#belt_funnel", "uv": [ 10, 0, 16, 12 ], "rotation": 90 },
+                "down": { "texture": "#belt_funnel", "uv": [ 10, 0, 16, 13 ], "rotation": 90 }
             }
         },
         {
             "name": "Side",
-            "from": [ 3, 1, -1 ], 
+            "from": [ 3, -3.1, -1 ], 
             "to": [ 4, 7, 5 ], 
             "faces": {
-                "north": { "texture": "#belt_funnel", "uv": [ 9, 1, 10, 7 ] },
-                "east": { "texture": "#belt_funnel", "uv": [ 9, 8, 10, 14 ], "rotation": 90 },
-                "south": { "texture": "#belt_funnel", "uv": [ 0, 1, 1, 7 ] },
-                "west": { "texture": "#belt_funnel", "uv": [ 0, 8, 1, 14 ], "rotation": 90 }
-            }
-        },
-        {
-            "name": "Side",
-            "from": [ 12, 1, -1 ], 
-            "to": [ 13, 7, 5 ], 
-            "faces": {
-                "north": { "texture": "#belt_funnel", "uv": [ 0, 1, 1, 7 ] },
-                "east": { "texture": "#belt_funnel", "uv": [ 9, 8, 10, 14 ], "rotation": 90 },
-                "south": { "texture": "#belt_funnel", "uv": [ 9, 1, 10, 7 ] },
-                "west": { "texture": "#belt_funnel", "uv": [ 0, 8, 1, 14 ], "rotation": 90 }
+                "north": { "texture": "#belt_funnel", "uv": [ 9, 1, 10, 11.1 ] },
+                "east": { "texture": "#belt_funnel", "uv": [ 10, 1, 16, 11 ] },
+                "south": { "texture": "#belt_funnel", "uv": [ 0, 1, 1, 11.1 ] },
+                "west": { "texture": "#belt_funnel", "uv": [ 10, 1, 16, 11 ] }
             }
         },
         {
             "name": "Center",
-            "from": [ 4, 1, -1 ], 
+            "from": [ 4, -3.1, -1 ], 
             "to": [ 12, 7, 4 ], 
             "faces": {
-                "north": { "texture": "#belt_funnel", "uv": [ 1, 8, 9, 14 ] },
-                "east": { "texture": "#belt_funnel", "uv": [ 9, 8, 10, 14 ], "rotation": 90 },
-                "south": { "texture": "#belt_funnel", "uv": [ 1, 1, 9, 7 ] },
-                "west": { "texture": "#belt_funnel", "uv": [ 0, 8, 1, 14 ], "rotation": 90 }
+                "north": { "texture": "#brass_casing", "uv": [ 4, 3, 12, 13.1 ] },
+                "east": { "texture": "#belt_funnel", "uv": [ 9, 3, 10, 9 ], "rotation": 90 },
+                "south": { "texture": "#belt_funnel", "uv": [ 1, 1, 9, 11.1 ] },
+                "west": { "texture": "#belt_funnel", "uv": [ 0, 2, 1, 8 ], "rotation": 90 }
             }
         },
         {
@@ -73,24 +61,34 @@
             "rotation": { "origin": [ 8, 8, 0 ], "axis": "x", "angle": -22.5 },
             "faces": {
                 "north": { "texture": "#belt_funnel", "uv": [ 1, 7, 9, 9 ], "rotation": 180 },
-                "east": { "texture": "#belt_funnel", "uv": [ 0, 9.6, 1.8, 14 ], "rotation": 90 },
-                "south": { "texture": "#belt_funnel", "uv": [ 1, 7, 9, 9 ] },
-                "west": { "texture": "#belt_funnel", "uv": [ 0, 8, 2, 12.4 ], "rotation": 90 },
-                "up": { "texture": "#belt_funnel", "uv": [ 1, 8, 9, 12.4 ], "rotation": 180 },
+                "east": { "texture": "#belt_funnel", "uv": [ 11, 4.6, 16, 6.6 ], "rotation": 180 },
+                "south": { "texture": "#belt_funnel", "uv": [ 9, 2, 11, 10 ], "rotation": 90 },
+                "west": { "texture": "#belt_funnel", "uv": [ 10, 5, 15, 7.4 ], "rotation": 180 },
+                "up": { "texture": "#belt_funnel", "uv": [ 11, 2, 16, 9.4 ], "rotation": 90 },
                 "down": { "texture": "#belt_funnel", "uv": [ 1, 8, 9, 12.8 ] }
             }
         },
         {
             "name": "Ramp",
-            "from": [ 4, -0.9, 4 ], 
-            "to": [ 12, 1.1, 11 ], 
-            "rotation": { "origin": [ 8, 1, 5 ], "axis": "x", "angle": 45.0 },
+            "from": [ 4, -4, -8 ], 
+            "to": [ 12, 3, -1 ], 
+            "rotation": { "origin": [ 8, -4, -1 ], "axis": "x", "angle": 45.0 },
             "faces": {
-                "north": { "texture": "#belt", "uv": [ 0, 0, 8, 2 ] },
-                "east": { "texture": "#belt", "uv": [ 14, 3, 16, 10 ], "rotation": 90 },
-                "west": { "texture": "#belt", "uv": [ 0, 3, 2, 10 ], "rotation": 270 },
-                "up": { "texture": "#belt", "uv": [ 4, 1, 12, 8 ] },
-                "down": { "texture": "#belt", "uv": [ 0, 0, 8, 7 ] }
+                "north": { "texture": "#brass_casing", "uv": [ 4, 5, 12, 12 ] },
+                "east": { "texture": "#brass_casing", "uv": [ 4, 9, 11, 16 ], "rotation": 90 },
+                "west": { "texture": "#brass_casing", "uv": [ 5, 9, 12, 16 ], "rotation": 270 },
+                "down": { "texture": "#brass_casing", "uv": [ 4, 0, 12, 7 ] }
+            }
+        },
+        {
+            "name": "Side",
+            "from": [ 12, -3.1, -1 ], 
+            "to": [ 13, 7, 5 ], 
+            "faces": {
+                "north": { "texture": "#belt_funnel", "uv": [ 0, 1, 1, 11.1 ] },
+                "east": { "texture": "#belt_funnel", "uv": [ 10, 1, 16, 11 ], "rotation": 180 },
+                "south": { "texture": "#belt_funnel", "uv": [ 9, 1, 10, 11.1 ] },
+                "west": { "texture": "#belt_funnel", "uv": [ 10, 1, 16, 11 ] }
             }
         }
     ]

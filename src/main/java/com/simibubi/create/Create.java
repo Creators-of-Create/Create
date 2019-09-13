@@ -28,7 +28,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.0.5";
+	public static final String VERSION = "0.1.0";
 
 	public static Logger logger = LogManager.getLogger();
 	public static ItemGroup creativeTab = new CreateItemGroup();
@@ -77,6 +77,8 @@ public class Create {
 	}
 
 	public static void tick() {
+		if (schematicReceiver == null)
+			schematicReceiver = new ServerSchematicLoader();
 		schematicReceiver.tick();
 	}
 

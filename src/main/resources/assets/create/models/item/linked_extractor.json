@@ -14,21 +14,9 @@
     },
 	"textures": {
 		"redstone_antenna": "create:block/redstone_antenna",
-        "extractor": "create:block/extractor",
-		"symbols": "create:item/symbols"
+        "extractor": "create:block/extractor"
     },
 	"elements": [
-		{
-            "name": "Indicator",
-            "from": [ 8, 7, 13 ], 
-            "to": [ 16, 15, 13 ], 
-            "shade": false,
-            "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": -45.0 },
-            "faces": {
-                "north": { "texture": "#symbols", "uv": [ 0, 0, 8, 8 ] },
-                "south": { "texture": "#symbols", "uv": [ 0, 0, 8, 8 ] }
-            }
-        },
 		{
             "name": "Bottom",
             "from": [ 4, 2, -1 ], 
