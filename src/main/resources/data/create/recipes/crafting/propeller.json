@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            " I ",
+            "ISI",
+			" I "
+        ],
+        "key": {
+            "I": {
+                "item": "create:iron_sheet"
+            },
+			"S": {
+                "item": "create:shaft"
+            }
+        },
+	"result": {
+		"item": "create:propeller",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

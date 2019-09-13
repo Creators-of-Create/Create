@@ -13,11 +13,11 @@ import net.minecraft.util.Rotation;
 public abstract class HorizontalKineticBlock extends KineticBlock {
 
 	public static final IProperty<Direction> HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
-	
+
 	public HorizontalKineticBlock(Properties properties) {
 		super(properties);
 	}
-	
+
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(HORIZONTAL_FACING);
@@ -27,6 +27,26 @@ public abstract class HorizontalKineticBlock extends KineticBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+	}
+
+	public Direction getPreferredHorizontalFacing(BlockItemUseContext context) {
+		Direction prefferedSide = null;
+		for (Direction side : Direction.values()) {
+			if (side.getAxis().isVertical())
+				continue;
+			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));
+			if (blockState.getBlock() instanceof IRotate) {
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos().offset(side),
+						blockState, side.getOpposite()))
+					if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
+						prefferedSide = null;
+						break;
+					} else {
+						prefferedSide = side;
+					}
+			}
+		}
+		return prefferedSide;
 	}
 
 	@Override

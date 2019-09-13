@@ -35,6 +35,7 @@ public class CreateClient {
 		AllContainers.registerScreenFactories();
 		AllTileEntities.registerRenderers();
 		AllItems.registerColorHandlers();
+		AllBlocks.registerColorHandlers();
 	}
 	
 	@SubscribeEvent

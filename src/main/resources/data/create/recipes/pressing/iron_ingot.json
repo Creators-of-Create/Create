@@ -1,0 +1,16 @@
+{
+    "type": "create:pressing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:iron_ingot"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "create:iron_sheet",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}

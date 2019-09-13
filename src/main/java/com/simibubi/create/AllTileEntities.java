@@ -11,6 +11,8 @@ import com.simibubi.create.modules.contraptions.receivers.CrushingWheelTileEntit
 import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ChassisTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingTileEntity;
@@ -38,6 +40,8 @@ import com.simibubi.create.modules.logistics.block.LinkedExtractorTileEntityRend
 import com.simibubi.create.modules.logistics.block.LinkedTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntity;
 import com.simibubi.create.modules.logistics.block.StockswitchTileEntity;
+import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterTileEntity;
+import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterTileEntityRenderer;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
@@ -79,6 +83,7 @@ public enum AllTileEntities {
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
+	MECHANICAL_PRESS(MechanicalPressTileEntity::new, AllBlocks.MECHANICAL_PRESS),
 
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
@@ -88,6 +93,7 @@ public enum AllTileEntities {
 	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR),
 	BELT_FUNNEL(BeltFunnelTileEntity::new, AllBlocks.BELT_FUNNEL),
 	ENTITY_DETECTOR(EntityDetectorTileEntity::new, AllBlocks.ENTITY_DETECTOR),
+	FLEXPEATER(FlexpeaterTileEntity::new, AllBlocks.FLEXPEATER),
 
 	;
 
@@ -136,6 +142,8 @@ public enum AllTileEntities {
 		bind(LinkedExtractorTileEntity.class, new LinkedExtractorTileEntityRenderer());
 		bind(ExtractorTileEntity.class, new ExtractorTileEntityRenderer());
 		bind(EntityDetectorTileEntity.class, new EntityDetectorTileEntityRenderer());
+		bind(MechanicalPressTileEntity.class, new MechanicalPressTileEntityRenderer());
+		bind(FlexpeaterTileEntity.class, new FlexpeaterTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

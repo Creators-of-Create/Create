@@ -16,6 +16,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
@@ -23,10 +24,12 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.shapes.IBooleanFunction;
@@ -36,6 +39,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 
 public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockItem, IWithTileEntity<BeltTileEntity> {
 
@@ -151,6 +155,22 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 		withTileEntityDo(worldIn, pos, te -> {
 			te.attachmentTracker.findAttachments(te);
 		});
+	}
+
+	@Override
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+			BlockRayTraceResult hit) {
+		if (player.isSneaking() || !player.isAllowEdit())
+			return false;
+		ItemStack heldItem = player.getHeldItem(handIn);
+		if (!Tags.Items.DYES.contains(heldItem.getItem()))
+			return false;
+		if (worldIn.isRemote)
+			return true;
+		withTileEntityDo(worldIn, pos, te -> te.applyColor(DyeColor.getColor(heldItem)));
+		if (!player.isCreative())
+			heldItem.shrink(1);
+		return true;
 	}
 
 	@Override

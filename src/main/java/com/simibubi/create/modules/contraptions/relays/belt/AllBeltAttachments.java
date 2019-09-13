@@ -21,6 +21,7 @@ public enum AllBeltAttachments {
 
 	BELT_FUNNEL(AllBlocks.BELT_FUNNEL),
 	BELT_OBSERVER(AllBlocks.ENTITY_DETECTOR),
+	MECHANICAL_PRESS(AllBlocks.MECHANICAL_PRESS),
 
 	;
 

@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/flexpeater",
+    "textures": {
+        "flexpeater_off": "create:block/flexpeater_on",
+		"particle": "create:block/flexpeater_on"
+    }
+}

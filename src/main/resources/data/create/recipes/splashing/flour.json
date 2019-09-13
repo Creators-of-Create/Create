@@ -1,0 +1,16 @@
+{
+    "type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "create:flour"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "create:dough",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}

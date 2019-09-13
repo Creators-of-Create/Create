@@ -7,6 +7,8 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 
 public class RotationChassisBlock extends AbstractChassisBlock {
 
@@ -28,7 +30,7 @@ public class RotationChassisBlock extends AbstractChassisBlock {
 	}
 	
 	@Override
-	public String getValueName() {
+	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
 		return "Radius";
 	}
 	

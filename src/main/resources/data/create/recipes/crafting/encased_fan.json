@@ -13,7 +13,7 @@
                 "item": "create:andesite_alloy_cube"
             },
 			"S": {
-                "item": "create:shaft"
+                "item": "create:propeller"
             },
 			"R": {
                 "tag": "minecraft:logs"

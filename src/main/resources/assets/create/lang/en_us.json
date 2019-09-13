@@ -15,6 +15,10 @@
 	"item.create.rose_quartz": "Rose Quartz",
 	"item.create.refined_rose_quartz": "Refined Rose Quartz",
 	"item.create.refined_radiance_cube": "Refined Radiance",
+	"item.create.iron_sheet": "Iron Sheets",
+	"item.create.propeller": "Propeller",
+	"item.create.flour": "Wheat Flour",
+	"item.create.dough": "Dough",
 	
 	"item.create.blazing_pickaxe": "Blazing Pickaxe",
 	"item.create.blazing_shovel": "Blazing Shovel",
@@ -46,6 +50,8 @@
 	"block.create.drill": "Mechanical Drill",
 	"block.create.harvester": "Mechanical Harvester",
 	"block.create.water_wheel": "Water Wheel",
+	"block.create.belt_support": "Belt Support",
+	"block.create.mechanical_press": "Mechanical Press",
 	
 	"block.create.sticky_mechanical_piston": "Sticky Mechanical Piston",
 	"block.create.mechanical_piston": "Mechanical Piston",
@@ -63,6 +69,7 @@
 	"block.create.belt_funnel": "Belt Funnel",
 	"block.create.linked_extractor": "Linked Extractor",
 	"block.create.pulse_repeater": "Pulse Repeater",
+	"block.create.flexpeater": "FlexPeater",
 	"block.create.entity_detector": "Belt Observer",
 	
 	"block.create.andesite_bricks": "Andesite Bricks",

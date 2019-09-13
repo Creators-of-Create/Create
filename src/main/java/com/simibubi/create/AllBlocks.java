@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.simibubi.create.foundation.block.IBlockWithColorHandler;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
@@ -12,6 +13,7 @@ import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControlle
 import com.simibubi.create.modules.contraptions.receivers.DrillBlock;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock;
+import com.simibubi.create.modules.contraptions.receivers.MechanicalPressBlock;
 import com.simibubi.create.modules.contraptions.receivers.TurntableBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock;
@@ -29,15 +31,17 @@ import com.simibubi.create.modules.contraptions.relays.GearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.ShaftHalfBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltSupportBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
 import com.simibubi.create.modules.logistics.block.BeltFunnelBlock;
 import com.simibubi.create.modules.logistics.block.EntityDetectorBlock;
 import com.simibubi.create.modules.logistics.block.ExtractorBlock;
 import com.simibubi.create.modules.logistics.block.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.block.LinkedExtractorBlock;
-import com.simibubi.create.modules.logistics.block.PulseRepeaterBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneBridgeBlock;
 import com.simibubi.create.modules.logistics.block.StockswitchBlock;
+import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterBlock;
+import com.simibubi.create.modules.logistics.block.diodes.PulseRepeaterBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
@@ -54,8 +58,12 @@ import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.WallBlock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllBlocks {
@@ -77,6 +85,7 @@ public enum AllBlocks {
 	GEARSHIFT(new GearshiftBlock()),
 	GEARBOX(new GearboxBlock()),
 	BELT(new BeltBlock()),
+	BELT_SUPPORT(new BeltSupportBlock()),
 	BELT_PULLEY(new RenderUtilityAxisBlock()),
 	BELT_ANIMATION(new RenderUtilityBlock()),
 	MOTOR(new MotorBlock()),
@@ -87,6 +96,8 @@ public enum AllBlocks {
 	SHAFT_HALF(new ShaftHalfBlock()),
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
+	MECHANICAL_PRESS(new MechanicalPressBlock()),
+	MECHANICAL_PRESS_HEAD(new MechanicalPressBlock.Head()),
 	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
 	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
 	MECHANICAL_PISTON_HEAD(new MechanicalPistonHeadBlock()),
@@ -108,6 +119,8 @@ public enum AllBlocks {
 	BELT_FUNNEL(new BeltFunnelBlock()),
 	ENTITY_DETECTOR(new EntityDetectorBlock()),
 	PULSE_REPEATER(new PulseRepeaterBlock()),
+	FLEXPEATER(new FlexpeaterBlock()),
+	FLEXPEATER_INDICATOR(new RenderUtilityBlock()),
 
 	__CURIOSITIES__(),
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),
@@ -238,6 +251,16 @@ public enum AllBlocks {
 
 		return featured.setRegistryName(Create.ID,
 				block.getRegistryName().getPath() + "_" + feature.name().toLowerCase());
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void registerColorHandlers() {
+		BlockColors blockColors = Minecraft.getInstance().getBlockColors();
+		for (AllBlocks block : values()) {
+			if (block.block instanceof IBlockWithColorHandler) {
+				blockColors.register(((IBlockWithColorHandler) block.block).getColorHandler(), block.block);
+			}
+		}
 	}
 
 }

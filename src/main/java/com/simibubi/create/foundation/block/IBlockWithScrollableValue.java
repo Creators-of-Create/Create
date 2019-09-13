@@ -35,7 +35,7 @@ public interface IBlockWithScrollableValue {
 
 	public void onScroll(BlockState state, IWorld world, BlockPos pos, double delta);
 
-	public String getValueName();
+	public String getValueName(BlockState state, IWorld world, BlockPos pos);
 
 	public Vec3d getValueBoxPosition(BlockState state, IWorld world, BlockPos pos);
 
@@ -125,7 +125,7 @@ public interface IBlockWithScrollableValue {
 			GlStateManager.translated(bb.getZSize() + 1/32f, -1/16f, 0);
 			GlStateManager.scaled(textScale, -textScale, textScale);
 
-			String text = block.getValueName();
+			String text = block.getValueName(state, world, blockPos);
 			mc.fontRenderer.drawString(text, 0, 0, 0x88FFBB);
 			GlStateManager.translated(0, 0, -1 / 4f);
 			mc.fontRenderer.drawString(text, 1, 1, 0x224433);

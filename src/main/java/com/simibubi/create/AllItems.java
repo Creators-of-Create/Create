@@ -41,14 +41,15 @@ public enum AllItems {
 			new BuilderGunItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN)))),
 
 	__MATERIALS__(),
-	ANDESITE_ALLOY_CUBE(new Item(standardItemProperties())),
-	BLAZE_BRASS_CUBE(new Item(standardItemProperties())),
-	CHORUS_CHROME_CUBE(new Item(standardItemProperties().rarity(Rarity.UNCOMMON))),
-	SHADOW_STEEL_CUBE(new Item(standardItemProperties().rarity(Rarity.UNCOMMON))),
-	ROSE_QUARTZ(new Item(standardItemProperties())),
-	REFINED_ROSE_QUARTZ(new Item(standardItemProperties())),
+	IRON_SHEET(ingredient()),
+	ANDESITE_ALLOY_CUBE(ingredient()),
+	BLAZE_BRASS_CUBE(ingredient()),
+	CHORUS_CHROME_CUBE(ingredient(Rarity.UNCOMMON)),
+	SHADOW_STEEL_CUBE(ingredient(Rarity.UNCOMMON)),
+	ROSE_QUARTZ(ingredient()),
+	REFINED_ROSE_QUARTZ(ingredient()),
 	CHROMATIC_COMPOUND_CUBE(new ChromaticCompoundCubeItem(standardItemProperties().rarity(Rarity.UNCOMMON))),
-	REFINED_RADIANCE_CUBE(new Item(standardItemProperties().rarity(Rarity.RARE))),
+	REFINED_RADIANCE_CUBE(ingredient(Rarity.RARE)),
 
 //	BLAZING_PICKAXE(new BlazingToolItem(1, -2.8F, standardProperties(), PICKAXE)),
 //	BLAZING_SHOVEL(new BlazingToolItem(1.5F, -3.0F, standardProperties(), SHOVEL)),
@@ -71,9 +72,12 @@ public enum AllItems {
 	EMPTY_BLUEPRINT(new Item(standardItemProperties().maxStackSize(1))),
 	BLUEPRINT_AND_QUILL(new SchematicAndQuillItem(standardItemProperties().maxStackSize(1))),
 	BLUEPRINT(new SchematicItem(standardItemProperties())),
-	
+
 	__CONTRAPTIONS__(),
 	BELT_CONNECTOR(new BeltItem(standardItemProperties())),
+	FLOUR(ingredient()),
+	DOUGH(ingredient()),
+	PROPELLER(ingredient()),
 
 	;
 
@@ -103,6 +107,14 @@ public enum AllItems {
 
 	public static Properties standardItemProperties() {
 		return new Properties().group(Create.creativeTab);
+	}
+
+	private static Item ingredient() {
+		return ingredient(Rarity.COMMON);
+	}
+
+	private static Item ingredient(Rarity rarity) {
+		return new Item(standardItemProperties().rarity(rarity));
 	}
 
 	public static void registerItems(IForgeRegistry<Item> iForgeRegistry) {

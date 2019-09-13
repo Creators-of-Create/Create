@@ -80,7 +80,7 @@ public class MotorBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public String getValueName() {
+	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
 		return "Speed";
 	}
 

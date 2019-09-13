@@ -37,7 +37,7 @@ public class BeltTileEntityRenderer extends KineticTileEntityRenderer {
 			beltTextures = textureMap.getSprite(new ResourceLocation(Create.ID, "block/belt_animated"));
 		}
 
-		public ByteBuffer getTransformed(BeltTileEntity te, float x, float y, float z) {
+		public ByteBuffer getTransformed(BeltTileEntity te, float x, float y, float z, int color) {
 			original.rewind();
 			mutable.rewind();
 
@@ -63,6 +63,11 @@ public class BeltTileEntityRenderer extends KineticTileEntityRenderer {
 			float texOffX = textureOffsetX;
 			float texOffY = textureOffsetY;
 
+			boolean defaultColor = color == -1;
+			int b = defaultColor ? 128 : color & 0xFF;
+			int g = defaultColor ? 128 : (color >> 8) & 0xFF;
+			int r = defaultColor ? 128 : (color >> 16) & 0xFF;
+
 			for (int vertex = 0; vertex < vertexCount(original); vertex++) {
 				putPos(mutable, vertex, getX(original, vertex) + x, getY(original, vertex) + y,
 						getZ(original, vertex) + z);
@@ -71,6 +76,14 @@ public class BeltTileEntityRenderer extends KineticTileEntityRenderer {
 				int bufferPosition = getBufferPosition(vertex);
 				mutable.putFloat(bufferPosition + 16, original.getFloat(bufferPosition + 16) + texOffX);
 				mutable.putFloat(bufferPosition + 20, original.getFloat(bufferPosition + 20) + texOffY);
+
+				byte lumByte = getR(original, vertex);
+				float lum = (lumByte < 0 ? 255 + lumByte : lumByte) / 256f;
+
+				int r2 = (int) (r * lum);
+				int g2 = (int) (g * lum);
+				int b2 = (int) (b * lum);
+				putColor(mutable, vertex, (byte) r2, (byte) g2, (byte) b2, (byte) 255);
 			}
 
 			return mutable;
@@ -96,6 +109,7 @@ public class BeltTileEntityRenderer extends KineticTileEntityRenderer {
 	}
 
 	public void renderBeltFromCache(BeltTileEntity te, float x, float y, float z, BufferBuilder buffer) {
-		buffer.putBulkData(((BeltModelAnimator) cachedBuffers.get(te.getBlockState())).getTransformed(te, x, y, z));
+		buffer.putBulkData(
+				((BeltModelAnimator) cachedBuffers.get(te.getBlockState())).getTransformed(te, x, y, z, te.color));
 	}
 }

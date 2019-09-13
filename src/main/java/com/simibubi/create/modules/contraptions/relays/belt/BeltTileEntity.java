@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.Tracker;
@@ -19,6 +20,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -38,6 +40,7 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public AllBeltAttachments.Tracker attachmentTracker;
 	private CompoundNBT trackerUpdateTag;
+	public int color;
 
 	protected static class TransportedEntityInfo {
 		int ticksSinceLastCollision;
@@ -64,6 +67,7 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		super(AllTileEntities.BELT.type);
 		controller = BlockPos.ZERO;
 		attachmentTracker = new Tracker();
+		color = -1;
 	}
 
 	protected boolean isLastBelt() {
@@ -86,6 +90,7 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.put("Controller", NBTUtil.writeBlockPos(controller));
+		compound.putInt("Color", color);
 		attachmentTracker.write(compound);
 		return super.write(compound);
 	}
@@ -94,7 +99,23 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 	public void read(CompoundNBT compound) {
 		controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 		trackerUpdateTag = compound;
+		color = compound.getInt("Color");
 		super.read(compound);
+	}
+
+	public void applyColor(DyeColor colorIn) {
+		int colorValue = colorIn.getMapColor().colorValue;
+		for (BlockPos blockPos : BeltBlock.getBeltChain(world, getController())) {
+			BeltTileEntity tileEntity = (BeltTileEntity) world.getTileEntity(blockPos);
+			if (tileEntity != null) {
+				if (tileEntity.color == -1) {
+					tileEntity.color = colorValue;
+				} else {
+					tileEntity.color = ColorHelper.mixColors(tileEntity.color, colorValue, .5f);
+				}
+				tileEntity.sendData();
+			}
+		}
 	}
 
 	public void setController(BlockPos controller) {

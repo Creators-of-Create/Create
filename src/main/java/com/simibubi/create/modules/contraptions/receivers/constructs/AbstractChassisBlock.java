@@ -74,7 +74,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock
 	}
 
 	@Override
-	public String getValueName() {
+	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
 		return "Range";
 	}
 	
