@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.logistics.block;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 
 import net.minecraft.block.BlockState;
@@ -127,7 +128,7 @@ public interface IBlockWithFilter {
 			GlStateManager.translated(17.5f, -5f, -5f);
 			GlStateManager.rotated(67.5f, 1, 0, 0);
 			
-			String text = "Filter";
+			String text = Lang.translate("logistics.filter");
 			Minecraft.getInstance().fontRenderer.drawString(text, 0, 0, 0x88FFBB);
 			GlStateManager.translated(0, 0, -1/4f);
 			Minecraft.getInstance().fontRenderer.drawString(text, 1, 1, 0x224433);

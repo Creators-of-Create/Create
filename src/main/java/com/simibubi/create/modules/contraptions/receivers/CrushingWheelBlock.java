@@ -3,7 +3,6 @@ package com.simibubi.create.modules.contraptions.receivers;
 import static com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerBlock.VALID;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
@@ -165,16 +164,6 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 	@Override
 	protected boolean hasStaticPart() {
 		return false;
-	}
-
-	@Override
-	public ItemDescription getDescription() {
-		return new ItemDescription(color)
-				.withSummary("Using rotational force, two of these Wheels can grind up anything that falls into them.")
-				.withBehaviour("When next other Wheel",
-						"Grinds up Mobs, Players and Items into their components. Wheels have to rotate at exact "
-								+ h("Opposite Speeds", color) + ", dragging inputs into them from above.")
-				.createTabs();
 	}
 
 }

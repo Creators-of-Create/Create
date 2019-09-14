@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
-import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -104,12 +103,6 @@ public class TurntableBlock extends KineticBlock {
 	@Override
 	protected boolean hasStaticPart() {
 		return false;
-	}
-
-	@Override
-	public ItemDescription getDescription() {
-		return new ItemDescription(color).withSummary("Turns rotational Force into raw Motion Sickness.")
-				.withBehaviour("When Rotated", "Rotates any Entities standing on top.").createTabs();
 	}
 
 }

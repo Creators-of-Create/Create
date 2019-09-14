@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.symmetry.mirror;
+package com.simibubi.create.modules.curiosities.symmetry.mirror;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
@@ -60,7 +61,7 @@ public class TriplePlaneMirror extends SymmetryMirror {
 	
 	@Override
 	public List<String> getAlignToolTips() {
-		return ImmutableList.of("Horizontal");
+		return ImmutableList.of(Lang.translate("orientation.horizontal"));
 	}
 
 }

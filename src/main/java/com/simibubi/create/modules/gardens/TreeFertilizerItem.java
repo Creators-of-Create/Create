@@ -2,9 +2,6 @@ package com.simibubi.create.modules.gardens;
 
 import java.util.Random;
 
-import com.simibubi.create.foundation.item.InfoItem;
-import com.simibubi.create.foundation.utility.ItemDescription;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.PlacementSimulationWorld;
 
 import net.minecraft.block.Block;
@@ -12,24 +9,18 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SaplingBlock;
 import net.minecraft.item.BoneMealItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class TreeFertilizerItem extends InfoItem {
+public class TreeFertilizerItem extends Item {
 
 	public TreeFertilizerItem(Properties properties) {
 		super(properties);
 	}
 
-	@Override
-	public ItemDescription getDescription() {
-		return new ItemDescription(Palette.Green)
-				.withSummary("A powerful combination of minerals suitable for common tree types.")
-				.withBehaviour("When used on Sapling", "Grows Trees regardless of their spacing Conditions").createTabs();
-	}
-	
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		BlockState state = context.getWorld().getBlockState(context.getPos());

@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.symmetry.client;
+package com.simibubi.create.modules.curiosities.symmetry.client;
 
 import com.simibubi.create.foundation.block.CustomRenderItemBakedModel;
 

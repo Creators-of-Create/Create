@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
+import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,7 +33,7 @@ public class RotationChassisBlock extends AbstractChassisBlock {
 	
 	@Override
 	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
-		return "Radius";
+		return Lang.translate("generic.radius");
 	}
 	
 	@Override

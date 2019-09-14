@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.symmetry.client;
+package com.simibubi.create.modules.curiosities.symmetry.client;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;

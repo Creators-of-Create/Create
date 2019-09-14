@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.gui.widgets;
 import java.util.function.Consumer;
 
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.util.text.TextFormatting;
 
@@ -10,7 +11,9 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	protected Consumer<Integer> onScroll;
 	protected int state;
-	protected String title = "Choose an option";
+	protected String title = Lang.translate("gui.scrollInput.defaultTitle");
+	protected final String scrollToModify = Lang.translate("gui.scrollInput.scrollToModify");
+	protected final String shiftScrollsFaster = Lang.translate("gui.scrollInput.shiftScrollsFaster");
 	protected Label displayLabel;
 
 	protected int min, max;
@@ -107,8 +110,8 @@ public class ScrollInput extends AbstractSimiWidget {
 	protected void updateTooltip() {
 		toolTip.clear();
 		toolTip.add(TextFormatting.BLUE + title);
-		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + "Scroll to Modify");
-		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + "Shift to Scroll faster");
+		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + scrollToModify);
+		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + shiftScrollsFaster);
 	}
 
 }

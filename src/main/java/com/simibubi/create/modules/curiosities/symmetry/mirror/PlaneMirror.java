@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.symmetry.mirror;
+package com.simibubi.create.modules.curiosities.symmetry.mirror;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,7 +6,8 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.modules.symmetry.block.PlaneSymmetryBlock;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.curiosities.symmetry.block.PlaneSymmetryBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
@@ -85,7 +86,7 @@ public class PlaneMirror extends SymmetryMirror {
 
 	@Override
 	public List<String> getAlignToolTips() {
-		return ImmutableList.of("Mirror Z", "Mirror X");
+		return ImmutableList.of(Lang.translate("orientation.alongZ"), Lang.translate("orientation.alongX"));
 	}
 
 }

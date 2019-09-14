@@ -1,41 +1,26 @@
 package com.simibubi.create.modules.schematics.block;
 
-import java.util.List;
-
-import com.simibubi.create.foundation.utility.ITooltip;
-import com.simibubi.create.foundation.utility.ItemDescription;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
-import com.simibubi.create.foundation.utility.TooltipHolder;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class SchematicTableBlock extends HorizontalBlock implements ITooltip {
-
-	private TooltipHolder info;
+public class SchematicTableBlock extends HorizontalBlock {
 
 	public SchematicTableBlock() {
 		super(Properties.from(Blocks.OAK_PLANKS));
-		info = new TooltipHolder(this);
 	}
 
 	@Override
@@ -47,13 +32,6 @@ public class SchematicTableBlock extends HorizontalBlock implements ITooltip {
 	@Override
 	public boolean isSolid(BlockState state) {
 		return false;
-	}
-
-	@Override
-	@OnlyIn(value = Dist.CLIENT)
-	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
-			ITooltipFlag flagIn) {
-		info.addInformation(tooltip);
 	}
 
 	@Override
@@ -100,14 +78,6 @@ public class SchematicTableBlock extends HorizontalBlock implements ITooltip {
 			worldIn.removeTileEntity(pos);
 		}
 
-	}
-
-	@Override
-	public ItemDescription getDescription() {
-		Palette color = Palette.Blue;
-		return new ItemDescription(color).withSummary("Writes saved Schematics onto an " + h("Empty Schematic", color))
-				.withBehaviour("When given an Empty Schematic", "Uploads the chosen File from your Schematics Folder")
-				.createTabs();
 	}
 
 }

@@ -3,10 +3,13 @@ package com.simibubi.create.foundation.gui.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.util.text.TextFormatting;
 
 public class SelectionScrollInput extends ScrollInput {
 
+	private final String scrollToSelect = Lang.translate("gui.scrollInput.scrollToSelect");
 	protected List<String> options;
 
 	public SelectionScrollInput(int xIn, int yIn, int widthIn, int heightIn) {
@@ -25,7 +28,7 @@ public class SelectionScrollInput extends ScrollInput {
 	protected void writeToLabel() {
 		displayLabel.text = options.get(state);
 	}
-	
+
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
 		return super.mouseScrolled(mouseX, mouseY, -delta);
@@ -33,7 +36,8 @@ public class SelectionScrollInput extends ScrollInput {
 
 	@Override
 	protected void updateTooltip() {
-		super.updateTooltip();
+		toolTip.clear();
+		toolTip.add(TextFormatting.BLUE + title);
 		for (int i = min; i < max; i++) {
 			StringBuilder result = new StringBuilder();
 			if (i == state)
@@ -42,7 +46,7 @@ public class SelectionScrollInput extends ScrollInput {
 				result.append(TextFormatting.GRAY).append("> ").append(options.get(i));
 			toolTip.add(result.toString());
 		}
-		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + "Scroll to Select");
+		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + scrollToSelect);
 	}
 
 }

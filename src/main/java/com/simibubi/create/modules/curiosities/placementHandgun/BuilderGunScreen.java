@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.gui.widgets.Indicator.State;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.packet.NbtPacket;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -38,6 +39,9 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 	private ItemStack item;
 	private boolean offhand;
 	private float animationProgress;
+
+	private final String title = Lang.translate("gui.blockzapper.title");
+	private final String patternSection = Lang.translate("gui.blockzapper.patternSection");
 
 	private IconButton replaceModeButton;
 	private Indicator replaceModeIndicator;
@@ -72,24 +76,23 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 		replaceModeButton = new IconButton(i + 51, j + 41, ScreenResources.ICON_REPLACE_SOLID);
 		if (nbt.contains("Replace") && nbt.getBoolean("Replace"))
 			replaceModeIndicator.state = State.ON;
-		replaceModeButton.setToolTip("Replace Mode");
+		replaceModeButton.setToolTip(Lang.translate("gui.blockzapper.replaceMode"));
 
 		spreadDiagonallyIndicator = new Indicator(i + 74, j + 36, "");
 		spreadDiagonallyButton = new IconButton(i + 74, j + 41, ScreenResources.ICON_FOLLOW_DIAGONAL);
 		if (nbt.contains("SearchDiagonal") && nbt.getBoolean("SearchDiagonal"))
 			spreadDiagonallyIndicator.state = State.ON;
-		spreadDiagonallyButton.setToolTip("Follow Diagonals");
+		spreadDiagonallyButton.setToolTip(Lang.translate("gui.blockzapper.searchDiagonal"));
 
 		spreadMaterialIndicator = new Indicator(i + 92, j + 36, "");
 		spreadMaterialButton = new IconButton(i + 92, j + 41, ScreenResources.ICON_FOLLOW_MATERIAL);
 		if (nbt.contains("SearchFuzzy") && nbt.getBoolean("SearchFuzzy"))
 			spreadMaterialIndicator.state = State.ON;
-		spreadMaterialButton.setToolTip("Ignore Material Borders");
+		spreadMaterialButton.setToolTip(Lang.translate("gui.blockzapper.searchFuzzy"));
 
 		spreadRangeLabel = new Label(i + 119, j + 46, "").withShadow().withSuffix("m");
-		spreadRangeInput = new ScrollInput(i + 115, j + 43, 22, 14)
-				.withRange(1, BuilderGunItem.getMaxAoe(item)).setState(1)
-				.titled("Spread Range").writingTo(spreadRangeLabel);
+		spreadRangeInput = new ScrollInput(i + 115, j + 43, 22, 14).withRange(1, BuilderGunItem.getMaxAoe(item))
+				.setState(1).titled(Lang.translate("gui.blockzapper.range")).writingTo(spreadRangeLabel);
 
 		if (nbt.contains("SearchDistance"))
 			spreadRangeInput.setState(nbt.getInt("SearchDistance"));
@@ -104,7 +107,7 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 				int id = patternButtons.size();
 				PlacementPatterns pattern = PlacementPatterns.values()[id];
 				patternButtons.add(new IconButton(i + 147 + col * 18, j + 23 + row * 18, pattern.icon));
-				patternButtons.get(id).setToolTip(pattern.displayName);
+				patternButtons.get(id).setToolTip(Lang.translate("gui.blockzapper.pattern." + pattern.translationKey));
 
 			}
 		}
@@ -173,8 +176,8 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 		int j = guiTop;
 		ScreenResources.PLACEMENT_GUN.draw(this, i, j);
 
-		font.drawStringWithShadow("Handheld Blockzapper", i + 8, j + 10, 0xCCDDFF);
-		font.drawString("Patterns", i + 148, j + 11, ScreenResources.FONT_COLOR);
+		font.drawStringWithShadow(title, i + 8, j + 10, 0xCCDDFF);
+		font.drawString(patternSection, i + 148, j + 11, ScreenResources.FONT_COLOR);
 
 		minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		GlStateManager.enableBlend();

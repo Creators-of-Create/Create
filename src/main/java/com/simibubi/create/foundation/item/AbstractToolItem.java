@@ -9,11 +9,7 @@ import static com.simibubi.create.foundation.item.AllToolTypes.SWORD;
 import java.util.Collections;
 import java.util.List;
 
-import com.simibubi.create.foundation.utility.ITooltip;
-import com.simibubi.create.foundation.utility.TooltipHolder;
-
 import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
@@ -22,7 +18,6 @@ import net.minecraft.item.Items;
 import net.minecraft.item.ToolItem;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
@@ -31,15 +26,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
-public abstract class AbstractToolItem extends ToolItem implements ITooltip {
+public abstract class AbstractToolItem extends ToolItem {
 
-	protected TooltipHolder info;
 	protected AllToolTypes[] toolTypes;
 
 	public AbstractToolItem(float attackDamageIn, float attackSpeedIn, IItemTier tier, Properties builder,
 			AllToolTypes... types) {
 		super(attackDamageIn, attackSpeedIn, tier, Collections.emptySet(), setToolTypes(builder, tier, types));
-		info = new TooltipHolder(this);
 		toolTypes = types;
 	}
 
@@ -60,12 +53,6 @@ public abstract class AbstractToolItem extends ToolItem implements ITooltip {
 			if (type == typeIn)
 				return true;
 		return false;
-	}
-
-	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		info.addInformation(tooltip);
-		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 
 	@Override

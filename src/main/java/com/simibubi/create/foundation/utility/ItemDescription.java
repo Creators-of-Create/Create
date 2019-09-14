@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.utility;
 
+import static com.simibubi.create.foundation.utility.TooltipHelper.cutString;
 import static net.minecraft.util.text.TextFormatting.AQUA;
 import static net.minecraft.util.text.TextFormatting.BLUE;
 import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
@@ -26,13 +27,16 @@ import net.minecraft.util.text.TextFormatting;
 
 public class ItemDescription {
 
-	public static final int maxCharsPerLine = 35;
+	public static final ItemDescription MISSING = new ItemDescription(null);
 	public static ITextComponent trim = new StringTextComponent(
 			WHITE + "" + STRIKETHROUGH + "                          ");
 
 	public enum Palette {
 
-		Blue(BLUE, AQUA), Green(DARK_GREEN, GREEN), Yellow(GOLD, YELLOW), Red(DARK_RED, RED),
+		Blue(BLUE, AQUA),
+		Green(DARK_GREEN, GREEN),
+		Yellow(GOLD, YELLOW),
+		Red(DARK_RED, RED),
 		Purple(DARK_PURPLE, LIGHT_PURPLE),
 
 		;
@@ -56,24 +60,23 @@ public class ItemDescription {
 		lines = new ArrayList<>();
 		linesOnShift = new ArrayList<>();
 		linesOnCtrl = new ArrayList<>();
-		trim = new StringTextComponent(WHITE + "" + STRIKETHROUGH + "                                        ");
 	}
 
 	public ItemDescription withSummary(String summary) {
-		add(linesOnShift, cutString(summary, palette.color));
-		linesOnShift.add(trim);
+		add(linesOnShift, cutString(summary, palette.color, palette.hColor));
+		add(linesOnShift, "");
 		return this;
 	}
 
 	public ItemDescription withBehaviour(String condition, String behaviour) {
 		add(linesOnShift, GRAY + condition);
-		add(linesOnShift, cutString(behaviour, palette.color, 1));
+		add(linesOnShift, cutString(behaviour, palette.color, palette.hColor, 1));
 		return this;
 	}
 
 	public ItemDescription withControl(String condition, String action) {
 		add(linesOnCtrl, GRAY + condition);
-		add(linesOnCtrl, cutString(action, palette.color, 1));
+		add(linesOnCtrl, cutString(action, palette.color, palette.hColor, 1));
 		return this;
 	}
 
@@ -96,56 +99,20 @@ public class ItemDescription {
 
 				list.add(0, new StringTextComponent(tabs));
 				if (shift || ctrl)
-					list.add(1, trim);
+					list.add(1, new StringTextComponent(""));
 			}
 		}
-		
+
 		if (!hasDescription)
 			linesOnShift = lines;
 		if (!hasControls)
 			linesOnCtrl = lines;
-		
+
 		return this;
 	}
 
 	public static String hightlight(String s, Palette palette) {
 		return palette.hColor + s + palette.color;
-	}
-
-	public List<String> cutString(String s, TextFormatting defaultColor) {
-		return cutString(s, defaultColor, 0);
-	}
-
-	public List<String> cutString(String s, TextFormatting defaultColor, int indent) {
-
-		String lineStart = defaultColor.toString();
-		for (int i = 0; i < indent; i++)
-			lineStart += " ";
-
-		String[] words = s.split(" ");
-		List<String> lines = new ArrayList<>();
-		StringBuilder currentLine = new StringBuilder(lineStart);
-		boolean firstWord = true;
-
-		for (int i = 0; i < words.length; i++) {
-			String word = words[i];
-			boolean lastWord = i == words.length - 1;
-
-			if (!lastWord && !firstWord && currentLine.length() + word.length() > maxCharsPerLine) {
-				lines.add(currentLine.toString());
-				currentLine = new StringBuilder(lineStart);
-				firstWord = true;
-			}
-
-			currentLine.append((firstWord ? "" : " ") + word);
-			firstWord = false;
-		}
-
-		if (!firstWord) {
-			lines.add(currentLine.toString());
-		}
-
-		return lines;
 	}
 
 	public static void add(List<ITextComponent> infoList, List<String> textLines) {

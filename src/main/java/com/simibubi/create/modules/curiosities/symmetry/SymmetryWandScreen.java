@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.symmetry;
+package com.simibubi.create.modules.curiosities.symmetry;
 
 import org.lwjgl.opengl.GL11;
 
@@ -10,11 +10,12 @@ import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.packet.NbtPacket;
-import com.simibubi.create.modules.symmetry.mirror.CrossPlaneMirror;
-import com.simibubi.create.modules.symmetry.mirror.EmptyMirror;
-import com.simibubi.create.modules.symmetry.mirror.PlaneMirror;
-import com.simibubi.create.modules.symmetry.mirror.SymmetryMirror;
-import com.simibubi.create.modules.symmetry.mirror.TriplePlaneMirror;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.curiosities.symmetry.mirror.CrossPlaneMirror;
+import com.simibubi.create.modules.curiosities.symmetry.mirror.EmptyMirror;
+import com.simibubi.create.modules.curiosities.symmetry.mirror.PlaneMirror;
+import com.simibubi.create.modules.curiosities.symmetry.mirror.SymmetryMirror;
+import com.simibubi.create.modules.curiosities.symmetry.mirror.TriplePlaneMirror;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
@@ -35,6 +36,9 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	private Label labelType;
 	private ScrollInput areaAlign;
 	private Label labelAlign;
+
+	private final String mirrorType = Lang.translate("gui.symmetryWand.mirrorType");
+	private final String orientation = Lang.translate("gui.symmetryWand.orientation");
 
 	private SymmetryMirror currentElement;
 	private float animationProgress;
@@ -62,8 +66,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		int state = currentElement instanceof TriplePlaneMirror ? 2
 				: currentElement instanceof CrossPlaneMirror ? 1 : 0;
 		areaType = new SelectionScrollInput(guiLeft + 119, guiTop + 12, 70, 14)
-				.forOptions(SymmetryMirror.TOOLTIP_ELEMENTS).titled("Type of Mirror").writingTo(labelType)
-				.setState(state);
+				.forOptions(SymmetryMirror.getMirrors()).titled(mirrorType).writingTo(labelType).setState(state);
 
 		areaType.calling(position -> {
 			switch (position) {
@@ -83,7 +86,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		});
 
 		widgets.clear();
-		
+
 		initAlign(currentElement);
 
 		widgets.add(labelAlign);
@@ -98,7 +101,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		}
 
 		areaAlign = new SelectionScrollInput(guiLeft + 119, guiTop + 32, 70, 14).forOptions(element.getAlignToolTips())
-				.titled("Direction").writingTo(labelAlign).setState(element.getOrientationIndex())
+				.titled(orientation).writingTo(labelAlign).setState(element.getOrientationIndex())
 				.calling(element::setOrientation);
 
 		widgets.add(areaAlign);
@@ -117,8 +120,8 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		int x = guiLeft + 63;
 		int y = guiTop + 15;
 
-		font.drawString("Symmetry", x, y, ScreenResources.FONT_COLOR);
-		font.drawString("Direction", x, y + 20, ScreenResources.FONT_COLOR);
+		font.drawString(mirrorType, x - 5, y, ScreenResources.FONT_COLOR);
+		font.drawString(orientation, x - 5, y + 20, ScreenResources.FONT_COLOR);
 
 		minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		GlStateManager.enableBlend();
@@ -128,25 +131,25 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 		GlStateManager.pushLightingAttributes();
 		GlStateManager.pushMatrix();
-		
+
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.enableBlend();
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.enableAlphaTest();
 		GlStateManager.alphaFunc(516, 0.1F);
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);		
-		
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
 		GlStateManager.translated((this.width - this.sWidth) / 2 + 250, this.height / 2 + this.sHeight / 2, 100);
 		GlStateManager.rotatef(-30, .4f, 0, -.2f);
 		GlStateManager.rotatef(90 + 0.2f * animationProgress, 0, 1, 0);
 		GlStateManager.scaled(100, -100, 100);
 		itemRenderer.renderItem(wand, itemRenderer.getModelWithOverrides(wand));
-		
+
 		GlStateManager.disableAlphaTest();
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.disableLighting();
-		
+
 		GlStateManager.popMatrix();
 		GlStateManager.popAttributes();
 	}
@@ -169,7 +172,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	public void removed() {
 		ItemStack heldItemMainhand = minecraft.player.getHeldItemMainhand();
 		CompoundNBT compound = heldItemMainhand.getTag();
-		compound.put(SymmetryWandItem.$SYMMETRY, currentElement.writeToNbt());
+		compound.put(SymmetryWandItem.SYMMETRY, currentElement.writeToNbt());
 		heldItemMainhand.setTag(compound);
 		AllPackets.channel.send(PacketDistributor.SERVER.noArg(), new NbtPacket(heldItemMainhand));
 		minecraft.player.setHeldItem(Hand.MAIN_HAND, heldItemMainhand);

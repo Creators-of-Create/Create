@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
-import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 
 import net.minecraft.block.Block;
@@ -195,14 +194,6 @@ public class MechanicalPistonBlock extends KineticBlock {
 			}
 
 		return VoxelShapes.fullCube();
-	}
-
-	@Override
-	public ItemDescription getDescription() {
-		return new ItemDescription(color)
-				.withSummary("With " + h("Piston Poles", color) + " at the rear, will "
-						+ h("move Attached Structures", color) + " based on its input rotation speed.")
-				.withBehaviour("When Rotated", "Translates attached Structure accordingly.").createTabs();
 	}
 
 }

@@ -3,6 +3,7 @@ package com.simibubi.create.modules.logistics.block;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.logistics.IHaveWireless;
 
@@ -14,8 +15,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -138,7 +139,7 @@ public interface IBlockWithFrequency {
 			GlStateManager.scaled(textScale, -textScale, textScale);
 			GlStateManager.translated(19.5f, -5f, 10f);
 
-			String text = "Freq. #2";
+			String text = Lang.translate("logistics.secondFrequency");
 			Minecraft.getInstance().fontRenderer.drawString(text, 0, 0, 0xFFFF99);
 			GlStateManager.translated(0, 0, -1 / 4f);
 			Minecraft.getInstance().fontRenderer.drawString(text, 1, 1, 0x444433);
@@ -158,7 +159,7 @@ public interface IBlockWithFrequency {
 			GlStateManager.scaled(textScale, -textScale, textScale);
 			GlStateManager.translated(19.5f, -5f, 10f);
 
-			String text = "Freq. #1";
+			String text = Lang.translate("logistics.firstFrequency");
 			Minecraft.getInstance().fontRenderer.drawString(text, 0, 0, 0xFFFF99);
 			GlStateManager.translated(0, 0, -1 / 4f);
 			Minecraft.getInstance().fontRenderer.drawString(text, 1, 1, 0x444433);

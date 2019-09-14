@@ -11,6 +11,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.modules.schematics.client.SchematicEditScreen;
 
@@ -58,15 +59,17 @@ public class SchematicItem extends Item {
 		blueprint.setTag(tag);
 
 		writeSize(blueprint);
-		blueprint.setDisplayName(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.WHITE
-				+ "Schematic (" + TextFormatting.GOLD + schematic + TextFormatting.WHITE + ")"));
-
 		return blueprint;
 	}
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+		if (stack.hasTag()) {
+			if (stack.getTag().contains("File"))
+				tooltip.add(new StringTextComponent(TextFormatting.GOLD + stack.getTag().getString("File")));
+		}
+
 		if (AllKeys.shiftDown()) {
 			TextFormatting gray = TextFormatting.GRAY;
 			tooltip.add(new StringTextComponent(gray + "Holds a structure to be printed"));
@@ -104,7 +107,7 @@ public class SchematicItem extends Item {
 		String filepath = "";
 
 		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER)
-			filepath = "schematics/uploaded/" + owner + "/" + schematic;
+			filepath = CreateConfig.parameters.schematicPath + "/" + owner + "/" + schematic;
 		else
 			filepath = "schematics/" + schematic;
 

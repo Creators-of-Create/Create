@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.schematics.block;
 
+import static net.minecraft.util.text.TextFormatting.GRAY;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -13,6 +15,9 @@ import com.simibubi.create.foundation.gui.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Indicator;
 import com.simibubi.create.foundation.gui.widgets.Indicator.State;
+import com.simibubi.create.foundation.utility.ItemDescription.Palette;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.TooltipHelper;
 import com.simibubi.create.modules.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.modules.schematics.packet.ConfigureSchematicannonPacket.Option;
 
@@ -41,6 +46,16 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	protected IconButton resetButton;
 	protected Indicator resetIndicator;
 
+	private final String title = Lang.translate("gui.schematicannon.title");
+	private final String settingsTitle = Lang.translate("gui.schematicannon.settingsTitle");
+	private final String listPrinter = Lang.translate("gui.schematicannon.listPrinter");
+	private final String _gunpowderLevel = "gui.schematicannon.gunpowderLevel";
+	private final String _shotsRemaining = "gui.schematicannon.shotsRemaining";
+	private final String _shotsRemainingWithBackup = "gui.schematicannon.shotsRemainingWithBackup";
+
+	private final String optionEnabled = Lang.translate("gui.schematicannon.optionEnabled");
+	private final String optionDisabled = Lang.translate("gui.schematicannon.optionDisabled");
+
 	public SchematicannonScreen(SchematicannonContainer container, PlayerInventory inventory,
 			ITextComponent p_i51105_3_) {
 		super(container, inventory, p_i51105_3_);
@@ -62,7 +77,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		pauseButton = new IconButton(x + 88, y + 55, ScreenResources.ICON_PAUSE);
 		pauseIndicator = new Indicator(x + 88, y + 50, "");
 		resetButton = new IconButton(x + 106, y + 55, ScreenResources.ICON_STOP);
-		resetIndicator = new Indicator(x + 106, y + 50, "Not Running");
+		resetIndicator = new Indicator(x + 106, y + 50, "");
 		resetIndicator.state = State.RED;
 		Collections.addAll(widgets, playButton, playIndicator, pauseButton, pauseIndicator, resetButton,
 				resetIndicator);
@@ -73,8 +88,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		List<ScreenResources> icons = ImmutableList.of(ScreenResources.ICON_DONT_REPLACE,
 				ScreenResources.ICON_REPLACE_SOLID, ScreenResources.ICON_REPLACE_ANY,
 				ScreenResources.ICON_REPLACE_EMPTY);
-		List<String> toolTips = ImmutableList.of("Don't Replace Solid Blocks", "Replace Solid with Solid",
-				"Replace Solid with Any", "Replace Solid with Empty");
+		List<String> toolTips = ImmutableList.of(Lang.translate("gui.schematicannon.option.dontReplaceSolid"),
+				Lang.translate("gui.schematicannon.option.replaceWithSolid"),
+				Lang.translate("gui.schematicannon.option.replaceWithAny"),
+				Lang.translate("gui.schematicannon.option.replaceWithEmpty"));
 
 		for (int i = 0; i < 4; i++) {
 			replaceLevelIndicators.add(new Indicator(x + 16 + i * 18, y + 96, ""));
@@ -86,12 +103,12 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		// Other Settings
 		skipMissingButton = new IconButton(x + 106, y + 101, ScreenResources.ICON_SKIP_MISSING);
-		skipMissingButton.setToolTip("Skip missing Blocks");
+		skipMissingButton.setToolTip(Lang.translate("gui.schematicannon.option.skipMissing"));
 		skipMissingIndicator = new Indicator(x + 106, y + 96, "");
 		Collections.addAll(widgets, skipMissingButton, skipMissingIndicator);
 
 		skipTilesButton = new IconButton(x + 124, y + 101, ScreenResources.ICON_SKIP_TILES);
-		skipTilesButton.setToolTip("Protect Tile Entities");
+		skipTilesButton.setToolTip(Lang.translate("gui.schematicannon.option.skipTileEntities"));
 		skipTilesIndicator = new Indicator(x + 124, y + 96, "");
 		Collections.addAll(widgets, skipTilesButton, skipTilesIndicator);
 
@@ -143,70 +160,32 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	protected void handleTooltips() {
 		for (Widget w : widgets)
-			if (w instanceof IconButton)
-				if (!((IconButton) w).getToolTip().isEmpty()) {
-					((IconButton) w).setToolTip(((IconButton) w).getToolTip().get(0));
-					((IconButton) w).getToolTip().add(TextFormatting.DARK_GRAY + "< Hold Shift >");
+			if (w instanceof IconButton) {
+				IconButton button = (IconButton) w;
+				if (!button.getToolTip().isEmpty()) {
+					button.setToolTip(button.getToolTip().get(0));
+					button.getToolTip().add(TooltipHelper.holdShift(Palette.Blue, hasShiftDown()));
 				}
+			}
 
 		if (hasShiftDown()) {
-			if (skipMissingButton.isHovered()) {
-				List<String> tip = skipMissingButton.getToolTip();
-				tip.remove(1);
-				tip.add(TextFormatting.BLUE
-						+ (skipMissingIndicator.state == State.ON ? "Currently Enabled" : "Currently Disabled"));
-				tip.add(TextFormatting.GRAY + "If the Schematicannon cannot find");
-				tip.add(TextFormatting.GRAY + "a required Block for placement, it");
-				tip.add(TextFormatting.GRAY + "will continue at the next Location.");
-			}
-			if (skipTilesButton.isHovered()) {
-				List<String> tip = skipTilesButton.getToolTip();
-				tip.remove(1);
-				tip.add(TextFormatting.BLUE
-						+ (skipTilesIndicator.state == State.ON ? "Currently Enabled" : "Currently Disabled"));
-				tip.add(TextFormatting.GRAY + "The Schematicannon will avoid replacing");
-				tip.add(TextFormatting.GRAY + "data holding blocks such as Chests.");
-			}
-			if (replaceLevelButtons.get(0).isHovered()) {
-				List<String> tip = replaceLevelButtons.get(0).getToolTip();
-				tip.remove(1);
-				tip.add(TextFormatting.BLUE + (replaceLevelIndicators.get(0).state == State.ON ? "Currently Enabled"
-						: "Currently Disabled"));
-				tip.add(TextFormatting.GRAY + "The cannon will never replace");
-				tip.add(TextFormatting.GRAY + "any Solid blocks in its working area,");
-				tip.add(TextFormatting.GRAY + "only non-Solid and Air.");
-			}
-			if (replaceLevelButtons.get(1).isHovered()) {
-				List<String> tip = replaceLevelButtons.get(1).getToolTip();
-				tip.remove(1);
-				tip.add(TextFormatting.BLUE + (replaceLevelIndicators.get(1).state == State.ON ? "Currently Enabled"
-						: "Currently Disabled"));
-				tip.add(TextFormatting.GRAY + "The cannon will only replace");
-				tip.add(TextFormatting.GRAY + "Solid blocks in its working area,");
-				tip.add(TextFormatting.GRAY + "if the Schematic contains a solid");
-				tip.add(TextFormatting.GRAY + "Block at their location.");
-			}
-			if (replaceLevelButtons.get(2).isHovered()) {
-				List<String> tip = replaceLevelButtons.get(2).getToolTip();
-				tip.remove(1);
-				tip.add(TextFormatting.BLUE + (replaceLevelIndicators.get(2).state == State.ON ? "Currently Enabled"
-						: "Currently Disabled"));
-				tip.add(TextFormatting.GRAY + "The cannon will replace");
-				tip.add(TextFormatting.GRAY + "Solid blocks in its working area,");
-				tip.add(TextFormatting.GRAY + "if the Schematic contains any");
-				tip.add(TextFormatting.GRAY + "Block at their location.");
-			}
-			if (replaceLevelButtons.get(3).isHovered()) {
-				List<String> tip = replaceLevelButtons.get(3).getToolTip();
-				tip.remove(1);
-				tip.add(TextFormatting.BLUE + (replaceLevelIndicators.get(3).state == State.ON ? "Currently Enabled"
-						: "Currently Disabled"));
-				tip.add(TextFormatting.GRAY + "The cannon will clear out all");
-				tip.add(TextFormatting.GRAY + "blocks in its working area,");
-				tip.add(TextFormatting.GRAY + "including those replaced by Air.");
-			}
-
+			fillToolTip(skipMissingButton, skipMissingIndicator, "skipMissing");
+			fillToolTip(skipTilesButton, skipTilesIndicator, "skipTileEntities");
+			fillToolTip(replaceLevelButtons.get(0), replaceLevelIndicators.get(0), "dontReplaceSolid");
+			fillToolTip(replaceLevelButtons.get(1), replaceLevelIndicators.get(1), "replaceWithSolid");
+			fillToolTip(replaceLevelButtons.get(2), replaceLevelIndicators.get(2), "replaceWithAny");
+			fillToolTip(replaceLevelButtons.get(3), replaceLevelIndicators.get(3), "replaceWithEmpty");
 		}
+	}
+
+	private void fillToolTip(IconButton button, Indicator indicator, String tooltipKey) {
+		if (!button.isHovered())
+			return;
+		boolean enabled = indicator.state == State.ON;
+		List<String> tip = button.getToolTip();
+		tip.add(TextFormatting.BLUE + (enabled ? optionEnabled : optionDisabled));
+		tip.addAll(TooltipHelper.cutString(Lang.translate("gui.schematicannon.option." + tooltipKey + ".description"),
+				GRAY, GRAY));
 	}
 
 	@Override
@@ -224,9 +203,9 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		renderCannon();
 
-		font.drawString("Schematicannon", guiLeft + 80, guiTop + 10, ScreenResources.FONT_COLOR);
+		font.drawString(title, guiLeft + 80, guiTop + 10, ScreenResources.FONT_COLOR);
 
-		String msg = te.statusMsg;
+		String msg = Lang.translate("schematicannon.status." + te.statusMsg);
 		int stringWidth = font.getStringWidth(msg);
 
 		if (te.missingBlock != null) {
@@ -237,8 +216,9 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		font.drawStringWithShadow(msg, guiLeft + 20 + 96 - stringWidth / 2, guiTop + 30, 0xCCDDFF);
 
-		font.drawString("Placement Settings", guiLeft + 20 + 13, guiTop + 84, ScreenResources.FONT_COLOR);
-		font.drawString("Inventory", guiLeft - 10 + 7, guiTop + 145 + 6, 0x666666);
+		font.drawString(settingsTitle, guiLeft + 20 + 13, guiTop + 84, ScreenResources.FONT_COLOR);
+		font.drawString(playerInventory.getDisplayName().getFormattedText(), guiLeft - 10 + 7, guiTop + 145 + 6,
+				0x666666);
 	}
 
 	protected void renderCannon() {
@@ -295,10 +275,9 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			int shotsLeft = (int) (te.fuelLevel / fuelUsageRate);
 			int shotsLeftWithItems = (int) (shotsLeft
 					+ te.inventory.getStackInSlot(4).getCount() * (te.getFuelAddedByGunPowder() / fuelUsageRate));
-			renderTooltip(
-					ImmutableList.of("Gunpowder at " + (int) (te.fuelLevel * 100) + "%",
-							TextFormatting.GRAY + "Shots left: " + TextFormatting.BLUE + shotsLeft,
-							TextFormatting.GRAY + "With backup: " + TextFormatting.BLUE + shotsLeftWithItems),
+			renderTooltip(ImmutableList.of(Lang.translate(_gunpowderLevel, "" + (int) (te.fuelLevel * 100)),
+					GRAY + Lang.translate(_shotsRemaining, "" + TextFormatting.BLUE + shotsLeft),
+					GRAY + Lang.translate(_shotsRemainingWithBackup, "" + TextFormatting.BLUE + shotsLeftWithItems)),
 					mouseX, mouseY);
 		}
 
@@ -312,7 +291,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		int paperX = guiLeft + 20 + 202, paperY = guiTop + 20;
 		if (mouseX >= paperX && mouseY >= paperY && mouseX <= paperX + 16 && mouseY <= paperY + 16) {
-			renderTooltip("Material List Printer", mouseX, mouseY);
+			renderTooltip(listPrinter, mouseX, mouseY);
 		}
 
 		super.renderWindowForeground(mouseX, mouseY, partialTicks);

@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.relays.EncasedShaftBlock;
 
 import net.minecraft.block.Block;
@@ -15,11 +14,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class EncasedFanBlock extends EncasedShaftBlock implements IWithTileEntity<EncasedFanTileEntity> {
-
-	@Override
-	public ItemDescription getDescription() {
-		return new ItemDescription(color).withSummary("Exchange rotational power for air flow and back.").createTabs();
-	}
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {

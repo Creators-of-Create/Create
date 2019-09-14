@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.generators;
 
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.utility.ItemDescription;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -57,15 +57,6 @@ public class MotorBlock extends HorizontalKineticBlock
 		return true;
 	}
 
-	// IToolTip
-
-	@Override
-	public ItemDescription getDescription() {
-		return new ItemDescription(color).withSummary("Provides Rotational Power.")
-				.withControl("When R-Clicked", "Opens the " + h("Configuration Screen", color)).createTabs();
-
-	}
-
 	@Override
 	public int getCurrentValue(BlockState state, IWorld world, BlockPos pos) {
 		MotorTileEntity tileEntity = (MotorTileEntity) world.getTileEntity(pos);
@@ -81,7 +72,7 @@ public class MotorBlock extends HorizontalKineticBlock
 
 	@Override
 	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
-		return "Speed";
+		return Lang.translate("generic.speed");
 	}
 
 	@Override

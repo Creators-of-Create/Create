@@ -4,51 +4,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.gui.ScreenResources;
-
-import net.minecraft.util.text.TextFormatting;
+import com.simibubi.create.foundation.utility.Lang;
 
 public enum Tools {
 
-	Deploy(new DeployTool(), "Deploy", ScreenResources.ICON_TOOL_DEPLOY, ImmutableList.of(
-			"Moves the structure to a location.",
-			"Right-Click on the ground to place.",
-			"Hold [Ctrl] to select at a fixed distance.",
-			"[Ctrl]-Scroll to change the distance."
-			)),
-	Move(new MoveTool(), "Move XZ", ScreenResources.ICON_TOOL_MOVE_XZ, ImmutableList.of(
-			"Shifts the Schematic Horizontally",
-			"Point at the Schematic and [CTRL]-Scroll to push it."
-			)),
-	MoveY(new MoveVerticalTool(), "Move Y", ScreenResources.ICON_TOOL_MOVE_Y, ImmutableList.of(
-			"Shifts the Schematic Vertically",
-			"[CTRL]-Scroll to move it up/down"
-			)),
-	Rotate(new RotateTool(), "Rotate", ScreenResources.ICON_TOOL_ROTATE, ImmutableList.of(
-			"Rotates the Schematic around its center.",
-			"[CTRL]-Scroll to rotate by 90 Degrees"
-			)),
-	Print(new PlaceTool(), "Print", ScreenResources.ICON_CONFIRM, ImmutableList.of(
-			"Instantly places the structure in the world",
-			"[Right-Click] to confirm placement at the current location.",
-			TextFormatting.ITALIC + "(Creative only)"
-			)),
-	Flip(new FlipTool(), "Flip", ScreenResources.ICON_TOOL_MIRROR, ImmutableList.of(
-			"Flips the Schematic along the face you select.",
-			"Point at the Schematic and [CTRL]-Scroll to flip it."
-			));
+	Deploy(new DeployTool(), ScreenResources.ICON_TOOL_DEPLOY),
+	Move(new MoveTool(), ScreenResources.ICON_TOOL_MOVE_XZ),
+	MoveY(new MoveVerticalTool(), ScreenResources.ICON_TOOL_MOVE_Y),
+	Rotate(new RotateTool(), ScreenResources.ICON_TOOL_ROTATE),
+	Print(new PlaceTool(), ScreenResources.ICON_CONFIRM),
+	Flip(new FlipTool(), ScreenResources.ICON_TOOL_MIRROR);
 
 	private ISchematicTool tool;
-	private String displayName;
 	private ScreenResources icon;
-	private List<String> description;
 
-	private Tools(ISchematicTool tool, String name, ScreenResources icon, List<String> description) {
+	private Tools(ISchematicTool tool, ScreenResources icon) {
 		this.tool = tool;
-		this.displayName = name;
 		this.icon = icon;
-		this.description = description;
 	}
 
 	public ISchematicTool getTool() {
@@ -56,7 +29,7 @@ public enum Tools {
 	}
 
 	public String getDisplayName() {
-		return displayName;
+		return Lang.translate("schematic.tool." + name().toLowerCase());
 	}
 
 	public ScreenResources getIcon() {
@@ -72,7 +45,7 @@ public enum Tools {
 	}
 
 	public List<String> getDescription() {
-		return description;
+		return Lang.translatedOptions("schematic.tool." + name().toLowerCase() + ".description", "0", "1", "2", "3");
 	}
 
 }

@@ -6,6 +6,7 @@ import static net.minecraft.block.RedstoneDiodeBlock.POWERED;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -84,10 +85,10 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 
 	public String getUnit() {
 		if (newMaxState < 20)
-			return "Ticks";
+			return Lang.translate("generic.unit.ticks");
 		if (newMaxState < 20 * 60)
-			return "Seconds";
-		return "Minutes";
+			return Lang.translate("generic.unit.seconds");
+		return Lang.translate("generic.unit.minutes");
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.symmetry.block;
+package com.simibubi.create.modules.curiosities.symmetry.block;
 
 import net.minecraft.block.material.Material;
 

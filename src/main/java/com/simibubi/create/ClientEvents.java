@@ -1,11 +1,17 @@
 package com.simibubi.create;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.utility.TooltipHelper;
 import com.simibubi.create.modules.contraptions.receivers.TurntableHandler;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltItemHandler;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
@@ -16,11 +22,15 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
+
+	private static final String itemPrefix = "item." + Create.ID;
+	private static final String blockPrefix = "block." + Create.ID;
 
 	@SubscribeEvent
 	public static void onTick(ClientTickEvent event) {
@@ -91,6 +101,20 @@ public class ClientEvents {
 
 		CreateClient.schematicHandler.onMouseInput(button, pressed);
 		CreateClient.schematicAndQuillHandler.onMouseInput(button, pressed);
+	}
+
+	@SubscribeEvent
+	public static void addToItemTooltip(ItemTooltipEvent event) {
+		ItemStack stack = event.getItemStack();
+		String translationKey = stack.getItem().getTranslationKey(stack);
+		if (!translationKey.startsWith(itemPrefix) && !translationKey.startsWith(blockPrefix))
+			return;
+
+		if (TooltipHelper.hasTooltip(stack)) {
+			List<ITextComponent> toolTip = new ArrayList<>();
+			TooltipHelper.getTooltip(stack).addInformation(toolTip);
+			event.getToolTip().addAll(1, toolTip);
+		}
 	}
 
 	@SubscribeEvent

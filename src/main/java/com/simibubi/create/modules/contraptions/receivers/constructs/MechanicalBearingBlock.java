@@ -1,8 +1,6 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.utility.ItemDescription;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 
 import net.minecraft.block.Block;
@@ -19,14 +17,6 @@ public class MechanicalBearingBlock extends DirectionalKineticBlock
 
 	public MechanicalBearingBlock() {
 		super(Properties.from(Blocks.PISTON));
-	}
-
-	@Override
-	public ItemDescription getDescription() {
-		Palette color = Palette.Red;
-		return new ItemDescription(color)
-				.withSummary("Rotates attached structures around its axis. Can be used to generate rotational energy.")
-				.createTabs();
 	}
 
 	@Override

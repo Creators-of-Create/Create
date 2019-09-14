@@ -2,6 +2,7 @@ package com.simibubi.create.modules.logistics.block.diodes;
 
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -83,7 +84,7 @@ public class FlexpeaterBlock extends RedstoneDiodeBlock
 		FlexpeaterTileEntity te = (FlexpeaterTileEntity) world.getTileEntity(pos);
 		if (te == null)
 			return "";
-		return "Delay (" + te.getUnit() + ")";
+		return Lang.translate("generic.delay") + " (" + te.getUnit() + ")";
 	}
 
 	@Override

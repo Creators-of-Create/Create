@@ -27,6 +27,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class ServerSchematicLoader {
 
@@ -91,9 +92,10 @@ public class ServerSchematicLoader {
 		// Too big
 		Integer maxFileSize = parameters.maxTotalSchematicSize.get();
 		if (size > maxFileSize * 1000) {
-			player.sendMessage(new StringTextComponent("Your schematic is too large (" + size / 1000 + " KB)."));
-			player.sendMessage(
-					new StringTextComponent("The maximum allowed schematic file size is: " + maxFileSize + " KB"));
+			player.sendMessage(new TranslationTextComponent("create.schematics.uploadTooLarge")
+					.appendSibling(new StringTextComponent(" (" + size / 1000 + " KB).")));
+			player.sendMessage(new TranslationTextComponent("create.schematics.maxAllowedSize")
+					.appendSibling(new StringTextComponent(" " + maxFileSize + " KB")));
 			return;
 		}
 

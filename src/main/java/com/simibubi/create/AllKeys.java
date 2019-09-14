@@ -9,7 +9,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public enum AllKeys {
 
-	TOOL_MENU("Tool Menu (Hold)", GLFW.GLFW_KEY_LEFT_ALT),
+	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT),
 	ACTIVATE_TOOL("", GLFW.GLFW_KEY_LEFT_CONTROL),
 
 	;
@@ -20,7 +20,7 @@ public enum AllKeys {
 	private boolean modifiable;
 
 	private AllKeys(String description, int defaultKey) {
-		this.description = description;
+		this.description = Create.ID + ".keyinfo." + description;
 		this.key = defaultKey;
 		this.modifiable = !description.isEmpty();
 	}

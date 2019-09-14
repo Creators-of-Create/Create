@@ -36,19 +36,19 @@ public class MovingConstructHandler {
 
 	public void onLoadWorld(IWorld world) {
 		movingPistons.put(world, new ArrayList<>());
-		Create.logger.info("Prepared Construct List for " + world.getDimension().getType().getRegistryName());
+		Create.logger.debug("Prepared Construct List for " + world.getDimension().getType().getRegistryName());
 	}
 
 	public void onUnloadWorld(IWorld world) {
 		movingPistons.remove(world);
-		Create.logger.info("Removed Construct List for " + world.getDimension().getType().getRegistryName());
+		Create.logger.debug("Removed Construct List for " + world.getDimension().getType().getRegistryName());
 	}
 
 	public static void moveEntities(MechanicalPistonTileEntity te, float movementSpeed, Direction movementDirection,
 			float newOffset) {
 		if (TranslationConstruct.isFrozen())
 			return;
-		
+
 		World world = te.getWorld();
 		Vec3d movementVec = new Vec3d(te.getBlockState().get(BlockStateProperties.FACING).getDirectionVec());
 		TranslationConstruct construct = te.movingConstruct;
@@ -134,7 +134,6 @@ public class MovingConstructHandler {
 						break;
 					}
 				}
-
 
 				if (!allowedMovement.equals(movement)) {
 					if (allowedMovement.y != movement.y) {

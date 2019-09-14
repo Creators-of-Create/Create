@@ -7,8 +7,6 @@ import java.util.Optional;
 
 import com.simibubi.create.foundation.item.AbstractToolItem;
 import com.simibubi.create.foundation.item.AllToolTypes;
-import com.simibubi.create.foundation.utility.ItemDescription;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.ItemHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -24,7 +22,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
@@ -92,16 +89,6 @@ public class BlazingToolItem extends AbstractToolItem {
 		}
 
 		drops.addAll(smeltedStacks);
-	}
-
-	@Override
-	public ItemDescription getDescription() {
-		Palette color = Palette.Purple;
-		return new ItemDescription(color).withSummary("A tool forged from fiery Blaze Brass.")
-				.withBehaviour("When in Nether", "Using the tool will not affect durability.")
-				.withBehaviour("Outside of Nether, When [Forge#5828] Fixed",
-						TextFormatting.STRIKETHROUGH + "Tool smelts drops of broken blocks")
-				.createTabs();
 	}
 
 }

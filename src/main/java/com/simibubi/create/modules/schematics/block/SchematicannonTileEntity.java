@@ -181,7 +181,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		attachedInventories = new LinkedList<>();
 		flyingBlocks = new LinkedList<>();
 		inventory = new SchematicannonInventory();
-		statusMsg = "Idle";
+		statusMsg = "idle";
 		state = State.STOPPED;
 		replaceMode = 2;
 		neighbourCheckCooldown = NEIGHBOUR_CHECKING;
@@ -392,7 +392,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 		if (blueprint.isEmpty()) {
 			state = State.STOPPED;
-			statusMsg = "Idle";
+			statusMsg = "idle";
 			sendUpdate = true;
 			return;
 		}
@@ -416,7 +416,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		if (fuelLevel <= 0) {
 			fuelLevel = 0;
 			state = State.PAUSED;
-			statusMsg = "Out of Gunpowder";
+			statusMsg = "noGunpowder";
 			sendUpdate = true;
 			return;
 		}
@@ -443,7 +443,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		// Check block
 		if (!getWorld().isAreaLoaded(target, 0)) {
 			blockNotLoaded = true;
-			statusMsg = "Block is not loaded";
+			statusMsg = "targetNotLoaded";
 			state = State.PAUSED;
 			return;
 		} else {
@@ -455,7 +455,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 		BlockState blockState = blockReader.getBlockState(target);
 		if (!shouldPlace(target, blockState)) {
-			statusMsg = "Searching";
+			statusMsg = "searching";
 			blockSkipped = true;
 			return;
 		}
@@ -469,7 +469,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 		if (!findItemInAttachedInventories(requiredItem)) {
 			if (skipMissing) {
-				statusMsg = "Skipping";
+				statusMsg = "skipping";
 				blockSkipped = true;
 				if (missingBlock != null) {
 					missingBlock = null;
@@ -480,16 +480,16 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 			missingBlock = blockState;
 			state = State.PAUSED;
-			statusMsg = "Missing Block: ";
+			statusMsg = "missingBlock";
 			return;
 		}
 
 		// Success
 		state = State.RUNNING;
 		if (blockState.getBlock() != Blocks.AIR)
-			statusMsg = "Placing: " + blocksPlaced + " / " + blocksToPlace;
+			statusMsg = "placing";
 		else
-			statusMsg = "Clearing Blocks";
+			statusMsg = "clearing";
 		launchBlock(target, blockState);
 		printerCooldown = parameters.schematicannonDelay.get();
 		fuelLevel -= getFuelUsageRate();
@@ -504,14 +504,14 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 	protected void initializePrinter(ItemStack blueprint) {
 		if (!blueprint.hasTag()) {
 			state = State.STOPPED;
-			statusMsg = "Invalid Blueprint";
+			statusMsg = "schematicInvalid";
 			sendUpdate = true;
 			return;
 		}
 
 		if (!blueprint.getTag().getBoolean("Deployed")) {
 			state = State.STOPPED;
-			statusMsg = "Blueprint not Deployed";
+			statusMsg = "schematicNotPlaced";
 			sendUpdate = true;
 			return;
 		}
@@ -522,7 +522,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 		if (activeTemplate.getSize().equals(BlockPos.ZERO)) {
 			state = State.STOPPED;
-			statusMsg = "Schematic File Expired";
+			statusMsg = "schematicExpired";
 			inventory.setStackInSlot(0, ItemStack.EMPTY);
 			inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_BLUEPRINT.get()));
 			return;
@@ -530,7 +530,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 		if (!anchor.withinDistance(getPos(), MAX_ANCHOR_DISTANCE)) {
 			state = State.STOPPED;
-			statusMsg = "Target too Far Away";
+			statusMsg = "targetOutsideRange";
 			return;
 		}
 
@@ -539,7 +539,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, SchematicItem.getSettings(blueprint));
 		schematicLoaded = true;
 		state = State.PAUSED;
-		statusMsg = "Ready";
+		statusMsg = "ready";
 		updateChecklist();
 		sendUpdate = true;
 		blocksToPlace += blocksPlaced;
@@ -603,7 +603,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 			inventory.setStackInSlot(1,
 					new ItemStack(AllItems.EMPTY_BLUEPRINT.get(), inventory.getStackInSlot(1).getCount() + 1));
 			state = State.STOPPED;
-			statusMsg = "Finished";
+			statusMsg = "finished";
 			resetPrinter();
 			target = getPos().add(1, 0, 0);
 			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_NOTE_BLOCK_BELL,

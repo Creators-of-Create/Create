@@ -9,13 +9,13 @@ import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.modules.contraptions.generators.ConfigureMotorPacket;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ConfigureChassisPacket;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunBeamPacket;
+import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.modules.logistics.block.diodes.ConfigureFlexpeaterPacket;
 import com.simibubi.create.modules.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.modules.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.modules.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.modules.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.modules.schematics.packet.SchematicUploadPacket;
-import com.simibubi.create.modules.symmetry.SymmetryEffectPacket;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;

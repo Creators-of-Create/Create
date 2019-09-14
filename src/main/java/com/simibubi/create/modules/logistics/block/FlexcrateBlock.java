@@ -1,9 +1,6 @@
 package com.simibubi.create.modules.logistics.block;
 
-import com.simibubi.create.foundation.block.InfoBlock;
-import com.simibubi.create.foundation.utility.ItemDescription;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
-
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +16,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class FlexcrateBlock extends InfoBlock {
+public class FlexcrateBlock extends Block {
 
 	public static final VoxelShape SHAPE = makeCuboidShape(1, 0, 1, 15, 14, 15);
 
@@ -56,15 +53,6 @@ public class FlexcrateBlock extends InfoBlock {
 		return new FlexcrateTileEntity();
 	}
 
-	@Override
-	public ItemDescription getDescription() {
-		Palette color = Palette.Yellow;
-		return new ItemDescription(color)
-				.withSummary("This Storage Container allows Manual control over its capacity. It can hold up to "
-						+ h("16 Stacks", color) + " of Items.")
-				.createTabs();
-	}
-	
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (worldIn.getTileEntity(pos) == null)

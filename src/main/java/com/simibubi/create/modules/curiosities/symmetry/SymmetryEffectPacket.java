@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.symmetry;
+package com.simibubi.create.modules.curiosities.symmetry;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.gui.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.logistics.packet.ConfigureStockswitchPacket;
 
 import net.minecraft.block.BlockState;
@@ -22,6 +23,14 @@ public class StockswitchScreen extends AbstractSimiScreen {
 	private Label offBelowLabel;
 	private ScrollInput onAbove;
 	private Label onAboveLabel;
+
+	private final String title = Lang.translate("gui.stockswitch.title");
+	private final String startAbove = Lang.translate("gui.stockswitch.startAbove");
+	private final String startAt = Lang.translate("gui.stockswitch.startAt");
+	private final String stopBelow = Lang.translate("gui.stockswitch.stopBelow");
+	private final String stopAt = Lang.translate("gui.stockswitch.stopAt");
+	private final String lowerLimit = Lang.translate("gui.stockswitch.lowerLimit");
+	private final String upperLimit = Lang.translate("gui.stockswitch.upperLimit");
 
 	private int lastModification;
 	private StockswitchTileEntity te;
@@ -40,7 +49,7 @@ public class StockswitchScreen extends AbstractSimiScreen {
 		cursorPos = te.currentLevel == -1 ? 0 : te.currentLevel;
 
 		offBelowLabel = new Label(guiLeft + 116, guiTop + 72, "").colored(0xD3CBBE).withShadow();
-		offBelow = new ScrollInput(guiLeft + 113, guiTop + 69, 33, 14).withRange(0, 96).titled("Lower Threshold")
+		offBelow = new ScrollInput(guiLeft + 113, guiTop + 69, 33, 14).withRange(0, 96).titled(lowerLimit)
 				.calling(state -> {
 					offBelowLabel.text = state + "%";
 					lastModification = 0;
@@ -51,7 +60,7 @@ public class StockswitchScreen extends AbstractSimiScreen {
 				}).setState((int) (te.offWhenBelow * 100));
 
 		onAboveLabel = new Label(guiLeft + 116, guiTop + 55, "").colored(0xD3CBBE).withShadow();
-		onAbove = new ScrollInput(guiLeft + 113, guiTop + 52, 33, 14).withRange(5, 101).titled("Upper Threshold")
+		onAbove = new ScrollInput(guiLeft + 113, guiTop + 52, 33, 14).withRange(5, 101).titled(upperLimit)
 				.calling(state -> {
 					onAboveLabel.text = state + "%";
 					lastModification = 0;
@@ -71,13 +80,10 @@ public class StockswitchScreen extends AbstractSimiScreen {
 		int hFontColor = 0xD3CBBE;
 		int fontColor = 0x4B3A22;
 		STOCKSWITCH.draw(this, guiLeft, guiTop);
-		font.drawStringWithShadow("Stockpile Switch",
-				guiLeft - 3 + (STOCKSWITCH.width - font.getStringWidth("Stockpile Switch")) / 2, guiTop + 10,
-				hFontColor);
-		font.drawString("Start Signal " + (onAbove.getState() == 100 ? "at" : "above"), guiLeft + 13, guiTop + 55,
-				fontColor);
-		font.drawString("Stop Signal " + (offBelow.getState() == 0 ? "at" : "below"), guiLeft + 13, guiTop + 72,
-				fontColor);
+		font.drawStringWithShadow(title, guiLeft - 3 + (STOCKSWITCH.width - font.getStringWidth(title)) / 2,
+				guiTop + 10, hFontColor);
+		font.drawString(onAbove.getState() == 100 ? startAt : startAbove, guiLeft + 13, guiTop + 55, fontColor);
+		font.drawString(offBelow.getState() == 0 ? stopAt : stopBelow, guiLeft + 13, guiTop + 72, fontColor);
 
 		ScreenResources sprite = ScreenResources.STOCKSWITCH_INTERVAL;
 		float lowerBound = offBelow.getState() / 100f * (sprite.width - 20) + 10;
@@ -108,12 +114,12 @@ public class StockswitchScreen extends AbstractSimiScreen {
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		if (te.currentLevel == -1)
 			cursorPos = 0;
 		else
 			cursorPos += (te.currentLevel - cursorPos) / 4;
-		
+
 		if (lastModification >= 0)
 			lastModification++;
 

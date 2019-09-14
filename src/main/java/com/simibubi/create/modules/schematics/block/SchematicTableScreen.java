@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 
 import net.minecraft.client.Minecraft;
@@ -34,6 +35,12 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	private IconButton folderButton;
 	private IconButton refreshButton;
 	private Label schematicsLabel;
+
+	private final String title = Lang.translate("gui.schematicTable.title");
+	private final String uploading = Lang.translate("gui.schematicTable.uploading");
+	private final String finished = Lang.translate("gui.schematicTable.finished");
+	private final String noSchematics = Lang.translate("gui.schematicTable.noSchematics");
+	private final String availableSchematicsTitle = Lang.translate("gui.schematicTable.availableSchematics");
 
 	private float progress;
 	private float chasingProgress;
@@ -60,7 +67,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		schematicsLabel.text = "";
 		if (!availableSchematics.isEmpty()) {
 			schematicsArea = new SelectionScrollInput(mainLeft + 33, mainTop + 23, 134, 14)
-					.forOptions(availableSchematics).titled("Available Schematics").writingTo(schematicsLabel);
+					.forOptions(availableSchematics).titled(availableSchematicsTitle).writingTo(schematicsLabel);
 			widgets.add(schematicsArea);
 			widgets.add(schematicsLabel);
 		}
@@ -89,18 +96,18 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		int mainTop = guiTop - 16;
 
 		ScreenResources.PLAYER_INVENTORY.draw(this, x - 16, y + 70 + 14);
-		font.drawString("Inventory", x - 15 + 7, y + 64 + 26, 0x666666);
+		font.drawString(playerInventory.getDisplayName().getFormattedText(), x - 15 + 7, y + 64 + 26, 0x666666);
 
 		SCHEMATIC_TABLE.draw(this, mainLeft, mainTop);
 		if (container.getTileEntity().isUploading)
-			font.drawString("Uploading...", mainLeft + 76, mainTop + 10, ScreenResources.FONT_COLOR);
+			font.drawString(uploading, mainLeft + 76, mainTop + 10, ScreenResources.FONT_COLOR);
 		else if (container.getSlot(1).getHasStack())
-			font.drawString("Upload Finished!", mainLeft + 60, mainTop + 10, ScreenResources.FONT_COLOR);
+			font.drawString(finished, mainLeft + 60, mainTop + 10, ScreenResources.FONT_COLOR);
 		else
-			font.drawString("Schematic Table", mainLeft + 60, mainTop + 10, ScreenResources.FONT_COLOR);
+			font.drawString(title, mainLeft + 60, mainTop + 10, ScreenResources.FONT_COLOR);
 
 		if (schematicsArea == null) {
-			font.drawStringWithShadow("  No Schematics Saved  ", mainLeft + 39, mainTop + 26, 0xFFDD44);
+			font.drawStringWithShadow(noSchematics, mainLeft + 39, mainTop + 26, 0xFFDD44);
 		}
 
 		minecraft.getTextureManager().bindTexture(SCHEMATIC_TABLE_PROGRESS.location);
@@ -174,7 +181,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	@Override
 	public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
 		ClientSchematicLoader schematicSender = CreateClient.schematicSender;
-		
+
 		if (confirmButton.active && confirmButton.isHovered() && ((SchematicTableContainer) container).canWrite()
 				&& schematicsArea != null) {
 
@@ -195,7 +202,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 			if (!availableSchematics.isEmpty()) {
 				schematicsArea = new SelectionScrollInput(guiLeft - 56 + 33, guiTop - 16 + 23, 134, 14)
-						.forOptions(availableSchematics).titled("Available Schematics").writingTo(schematicsLabel);
+						.forOptions(availableSchematics).titled(availableSchematicsTitle).writingTo(schematicsLabel);
 				widgets.add(schematicsArea);
 			} else {
 				schematicsArea = null;

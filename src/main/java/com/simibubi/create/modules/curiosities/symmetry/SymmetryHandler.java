@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.symmetry;
+package com.simibubi.create.modules.curiosities.symmetry;
 
 import java.util.Random;
 
@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
-import com.simibubi.create.modules.symmetry.mirror.EmptyMirror;
-import com.simibubi.create.modules.symmetry.mirror.SymmetryMirror;
+import com.simibubi.create.modules.curiosities.symmetry.mirror.EmptyMirror;
+import com.simibubi.create.modules.curiosities.symmetry.mirror.SymmetryMirror;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;

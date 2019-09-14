@@ -7,7 +7,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
-import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity.TransportedEntityInfo;
 
@@ -24,9 +23,9 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -409,11 +408,6 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 							buildingBlock.withOffset(x * segment / 16f, y * segment / 16f, z * segment / 16f),
 							IBooleanFunction.AND));
 		return shape;
-	}
-
-	@Override
-	public ItemDescription getDescription() {
-		return new ItemDescription(color);
 	}
 
 }

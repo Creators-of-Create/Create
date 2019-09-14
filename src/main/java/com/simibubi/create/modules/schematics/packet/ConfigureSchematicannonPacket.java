@@ -73,15 +73,15 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 					
 				case PLAY:
 					te.state = State.RUNNING;
-					te.statusMsg = "Running";
+					te.statusMsg = "running";
 					break;
 				case PAUSE:
 					te.state = State.PAUSED;
-					te.statusMsg = "Paused";
+					te.statusMsg = "paused";
 					break;
 				case STOP:
 					te.state = State.STOPPED;
-					te.statusMsg = "Stopped";
+					te.statusMsg = "stopped";
 					break;
 				default:
 					break;

@@ -4,11 +4,16 @@ import java.util.function.Consumer;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 
 public class TextInputPromptScreen extends AbstractSimiScreen {
 
+	private final String defaultConfirm = Lang.translate("action.confirm");
+	private final String defaultAbort = Lang.translate("action.abort");
+	
 	private Consumer<String> callback;
 	private Consumer<String> abortCallback;
 
@@ -27,8 +32,8 @@ public class TextInputPromptScreen extends AbstractSimiScreen {
 		this.callback = callBack;
 		this.abortCallback = abortCallback;
 
-		buttonTextConfirm = "Confirm";
-		buttonTextAbort = "Abort";
+		buttonTextConfirm = defaultConfirm;
+		buttonTextAbort = defaultAbort;
 		confirmed = false;
 	}
 

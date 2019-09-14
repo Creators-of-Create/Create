@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.block;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -61,7 +62,7 @@ public interface IBlockWithScrollableValue {
 			return;
 		if (!mc.player.isAllowEdit())
 			return;
-		
+
 		IBlockWithScrollableValue block = (IBlockWithScrollableValue) state.getBlock();
 		Vec3d pos = new Vec3d(blockPos);
 
@@ -76,7 +77,7 @@ public interface IBlockWithScrollableValue {
 		cursor = VecHelper.rotate(cursor, facing == Direction.UP ? -90 : facing == Direction.DOWN ? 90 : 0, Axis.Z)
 				.add(.5, .5, .5);
 		boolean contains = bb.contains(cursor);
-		
+
 		TessellatorHelper.prepareForDrawing();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
@@ -84,7 +85,7 @@ public interface IBlockWithScrollableValue {
 				GlStateManager.DestFactor.ZERO);
 		GlStateManager.disableTexture();
 		GlStateManager.depthMask(false);
-		
+
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(3, DefaultVertexFormats.POSITION_COLOR);
@@ -122,7 +123,7 @@ public interface IBlockWithScrollableValue {
 
 		if (contains) {
 			GlStateManager.pushMatrix();
-			GlStateManager.translated(bb.getZSize() + 1/32f, -1/16f, 0);
+			GlStateManager.translated(bb.getZSize() + 1 / 32f, -1 / 16f, 0);
 			GlStateManager.scaled(textScale, -textScale, textScale);
 
 			String text = block.getValueName(state, world, blockPos);
@@ -131,7 +132,7 @@ public interface IBlockWithScrollableValue {
 			mc.fontRenderer.drawString(text, 1, 1, 0x224433);
 			GlStateManager.translated(0, 0, 1 / 4f);
 
-			text = TextFormatting.ITALIC + "<Scroll>";
+			text = TextFormatting.ITALIC + "<" + Lang.translate("action.scroll") + ">";
 			mc.fontRenderer.drawString(text, 0, 10, 0xBBBBCC);
 			GlStateManager.translated(0, 0, -1 / 4f);
 			mc.fontRenderer.drawString(text, 1, 11, 0x111111);
@@ -143,8 +144,8 @@ public interface IBlockWithScrollableValue {
 		String numberText = block.getCurrentValue(state, world, blockPos) + "";
 		int stringWidth = mc.fontRenderer.getStringWidth(numberText);
 		float numberScale = 4 / 128f * (6f / stringWidth);
-		GlStateManager.translated(7/64f, -5/64f, 0);
-		
+		GlStateManager.translated(7 / 64f, -5 / 64f, 0);
+
 		GlStateManager.scaled(numberScale, -numberScale, numberScale);
 
 		mc.fontRenderer.drawString(numberText, 0, 0, 0xFFFFFF);
@@ -156,12 +157,12 @@ public interface IBlockWithScrollableValue {
 		GlStateManager.lineWidth(1);
 		TessellatorHelper.cleanUpAfterDrawing();
 	}
-	
+
 	public static boolean onScroll(double delta) {
 		RayTraceResult objectMouseOver = Minecraft.getInstance().objectMouseOver;
 		if (!(objectMouseOver instanceof BlockRayTraceResult))
 			return false;
-		
+
 		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
 		Minecraft mc = Minecraft.getInstance();
 		ClientWorld world = mc.world;
@@ -186,7 +187,7 @@ public interface IBlockWithScrollableValue {
 				.add(.5, .5, .5);
 		if (!bb.contains(cursor))
 			return false;
-		
+
 		block.onScroll(state, world, blockPos, delta);
 		return true;
 	}

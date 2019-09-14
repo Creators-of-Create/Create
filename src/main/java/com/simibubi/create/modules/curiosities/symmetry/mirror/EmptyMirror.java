@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.symmetry.mirror;
+package com.simibubi.create.modules.curiosities.symmetry.mirror;
 
 import java.util.HashMap;
 import java.util.List;

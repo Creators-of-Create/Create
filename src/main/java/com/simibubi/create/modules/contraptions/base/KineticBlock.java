@@ -1,9 +1,9 @@
 package com.simibubi.create.modules.contraptions.base;
 
-import com.simibubi.create.foundation.block.InfoBlock;
 import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +15,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public abstract class KineticBlock extends InfoBlock implements IRotate {
+public abstract class KineticBlock extends Block implements IRotate {
 
 	protected static final Palette color = Palette.Red;
 	

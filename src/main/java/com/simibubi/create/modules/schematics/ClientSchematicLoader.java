@@ -19,6 +19,7 @@ import java.util.Map;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.FilesHelper;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.schematics.packet.SchematicUploadPacket;
 
 import net.minecraft.client.Minecraft;
@@ -68,10 +69,10 @@ public class ClientSchematicLoader {
 			// Too big
 			Integer maxSize = parameters.maxTotalSchematicSize.get();
 			if (size > maxSize * 1000) {
-				Minecraft.getInstance().player
-						.sendMessage(new StringTextComponent("Your schematic is too large (" + size / 1000 + " KB)."));
+				Minecraft.getInstance().player.sendMessage(new StringTextComponent(
+						Lang.translate("schematics.uploadTooLarge") + " (" + size / 1000 + " KB)."));
 				Minecraft.getInstance().player.sendMessage(
-						new StringTextComponent("The maximum allowed schematic file size is: " + maxSize + " KB"));
+						new StringTextComponent(Lang.translate("schematics.maxAllowedSize") + " " + maxSize + " KB"));
 				return;
 			}
 

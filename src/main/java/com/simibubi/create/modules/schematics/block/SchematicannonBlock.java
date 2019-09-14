@@ -1,10 +1,8 @@
 package com.simibubi.create.modules.schematics.block;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.block.InfoBlock;
-import com.simibubi.create.foundation.utility.ItemDescription;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +20,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class SchematicannonBlock extends InfoBlock {
+public class SchematicannonBlock extends Block {
 
 	public SchematicannonBlock() {
 		super(Properties.from(Blocks.DISPENSER));
@@ -90,13 +88,6 @@ public class SchematicannonBlock extends InfoBlock {
 			worldIn.removeTileEntity(pos);
 		}
 
-	}
-
-	@Override
-	public ItemDescription getDescription() {
-		Palette color = Palette.Blue;
-		return new ItemDescription(color).withSummary("Prints a deployed " + h("Schematic", color)
-				+ " into the world using blocks from inventories placed right next to it.").createTabs();
 	}
 
 }

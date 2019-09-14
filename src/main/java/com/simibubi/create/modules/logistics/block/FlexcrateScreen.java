@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.gui.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.logistics.packet.ConfigureFlexcratePacket;
 
 import net.minecraft.block.BlockState;
@@ -23,6 +24,9 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 	private Label allowedItemsLabel;
 	private ScrollInput allowedItems;
 	private int lastModification;
+
+	private final String title = Lang.translate("gui.flexcrate.title");
+	private final String storageSpace = Lang.translate("gui.flexcrate.storageSpace");
 
 	public FlexcrateScreen(FlexcrateContainer container, PlayerInventory inv, ITextComponent title) {
 		super(container, inv, title);
@@ -37,8 +41,8 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 		widgets.clear();
 
 		allowedItemsLabel = new Label(guiLeft + 100 + 70, guiTop + 107, "").colored(0xD3CBBE).withShadow();
-		allowedItems = new ScrollInput(guiLeft + 100 + 65, guiTop + 104, 41, 14).titled("Storage Space")
-				.withRange(1, 1025).writingTo(allowedItemsLabel).withShiftStep(64).setState(te.allowedAmount)
+		allowedItems = new ScrollInput(guiLeft + 100 + 65, guiTop + 104, 41, 14).titled(storageSpace).withRange(1, 1025)
+				.writingTo(allowedItemsLabel).withShiftStep(64).setState(te.allowedAmount)
 				.calling(s -> lastModification = 0);
 		allowedItems.onChanged();
 		widgets.add(allowedItemsLabel);
@@ -55,13 +59,13 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 		int fontColor = 0x4B3A22;
 
 		FLEXCRATE.draw(this, crateLeft, crateTop);
-		font.drawStringWithShadow("FlexCrate", crateLeft - 3 + (FLEXCRATE.width - font.getStringWidth("FlexCrate")) / 2,
+		font.drawStringWithShadow(title, crateLeft - 3 + (FLEXCRATE.width - font.getStringWidth(title)) / 2,
 				crateTop + 10, hFontColor);
 		String itemCount = "" + te.itemCount;
 		font.drawString(itemCount, crateLeft + 53 - font.getStringWidth(itemCount), crateTop + 107, fontColor);
 
 		PLAYER_INVENTORY.draw(this, invLeft, invTop);
-		font.drawString("Inventory", invLeft + 7, invTop + 6, 0x666666);
+		font.drawString(playerInventory.getDisplayName().getFormattedText(), invLeft + 7, invTop + 6, 0x666666);
 
 		for (int slot = 0; slot < 16; slot++) {
 			if (allowedItems.getState() > slot * 64)

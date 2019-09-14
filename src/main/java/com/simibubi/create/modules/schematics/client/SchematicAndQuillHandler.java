@@ -15,6 +15,7 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.TextInputPromptScreen;
 import com.simibubi.create.foundation.utility.FilesHelper;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -38,8 +39,6 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.gen.feature.template.Template;
 
 public class SchematicAndQuillHandler {
@@ -84,10 +83,8 @@ public class SchematicAndQuillHandler {
 
 			firstPos = new BlockPos(bb.minX, bb.minY, bb.minZ);
 			secondPos = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-			Minecraft.getInstance().player.sendStatusMessage(
-					new StringTextComponent(
-							"Schematic size: " + (bb.getXSize()) + "x" + (bb.getYSize()) + "x" + (bb.getZSize())),
-					true);
+			Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.dimensions", bb.getXSize(),
+					bb.getYSize(), bb.getZSize());
 		}
 
 		return true;
@@ -104,33 +101,33 @@ public class SchematicAndQuillHandler {
 		if (player.isSneaking()) {
 			firstPos = null;
 			secondPos = null;
-			player.sendStatusMessage(new StringTextComponent("Removed selection."), true);
+			Lang.sendStatus(player, "schematicAndQuill.abort");
 			return;
 		}
 
 		if (secondPos != null) {
 			TextInputPromptScreen guiScreenIn = new TextInputPromptScreen(this::saveSchematic, s -> {
 			});
-			guiScreenIn.setTitle("Enter a name for the Schematic:");
-			guiScreenIn.setButtonTextConfirm("Save");
-			guiScreenIn.setButtonTextAbort("Cancel");
+			guiScreenIn.setTitle(Lang.translate("schematicAndQuill.prompt"));
+			guiScreenIn.setButtonTextConfirm(Lang.translate("action.saveToFile"));
+			guiScreenIn.setButtonTextAbort(Lang.translate("action.discard"));
 			ScreenOpener.open(guiScreenIn);
 			return;
 		}
 
 		if (selectedPos == null) {
-			player.sendStatusMessage(new StringTextComponent("Hold [CTRL] to select Air blocks."), true);
+			Lang.sendStatus(player, "schematicAndQuill.noTarget");
 			return;
 		}
 
 		if (firstPos != null) {
 			secondPos = selectedPos;
-			player.sendStatusMessage(new StringTextComponent(TextFormatting.GREEN + "Second position set."), true);
+			Lang.sendStatus(player, "schematicAndQuill.secondPos");
 			return;
 		}
 
 		firstPos = selectedPos;
-		player.sendStatusMessage(new StringTextComponent(TextFormatting.GREEN + "First position set."), true);
+		Lang.sendStatus(player, "schematicAndQuill.firstPos");
 	}
 
 	public void saveSchematic(String string) {
@@ -140,7 +137,7 @@ public class SchematicAndQuillHandler {
 				new BlockPos(bb.getXSize(), bb.getYSize(), bb.getZSize()), false, Blocks.AIR);
 
 		if (string.isEmpty())
-			string = "My Schematic";
+			string = Lang.translate("schematicAndQuill.fallbackName");
 
 		String folderPath = "schematics";
 		FilesHelper.createFolderIfMissing(folderPath);
@@ -160,7 +157,7 @@ public class SchematicAndQuillHandler {
 		}
 		firstPos = null;
 		secondPos = null;
-		Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent("Saved as " + filepath), true);
+		Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.saved", filepath);
 	}
 
 	public void render() {

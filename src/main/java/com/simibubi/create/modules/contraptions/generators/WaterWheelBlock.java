@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.generators;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -130,12 +129,6 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(HORIZONTAL_FACING).getAxis();
-	}
-
-	@Override
-	public ItemDescription getDescription() {
-		return new ItemDescription(color).withSummary("Creates Rotational Power from " + h("Water streams", color) + " around it.")
-				.createTabs();
 	}
 
 }

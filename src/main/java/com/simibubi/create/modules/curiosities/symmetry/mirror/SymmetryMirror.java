@@ -1,10 +1,11 @@
-package com.simibubi.create.modules.symmetry.mirror;
+package com.simibubi.create.modules.curiosities.symmetry.mirror;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -27,8 +28,6 @@ public abstract class SymmetryMirror {
 	public static final String CROSS_PLANE = "cross_plane";
 	public static final String TRIPLE_PLANE = "triple_plane";
 
-	public static final List<String> TOOLTIP_ELEMENTS = ImmutableList.of("Mirror once", "Rectanglar", "Octagonal");
-
 	protected Vec3d position;
 	protected IStringSerializable orientation;
 	protected int orientationIndex;
@@ -38,6 +37,11 @@ public abstract class SymmetryMirror {
 		position = pos;
 		enable = true;
 		orientationIndex = 0;
+	}
+
+	public static List<String> getMirrors() {
+		return ImmutableList.of(Lang.translate("symmetry.mirror.plane"), Lang.translate("symmetry.mirror.doublePlane"),
+				Lang.translate("symmetry.mirror.triplePlane"));
 	}
 
 	public IStringSerializable getOrientation() {

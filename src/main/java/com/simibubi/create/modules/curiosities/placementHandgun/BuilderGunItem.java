@@ -12,10 +12,10 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.item.InfoItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.foundation.utility.ItemDescription.Palette;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,6 +27,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -62,19 +63,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class BuilderGunItem extends InfoItem {
+public class BuilderGunItem extends Item {
 
 	public static enum ComponentTier {
-		None(TextFormatting.DARK_GRAY + "Andesite Alloy"),
-		BlazeBrass(TextFormatting.GOLD + "Blaze Brass"),
-		ChorusChrome(TextFormatting.LIGHT_PURPLE + "Chorus Chrome"),
+		None(TextFormatting.DARK_GRAY), 
+		BlazeBrass(TextFormatting.GOLD), 
+		ChorusChrome(TextFormatting.LIGHT_PURPLE),
 
 		;
 
-		protected String displayName;
+		protected TextFormatting color;
 
-		private ComponentTier(String displayName) {
-			this.displayName = displayName;
+		private ComponentTier(TextFormatting color) {
+			this.color = color;
 		}
 	}
 
@@ -92,35 +93,24 @@ public class BuilderGunItem extends InfoItem {
 	}
 
 	@Override
-	public ItemDescription getDescription() {
-		Palette palette = Palette.Purple;
-		return new ItemDescription(palette).withSummary("Novel gadget for placing or exchanging blocks at a distance.")
-				.withControl("L-Click at Block", "Sets blocks placed by the tool to the targeted block.")
-				.withControl("R-Click at Block",
-						h("Places", palette) + " or " + h("Replaces", palette) + " the targeted block.")
-				.withControl("R-Click while Sneaking", "Opens the " + h("Configuration", palette) + " Interface")
-				.createTabs();
-	}
-
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		if (stack.hasTag() && stack.getTag().contains("BlockUsed")) {
 			String usedblock = NBTUtil.readBlockState(stack.getTag().getCompound("BlockUsed")).getBlock()
 					.getTranslationKey();
-			ItemDescription.add(tooltip, TextFormatting.DARK_GRAY + "Using: " + TextFormatting.GRAY
-					+ new TranslationTextComponent(usedblock).getFormattedText());
+			ItemDescription.add(tooltip, TextFormatting.DARK_GRAY + Lang.translate("blockzapper.usingBlock",
+					TextFormatting.GRAY + new TranslationTextComponent(usedblock).getFormattedText()));
 		}
-
-		super.addInformation(stack, worldIn, tooltip, flagIn);
-
 		Palette palette = Palette.Purple;
 		if (Screen.hasShiftDown()) {
-			ItemDescription.add(tooltip, palette.color + "Component Tiers:");
+			ItemDescription.add(tooltip, palette.color + Lang.translate("blockzapper.componentUpgrades"));
 
 			for (Components c : Components.values()) {
 				ComponentTier tier = getTier(c, stack);
-				ItemDescription.add(tooltip, "> " + TextFormatting.GRAY + c.name() + ": " + tier.displayName);
+				ItemDescription.add(tooltip,
+						"> " + TextFormatting.GRAY + Lang.translate("blockzapper.component." + c.name().toLowerCase())
+								+ ": " + tier.color
+								+ Lang.translate("blockzapper.componentTier." + tier.name().toLowerCase()));
 			}
 		}
 	}
@@ -198,8 +188,8 @@ public class BuilderGunItem extends InfoItem {
 		else {
 			world.playSound(player, player.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_BASS, SoundCategory.BLOCKS, 1f,
 					0.5f);
-			player.sendStatusMessage(new StringTextComponent(TextFormatting.RED + "Left-Click a Block to set Material"),
-					true);
+			player.sendStatusMessage(
+					new StringTextComponent(TextFormatting.RED + Lang.translate("blockzapper.leftClickToSet")), true);
 			return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
 		}
 
@@ -224,26 +214,8 @@ public class BuilderGunItem extends InfoItem {
 				-0.1f, 1);
 		Vec3d barrelPos = start.add(barrelPosNoTransform.rotatePitch(pitch).rotateYaw(yaw));
 
-		// Client side - Shoot visual laser
+		// Client side
 		if (world.isRemote) {
-//			BuilderGunHandler.addBeam(new LaserBeam(barrelPos, raytrace.getHitVec()));
-//
-//			if (getTier(Components.Amplifier, item) == ComponentTier.BlazeBrass) {
-//				BuilderGunHandler.addBeam(new LaserBeam(
-//						start.add(barrelPosNoTransform.add(-.09f, -.08f, 0).rotatePitch(pitch).rotateYaw(yaw)),
-//						raytrace.getHitVec()));
-//			}
-//			if (getTier(Components.Amplifier, item) == ComponentTier.ChorusChrome) {
-//				BuilderGunHandler.addBeam(new LaserBeam(
-//						start.add(barrelPosNoTransform.add(-.09f, -.08f, 0).rotatePitch(pitch).rotateYaw(yaw)),
-//						raytrace.getHitVec()));
-//				BuilderGunHandler.addBeam(new LaserBeam(
-//						start.add(barrelPosNoTransform.add(.09f, -.08f, 0).rotatePitch(pitch).rotateYaw(yaw)),
-//						raytrace.getHitVec()));
-//			}
-//
-//			BuilderGunHandler.shoot(hand);
-//			applyCooldown(player, item, gunInOtherHand);
 			BuilderGunHandler.dontAnimateItem(hand);
 			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
 		}
@@ -263,7 +235,8 @@ public class BuilderGunItem extends InfoItem {
 				continue;
 			if (!player.isCreative() && BlockHelper.findAndRemoveInInventory(stateToUse, player, 1) == 0) {
 				player.getCooldownTracker().setCooldown(item.getItem(), 20);
-				player.sendStatusMessage(new StringTextComponent(TextFormatting.RED + "Out of Blocks!"), true);
+				player.sendStatusMessage(
+						new StringTextComponent(TextFormatting.RED + Lang.translate("blockzapper.empty")), true);
 				return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
 			}
 

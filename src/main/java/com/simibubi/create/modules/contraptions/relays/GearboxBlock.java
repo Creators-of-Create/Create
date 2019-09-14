@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.contraptions.relays;
 
-import com.simibubi.create.foundation.utility.ItemDescription;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -38,14 +37,6 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	@Override
 	protected boolean hasStaticPart() {
 		return true;
-	}
-
-	// IToolTip
-
-	@Override
-	public ItemDescription getDescription() {
-		return new ItemDescription(color)
-				.withSummary("Relays Rotation to Four directions. Reverses straight connections.").createTabs();
 	}
 
 }

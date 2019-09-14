@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RotatedPillarBlock;
@@ -75,7 +76,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock
 
 	@Override
 	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
-		return "Range";
+		return Lang.translate("generic.range");
 	}
 	
 	@Override

@@ -7,8 +7,6 @@ import java.util.Optional;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.utility.ItemDescription;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
@@ -48,12 +46,6 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 		return SHAPE;
 	}
 
-	@Override
-	public ItemDescription getDescription() {
-		Palette color = Palette.Red;
-		return new ItemDescription(color).withSummary("Applies pressure to items below it.").createTabs();
-	}
-	
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {

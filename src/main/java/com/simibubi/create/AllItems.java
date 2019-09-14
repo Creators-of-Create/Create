@@ -7,12 +7,12 @@ import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItemRenderer;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
+import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
+import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandItemRenderer;
+import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandModel;
 import com.simibubi.create.modules.gardens.TreeFertilizerItem;
 import com.simibubi.create.modules.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.modules.schematics.item.SchematicItem;
-import com.simibubi.create.modules.symmetry.SymmetryWandItem;
-import com.simibubi.create.modules.symmetry.client.SymmetryWandItemRenderer;
-import com.simibubi.create.modules.symmetry.client.SymmetryWandModel;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.ItemColors;

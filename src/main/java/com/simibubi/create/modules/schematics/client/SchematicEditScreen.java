@@ -3,7 +3,6 @@ package com.simibubi.create.modules.schematics.client;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
@@ -12,6 +11,7 @@ import com.simibubi.create.foundation.gui.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.item.ItemStack;
@@ -25,9 +25,13 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	private TextFieldWidget yInput;
 	private TextFieldWidget zInput;
 
-	private static final List<String> rotationOptions = ImmutableList.of("None", "Clockwise 90", "Clockwise 180",
-			"Clockwise 270");
-	private static final List<String> mirrorOptions = ImmutableList.of("None", "Left-Right", "Front-Back");
+	private final List<String> rotationOptions = Lang.translatedOptions("schematic.rotation", "none", "cw90", "cw180",
+			"cw270");
+	private final List<String> mirrorOptions = Lang.translatedOptions("schematic.mirror", "none", "leftRight",
+			"frontBack");
+	private final String positionLabel = Lang.translate("schematic.position");
+	private final String rotationLabel = Lang.translate("schematic.rotation");
+	private final String mirrorLabel = Lang.translate("schematic.mirror");
 
 	private ScrollInput rotationArea;
 	private ScrollInput mirrorArea;
@@ -126,9 +130,9 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		font.drawStringWithShadow(handler.cachedSchematicName,
 				x + 103 - font.getStringWidth(handler.cachedSchematicName) / 2, y + 10, 0xDDEEFF);
 
-		font.drawString("Position", x + 10, y + 32, ScreenResources.FONT_COLOR);
-		font.drawString("Rotation", x + 10, y + 52, ScreenResources.FONT_COLOR);
-		font.drawString("Mirror", x + 10, y + 72, ScreenResources.FONT_COLOR);
+		font.drawString(positionLabel, x + 10, y + 32, ScreenResources.FONT_COLOR);
+		font.drawString(rotationLabel, x + 10, y + 52, ScreenResources.FONT_COLOR);
+		font.drawString(mirrorLabel, x + 10, y + 72, ScreenResources.FONT_COLOR);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translated(guiLeft + 220, guiTop + 20, 0);

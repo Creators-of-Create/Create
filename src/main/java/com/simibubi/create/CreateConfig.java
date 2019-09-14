@@ -64,6 +64,7 @@ public class CreateConfig {
 	CreateConfig(final ForgeConfigSpec.Builder builder) {
 		initGeneral(builder);
 		initContraptions(builder);
+		initSchematics(builder);
 		initCuriosities(builder);
 		initLogistics(builder);
 		initGardens(builder);
@@ -256,7 +257,7 @@ public class CreateConfig {
 		builder.pop();
 	}
 
-	public void initSchematics(final ForgeConfigSpec.Builder builder) {
+	private void initSchematics(final ForgeConfigSpec.Builder builder) {
 		builder.comment("The Schematics Module").push("schematics");
 		String basePath = "create.config.schematics.";
 		String name = "";

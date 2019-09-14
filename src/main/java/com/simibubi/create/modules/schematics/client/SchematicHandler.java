@@ -1,6 +1,8 @@
 package com.simibubi.create.modules.schematics.client;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllItems;
@@ -10,6 +12,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.ToolSelectionScreen;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.type.Cuboid;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.schematics.SchematicWorld;
 import com.simibubi.create.modules.schematics.client.tools.Tools;
@@ -43,6 +46,9 @@ public class SchematicHandler {
 	public boolean deployed;
 	public int slot;
 	public ItemStack item;
+
+	private final List<String> mirrors = Arrays.asList("none", "leftRight", "frontBack");
+	private final List<String> rotations = Arrays.asList("none", "cw90", "cw180", "cw270");
 
 	public Tools currentTool;
 	public ToolSelectionScreen selectionScreen;
@@ -194,7 +200,7 @@ public class SchematicHandler {
 	}
 
 	public void sync() {
-		Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent("Syncing..."), true);
+		message(Lang.translate("schematics.synchronizing"));
 		AllPackets.channel.sendToServer(new NbtPacket(item, slot));
 
 		if (deployed) {
@@ -246,22 +252,23 @@ public class SchematicHandler {
 		if (m == Mirror.NONE) {
 			cachedSettings.setMirror(mirror);
 			anchor = anchor.add(anchorOffset);
-			Minecraft.getInstance().player.sendStatusMessage(
-					new StringTextComponent("Mirror: " + cachedSettings.getMirror().toString()), true);
+			message(Lang.translate("schematic.mirror") + ": "
+					+ Lang.translate("schematic.mirror." + mirrors.get(cachedSettings.getMirror().ordinal())));
 
 		} else if (m == mirror) {
 			cachedSettings.setMirror(Mirror.NONE);
 			anchor = anchor.subtract(anchorOffset);
-			Minecraft.getInstance().player.sendStatusMessage(
-					new StringTextComponent("Mirror: " + cachedSettings.getMirror().toString()), true);
+			message(Lang.translate("schematic.mirror") + ": "
+					+ Lang.translate("schematic.mirror." + mirrors.get(cachedSettings.getMirror().ordinal())));
 
 		} else if (m != mirror) {
 			cachedSettings.setMirror(Mirror.NONE);
 			anchor = anchor.add(anchorOffset);
 			cachedSettings.setRotation(r.add(Rotation.CLOCKWISE_180));
-			Minecraft.getInstance().player.sendStatusMessage(
-					new StringTextComponent("Mirror: None, Rotation: " + cachedSettings.getRotation().toString()),
-					true);
+			message(Lang.translate("schematic.mirror") + ": "
+					+ Lang.translate("schematic.mirror." + mirrors.get(cachedSettings.getMirror().ordinal())) + ", "
+					+ Lang.translate("schematic.rotation") + ": "
+					+ Lang.translate("schematic.rotation." + rotations.get(cachedSettings.getRotation().ordinal())));
 		}
 
 		item.getTag().put("Anchor", NBTUtil.writeBlockPos(anchor));
@@ -269,6 +276,10 @@ public class SchematicHandler {
 		item.getTag().putString("Rotation", r.name());
 
 		markDirty();
+	}
+
+	public void message(String msg) {
+		Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent(msg), true);
 	}
 
 	public void rotate(Rotation rotation) {
@@ -282,8 +293,8 @@ public class SchematicHandler {
 		item.getTag().put("Anchor", NBTUtil.writeBlockPos(anchor));
 		item.getTag().putString("Rotation", cachedSettings.getRotation().name());
 
-		Minecraft.getInstance().player.sendStatusMessage(
-				new StringTextComponent("Rotation: " + cachedSettings.getRotation().toString()), true);
+		message(Lang.translate("schematic.rotation") + ": "
+				+ Lang.translate("schematic.rotation." + rotations.get(cachedSettings.getRotation().ordinal())));
 
 		markDirty();
 	}

@@ -1,6 +1,6 @@
-package com.simibubi.create.modules.symmetry.block;
+package com.simibubi.create.modules.curiosities.symmetry.block;
 
-import com.simibubi.create.modules.symmetry.mirror.CrossPlaneMirror;
+import com.simibubi.create.modules.curiosities.symmetry.mirror.CrossPlaneMirror;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

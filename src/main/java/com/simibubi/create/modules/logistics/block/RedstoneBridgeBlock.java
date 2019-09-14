@@ -6,19 +6,13 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
-import com.simibubi.create.foundation.utility.ITooltip;
-import com.simibubi.create.foundation.utility.ItemDescription;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
-import com.simibubi.create.foundation.utility.TooltipHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -33,14 +27,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITooltip, IBlockWithFrequency {
+public class RedstoneBridgeBlock extends ProperDirectionalBlock implements IBlockWithFrequency {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty RECEIVER = BooleanProperty.create("receiver");
@@ -53,11 +44,8 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITool
 			NORTH_SHAPE = makeCuboidShape(3, 1, 13, 13, 15, 17), EAST_SHAPE = makeCuboidShape(-1, 1, 3, 3, 15, 13),
 			WEST_SHAPE = makeCuboidShape(13, 1, 3, 17, 15, 13);
 
-	private TooltipHolder info;
-
 	public RedstoneBridgeBlock() {
 		super(Properties.from(Blocks.DARK_OAK_LOG));
-		info = new TooltipHolder(this);
 		cacheItemPositions();
 		setDefaultState(getDefaultState().with(POWERED, false).with(RECEIVER, false));
 	}
@@ -249,31 +237,6 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements ITool
 	@Override
 	public Direction getFrequencyItemFacing(BlockState state) {
 		return state.get(FACING);
-	}
-
-	@Override
-	@OnlyIn(value = Dist.CLIENT)
-	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
-			ITooltipFlag flagIn) {
-		info.addInformation(tooltip);
-	}
-
-	@Override
-	public ItemDescription getDescription() {
-		Palette color = Palette.Yellow;
-		return new ItemDescription(color)
-				.withSummary("Endpoints for " + h("Wireless Redstone", color) + " connections. Can be assigned "
-						+ h("Frequencies", color) + " using any item. Signal can travel distances up to "
-						+ h("128m", color))
-				.withBehaviour("When Powered",
-						"Bridges of the same " + h("Frequency", color) + " will provide a Redstone signal.")
-				.withControl("When R-Clicked with an Item",
-						"Sets the " + h("Frequency", color) + " to that item. A total of "
-								+ h("two different items", color)
-								+ " can be used in combination for defining a Frequency.")
-				.withControl("When R-Clicked while Sneaking",
-						"Toggles between " + h("Receiver", color) + " and " + h("Transmitter", color) + " Mode. ")
-				.createTabs();
 	}
 
 }
