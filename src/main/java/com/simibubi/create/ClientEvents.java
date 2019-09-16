@@ -3,6 +3,7 @@ package com.simibubi.create;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.compat.jei.AnimatedKinetics;
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.TooltipHelper;
@@ -36,6 +37,9 @@ public class ClientEvents {
 	public static void onTick(ClientTickEvent event) {
 		if (event.phase == Phase.START)
 			return;
+		
+		AnimatedKinetics.tick();
+		
 		if (!isGameActive())
 			return;
 

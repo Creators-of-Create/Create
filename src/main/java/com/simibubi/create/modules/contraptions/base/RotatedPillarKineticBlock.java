@@ -7,6 +7,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Rotation;
 
 public abstract class RotatedPillarKineticBlock extends KineticBlock {
@@ -34,6 +35,24 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 		default:
 			return state;
 		}
+	}
+	
+	public Axis getPreferredAxis(BlockItemUseContext context) {
+		Axis prefferedAxis = null;
+		for (Direction side : Direction.values()) {
+			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));
+			if (blockState.getBlock() instanceof IRotate) {
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos().offset(side),
+						blockState, side.getOpposite()))
+					if (prefferedAxis != null && prefferedAxis != side.getAxis()) {
+						prefferedAxis = null;
+						break;
+					} else {
+						prefferedAxis = side.getAxis();
+					}
+			}
+		}
+		return prefferedAxis;
 	}
 
 	@Override

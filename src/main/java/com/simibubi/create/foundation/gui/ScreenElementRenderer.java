@@ -2,13 +2,19 @@ package com.simibubi.create.foundation.gui;
 
 import java.util.function.Supplier;
 
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 
 public class ScreenElementRenderer {
 
@@ -45,6 +51,17 @@ public class ScreenElementRenderer {
 		Minecraft mc = Minecraft.getInstance();
 		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		mc.getBlockRendererDispatcher().renderBlockBrightness(toRender, 1);
+
+		if (!toRender.getFluidState().isEmpty()) {
+			RenderHelper.disableStandardItemLighting();
+			Tessellator tessellator = Tessellator.getInstance();
+			BufferBuilder bufferbuilder = tessellator.getBuffer();
+			bufferbuilder.setTranslation(0, -300, 0);
+			bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+			mc.getBlockRendererDispatcher().renderFluid(new BlockPos(0, 300, 0), mc.world, bufferbuilder, toRender.getFluidState());
+			Tessellator.getInstance().draw();
+			bufferbuilder.setTranslation(0, 0, 0);
+		}
 
 		GlStateManager.disableAlphaTest();
 		GlStateManager.disableRescaleNormal();

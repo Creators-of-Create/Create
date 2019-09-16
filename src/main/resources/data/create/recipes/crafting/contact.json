@@ -16,7 +16,7 @@
                 "item": "minecraft:redstone"
             },
 			"G": {
-                "item": "minecraft:gold_nugget"
+                "item": "create:gold_sheet"
             }
         },
 	"result": {

@@ -10,7 +10,7 @@
                 "tag": "minecraft:planks"
             },
 			"A": {
-                "item": "create:andesite_alloy_cube"
+                "item": "create:iron_sheet"
             },
 			"S": {
                 "item": "create:shaft"

@@ -10,6 +10,7 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
@@ -31,7 +32,7 @@ public class BuilderGunUpgradeRecipe implements ICraftingRecipe {
 	
 	@Override
 	public boolean matches(CraftingInventory inv, World worldIn) {
-		return recipe.matches(inv, worldIn);
+		return getRecipe().matches(inv, worldIn);
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class BuilderGunUpgradeRecipe implements ICraftingRecipe {
 			ItemStack handgun = inv.getStackInSlot(slot).copy();
 			if (!AllItems.PLACEMENT_HANDGUN.typeOf(handgun))
 				continue;
-			BuilderGunItem.setTier(component, tier, handgun);
+			BuilderGunItem.setTier(getUpgradedComponent(), getTier(), handgun);
 			return handgun;
 		}
 		return ItemStack.EMPTY;
@@ -49,7 +50,7 @@ public class BuilderGunUpgradeRecipe implements ICraftingRecipe {
 	@Override
 	public ItemStack getRecipeOutput() {
 		ItemStack handgun = new ItemStack(AllItems.PLACEMENT_HANDGUN.get());
-		BuilderGunItem.setTier(component, tier, handgun);
+		BuilderGunItem.setTier(getUpgradedComponent(), getTier(), handgun);
 		return handgun;
 	}
 
@@ -60,9 +61,14 @@ public class BuilderGunUpgradeRecipe implements ICraftingRecipe {
 	
 	@Override
 	public ResourceLocation getId() {
-		return recipe.getId();
+		return getRecipe().getId();
 	}
 
+	@Override
+	public IRecipeType<?> getType() {
+		return AllRecipes.Types.BLOCKZAPPER_UPGRADE;
+	}
+	
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
 		return AllRecipes.PLACEMENT_HANDGUN_UPGRADE.serializer;
@@ -90,10 +96,10 @@ public class BuilderGunUpgradeRecipe implements ICraftingRecipe {
 
 		@Override
 		public void write(PacketBuffer buffer, BuilderGunUpgradeRecipe recipe) {
-			IRecipeSerializer.CRAFTING_SHAPED.write(buffer, recipe.recipe);
+			IRecipeSerializer.CRAFTING_SHAPED.write(buffer, recipe.getRecipe());
 			
-			String name = recipe.component.name();
-			String name2 = recipe.tier.name();
+			String name = recipe.getUpgradedComponent().name();
+			String name2 = recipe.getTier().name();
 			buffer.writeInt(name.length());
 			buffer.writeString(name);
 			buffer.writeInt(name2.length());
@@ -104,7 +110,19 @@ public class BuilderGunUpgradeRecipe implements ICraftingRecipe {
 
 	@Override
 	public boolean canFit(int width, int height) {
-		return recipe.canFit(width, height);
+		return getRecipe().canFit(width, height);
+	}
+
+	public ShapedRecipe getRecipe() {
+		return recipe;
+	}
+
+	public Components getUpgradedComponent() {
+		return component;
+	}
+
+	public ComponentTier getTier() {
+		return tier;
 	}
 
 }

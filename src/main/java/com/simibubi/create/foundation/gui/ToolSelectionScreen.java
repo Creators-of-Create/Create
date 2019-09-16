@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.schematics.client.tools.Tools;
 

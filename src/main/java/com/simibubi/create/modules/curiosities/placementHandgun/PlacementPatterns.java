@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.curiosities.placementHandgun;
 
-import com.simibubi.create.foundation.gui.ScreenResources;
+import com.simibubi.create.ScreenResources;
 
 public enum PlacementPatterns {
 

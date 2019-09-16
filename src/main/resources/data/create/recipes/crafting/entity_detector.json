@@ -10,7 +10,7 @@
                 "tag": "minecraft:planks"
             },
 			"A": {
-                "item": "minecraft:gold_nugget"
+                "item": "create:gold_sheet"
             },
 			"S": {
                 "item": "minecraft:observer"

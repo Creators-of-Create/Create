@@ -9,7 +9,7 @@
                 "tag": "minecraft:planks"
             },
 			"G": {
-                "item": "minecraft:gold_ingot"
+                "item": "create:gold_sheet"
             },
 			"T": {
                 "item": "minecraft:redstone_torch"

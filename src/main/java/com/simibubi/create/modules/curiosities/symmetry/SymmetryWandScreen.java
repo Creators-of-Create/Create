@@ -4,8 +4,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
-import com.simibubi.create.foundation.gui.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;

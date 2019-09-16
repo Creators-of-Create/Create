@@ -72,7 +72,7 @@ public class BuilderGunItem extends Item {
 
 		;
 
-		protected TextFormatting color;
+		public TextFormatting color;
 
 		private ComponentTier(TextFormatting color) {
 			this.color = color;

@@ -10,7 +10,7 @@
                 "tag": "minecraft:planks"
             },
 			"A": {
-                "item": "minecraft:gold_nugget"
+                "item": "create:gold_sheet"
             },
 			"S": {
                 "item": "minecraft:chest"
@@ -18,7 +18,7 @@
         },
 	"result": {
 		"item": "create:flexcrate",
-		"count": 1
+		"count": 2
 	},
 	"conditions": [
 		{

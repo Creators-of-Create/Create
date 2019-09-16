@@ -1,20 +1,11 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-			"GN",
-            "RD",
-			"PN"
+			"N",
+            "P",
+			"P"
         ],
         "key": {
-			"G": {
-                "item": "minecraft:gold_ingot"
-            },
-			"R": {
-                "item": "minecraft:redstone"
-            },
-			"D": {
-                "item": "minecraft:dried_kelp"
-            },
 			"N": {
                 "item": "create:gold_sheet"
             },
@@ -23,7 +14,7 @@
             }
         },
 	"result": {
-		"item": "create:extractor",
+		"item": "create:belt_support",
 		"count": 4
 	},
 	"conditions": [

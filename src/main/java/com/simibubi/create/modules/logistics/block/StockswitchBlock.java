@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class StockswitchBlock extends HorizontalBlock {
 
@@ -34,12 +35,12 @@ public class StockswitchBlock extends HorizontalBlock {
 	public boolean isSolid(BlockState state) {
 		return false;
 	}
-	
+
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		updateObservedInventory(state, worldIn, pos);
 	}
-	
+
 	@Override
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		if (world.isRemote())
@@ -48,32 +49,32 @@ public class StockswitchBlock extends HorizontalBlock {
 			return;
 		updateObservedInventory(state, world, pos);
 	}
-	
+
 	private void updateObservedInventory(BlockState state, IWorldReader world, BlockPos pos) {
 		StockswitchTileEntity te = (StockswitchTileEntity) world.getTileEntity(pos);
 		if (te == null)
 			return;
 		te.updateCurrentLevel();
 	}
-	
+
 	private boolean isObserving(BlockState state, BlockPos pos, BlockPos observing) {
 		return observing.equals(pos.offset(state.get(HORIZONTAL_FACING)));
 	}
-	
+
 	@Override
 	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
 		return side != null && side.getOpposite() != state.get(HORIZONTAL_FACING);
 	}
-	
+
 	@Override
 	public boolean canProvidePower(BlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		StockswitchTileEntity te = (StockswitchTileEntity) blockAccess.getTileEntity(pos);
-		return te == null || !te.powered ? 0 : 15 ;
+		return te == null || !te.powered ? 0 : 15;
 	}
 
 	@Override
@@ -100,10 +101,27 @@ public class StockswitchBlock extends HorizontalBlock {
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = getDefaultState();
 
-		if (context.getFace().getAxis().isHorizontal()) {
-			state = state.with(HORIZONTAL_FACING, context.getFace().getOpposite());
+		Direction preferredFacing = null;
+		for (Direction face : Direction.values()) {
+			if (face.getAxis().isVertical())
+				continue;
+
+			TileEntity te = context.getWorld().getTileEntity(context.getPos().offset(face));
+			if (te != null && te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent())
+				if (preferredFacing == null)
+					preferredFacing = face;
+				else {
+					preferredFacing = null;
+					break;
+				}
+		}
+
+		if (preferredFacing != null) {
+			state = state.with(HORIZONTAL_FACING, preferredFacing);
+		} else if (context.getFace().getAxis().isHorizontal()) {
+			state = state.with(HORIZONTAL_FACING, context.getFace());
 		} else {
-			state = state.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing());
+			state = state.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
 		}
 
 		return state;

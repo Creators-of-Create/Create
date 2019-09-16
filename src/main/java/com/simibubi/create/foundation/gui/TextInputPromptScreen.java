@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.gui.widget.TextFieldWidget;

@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.base;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.simibubi.create.AllRecipes;
 
@@ -16,15 +17,15 @@ import net.minecraft.util.ResourceLocation;
 
 public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<T> {
 	protected final List<Ingredient> ingredients;
-	protected final List<StochasticOutput> results;
+	private final List<StochasticOutput> results;
 	private final IRecipeType<?> type;
 	private final IRecipeSerializer<?> serializer;
 	protected final ResourceLocation id;
 	protected final String group;
 	protected final int processingDuration;
 
-	public ProcessingRecipe(AllRecipes recipeType, ResourceLocation id, String group,
-			List<Ingredient> ingredients, List<StochasticOutput> results, int processingDuration) {
+	public ProcessingRecipe(AllRecipes recipeType, ResourceLocation id, String group, List<Ingredient> ingredients,
+			List<StochasticOutput> results, int processingDuration) {
 		this.type = recipeType.type;
 		this.serializer = recipeType.serializer;
 		this.id = id;
@@ -40,18 +41,14 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 		nonnulllist.addAll(this.ingredients);
 		return nonnulllist;
 	}
-	
+
 	public int getProcessingDuration() {
 		return processingDuration;
 	}
-	
-	public List<StochasticOutput> getAllResults() {
-		return results;
-	}
-	
+
 	public List<ItemStack> rollResults() {
 		List<ItemStack> stacks = new ArrayList<>();
-		for (StochasticOutput output : results) {
+		for (StochasticOutput output : getRollableResults()) {
 			ItemStack stack = output.rollOutput();
 			if (!stack.isEmpty())
 				stacks.add(stack);
@@ -71,7 +68,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		return results.isEmpty() ? ItemStack.EMPTY : results.get(0).getStack();
+		return getRollableResults().isEmpty() ? ItemStack.EMPTY : getRollableResults().get(0).getStack();
 	}
 
 	@Override
@@ -83,7 +80,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	public IRecipeSerializer<?> getSerializer() {
 		return serializer;
 	}
-	
+
 	@Override
 	public String getGroup() {
 		return group;
@@ -92,5 +89,13 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	@Override
 	public IRecipeType<?> getType() {
 		return type;
+	}
+
+	public List<StochasticOutput> getRollableResults() {
+		return results;
+	}
+
+	public List<ItemStack> getPossibleOutputs() {
+		return getRollableResults().stream().map(output -> output.getStack()).collect(Collectors.toList());
 	}
 }

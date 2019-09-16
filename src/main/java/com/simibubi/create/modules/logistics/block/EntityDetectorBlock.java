@@ -97,8 +97,27 @@ public class EntityDetectorBlock extends HorizontalBlock
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = getDefaultState();
 
-		if (context.getFace().getAxis().isHorizontal()) {
-			state = state.with(HORIZONTAL_FACING, context.getFace().getOpposite());
+		Direction preferredFacing = null;
+		for (Direction face : Direction.values()) {
+			if (face.getAxis().isVertical())
+				continue;
+
+			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(face));
+			if (AllBlocks.BELT.typeOf(blockState)
+					&& blockState.get(BlockStateProperties.HORIZONTAL_FACING).getAxis() != face.getAxis()
+					&& blockState.get(BeltBlock.SLOPE) == Slope.HORIZONTAL)
+				if (preferredFacing == null)
+					preferredFacing = face;
+				else {
+					preferredFacing = null;
+					break;
+				}
+		}
+
+		if (preferredFacing != null) {
+			state = state.with(HORIZONTAL_FACING, preferredFacing);
+		} else if (context.getFace().getAxis().isHorizontal()) {
+			state = state.with(HORIZONTAL_FACING, context.getFace());
 		} else {
 			state = state.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing());
 		}
@@ -221,7 +240,7 @@ public class EntityDetectorBlock extends HorizontalBlock
 			itemPositions.add(position);
 		}
 	}
-	
+
 	@Override
 	public float getItemHitboxScale() {
 		return 1.76f / 16f;

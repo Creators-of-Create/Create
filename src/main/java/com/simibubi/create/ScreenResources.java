@@ -1,6 +1,4 @@
-package com.simibubi.create.foundation.gui;
-
-import com.simibubi.create.Create;
+package com.simibubi.create;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -33,6 +31,12 @@ public enum ScreenResources {
 	STOCKSWITCH_CURSOR_OFF("flex_crate_and_stockpile_switch.png", 226, 129, 8, 21),
 	STOCKSWITCH_BOUND_LEFT("flex_crate_and_stockpile_switch.png", 234, 129, 7, 21),
 	STOCKSWITCH_BOUND_RIGHT("flex_crate_and_stockpile_switch.png", 241, 129, 7, 21),
+	
+	// JEI
+	CRUSHING_RECIPE("recipes1.png", 177, 109),
+	FAN_RECIPE("recipes1.png", 0, 128, 177, 109),
+	BLOCKZAPPER_UPGRADE_RECIPE("recipes2.png", 144, 66),
+	PRESSER_RECIPE("recipes2.png", 0, 108, 177, 109),
 	
 	// Widgets
 	PALETTE_BUTTON("palette_picker.png", 0, 236, 20, 20),

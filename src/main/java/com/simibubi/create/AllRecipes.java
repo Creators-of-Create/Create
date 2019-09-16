@@ -18,19 +18,10 @@ import net.minecraftforge.event.RegistryEvent;
 
 public enum AllRecipes {
 
-	PLACEMENT_HANDGUN_UPGRADE(BuilderGunUpgradeRecipe.Serializer::new, IRecipeType.CRAFTING),
-
-	CRUSHING(() -> {
-		return new ProcessingRecipeSerializer<>(CrushingRecipe::new);
-	}, Types.CRUSHING),
-	
-	SPLASHING(() -> {
-		return new ProcessingRecipeSerializer<>(SplashingRecipe::new);
-	}, Types.SPLASHING),
-	
-	PRESSING(() -> {
-		return new ProcessingRecipeSerializer<>(PressingRecipe::new);
-	}, Types.PRESSING),
+	PLACEMENT_HANDGUN_UPGRADE(BuilderGunUpgradeRecipe.Serializer::new, Types.BLOCKZAPPER_UPGRADE),
+	CRUSHING(() -> new ProcessingRecipeSerializer<>(CrushingRecipe::new), Types.CRUSHING),
+	SPLASHING(() -> new ProcessingRecipeSerializer<>(SplashingRecipe::new), Types.SPLASHING),
+	PRESSING(() -> new ProcessingRecipeSerializer<>(PressingRecipe::new), Types.PRESSING),
 
 	;
 
@@ -38,6 +29,7 @@ public enum AllRecipes {
 		public static IRecipeType<CrushingRecipe> CRUSHING = register("crushing");
 		public static IRecipeType<SplashingRecipe> SPLASHING = register("splashing");
 		public static IRecipeType<PressingRecipe> PRESSING = register("pressing");
+		public static IRecipeType<BuilderGunUpgradeRecipe> BLOCKZAPPER_UPGRADE = register("blockzapper_upgrade");
 
 		static <T extends IRecipe<?>> IRecipeType<T> register(final String key) {
 			return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(key), new IRecipeType<T>() {

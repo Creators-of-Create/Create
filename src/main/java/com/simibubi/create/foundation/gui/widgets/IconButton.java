@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.gui.widgets;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.foundation.gui.ScreenResources;
+import com.simibubi.create.ScreenResources;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;

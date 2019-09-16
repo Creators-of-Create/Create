@@ -7,6 +7,7 @@ import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -38,6 +39,14 @@ public class MotorBlock extends HorizontalKineticBlock
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new MotorTileEntity();
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		Direction preferred = getPreferredHorizontalFacing(context);
+		if (context.isPlacerSneaking() || preferred == null)
+			return super.getStateForPlacement(context);
+		return getDefaultState().with(HORIZONTAL_FACING, preferred);
 	}
 
 	// IRotate:

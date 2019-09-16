@@ -70,8 +70,8 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 		buffer.writeInt(recipe.ingredients.size());
 		recipe.ingredients.forEach(i -> i.write(buffer));
 
-		buffer.writeInt(recipe.results.size());
-		recipe.results.forEach(i -> i.write(buffer));
+		buffer.writeInt(recipe.getRollableResults().size());
+		recipe.getRollableResults().forEach(i -> i.write(buffer));
 		
 		buffer.writeInt(recipe.processingDuration);
 	}

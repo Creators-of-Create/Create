@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.simibubi.create.foundation.gui.ScreenResources;
+import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.utility.Lang;
 
 public enum Tools {

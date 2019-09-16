@@ -42,6 +42,7 @@ public enum AllItems {
 
 	__MATERIALS__(),
 	IRON_SHEET(ingredient()),
+	GOLD_SHEET(ingredient()),
 	ANDESITE_ALLOY_CUBE(ingredient()),
 	BLAZE_BRASS_CUBE(ingredient()),
 	CHORUS_CHROME_CUBE(ingredient(Rarity.UNCOMMON)),

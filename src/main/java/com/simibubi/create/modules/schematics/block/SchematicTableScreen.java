@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.schematics.block;
 
-import static com.simibubi.create.foundation.gui.ScreenResources.SCHEMATIC_TABLE;
-import static com.simibubi.create.foundation.gui.ScreenResources.SCHEMATIC_TABLE_PROGRESS;
+import static com.simibubi.create.ScreenResources.SCHEMATIC_TABLE;
+import static com.simibubi.create.ScreenResources.SCHEMATIC_TABLE_PROGRESS;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -9,8 +9,8 @@ import java.util.List;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
-import com.simibubi.create.foundation.gui.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;

@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.gui.widgets;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.foundation.gui.ScreenResources;
+import com.simibubi.create.ScreenResources;
 
 public class Indicator extends AbstractSimiWidget {
 	
