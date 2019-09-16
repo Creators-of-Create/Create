@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllKeys;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.modules.schematics.client.SchematicEditScreen;
@@ -69,16 +68,6 @@ public class SchematicItem extends Item {
 			if (stack.getTag().contains("File"))
 				tooltip.add(new StringTextComponent(TextFormatting.GOLD + stack.getTag().getString("File")));
 		}
-
-		if (AllKeys.shiftDown()) {
-			TextFormatting gray = TextFormatting.GRAY;
-			tooltip.add(new StringTextComponent(gray + "Holds a structure to be printed"));
-			tooltip.add(new StringTextComponent(gray + "by the Schematicannon."));
-			tooltip.add(new StringTextComponent(""));
-			tooltip.add(new StringTextComponent(gray + "Sneak R-Click to put coordinates."));
-			tooltip.add(new StringTextComponent(gray + "Otherwise use the overlay to position it."));
-		} else
-			tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "< Hold Shift >"));
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 
