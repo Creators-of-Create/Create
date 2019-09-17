@@ -7,7 +7,8 @@
         "mechanical_press_pole": "create:block/mechanical_press_pole",
         "gearbox": "create:block/gearbox",
         "mechanical_press_top": "create:block/mechanical_press_top",
-        "mechanical_press_bottom": "create:block/mechanical_press_bottom"
+        "mechanical_press_bottom": "create:block/mechanical_press_bottom",
+		"particle": "create:block/gearbox_top"
     },
 	"display": {
         "gui": {

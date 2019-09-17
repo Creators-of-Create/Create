@@ -42,7 +42,7 @@ public class PulseRepeaterBlock extends RedstoneDiodeBlock {
 		boolean shouldPower = shouldBePowered(worldIn, pos, state);
 
 		if (pulsing) {
-			worldIn.setBlockState(pos, state.with(POWERED, true).with(PULSING, false), 2);
+			worldIn.setBlockState(pos, state.with(POWERED, shouldPower).with(PULSING, false), 2);
 		} else if (powered && !shouldPower) {
 			worldIn.setBlockState(pos, state.with(POWERED, false).with(PULSING, false), 2);
 		} else if (!powered) {

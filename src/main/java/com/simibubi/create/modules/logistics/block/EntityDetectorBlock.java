@@ -179,6 +179,9 @@ public class EntityDetectorBlock extends HorizontalBlock
 	@Override
 	public boolean handleEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
 
+		if (te.getWorld().isRemote)
+			return false;
+		
 		if (state.processingEntity != entity) {
 			state.processingEntity = entity;
 			state.processingDuration = 0;
@@ -207,7 +210,7 @@ public class EntityDetectorBlock extends HorizontalBlock
 
 		state.processingDuration = -1;
 		world.setBlockState(state.attachmentPos, blockState.with(POWERED, true));
-		world.getPendingBlockTicks().scheduleTick(state.attachmentPos, this, 4);
+		world.getPendingBlockTicks().scheduleTick(state.attachmentPos, this, 6);
 		world.notifyNeighborsOfStateChange(state.attachmentPos, this);
 
 		return false;
@@ -215,7 +218,7 @@ public class EntityDetectorBlock extends HorizontalBlock
 
 	@Override
 	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
-		worldIn.setBlockState(pos, state.with(POWERED, false));
+		worldIn.setBlockState(pos, state.with(POWERED, false), 2);
 		worldIn.notifyNeighborsOfStateChange(pos, this);
 	}
 

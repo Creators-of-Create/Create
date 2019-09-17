@@ -100,12 +100,12 @@ public interface IBlockWithScrollableValue {
 
 		if (contains) {
 			GlStateManager.lineWidth(2);
-			WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ, .5f, 1,
+			WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ, 1, .5f,
 					.75f, 1f);
 		} else {
 			GlStateManager.lineWidth(2);
-			WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ, .25f,
-					.5f, .35f, 1f);
+			WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ, .5f,
+					.25f, .35f, 1f);
 		}
 
 		tessellator.draw();
@@ -127,13 +127,13 @@ public interface IBlockWithScrollableValue {
 			GlStateManager.scaled(textScale, -textScale, textScale);
 
 			String text = block.getValueName(state, world, blockPos);
-			mc.fontRenderer.drawString(text, 0, 0, 0x88FFBB);
+			mc.fontRenderer.drawString(text, 0, 0, 0xFF88BB);
 			GlStateManager.translated(0, 0, -1 / 4f);
 			mc.fontRenderer.drawString(text, 1, 1, 0x224433);
 			GlStateManager.translated(0, 0, 1 / 4f);
 
 			text = TextFormatting.ITALIC + "<" + Lang.translate("action.scroll") + ">";
-			mc.fontRenderer.drawString(text, 0, 10, 0xBBBBCC);
+			mc.fontRenderer.drawString(text, 0, 10, 0xCCBBCC);
 			GlStateManager.translated(0, 0, -1 / 4f);
 			mc.fontRenderer.drawString(text, 1, 11, 0x111111);
 			GlStateManager.translated(0, 0, 1 / 4f);

@@ -16,8 +16,8 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -46,6 +46,11 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(HORIZONTAL_FACING, POWERED);
 		super.fillStateContainer(builder);
+	}
+	
+	@Override
+	public boolean showsCount() {
+		return true;
 	}
 	
 	@Override
@@ -80,8 +85,6 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		updateObservedInventory(state, worldIn, pos);
-		
-		cacheItemPositions();
 	}
 	
 	@Override
@@ -137,8 +140,6 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 	}
 
 	private void cacheItemPositions() {
-//		if (!itemPositions.isEmpty())
-//			return;
 		itemPositions.clear();
 
 		Vec3d position = Vec3d.ZERO;

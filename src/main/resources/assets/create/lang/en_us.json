@@ -546,7 +546,7 @@
 	"block.create.stockswitch.tooltip.action1": "Opens the _Configuration_ _Interface_",
 	
 	"block.create.redstone_bridge.tooltip": "REDSTONE LINK",
-	"block.create.redstone_bridge.tooltip.summary": "Endpoints for _Wireless_ _Redstone_ connections. Can be assigned _Frequencies_ using any item. Signal can travel distances up to _128m_",
+	"block.create.redstone_bridge.tooltip.summary": "Endpoints for _Wireless_ _Redstone_ connections. Can be assigned _Frequencies_ using any item. Signal range is limited, but reasonably far.",
 	"block.create.redstone_bridge.tooltip.condition1": "When Powered",
 	"block.create.redstone_bridge.tooltip.behaviour1": "Receiving Links of the same _Frequency_ will provide a Redstone signal.",
 	"block.create.redstone_bridge.tooltip.control1": "When R-Clicked with an Item",

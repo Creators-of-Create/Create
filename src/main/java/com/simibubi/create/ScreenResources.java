@@ -37,6 +37,7 @@ public enum ScreenResources {
 	FAN_RECIPE("recipes1.png", 0, 128, 177, 109),
 	BLOCKZAPPER_UPGRADE_RECIPE("recipes2.png", 144, 66),
 	PRESSER_RECIPE("recipes2.png", 0, 108, 177, 109),
+	WASHING_RECIPE("recipes3.png", 177, 109),
 	
 	// Widgets
 	PALETTE_BUTTON("palette_picker.png", 0, 236, 20, 20),

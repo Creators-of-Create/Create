@@ -64,25 +64,24 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements IBloc
 
 		updateTransmittedSignal(state, worldIn, pos, blockFacing);
 	}
-	
+
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		updateTransmittedSignal(state, worldIn, pos, state.get(FACING));
 	}
-	
+
 	private void updateTransmittedSignal(BlockState state, World worldIn, BlockPos pos, Direction blockFacing) {
 		if (worldIn.isRemote)
 			return;
 		if (state.get(RECEIVER))
 			return;
-		
-		boolean shouldPower = worldIn.getWorld().isBlockPowered(pos.offset(blockFacing.getOpposite()))
-				|| worldIn.getWorld().isBlockPowered(pos);
+
+		boolean shouldPower = worldIn.getWorld().isBlockPowered(pos);
 		boolean previouslyPowered = state.get(POWERED);
-		
+
 		if (previouslyPowered != shouldPower) {
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
-			
+
 			RedstoneBridgeTileEntity te = (RedstoneBridgeTileEntity) worldIn.getTileEntity(pos);
 			if (te == null)
 				return;
@@ -133,7 +132,7 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements IBloc
 			RedstoneBridgeTileEntity te = (RedstoneBridgeTileEntity) worldIn.getTileEntity(pos);
 			if (te == null)
 				return false;
-			
+
 			if (!worldIn.isRemote) {
 				Boolean wasReceiver = state.get(RECEIVER);
 				boolean blockPowered = worldIn.isBlockPowered(pos);
@@ -151,7 +150,7 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements IBloc
 
 	@Override
 	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
-		return state.get(FACING) == Direction.UP;
+		return state.get(FACING) == Direction.UP && side != null;
 	}
 
 	@Override
@@ -233,7 +232,7 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements IBloc
 		Direction facing = state.get(FACING);
 		return itemPositions.get(facing.getIndex());
 	}
-	
+
 	@Override
 	public Direction getFrequencyItemFacing(BlockState state) {
 		return state.get(FACING);

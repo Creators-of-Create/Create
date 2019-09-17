@@ -1,20 +1,29 @@
 package com.simibubi.create.compat.jei;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.contraptions.base.StochasticOutput;
 import com.simibubi.create.modules.contraptions.receivers.SplashingRecipe;
 
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
 public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe> {
 
@@ -45,10 +54,38 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 	public String getTitle() {
 		return Lang.translate("recipe.splashing");
 	}
+	
+	@Override
+	public void setIngredients(SplashingRecipe recipe, IIngredients ingredients) {
+		ingredients.setInputIngredients(recipe.getIngredients());
+		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getPossibleOutputs());
+	}
+
+	@Override
+	public void setRecipe(IRecipeLayout recipeLayout, SplashingRecipe recipe, IIngredients ingredients) {
+		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
+		itemStacks.init(0, true, 20, 67);
+		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
+
+		List<StochasticOutput> results = recipe.getRollableResults();
+		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
+			itemStacks.init(outputIndex + 1, false, 139, 58 + 19 * outputIndex);
+			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
+		}
+
+		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+			if (input)
+				return;
+			StochasticOutput output = results.get(slotIndex - 1);
+			if (output.getChance() != 1)
+				tooltip.add(1, TextFormatting.GOLD
+						+ Lang.translate("recipe.processing.chance", (int) (output.getChance() * 100)));
+		});
+	}
 
 	@Override
 	public IDrawable getBackground() {
-		return new ScreenResourceWrapper(ScreenResources.FAN_RECIPE);
+		return new ScreenResourceWrapper(ScreenResources.WASHING_RECIPE);
 	}
 
 	@Override

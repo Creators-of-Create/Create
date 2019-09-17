@@ -40,7 +40,7 @@ public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFr
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-
+	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new LinkedExtractorTileEntity();

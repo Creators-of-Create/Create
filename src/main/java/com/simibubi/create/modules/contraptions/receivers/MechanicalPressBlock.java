@@ -20,6 +20,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
@@ -56,12 +57,12 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 			return;
 
 		if (worldIn.isBlockPowered(pos)) {
-			if (!te.finished && !te.running)
+			if (!te.finished && !te.running && te.getSpeed() != 0)
 				te.start(false);
 		} else {
 			te.finished = false;
 		}
-		
+
 	}
 
 	@Override
@@ -92,22 +93,22 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 		return true;
 	}
 
-	public static class Head extends HorizontalBlock implements IRenderUtilityBlock {
-
-		public Head() {
-			super(Properties.from(Blocks.AIR));
-		}
-
-		@Override
-		protected void fillStateContainer(Builder<Block, BlockState> builder) {
-			builder.add(HORIZONTAL_FACING);
-			super.fillStateContainer(builder);
-		}
+	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		onAttachmentPlaced(worldIn, pos, state);
 	}
 
 	@Override
 	public List<BlockPos> getPotentialAttachmentLocations(BeltTileEntity te) {
 		return Arrays.asList(te.getPos().up(2));
+	}
+
+	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		onAttachmentRemoved(worldIn, pos, state);
+		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			worldIn.removeTileEntity(pos);
+		}
 	}
 
 	@Override
@@ -122,9 +123,13 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 	public boolean handleEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
 		MechanicalPressTileEntity pressTe = (MechanicalPressTileEntity) te.getWorld()
 				.getTileEntity(state.attachmentPos);
-		
+
 		// Not powered
 		if (pressTe == null || pressTe.getSpeed() == 0)
+			return false;
+
+		// Not an Item
+		if (!(entity instanceof ItemEntity))
 			return false;
 
 		// Running
@@ -138,26 +143,43 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 			}
 			return false;
 		}
-		
+
 		// Start process
 		if (state.processingEntity != entity) {
 			state.processingEntity = entity;
-			state.processingDuration = 1;
-			pressTe.start(true);
+			if (!pressTe.getRecipe((ItemEntity) entity).isPresent()) {
+				state.processingDuration = -1;
+			} else {
+				state.processingDuration = 1;
+				pressTe.start(true);
+			}
 			return false;
 		}
-		
+
 		// Already processed
 		if (state.processingDuration == -1)
 			return false;
-		
+
 		// Just Finished
 		if (pressTe.finished) {
 			state.processingDuration = -1;
 			return false;
 		}
-		
+
 		return false;
+	}
+
+	public static class Head extends HorizontalBlock implements IRenderUtilityBlock {
+
+		public Head() {
+			super(Properties.from(Blocks.AIR));
+		}
+
+		@Override
+		protected void fillStateContainer(Builder<Block, BlockState> builder) {
+			builder.add(HORIZONTAL_FACING);
+			super.fillStateContainer(builder);
+		}
 	}
 
 }

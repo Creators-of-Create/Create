@@ -13,7 +13,8 @@
         }
     },
 	"textures": {
-        "extractor": "create:block/extractor"
+        "extractor": "create:block/extractor",
+		"particle": "create:block/extractor"
     },
 	"elements": [
 		{

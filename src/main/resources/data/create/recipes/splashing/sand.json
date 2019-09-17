@@ -1,0 +1,16 @@
+{
+    "type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:sand"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:clay_ball",
+			"count": 2
+		}
+	],
+	"processingTime": 100
+}

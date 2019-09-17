@@ -22,7 +22,8 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 	
 	public ExtractorTileEntity() {
 		super(AllTileEntities.EXTRACTOR.type);
-		state = State.WAITING_FOR_INVENTORY;
+		state = State.ON_COOLDOWN;
+		cooldown = CreateConfig.parameters.extractorDelay.get();
 		inventory = LazyOptional.empty();
 		filter = ItemStack.EMPTY;
 	}
@@ -35,12 +36,15 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 	@Override
 	public void read(CompoundNBT compound) {
 		filter = ItemStack.read(compound.getCompound("Filter"));
+		if (compound.getBoolean("Locked"))
+			setState(State.LOCKED);
 		super.read(compound);
 	}
 	
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.put("Filter", filter.serializeNBT());
+		compound.putBoolean("Locked", getState() == State.LOCKED);
 		return super.write(compound);
 	}
 	
@@ -52,6 +56,8 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 	@Override
 	public void tick() {
 		if (initialize && hasWorld()) {
+			if (world.isBlockPowered(pos))
+				state = State.LOCKED;
 			neighborChanged();
 			initialize = false;
 		}
@@ -87,13 +93,15 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 
 	@Override
 	public void setFilter(ItemStack stack) {
-		filter = stack;
+		filter = stack.copy();
+		markDirty();
 		sendData();
+		neighborChanged();
 	}
 
 	@Override
 	public ItemStack getFilter() {
-		return filter;
+		return filter.copy();
 	}
 
 }

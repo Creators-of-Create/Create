@@ -29,13 +29,14 @@ public class EntityDetectorTileEntity extends SyncedTileEntity implements IHaveF
 
 	@Override
 	public void setFilter(ItemStack stack) {
-		filter = stack;
+		filter = stack.copy();
+		markDirty();
 		sendData();
 	}
 
 	@Override
 	public ItemStack getFilter() {
-		return filter;
+		return filter.copy();
 	}
 
 }

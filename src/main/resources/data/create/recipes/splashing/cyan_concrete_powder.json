@@ -1,0 +1,16 @@
+{
+    "type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:cyan_concrete_powder"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:cyan_concrete",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}

@@ -10,6 +10,8 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.util.LazyOptional;
@@ -92,8 +94,10 @@ public class BeltFunnelTileEntity extends SyncedTileEntity implements ITickableT
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			stack = inv.insertItem(slot, stack, world.isRemote);
 			if (stack.isEmpty()) {
-				if (!world.isRemote)
+				if (!world.isRemote) {
 					entity.remove();
+					world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.BLOCKS, .125f, 1f);
+				}
 				else {
 					Vec3i directionVec = getBlockState().get(BlockStateProperties.HORIZONTAL_FACING).getDirectionVec();
 					float xSpeed = directionVec.getX() * 1/8f;

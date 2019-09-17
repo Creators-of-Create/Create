@@ -32,7 +32,7 @@ public class FrequencyHandler {
 		}
 
 		public ItemStack getStack() {
-			return stack;
+			return stack.copy();
 		}
 
 		@Override

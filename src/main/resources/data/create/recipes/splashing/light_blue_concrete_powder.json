@@ -1,0 +1,16 @@
+{
+    "type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:light_blue_concrete_powder"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:light_blue_concrete",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}

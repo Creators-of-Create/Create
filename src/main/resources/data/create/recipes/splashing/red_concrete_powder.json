@@ -1,0 +1,16 @@
+{
+    "type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:red_concrete_powder"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:red_concrete",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}

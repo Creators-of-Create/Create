@@ -23,12 +23,19 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 	private ItemStack filter;
 	private int cooldown;
 	private LazyOptional<IItemHandler> inventory;
+	private boolean initialize;
 
 	public LinkedExtractorTileEntity() {
 		super(AllTileEntities.LINKED_EXTRACTOR.type);
-		state = State.WAITING_FOR_INVENTORY;
+		setState(State.ON_COOLDOWN);
 		inventory = LazyOptional.empty();
 		filter = ItemStack.EMPTY;
+	}
+	
+	@Override
+	public void onLoad() {
+		super.onLoad();
+		initialize = true;
 	}
 
 	@Override
@@ -39,18 +46,29 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 	@Override
 	public void read(CompoundNBT compound) {
 		filter = ItemStack.read(compound.getCompound("Filter"));
+		if (compound.getBoolean("Locked"))
+			setState(State.LOCKED);
 		super.read(compound);
 	}
 	
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.put("Filter", filter.serializeNBT());
+		compound.putBoolean("Locked", getState() == State.LOCKED);
 		return super.write(compound);
 	}
 	
 	@Override
 	public void tick() {
+		if (initialize && hasWorld()) {
+			if (world.isBlockPowered(pos))
+				state = State.LOCKED;
+			neighborChanged();
+			initialize = false;
+		}
+		
 		IExtractor.super.tick();
+		
 		if (world.isRemote)
 			return;
 		if (receivedSignal != getBlockState().get(POWERED)) {
@@ -94,13 +112,15 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 
 	@Override
 	public void setFilter(ItemStack stack) {
-		filter = stack;
+		filter = stack.copy();
+		markDirty();
 		sendData();
+		neighborChanged();
 	}
 
 	@Override
 	public ItemStack getFilter() {
-		return filter;
+		return filter.copy();
 	}
 
 }

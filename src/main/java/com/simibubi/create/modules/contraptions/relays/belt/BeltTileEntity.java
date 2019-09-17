@@ -66,7 +66,7 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 	public BeltTileEntity() {
 		super(AllTileEntities.BELT.type);
 		controller = BlockPos.ZERO;
-		attachmentTracker = new Tracker();
+		attachmentTracker = new Tracker(this);
 		color = -1;
 	}
 
@@ -187,15 +187,6 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 			return;
 		}
 
-		if (entityIn instanceof ItemEntity) {
-			if (speed == 0) {
-				((ItemEntity) entityIn).setAgeToCreativeDespawnTime();
-			} else {
-				if (((ItemEntity) entityIn).getAge() > 0)
-					((ItemEntity) entityIn).setNoDespawn();
-			}
-		}
-
 		if (speed == 0)
 			return;
 
@@ -227,7 +218,8 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		Vec3d movement = new Vec3d(movementDirection.getDirectionVec()).scale(movementSpeed);
 
 		double diffCenter = axis == Axis.Z ? (pos.getX() + .5f - entityIn.posX) : (pos.getZ() + .5f - entityIn.posZ);
-		if (Math.abs(diffCenter) > 48 / 64f)
+		float maxDiffCenter = (entityIn instanceof ItemEntity)? 32 / 64f : 48 / 64f;
+		if (Math.abs(diffCenter) > maxDiffCenter)
 			return;
 
 		Part part = blockState.get(BeltBlock.PART);
@@ -257,7 +249,7 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		entityIn.stepHeight = 1;
 
 		if (Math.abs(movementSpeed) < .5f) {
-			Vec3d checkDistance = movement.scale(2f).add(movement.normalize().scale(.5));
+			Vec3d checkDistance = movement.scale(2f).add(movement.normalize());
 			AxisAlignedBB bb = entityIn.getBoundingBox();
 			AxisAlignedBB checkBB = new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
 			if (!world

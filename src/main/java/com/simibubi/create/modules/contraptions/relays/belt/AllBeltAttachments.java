@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -76,9 +77,11 @@ public enum AllBeltAttachments {
 
 	public static class Tracker {
 		public List<BeltAttachmentState> attachments;
+		private BeltTileEntity te;
 
-		public Tracker() {
+		public Tracker(BeltTileEntity te) {
 			attachments = new ArrayList<>(0);
+			this.te = te;
 		}
 
 		public void findAttachments(BeltTileEntity belt) {
@@ -103,8 +106,13 @@ public enum AllBeltAttachments {
 		public BeltAttachmentState addAttachment(IWorld world, BlockPos pos) {
 			BlockState state = world.getBlockState(pos);
 			removeAttachment(pos);
+			if (!(state.getBlock() instanceof IBeltAttachment)) {
+				Create.logger.warn("Missing belt attachment for Belt at " + pos.toString());
+				return null;
+			}
 			BeltAttachmentState newAttachmentState = new BeltAttachmentState((IBeltAttachment) state.getBlock(), pos);
 			attachments.add(newAttachmentState);
+			te.markDirty();
 			return newAttachmentState;
 		}
 
@@ -115,6 +123,7 @@ public enum AllBeltAttachments {
 					toRemove = atState;
 			if (toRemove != null)
 				attachments.remove(toRemove);
+			te.markDirty();
 		}
 
 		public void forEachAttachment(Consumer<BeltAttachmentState> consumer) {
@@ -131,6 +140,8 @@ public enum AllBeltAttachments {
 					CompoundNBT stateNBT = (CompoundNBT) data;
 					BlockPos attachmentPos = NBTUtil.readBlockPos(stateNBT.getCompound("Position"));
 					BeltAttachmentState atState = addAttachment(belt.getWorld(), attachmentPos);
+					if (atState == null)
+						continue;
 					atState.processingDuration = stateNBT.getInt("Duration");
 				}
 			}

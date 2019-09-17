@@ -6,6 +6,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -28,7 +30,7 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 	default void tick() {
 		if (isFrozen())
 			return;
-		
+
 		State state = getState();
 
 		if (state == State.LOCKED)
@@ -36,8 +38,11 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 
 		if (state == State.ON_COOLDOWN) {
 			int cooldown = tickCooldown();
-			if (cooldown <= 0)
+			if (cooldown <= 0) {
 				setState(State.RUNNING);
+				if (!getInventory().isPresent())
+					findNewInventory();
+			}
 			return;
 		}
 
@@ -48,9 +53,8 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 		if (hasSpace && hasInventory) {
 			toExtract = extract(true);
 
-			ItemStack filter = (this instanceof IHaveFilter) ? filter = ((IHaveFilter) this).getFilter()
-					: ItemStack.EMPTY;
-			if (!filter.isEmpty() && !ItemStack.areItemsEqual(toExtract, filter))
+			ItemStack filterItem = (this instanceof IHaveFilter) ? ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
+			if (!filterItem.isEmpty() && !ItemStack.areItemsEqual(toExtract, filterItem))
 				toExtract = ItemStack.EMPTY;
 		}
 
@@ -84,16 +88,15 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 	public default void neighborChanged() {
 		if (isFrozen())
 			return;
-		
+
 		boolean hasSpace = hasSpaceForExtracting();
 		boolean hasInventory = getInventory().isPresent();
 		ItemStack toExtract = ItemStack.EMPTY;
 
 		if (hasSpace && hasInventory) {
 			toExtract = extract(true);
-			ItemStack filter = (this instanceof IHaveFilter) ? filter = ((IHaveFilter) this).getFilter()
-					: ItemStack.EMPTY;
-			if (!filter.isEmpty() && !ItemStack.areItemsEqual(toExtract, filter))
+			ItemStack filterItem = (this instanceof IHaveFilter) ? ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
+			if (!filterItem.isEmpty() && !ItemStack.areItemsEqual(toExtract, filterItem))
 				toExtract = ItemStack.EMPTY;
 		}
 
@@ -116,38 +119,64 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 	default ItemStack extract(boolean simulate) {
 		IItemHandler inv = getInventory().orElse(null);
 		ItemStack extracting = ItemStack.EMPTY;
-		ItemStack filter = (this instanceof IHaveFilter) ? filter = ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
-		int extractionCount = filter.isEmpty() ? CreateConfig.parameters.extractorAmount.get() : filter.getCount();
+		ItemStack filterItem = (this instanceof IHaveFilter) ? ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
+		int extractionCount = filterItem.isEmpty() ? CreateConfig.parameters.extractorAmount.get()
+				: filterItem.getCount();
+		boolean checkHasEnoughItems = !filterItem.isEmpty();
+		boolean hasEnoughItems = !checkHasEnoughItems;
 
-		for (int slot = 0; slot < inv.getSlots(); slot++) {
-			ItemStack stack = inv.extractItem(slot, extractionCount - extracting.getCount(), true);
-			ItemStack compare = stack.copy();
-			compare.setCount(extracting.getCount());
-			if (!extracting.isEmpty() && !extracting.equals(compare, false))
-				continue;
+		Extraction: do {
+			extracting = ItemStack.EMPTY;
 
-			if (extracting.isEmpty())
-				extracting = stack.copy();
+			for (int slot = 0; slot < inv.getSlots(); slot++) {
+				ItemStack stack = inv.extractItem(slot, extractionCount - extracting.getCount(), true);
+				ItemStack compare = stack.copy();
+
+				compare.setCount(filterItem.getCount());
+				if (!filterItem.isEmpty() && !filterItem.equals(compare, false))
+					continue;
+
+				compare.setCount(extracting.getCount());
+				if (!extracting.isEmpty() && !extracting.equals(compare, false))
+					continue;
+
+				if (extracting.isEmpty())
+					extracting = stack.copy();
+				else
+					extracting.grow(stack.getCount());
+
+				if (!simulate && hasEnoughItems)
+					inv.extractItem(slot, stack.getCount(), false);
+
+				if (extracting.getCount() >= extractionCount) {
+					if (checkHasEnoughItems) {
+						hasEnoughItems = true;
+						checkHasEnoughItems = false;
+						continue Extraction;
+					} else {
+						break Extraction;
+					}
+				}
+			}
+
+			if (checkHasEnoughItems)
+				checkHasEnoughItems = false;
 			else
-				extracting.grow(stack.getCount());
+				break Extraction;
+		} while (true);
 
-			if (!simulate)
-				inv.extractItem(slot, stack.getCount(), false);
-			if (extracting.getCount() >= extractionCount)
-				break;
-		}
-
-		if (!simulate) {
+		if (!simulate && hasEnoughItems) {
 			World world = getWorld();
 			Vec3d pos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);
 			ItemEntity entityIn = new ItemEntity(world, pos.x, pos.y, pos.z, extracting);
 			entityIn.setMotion(Vec3d.ZERO);
 			world.addEntity(entityIn);
+			world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f, .1f);
 		}
 
 		return extracting;
 	}
-	
+
 	public static boolean isFrozen() {
 		return CreateConfig.parameters.freezeExtractors.get();
 	}

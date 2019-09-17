@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.logistics;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +11,6 @@ import com.simibubi.create.modules.contraptions.receivers.SplashingRecipe;
 
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.BlastingRecipe;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipe;
@@ -21,6 +21,7 @@ import net.minecraft.tileentity.BlastFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.SmokerTileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -111,7 +112,7 @@ public class InWorldProcessing {
 				}
 			}
 
-			entity.setItem(new ItemStack(Items.GUNPOWDER, entity.getItem().getCount()));
+			entity.remove();
 			return;
 		}
 
@@ -144,10 +145,38 @@ public class InWorldProcessing {
 	}
 
 	public static void applyRecipeOn(ItemEntity entity, IRecipe<?> recipe) {
-		ItemStack out = recipe.getRecipeOutput().copy();
-		List<ItemStack> stacks = ItemHelper.multipliedOutput(entity.getItem(), out);
-		if (stacks.isEmpty())
+		List<ItemStack> stacks;
+
+		if (recipe instanceof SplashingRecipe) {
+			stacks = new ArrayList<>();
+			for (int i = 0; i < entity.getItem().getCount(); i++) {
+				for (ItemStack stack : ((SplashingRecipe) recipe).rollResults()) {
+					for (ItemStack previouslyRolled : stacks) {
+						if (stack.isEmpty())
+							continue;
+						if (!ItemHandlerHelper.canItemStacksStack(stack, previouslyRolled))
+							continue;
+						int amount = Math.min(previouslyRolled.getMaxStackSize() - previouslyRolled.getCount(),
+								stack.getCount());
+						previouslyRolled.grow(amount);
+						stack.shrink(amount);
+					}
+
+					if (stack.isEmpty())
+						continue;
+
+					stacks.add(stack);
+				}
+			}
+		} else {
+			ItemStack out = recipe.getRecipeOutput().copy();
+			stacks = ItemHelper.multipliedOutput(entity.getItem(), out);
+		}
+
+		if (stacks.isEmpty()) {
+			entity.remove();
 			return;
+		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks)
 			entity.world.addEntity(new ItemEntity(entity.world, entity.posX, entity.posY, entity.posZ, additional));

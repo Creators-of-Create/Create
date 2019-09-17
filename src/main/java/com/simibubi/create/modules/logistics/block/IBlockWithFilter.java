@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.utility.TessellatorHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -40,13 +41,17 @@ public interface IBlockWithFilter {
 		return 2 / 16f;
 	}
 
-	public default boolean handleActivatedFilterSlots(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
+	public default boolean showsCount() {
+		return false;
+	}
+
+	public default boolean handleActivatedFilterSlots(BlockState state, World worldIn, BlockPos pos,
+			PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te == null || !(te instanceof IHaveFilter))
 			return false;
-
 		IHaveFilter actor = (IHaveFilter) te;
+
 		Vec3d vec = new Vec3d(pos);
 		Vec3d position = vec.add(getFilterPosition(state));
 		ItemStack stack = player.getHeldItem(handIn);
@@ -75,13 +80,18 @@ public interface IBlockWithFilter {
 
 		if (!(state.getBlock() instanceof IBlockWithFilter))
 			return;
+		TileEntity te = world.getTileEntity(pos);
+		if (te == null || !(te instanceof IHaveFilter))
+			return;
+		IHaveFilter actor = (IHaveFilter) te;
 
 		IBlockWithFilter filterBlock = (IBlockWithFilter) state.getBlock();
 		Vec3d vec = new Vec3d(pos);
 		Vec3d position = filterBlock.getFilterPosition(state).add(vec);
 		float scale = filterBlock.getItemHitboxScale();
 
-		AxisAlignedBB bb = new AxisAlignedBB(position, position).grow(scale, scale / 1.25f, scale).offset(0, -scale / 16f, 0);
+		AxisAlignedBB bb = new AxisAlignedBB(position, position).grow(scale, scale / 1.25f, scale).offset(0,
+				-scale / 16f, 0);
 		boolean contains = bb.grow(scale).contains(result.getHitVec());
 
 		TessellatorHelper.prepareForDrawing();
@@ -108,30 +118,42 @@ public interface IBlockWithFilter {
 
 		if (contains) {
 			GlStateManager.lineWidth(2);
-			WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ, .5f, 1, .75f, 1f);
+			WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ, .5f, 1,
+					.75f, 1f);
 		} else {
 			GlStateManager.lineWidth(2);
-			WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ, .25f, .5f, .35f, 1f);
+			WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ, .25f,
+					.5f, .35f, 1f);
 		}
-		
+
 		tessellator.draw();
-		
+
 		GlStateManager.popMatrix();
 		GlStateManager.enableTexture();
 		GlStateManager.depthMask(true);
-		
+
 		if (contains) {
-			float textScale = 1/128f;
+			float textScale = 1 / 128f;
 			GlStateManager.translated(position.x, position.y, position.z);
 			GlStateManager.rotated(facing.getHorizontalAngle() * (facing.getAxis() == Axis.X ? -1 : 1), 0, 1, 0);
 			GlStateManager.scaled(textScale, -textScale, textScale);
 			GlStateManager.translated(17.5f, -5f, -5f);
 			GlStateManager.rotated(67.5f, 1, 0, 0);
-			
+
 			String text = Lang.translate("logistics.filter");
-			Minecraft.getInstance().fontRenderer.drawString(text, 0, 0, 0x88FFBB);
-			GlStateManager.translated(0, 0, -1/4f);
-			Minecraft.getInstance().fontRenderer.drawString(text, 1, 1, 0x224433);
+			FontRenderer font = Minecraft.getInstance().fontRenderer;
+			font.drawString(text, 0, 0, 0x88FFBB);
+			GlStateManager.translated(0, 0, -1 / 4f);
+			font.drawString(text, 1, 1, 0x224433);
+
+			if (filterBlock.showsCount() && !actor.getFilter().isEmpty()) {
+				String count = actor.getFilter().getCount() + "";
+				GlStateManager.translated(-7 - font.getStringWidth(count), 10, 10 + 1 / 4f);
+				GlStateManager.scaled(1.5,1.5, 1.5);
+				font.drawString(count, 0, 0, 0xEDEDED);
+				GlStateManager.translated(0, 0, -1 / 4f);
+				font.drawString(count, 1, 1, 0x4F4F4F);
+			}
 		}
 		GlStateManager.disableBlend();
 

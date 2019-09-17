@@ -243,9 +243,12 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 				entity.attackEntityFrom(damageSourceLava, 8);
 			}
 			if (getProcessingType() == Type.SPLASHING) {
-				entity.extinguish();
-				world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-						SoundCategory.NEUTRAL, 0.7F, 1.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.4F);
+				if (entity.isBurning()) {
+					entity.extinguish();
+					world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+							SoundCategory.NEUTRAL, 0.7F,
+							1.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.4F);
+				}
 			}
 		}
 	}

@@ -14,7 +14,8 @@
     },
 	"textures": {
 		"redstone_antenna": "create:block/redstone_antenna",
-        "extractor": "create:block/extractor"
+        "extractor": "create:block/extractor",
+		"particle": "create:block/extractor"
     },
 	"elements": [
 		{

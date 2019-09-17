@@ -1,0 +1,16 @@
+{
+    "type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:bucket"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:water_bucket",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}

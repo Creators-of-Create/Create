@@ -1,0 +1,16 @@
+{
+    "type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:ice"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:packed_ice",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}
