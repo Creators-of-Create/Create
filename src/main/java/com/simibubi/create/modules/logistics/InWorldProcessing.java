@@ -42,8 +42,8 @@ public class InWorldProcessing {
 	public static boolean canProcess(ItemEntity entity, Type type) {
 		World world = entity.world;
 
-		if (entity.getPersistantData().contains("CreateData")
-				&& entity.getPersistantData().getCompound("CreateData").contains("Processing"))
+		if (entity.getPersistentData().contains("CreateData")
+				&& entity.getPersistentData().getCompound("CreateData").contains("Processing"))
 			return true;
 
 		if (type == Type.BLASTING) {
@@ -124,7 +124,7 @@ public class InWorldProcessing {
 	}
 
 	private static int decrementProcessingTime(ItemEntity entity, Type type) {
-		CompoundNBT nbt = entity.getPersistantData();
+		CompoundNBT nbt = entity.getPersistentData();
 
 		if (!nbt.contains("CreateData"))
 			nbt.put("CreateData", new CompoundNBT());
@@ -178,8 +178,11 @@ public class InWorldProcessing {
 			return;
 		}
 		entity.setItem(stacks.remove(0));
-		for (ItemStack additional : stacks)
-			entity.world.addEntity(new ItemEntity(entity.world, entity.posX, entity.posY, entity.posZ, additional));
+		for (ItemStack additional : stacks) {
+			ItemEntity entityIn = new ItemEntity(entity.world, entity.posX, entity.posY, entity.posZ, additional);
+			entityIn.setMotion(entity.getMotion());
+			entity.world.addEntity(entityIn);
+		}
 	}
 
 	public static boolean isFrozen() {

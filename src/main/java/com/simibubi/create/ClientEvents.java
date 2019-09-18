@@ -109,6 +109,9 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void addToItemTooltip(ItemTooltipEvent event) {
+		if (!CreateClientConfig.instance.enableTooltips.get())
+			return;
+		
 		ItemStack stack = event.getItemStack();
 		String translationKey = stack.getItem().getTranslationKey(stack);
 		if (!translationKey.startsWith(itemPrefix) && !translationKey.startsWith(blockPrefix))

@@ -155,13 +155,13 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		passengers.forEach((entity, info) -> {
 			if (!canTransport(entity))
 				toRemove.add(entity);
-			if (info.ticksSinceLastCollision > 1) {
+			if (info.ticksSinceLastCollision > ((getBlockState().get(BeltBlock.SLOPE) != Slope.HORIZONTAL) ? 3 : 1)) {
 				toRemove.add(entity);
 			}
 			info.tick();
 		});
 		toRemove.forEach(e -> {
-			if (e instanceof ItemEntity && ((ItemEntity) e).getAge() < 0)
+			if (e instanceof ItemEntity)
 				((ItemEntity) e).setAgeToCreativeDespawnTime();
 			passengers.remove(e);
 		});
@@ -187,18 +187,22 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 			return;
 		}
 
-		if (speed == 0)
+		// Too slow
+		boolean notHorizontal = getBlockState().get(BeltBlock.SLOPE) != Slope.HORIZONTAL;
+		if (Math.abs(getSpeed()) < (notHorizontal ? 32 : 1))
 			return;
 
+		// Not on top
 		if (entityIn.posY - .25f < pos.getY())
 			return;
 
-		if (entityIn instanceof LivingEntity) {
+		// Not sure if this does anything
+		if (entityIn instanceof LivingEntity) 
 			((LivingEntity) entityIn).setIdleTime(101);
-		}
 
 		BeltTileEntity belt = (BeltTileEntity) te;
 
+		// Attachment pauses movement
 		for (BeltAttachmentState state : belt.attachmentTracker.attachments) {
 			if (state.attachment.handleEntity(belt, entityIn, state)) {
 				info.ticksSinceLastCollision--;
@@ -218,15 +222,15 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		Vec3d movement = new Vec3d(movementDirection.getDirectionVec()).scale(movementSpeed);
 
 		double diffCenter = axis == Axis.Z ? (pos.getX() + .5f - entityIn.posX) : (pos.getZ() + .5f - entityIn.posZ);
-		float maxDiffCenter = (entityIn instanceof ItemEntity)? 32 / 64f : 48 / 64f;
+		float maxDiffCenter = (entityIn instanceof ItemEntity) ? 32 / 64f : 48 / 64f;
 		if (Math.abs(diffCenter) > maxDiffCenter)
 			return;
 
 		Part part = blockState.get(BeltBlock.PART);
 		float top = 13 / 16f;
-		boolean onSlope = part == Part.MIDDLE
+		boolean onSlope = notHorizontal && (part == Part.MIDDLE
 				|| part == (slope == Slope.UPWARD ? Part.END : Part.START) && entityIn.posY - pos.getY() < top
-				|| part == (slope == Slope.UPWARD ? Part.START : Part.END) && entityIn.posY - pos.getY() > top;
+				|| part == (slope == Slope.UPWARD ? Part.START : Part.END) && entityIn.posY - pos.getY() > top);
 
 		boolean movingDown = onSlope && slope == (movementFacing == beltFacing ? Slope.DOWNWARD : Slope.UPWARD);
 		boolean movingUp = onSlope && slope == (movementFacing == beltFacing ? Slope.UPWARD : Slope.DOWNWARD);
@@ -246,8 +250,10 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		movement = movement.add(centering);
 
 		float step = entityIn.stepHeight;
-		entityIn.stepHeight = 1;
+		if (!(entityIn instanceof PlayerEntity))
+			entityIn.stepHeight = 1;
 
+		// Entity Collisions
 		if (Math.abs(movementSpeed) < .5f) {
 			Vec3d checkDistance = movement.scale(2f).add(movement.normalize());
 			AxisAlignedBB bb = entityIn.getBoundingBox();
@@ -264,7 +270,7 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 
 		if (movingUp) {
 			float minVelocity = entityIn instanceof ItemEntity ? .09f : .13f;
-			float yMovement = (float) (Math.signum(movementSpeed) * Math.max(Math.abs(movement.y), minVelocity));
+			float yMovement = (float) -(Math.max(Math.abs(movement.y), minVelocity));
 			entityIn.move(MoverType.SELF, new Vec3d(0, yMovement, 0));
 			entityIn.move(MoverType.SELF, movement.mul(1, 0, 1));
 		} else if (movingDown) {
@@ -273,15 +279,17 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		} else {
 			entityIn.move(MoverType.SELF, movement);
 		}
-		entityIn.stepHeight = step;
 
-		boolean movedPastEndingSlope = onSlope && AllBlocks.BELT.typeOf(world.getBlockState(entityIn.getPosition()))
-				|| AllBlocks.BELT.typeOf(world.getBlockState(entityIn.getPosition().down()));
+		if (!(entityIn instanceof PlayerEntity))
+			entityIn.stepHeight = step;
 
-		if (movedPastEndingSlope && !movingDown && Math.abs(movementSpeed) > .25f) {
+		boolean movedPastEndingSlope = onSlope && (AllBlocks.BELT.typeOf(world.getBlockState(entityIn.getPosition()))
+				|| AllBlocks.BELT.typeOf(world.getBlockState(entityIn.getPosition().down())));
+
+		if (movedPastEndingSlope && !movingDown && Math.abs(movementSpeed) > 0)
 			entityIn.setPosition(entityIn.posX, entityIn.posY + movement.y, entityIn.posZ);
+		if (movedPastEndingSlope)
 			entityIn.setMotion(movement);
-		}
 	}
 
 	public boolean canTransport(Entity entity) {

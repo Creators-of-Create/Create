@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 
@@ -36,6 +37,11 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 	public void onLoad() {
 		super.onLoad();
 		initialize = true;
+	}
+	
+	@Override
+	public World getWirelessWorld() {
+		return super.getWorld();
 	}
 
 	@Override

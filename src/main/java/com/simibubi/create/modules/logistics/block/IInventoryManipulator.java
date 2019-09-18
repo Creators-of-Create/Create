@@ -10,9 +10,13 @@ import net.minecraftforge.items.IItemHandler;
 
 public interface IInventoryManipulator {
 
-	public World getWorld();
-
-	public BlockPos getPos();
+	public default World getWorld() {
+		return ((TileEntity) this).getWorld();
+	}
+	
+	public default BlockPos getPos() {
+		return ((TileEntity) this).getPos();
+	}
 
 	public BlockPos getInventoryPos();
 

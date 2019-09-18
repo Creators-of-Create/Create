@@ -4,7 +4,7 @@ loaderVersion="[28,)"
 
 [[mods]] 
 modId="create"
-version="0.0.5"
+version="0.1.0"
 displayName="Create" 
 #updateJSONURL=""
 authors="simibubi" 
@@ -14,7 +14,7 @@ A handful of additions to aid the creative survivalist.'''
 [[dependencies.create]] 
     modId="forge"
     mandatory=true 
-    versionRange="[28.0.45,)"
+    versionRange="[28.1.0,)"
     ordering="NONE"
     side="BOTH"
 

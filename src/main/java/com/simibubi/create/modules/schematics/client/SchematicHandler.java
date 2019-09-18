@@ -213,7 +213,7 @@ public class SchematicHandler {
 			PlacementSettings settings = cachedSettings.copy();
 			settings.setBoundingBox(null);
 			schematic.addBlocksToWorld(w, anchor, settings);
-			new SchematicHologram().startHologram(w);
+			CreateClient.schematicHologram.startHologram(w);
 		}
 	}
 

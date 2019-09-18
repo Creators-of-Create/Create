@@ -3,9 +3,23 @@
     "textures": {
         "particle": "create:block/bearing_side",
         "gearbox": "create:block/gearbox",
-        "bearing_side": "create:block/bearing_side"
+        "bearing_side": "create:block/bearing_side",
+		"brass_casing": "create:block/brass_casing"
     },
     "elements": [
+		{
+            "name": "Indicator",
+            "from": [ 6, 10, 16 ], 
+            "to": [ 10, 12, 17 ], 
+            "faces": {
+                "north": { "texture": "#brass_casing", "uv": [ 3, 0, 7, 2 ] },
+                "east": { "texture": "#brass_casing", "uv": [ 7, 14, 8, 16 ] },
+                "south": { "texture": "#brass_casing", "uv": [ 6, 14, 10, 16 ] },
+                "west": { "texture": "#brass_casing", "uv": [ 8, 14, 9, 16 ] },
+                "up": { "texture": "#brass_casing", "uv": [ 6, 1, 10, 2 ] },
+                "down": { "texture": "#brass_casing", "uv": [ 6, 0, 10, 1 ] }
+            }
+        },
         {
             "name": "Side",
             "from": [ 0, 0, 0 ], 

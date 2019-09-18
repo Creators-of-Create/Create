@@ -24,6 +24,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class MechanicalPistonTileEntity extends KineticTileEntity implements ITickableTileEntity {
 
@@ -54,6 +56,12 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
+	}
+	
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		return super.getMaxRenderDistanceSquared() * 16;
 	}
 
 	@Override

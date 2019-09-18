@@ -6,7 +6,6 @@ import static net.minecraft.block.RedstoneDiodeBlock.POWERED;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
-import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -25,7 +24,7 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 		lastModified = -1;
 		maxState = 1;
 	}
-	
+
 	@Override
 	public void read(CompoundNBT compound) {
 		state = compound.getInt("State");
@@ -34,7 +33,7 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 		lastModified = -1;
 		super.read(compound);
 	}
-	
+
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.putInt("State", state);
@@ -55,7 +54,7 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 			}
 			lastModified = 0;
 		}
-		
+
 		if (amount < 0) {
 			if (newMaxState <= 20) {
 				newMaxState += amount;
@@ -69,7 +68,7 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 
 		newMaxState = MathHelper.clamp(newMaxState, 1, 60 * 20 * 30);
 	}
-	
+
 	@Override
 	public boolean hasFastRenderer() {
 		return true;
@@ -85,12 +84,12 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 
 	public String getUnit() {
 		if (newMaxState < 20)
-			return Lang.translate("generic.unit.ticks");
+			return "ticks";
 		if (newMaxState < 20 * 60)
-			return Lang.translate("generic.unit.seconds");
-		return Lang.translate("generic.unit.minutes");
+			return "seconds";
+		return "minutes";
 	}
-	
+
 	@Override
 	public void tick() {
 		updateConfigurableValue();
@@ -98,10 +97,10 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 		boolean powering = getBlockState().get(POWERING);
 		boolean atMax = state == maxState;
 		boolean atMin = state == 0;
-		
+
 		if (!charging && powered)
 			charging = true;
-		
+
 		if (charging && atMax) {
 			if (!powering && !world.isRemote)
 				world.setBlockState(pos, getBlockState().with(POWERING, true));
@@ -109,13 +108,13 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 				charging = false;
 			return;
 		}
-		
+
 		if (!charging && atMin) {
 			if (powering && !world.isRemote)
 				world.setBlockState(pos, getBlockState().with(POWERING, false));
 			return;
 		}
-		
+
 		state += charging ? 1 : -1;
 	}
 

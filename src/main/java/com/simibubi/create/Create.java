@@ -39,7 +39,7 @@ public class Create {
 	public static ModConfig config;
 
 	public Create() {
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CreateConfig.specification);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, CreateConfig.specification);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CreateClientConfig.specification);
 	}
 

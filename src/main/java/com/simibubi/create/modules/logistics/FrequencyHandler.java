@@ -63,7 +63,7 @@ public class FrequencyHandler {
 	}
 
 	public List<IHaveWireless> getNetworkOf(IHaveWireless actor) {
-		Map<Pair<Frequency, Frequency>, List<IHaveWireless>> networksInWorld = networksIn(actor.getWorld());
+		Map<Pair<Frequency, Frequency>, List<IHaveWireless>> networksInWorld = networksIn(actor.getWirelessWorld());
 		Pair<Frequency, Frequency> key = getNetworkKey(actor);
 		if (!networksInWorld.containsKey(key))
 			networksInWorld.put(key, new ArrayList<>());
@@ -79,7 +79,7 @@ public class FrequencyHandler {
 		List<IHaveWireless> network = getNetworkOf(actor);
 		network.remove(actor);
 		if (network.isEmpty()) {
-			networksIn(actor.getWorld()).remove(getNetworkKey(actor));
+			networksIn(actor.getWirelessWorld()).remove(getNetworkKey(actor));
 			return;
 		}
 		updateNetworkOf(actor);
@@ -109,7 +109,7 @@ public class FrequencyHandler {
 	}
 
 	public static boolean withinRange(IHaveWireless from, IHaveWireless to) {
-		return from.getPos().withinDistance(to.getPos(), CreateConfig.parameters.linkRange.get());
+		return from.getWirelessPos().withinDistance(to.getWirelessPos(), CreateConfig.parameters.linkRange.get());
 	}
 
 	public Map<Pair<Frequency, Frequency>, List<IHaveWireless>> networksIn(IWorld world) {

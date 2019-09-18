@@ -656,6 +656,8 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 	protected boolean shouldIgnoreBlockState(BlockState state) {
 		// Block doesnt have a mapping (Water, lava, etc)
+		if (state.getBlock() == Blocks.STRUCTURE_VOID)
+			return true;
 		if (getItemForBlock(state).getItem() == Items.AIR && state.getBlock() != Blocks.AIR)
 			return true;
 

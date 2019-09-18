@@ -1,6 +1,11 @@
 package com.simibubi.create.modules.contraptions;
 
+import static com.simibubi.create.AllBlocks.BELT;
+import static com.simibubi.create.AllBlocks.COGWHEEL;
+import static com.simibubi.create.AllBlocks.ENCASED_FAN;
+import static com.simibubi.create.AllBlocks.LARGE_COGWHEEL;
 import static com.simibubi.create.CreateConfig.parameters;
+import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,8 +20,6 @@ import com.simibubi.create.modules.contraptions.relays.SplitShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.state.IProperty;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -42,7 +45,6 @@ public class RotationPropagator {
 		final Direction direction = Direction.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ());
 		final World world = from.getWorld();
 
-		IProperty<Axis> axisProperty = BlockStateProperties.AXIS;
 		boolean connectedByAxis = definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
 				&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
 		boolean connectedByGears = definitionFrom.hasCogsTowards(world, from.getPos(), stateFrom, direction)
@@ -71,9 +73,19 @@ public class RotationPropagator {
 		}
 
 		// Attached Fans
-		if (AllBlocks.ENCASED_FAN.typeOf(stateFrom) && AllBlocks.ENCASED_FAN.typeOf(stateTo)) {
-			if (stateFrom.get(BlockStateProperties.AXIS) == stateTo.get(BlockStateProperties.AXIS))
+		if (ENCASED_FAN.typeOf(stateFrom) && ENCASED_FAN.typeOf(stateTo)) {
+			if (stateFrom.get(AXIS) == stateTo.get(AXIS))
 				return 1;
+		}
+
+		// Large Gear <-> Large Gear
+		if (isLargeToLargeGear(stateFrom, stateTo, diff)) {
+			Axis sourceAxis = stateFrom.get(AXIS);
+			Axis targetAxis = stateTo.get(AXIS);
+			int sourceAxisDiff = sourceAxis.getCoordinate(diff.getX(), diff.getY(), diff.getZ());
+			int targetAxisDiff = targetAxis.getCoordinate(diff.getX(), diff.getY(), diff.getZ());
+			
+			return sourceAxisDiff > 0 ^ targetAxisDiff > 0 ? -1 : 1;
 		}
 
 		// Gear <-> Large Gear
@@ -86,13 +98,32 @@ public class RotationPropagator {
 		if (connectedByGears) {
 			if (diff.manhattanDistance(BlockPos.ZERO) != 1)
 				return 0;
-			if (AllBlocks.LARGE_COGWHEEL.typeOf(stateTo))
+			if (LARGE_COGWHEEL.typeOf(stateTo))
 				return 0;
-			if (stateFrom.get(axisProperty) == stateTo.get(axisProperty))
+			if (stateFrom.get(AXIS) == stateTo.get(AXIS))
 				return -1;
 		}
 
 		return 0;
+	}
+
+	private static boolean isLargeToLargeGear(BlockState from, BlockState to, BlockPos diff) {
+		if (!LARGE_COGWHEEL.typeOf(from) || !LARGE_COGWHEEL.typeOf(to))
+			return false;
+		Axis fromAxis = from.get(AXIS);
+		Axis toAxis = to.get(AXIS);
+		if (fromAxis == toAxis)
+			return false;
+		for (Axis axis : Axis.values()) {
+			int axisDiff = axis.getCoordinate(diff.getX(), diff.getY(), diff.getZ());
+			if (axis == fromAxis || axis == toAxis) {
+				if (axisDiff == 0)
+					return false;
+
+			} else if (axisDiff != 0)
+				return false;
+		}
+		return true;
 	}
 
 	private static float getAxisModifier(KineticTileEntity te, Direction direction) {
@@ -111,10 +142,10 @@ public class RotationPropagator {
 	}
 
 	private static boolean isLargeToSmallGear(BlockState from, BlockState to, final BlockPos diff) {
-		if (!AllBlocks.LARGE_COGWHEEL.typeOf(from) || !AllBlocks.COGWHEEL.typeOf(to))
+		if (!LARGE_COGWHEEL.typeOf(from) || !COGWHEEL.typeOf(to))
 			return false;
-		Axis axisFrom = from.get(BlockStateProperties.AXIS);
-		if (axisFrom != to.get(BlockStateProperties.AXIS))
+		Axis axisFrom = from.get(AXIS);
+		if (axisFrom != to.get(AXIS))
 			return false;
 		if (axisFrom.getCoordinate(diff.getX(), diff.getY(), diff.getZ()) != 0)
 			return false;
@@ -309,12 +340,13 @@ public class RotationPropagator {
 
 		// Some Blocks can interface diagonally
 		BlockState blockState = te.getBlockState();
-		if (AllBlocks.COGWHEEL.typeOf(blockState) || AllBlocks.LARGE_COGWHEEL.typeOf(blockState)
-				|| AllBlocks.BELT.typeOf(blockState)) {
+		boolean isLargeWheel = LARGE_COGWHEEL.typeOf(blockState);
+
+		if (COGWHEEL.typeOf(blockState) || isLargeWheel || BELT.typeOf(blockState)) {
 			Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
 
 			BlockPos.getAllInBox(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1)).forEach(offset -> {
-				if (axis.getCoordinate(offset.getX(), offset.getY(), offset.getZ()) != 0)
+				if (!isLargeWheel && axis.getCoordinate(offset.getX(), offset.getY(), offset.getZ()) != 0)
 					return;
 				if (offset.distanceSq(0, 0, 0, false) != BlockPos.ZERO.distanceSq(1, 1, 0, false))
 					return;
@@ -324,7 +356,7 @@ public class RotationPropagator {
 
 		return neighbours;
 	}
-	
+
 	public static boolean isFrozen() {
 		return CreateConfig.parameters.freezeRotationPropagator.get();
 	}

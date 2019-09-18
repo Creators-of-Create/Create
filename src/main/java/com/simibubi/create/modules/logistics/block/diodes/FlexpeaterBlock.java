@@ -84,7 +84,15 @@ public class FlexpeaterBlock extends RedstoneDiodeBlock
 		FlexpeaterTileEntity te = (FlexpeaterTileEntity) world.getTileEntity(pos);
 		if (te == null)
 			return "";
-		return Lang.translate("generic.delay") + " (" + te.getUnit() + ")";
+		return Lang.translate("generic.delay") + " (" + Lang.translate("generic.unit." + te.getUnit()) + ")";
+	}
+	
+	@Override
+	public String getValueSuffix(BlockState state, IWorld world, BlockPos pos) {
+		FlexpeaterTileEntity te = (FlexpeaterTileEntity) world.getTileEntity(pos);
+		if (te == null)
+			return "";
+		return "" + te.getUnit().charAt(0);
 	}
 
 	@Override

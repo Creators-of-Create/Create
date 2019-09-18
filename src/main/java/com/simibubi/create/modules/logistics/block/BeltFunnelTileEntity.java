@@ -69,7 +69,7 @@ public class BeltFunnelTileEntity extends SyncedTileEntity implements ITickableT
 			initialize = false;
 		}
 	}
-
+	
 	@Override
 	public void setInventory(LazyOptional<IItemHandler> inventory) {
 		this.inventory = inventory;

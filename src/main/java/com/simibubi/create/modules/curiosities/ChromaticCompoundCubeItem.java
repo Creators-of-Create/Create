@@ -8,10 +8,13 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.animation.Animation;
 
 public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHandler {
 
+	@OnlyIn(value = Dist.CLIENT)
 	public static class Color implements IItemColor {
 		@Override
 		public int getColor(ItemStack stack, int layer) {
@@ -36,6 +39,7 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 	}
 
 	@Override
+	@OnlyIn(value = Dist.CLIENT)
 	public IItemColor getColorHandler() {
 		return new Color();
 	}

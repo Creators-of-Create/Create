@@ -15,6 +15,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class MechanicalBearingTileEntity extends KineticTileEntity implements ITickableTileEntity {
 
@@ -33,6 +35,12 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 	public AxisAlignedBB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}
+	
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		return super.getMaxRenderDistanceSquared() * 16;
+	}
 
 	@Override
 	public boolean isSource() {
@@ -47,7 +55,7 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 		isWindmill = shouldWindmill;
 		if (isWindmill)
 			removeSource();
-		
+
 		if (isWindmill && !running) {
 			assembleNextTick = true;
 		}
@@ -177,7 +185,8 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {
-				if (speed == 0 && (Math.abs(angle) < Math.PI / 4f || Math.abs(angle) > 7 * Math.PI / 4f)) {
+				boolean canDisassemble = Math.abs(angle) < Math.PI / 4f || Math.abs(angle) > 7 * Math.PI / 4f;
+				if (speed == 0 && (canDisassemble || movingConstruct == null || movingConstruct.blocks.isEmpty())) {
 					disassembleConstruct();
 				}
 				return;

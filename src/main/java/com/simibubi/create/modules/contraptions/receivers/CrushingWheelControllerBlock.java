@@ -36,7 +36,7 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
-		return state.get(VALID);
+		return true;
 	}
 
 	@Override
@@ -95,11 +95,17 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 	}
 
 	public void updateSpeed(BlockState state, World world, BlockPos pos) {
-		if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen())
-			return;
 		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) world.getTileEntity(pos);
+		
 		if (te == null)
 			return;
+		if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen()) {
+			if (te.crushingspeed != 0) {
+				te.crushingspeed = 0;
+				te.sendData();
+			}
+			return;
+		}
 
 		for (Direction d : Direction.values()) {
 			if (d.getAxis().isVertical())
@@ -111,6 +117,7 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 				continue;
 			KineticTileEntity wheelTe = (KineticTileEntity) world.getTileEntity(pos.offset(d));
 			te.crushingspeed = Math.abs(wheelTe.getSpeed() / 50f);
+			te.sendData();
 			break;
 		}
 	}

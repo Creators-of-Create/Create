@@ -42,7 +42,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 			ItemStack itemstack = new ItemStack(Registry.ITEM.getOrDefault(new ResourceLocation(s1)), i);
 			results.add(new StochasticOutput(itemstack, chance));
 		}
-		
+
 		int duration = JSONUtils.getInt(json, "processingTime");
 
 		return this.factory.create(recipeId, s, ingredients, results, duration);
@@ -52,13 +52,15 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 		String s = buffer.readString(32767);
 
 		List<Ingredient> ingredients = new ArrayList<>();
-		for (int i = 0; i < buffer.readInt(); i++) 
+		int ingredientCount = buffer.readInt();
+		for (int i = 0; i < ingredientCount; i++)
 			ingredients.add(Ingredient.read(buffer));
-		
+
 		List<StochasticOutput> results = new ArrayList<>();
-		for (int i = 0; i < buffer.readInt(); i++) 
+		int outputCount = buffer.readInt();
+		for (int i = 0; i < outputCount; i++)
 			results.add(StochasticOutput.read(buffer));
-		
+
 		int duration = buffer.readInt();
 
 		return this.factory.create(recipeId, s, ingredients, results, duration);
@@ -72,12 +74,13 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 
 		buffer.writeInt(recipe.getRollableResults().size());
 		recipe.getRollableResults().forEach(i -> i.write(buffer));
-		
+
 		buffer.writeInt(recipe.processingDuration);
 	}
 
 	public interface IRecipeFactory<T extends ProcessingRecipe<?>> {
-		T create(ResourceLocation id, String group, List<Ingredient> ingredients, List<StochasticOutput> results, int duration);
+		T create(ResourceLocation id, String group, List<Ingredient> ingredients, List<StochasticOutput> results,
+				int duration);
 	}
 
 }

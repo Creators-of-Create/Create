@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.schematics.client.SchematicEditScreen;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -67,6 +68,8 @@ public class SchematicItem extends Item {
 		if (stack.hasTag()) {
 			if (stack.getTag().contains("File"))
 				tooltip.add(new StringTextComponent(TextFormatting.GOLD + stack.getTag().getString("File")));
+		} else {
+			tooltip.add(new StringTextComponent(TextFormatting.RED + Lang.translate("schematic.invalid")));
 		}
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
@@ -96,7 +99,7 @@ public class SchematicItem extends Item {
 		String filepath = "";
 
 		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER)
-			filepath = CreateConfig.parameters.schematicPath + "/" + owner + "/" + schematic;
+			filepath = CreateConfig.parameters.schematicPath.get() + "/" + owner + "/" + schematic;
 		else
 			filepath = "schematics/" + schematic;
 

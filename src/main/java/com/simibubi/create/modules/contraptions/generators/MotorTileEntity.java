@@ -44,7 +44,13 @@ public class MotorTileEntity extends KineticTileEntity implements ITickableTileE
 	public void setSpeedValueLazily(int speed) {
 		if (newSpeed == speed)
 			return;
-		newSpeed = MathHelper.clamp(speed, 1, CreateConfig.parameters.maxMotorSpeed.get());
+		Integer max = CreateConfig.parameters.maxMotorSpeed.get();
+		if (newSpeed > 0 && speed == 0)
+			newSpeed = -1;
+		else if (newSpeed < 0 && speed == 0)
+			newSpeed = 1;
+		else
+			newSpeed = MathHelper.clamp(speed, -max, max);
 		this.lastModified = 0;
 	}
 

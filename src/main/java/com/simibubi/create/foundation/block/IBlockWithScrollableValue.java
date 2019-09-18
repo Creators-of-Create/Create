@@ -46,6 +46,10 @@ public interface IBlockWithScrollableValue {
 		return false;
 	}
 
+	public default String getValueSuffix(BlockState state, IWorld world, BlockPos pos) {
+		return "";
+	}
+
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
@@ -141,12 +145,18 @@ public interface IBlockWithScrollableValue {
 			GlStateManager.popMatrix();
 		}
 
-		String numberText = block.getCurrentValue(state, world, blockPos) + "";
+		String numberText = block.getCurrentValue(state, world, blockPos)
+				+ block.getValueSuffix(state, world, blockPos);
 		int stringWidth = mc.fontRenderer.getStringWidth(numberText);
-		float numberScale = 4 / 128f * (6f / stringWidth);
-		GlStateManager.translated(7 / 64f, -5 / 64f, 0);
+		float numberScale = 4 / 128f * ((float) mc.fontRenderer.FONT_HEIGHT / stringWidth);
+		boolean singleDigit = stringWidth < 10;
+		if (singleDigit)
+			numberScale = numberScale / 2;
+		GlStateManager.translated(4 / 64f, -5 / 64f, 0);
 
 		GlStateManager.scaled(numberScale, -numberScale, numberScale);
+		float verticalMargin = (stringWidth - mc.fontRenderer.FONT_HEIGHT) / 2f;
+		GlStateManager.translated(singleDigit ? stringWidth / 2 : 0, singleDigit ? -verticalMargin : verticalMargin, 0);
 
 		mc.fontRenderer.drawString(numberText, 0, 0, 0xFFFFFF);
 		GlStateManager.translated(0, 0, -1 / 4f);

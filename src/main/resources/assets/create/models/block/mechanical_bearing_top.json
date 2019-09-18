@@ -3,9 +3,23 @@
     "textures": {
         "particle": "create:block/bearing_side",
         "bearing_top": "create:block/bearing_top",
-        "bearing_side": "create:block/bearing_side"
+        "bearing_side": "create:block/bearing_side",
+		"brass_casing": "create:block/brass_casing"
     },
     "elements": [
+		{
+            "name": "Cube",
+            "from": [ 6, 12, 16 ], 
+            "to": [ 10, 14, 17 ], 
+            "faces": {
+                "north": { "texture": "#brass_casing", "uv": [ 3, 0, 7, 2 ] },
+                "east": { "texture": "#brass_casing", "uv": [ 7, 0, 8, 2 ] },
+                "south": { "texture": "#brass_casing", "uv": [ 6, 0, 10, 2 ] },
+                "west": { "texture": "#brass_casing", "uv": [ 8, 0, 9, 2 ] },
+                "up": { "texture": "#brass_casing", "uv": [ 6, 0, 10, 1 ] },
+                "down": { "texture": "#brass_casing", "uv": [ 6, 1, 10, 2 ] }
+            }
+        },
         {
             "name": "Top",
             "from": [ 0, 12, 0 ], 

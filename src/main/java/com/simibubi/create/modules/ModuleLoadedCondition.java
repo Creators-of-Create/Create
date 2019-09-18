@@ -44,7 +44,7 @@ public class ModuleLoadedCondition implements ICondition {
 		public ModuleLoadedCondition read(JsonObject json) {
 			return new ModuleLoadedCondition(JSONUtils.getString(json, "module"));
 		}
-
+		
 		@Override
 		public ResourceLocation getID() {
 			return NAME;

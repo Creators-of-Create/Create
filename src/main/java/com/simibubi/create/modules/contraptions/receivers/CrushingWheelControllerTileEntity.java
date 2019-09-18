@@ -81,6 +81,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 	public Entity processingEntity;
 	private UUID entityUUID;
+	protected boolean searchForEntity;
 
 	private Inventory contents;
 	public float crushingspeed;
@@ -92,9 +93,23 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 	@Override
 	public void tick() {
-		if (!isOccupied() || isFrozen())
+		if (isFrozen())
 			return;
-
+		if (searchForEntity) {
+			searchForEntity = false;
+			List<Entity> search = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()),
+					e -> entityUUID.equals(e.getUniqueID()));
+			if (search.isEmpty())
+				clear();
+			else
+				processingEntity = search.get(0);
+		}
+		
+		if (!isOccupied())
+			return;
+		if (crushingspeed == 0)
+			return;
+		
 		float speed = crushingspeed / 2.5f;
 
 		if (!hasEntity()) {
@@ -216,15 +231,9 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	public void read(CompoundNBT compound) {
 		super.read(compound);
 
-		if (compound.contains("Entity") && !isFrozen()) {
+		if (compound.contains("Entity") && !isFrozen() && !isOccupied()) {
 			entityUUID = NBTUtil.readUniqueId(compound.getCompound("Entity"));
-
-			List<Entity> search = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()),
-					e -> entityUUID.equals(e.getUniqueID()));
-			if (search.isEmpty())
-				clear();
-			else
-				processingEntity = search.get(0);
+			this.searchForEntity = true;
 		}
 		crushingspeed = compound.getFloat("Speed");
 		contents = Inventory.read(compound);

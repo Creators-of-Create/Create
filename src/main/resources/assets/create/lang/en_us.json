@@ -147,11 +147,11 @@
 	
 	"create.recipe.crushing": "Crushing",
 	"create.recipe.splashing": "Bulk Washing",
-	"create.recipe.splashing.fan": "Fan behind §9Flowing Water",
+	"create.recipe.splashing.fan": "Fan behind Flowing Water",
 	"create.recipe.smokingViaFan": "Bulk Smoking",
-	"create.recipe.smokingViaFan.fan": "Fan behind §6Fire",
+	"create.recipe.smokingViaFan.fan": "Fan behind Fire",
 	"create.recipe.blastingViaFan": "Bulk Smelting",
-	"create.recipe.blastingViaFan.fan": "Fan behind §6Lava",
+	"create.recipe.blastingViaFan.fan": "Fan behind Lava",
 	"create.recipe.pressing": "Mechanical Press",
 	"create.recipe.blockzapperUpgrade": "Handheld Blockzapper",
 	"create.recipe.processing.chance": "%1$s%% Chance",
@@ -241,6 +241,7 @@
 	"create.schematicAndQuill.fallbackName": "My Schematic",
 	"create.schematicAndQuill.saved": "Saved as %1$s",
 	
+	"create.schematic.invalid": "[!] Invalid Item - Use the Schematic Table instead",
 	"create.schematic.position": "Position",
 	"create.schematic.rotation": "Rotation",
 	"create.schematic.rotation.none": "None",
