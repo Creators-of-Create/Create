@@ -90,15 +90,16 @@ public class ClientSchematicLoader {
 			byte[] data = new byte[maxPacketSize];
 			try {
 				int status = activeUploads.get(schematic).read(data);
-				if (status < maxPacketSize) {
-					data = Arrays.copyOf(data, status);
-				}
 
-				if (Minecraft.getInstance().world != null)
-					AllPackets.channel.sendToServer(SchematicUploadPacket.write(schematic, data));
-				else {
-					activeUploads.remove(schematic);
-					return;
+				if (status != -1) {
+					if (status < maxPacketSize)
+						data = Arrays.copyOf(data, status);
+					if (Minecraft.getInstance().world != null)
+						AllPackets.channel.sendToServer(SchematicUploadPacket.write(schematic, data));
+					else {
+						activeUploads.remove(schematic);
+						return;
+					}
 				}
 
 				if (status < maxPacketSize)

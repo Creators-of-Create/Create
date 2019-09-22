@@ -1,0 +1,7 @@
+{
+	"forge_marker": 1,
+	"defaults": { "model": "create:block/palettes/limesand" },
+    "variants": {
+      "": [{ "y": 0 }, { "y": 90 }, { "y": 180 }, { "y": 270 }]
+    }
+}

@@ -119,4 +119,9 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 		return te.getBlockState();
 	}
 
+	public static void invalidateCache() {
+		if (cachedBuffers != null)
+			cachedBuffers.clear();
+	}
+	
 }

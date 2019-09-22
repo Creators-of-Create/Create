@@ -1,17 +1,19 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            "S  ",
-            "SS ",
-			"SSS"
+			"WL",
+            "LW"
         ],
         "key": {
-			"S": {
-                "item": "create:gabbro_bricks"
+			"L": {
+                "item": "minecraft:sand"
+            },
+			"W": {
+                "item": "minecraft:diorite"
             }
         },
 	"result": {
-		"item": "create:gabbro_bricks_stairs",
+		"item": "create:limesand",
 		"count": 4
 	},
 	"conditions": [

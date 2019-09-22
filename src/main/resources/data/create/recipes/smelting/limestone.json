@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "item": "minecraft:sandstone"
+    "item": "create:limesand"
   },
   "result": "create:limestone",
   "experience": 0.1,

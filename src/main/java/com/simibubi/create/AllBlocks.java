@@ -53,6 +53,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FallingBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.RotatedPillarBlock;
@@ -141,6 +142,7 @@ public enum AllBlocks {
 	INDENTED_GABBRO(new Block(Properties.from(GABBRO.block)), ComesWith.SLAB),
 	SLIGHTLY_MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
 	MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
+	LIMESAND(new FallingBlock(Properties.from(Blocks.SAND))),
 	LIMESTONE(new Block(Properties.from(Blocks.SANDSTONE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	LIMESTONE_BRICKS(new Block(Properties.from(LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	POLISHED_LIMESTONE(new Block(Properties.from(LIMESTONE.block)), ComesWith.SLAB),

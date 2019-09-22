@@ -5,14 +5,8 @@ import net.minecraft.client.Minecraft;
 
 public abstract class AnimatedKinetics implements IDrawable {
 
-	protected static int ticks;
-
-	public static void tick() {
-		ticks++;
-	}
-
 	public static float getCurrentAngle() {
-		return ((ticks + Minecraft.getInstance().getRenderPartialTicks()) * 4f) % 360;
+		return ((AnimationTickHolder.ticks + Minecraft.getInstance().getRenderPartialTicks()) * 4f) % 360;
 	}
 
 }

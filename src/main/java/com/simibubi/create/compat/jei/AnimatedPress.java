@@ -1,5 +1,7 @@
 package com.simibubi.create.compat.jei;
 
+import static com.simibubi.create.compat.jei.AnimationTickHolder.ticks;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;

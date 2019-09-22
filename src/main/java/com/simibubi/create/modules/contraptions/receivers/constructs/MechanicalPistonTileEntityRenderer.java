@@ -89,5 +89,10 @@ public class MechanicalPistonTileEntityRenderer extends KineticTileEntityRendere
 		return AllBlocks.SHAFT.block.getDefaultState().with(BlockStateProperties.AXIS,
 				((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState()));
 	}
+	
+	public static void invalidateCache() {
+		if (cachedConstructs != null)
+			cachedConstructs.invalidateAll();
+	}
 
 }

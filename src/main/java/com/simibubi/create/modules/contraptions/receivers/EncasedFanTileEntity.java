@@ -7,6 +7,7 @@ import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlockTags;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.CreateClient;
@@ -91,8 +92,7 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 	}
 
 	public void updateGenerator() {
-		boolean shouldGenerate = world.isBlockPowered(pos) && world.isBlockPresent(pos.down())
-				&& world.getBlockState(pos.down()).getBlock() == Blocks.FIRE;
+		boolean shouldGenerate = world.isBlockPowered(pos) && world.isBlockPresent(pos.down()) && blockBelowIsHot();
 		if (shouldGenerate == isGenerator)
 			return;
 
@@ -101,6 +101,10 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 			removeSource();
 		applyNewSpeed(isGenerator ? CreateConfig.parameters.generatingFanSpeed.get() : 0);
 		sendData();
+	}
+
+	public boolean blockBelowIsHot() {
+		return world.getBlockState(pos.down()).getBlock().isIn(AllBlockTags.FAN_HEATERS.tag);
 	}
 
 	protected void updateReachAndForce() {

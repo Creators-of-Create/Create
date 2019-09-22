@@ -21,17 +21,23 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 
 	public FlexpeaterTileEntity() {
 		super(AllTileEntities.FLEXPEATER.type);
-		lastModified = -1;
-		maxState = 1;
+		lastModified  = -1;
+		maxState = newMaxState = 1;
 	}
 
 	@Override
 	public void read(CompoundNBT compound) {
+		readClientUpdate(compound);
+		newMaxState = maxState;
+		super.read(compound);
+	}
+	
+	@Override
+	public void readClientUpdate(CompoundNBT compound) {
 		state = compound.getInt("State");
 		charging = compound.getBoolean("Charging");
-		newMaxState = maxState = compound.getInt("MaxState");
-		lastModified = -1;
-		super.read(compound);
+		maxState = compound.getInt("MaxState");
+		state = MathHelper.clamp(state, 0, maxState - 1);
 	}
 
 	@Override
@@ -95,8 +101,8 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 		updateConfigurableValue();
 		boolean powered = getBlockState().get(POWERED);
 		boolean powering = getBlockState().get(POWERING);
-		boolean atMax = state == maxState;
-		boolean atMin = state == 0;
+		boolean atMax = state >= maxState;
+		boolean atMin = state <= 0;
 
 		if (!charging && powered)
 			charging = true;

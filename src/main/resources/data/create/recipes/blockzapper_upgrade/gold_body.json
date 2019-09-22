@@ -1,15 +1,13 @@
 {
-    "type": "create:placement_handgun_upgrade",
+    "type": "create:blockzapper_upgrade",
         "pattern": [
-            "E ",
-            "BR"
+            " B ",
+            "BEB",
+            " B "
         ],
         "key": {
             "B": {
                 "item": "create:blaze_brass_cube"
-            },
-			"R": {
-                "item": "minecraft:end_rod"
             },
             "E": {
                 "item": "create:placement_handgun"
@@ -19,6 +17,6 @@
 		"item": "create:placement_handgun",
 		"count": 1
 	},
-	"component": "Amplifier",
+	"component": "Body",
 	"tier": "BlazeBrass"
 }

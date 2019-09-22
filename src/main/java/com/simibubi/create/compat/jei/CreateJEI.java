@@ -64,7 +64,8 @@ public class CreateJEI implements IModPlugin {
 		registration.addRecipes(findRecipes(AllRecipes.CRUSHING), crushingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipes.SPLASHING), splashingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipes.PRESSING), pressingCategory.getUid());
-		registration.addRecipes(findRecipes(AllRecipes.PLACEMENT_HANDGUN_UPGRADE), blockzapperCategory.getUid());
+		registration.addRecipes(findRecipesById(AllRecipes.BLOCKZAPPER_UPGRADE.serializer.getRegistryName()),
+				blockzapperCategory.getUid());
 		registration.addRecipes(findRecipesByType(IRecipeType.SMOKING), smokingCategory.getUid());
 		registration.addRecipes(findRecipesByTypeExcluding(IRecipeType.SMELTING, IRecipeType.SMOKING),
 				blastingCategory.getUid());
@@ -96,6 +97,11 @@ public class CreateJEI implements IModPlugin {
 	private static List<IRecipe<?>> findRecipesByType(IRecipeType<?> type) {
 		return Minecraft.getInstance().world.getRecipeManager().getRecipes().stream().filter(r -> r.getType() == type)
 				.collect(Collectors.toList());
+	}
+
+	private static List<IRecipe<?>> findRecipesById(ResourceLocation id) {
+		return Minecraft.getInstance().world.getRecipeManager().getRecipes().stream()
+				.filter(r -> r.getSerializer().getRegistryName().equals(id)).collect(Collectors.toList());
 	}
 
 	private static List<IRecipe<?>> findRecipesByTypeExcluding(IRecipeType<?> type, IRecipeType<?> excludingType) {

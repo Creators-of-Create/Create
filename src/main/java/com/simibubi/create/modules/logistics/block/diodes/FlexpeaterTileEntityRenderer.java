@@ -33,12 +33,12 @@ public class FlexpeaterTileEntityRenderer extends TileEntityRendererFast<Flexpea
 			mutable.rewind();
 
 			int color = ColorHelper.mixColors(0x2C0300, 0xCD0000, colorModifier);
-			
+
 			byte r = (byte) (color >> 16);
 			byte g = (byte) ((color >> 8) & 0xFF);
 			byte b = (byte) (color & 0xFF);
 			byte a = (byte) 255;
-			
+
 			for (int vertex = 0; vertex < vertexCount(original); vertex++) {
 				putColor(mutable, vertex, r, g, b, a);
 				putPos(mutable, vertex, getX(original, vertex) + xIn, getY(original, vertex) + yIn,
@@ -50,7 +50,7 @@ public class FlexpeaterTileEntityRenderer extends TileEntityRendererFast<Flexpea
 		}
 	}
 
-	private FlexpeaterIndicatorRenderer cachedIndicator;
+	protected static FlexpeaterIndicatorRenderer cachedIndicator;
 
 	@Override
 	public void renderTileEntityFast(FlexpeaterTileEntity te, double x, double y, double z, float partialTicks,
@@ -78,6 +78,10 @@ public class FlexpeaterTileEntityRenderer extends TileEntityRendererFast<Flexpea
 		int packedLightmapCoords = blockState.getPackedLightmapCoords(getWorld(), pos);
 		buffer.putBulkData(cachedIndicator.getTransformed((float) x, (float) y, (float) z,
 				te.state / (float) te.maxState, packedLightmapCoords));
+	}
+
+	public static void invalidateCache() {
+		cachedIndicator = null;
 	}
 
 }

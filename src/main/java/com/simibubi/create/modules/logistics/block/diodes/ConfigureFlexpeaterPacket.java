@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.packet.TileEntityConfigurationPacket;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 public class ConfigureFlexpeaterPacket extends TileEntityConfigurationPacket<FlexpeaterTileEntity> {
 
@@ -31,6 +32,7 @@ public class ConfigureFlexpeaterPacket extends TileEntityConfigurationPacket<Fle
 	@Override
 	protected void applySettings(FlexpeaterTileEntity te) {
 		te.maxState = maxState;
+		te.state = MathHelper.clamp(te.state, 0, maxState);
 		te.sendData();
 	}
 

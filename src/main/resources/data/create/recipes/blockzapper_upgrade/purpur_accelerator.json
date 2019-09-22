@@ -1,15 +1,15 @@
 {
-    "type": "create:placement_handgun_upgrade",
+    "type": "create:blockzapper_upgrade",
         "pattern": [
-            "GBG",
-            " E "
+            "SE",
+            "BS"
         ],
         "key": {
             "B": {
                 "item": "create:chorus_chrome_cube"
             },
-			"G": {
-                "item": "minecraft:glass"
+			"S": {
+                "item": "minecraft:sugar"
             },
             "E": {
                 "item": "create:placement_handgun"
@@ -19,6 +19,6 @@
 		"item": "create:placement_handgun",
 		"count": 1
 	},
-	"component": "Scope",
+	"component": "Accelerator",
 	"tier": "ChorusChrome"
 }

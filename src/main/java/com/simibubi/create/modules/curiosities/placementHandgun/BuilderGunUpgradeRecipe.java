@@ -10,7 +10,6 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
@@ -64,14 +63,14 @@ public class BuilderGunUpgradeRecipe implements ICraftingRecipe {
 		return getRecipe().getId();
 	}
 
-	@Override
-	public IRecipeType<?> getType() {
-		return AllRecipes.Types.BLOCKZAPPER_UPGRADE;
-	}
+//	@Override
+//	public IRecipeType<?> getType() {
+//		return AllRecipes.Types.BLOCKZAPPER_UPGRADE;
+//	}
 	
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
-		return AllRecipes.PLACEMENT_HANDGUN_UPGRADE.serializer;
+		return AllRecipes.BLOCKZAPPER_UPGRADE.serializer;
 	}
 	
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BuilderGunUpgradeRecipe> {

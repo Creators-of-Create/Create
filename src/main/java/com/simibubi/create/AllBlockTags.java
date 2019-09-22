@@ -8,7 +8,10 @@ import net.minecraft.util.ResourceLocation;
 
 public enum AllBlockTags {
 
-	WINDMILL_SAILS;
+	WINDMILL_SAILS,
+	FAN_HEATERS,
+	
+	;
 
 	public Tag<Block> tag;
 
