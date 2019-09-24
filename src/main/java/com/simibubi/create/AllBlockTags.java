@@ -10,6 +10,7 @@ public enum AllBlockTags {
 
 	WINDMILL_SAILS,
 	FAN_HEATERS,
+	WINDOWABLE,
 	
 	;
 

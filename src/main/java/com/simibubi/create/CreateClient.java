@@ -1,15 +1,29 @@
 package com.simibubi.create;
 
+import java.util.Map;
+import java.util.function.Function;
+
 import com.simibubi.create.modules.contraptions.CachedBufferReloader;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanParticleHandler;
+import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel;
+import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
+import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandModel;
 import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 import com.simibubi.create.modules.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHologram;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -59,6 +73,42 @@ public class CreateClient {
 		schematicAndQuillHandler.tick();
 		schematicHandler.tick();
 		schematicHologram.tick();
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void onModelBake(ModelBakeEvent event) {
+		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
+
+		swapModels(modelRegistry, getItemModelLocation(AllItems.SYMMETRY_WAND),
+				t -> new SymmetryWandModel(t).loadPartials(event));
+		swapModels(modelRegistry, getItemModelLocation(AllItems.PLACEMENT_HANDGUN),
+				t -> new BuilderGunModel(t).loadPartials(event));
+		swapModels(modelRegistry,
+				getBlockModelLocation(AllBlocks.WINDOW_IN_A_BLOCK,
+						BlockModelShapes
+								.getPropertyMapString(AllBlocks.WINDOW_IN_A_BLOCK.get().getDefaultState().getValues())),
+				WindowInABlockModel::new);
+		swapModels(modelRegistry,
+				getBlockModelLocation(AllBlocks.WINDOW_IN_A_BLOCK,
+						BlockModelShapes.getPropertyMapString(AllBlocks.WINDOW_IN_A_BLOCK.get().getDefaultState()
+								.with(BlockStateProperties.WATERLOGGED, true).getValues())),
+				WindowInABlockModel::new);
+
+	}
+
+	protected static ModelResourceLocation getItemModelLocation(AllItems item) {
+		return new ModelResourceLocation(item.item.getRegistryName(), "inventory");
+	}
+
+	protected static ModelResourceLocation getBlockModelLocation(AllBlocks block, String suffix) {
+		return new ModelResourceLocation(block.block.getRegistryName(), suffix);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
+			ModelResourceLocation location, Function<IBakedModel, T> factory) {
+		modelRegistry.put(location, factory.apply(modelRegistry.get(location)));
 	}
 
 }

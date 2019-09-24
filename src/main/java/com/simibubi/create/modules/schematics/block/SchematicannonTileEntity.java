@@ -166,16 +166,16 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	@Override
-	public double getMaxRenderDistanceSquared() {
-		return 65536.0D;
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}
-
+	
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		return super.getMaxRenderDistanceSquared() * 16;
+	}
+	
 	public SchematicannonTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		attachedInventories = new LinkedList<>();

@@ -294,20 +294,24 @@ public class TranslationConstruct {
 			if (direction != movementDirection && !currentChassisPos.withinDistance(currentPos, chassisRange + 1))
 				continue;
 
-			// Skip if pushed column ended already (Except for Relocating Chassis)
+			// Skip if pushed column ended already
 			if (!currentPos.equals(currentChassisPos)) {
+				
+				// Don't pull if not sticky
+				if (!chassisSticky && !pushing)
+					continue;
+				
 				for (BlockPos p = currentPos; !p.equals(currentChassisPos); p = p.offset(direction.getOpposite())) {
 					BlockState blockState = world.getBlockState(p);
-					
-					if (!chassisSticky && (blockState.getMaterial().isReplaceable()
-							|| blockState.isAir(world, currentPos))) {
+
+					if (!chassisSticky
+							&& (blockState.getMaterial().isReplaceable() || blockState.isAir(world, currentPos))) {
 						continue Search;
 					}
-					
+
 					if (!pushing && chassisSticky && !canPush(world, p, movementDirection)) {
 						continue Search;
 					}
-					
 				}
 			}
 
@@ -318,7 +322,7 @@ public class TranslationConstruct {
 			// Structure is immobile
 			if (pushing && !canPush(world, currentPos, movementDirection))
 				return null;
-			if (!pushing && !canPull(world, currentPos, movementDirection)) 
+			if (!pushing && !canPull(world, currentPos, movementDirection))
 				continue;
 
 			CompoundNBT nbt = new CompoundNBT();

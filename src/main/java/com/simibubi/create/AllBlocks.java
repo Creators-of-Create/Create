@@ -32,6 +32,7 @@ import com.simibubi.create.modules.contraptions.relays.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.ShaftHalfBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltSupportBlock;
+import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.CrossPlaneSymmetryBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.PlaneSymmetryBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.TriplePlaneSymmetryBlock;
@@ -45,6 +46,7 @@ import com.simibubi.create.modules.logistics.block.RedstoneBridgeBlock;
 import com.simibubi.create.modules.logistics.block.StockswitchBlock;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterBlock;
 import com.simibubi.create.modules.logistics.block.diodes.PulseRepeaterBlock;
+import com.simibubi.create.modules.palettes.GlassPaneBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
@@ -56,6 +58,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.FallingBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FenceGateBlock;
+import net.minecraft.block.GlassBlock;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.WallBlock;
@@ -127,11 +130,15 @@ public enum AllBlocks {
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),
 	SYMMETRY_CROSSPLANE(new CrossPlaneSymmetryBlock()),
 	SYMMETRY_TRIPLEPLANE(new TriplePlaneSymmetryBlock()),
+	WINDOW_IN_A_BLOCK(new WindowInABlockBlock()),
 
 	__GARDENS__(),
 	COCOA_LOG(new CocoaLogBlock()),
 
 	__PALETTES__(),
+	TILED_GLASS(new GlassBlock(Properties.from(Blocks.GLASS))),
+	TILED_GLASS_PANE(new GlassPaneBlock(Properties.from(Blocks.GLASS))),
+	
 	ANDESITE_BRICKS(new Block(Properties.from(Blocks.ANDESITE))),
 	DIORITE_BRICKS(new Block(Properties.from(Blocks.DIORITE))),
 	GRANITE_BRICKS(new Block(Properties.from(Blocks.GRANITE))),

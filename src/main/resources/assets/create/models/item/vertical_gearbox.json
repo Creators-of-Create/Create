@@ -1,0 +1,48 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+	"parent": "block/block",
+    "textures": {
+        "particle": "create:block/gearbox",
+        "gearbox_top": "create:block/gearbox_top",
+        "gearbox": "create:block/gearbox"
+    },
+    "elements": [
+        {
+            "name": "Side",
+            "from": [ 0, 0, 0 ], 
+            "to": [ 2, 16, 16 ], 
+            "faces": {
+                "north": { "texture": "#gearbox_top", "uv": [ 14, 0, 16, 16 ] },
+                "east": { "texture": "#gearbox_top", "uv": [ 0, 0, 16, 16 ] },
+                "south": { "texture": "#gearbox_top", "uv": [ 0, 0, 2, 16 ] },
+                "west": { "texture": "#gearbox_top", "uv": [ 0, 0, 16, 16 ] },
+                "up": { "texture": "#gearbox_top", "uv": [ 0, 0, 2, 16 ] },
+                "down": { "texture": "#gearbox_top", "uv": [ 0, 0, 2, 16 ] }
+            }
+        },
+        {
+            "name": "Side",
+            "from": [ 14, 0, 0 ], 
+            "to": [ 16, 16, 16 ], 
+            "faces": {
+                "north": { "texture": "#gearbox_top", "uv": [ 0, 0, 2, 16 ] },
+                "east": { "texture": "#gearbox_top", "uv": [ 0, 0, 16, 16 ] },
+                "south": { "texture": "#gearbox_top", "uv": [ 14, 0, 16, 16 ] },
+                "west": { "texture": "#gearbox_top", "uv": [ 0, 0, 16, 16 ] },
+                "up": { "texture": "#gearbox_top", "uv": [ 14, 0, 16, 16 ] },
+                "down": { "texture": "#gearbox_top", "uv": [ 14, 0, 16, 16 ] }
+            }
+        },
+        {
+            "name": "Center",
+            "from": [ 2, 1, 1 ], 
+            "to": [ 14, 15, 15 ], 
+            "faces": {
+                "north": { "texture": "#gearbox", "uv": [ 2, 1, 14, 15 ] },
+                "south": { "texture": "#gearbox", "uv": [ 2, 1, 14, 15 ] },
+                "up": { "texture": "#gearbox", "uv": [ 2, 1, 14, 15 ] },
+                "down": { "texture": "#gearbox", "uv": [ 2, 1, 14, 15 ] }
+            }
+        }
+    ]
+}

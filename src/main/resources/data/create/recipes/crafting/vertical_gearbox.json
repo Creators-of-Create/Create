@@ -1,0 +1,18 @@
+{
+    "type": "crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "create:gearbox"
+		}
+	],
+	"result": {
+		"item": "create:vertical_gearbox",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

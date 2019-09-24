@@ -2,22 +2,19 @@ package com.simibubi.create;
 
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.modules.IModule;
+import com.simibubi.create.modules.contraptions.relays.VerticalGearboxItem;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItemRenderer;
-import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandItemRenderer;
-import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandModel;
 import com.simibubi.create.modules.gardens.TreeFertilizerItem;
 import com.simibubi.create.modules.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.modules.schematics.item.SchematicItem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;
@@ -25,8 +22,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -76,6 +71,7 @@ public enum AllItems {
 
 	__CONTRAPTIONS__(),
 	BELT_CONNECTOR(new BeltItem(standardItemProperties())),
+	VERTICAL_GEARBOX(new VerticalGearboxItem(new Properties())),
 	FLOUR(ingredient()),
 	DOUGH(ingredient()),
 	PROPELLER(ingredient()),
@@ -161,23 +157,6 @@ public enum AllItems {
 		default:
 			return null;
 		}
-	}
-
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static void onModelBake(ModelBakeEvent event) {
-
-		ModelResourceLocation wandLocation = getModelLocation(SYMMETRY_WAND);
-		IBakedModel template = event.getModelRegistry().get(wandLocation);
-		event.getModelRegistry().put(wandLocation, new SymmetryWandModel(template).loadPartials(event));
-
-		ModelResourceLocation handgunLocation = getModelLocation(PLACEMENT_HANDGUN);
-		template = event.getModelRegistry().get(handgunLocation);
-		event.getModelRegistry().put(handgunLocation, new BuilderGunModel(template).loadPartials(event));
-	}
-
-	protected static ModelResourceLocation getModelLocation(AllItems item) {
-		return new ModelResourceLocation(item.item.getRegistryName(), "inventory");
 	}
 
 }

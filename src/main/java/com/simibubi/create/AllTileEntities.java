@@ -29,6 +29,7 @@ import com.simibubi.create.modules.contraptions.relays.ShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.SplitShaftTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntityRenderer;
+import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockTileEntity;
 import com.simibubi.create.modules.logistics.block.BeltFunnelTileEntity;
 import com.simibubi.create.modules.logistics.block.EntityDetectorTileEntity;
 import com.simibubi.create.modules.logistics.block.EntityDetectorTileEntityRenderer;
@@ -94,6 +95,9 @@ public enum AllTileEntities {
 	BELT_FUNNEL(BeltFunnelTileEntity::new, AllBlocks.BELT_FUNNEL),
 	ENTITY_DETECTOR(EntityDetectorTileEntity::new, AllBlocks.ENTITY_DETECTOR),
 	FLEXPEATER(FlexpeaterTileEntity::new, AllBlocks.FLEXPEATER),
+	
+	// Curiosities
+	WINDOW_IN_A_BLOCK(WindowInABlockTileEntity::new, AllBlocks.WINDOW_IN_A_BLOCK),
 
 	;
 

@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:stairs", "#minecraft:slabs", "#minecraft:walls", "#minecraft:fences", "#forge:fences"
+  ]
+}

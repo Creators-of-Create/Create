@@ -28,7 +28,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.1.0";
+	public static final String VERSION = "0.1.1";
 
 	public static Logger logger = LogManager.getLogger();
 	public static ItemGroup creativeTab = new CreateItemGroup();

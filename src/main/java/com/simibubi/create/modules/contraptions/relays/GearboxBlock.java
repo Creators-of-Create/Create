@@ -1,19 +1,27 @@
 package com.simibubi.create.modules.contraptions.relays;
 
-import com.simibubi.create.modules.contraptions.base.IRotate;
+import java.util.Arrays;
+import java.util.List;
+
+import com.simibubi.create.AllItems;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootContext.Builder;
 
 public class GearboxBlock extends RotatedPillarKineticBlock {
 
@@ -32,49 +40,30 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		super.fillItemGroup(group, items);
+		items.add(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public List<ItemStack> getDrops(BlockState state, Builder builder) {
+		if (state.get(AXIS).isVertical())
+			return super.getDrops(state, builder);
+		return Arrays.asList(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));
+	}
+	
+	@Override
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
+			PlayerEntity player) {
+		if (state.get(AXIS).isVertical())
+			return super.getPickBlock(state, target, world, pos, player);
+		return new ItemStack(AllItems.VERTICAL_GEARBOX.get());
+	}
+
+	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState placedOnState = context.getWorld()
-				.getBlockState(context.getPos().offset(context.getFace().getOpposite()));
-		Block placedOn = placedOnState.getBlock();
-
-		if (!(placedOn instanceof IRotate) || !((IRotate) placedOn).hasShaftTowards(context.getWorld(),
-				context.getPos(), placedOnState, context.getFace()))
-			return getDefaultState().with(AXIS, context.getFace().getAxis());
-
-		Axis badAxis = context.getFace().getAxis();
-		Axis otherBadAxis = null;
-
-		for (Direction side : Direction.values()) {
-			if (side.getAxis() == badAxis)
-				continue;
-
-			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));
-			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos().offset(side),
-						blockState, side.getOpposite()))
-					if (otherBadAxis != null && otherBadAxis != side.getAxis()) {
-						otherBadAxis = null;
-						break;
-					} else {
-						otherBadAxis = side.getAxis();
-					}
-			}
-		}
-
-		boolean skipped = false;
-		for (Axis axis : Axis.values()) {
-			if (axis == badAxis)
-				continue;
-			if (!skipped && context.isPlacerSneaking() && (otherBadAxis == null || badAxis == null)) {
-				skipped = true;
-				continue;
-			}
-			if (axis == otherBadAxis)
-				continue;
-			return getDefaultState().with(AXIS, axis);
-		}
-
-		return super.getStateForPlacement(context);
+		return getDefaultState().with(AXIS, Axis.Y);
 	}
 
 	// IRotate:

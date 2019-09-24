@@ -48,6 +48,7 @@ public class CreateConfig {
 
 	// Curiosities
 	public IntValue maxSymmetryWandRange;
+	public BooleanValue allowGlassPanesInPartialBlocks;
 
 	// Contraptions
 	public IntValue maxBeltLength, crushingDamage, maxMotorSpeed, maxRotationSpeed;
@@ -254,6 +255,10 @@ public class CreateConfig {
 				.comment("", "The Maximum Distance to an active mirror for the symmetry wand to trigger.")
 				.translation(basePath + name).defineInRange(name, 50, 10, Integer.MAX_VALUE);
 
+		name = "allowGlassPanesInPartialBlocks";
+		allowGlassPanesInPartialBlocks = builder.comment("", "Allow Glass Panes to be put inside Blocks like Stairs, Slabs, Fences etc.")
+				.translation(basePath + name).define(name, true);
+		
 		builder.pop();
 	}
 
