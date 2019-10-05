@@ -12,17 +12,27 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.fml.DistExecutor;
 
 public class WindowInABlockTileEntity extends SyncedTileEntity {
 
 	private BlockState partialBlock = Blocks.AIR.getDefaultState();
 	private BlockState windowBlock = Blocks.AIR.getDefaultState();
+	
+	@OnlyIn(value = Dist.CLIENT)
 	private IModelData modelData;
 
 	public WindowInABlockTileEntity() {
 		super(AllTileEntities.WINDOW_IN_A_BLOCK.type);
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> this::initDataMap);
+	}
+
+	@OnlyIn(value = Dist.CLIENT)
+	private void initDataMap() {
 		modelData = new ModelDataMap.Builder().withInitial(WINDOW_BLOCK, Blocks.AIR.getDefaultState())
 				.withInitial(PARTIAL_BLOCK, Blocks.AIR.getDefaultState())
 				.withInitial(WindowInABlockModel.POSITION, BlockPos.ZERO).build();
@@ -57,6 +67,7 @@ public class WindowInABlockTileEntity extends SyncedTileEntity {
 		markDirty();
 	}
 
+	@OnlyIn(value = Dist.CLIENT)
 	@Override
 	public IModelData getModelData() {
 		modelData.setData(WindowInABlockModel.PARTIAL_BLOCK, partialBlock);

@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 public class ColorHelper {
 
 	public static int rainbowColor(int timeStep) {
@@ -37,6 +39,19 @@ public class ColorHelper {
 				+ (int) (b1 + (b2 - b1) * w);
 
 		return color;
+	}
+	
+	public static void glColor(int color) {
+		color = mixColors(color, 0xFFFFFF, .5f);
+		int r = (color >> 16);
+		int g = (color >> 8) & 0xFF;
+		int b = color & 0xFF;
+		
+		GlStateManager.color4f(r / 256f, g / 256f, b / 256f, 1);
+	}
+	
+	public static void glResetColor() {
+		GlStateManager.color4f(1, 1, 1, 1);
 	}
 	
 }

@@ -171,7 +171,7 @@ public class WindowInABlockBlock extends PaneBlock
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		WindowInABlockTileEntity tileEntity = getTileEntity(worldIn, pos);
 		if (tileEntity == null)
-			return VoxelShapes.empty();
+			return makeCuboidShape(7, 0, 7, 9, 16, 9);
 		VoxelShape shape1 = tileEntity.getPartialBlock().getShape(worldIn, pos, context);
 		VoxelShape shape2 = tileEntity.getWindowBlock().getShape(worldIn, pos, context);
 		return VoxelShapes.or(shape1, shape2);

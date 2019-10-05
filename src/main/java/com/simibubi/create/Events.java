@@ -45,6 +45,7 @@ public class Events {
 		IWorld world = event.getWorld();
 		Create.frequencyHandler.onLoadWorld(world);
 		Create.constructHandler.onLoadWorld(world);
+		Create.logisticalNetworkHandler.onLoadWorld(world);
 	}
 
 	@SubscribeEvent
@@ -52,6 +53,7 @@ public class Events {
 		IWorld world = event.getWorld();
 		Create.frequencyHandler.onUnloadWorld(world);
 		Create.constructHandler.onUnloadWorld(world);
+		Create.logisticalNetworkHandler.onUnloadWorld(world);
 	}
 
 	@SubscribeEvent
@@ -81,7 +83,8 @@ public class Events {
 		if (AllBlocks.WINDOW_IN_A_BLOCK.typeOf(blockState))
 			return;
 
-		world.setBlockState(pos, AllBlocks.WINDOW_IN_A_BLOCK.get().getDefaultState());
+		BlockState defaultState = AllBlocks.WINDOW_IN_A_BLOCK.get().getDefaultState();
+		world.setBlockState(pos, defaultState);
 		TileEntity te = world.getTileEntity(pos);
 		if (te != null && te instanceof WindowInABlockTileEntity) {
 			WindowInABlockTileEntity wte = (WindowInABlockTileEntity) te;

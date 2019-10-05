@@ -37,15 +37,19 @@ import com.simibubi.create.modules.curiosities.symmetry.block.CrossPlaneSymmetry
 import com.simibubi.create.modules.curiosities.symmetry.block.PlaneSymmetryBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.TriplePlaneSymmetryBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
-import com.simibubi.create.modules.logistics.block.BeltFunnelBlock;
-import com.simibubi.create.modules.logistics.block.EntityDetectorBlock;
-import com.simibubi.create.modules.logistics.block.ExtractorBlock;
-import com.simibubi.create.modules.logistics.block.FlexcrateBlock;
-import com.simibubi.create.modules.logistics.block.LinkedExtractorBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneBridgeBlock;
 import com.simibubi.create.modules.logistics.block.StockswitchBlock;
+import com.simibubi.create.modules.logistics.block.belts.BeltFunnelBlock;
+import com.simibubi.create.modules.logistics.block.belts.EntityDetectorBlock;
+import com.simibubi.create.modules.logistics.block.belts.ExtractorBlock;
+import com.simibubi.create.modules.logistics.block.belts.LinkedExtractorBlock;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterBlock;
 import com.simibubi.create.modules.logistics.block.diodes.PulseRepeaterBlock;
+import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
+import com.simibubi.create.modules.logistics.management.base.LogisticalCasingBlock;
+import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock;
+import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.LogisticalControllerIndicatorBlock;
+import com.simibubi.create.modules.logistics.management.index.LogisticalIndexBlock;
 import com.simibubi.create.modules.palettes.GlassPaneBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
@@ -125,6 +129,10 @@ public enum AllBlocks {
 	PULSE_REPEATER(new PulseRepeaterBlock()),
 	FLEXPEATER(new FlexpeaterBlock()),
 	FLEXPEATER_INDICATOR(new RenderUtilityBlock()),
+	LOGISTICAL_CASING(new LogisticalCasingBlock()),
+	LOGISTICAL_CONTROLLER(new LogisticalControllerBlock()),
+	LOGISTICAL_CONTROLLER_INDICATOR(new LogisticalControllerIndicatorBlock()),
+	LOGISTICAL_INDEX(new LogisticalIndexBlock()),
 
 	__CURIOSITIES__(),
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),

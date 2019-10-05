@@ -30,19 +30,28 @@ import com.simibubi.create.modules.contraptions.relays.SplitShaftTileEntityRende
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntityRenderer;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockTileEntity;
-import com.simibubi.create.modules.logistics.block.BeltFunnelTileEntity;
-import com.simibubi.create.modules.logistics.block.EntityDetectorTileEntity;
-import com.simibubi.create.modules.logistics.block.EntityDetectorTileEntityRenderer;
-import com.simibubi.create.modules.logistics.block.ExtractorTileEntity;
-import com.simibubi.create.modules.logistics.block.ExtractorTileEntityRenderer;
-import com.simibubi.create.modules.logistics.block.FlexcrateTileEntity;
-import com.simibubi.create.modules.logistics.block.LinkedExtractorTileEntity;
-import com.simibubi.create.modules.logistics.block.LinkedExtractorTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.LinkedTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntity;
 import com.simibubi.create.modules.logistics.block.StockswitchTileEntity;
+import com.simibubi.create.modules.logistics.block.belts.BeltFunnelTileEntity;
+import com.simibubi.create.modules.logistics.block.belts.EntityDetectorTileEntity;
+import com.simibubi.create.modules.logistics.block.belts.EntityDetectorTileEntityRenderer;
+import com.simibubi.create.modules.logistics.block.belts.ExtractorTileEntity;
+import com.simibubi.create.modules.logistics.block.belts.ExtractorTileEntityRenderer;
+import com.simibubi.create.modules.logistics.block.belts.LinkedExtractorTileEntity;
+import com.simibubi.create.modules.logistics.block.belts.LinkedExtractorTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterTileEntity;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterTileEntityRenderer;
+import com.simibubi.create.modules.logistics.block.inventories.FlexcrateTileEntity;
+import com.simibubi.create.modules.logistics.management.base.LogisticalCasingTileEntity;
+import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity;
+import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntityRenderer;
+import com.simibubi.create.modules.logistics.management.controller.CalculationTileEntity;
+import com.simibubi.create.modules.logistics.management.controller.RequestTileEntity;
+import com.simibubi.create.modules.logistics.management.controller.StorageTileEntity;
+import com.simibubi.create.modules.logistics.management.controller.SupplyTileEntity;
+import com.simibubi.create.modules.logistics.management.controller.TransactionsTileEntity;
+import com.simibubi.create.modules.logistics.management.index.LogisticalIndexTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
@@ -95,6 +104,13 @@ public enum AllTileEntities {
 	BELT_FUNNEL(BeltFunnelTileEntity::new, AllBlocks.BELT_FUNNEL),
 	ENTITY_DETECTOR(EntityDetectorTileEntity::new, AllBlocks.ENTITY_DETECTOR),
 	FLEXPEATER(FlexpeaterTileEntity::new, AllBlocks.FLEXPEATER),
+	LOGISTICAL_CASING(LogisticalCasingTileEntity::new, AllBlocks.LOGISTICAL_CASING),
+	LOGISTICAL_SUPPLY_CONTROLLER(SupplyTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
+	LOGISTICAL_REQUEST_CONTROLLER(RequestTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
+	LOGISTICAL_STORAGE_CONTROLLER(StorageTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
+	LOGISTICAL_CALCULATION_CONTROLLER(CalculationTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
+	LOGISTICAL_TRANSATIONS_CONTROLLER(TransactionsTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
+	LOGISTICAL_INDEX(LogisticalIndexTileEntity::new, AllBlocks.LOGISTICAL_INDEX),
 	
 	// Curiosities
 	WINDOW_IN_A_BLOCK(WindowInABlockTileEntity::new, AllBlocks.WINDOW_IN_A_BLOCK),
@@ -148,6 +164,7 @@ public enum AllTileEntities {
 		bind(EntityDetectorTileEntity.class, new EntityDetectorTileEntityRenderer());
 		bind(MechanicalPressTileEntity.class, new MechanicalPressTileEntityRenderer());
 		bind(FlexpeaterTileEntity.class, new FlexpeaterTileEntityRenderer());
+		bind(LogisticalControllerTileEntity.class, new LogisticalControllerTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

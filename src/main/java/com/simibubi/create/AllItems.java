@@ -10,6 +10,10 @@ import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItemRe
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandItemRenderer;
 import com.simibubi.create.modules.gardens.TreeFertilizerItem;
+import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
+import com.simibubi.create.modules.logistics.management.LogisticalDialItem;
+import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.Type;
+import com.simibubi.create.modules.logistics.management.base.LogisticalControllerItem;
 import com.simibubi.create.modules.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.modules.schematics.item.SchematicItem;
 
@@ -76,6 +80,19 @@ public enum AllItems {
 	DOUGH(ingredient()),
 	PROPELLER(ingredient()),
 
+	__LOGISTICS__(),
+	CARDBOARD_BOX_1616(new CardboardBoxItem(standardItemProperties())),
+	CARDBOARD_BOX_1612(new CardboardBoxItem(standardItemProperties())),
+	CARDBOARD_BOX_1416(new CardboardBoxItem(standardItemProperties())),
+	CARDBOARD_BOX_1410(new CardboardBoxItem(standardItemProperties())),
+	
+	LOGISTICAL_DIAL(new LogisticalDialItem(standardItemProperties())),
+	LOGISTICAL_CONTROLLER_SUPPLY(new LogisticalControllerItem(standardItemProperties(), Type.SUPPLY)),
+	LOGISTICAL_CONTROLLER_REQUEST(new LogisticalControllerItem(standardItemProperties(), Type.REQUEST)),
+	LOGISTICAL_CONTROLLER_STORAGE(new LogisticalControllerItem(standardItemProperties(), Type.STORAGE)),
+	LOGISTICAL_CONTROLLER_CALCULATION(new LogisticalControllerItem(standardItemProperties(), Type.CALCULATION)),
+	LOGISTICAL_CONTROLLER_TRANSACTIONS(new LogisticalControllerItem(standardItemProperties(), Type.TRANSACTIONS)),
+	
 	;
 
 	private static class CategoryTracker {
@@ -128,6 +145,10 @@ public enum AllItems {
 
 	public boolean typeOf(ItemStack stack) {
 		return stack.getItem() == item;
+	}
+	
+	public ItemStack asStack() {
+		return new ItemStack(item);
 	}
 
 	// Client

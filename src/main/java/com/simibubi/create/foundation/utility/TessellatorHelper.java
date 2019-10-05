@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -30,7 +31,11 @@ public class TessellatorHelper {
     }
 
     public static void begin() {
-        Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+    	begin(DefaultVertexFormats.POSITION_TEX);
+    }
+    
+    public static void begin(VertexFormat format) {
+    	Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, format);
     }
 
     public static void draw() {

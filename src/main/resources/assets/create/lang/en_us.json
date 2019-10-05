@@ -340,6 +340,10 @@
 	"create.schematicannon.status.schematicNotPlaced": "Schematic not Deployed",
 	"create.schematicannon.status.schematicExpired": "Schematic File Expired",
 	
+	"create.gui.index.title": "Logistical Index",
+	"create.gui.index.targetAddressSelect": "Destination Address",
+	"create.gui.index.confirmOrder": "Confirm Order",
+	
 	"create.tooltip.holdKey": "Hold [%1$s]",
 	"create.tooltip.holdKeyOrKey": "Hold [%1$s] or [%2$s]",
 	"create.tooltip.keyShift": "Shift",

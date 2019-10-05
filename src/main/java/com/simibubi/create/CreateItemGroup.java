@@ -15,7 +15,7 @@ public final class CreateItemGroup extends ItemGroup {
 
 	@Override
 	public ItemStack createIcon() {
-		return new ItemStack(AllItems.SYMMETRY_WAND.get());
+		return new ItemStack(AllBlocks.COGWHEEL.get());
 	}
 	
 	@Override

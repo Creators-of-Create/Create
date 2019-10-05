@@ -6,9 +6,11 @@ import org.apache.logging.log4j.Logger;
 import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MovingConstructHandler;
 import com.simibubi.create.modules.logistics.FrequencyHandler;
+import com.simibubi.create.modules.logistics.management.LogisticalNetworkHandler;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -35,6 +37,7 @@ public class Create {
 	public static ServerSchematicLoader schematicReceiver;
 	public static FrequencyHandler frequencyHandler;
 	public static MovingConstructHandler constructHandler;
+	public static LogisticalNetworkHandler logisticalNetworkHandler;
 
 	public static ModConfig config;
 
@@ -48,6 +51,8 @@ public class Create {
 		schematicReceiver = new ServerSchematicLoader();
 		frequencyHandler = new FrequencyHandler();
 		constructHandler = new MovingConstructHandler();
+		logisticalNetworkHandler = new LogisticalNetworkHandler();
+		
 		CraftingHelper.register(new ModuleLoadedCondition.Serializer());
 		AllPackets.registerPackets();
 	}
@@ -66,6 +71,11 @@ public class Create {
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 		AllRecipes.register(event);
+	}
+	
+	@SubscribeEvent
+	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
+		AllEntities.register(event);
 	}
 
 	@SubscribeEvent

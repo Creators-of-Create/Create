@@ -1,11 +1,17 @@
 package com.simibubi.create.modules.logistics.block;
 
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.logistics.entity.CardboardBoxEntity;
+import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -168,10 +174,20 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 		if (!simulate && hasEnoughItems) {
 			World world = getWorld();
 			Vec3d pos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);
-			ItemEntity entityIn = new ItemEntity(world, pos.x, pos.y, pos.z, extracting);
-			entityIn.setMotion(Vec3d.ZERO);
+			Entity entityIn = null;
+
+			if (extracting.getItem() instanceof CardboardBoxItem) {
+				Direction face = getWorld().getBlockState(getPos()).get(HORIZONTAL_FACING).getOpposite();
+				entityIn = new CardboardBoxEntity(world, pos, extracting, face);
+				world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .25f, .05f);
+
+			} else {
+				entityIn = new ItemEntity(world, pos.x, pos.y, pos.z, extracting);
+				entityIn.setMotion(Vec3d.ZERO);
+				world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f, .1f);
+			}
+
 			world.addEntity(entityIn);
-			world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f, .1f);
 		}
 
 		return extracting;

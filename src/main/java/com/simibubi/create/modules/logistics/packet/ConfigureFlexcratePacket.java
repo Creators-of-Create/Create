@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.logistics.packet;
 
 import com.simibubi.create.foundation.packet.TileEntityConfigurationPacket;
-import com.simibubi.create.modules.logistics.block.FlexcrateTileEntity;
+import com.simibubi.create.modules.logistics.block.inventories.FlexcrateTileEntity;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;

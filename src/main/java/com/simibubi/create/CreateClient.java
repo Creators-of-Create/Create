@@ -54,6 +54,7 @@ public class CreateClient {
 		AllTileEntities.registerRenderers();
 		AllItems.registerColorHandlers();
 		AllBlocks.registerColorHandlers();
+		AllEntities.registerRenderers();
 
 		IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)

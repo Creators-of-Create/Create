@@ -29,7 +29,7 @@ public class DrillTileEntity extends KineticTileEntity implements ITickableTileE
 
 	private static final AtomicInteger NEXT_DRILL_ID = new AtomicInteger();
 
-	private static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
+	public static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
 	private int ticksUntilNextProgress;
 	private int destroyProgress;
 	private int drillId = -NEXT_DRILL_ID.incrementAndGet();
