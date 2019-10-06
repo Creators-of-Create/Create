@@ -4,12 +4,12 @@ import com.simibubi.create.ScreenResources;
 
 public enum PlacementPatterns {
 
-	Solid(ScreenResources.ICON_PATTERN_SOLID),
-	Checkered(ScreenResources.ICON_PATTERN_CHECKERED),
-	InverseCheckered(ScreenResources.ICON_PATTERN_CHECKERED_INVERSED),
-	Chance25(ScreenResources.ICON_PATTERN_CHANCE_25),
-	Chance50(ScreenResources.ICON_PATTERN_CHANCE_50),
-	Chance75(ScreenResources.ICON_PATTERN_CHANCE_75);
+	Solid(ScreenResources.I_PATTERN_SOLID),
+	Checkered(ScreenResources.I_PATTERN_CHECKERED),
+	InverseCheckered(ScreenResources.I_PATTERN_CHECKERED_INVERSED),
+	Chance25(ScreenResources.I_PATTERN_CHANCE_25),
+	Chance50(ScreenResources.I_PATTERN_CHANCE_50),
+	Chance75(ScreenResources.I_PATTERN_CHANCE_75);
 
 	public String translationKey;
 	public ScreenResources icon;

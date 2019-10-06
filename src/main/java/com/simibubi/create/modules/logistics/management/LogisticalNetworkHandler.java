@@ -25,26 +25,30 @@ public class LogisticalNetworkHandler {
 
 	public LogisticalNetwork handleAdded(LogisticalControllerTileEntity te) {
 		LogisticalNetwork networkByID = getNetworkByID(te.getWorld(), te.getNetworkId());
+		if (te.address == null || te.address.isEmpty()) {
+			te.address = networkByID.getNextAvailableAddress(te);
+			te.sendData();
+		}
 		networkByID.addController(te);
 		return networkByID;
 	}
-	
+
 	public void handleRemoved(LogisticalControllerTileEntity te) {
 		getNetworkByID(te.getWorld(), te.getNetworkId()).removeController(te);
 		removeIfEmpty(te.getWorld(), te.getNetworkId());
 	}
-	
+
 	public LogisticalNetwork getNetworkByID(IWorld world, UUID id) {
 		Map<UUID, LogisticalNetwork> worldNets = networks.get(world);
 		if (!worldNets.containsKey(id))
 			worldNets.put(id, new LogisticalNetwork());
 		return worldNets.get(id);
 	}
-	
+
 	private void removeIfEmpty(IWorld world, UUID id) {
 		Map<UUID, LogisticalNetwork> worldNets = networks.get(world);
 		if (worldNets.get(id).isEmpty())
 			worldNets.remove(id);
 	}
-	
+
 }

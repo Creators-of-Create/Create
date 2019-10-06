@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class ScreenElementRenderer {
 
@@ -34,6 +36,10 @@ public class ScreenElementRenderer {
 	}
 
 	public static void renderBlock(Supplier<BlockState> transformsAndState) {
+		renderBlock(transformsAndState, -1);
+	}
+
+	public static void renderBlock(Supplier<BlockState> transformsAndState, int color) {
 		GlStateManager.pushMatrix();
 
 		GlStateManager.enableBlend();
@@ -50,7 +56,18 @@ public class ScreenElementRenderer {
 		GlStateManager.scaled(50, -50, 50);
 		Minecraft mc = Minecraft.getInstance();
 		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		mc.getBlockRendererDispatcher().renderBlockBrightness(toRender, 1);
+
+		if (color == -1) {
+			mc.getBlockRendererDispatcher().renderBlockBrightness(toRender, 1);
+		} else {
+			GlStateManager.disableLighting();
+			GlStateManager.rotated(90, 0, 1, 0);
+			Vec3d rgb = ColorHelper.getRGB(color);
+			mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(
+					mc.getBlockRendererDispatcher().getModelForState(toRender), 1, (float) rgb.x, (float) rgb.y,
+					(float) rgb.z);
+			GlStateManager.enableLighting();
+		}
 
 		if (!toRender.getFluidState().isEmpty()) {
 			RenderHelper.disableStandardItemLighting();
@@ -58,7 +75,8 @@ public class ScreenElementRenderer {
 			BufferBuilder bufferbuilder = tessellator.getBuffer();
 			bufferbuilder.setTranslation(0, -300, 0);
 			bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-			mc.getBlockRendererDispatcher().renderFluid(new BlockPos(0, 300, 0), mc.world, bufferbuilder, toRender.getFluidState());
+			mc.getBlockRendererDispatcher().renderFluid(new BlockPos(0, 300, 0), mc.world, bufferbuilder,
+					toRender.getFluidState());
 			Tessellator.getInstance().draw();
 			bufferbuilder.setTranslation(0, 0, 0);
 		}

@@ -16,7 +16,7 @@ import com.simibubi.create.foundation.type.CountedItemsList;
 import com.simibubi.create.foundation.type.CountedItemsList.ItemStackEntry;
 import com.simibubi.create.modules.logistics.management.LogisticalNetwork;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity;
-import com.simibubi.create.modules.logistics.management.base.LogisticalInventoryControllerTileEntity;
+import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerTileEntity;
 import com.simibubi.create.modules.logistics.management.index.IndexContainerUpdatePacket.Type;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -91,7 +91,7 @@ public class LogisticalIndexTileEntity extends LogisticalControllerTileEntity im
 			return;
 		availableReceivers.clear();
 		for (LogisticalControllerTileEntity logisticalControllerTileEntity : network.receivers)
-			availableReceivers.add(logisticalControllerTileEntity.getName());
+			availableReceivers.add(logisticalControllerTileEntity.address);
 		sendData();
 	}
 	
@@ -165,7 +165,7 @@ public class LogisticalIndexTileEntity extends LogisticalControllerTileEntity im
 				if (!(te instanceof LogisticalInventoryControllerTileEntity))
 					continue;
 				CountedItemsList allItems = ((LogisticalInventoryControllerTileEntity) te).getAllItems();
-				controllers.put(te.getName(), allItems);
+				controllers.put(te.address, allItems);
 			}
 		}
 

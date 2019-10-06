@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateContainer;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateScreen;
+import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerContainer;
+import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerScreen;
 import com.simibubi.create.modules.logistics.management.index.LogisticalIndexContainer;
 import com.simibubi.create.modules.logistics.management.index.LogisticalIndexScreen;
 import com.simibubi.create.modules.schematics.block.SchematicTableContainer;
@@ -32,6 +34,7 @@ public enum AllContainers {
 	SCHEMATICANNON(SchematicannonContainer::new),
 	FLEXCRATE(FlexcrateContainer::new),
 	LOGISTICAL_INDEX(LogisticalIndexContainer::new),
+	LOGISTICAL_CONTROLLER(LogisticalInventoryControllerContainer::new),
 	
 	;
 
@@ -58,6 +61,7 @@ public enum AllContainers {
 		bind(SCHEMATICANNON, SchematicannonScreen::new);
 		bind(FLEXCRATE, FlexcrateScreen::new);
 		bind(LOGISTICAL_INDEX, LogisticalIndexScreen::new);
+		bind(LOGISTICAL_CONTROLLER, LogisticalInventoryControllerScreen::new);
 	}
 
 	@OnlyIn(Dist.CLIENT)

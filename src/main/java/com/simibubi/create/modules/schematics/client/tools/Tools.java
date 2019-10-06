@@ -9,12 +9,12 @@ import com.simibubi.create.foundation.utility.Lang;
 
 public enum Tools {
 
-	Deploy(new DeployTool(), ScreenResources.ICON_TOOL_DEPLOY),
-	Move(new MoveTool(), ScreenResources.ICON_TOOL_MOVE_XZ),
-	MoveY(new MoveVerticalTool(), ScreenResources.ICON_TOOL_MOVE_Y),
-	Rotate(new RotateTool(), ScreenResources.ICON_TOOL_ROTATE),
-	Print(new PlaceTool(), ScreenResources.ICON_CONFIRM),
-	Flip(new FlipTool(), ScreenResources.ICON_TOOL_MIRROR);
+	Deploy(new DeployTool(), ScreenResources.I_TOOL_DEPLOY),
+	Move(new MoveTool(), ScreenResources.I_TOOL_MOVE_XZ),
+	MoveY(new MoveVerticalTool(), ScreenResources.I_TOOL_MOVE_Y),
+	Rotate(new RotateTool(), ScreenResources.I_TOOL_ROTATE),
+	Print(new PlaceTool(), ScreenResources.I_CONFIRM),
+	Flip(new FlipTool(), ScreenResources.I_TOOL_MIRROR);
 
 	private ISchematicTool tool;
 	private ScreenResources icon;

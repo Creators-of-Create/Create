@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.logistics.management.base;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.Type;
 
 import net.minecraft.item.BlockItem;
@@ -22,6 +23,11 @@ public class LogisticalControllerItem extends BlockItem {
 		if (this.isInGroup(group)) {
 			items.add(new ItemStack(this));
 		}
+	}
+	
+	@Override
+	public String getTranslationKey(ItemStack stack) {
+		return "item." + Create.ID + "." + getRegistryName().getPath();
 	}
 
 	public Type getType() {

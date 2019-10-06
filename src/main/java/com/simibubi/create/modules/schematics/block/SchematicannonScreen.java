@@ -72,11 +72,11 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		widgets.clear();
 
 		// Play Pause Stop
-		playButton = new IconButton(x + 70, y + 55, ScreenResources.ICON_PLAY);
+		playButton = new IconButton(x + 70, y + 55, ScreenResources.I_PLAY);
 		playIndicator = new Indicator(x + 70, y + 50, "");
-		pauseButton = new IconButton(x + 88, y + 55, ScreenResources.ICON_PAUSE);
+		pauseButton = new IconButton(x + 88, y + 55, ScreenResources.I_PAUSE);
 		pauseIndicator = new Indicator(x + 88, y + 50, "");
-		resetButton = new IconButton(x + 106, y + 55, ScreenResources.ICON_STOP);
+		resetButton = new IconButton(x + 106, y + 55, ScreenResources.I_STOP);
 		resetIndicator = new Indicator(x + 106, y + 50, "");
 		resetIndicator.state = State.RED;
 		Collections.addAll(widgets, playButton, playIndicator, pauseButton, pauseIndicator, resetButton,
@@ -85,9 +85,9 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		// Replace settings
 		replaceLevelButtons = new Vector<>(4);
 		replaceLevelIndicators = new Vector<>(4);
-		List<ScreenResources> icons = ImmutableList.of(ScreenResources.ICON_DONT_REPLACE,
-				ScreenResources.ICON_REPLACE_SOLID, ScreenResources.ICON_REPLACE_ANY,
-				ScreenResources.ICON_REPLACE_EMPTY);
+		List<ScreenResources> icons = ImmutableList.of(ScreenResources.I_DONT_REPLACE,
+				ScreenResources.I_REPLACE_SOLID, ScreenResources.I_REPLACE_ANY,
+				ScreenResources.I_REPLACE_EMPTY);
 		List<String> toolTips = ImmutableList.of(Lang.translate("gui.schematicannon.option.dontReplaceSolid"),
 				Lang.translate("gui.schematicannon.option.replaceWithSolid"),
 				Lang.translate("gui.schematicannon.option.replaceWithAny"),
@@ -102,12 +102,12 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		widgets.addAll(replaceLevelIndicators);
 
 		// Other Settings
-		skipMissingButton = new IconButton(x + 106, y + 101, ScreenResources.ICON_SKIP_MISSING);
+		skipMissingButton = new IconButton(x + 106, y + 101, ScreenResources.I_SKIP_MISSING);
 		skipMissingButton.setToolTip(Lang.translate("gui.schematicannon.option.skipMissing"));
 		skipMissingIndicator = new Indicator(x + 106, y + 96, "");
 		Collections.addAll(widgets, skipMissingButton, skipMissingIndicator);
 
-		skipTilesButton = new IconButton(x + 124, y + 101, ScreenResources.ICON_SKIP_TILES);
+		skipTilesButton = new IconButton(x + 124, y + 101, ScreenResources.I_SKIP_TILES);
 		skipTilesButton.setToolTip(Lang.translate("gui.schematicannon.option.skipTileEntities"));
 		skipTilesIndicator = new Indicator(x + 124, y + 96, "");
 		Collections.addAll(widgets, skipTilesButton, skipTilesIndicator);

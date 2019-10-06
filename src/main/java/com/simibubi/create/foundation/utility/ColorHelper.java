@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.utility;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import net.minecraft.util.math.Vec3d;
+
 public class ColorHelper {
 
 	public static int rainbowColor(int timeStep) {
@@ -34,24 +36,29 @@ public class ColorHelper {
 		int g2 = (color2 >> 8) & 0xFF;
 		int b2 = color2 & 0xFF;
 
-		int color = ((int) (r1 + (r2 - r1) * w) << 16) 
-				+ ((int) (g1 + (g2 - g1) * w) << 8) 
-				+ (int) (b1 + (b2 - b1) * w);
+		int color = ((int) (r1 + (r2 - r1) * w) << 16) + ((int) (g1 + (g2 - g1) * w) << 8) + (int) (b1 + (b2 - b1) * w);
 
 		return color;
 	}
-	
+
 	public static void glColor(int color) {
 		color = mixColors(color, 0xFFFFFF, .5f);
 		int r = (color >> 16);
 		int g = (color >> 8) & 0xFF;
 		int b = color & 0xFF;
-		
+
 		GlStateManager.color4f(r / 256f, g / 256f, b / 256f, 1);
 	}
-	
+
 	public static void glResetColor() {
 		GlStateManager.color4f(1, 1, 1, 1);
 	}
-	
+
+	public static Vec3d getRGB(int color) {
+		int r = (color >> 16);
+		int g = (color >> 8) & 0xFF;
+		int b = color & 0xFF;
+		return new Vec3d(r, g, b).scale(1 / 256d);
+	}
+
 }

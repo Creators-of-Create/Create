@@ -11,11 +11,14 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
+import com.simibubi.create.foundation.block.IWithContainer;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.modules.logistics.management.base.LogisticalCasingBlock.Part;
 import com.simibubi.create.modules.logistics.management.controller.CalculationTileEntity;
+import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerTileEntity;
 import com.simibubi.create.modules.logistics.management.controller.RequestTileEntity;
 import com.simibubi.create.modules.logistics.management.controller.StorageTileEntity;
 import com.simibubi.create.modules.logistics.management.controller.SupplyTileEntity;
@@ -27,10 +30,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
@@ -46,6 +49,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class LogisticalControllerBlock extends DirectionalBlock
 		implements IWithoutBlockItem, IWithTileEntity<LogisticalControllerTileEntity> {
@@ -128,20 +132,34 @@ public class LogisticalControllerBlock extends DirectionalBlock
 	}
 
 	@Override
+	public String getTranslationKey() {
+		return "block." + Create.ID + ".logistical_controller";
+	}
+
+	public static String getControllerTypeTranslationKey(BlockState state) {
+		return "item." + Create.ID + ".logistical_controller_" + state.get(TYPE).name().toLowerCase();
+	}
+
+	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (player.isSneaking() || !player.isAllowEdit())
 			return false;
-		ItemStack held = player.getHeldItem(handIn);
-		if (held.getItem() != Items.NAME_TAG)
-			return false;
-		if (!held.hasDisplayName())
+		if (!state.hasTileEntity())
 			return false;
 
-		withTileEntityDo(worldIn, pos, te -> {
-			te.setName(held.getDisplayName().getUnformattedComponentText());
-		});
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (!(te instanceof LogisticalInventoryControllerTileEntity))
+			return false;
+		if (state.get(TYPE) == Type.CALCULATION)
+			return false;
+		if (AllItems.LOGISTICAL_DIAL.typeOf(player.getHeldItem(handIn)))
+			return false;
+		if (worldIn.isRemote)
+			return true;
 
+		IWithContainer<?, ?> cte = (IWithContainer<?, ?>) te;
+		NetworkHooks.openGui((ServerPlayerEntity) player, cte, cte::sendToContainer);
 		return true;
 	}
 

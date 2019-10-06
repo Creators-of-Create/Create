@@ -72,9 +72,9 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			widgets.add(schematicsLabel);
 		}
 
-		confirmButton = new IconButton(mainLeft + 69, mainTop + 55, ScreenResources.ICON_CONFIRM);
-		folderButton = new IconButton(mainLeft + 204, mainTop + 6, ScreenResources.ICON_OPEN_FOLDER);
-		refreshButton = new IconButton(mainLeft + 204, mainTop + 26, ScreenResources.ICON_REFRESH);
+		confirmButton = new IconButton(mainLeft + 69, mainTop + 55, ScreenResources.I_CONFIRM);
+		folderButton = new IconButton(mainLeft + 204, mainTop + 6, ScreenResources.I_OPEN_FOLDER);
+		refreshButton = new IconButton(mainLeft + 204, mainTop + 26, ScreenResources.I_REFRESH);
 		widgets.add(confirmButton);
 		widgets.add(folderButton);
 		widgets.add(refreshButton);

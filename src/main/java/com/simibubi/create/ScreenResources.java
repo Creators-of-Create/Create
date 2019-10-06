@@ -46,6 +46,13 @@ public enum ScreenResources {
 	INDEX_SEARCH("index.png", 0, 99, 28, 19),
 	INDEX_SEARCH_OVERLAY("widgets.png", 0, 81, 176, 20),
 
+	LOGISTICAL_CONTROLLER_TRIM("controller.png", 178, 6),
+	LOGISTICAL_CONTROLLER("controller.png", 0, 6, 185, 71),
+
+	ITEM_COUNT_SCROLLAREA("controller.png", 62, 83, 22, 10),
+	BIG_SLOT("controller.png", 0, 83, 26, 26),
+	SHIPPING_SLOT("controller.png", 26, 83, 18, 21),
+	RECEIVING_SLOT("controller.png", 44, 83, 18, 21),
 	SLOT_FRAME("index.png", 0, 118, 18, 18),
 	SLOT_INNER("index.png", 18, 118, 18, 18),
 	DISABLED_SLOT_FRAME("index.png", 0, 136, 18, 18),
@@ -77,43 +84,50 @@ public enum ScreenResources {
 	BLUEPRINT_SLOT("widgets.png", 90, 0, 24, 24),
 
 	// Icons
-	ICON_NONE("icons.png", 16, 16, 16, 16),
-	ICON_ADD("icons.png", 16, 16),
-	ICON_TRASH("icons.png", 16, 0, 16, 16),
-	ICON_3x3("icons.png", 32, 0, 16, 16),
-	ICON_TARGET("icons.png", 48, 0, 16, 16),
-	ICON_CONFIRM("icons.png", 0, 16, 16, 16),
+	I_NONE(16, 16),
+	I_ADD(0, 0),
+	I_TRASH(16, 0),
+	I_3x3(32, 0),
+	I_TARGET(48, 0),
+	I_CONFIRM(0, 16),
 
-	ICON_OPEN_FOLDER("icons.png", 32, 16, 16, 16),
-	ICON_REFRESH("icons.png", 48, 16, 16, 16),
+	I_OPEN_FOLDER(32, 16),
+	I_REFRESH(48, 16),
 
-	ICON_DONT_REPLACE("icons.png", 0, 32, 16, 16),
-	ICON_REPLACE_SOLID("icons.png", 16, 32, 16, 16),
-	ICON_REPLACE_ANY("icons.png", 32, 32, 16, 16),
-	ICON_REPLACE_EMPTY("icons.png", 48, 32, 16, 16),
+	I_DONT_REPLACE(0, 32),
+	I_REPLACE_SOLID(16, 32),
+	I_REPLACE_ANY(32, 32),
+	I_REPLACE_EMPTY(48, 32),
 
-	ICON_TOOL_DEPLOY("icons.png", 0, 48, 16, 16),
-	ICON_SKIP_MISSING("icons.png", 16, 48, 16, 16),
-	ICON_SKIP_TILES("icons.png", 32, 48, 16, 16),
+	I_TOOL_DEPLOY(0, 48),
+	I_SKIP_MISSING(16, 48),
+	I_SKIP_TILES(32, 48),
 
-	ICON_TOOL_MOVE_XZ("icons.png", 0, 64, 16, 16),
-	ICON_TOOL_MOVE_Y("icons.png", 16, 64, 16, 16),
-	ICON_TOOL_ROTATE("icons.png", 32, 64, 16, 16),
-	ICON_TOOL_MIRROR("icons.png", 48, 64, 16, 16),
+	I_TOOL_MOVE_XZ(0, 64),
+	I_TOOL_MOVE_Y(16, 64),
+	I_TOOL_ROTATE(32, 64),
+	I_TOOL_MIRROR(48, 64),
 
-	ICON_PLAY("icons.png", 0, 80, 16, 16),
-	ICON_PAUSE("icons.png", 16, 80, 16, 16),
-	ICON_STOP("icons.png", 32, 80, 16, 16),
+	I_PLAY(0, 80),
+	I_PAUSE(16, 80),
+	I_STOP(32, 80),
 
-	ICON_PATTERN_SOLID("icons.png", 0, 96, 16, 16),
-	ICON_PATTERN_CHECKERED("icons.png", 16, 96, 16, 16),
-	ICON_PATTERN_CHECKERED_INVERSED("icons.png", 32, 96, 16, 16),
-	ICON_PATTERN_CHANCE_25("icons.png", 48, 96, 16, 16),
-	ICON_PATTERN_CHANCE_50("icons.png", 0, 112, 16, 16),
-	ICON_PATTERN_CHANCE_75("icons.png", 16, 112, 16, 16),
-	ICON_FOLLOW_DIAGONAL("icons.png", 32, 112, 16, 16),
-	ICON_FOLLOW_MATERIAL("icons.png", 48, 112, 16, 16),
+	I_PATTERN_SOLID(0, 96),
+	I_PATTERN_CHECKERED(16, 96),
+	I_PATTERN_CHECKERED_INVERSED(32, 96),
+	I_PATTERN_CHANCE_25(48, 96),
+	I_PATTERN_CHANCE_50(0, 112),
+	I_PATTERN_CHANCE_75(16, 112),
+	I_FOLLOW_DIAGONAL(32, 112),
+	I_FOLLOW_MATERIAL(48, 112),
 
+	I_PRIORITY_VERY_LOW(64, 0),
+	I_PRIORITY_LOW(80, 0),
+	I_PRIORITY_HIGH(96, 0),
+	I_PRIORITY_VERY_HIGH(112, 0),
+	I_ACTIVE(64, 16),
+	I_PASSIVE(80, 16),
+	
 	;
 
 	public static final int FONT_COLOR = 0x575F7A;
@@ -124,6 +138,10 @@ public enum ScreenResources {
 
 	private ScreenResources(String location, int width, int height) {
 		this(location, 0, 0, width, height);
+	}
+
+	private ScreenResources(int startX, int startY) {
+		this("icons.png", startX, startY, 16, 16);
 	}
 
 	private ScreenResources(String location, int startX, int startY, int width, int height) {

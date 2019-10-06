@@ -73,19 +73,19 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 
 		widgets.clear();
 		replaceModeIndicator = new Indicator(i + 51, j + 36, "");
-		replaceModeButton = new IconButton(i + 51, j + 41, ScreenResources.ICON_REPLACE_SOLID);
+		replaceModeButton = new IconButton(i + 51, j + 41, ScreenResources.I_REPLACE_SOLID);
 		if (nbt.contains("Replace") && nbt.getBoolean("Replace"))
 			replaceModeIndicator.state = State.ON;
 		replaceModeButton.setToolTip(Lang.translate("gui.blockzapper.replaceMode"));
 
 		spreadDiagonallyIndicator = new Indicator(i + 74, j + 36, "");
-		spreadDiagonallyButton = new IconButton(i + 74, j + 41, ScreenResources.ICON_FOLLOW_DIAGONAL);
+		spreadDiagonallyButton = new IconButton(i + 74, j + 41, ScreenResources.I_FOLLOW_DIAGONAL);
 		if (nbt.contains("SearchDiagonal") && nbt.getBoolean("SearchDiagonal"))
 			spreadDiagonallyIndicator.state = State.ON;
 		spreadDiagonallyButton.setToolTip(Lang.translate("gui.blockzapper.searchDiagonal"));
 
 		spreadMaterialIndicator = new Indicator(i + 92, j + 36, "");
-		spreadMaterialButton = new IconButton(i + 92, j + 41, ScreenResources.ICON_FOLLOW_MATERIAL);
+		spreadMaterialButton = new IconButton(i + 92, j + 41, ScreenResources.I_FOLLOW_MATERIAL);
 		if (nbt.contains("SearchFuzzy") && nbt.getBoolean("SearchFuzzy"))
 			spreadMaterialIndicator.state = State.ON;
 		spreadMaterialButton.setToolTip(Lang.translate("gui.blockzapper.searchFuzzy"));

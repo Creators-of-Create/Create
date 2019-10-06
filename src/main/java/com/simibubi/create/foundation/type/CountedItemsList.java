@@ -144,7 +144,7 @@ public class CountedItemsList {
 		return getItemSet(stack);
 	}
 
-	public class ItemStackEntry implements Comparable<ItemStackEntry> {
+	public static class ItemStackEntry implements Comparable<ItemStackEntry> {
 		public ItemStack stack;
 		public int amount;
 

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;

@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.logistics.management.controller;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.modules.logistics.management.base.LogisticalInventoryControllerTileEntity;
 
 public class RequestTileEntity extends LogisticalInventoryControllerTileEntity {
 

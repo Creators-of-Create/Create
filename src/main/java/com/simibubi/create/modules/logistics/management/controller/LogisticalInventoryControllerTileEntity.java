@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics.management.base;
+package com.simibubi.create.modules.logistics.management.controller;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
@@ -12,11 +12,16 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.foundation.block.IWithContainer;
 import com.simibubi.create.foundation.type.CombinedCountedItemsList;
 import com.simibubi.create.foundation.type.CountedItemsList;
 import com.simibubi.create.foundation.type.CountedItemsList.ItemStackEntry;
 import com.simibubi.create.foundation.utility.ItemHelper;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
+import com.simibubi.create.modules.logistics.management.base.LogisticalCasingTileEntity;
+import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock;
+import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity;
+import com.simibubi.create.modules.logistics.management.base.LogisticalTask;
 import com.simibubi.create.modules.logistics.management.base.LogisticalTask.DepositTask;
 import com.simibubi.create.modules.logistics.management.base.LogisticalTask.SupplyTask;
 
@@ -24,6 +29,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -34,7 +40,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class LogisticalInventoryControllerTileEntity extends LogisticalControllerTileEntity {
+public abstract class LogisticalInventoryControllerTileEntity extends LogisticalControllerTileEntity
+		implements IWithContainer<LogisticalInventoryControllerTileEntity, LogisticalInventoryControllerContainer> {
 
 	protected Map<BlockPos, ConnectedInventory> observedInventories = new HashMap<>();
 	protected Map<IItemHandler, ConnectedInventory> inventoryByHandler = new HashMap<>();
@@ -43,6 +50,8 @@ public abstract class LogisticalInventoryControllerTileEntity extends Logistical
 
 	protected LazyOptional<IItemHandler> shippingInventory;
 	protected boolean tryInsertBox;
+
+	public boolean isActive;
 
 	public LogisticalInventoryControllerTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
@@ -56,6 +65,7 @@ public abstract class LogisticalInventoryControllerTileEntity extends Logistical
 			ShippingInventory inv = (ShippingInventory) shippingInventory.orElse(null);
 			inv.deserializeNBT(compound.getCompound("ShippingInventory"));
 		}
+		isActive = compound.getBoolean("Active");
 	}
 
 	public void inventoryChanged(BlockPos pos) {
@@ -96,7 +106,7 @@ public abstract class LogisticalInventoryControllerTileEntity extends Logistical
 	protected void notifyIndexers(CountedItemsList updates) {
 		if (network == null)
 			return;
-		network.indexers.forEach(indexer -> indexer.handleUpdatedController(getName(), updates));
+		network.indexers.forEach(indexer -> indexer.handleUpdatedController(address, updates));
 	}
 
 	@Override
@@ -275,6 +285,7 @@ public abstract class LogisticalInventoryControllerTileEntity extends Logistical
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		shippingInventory.ifPresent(inv -> compound.put("ShippingInventory", ((ShippingInventory) inv).serializeNBT()));
+		compound.putBoolean("Active", isActive);
 		return super.write(compound);
 	}
 
@@ -324,25 +335,40 @@ public abstract class LogisticalInventoryControllerTileEntity extends Logistical
 		}
 	}
 
+	@Override
+	public IContainerFactory<LogisticalInventoryControllerTileEntity, LogisticalInventoryControllerContainer> getContainerFactory() {
+		return LogisticalInventoryControllerContainer::new;
+	}
+
+	@Override
+	public void sendToContainer(PacketBuffer buffer) {
+		IWithContainer.super.sendToContainer(buffer);
+	}
+
 	protected abstract ShippingInventory createInventory();
 
 	public class ShippingInventory extends ItemStackHandler {
 
 		static final int SHIPPING = 0;
 		static final int RECEIVING = 1;
+		static final int FILTER = 2;
+		int filterAmount = 0;
+
 		boolean ships;
 		boolean receives;
 
 		public ShippingInventory(boolean ships, boolean receives) {
-			super(2);
+			super(3);
 			this.ships = ships;
 			this.receives = receives;
 		}
 
 		@Override
 		public boolean isItemValid(int slot, ItemStack stack) {
+			if (slot == FILTER)
+				return true;
 			if (slot == RECEIVING && receives)
-				return stack.getItem() instanceof CardboardBoxItem && CardboardBoxItem.matchAddress(stack, name);
+				return stack.getItem() instanceof CardboardBoxItem && CardboardBoxItem.matchAddress(stack, address);
 			return false;
 		}
 
@@ -355,6 +381,15 @@ public abstract class LogisticalInventoryControllerTileEntity extends Logistical
 			if (slot == RECEIVING)
 				return ItemStack.EMPTY;
 			return super.extractItem(slot, amount, simulate);
+		}
+
+		@Override
+		public void setStackInSlot(int slot, ItemStack stack) {
+			if (slot == FILTER) {
+				stack = stack.copy();
+				stack.setCount(1);
+			}
+			super.setStackInSlot(slot, stack);
 		}
 
 		public void createPackage(List<ItemStack> contents, String address) {
@@ -388,6 +423,7 @@ public abstract class LogisticalInventoryControllerTileEntity extends Logistical
 			CompoundNBT tag = super.serializeNBT();
 			tag.putBoolean("Ships", ships);
 			tag.putBoolean("Receives", receives);
+			tag.putInt("FilterAmount", filterAmount);
 			return tag;
 		}
 
@@ -395,6 +431,7 @@ public abstract class LogisticalInventoryControllerTileEntity extends Logistical
 		public void deserializeNBT(CompoundNBT nbt) {
 			ships = nbt.getBoolean("Ships");
 			receives = nbt.getBoolean("Receives");
+			filterAmount = nbt.getInt("FilterAmount");
 			super.deserializeNBT(nbt);
 		}
 	}

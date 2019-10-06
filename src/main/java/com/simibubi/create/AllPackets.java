@@ -11,6 +11,7 @@ import com.simibubi.create.modules.contraptions.receivers.constructs.ConfigureCh
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunBeamPacket;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.modules.logistics.block.diodes.ConfigureFlexpeaterPacket;
+import com.simibubi.create.modules.logistics.management.controller.LogisticalControllerConfigurationPacket;
 import com.simibubi.create.modules.logistics.management.index.IndexContainerUpdatePacket;
 import com.simibubi.create.modules.logistics.management.index.IndexOrderRequest;
 import com.simibubi.create.modules.logistics.packet.ConfigureFlexcratePacket;
@@ -35,6 +36,8 @@ public enum AllPackets {
 	CONFIGURE_CHASSIS(ConfigureChassisPacket.class, ConfigureChassisPacket::new),
 	CONFIGURE_MOTOR(ConfigureMotorPacket.class, ConfigureMotorPacket::new),
 	CONFIGURE_FLEXPEATER(ConfigureFlexpeaterPacket.class, ConfigureFlexpeaterPacket::new),
+	CONFIGURE_LOGISTICAL_CONTROLLER(LogisticalControllerConfigurationPacket.class,
+			LogisticalControllerConfigurationPacket::new),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new),
 	INDEX_ORDER_REQUEST(IndexOrderRequest.class, IndexOrderRequest::new),

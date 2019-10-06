@@ -18,10 +18,11 @@ public abstract class LogisticalControllerTileEntity extends SyncedTileEntity
 		implements Comparable<LogisticalControllerTileEntity>, ITickableTileEntity {
 
 	public static final int COOLDOWN = 20;
+
+	public Priority priority = Priority.LOW;
+	public String address = "";
 	
-	protected Priority priority = Priority.LOW;
 	protected LogisticalNetwork network;
-	protected String name = "";
 	protected UUID networkId;
 	protected boolean initialize;
 	protected boolean checkTasks;
@@ -39,7 +40,7 @@ public abstract class LogisticalControllerTileEntity extends SyncedTileEntity
 			initialize();
 			return;
 		}
-		
+
 		if (taskCooldown > 0)
 			taskCooldown--;
 	}
@@ -55,20 +56,12 @@ public abstract class LogisticalControllerTileEntity extends SyncedTileEntity
 			handleRemoved();
 		super.remove();
 	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getName() {
-		return name;
-	}
 
 	@Override
 	public boolean hasFastRenderer() {
 		return true;
 	}
-	
+
 	public void notifyTaskUpdate() {
 		checkTasks = true;
 	}
@@ -77,7 +70,8 @@ public abstract class LogisticalControllerTileEntity extends SyncedTileEntity
 	public CompoundNBT write(CompoundNBT compound) {
 		if (networkId != null)
 			compound.putUniqueId("NetworkID", networkId);
-		compound.putString("Address", name);
+		compound.putString("Address", address);
+		compound.putInt("Priority", priority.ordinal());
 		return super.write(compound);
 	}
 
@@ -89,7 +83,8 @@ public abstract class LogisticalControllerTileEntity extends SyncedTileEntity
 	public void read(CompoundNBT compound) {
 		if (compound.contains("NetworkIDLeast"))
 			networkId = compound.getUniqueId("NetworkID");
-		name = compound.getString("Address");
+		address = compound.getString("Address");
+		priority = Priority.values()[compound.getInt("Priority")];
 		super.read(compound);
 	}
 
@@ -149,8 +144,12 @@ public abstract class LogisticalControllerTileEntity extends SyncedTileEntity
 		return network;
 	}
 
+	public Priority getPriority() {
+		return priority;
+	}
+
 	public static enum Priority {
-		LOWEST, LOW, MEDIUM, HIGH, HIGHEST;
+		HIGHEST, HIGH, LOWEST, LOW;
 	}
 
 }

@@ -24,6 +24,13 @@
 	"item.create.flour": "Wheat Flour",
 	"item.create.dough": "Dough",
 	
+	"item.create.logistical_controller_supply": "Item Supply",
+	"item.create.logistical_controller_request": "Item Request",
+	"item.create.logistical_controller_storage": "Item Storage",
+	"item.create.logistical_controller_calculation": "Ingredient Calculator",
+	"item.create.logistical_controller_transactions": "Task Manager",
+	"item.create.logistical_dial": "Logistical Dial",
+	
 	"item.create.blazing_pickaxe": "Blazing Pickaxe",
 	"item.create.blazing_shovel": "Blazing Shovel",
 	"item.create.blazing_axe": "Blazing Axe",
@@ -75,6 +82,9 @@
 	"block.create.pulse_repeater": "Pulse Repeater",
 	"block.create.flexpeater": "FlexPeater",
 	"block.create.entity_detector": "Belt Observer",
+	"block.create.logistical_casing": "Logistical Casing",
+	"block.create.logistical_controller": "Logistical Controller",
+	"block.create.logistical_index": "Logistical Index",
 	
 	"block.create.tiled_glass": "Tiled Glass",
 	"block.create.tiled_glass_pane": "Tiled Glass Pane",
@@ -343,6 +353,16 @@
 	"create.gui.index.title": "Logistical Index",
 	"create.gui.index.targetAddressSelect": "Destination Address",
 	"create.gui.index.confirmOrder": "Confirm Order",
+	
+	"create.logistics.priority": "Priority",
+	"create.logistics.priority.lowest": "Lowest",
+	"create.logistics.priority.low": "Low",
+	"create.logistics.priority.high": "High",
+	"create.logistics.priority.highest": "Highest",
+	"create.gui.logistical_controller.active_mode": "Active Mode",
+	"create.gui.logistical_controller.passive_mode": "Passive Mode",	
+	"create.gui.requester.requestedItemCount": "Requested Amount",
+	"create.gui.storage.passiveModeOnly": "Item Storage is Passive only",
 	
 	"create.tooltip.holdKey": "Hold [%1$s]",
 	"create.tooltip.holdKeyOrKey": "Hold [%1$s] or [%2$s]",

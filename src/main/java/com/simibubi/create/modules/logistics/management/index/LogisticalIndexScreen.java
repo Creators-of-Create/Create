@@ -2,7 +2,6 @@ package com.simibubi.create.modules.logistics.management.index;
 
 import static com.simibubi.create.ScreenResources.DISABLED_SLOT_FRAME;
 import static com.simibubi.create.ScreenResources.DISABLED_SLOT_INNER;
-import static com.simibubi.create.ScreenResources.ICON_CONFIRM;
 import static com.simibubi.create.ScreenResources.INDEX_BOTTOM;
 import static com.simibubi.create.ScreenResources.INDEX_BOTTOM_TRIM;
 import static com.simibubi.create.ScreenResources.INDEX_MIDDLE;
@@ -15,6 +14,7 @@ import static com.simibubi.create.ScreenResources.INDEX_TAB;
 import static com.simibubi.create.ScreenResources.INDEX_TAB_ACTIVE;
 import static com.simibubi.create.ScreenResources.INDEX_TOP;
 import static com.simibubi.create.ScreenResources.INDEX_TOP_TRIM;
+import static com.simibubi.create.ScreenResources.I_CONFIRM;
 import static com.simibubi.create.ScreenResources.SLOT_FRAME;
 import static com.simibubi.create.ScreenResources.SLOT_INNER;
 
@@ -23,8 +23,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -44,12 +42,8 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.GameSettings;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -118,14 +112,14 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 		receiverTextField.setEnableBackgroundDrawing(false);
 		receiverTextField.setMaxStringLength(256);
 		receiverTextField.func_212954_a(this::onReceiverTextChanged);
-		if (initialTargetAddress != null) 
+		if (initialTargetAddress != null)
 			receiverTextField.setText(initialTargetAddress);
 		receiverTextField.setFocused2(false);
 
 		receiverScrollInput = new SelectionScrollInput(guiLeft + 24, guiTop + 235, 126, 18).forOptions(receivers)
 				.titled(receiverScrollInputTitle).calling(this::onReceiverScrollInputChanged);
 
-		orderButton = new IconButton(guiLeft + 152, guiTop + 235, ICON_CONFIRM);
+		orderButton = new IconButton(guiLeft + 152, guiTop + 235, I_CONFIRM);
 		orderButton.active = false;
 		orderButton.setToolTip(orderButtonTooltip);
 
@@ -161,6 +155,7 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 
 		if (container.te.update) {
 			buildDisplayedItems();
+			((SelectionScrollInput) receiverScrollInput).forOptions(container.te.availableReceivers);
 			container.te.update = false;
 		}
 
@@ -515,7 +510,7 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 		int color = 0xFFFFFF;
 		if (orderedFully) {
 			color = ColorHelper.mixColors(container.te.getColor(), 0, 0.5f);
-			text = "0";
+			text = "\\u2714";
 		}
 
 		this.renderItemOverlayIntoGUI(font, stack, slotX, slotY, text, color);
@@ -564,82 +559,6 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 		GlStateManager.color4f(1, 1, 1, cursorLight.get(pt));
 		ScreenResources.SELECTED_SLOT_INNER.draw(this, x, y);
 		resetColor();
-	}
-
-	public void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition,
-			@Nullable String text, int textColor) {
-		if (!stack.isEmpty()) {
-			if (stack.getItem().showDurabilityBar(stack)) {
-				GlStateManager.disableLighting();
-				GlStateManager.disableDepthTest();
-				GlStateManager.disableTexture();
-				GlStateManager.disableAlphaTest();
-				GlStateManager.disableBlend();
-				Tessellator tessellator = Tessellator.getInstance();
-				BufferBuilder bufferbuilder = tessellator.getBuffer();
-				double health = stack.getItem().getDurabilityForDisplay(stack);
-				int i = Math.round(13.0F - (float) health * 13.0F);
-				int j = stack.getItem().getRGBDurabilityForDisplay(stack);
-				this.draw(bufferbuilder, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
-				this.draw(bufferbuilder, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255,
-						255);
-				GlStateManager.enableBlend();
-				GlStateManager.enableAlphaTest();
-				GlStateManager.enableTexture();
-				GlStateManager.enableLighting();
-				GlStateManager.enableDepthTest();
-			}
-
-			if (stack.getCount() != 1 || text != null) {
-				String s = text == null ? String.valueOf(stack.getCount()) : text;
-				GlStateManager.disableLighting();
-				GlStateManager.disableDepthTest();
-				GlStateManager.disableBlend();
-				GlStateManager.pushMatrix();
-
-				int guiScaleFactor = (int) minecraft.mainWindow.getGuiScaleFactor();
-				GlStateManager.translated((float) (xPosition + 16.5f), (float) (yPosition + 16.5f), 0);
-
-				double scale = 1;
-				switch (guiScaleFactor) {
-				case 1:
-					scale = 2060 / 2048d;
-					break;
-				case 2:
-					scale = .5;
-					break;
-				case 3:
-					scale = .675;
-					break;
-				case 4:
-					scale = .75;
-					break;
-				default:
-					scale = ((float) guiScaleFactor - 1) / guiScaleFactor;
-				}
-
-				GlStateManager.scaled(scale, scale, 0);
-				GlStateManager.translated(-fr.getStringWidth(s) - (guiScaleFactor > 1 ? 0 : -.5f),
-						-font.FONT_HEIGHT + (guiScaleFactor > 1 ? 1 : 1.75f), 0);
-				fr.drawStringWithShadow(s, 0, 0, textColor);
-
-				GlStateManager.popMatrix();
-				GlStateManager.enableBlend();
-				GlStateManager.enableLighting();
-				GlStateManager.enableDepthTest();
-				GlStateManager.enableBlend();
-			}
-		}
-	}
-
-	private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue,
-			int alpha) {
-		renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-		renderer.pos((double) (x + 0), (double) (y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
-		renderer.pos((double) (x + 0), (double) (y + height), 0.0D).color(red, green, blue, alpha).endVertex();
-		renderer.pos((double) (x + width), (double) (y + height), 0.0D).color(red, green, blue, alpha).endVertex();
-		renderer.pos((double) (x + width), (double) (y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
-		Tessellator.getInstance().draw();
 	}
 
 }
