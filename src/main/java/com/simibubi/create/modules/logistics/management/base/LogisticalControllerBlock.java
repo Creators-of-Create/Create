@@ -1,11 +1,17 @@
 package com.simibubi.create.modules.logistics.management.base;
 
+import static com.simibubi.create.AllItems.LOGISTICAL_CONTROLLER_CALCULATION;
+import static com.simibubi.create.AllItems.LOGISTICAL_CONTROLLER_REQUEST;
+import static com.simibubi.create.AllItems.LOGISTICAL_CONTROLLER_STORAGE;
+import static com.simibubi.create.AllItems.LOGISTICAL_CONTROLLER_SUPPLY;
+import static com.simibubi.create.AllItems.LOGISTICAL_CONTROLLER_TRANSACTIONS;
 import static com.simibubi.create.modules.logistics.management.base.LogisticalCasingBlock.ACTIVE;
 import static com.simibubi.create.modules.logistics.management.base.LogisticalCasingBlock.PART;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,6 +49,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -52,7 +59,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class LogisticalControllerBlock extends DirectionalBlock
-		implements IWithoutBlockItem, IWithTileEntity<LogisticalControllerTileEntity> {
+		implements IWithoutBlockItem, IWithTileEntity<LogisticalActorTileEntity> {
 
 	public static final IProperty<Type> TYPE = EnumProperty.create("type", Type.class);
 
@@ -119,6 +126,27 @@ public class LogisticalControllerBlock extends DirectionalBlock
 			state = state.with(TYPE, ((LogisticalControllerItem) item).getType());
 
 		return state;
+	}
+
+	@Override
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
+			PlayerEntity player) {
+		return getItem(world, pos, state);
+	}
+
+	@Override
+	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.storage.loot.LootContext.Builder builder) {
+		return Arrays.asList(getItem(builder.getWorld(), BlockPos.ZERO, state));
+	}
+
+	@Override
+	public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
+		for (AllItems item : Arrays.asList(LOGISTICAL_CONTROLLER_CALCULATION, LOGISTICAL_CONTROLLER_REQUEST,
+				LOGISTICAL_CONTROLLER_STORAGE, LOGISTICAL_CONTROLLER_SUPPLY, LOGISTICAL_CONTROLLER_TRANSACTIONS)) {
+			if (((LogisticalControllerItem) item.get()).getType() == state.get(TYPE))
+				return item.asStack();
+		}
+		return ItemStack.EMPTY;
 	}
 
 	@Override

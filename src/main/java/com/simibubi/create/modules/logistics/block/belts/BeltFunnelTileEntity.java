@@ -3,7 +3,7 @@ package com.simibubi.create.modules.logistics.block.belts;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.modules.logistics.block.IInventoryManipulator;
-import com.simibubi.create.modules.logistics.entity.CardboardBoxEntity;
+import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BeltFunnelTileEntity extends SyncedTileEntity implements ITickableTileEntity, IInventoryManipulator {
 
@@ -99,21 +100,20 @@ public class BeltFunnelTileEntity extends SyncedTileEntity implements ITickableT
 			stack = ((CardboardBoxEntity) entity).getBox().copy();
 
 		IItemHandler inv = inventory.orElse(null);
-		for (int slot = 0; slot < inv.getSlots(); slot++) {
-			stack = inv.insertItem(slot, stack, world.isRemote);
-			if (stack.isEmpty()) {
-				if (!world.isRemote) {
-					entity.remove();
-					world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.BLOCKS, .125f, 1f);
-				} else {
-					Vec3i directionVec = getBlockState().get(BlockStateProperties.HORIZONTAL_FACING).getDirectionVec();
-					float xSpeed = directionVec.getX() * 1 / 8f;
-					float zSpeed = directionVec.getZ() * 1 / 8f;
-					world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), entity.posX,
-							entity.posY, entity.posZ, xSpeed, 1 / 6f, zSpeed);
-				}
-				return;
+		stack = ItemHandlerHelper.insertItemStacked(inv, stack, false);
+		
+		if (stack.isEmpty()) {
+			if (!world.isRemote) {
+				entity.remove();
+				world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.BLOCKS, .125f, 1f);
+			} else {
+				Vec3i directionVec = getBlockState().get(BlockStateProperties.HORIZONTAL_FACING).getDirectionVec();
+				float xSpeed = directionVec.getX() * 1 / 8f;
+				float zSpeed = directionVec.getZ() * 1 / 8f;
+				world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), entity.posX,
+						entity.posY, entity.posZ, xSpeed, 1 / 6f, zSpeed);
 			}
+			return;
 		}
 
 		waitingForInventorySpace = true;

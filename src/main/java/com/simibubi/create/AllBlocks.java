@@ -50,6 +50,8 @@ import com.simibubi.create.modules.logistics.management.base.LogisticalCasingBlo
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.LogisticalControllerIndicatorBlock;
 import com.simibubi.create.modules.logistics.management.index.LogisticalIndexBlock;
+import com.simibubi.create.modules.logistics.transport.villager.LogisticiansTableBlock;
+import com.simibubi.create.modules.logistics.transport.villager.PackageFunnelBlock;
 import com.simibubi.create.modules.palettes.GlassPaneBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
@@ -133,6 +135,9 @@ public enum AllBlocks {
 	LOGISTICAL_CONTROLLER(new LogisticalControllerBlock()),
 	LOGISTICAL_CONTROLLER_INDICATOR(new LogisticalControllerIndicatorBlock()),
 	LOGISTICAL_INDEX(new LogisticalIndexBlock()),
+	PACKAGE_FUNNEL(new PackageFunnelBlock()),
+	LOGISTICIANS_TABLE(new LogisticiansTableBlock()),
+	LOGISTICIANS_TABLE_INDICATOR(new RenderUtilityBlock()),
 
 	__CURIOSITIES__(),
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),

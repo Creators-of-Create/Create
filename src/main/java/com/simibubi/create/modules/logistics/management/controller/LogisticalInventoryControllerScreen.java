@@ -31,7 +31,7 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.Type;
-import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity.Priority;
+import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity.Priority;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.widget.TextFieldWidget;

@@ -11,6 +11,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerTileEntity;
 
+import net.minecraft.block.Block;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -60,7 +61,7 @@ public class LogisticalCasingTileEntity extends SyncedTileEntity {
 	public void neighbourChanged(BlockPos neighbour) {
 		if (!controllerPresent())
 			return;
-		for (LogisticalControllerTileEntity controller : getControllers()) {
+		for (LogisticalActorTileEntity controller : getControllers()) {
 			if (!(controller instanceof LogisticalInventoryControllerTileEntity))
 				continue;
 			((LogisticalInventoryControllerTileEntity) controller).inventoryChanged(neighbour);
@@ -86,18 +87,29 @@ public class LogisticalCasingTileEntity extends SyncedTileEntity {
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if (!(tileEntity instanceof LogisticalInventoryControllerTileEntity))
 			return;
-		for (Direction facing : Direction.values())
+		for (Direction facing : Direction.values()) {
 			((LogisticalInventoryControllerTileEntity) tileEntity).detachInventory(getPos().offset(facing));
+			notifyAttachments(facing);
+		}
 	}
 
 	public void attachController(BlockPos pos) {
 		TileEntity tileEntity = world.getTileEntity(pos);
-		if (!(tileEntity instanceof LogisticalControllerTileEntity))
+		if (!(tileEntity instanceof LogisticalInventoryControllerTileEntity))
 			return;
-		for (Direction facing : Direction.values())
+		for (Direction facing : Direction.values()) {
 			((LogisticalInventoryControllerTileEntity) tileEntity).inventoryChanged(getPos().offset(facing));
+			notifyAttachments(facing);
+		}
 	}
-	
+
+	private void notifyAttachments(Direction d) {
+		BlockPos offset = pos.offset(d);
+		Block block = world.getBlockState(offset).getBlock();
+		if (block instanceof ILogisticalCasingAttachment)
+			((ILogisticalCasingAttachment) block).onCasingUpdated(world, offset, this);
+	}
+
 	@Override
 	public void remove() {
 		controllers.forEach(this::detachController);
@@ -108,7 +120,7 @@ public class LogisticalCasingTileEntity extends SyncedTileEntity {
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (!controllerPresent())
 			return LazyOptional.empty();
-		List<LogisticalControllerTileEntity> TEs = getControllers();
+		List<LogisticalActorTileEntity> TEs = getControllers();
 		if (controllers.isEmpty())
 			return LazyOptional.empty();
 		List<T> invs = TEs.stream().map(te -> te.getCasingCapability(cap, side).orElse(null))
@@ -119,12 +131,12 @@ public class LogisticalCasingTileEntity extends SyncedTileEntity {
 		return LazyOptional.of(() -> new CombinedInvWrapper(params)).cast();
 	}
 
-	public List<LogisticalControllerTileEntity> getControllers() {
-		List<LogisticalControllerTileEntity> TEs = new ArrayList<>(controllers.size());
+	public List<LogisticalActorTileEntity> getControllers() {
+		List<LogisticalActorTileEntity> TEs = new ArrayList<>(controllers.size());
 		for (BlockPos controllerPos : controllers) {
 			TileEntity tileEntity = world.getTileEntity(controllerPos);
-			if (tileEntity instanceof LogisticalControllerTileEntity)
-				TEs.add((LogisticalControllerTileEntity) tileEntity);
+			if (tileEntity instanceof LogisticalActorTileEntity)
+				TEs.add((LogisticalActorTileEntity) tileEntity);
 		}
 		return TEs;
 	}

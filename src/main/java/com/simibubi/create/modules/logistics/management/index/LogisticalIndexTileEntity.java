@@ -15,7 +15,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.type.CountedItemsList;
 import com.simibubi.create.foundation.type.CountedItemsList.ItemStackEntry;
 import com.simibubi.create.modules.logistics.management.LogisticalNetwork;
-import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity;
+import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity;
 import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerTileEntity;
 import com.simibubi.create.modules.logistics.management.index.IndexContainerUpdatePacket.Type;
 
@@ -34,7 +34,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class LogisticalIndexTileEntity extends LogisticalControllerTileEntity implements INamedContainerProvider {
+public class LogisticalIndexTileEntity extends LogisticalActorTileEntity implements INamedContainerProvider {
 
 	// Server
 	public int nextPush;
@@ -90,7 +90,7 @@ public class LogisticalIndexTileEntity extends LogisticalControllerTileEntity im
 		if (network == null)
 			return;
 		availableReceivers.clear();
-		for (LogisticalControllerTileEntity logisticalControllerTileEntity : network.receivers)
+		for (LogisticalActorTileEntity logisticalControllerTileEntity : network.receivers)
 			availableReceivers.add(logisticalControllerTileEntity.address);
 		sendData();
 	}
@@ -110,12 +110,6 @@ public class LogisticalIndexTileEntity extends LogisticalControllerTileEntity im
 
 		if (nextPush > 0)
 			nextPush--;
-	}
-
-	@Override
-	// Prevents the inherited TESR
-	public double getMaxRenderDistanceSquared() {
-		return 0;
 	}
 
 	@Override
@@ -161,7 +155,7 @@ public class LogisticalIndexTileEntity extends LogisticalControllerTileEntity im
 		// First player to open
 		if (!playersEntered.isEmpty() && playersUsing.size() == playersEntered.size()) {
 			controllers.clear();
-			for (LogisticalControllerTileEntity te : network.suppliers) {
+			for (LogisticalActorTileEntity te : network.suppliers) {
 				if (!(te instanceof LogisticalInventoryControllerTileEntity))
 					continue;
 				CountedItemsList allItems = ((LogisticalInventoryControllerTileEntity) te).getAllItems();

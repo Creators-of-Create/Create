@@ -52,6 +52,9 @@ import com.simibubi.create.modules.logistics.management.controller.StorageTileEn
 import com.simibubi.create.modules.logistics.management.controller.SupplyTileEntity;
 import com.simibubi.create.modules.logistics.management.controller.TransactionsTileEntity;
 import com.simibubi.create.modules.logistics.management.index.LogisticalIndexTileEntity;
+import com.simibubi.create.modules.logistics.transport.villager.LogisticiansTableTileEntity;
+import com.simibubi.create.modules.logistics.transport.villager.LogisticiansTableTileEntityRenderer;
+import com.simibubi.create.modules.logistics.transport.villager.PackageFunnelTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
@@ -111,7 +114,9 @@ public enum AllTileEntities {
 	LOGISTICAL_CALCULATION_CONTROLLER(CalculationTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
 	LOGISTICAL_TRANSATIONS_CONTROLLER(TransactionsTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
 	LOGISTICAL_INDEX(LogisticalIndexTileEntity::new, AllBlocks.LOGISTICAL_INDEX),
-	
+	LOGISTICIANS_TABLE(LogisticiansTableTileEntity::new, AllBlocks.LOGISTICIANS_TABLE),
+	PACKAGE_FUNNEL(PackageFunnelTileEntity::new, AllBlocks.PACKAGE_FUNNEL),
+
 	// Curiosities
 	WINDOW_IN_A_BLOCK(WindowInABlockTileEntity::new, AllBlocks.WINDOW_IN_A_BLOCK),
 
@@ -124,6 +129,10 @@ public enum AllTileEntities {
 	private AllTileEntities(Supplier<? extends TileEntity> supplier, AllBlocks... blocks) {
 		this.supplier = supplier;
 		this.blocks = blocks;
+	}
+	
+	public boolean typeOf(TileEntity te) {
+		return te.getType().equals(type);
 	}
 
 	@SubscribeEvent
@@ -165,6 +174,7 @@ public enum AllTileEntities {
 		bind(MechanicalPressTileEntity.class, new MechanicalPressTileEntityRenderer());
 		bind(FlexpeaterTileEntity.class, new FlexpeaterTileEntityRenderer());
 		bind(LogisticalControllerTileEntity.class, new LogisticalControllerTileEntityRenderer());
+		bind(LogisticiansTableTileEntity.class, new LogisticiansTableTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

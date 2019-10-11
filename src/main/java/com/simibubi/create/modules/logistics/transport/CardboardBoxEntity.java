@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics.entity;
+package com.simibubi.create.modules.logistics.transport;
 
 import java.util.Collections;
 
@@ -10,6 +10,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
@@ -17,6 +19,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.item.minecart.MinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -26,8 +29,11 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -79,8 +85,15 @@ public class CardboardBoxEntity extends LivingEntity implements IEntityAdditiona
 		extractorAnimationProgress = 20;
 	}
 
+	public String getAddress() {
+		return box.getTag().getString("Address");
+	}
+	
 	@Override
 	public void tick() {
+		if (extractorAnimationProgress == 0) {
+			setMotion(new Vec3d(extractorSide.getDirectionVec()).scale(1 / 16f).add(0, 1 / 32f, 0));
+		}
 		if (extractorAnimationProgress > -1) {
 			extractorAnimationProgress--;
 			return;
@@ -117,10 +130,137 @@ public class CardboardBoxEntity extends LivingEntity implements IEntityAdditiona
 		recalculateSize();
 	}
 
+	@Override
 	public AxisAlignedBB getCollisionBoundingBox() {
-		return this.getBoundingBox();
+		return getBoundingBox(getPose()).grow(-.1f, 0, -.1f);
 	}
 
+	@Override
+	public boolean canBePushed() {
+		return true;
+	}
+
+	@Override
+	public AxisAlignedBB getCollisionBox(Entity entityIn) {
+		if (entityIn instanceof CardboardBoxEntity)
+			return getBoundingBox();
+		if (entityIn instanceof MinecartEntity)
+			return null;
+		return super.getCollisionBox(entityIn);
+	}
+
+	@Override
+	public boolean canBeCollidedWith() {
+		return isAlive();
+	}
+
+	@Override
+	public void applyEntityCollision(Entity entityIn) {
+		if (entityIn instanceof CardboardBoxEntity) {
+			if (entityIn.getBoundingBox().minY < this.getBoundingBox().maxY) {
+				super.applyEntityCollision(entityIn);
+			}
+		} else if (entityIn.getBoundingBox().minY <= this.getBoundingBox().minY) {
+			super.applyEntityCollision(entityIn);
+		}
+	}
+
+	@Override
+	public ActionResultType applyPlayerInteraction(PlayerEntity player, Vec3d vec, Hand hand) {
+		return super.applyPlayerInteraction(player, vec, hand);
+	}
+
+	@Override
+	public boolean processInitialInteract(PlayerEntity player, Hand hand) {
+		if (player.getPassengers().isEmpty()) {
+			startRiding(player);
+			return true;
+		} else {
+			for (Entity e : player.getPassengers()) {
+				while (e instanceof CardboardBoxEntity) {
+					if (e == this)
+						return false;
+					if (e.getPassengers().isEmpty()) {
+						startRiding(e);
+						return false;
+					}
+					e = e.getPassengers().get(0);
+				}
+			}
+		}
+
+		return super.processInitialInteract(player, hand);
+	}
+
+	@Override
+	public void updateRidden() {
+		super.updateRidden();
+		Entity ridingEntity = getRidingEntity();
+		if (ridingEntity instanceof LivingEntity) {
+
+			if (!(ridingEntity instanceof CardboardBoxEntity)) {
+				Vec3d front = VecHelper.rotate(new Vec3d(1, 0, 0), -90 - ridingEntity.getRotationYawHead(), Axis.Y);
+				double x = ridingEntity.posX + front.x;
+				double y = ridingEntity.posY + ridingEntity.getMountedYOffset() / 2 + this.getYOffset();
+				double z = ridingEntity.posZ + front.z;
+
+				prevRotationYaw = rotationYaw;
+				setRotation(-ridingEntity.rotationYaw, 0);
+
+				if (world.isRemote)
+					setPosition(x, y, z);
+				setPositionAndUpdate(x, y, z);
+
+				if (ridingEntity.isSneaking()) {
+					stopRiding();
+					return;
+				}
+
+			} else {
+				prevRotationYaw = rotationYaw;
+				setRotation(rotationYaw + ridingEntity.rotationYaw - ridingEntity.prevRotationYaw, 0);
+			}
+		}
+	}
+
+	@Override
+	public double getMountedYOffset() {
+		return this.getSize(getPose()).height;
+	}
+
+	@Override
+	public void dismountEntity(Entity ridingEntity) {
+		boolean ridingBox = ridingEntity instanceof CardboardBoxEntity;
+
+		if (ridingBox) {
+			super.dismountEntity(ridingEntity);
+		}
+
+		if (ridingEntity instanceof LivingEntity && !ridingBox) {
+			Vec3d front = VecHelper.rotate(new Vec3d(1, 0, 0), -90 - ridingEntity.rotationYaw, Axis.Y);
+			double x = ridingEntity.posX + front.x;
+			double y = ridingEntity.posY + ridingEntity.getMountedYOffset() / 2 + this.getYOffset();
+			double z = ridingEntity.posZ + front.z;
+			setRotation(-ridingEntity.rotationYaw, 0);
+			if (world.isRemote)
+				setPosition(x, y, z);
+			setPositionAndUpdate(x, y, z);
+		}
+
+		getPassengers().forEach(x -> x.stopRiding());
+
+	}
+
+	@Override
+	protected void onInsideBlock(BlockState state) {
+		if (state.getBlock() == Blocks.WATER) {
+			destroy(DamageSource.DROWN);
+			remove();
+		}
+		super.onInsideBlock(state);
+	}
+
+	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (world.isRemote || !this.isAlive())
 			return false;
@@ -129,6 +269,9 @@ public class CardboardBoxEntity extends LivingEntity implements IEntityAdditiona
 			this.remove();
 			return false;
 		}
+
+		if (DamageSource.IN_WALL.equals(source) && isPassenger())
+			return false;
 
 		if (DamageSource.FALL.equals(source))
 			return false;

@@ -2,8 +2,8 @@ package com.simibubi.create;
 
 import java.util.function.Function;
 
-import com.simibubi.create.modules.logistics.entity.CardboardBoxEntity;
-import com.simibubi.create.modules.logistics.entity.CardboardBoxEntityRenderer;
+import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
+import com.simibubi.create.modules.logistics.transport.CardboardBoxEntityRenderer;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;

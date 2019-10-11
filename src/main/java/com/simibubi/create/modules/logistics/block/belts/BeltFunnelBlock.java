@@ -12,7 +12,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.I
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.modules.logistics.block.IInventoryManipulator;
-import com.simibubi.create.modules.logistics.entity.CardboardBoxEntity;
+import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 
 import net.minecraft.block.Block;
@@ -141,7 +141,6 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 		boolean slope = te.getBlockState().get(BeltBlock.SLOPE) != Slope.HORIZONTAL;
 		if (isItem && entity.getPositionVec().distanceTo(VecHelper.getCenterOf(te.getPos())) > (slope ? .6f : .4f))
 			return false;
-
 		entity.setMotion(Vec3d.ZERO);
 		withTileEntityDo(te.getWorld(), state.attachmentPos, funnelTE -> {
 			funnelTE.tryToInsert(entity);

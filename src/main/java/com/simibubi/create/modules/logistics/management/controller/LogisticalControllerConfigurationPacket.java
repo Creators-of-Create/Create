@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.logistics.management.controller;
 
 import com.simibubi.create.foundation.packet.TileEntityConfigurationPacket;
-import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity.Priority;
+import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity.Priority;
 import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerTileEntity.ShippingInventory;
 
 import net.minecraft.network.PacketBuffer;

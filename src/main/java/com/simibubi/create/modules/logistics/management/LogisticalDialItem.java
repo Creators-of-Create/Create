@@ -1,20 +1,17 @@
 package com.simibubi.create.modules.logistics.management;
 
-import static com.simibubi.create.AllBlocks.LOGISTICAL_CONTROLLER;
-import static com.simibubi.create.AllBlocks.LOGISTICAL_INDEX;
-
 import java.util.UUID;
 
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
-import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity;
+import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -30,7 +27,7 @@ public class LogisticalDialItem extends Item implements IItemWithColorHandler {
 	public IItemColor getColorHandler() {
 		return (stack, layer) -> {
 			if (layer == 1 && stack.getOrCreateTag().contains("NetworkIDLeast"))
-				return LogisticalControllerTileEntity.colorFromUUID(stack.getTag().getUniqueId("NetworkID"));
+				return LogisticalActorTileEntity.colorFromUUID(stack.getTag().getUniqueId("NetworkID"));
 			return 0xFFFFFF;
 		};
 	}
@@ -48,8 +45,9 @@ public class LogisticalDialItem extends Item implements IItemWithColorHandler {
 
 		if (!context.getPlayer().isAllowEdit())
 			return super.onItemUse(context);
-		BlockState blockState = context.getWorld().getBlockState(context.getPos());
-		if (!LOGISTICAL_CONTROLLER.typeOf(blockState) && !LOGISTICAL_INDEX.typeOf(blockState)) {
+
+		TileEntity te = context.getWorld().getTileEntity(context.getPos());
+		if (!(te instanceof LogisticalActorTileEntity)) {
 			if (context.isPlacerSneaking()) {
 				if (!isRemote)
 					heldItem.getTag().putUniqueId("NetworkID", UUID.randomUUID());
@@ -59,8 +57,7 @@ public class LogisticalDialItem extends Item implements IItemWithColorHandler {
 			return super.onItemUse(context);
 		}
 
-		LogisticalControllerTileEntity tileEntity = (LogisticalControllerTileEntity) context.getWorld()
-				.getTileEntity(context.getPos());
+		LogisticalActorTileEntity tileEntity = (LogisticalActorTileEntity) te;
 		if (context.isPlacerSneaking()) {
 			if (!isRemote)
 				heldItem.getTag().putUniqueId("NetworkID", tileEntity.getNetworkId());

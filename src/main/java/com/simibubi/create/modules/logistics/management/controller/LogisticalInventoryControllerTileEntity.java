@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.type.CountedItemsList;
 import com.simibubi.create.foundation.type.CountedItemsList.ItemStackEntry;
 import com.simibubi.create.foundation.utility.ItemHelper;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
+import com.simibubi.create.modules.logistics.management.LogisticalNetwork;
 import com.simibubi.create.modules.logistics.management.base.LogisticalCasingTileEntity;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity;
@@ -349,9 +350,9 @@ public abstract class LogisticalInventoryControllerTileEntity extends Logistical
 
 	public class ShippingInventory extends ItemStackHandler {
 
-		static final int SHIPPING = 0;
-		static final int RECEIVING = 1;
-		static final int FILTER = 2;
+		public static final int SHIPPING = 0;
+		public static final int RECEIVING = 1;
+		public static final int FILTER = 2;
 		int filterAmount = 0;
 
 		boolean ships;
@@ -402,10 +403,22 @@ public abstract class LogisticalInventoryControllerTileEntity extends Logistical
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
 			markDirty();
+			boolean empty = getStackInSlot(slot).isEmpty();
 
-			if (slot == RECEIVING && !getStackInSlot(slot).isEmpty())
+			if (slot == RECEIVING && !empty)
 				tryInsertBox = true;
-			if (slot == SHIPPING && getStackInSlot(slot).isEmpty())
+
+			if (slot == RECEIVING && empty) {
+				if (getNetwork() != null) {
+					getNetwork().packageTargets.forEach(target -> {
+						if (target.getAddressList().stream()
+								.anyMatch(e -> LogisticalNetwork.matchAddresses(e, address)))
+							target.slotOpened();
+					});
+				}
+			}
+
+			if (slot == SHIPPING && empty)
 				checkTasks = true;
 
 			BlockPos start = pos.offset(getBlockState().get(FACING).getOpposite());

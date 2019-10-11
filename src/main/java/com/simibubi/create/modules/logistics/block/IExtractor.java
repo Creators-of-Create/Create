@@ -4,8 +4,8 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.logistics.entity.CardboardBoxEntity;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
+import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;

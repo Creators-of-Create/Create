@@ -1,10 +1,9 @@
 package com.simibubi.create.modules.contraptions;
 
+import com.simibubi.create.foundation.utility.ColoredIndicatorRenderer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntityRenderer;
-import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterTileEntityRenderer;
-import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntityRenderer;
 
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
@@ -22,8 +21,7 @@ public class CachedBufferReloader extends ReloadListener<String> {
 		KineticTileEntityRenderer.invalidateCache();
 		MechanicalPistonTileEntityRenderer.invalidateCache();
 		MechanicalBearingTileEntityRenderer.invalidateCache();
-		FlexpeaterTileEntityRenderer.invalidateCache();
-		LogisticalControllerTileEntityRenderer.invalidateCache();
+		ColoredIndicatorRenderer.invalidateCache();
 	}
 
 

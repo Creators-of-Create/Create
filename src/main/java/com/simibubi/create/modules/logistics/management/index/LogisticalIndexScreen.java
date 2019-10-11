@@ -49,6 +49,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class LogisticalIndexScreen extends AbstractSimiContainerScreen<LogisticalIndexContainer> {
 
@@ -201,6 +202,8 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 	}
 
 	private void onReceiverScrollInputChanged(int index) {
+		if (receivers.isEmpty())
+			return;
 		String address = receivers.get(index);
 		receiverTextField.func_212954_a(null);
 		receiverTextField.setSuggestion(null);
@@ -239,7 +242,7 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 
 	@Override
 	public void mouseMoved(double xPos, double yPos) {
-
+		cursorActive = false;
 		super.mouseMoved(xPos, yPos);
 	}
 
@@ -469,7 +472,7 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 		int slot = 0;
 		for (ItemStackEntry entry : displayedItems) {
 			resetColor();
-			RenderHelper.enableGUIStandardItemLighting();
+			
 			renderSlot(slot, entry.stack, entry.amount);
 			slot++;
 		}
@@ -481,6 +484,7 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 
 //		boolean ordered = order.contains(stack);
 		boolean orderedFully = order.getItemCount(stack) == count;
+		RenderHelper.disableStandardItemLighting();
 
 		if (orderedFully) {
 			DISABLED_SLOT_FRAME.draw(this, slotX, slotY);
@@ -497,6 +501,7 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 		slotX++;
 		slotY++;
 
+		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.pushMatrix();
 		GlStateManager.translatef(0.0F, 0.0F, 32.0F);
 		this.blitOffset = 200;
@@ -509,8 +514,8 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 		String text = count > 1 ? String.valueOf(count) : null;
 		int color = 0xFFFFFF;
 		if (orderedFully) {
-			color = ColorHelper.mixColors(container.te.getColor(), 0, 0.5f);
-			text = "\\u2714";
+			color = ColorHelper.mixColors(container.te.getColor(), 0xFFFFFF, 0.5f);
+			text = new StringTextComponent("\u2714").getFormattedText();
 		}
 
 		this.renderItemOverlayIntoGUI(font, stack, slotX, slotY, text, color);

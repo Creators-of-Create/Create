@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity;
+import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity;
 
 import net.minecraft.world.IWorld;
 
@@ -23,7 +23,7 @@ public class LogisticalNetworkHandler {
 		Create.logger.debug("Removed Logistical Network Map for " + world.getDimension().getType().getRegistryName());
 	}
 
-	public LogisticalNetwork handleAdded(LogisticalControllerTileEntity te) {
+	public LogisticalNetwork handleAdded(LogisticalActorTileEntity te) {
 		LogisticalNetwork networkByID = getNetworkByID(te.getWorld(), te.getNetworkId());
 		if (te.address == null || te.address.isEmpty()) {
 			te.address = networkByID.getNextAvailableAddress(te);
@@ -33,7 +33,7 @@ public class LogisticalNetworkHandler {
 		return networkByID;
 	}
 
-	public void handleRemoved(LogisticalControllerTileEntity te) {
+	public void handleRemoved(LogisticalActorTileEntity te) {
 		getNetworkByID(te.getWorld(), te.getNetworkId()).removeController(te);
 		removeIfEmpty(te.getWorld(), te.getNetworkId());
 	}

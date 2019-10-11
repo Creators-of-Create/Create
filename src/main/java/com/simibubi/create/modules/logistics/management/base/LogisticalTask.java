@@ -26,12 +26,19 @@ public abstract class LogisticalTask implements Comparable<LogisticalTask> {
 
 	public static class SupplyTask extends LogisticalTask {
 		public List<Pair<Ingredient, Integer>> items;
+		private String display;
 
 		public SupplyTask(ItemStackEntry requested, String address) {
 			items = Arrays.asList(Pair.of(Ingredient.fromStacks(requested.stack), requested.amount));
 			targetAddress = address;
+			display = "Supply " + requested.amount + "x " + requested.stack.getItem().getName().getFormattedText()
+					+ " -> " + address;
 		}
 
+		@Override
+		public String toString() {
+			return display;
+		}
 	}
 
 	public static class DepositTask extends LogisticalTask {

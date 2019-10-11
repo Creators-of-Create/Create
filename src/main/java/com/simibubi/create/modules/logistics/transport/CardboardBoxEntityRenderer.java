@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics.entity;
+package com.simibubi.create.modules.logistics.transport;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3i;
 
 public class CardboardBoxEntityRenderer extends EntityRenderer<CardboardBoxEntity> {
 
@@ -44,22 +45,32 @@ public class CardboardBoxEntityRenderer extends EntityRenderer<CardboardBoxEntit
 		bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		GlStateManager.pushMatrix();
 		GlStateManager.translated(x, y, z);
-		
+
 		if (entity.extractorSide != null && entity.extractorAnimationProgress > 0) {
+			float offset = 0;
+			float yOffset = 0.55f;
 			float time = entity.extractorAnimationProgress - partialTicks;
 			float scale = 1;
 			if (time > 5) {
-				scale = MathHelper.lerp(((time - 10) / 10), .3f, .25f);
+				float step = (time - 10) / 10;
+				offset = MathHelper.lerp(step, -.5f, -1.5f);
+				scale = MathHelper.lerp(step, .3f, .3f);
 			} else {
 				float step = time / 5;
-				scale = MathHelper.lerp(step * step * step, 1, .3f);
+				float cubicStep = step * step * step;
+				offset = -cubicStep * .5f;
+				yOffset = step * .55f;
+				scale = MathHelper.lerp(cubicStep, 1, .3f);
 			}
+			
 			GlStateManager.scaled(scale, scale, scale);
+			Vec3i vec = entity.extractorSide.getDirectionVec();
+			GlStateManager.translated(offset * vec.getX(), offset * vec.getY() + yOffset, offset * vec.getZ());
 		}
-		
+
 		GlStateManager.rotated(entity.rotationYaw, 0, 1, 0);
 		GlStateManager.translated(-.5, 0, .5);
-		
+
 		Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightness(model,
 				Blocks.AIR.getDefaultState(), 1, false);
 		GlStateManager.popMatrix();

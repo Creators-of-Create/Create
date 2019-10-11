@@ -7,13 +7,16 @@ import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MovingConstructHandler;
 import com.simibubi.create.modules.logistics.FrequencyHandler;
 import com.simibubi.create.modules.logistics.management.LogisticalNetworkHandler;
+import com.simibubi.create.modules.logistics.transport.villager.LogisticianHandler;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.village.PointOfInterestType;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,6 +41,7 @@ public class Create {
 	public static FrequencyHandler frequencyHandler;
 	public static MovingConstructHandler constructHandler;
 	public static LogisticalNetworkHandler logisticalNetworkHandler;
+	public static LogisticianHandler logisticianHandler;
 
 	public static ModConfig config;
 
@@ -52,7 +56,7 @@ public class Create {
 		frequencyHandler = new FrequencyHandler();
 		constructHandler = new MovingConstructHandler();
 		logisticalNetworkHandler = new LogisticalNetworkHandler();
-		
+
 		CraftingHelper.register(new ModuleLoadedCondition.Serializer());
 		AllPackets.registerPackets();
 	}
@@ -72,10 +76,20 @@ public class Create {
 	public static void registerRecipes(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 		AllRecipes.register(event);
 	}
-	
+
 	@SubscribeEvent
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		AllEntities.register(event);
+	}
+
+	@SubscribeEvent
+	public static void registerVillagerProfessions(RegistryEvent.Register<VillagerProfession> event) {
+		LogisticianHandler.registerVillagerProfessions(event);
+	}
+
+	@SubscribeEvent
+	public static void registerPointsOfInterest(RegistryEvent.Register<PointOfInterestType> event) {
+		LogisticianHandler.registerPointsOfInterest(event);
 	}
 
 	@SubscribeEvent
