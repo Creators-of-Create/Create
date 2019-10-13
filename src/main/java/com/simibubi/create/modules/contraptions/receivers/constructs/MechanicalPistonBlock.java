@@ -10,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
@@ -18,13 +19,19 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 
 public class MechanicalPistonBlock extends KineticBlock {
 
@@ -108,6 +115,33 @@ public class MechanicalPistonBlock extends KineticBlock {
 
 		return this.getDefaultState().with(FACING, facing).with(STATE, PistonState.RETRACTED)
 				.with(AXIS_ALONG_FIRST_COORDINATE, alongFirst);
+	}
+
+	@Override
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+			BlockRayTraceResult hit) {
+		if (state.get(STATE) != PistonState.RETRACTED)
+			return false;
+		if (!player.isAllowEdit())
+			return false;
+		if (!player.getHeldItem(handIn).getItem().isIn(Tags.Items.SLIMEBALLS))
+			return false;
+		Direction direction = state.get(FACING);
+		if (hit.getFace() != direction)
+			return false;
+		if (((MechanicalPistonBlock) state.getBlock()).isSticky)
+			return false;
+		if (worldIn.isRemote) {
+			Vec3d vec = hit.getHitVec();
+			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
+			return true;
+		}
+		worldIn.playSound(null, pos, SoundEvents.BLOCK_SLIME_BLOCK_PLACE, SoundCategory.BLOCKS, .5f, 1);
+		if (!player.isCreative())
+			player.getHeldItem(handIn).shrink(1);
+		worldIn.setBlockState(pos, AllBlocks.STICKY_MECHANICAL_PISTON.get().getDefaultState().with(FACING, direction)
+				.with(AXIS_ALONG_FIRST_COORDINATE, state.get(AXIS_ALONG_FIRST_COORDINATE)));
+		return true;
 	}
 
 	@Override

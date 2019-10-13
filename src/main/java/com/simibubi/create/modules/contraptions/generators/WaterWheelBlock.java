@@ -83,22 +83,23 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 
 		flowVec = flowVec.scale(f.getAxisDirection().getOffset());
 		boolean clockwise = wf.getAxisDirection() == AxisDirection.POSITIVE;
+		int clockwiseMultiplier = 1; // No difference. Causes confusion
 
 		if (wf.getAxis() == Axis.Z) {
 			if (f.getAxis() == Axis.Y)
-				flow = flowVec.x > 0 ^ !clockwise ? -flowVec.x * 2 : -flowVec.x;
+				flow = flowVec.x > 0 ^ !clockwise ? -flowVec.x * clockwiseMultiplier : -flowVec.x;
 			if (f.getAxis() == Axis.X)
-				flow = flowVec.y < 0 ^ !clockwise ? flowVec.y * 2 : flowVec.y;
+				flow = flowVec.y < 0 ^ !clockwise ? flowVec.y * clockwiseMultiplier : flowVec.y;
 		}
 
 		if (wf.getAxis() == Axis.X) {
 			if (f.getAxis() == Axis.Y)
-				flow = flowVec.z < 0 ^ !clockwise ? flowVec.z * 2 : flowVec.z;
+				flow = flowVec.z < 0 ^ !clockwise ? flowVec.z * clockwiseMultiplier : flowVec.z;
 			if (f.getAxis() == Axis.Z)
-				flow = flowVec.y > 0 ^ !clockwise ? -flowVec.y * 2 : -flowVec.y;
+				flow = flowVec.y > 0 ^ !clockwise ? -flowVec.y * clockwiseMultiplier : -flowVec.y;
 		}
 
-		te.setFlow(f, (int) (flow * 10));
+		te.setFlow(f, (int) (flow * 20));
 	}
 
 	private void updateWheelSpeed(IWorld world, BlockPos pos) {

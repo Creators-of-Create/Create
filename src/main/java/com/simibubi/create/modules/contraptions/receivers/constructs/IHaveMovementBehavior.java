@@ -7,6 +7,26 @@ import net.minecraft.world.World;
 
 public interface IHaveMovementBehavior {
 
-	public boolean visitPosition(World world, BlockPos pos, BlockState block, Direction movement, MechanicalPistonTileEntity piston);
-	
+	default IMovementContext visitPosition(World world, BlockPos pos, BlockState block, Direction movement,
+			MechanicalPistonTileEntity piston) {
+		return IdleMovementContext.INSTANCE;
+	}
+
+	default void tick(MechanicalPistonTileEntity piston) {
+	}
+
+	default boolean hasSpecialRenderer() {
+		return false;
+	}
+
+	public interface IMovementContext {
+		default boolean isBlocking() {
+			return false;
+		}
+	}
+
+	public static class IdleMovementContext implements IMovementContext {
+		public static IdleMovementContext INSTANCE = new IdleMovementContext();
+	}
+
 }

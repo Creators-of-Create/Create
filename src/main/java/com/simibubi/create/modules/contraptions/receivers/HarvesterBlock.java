@@ -93,10 +93,12 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 	}
 
 	@Override
-	public boolean visitPosition(World world, BlockPos pos, BlockState block, Direction movement,
+	public IMovementContext visitPosition(World world, BlockPos pos, BlockState block, Direction movement,
 			MechanicalPistonTileEntity piston) {
+		IMovementContext context = IdleMovementContext.INSTANCE;
+
 		if (movement != block.get(HORIZONTAL_FACING))
-			return false;
+			return context;
 
 		BlockState stateVisited = world.getBlockState(pos);
 		boolean notCropButCuttable = false;
@@ -111,7 +113,7 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 			if (isValidOther(world, pos, stateVisited))
 				notCropButCuttable = true;
 			else
-				return false;
+				return context;
 		}
 
 		List<ItemStack> drops = Block.getDrops(stateVisited, (ServerWorld) world, pos, null);
@@ -130,7 +132,7 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 			world.addEntity(itemEntity);
 		}
 
-		return false;
+		return context;
 	}
 
 	private boolean isValidCrop(World world, BlockPos pos, BlockState state) {

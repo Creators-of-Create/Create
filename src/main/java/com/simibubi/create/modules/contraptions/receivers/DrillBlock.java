@@ -140,18 +140,20 @@ public class DrillBlock extends DirectionalKineticBlock implements IHaveMovement
 	}
 
 	@Override
-	public boolean visitPosition(World world, BlockPos pos, BlockState block, Direction movement,
+	public IMovementContext visitPosition(World world, BlockPos pos, BlockState block, Direction movement,
 			MechanicalPistonTileEntity piston) {
+		IMovementContext context = IdleMovementContext.INSTANCE;
+		
 		if (movement != block.get(FACING))
-			return false;
+			return context;
 
 		pos = pos.offset(movement);
 		BlockState stateVisited = world.getBlockState(pos);
 
 		if (stateVisited.getCollisionShape(world, pos).isEmpty())
-			return false;
+			return context;
 		if (stateVisited.getBlockHardness(world, pos) == -1)
-			return false;
+			return context;
 
 		world.playEvent(2001, pos, Block.getStateId(stateVisited));
 		List<ItemStack> drops = Block.getDrops(stateVisited, (ServerWorld) world, pos, null);
@@ -164,7 +166,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IHaveMovement
 			world.addEntity(itemEntity);
 		}
 
-		return false;
+		return context;
 	}
 
 }

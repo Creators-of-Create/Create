@@ -255,10 +255,10 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 			BlockPos otherRelativePos = BlockPos.ZERO.offset(otherMovementDirection,
 					getModulatedOffset(otherPiston.offset));
 
-			for (AxisAlignedBB tBB : Arrays.asList(movingConstruct.collisionBoxFront,
-					movingConstruct.collisionBoxBack)) {
-				for (AxisAlignedBB oBB : Arrays.asList(otherPiston.movingConstruct.collisionBoxFront,
-						otherPiston.movingConstruct.collisionBoxBack)) {
+			for (AxisAlignedBB tBB : Arrays.asList(movingConstruct.constructCollisionBox,
+					movingConstruct.pistonCollisionBox)) {
+				for (AxisAlignedBB oBB : Arrays.asList(otherPiston.movingConstruct.constructCollisionBox,
+						otherPiston.movingConstruct.pistonCollisionBox)) {
 					if (tBB == null || oBB == null)
 						continue;
 
