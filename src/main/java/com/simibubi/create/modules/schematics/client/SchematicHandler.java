@@ -209,7 +209,7 @@ public class SchematicHandler {
 			if (schematic.getSize().equals(BlockPos.ZERO))
 				return;
 
-			SchematicWorld w = new SchematicWorld(new HashMap<>(), new Cuboid(), anchor);
+			SchematicWorld w = new SchematicWorld(new HashMap<>(), new Cuboid(), anchor, Minecraft.getInstance().world);
 			PlacementSettings settings = cachedSettings.copy();
 			settings.setBoundingBox(null);
 			schematic.addBlocksToWorld(w, anchor, settings);

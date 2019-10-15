@@ -2,6 +2,7 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.generators.MotorTileEntity;
 import com.simibubi.create.modules.contraptions.generators.MotorTileEntityRenderer;
@@ -54,13 +55,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.IForgeRegistry;
 
-@Mod.EventBusSubscriber(bus = Bus.MOD)
 public enum AllTileEntities {
 
 	// Schematics
@@ -95,7 +92,7 @@ public enum AllTileEntities {
 	BELT_FUNNEL(BeltFunnelTileEntity::new, AllBlocks.BELT_FUNNEL),
 	ENTITY_DETECTOR(EntityDetectorTileEntity::new, AllBlocks.ENTITY_DETECTOR),
 	FLEXPEATER(FlexpeaterTileEntity::new, AllBlocks.FLEXPEATER),
-	
+
 	// Curiosities
 	WINDOW_IN_A_BLOCK(WindowInABlockTileEntity::new, AllBlocks.WINDOW_IN_A_BLOCK),
 
@@ -110,18 +107,16 @@ public enum AllTileEntities {
 		this.blocks = blocks;
 	}
 
-	@SubscribeEvent
-	public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event) {
-
+	public static void registerTileEntities(IForgeRegistry<TileEntityType<?>> registry) {
 		for (AllTileEntities tileEntity : values()) {
 			Block[] blocks = new Block[tileEntity.blocks.length];
 			for (int i = 0; i < blocks.length; i++)
 				blocks[i] = tileEntity.blocks[i].block;
 
-			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, tileEntity.name().toLowerCase());
+			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, Lang.asId(tileEntity.name()));
 			tileEntity.type = TileEntityType.Builder.create(tileEntity.supplier, blocks).build(null)
 					.setRegistryName(resourceLocation);
-			event.getRegistry().register(tileEntity.type);
+			registry.register(tileEntity.type);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.relays.VerticalGearboxItem;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltItem;
@@ -91,14 +92,14 @@ public enum AllItems {
 		CategoryTracker.currentModule = new IModule() {
 			@Override
 			public String getModuleName() {
-				return name().toLowerCase().replaceAll("__", "");
+				return Lang.asId(name()).replaceAll("__", "");
 			}
 		};
 	}
 
 	private AllItems(Item item) {
 		this.item = item;
-		this.item.setRegistryName(Create.ID, this.name().toLowerCase());
+		this.item.setRegistryName(Create.ID, Lang.asId(name()));
 		this.module = CategoryTracker.currentModule;
 	}
 

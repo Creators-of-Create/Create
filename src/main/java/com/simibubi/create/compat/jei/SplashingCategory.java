@@ -29,12 +29,14 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 
 	private static ResourceLocation ID = new ResourceLocation(Create.ID, "splashing");
 	private IDrawable icon;
+	private IDrawable slot;
 
 	public SplashingCategory() {
+		slot = new ScreenResourceWrapper(ScreenResources.PROCESSING_RECIPE_SLOT);
 		icon = new DoubleItemIcon(() -> new ItemStack(AllItems.PROPELLER.get()),
 				() -> new ItemStack(Items.WATER_BUCKET));
 	}
-	
+
 	@Override
 	public IDrawable getIcon() {
 		return icon;
@@ -54,7 +56,7 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 	public String getTitle() {
 		return Lang.translate("recipe.splashing");
 	}
-	
+
 	@Override
 	public void setIngredients(SplashingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
@@ -69,7 +71,10 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 
 		List<StochasticOutput> results = recipe.getRollableResults();
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
-			itemStacks.init(outputIndex + 1, false, 139, 58 + 19 * outputIndex);
+			int xOffset = outputIndex % 2 == 0 ? 0 : 19;
+			int yOffset = (outputIndex / 2) * -19;
+
+			itemStacks.init(outputIndex + 1, false, 132 + xOffset, 77 + yOffset);
 			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
 		}
 
@@ -86,6 +91,17 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 	@Override
 	public IDrawable getBackground() {
 		return new ScreenResourceWrapper(ScreenResources.WASHING_RECIPE);
+	}
+
+	@Override
+	public void draw(SplashingRecipe recipe, double mouseX, double mouseY) {
+		super.draw(recipe, mouseX, mouseY);
+		int size = recipe.getPossibleOutputs().size();
+		for (int i = 4; i < size; i++) {
+			int xOffset = i % 2 == 0 ? 0 : 19;
+			int yOffset = (i / 2) * -19;
+			slot.draw(131 + xOffset, 76 + yOffset);
+		}
 	}
 
 	@Override

@@ -49,7 +49,8 @@ public class SchematicHologram {
 	}
 
 	public void startHologram(Template schematic, BlockPos anchor) {
-		SchematicWorld world = new SchematicWorld(new HashMap<>(), new Cuboid(BlockPos.ZERO, BlockPos.ZERO), anchor);
+		SchematicWorld world = new SchematicWorld(new HashMap<>(), new Cuboid(BlockPos.ZERO, BlockPos.ZERO), anchor,
+				Minecraft.getInstance().world);
 		schematic.addBlocksToWorld(world, anchor, new PlacementSettings());
 		startHologram(world);
 	}

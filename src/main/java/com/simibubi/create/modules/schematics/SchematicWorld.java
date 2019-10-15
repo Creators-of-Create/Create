@@ -3,12 +3,11 @@ package com.simibubi.create.modules.schematics;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.google.common.collect.ImmutableMap;
 import com.simibubi.create.foundation.type.Cuboid;
+import com.simibubi.create.foundation.utility.WrappedWorld;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,47 +15,34 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
-import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EmptyTickList;
 import net.minecraft.world.ITickList;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.border.WorldBorder;
-import net.minecraft.world.chunk.AbstractChunkProvider;
-import net.minecraft.world.chunk.ChunkStatus;
-import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.gen.Heightmap.Type;
-import net.minecraft.world.storage.WorldInfo;
 
-public class SchematicWorld implements IWorld {
+public class SchematicWorld extends WrappedWorld {
 
 	private Map<BlockPos, BlockState> blocks;
 	private Cuboid bounds;
 	public BlockPos anchor;
-	
-	public SchematicWorld(Map<BlockPos, BlockState> blocks, Cuboid bounds, BlockPos anchor) {
+
+	public SchematicWorld(Map<BlockPos, BlockState> blocks, Cuboid bounds, BlockPos anchor, World original) {
+		super(original);
 		this.blocks = blocks;
 		this.setBounds(bounds);
 		this.anchor = anchor;
 	}
-	
+
 	public Set<BlockPos> getAllPositions() {
 		return blocks.keySet();
 	}
-	
+
 	@Override
 	public TileEntity getTileEntity(BlockPos pos) {
 		return null;
@@ -65,11 +51,11 @@ public class SchematicWorld implements IWorld {
 	@Override
 	public BlockState getBlockState(BlockPos globalPos) {
 		BlockPos pos = globalPos.subtract(anchor);
-		
+
 		if (pos.getY() - bounds.y == -1) {
 			return Blocks.GRASS_BLOCK.getDefaultState();
 		}
-		
+
 		if (getBounds().contains(pos) && blocks.containsKey(pos)) {
 			return blocks.get(pos);
 		} else {
@@ -83,7 +69,7 @@ public class SchematicWorld implements IWorld {
 
 	@Override
 	public IFluidState getFluidState(BlockPos pos) {
-		return new FluidState(Fluids.EMPTY, ImmutableMap.of());
+		return getBlockState(pos).getFluidState();
 	}
 
 	@Override
@@ -118,43 +104,8 @@ public class SchematicWorld implements IWorld {
 	}
 
 	@Override
-	public IChunk getChunk(int x, int z, ChunkStatus requiredStatus, boolean nonnull) {
-		return null;
-	}
-
-	@Override
-	public BlockPos getHeight(Type heightmapType, BlockPos pos) {
-		return BlockPos.ZERO;
-	}
-
-	@Override
-	public int getHeight(Type heightmapType, int x, int z) {
-		return 0;
-	}
-
-	@Override
 	public int getSkylightSubtracted() {
 		return 0;
-	}
-
-	@Override
-	public WorldBorder getWorldBorder() {
-		return null;
-	}
-
-	@Override
-	public boolean isRemote() {
-		return false;
-	}
-
-	@Override
-	public int getSeaLevel() {
-		return 0;
-	}
-
-	@Override
-	public Dimension getDimension() {
-		return null;
 	}
 
 	@Override
@@ -197,14 +148,9 @@ public class SchematicWorld implements IWorld {
 		if (boundsMax.getZ() <= pos.getZ()) {
 			bounds.length += pos.getZ() - boundsMax.getZ() + 1;
 		}
-		
+
 		blocks.put(pos, arg1);
 		return true;
-	}
-
-	@Override
-	public long getSeed() {
-		return 0;
 	}
 
 	@Override
@@ -215,54 +161,6 @@ public class SchematicWorld implements IWorld {
 	@Override
 	public ITickList<Fluid> getPendingFluidTicks() {
 		return EmptyTickList.get();
-	}
-
-	@Override
-	public World getWorld() {
-		return null;
-	}
-
-	@Override
-	public WorldInfo getWorldInfo() {
-		return null;
-	}
-
-	@Override
-	public DifficultyInstance getDifficultyForLocation(BlockPos pos) {
-		return null;
-	}
-
-	@Override
-	public AbstractChunkProvider getChunkProvider() {
-		return null;
-	}
-
-	@Override
-	public Random getRandom() {
-		return new Random();
-	}
-
-	@Override
-	public void notifyNeighbors(BlockPos pos, Block blockIn) {
-	}
-
-	@Override
-	public BlockPos getSpawnPoint() {
-		return null;
-	}
-
-	@Override
-	public void playSound(PlayerEntity player, BlockPos pos, SoundEvent soundIn, SoundCategory category, float volume,
-			float pitch) {
-	}
-
-	@Override
-	public void addParticle(IParticleData particleData, double x, double y, double z, double xSpeed, double ySpeed,
-			double zSpeed) {
-	}
-
-	@Override
-	public void playEvent(PlayerEntity player, int type, BlockPos pos, int data) {
 	}
 
 	public Cuboid getBounds() {

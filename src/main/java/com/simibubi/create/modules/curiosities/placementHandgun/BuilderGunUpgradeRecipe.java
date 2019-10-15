@@ -10,9 +10,11 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -33,7 +35,12 @@ public class BuilderGunUpgradeRecipe implements ICraftingRecipe {
 	public boolean matches(CraftingInventory inv, World worldIn) {
 		return getRecipe().matches(inv, worldIn);
 	}
-
+	
+	@Override
+	public NonNullList<Ingredient> getIngredients() {
+		return recipe.getIngredients();
+	}
+	
 	@Override
 	public ItemStack getCraftingResult(CraftingInventory inv) {
 		for (int slot = 0; slot < inv.getSizeInventory(); slot++) {

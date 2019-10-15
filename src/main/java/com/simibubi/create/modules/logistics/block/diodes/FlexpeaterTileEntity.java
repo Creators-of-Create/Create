@@ -18,6 +18,7 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 	public int newMaxState;
 	public int lastModified;
 	public boolean charging;
+	public boolean forceClientState;
 
 	public FlexpeaterTileEntity() {
 		super(AllTileEntities.FLEXPEATER.type);
@@ -38,6 +39,15 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 		charging = compound.getBoolean("Charging");
 		maxState = compound.getInt("MaxState");
 		state = MathHelper.clamp(state, 0, maxState - 1);
+		if (compound.contains("Force"))
+			newMaxState = maxState;
+	}
+	
+	@Override
+	public CompoundNBT writeToClient(CompoundNBT tag) {
+		if (forceClientState)
+			tag.putBoolean("Force", true);
+		return super.writeToClient(tag);
 	}
 
 	@Override

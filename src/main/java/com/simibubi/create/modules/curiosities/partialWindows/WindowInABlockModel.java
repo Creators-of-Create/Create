@@ -1,5 +1,9 @@
 package com.simibubi.create.modules.curiosities.partialWindows;
 
+import static com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockTileEntity.PARTIAL_BLOCK;
+import static com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockTileEntity.POSITION;
+import static com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockTileEntity.WINDOW_BLOCK;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,13 +27,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
 
 public class WindowInABlockModel extends WrappedBakedModel {
-
-	public static final ModelProperty<BlockState> PARTIAL_BLOCK = new ModelProperty<>();
-	public static final ModelProperty<BlockState> WINDOW_BLOCK = new ModelProperty<>();
-	public static final ModelProperty<BlockPos> POSITION = new ModelProperty<>();
 
 	public WindowInABlockModel(IBakedModel template) {
 		super(template);
@@ -46,7 +45,7 @@ public class WindowInABlockModel extends WrappedBakedModel {
 
 		if (partialState == null || windowState == null)
 			return dispatcher.getModelForState(Blocks.DIRT.getDefaultState()).getQuads(state, side, rand, data);
-		
+
 		BlockRenderLayer renderLayer = MinecraftForgeClient.getRenderLayer();
 		if (partialState.canRenderInLayer(renderLayer) && partialState != null) {
 			quads.addAll(dispatcher.getModelForState(partialState).getQuads(partialState, side, rand, data));

@@ -1,9 +1,23 @@
 {
     "type": "crafting_shapeless",
 	"ingredients": [
-		{
-			"item": "minecraft:horn_coral"
-		},
+		[
+			{
+				"item": "minecraft:horn_coral"
+			},
+			{
+				"item": "minecraft:tube_coral"
+			},
+			{
+				"item": "minecraft:fire_coral"
+			},
+			{
+				"item": "minecraft:bubble_coral"
+			},
+			{
+				"item": "minecraft:brain_coral"
+			}
+		],
 		{
 			"item": "minecraft:bone_meal"
 		},

@@ -60,7 +60,7 @@ public class SymmetryWandItem extends Item {
 		if (player.isSneaking()) {
 			if (player.world.isRemote) {
 				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-					openWandGUI(wand);
+					openWandGUI(wand, context.getHand());
 				});
 				player.getCooldownTracker().setCooldown(this, 5);
 			}
@@ -123,7 +123,7 @@ public class SymmetryWandItem extends Item {
 		if (playerIn.isSneaking()) {
 			if (worldIn.isRemote) {
 				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-					openWandGUI(playerIn.getHeldItem(handIn));
+					openWandGUI(playerIn.getHeldItem(handIn), handIn);
 				});
 				playerIn.getCooldownTracker().setCooldown(this, 5);
 			}
@@ -136,8 +136,8 @@ public class SymmetryWandItem extends Item {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private void openWandGUI(ItemStack wand) {
-		ScreenOpener.open(new SymmetryWandScreen(wand));
+	private void openWandGUI(ItemStack wand, Hand hand) {
+		ScreenOpener.open(new SymmetryWandScreen(wand, hand));
 	}
 
 	private static void checkNBT(ItemStack wand) {

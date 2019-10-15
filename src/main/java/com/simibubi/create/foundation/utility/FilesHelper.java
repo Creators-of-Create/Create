@@ -26,7 +26,7 @@ public class FilesHelper {
 		Path path = Paths.get(name);
 		if (path.getParent() != null)
 			createFolderIfMissing(path.getParent().toString());
-		
+
 		if (!Files.isDirectory(path)) {
 			try {
 				Files.createDirectory(path);
@@ -49,7 +49,7 @@ public class FilesHelper {
 	}
 
 	public static String slug(String name) {
-		return name.toLowerCase().replace(' ', '_').replace('!', '_').replace('?', '_');
+		return Lang.asId(name).replace(' ', '_').replace('!', '_').replace('?', '_');
 	}
 
 	public static boolean saveTagCompoundAsJson(CompoundNBT compound, String path) {
@@ -65,7 +65,6 @@ public class FilesHelper {
 		}
 		return false;
 	}
-	
 
 	public static boolean saveTagCompoundAsJsonCompact(CompoundNBT compound, String path) {
 		try {
@@ -78,7 +77,7 @@ public class FilesHelper {
 			e.printStackTrace();
 		}
 		return false;
-		
+
 	}
 
 	public static CompoundNBT loadJsonNBT(InputStream inputStream) {
@@ -109,6 +108,5 @@ public class FilesHelper {
 		}
 		return null;
 	}
-
 
 }

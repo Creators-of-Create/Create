@@ -1,8 +1,5 @@
 package com.simibubi.create.modules.curiosities.partialWindows;
 
-import static com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel.PARTIAL_BLOCK;
-import static com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel.WINDOW_BLOCK;
-
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 
@@ -14,18 +11,22 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 
 public class WindowInABlockTileEntity extends SyncedTileEntity {
 
 	private BlockState partialBlock = Blocks.AIR.getDefaultState();
 	private BlockState windowBlock = Blocks.AIR.getDefaultState();
+
 	private IModelData modelData;
+	public static final ModelProperty<BlockState> PARTIAL_BLOCK = new ModelProperty<>();
+	public static final ModelProperty<BlockState> WINDOW_BLOCK = new ModelProperty<>();
+	public static final ModelProperty<BlockPos> POSITION = new ModelProperty<>();
 
 	public WindowInABlockTileEntity() {
 		super(AllTileEntities.WINDOW_IN_A_BLOCK.type);
 		modelData = new ModelDataMap.Builder().withInitial(WINDOW_BLOCK, Blocks.AIR.getDefaultState())
-				.withInitial(PARTIAL_BLOCK, Blocks.AIR.getDefaultState())
-				.withInitial(WindowInABlockModel.POSITION, BlockPos.ZERO).build();
+				.withInitial(PARTIAL_BLOCK, Blocks.AIR.getDefaultState()).withInitial(POSITION, BlockPos.ZERO).build();
 	}
 
 	@Override
@@ -59,9 +60,9 @@ public class WindowInABlockTileEntity extends SyncedTileEntity {
 
 	@Override
 	public IModelData getModelData() {
-		modelData.setData(WindowInABlockModel.PARTIAL_BLOCK, partialBlock);
-		modelData.setData(WindowInABlockModel.WINDOW_BLOCK, windowBlock);
-		modelData.setData(WindowInABlockModel.POSITION, pos);
+		modelData.setData(PARTIAL_BLOCK, partialBlock);
+		modelData.setData(WINDOW_BLOCK, windowBlock);
+		modelData.setData(POSITION, pos);
 		return modelData;
 	}
 

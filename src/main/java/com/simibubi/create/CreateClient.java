@@ -24,13 +24,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@EventBusSubscriber(bus = Bus.MOD)
 public class CreateClient {
 
 	public static ClientSchematicLoader schematicSender;
@@ -41,7 +39,14 @@ public class CreateClient {
 
 	public static ModConfig config;
 
-	@SubscribeEvent
+	public static void addListeners(IEventBus modEventBus) {
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			modEventBus.addListener(CreateClient::clientInit);
+			modEventBus.addListener(CreateClient::createConfigs);
+			modEventBus.addListener(CreateClient::onModelBake);
+		});
+	}
+	
 	public static void clientInit(FMLClientSetupEvent event) {
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
@@ -60,7 +65,6 @@ public class CreateClient {
 			((IReloadableResourceManager) resourceManager).addReloadListener(new CachedBufferReloader());
 	}
 
-	@SubscribeEvent
 	public static void createConfigs(ModConfig.ModConfigEvent event) {
 		if (event.getConfig().getSpec() == CreateConfig.specification)
 			return;
@@ -75,7 +79,6 @@ public class CreateClient {
 		schematicHologram.tick();
 	}
 
-	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onModelBake(ModelBakeEvent event) {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
@@ -110,5 +113,7 @@ public class CreateClient {
 			ModelResourceLocation location, Function<IBakedModel, T> factory) {
 		modelRegistry.put(location, factory.apply(modelRegistry.get(location)));
 	}
+
+
 
 }

@@ -4,25 +4,30 @@ import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 
 public abstract class AbstractChassisBlock extends RotatedPillarBlock
 		implements IWithTileEntity<ChassisTileEntity>, IBlockWithScrollableValue {
-	
+
 	private static final Vec3d valuePos = new Vec3d(15 / 16f, 9 / 16f, 9 / 16f);
 
 	public AbstractChassisBlock(Properties properties) {
@@ -50,16 +55,24 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock
 			return false;
 
 		ItemStack heldItem = player.getHeldItem(handIn);
-		boolean isSlimeBall = heldItem.isItemEqual(new ItemStack(Items.SLIME_BALL));
+		boolean isSlimeBall = heldItem.getItem().isIn(Tags.Items.SLIMEBALLS);
+
 		if ((!heldItem.isEmpty() || !player.isSneaking()) && !isSlimeBall)
 			return false;
 		if (state.get(affectedSide) == isSlimeBall)
 			return false;
-		if (worldIn.isRemote)
+		if (worldIn.isRemote) {
+			Vec3d vec = hit.getHitVec();
+			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
 			return true;
+		}
 
+		worldIn.playSound(null, pos, SoundEvents.BLOCK_SLIME_BLOCK_PLACE, SoundCategory.BLOCKS, .5f, 1);
 		if (isSlimeBall && !player.isCreative())
 			heldItem.shrink(1);
+		if (!isSlimeBall && !player.isCreative())
+			Block.spawnAsEntity(worldIn, pos.offset(hit.getFace()), new ItemStack(Items.SLIME_BALL));
+
 		worldIn.setBlockState(pos, state.with(affectedSide, isSlimeBall));
 		return true;
 	}
@@ -78,17 +91,17 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock
 	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
 		return Lang.translate("generic.range");
 	}
-	
+
 	@Override
 	public Vec3d getValueBoxPosition(BlockState state, IWorld world, BlockPos pos) {
 		return valuePos;
 	}
-	
+
 	@Override
 	public Direction getValueBoxDirection(BlockState state, IWorld world, BlockPos pos) {
 		return null;
 	}
-	
+
 	@Override
 	public boolean isValueOnAllSides() {
 		return true;

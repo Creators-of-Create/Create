@@ -66,9 +66,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 public class BuilderGunItem extends Item {
 
 	public static enum ComponentTier {
-		None(TextFormatting.DARK_GRAY), 
-		BlazeBrass(TextFormatting.GOLD), 
-		ChorusChrome(TextFormatting.LIGHT_PURPLE),
+		None(TextFormatting.DARK_GRAY), BlazeBrass(TextFormatting.GOLD), ChorusChrome(TextFormatting.LIGHT_PURPLE),
 
 		;
 
@@ -108,9 +106,9 @@ public class BuilderGunItem extends Item {
 			for (Components c : Components.values()) {
 				ComponentTier tier = getTier(c, stack);
 				ItemDescription.add(tooltip,
-						"> " + TextFormatting.GRAY + Lang.translate("blockzapper.component." + c.name().toLowerCase())
+						"> " + TextFormatting.GRAY + Lang.translate("blockzapper.component." + Lang.asId(c.name()))
 								+ ": " + tier.color
-								+ Lang.translate("blockzapper.componentTier." + tier.name().toLowerCase()));
+								+ Lang.translate("blockzapper.componentTier." + Lang.asId(tier.name())));
 			}
 		}
 	}

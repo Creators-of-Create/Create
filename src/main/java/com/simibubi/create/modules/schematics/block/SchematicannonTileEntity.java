@@ -535,7 +535,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		}
 
 		schematicAnchor = anchor;
-		blockReader = new SchematicWorld(new HashMap<>(), new Cuboid(), schematicAnchor);
+		blockReader = new SchematicWorld(new HashMap<>(), new Cuboid(), schematicAnchor, world);
 		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, SchematicItem.getSettings(blueprint));
 		schematicLoaded = true;
 		state = State.PAUSED;

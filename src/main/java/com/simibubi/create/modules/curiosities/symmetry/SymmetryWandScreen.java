@@ -43,14 +43,16 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	private SymmetryMirror currentElement;
 	private float animationProgress;
 	private ItemStack wand;
+	private Hand hand;
 
-	public SymmetryWandScreen(ItemStack wand) {
+	public SymmetryWandScreen(ItemStack wand, Hand hand) {
 		super();
 
 		currentElement = SymmetryWandItem.getMirror(wand);
 		if (currentElement instanceof EmptyMirror) {
 			currentElement = new PlaneMirror(Vec3d.ZERO);
 		}
+		this.hand = hand;
 		this.wand = wand;
 		animationProgress = 0;
 	}
@@ -170,12 +172,12 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 	@Override
 	public void removed() {
-		ItemStack heldItemMainhand = minecraft.player.getHeldItemMainhand();
-		CompoundNBT compound = heldItemMainhand.getTag();
+		ItemStack heldItem = minecraft.player.getHeldItem(hand);
+		CompoundNBT compound = heldItem.getTag();
 		compound.put(SymmetryWandItem.SYMMETRY, currentElement.writeToNbt());
-		heldItemMainhand.setTag(compound);
-		AllPackets.channel.send(PacketDistributor.SERVER.noArg(), new NbtPacket(heldItemMainhand));
-		minecraft.player.setHeldItem(Hand.MAIN_HAND, heldItemMainhand);
+		heldItem.setTag(compound);
+		AllPackets.channel.send(PacketDistributor.SERVER.noArg(), new NbtPacket(heldItem, hand));
+		minecraft.player.setHeldItem(hand, heldItem);
 		super.removed();
 	}
 

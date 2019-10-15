@@ -5,30 +5,36 @@ import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Hand;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class NbtPacket extends SimplePacketBase {
 
 	public ItemStack stack;
 	public int slot;
+	public Hand hand;
 
-	public NbtPacket(ItemStack stack) {
+	public NbtPacket(ItemStack stack, Hand hand) {
 		this(stack, -1);
+		this.hand = hand;
 	}
 	
 	public NbtPacket(ItemStack stack, int slot) {
 		this.stack = stack;
 		this.slot = slot;
+		this.hand = Hand.MAIN_HAND;
 	}
 
 	public NbtPacket(PacketBuffer buffer) {
 		stack = buffer.readItemStack();
 		slot = buffer.readInt();
+		hand = Hand.values()[buffer.readInt()];
 	}
 	
 	public void write(PacketBuffer buffer) {
 		buffer.writeItemStack(stack);
 		buffer.writeInt(slot);
+		buffer.writeInt(hand.ordinal());
 	}
 
 	public void handle(Supplier<Context> context) {
@@ -36,15 +42,7 @@ public class NbtPacket extends SimplePacketBase {
 			ServerPlayerEntity player = context.get().getSender();
 			
 			if (slot == -1) {
-				ItemStack heldItem = player.getHeldItemMainhand();
-				if (heldItem.getItem() == stack.getItem()) {
-					heldItem.setTag(stack.getTag());
-				}
-				return;
-			}
-			
-			if (slot == -2) {
-				ItemStack heldItem = player.getHeldItemOffhand();
+				ItemStack heldItem = player.getHeldItem(hand);
 				if (heldItem.getItem() == stack.getItem()) {
 					heldItem.setTag(stack.getTag());
 				}

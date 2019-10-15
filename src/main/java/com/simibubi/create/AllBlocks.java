@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.generators.MotorBlock;
 import com.simibubi.create.modules.contraptions.generators.WaterWheelBlock;
@@ -182,14 +183,14 @@ public enum AllBlocks {
 		CategoryTracker.currentModule = new IModule() {
 			@Override
 			public String getModuleName() {
-				return name().toLowerCase().replaceAll("__", "");
+				return Lang.asId(name()).replaceAll("__", "");
 			}
 		};
 	}
 
 	private AllBlocks(Block block, ComesWith... comesWith) {
 		this.block = block;
-		this.block.setRegistryName(Create.ID, this.name().toLowerCase());
+		this.block.setRegistryName(Create.ID, Lang.asId(name()));
 		this.module = CategoryTracker.currentModule;
 
 		alsoRegistered = new Block[comesWith.length];
@@ -259,7 +260,7 @@ public enum AllBlocks {
 		}
 
 		return featured.setRegistryName(Create.ID,
-				block.getRegistryName().getPath() + "_" + feature.name().toLowerCase());
+				block.getRegistryName().getPath() + "_" + Lang.asId(feature.name()));
 	}
 
 	@OnlyIn(Dist.CLIENT)

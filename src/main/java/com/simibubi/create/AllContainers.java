@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.logistics.block.FlexcrateContainer;
 import com.simibubi.create.modules.logistics.block.FlexcrateScreen;
 import com.simibubi.create.modules.schematics.block.SchematicTableContainer;
@@ -17,19 +18,15 @@ import net.minecraft.inventory.container.ContainerType.IFactory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.network.IContainerFactory;
+import net.minecraftforge.registries.IForgeRegistry;
 
-@EventBusSubscriber(bus = Bus.MOD)
 public enum AllContainers {
 
-	SCHEMATIC_TABLE(SchematicTableContainer::new), 
+	SCHEMATIC_TABLE(SchematicTableContainer::new),
 	SCHEMATICANNON(SchematicannonContainer::new),
 	FLEXCRATE(FlexcrateContainer::new),
-	
+
 	;
 
 	public ContainerType<? extends Container> type;
@@ -39,13 +36,11 @@ public enum AllContainers {
 		this.factory = factory;
 	}
 
-	@SubscribeEvent
-	public static void onContainerTypeRegistry(final RegistryEvent.Register<ContainerType<?>> e) {
-
+	public static void registerContainers(IForgeRegistry<ContainerType<?>> iForgeRegistry) {
 		for (AllContainers container : values()) {
 			container.type = new ContainerType<>(container.factory)
-					.setRegistryName(new ResourceLocation(Create.ID, container.name().toLowerCase()));
-			e.getRegistry().register(container.type);
+					.setRegistryName(new ResourceLocation(Create.ID, Lang.asId(container.name())));
+			iForgeRegistry.register(container.type);
 		}
 	}
 
@@ -58,7 +53,8 @@ public enum AllContainers {
 
 	@OnlyIn(Dist.CLIENT)
 	@SuppressWarnings("unchecked")
-	private static <C extends Container, S extends Screen & IHasContainer<C>> void bind(AllContainers c, IScreenFactory<C, S> factory) {
+	private static <C extends Container, S extends Screen & IHasContainer<C>> void bind(AllContainers c,
+			IScreenFactory<C, S> factory) {
 		ScreenManager.registerFactory((ContainerType<C>) c.type, factory);
 	}
 
