@@ -3,7 +3,6 @@ package com.simibubi.create.modules.contraptions.receivers.constructs;
 import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
 import static com.simibubi.create.AllBlocks.PISTON_POLE;
 import static com.simibubi.create.AllBlocks.STICKY_MECHANICAL_PISTON;
-import static com.simibubi.create.AllBlocks.TRANSLATION_CHASSIS;
 import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
@@ -54,11 +53,24 @@ public class TranslationConstruct {
 
 	protected int extensionLength;
 	protected int initialExtensionProgress;
-	protected Axis movementAxis;
+	protected Direction orientation;
 
 	public TranslationConstruct() {
 		blocks = new HashMap<>();
 		actors = new ArrayList<>();
+	}
+	
+	public static TranslationConstruct movePistonAt(World world, BlockPos pos, Direction direction, boolean retract) {
+		if (isFrozen())
+			return null;
+		TranslationConstruct construct = new TranslationConstruct();
+		construct.orientation = direction;
+		if (!construct.collectExtensions(world, pos, direction))
+			return null;
+		if (!construct.searchMovedStructure(world, pos.offset(direction, construct.initialExtensionProgress + 1),
+				retract ? direction.getOpposite() : direction))
+			return null;
+		return construct;
 	}
 
 	public Set<BlockPos> getColliders(World world, Direction movementDirection) {
@@ -83,38 +95,6 @@ public class TranslationConstruct {
 
 		}
 		return cachedColliders;
-	}
-
-	public static TranslationConstruct getAttachedForPushing(World world, BlockPos pos, Direction direction) {
-		if (isFrozen())
-			return null;
-
-		TranslationConstruct construct = new TranslationConstruct();
-
-		if (!construct.collectExtensions(world, pos, direction))
-			return null;
-		if (!construct.collectAttached(world, pos.offset(direction, construct.initialExtensionProgress), direction,
-				direction, construct.initialExtensionProgress))
-			return null;
-
-		return construct;
-	}
-
-	public static TranslationConstruct getAttachedForPulling(World world, BlockPos pos, Direction direction) {
-		if (isFrozen())
-			return null;
-
-		TranslationConstruct construct = new TranslationConstruct();
-
-		if (!construct.collectExtensions(world, pos, direction))
-			return null;
-		if (STICKY_MECHANICAL_PISTON.typeOf(world.getBlockState(pos))) {
-			if (!construct.collectAttached(world, pos.offset(direction, construct.initialExtensionProgress), direction,
-					direction.getOpposite(), construct.initialExtensionProgress))
-				return null;
-		}
-
-		return construct;
 	}
 
 	private boolean collectExtensions(World world, BlockPos pos, Direction direction) {
@@ -174,241 +154,6 @@ public class TranslationConstruct {
 		return true;
 	}
 
-	protected boolean collectAttached(World world, BlockPos pos, Direction direction, Direction movementDirection,
-			int offset) {
-
-		// Find chassis
-		List<BlockInfo> chassis = collectChassis(world, pos, direction, offset);
-		if (chassis == null)
-			return false;
-
-		// Get single row of blocks
-		if (chassis.isEmpty()) {
-			if (movementDirection != direction) {
-				BlockState state = world.getBlockState(pos.offset(direction));
-				if (state.getMaterial().isReplaceable() || state.isAir(world, pos.offset(direction)))
-					return true;
-				if (state.getCollisionShape(world, pos.offset(direction)).isEmpty())
-					return true;
-				if (!canPull(world, pos.offset(direction), movementDirection))
-					return true;
-
-				BlockPos blockPos = pos.offset(direction).offset(direction, -offset);
-				blocks.put(blockPos, new BlockInfo(blockPos, state, null));
-				constructCollisionBox = new AxisAlignedBB(blockPos);
-
-			} else {
-				for (int distance = 1; distance <= parameters.maxChassisRange.get() + 1; distance++) {
-					BlockPos currentPos = pos.offset(direction, distance);
-					BlockState state = world.getBlockState(currentPos);
-
-					// Ignore replaceable Blocks and Air-like
-					if (state.getMaterial().isReplaceable() || state.isAir(world, currentPos))
-						break;
-					if (state.getCollisionShape(world, currentPos).isEmpty())
-						break;
-
-					// Row is immobile
-					if (!canPush(world, currentPos, direction))
-						return false;
-
-					// Too many blocks
-					if (distance == parameters.maxChassisRange.get() + 1)
-						return false;
-
-					BlockPos blockPos = currentPos.offset(direction, -offset);
-					blocks.put(blockPos, new BlockInfo(blockPos, state, null));
-
-					if (constructCollisionBox == null)
-						constructCollisionBox = new AxisAlignedBB(blockPos);
-					else
-						constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(blockPos));
-
-					// Don't collect in front of drills
-					if (AllBlocks.DRILL.typeOf(state) && state.get(FACING) == direction)
-						break;
-				}
-			}
-		}
-
-		// Get attached blocks by chassis
-		else {
-			constructCollisionBox = new AxisAlignedBB(pos.offset(direction, -offset + 1));
-			List<BlockInfo> attachedBlocksByChassis = getAttachedBlocksByChassis(world, direction, chassis,
-					movementDirection, offset);
-			if (attachedBlocksByChassis == null)
-				return false;
-			attachedBlocksByChassis.forEach(info -> {
-				blocks.put(info.pos, info);
-				constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(info.pos));
-			});
-		}
-
-		// Find blocks with special movement behaviour
-		blocks.values().forEach(block -> {
-			if (block.state.getBlock() instanceof IHaveMovementBehavior)
-				actors.add(block);
-		});
-
-		return true;
-	}
-
-	private static List<BlockInfo> getAttachedBlocksByChassis(World world, Direction direction, List<BlockInfo> chassis,
-			Direction movementDirection, int offset) {
-		Axis axis = direction.getAxis();
-
-		List<BlockPos> frontier = new LinkedList<>();
-		Set<BlockPos> visited = new HashSet<>();
-		chassis.forEach(c -> frontier.add(c.pos.offset(direction, offset)));
-
-		BlockPos chassisPos = chassis.get(0).pos.offset(direction, offset);
-		int chassisCoord = direction.getAxis().getCoordinate(chassisPos.getX(), chassisPos.getY(), chassisPos.getZ());
-		Function<BlockPos, BlockPos> getChassisPos = pos -> new BlockPos(axis == Axis.X ? chassisCoord : pos.getX(),
-				axis == Axis.Y ? chassisCoord : pos.getY(), axis == Axis.Z ? chassisCoord : pos.getZ());
-
-		List<BlockInfo> blocks = new ArrayList<>();
-		boolean pushing = direction == movementDirection;
-
-		Search: while (!frontier.isEmpty()) {
-			BlockPos currentPos = frontier.remove(0);
-			BlockState state = world.getBlockState(currentPos);
-
-			if (visited.contains(currentPos))
-				continue;
-			visited.add(currentPos);
-
-			BlockPos currentChassisPos = getChassisPos.apply(currentPos);
-			BlockState chassisState = world.getBlockState(currentChassisPos);
-
-			// Not attached to a chassis
-			if (!(chassisState.getBlock() instanceof TranslationChassisBlock))
-				continue;
-
-			int chassisRange = ((ChassisTileEntity) world.getTileEntity(currentChassisPos)).getRange();
-			boolean chassisSticky = chassisState
-					.get(((AbstractChassisBlock) chassisState.getBlock()).getGlueableSide(chassisState, direction));
-
-			// Ignore replaceable Blocks and Air-like
-			if (state.getMaterial().isReplaceable() || state.isAir(world, currentPos))
-				continue;
-			if (state.getCollisionShape(world, currentPos).isEmpty())
-				continue;
-
-			// Too many Blocks
-			if (pushing && !currentChassisPos.withinDistance(currentPos, chassisRange + 1))
-				return null;
-			if (direction != movementDirection && !currentChassisPos.withinDistance(currentPos, chassisRange + 1))
-				continue;
-
-			// Skip if pushed column ended already
-			if (!currentPos.equals(currentChassisPos)) {
-
-				// Don't pull if not sticky
-				if (!chassisSticky && !pushing)
-					continue;
-
-				for (BlockPos p = currentPos; !p.equals(currentChassisPos); p = p.offset(direction.getOpposite())) {
-					BlockState blockState = world.getBlockState(p);
-
-					if (!chassisSticky
-							&& (blockState.getMaterial().isReplaceable() || blockState.isAir(world, currentPos))) {
-						continue Search;
-					}
-
-					if (!pushing && chassisSticky && !canPush(world, p, movementDirection)) {
-						continue Search;
-					}
-				}
-			}
-
-			// Ignore sand and co.
-			if (chassisSticky && movementDirection != direction && state.getBlock() instanceof FallingBlock)
-				continue;
-
-			// Structure is immobile
-			if (pushing && !canPush(world, currentPos, movementDirection))
-				return null;
-			if (!pushing && !canPull(world, currentPos, movementDirection))
-				continue;
-
-			CompoundNBT nbt = new CompoundNBT();
-			nbt.putInt("Range", chassisRange);
-			blocks.add(new BlockInfo(currentPos.offset(direction, -offset), state,
-					TRANSLATION_CHASSIS.typeOf(state) ? nbt : null));
-
-			// Expand search
-			for (Direction facing : Direction.values()) {
-				if (currentChassisPos.equals(currentPos) && facing == direction.getOpposite())
-					continue;
-				if (AllBlocks.DRILL.typeOf(state) && facing == direction)
-					continue;
-
-				frontier.add(currentPos.offset(facing));
-			}
-		}
-
-		return blocks;
-	}
-
-	private static boolean canPush(World world, BlockPos pos, Direction direction) {
-		BlockState blockState = world.getBlockState(pos);
-		if (TRANSLATION_CHASSIS.typeOf(blockState))
-			return true;
-		if (blockState.getBlock() instanceof ShulkerBoxBlock)
-			return false;
-		return PistonBlock.canPush(blockState, world, pos, direction, true, direction);
-	}
-
-	private static boolean canPull(World world, BlockPos pos, Direction direction) {
-		return canPush(world, pos, direction.getOpposite());
-	}
-
-	private static List<BlockInfo> collectChassis(World world, BlockPos pos, Direction direction, int offset2) {
-		List<BlockPos> search = new LinkedList<>();
-		Set<BlockPos> visited = new HashSet<>();
-		List<BlockInfo> chassis = new LinkedList<>();
-		search.add(pos.offset(direction));
-		while (!search.isEmpty()) {
-			if (chassis.size() > parameters.maxChassisForTranslation.get())
-				return null;
-
-			BlockPos current = search.remove(0);
-			if (visited.contains(current))
-				continue;
-
-			BlockState blockState = world.getBlockState(current);
-			if (!(blockState.getBlock() instanceof TranslationChassisBlock))
-				continue;
-			if (blockState.get(AXIS) != direction.getAxis())
-				continue;
-
-			visited.add(current);
-			chassis.add(new BlockInfo(current.offset(direction, -offset2), blockState, null));
-
-			for (Direction offset : Direction.values()) {
-				if (offset.getAxis() == direction.getAxis())
-					continue;
-				search.add(current.offset(offset));
-			}
-		}
-		return chassis;
-	}
-
-	/////////////////////////
-
-	public static TranslationConstruct moveConstructAt(World world, BlockPos pos, Direction direction) {
-		if (isFrozen())
-			return null;
-		TranslationConstruct construct = new TranslationConstruct();
-		construct.movementAxis = direction.getAxis();
-
-		// collect piston extensions
-
-		if (!construct.searchMovedStructure(world, pos, direction))
-			return null;
-		return construct;
-	}
-
 	private boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
 		List<BlockPos> frontier = new ArrayList<>();
 		Set<BlockPos> visited = new HashSet<>();
@@ -420,15 +165,17 @@ public class TranslationConstruct {
 			if (!world.isAreaLoaded(currentPos, 1))
 				return false;
 			if (!world.isBlockPresent(currentPos))
-				continue;
+				break;
 			BlockState state = world.getBlockState(currentPos);
 			if (state.getMaterial().isReplaceable())
 				break;
 			if (state.getCollisionShape(world, currentPos).isEmpty())
 				break;
+			if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state) && state.get(FACING) == direction.getOpposite())
+				break;
 			if (!canPush(world, currentPos, direction))
 				return false;
-			
+			frontier.add(currentPos);
 		}
 
 		for (int limit = 1000; limit > 0; limit--) {
@@ -455,7 +202,7 @@ public class TranslationConstruct {
 			return true;
 		if (!canPush(world, pos, direction))
 			return false;
-		if (TRANSLATION_CHASSIS.typeOf(state) && !moveChassis(world, pos, direction, frontier, visited))
+		if (isChassis(state) && !moveChassis(world, pos, direction, frontier, visited))
 			return false;
 		if (state.getBlock() instanceof SlimeBlock)
 			for (Direction offset : Direction.values())
@@ -475,9 +222,6 @@ public class TranslationConstruct {
 
 		BlockInfo anchorChassis = cluster.get(0);
 		Axis chassisAxis = anchorChassis.state.get(AXIS);
-		List<BlockPos> chassisFrontier = new LinkedList<>();
-		Set<BlockPos> chassisVisited = new HashSet<>();
-		cluster.forEach(c -> frontier.add(c.pos));
 		int chassisCoord = chassisAxis.getCoordinate(anchorChassis.pos.getX(), anchorChassis.pos.getY(),
 				anchorChassis.pos.getZ());
 
@@ -488,7 +232,11 @@ public class TranslationConstruct {
 
 		// Collect blocks on both sides
 		for (AxisDirection axisDirection : AxisDirection.values()) {
+
 			Direction chassisDirection = Direction.getFacingFromAxis(axisDirection, chassisAxis);
+			List<BlockPos> chassisFrontier = new LinkedList<>();
+			Set<BlockPos> chassisVisited = new HashSet<>();
+			cluster.forEach(c -> chassisFrontier.add(c.pos));
 			boolean pushing = chassisDirection == movementDirection;
 
 			Search: while (!chassisFrontier.isEmpty()) {
@@ -506,7 +254,10 @@ public class TranslationConstruct {
 				BlockState chassisState = world.getBlockState(currentChassisPos);
 
 				// Not attached to a chassis
-				if (!AllBlocks.TRANSLATION_CHASSIS.typeOf(chassisState) || chassisState.get(AXIS) != chassisAxis)
+				if (!isChassis(chassisState) || chassisState.get(AXIS) != chassisAxis)
+					continue;
+				if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state)
+						&& state.get(FACING) == chassisDirection.getOpposite())
 					continue;
 
 				int chassisRange = ((ChassisTileEntity) world.getTileEntity(currentChassisPos)).getRange();
@@ -580,7 +331,8 @@ public class TranslationConstruct {
 		List<BlockPos> search = new LinkedList<>();
 		Set<BlockPos> visited = new HashSet<>();
 		List<BlockInfo> chassis = new LinkedList<>();
-		Axis axis = world.getBlockState(pos).get(AXIS);
+		BlockState anchorChassis = world.getBlockState(pos);
+		Axis axis = anchorChassis.get(AXIS);
 		search.add(pos);
 
 		while (!search.isEmpty()) {
@@ -594,7 +346,9 @@ public class TranslationConstruct {
 				return null;
 
 			BlockState state = world.getBlockState(current);
-			if (!TRANSLATION_CHASSIS.typeOf(state))
+			if (!isChassis(state))
+				continue;
+			if (!TranslationChassisBlock.sameKind(anchorChassis, state))
 				continue;
 			if (state.get(AXIS) != axis)
 				continue;
@@ -619,14 +373,27 @@ public class TranslationConstruct {
 			return state.get(BlockStateProperties.HORIZONTAL_FACING) == facing;
 		return false;
 	}
+	
+	private static boolean isChassis(BlockState state) {
+		return TranslationChassisBlock.isChassis(state);
+	}
 
+	private static boolean canPush(World world, BlockPos pos, Direction direction) {
+		BlockState blockState = world.getBlockState(pos);
+		if (isChassis(blockState))
+			return true;
+		if (blockState.getBlock() instanceof ShulkerBoxBlock)
+			return false;
+		return PistonBlock.canPush(blockState, world, pos, direction, true, direction);
+	}
+	
 	private void add(BlockPos pos, BlockInfo block) {
-		BlockPos localPos = pos.offset(Direction.getFacingFromAxisDirection(movementAxis, AxisDirection.POSITIVE),
-				-initialExtensionProgress);
-		blocks.put(localPos, block);
+		BlockPos localPos = pos.offset(orientation, -initialExtensionProgress);
+		BlockInfo blockInfo = new BlockInfo(localPos, block.state, block.nbt);
+		blocks.put(localPos, blockInfo);
 		if (block.state.getBlock() instanceof IHaveMovementBehavior)
-			actors.add(block);
-		constructCollisionBox.union(new AxisAlignedBB(pos));
+			actors.add(blockInfo);
+		constructCollisionBox.union(new AxisAlignedBB(localPos));
 	}
 
 	private static BlockInfo capture(World world, BlockPos pos) {

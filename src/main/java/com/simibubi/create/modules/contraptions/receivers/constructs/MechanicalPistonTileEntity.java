@@ -57,7 +57,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	public AxisAlignedBB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public double getMaxRenderDistanceSquared() {
@@ -102,9 +102,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		// Collect Construct
-		movingConstruct = getMovementSpeed() < 0
-				? TranslationConstruct.getAttachedForPulling(getWorld(), getPos(), direction)
-				: TranslationConstruct.getAttachedForPushing(getWorld(), getPos(), direction);
+		movingConstruct = TranslationConstruct.movePistonAt(world, pos, direction, getMovementSpeed() < 0);
 		if (movingConstruct == null)
 			return;
 

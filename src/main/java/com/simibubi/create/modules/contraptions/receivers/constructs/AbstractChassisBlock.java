@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
+import java.util.List;
+
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.Lang;
@@ -22,7 +24,7 @@ import net.minecraft.world.World;
 
 public abstract class AbstractChassisBlock extends RotatedPillarBlock
 		implements IWithTileEntity<ChassisTileEntity>, IBlockWithScrollableValue {
-	
+
 	private static final Vec3d valuePos = new Vec3d(15 / 16f, 9 / 16f, 9 / 16f);
 
 	public AbstractChassisBlock(Properties properties) {
@@ -78,17 +80,29 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock
 	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
 		return Lang.translate("generic.range");
 	}
-	
+
 	@Override
 	public Vec3d getValueBoxPosition(BlockState state, IWorld world, BlockPos pos) {
 		return valuePos;
 	}
-	
+
 	@Override
 	public Direction getValueBoxDirection(BlockState state, IWorld world, BlockPos pos) {
 		return null;
 	}
-	
+
+	@Override
+	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.storage.loot.LootContext.Builder builder) {
+		@SuppressWarnings("deprecation")
+		List<ItemStack> drops = super.getDrops(state, builder);
+		for (Direction face : Direction.values()) {
+			BooleanProperty glueableSide = getGlueableSide(state, face);
+			if (glueableSide != null && state.get(glueableSide))
+				drops.add(new ItemStack(Items.SLIME_BALL));
+		}
+		return drops;
+	}
+
 	@Override
 	public boolean isValueOnAllSides() {
 		return true;

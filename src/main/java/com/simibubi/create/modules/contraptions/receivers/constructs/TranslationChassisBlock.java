@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
+import com.simibubi.create.AllBlocks;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -25,19 +27,39 @@ public class TranslationChassisBlock extends AbstractChassisBlock {
 		builder.add(STICKY_TOP, STICKY_BOTTOM);
 		super.fillStateContainer(builder);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
 		BlockState blockState = context.getWorld().getBlockState(placedOnPos);
-		if (blockState.getBlock() instanceof TranslationChassisBlock && !context.isPlacerSneaking())
+		if (isChassis(blockState) && !context.isPlacerSneaking())
 			return getDefaultState().with(AXIS, blockState.get(AXIS));
+		if (!context.isPlacerSneaking())
+			return getDefaultState().with(AXIS, context.getNearestLookingDirection().getAxis());
 		return super.getStateForPlacement(context);
 	}
 
 	@Override
 	public BooleanProperty getGlueableSide(BlockState state, Direction face) {
+		if (face.getAxis() != state.get(AXIS))
+			return null;
 		return face.getAxisDirection() == AxisDirection.POSITIVE ? STICKY_TOP : STICKY_BOTTOM;
+	}
+	
+	@Override
+	public String getTranslationKey() {
+		Block block = AllBlocks.TRANSLATION_CHASSIS.get();
+		if (this == block)
+			return super.getTranslationKey();
+		return block.getTranslationKey();
+	}
+
+	public static boolean isChassis(BlockState state) {
+		return AllBlocks.TRANSLATION_CHASSIS.typeOf(state) || AllBlocks.TRANSLATION_CHASSIS_SECONDARY.typeOf(state);
+	}
+
+	public static boolean sameKind(BlockState state1, BlockState state2) {
+		return state1.getBlock() == state2.getBlock();
 	}
 
 }

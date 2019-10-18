@@ -91,7 +91,11 @@ public enum AllTileEntities {
 	BELT(BeltTileEntity::new, AllBlocks.BELT),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
 	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING),
-	CHASSIS(ChassisTileEntity::new, AllBlocks.ROTATION_CHASSIS, AllBlocks.TRANSLATION_CHASSIS),
+	CHASSIS(
+			ChassisTileEntity::new,
+			AllBlocks.ROTATION_CHASSIS,
+			AllBlocks.TRANSLATION_CHASSIS,
+			AllBlocks.TRANSLATION_CHASSIS_SECONDARY),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
@@ -130,7 +134,7 @@ public enum AllTileEntities {
 		this.supplier = supplier;
 		this.blocks = blocks;
 	}
-	
+
 	public boolean typeOf(TileEntity te) {
 		return te.getType().equals(type);
 	}

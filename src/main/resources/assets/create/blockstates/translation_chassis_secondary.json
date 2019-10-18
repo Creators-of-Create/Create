@@ -1,0 +1,22 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+  	"textures": {
+  	  "side": "create:block/translation_chassis_side_alt"
+  	}
+  },
+  "variants": {
+	"axis=x,sticky_top=false,sticky_bottom=false": { "model": "create:block/translation_chassis", "x": 90, "y": 90 },
+	"axis=x,sticky_top=true,sticky_bottom=false": { "model": "create:block/translation_chassis_top_sticky", "x": 90, "y": 90 },
+	"axis=x,sticky_top=false,sticky_bottom=true": { "model": "create:block/translation_chassis_bottom_sticky", "x": 90, "y": 90 },
+	"axis=x,sticky_top=true,sticky_bottom=true": { "model": "create:block/translation_chassis_both_sticky", "x": 90, "y": 90 },
+	"axis=y,sticky_top=false,sticky_bottom=false": { "model": "create:block/translation_chassis" },
+	"axis=y,sticky_top=true,sticky_bottom=false": { "model": "create:block/translation_chassis_top_sticky" },
+	"axis=y,sticky_top=false,sticky_bottom=true": { "model": "create:block/translation_chassis_bottom_sticky" },
+	"axis=y,sticky_top=true,sticky_bottom=true": { "model": "create:block/translation_chassis_both_sticky" },
+	"axis=z,sticky_top=false,sticky_bottom=false": { "model": "create:block/translation_chassis", "x": 90, "y": 180 },
+	"axis=z,sticky_top=true,sticky_bottom=false": { "model": "create:block/translation_chassis_top_sticky", "x": 90, "y": 180 },
+	"axis=z,sticky_top=false,sticky_bottom=true": { "model": "create:block/translation_chassis_bottom_sticky", "x": 90, "y": 180 },
+	"axis=z,sticky_top=true,sticky_bottom=true": { "model": "create:block/translation_chassis_both_sticky", "x": 90, "y": 180 }
+  }
+}

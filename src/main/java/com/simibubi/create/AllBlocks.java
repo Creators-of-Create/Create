@@ -115,6 +115,7 @@ public enum AllBlocks {
 	MECHANICAL_BEARING(new MechanicalBearingBlock()),
 	MECHANICAL_BEARING_TOP(new ShaftHalfBlock()),
 	TRANSLATION_CHASSIS(new TranslationChassisBlock()),
+	TRANSLATION_CHASSIS_SECONDARY(new TranslationChassisBlock()),
 	ROTATION_CHASSIS(new RotationChassisBlock()),
 	DRILL(new DrillBlock()),
 	HARVESTER(new HarvesterBlock()),
