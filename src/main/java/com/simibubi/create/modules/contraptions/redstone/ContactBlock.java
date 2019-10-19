@@ -101,16 +101,22 @@ public class ContactBlock extends ProperDirectionalBlock implements IHaveMovemen
 	}
 
 	@Override
-	public IMovementContext visitPosition(World world, BlockPos pos, BlockState block, Direction movement,
-			MechanicalPistonTileEntity piston) {
+	public void visitPosition(MovementContext context) {
+		BlockState block = context.state;
+		World world = context.world;
+		BlockPos pos = context.currentGridPos;
+
 		Direction direction = block.get(FACING);
 		if (!hasValidContact(world, pos, direction))
-			return IdleMovementContext.INSTANCE;
+			return;
+		if (context.moverType != MoverType.PISTON)
+			return;
 
-		int ticksToStayActive = (int) Math.ceil(1 / Math.abs(piston.getMovementSpeed()));
+		int ticksToStayActive = (int) Math
+				.ceil(1 / Math.abs(((MechanicalPistonTileEntity) context.mover).getMovementSpeed()));
 		world.setBlockState(pos.offset(direction), world.getBlockState(pos.offset(direction)).with(POWERED, true));
 		world.getPendingBlockTicks().scheduleTick(pos.offset(direction), this, ticksToStayActive, TickPriority.NORMAL);
-		return IdleMovementContext.INSTANCE;
+		return;
 	}
 
 }

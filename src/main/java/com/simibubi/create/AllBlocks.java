@@ -11,8 +11,10 @@ import com.simibubi.create.modules.contraptions.generators.WaterWheelBlock;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelBlock;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerBlock;
 import com.simibubi.create.modules.contraptions.receivers.DrillBlock;
+import com.simibubi.create.modules.contraptions.receivers.DrillBlock.DrillHeadBlock;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock;
+import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock.HarvesterBladeBlock;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressBlock;
 import com.simibubi.create.modules.contraptions.receivers.TurntableBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingBlock;
@@ -118,7 +120,9 @@ public enum AllBlocks {
 	TRANSLATION_CHASSIS_SECONDARY(new TranslationChassisBlock()),
 	ROTATION_CHASSIS(new RotationChassisBlock()),
 	DRILL(new DrillBlock()),
+	DRILL_HEAD(new DrillHeadBlock()),
 	HARVESTER(new HarvesterBlock()),
+	HARVESTER_BLADE(new HarvesterBladeBlock()),
 
 	__LOGISTICS__(),
 	CONTACT(new ContactBlock()),

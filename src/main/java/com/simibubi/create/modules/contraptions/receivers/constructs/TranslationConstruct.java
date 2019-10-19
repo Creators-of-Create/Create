@@ -16,8 +16,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
+import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
@@ -43,7 +46,7 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 public class TranslationConstruct {
 
 	protected Map<BlockPos, BlockInfo> blocks;
-	protected List<BlockInfo> actors;
+	protected List<MutablePair<BlockInfo, MovementContext>> actors;
 
 	protected AxisAlignedBB constructCollisionBox;
 	protected AxisAlignedBB pistonCollisionBox;
@@ -59,7 +62,7 @@ public class TranslationConstruct {
 		blocks = new HashMap<>();
 		actors = new ArrayList<>();
 	}
-	
+
 	public static TranslationConstruct movePistonAt(World world, BlockPos pos, Direction direction, boolean retract) {
 		if (isFrozen())
 			return null;
@@ -157,7 +160,7 @@ public class TranslationConstruct {
 	private boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
 		List<BlockPos> frontier = new ArrayList<>();
 		Set<BlockPos> visited = new HashSet<>();
-		constructCollisionBox = new AxisAlignedBB(pos);
+		constructCollisionBox = new AxisAlignedBB(pos.offset(direction, initialExtensionProgress));
 		frontier.add(pos);
 
 		for (int offset = 1; offset <= parameters.maxChassisRange.get(); offset++) {
@@ -205,8 +208,18 @@ public class TranslationConstruct {
 		if (isChassis(state) && !moveChassis(world, pos, direction, frontier, visited))
 			return false;
 		if (state.getBlock() instanceof SlimeBlock)
-			for (Direction offset : Direction.values())
-				frontier.add(pos.offset(offset));
+			for (Direction offset : Direction.values()) {
+				BlockPos offsetPos = pos.offset(offset);
+				if (offset.getAxis() == direction.getAxis()) {
+					BlockState blockState = world.getBlockState(offsetPos);
+					if (AllBlocks.MECHANICAL_PISTON.typeOf(blockState)
+							|| AllBlocks.STICKY_MECHANICAL_PISTON.typeOf(blockState)
+							|| AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(blockState))
+						continue;
+				}
+				if (!visited.contains(offsetPos))
+					frontier.add(offsetPos);
+			}
 
 		add(pos, capture(world, pos));
 		return true;
@@ -215,10 +228,14 @@ public class TranslationConstruct {
 	private boolean moveChassis(World world, BlockPos pos, Direction movementDirection, List<BlockPos> frontier,
 			Set<BlockPos> visited) {
 		List<BlockInfo> cluster = getChassisClusterAt(world, pos);
+
 		if (cluster == null)
 			return false;
 		if (cluster.isEmpty())
 			return true;
+
+		Set<BlockPos> validChassis = new HashSet<>(cluster.size());
+		cluster.forEach(info -> validChassis.add(info.pos));
 
 		BlockInfo anchorChassis = cluster.get(0);
 		Axis chassisAxis = anchorChassis.state.get(AXIS);
@@ -275,6 +292,10 @@ public class TranslationConstruct {
 				if (pushing && notInRange)
 					return false;
 				if (!pushing && notInRange)
+					continue;
+
+				// Chassis not part of cluster
+				if (!validChassis.contains(currentChassisPos))
 					continue;
 
 				boolean isBaseChassis = currentPos.equals(currentChassisPos);
@@ -373,7 +394,7 @@ public class TranslationConstruct {
 			return state.get(BlockStateProperties.HORIZONTAL_FACING) == facing;
 		return false;
 	}
-	
+
 	private static boolean isChassis(BlockState state) {
 		return TranslationChassisBlock.isChassis(state);
 	}
@@ -386,14 +407,14 @@ public class TranslationConstruct {
 			return false;
 		return PistonBlock.canPush(blockState, world, pos, direction, true, direction);
 	}
-	
+
 	private void add(BlockPos pos, BlockInfo block) {
 		BlockPos localPos = pos.offset(orientation, -initialExtensionProgress);
 		BlockInfo blockInfo = new BlockInfo(localPos, block.state, block.nbt);
 		blocks.put(localPos, blockInfo);
 		if (block.state.getBlock() instanceof IHaveMovementBehavior)
-			actors.add(blockInfo);
-		constructCollisionBox.union(new AxisAlignedBB(localPos));
+			actors.add(MutablePair.of(blockInfo, null));
+		constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(localPos));
 	}
 
 	private static BlockInfo capture(World world, BlockPos pos) {
@@ -482,7 +503,7 @@ public class TranslationConstruct {
 		// Find blocks with special movement behaviour
 		construct.blocks.values().forEach(block -> {
 			if (block.state.getBlock() instanceof IHaveMovementBehavior)
-				construct.actors.add(block);
+				construct.actors.add(MutablePair.of(block, null));
 		});
 
 		return construct;

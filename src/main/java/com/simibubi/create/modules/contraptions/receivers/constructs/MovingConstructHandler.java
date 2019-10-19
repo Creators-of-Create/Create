@@ -26,6 +26,8 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
@@ -53,14 +55,14 @@ public class MovingConstructHandler {
 		Vec3d movementVec = new Vec3d(te.getBlockState().get(BlockStateProperties.FACING).getDirectionVec());
 		TranslationConstruct construct = te.movingConstruct;
 
-		if (world.isRemote) {
-			renderedBBs.clear();
-//			if (construct.collisionBoxFront != null)
-//				renderedBBs.add(construct.collisionBoxFront.offset(te.getConstructOffset(0)));
-//			if (construct.collisionBoxBack != null)
-//				renderedBBs.add(construct.collisionBoxBack.offset(te.getConstructOffset(0)));
-
-		}
+//		if (world.isRemote) {
+//			renderedBBs.clear();
+//			if (construct.pistonCollisionBox != null)
+//				renderedBBs.add(construct.pistonCollisionBox.offset(te.getConstructOffset(0)));
+//			if (construct.constructCollisionBox != null)
+//				renderedBBs.add(construct.constructCollisionBox.offset(te.getConstructOffset(0)));
+//
+//		}
 
 		if (construct.getCollisionBoxFront() != null) {
 			AxisAlignedBB constructBB = construct.getCollisionBoxFront().offset(te.getConstructOffset(0)).grow(.5f);
@@ -164,8 +166,8 @@ public class MovingConstructHandler {
 		return movingPistons.get(mechanicalPistonTileEntity.getWorld());
 	}
 
-//	@SubscribeEvent
-//	public static void onRenderWorld(RenderWorldLastEvent event) {
+	@SubscribeEvent
+	public static void onRenderWorld(RenderWorldLastEvent event) {
 //		for (AxisAlignedBB bb : renderedBBs) {
 //			TessellatorHelper.prepareForDrawing();
 //			GlStateManager.disableTexture();
@@ -177,6 +179,6 @@ public class MovingConstructHandler {
 //			GlStateManager.enableTexture();
 //			TessellatorHelper.cleanUpAfterDrawing();
 //		}
-//	}
+	}
 
 }

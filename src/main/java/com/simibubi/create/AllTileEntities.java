@@ -9,8 +9,11 @@ import com.simibubi.create.modules.contraptions.generators.WaterWheelTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.DrillTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.HarvesterTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.HarvesterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
@@ -91,12 +94,10 @@ public enum AllTileEntities {
 	BELT(BeltTileEntity::new, AllBlocks.BELT),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
 	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING),
-	CHASSIS(
-			ChassisTileEntity::new,
-			AllBlocks.ROTATION_CHASSIS,
-			AllBlocks.TRANSLATION_CHASSIS,
+	CHASSIS(ChassisTileEntity::new, AllBlocks.ROTATION_CHASSIS, AllBlocks.TRANSLATION_CHASSIS,
 			AllBlocks.TRANSLATION_CHASSIS_SECONDARY),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
+	HARVESTER(HarvesterTileEntity::new, AllBlocks.HARVESTER),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
@@ -161,6 +162,7 @@ public enum AllTileEntities {
 		bind(TurntableTileEntity.class, new KineticTileEntityRenderer());
 		bind(MotorTileEntity.class, new MotorTileEntityRenderer());
 		bind(EncasedShaftTileEntity.class, new EncasedShaftTileEntityRenderer());
+		bind(DrillTileEntity.class, new DrillTileEntityRenderer());
 		bind(EncasedFanTileEntity.class, new EncasedFanTileEntityRenderer());
 		bind(GearboxTileEntity.class, new GearboxTileEntityRenderer());
 		bind(GearshiftTileEntity.class, new SplitShaftTileEntityRenderer());
@@ -168,7 +170,6 @@ public enum AllTileEntities {
 		bind(BeltTileEntity.class, new BeltTileEntityRenderer());
 		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());
 		bind(MechanicalBearingTileEntity.class, new MechanicalBearingTileEntityRenderer());
-		bind(DrillTileEntity.class, new KineticTileEntityRenderer());
 		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());
 		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());
 		bind(RedstoneBridgeTileEntity.class, new LinkedTileEntityRenderer());
@@ -179,6 +180,7 @@ public enum AllTileEntities {
 		bind(FlexpeaterTileEntity.class, new FlexpeaterTileEntityRenderer());
 		bind(LogisticalControllerTileEntity.class, new LogisticalControllerTileEntityRenderer());
 		bind(LogisticiansTableTileEntity.class, new LogisticiansTableTileEntityRenderer());
+		bind(HarvesterTileEntity.class, new HarvesterTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

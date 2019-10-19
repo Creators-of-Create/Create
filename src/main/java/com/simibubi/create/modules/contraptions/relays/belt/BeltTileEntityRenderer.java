@@ -98,7 +98,7 @@ public class BeltTileEntityRenderer extends KineticTileEntityRenderer {
 		if (beltEntity.hasPulley())
 			super.renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, buffer);
 
-		cacheIfMissing(beltEntity.getBlockState(), BeltModelAnimator::new);
+		cacheIfMissing(beltEntity.getBlockState(), getWorld(), BeltModelAnimator::new);
 		renderBeltFromCache(beltEntity, (float) x, (float) y, (float) z, buffer);
 	}
 

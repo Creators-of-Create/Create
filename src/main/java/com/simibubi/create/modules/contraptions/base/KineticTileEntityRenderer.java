@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.client.model.animation.TileEntityRendererFast;
@@ -32,7 +33,7 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 
 	protected static Map<BlockState, BufferManipulator> cachedBuffers;
 
-	protected class BlockModelSpinner extends BufferManipulator {
+	protected static class BlockModelSpinner extends BufferManipulator {
 
 		public BlockModelSpinner(ByteBuffer original) {
 			super(original);
@@ -50,7 +51,7 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 				x = getX(original, vertex) - .5f;
 				y = getY(original, vertex) - .5f;
 				z = getZ(original, vertex) - .5f;
-				
+
 				putPos(mutable, vertex, rotateX(x, y, z, sin, cos, axis) + .5f + xIn,
 						rotateY(x, y, z, sin, cos, axis) + .5f + yIn, rotateZ(x, y, z, sin, cos, axis) + .5f + zIn);
 				putLight(mutable, vertex, packedLightCoords);
@@ -69,7 +70,7 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 			int destroyStage, BufferBuilder buffer) {
 
 		final BlockState state = getRenderedBlockState(te);
-		cacheIfMissing(state, BlockModelSpinner::new);
+		cacheIfMissing(state, getWorld(), BlockModelSpinner::new);
 
 		final BlockPos pos = te.getPos();
 		Axis axis = ((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState());
@@ -77,17 +78,22 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 		float offset = getRotationOffsetForPosition(te, pos, axis);
 		float angle = (float) (((time * te.getSpeed() + offset) % 360) / 180 * (float) Math.PI);
 
-		renderFromCache(buffer, state, (float) x, (float) y, (float) z, pos, axis, angle);
+		renderFromCache(buffer, state, getWorld(), (float) x, (float) y, (float) z, pos, axis, angle);
 	}
 
-	protected void renderFromCache(BufferBuilder buffer, BlockState state, float x, float y, float z, BlockPos pos,
-			Axis axis, float angle) {
-		int packedLightmapCoords = state.getPackedLightmapCoords(getWorld(), pos);
-		buffer.putBulkData(((BlockModelSpinner) cachedBuffers.get(state)).getTransformed(x, y, z, angle, axis,
+	protected static void renderFromCache(BufferBuilder buffer, BlockState state, World world, float x, float y,
+			float z, BlockPos pos, Axis axis, float angle) {
+		int packedLightmapCoords = state.getPackedLightmapCoords(world, pos);
+		buffer.putBulkData(((BlockModelSpinner) getBuffer(state)).getTransformed(x, y, z, angle, axis,
 				packedLightmapCoords));
 	}
 
-	protected void cacheIfMissing(final BlockState state, Function<ByteBuffer, BufferManipulator> factory) {
+	public static BufferManipulator getBuffer(BlockState state) {
+		return cachedBuffers.get(state);
+	}
+
+	public static void cacheIfMissing(final BlockState state, World world,
+			Function<ByteBuffer, BufferManipulator> factory) {
 		if (!cachedBuffers.containsKey(state)) {
 			BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 			BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
@@ -97,7 +103,7 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 
 			builder.setTranslation(0, 1, 0);
 			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-			blockRenderer.renderModelFlat(getWorld(), originalModel, state, BlockPos.ZERO.down(), builder, true, random, 42,
+			blockRenderer.renderModelFlat(world, originalModel, state, BlockPos.ZERO.down(), builder, true, random, 42,
 					EmptyModelData.INSTANCE);
 			builder.finishDrawing();
 
@@ -123,5 +129,5 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 		if (cachedBuffers != null)
 			cachedBuffers.clear();
 	}
-	
+
 }

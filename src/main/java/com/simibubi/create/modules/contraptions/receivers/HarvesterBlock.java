@@ -3,8 +3,8 @@ package com.simibubi.create.modules.contraptions.receivers;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,6 +12,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.SugarCaneBlock;
+import net.minecraft.block.material.PushReaction;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -19,6 +21,7 @@ import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -30,6 +33,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
 
 public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBehavior {
@@ -40,6 +45,21 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 
 	public HarvesterBlock() {
 		super(Properties.from(Blocks.IRON_BLOCK));
+	}
+
+	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return new HarvesterTileEntity();
+	}
+
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.PUSH_ONLY;
 	}
 
 	@Override
@@ -62,6 +82,12 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(HORIZONTAL_FACING);
 		super.fillStateContainer(builder);
+	}
+	
+	@Override
+	@OnlyIn(value = Dist.CLIENT)
+	public void renderInConstruct(MovementContext context, double x, double y, double z, BufferBuilder buffer) {
+		HarvesterTileEntityRenderer.renderInConstruct(context, x, y, z, buffer);
 	}
 
 	@Override
@@ -93,12 +119,14 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 	}
 
 	@Override
-	public IMovementContext visitPosition(World world, BlockPos pos, BlockState block, Direction movement,
-			MechanicalPistonTileEntity piston) {
-		IMovementContext context = IdleMovementContext.INSTANCE;
+	public void visitPosition(MovementContext context) {
+		Direction movement = context.getMovementDirection();
+		World world = context.world;
+		BlockState block = context.state;
+		BlockPos pos = context.currentGridPos;
 
 		if (movement != block.get(HORIZONTAL_FACING))
-			return context;
+			return;
 
 		BlockState stateVisited = world.getBlockState(pos);
 		boolean notCropButCuttable = false;
@@ -113,7 +141,7 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 			if (isValidOther(world, pos, stateVisited))
 				notCropButCuttable = true;
 			else
-				return context;
+				return;
 		}
 
 		List<ItemStack> drops = Block.getDrops(stateVisited, (ServerWorld) world, pos, null);
@@ -131,8 +159,6 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 					new Vec3d(movement.getDirectionVec()).add(0, 0.5f, 0).scale(world.rand.nextFloat() * .3f));
 			world.addEntity(itemEntity);
 		}
-
-		return context;
 	}
 
 	private boolean isValidCrop(World world, BlockPos pos, BlockState state) {
@@ -199,6 +225,25 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 		}
 
 		return Blocks.AIR.getDefaultState();
+	}
+
+	public static class HarvesterBladeBlock extends HorizontalBlock implements IRenderUtilityBlock {
+
+		public HarvesterBladeBlock() {
+			super(Properties.from(Blocks.AIR));
+		}
+
+		@Override
+		protected void fillStateContainer(Builder<Block, BlockState> builder) {
+			builder.add(HORIZONTAL_FACING);
+			super.fillStateContainer(builder);
+		}
+
+		@Override
+		public BlockRenderLayer getRenderLayer() {
+			return BlockRenderLayer.SOLID;
+		}
+
 	}
 
 }

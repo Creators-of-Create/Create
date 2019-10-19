@@ -40,7 +40,7 @@ public class MechanicalPressTileEntityRenderer extends KineticTileEntityRenderer
 		super.renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, buffer);
 
 		final BlockState state = getRenderedHeadBlockState(te);
-		cacheIfMissing(state, HeadTranslator::new);
+		cacheIfMissing(state, getWorld(), HeadTranslator::new);
 
 		final BlockPos pos = te.getPos();
 

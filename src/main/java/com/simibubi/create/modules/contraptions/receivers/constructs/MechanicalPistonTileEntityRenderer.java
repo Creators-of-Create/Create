@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.receivers.constructs;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.cache.Cache;
@@ -12,6 +13,7 @@ import com.simibubi.create.foundation.utility.PlacementSimulationWorld;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -21,6 +23,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -43,6 +46,17 @@ public class MechanicalPistonTileEntityRenderer extends KineticTileEntityRendere
 
 		cacheConstructIfMissing(pistonTe.movingConstruct);
 		renderConstructFromCache(pistonTe.movingConstruct, pistonTe, x, y, z, partialTicks, buffer);
+		for (Pair<BlockInfo, MovementContext> actor : pistonTe.movingConstruct.actors) {
+			MovementContext context = actor.getRight();
+			if (context == null)
+				continue;
+			final Vec3d offset = pistonTe.getConstructOffset(partialTicks);
+			BlockInfo blockInfo = actor.getLeft();
+			IHaveMovementBehavior block = (IHaveMovementBehavior) blockInfo.state.getBlock();
+			BlockPos pos = blockInfo.pos.subtract(te.getPos());
+			block.renderInConstruct(context, x + offset.x + pos.getX(),
+					y + offset.y + pos.getY(), z + offset.z + pos.getZ(), buffer);
+		}
 
 	}
 
@@ -89,7 +103,7 @@ public class MechanicalPistonTileEntityRenderer extends KineticTileEntityRendere
 		return AllBlocks.SHAFT.block.getDefaultState().with(BlockStateProperties.AXIS,
 				((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState()));
 	}
-	
+
 	public static void invalidateCache() {
 		if (cachedConstructs != null)
 			cachedConstructs.invalidateAll();

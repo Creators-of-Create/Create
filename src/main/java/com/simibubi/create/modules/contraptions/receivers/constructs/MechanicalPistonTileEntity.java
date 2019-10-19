@@ -5,10 +5,14 @@ import static com.simibubi.create.CreateConfig.parameters;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.Create;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MoverType;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
@@ -78,8 +82,16 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	public void read(CompoundNBT tag) {
 		running = tag.getBoolean("Running");
 		offset = tag.getFloat("Offset");
-		if (running && !TranslationConstruct.isFrozen())
+		if (running && !TranslationConstruct.isFrozen()) {
 			movingConstruct = TranslationConstruct.fromNBT(tag.getCompound("Construct"));
+			for (MutablePair<BlockInfo, MovementContext> pair : movingConstruct.actors) {
+				MovementContext context = new MovementContext(world, pair.left.state, MoverType.PISTON, this);
+				Direction direction = getBlockState().get(BlockStateProperties.FACING);
+				context.movementVec = new Vec3d(direction.getDirectionVec()).scale(getMovementSpeed()).normalize();
+				context.currentGridPos = pair.left.pos.offset(direction, getModulatedOffset(offset));
+				pair.setRight(context);
+			}
+		}
 
 		super.read(tag);
 	}
@@ -90,10 +102,15 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
-		for (BlockInfo block : movingConstruct.actors) {
+		for (MutablePair<BlockInfo, MovementContext> pair : movingConstruct.actors) {
+			BlockInfo block = pair.left;
+			MovementContext context = pair.right;
+
+			BlockPos newPos = block.pos.offset(direction, getModulatedOffset(newOffset));
+			context.currentGridPos = newPos;
+
 			IHaveMovementBehavior actor = (IHaveMovementBehavior) block.state.getBlock();
-			actor.visitPosition(world, block.pos.offset(direction, getModulatedOffset(newOffset)), block.state,
-					getMovementSpeed() > 0 ? direction : direction.getOpposite(), this);
+			actor.visitPosition(context);
 		}
 
 	}
@@ -132,6 +149,13 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 			getWorld().setBlockState(startPos, Blocks.AIR.getDefaultState(), 67);
 		}
 
+		for (MutablePair<BlockInfo, MovementContext> pair : movingConstruct.actors) {
+			MovementContext context = new MovementContext(world, pair.left.state, MoverType.PISTON, this);
+			context.movementVec = new Vec3d(direction.getDirectionVec()).scale(getMovementSpeed()).normalize();
+			context.currentGridPos = pair.left.pos.offset(direction, getModulatedOffset(offset));
+			pair.setRight(context);
+		}
+
 		onBlockVisited(offset);
 	}
 
@@ -160,7 +184,10 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 			getWorld().setBlockState(targetPos, state, 3);
 			TileEntity tileEntity = world.getTileEntity(targetPos);
 			if (tileEntity != null && block.nbt != null) {
-				((ChassisTileEntity) tileEntity).setRange(block.nbt.getInt("Range"));
+				block.nbt.putInt("x", targetPos.getX());
+				block.nbt.putInt("y", targetPos.getY());
+				block.nbt.putInt("z", targetPos.getZ());
+				tileEntity.read(block.nbt);
 			}
 		}
 
@@ -181,6 +208,13 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 			if (running) {
 				if (speed == 0)
 					disassembleConstruct();
+				else {
+					for (MutablePair<BlockInfo, MovementContext> pair : movingConstruct.actors)
+						pair.right.movementVec = new Vec3d(
+								getBlockState().get(BlockStateProperties.FACING).getDirectionVec())
+										.scale(getMovementSpeed()).normalize();
+					sendData();
+				}
 				return;
 			}
 			assembleConstruct();

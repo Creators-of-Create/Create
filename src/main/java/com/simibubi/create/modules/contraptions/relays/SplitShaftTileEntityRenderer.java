@@ -29,7 +29,7 @@ public class SplitShaftTileEntityRenderer extends KineticTileEntityRenderer {
 				continue;
 
 			BlockState state = defaultState.with(BlockStateProperties.FACING, direction);
-			cacheIfMissing(state, BlockModelSpinner::new);
+			cacheIfMissing(state, getWorld(), BlockModelSpinner::new);
 
 			float offset = getRotationOffsetForPosition(te, pos, axis);
 			float angle = (time * te.getSpeed()) % 360;
@@ -42,7 +42,7 @@ public class SplitShaftTileEntityRenderer extends KineticTileEntityRenderer {
 			angle += offset;
 			angle = angle / 180f * (float) Math.PI;
 
-			renderFromCache(buffer, state, (float) x, (float) y, (float) z, pos, axis, angle);
+			renderFromCache(buffer, state, getWorld(), (float) x, (float) y, (float) z, pos, axis, angle);
 		}
 	}
 

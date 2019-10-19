@@ -45,8 +45,8 @@ public class MechanicalBearingTileEntityRenderer extends KineticTileEntityRender
 		BlockState capState = AllBlocks.MECHANICAL_BEARING_TOP.get().getDefaultState().with(BlockStateProperties.FACING,
 				facing);
 
-		cacheIfMissing(shaftState, BlockModelSpinner::new);
-		cacheIfMissing(capState, BlockModelSpinner::new);
+		cacheIfMissing(shaftState, getWorld(), BlockModelSpinner::new);
+		cacheIfMissing(capState, getWorld(), BlockModelSpinner::new);
 
 		float offset = getRotationOffsetForPosition(te, pos, facing.getAxis());
 		float angle = (time * te.getSpeed()) % 360;
@@ -55,8 +55,9 @@ public class MechanicalBearingTileEntityRenderer extends KineticTileEntityRender
 		angle = angle / 180f * (float) Math.PI;
 		float interpolatedAngle = bearingTe.getInterpolatedAngle(partialTicks);
 
-		renderFromCache(buffer, shaftState, (float) x, (float) y, (float) z, pos, facing.getAxis(), angle);
-		renderFromCache(buffer, capState, (float) x, (float) y, (float) z, pos, facing.getAxis(), interpolatedAngle);
+		renderFromCache(buffer, shaftState, getWorld(), (float) x, (float) y, (float) z, pos, facing.getAxis(), angle);
+		renderFromCache(buffer, capState, getWorld(), (float) x, (float) y, (float) z, pos, facing.getAxis(),
+				interpolatedAngle);
 
 		if (!bearingTe.running)
 			return;
@@ -110,7 +111,7 @@ public class MechanicalBearingTileEntityRenderer extends KineticTileEntityRender
 		return AllBlocks.SHAFT.block.getDefaultState().with(BlockStateProperties.AXIS,
 				((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState()));
 	}
-	
+
 	public static void invalidateCache() {
 		if (cachedConstructs != null)
 			cachedConstructs.invalidateAll();
