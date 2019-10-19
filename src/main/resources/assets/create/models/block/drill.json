@@ -2,7 +2,8 @@
     "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
     "textures": {
         "gearbox_top": "create:block/gearbox_top",
-        "anvil": "minecraft:block/anvil",
+        "anvil": "create:block/noisy_iron_block",
+		"anvil2": "minecraft:block/anvil",
         "gearbox": "create:block/gearbox",
         "axis_top": "create:block/axis_top",
         "axis": "create:block/axis",
@@ -14,12 +15,12 @@
             "from": [ 4, 4, 11 ], 
             "to": [ 12, 12, 13 ], 
             "faces": {
-                "north": { "texture": "#anvil", "uv": [ 3, 3, 11, 11 ] },
-                "east": { "texture": "#anvil", "uv": [ 10, 5, 12, 13 ] },
-                "south": { "texture": "#anvil", "uv": [ 3, 3, 11, 11 ] },
-                "west": { "texture": "#anvil", "uv": [ 8, 4, 10, 12 ] },
-                "up": { "texture": "#anvil", "uv": [ 5, 5, 13, 7 ] },
-                "down": { "texture": "#anvil", "uv": [ 4, 3, 12, 5 ] }
+                "north": { "texture": "#anvil2", "uv": [ 3, 3, 11, 11 ] },
+                "east": { "texture": "#anvil2", "uv": [ 10, 5, 12, 13 ] },
+                "south": { "texture": "#anvil2", "uv": [ 3, 3, 11, 11 ] },
+                "west": { "texture": "#anvil2", "uv": [ 8, 4, 10, 12 ] },
+                "up": { "texture": "#anvil2", "uv": [ 5, 5, 13, 7 ] },
+                "down": { "texture": "#anvil2", "uv": [ 4, 3, 12, 5 ] }
             }
         },
         {

@@ -1,5 +1,5 @@
 {
-	"parent": "create:block/saw",
+	"parent": "create:block/saw_horizontal",
     "textures": {
         "stonecutter_saw": "create:block/static_saw"
     }

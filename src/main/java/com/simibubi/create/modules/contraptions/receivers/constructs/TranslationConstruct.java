@@ -20,6 +20,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
+import com.simibubi.create.modules.contraptions.receivers.SawBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
 
@@ -419,6 +420,8 @@ public class TranslationConstruct {
 
 	private static BlockInfo capture(World world, BlockPos pos) {
 		BlockState blockstate = world.getBlockState(pos);
+		if (AllBlocks.SAW.typeOf(blockstate))
+			blockstate = blockstate.with(SawBlock.RUNNING, true);
 		TileEntity tileentity = world.getTileEntity(pos);
 		CompoundNBT compoundnbt = null;
 		if (tileentity != null) {

@@ -23,6 +23,8 @@
 	"item.create.propeller": "Propeller",
 	"item.create.flour": "Wheat Flour",
 	"item.create.dough": "Dough",
+	"item.create.crushed_iron": "Crushed Iron Ore",
+	"item.create.crushed_gold": "Crushed Gold Ore",
 	
 	"item.create.logistical_controller_supply": "Item Supply",
 	"item.create.logistical_controller_request": "Item Request",
@@ -60,6 +62,7 @@
 	"block.create.crushing_wheel": "Crushing Wheel",
 	"block.create.drill": "Mechanical Drill",
 	"block.create.harvester": "Mechanical Harvester",
+	"block.create.saw": "Mechanical Saw",
 	"block.create.water_wheel": "Water Wheel",
 	"block.create.belt_support": "Belt Support",
 	"block.create.mechanical_press": "Mechanical Press",

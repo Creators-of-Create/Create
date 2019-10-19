@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
+import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
 
 import net.minecraft.block.Block;
@@ -28,7 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -39,9 +39,7 @@ import net.minecraftforge.common.IPlantable;
 
 public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBehavior {
 
-	public static final VoxelShape SHAPE_SOUTH = makeCuboidShape(0, 4, 0, 16, 12, 6),
-			SHAPE_NORTH = makeCuboidShape(0, 4, 10, 16, 12, 16), SHAPE_WEST = makeCuboidShape(10, 4, 0, 16, 12, 16),
-			SHAPE_EAST = makeCuboidShape(0, 4, 0, 6, 12, 16);
+	private static VoxelShaper SHAPER = VoxelShaper.forHorizontalBlock(Block.makeCuboidShape(0, 2, 0, 16, 14, 3));
 
 	public HarvesterBlock() {
 		super(Properties.from(Blocks.IRON_BLOCK));
@@ -65,17 +63,7 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		Direction direction = state.get(HORIZONTAL_FACING);
-
-		if (direction == Direction.NORTH)
-			return SHAPE_NORTH;
-		if (direction == Direction.SOUTH)
-			return SHAPE_SOUTH;
-		if (direction == Direction.EAST)
-			return SHAPE_EAST;
-		if (direction == Direction.WEST)
-			return SHAPE_WEST;
-
-		return VoxelShapes.empty();
+		return SHAPER.get(direction);
 	}
 
 	@Override
@@ -83,7 +71,7 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 		builder.add(HORIZONTAL_FACING);
 		super.fillStateContainer(builder);
 	}
-	
+
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
 	public void renderInConstruct(MovementContext context, double x, double y, double z, BufferBuilder buffer) {

@@ -2,23 +2,18 @@ package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
-import com.simibubi.create.modules.contraptions.base.IRotate;
-import com.simibubi.create.modules.contraptions.base.KineticBlock;
+import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.SoundCategory;
@@ -33,11 +28,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
-public class MechanicalPistonBlock extends KineticBlock {
+public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 
 	public static final EnumProperty<PistonState> STATE = EnumProperty.create("state", PistonState.class);
-	public static final DirectionProperty FACING = BlockStateProperties.FACING;
-	public static final BooleanProperty AXIS_ALONG_FIRST_COORDINATE = BooleanProperty.create("axis_along_first");
 
 	protected static final VoxelShape BASE_SHAPE_UP = makeCuboidShape(0, 0, 0, 16, 12, 16),
 			BASE_SHAPE_DOWN = makeCuboidShape(0, 4, 0, 16, 16, 16),
@@ -63,58 +56,8 @@ public class MechanicalPistonBlock extends KineticBlock {
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(STATE, FACING, AXIS_ALONG_FIRST_COORDINATE);
+		builder.add(STATE);
 		super.fillStateContainer(builder);
-	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction facing = context.getNearestLookingDirection().getOpposite();
-		BlockPos pos = context.getPos();
-		World world = context.getWorld();
-		boolean alongFirst = false;
-		if (context.isPlacerSneaking())
-			facing = facing.getOpposite();
-
-		if (facing.getAxis().isHorizontal()) {
-			alongFirst = facing.getAxis() == Axis.Z;
-
-			Block blockAbove = world.getBlockState(pos.offset(Direction.UP)).getBlock();
-			boolean shaftAbove = blockAbove instanceof IRotate && ((IRotate) blockAbove).hasShaftTowards(world,
-					pos.up(), world.getBlockState(pos.up()), Direction.DOWN);
-			Block blockBelow = world.getBlockState(pos.offset(Direction.DOWN)).getBlock();
-			boolean shaftBelow = blockBelow instanceof IRotate && ((IRotate) blockBelow).hasShaftTowards(world,
-					pos.down(), world.getBlockState(pos.down()), Direction.UP);
-
-			if (shaftAbove || shaftBelow)
-				alongFirst = facing.getAxis() == Axis.X;
-		}
-
-		if (facing.getAxis().isVertical()) {
-			alongFirst = context.getPlacementHorizontalFacing().getAxis() == Axis.X;
-			Direction prefferedSide = null;
-			for (Direction side : Direction.values()) {
-				if (side.getAxis().isVertical())
-					continue;
-				BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));
-				if (blockState.getBlock() instanceof IRotate) {
-					if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(),
-							context.getPos().offset(side), blockState, side.getOpposite()))
-						if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
-							prefferedSide = null;
-							break;
-						} else {
-							prefferedSide = side;
-						}
-				}
-			}
-			if (prefferedSide != null) {
-				alongFirst = prefferedSide.getAxis() == Axis.X;
-			}
-		}
-
-		return this.getDefaultState().with(FACING, facing).with(STATE, PistonState.RETRACTED)
-				.with(AXIS_ALONG_FIRST_COORDINATE, alongFirst);
 	}
 
 	@Override
@@ -152,26 +95,6 @@ public class MechanicalPistonBlock extends KineticBlock {
 	@Override
 	protected boolean hasStaticPart() {
 		return true;
-	}
-
-	@Override
-	public Axis getRotationAxis(BlockState state) {
-		Axis pistonAxis = state.get(FACING).getAxis();
-		boolean alongFirst = state.get(AXIS_ALONG_FIRST_COORDINATE);
-
-		if (pistonAxis == Axis.X)
-			return alongFirst ? Axis.Y : Axis.Z;
-		if (pistonAxis == Axis.Y)
-			return alongFirst ? Axis.X : Axis.Z;
-		if (pistonAxis == Axis.Z)
-			return alongFirst ? Axis.X : Axis.Y;
-
-		return super.getRotationAxis(state);
-	}
-
-	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
-		return face.getAxis() == getRotationAxis(state);
 	}
 
 	public enum PistonState implements IStringSerializable {

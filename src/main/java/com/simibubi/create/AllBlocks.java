@@ -16,6 +16,7 @@ import com.simibubi.create.modules.contraptions.receivers.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock.HarvesterBladeBlock;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressBlock;
+import com.simibubi.create.modules.contraptions.receivers.SawBlock;
 import com.simibubi.create.modules.contraptions.receivers.TurntableBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock;
@@ -121,6 +122,7 @@ public enum AllBlocks {
 	ROTATION_CHASSIS(new RotationChassisBlock()),
 	DRILL(new DrillBlock()),
 	DRILL_HEAD(new DrillHeadBlock()),
+	SAW(new SawBlock()),
 	HARVESTER(new HarvesterBlock()),
 	HARVESTER_BLADE(new HarvesterBladeBlock()),
 

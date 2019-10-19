@@ -8,6 +8,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
@@ -60,6 +61,10 @@ public class CardboardBoxItem extends Item {
 		return box;
 	}
 
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+	}
+	
 	public static void addAddress(ItemStack box, String address) {
 		box.getOrCreateTag().putString("Address", address);
 	}

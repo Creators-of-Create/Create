@@ -11,6 +11,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.Create;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.SawBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MoverType;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
@@ -180,6 +181,9 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 				state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world, targetPos,
 						targetPos.offset(face));
 
+			if (AllBlocks.SAW.typeOf(state))
+				state = state.with(SawBlock.RUNNING, false);
+			
 			world.destroyBlock(targetPos, world.getBlockState(targetPos).getCollisionShape(world, targetPos).isEmpty());
 			getWorld().setBlockState(targetPos, state, 3);
 			TileEntity tileEntity = world.getTileEntity(targetPos);

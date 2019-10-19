@@ -16,6 +16,8 @@ import com.simibubi.create.modules.contraptions.receivers.HarvesterTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.SawTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.SawTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ChassisTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingTileEntity;
@@ -97,6 +99,7 @@ public enum AllTileEntities {
 	CHASSIS(ChassisTileEntity::new, AllBlocks.ROTATION_CHASSIS, AllBlocks.TRANSLATION_CHASSIS,
 			AllBlocks.TRANSLATION_CHASSIS_SECONDARY),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
+	SAW(SawTileEntity::new, AllBlocks.SAW),
 	HARVESTER(HarvesterTileEntity::new, AllBlocks.HARVESTER),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
@@ -163,6 +166,7 @@ public enum AllTileEntities {
 		bind(MotorTileEntity.class, new MotorTileEntityRenderer());
 		bind(EncasedShaftTileEntity.class, new EncasedShaftTileEntityRenderer());
 		bind(DrillTileEntity.class, new DrillTileEntityRenderer());
+		bind(SawTileEntity.class, new SawTileEntityRenderer());
 		bind(EncasedFanTileEntity.class, new EncasedFanTileEntityRenderer());
 		bind(GearboxTileEntity.class, new GearboxTileEntityRenderer());
 		bind(GearshiftTileEntity.class, new SplitShaftTileEntityRenderer());

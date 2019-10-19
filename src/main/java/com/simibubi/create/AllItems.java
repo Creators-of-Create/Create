@@ -79,6 +79,8 @@ public enum AllItems {
 	FLOUR(ingredient()),
 	DOUGH(ingredient()),
 	PROPELLER(ingredient()),
+	CRUSHED_IRON(ingredient()),
+	CRUSHED_GOLD(ingredient()),
 
 	__LOGISTICS__(),
 	CARDBOARD_BOX_1616(new CardboardBoxItem(standardItemProperties())),

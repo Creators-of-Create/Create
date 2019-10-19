@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.utility.VoxelShapers;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
-import com.simibubi.create.modules.contraptions.relays.ShaftBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -24,7 +24,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -33,11 +32,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class DrillBlock extends DirectionalKineticBlock
 		implements IHaveMovementBehavior, IWithTileEntity<DrillTileEntity> {
-
-	protected static final VoxelShape CORE_SHAPE = makeCuboidShape(3, 3, 3, 13, 13, 13),
-			DRILL_SHAPE_X = VoxelShapes.or(CORE_SHAPE, ShaftBlock.AXIS_X),
-			DRILL_SHAPE_Y = VoxelShapes.or(CORE_SHAPE, ShaftBlock.AXIS_Y),
-			DRILL_SHAPE_Z = VoxelShapes.or(CORE_SHAPE, ShaftBlock.AXIS_Z);
 
 	public DrillBlock() {
 		super(Properties.from(Blocks.IRON_BLOCK));
@@ -55,16 +49,7 @@ public class DrillBlock extends DirectionalKineticBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		Axis axis = state.get(FACING).getAxis();
-
-		if (axis == Axis.X)
-			return DRILL_SHAPE_X;
-		if (axis == Axis.Y)
-			return DRILL_SHAPE_Y;
-		if (axis == Axis.Z)
-			return DRILL_SHAPE_Z;
-
-		return CORE_SHAPE;
+		return VoxelShapers.SHORT_CASING.get(state.get(FACING));
 	}
 
 	@Override

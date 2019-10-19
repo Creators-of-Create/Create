@@ -8,13 +8,13 @@
     ], 
 	"results": [
 		{
-			"item": "minecraft:gold_ingot",
+			"item": "create:crushed_gold",
 			"count": 1
 		},
 		{
-			"item": "minecraft:gold_nugget",
-			"count": 9,
-			"chance": 0.5
+			"item": "create:crushed_gold",
+			"count": 2,
+			"chance": 0.3
 		},
 		{
 			"item": "minecraft:cobblestone",

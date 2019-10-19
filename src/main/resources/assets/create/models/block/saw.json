@@ -5,7 +5,8 @@
         "gearbox": "create:block/gearbox",
         "stonecutter_saw": "minecraft:block/stonecutter_saw",
         "andesite_casing_short": "create:block/andesite_casing_short",
-        "mechanical_saw_top": "create:block/mechanical_saw_top"
+        "mechanical_saw_top": "create:block/mechanical_saw_top",
+		"particle": "create:block/mechanical_saw_top"
     },
     "elements": [
         {
@@ -67,14 +68,14 @@
         },
         {
             "name": "Top",
-            "from": [ 0, 12, 3 ], 
-            "to": [ 16, 13, 13 ], 
+            "from": [ 0, 12, 2 ], 
+            "to": [ 16, 13, 14 ], 
             "faces": {
-                "north": { "texture": "#mechanical_saw_top", "uv": [ 0, 12, 16, 13 ] },
+                "north": { "texture": "#mechanical_saw_top", "uv": [ 0, 13, 16, 14 ] },
                 "east": { "texture": "#mechanical_saw_top", "uv": [ 0, 3, 1, 13 ], "rotation": 90 },
-                "south": { "texture": "#mechanical_saw_top", "uv": [ 0, 3, 16, 4 ] },
+                "south": { "texture": "#mechanical_saw_top", "uv": [ 0, 2, 16, 3 ] },
                 "west": { "texture": "#mechanical_saw_top", "uv": [ 15, 3, 16, 13 ], "rotation": 270 },
-                "up": { "texture": "#mechanical_saw_top", "uv": [ 0, 3, 16, 13 ] }
+                "up": { "texture": "#mechanical_saw_top", "uv": [ 0, 2, 16, 14 ] }
             }
         }
     ]
