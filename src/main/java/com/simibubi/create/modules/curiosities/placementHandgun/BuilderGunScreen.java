@@ -31,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 @SuppressWarnings("deprecation")
@@ -42,6 +43,7 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 
 	private final String title = Lang.translate("gui.blockzapper.title");
 	private final String patternSection = Lang.translate("gui.blockzapper.patternSection");
+	private final String needsUpgradedAmplifier = Lang.translate("gui.blockzapper.needsUpgradedAmplifier");
 
 	private IconButton replaceModeButton;
 	private Indicator replaceModeIndicator;
@@ -96,6 +98,8 @@ public class BuilderGunScreen extends AbstractSimiScreen {
 
 		if (nbt.contains("SearchDistance"))
 			spreadRangeInput.setState(nbt.getInt("SearchDistance"));
+		if (BuilderGunItem.getMaxAoe(item) == 2)
+			spreadRangeInput.getToolTip().add(1, TextFormatting.RED + needsUpgradedAmplifier);
 
 		Collections.addAll(widgets, replaceModeButton, replaceModeIndicator, spreadDiagonallyButton,
 				spreadDiagonallyIndicator, spreadMaterialButton, spreadMaterialIndicator, spreadRangeLabel,

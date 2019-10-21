@@ -2,36 +2,31 @@
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
 	"parent": "create:item/placement_handgun",
     "textures": {
-        "0": "block/white_concrete_powder",
-        "1": "block/white_stained_glass"
+        "2": "block/white_concrete_powder",
+        "3": "block/white_stained_glass"
     },
     "elements": [
         {
-            "name": "Rod Front",
-            "from": [ 7.300000004470348, 4.3000000193715096, 0.5000000074505806 ], 
-            "to": [ 8.699999995529652, 5.700000010430813, 8.50000000745058 ], 
-            "rotation": { "origin": [ 8.0, 5.0, 8.0 ], "axis": "z", "angle": -45.0 },
+            "name": "Core",
+            "from": [ 7.3, 5, 2.7 ], 
+            "to": [ 8.7, 6, 11.7 ], 
             "faces": {
-                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 1.3999999910593033, 1.3999999910593033 ] },
-                "east": { "texture": "#0", "uv": [ 4.0, 4.0, 12.0, 5.399999991059303 ] },
-                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 1.3999999910593033, 1.3999999910593033 ] },
-                "west": { "texture": "#0", "uv": [ 1.0, 0.0, 9.0, 1.3999999910593033 ] },
-                "up": { "texture": "#0", "uv": [ 0.0, 0.0, 1.3999999910593033, 8.0 ] },
-                "down": { "texture": "#0", "uv": [ 0.0, 0.0, 1.3999999910593033, 8.0 ] }
+                "north": { "texture": "#2", "uv": [ 6, 5, 7, 6 ] },
+                "east": { "texture": "#2", "uv": [ 3, 5, 12, 6 ] },
+                "west": { "texture": "#2", "uv": [ 3, 7, 12, 8 ] }
             }
         },
         {
-            "name": "Rod Glow",
-            "from": [ 6.899999998509884, 3.900000013411045, 0.0 ], 
-            "to": [ 9.100000001490116, 6.100000016391277, 7.0 ], 
-            "rotation": { "origin": [ 8.0, 5.0, 8.0 ], "axis": "z", "angle": -45.0 },
+            "name": "Core Glow",
+            "from": [ 7.1, 4.6, 2.5 ], 
+            "to": [ 8.9, 6.4, 11.4 ], 
             "faces": {
-                "north": { "texture": "#1", "uv": [ 0.0, 0.0, 2.2000000029802322, 2.2000000029802322 ] },
-                "east": { "texture": "#1", "uv": [ 0.0, 0.0, 7.0, 2.2000000029802322 ] },
-                "south": { "texture": "#1", "uv": [ 0.0, 0.0, 2.2000000029802322, 2.2000000029802322 ] },
-                "west": { "texture": "#1", "uv": [ 0.0, 0.0, 7.0, 2.2000000029802322 ] },
-                "up": { "texture": "#1", "uv": [ 0.0, 0.0, 2.2000000029802322, 7.0 ] },
-                "down": { "texture": "#1", "uv": [ 0.0, 0.0, 2.2000000029802322, 7.0 ] }
+                "north": { "texture": "#3", "uv": [ 6, 7, 7.8, 8.8 ] },
+                "east": { "texture": "#3", "uv": [ 3, 7, 11.9, 8.8 ] },
+                "south": { "texture": "#3", "uv": [ 5, 7, 6.8, 8.8 ] },
+                "west": { "texture": "#3", "uv": [ 4, 7, 12.9, 8.8 ] },
+                "up": { "texture": "#3", "uv": [ 7, 3, 8.8, 11.9 ] },
+                "down": { "texture": "#3", "uv": [ 7, 4, 8.8, 12.9 ] }
             }
         }
     ]

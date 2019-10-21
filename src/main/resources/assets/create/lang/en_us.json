@@ -201,6 +201,7 @@
 	"create.gui.blockzapper.searchDiagonal": "Follow Diagonals",
 	"create.gui.blockzapper.searchFuzzy": "Ignore Material Borders",
 	"create.gui.blockzapper.range": "Spread Range",
+	"create.gui.blockzapper.needsUpgradedAmplifier": "Requires Upgraded Amplifier",
 	"create.gui.blockzapper.patternSection": "Patterns",
 	"create.gui.blockzapper.pattern.solid": "Solid",
 	"create.gui.blockzapper.pattern.checkered": "Checkerboard",

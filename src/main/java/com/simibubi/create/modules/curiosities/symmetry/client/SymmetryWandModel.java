@@ -1,5 +1,8 @@
 package com.simibubi.create.modules.curiosities.symmetry.client;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.simibubi.create.foundation.block.CustomRenderItemBakedModel;
 
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -14,6 +17,10 @@ public class SymmetryWandModel extends CustomRenderItemBakedModel {
 		super(template);
 	}
 
+	public static List<String> getCustomModelLocations() {
+		return Arrays.asList("symmetry_wand_core", "symmetry_wand_bits");
+	}
+	
 	@Override
 	public CustomRenderItemBakedModel loadPartials(ModelBakeEvent event) {
 		this.core = loadCustomModel(event, "symmetry_wand_core");

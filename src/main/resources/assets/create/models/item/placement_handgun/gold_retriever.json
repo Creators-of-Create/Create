@@ -2,27 +2,21 @@
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
     "parent": "create:item/placement_handgun",
     "textures": {
-        "0": "block/anvil",
-        "1": "block/gray_concrete_powder",
-        "2": "block/white_concrete_powder",
-        "3": "block/white_stained_glass",
-        "4": "block/obsidian",
-        "5": "block/gold_block",
-        "6": "block/redstone_block"
+        "0": "create:block/blaze_brass_mesh",
+        "cyan_concrete_powder": "block/cyan_concrete_powder"
     },
     "elements": [
         {
-            "name": "Retriever Back",
-            "from": [ 7.0, 2.0, 8.0 ], 
-            "to": [ 9.0, 4.0, 9.0 ], 
-            "rotation": { "origin": [ 8.0, 3.0, 7.0 ], "axis": "x", "angle": -22.5 },
+            "name": "Retriever",
+            "from": [ 6.5, 3, 6.1 ], 
+            "to": [ 9.5, 4, 8.1 ], 
             "faces": {
-                "north": { "texture": "#6", "uv": [ 12.0, 4.0, 14.0, 6.0 ] },
-                "east": { "texture": "#5", "uv": [ 15.0, 8.0, 16.0, 10.0 ] },
-                "south": { "texture": "#5", "uv": [ 1.0, 13.0, 3.0, 15.0 ] },
-                "west": { "texture": "#5", "uv": [ 15.0, 7.0, 16.0, 9.0 ] },
-                "up": { "texture": "#5", "uv": [ 3.0, 15.0, 5.0, 16.0 ] },
-                "down": { "texture": "#5", "uv": [ 7.0, 15.0, 9.0, 16.0 ] }
+                "north": { "texture": "#cyan_concrete_powder", "uv": [ 5, 11, 8, 12 ] },
+                "east": { "texture": "#cyan_concrete_powder", "uv": [ 10, 7, 12, 8 ] },
+                "south": { "texture": "#cyan_concrete_powder", "uv": [ 9, 7, 12, 8 ] },
+                "west": { "texture": "#cyan_concrete_powder", "uv": [ 10, 7, 12, 8 ] },
+                "up": { "texture": "#0", "uv": [ 0, 6, 3, 8 ] },
+                "down": { "texture": "#0", "uv": [ 0, 6, 3, 8 ] }
             }
         }
     ]

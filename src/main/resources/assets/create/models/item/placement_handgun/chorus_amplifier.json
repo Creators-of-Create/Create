@@ -2,69 +2,33 @@
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
 	"parent": "create:item/placement_handgun",
     "textures": {
-        "0": "block/anvil",
-        "1": "block/gray_concrete_powder",
-        "2": "block/white_concrete_powder",
-        "3": "block/white_stained_glass",
-        "4": "block/obsidian",
-        "5": "block/purpur_pillar",
-        "6": "block/redstone_block"
+        "0": "create:block/chorus_chrome_mesh"
     },
     "elements": [
         {
-            "name": "Amplifier",
-            "from": [ 10.000000014901161, 4.0, 4.0 ], 
-            "to": [ 11.000000014901161, 5.0, 10.0 ], 
-            "rotation": { "origin": [ 11.0, 4.0, 8.0 ], "axis": "z", "angle": 45.0 },
+            "name": "Amplifier Connector",
+            "from": [ 7, 2, 3 ], 
+            "to": [ 9, 3, 8 ], 
             "faces": {
-                "north": { "texture": "#5", "uv": [ 1.0, 2.0, 2.0, 3.0 ] },
-                "east": { "texture": "#5", "uv": [ 10.0, 0.0, 16.0, 1.0 ] },
-                "south": { "texture": "#5", "uv": [ 7.0, 7.0, 8.0, 8.0 ] },
-                "west": { "texture": "#5", "uv": [ 0.0, 1.0, 6.0, 2.0 ] },
-                "up": { "texture": "#5", "uv": [ 2.0, 0.0, 1.0, 6.0 ] },
-                "down": { "texture": "#5", "uv": [ 13.0, 10.0, 14.0, 16.0 ] }
+                "north": { "texture": "#0", "uv": [ 1, 3, 3, 4 ] },
+                "east": { "texture": "#0", "uv": [ 11, 5, 16, 6 ] },
+                "south": { "texture": "#0", "uv": [ 0, 3, 2, 4 ] },
+                "west": { "texture": "#0", "uv": [ 0, 5, 5, 6 ] },
+                "up": { "texture": "#0", "uv": [ 0, 3, 5, 5 ], "rotation": 90 },
+                "down": { "texture": "#0", "uv": [ 0, 3, 5, 5 ], "rotation": 270 }
             }
         },
         {
             "name": "Amplifier Connector",
-            "from": [ 9.800000011920929, 5.0, 8.0 ], 
-            "to": [ 10.800000011920929, 8.0, 9.0 ], 
-            "rotation": { "origin": [ 11.0, 4.0, 8.0 ], "axis": "z", "angle": 45.0 },
+            "from": [ 7, 3, 7 ], 
+            "to": [ 9, 4, 8 ], 
             "faces": {
-                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 1.0, 3.0 ] },
-                "east": { "texture": "#0", "uv": [ 6.0, 3.0, 7.0, 6.0 ] },
-                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 1.0, 3.0 ] },
-                "west": { "texture": "#0", "uv": [ 10.0, 2.0, 14.0, 3.0 ] },
-                "up": { "texture": "#0", "uv": [ 15.0, 11.0, 14.0, 15.0 ] },
-                "down": { "texture": "#0", "uv": [ 10.0, 3.0, 11.0, 4.0 ] }
-            }
-        },
-        {
-            "name": "Amplifier Connector 2",
-            "from": [ 7.800000011920929, 7.0, 8.0 ], 
-            "to": [ 9.800000011920929, 8.0, 9.0 ], 
-            "rotation": { "origin": [ 11.0, 4.0, 8.0 ], "axis": "z", "angle": 45.0 },
-            "faces": {
-                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
-                "east": { "texture": "#0", "uv": [ 6.0, 3.0, 7.0, 4.0 ] },
-                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
-                "west": { "texture": "#0", "uv": [ 10.0, 2.0, 13.0, 3.0 ] },
-                "up": { "texture": "#0", "uv": [ 7.0, 6.0, 9.0, 7.0 ] },
-                "down": { "texture": "#0", "uv": [ 10.0, 3.0, 12.0, 4.0 ] }
-            }
-        },
-        {
-            "name": "Amplifier 2",
-            "from": [ 5.000000014901161, 3.0, 4.0 ], 
-            "to": [ 6.000000014901161, 4.0, 10.0 ], 
-            "rotation": { "origin": [ 5.0, 4.0, 8.0 ], "axis": "z", "angle": 45.0 },
-            "faces": {
-                "north": { "texture": "#5", "uv": [ 1.0, 2.0, 2.0, 3.0 ] },
-                "east": { "texture": "#5", "uv": [ 10.0, 0.0, 16.0, 1.0 ] },
-                "south": { "texture": "#5", "uv": [ 7.0, 7.0, 8.0, 8.0 ] },
-                "west": { "texture": "#5", "uv": [ 0.0, 1.0, 6.0, 2.0 ] },
-                "up": { "texture": "#5", "uv": [ 2.0, 0.0, 1.0, 6.0 ] },
-                "down": { "texture": "#5", "uv": [ 13.0, 10.0, 14.0, 16.0 ] }
+                "north": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "east": { "texture": "#0", "uv": [ 0, 0, 1, 1 ] },
+                "south": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "west": { "texture": "#0", "uv": [ 0, 0, 1, 1 ] },
+                "up": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "down": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] }
             }
         }
     ]

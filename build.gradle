@@ -20,7 +20,7 @@ archivesBaseName = 'create'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20191012-1.14.3'
+    mappings channel: 'snapshot', version: '20191021-1.14.3'
     
     runs {		
 		client {
@@ -71,12 +71,12 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.45'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.61'
     
     // compile against the JEI API but do not include it at runtime
  	compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.18:api")
   	// at runtime, use the full JEI jar
-  	//runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.18")
+  	runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.10")
 }
 
 jar {

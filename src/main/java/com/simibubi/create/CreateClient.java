@@ -24,6 +24,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.config.ModConfig;
@@ -44,9 +46,10 @@ public class CreateClient {
 			modEventBus.addListener(CreateClient::clientInit);
 			modEventBus.addListener(CreateClient::createConfigs);
 			modEventBus.addListener(CreateClient::onModelBake);
+			modEventBus.addListener(CreateClient::onModelRegistry);
 		});
 	}
-	
+
 	public static void clientInit(FMLClientSetupEvent event) {
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
@@ -97,7 +100,14 @@ public class CreateClient {
 						BlockModelShapes.getPropertyMapString(AllBlocks.WINDOW_IN_A_BLOCK.get().getDefaultState()
 								.with(BlockStateProperties.WATERLOGGED, true).getValues())),
 				WindowInABlockModel::new);
+	}
 
+	@OnlyIn(Dist.CLIENT)
+	public static void onModelRegistry(ModelRegistryEvent event) {
+		for (String location : SymmetryWandModel.getCustomModelLocations())
+			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
+		for (String location : BuilderGunModel.getCustomModelLocations())
+			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
 	}
 
 	protected static ModelResourceLocation getItemModelLocation(AllItems item) {
@@ -113,7 +123,5 @@ public class CreateClient {
 			ModelResourceLocation location, Function<IBakedModel, T> factory) {
 		modelRegistry.put(location, factory.apply(modelRegistry.get(location)));
 	}
-
-
 
 }
