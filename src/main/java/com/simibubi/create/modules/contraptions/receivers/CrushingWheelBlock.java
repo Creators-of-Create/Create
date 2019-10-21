@@ -76,6 +76,8 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 	public void updateControllers(BlockState state, World world, BlockPos pos, Direction facing) {
 		if (facing.getAxis() == state.get(AXIS) || facing.getAxis().isVertical())
 			return;
+		if (world == null)
+			return;
 
 		BlockPos controllerPos = pos.offset(facing);
 		BlockPos otherWheelPos = pos.offset(facing, 2);

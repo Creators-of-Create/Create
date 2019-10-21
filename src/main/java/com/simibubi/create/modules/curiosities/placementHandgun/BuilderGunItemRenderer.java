@@ -12,6 +12,7 @@ import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem.C
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem.Components;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FourWayBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -47,7 +48,7 @@ public class BuilderGunItemRenderer extends ItemStackTileEntityRenderer {
 		// Block indicator
 		if (mainModel.showBlock && stack.hasTag() && stack.getTag().contains("BlockUsed"))
 			renderBlockUsed(stack, itemRenderer);
-		
+
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		boolean leftHanded = player.getPrimaryHand() == HandSide.LEFT;
 		boolean mainHand = player.getHeldItemMainhand() == stack;
@@ -73,7 +74,7 @@ public class BuilderGunItemRenderer extends ItemStackTileEntityRenderer {
 
 		// Accelerator spins
 		float angle = worldTime * -25;
-		if (mainHand || offHand) 
+		if (mainHand || offHand)
 			angle += 360 * animation;
 
 		angle %= 360;
@@ -92,8 +93,13 @@ public class BuilderGunItemRenderer extends ItemStackTileEntityRenderer {
 		GlStateManager.pushMatrix();
 		GlStateManager.translatef(-0.8F, -0.7F, -0.5F);
 		GlStateManager.scalef(0.25F, 0.25F, 0.25F);
-		itemRenderer.renderItem(new ItemStack(state.getBlock()),
-				Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state));
+		IBakedModel modelForState = Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state);
+
+		if (state.getBlock() instanceof FourWayBlock)
+			modelForState = Minecraft.getInstance().getItemRenderer()
+					.getModelWithOverrides(new ItemStack(state.getBlock()));
+		
+		itemRenderer.renderItem(new ItemStack(state.getBlock()), modelForState);
 		GlStateManager.popMatrix();
 	}
 

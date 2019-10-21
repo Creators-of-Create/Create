@@ -65,10 +65,12 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 		super.onLanded(worldIn, entityIn);
 		if (CrushingWheelControllerTileEntity.isFrozen())
 			return;
-		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn
-				.getTileEntity(entityIn.getPosition().down());
-		if (te == null)
+		TileEntity tileEntity = worldIn.getTileEntity(entityIn.getPosition().down());
+		if (tileEntity == null)
 			return;
+		if (!(tileEntity instanceof CrushingWheelControllerTileEntity))
+			return;
+		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) tileEntity;
 		if (te.isOccupied())
 			return;
 
@@ -96,7 +98,7 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 
 	public void updateSpeed(BlockState state, World world, BlockPos pos) {
 		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) world.getTileEntity(pos);
-		
+
 		if (te == null)
 			return;
 		if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen()) {
