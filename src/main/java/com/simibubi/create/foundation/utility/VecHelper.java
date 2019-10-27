@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.Random;
 
+import net.minecraft.nbt.DoubleNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -34,6 +36,18 @@ public class VecHelper {
 	public static Vec3d offsetRandomly(Vec3d vec, Random r, float radius) {
 		return new Vec3d(vec.x + (r.nextFloat() - .5f) * 2 * radius, vec.y + (r.nextFloat() - .5f) * 2 * radius,
 				vec.z + (r.nextFloat() - .5f) * 2 * radius);
+	}
+
+	public static ListNBT writeNBT(Vec3d vec) {
+		ListNBT listnbt = new ListNBT();
+		listnbt.add(new DoubleNBT(vec.x));
+		listnbt.add(new DoubleNBT(vec.y));
+		listnbt.add(new DoubleNBT(vec.z));
+		return listnbt;
+	}
+
+	public static Vec3d readNBT(ListNBT list) {
+		return new Vec3d(list.getDouble(0), list.getDouble(1), list.getDouble(2));
 	}
 
 }

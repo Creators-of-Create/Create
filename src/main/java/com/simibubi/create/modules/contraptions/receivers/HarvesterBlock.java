@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
@@ -14,7 +15,6 @@ import net.minecraft.block.CropsBlock;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.SugarCaneBlock;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -74,8 +74,8 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void renderInConstruct(MovementContext context, double x, double y, double z, BufferBuilder buffer) {
-		HarvesterTileEntityRenderer.renderInConstruct(context, x, y, z, buffer);
+	public ByteBuffer renderInConstruct(MovementContext context) {
+		return HarvesterTileEntityRenderer.renderInConstruct(context);
 	}
 
 	@Override

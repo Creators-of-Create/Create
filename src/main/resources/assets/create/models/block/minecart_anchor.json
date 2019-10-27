@@ -1,0 +1,32 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+    "textures": {
+        "translation_chassis_side": "create:block/translation_chassis_side"
+    },
+    "elements": [
+        {
+            "name": "Top",
+            "from": [ 0, 12, 0 ], 
+            "to": [ 16, 16, 16 ], 
+            "faces": {
+                "north": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 4 ] },
+                "east": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 4, 16 ], "rotation": 90 },
+                "south": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 4 ] },
+                "west": { "texture": "#translation_chassis_side", "uv": [ 12, 0, 16, 16 ], "rotation": 270 },
+                "up": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 16 ] },
+                "down": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 16 ] }
+            }
+        },
+        {
+            "name": "Inner",
+            "from": [ 4, 4, 4 ], 
+            "to": [ 12, 12, 12 ], 
+            "faces": {
+                "north": { "texture": "#translation_chassis_side", "uv": [ 4, 8, 12, 16 ] },
+                "east": { "texture": "#translation_chassis_side", "uv": [ 4, 8, 12, 16 ] },
+                "south": { "texture": "#translation_chassis_side", "uv": [ 4, 8, 12, 16 ] },
+                "west": { "texture": "#translation_chassis_side", "uv": [ 4, 8, 12, 16 ] }
+            }
+        }
+    ]
+}

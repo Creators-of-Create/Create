@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.math.BlockPos;
@@ -29,6 +30,22 @@ public class TessellatorHelper {
         Vec3d view = renderInfo.getProjectedView();
         GlStateManager.translated(-view.x, -view.y, -view.z);
     }
+    
+	public static void prepareFastRender() {
+		Minecraft.getInstance().textureManager
+				.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.enableBlend();
+		GlStateManager.disableCull();
+
+		if (net.minecraft.client.Minecraft.isAmbientOcclusionEnabled())
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+		else
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+		
+		GlStateManager.color3f(1, 1, 1);
+	}
 
     public static void begin() {
     	begin(DefaultVertexFormats.POSITION_TEX);

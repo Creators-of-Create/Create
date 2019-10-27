@@ -48,12 +48,12 @@ public class MovingConstructHandler {
 
 	public static void moveEntities(MechanicalPistonTileEntity te, float movementSpeed, Direction movementDirection,
 			float newOffset) {
-		if (TranslationConstruct.isFrozen())
+		if (PistonContraption.isFrozen())
 			return;
 
 		World world = te.getWorld();
 		Vec3d movementVec = new Vec3d(te.getBlockState().get(BlockStateProperties.FACING).getDirectionVec());
-		TranslationConstruct construct = te.movingConstruct;
+		Contraption construct = te.movedContraption;
 
 //		if (world.isRemote) {
 //			renderedBBs.clear();

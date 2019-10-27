@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
@@ -13,7 +14,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
@@ -80,17 +80,17 @@ public class DrillBlock extends DirectionalKineticBlock
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void renderInConstruct(MovementContext context, double x, double y, double z, BufferBuilder buffer) {
-		DrillTileEntityRenderer.renderInConstruct(context, x, y, z, buffer);
+	public ByteBuffer renderInConstruct(MovementContext context) {
+		return DrillTileEntityRenderer.renderInConstruct(context);
 	}
 
 	@Override
 	public void visitPosition(MovementContext context) {
 		Direction movement = context.getMovementDirection();
-		BlockState block = context.state;
-
-		if (movement != block.get(FACING))
-			return;
+		
+//		BlockState block = context.state;
+//		if (movement == block.get(FACING).getOpposite())
+//			return;
 
 		World world = context.world;
 		BlockPos pos = context.currentGridPos;

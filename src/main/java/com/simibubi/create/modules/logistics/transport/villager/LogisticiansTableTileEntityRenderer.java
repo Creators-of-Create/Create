@@ -5,13 +5,12 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.ColoredIndicatorRenderer;
+import com.simibubi.create.foundation.utility.TessellatorHelper;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.model.BookModel;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -25,19 +24,8 @@ public class LogisticiansTableTileEntityRenderer extends TileEntityRenderer<Logi
 
 	public void render(LogisticiansTableTileEntity tileEntityIn, double x, double y, double z, float partialTicks,
 			int destroyStage) {
-		Minecraft.getInstance().textureManager
-				.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GlStateManager.enableBlend();
-		GlStateManager.disableCull();
+		TessellatorHelper.prepareFastRender();
 
-		if (net.minecraft.client.Minecraft.isAmbientOcclusionEnabled())
-			GlStateManager.shadeModel(GL11.GL_SMOOTH);
-		else
-			GlStateManager.shadeModel(GL11.GL_FLAT);
-
-		GlStateManager.color3f(1, 1, 1);
 		BlockPos pos = tileEntityIn.getPos();
 		BlockState blockState = tileEntityIn.getBlockState();
 		BlockState renderedState = AllBlocks.LOGISTICIANS_TABLE_INDICATOR.get().getDefaultState();
@@ -63,5 +51,4 @@ public class LogisticiansTableTileEntityRenderer extends TileEntityRenderer<Logi
 		GlStateManager.popMatrix();
 
 	}
-
 }

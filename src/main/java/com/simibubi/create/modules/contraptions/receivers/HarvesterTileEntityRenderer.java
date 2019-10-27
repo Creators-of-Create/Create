@@ -58,40 +58,42 @@ public class HarvesterTileEntityRenderer extends TileEntityRenderer<HarvesterTil
 
 	}
 
-	public static void renderInConstruct(MovementContext context, double x, double y, double z, BufferBuilder buffer) {
+	public static ByteBuffer renderInConstruct(MovementContext context) {
 		World world = context.world;
 		BlockState state = context.state;
 		BlockPos pos = context.currentGridPos;
 		Direction facing = context.getMovementDirection();
 
-		float speed = facing == state.get(HORIZONTAL_FACING) ? 100 * facing.getAxisDirection().getOffset() : 0;
+		float speed = (float) (facing == state.get(HORIZONTAL_FACING)
+				? context.getAnimationSpeed() * facing.getAxisDirection().getOffset()
+				: 0);
 		if (facing.getAxis() == Axis.X)
 			speed = -speed;
-		
+
 		float time = Animation.getWorldTime(Minecraft.getInstance().world,
 				Minecraft.getInstance().getRenderPartialTicks());
 		float angle = (float) (((time * speed) % 360) / 180 * (float) Math.PI);
-		render(world, state, pos, x, y, z, angle, buffer);
+		return getVertexData(world, state, pos, 0, 0, 0, angle);
 	}
 
 	@Override
 	public void renderTileEntityFast(HarvesterTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
-		render(te.getWorld(), te.getBlockState(), te.getPos(), x, y, z, 0, buffer);
+		buffer.putBulkData(getVertexData(te.getWorld(), te.getBlockState(), te.getPos(), x, y, z, 0));
 	}
 
-	public static void render(World world, BlockState state, BlockPos pos, double x, double y, double z, float angle,
-			BufferBuilder buffer) {
+	public static ByteBuffer getVertexData(World world, BlockState state, BlockPos pos, double x, double y, double z,
+			float angle) {
 		if (!AllBlocks.HARVESTER.typeOf(state))
-			return;
-
+			return ByteBuffer.wrap(new byte[] {});
 		BlockState renderedState = AllBlocks.HARVESTER_BLADE.get().getDefaultState().with(HORIZONTAL_FACING,
 				state.get(HORIZONTAL_FACING));
 
 		KineticTileEntityRenderer.cacheIfMissing(renderedState, world, HarvesterRenderer::new);
 		HarvesterRenderer renderer = (HarvesterRenderer) KineticTileEntityRenderer.getBuffer(renderedState);
-		buffer.putBulkData(renderer.getTransformed((float) x, (float) y, (float) z, angle, state.get(HORIZONTAL_FACING),
-				state.getPackedLightmapCoords(world, pos)));
+		ByteBuffer byteBuffer = renderer.getTransformed((float) x, (float) y, (float) z, angle,
+				state.get(HORIZONTAL_FACING), state.getPackedLightmapCoords(world, pos));
+		return byteBuffer;
 	}
 
 }

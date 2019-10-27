@@ -1,0 +1,93 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+	"parent": "block/block",
+    "textures": {
+        "particle": "create:block/translation_chassis_side",
+        "gearbox_top": "create:block/gearbox_top",
+        "clutch_off": "create:block/clutch_off",
+        "rail": "minecraft:block/rail",
+        "translation_chassis_side": "create:block/translation_chassis_side"
+    },
+    "elements": [
+        {
+            "name": "Rail",
+            "from": [ 0, 1, 0 ], 
+            "to": [ 16, 1, 16 ], 
+            "faces": {
+                "up": { "texture": "#rail", "uv": [ 0, 0, 16, 16 ] },
+                "down": { "texture": "#rail", "uv": [ 0, 0, 16, 16 ], "rotation": 180 }
+            }
+        },
+        {
+            "name": "Side",
+            "from": [ 0, 0, 0 ], 
+            "to": [ 2, 16, 16 ], 
+            "faces": {
+                "north": { "texture": "#gearbox_top", "uv": [ 14, 0, 16, 16 ] },
+                "east": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 16 ], "rotation": 90 },
+                "south": { "texture": "#gearbox_top", "uv": [ 0, 16, 2, 0 ] },
+                "west": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 16 ], "rotation": 90 },
+                "up": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 2, 16 ] },
+                "down": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 2, 16 ] }
+            }
+        },
+        {
+            "name": "Side",
+            "from": [ 14, 0, 0 ], 
+            "to": [ 16, 16, 16 ], 
+            "faces": {
+                "north": { "texture": "#gearbox_top", "uv": [ 0, 0, 2, 16 ] },
+                "east": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 16 ], "rotation": 90 },
+                "south": { "texture": "#gearbox_top", "uv": [ 14, 16, 16, 0 ] },
+                "west": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 16 ], "rotation": 90 },
+                "up": { "texture": "#translation_chassis_side", "uv": [ 14, 0, 16, 16 ] },
+                "down": { "texture": "#translation_chassis_side", "uv": [ 14, 0, 16, 16 ] }
+            }
+        },
+        {
+            "name": "Top",
+            "from": [ 2, 14, 0 ], 
+            "to": [ 14, 16, 16 ], 
+            "faces": {
+                "north": { "texture": "#gearbox_top", "uv": [ 2, 0, 14, 2 ] },
+                "south": { "texture": "#gearbox_top", "uv": [ 2, 0, 14, 2 ] },
+                "up": { "texture": "#translation_chassis_side", "uv": [ 2, 0, 14, 16 ], "rotation": 180 },
+                "down": { "texture": "#translation_chassis_side", "uv": [ 2, 0, 14, 16 ] }
+            }
+        },
+        {
+            "name": "Indicator",
+            "from": [ 1, 10, 2 ], 
+            "to": [ 15, 14, 14 ], 
+            "faces": {
+                "north": { "texture": "#clutch_off", "uv": [ 1, 6, 15, 10 ] },
+                "south": { "texture": "#clutch_off", "uv": [ 1, 6, 15, 10 ] },
+                "down": { "texture": "#gearbox_top", "uv": [ 1, 2, 15, 14 ] }
+            }
+        },
+        {
+            "name": "Side",
+            "from": [ 15.875, 0.062, 1.125 ], 
+            "to": [ 17.875, 12.937, 14.875 ], 
+            "faces": {
+                "north": { "texture": "#gearbox_top", "uv": [ 0, 0, 2, 12.875 ] },
+                "east": { "texture": "#translation_chassis_side", "uv": [ 2, 1, 14, 15 ], "rotation": 90 },
+                "south": { "texture": "#gearbox_top", "uv": [ 14, 16, 16, 3 ] },
+                "up": { "texture": "#translation_chassis_side", "uv": [ 7, 1, 9, 15 ] },
+                "down": { "texture": "#translation_chassis_side", "uv": [ 7, 1, 9, 15 ] }
+            }
+        },
+        {
+            "name": "Side",
+            "from": [ -1.875, 0.062, 1.125 ], 
+            "to": [ 0.125, 12.937, 14.875 ], 
+            "faces": {
+                "north": { "texture": "#gearbox_top", "uv": [ 14, 0, 16, 12.875 ] },
+                "south": { "texture": "#gearbox_top", "uv": [ 0, 16, 2, 3 ] },
+                "west": { "texture": "#translation_chassis_side", "uv": [ 2, 1, 14, 15 ], "rotation": 90 },
+                "up": { "texture": "#translation_chassis_side", "uv": [ 7, 1, 9, 15 ] },
+                "down": { "texture": "#translation_chassis_side", "uv": [ 7, 1, 9, 15 ] }
+            }
+        }
+    ]
+}

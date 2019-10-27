@@ -25,6 +25,8 @@
 	"item.create.dough": "Dough",
 	"item.create.crushed_iron": "Crushed Iron Ore",
 	"item.create.crushed_gold": "Crushed Gold Ore",
+	"item.create.time_scarf": "Scarf with a clock on it",
+	"item.create.motion_scarf": "Scarf of Perpetuality",
 	
 	"item.create.logistical_controller_supply": "Item Supply",
 	"item.create.logistical_controller_request": "Item Request",

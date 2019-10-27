@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.function.Function;
 
+import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.ContraptionEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.ContraptionEntityRenderer;
 import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
 import com.simibubi.create.modules.logistics.transport.CardboardBoxEntityRenderer;
 
@@ -19,6 +21,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 public enum AllEntities {
 
 	CARDBOARD_BOX(CardboardBoxEntity::new, 30, 3, CardboardBoxEntity::build),
+	CONTRAPTION(ContraptionEntity::new, 30, 3, ContraptionEntity::build),
 
 	;
 
@@ -56,6 +59,7 @@ public enum AllEntities {
 	@OnlyIn(value = Dist.CLIENT)
 	public static void registerRenderers() {
 		RenderingRegistry.registerEntityRenderingHandler(CardboardBoxEntity.class, CardboardBoxEntityRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(ContraptionEntity.class, ContraptionEntityRenderer::new);
 	}
 
 }

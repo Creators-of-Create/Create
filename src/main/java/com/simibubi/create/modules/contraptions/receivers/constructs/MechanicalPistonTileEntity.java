@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import static com.simibubi.create.CreateConfig.parameters;
+import static com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.STATE;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -11,17 +12,14 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.Create;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
-import com.simibubi.create.modules.contraptions.receivers.SawBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MoverType;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -34,7 +32,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class MechanicalPistonTileEntity extends KineticTileEntity implements ITickableTileEntity {
 
-	protected TranslationConstruct movingConstruct;
+	protected PistonContraption movedContraption;
 	protected float offset;
 	protected boolean running;
 	protected boolean assembleNextTick;
@@ -73,8 +71,8 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	public CompoundNBT write(CompoundNBT tag) {
 		tag.putBoolean("Running", running);
 		tag.putFloat("Offset", offset);
-		if (running && !TranslationConstruct.isFrozen())
-			tag.put("Construct", movingConstruct.writeNBT());
+		if (running && !PistonContraption.isFrozen())
+			tag.put("Construct", movedContraption.writeNBT());
 
 		return super.write(tag);
 	}
@@ -83,12 +81,14 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	public void read(CompoundNBT tag) {
 		running = tag.getBoolean("Running");
 		offset = tag.getFloat("Offset");
-		if (running && !TranslationConstruct.isFrozen()) {
-			movingConstruct = TranslationConstruct.fromNBT(tag.getCompound("Construct"));
-			for (MutablePair<BlockInfo, MovementContext> pair : movingConstruct.actors) {
-				MovementContext context = new MovementContext(world, pair.left.state, MoverType.PISTON, this);
+		if (running && !PistonContraption.isFrozen()) {
+			movedContraption = new PistonContraption();
+			movedContraption.readNBT(tag.getCompound("Construct"));
+			for (MutablePair<BlockInfo, MovementContext> pair : movedContraption.getActors()) {
+				MovementContext context = new MovementContext(pair.left.state, MoverType.PISTON);
+				context.world = world;
 				Direction direction = getBlockState().get(BlockStateProperties.FACING);
-				context.movementVec = new Vec3d(direction.getDirectionVec()).scale(getMovementSpeed()).normalize();
+				context.motion = new Vec3d(direction.getDirectionVec()).scale(getMovementSpeed()).normalize();
 				context.currentGridPos = pair.left.pos.offset(direction, getModulatedOffset(offset));
 				pair.setRight(context);
 			}
@@ -98,12 +98,12 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	}
 
 	protected void onBlockVisited(float newOffset) {
-		if (TranslationConstruct.isFrozen())
+		if (PistonContraption.isFrozen())
 			return;
 
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
-		for (MutablePair<BlockInfo, MovementContext> pair : movingConstruct.actors) {
+		for (MutablePair<BlockInfo, MovementContext> pair : movedContraption.getActors()) {
 			BlockInfo block = pair.left;
 			MovementContext context = pair.right;
 
@@ -120,39 +120,40 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		// Collect Construct
-		movingConstruct = TranslationConstruct.movePistonAt(world, pos, direction, getMovementSpeed() < 0);
-		if (movingConstruct == null)
+		movedContraption = PistonContraption.movePistonAt(world, pos, direction, getMovementSpeed() < 0);
+		if (movedContraption == null)
 			return;
 
 		// Check if not at limit already
-		float resultingOffset = movingConstruct.initialExtensionProgress + getMovementSpeed();
-		if (resultingOffset <= 0 || resultingOffset >= movingConstruct.extensionLength) {
-			movingConstruct = null;
+		float resultingOffset = movedContraption.initialExtensionProgress + getMovementSpeed();
+		if (resultingOffset <= 0 || resultingOffset >= movedContraption.extensionLength) {
+			movedContraption = null;
 			return;
 		}
 		if (hasBlockCollisions(resultingOffset + .5f)) {
-			movingConstruct = null;
+			movedContraption = null;
 			return;
 		}
 
 		// Run
 		running = true;
-		offset = movingConstruct.initialExtensionProgress;
+		offset = movedContraption.initialExtensionProgress;
 		if (!world.isRemote)
 			Create.constructHandler.add(this);
 
 		sendData();
 		getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66);
-		for (BlockInfo block : movingConstruct.blocks.values()) {
-			BlockPos startPos = block.pos.offset(direction, movingConstruct.initialExtensionProgress);
+		for (BlockInfo block : movedContraption.blocks.values()) {
+			BlockPos startPos = block.pos.offset(direction, movedContraption.initialExtensionProgress);
 			if (startPos.equals(pos))
 				continue;
 			getWorld().setBlockState(startPos, Blocks.AIR.getDefaultState(), 67);
 		}
 
-		for (MutablePair<BlockInfo, MovementContext> pair : movingConstruct.actors) {
-			MovementContext context = new MovementContext(world, pair.left.state, MoverType.PISTON, this);
-			context.movementVec = new Vec3d(direction.getDirectionVec()).scale(getMovementSpeed()).normalize();
+		for (MutablePair<BlockInfo, MovementContext> pair : movedContraption.getActors()) {
+			MovementContext context = new MovementContext(pair.left.state, MoverType.PISTON);
+			context.world = world;
+			context.motion = new Vec3d(direction.getDirectionVec()).scale(getMovementSpeed()).normalize();
 			context.currentGridPos = pair.left.pos.offset(direction, getModulatedOffset(offset));
 			pair.setRight(context);
 		}
@@ -167,38 +168,19 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 		if (!removed)
 			getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.EXTENDED), 3);
-
-		for (BlockInfo block : movingConstruct.blocks.values()) {
-			BlockPos targetPos = block.pos.offset(direction, getModulatedOffset(offset));
-			BlockState state = block.state;
-			if (targetPos.equals(pos)) {
-				if (!AllBlocks.PISTON_POLE.typeOf(state) && !removed)
-					getWorld().setBlockState(pos,
-							getBlockState().with(MechanicalPistonBlock.STATE, PistonState.RETRACTED), 3);
-				continue;
-			}
-			for (Direction face : Direction.values())
-				state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world, targetPos,
-						targetPos.offset(face));
-
-			if (AllBlocks.SAW.typeOf(state))
-				state = state.with(SawBlock.RUNNING, false);
-			
-			world.destroyBlock(targetPos, world.getBlockState(targetPos).getCollisionShape(world, targetPos).isEmpty());
-			getWorld().setBlockState(targetPos, state, 3);
-			TileEntity tileEntity = world.getTileEntity(targetPos);
-			if (tileEntity != null && block.nbt != null) {
-				block.nbt.putInt("x", targetPos.getX());
-				block.nbt.putInt("y", targetPos.getY());
-				block.nbt.putInt("z", targetPos.getZ());
-				tileEntity.read(block.nbt);
-			}
-		}
-
+		movedContraption.disassemble(world, BlockPos.ZERO.offset(direction, getModulatedOffset(offset)),
+				(targetPos, state) -> {
+					if (targetPos.equals(pos)) {
+						if (!AllBlocks.PISTON_POLE.typeOf(state) && !removed)
+							world.setBlockState(pos, getBlockState().with(STATE, PistonState.RETRACTED), 3);
+						return true;
+					}
+					return false;
+				});
 		running = false;
 		if (!world.isRemote)
 			Create.constructHandler.remove(this);
-		movingConstruct = null;
+		movedContraption = null;
 		sendData();
 
 		if (removed)
@@ -213,10 +195,10 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 				if (speed == 0)
 					disassembleConstruct();
 				else {
-					for (MutablePair<BlockInfo, MovementContext> pair : movingConstruct.actors)
-						pair.right.movementVec = new Vec3d(
+					for (MutablePair<BlockInfo, MovementContext> pair : movedContraption.getActors())
+						pair.right.motion = new Vec3d(
 								getBlockState().get(BlockStateProperties.FACING).getDirectionVec())
-										.scale(getMovementSpeed()).normalize();
+										.scale(getMovementSpeed());
 					sendData();
 				}
 				return;
@@ -257,14 +239,14 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 
 		offset = newOffset;
 
-		if (offset <= 0 || offset >= movingConstruct.extensionLength) {
+		if (offset <= 0 || offset >= movedContraption.extensionLength) {
 			disassembleConstruct();
 			return;
 		}
 	}
 
 	private boolean hasBlockCollisions(float newOffset) {
-		if (TranslationConstruct.isFrozen())
+		if (PistonContraption.isFrozen())
 			return true;
 
 		Direction movementDirection = getBlockState().get(BlockStateProperties.FACING);
@@ -280,7 +262,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 
 			if (otherPiston == this)
 				continue;
-			if (!otherPiston.running || otherPiston.movingConstruct == null) {
+			if (!otherPiston.running || otherPiston.movedContraption == null) {
 				iterator.remove();
 				continue;
 			}
@@ -291,10 +273,10 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 			BlockPos otherRelativePos = BlockPos.ZERO.offset(otherMovementDirection,
 					getModulatedOffset(otherPiston.offset));
 
-			for (AxisAlignedBB tBB : Arrays.asList(movingConstruct.constructCollisionBox,
-					movingConstruct.pistonCollisionBox)) {
-				for (AxisAlignedBB oBB : Arrays.asList(otherPiston.movingConstruct.constructCollisionBox,
-						otherPiston.movingConstruct.pistonCollisionBox)) {
+			for (AxisAlignedBB tBB : Arrays.asList(movedContraption.constructCollisionBox,
+					movedContraption.pistonCollisionBox)) {
+				for (AxisAlignedBB oBB : Arrays.asList(otherPiston.movedContraption.constructCollisionBox,
+						otherPiston.movedContraption.pistonCollisionBox)) {
 					if (tBB == null || oBB == null)
 						continue;
 
@@ -306,9 +288,9 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 
 					if (thisBB.intersects(otherBB)) {
 						boolean actuallyColliding = false;
-						for (BlockPos colliderPos : movingConstruct.getColliders(world, movementDirection)) {
+						for (BlockPos colliderPos : movedContraption.getColliders(world, movementDirection)) {
 							colliderPos = colliderPos.add(thisColliderOffset).subtract(otherRelativePos);
-							if (!otherPiston.movingConstruct.blocks.containsKey(colliderPos))
+							if (!otherPiston.movedContraption.blocks.containsKey(colliderPos))
 								continue;
 							actuallyColliding = true;
 						}
@@ -327,7 +309,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 			return false;
 
 		// Other Blocks in world
-		for (BlockPos pos : movingConstruct.getColliders(world,
+		for (BlockPos pos : movedContraption.getColliders(world,
 				getMovementSpeed() > 0 ? movementDirection : movementDirection.getOpposite())) {
 			BlockPos colliderPos = pos.add(relativePos);
 
@@ -342,7 +324,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 	}
 
 	private int getModulatedOffset(float offset) {
-		return MathHelper.clamp((int) (offset + .5f), 0, movingConstruct.extensionLength);
+		return MathHelper.clamp((int) (offset + .5f), 0, movedContraption.extensionLength);
 	}
 
 	public float getMovementSpeed() {
@@ -354,7 +336,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 
 	public Vec3d getConstructOffset(float partialTicks) {
 		float interpolatedOffset = MathHelper.clamp(offset + (partialTicks - .5f) * getMovementSpeed(), 0,
-				movingConstruct.extensionLength);
+				movedContraption.extensionLength);
 		return new Vec3d(getBlockState().get(BlockStateProperties.FACING).getDirectionVec()).scale(interpolatedOffset);
 	}
 

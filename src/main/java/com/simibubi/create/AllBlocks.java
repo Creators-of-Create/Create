@@ -24,6 +24,8 @@ import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalP
 import com.simibubi.create.modules.contraptions.receivers.constructs.PistonPoleBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.RotationChassisBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.TranslationChassisBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.CartAssemblerBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.CartAssemblerBlock.MinecartAnchorBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.CogWheelBlock;
@@ -125,6 +127,8 @@ public enum AllBlocks {
 	SAW(new SawBlock()),
 	HARVESTER(new HarvesterBlock()),
 	HARVESTER_BLADE(new HarvesterBladeBlock()),
+	CART_ASSEMBLER(new CartAssemblerBlock()),
+	MINECART_ANCHOR(new MinecartAnchorBlock()),
 
 	__LOGISTICS__(),
 	CONTACT(new ContactBlock()),

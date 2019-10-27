@@ -5,7 +5,6 @@ import java.util.Random;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -109,11 +108,9 @@ public class ContactBlock extends ProperDirectionalBlock implements IHaveMovemen
 		Direction direction = block.get(FACING);
 		if (!hasValidContact(world, pos, direction))
 			return;
-		if (context.moverType != MoverType.PISTON)
-			return;
 
 		int ticksToStayActive = (int) Math
-				.ceil(1 / Math.abs(((MechanicalPistonTileEntity) context.mover).getMovementSpeed()));
+				.ceil(1 / Math.abs(context.motion.length()));
 		world.setBlockState(pos.offset(direction), world.getBlockState(pos.offset(direction)).with(POWERED, true));
 		world.getPendingBlockTicks().scheduleTick(pos.offset(direction), this, ticksToStayActive, TickPriority.NORMAL);
 		return;

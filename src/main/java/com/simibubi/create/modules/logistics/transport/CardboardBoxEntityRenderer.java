@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -22,18 +21,6 @@ public class CardboardBoxEntityRenderer extends EntityRenderer<CardboardBoxEntit
 	@Override
 	protected ResourceLocation getEntityTexture(CardboardBoxEntity entity) {
 		return null;
-	}
-
-	@Override
-	public boolean shouldRender(CardboardBoxEntity livingEntity, ICamera camera, double camX, double camY,
-			double camZ) {
-		return super.shouldRender(livingEntity, camera, camX, camY, camZ);
-	}
-
-	@Override
-	public void renderMultipass(CardboardBoxEntity entityIn, double x, double y, double z, float entityYaw,
-			float partialTicks) {
-		super.renderMultipass(entityIn, x, y, z, entityYaw, partialTicks);
 	}
 
 	@Override

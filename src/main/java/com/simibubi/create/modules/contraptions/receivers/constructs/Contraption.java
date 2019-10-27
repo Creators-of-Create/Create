@@ -1,8 +1,5 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
-import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
-import static com.simibubi.create.AllBlocks.PISTON_POLE;
-import static com.simibubi.create.AllBlocks.STICKY_MECHANICAL_PISTON;
 import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
@@ -14,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -22,7 +20,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.receivers.SawBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
@@ -34,47 +31,66 @@ import net.minecraft.nbt.FloatNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.PistonType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
-public class TranslationConstruct {
+public class Contraption {
 
 	protected Map<BlockPos, BlockInfo> blocks;
 	protected List<MutablePair<BlockInfo, MovementContext>> actors;
-
 	protected AxisAlignedBB constructCollisionBox;
-	protected AxisAlignedBB pistonCollisionBox;
-
 	protected Set<BlockPos> cachedColliders;
 	protected Direction cachedColliderDirection;
+	protected BlockPos anchor;
 
-	protected int extensionLength;
-	protected int initialExtensionProgress;
-	protected Direction orientation;
-
-	public TranslationConstruct() {
+	public Contraption() {
 		blocks = new HashMap<>();
 		actors = new ArrayList<>();
 	}
 
-	public static TranslationConstruct movePistonAt(World world, BlockPos pos, Direction direction, boolean retract) {
-		if (isFrozen())
-			return null;
-		TranslationConstruct construct = new TranslationConstruct();
-		construct.orientation = direction;
-		if (!construct.collectExtensions(world, pos, direction))
-			return null;
-		if (!construct.searchMovedStructure(world, pos.offset(direction, construct.initialExtensionProgress + 1),
-				retract ? direction.getOpposite() : direction))
-			return null;
-		return construct;
+	private static List<BlockInfo> getChassisClusterAt(World world, BlockPos pos) {
+		List<BlockPos> search = new LinkedList<>();
+		Set<BlockPos> visited = new HashSet<>();
+		List<BlockInfo> chassis = new LinkedList<>();
+		BlockState anchorChassis = world.getBlockState(pos);
+		Axis axis = anchorChassis.get(AXIS);
+		search.add(pos);
+
+		while (!search.isEmpty()) {
+			if (chassis.size() > parameters.maxChassisForTranslation.get())
+				return null;
+
+			BlockPos current = search.remove(0);
+			if (visited.contains(current))
+				continue;
+			if (!world.isAreaLoaded(current, 1))
+				return null;
+
+			BlockState state = world.getBlockState(current);
+			if (!isChassis(state))
+				continue;
+			if (!TranslationChassisBlock.sameKind(anchorChassis, state))
+				continue;
+			if (state.get(AXIS) != axis)
+				continue;
+
+			visited.add(current);
+			chassis.add(new BlockInfo(current, world.getBlockState(current), getTileEntityNBT(world, current)));
+
+			for (Direction offset : Direction.values()) {
+				if (offset.getAxis() == axis)
+					continue;
+				search.add(current.offset(offset));
+			}
+		}
+		return chassis;
 	}
 
 	public Set<BlockPos> getColliders(World world, Direction movementDirection) {
@@ -101,86 +117,17 @@ public class TranslationConstruct {
 		return cachedColliders;
 	}
 
-	private boolean collectExtensions(World world, BlockPos pos, Direction direction) {
-		List<BlockInfo> poles = new ArrayList<>();
-		BlockPos actualStart = pos;
-		BlockState nextBlock = world.getBlockState(actualStart.offset(direction));
-		int extensionsInFront = 0;
-		boolean sticky = STICKY_MECHANICAL_PISTON.typeOf(world.getBlockState(pos));
-
-		if (world.getBlockState(pos).get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED) {
-			while (PISTON_POLE.typeOf(nextBlock) && nextBlock.get(FACING).getAxis() == direction.getAxis()
-					|| MECHANICAL_PISTON_HEAD.typeOf(nextBlock) && nextBlock.get(FACING) == direction) {
-
-				actualStart = actualStart.offset(direction);
-				poles.add(new BlockInfo(actualStart, nextBlock.with(FACING, direction), null));
-				extensionsInFront++;
-				nextBlock = world.getBlockState(actualStart.offset(direction));
-
-				if (extensionsInFront > parameters.maxPistonPoles.get())
-					return false;
-			}
-		}
-
-		if (extensionsInFront == 0)
-			poles.add(
-					new BlockInfo(pos,
-							MECHANICAL_PISTON_HEAD.get().getDefaultState().with(FACING, direction).with(
-									BlockStateProperties.PISTON_TYPE, sticky ? PistonType.STICKY : PistonType.DEFAULT),
-							null));
-		else
-			poles.add(new BlockInfo(pos, PISTON_POLE.get().getDefaultState().with(FACING, direction), null));
-
-		BlockPos end = pos;
-		nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
-		int extensionsInBack = 0;
-
-		while (PISTON_POLE.typeOf(nextBlock)) {
-			end = end.offset(direction.getOpposite());
-			poles.add(new BlockInfo(end, nextBlock.with(FACING, direction), null));
-			extensionsInBack++;
-			nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
-
-			if (extensionsInFront + extensionsInBack > parameters.maxPistonPoles.get())
-				return false;
-		}
-
-		extensionLength = extensionsInBack + extensionsInFront;
-		initialExtensionProgress = extensionsInFront;
-		pistonCollisionBox = new AxisAlignedBB(end.offset(direction, -extensionsInFront));
-
-		for (BlockInfo pole : poles) {
-			BlockPos polePos = pole.pos.offset(direction, -extensionsInFront);
-			blocks.put(polePos, new BlockInfo(polePos, pole.state, null));
-			pistonCollisionBox = pistonCollisionBox.union(new AxisAlignedBB(polePos));
-		}
-
-		return true;
-	}
-
-	private boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
+	protected boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
 		List<BlockPos> frontier = new ArrayList<>();
 		Set<BlockPos> visited = new HashSet<>();
-		constructCollisionBox = new AxisAlignedBB(pos.offset(direction, initialExtensionProgress));
-		frontier.add(pos);
+		anchor = pos;
 
-		for (int offset = 1; offset <= parameters.maxChassisRange.get(); offset++) {
-			BlockPos currentPos = pos.offset(direction, offset);
-			if (!world.isAreaLoaded(currentPos, 1))
-				return false;
-			if (!world.isBlockPresent(currentPos))
-				break;
-			BlockState state = world.getBlockState(currentPos);
-			if (state.getMaterial().isReplaceable())
-				break;
-			if (state.getCollisionShape(world, currentPos).isEmpty())
-				break;
-			if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state) && state.get(FACING) == direction.getOpposite())
-				break;
-			if (!canPush(world, currentPos, direction))
-				return false;
-			frontier.add(currentPos);
-		}
+		if (constructCollisionBox == null)
+			constructCollisionBox = new AxisAlignedBB(pos);
+
+		frontier.add(pos);
+		if (!addToInitialFrontier(world, pos, direction, frontier))
+			return false;
 
 		for (int limit = 1000; limit > 0; limit--) {
 			if (frontier.isEmpty())
@@ -190,6 +137,10 @@ public class TranslationConstruct {
 
 		}
 		return false;
+	}
+
+	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, List<BlockPos> frontier) {
+		return true;
 	}
 
 	private boolean moveBlock(World world, BlockPos pos, Direction direction, List<BlockPos> frontier,
@@ -349,42 +300,8 @@ public class TranslationConstruct {
 		return true;
 	}
 
-	private static List<BlockInfo> getChassisClusterAt(World world, BlockPos pos) {
-		List<BlockPos> search = new LinkedList<>();
-		Set<BlockPos> visited = new HashSet<>();
-		List<BlockInfo> chassis = new LinkedList<>();
-		BlockState anchorChassis = world.getBlockState(pos);
-		Axis axis = anchorChassis.get(AXIS);
-		search.add(pos);
-
-		while (!search.isEmpty()) {
-			if (chassis.size() > parameters.maxChassisForTranslation.get())
-				return null;
-
-			BlockPos current = search.remove(0);
-			if (visited.contains(current))
-				continue;
-			if (!world.isAreaLoaded(current, 1))
-				return null;
-
-			BlockState state = world.getBlockState(current);
-			if (!isChassis(state))
-				continue;
-			if (!TranslationChassisBlock.sameKind(anchorChassis, state))
-				continue;
-			if (state.get(AXIS) != axis)
-				continue;
-
-			visited.add(current);
-			chassis.add(capture(world, current));
-
-			for (Direction offset : Direction.values()) {
-				if (offset.getAxis() == axis)
-					continue;
-				search.add(current.offset(offset));
-			}
-		}
-		return chassis;
+	private static boolean isChassis(BlockState state) {
+		return TranslationChassisBlock.isChassis(state);
 	}
 
 	private boolean notSupportive(World world, BlockPos pos, Direction facing) {
@@ -396,11 +313,7 @@ public class TranslationConstruct {
 		return false;
 	}
 
-	private static boolean isChassis(BlockState state) {
-		return TranslationChassisBlock.isChassis(state);
-	}
-
-	private static boolean canPush(World world, BlockPos pos, Direction direction) {
+	protected static boolean canPush(World world, BlockPos pos, Direction direction) {
 		BlockState blockState = world.getBlockState(pos);
 		if (isChassis(blockState))
 			return true;
@@ -409,19 +322,15 @@ public class TranslationConstruct {
 		return PistonBlock.canPush(blockState, world, pos, direction, true, direction);
 	}
 
-	private void add(BlockPos pos, BlockInfo block) {
-		BlockPos localPos = pos.offset(orientation, -initialExtensionProgress);
-		BlockInfo blockInfo = new BlockInfo(localPos, block.state, block.nbt);
-		blocks.put(localPos, blockInfo);
-		if (block.state.getBlock() instanceof IHaveMovementBehavior)
-			actors.add(MutablePair.of(blockInfo, null));
-		constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(localPos));
-	}
-
-	private static BlockInfo capture(World world, BlockPos pos) {
+	protected BlockInfo capture(World world, BlockPos pos) {
 		BlockState blockstate = world.getBlockState(pos);
 		if (AllBlocks.SAW.typeOf(blockstate))
 			blockstate = blockstate.with(SawBlock.RUNNING, true);
+		CompoundNBT compoundnbt = getTileEntityNBT(world, pos);
+		return new BlockInfo(pos, blockstate, compoundnbt);
+	}
+
+	public static CompoundNBT getTileEntityNBT(World world, BlockPos pos) {
 		TileEntity tileentity = world.getTileEntity(pos);
 		CompoundNBT compoundnbt = null;
 		if (tileentity != null) {
@@ -430,15 +339,41 @@ public class TranslationConstruct {
 			compoundnbt.remove("y");
 			compoundnbt.remove("z");
 		}
-		return new BlockInfo(pos, blockstate, compoundnbt);
+		return compoundnbt;
+	}
+
+	protected void add(BlockPos pos, BlockInfo block) {
+		BlockInfo blockInfo = new BlockInfo(pos, block.state, block.nbt);
+		blocks.put(pos, blockInfo);
+		if (block.state.getBlock() instanceof IHaveMovementBehavior)
+			getActors().add(MutablePair.of(blockInfo, null));
+		constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(pos));
+	}
+
+	public void readNBT(CompoundNBT nbt) {
+		nbt.getList("Blocks", 10).forEach(c -> {
+			CompoundNBT comp = (CompoundNBT) c;
+			BlockInfo info = new BlockInfo(NBTUtil.readBlockPos(comp.getCompound("Pos")),
+					NBTUtil.readBlockState(comp.getCompound("Block")),
+					comp.contains("Data") ? comp.getCompound("Data") : null);
+			blocks.put(info.pos, info);
+		});
+
+		nbt.getList("Actors", 10).forEach(c -> {
+			CompoundNBT comp = (CompoundNBT) c;
+			BlockInfo info = blocks.get(NBTUtil.readBlockPos(comp.getCompound("Pos")));
+			MovementContext context = MovementContext.readNBT(comp);
+			getActors().add(MutablePair.of(info, context));
+		});
+		
+		if (nbt.contains("BoundsFront"))
+			constructCollisionBox = readAABB(nbt.getList("BoundsFront", 5));
+
+		anchor = NBTUtil.readBlockPos(nbt.getCompound("Anchor"));
 	}
 
 	public AxisAlignedBB getCollisionBoxFront() {
 		return constructCollisionBox;
-	}
-
-	public AxisAlignedBB getCollisionBoxBack() {
-		return pistonCollisionBox;
 	}
 
 	public CompoundNBT writeNBT() {
@@ -452,19 +387,22 @@ public class TranslationConstruct {
 				c.put("Data", block.nbt);
 			blocks.add(c);
 		}
+		
+		ListNBT actorsNBT = new ListNBT();
+		for (MutablePair<BlockInfo, MovementContext> actor : getActors()) {
+			CompoundNBT compound = new CompoundNBT();
+			compound.put("Pos", NBTUtil.writeBlockPos(actor.left.pos));
+			actor.right.writeToNBT(compound);
+			actorsNBT.add(compound);
+		}
+		nbt.put("Actors", actorsNBT);
 
 		if (constructCollisionBox != null) {
 			ListNBT bb = writeAABB(constructCollisionBox);
 			nbt.put("BoundsFront", bb);
 		}
-
-		if (pistonCollisionBox != null) {
-			ListNBT bb = writeAABB(pistonCollisionBox);
-			nbt.put("BoundsBack", bb);
-		}
-
 		nbt.put("Blocks", blocks);
-		nbt.putInt("ExtensionLength", extensionLength);
+		nbt.put("Anchor", NBTUtil.writeBlockPos(anchor));
 		return nbt;
 	}
 
@@ -487,32 +425,38 @@ public class TranslationConstruct {
 
 	}
 
-	public static TranslationConstruct fromNBT(CompoundNBT nbt) {
-		TranslationConstruct construct = new TranslationConstruct();
-		nbt.getList("Blocks", 10).forEach(c -> {
-			CompoundNBT comp = (CompoundNBT) c;
-			BlockInfo info = new BlockInfo(NBTUtil.readBlockPos(comp.getCompound("Pos")),
-					NBTUtil.readBlockState(comp.getCompound("Block")),
-					comp.contains("Data") ? comp.getCompound("Data") : null);
-			construct.blocks.put(info.pos, info);
-		});
-		construct.extensionLength = nbt.getInt("ExtensionLength");
-
-		if (nbt.contains("BoundsFront"))
-			construct.constructCollisionBox = construct.readAABB(nbt.getList("BoundsFront", 5));
-		if (nbt.contains("BoundsBack"))
-			construct.pistonCollisionBox = construct.readAABB(nbt.getList("BoundsBack", 5));
-
-		// Find blocks with special movement behaviour
-		construct.blocks.values().forEach(block -> {
-			if (block.state.getBlock() instanceof IHaveMovementBehavior)
-				construct.actors.add(MutablePair.of(block, null));
-		});
-
-		return construct;
-	}
-
 	public static boolean isFrozen() {
 		return CreateConfig.parameters.freezePistonConstructs.get();
 	}
+
+	public void disassemble(IWorld world, BlockPos offset, BiPredicate<BlockPos, BlockState> customPlacement) {
+		for (BlockInfo block : blocks.values()) {
+			BlockPos targetPos = block.pos.add(offset);
+			BlockState state = block.state;
+
+			if (customPlacement.test(targetPos, state))
+				continue;
+
+			for (Direction face : Direction.values())
+				state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world, targetPos,
+						targetPos.offset(face));
+			if (AllBlocks.SAW.typeOf(state))
+				state = state.with(SawBlock.RUNNING, false);
+
+			world.destroyBlock(targetPos, world.getBlockState(targetPos).getCollisionShape(world, targetPos).isEmpty());
+			world.setBlockState(targetPos, state, 3);
+			TileEntity tileEntity = world.getTileEntity(targetPos);
+			if (tileEntity != null && block.nbt != null) {
+				block.nbt.putInt("x", targetPos.getX());
+				block.nbt.putInt("y", targetPos.getY());
+				block.nbt.putInt("z", targetPos.getZ());
+				tileEntity.read(block.nbt);
+			}
+		}
+	}
+
+	public List<MutablePair<BlockInfo, MovementContext>> getActors() {
+		return actors;
+	}
+
 }

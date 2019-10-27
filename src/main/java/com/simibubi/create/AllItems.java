@@ -81,6 +81,8 @@ public enum AllItems {
 	PROPELLER(ingredient()),
 	CRUSHED_IRON(ingredient()),
 	CRUSHED_GOLD(ingredient()),
+	TIME_SCARF(ingredient()),
+	MOTION_SCARF(ingredient()),
 
 	__LOGISTICS__(),
 	CARDBOARD_BOX_1616(new CardboardBoxItem(standardItemProperties())),
