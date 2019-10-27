@@ -1,7 +1,9 @@
 package com.simibubi.create.modules.schematics.block;
 
+import static com.simibubi.create.ScreenResources.FLEXCRATE;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -22,6 +24,7 @@ import com.simibubi.create.modules.schematics.packet.ConfigureSchematicannonPack
 import com.simibubi.create.modules.schematics.packet.ConfigureSchematicannonPacket.Option;
 
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.BlockItem;
@@ -45,6 +48,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	protected Indicator pauseIndicator;
 	protected IconButton resetButton;
 	protected Indicator resetIndicator;
+
+	private List<Rectangle2d> extraAreas;
 
 	private final String title = Lang.translate("gui.schematicannon.title");
 	private final String settingsTitle = Lang.translate("gui.schematicannon.settingsTitle");
@@ -111,6 +116,9 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		skipTilesButton.setToolTip(Lang.translate("gui.schematicannon.option.skipTileEntities"));
 		skipTilesIndicator = new Indicator(x + 124, y + 96, "");
 		Collections.addAll(widgets, skipTilesButton, skipTilesIndicator);
+
+		extraAreas = new ArrayList<>();
+		extraAreas.add(new Rectangle2d(guiLeft + 240, guiTop + 88, 84, 113));
 
 		tick();
 	}
@@ -219,6 +227,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		font.drawString(settingsTitle, guiLeft + 20 + 13, guiTop + 84, ScreenResources.FONT_COLOR);
 		font.drawString(playerInventory.getDisplayName().getFormattedText(), guiLeft - 10 + 7, guiTop + 145 + 6,
 				0x666666);
+
+		//to see or debug the bounds of the extra area uncomment the following lines
+		//Rectangle2d r = extraAreas.get(0);
+		//fill(r.getX() + r.getWidth(), r.getY() + r.getHeight(), r.getX(), r.getY(), 0xd3d3d3d3);
 	}
 
 	protected void renderCannon() {
@@ -321,6 +333,11 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			sendOptionUpdate(Option.STOP, true);
 
 		return super.mouseClicked(x, y, button);
+	}
+
+	@Override
+	public List<Rectangle2d> getExtraAreas() {
+		return extraAreas;
 	}
 
 	protected void sendOptionUpdate(Option option, boolean set) {
