@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.gui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -8,6 +9,7 @@ import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -128,4 +130,12 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		}
 	}
 
+	/**
+	 * Used for moving JEI out of the way of extra things like Flexcrate renders
+	 *
+	 * @return the space that the gui takes up besides the normal rectangle defined by {@link ContainerScreen}.
+	 */
+	public List<Rectangle2d> getExtraAreas() {
+		return Collections.emptyList();
+	}
 }

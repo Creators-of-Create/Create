@@ -9,12 +9,11 @@ import com.simibubi.create.AllRecipes;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.modules.logistics.block.FlexcrateScreen;
+import com.simibubi.create.modules.schematics.block.SchematicannonScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import mezz.jei.api.registration.IRecipeCategoryRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -88,6 +87,12 @@ public class CreateJEI implements IModPlugin {
 		registration.addRecipeCatalyst(blastingFan, blastingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_PRESS.get()), pressingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllItems.PLACEMENT_HANDGUN.get()), blockzapperCategory.getUid());
+	}
+
+	@Override
+	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+		registration.addGuiContainerHandler(FlexcrateScreen.class, new SlotMover<>());
+		registration.addGuiContainerHandler(SchematicannonScreen.class, new SlotMover<>());
 	}
 
 	private static List<IRecipe<?>> findRecipes(AllRecipes recipe) {

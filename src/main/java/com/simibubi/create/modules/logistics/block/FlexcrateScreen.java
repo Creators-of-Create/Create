@@ -15,8 +15,12 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.logistics.packet.ConfigureFlexcratePacket;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContainer> {
 
@@ -24,6 +28,8 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 	private Label allowedItemsLabel;
 	private ScrollInput allowedItems;
 	private int lastModification;
+
+	private List<Rectangle2d> extraAreas;
 
 	private final String title = Lang.translate("gui.flexcrate.title");
 	private final String storageSpace = Lang.translate("gui.flexcrate.storageSpace");
@@ -47,6 +53,9 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 		allowedItems.onChanged();
 		widgets.add(allowedItemsLabel);
 		widgets.add(allowedItems);
+
+		extraAreas = new ArrayList<>();
+		extraAreas.add(new Rectangle2d(guiLeft + FLEXCRATE.width + 110, guiTop + 46, 71, 70));
 	}
 
 	@Override
@@ -76,6 +85,10 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 		}
 
 		ScreenElementRenderer.renderBlock(this::getRenderedBlock);
+
+		//to see or debug the bounds of the extra area uncomment the following lines
+		//Rectangle2d r = extraAreas.get(0);
+		//fill(r.getX() + r.getWidth(), r.getY() + r.getHeight(), r.getX(), r.getY(), 0xd3d3d3d3);
 	}
 
 	@Override
@@ -101,4 +114,8 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 		return AllBlocks.FLEXCRATE.get().getDefaultState();
 	}
 
+	@Override
+	public List<Rectangle2d> getExtraAreas() {
+		return extraAreas;
+	}
 }
