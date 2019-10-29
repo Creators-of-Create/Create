@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BufferManipulator;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -17,7 +18,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.animation.Animation;
 
 public class BeltTileEntityRenderer extends KineticTileEntityRenderer {
 
@@ -45,8 +45,7 @@ public class BeltTileEntityRenderer extends KineticTileEntityRenderer {
 			float textureOffsetY = 0;
 
 			if (te.getSpeed() != 0) {
-				float time = Animation.getWorldTime(Minecraft.getInstance().world,
-						Minecraft.getInstance().getRenderPartialTicks());
+				float time = AnimationTickHolder.getRenderTick();
 				Direction direction = te.getBlockState().get(BlockStateProperties.HORIZONTAL_FACING);
 				if (direction == Direction.EAST || direction == Direction.NORTH)
 					time = -time;

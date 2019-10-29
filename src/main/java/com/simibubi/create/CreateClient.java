@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.simibubi.create.modules.contraptions.CachedBufferReloader;
+import com.simibubi.create.modules.contraptions.WrenchModel;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanParticleHandler;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
@@ -38,7 +39,8 @@ public class CreateClient {
 	public static SchematicHologram schematicHologram;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static EncasedFanParticleHandler fanParticles;
-
+	public static int renderTicks;
+	
 	public static ModConfig config;
 
 	public static void addListeners(IEventBus modEventBus) {
@@ -90,6 +92,8 @@ public class CreateClient {
 				t -> new SymmetryWandModel(t).loadPartials(event));
 		swapModels(modelRegistry, getItemModelLocation(AllItems.PLACEMENT_HANDGUN),
 				t -> new BuilderGunModel(t).loadPartials(event));
+		swapModels(modelRegistry, getItemModelLocation(AllItems.WRENCH),
+				t -> new WrenchModel(t).loadPartials(event));
 		swapModels(modelRegistry,
 				getBlockModelLocation(AllBlocks.WINDOW_IN_A_BLOCK,
 						BlockModelShapes
@@ -107,6 +111,8 @@ public class CreateClient {
 		for (String location : SymmetryWandModel.getCustomModelLocations())
 			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
 		for (String location : BuilderGunModel.getCustomModelLocations())
+			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
+		for (String location : WrenchModel.getCustomModelLocations())
 			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
 	}
 

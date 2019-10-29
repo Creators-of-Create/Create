@@ -23,6 +23,7 @@
 	"item.create.propeller": "Propeller",
 	"item.create.flour": "Wheat Flour",
 	"item.create.dough": "Dough",
+	"item.create.wrench": "Wrench",
 
 	"item.create.blazing_pickaxe": "Blazing Pickaxe",
 	"item.create.blazing_shovel": "Blazing Shovel",
@@ -56,6 +57,8 @@
 	"block.create.water_wheel": "Water Wheel",
 	"block.create.belt_support": "Belt Support",
 	"block.create.mechanical_press": "Mechanical Press",
+	"block.create.mechanical_mixer": "Mechanical Mixer",
+	"block.create.basin": "Basin",
 
 	"block.create.sticky_mechanical_piston": "Sticky Mechanical Piston",
 	"block.create.mechanical_piston": "Mechanical Piston",
@@ -345,6 +348,8 @@
 	"create.tooltip.holdKeyOrKey": "Hold [%1$s] or [%2$s]",
 	"create.tooltip.keyShift": "Shift",
 	"create.tooltip.keyCtrl": "Ctrl",
+	
+	"create.mechanical_mixer.min_ingredients": "Min. Ingredients",
 
 	"_comment": "-------------------------]  ITEM DESCRIPTIONS  [------------------------------------------------",
 
@@ -473,8 +478,8 @@
 
 	"block.create.encased_fan.tooltip": "ENCASED FAN",
 	"block.create.encased_fan.tooltip.summary": "Converts _Rotational_ _Force_ to _Air_ _Currents_ and back. Has a variety of uses.",
-	"block.create.encased_fan.tooltip.condition1": "When above Fire",
-	"block.create.encased_fan.tooltip.behaviour1": "Provides _Rotational_ _Force_ (has to be vertical)",
+	"block.create.encased_fan.tooltip.condition1": "When Powered by Redstone",
+	"block.create.encased_fan.tooltip.behaviour1": "Provides _Rotational_ _Force_ from any _heat_ _sources_ immediately below itself (fan has to be vertical)",
 	"block.create.encased_fan.tooltip.condition2": "When Rotated",
 	"block.create.encased_fan.tooltip.behaviour2": "_Pushes_ Entities on one side, _Pulls_ on the other. Force and Speed depend on incoming Rotations.",
 	"block.create.encased_fan.tooltip.condition3": "When air flows through special blocks",

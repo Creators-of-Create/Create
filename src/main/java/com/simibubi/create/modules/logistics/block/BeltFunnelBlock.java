@@ -49,6 +49,18 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
+	
+	@Override
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+			boolean isMoving) {
+		Direction blockFacing = state.get(HORIZONTAL_FACING);
+		if (fromPos.equals(pos.offset(blockFacing))) {
+			if (!isValidPosition(state, worldIn, pos)) {
+				worldIn.destroyBlock(pos, true);
+				return;
+			}
+		}
+	}
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
@@ -61,6 +73,13 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 		super.fillStateContainer(builder);
 	}
 
+	@Override
+	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		BlockPos neighbourPos = pos.offset(state.get(HORIZONTAL_FACING));
+		BlockState neighbour = worldIn.getBlockState(neighbourPos);
+		return !neighbour.getShape(worldIn, pos).isEmpty();
+	}
+	
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = getDefaultState();

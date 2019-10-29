@@ -93,6 +93,11 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock
 	}
 
 	@Override
+	public boolean requiresWrench() {
+		return true;
+	}
+	
+	@Override
 	public Vec3d getValueBoxPosition(BlockState state, IWorld world, BlockPos pos) {
 		return valuePos;
 	}
@@ -103,7 +108,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock
 	}
 
 	@Override
-	public boolean isValueOnAllSides() {
+	public boolean isValueOnMultipleFaces() {
 		return true;
 	}
 

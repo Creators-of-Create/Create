@@ -1,9 +1,12 @@
 package com.simibubi.create.modules.contraptions.relays;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.modules.contraptions.base.IRotate;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -27,7 +30,7 @@ public class CogWheelBlock extends ShaftBlock {
 	protected static final VoxelShape LARGE_GEAR_Z = makeCuboidShape(0, 0, 6, 16, 16, 10);
 
 	public CogWheelBlock(boolean large) {
-		super(Properties.from(Blocks.STRIPPED_SPRUCE_LOG));
+		super(Properties.from(Blocks.GRANITE));
 		isLarge = large;
 	}
 
@@ -49,17 +52,30 @@ public class CogWheelBlock extends ShaftBlock {
 		return true;
 	}
 
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
+		BlockState placedAgainst = context.getWorld().getBlockState(placedOnPos);
+		Block block = placedAgainst.getBlock();
+
+		if (!(block instanceof IRotate) || !(((IRotate) block).hasCogsTowards(context.getWorld(), placedOnPos,
+				placedAgainst, context.getFace())))
+			return super.getStateForPlacement(context);
+
+		return getDefaultState().with(AXIS, ((IRotate) block).getRotationAxis(placedAgainst));
+	}
+
 	private VoxelShape getGearShape(BlockState state) {
 		if (state.get(AXIS) == Axis.X)
 			return isLarge ? LARGE_GEAR_X : GEAR_X;
 		if (state.get(AXIS) == Axis.Z)
 			return isLarge ? LARGE_GEAR_Z : GEAR_Z;
-		
+
 		return isLarge ? LARGE_GEAR_Y : GEAR_Y;
 	}
-	
+
 	// IRotate
-	
+
 	@Override
 	public boolean hasCogsTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return !isLarge && face.getAxis() != state.get(AXIS);

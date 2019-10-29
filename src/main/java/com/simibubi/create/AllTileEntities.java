@@ -7,11 +7,15 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.generators.MotorTileEntity;
 import com.simibubi.create.modules.contraptions.generators.MotorTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.generators.WaterWheelTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.BasinTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.BasinTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.MechanicalMixerTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.MechanicalMixerTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
@@ -82,6 +86,8 @@ public enum AllTileEntities {
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
 	MECHANICAL_PRESS(MechanicalPressTileEntity::new, AllBlocks.MECHANICAL_PRESS),
+	MECHANICAL_MIXER(MechanicalMixerTileEntity::new, AllBlocks.MECHANICAL_MIXER),
+	BASIN(BasinTileEntity::new, AllBlocks.BASIN),
 
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
@@ -143,6 +149,8 @@ public enum AllTileEntities {
 		bind(EntityDetectorTileEntity.class, new EntityDetectorTileEntityRenderer());
 		bind(MechanicalPressTileEntity.class, new MechanicalPressTileEntityRenderer());
 		bind(FlexpeaterTileEntity.class, new FlexpeaterTileEntityRenderer());
+		bind(MechanicalMixerTileEntity.class, new MechanicalMixerTileEntityRenderer());
+		bind(BasinTileEntity.class, new BasinTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

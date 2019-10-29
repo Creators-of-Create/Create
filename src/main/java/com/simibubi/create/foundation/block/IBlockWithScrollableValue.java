@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.block;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -42,8 +43,16 @@ public interface IBlockWithScrollableValue {
 
 	public Direction getValueBoxDirection(BlockState state, IWorld world, BlockPos pos);
 
-	public default boolean isValueOnAllSides() {
+	public default boolean isValueOnMultipleFaces() {
 		return false;
+	}
+
+	public default boolean requiresWrench() {
+		return false;
+	}
+
+	public default boolean isValueOnFace(Direction face) {
+		return true;
 	}
 
 	public default String getValueSuffix(BlockState state, IWorld world, BlockPos pos) {
@@ -70,11 +79,16 @@ public interface IBlockWithScrollableValue {
 		IBlockWithScrollableValue block = (IBlockWithScrollableValue) state.getBlock();
 		Vec3d pos = new Vec3d(blockPos);
 
+		if (block.requiresWrench() && !AllItems.WRENCH.typeOf(mc.player.getHeldItemMainhand()))
+			return;
+
 		Vec3d valueBoxPosition = block.getValueBoxPosition(state, world, blockPos);
 		AxisAlignedBB bb = VALUE_BB.offset(valueBoxPosition);
 		bb = bb.grow(1 / 128f);
-		Direction facing = block.isValueOnAllSides() ? result.getFace()
+		Direction facing = block.isValueOnMultipleFaces() ? result.getFace()
 				: block.getValueBoxDirection(state, world, blockPos);
+		if (block.isValueOnMultipleFaces() && !block.isValueOnFace(result.getFace()))
+			return;
 
 		Vec3d cursor = result.getHitVec().subtract(VecHelper.getCenterOf(blockPos));
 		cursor = VecHelper.rotate(cursor, facing.getHorizontalAngle() + 90, Axis.Y);
@@ -185,10 +199,14 @@ public interface IBlockWithScrollableValue {
 			return false;
 
 		IBlockWithScrollableValue block = (IBlockWithScrollableValue) state.getBlock();
+
+		if (block.requiresWrench() && !AllItems.WRENCH.typeOf(mc.player.getHeldItemMainhand()))
+			return false;
+
 		Vec3d valueBoxPosition = block.getValueBoxPosition(state, world, blockPos);
 		AxisAlignedBB bb = VALUE_BB.offset(valueBoxPosition);
 		bb = bb.grow(1 / 128f);
-		Direction facing = block.isValueOnAllSides() ? result.getFace()
+		Direction facing = block.isValueOnMultipleFaces() ? result.getFace()
 				: block.getValueBoxDirection(state, world, blockPos);
 
 		Vec3d cursor = result.getHitVec().subtract(VecHelper.getCenterOf(blockPos));

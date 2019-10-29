@@ -31,6 +31,7 @@ public class ConfigureChassisPacket extends TileEntityConfigurationPacket<Chassi
 	@Override
 	protected void applySettings(ChassisTileEntity te) {
 		te.setRange(range);
+		te.markDirty();
 		te.sendData();
 	}
 

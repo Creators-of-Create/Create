@@ -3,7 +3,6 @@ package com.simibubi.create.modules.contraptions.relays;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -36,17 +35,6 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return state.get(AXIS) == Axis.X ? AXIS_X : state.get(AXIS) == Axis.Z ? AXIS_Z : AXIS_Y;
-	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState placedAgainst = context.getWorld()
-				.getBlockState(context.getPos().offset(context.getFace().getOpposite()));
-
-		if (!(placedAgainst.getBlock() instanceof ShaftBlock))
-			return super.getStateForPlacement(context);
-
-		return getDefaultState().with(AXIS, placedAgainst.get(AXIS));
 	}
 
 	// IRotate:

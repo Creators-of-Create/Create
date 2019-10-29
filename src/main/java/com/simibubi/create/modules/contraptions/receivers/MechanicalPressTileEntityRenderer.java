@@ -10,11 +10,13 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 public class MechanicalPressTileEntityRenderer extends KineticTileEntityRenderer {
 
-	protected class HeadTranslator extends BufferManipulator {
+	public static class HeadTranslator extends BufferManipulator {
 
 		public HeadTranslator(ByteBuffer original) {
 			super(original);
@@ -32,6 +34,30 @@ public class MechanicalPressTileEntityRenderer extends KineticTileEntityRenderer
 
 			return mutable;
 		}
+
+		public ByteBuffer getTransformedRotated(float xIn, float yIn, float zIn, float pushDistance, float angle,
+				int packedLightCoords) {
+			original.rewind();
+			mutable.rewind();
+			float cos = MathHelper.cos(angle);
+			float sin = MathHelper.sin(angle);
+
+			for (int vertex = 0; vertex < vertexCount(original); vertex++) {
+				float x = getX(original, vertex) - .5f;
+				float y = getY(original, vertex) + yIn - pushDistance;
+				float z = getZ(original, vertex) - .5f;
+				float x2 = x;
+
+				x = rotateX(x, y, z, sin, cos, Axis.Y) + .5f + xIn;
+				z = rotateZ(x2, y, z, sin, cos, Axis.Y) + .5f + zIn;
+
+				putPos(mutable, vertex, x, y, z);
+				putLight(mutable, vertex, packedLightCoords);
+			}
+
+			return mutable;
+		}
+
 	}
 
 	@Override

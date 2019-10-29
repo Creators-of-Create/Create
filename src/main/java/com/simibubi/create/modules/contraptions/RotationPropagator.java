@@ -45,8 +45,16 @@ public class RotationPropagator {
 		final Direction direction = Direction.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ());
 		final World world = from.getWorld();
 
-		boolean connectedByAxis = definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
+		boolean alignedAxes = true;
+		for (Axis axis : Axis.values())
+			if (axis != direction.getAxis())
+				if (axis.getCoordinate(diff.getX(), diff.getY(), diff.getZ()) != 0)
+					alignedAxes = false;
+
+		boolean connectedByAxis = alignedAxes
+				&& definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
 				&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
+
 		boolean connectedByGears = definitionFrom.hasCogsTowards(world, from.getPos(), stateFrom, direction)
 				&& definitionTo.hasCogsTowards(world, to.getPos(), stateTo, direction.getOpposite());
 
@@ -54,10 +62,6 @@ public class RotationPropagator {
 		if (from instanceof BeltTileEntity && to instanceof BeltTileEntity && !connectedByAxis) {
 			return ((BeltTileEntity) from).getController().equals(((BeltTileEntity) to).getController()) ? 1 : 0;
 		}
-
-		// Gearbox <-> Gearbox
-		if (from instanceof GearboxTileEntity && to instanceof GearboxTileEntity)
-			return 0;
 
 		// Axis <-> Axis
 		if (connectedByAxis) {
@@ -84,7 +88,7 @@ public class RotationPropagator {
 			Axis targetAxis = stateTo.get(AXIS);
 			int sourceAxisDiff = sourceAxis.getCoordinate(diff.getX(), diff.getY(), diff.getZ());
 			int targetAxisDiff = targetAxis.getCoordinate(diff.getX(), diff.getY(), diff.getZ());
-			
+
 			return sourceAxisDiff > 0 ^ targetAxisDiff > 0 ? -1 : 1;
 		}
 
@@ -100,7 +104,7 @@ public class RotationPropagator {
 				return 0;
 			if (LARGE_COGWHEEL.typeOf(stateTo))
 				return 0;
-			if (stateFrom.get(AXIS) == stateTo.get(AXIS))
+			if (definitionFrom.getRotationAxis(stateFrom) == definitionTo.getRotationAxis(stateTo))
 				return -1;
 		}
 

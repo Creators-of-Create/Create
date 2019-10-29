@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.schematics.block;
 
-import static com.simibubi.create.ScreenResources.FLEXCRATE;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 
 import java.util.ArrayList;

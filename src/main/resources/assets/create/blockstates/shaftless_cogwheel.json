@@ -1,0 +1,13 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "create:block/cogwheel_shaftless"
+	},
+    "variants": {
+		"axis" : {
+			"x": { "x": 90, "y": 90 },
+			"y": {},
+			"z": { "x": 90 }
+		}
+	}
+}

@@ -8,6 +8,7 @@ import static com.simibubi.create.modules.curiosities.placementHandgun.BuilderGu
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem.ComponentTier;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem.Components;
 
@@ -22,7 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.client.model.animation.Animation;
 
 public class BuilderGunItemRenderer extends ItemStackTileEntityRenderer {
 
@@ -31,7 +31,7 @@ public class BuilderGunItemRenderer extends ItemStackTileEntityRenderer {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		BuilderGunModel mainModel = (BuilderGunModel) itemRenderer.getModelWithOverrides(stack);
 		float pt = Minecraft.getInstance().getRenderPartialTicks();
-		float worldTime = Animation.getWorldTime(Minecraft.getInstance().world, pt);
+		float worldTime = AnimationTickHolder.getRenderTick();
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translatef(0.5F, 0.5F, 0.5F);

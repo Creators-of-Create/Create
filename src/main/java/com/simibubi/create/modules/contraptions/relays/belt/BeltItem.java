@@ -69,9 +69,8 @@ public class BeltItem extends Item {
 					context.getItem().shrink(1);
 			}
 
-			tag.remove("FirstPulley");
 			if (!context.getItem().isEmpty()) {
-				context.getItem().setTag(tag);
+				context.getItem().setTag(null);
 				context.getPlayer().getCooldownTracker().setCooldown(this, 5);
 			}
 			return ActionResultType.SUCCESS;

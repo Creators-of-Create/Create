@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.PlacementSimulationWorld;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -25,7 +26,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
-import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class MechanicalBearingTileEntityRenderer extends KineticTileEntityRenderer {
@@ -39,7 +39,7 @@ public class MechanicalBearingTileEntityRenderer extends KineticTileEntityRender
 		MechanicalBearingTileEntity bearingTe = (MechanicalBearingTileEntity) te;
 		final Direction facing = te.getBlockState().get(BlockStateProperties.FACING);
 		final BlockPos pos = te.getPos();
-		float time = Animation.getWorldTime(Minecraft.getInstance().world, partialTicks);
+		float time = AnimationTickHolder.getRenderTick();
 		BlockState shaftState = AllBlocks.SHAFT_HALF.get().getDefaultState().with(BlockStateProperties.FACING,
 				facing.getOpposite());
 		BlockState capState = AllBlocks.MECHANICAL_BEARING_TOP.get().getDefaultState().with(BlockStateProperties.FACING,
