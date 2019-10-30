@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.curiosities.placementHandgun;
 
 import com.simibubi.create.ScreenResources;
+import com.simibubi.create.foundation.utility.Lang;
 
 public enum PlacementPatterns {
 
@@ -15,7 +16,7 @@ public enum PlacementPatterns {
 	public ScreenResources icon;
 
 	private PlacementPatterns(ScreenResources icon) {
-		this.translationKey = name().toLowerCase();
+		this.translationKey = Lang.asId(name());
 		this.icon = icon;
 	}
 

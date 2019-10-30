@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.simibubi.create.modules.contraptions.CachedBufferReloader;
+import com.simibubi.create.modules.contraptions.WrenchModel;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanParticleHandler;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
@@ -24,13 +25,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@EventBusSubscriber(bus = Bus.MOD)
 public class CreateClient {
 
 	public static ClientSchematicLoader schematicSender;
@@ -38,10 +39,19 @@ public class CreateClient {
 	public static SchematicHologram schematicHologram;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static EncasedFanParticleHandler fanParticles;
-
+	public static int renderTicks;
+	
 	public static ModConfig config;
 
-	@SubscribeEvent
+	public static void addListeners(IEventBus modEventBus) {
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			modEventBus.addListener(CreateClient::clientInit);
+			modEventBus.addListener(CreateClient::createConfigs);
+			modEventBus.addListener(CreateClient::onModelBake);
+			modEventBus.addListener(CreateClient::onModelRegistry);
+		});
+	}
+
 	public static void clientInit(FMLClientSetupEvent event) {
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
@@ -61,7 +71,6 @@ public class CreateClient {
 			((IReloadableResourceManager) resourceManager).addReloadListener(new CachedBufferReloader());
 	}
 
-	@SubscribeEvent
 	public static void createConfigs(ModConfig.ModConfigEvent event) {
 		if (event.getConfig().getSpec() == CreateConfig.specification)
 			return;
@@ -76,7 +85,6 @@ public class CreateClient {
 		schematicHologram.tick();
 	}
 
-	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onModelBake(ModelBakeEvent event) {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
@@ -85,6 +93,8 @@ public class CreateClient {
 				t -> new SymmetryWandModel(t).loadPartials(event));
 		swapModels(modelRegistry, getItemModelLocation(AllItems.PLACEMENT_HANDGUN),
 				t -> new BuilderGunModel(t).loadPartials(event));
+		swapModels(modelRegistry, getItemModelLocation(AllItems.WRENCH),
+				t -> new WrenchModel(t).loadPartials(event));
 		swapModels(modelRegistry,
 				getBlockModelLocation(AllBlocks.WINDOW_IN_A_BLOCK,
 						BlockModelShapes
@@ -95,7 +105,16 @@ public class CreateClient {
 						BlockModelShapes.getPropertyMapString(AllBlocks.WINDOW_IN_A_BLOCK.get().getDefaultState()
 								.with(BlockStateProperties.WATERLOGGED, true).getValues())),
 				WindowInABlockModel::new);
+	}
 
+	@OnlyIn(Dist.CLIENT)
+	public static void onModelRegistry(ModelRegistryEvent event) {
+		for (String location : SymmetryWandModel.getCustomModelLocations())
+			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
+		for (String location : BuilderGunModel.getCustomModelLocations())
+			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
+		for (String location : WrenchModel.getCustomModelLocations())
+			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
 	}
 
 	protected static ModelResourceLocation getItemModelLocation(AllItems item) {

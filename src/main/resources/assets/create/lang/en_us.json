@@ -1,5 +1,5 @@
 {
-	
+
 	"_comment": "-------------------------]  GAME ELEMENTS  [------------------------------------------------",
 
 	"item.create.symmetry_wand": "Staff of Symmetry",
@@ -23,6 +23,7 @@
 	"item.create.propeller": "Propeller",
 	"item.create.flour": "Wheat Flour",
 	"item.create.dough": "Dough",
+	"item.create.wrench": "Wrench",
 	"item.create.crushed_iron": "Crushed Iron Ore",
 	"item.create.crushed_gold": "Crushed Gold Ore",
 	"item.create.time_scarf": "Scarf with a clock on it",
@@ -34,32 +35,32 @@
 	"item.create.logistical_controller_calculation": "Ingredient Calculator",
 	"item.create.logistical_controller_transactions": "Task Manager",
 	"item.create.logistical_dial": "Logistical Dial",
-	
+
 	"item.create.blazing_pickaxe": "Blazing Pickaxe",
 	"item.create.blazing_shovel": "Blazing Shovel",
 	"item.create.blazing_axe": "Blazing Axe",
 	"item.create.blazing_sword": "Blazing Longsword",
-	
+
 	"item.create.shadow_steel_pickaxe": "Shadow Steel Pickaxe",
 	"item.create.shadow_steel_mattock": "Shadow Steel Garden Mattock",
 	"item.create.shadow_steel_sword": "Shadow Steel Sword",
-	
+
 	"item.create.rose_quartz_pickaxe": "Gilded Quartz Pickaxe",
 	"item.create.rose_quartz_shovel": "Gilded Quartz Shovel",
 	"item.create.rose_quartz_axe": "Gilded Quartz Axe",
 	"item.create.rose_quartz_sword": "Gilded Quartz Blade",
-	
+
 	"block.create.cogwheel": "Cogwheel",
-    "block.create.large_cogwheel": "Large Cogwheel",
-    "block.create.turntable": "Turntable",
-    "block.create.gearbox": "Gearbox",
+	"block.create.large_cogwheel": "Large Cogwheel",
+	"block.create.turntable": "Turntable",
+	"block.create.gearbox": "Gearbox",
 	"block.create.gearshift": "Gearshift",
 	"block.create.clutch": "Clutch",
-    "block.create.shaft": "Shaft",
+	"block.create.shaft": "Shaft",
 	"block.create.encased_belt": "Encased Belt",
 	"block.create.encased_shaft": "Encased Shaft",
 	"block.create.encased_fan": "Encased Fan",
-    "block.create.motor": "Motor",
+	"block.create.motor": "Motor",
 	"block.create.belt": "Mechanical Belt",
 	"block.create.crushing_wheel": "Crushing Wheel",
 	"block.create.drill": "Mechanical Drill",
@@ -68,7 +69,9 @@
 	"block.create.water_wheel": "Water Wheel",
 	"block.create.belt_support": "Belt Support",
 	"block.create.mechanical_press": "Mechanical Press",
-	
+	"block.create.mechanical_mixer": "Mechanical Mixer",
+	"block.create.basin": "Basin",
+
 	"block.create.sticky_mechanical_piston": "Sticky Mechanical Piston",
 	"block.create.mechanical_piston": "Mechanical Piston",
 	"block.create.mechanical_piston_head": "Mechanical Piston Head",
@@ -95,12 +98,12 @@
 	
 	"block.create.tiled_glass": "Tiled Glass",
 	"block.create.tiled_glass_pane": "Tiled Glass Pane",
-	
+
 	"block.create.window_in_a_block": "Block with Glass Pane",
 	"block.create.andesite_bricks": "Andesite Bricks",
 	"block.create.diorite_bricks": "Diorite Bricks",
 	"block.create.granite_bricks": "Granite Bricks",
-	
+
 	"block.create.gabbro": "Gabbro",
 	"block.create.gabbro_stairs": "Gabbro Stairs",
 	"block.create.gabbro_slab": "Gabbro Slab",
@@ -115,7 +118,7 @@
 	"block.create.indented_gabbro_slab": "Indented Gabbro Slab",
 	"block.create.slightly_mossy_gabbro_bricks": "Mossy Gabbro Bricks",
 	"block.create.mossy_gabbro_bricks": "Overgrown Gabbro Bricks",
-	
+
 	"block.create.weathered_limestone": "Weathered Limestone",
 	"block.create.weathered_limestone_stairs": "Weathered Limestone Stairs",
 	"block.create.weathered_limestone_wall": "Weathered Limestone Wall",
@@ -127,7 +130,7 @@
 	"block.create.weathered_limestone_bricks_wall": "Weathered Limestone Brick Wall",
 	"block.create.weathered_limestone_bricks_slab": "Weathered Limestone Brick Slab",
 	"block.create.weathered_limestone_pillar": "Weathered Limestone Pillar",
-	
+
 	"block.create.dolomite_pillar": "Dolomite Pillar",
 	"block.create.dolomite": "Dolomite",
 	"block.create.dolomite_stairs": "Dolomite Stairs",
@@ -138,7 +141,7 @@
 	"block.create.dolomite_bricks_stairs": "Dolomite Brick Stairs",
 	"block.create.dolomite_bricks_slab": "Dolomite Brick Slab",
 	"block.create.polished_dolomite": "Polished Dolomite",
-	
+
 	"block.create.limesand": "Limesand",
 	"block.create.limestone": "Limestone",
 	"block.create.limestone_stairs": "Limestone Stairs",
@@ -151,22 +154,22 @@
 	"block.create.polished_limestone": "Polished Limestone",
 	"block.create.polished_limestone_slab": "Polished Limestone Slab",
 	"block.create.limestone_pillar": "Limestone Pillar",
-	
+
 	"block.create.schematicannon": "Schematicannon",
 	"block.create.schematic_table": "Schematic Table",
 	"block.create.creative_crate": "Schematicannon Creatifier",
 
 	"block.create.cocoa_log": "Cocoa Jungle Log",
-	
+
 	"block.create.shop_shelf": "Shelf",
-	
+
 	"_comment": "-------------------------]  UI & MESSAGES  [------------------------------------------------",
 
 	"death.attack.create.crush": "%1$s was processed by Crushing Wheels",
 	"death.attack.create.fan_fire": "%1$s was burned to death by hot air",
 	"death.attack.create.fan_lava": "%1$s was burned to death by lava fan",
 	"death.attack.create.drill": "%1$s was impaled by Mechanical Drill",
-	
+
 	"create.recipe.crushing": "Crushing",
 	"create.recipe.splashing": "Bulk Washing",
 	"create.recipe.splashing.fan": "Fan behind Flowing Water",
@@ -177,7 +180,7 @@
 	"create.recipe.pressing": "Mechanical Press",
 	"create.recipe.blockzapperUpgrade": "Handheld Blockzapper",
 	"create.recipe.processing.chance": "%1$s%% Chance",
-	
+
 	"create.generic.range": "Range",
 	"create.generic.radius": "Radius",
 	"create.generic.speed": "Speed",
@@ -185,23 +188,23 @@
 	"create.generic.unit.ticks": "Ticks",
 	"create.generic.unit.seconds": "Seconds",
 	"create.generic.unit.minutes": "Minutes",
-	
+
 	"create.action.scroll": "Scroll",
 	"create.action.confirm": "Confirm",
 	"create.action.abort": "Abort",
 	"create.action.saveToFile": "Save",
 	"create.action.discard": "Discard",
-	
+
 	"create.keyinfo.toolmenu": "Focus Tool Menu",
-	
+
 	"create.gui.scrollInput.defaultTitle": "Choose an Option:",
 	"create.gui.scrollInput.scrollToModify": "Scroll to Modify",
 	"create.gui.scrollInput.scrollToSelect": "Scroll to Select",
 	"create.gui.scrollInput.shiftScrollsFaster": "Shift to Scroll faster",
-	
+
 	"create.gui.toolmenu.focusKey": "Hold [%1$s] to Focus",
 	"create.gui.toolmenu.cycle": "[SCROLL] to Cycle",
-	
+
 	"create.gui.symmetryWand.mirrorType": "Mirror",
 	"create.gui.symmetryWand.orientation": "Orientation",
 	"create.symmetry.mirror.plane": "Mirror once",
@@ -212,12 +215,13 @@
 	"create.orientation.horizontal": "Horizontal",
 	"create.orientation.alongZ": "Along Z",
 	"create.orientation.alongX": "Along X",
-	
+
 	"create.gui.blockzapper.title": "Handheld Blockzapper",
 	"create.gui.blockzapper.replaceMode": "Replace Mode",
 	"create.gui.blockzapper.searchDiagonal": "Follow Diagonals",
 	"create.gui.blockzapper.searchFuzzy": "Ignore Material Borders",
 	"create.gui.blockzapper.range": "Spread Range",
+	"create.gui.blockzapper.needsUpgradedAmplifier": "Requires Upgraded Amplifier",
 	"create.gui.blockzapper.patternSection": "Patterns",
 	"create.gui.blockzapper.pattern.solid": "Solid",
 	"create.gui.blockzapper.pattern.checkered": "Checkerboard",
@@ -225,7 +229,7 @@
 	"create.gui.blockzapper.pattern.chance25": "25% Roll",
 	"create.gui.blockzapper.pattern.chance50": "50% Roll",
 	"create.gui.blockzapper.pattern.chance75": "75% Roll",
-	
+
 	"create.blockzapper.usingBlock": "Using: %1$s",
 	"create.blockzapper.componentUpgrades": "Component Upgrades:",
 	"create.blockzapper.component.body": "Body",
@@ -238,14 +242,14 @@
 	"create.blockzapper.componentTier.choruschrome": "Chorus Chrome",
 	"create.blockzapper.leftClickToSet": "Left-Click a Block to set Material",
 	"create.blockzapper.empty": "Out of Blocks!",
-	
+
 	"create.logistics.filter": "Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
-	
+
 	"create.gui.flexcrate.title": "FlexCrate",
 	"create.gui.flexcrate.storageSpace": "Storage Space",
-	
+
 	"create.gui.stockswitch.title": "Stockpile Switch",
 	"create.gui.stockswitch.lowerLimit": "Lower Threshold",
 	"create.gui.stockswitch.upperLimit": "Upper Threshold",
@@ -253,7 +257,7 @@
 	"create.gui.stockswitch.startAbove": "Start Signal above",
 	"create.gui.stockswitch.stopAt": "Stop Signal at",
 	"create.gui.stockswitch.stopBelow": "Stop Signal below",
-	
+
 	"create.schematicAndQuill.dimensions": "Schematic Size: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "First position set.",
 	"create.schematicAndQuill.secondPos": "Second position set.",
@@ -262,7 +266,7 @@
 	"create.schematicAndQuill.prompt": "Enter a name for the Schematic:",
 	"create.schematicAndQuill.fallbackName": "My Schematic",
 	"create.schematicAndQuill.saved": "Saved as %1$s",
-	
+
 	"create.schematic.invalid": "[!] Invalid Item - Use the Schematic Table instead",
 	"create.schematic.position": "Position",
 	"create.schematic.rotation": "Rotation",
@@ -274,14 +278,14 @@
 	"create.schematic.mirror.none": "None",
 	"create.schematic.mirror.frontBack": "Front-Back",
 	"create.schematic.mirror.leftRight": "Left-Right",
-	
+
 	"create.schematic.tool.deploy": "Deploy",
 	"create.schematic.tool.move": "Move XZ",
 	"create.schematic.tool.movey": "Move Y",
 	"create.schematic.tool.rotate": "Rotate",
 	"create.schematic.tool.print": "Print",
 	"create.schematic.tool.flip": "Flip",
-	
+
 	"create.schematic.tool.deploy.description.0": "Moves the structure to a location.",
 	"create.schematic.tool.deploy.description.1": "Right-Click on the ground to place.",
 	"create.schematic.tool.deploy.description.2": "Hold [Ctrl] to select at a fixed distance.",
@@ -306,17 +310,17 @@
 	"create.schematic.tool.flip.description.1": "Point at the Schematic and [CTRL]-Scroll to flip it.",
 	"create.schematic.tool.flip.description.2": "",
 	"create.schematic.tool.flip.description.3": "",
-	
+
 	"create.schematics.synchronizing": "Syncing...",
 	"create.schematics.uploadTooLarge": "Your schematic is too large",
 	"create.schematics.maxAllowedSize": "The maximum allowed schematic file size is:",
-	
+
 	"create.gui.schematicTable.title": "Schematic Table",
 	"create.gui.schematicTable.availableSchematics": "Available Schematics",
 	"create.gui.schematicTable.noSchematics": "No Schematics Saved",
 	"create.gui.schematicTable.uploading": "Uploading...",
 	"create.gui.schematicTable.finished": "Upload Finished!",
-	
+
 	"create.gui.schematicannon.title": "Schematicannon",
 	"create.gui.schematicannon.settingsTitle": "Placement Settings",
 	"create.gui.schematicannon.listPrinter": "Material List Printer",
@@ -331,14 +335,14 @@
 	"create.gui.schematicannon.option.replaceWithEmpty": "Replace Solid with Empty",
 	"create.gui.schematicannon.option.skipMissing": "Skip missing Blocks",
 	"create.gui.schematicannon.option.skipTileEntities": "Protect Tile Entities",
-	
+
 	"create.gui.schematicannon.option.skipMissing.description": "If the Schematicannon cannot find a required Block for placement, it will continue at the next Location.",
 	"create.gui.schematicannon.option.skipTileEntities.description": "The Schematicannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "The cannon will never replace any Solid blocks in its working area, only non-Solid and Air.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "The cannon will only replace Solid blocks in its working area, if the Schematic contains a solid Block at their location.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "The cannon will replace Solid blocks in its working area, if the Schematic contains any Block at their location.",
 	"create.gui.schematicannon.option.replaceWithEmpty.description": "The cannon will clear out all blocks in its working area, including those replaced by Air.",
-	
+
 	"create.schematicannon.status.idle": "Idle",
 	"create.schematicannon.status.ready": "Ready",
 	"create.schematicannon.status.running": "Running",
@@ -370,14 +374,16 @@
 	"create.gui.logistical_controller.passive_mode": "Passive Mode",	
 	"create.gui.requester.requestedItemCount": "Requested Amount",
 	"create.gui.storage.passiveModeOnly": "Item Storage is Passive only",
-	
+
 	"create.tooltip.holdKey": "Hold [%1$s]",
 	"create.tooltip.holdKeyOrKey": "Hold [%1$s] or [%2$s]",
 	"create.tooltip.keyShift": "Shift",
 	"create.tooltip.keyCtrl": "Ctrl",
 	
+	"create.mechanical_mixer.min_ingredients": "Min. Ingredients",
+
 	"_comment": "-------------------------]  ITEM DESCRIPTIONS  [------------------------------------------------",
-	
+
 	"item.create.example_item.tooltip": "EXAMPLE ITEM (just a marker that this tooltip exists)",
 	"item.create.example_item.tooltip.summary": "A brief description of the item. _Underscores_ highlight a term.",
 	"item.create.example_item.tooltip.condition1": "When this",
@@ -385,8 +391,8 @@
 	"item.create.example_item.tooltip.condition2": "And When this",
 	"item.create.example_item.tooltip.behaviour2": "You can add as many behaviours as you like",
 	"item.create.example_item.tooltip.control1": "When Ctrl pressed",
-	"item.create.example_item.tooltip.action1": "These controls are displayed.",	
-	
+	"item.create.example_item.tooltip.action1": "These controls are displayed.",
+
 	"item.create.symmetry_wand.tooltip": "SYMMETRY WAND",
 	"item.create.symmetry_wand.tooltip.summary": "Perfectly mirrors your Block placement across the configured planes.",
 	"item.create.symmetry_wand.tooltip.condition1": "When in Hotbar",
@@ -397,7 +403,7 @@
 	"item.create.symmetry_wand.tooltip.action2": "_Removes_ the active Mirror",
 	"item.create.symmetry_wand.tooltip.control3": "R-Click while Sneaking",
 	"item.create.symmetry_wand.tooltip.action3": "Opens the _Configuration_ _Interface_",
-	
+
 	"item.create.placement_handgun.tooltip": "BLOCKZAPPER",
 	"item.create.placement_handgun.tooltip.summary": "Novel gadget for placing or exchanging blocks at a distance.",
 	"item.create.placement_handgun.tooltip.control1": "L-Click at Block",
@@ -406,27 +412,27 @@
 	"item.create.placement_handgun.tooltip.action2": "_Places_ or _Replaces_ the targeted block.",
 	"item.create.placement_handgun.tooltip.control3": "R-Click while Sneaking",
 	"item.create.placement_handgun.tooltip.action3": "Opens the _Configuration_ _Interface_",
-	
+
 	"item.create.tree_fertilizer.tooltip": "TREE FERTILIZER",
 	"item.create.tree_fertilizer.tooltip.summary": "A powerful combination of minerals suitable for common tree types",
 	"item.create.tree_fertilizer.tooltip.condition1": "When used on Sapling",
-	"item.create.tree_fertilizer.tooltip.behaviour1": "Grows Trees regardless of their spacing Conditions",	
-	
+	"item.create.tree_fertilizer.tooltip.behaviour1": "Grows Trees regardless of their spacing Conditions",
+
 	"block.create.cocoa_log.tooltip": "COCOA LOG",
 	"block.create.cocoa_log.tooltip.summary": "An augmented jungle log allowing for easier automation of _Cocoa_ _Beans_",
 	"block.create.cocoa_log.tooltip.condition1": "When Mature",
 	"block.create.cocoa_log.tooltip.behaviour1": "Grows _Cocoa_ _Pods_ on all sides",
-	
+
 	"item.create.empty_blueprint.tooltip": "EMPTY SCHEMATIC",
 	"item.create.empty_blueprint.tooltip.summary": "Used as a recipe ingredient and for writing at the _Schematic_ _Table_",
-	
+
 	"item.create.blueprint.tooltip": "SCHEMATIC",
 	"item.create.blueprint.tooltip.summary": "Holds a structure to be positioned and placed into the world. Position the Hologram as desired and use a _Schematicannon_ to build it.",
 	"item.create.blueprint.tooltip.condition1": "When Held",
 	"item.create.blueprint.tooltip.behaviour1": "Can be positioned using the Tools on Screen",
 	"item.create.blueprint.tooltip.control1": "R-Click while Sneaking",
 	"item.create.blueprint.tooltip.action1": "Opens an _Interface_ for entering exact _Coordinates._",
-	
+
 	"item.create.blueprint_and_quill.tooltip": "SCHEMATIC AND QUILL",
 	"item.create.blueprint_and_quill.tooltip.summary": "Used for saving a Structure in your world to a .nbt file.",
 	"item.create.blueprint_and_quill.tooltip.condition1": "Step 1",
@@ -439,62 +445,62 @@
 	"item.create.blueprint_and_quill.tooltip.action2": "Select points in _mid-air_. _Scroll_ to adjust the distance.",
 	"item.create.blueprint_and_quill.tooltip.control3": "R-Click while Sneaking",
 	"item.create.blueprint_and_quill.tooltip.action3": "_Resets_ and removes the selection.",
-	
+
 	"block.create.creative_crate.tooltip": "CREATIVE CRATE",
 	"block.create.creative_crate.tooltip.summary": "Provides an endless supply of blocks to adjacent _Schematicannons_",
-	
+
 	"block.create.schematicannon.tooltip": "SCHEMATICANNON",
 	"block.create.schematicannon.tooltip.summary": "Shoots blocks to recreate a deployed _Schematic_ in the World. Uses items from adjacent Inventories and _Gunpowder_ as fuel.",
 	"block.create.schematicannon.tooltip.control1": "When R-Clicked",
 	"block.create.schematicannon.tooltip.action1": "Opens the _Interface_",
-	
+
 	"block.create.schematic_table.tooltip": "SCHEMATIC TABLE",
 	"block.create.schematic_table.tooltip.summary": "Writes saved Schematics onto an _Empty_ _Schematic_",
 	"block.create.schematic_table.tooltip.condition1": "When given an Empty Schematic",
 	"block.create.schematic_table.tooltip.behaviour1": "Uploads a chosen File from your Schematics Folder",
-	
+
 	"block.create.shaft.tooltip": "SHAFT",
 	"block.create.shaft.tooltip.summary": "_Relays_ _Rotation_ in a straight line.",
-	
+
 	"block.create.cogwheel.tooltip": "COGWHEEL",
 	"block.create.cogwheel.tooltip.summary": "_Relays_ _Rotation_ in a straigt line, and to adjacent _Cogwheels._",
 
 	"block.create.large_cogwheel.tooltip": "LARGE COGWHEEL",
 	"block.create.large_cogwheel.tooltip.summary": "A larger version of the _Cogwheel,_ allowing for _change_ in _Rotation_ _Speed_ when connected to its smaller Counterpart.",
-	
+
 	"block.create.encased_shaft.tooltip": "ENCASED SHAFT",
 	"block.create.encased_shaft.tooltip.summary": "_Relays_ _Rotation_ in a straight line. Suitable for propagating Rotation through Walls.",
 
 	"block.create.gearbox.tooltip": "GEARBOX",
 	"block.create.gearbox.tooltip.summary": "_Relays_ _Rotation_ to _Four_ _directions._ Reverses straight connections.",
-	
+
 	"block.create.gearshift.tooltip": "GEARSHIFT",
 	"block.create.gearshift.tooltip.summary": "A controllable _rotation_ _switch_ for connected shafts.",
 	"block.create.gearshift.tooltip.condition1": "When Powered",
 	"block.create.gearshift.tooltip.behaviour1": "_Reverses_ the outgoing rotation.",
-	
+
 	"block.create.clutch.tooltip": "CLUTCH",
 	"block.create.clutch.tooltip.summary": "A controllable _rotation_ _switch_ for connected shafts.",
 	"block.create.clutch.tooltip.condition1": "When Powered",
 	"block.create.clutch.tooltip.behaviour1": "_Stops_ conveying rotation to the other side.",
-	
+
 	"block.create.encased_belt.tooltip": "ENCASED_BELT",
 	"block.create.encased_belt.tooltip.summary": "_Relays_ _Rotation_ through its block and to an attached _Encased_ _Belt._",
 	"block.create.encased_belt.tooltip.condition1": "When Attached to other Encased Belt",
 	"block.create.encased_belt.tooltip.behaviour1": "Attached Block will have the exact same rotation speed and direction. Attached Belts do not have to face the same way.",
-	
+
 	"item.create.belt_connector.tooltip": "BELT CONNECTOR",
 	"item.create.belt_connector.tooltip.summary": "Connects two _Shafts_ with a _Mechanical_ _Belt._ Connected shafts will have the exact same rotation speed and direction. The Belt can act as a _Conveyor_ for _Entities._",
 	"item.create.belt_connector.tooltip.control1": "R-Clicked on Shaft",
 	"item.create.belt_connector.tooltip.action1": "Selects the shaft as one pulley of the Belt. Both selected Shafts have to _line_ _up_ either _Vertically,_ _Horizontally_ or _Diagonally_ towards the Belt's Direction.",
 	"item.create.belt_connector.tooltip.control2": "R-Click while Sneaking",
 	"item.create.belt_connector.tooltip.action2": "_Resets_ the first selected position for the Belt",
-	
+
 	"block.create.belt_support.tooltip": "BELT SUPPORT",
 	"block.create.belt_support.tooltip.summary": "A _purely_ _decorational_ block suitable for mounting _Mechanical_ _Belts_ to the Ground.",
 	"block.create.belt_support.tooltip.condition1": "When placed below a Belt",
-	"block.create.belt_support.tooltip.behaviour1": "Supports the top of the Belt, hiding the bottom layer.",	
-	
+	"block.create.belt_support.tooltip.behaviour1": "Supports the top of the Belt, hiding the bottom layer.",
+
 	"block.create.motor.tooltip": "MOTOR",
 	"block.create.motor.tooltip.summary": "A configurable source of _Rotational_ _Force_",
 
@@ -503,8 +509,8 @@
 
 	"block.create.encased_fan.tooltip": "ENCASED FAN",
 	"block.create.encased_fan.tooltip.summary": "Converts _Rotational_ _Force_ to _Air_ _Currents_ and back. Has a variety of uses.",
-	"block.create.encased_fan.tooltip.condition1": "When above Fire",
-	"block.create.encased_fan.tooltip.behaviour1": "Provides _Rotational_ _Force_ (has to be vertical)",
+	"block.create.encased_fan.tooltip.condition1": "When Powered by Redstone",
+	"block.create.encased_fan.tooltip.behaviour1": "Provides _Rotational_ _Force_ from any _heat_ _sources_ immediately below itself (fan has to be vertical)",
 	"block.create.encased_fan.tooltip.condition2": "When Rotated",
 	"block.create.encased_fan.tooltip.behaviour2": "_Pushes_ Entities on one side, _Pulls_ on the other. Force and Speed depend on incoming Rotations.",
 	"block.create.encased_fan.tooltip.condition3": "When air flows through special blocks",
@@ -524,55 +530,55 @@
 	"block.create.mechanical_press.tooltip.behaviour1": "_Starts_ to compress items dropped below it.",
 	"block.create.mechanical_press.tooltip.condition2": "When Above a Mechanical Belt",
 	"block.create.mechanical_press.tooltip.behaviour2": "_Automatically_ compresses bypassing items on the Belt.",
-	
+
 	"block.create.mechanical_piston.tooltip": "MECHANICAL PISTON",
 	"block.create.mechanical_piston.tooltip.summary": "A more advanced version of the _Piston,_ using _Rotational_ _Force_ to precisely move attached structures. _Piston_ _Extension_ _Poles_ at the rear define the _Range_ of this Device. Without extensions, the piston will not move. Use _Translation_ _Chassis_ to move more than a single line of blocks.",
 	"block.create.mechanical_piston.tooltip.condition1": "When Rotated",
 	"block.create.mechanical_piston.tooltip.behaviour1": "Starts moving the attached structure. Speed and direction correlate to the incoming Rotation Speed.",
-		
+
 	"block.create.sticky_mechanical_piston.tooltip": "STICKY MECHANICAL PISTON",
 	"block.create.sticky_mechanical_piston.tooltip.summary": "A more advanced version of the _Sticky_ _Piston,_ using _Rotational_ _Force_ to precisely move attached structures. _Piston_ _Extension_ _Poles_ at the rear define the _Range_ of this Device. Without extensions, the piston will not move. Use _Translation_ _Chassis_ to move more than a single line of blocks.",
 	"block.create.sticky_mechanical_piston.tooltip.condition1": "When Rotated",
 	"block.create.sticky_mechanical_piston.tooltip.behaviour1": "Starts moving the attached structure. Speed and direction correlate to the incoming Rotation Speed.",
-	
+
 	"block.create.piston_pole.tooltip": "PISTON POLE",
 	"block.create.piston_pole.tooltip.summary": "Used to increase the extension range of _Mechanical_ _Pistons_",
 	"block.create.piston_pole.tooltip.condition1": "When attached to Mechanical Piston",
 	"block.create.piston_pole.tooltip.behaviour1": "Extends the pistons extension range by 1 block",
-	
+
 	"block.create.mechanical_bearing.tooltip": "MECHANICAL BEARING",
 	"block.create.mechanical_bearing.tooltip.summary": "Used for rotating _larger_ _structures_ or generating _Rotational_ _Force_ from wind.",
 	"block.create.mechanical_bearing.tooltip.condition1": "When Rotated",
 	"block.create.mechanical_bearing.tooltip.behaviour1": "Starts physically rotating attached _Rotation_ _Chassis_ and their attached blocks respectively.",
 	"block.create.mechanical_bearing.tooltip.condition2": "When Powered by Redstone",
 	"block.create.mechanical_bearing.tooltip.behaviour2": "Starts providing _Rotational_ _Force_ from rotating its attached structure. The Structure has to include suitable _Sail_ _Blocks_ (Currently any Wool Block).",
-	
+
 	"block.create.translation_chassis.tooltip": "TRANSLATION CHASSIS",
 	"block.create.translation_chassis.tooltip.summary": "A configurable base for Structures moved by a _Mechanical_ _Piston._ These Blocks have to form the first Layer of blocks in front of the Piston.",
 	"block.create.translation_chassis.tooltip.condition1": "When Moved by Mechanical Piston",
 	"block.create.translation_chassis.tooltip.behaviour1": "_Moves_ all _attached_ _Chassis_ with the same orientation, and attached Blocks in front of it. When the Piston retracts, blocks will only be pulled if the chassis' face is _Sticky_ (See [Ctrl]).",
 	"block.create.translation_chassis.tooltip.control1": "When R-Clicked with Slime Ball",
 	"block.create.translation_chassis.tooltip.action1": "Makes the clicked face _Sticky._ When the piston retracts, the chassis will _pull_ _back_ all attached Blocks in its column and within the configured Range.",
-	
+
 	"block.create.rotation_chassis.tooltip": "ROTATION CHASSIS",
 	"block.create.rotation_chassis.tooltip.summary": "Required for rotating structures with the _Mechanical_ _Bearing._ ",
 	"block.create.rotation_chassis.tooltip.condition1": "When Rotated by Bearing",
 	"block.create.rotation_chassis.tooltip.behaviour1": "_Rotates_ all blocks attached to _Sticky_ sides (See [Ctrl]) within the configured range around itself. _Transmits_ the rotation to further attached Rotation Chassis.",
 	"block.create.rotation_chassis.tooltip.control1": "When R-Clicked with Slime Ball",
 	"block.create.rotation_chassis.tooltip.action1": "Makes the clicked face _Sticky._ When the Chassis rotates, all blocks attached to this side will be rotated with it.",
-	
+
 	"block.create.drill.tooltip": "MECHANICAL DRILL",
 	"block.create.drill.tooltip.summary": "A mechanical device suitable for _breaking_ _blocks._",
 	"block.create.drill.tooltip.condition1": "When Rotated",
 	"block.create.drill.tooltip.behaviour1": "Acts as a _stationary_ Block Breaker. Also _hurts_ _entities_ in its effective area.",
 	"block.create.drill.tooltip.condition2": "When Pushed by Mechanical Piston",
-	"block.create.drill.tooltip.behaviour2": "Breaks Blocks the drill is running into.",	
-	
+	"block.create.drill.tooltip.behaviour2": "Breaks Blocks the drill is running into.",
+
 	"block.create.harvester.tooltip": "MECHANICAL HARVESTER",
 	"block.create.harvester.tooltip.summary": "A mechanical plant cutter suitable for medium scale crop automation",
 	"block.create.harvester.tooltip.condition1": "When Pushed by Mechanical Piston",
 	"block.create.harvester.tooltip.behaviour1": "_Harvests_ all _mature_ _crops_ the blade is running into, and resets them to their initial growth state.",
-	
+
 	"block.create.stockswitch.tooltip": "STOCKSWITCH",
 	"block.create.stockswitch.tooltip.summary": "Toggles a Redstone signal based on the _Storage_ _Space_ in the attached Container.",
 	"block.create.stockswitch.tooltip.condition1": "When below Lower Limit",
@@ -581,7 +587,7 @@
 	"block.create.stockswitch.tooltip.behaviour2": "Starts providing _Redstone_ _Power_ until Lower Limit is reached again.",
 	"block.create.stockswitch.tooltip.control1": "When R-Clicked",
 	"block.create.stockswitch.tooltip.action1": "Opens the _Configuration_ _Interface_",
-	
+
 	"block.create.redstone_bridge.tooltip": "REDSTONE LINK",
 	"block.create.redstone_bridge.tooltip.summary": "Endpoints for _Wireless_ _Redstone_ connections. Can be assigned _Frequencies_ using any item. Signal range is limited, but reasonably far.",
 	"block.create.redstone_bridge.tooltip.condition1": "When Powered",
@@ -590,50 +596,50 @@
 	"block.create.redstone_bridge.tooltip.action1": "Sets the _Frequency_ to that item. A total of _two_ _different_ _items_ can be used in combination for defining a Frequency.",
 	"block.create.redstone_bridge.tooltip.control2": "When R-Clicked while Sneaking",
 	"block.create.redstone_bridge.tooltip.action2": "Toggles between _Receiver_ and _Transmitter_ Mode.",
-	
+
 	"block.create.contact.tooltip": "REDSTONE CONTACT",
 	"block.create.contact.tooltip.summary": "A simple device for advanced Redstone Contraptions.",
 	"block.create.contact.tooltip.condition1": "When facing other Contact",
 	"block.create.contact.tooltip.behaviour1": "Provides a _Redstone_ _Signal_",
 	"block.create.contact.tooltip.condition2": "When moved by Mechanical Piston",
-	"block.create.contact.tooltip.behaviour2": "Triggers all stationary Contacts passing by",	
-	
+	"block.create.contact.tooltip.behaviour2": "Triggers all stationary Contacts passing by",
+
 	"block.create.flexcrate.tooltip": "FLEXCRATE",
 	"block.create.flexcrate.tooltip.summary": "This _Storage_ _Container_ allows Manual control over its capacity. It can hold up to _16_ _Stacks_ of any Item",
 	"block.create.flexcrate.tooltip.control1": "When R-Clicked",
-	"block.create.flexcrate.tooltip.action1": "Opens the _Interface_",	
-	
+	"block.create.flexcrate.tooltip.action1": "Opens the _Interface_",
+
 	"block.create.extractor.tooltip": "EXTRACTOR",
 	"block.create.extractor.tooltip.summary": "_Takes_ _items_ from an attached _Inventory_ and drops them onto the ground. Will not drop Items until the space cleared. Can be assigned an item-stack as a _filter._",
 	"block.create.extractor.tooltip.condition1": "When Powered by Redstone",
 	"block.create.extractor.tooltip.behaviour1": "_Pauses_ the Extractor",
 	"block.create.extractor.tooltip.control1": "R-Click on Filter Space",
-	"block.create.extractor.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter._ Extractor will pull the item _type_ and _count_ of the filter stack exclusively.",	
-	
+	"block.create.extractor.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter._ Extractor will pull the item _type_ and _count_ of the filter stack exclusively.",
+
 	"block.create.linked_extractor.tooltip": "LINKED EXTRACTOR",
 	"block.create.linked_extractor.tooltip.summary": "_Takes_ _items_ from an attached _Inventory_ and drops them onto the ground. Will not drop Items until the space cleared. Can be assigned an item-stack as a _filter._ Can be controlled remotely via a _Redstone_ _Link._",
 	"block.create.linked_extractor.tooltip.condition1": "When Redstone Link Active",
 	"block.create.linked_extractor.tooltip.behaviour1": "_Pauses_ the Extractor",
 	"block.create.linked_extractor.tooltip.control1": "R-Click on Filter Space",
-	"block.create.linked_extractor.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter._ Extractor will pull the item _type_ and _count_ of the filter stack exclusively.",		
+	"block.create.linked_extractor.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter._ Extractor will pull the item _type_ and _count_ of the filter stack exclusively.",
 	"block.create.linked_extractor.tooltip.control2": "R-Click on Frequency Space",
-	"block.create.linked_extractor.tooltip.action2": "Assigns currently _held_ _item_ as part of the Frequency listened on. Whenever a transmitting _Redstone_ _Link_ of the same frequency is powered, this Extractor will pause.",		
-	
+	"block.create.linked_extractor.tooltip.action2": "Assigns currently _held_ _item_ as part of the Frequency listened on. Whenever a transmitting _Redstone_ _Link_ of the same frequency is powered, this Extractor will pause.",
+
 	"block.create.belt_funnel.tooltip": "BELT FUNNEL",
 	"block.create.belt_funnel.tooltip.summary": "Collects incoming items on a _Mechanical_ _Belt_ and inserts them into the attached _Inventory_ if possible. Has to be directly _on_ _top_ of a Belt, with the opening facing against the Belts' movement direction. The inventory has to be on the same height as the funnel.",
-	
+
 	"block.create.entity_detector.tooltip": "BELT OBSERVER",
 	"block.create.entity_detector.tooltip.summary": "Detects items passing by on a _Mechanical_ _Belt_ in front of it. Works well with a _Piston_ on top, pushing certain items off.",
 	"block.create.entity_detector.tooltip.condition1": "When item matches Filter",
 	"block.create.entity_detector.tooltip.behaviour1": "Provides a short _Redstone_ _pulse_ to all sides. An Empty Filter matches all passing items.",
 	"block.create.entity_detector.tooltip.control1": "R-Click on Filter Space",
-	"block.create.entity_detector.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter._ Observer will react to this item type only.",	
-	
+	"block.create.entity_detector.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter._ Observer will react to this item type only.",
+
 	"block.create.pulse_repeater.tooltip": "PULSE REPEATER",
 	"block.create.pulse_repeater.tooltip.summary": "A simple circuit for cutting passing redstone signals to a length of _1_ _tick._",
-	
+
 	"block.create.flexpeater.tooltip": "FLEX REPEATER",
 	"block.create.flexpeater.tooltip.summary": "An advanced _Redstone_ _Repeater_ with a _configurable_ _Delay_ up to 30 Minutes.",
-	
+
 	"itemGroup.create": "Create"
 }

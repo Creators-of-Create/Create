@@ -2,10 +2,13 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.generators.MotorTileEntity;
 import com.simibubi.create.modules.contraptions.generators.MotorTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.generators.WaterWheelTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.BasinTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.BasinTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
@@ -14,6 +17,8 @@ import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.MechanicalMixerTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.MechanicalMixerTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.SawTileEntity;
@@ -71,13 +76,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.IForgeRegistry;
 
-@Mod.EventBusSubscriber(bus = Bus.MOD)
 public enum AllTileEntities {
 
 	// Schematics
@@ -105,6 +106,8 @@ public enum AllTileEntities {
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
 	MECHANICAL_PRESS(MechanicalPressTileEntity::new, AllBlocks.MECHANICAL_PRESS),
+	MECHANICAL_MIXER(MechanicalMixerTileEntity::new, AllBlocks.MECHANICAL_MIXER),
+	BASIN(BasinTileEntity::new, AllBlocks.BASIN),
 
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
@@ -143,18 +146,16 @@ public enum AllTileEntities {
 		return te.getType().equals(type);
 	}
 
-	@SubscribeEvent
-	public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event) {
-
+	public static void registerTileEntities(IForgeRegistry<TileEntityType<?>> registry) {
 		for (AllTileEntities tileEntity : values()) {
 			Block[] blocks = new Block[tileEntity.blocks.length];
 			for (int i = 0; i < blocks.length; i++)
 				blocks[i] = tileEntity.blocks[i].block;
 
-			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, tileEntity.name().toLowerCase());
+			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, Lang.asId(tileEntity.name()));
 			tileEntity.type = TileEntityType.Builder.create(tileEntity.supplier, blocks).build(null)
 					.setRegistryName(resourceLocation);
-			event.getRegistry().register(tileEntity.type);
+			registry.register(tileEntity.type);
 		}
 	}
 
@@ -185,6 +186,8 @@ public enum AllTileEntities {
 		bind(LogisticalControllerTileEntity.class, new LogisticalControllerTileEntityRenderer());
 		bind(LogisticiansTableTileEntity.class, new LogisticiansTableTileEntityRenderer());
 		bind(HarvesterTileEntity.class, new HarvesterTileEntityRenderer());
+		bind(MechanicalMixerTileEntity.class, new MechanicalMixerTileEntityRenderer());
+		bind(BasinTileEntity.class, new BasinTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

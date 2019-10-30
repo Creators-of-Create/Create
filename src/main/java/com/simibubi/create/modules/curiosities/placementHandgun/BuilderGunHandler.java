@@ -46,11 +46,11 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class BuilderGunHandler {
 
-	private static List<LaserBeam> cachedBeams;
-	private static float leftHandAnimation;
-	private static float rightHandAnimation;
-	private static float lastLeftHandAnimation;
-	private static float lastRightHandAnimation;
+	public static List<LaserBeam> cachedBeams;
+	public static float leftHandAnimation;
+	public static float rightHandAnimation;
+	public static float lastLeftHandAnimation;
+	public static float lastRightHandAnimation;
 
 	private static boolean dontReequipLeft;
 	private static boolean dontReequipRight;
@@ -86,8 +86,9 @@ public class BuilderGunHandler {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		float yaw = (float) ((player.getYaw(partialTicks)) / -180 * Math.PI);
 		float pitch = (float) ((player.getPitch(partialTicks)) / -180 * Math.PI);
-		Vec3d barrelPosNoTransform = new Vec3d(mainHand == (player.getPrimaryHand() == HandSide.RIGHT) ? -.35f : .35f,
-				-0.1f, 1);
+		boolean rightHand = mainHand == (player.getPrimaryHand() == HandSide.RIGHT);
+		float zOffset = ((float) Minecraft.getInstance().gameSettings.fov - 70) / -100;
+		Vec3d barrelPosNoTransform = new Vec3d(rightHand ? -.35f : .35f, -0.115f, .75f + zOffset);
 		Vec3d barrelPos = player.getEyePosition(partialTicks)
 				.add(barrelPosNoTransform.rotatePitch(pitch).rotateYaw(yaw));
 		return barrelPos;

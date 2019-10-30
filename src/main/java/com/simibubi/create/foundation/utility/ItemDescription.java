@@ -85,19 +85,41 @@ public class ItemDescription {
 		boolean hasControls = !linesOnCtrl.isEmpty();
 
 		if (hasDescription || hasControls) {
+			String[] holdKey = Lang.translate("tooltip.holdKey", "$").split("\\$");
+			String[] holdKeyOrKey = Lang.translate("tooltip.holdKeyOrKey", "$", "$").split("\\$");
+			String keyShift = Lang.translate("tooltip.keyShift");
+			String keyCtrl = Lang.translate("tooltip.keyCtrl");
 			for (List<ITextComponent> list : Arrays.asList(lines, linesOnShift, linesOnCtrl)) {
 				boolean shift = list == linesOnShift;
 				boolean ctrl = list == linesOnCtrl;
 
-				String tabs = DARK_GRAY + "Hold ";
-				if (hasDescription)
-					tabs += "<" + (shift ? palette.hColor : palette.color) + "Shift" + DARK_GRAY + ">";
-				if (hasDescription && hasControls)
-					tabs += " or ";
-				if (hasControls)
-					tabs += "<" + (ctrl ? palette.hColor : palette.color) + "Control" + DARK_GRAY + ">";
+				if (holdKey.length != 2 || holdKeyOrKey.length != 3) {
+					list.add(0, new StringTextComponent("Invalid lang formatting!"));
+					continue;
+				}
 
-				list.add(0, new StringTextComponent(tabs));
+				StringBuilder tabBuilder = new StringBuilder();
+				tabBuilder.append(DARK_GRAY);
+				if (hasDescription && hasControls) {
+					tabBuilder.append(holdKeyOrKey[0]);
+					tabBuilder.append(shift ? palette.hColor : palette.color);
+					tabBuilder.append(keyShift);
+					tabBuilder.append(DARK_GRAY);
+					tabBuilder.append(holdKeyOrKey[1]);
+					tabBuilder.append(ctrl ? palette.hColor : palette.color);
+					tabBuilder.append(keyCtrl);
+					tabBuilder.append(DARK_GRAY);
+					tabBuilder.append(holdKeyOrKey[2]);
+
+				} else {
+					tabBuilder.append(holdKey[0]);
+					tabBuilder.append((hasDescription ? shift : ctrl) ? palette.hColor : palette.color);
+					tabBuilder.append(hasDescription ? keyShift : keyCtrl);
+					tabBuilder.append(DARK_GRAY);
+					tabBuilder.append(holdKey[1]);
+				}
+
+				list.add(0, new StringTextComponent(tabBuilder.toString()));
 				if (shift || ctrl)
 					list.add(1, new StringTextComponent(""));
 			}

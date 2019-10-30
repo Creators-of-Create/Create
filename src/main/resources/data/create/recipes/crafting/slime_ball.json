@@ -1,0 +1,21 @@
+{
+    "type": "crafting_shapeless",
+	"ingredients": [
+		{
+			"tag": "forge:dyes/lime"
+		},
+		{
+			"item": "create:dough"
+		}
+	],
+	"result": {
+		"item": "minecraft:slime_ball",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

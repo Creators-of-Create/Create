@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.modules.contraptions.generators.ConfigureMotorPacket;
+import com.simibubi.create.modules.contraptions.receivers.ConfigureMixerPacket;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ConfigureChassisPacket;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunBeamPacket;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
@@ -38,6 +39,7 @@ public enum AllPackets {
 	CONFIGURE_FLEXPEATER(ConfigureFlexpeaterPacket.class, ConfigureFlexpeaterPacket::new),
 	CONFIGURE_LOGISTICAL_CONTROLLER(LogisticalControllerConfigurationPacket.class,
 			LogisticalControllerConfigurationPacket::new),
+	CONFIGURE_MIXER(ConfigureMixerPacket.class, ConfigureMixerPacket::new),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new),
 	INDEX_ORDER_REQUEST(IndexOrderRequest.class, IndexOrderRequest::new),

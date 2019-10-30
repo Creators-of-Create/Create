@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.simibubi.create.Create;
 
@@ -28,6 +29,10 @@ public class Lang {
 			result.add(translate(prefix + "." + key));
 		}
 		return result;
+	}
+	
+	public static String asId(String name) {
+		return name.toLowerCase(Locale.ENGLISH);
 	}
 	
 }

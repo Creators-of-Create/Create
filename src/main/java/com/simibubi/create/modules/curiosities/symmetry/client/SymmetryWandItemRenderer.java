@@ -2,13 +2,13 @@ package com.simibubi.create.modules.curiosities.symmetry.client;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.client.model.animation.Animation;
 
 public class SymmetryWandItemRenderer extends ItemStackTileEntityRenderer {
 
@@ -17,8 +17,7 @@ public class SymmetryWandItemRenderer extends ItemStackTileEntityRenderer {
 
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		SymmetryWandModel mainModel = (SymmetryWandModel) itemRenderer.getModelWithOverrides(stack);
-		float worldTime = Animation.getWorldTime(Minecraft.getInstance().world,
-				Minecraft.getInstance().getRenderPartialTicks());
+		float worldTime = AnimationTickHolder.getRenderTick();
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translatef(0.5F, 0.5F, 0.5F);

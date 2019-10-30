@@ -3,12 +3,16 @@ package com.simibubi.create.modules.contraptions.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public abstract class RotatedPillarKineticBlock extends KineticBlock {
 
@@ -36,7 +40,7 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 			return state;
 		}
 	}
-	
+
 	public Axis getPreferredAxis(BlockItemUseContext context) {
 		Axis prefferedAxis = null;
 		for (Direction side : Direction.values()) {
@@ -63,6 +67,22 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return this.getDefaultState().with(AXIS, context.getFace().getAxis());
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		Axis axis = context.getFace().getAxis();
+		World world = context.getWorld();
+		if (axis == state.get(AXIS))
+			return ActionResultType.PASS;
+		if (!world.isRemote) {
+			BlockPos pos = context.getPos();
+			world.removeTileEntity(pos);
+			world.setBlockState(pos, state.with(AXIS, axis), 3);
+			KineticTileEntity tileEntity = (KineticTileEntity) world.getTileEntity(pos);
+			tileEntity.attachKinetics();
+		}
+		return ActionResultType.SUCCESS;
 	}
 
 }

@@ -3,9 +3,9 @@ package com.simibubi.create;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.compat.jei.AnimationTickHolder;
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.TooltipHelper;
 import com.simibubi.create.modules.contraptions.receivers.TurntableHandler;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltItemHandler;

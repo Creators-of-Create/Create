@@ -9,6 +9,7 @@ import java.util.function.Function;
 import org.lwjgl.opengl.GL11;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BufferManipulator;
 
 import net.minecraft.block.BlockState;
@@ -23,7 +24,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.client.model.animation.TileEntityRendererFast;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -74,7 +74,7 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 
 		final BlockPos pos = te.getPos();
 		Axis axis = ((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState());
-		float time = Animation.getWorldTime(Minecraft.getInstance().world, partialTicks);
+		float time = AnimationTickHolder.getRenderTick();
 		float offset = getRotationOffsetForPosition(te, pos, axis);
 		float angle = (float) (((time * te.getSpeed() + offset) % 360) / 180 * (float) Math.PI);
 

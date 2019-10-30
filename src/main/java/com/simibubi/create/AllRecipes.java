@@ -2,6 +2,7 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.ProcessingRecipeSerializer;
 import com.simibubi.create.modules.contraptions.receivers.CrushingRecipe;
 import com.simibubi.create.modules.contraptions.receivers.PressingRecipe;
@@ -52,7 +53,7 @@ public enum AllRecipes {
 	public static void register(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 		for (AllRecipes r : AllRecipes.values()) {
 			r.serializer = r.supplier.get();
-			ResourceLocation location = new ResourceLocation(Create.ID, r.name().toLowerCase());
+			ResourceLocation location = new ResourceLocation(Create.ID, Lang.asId(r.name()));
 			event.getRegistry().register(r.serializer.setRegistryName(location));
 		}
 	}

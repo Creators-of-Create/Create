@@ -67,7 +67,8 @@ public enum ScreenResources {
 	BLOCKZAPPER_UPGRADE_RECIPE("recipes2.png", 144, 66),
 	PRESSER_RECIPE("recipes2.png", 0, 108, 177, 109),
 	WASHING_RECIPE("recipes3.png", 177, 109),
-
+	PROCESSING_RECIPE_SLOT("recipes3.png", 177, 0, 20, 20),
+	
 	// Widgets
 	PALETTE_BUTTON("palette_picker.png", 0, 236, 20, 20),
 	TEXT_INPUT("widgets.png", 0, 28, 194, 47),

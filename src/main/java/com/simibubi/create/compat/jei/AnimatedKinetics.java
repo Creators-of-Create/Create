@@ -1,5 +1,7 @@
 package com.simibubi.create.compat.jei;
 
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.Minecraft;
 

@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.gui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -216,4 +218,12 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		Tessellator.getInstance().draw();
 	}
 
+	/**
+	 * Used for moving JEI out of the way of extra things like Flexcrate renders
+	 *
+	 * @return the space that the gui takes up besides the normal rectangle defined by {@link ContainerScreen}.
+	 */
+	public List<Rectangle2d> getExtraAreas() {
+		return Collections.emptyList();
+	}
 }

@@ -65,7 +65,7 @@ public class TurntableBlock extends KineticBlock {
 		if (!world.isRemote && (e instanceof PlayerEntity))
 			return;
 
-		if (offset.length() > 1 / 16f) {
+		if (offset.length() > 1 / 4f) {
 			offset = VecHelper.rotate(offset, speed / 1f, Axis.Y);
 			Vec3d movement = origin.add(offset).subtract(e.getPositionVec());
 			e.setMotion(e.getMotion().add(movement));

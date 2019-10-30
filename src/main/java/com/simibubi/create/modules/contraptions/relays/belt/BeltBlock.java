@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity.TransportedEntityInfo;
 
@@ -325,7 +326,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 
 		@Override
 		public String getName() {
-			return name().toLowerCase();
+			return Lang.asId(name());
 		}
 	}
 
@@ -334,7 +335,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 
 		@Override
 		public String getName() {
-			return name().toLowerCase();
+			return Lang.asId(name());
 		}
 	}
 

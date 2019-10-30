@@ -10,7 +10,7 @@
                 "item": "minecraft:iron_bars"
             },
 			"A": {
-                "item": "create:iron_sheet"
+                "item": "create:andesite_alloy_cube"
             },
 			"S": {
                 "item": "create:propeller"

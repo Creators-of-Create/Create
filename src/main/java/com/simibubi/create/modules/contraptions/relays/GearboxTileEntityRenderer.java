@@ -1,17 +1,16 @@
 package com.simibubi.create.modules.contraptions.relays;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.client.model.animation.Animation;
 
 public class GearboxTileEntityRenderer extends KineticTileEntityRenderer {
 
@@ -20,14 +19,12 @@ public class GearboxTileEntityRenderer extends KineticTileEntityRenderer {
 			int destroyStage, BufferBuilder buffer) {
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
 		final BlockPos pos = te.getPos();
-		float time = Animation.getWorldTime(Minecraft.getInstance().world, partialTicks);
+		float time = AnimationTickHolder.getRenderTick();
 		final BlockState defaultState = AllBlocks.SHAFT_HALF.get().getDefaultState();
 
 		for (Direction direction : Direction.values()) {
 			final Axis axis = direction.getAxis();
 			if (boxAxis == axis)
-				continue;
-			if (AllBlocks.GEARBOX.typeOf(getWorld().getBlockState(pos.offset(direction))))
 				continue;
 
 			BlockState state = defaultState.with(BlockStateProperties.FACING, direction);

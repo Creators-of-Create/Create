@@ -109,7 +109,7 @@ public class BlockzapperUpgradeCategory implements IRecipeCategory<BuilderGunUpg
 	public void draw(BuilderGunUpgradeRecipe recipe, double mouseX, double mouseY) {
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
 		String componentName = Lang
-				.translate("blockzapper.component." + recipe.getUpgradedComponent().name().toLowerCase());
+				.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent().name()));
 		String text = "+ " + recipe.getTier().color + componentName;
 		font.drawStringWithShadow(text,
 				(BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(text)) / 2, 57, 0x8B8B8B);

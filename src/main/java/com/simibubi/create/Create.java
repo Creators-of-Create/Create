@@ -13,27 +13,28 @@ import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.village.PointOfInterestType;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@EventBusSubscriber(bus = Bus.MOD)
 @Mod(Create.ID)
 public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.1.1";
+	public static final String VERSION = "0.1.1a";
 
 	public static Logger logger = LogManager.getLogger();
 	public static ItemGroup creativeTab = new CreateItemGroup();
@@ -46,11 +47,20 @@ public class Create {
 	public static ModConfig config;
 
 	public Create() {
+		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		modEventBus.addListener(Create::init);
+		modEventBus.addGenericListener(Block.class, Create::registerBlocks);
+		modEventBus.addGenericListener(Item.class, Create::registerItems);
+		modEventBus.addGenericListener(IRecipeSerializer.class, Create::registerRecipes);
+		modEventBus.addGenericListener(TileEntityType.class, Create::registerTileEntities);
+		modEventBus.addGenericListener(ContainerType.class, Create::registerContainers);
+		modEventBus.addListener(Create::createConfigs);
+		CreateClient.addListeners(modEventBus);
+
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, CreateConfig.specification);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CreateClientConfig.specification);
 	}
 
-	@SubscribeEvent
 	public static void init(final FMLCommonSetupEvent event) {
 		schematicReceiver = new ServerSchematicLoader();
 		frequencyHandler = new FrequencyHandler();
@@ -61,18 +71,23 @@ public class Create {
 		AllPackets.registerPackets();
 	}
 
-	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
 		AllItems.registerItems(event.getRegistry());
 		AllBlocks.registerItemBlocks(event.getRegistry());
 	}
 
-	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
 		AllBlocks.registerBlocks(event.getRegistry());
 	}
 
-	@SubscribeEvent
+	public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
+		AllTileEntities.registerTileEntities(event.getRegistry());
+	}
+
+	public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
+		AllContainers.registerContainers(event.getRegistry());
+	}
+
 	public static void registerRecipes(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 		AllRecipes.register(event);
 	}

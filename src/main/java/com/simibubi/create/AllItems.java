@@ -1,7 +1,10 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
+import com.simibubi.create.modules.contraptions.WrenchItem;
+import com.simibubi.create.modules.contraptions.WrenchItemRenderer;
 import com.simibubi.create.modules.contraptions.relays.VerticalGearboxItem;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
@@ -79,6 +82,8 @@ public enum AllItems {
 	FLOUR(ingredient()),
 	DOUGH(ingredient()),
 	PROPELLER(ingredient()),
+	WRENCH(new WrenchItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.WRENCH)))),
+
 	CRUSHED_IRON(ingredient()),
 	CRUSHED_GOLD(ingredient()),
 	TIME_SCARF(ingredient()),
@@ -112,14 +117,14 @@ public enum AllItems {
 		CategoryTracker.currentModule = new IModule() {
 			@Override
 			public String getModuleName() {
-				return name().toLowerCase().replaceAll("__", "");
+				return Lang.asId(name()).replaceAll("__", "");
 			}
 		};
 	}
 
 	private AllItems(Item item) {
 		this.item = item;
-		this.item.setRegistryName(Create.ID, this.name().toLowerCase());
+		this.item.setRegistryName(Create.ID, Lang.asId(name()));
 		this.module = CategoryTracker.currentModule;
 	}
 
@@ -158,7 +163,7 @@ public enum AllItems {
 	// Client
 
 	private enum AllItemRenderers {
-		SYMMETRY_WAND, BUILDER_GUN,;
+		SYMMETRY_WAND, BUILDER_GUN, WRENCH;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -179,6 +184,8 @@ public enum AllItems {
 			return new SymmetryWandItemRenderer();
 		case BUILDER_GUN:
 			return new BuilderGunItemRenderer();
+		case WRENCH:
+			return new WrenchItemRenderer();
 		default:
 			return null;
 		}

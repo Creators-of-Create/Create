@@ -2,51 +2,61 @@
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
     "parent": "create:item/placement_handgun",
     "textures": {
-        "0": "block/anvil",
-        "1": "block/gray_concrete_powder",
-        "2": "block/white_concrete_powder",
-        "3": "block/white_stained_glass",
-        "4": "block/obsidian",
-        "5": "block/purpur_pillar"
+        "cog": "minecraft:block/purpur_block"
     },
     "elements": [
         {
-            "name": "Accelerator",
-            "from": [ 6.499999992549419, 5.0, 10.300000004470348 ], 
-            "to": [ 9.49999999254942, 6.0, 15.300000004470348 ], 
+            "name": "Cog",
+            "from": [ 7.5, 3, 12 ], 
+            "to": [ 8.5, 8, 14 ], 
             "faces": {
-                "north": { "texture": "#5", "uv": [ 7.0, 1.0, 10.0, 2.0 ] },
-                "south": { "texture": "#5", "uv": [ 6.0, 3.0, 9.0, 4.0 ] },
-                "up": { "texture": "#5", "uv": [ 6.0, 10.0, 9.0, 15.0 ] },
-                "down": { "texture": "#5", "uv": [ 7.0, 0.0, 10.0, 5.0 ] }
+                "north": { "texture": "#cog", "uv": [ 6, 7, 8, 12 ] },
+                "east": { "texture": "#cog", "uv": [ 5, 3, 7, 8 ] },
+                "south": { "texture": "#cog", "uv": [ 4, 4, 5, 9 ] },
+                "west": { "texture": "#cog", "uv": [ 4, 6, 6, 11 ] },
+                "up": { "texture": "#cog", "uv": [ 4, 6, 5, 8 ] },
+                "down": { "texture": "#cog", "uv": [ 5, 6, 6, 8 ] }
             }
         },
         {
-            "name": "Accelerator Connector",
-            "from": [ 6.4000000059604645, 7.300000004470348, 10.300000004470348 ], 
-            "to": [ 9.600000008940697, 8.699999995529652, 11.699999995529652 ], 
-            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": 45.0 },
+            "name": "Cog",
+            "from": [ 7.5, 3, 12 ], 
+            "to": [ 8.5, 8, 14 ], 
+            "rotation": { "origin": [ 8, 5.5, 8 ], "axis": "z", "angle": 45.0 },
             "faces": {
-                "north": { "texture": "#0", "uv": [ 13.0, 1.0, 15.0, 3.0 ] },
-                "east": { "texture": "#0", "uv": [ 4.0, 2.0, 5.399999991059303, 3.3999999910593033 ] },
-                "south": { "texture": "#0", "uv": [ 1.0, 6.0, 4.200000002980232, 7.399999991059303 ] },
-                "west": { "texture": "#0", "uv": [ 4.0, 2.0, 5.399999991059303, 3.3999999910593033 ] },
-                "up": { "texture": "#0", "uv": [ 5.0, 6.0, 8.200000002980232, 7.399999991059303 ] },
-                "down": { "texture": "#0", "uv": [ 4.0, 4.0, 7.200000002980232, 5.399999991059303 ] }
+                "north": { "texture": "#cog", "uv": [ 6, 7, 8, 12 ] },
+                "east": { "texture": "#cog", "uv": [ 5, 3, 7, 8 ] },
+                "south": { "texture": "#cog", "uv": [ 4, 4, 5, 9 ] },
+                "west": { "texture": "#cog", "uv": [ 4, 6, 6, 11 ] },
+                "up": { "texture": "#cog", "uv": [ 4, 6, 5, 8 ] },
+                "down": { "texture": "#cog", "uv": [ 5, 6, 6, 8 ] }
             }
         },
         {
-            "name": "Accelerator Back Cap",
-            "from": [ 7.100000001490116, 4.3000000193715096, 15.0 ], 
-            "to": [ 8.699999995529652, 5.900000013411045, 15.399999991059303 ], 
-            "rotation": { "origin": [ 8.0, 5.0, 8.0 ], "axis": "z", "angle": -45.0 },
+            "name": "Cog",
+            "from": [ 7.5, 3, 12 ], 
+            "to": [ 8.5, 8, 14 ], 
+            "rotation": { "origin": [ 8, 5.5, 8 ], "axis": "z", "angle": -45.0 },
             "faces": {
-                "north": { "texture": "#5", "uv": [ 7.0, 7.0, 9.0, 9.0 ] },
-                "east": { "texture": "#5", "uv": [ 12.0, 4.0, 13.0, 6.4000000059604645 ] },
-                "south": { "texture": "#5", "uv": [ 11.0, 5.0, 13.0, 7.0 ] },
-                "west": { "texture": "#5", "uv": [ 6.0, 2.0, 7.0, 4.4000000059604645 ] },
-                "up": { "texture": "#5", "uv": [ 7.0, 6.0, 9.400000005960464, 7.0 ] },
-                "down": { "texture": "#5", "uv": [ 9.0, 0.0, 11.400000005960464, 1.0 ] }
+                "north": { "texture": "#cog", "uv": [ 6, 7, 8, 12 ] },
+                "east": { "texture": "#cog", "uv": [ 5, 3, 7, 8 ] },
+                "south": { "texture": "#cog", "uv": [ 4, 4, 5, 9 ] },
+                "west": { "texture": "#cog", "uv": [ 4, 6, 6, 11 ] },
+                "up": { "texture": "#cog", "uv": [ 4, 6, 5, 8 ] },
+                "down": { "texture": "#cog", "uv": [ 5, 6, 6, 8 ] }
+            }
+        },
+        {
+            "name": "Cog",
+            "from": [ 5.5, 5, 12 ], 
+            "to": [ 10.5, 6, 14 ], 
+            "faces": {
+                "north": { "texture": "#cog", "uv": [ 6, 7, 8, 12 ] },
+                "east": { "texture": "#cog", "uv": [ 5, 3, 7, 4 ] },
+                "south": { "texture": "#cog", "uv": [ 4, 4, 9, 5 ] },
+                "west": { "texture": "#cog", "uv": [ 4, 6, 6, 7 ] },
+                "up": { "texture": "#cog", "uv": [ 4, 6, 5, 8 ] },
+                "down": { "texture": "#cog", "uv": [ 5, 6, 6, 8 ] }
             }
         }
     ]

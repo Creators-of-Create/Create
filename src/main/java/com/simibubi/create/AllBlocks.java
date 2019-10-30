@@ -5,9 +5,11 @@ import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.generators.MotorBlock;
 import com.simibubi.create.modules.contraptions.generators.WaterWheelBlock;
+import com.simibubi.create.modules.contraptions.receivers.BasinBlock;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelBlock;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerBlock;
 import com.simibubi.create.modules.contraptions.receivers.DrillBlock;
@@ -15,6 +17,8 @@ import com.simibubi.create.modules.contraptions.receivers.DrillBlock.DrillHeadBl
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock.HarvesterBladeBlock;
+import com.simibubi.create.modules.contraptions.receivers.MechanicalMixerBlock;
+import com.simibubi.create.modules.contraptions.receivers.MechanicalMixerBlock.MechanicalMixerBlockItem;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressBlock;
 import com.simibubi.create.modules.contraptions.receivers.SawBlock;
 import com.simibubi.create.modules.contraptions.receivers.TurntableBlock;
@@ -94,6 +98,7 @@ public enum AllBlocks {
 	SHAFT(new ShaftBlock(Properties.from(Blocks.ANDESITE))),
 	COGWHEEL(new CogWheelBlock(false)),
 	LARGE_COGWHEEL(new CogWheelBlock(true)),
+	SHAFTLESS_COGWHEEL(new RenderUtilityAxisBlock()),
 	ENCASED_SHAFT(new EncasedShaftBlock()),
 	ENCASED_BELT(new EncasedBeltBlock()),
 	CLUTCH(new ClutchBlock()),
@@ -109,10 +114,16 @@ public enum AllBlocks {
 	ENCASED_FAN_INNER(new RenderUtilityAxisBlock()),
 	TURNTABLE(new TurntableBlock()),
 	SHAFT_HALF(new ShaftHalfBlock()),
+
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
 	MECHANICAL_PRESS(new MechanicalPressBlock()),
 	MECHANICAL_PRESS_HEAD(new MechanicalPressBlock.Head()),
+	MECHANICAL_MIXER(new MechanicalMixerBlock()),
+	MECHANICAL_MIXER_POLE(new RenderUtilityBlock()),
+	MECHANICAL_MIXER_HEAD(new RenderUtilityBlock()),
+	BASIN(new BasinBlock()),
+
 	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
 	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
 	MECHANICAL_PISTON_HEAD(new MechanicalPistonHeadBlock()),
@@ -162,7 +173,7 @@ public enum AllBlocks {
 	__PALETTES__(),
 	TILED_GLASS(new GlassBlock(Properties.from(Blocks.GLASS))),
 	TILED_GLASS_PANE(new GlassPaneBlock(Properties.from(Blocks.GLASS))),
-	
+
 	ANDESITE_BRICKS(new Block(Properties.from(Blocks.ANDESITE))),
 	DIORITE_BRICKS(new Block(Properties.from(Blocks.DIORITE))),
 	GRANITE_BRICKS(new Block(Properties.from(Blocks.GRANITE))),
@@ -206,14 +217,14 @@ public enum AllBlocks {
 		CategoryTracker.currentModule = new IModule() {
 			@Override
 			public String getModuleName() {
-				return name().toLowerCase().replaceAll("__", "");
+				return Lang.asId(name()).replaceAll("__", "");
 			}
 		};
 	}
 
 	private AllBlocks(Block block, ComesWith... comesWith) {
 		this.block = block;
-		this.block.setRegistryName(Create.ID, this.name().toLowerCase());
+		this.block.setRegistryName(Create.ID, Lang.asId(name()));
 		this.module = CategoryTracker.currentModule;
 
 		alsoRegistered = new Block[comesWith.length];
@@ -246,8 +257,15 @@ public enum AllBlocks {
 	}
 
 	private static void registerAsItem(IForgeRegistry<Item> registry, Block blockIn) {
-		registry.register(
-				new BlockItem(blockIn, AllItems.standardItemProperties()).setRegistryName(blockIn.getRegistryName()));
+		BlockItem blockItem = null;
+		net.minecraft.item.Item.Properties standardItemProperties = AllItems.standardItemProperties();
+
+		if (blockIn == AllBlocks.MECHANICAL_MIXER.get())
+			blockItem = new MechanicalMixerBlockItem(standardItemProperties);
+		else
+			blockItem = new BlockItem(blockIn, standardItemProperties);
+		
+		registry.register(blockItem.setRegistryName(blockIn.getRegistryName()));
 	}
 
 	public Block get() {
@@ -282,8 +300,7 @@ public enum AllBlocks {
 			return null;
 		}
 
-		return featured.setRegistryName(Create.ID,
-				block.getRegistryName().getPath() + "_" + feature.name().toLowerCase());
+		return featured.setRegistryName(Create.ID, block.getRegistryName().getPath() + "_" + Lang.asId(feature.name()));
 	}
 
 	@OnlyIn(Dist.CLIENT)

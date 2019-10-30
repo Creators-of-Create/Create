@@ -33,7 +33,9 @@ public class ConfigureFlexpeaterPacket extends TileEntityConfigurationPacket<Fle
 	protected void applySettings(FlexpeaterTileEntity te) {
 		te.maxState = maxState;
 		te.state = MathHelper.clamp(te.state, 0, maxState);
+		te.forceClientState = true;
 		te.sendData();
+		te.forceClientState = false;
 	}
 
 }

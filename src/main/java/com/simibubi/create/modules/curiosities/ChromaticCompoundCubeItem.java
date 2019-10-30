@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.curiosities;
 
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.client.Minecraft;
@@ -10,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.animation.Animation;
 
 public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHandler {
 
@@ -21,7 +21,7 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 			Minecraft mc = Minecraft.getInstance();
 			float pt = mc.getRenderPartialTicks();
 			float progress = (float) ((mc.player.getYaw(pt)) / 180 * Math.PI)
-					+ (Animation.getWorldTime(mc.world, pt) * 1f);
+					+ (AnimationTickHolder.getRenderTick() * 1f);
 			if (layer == 0)
 				return ColorHelper.mixColors(0xDDDDDD, 0xDDDDDD, ((float) MathHelper.sin(progress) + 1) / 2);
 			if (layer == 1)

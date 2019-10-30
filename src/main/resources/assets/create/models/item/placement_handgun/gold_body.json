@@ -3,25 +3,61 @@
     "ambientocclusion": true,
 	"parent": "create:item/placement_handgun",
     "textures": {
-        "0": "block/anvil",
-        "1": "block/magma",
-        "2": "block/white_concrete_powder",
-        "3": "block/white_stained_glass",
-        "4": "block/obsidian"
+        "0": "create:block/blaze_brass_mesh"
     },
     "elements": [
         {
-            "name": "Rod Back",
-            "from": [ 7.0, 4.000000014901161, 7.0 ], 
-            "to": [ 9.0, 6.000000014901161, 14.0 ], 
-            "rotation": { "origin": [ 8.0, 5.0, 8.0 ], "axis": "z", "angle": -45.0 },
+            "name": "Connector",
+            "from": [ 7, 4, 2 ], 
+            "to": [ 9, 5, 12 ], 
             "faces": {
-                "north": { "texture": "#1", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
-                "east": { "texture": "#1", "uv": [ 0.0, 0.0, 7.0, 2.0 ] },
-                "south": { "texture": "#1", "uv": [ 6.0, 7.0, 8.0, 9.0 ] },
-                "west": { "texture": "#1", "uv": [ 4.0, 3.0, 11.0, 5.0 ] },
-                "up": { "texture": "#1", "uv": [ 6.0, 5.0, 8.0, 12.0 ] },
-                "down": { "texture": "#1", "uv": [ 8.0, 6.0, 10.0, 13.0 ] }
+                "north": { "texture": "#0", "uv": [ 6, 3, 8, 4 ] },
+                "east": { "texture": "#0", "uv": [ 6, 5, 16, 6 ] },
+                "south": { "texture": "#0", "uv": [ 8, 5, 10, 6 ] },
+                "west": { "texture": "#0", "uv": [ 0, 5, 10, 6 ] },
+                "up": { "texture": "#0", "uv": [ 3, 3, 13, 5 ], "rotation": 270 },
+                "down": { "texture": "#0", "uv": [ 0, 4, 10, 6 ], "rotation": 270 }
+            }
+        },
+        {
+            "name": "Rod Back Cap",
+            "from": [ 7, 4.5, 14 ], 
+            "to": [ 9, 6.5, 15 ], 
+            "rotation": { "origin": [ 8, 5.5, 8 ], "axis": "z", "angle": -45.0 },
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0, 0, 2, 2 ] },
+                "east": { "texture": "#0", "uv": [ 0, 0, 1, 2 ] },
+                "south": { "texture": "#0", "uv": [ 0, 0, 2, 2 ] },
+                "west": { "texture": "#0", "uv": [ 0, 0, 1, 2 ] },
+                "up": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "down": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] }
+            }
+        },
+        {
+            "name": "Connector",
+            "from": [ 7, 6, 2 ], 
+            "to": [ 9, 7, 12 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0, 8, 2, 9 ] },
+                "east": { "texture": "#0", "uv": [ 0, 6, 10, 7 ] },
+                "south": { "texture": "#0", "uv": [ 0, 7, 2, 8 ] },
+                "west": { "texture": "#0", "uv": [ 0, 6, 10, 7 ] },
+                "up": { "texture": "#0", "uv": [ 0, 6, 2, 16 ] },
+                "down": { "texture": "#0", "uv": [ 0, 6, 2, 16 ] }
+            }
+        },
+        {
+            "name": "Rod Back Cap",
+            "from": [ 7, 4.5, 11 ], 
+            "to": [ 9, 6.5, 12 ], 
+            "rotation": { "origin": [ 8, 5.5, 8 ], "axis": "z", "angle": -45.0 },
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0, 0, 2, 2 ] },
+                "east": { "texture": "#0", "uv": [ 0, 0, 1, 2 ] },
+                "south": { "texture": "#0", "uv": [ 0, 0, 2, 2 ] },
+                "west": { "texture": "#0", "uv": [ 0, 0, 1, 2 ] },
+                "up": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "down": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] }
             }
         }
     ]

@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 
 import net.minecraft.block.Block;
@@ -102,7 +103,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 
 		@Override
 		public String getName() {
-			return name().toLowerCase();
+			return Lang.asId(name());
 		}
 	}
 

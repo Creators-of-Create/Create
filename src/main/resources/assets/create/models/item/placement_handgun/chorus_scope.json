@@ -1,55 +1,37 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+	"ambientocclusion": true,
 	"parent": "create:item/placement_handgun",
     "textures": {
-        "0": "block/anvil",
-        "1": "block/gray_concrete_powder",
-        "2": "block/white_concrete_powder",
-        "3": "block/white_stained_glass",
-        "4": "block/obsidian",
-        "5": "block/purpur_pillar",
-        "6": "block/obsidian"
+        "mesh": "create:block/chorus_chrome_mesh",
+        "smooth_stone_slab_side": "block/smooth_stone_slab_side"
     },
     "elements": [
         {
             "name": "Scope",
-            "from": [ 7.500000007450581, 6.0, 6.0 ], 
-            "to": [ 8.50000000745058, 7.0, 12.0 ], 
+            "from": [ 7.5, 7.5, 9.5 ], 
+            "to": [ 8.5, 8.5, 14.5 ], 
+            "rotation": { "origin": [ 8, 8, 8 ], "axis": "z", "angle": 45.0 },
             "faces": {
-                "north": { "texture": "#5", "uv": [ 15.0, 7.0, 16.0, 8.0 ] },
-                "east": { "texture": "#5", "uv": [ 8.0, 15.0, 14.0, 16.0 ] },
-                "south": { "texture": "#5", "uv": [ 15.0, 8.0, 16.0, 9.0 ] },
-                "west": { "texture": "#5", "uv": [ 6.0, 15.0, 12.0, 16.0 ] },
-                "up": { "texture": "#5", "uv": [ 15.0, 5.0, 16.0, 11.0 ] },
-                "down": { "texture": "#5", "uv": [ 15.0, 4.0, 16.0, 10.0 ] }
+                "north": { "texture": "#smooth_stone_slab_side", "uv": [ 0, 0, 1, 1 ] },
+                "east": { "texture": "#mesh", "uv": [ 8, 1, 9, 6 ], "rotation": 90 },
+                "south": { "texture": "#smooth_stone_slab_side", "uv": [ 0, 0, 1, 1 ] },
+                "west": { "texture": "#mesh", "uv": [ 7, 1, 8, 6 ], "rotation": 270 },
+                "up": { "texture": "#mesh", "uv": [ 7, 1, 8, 6 ] },
+                "down": { "texture": "#mesh", "uv": [ 7, 1, 8, 6 ] }
             }
         },
         {
-            "name": "Scope Back",
-            "from": [ 7.200000002980232, 7.0, 10.0 ], 
-            "to": [ 8.800000011920929, 9.0, 12.0 ], 
-            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": 45.0 },
+            "name": "Scope Connector",
+            "from": [ 7.5, 7, 11 ], 
+            "to": [ 8.5, 8, 12 ], 
             "faces": {
-                "north": { "texture": "#5", "uv": [ 13.0, 1.0, 15.0, 3.0 ] },
-                "east": { "texture": "#5", "uv": [ 4.0, 2.0, 6.0, 4.0 ] },
-                "south": { "texture": "#5", "uv": [ 1.0, 6.0, 2.6000000089406967, 8.0 ] },
-                "west": { "texture": "#5", "uv": [ 4.0, 2.0, 6.0, 4.0 ] },
-                "up": { "texture": "#5", "uv": [ 5.0, 6.0, 6.600000008940697, 8.0 ] },
-                "down": { "texture": "#5", "uv": [ 4.0, 4.0, 5.600000008940697, 6.0 ] }
-            }
-        },
-        {
-            "name": "ScopeTop",
-            "from": [ 7.0, 7.0, 9.0 ], 
-            "to": [ 9.0, 9.0, 13.0 ], 
-            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "z", "angle": 45.0 },
-            "faces": {
-                "north": { "texture": "#6", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
-                "east": { "texture": "#5", "uv": [ 6.0, 3.0, 10.0, 5.0 ] },
-                "south": { "texture": "#6", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
-                "west": { "texture": "#5", "uv": [ 10.0, 2.0, 14.0, 4.0 ] },
-                "up": { "texture": "#5", "uv": [ 15.0, 11.0, 13.0, 15.0 ] },
-                "down": { "texture": "#5", "uv": [ 10.0, 3.0, 12.0, 7.0 ] }
+                "north": { "texture": "#mesh", "uv": [ 0, 0, 1, 1 ] },
+                "east": { "texture": "#mesh", "uv": [ 0, 0, 1, 1 ] },
+                "south": { "texture": "#mesh", "uv": [ 0, 0, 1, 1 ] },
+                "west": { "texture": "#mesh", "uv": [ 0, 0, 1, 1 ] },
+                "up": { "texture": "#mesh", "uv": [ 0, 0, 1, 1 ] },
+                "down": { "texture": "#mesh", "uv": [ 0, 0, 1, 1 ] }
             }
         }
     ]

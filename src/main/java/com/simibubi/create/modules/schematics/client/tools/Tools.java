@@ -29,7 +29,7 @@ public enum Tools {
 	}
 
 	public String getDisplayName() {
-		return Lang.translate("schematic.tool." + name().toLowerCase());
+		return Lang.translate("schematic.tool." + Lang.asId(name()));
 	}
 
 	public ScreenResources getIcon() {
@@ -45,7 +45,7 @@ public enum Tools {
 	}
 
 	public List<String> getDescription() {
-		return Lang.translatedOptions("schematic.tool." + name().toLowerCase() + ".description", "0", "1", "2", "3");
+		return Lang.translatedOptions("schematic.tool." + Lang.asId(name()) + ".description", "0", "1", "2", "3");
 	}
 
 }

@@ -23,6 +23,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -196,9 +198,10 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 		if (entityIn.posY - .25f < pos.getY())
 			return;
 
-		// Not sure if this does anything
-		if (entityIn instanceof LivingEntity) 
-			((LivingEntity) entityIn).setIdleTime(101);
+		// Lock entities in place
+		if (entityIn instanceof LivingEntity && !(entityIn instanceof PlayerEntity)) {
+			((LivingEntity) entityIn).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 1, 9, false, false));
+		}
 
 		BeltTileEntity belt = (BeltTileEntity) te;
 
