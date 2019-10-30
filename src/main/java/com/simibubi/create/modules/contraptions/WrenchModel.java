@@ -17,7 +17,7 @@ public class WrenchModel extends CustomRenderItemBakedModel {
 	}
 
 	public static List<String> getCustomModelLocations() {
-		return Arrays.asList("gear");
+		return Arrays.asList("wrench/gear");
 	}
 	
 	@Override

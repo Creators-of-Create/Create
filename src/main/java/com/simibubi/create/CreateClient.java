@@ -6,6 +6,7 @@ import java.util.function.Function;
 import com.simibubi.create.modules.contraptions.CachedBufferReloader;
 import com.simibubi.create.modules.contraptions.WrenchModel;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanParticleHandler;
+import com.simibubi.create.modules.curiosities.deforester.DeforesterModel;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
 import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandModel;
@@ -95,6 +96,8 @@ public class CreateClient {
 				t -> new BuilderGunModel(t).loadPartials(event));
 		swapModels(modelRegistry, getItemModelLocation(AllItems.WRENCH),
 				t -> new WrenchModel(t).loadPartials(event));
+		swapModels(modelRegistry, getItemModelLocation(AllItems.DEFORESTER),
+				t -> new DeforesterModel(t).loadPartials(event));
 		swapModels(modelRegistry,
 				getBlockModelLocation(AllBlocks.WINDOW_IN_A_BLOCK,
 						BlockModelShapes
@@ -114,6 +117,8 @@ public class CreateClient {
 		for (String location : BuilderGunModel.getCustomModelLocations())
 			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
 		for (String location : WrenchModel.getCustomModelLocations())
+			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
+		for (String location : DeforesterModel.getCustomModelLocations())
 			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
 	}
 

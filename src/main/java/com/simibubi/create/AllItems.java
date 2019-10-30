@@ -8,12 +8,15 @@ import com.simibubi.create.modules.contraptions.WrenchItemRenderer;
 import com.simibubi.create.modules.contraptions.relays.VerticalGearboxItem;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
+import com.simibubi.create.modules.curiosities.deforester.DeforesterItem;
+import com.simibubi.create.modules.curiosities.deforester.DeforesterItemRenderer;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItemRenderer;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandItemRenderer;
 import com.simibubi.create.modules.gardens.TreeFertilizerItem;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
+import com.simibubi.create.modules.logistics.item.FilterItem;
 import com.simibubi.create.modules.logistics.management.LogisticalDialItem;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.Type;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerItem;
@@ -41,6 +44,8 @@ public enum AllItems {
 			standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SYMMETRY_WAND)))),
 	PLACEMENT_HANDGUN(
 			new BuilderGunItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN)))),
+	DEFORESTER(new DeforesterItem(
+			standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.DEFORESTER)))),
 
 	__MATERIALS__(),
 	IRON_SHEET(ingredient()),
@@ -94,14 +99,15 @@ public enum AllItems {
 	CARDBOARD_BOX_1612(new CardboardBoxItem(standardItemProperties())),
 	CARDBOARD_BOX_1416(new CardboardBoxItem(standardItemProperties())),
 	CARDBOARD_BOX_1410(new CardboardBoxItem(standardItemProperties())),
-	
+
+	FILTER(new FilterItem(standardItemProperties())),
 	LOGISTICAL_DIAL(new LogisticalDialItem(standardItemProperties())),
 	LOGISTICAL_CONTROLLER_SUPPLY(new LogisticalControllerItem(standardItemProperties(), Type.SUPPLY)),
 	LOGISTICAL_CONTROLLER_REQUEST(new LogisticalControllerItem(standardItemProperties(), Type.REQUEST)),
 	LOGISTICAL_CONTROLLER_STORAGE(new LogisticalControllerItem(standardItemProperties(), Type.STORAGE)),
 	LOGISTICAL_CONTROLLER_CALCULATION(new LogisticalControllerItem(standardItemProperties(), Type.CALCULATION)),
 	LOGISTICAL_CONTROLLER_TRANSACTIONS(new LogisticalControllerItem(standardItemProperties(), Type.TRANSACTIONS)),
-	
+
 	;
 
 	private static class CategoryTracker {
@@ -155,7 +161,7 @@ public enum AllItems {
 	public boolean typeOf(ItemStack stack) {
 		return stack.getItem() == item;
 	}
-	
+
 	public ItemStack asStack() {
 		return new ItemStack(item);
 	}
@@ -163,7 +169,7 @@ public enum AllItems {
 	// Client
 
 	private enum AllItemRenderers {
-		SYMMETRY_WAND, BUILDER_GUN, WRENCH;
+		SYMMETRY_WAND, BUILDER_GUN, WRENCH, DEFORESTER;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -186,6 +192,8 @@ public enum AllItems {
 			return new BuilderGunItemRenderer();
 		case WRENCH:
 			return new WrenchItemRenderer();
+		case DEFORESTER:
+			return new DeforesterItemRenderer();
 		default:
 			return null;
 		}

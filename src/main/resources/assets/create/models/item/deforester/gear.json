@@ -1,0 +1,65 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:item/deforester",
+	"textures": {
+		"5": "block/stripped_spruce_log"
+	},
+	"elements": [
+		{
+			"name": "Cog",
+			"from": [7.5, 9, 6],
+			"to": [8.5, 10, 10],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 8.5, 8]},
+			"faces": {
+				"north": {"uv": [4, 6, 5, 7], "texture": "#5"},
+				"east": {"uv": [4, 6, 8, 7], "texture": "#5"},
+				"south": {"uv": [4, 6, 5, 7], "texture": "#5"},
+				"west": {"uv": [4, 6, 8, 7], "texture": "#5"},
+				"up": {"uv": [4, 6, 5, 10], "texture": "#5"},
+				"down": {"uv": [4, 6, 5, 10], "texture": "#5"}
+			}
+		},
+		{
+			"name": "Cog",
+			"from": [7.5, 9, 6],
+			"to": [8.5, 10, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8.5, 8]},
+			"faces": {
+				"north": {"uv": [5, 6, 6, 7], "rotation": 180, "texture": "#5"},
+				"east": {"uv": [5, 6, 9, 7], "rotation": 180, "texture": "#5"},
+				"south": {"uv": [5, 6, 6, 7], "rotation": 180, "texture": "#5"},
+				"west": {"uv": [5, 6, 9, 7], "rotation": 180, "texture": "#5"},
+				"up": {"uv": [5, 6, 6, 10], "rotation": 180, "texture": "#5"},
+				"down": {"uv": [5, 6, 6, 10], "rotation": 180, "texture": "#5"}
+			}
+		},
+		{
+			"name": "Cog",
+			"from": [7.5, 9, 6],
+			"to": [8.5, 10, 10],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8.5, 8]},
+			"faces": {
+				"north": {"uv": [5, 6, 6, 7], "rotation": 180, "texture": "#5"},
+				"east": {"uv": [5, 6, 9, 7], "rotation": 180, "texture": "#5"},
+				"south": {"uv": [5, 6, 6, 7], "rotation": 180, "texture": "#5"},
+				"west": {"uv": [5, 6, 9, 7], "rotation": 180, "texture": "#5"},
+				"up": {"uv": [5, 6, 6, 10], "rotation": 180, "texture": "#5"},
+				"down": {"uv": [5, 6, 6, 10], "rotation": 180, "texture": "#5"}
+			}
+		},
+		{
+			"name": "Cog",
+			"from": [6, 9, 7.5],
+			"to": [10, 10, 8.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8.5, 8]},
+			"faces": {
+				"north": {"uv": [4, 6, 5, 10], "rotation": 90, "texture": "#5"},
+				"east": {"uv": [4, 6, 5, 7], "rotation": 90, "texture": "#5"},
+				"south": {"uv": [4, 6, 5, 10], "rotation": 90, "texture": "#5"},
+				"west": {"uv": [4, 6, 5, 7], "rotation": 90, "texture": "#5"},
+				"up": {"uv": [4, 6, 5, 10], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [4, 6, 5, 10], "rotation": 90, "texture": "#5"}
+			}
+		}
+	]
+}

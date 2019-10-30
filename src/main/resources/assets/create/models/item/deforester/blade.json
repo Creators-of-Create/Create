@@ -1,0 +1,38 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:item/deforester",
+	"textures": {
+		"3": "block/white_concrete_powder",
+		"4": "block/white_stained_glass"
+	},
+	"elements": [
+		{
+			"name": "blade2",
+			"from": [10.5, 9.7, 7.75],
+			"to": [11.5, 15.7, 8.25],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6.75, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 6], "texture": "#3"},
+				"east": {"uv": [0, 0, 1, 6], "texture": "#3"},
+				"south": {"uv": [0, 0, 1, 6], "texture": "#3"},
+				"west": {"uv": [0, 0, 1, 6], "texture": "#3"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#3"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#3"}
+			}
+		},
+		{
+			"name": "blade3",
+			"from": [10.25, 9.45, 7.5],
+			"to": [11.75, 15.95, 8.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6.75, 8]},
+			"faces": {
+				"north": {"uv": [0, 6, 1.5, 12.5], "rotation": 180, "texture": "#4"},
+				"east": {"uv": [0, 6, 1, 12.5], "texture": "#4"},
+				"south": {"uv": [0, 7, 1.5, 13.5], "texture": "#4"},
+				"west": {"uv": [1, 6, 2, 12.5], "texture": "#4"},
+				"up": {"uv": [0, 9, 1.5, 10], "texture": "#4"},
+				"down": {"uv": [0, 7, 1.5, 8], "texture": "#4"}
+			}
+		}
+	]
+}

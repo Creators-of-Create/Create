@@ -40,7 +40,7 @@ public class BuilderGunModel extends CustomRenderItemBakedModel {
 	}
 
 	public static List<String> getCustomModelLocations() {
-		String p = "placement_handgun/";
+		String p = "blockzapper/";
 		return Arrays.asList(p + "core", p + "body", p + "amplifier_core", p + "accelerator", p + "gold_body",
 				p + "gold_scope", p + "gold_amplifier", p + "gold_retriever", p + "gold_accelerator", p + "chorus_body",
 				p + "chorus_amplifier", p + "chorus_retriever", p + "chorus_accelerator");
@@ -54,7 +54,7 @@ public class BuilderGunModel extends CustomRenderItemBakedModel {
 
 	@Override
 	public CustomRenderItemBakedModel loadPartials(ModelBakeEvent event) {
-		String p = "placement_handgun/";
+		String p = "blockzapper/";
 
 		this.core = loadCustomModel(event, p + "core");
 		this.body = loadCustomModel(event, p + "body");

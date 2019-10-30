@@ -12,14 +12,18 @@ public enum AllToolTiers implements IItemTier {
 
 	BLAZING(3, 750, 10.0F, 2.5F, 16, () -> {
 		return Ingredient.fromItems(AllItems.BLAZE_BRASS_CUBE.item);
-	}), 
-	
+	}),
+
 	ROSE_QUARTZ(3, 1644, 7.0F, 2.0F, 24, () -> {
 		return Ingredient.fromItems(AllItems.REFINED_ROSE_QUARTZ.item);
-	}), 
-	
+	}),
+
 	SHADOW_STEEL(4, 2303, 16.0F, 3.5F, 10, () -> {
 		return Ingredient.fromItems(AllItems.SHADOW_STEEL_CUBE.item);
+	}),
+
+	RADIANT(4, 2303, 16.0F, 3.5F, 10, () -> {
+		return Ingredient.fromItems(AllItems.REFINED_RADIANCE_CUBE.item);
 	}),
 
 	;
