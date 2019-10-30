@@ -104,7 +104,7 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 		searchTextField.setDisabledTextColour(-1);
 		searchTextField.setEnableBackgroundDrawing(false);
 		searchTextField.setMaxStringLength(256);
-		searchTextField.func_212954_a(this::onSearchKeyChanged);
+		searchTextField.setResponder(this::onSearchKeyChanged);
 		searchTextField.setFocused2(false);
 
 		receiverTextField = new TextFieldWidget(font, guiLeft + 29, guiTop + 240, 116, 8, "");
@@ -112,7 +112,7 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 		receiverTextField.setDisabledTextColour(-1);
 		receiverTextField.setEnableBackgroundDrawing(false);
 		receiverTextField.setMaxStringLength(256);
-		receiverTextField.func_212954_a(this::onReceiverTextChanged);
+		receiverTextField.setResponder(this::onReceiverTextChanged);
 		if (initialTargetAddress != null)
 			receiverTextField.setText(initialTargetAddress);
 		receiverTextField.setFocused2(false);
@@ -205,10 +205,10 @@ public class LogisticalIndexScreen extends AbstractSimiContainerScreen<Logistica
 		if (receivers.isEmpty())
 			return;
 		String address = receivers.get(index);
-		receiverTextField.func_212954_a(null);
+		receiverTextField.setResponder(null);
 		receiverTextField.setSuggestion(null);
 		receiverTextField.setText(address);
-		receiverTextField.func_212954_a(this::onReceiverTextChanged);
+		receiverTextField.setResponder(this::onReceiverTextChanged);
 		updateSubmitButton();
 	}
 

@@ -3,6 +3,9 @@ package com.simibubi.create.modules.logistics.block.inventories;
 import static com.simibubi.create.ScreenResources.FLEXCRATE;
 import static com.simibubi.create.ScreenResources.PLAYER_INVENTORY;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
@@ -18,9 +21,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContainer> {
 

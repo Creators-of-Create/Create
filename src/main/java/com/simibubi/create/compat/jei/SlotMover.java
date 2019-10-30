@@ -1,11 +1,12 @@
 package com.simibubi.create.compat.jei;
 
+import java.util.List;
+
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
+
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.inventory.container.Container;
-
-import java.util.List;
 
 /**
  * Allows a {@link AbstractSimiContainerScreen} to specify an area in getExtraArea() that will be avoided by JEI

@@ -29,9 +29,9 @@ import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity.Priority;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.Type;
-import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity.Priority;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -105,7 +105,7 @@ public class LogisticalInventoryControllerScreen
 		addressInput.setText(container.te.address);
 		addressInput.setEnableBackgroundDrawing(false);
 		addressInput.setMaxStringLength(256);
-		addressInput.func_212954_a(this::onAddressInputChanged);
+		addressInput.setResponder(this::onAddressInputChanged);
 		addressInput.setFocused2(false);
 
 		priorityInput = new SelectionScrollInput(x + 49, y + 31, 18, 18).forOptions(priorityOptions).titled(priority)

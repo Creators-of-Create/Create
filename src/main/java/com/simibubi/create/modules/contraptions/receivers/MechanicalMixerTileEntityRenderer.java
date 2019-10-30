@@ -21,8 +21,8 @@ public class MechanicalMixerTileEntityRenderer extends KineticTileEntityRenderer
 
 		final BlockState poleState = AllBlocks.MECHANICAL_MIXER_POLE.get().getDefaultState();
 		final BlockState headState = AllBlocks.MECHANICAL_MIXER_HEAD.get().getDefaultState();
-		cacheIfMissing(poleState, HeadTranslator::new);
-		cacheIfMissing(headState, HeadTranslator::new);
+		cacheIfMissing(poleState, getWorld(), HeadTranslator::new);
+		cacheIfMissing(headState, getWorld(), HeadTranslator::new);
 		final BlockPos pos = te.getPos();
 
 		int packedLightmapCoords = poleState.getPackedLightmapCoords(getWorld(), pos);

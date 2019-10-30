@@ -11,9 +11,9 @@ import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.B
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.IInventoryManipulator;
 import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

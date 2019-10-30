@@ -8,12 +8,16 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Lang;
-
-import com.simibubi.create.modules.logistics.block.FlexcrateScreen;
+import com.simibubi.create.modules.logistics.block.inventories.FlexcrateScreen;
 import com.simibubi.create.modules.schematics.block.SchematicannonScreen;
+
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.registration.*;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
