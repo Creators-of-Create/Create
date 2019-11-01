@@ -5,10 +5,9 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.math.MathHelper;
 
-public class MotorTileEntity extends KineticTileEntity implements ITickableTileEntity {
+public class MotorTileEntity extends KineticTileEntity {
 
 	public static final int DEFAULT_SPEED = 64;
 	public int newSpeed;
@@ -17,8 +16,14 @@ public class MotorTileEntity extends KineticTileEntity implements ITickableTileE
 	public MotorTileEntity() {
 		super(AllTileEntities.MOTOR.type);
 		setSpeed(DEFAULT_SPEED);
+		lastModified = -1;
 	}
 
+	@Override
+	public float getAddedStressCapacity() {
+		return 500;
+	}
+	
 	@Override
 	public boolean hasFastRenderer() {
 		return true;
@@ -33,6 +38,13 @@ public class MotorTileEntity extends KineticTileEntity implements ITickableTileE
 	public void setSpeed(float speed) {
 		super.setSpeed(speed);
 		newSpeed = (int) speed;
+	}
+	
+	@Override
+	public void removeSource() {
+		float speed = this.speed;
+		super.removeSource();
+		setSpeed(speed);
 	}
 
 	public int getSpeedValue() {
@@ -56,6 +68,8 @@ public class MotorTileEntity extends KineticTileEntity implements ITickableTileE
 
 	@Override
 	public void tick() {
+		super.tick();
+		
 		if (!world.isRemote)
 			return;
 		if (lastModified == -1)

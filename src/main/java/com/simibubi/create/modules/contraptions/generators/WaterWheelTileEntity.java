@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.generators;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
@@ -32,7 +33,7 @@ public class WaterWheelTileEntity extends KineticTileEntity {
 				setFlow(d, compound.getCompound("Flows").getInt(d.getName()));
 		}
 	}
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return new AxisAlignedBB(pos).grow(1);
@@ -45,7 +46,7 @@ public class WaterWheelTileEntity extends KineticTileEntity {
 		for (Direction d : Direction.values())
 			flows.putInt(d.getName(), this.flows.get(d));
 		compound.put("Flows", flows);
-		
+
 		return super.write(compound);
 	}
 
@@ -53,24 +54,40 @@ public class WaterWheelTileEntity extends KineticTileEntity {
 		flows.put(direction, speed);
 	}
 	
+	@Override
+	public void reActivateSource() {
+		updateSpeed();
+	}
+
 	public void updateSpeed() {
 		float speed = 0;
 		for (Integer i : flows.values())
 			speed += i;
 
 		if (this.speed != speed) {
+			hasFlows = speed != 0;
+			notifyStressCapacityChange(getAddedStressCapacity());
+			source = Optional.empty();
 			RotationPropagator.handleRemoved(world, pos, this);
 			this.setSpeed(speed);
-			hasFlows = speed != 0;
 			sendData();
 			RotationPropagator.handleAdded(world, pos, this);
 		}
 
+		onSpeedChanged();
 	}
 
 	@Override
 	public boolean isSource() {
 		return hasFlows;
+	}
+
+	@Override
+	public float getAddedStressCapacity() {
+		float torque = 0;
+		for (Integer i : flows.values())
+			torque += i;
+		return Math.abs(torque);
 	}
 
 }

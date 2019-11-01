@@ -6,6 +6,7 @@ import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
 import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.simibubi.create.AllBlockTags;
 import com.simibubi.create.AllBlocks;
@@ -24,7 +25,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
@@ -35,7 +35,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
-public class EncasedFanTileEntity extends KineticTileEntity implements ITickableTileEntity {
+public class EncasedFanTileEntity extends KineticTileEntity {
 
 	private static DamageSource damageSourceFire = new DamageSource("create.fan_fire").setDifficultyScaled()
 			.setFireDamage();
@@ -91,14 +91,23 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 		return isGenerator;
 	}
 
+	@Override
+	public float getAddedStressCapacity() {
+		return 50;
+	}
+
 	public void updateGenerator() {
 		boolean shouldGenerate = world.isBlockPowered(pos) && world.isBlockPresent(pos.down()) && blockBelowIsHot();
 		if (shouldGenerate == isGenerator)
 			return;
 
 		isGenerator = shouldGenerate;
-		if (isGenerator)
+		if (isGenerator) {
+			notifyStressCapacityChange(getAddedStressCapacity());
 			removeSource();
+		} else {
+			notifyStressCapacityChange(0);
+		}
 		applyNewSpeed(isGenerator ? CreateConfig.parameters.generatingFanSpeed.get() : 0);
 		sendData();
 	}
@@ -183,7 +192,15 @@ public class EncasedFanTileEntity extends KineticTileEntity implements ITickable
 	}
 
 	@Override
+	public void reActivateSource() {
+		source = Optional.empty();
+		applyNewSpeed(isGenerator ? CreateConfig.parameters.generatingFanSpeed.get() : 0);
+	}
+
+	@Override
 	public void tick() {
+		super.tick();
+
 		if (speed == 0 || isGenerator)
 			return;
 

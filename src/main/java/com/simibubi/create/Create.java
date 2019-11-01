@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.simibubi.create.modules.ModuleLoadedCondition;
+import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MovingConstructHandler;
 import com.simibubi.create.modules.logistics.FrequencyHandler;
 import com.simibubi.create.modules.logistics.management.LogisticalNetworkHandler;
@@ -42,6 +43,7 @@ public class Create {
 	public static FrequencyHandler frequencyHandler;
 	public static MovingConstructHandler constructHandler;
 	public static LogisticalNetworkHandler logisticalNetworkHandler;
+	public static TorquePropagator torquePropagator;
 	public static LogisticianHandler logisticianHandler;
 
 	public static ModConfig config;
@@ -66,6 +68,7 @@ public class Create {
 		frequencyHandler = new FrequencyHandler();
 		constructHandler = new MovingConstructHandler();
 		logisticalNetworkHandler = new LogisticalNetworkHandler();
+		torquePropagator = new TorquePropagator();
 
 		CraftingHelper.register(new ModuleLoadedCondition.Serializer());
 		AllPackets.registerPackets();

@@ -19,7 +19,6 @@ import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalP
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -30,7 +29,7 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MechanicalPistonTileEntity extends KineticTileEntity implements ITickableTileEntity {
+public class MechanicalPistonTileEntity extends KineticTileEntity {
 
 	protected PistonContraption movedContraption;
 	protected float offset;
@@ -189,6 +188,8 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ITi
 
 	@Override
 	public void tick() {
+		super.tick();
+		
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {

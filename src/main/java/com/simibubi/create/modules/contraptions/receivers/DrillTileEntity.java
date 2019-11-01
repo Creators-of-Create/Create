@@ -15,7 +15,6 @@ import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -25,7 +24,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
 
-public class DrillTileEntity extends KineticTileEntity implements ITickableTileEntity {
+public class DrillTileEntity extends KineticTileEntity {
 
 	private static final AtomicInteger NEXT_DRILL_ID = new AtomicInteger();
 
@@ -73,6 +72,8 @@ public class DrillTileEntity extends KineticTileEntity implements ITickableTileE
 
 	@Override
 	public void tick() {
+		super.tick();
+		
 		if (world.isRemote)
 			return;
 		if (speed == 0)

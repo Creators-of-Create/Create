@@ -83,7 +83,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 
 		flowVec = flowVec.scale(f.getAxisDirection().getOffset());
 		boolean clockwise = wf.getAxisDirection() == AxisDirection.POSITIVE;
-		int clockwiseMultiplier = 1; // No difference. Causes confusion
+		int clockwiseMultiplier = 2; 
 
 		if (wf.getAxis() == Axis.Z) {
 			if (f.getAxis() == Axis.Y)
@@ -103,6 +103,8 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 	}
 
 	private void updateWheelSpeed(IWorld world, BlockPos pos) {
+		if (world.isRemote())
+			return;
 		WaterWheelTileEntity te = (WaterWheelTileEntity) world.getTileEntity(pos);
 		if (te == null)
 			return;

@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
+import java.util.Optional;
+
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -8,7 +10,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -18,7 +19,7 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MechanicalBearingTileEntity extends KineticTileEntity implements ITickableTileEntity {
+public class MechanicalBearingTileEntity extends KineticTileEntity {
 
 	protected RotationConstruct movingConstruct;
 	protected float angle;
@@ -40,6 +41,11 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 	@OnlyIn(Dist.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return super.getMaxRenderDistanceSquared() * 16;
+	}
+	
+	@Override
+	public float getAddedStressCapacity() {
+		return getWindmillSpeed() * 50;
 	}
 
 	@Override
@@ -144,10 +150,16 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 			getWorld().setBlockState(info.pos.add(pos), Blocks.AIR.getDefaultState(), 67);
 		}
 
+		applyWindmillSpeed();
+	}
+
+	public void applyWindmillSpeed() {
 		if (isWindmill) {
 			RotationPropagator.handleRemoved(world, pos, this);
+			source = Optional.empty();
 			speed = getWindmillSpeed();
 			RotationPropagator.handleAdded(world, pos, this);
+			sendData();
 		}
 	}
 
@@ -176,9 +188,16 @@ public class MechanicalBearingTileEntity extends KineticTileEntity implements IT
 		angle = 0;
 		sendData();
 	}
+	
+	@Override
+	public void reActivateSource() {
+		applyWindmillSpeed();
+	}
 
 	@Override
 	public void tick() {
+		super.tick();
+		
 		if (running && RotationConstruct.isFrozen())
 			disassembleConstruct();
 

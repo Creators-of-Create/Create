@@ -26,7 +26,6 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -36,7 +35,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
-public class BeltTileEntity extends KineticTileEntity implements ITickableTileEntity {
+public class BeltTileEntity extends KineticTileEntity {
 
 	protected BlockPos controller;
 	public Map<Entity, TransportedEntityInfo> passengers;
@@ -140,6 +139,8 @@ public class BeltTileEntity extends KineticTileEntity implements ITickableTileEn
 
 	@Override
 	public void tick() {
+		super.tick();
+		
 		if (world != null && trackerUpdateTag != null) {
 			attachmentTracker.readAndSearch(trackerUpdateTag, this);
 			trackerUpdateTag = null;

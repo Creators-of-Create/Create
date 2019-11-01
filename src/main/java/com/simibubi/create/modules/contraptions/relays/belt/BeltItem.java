@@ -183,7 +183,7 @@ public class BeltItem extends Item {
 
 		float speed1 = ((KineticTileEntity) world.getTileEntity(first)).getSpeed();
 		float speed2 = ((KineticTileEntity) world.getTileEntity(second)).getSpeed();
-		if (speed1 != speed2 && speed1 != 0 && speed2 != 0)
+		if (Math.signum(speed1) != Math.signum(speed2) && speed1 != 0 && speed2 != 0)
 			return false;
 
 		BlockPos step = new BlockPos(Math.signum(diff.getX()), Math.signum(diff.getY()), Math.signum(diff.getZ()));

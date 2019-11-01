@@ -13,7 +13,6 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -22,7 +21,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class MechanicalPressTileEntity extends KineticTileEntity implements ITickableTileEntity {
+public class MechanicalPressTileEntity extends KineticTileEntity {
 
 	public static class PressingInv extends RecipeWrapper {
 		public PressingInv() {
@@ -85,6 +84,8 @@ public class MechanicalPressTileEntity extends KineticTileEntity implements ITic
 
 	@Override
 	public void tick() {
+		super.tick();
+		
 		if (!running)
 			return;
 

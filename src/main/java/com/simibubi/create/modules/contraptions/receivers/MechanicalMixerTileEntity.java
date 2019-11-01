@@ -22,7 +22,6 @@ import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.NonNullList;
@@ -35,7 +34,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class MechanicalMixerTileEntity extends KineticTileEntity implements ITickableTileEntity {
+public class MechanicalMixerTileEntity extends KineticTileEntity {
 
 	public int runningTicks;
 	public int processingTicks;
@@ -132,6 +131,7 @@ public class MechanicalMixerTileEntity extends KineticTileEntity implements ITic
 
 	@Override
 	public void tick() {
+		super.tick();
 
 		if (world.isRemote && lastModified != -1) {
 			if (lastModified++ > 10) {

@@ -46,6 +46,7 @@ public class Events {
 		Create.frequencyHandler.onLoadWorld(world);
 		Create.constructHandler.onLoadWorld(world);
 		Create.logisticalNetworkHandler.onLoadWorld(world);
+		Create.torquePropagator.onLoadWorld(world);
 	}
 
 	@SubscribeEvent
@@ -54,6 +55,7 @@ public class Events {
 		Create.frequencyHandler.onUnloadWorld(world);
 		Create.constructHandler.onUnloadWorld(world);
 		Create.logisticalNetworkHandler.onUnloadWorld(world);
+		Create.torquePropagator.onUnloadWorld(world);
 	}
 
 	@SubscribeEvent

@@ -173,8 +173,7 @@ public class RotationPropagator {
 			return;
 		if (!worldIn.isBlockPresent(pos))
 			return;
-
-		if (addedTE.getSpeed() != 0) {
+		if (addedTE.speed != 0) {
 			propagateNewSource(addedTE);
 			return;
 		}
@@ -182,16 +181,16 @@ public class RotationPropagator {
 		for (KineticTileEntity neighbourTE : getConnectedNeighbours(addedTE)) {
 			final float speedModifier = getRotationSpeedModifier(neighbourTE, addedTE);
 
-			if (neighbourTE.getSpeed() == 0)
+			if (neighbourTE.speed == 0)
 				continue;
 			if (neighbourTE.hasSource() && neighbourTE.getSource().equals(addedTE.getPos())) {
-				addedTE.setSpeed(neighbourTE.getSpeed() * speedModifier);
+				addedTE.setSpeed(neighbourTE.speed * speedModifier);
 				addedTE.onSpeedChanged();
 				addedTE.sendData();
 				continue;
 			}
 
-			addedTE.setSpeed(neighbourTE.getSpeed() * speedModifier);
+			addedTE.setSpeed(neighbourTE.speed * speedModifier);
 			addedTE.setSource(neighbourTE.getPos());
 			addedTE.onSpeedChanged();
 			addedTE.sendData();
@@ -210,18 +209,63 @@ public class RotationPropagator {
 		World world = updateTE.getWorld();
 
 		for (KineticTileEntity neighbourTE : getConnectedNeighbours(updateTE)) {
-			final float newSpeed = updateTE.getSpeed() * getRotationSpeedModifier(updateTE, neighbourTE);
+			float modFromTo = getRotationSpeedModifier(updateTE, neighbourTE);
+			float modToFrom = getRotationSpeedModifier(neighbourTE, updateTE);
+			final float newSpeed = updateTE.speed * modFromTo;
+			float oppositeSpeed = neighbourTE.speed * modToFrom;
 
-			if ((neighbourTE.isSource())
-					|| neighbourTE.hasSource() && !neighbourTE.getSource().equals(updateTE.getPos())) {
-				if (neighbourTE.getSpeed() != newSpeed || Math.abs(newSpeed) > parameters.maxRotationSpeed.get()) {
-					world.destroyBlock(pos, true);
-					return;
+			boolean incompatible = Math.signum(newSpeed) != Math.signum(neighbourTE.speed)
+					&& (newSpeed != 0 && neighbourTE.speed != 0);
+
+			boolean tooFast = Math.abs(newSpeed) > parameters.maxRotationSpeed.get();
+			if (tooFast) {
+				world.destroyBlock(pos, true);
+				return;
+			}
+
+			boolean isSource = neighbourTE.isSource();
+			boolean hasSource = neighbourTE.hasSource();
+			boolean poweredBySomethingElse = isSource
+					|| hasSource && !neighbourTE.getSource().equals(updateTE.getPos());
+
+			if (poweredBySomethingElse) {
+				if (neighbourTE.speed != newSpeed) {
+					if (incompatible) {
+						// Opposite directions
+						world.destroyBlock(pos, true);
+						return;
+
+					} else {
+						// Same direction: overpower the slower speed
+						if (Math.abs(oppositeSpeed) > Math.abs(updateTE.speed)) {
+							// Neighbour faster, overpower the incoming tree
+							updateTE.setSource(neighbourTE.getPos());
+							updateTE.setSpeed(neighbourTE.speed * getRotationSpeedModifier(neighbourTE, updateTE));
+							updateTE.onSpeedChanged();
+							updateTE.sendData();
+							propagateNewSource(updateTE);
+							return;
+						}
+						if (Math.abs(newSpeed) > Math.abs(neighbourTE.speed)) {
+							// Current faster, overpower the neighbours' tree
+
+							if (updateTE.hasSource() && updateTE.getSource().equals(neighbourTE.getPos())) {
+								updateTE.removeSource();
+							}
+
+							neighbourTE.setSource(updateTE.getPos());
+							neighbourTE.setSpeed(updateTE.speed * getRotationSpeedModifier(updateTE, neighbourTE));
+							neighbourTE.onSpeedChanged();
+							neighbourTE.sendData();
+							propagateNewSource(neighbourTE);
+							continue;
+						}
+					}
 				}
 				continue;
 			}
 
-			if (neighbourTE.getSpeed() == newSpeed)
+			if (neighbourTE.speed == newSpeed)
 				continue;
 
 			neighbourTE.setSpeed(newSpeed);
@@ -245,7 +289,7 @@ public class RotationPropagator {
 			return;
 		if (removedTE == null)
 			return;
-		if (removedTE.getSpeed() == 0)
+		if (removedTE.speed == 0)
 			return;
 
 		for (BlockPos neighbourPos : getPotentialNeighbourLocations(removedTE)) {
@@ -254,7 +298,7 @@ public class RotationPropagator {
 				continue;
 
 			final KineticTileEntity neighbourTE = (KineticTileEntity) worldIn.getTileEntity(neighbourPos);
-			if (!neighbourTE.hasSource() || !neighbourTE.getSource().equals(pos) || neighbourTE.isSource())
+			if (!neighbourTE.hasSource() || !neighbourTE.getSource().equals(pos))
 				continue;
 
 			propagateMissingSource(neighbourTE);
@@ -283,17 +327,16 @@ public class RotationPropagator {
 			currentTE.sendData();
 
 			for (KineticTileEntity neighbourTE : getConnectedNeighbours(currentTE)) {
-				if (neighbourTE.isSource()) {
-					potentialNewSources.add(neighbourTE);
-					continue;
-				}
-
 				if (!neighbourTE.hasSource())
 					continue;
 
 				if (!neighbourTE.getSource().equals(pos)) {
 					potentialNewSources.add(neighbourTE);
 					continue;
+				}
+
+				if (neighbourTE.isSource()) {
+					potentialNewSources.add(neighbourTE);
 				}
 
 				frontier.add(neighbourTE.getPos());
