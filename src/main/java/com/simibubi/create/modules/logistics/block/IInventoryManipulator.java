@@ -35,7 +35,9 @@ public interface IInventoryManipulator {
 		if (!invState.hasTileEntity())
 			return false;
 		TileEntity invTE = world.getTileEntity(invPos);
-
+		if (invTE == null)
+			return false;
+		
 		LazyOptional<IItemHandler> inventory = invTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		setInventory(inventory);
 		if (inventory.isPresent()) {

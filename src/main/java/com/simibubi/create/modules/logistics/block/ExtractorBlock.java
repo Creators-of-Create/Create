@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -35,7 +36,7 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 			SHAPE_SOUTH = makeCuboidShape(4, 2, 11, 12, 10, 17), SHAPE_WEST = makeCuboidShape(-1, 2, 4, 5, 10, 12),
 			SHAPE_EAST = makeCuboidShape(11, 2, 4, 17, 10, 12);
 	private static final List<Vec3d> itemPositions = new ArrayList<>(Direction.values().length);
-	
+
 	public ExtractorBlock() {
 		super(Properties.from(Blocks.ANDESITE));
 		setDefaultState(getDefaultState().with(POWERED, false));
@@ -47,28 +48,28 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 		builder.add(HORIZONTAL_FACING, POWERED);
 		super.fillStateContainer(builder);
 	}
-	
+
 	@Override
 	public boolean showsCount() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new ExtractorTileEntity();
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		return handleActivatedFilterSlots(state, worldIn, pos, player, handIn, hit);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = getDefaultState();
@@ -86,7 +87,7 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		updateObservedInventory(state, worldIn, pos);
 	}
-	
+
 	@Override
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		if (world.isRemote())
@@ -95,18 +96,18 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 			return;
 		updateObservedInventory(state, world, pos);
 	}
-	
+
 	private void updateObservedInventory(BlockState state, IWorldReader world, BlockPos pos) {
 		IExtractor extractor = (IExtractor) world.getTileEntity(pos);
 		if (extractor == null)
 			return;
 		extractor.neighborChanged();
 	}
-	
+
 	private boolean isObserving(BlockState state, BlockPos pos, BlockPos observing) {
 		return observing.equals(pos.offset(state.get(HORIZONTAL_FACING)));
 	}
-	
+
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
@@ -159,7 +160,7 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 			itemPositions.add(position);
 		}
 	}
-	
+
 	@Override
 	public float getItemHitboxScale() {
 		return 1.76f / 16f;
@@ -174,6 +175,11 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 	@Override
 	public Direction getFilterFacing(BlockState state) {
 		return state.get(HORIZONTAL_FACING).getOpposite();
+	}
+
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.BLOCK;
 	}
 
 }
