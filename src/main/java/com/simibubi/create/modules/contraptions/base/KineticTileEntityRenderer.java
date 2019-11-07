@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BufferManipulator;
+import com.simibubi.create.modules.contraptions.KineticDebugger;
+import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -19,6 +21,7 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -32,6 +35,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTileEntity> {
 
 	protected static Map<BlockState, BufferManipulator> cachedBuffers;
+	public static boolean rainbowMode = false;
 
 	protected static class BlockModelSpinner extends BufferManipulator {
 
@@ -84,8 +88,19 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 	protected static void renderFromCache(BufferBuilder buffer, BlockState state, World world, float x, float y,
 			float z, BlockPos pos, Axis axis, float angle) {
 		int packedLightmapCoords = state.getPackedLightmapCoords(world, pos);
-		buffer.putBulkData(((BlockModelSpinner) getBuffer(state)).getTransformed(x, y, z, angle, axis,
-				packedLightmapCoords));
+		ByteBuffer transformed = ((BlockModelSpinner) getBuffer(state)).getTransformed(x, y, z, angle, axis,
+				packedLightmapCoords);
+
+		if (KineticDebugger.isActive()) {
+			rainbowMode = true;
+			TileEntity tileEntity = world.getTileEntity(pos);
+			if (tileEntity instanceof KineticTileEntity && ((KineticTileEntity) tileEntity).hasNetwork()) {
+				int color = LogisticalActorTileEntity.colorFromUUID(((KineticTileEntity) tileEntity).getNetworkID());
+				BufferManipulator.recolorBuffer(transformed, color);
+			}
+		}
+
+		buffer.putBulkData(transformed);
 	}
 
 	public static BufferManipulator getBuffer(BlockState state) {

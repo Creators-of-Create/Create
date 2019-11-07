@@ -6,7 +6,6 @@ import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
 import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.simibubi.create.AllBlockTags;
 import com.simibubi.create.AllBlocks;
@@ -14,7 +13,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.modules.logistics.InWorldProcessing;
 import com.simibubi.create.modules.logistics.InWorldProcessing.Type;
 
@@ -35,7 +34,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
-public class EncasedFanTileEntity extends KineticTileEntity {
+public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 
 	private static DamageSource damageSourceFire = new DamageSource("create.fan_fire").setDifficultyScaled()
 			.setFireDamage();
@@ -87,13 +86,13 @@ public class EncasedFanTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean isSource() {
-		return isGenerator;
+	public float getAddedStressCapacity() {
+		return isGenerator ? CreateConfig.parameters.generatingFanCapacity.get().floatValue() : 0;
 	}
 
 	@Override
-	public float getAddedStressCapacity() {
-		return 50;
+	public float getGeneratedSpeed() {
+		return isGenerator ? CreateConfig.parameters.generatingFanSpeed.get() : 0;
 	}
 
 	public void updateGenerator() {
@@ -102,14 +101,7 @@ public class EncasedFanTileEntity extends KineticTileEntity {
 			return;
 
 		isGenerator = shouldGenerate;
-		if (isGenerator) {
-			notifyStressCapacityChange(getAddedStressCapacity());
-			removeSource();
-		} else {
-			notifyStressCapacityChange(0);
-		}
-		applyNewSpeed(isGenerator ? CreateConfig.parameters.generatingFanSpeed.get() : 0);
-		sendData();
+		updateGeneratedRotation();
 	}
 
 	public boolean blockBelowIsHot() {
@@ -122,7 +114,7 @@ public class EncasedFanTileEntity extends KineticTileEntity {
 		if (world.isRemote)
 			return;
 
-		float speed = Math.abs(this.speed);
+		float speed = Math.abs(this.getSpeed());
 		float distanceFactor = Math.min(speed / parameters.fanRotationArgmax.get(), 1);
 
 		pushDistance = MathHelper.lerp(distanceFactor, 3, parameters.fanMaxPushDistance.get());
@@ -180,9 +172,9 @@ public class EncasedFanTileEntity extends KineticTileEntity {
 	}
 
 	public Direction getAirFlow() {
-		if (speed == 0)
+		if (getSpeed() == 0)
 			return null;
-		return Direction.getFacingFromAxisDirection(getBlockState().get(AXIS), speed > 0 ? POSITIVE : NEGATIVE);
+		return Direction.getFacingFromAxisDirection(getBlockState().get(AXIS), getSpeed() > 0 ? POSITIVE : NEGATIVE);
 	}
 
 	@Override
@@ -192,16 +184,10 @@ public class EncasedFanTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void reActivateSource() {
-		source = Optional.empty();
-		applyNewSpeed(isGenerator ? CreateConfig.parameters.generatingFanSpeed.get() : 0);
-	}
-
-	@Override
 	public void tick() {
 		super.tick();
 
-		if (speed == 0 || isGenerator)
+		if (getSpeed() == 0 || isGenerator)
 			return;
 
 		List<Entity> frontEntities = world.getEntitiesWithinAABBExcludingEntity(null, frontBB);
@@ -308,7 +294,7 @@ public class EncasedFanTileEntity extends KineticTileEntity {
 		Vec3i flow = getAirFlow().getDirectionVec();
 
 		float sneakModifier = entity.isSneaking() ? 4096f : 512f;
-		float acceleration = (float) (speed * 1 / sneakModifier
+		float acceleration = (float) (getSpeed() * 1 / sneakModifier
 				/ (entity.getPositionVec().distanceTo(center) / (push ? pushDistance : pullDistance)));
 		Vec3d previousMotion = entity.getMotion();
 		float maxAcceleration = 5;

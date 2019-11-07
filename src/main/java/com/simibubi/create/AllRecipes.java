@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.ProcessingRecipeSerializer;
 import com.simibubi.create.modules.contraptions.receivers.CrushingRecipe;
+import com.simibubi.create.modules.contraptions.receivers.CuttingRecipe;
+import com.simibubi.create.modules.contraptions.receivers.MixingRecipe;
 import com.simibubi.create.modules.contraptions.receivers.PressingRecipe;
 import com.simibubi.create.modules.contraptions.receivers.SplashingRecipe;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunUpgradeRecipe;
@@ -23,6 +25,8 @@ public enum AllRecipes {
 	CRUSHING(() -> new ProcessingRecipeSerializer<>(CrushingRecipe::new), Types.CRUSHING),
 	SPLASHING(() -> new ProcessingRecipeSerializer<>(SplashingRecipe::new), Types.SPLASHING),
 	PRESSING(() -> new ProcessingRecipeSerializer<>(PressingRecipe::new), Types.PRESSING),
+	CUTTING(() -> new ProcessingRecipeSerializer<>(CuttingRecipe::new), Types.CUTTING),
+	MIXING(() -> new ProcessingRecipeSerializer<>(MixingRecipe::new), Types.MIXING),
 
 	;
 
@@ -30,6 +34,8 @@ public enum AllRecipes {
 		public static IRecipeType<CrushingRecipe> CRUSHING = register("crushing");
 		public static IRecipeType<SplashingRecipe> SPLASHING = register("splashing");
 		public static IRecipeType<PressingRecipe> PRESSING = register("pressing");
+		public static IRecipeType<CuttingRecipe> CUTTING = register("cutting");
+		public static IRecipeType<MixingRecipe> MIXING = register("mixing");
 
 		static <T extends IRecipe<?>> IRecipeType<T> register(final String key) {
 			return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(key), new IRecipeType<T>() {

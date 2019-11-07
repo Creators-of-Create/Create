@@ -73,10 +73,10 @@ public class DrillTileEntity extends KineticTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		if (world.isRemote)
 			return;
-		if (speed == 0)
+		if (getSpeed() == 0)
 			return;
 
 		BlockPos posToBreak = pos.offset(getBlockState().get(BlockStateProperties.FACING));

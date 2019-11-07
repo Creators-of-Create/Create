@@ -1,12 +1,17 @@
 package com.simibubi.create.modules.contraptions.base;
 
+import static net.minecraft.util.text.TextFormatting.GREEN;
+import static net.minecraft.util.text.TextFormatting.WHITE;
+
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
 
@@ -17,17 +22,23 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 
 public abstract class KineticTileEntity extends SyncedTileEntity implements ITickableTileEntity {
 
+	// Speed related
 	public float speed;
 	protected Optional<BlockPos> source;
 	public boolean reActivateSource;
 
+	// Torque related
 	public float maxStress;
 	public float currentStress;
-	public UUID networkID;
 	protected boolean overStressed;
+
+	public UUID networkID;
+	public UUID newNetworkID;
+	public boolean updateNetwork;
 	protected boolean initNetwork;
 
 	public KineticTileEntity(TileEntityType<?> typeIn) {
@@ -36,16 +47,13 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 		source = Optional.empty();
 	}
 
-	public void sync(UUID networkID, float maxStress, float currentStress) {
-		this.setNetworkID(networkID);
+	public void sync(float maxStress, float currentStress) {
 		this.maxStress = maxStress;
 		this.currentStress = currentStress;
 		boolean overStressed = maxStress < currentStress;
 		if (overStressed != this.overStressed) {
-
-			Lang.debugChat(getType().getRegistryName().getPath() + " jammed (" + currentStress + "/" + maxStress + ")");
-
 			this.overStressed = overStressed;
+			onSpeedChanged();
 			sendData();
 		}
 	}
@@ -55,17 +63,15 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 	}
 
 	public float getStressApplied() {
-		return isSource() ? 0 : 1;
+		Map<String, DoubleValue> stressEntries = CreateConfig.parameters.stressEntries;
+		String path = getBlockState().getBlock().getRegistryName().getPath();
+		if (!stressEntries.containsKey(path))
+			return 1;
+		return stressEntries.get(path).get().floatValue();
 	}
 
-	protected void notifyStressChange(float diff) {
-		KineticNetwork network = getNetwork();
-		network.setCurrentStress(network.getCurrentStress() + diff);
-		network.sync();
-	}
-
-	protected void notifyStressCapacityChange(float capacity) {
-		getNetwork().updateCapacityFor(this, capacity);
+	protected void notifyStressChange(float stress) {
+		getNetwork().updateStressFor(this, stress);
 	}
 
 	@Override
@@ -74,10 +80,6 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 	}
 
 	public void onSpeedChanged() {
-//		if (isSource() && !world.isRemote) {
-//			if (networkID == null)
-//				getNetwork().add(this);
-//		}
 	}
 
 	@Override
@@ -122,20 +124,28 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 			currentStress = compound.getFloat("Stress");
 			overStressed = maxStress < currentStress;
 			setNetworkID(NBTUtil.readUniqueId(compound.getCompound("Id")));
+			newNetworkID = networkID;
 			initNetwork = true;
+		} else {
+			networkID = newNetworkID = null;
+			overStressed = false;
 		}
 
 		super.read(compound);
 	}
 
 	public boolean isSource() {
-		return false;
+		return getGeneratedSpeed() != 0;
 	}
 
 	public float getSpeed() {
 		if (overStressed)
 			return 0;
 		return speed;
+	}
+
+	public float getGeneratedSpeed() {
+		return 0;
 	}
 
 	public void setSpeed(float speed) {
@@ -169,16 +179,18 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 
 		if (world == null || world.isRemote)
 			return;
-		if (hasNetwork()) {
-			getNetwork().remove(this);
-			networkID = null;
-		}
 		if (source == null)
 			return;
 		KineticTileEntity sourceTe = (KineticTileEntity) world.getTileEntity(source);
 		if (sourceTe == null)
 			return;
-		Create.torquePropagator.getNetworkFor(sourceTe).add(this);
+
+		if (reActivateSource && Math.abs(sourceTe.getSpeed()) >= Math.abs(getGeneratedSpeed())) {
+			reActivateSource = false;
+		}
+
+		newNetworkID = sourceTe.newNetworkID;
+		updateNetwork = true;
 	}
 
 	public void removeSource() {
@@ -186,23 +198,14 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 			reActivateSource = true;
 
 		this.source = Optional.empty();
-
-		if (hasNetwork() && !isSource()) {
-			getNetwork().remove(this);
-			networkID = null;
-		}
-
+		newNetworkID = null;
+		updateNetwork = true;
 		setSpeed(0);
 		onSpeedChanged();
 	}
 
 	public KineticNetwork getNetwork() {
-		KineticNetwork networkFor = Create.torquePropagator.getNetworkFor(this);
-		if (!networkFor.initialized) {
-			networkFor.add(this);
-			networkFor.initialized = true;
-		}
-		return networkFor;
+		return Create.torquePropagator.getNetworkFor(this);
 	}
 
 	public boolean hasNetwork() {
@@ -241,20 +244,49 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 
 	@Override
 	public void tick() {
+		if (world.isRemote)
+			return;
+
+		if (initNetwork) {
+			initNetwork = false;
+
+			KineticNetwork network = getNetwork();
+			if (!network.initialized)
+				network.initFromTE(this);
+			network.addSilently(this);
+		}
+
+		if (updateNetwork) {
+			updateNetwork = false;
+
+			if (hasNetwork() && !networkID.equals(newNetworkID)) {
+				getNetwork().remove(this);
+				networkID = null;
+				maxStress = currentStress = 0;
+				overStressed = false;
+			}
+
+			if (newNetworkID != null) {
+				networkID = newNetworkID;
+				KineticNetwork network = getNetwork();
+				network.initialized = true;
+				network.add(this);
+			}
+
+			sendData();
+		}
+
 		if (reActivateSource) {
 			reActivateSource();
 			reActivateSource = false;
 		}
+	}
 
-		if (initNetwork) {
-			initNetwork = false;
-			KineticNetwork network = getNetwork();
-			if (network.initialized) {
-				network.addSilently(this);
-			} else {
-				network.initFromTE(this);
-			}
-		}
+	public void addDebugInformation(List<String> lines) {
+		lines.add("Speed: " + GREEN + speed);
+		lines.add("Cost: " + GREEN + getStressApplied() + WHITE + "/" + GREEN + getAddedStressCapacity());
+		lines.add("Stress: " + GREEN + currentStress + WHITE + "/" + GREEN + maxStress);
+//		lines.add("Network: " + (hasNetwork() ? networkID.toString() : "Missing"));
 	}
 
 }

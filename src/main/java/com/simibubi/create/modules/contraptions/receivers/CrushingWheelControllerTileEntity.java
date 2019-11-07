@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.block.SyncedTileEntity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,58 +22,10 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class CrushingWheelControllerTileEntity extends SyncedTileEntity implements ITickableTileEntity {
-
-	public static class Inventory extends RecipeWrapper {
-		protected int processingDuration;
-		protected boolean appliedRecipe;
-
-		public Inventory() {
-			super(new ItemStackHandler(10));
-		}
-
-		@Override
-		public void clear() {
-			super.clear();
-			processingDuration = 0;
-			appliedRecipe = false;
-		}
-
-		public void write(CompoundNBT nbt) {
-			NonNullList<ItemStack> stacks = NonNullList.create();
-			for (int slot = 0; slot < inv.getSlots(); slot++) {
-				ItemStack stack = inv.getStackInSlot(slot);
-				stacks.add(stack);
-			}
-			ItemStackHelper.saveAllItems(nbt, stacks);
-			nbt.putInt("ProcessingTime", processingDuration);
-			nbt.putBoolean("AppliedRecipe", appliedRecipe);
-		}
-
-		public static Inventory read(CompoundNBT nbt) {
-			Inventory inventory = new Inventory();
-			NonNullList<ItemStack> stacks = NonNullList.withSize(10, ItemStack.EMPTY);
-			ItemStackHelper.loadAllItems(nbt, stacks);
-
-			for (int slot = 0; slot < stacks.size(); slot++)
-				inventory.setInventorySlotContents(slot, stacks.get(slot));
-			inventory.processingDuration = nbt.getInt("ProcessingTime");
-			inventory.appliedRecipe = nbt.getBoolean("AppliedRecipe");
-
-			return inventory;
-		}
-
-		public ItemStackHandler getItems() {
-			return (ItemStackHandler) inv;
-		}
-
-	}
 
 	private static DamageSource damageSource = new DamageSource("create.crush").setDamageBypassesArmor()
 			.setDifficultyScaled();
@@ -83,12 +34,12 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	private UUID entityUUID;
 	protected boolean searchForEntity;
 
-	private Inventory contents;
+	private ProcessingInventory contents;
 	public float crushingspeed;
 
 	public CrushingWheelControllerTileEntity() {
 		super(AllTileEntities.CRUSHING_WHEEL_CONTROLLER.type);
-		contents = new Inventory();
+		contents = new ProcessingInventory();
 	}
 
 	@Override
@@ -236,7 +187,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			this.searchForEntity = true;
 		}
 		crushingspeed = compound.getFloat("Speed");
-		contents = Inventory.read(compound);
+		contents = ProcessingInventory.read(compound);
 
 	}
 

@@ -108,7 +108,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 		WaterWheelTileEntity te = (WaterWheelTileEntity) world.getTileEntity(pos);
 		if (te == null)
 			return;
-		te.updateSpeed();
+		te.updateGeneratedRotation();
 	}
 
 	@Override

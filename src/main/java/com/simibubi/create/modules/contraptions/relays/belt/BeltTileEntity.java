@@ -72,7 +72,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	protected boolean isLastBelt() {
-		if (speed == 0)
+		if (getSpeed() == 0)
 			return false;
 
 		Direction direction = getBlockState().get(BlockStateProperties.HORIZONTAL_FACING);
@@ -83,7 +83,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (part == Part.MIDDLE)
 			return false;
 
-		boolean movingPositively = (speed > 0 == (direction.getAxisDirection().getOffset() == 1))
+		boolean movingPositively = (getSpeed() > 0 == (direction.getAxisDirection().getOffset() == 1))
 				^ direction.getAxis() == Axis.X;
 		return part == Part.START ^ movingPositively;
 	}
@@ -140,7 +140,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		if (world != null && trackerUpdateTag != null) {
 			attachmentTracker.readAndSearch(trackerUpdateTag, this);
 			trackerUpdateTag = null;
@@ -169,7 +169,7 @@ public class BeltTileEntity extends KineticTileEntity {
 			passengers.remove(e);
 		});
 
-		if (speed == 0)
+		if (getSpeed() == 0)
 			return;
 	}
 
@@ -180,7 +180,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		BlockState blockState = info.lastCollidedState;
 		Direction movementFacing = Direction.getFacingFromAxisDirection(
 				blockState.get(BlockStateProperties.HORIZONTAL_FACING).getAxis(),
-				speed < 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE);
+				getSpeed() < 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE);
 
 		boolean collidedWithBelt = te instanceof BeltTileEntity;
 		boolean betweenBelts = tileEntityBelowPassenger instanceof BeltTileEntity && tileEntityBelowPassenger != te;

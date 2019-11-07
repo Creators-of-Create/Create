@@ -223,46 +223,40 @@ public class RotationPropagator {
 				return;
 			}
 
-			boolean isSource = neighbourTE.isSource();
-			boolean hasSource = neighbourTE.hasSource();
-			boolean poweredBySomethingElse = isSource
-					|| hasSource && !neighbourTE.getSource().equals(updateTE.getPos());
+			if (incompatible) {
+				// Opposite directions
+				world.destroyBlock(pos, true);
+				return;
 
-			if (poweredBySomethingElse) {
-				if (neighbourTE.speed != newSpeed) {
-					if (incompatible) {
-						// Opposite directions
-						world.destroyBlock(pos, true);
-						return;
+			} else {
+				// Same direction: overpower the slower speed
+				if (Math.abs(oppositeSpeed) > Math.abs(updateTE.speed)) {
+					// Neighbour faster, overpower the incoming tree
+					updateTE.setSource(neighbourTE.getPos());
+					updateTE.setSpeed(neighbourTE.speed * getRotationSpeedModifier(neighbourTE, updateTE));
+					updateTE.onSpeedChanged();
+					updateTE.sendData();
 
-					} else {
-						// Same direction: overpower the slower speed
-						if (Math.abs(oppositeSpeed) > Math.abs(updateTE.speed)) {
-							// Neighbour faster, overpower the incoming tree
-							updateTE.setSource(neighbourTE.getPos());
-							updateTE.setSpeed(neighbourTE.speed * getRotationSpeedModifier(neighbourTE, updateTE));
-							updateTE.onSpeedChanged();
-							updateTE.sendData();
-							propagateNewSource(updateTE);
-							return;
-						}
-						if (Math.abs(newSpeed) > Math.abs(neighbourTE.speed)) {
-							// Current faster, overpower the neighbours' tree
-
-							if (updateTE.hasSource() && updateTE.getSource().equals(neighbourTE.getPos())) {
-								updateTE.removeSource();
-							}
-
-							neighbourTE.setSource(updateTE.getPos());
-							neighbourTE.setSpeed(updateTE.speed * getRotationSpeedModifier(updateTE, neighbourTE));
-							neighbourTE.onSpeedChanged();
-							neighbourTE.sendData();
-							propagateNewSource(neighbourTE);
-							continue;
-						}
-					}
+					propagateNewSource(updateTE);
+					return;
 				}
-				continue;
+				if (Math.abs(newSpeed) >= Math.abs(neighbourTE.speed)) {
+					if (Math.abs(newSpeed) > Math.abs(neighbourTE.speed) || updateTE.newNetworkID != null
+							&& !updateTE.newNetworkID.equals(neighbourTE.newNetworkID)) {
+						// Current faster, overpower the neighbours' tree
+
+						if (updateTE.hasSource() && updateTE.getSource().equals(neighbourTE.getPos())) {
+							updateTE.removeSource();
+						}
+
+						neighbourTE.setSource(updateTE.getPos());
+						neighbourTE.setSpeed(updateTE.speed * getRotationSpeedModifier(updateTE, neighbourTE));
+						neighbourTE.onSpeedChanged();
+						neighbourTE.sendData();
+						propagateNewSource(neighbourTE);
+					}
+					continue;
+				}
 			}
 
 			if (neighbourTE.speed == newSpeed)

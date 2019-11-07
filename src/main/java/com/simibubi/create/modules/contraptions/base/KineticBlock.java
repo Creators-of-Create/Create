@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 public abstract class KineticBlock extends Block implements IRotate {
 
 	protected static final Palette color = Palette.Red;
-	
+
 	public KineticBlock(Properties properties) {
 		super(properties);
 	}
@@ -61,6 +61,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 		super.updateNeighbors(stateIn, worldIn, pos, flags);
 		KineticTileEntity tileEntity = (KineticTileEntity) worldIn.getTileEntity(pos);
 		if (tileEntity == null)
+			return;
+		if (worldIn.isRemote())
 			return;
 		RotationPropagator.handleAdded(worldIn.getWorld(), pos, tileEntity);
 	}

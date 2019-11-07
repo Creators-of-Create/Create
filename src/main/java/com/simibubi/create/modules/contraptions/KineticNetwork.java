@@ -1,118 +1,127 @@
 package com.simibubi.create.modules.contraptions;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
 public class KineticNetwork {
 
 	public UUID id;
-	private float stressCapacityPool;
-	private float maxStress;
-	private float currentStress;
 	public boolean initialized;
 
+	private float maxStress;
+	private float currentStress;
+
+	private float unloadedStressCapacity;
+	private float unloadedStress;
 	public Map<KineticTileEntity, Float> sources;
-	public Set<KineticTileEntity> members;
+	public Map<KineticTileEntity, Float> members;
 
 	public KineticNetwork() {
 		id = UUID.randomUUID();
-		maxStress = stressCapacityPool = 0;
-		setCurrentStress(0);
 		sources = new HashMap<>();
-		members = new HashSet<>();
+		members = new HashMap<>();
 	}
-	
+
 	public void initFromTE(KineticTileEntity te) {
-		maxStress = stressCapacityPool = te.maxStress;
-		currentStress = te.currentStress;
+		unloadedStressCapacity = te.maxStress;
+		unloadedStress = te.currentStress;
 		initialized = true;
-		addSilently(te);
+		updateStress();
+		updateStressCapacity();
 	}
-	
+
 	public void addSilently(KineticTileEntity te) {
-		if (members.contains(te))
+		if (members.containsKey(te))
 			return;
 		if (te.isSource()) {
 			float capacity = te.getAddedStressCapacity();
-			stressCapacityPool -= capacity;
+			unloadedStressCapacity -= capacity;
 			sources.put(te, capacity);
 		}
-		members.add(te);
+		float stressApplied = te.getStressApplied();
+		unloadedStress -= stressApplied;
+		members.put(te, stressApplied);
 	}
 
 	public void add(KineticTileEntity te) {
-		if (members.contains(te))
+		if (members.containsKey(te))
 			return;
 
-		Lang.debugChat(te.getType().getRegistryName().getPath() + " added to Network");
+//		Debug.debugChatAndShowStack(te.getType().getRegistryName().getPath() + " added to Network", 5);
 
-		te.setNetworkID(this.id);
-		
 		if (te.isSource()) {
-			float capacity = te.getAddedStressCapacity();
-			sources.put(te, capacity);
-			updateMaxStress();
+			sources.put(te, te.getAddedStressCapacity());
+			updateStressCapacity();
 		}
-		members.add(te);
-		setCurrentStress(getCurrentStress() + te.getStressApplied());
+
+		members.put(te, te.getStressApplied());
+		updateStress();
 		sync();
 	}
-	
+
 	public void updateCapacityFor(KineticTileEntity te, float capacity) {
 		sources.put(te, capacity);
-		updateMaxStress();
+		updateStressCapacity();
+	}
+
+	public void updateStressFor(KineticTileEntity te, float stress) {
+		members.put(te, stress);
+		updateStress();
 	}
 
 	public void remove(KineticTileEntity te) {
-		if (!members.contains(te))
+		if (!members.containsKey(te))
 			return;
 
-		Lang.debugChat(te.getType().getRegistryName().getPath() + " removed from Network");
+//		Debug.debugChat(te.getType().getRegistryName().getPath() + " removed from Network");
 
 		if (te.isSource()) {
 			sources.remove(te);
-			updateMaxStress();
+			updateStressCapacity();
 		}
+
 		members.remove(te);
-		setCurrentStress(getCurrentStress() - te.getStressApplied());
+		updateStress();
 		sync();
 	}
 
 	public void sync() {
-		for (KineticTileEntity te : members) {
-			te.sync(id, getMaxStress(), getCurrentStress());
+		for (KineticTileEntity te : members.keySet()) {
+			te.sync(maxStress, currentStress);
 		}
 	}
 
-	public float getMaxStress() {
-		return maxStress;
-	}
-
-	private void updateMaxStress() {
+	public void updateStressCapacity() {
 		float presentCapacity = 0;
-		for (Float cap : sources.values())
-			presentCapacity += cap;
-		float newMaxStress = presentCapacity + stressCapacityPool;
+		for (KineticTileEntity te : sources.keySet())
+			presentCapacity += sources.get(te) * getStressMultiplierForSpeed(te.getGeneratedSpeed());
+		float newMaxStress = presentCapacity + unloadedStressCapacity;
 		if (maxStress != newMaxStress) {
 			maxStress = newMaxStress;
 			sync();
+//			Debug.debugChatAndShowStack("Current Stress level: " + currentStress + "/" + maxStress, 5);
 		}
-		Lang.debugChat("Current Stress level: " + currentStress + "/" + maxStress);
+
 	}
 
-	public float getCurrentStress() {
-		return currentStress;
+	public void updateStress() {
+		float presentStress = 0;
+
+		for (KineticTileEntity te : members.keySet())
+			presentStress += members.get(te) * getStressMultiplierForSpeed(te.speed);
+		float newStress = presentStress + unloadedStress;
+		if (currentStress != newStress) {
+			currentStress = newStress;
+			sync();
+//			Debug.debugChatAndShowStack("Current Stress level: " + currentStress + "/" + maxStress, 5);
+		}
 	}
 
-	public void setCurrentStress(float currentStress) {
-		this.currentStress = currentStress;
-		Lang.debugChat("Current Stress level: " + currentStress + "/" + maxStress);
+	private float getStressMultiplierForSpeed(float speed) {
+		return Math.abs(speed);
 	}
 
 }

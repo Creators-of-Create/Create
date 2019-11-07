@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.generators;
 
 import com.simibubi.create.foundation.packet.TileEntityConfigurationPacket;
-import com.simibubi.create.modules.contraptions.RotationPropagator;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
@@ -31,10 +30,8 @@ public class ConfigureMotorPacket extends TileEntityConfigurationPacket<MotorTil
 
 	@Override
 	protected void applySettings(MotorTileEntity te) {
-		RotationPropagator.handleRemoved(te.getWorld(), te.getPos(), te);
-		te.setSpeed(speed);
-		te.sendData();
-		RotationPropagator.handleAdded(te.getWorld(), te.getPos(), te);
+		te.generatedSpeed = speed;
+		te.updateGeneratedRotation();
 	}
 
 }

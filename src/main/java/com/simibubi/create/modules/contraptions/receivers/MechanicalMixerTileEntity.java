@@ -87,6 +87,7 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 	}
 
 	public float getRenderedHeadRotationSpeed(float partialTicks) {
+		float speed = getSpeed();
 		if (running) {
 			if (runningTicks < 15) {
 				return speed;
@@ -154,13 +155,14 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 			}
 		}
 
+		float speed = Math.abs(getSpeed());
 		if (running) {
 			if (world.isRemote && runningTicks == 20)
 				renderParticles();
 
 			if (!world.isRemote && runningTicks == 20) {
 				if (processingTicks < 0) {
-					processingTicks = (MathHelper.log2((int) (8000 / Math.abs(speed)))) * 15 + 1;
+					processingTicks = (MathHelper.log2((int) (8000 / speed))) * 15 + 1;
 					return;
 				}
 				processingTicks--;
@@ -178,7 +180,7 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 			return;
 		}
 
-		if (Math.abs(speed) < 32)
+		if (speed < 32)
 			return;
 		if (!checkBasin)
 			return;
@@ -229,7 +231,7 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 				float angle = world.rand.nextFloat() * 360;
 				Vec3d offset = new Vec3d(0, 0, 0.25f);
 				offset = VecHelper.rotate(offset, angle, Axis.Y);
-				Vec3d target = VecHelper.rotate(offset, speed > 0 ? 25 : -25, Axis.Y).add(0, .25f, 0);
+				Vec3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y).add(0, .25f, 0);
 
 				Vec3d center = offset.add(VecHelper.getCenterOf(pos));
 				target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);

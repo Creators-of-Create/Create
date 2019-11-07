@@ -2,20 +2,18 @@ package com.simibubi.create.modules.contraptions.generators;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.modules.contraptions.RotationPropagator;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.CreateConfig;
+import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 
-public class WaterWheelTileEntity extends KineticTileEntity {
+public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 
 	private Map<Direction, Integer> flows;
-	private boolean hasFlows;
 
 	public WaterWheelTileEntity() {
 		super(AllTileEntities.WATER_WHEEL.type);
@@ -53,41 +51,18 @@ public class WaterWheelTileEntity extends KineticTileEntity {
 	public void setFlow(Direction direction, int speed) {
 		flows.put(direction, speed);
 	}
-	
-	@Override
-	public void reActivateSource() {
-		updateSpeed();
-	}
 
-	public void updateSpeed() {
+	@Override
+	public float getGeneratedSpeed() {
 		float speed = 0;
 		for (Integer i : flows.values())
 			speed += i;
-
-		if (this.speed != speed) {
-			hasFlows = speed != 0;
-			notifyStressCapacityChange(getAddedStressCapacity());
-			source = Optional.empty();
-			RotationPropagator.handleRemoved(world, pos, this);
-			this.setSpeed(speed);
-			sendData();
-			RotationPropagator.handleAdded(world, pos, this);
-		}
-
-		onSpeedChanged();
-	}
-
-	@Override
-	public boolean isSource() {
-		return hasFlows;
+		return speed;
 	}
 
 	@Override
 	public float getAddedStressCapacity() {
-		float torque = 0;
-		for (Integer i : flows.values())
-			torque += i;
-		return Math.abs(torque);
+		return CreateConfig.parameters.waterWheelCapacity.get().floatValue();
 	}
 
 }

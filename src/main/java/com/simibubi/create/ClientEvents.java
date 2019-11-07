@@ -7,6 +7,8 @@ import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.TooltipHelper;
+import com.simibubi.create.modules.contraptions.KineticDebugger;
+import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.TurntableHandler;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltItemHandler;
 
@@ -37,11 +39,16 @@ public class ClientEvents {
 	public static void onTick(ClientTickEvent event) {
 		if (event.phase == Phase.START)
 			return;
-		
+
 		AnimationTickHolder.tick();
-		
+
 		if (!isGameActive())
 			return;
+
+		if (!KineticDebugger.isActive() && KineticTileEntityRenderer.rainbowMode) {
+			KineticTileEntityRenderer.rainbowMode = false;
+			KineticTileEntityRenderer.invalidateCache();
+		}
 
 		ScreenOpener.tick();
 		onGameTick();
@@ -57,6 +64,7 @@ public class ClientEvents {
 		CreateClient.schematicHandler.render();
 		CreateClient.schematicAndQuillHandler.render();
 		CreateClient.schematicHologram.render();
+		KineticDebugger.renderSourceOutline();
 	}
 
 	@SubscribeEvent
@@ -69,6 +77,7 @@ public class ClientEvents {
 
 	public static void onRenderHotbar() {
 		CreateClient.schematicHandler.renderOverlay();
+		KineticDebugger.renderOverlayText();
 	}
 
 	@SubscribeEvent
@@ -111,7 +120,7 @@ public class ClientEvents {
 	public static void addToItemTooltip(ItemTooltipEvent event) {
 		if (!CreateClientConfig.instance.enableTooltips.get())
 			return;
-		
+
 		ItemStack stack = event.getItemStack();
 		String translationKey = stack.getItem().getTranslationKey(stack);
 		if (!translationKey.startsWith(itemPrefix) && !translationKey.startsWith(blockPrefix))

@@ -14,6 +14,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEntity {
 
@@ -25,6 +26,12 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 			markDirty();
 		}
 	};
+	
+	public class BasinInputInventory extends RecipeWrapper {
+		public BasinInputInventory() {
+			super(inputInventory);
+		}
+	}
 
 	protected ItemStackHandler inputInventory = new ItemStackHandler(9) {
 		protected void onContentsChanged(int slot) {
@@ -69,10 +76,12 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 
 	protected LazyOptional<IItemHandlerModifiable> inventory = LazyOptional
 			.of(() -> new BasinInventory(inputInventory, outputInventory));
+	public BasinInputInventory recipeInventory;
 
 	public BasinTileEntity() {
 		super(AllTileEntities.BASIN.type);
 		updateProcessing = true;
+		recipeInventory = new BasinInputInventory();
 	}
 
 	@Override

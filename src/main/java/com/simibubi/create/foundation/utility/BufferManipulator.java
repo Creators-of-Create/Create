@@ -94,7 +94,7 @@ public abstract class BufferManipulator {
 	public static ByteBuffer remanipulateBuffer(ByteBuffer buffer, float x, float y, float z, float xOrigin,
 			float yOrigin, float zOrigin, float yaw, float pitch) {
 		buffer.rewind();
-		
+
 		float cosYaw = MathHelper.cos(yaw);
 		float sinYaw = MathHelper.sin(yaw);
 		float cosPitch = MathHelper.cos(pitch);
@@ -118,7 +118,27 @@ public abstract class BufferManipulator {
 			float zPos = zL + z + zOrigin;
 			putPos(buffer, vertex, xPos, yPos, zPos);
 		}
-		
+
+		return buffer;
+	}
+
+	public static ByteBuffer recolorBuffer(ByteBuffer buffer, int color) {
+		buffer.rewind();
+
+		boolean defaultColor = color == -1;
+		int b = defaultColor ? 128 : color & 0xFF;
+		int g = defaultColor ? 128 : (color >> 8) & 0xFF;
+		int r = defaultColor ? 128 : (color >> 16) & 0xFF;
+
+		for (int vertex = 0; vertex < vertexCount(buffer); vertex++) {
+			float lum = 1;
+
+			int r2 = (int) (r * lum);
+			int g2 = (int) (g * lum);
+			int b2 = (int) (b * lum);
+			putColor(buffer, vertex, (byte) r2, (byte) g2, (byte) b2, (byte) 255);
+		}
+
 		return buffer;
 	}
 

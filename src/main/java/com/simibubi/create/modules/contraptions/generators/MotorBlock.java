@@ -71,13 +71,13 @@ public class MotorBlock extends HorizontalKineticBlock
 		MotorTileEntity tileEntity = (MotorTileEntity) world.getTileEntity(pos);
 		if (tileEntity == null)
 			return 0;
-		return tileEntity.getSpeedValue();
+		return tileEntity.newGeneratedSpeed;
 	}
 
 	@Override
 	public void onScroll(BlockState state, IWorld world, BlockPos pos, double delta) {
 		withTileEntityDo(world, pos, te -> te
-				.setSpeedValueLazily((int) (te.getSpeedValue() * (delta > 0 ^ te.getSpeedValue() < 0 ? 2 : .5f))));
+				.setSpeedValueLazily((int) (te.newGeneratedSpeed * (delta > 0 ^ te.newGeneratedSpeed < 0 ? 2 : .5f))));
 	}
 
 	@Override

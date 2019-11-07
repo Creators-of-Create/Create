@@ -189,11 +189,11 @@ public class MechanicalPistonTileEntity extends KineticTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {
-				if (speed == 0)
+				if (getSpeed() == 0)
 					disassembleConstruct();
 				else {
 					for (MutablePair<BlockInfo, MovementContext> pair : movedContraption.getActors())

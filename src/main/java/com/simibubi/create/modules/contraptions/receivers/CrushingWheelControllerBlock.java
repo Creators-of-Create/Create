@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
@@ -37,6 +38,11 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
+	}
+	
+	@Override
+	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
+		return false;
 	}
 
 	@Override

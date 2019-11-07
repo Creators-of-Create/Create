@@ -10,11 +10,11 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class CrushingRecipe extends ProcessingRecipe<ProcessingInventory> {
+public class CuttingRecipe extends ProcessingRecipe<ProcessingInventory> {
 
-	public CrushingRecipe(ResourceLocation id, String group, List<Ingredient> ingredients,
+	public CuttingRecipe(ResourceLocation id, String group, List<Ingredient> ingredients,
 			List<StochasticOutput> results, int processingDuration) {
-		super(AllRecipes.CRUSHING, id, group, ingredients, results, processingDuration);
+		super(AllRecipes.CUTTING, id, group, ingredients, results, processingDuration);
 	}
 
 	@Override

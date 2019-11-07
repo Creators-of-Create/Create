@@ -112,10 +112,8 @@ public class Create {
 
 	@SubscribeEvent
 	public static void createConfigs(ModConfig.ModConfigEvent event) {
-		if (event.getConfig().getSpec() == CreateClientConfig.specification)
-			return;
-
-		config = event.getConfig();
+		if (event.getConfig().getSpec() == CreateConfig.specification)
+			config = event.getConfig();
 	}
 
 	public static void tick() {
