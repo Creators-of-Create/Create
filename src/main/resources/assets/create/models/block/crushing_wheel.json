@@ -7,7 +7,7 @@
 		"axis_top": "create:block/axis_top",
 		"axis": "create:block/axis",
 		"crushing_wheel": "create:block/crushing_wheel",
-		"spruce_log": "block/spruce_log"
+		"spruce_log": "block/spruce_log",
 		"particle": "block/polished_andesite"
 	},
 	"elements": [
