@@ -37,7 +37,7 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 	protected static Map<BlockState, BufferManipulator> cachedBuffers;
 	public static boolean rainbowMode = false;
 
-	protected static class BlockModelSpinner extends BufferManipulator {
+	public static class BlockModelSpinner extends BufferManipulator {
 
 		public BlockModelSpinner(ByteBuffer original) {
 			super(original);
@@ -78,14 +78,19 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 
 		final BlockPos pos = te.getPos();
 		Axis axis = ((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState());
-		float time = AnimationTickHolder.getRenderTick();
-		float offset = getRotationOffsetForPosition(te, pos, axis);
-		float angle = (float) (((time * te.getSpeed() + offset) % 360) / 180 * (float) Math.PI);
+		float angle = getAngleForTe(te, pos, axis);
 
 		renderFromCache(buffer, state, getWorld(), (float) x, (float) y, (float) z, pos, axis, angle);
 	}
 
-	protected static void renderFromCache(BufferBuilder buffer, BlockState state, World world, float x, float y,
+	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
+		float time = AnimationTickHolder.getRenderTick();
+		float offset = getRotationOffsetForPosition(te, pos, axis);
+		float angle = (float) (((time * te.getSpeed() + offset) % 360) / 180 * (float) Math.PI);
+		return angle;
+	}
+
+	public static void renderFromCache(BufferBuilder buffer, BlockState state, World world, float x, float y,
 			float z, BlockPos pos, Axis axis, float angle) {
 		int packedLightmapCoords = state.getPackedLightmapCoords(world, pos);
 		ByteBuffer transformed = ((BlockModelSpinner) getBuffer(state)).getTransformed(x, y, z, angle, axis,
@@ -126,7 +131,7 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 		}
 	}
 
-	protected float getRotationOffsetForPosition(KineticTileEntity te, final BlockPos pos, final Axis axis) {
+	protected static float getRotationOffsetForPosition(KineticTileEntity te, final BlockPos pos, final Axis axis) {
 		float offset = AllBlocks.LARGE_COGWHEEL.typeOf(te.getBlockState()) ? 11.25f : 0;
 		double d = (((axis == Axis.X) ? 0 : pos.getX()) + ((axis == Axis.Y) ? 0 : pos.getY())
 				+ ((axis == Axis.Z) ? 0 : pos.getZ())) % 2;

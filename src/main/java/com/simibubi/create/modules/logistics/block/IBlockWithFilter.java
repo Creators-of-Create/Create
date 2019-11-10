@@ -41,6 +41,14 @@ public interface IBlockWithFilter {
 		return 2 / 16f;
 	}
 
+	public default float getFilterAngle(BlockState state) {
+		return 22.5f;
+	}
+
+	public default boolean isFilterVisible(BlockState state) {
+		return true;
+	}
+
 	public default boolean showsCount() {
 		return false;
 	}
@@ -50,8 +58,10 @@ public interface IBlockWithFilter {
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te == null || !(te instanceof IHaveFilter))
 			return false;
-		IHaveFilter actor = (IHaveFilter) te;
+		if (!isFilterVisible(state))
+			return false;
 
+		IHaveFilter actor = (IHaveFilter) te;
 		Vec3d vec = new Vec3d(pos);
 		Vec3d position = vec.add(getFilterPosition(state));
 		ItemStack stack = player.getHeldItem(handIn);
@@ -86,6 +96,9 @@ public interface IBlockWithFilter {
 		IHaveFilter actor = (IHaveFilter) te;
 
 		IBlockWithFilter filterBlock = (IBlockWithFilter) state.getBlock();
+		if (!filterBlock.isFilterVisible(state))
+			return;
+
 		Vec3d vec = new Vec3d(pos);
 		Vec3d position = filterBlock.getFilterPosition(state).add(vec);
 		float scale = filterBlock.getItemHitboxScale();
@@ -112,7 +125,8 @@ public interface IBlockWithFilter {
 		Vec3i direction = facing.getDirectionVec();
 		GlStateManager.pushMatrix();
 		GlStateManager.translated(position.x, position.y, position.z);
-		GlStateManager.rotated(22.5f, direction.getZ(), 0, -direction.getX());
+		float filterAngle = filterBlock.getFilterAngle(state);
+		GlStateManager.rotated(filterAngle, direction.getZ(), 0, -direction.getX());
 		GlStateManager.translated(-center.x, -center.y, -center.z);
 		GlStateManager.translated(-position.x, -position.y, -position.z);
 
@@ -138,7 +152,7 @@ public interface IBlockWithFilter {
 			GlStateManager.rotated(facing.getHorizontalAngle() * (facing.getAxis() == Axis.X ? -1 : 1), 0, 1, 0);
 			GlStateManager.scaled(textScale, -textScale, textScale);
 			GlStateManager.translated(17.5f, -5f, -5f);
-			GlStateManager.rotated(67.5f, 1, 0, 0);
+			GlStateManager.rotated(90 - filterAngle, 1, 0, 0);
 
 			String text = Lang.translate("logistics.filter");
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
@@ -149,7 +163,7 @@ public interface IBlockWithFilter {
 			if (filterBlock.showsCount() && !actor.getFilter().isEmpty()) {
 				String count = actor.getFilter().getCount() + "";
 				GlStateManager.translated(-7 - font.getStringWidth(count), 10, 10 + 1 / 4f);
-				GlStateManager.scaled(1.5,1.5, 1.5);
+				GlStateManager.scaled(1.5, 1.5, 1.5);
 				font.drawString(count, 0, 0, 0xEDEDED);
 				GlStateManager.translated(0, 0, -1 / 4f);
 				font.drawString(count, 1, 1, 0x4F4F4F);

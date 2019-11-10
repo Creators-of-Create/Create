@@ -34,12 +34,12 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	private UUID entityUUID;
 	protected boolean searchForEntity;
 
-	private ProcessingInventory contents;
+	public ProcessingInventory inventory;
 	public float crushingspeed;
 
 	public CrushingWheelControllerTileEntity() {
 		super(AllTileEntities.CRUSHING_WHEEL_CONTROLLER.type);
-		contents = new ProcessingInventory();
+		inventory = new ProcessingInventory();
 	}
 
 	@Override
@@ -65,31 +65,31 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 		if (!hasEntity()) {
 
-			float processingSpeed = speed / (!contents.appliedRecipe ? contents.getStackInSlot(0).getCount() : 1);
-			contents.processingDuration -= processingSpeed;
-			spawnParticles(contents.getStackInSlot(0));
+			float processingSpeed = speed / (!inventory.appliedRecipe ? inventory.getStackInSlot(0).getCount() : 1);
+			inventory.remainingTime -= processingSpeed;
+			spawnParticles(inventory.getStackInSlot(0));
 
 			if (world.isRemote)
 				return;
 
-			if (contents.processingDuration < 20 && !contents.appliedRecipe) {
+			if (inventory.remainingTime < 20 && !inventory.appliedRecipe) {
 				applyRecipe();
-				contents.appliedRecipe = true;
+				inventory.appliedRecipe = true;
 				world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 2 | 16);
 				return;
 			}
 
 			Vec3d outPos = new Vec3d(pos).add(.5, -.5, .5);
-			if (contents.processingDuration <= 0) {
-				for (int slot = 0; slot < contents.getSizeInventory(); slot++) {
-					ItemStack stack = contents.getStackInSlot(slot);
+			if (inventory.remainingTime <= 0) {
+				for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+					ItemStack stack = inventory.getStackInSlot(slot);
 					if (stack.isEmpty())
 						continue;
 					ItemEntity entityIn = new ItemEntity(world, outPos.x, outPos.y, outPos.z, stack);
 					entityIn.setMotion(Vec3d.ZERO);
 					world.addEntity(entityIn);
 				}
-				contents.clear();
+				inventory.clear();
 				world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 2 | 16);
 				return;
 			}
@@ -140,12 +140,12 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	}
 
 	private void applyRecipe() {
-		Optional<CrushingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.CRUSHING, contents,
+		Optional<CrushingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.CRUSHING, inventory,
 				world);
 
 		if (recipe.isPresent()) {
-			int rolls = contents.getStackInSlot(0).getCount();
-			contents.clear();
+			int rolls = inventory.getStackInSlot(0).getCount();
+			inventory.clear();
 
 			for (int roll = 0; roll < rolls; roll++) {
 				List<ItemStack> rolledResults = recipe.get().rollResults();
@@ -153,8 +153,8 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 				for (int i = 0; i < rolledResults.size(); i++) {
 					ItemStack stack = rolledResults.get(i);
 
-					for (int slot = 0; slot < contents.getSizeInventory(); slot++) {
-						stack = contents.getItems().insertItem(slot, stack, false);
+					for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+						stack = inventory.getItems().insertItem(slot, stack, false);
 
 						if (stack.isEmpty())
 							break;
@@ -163,7 +163,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			}
 
 		} else {
-			contents.clear();
+			inventory.clear();
 		}
 
 	}
@@ -172,7 +172,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	public CompoundNBT write(CompoundNBT compound) {
 		if (hasEntity() && !isFrozen())
 			compound.put("Entity", NBTUtil.writeUniqueId(entityUUID));
-		contents.write(compound);
+		inventory.write(compound);
 		compound.putFloat("Speed", crushingspeed);
 
 		return super.write(compound);
@@ -187,7 +187,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			this.searchForEntity = true;
 		}
 		crushingspeed = compound.getFloat("Speed");
-		contents = ProcessingInventory.read(compound);
+		inventory = ProcessingInventory.read(compound);
 
 	}
 
@@ -197,13 +197,13 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	}
 
 	private void insertItem(ItemEntity entity) {
-		contents.clear();
-		contents.setInventorySlotContents(0, entity.getItem());
-		Optional<CrushingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.CRUSHING, contents,
+		inventory.clear();
+		inventory.setInventorySlotContents(0, entity.getItem());
+		Optional<CrushingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.CRUSHING, inventory,
 				world);
 
-		contents.processingDuration = recipe.isPresent() ? recipe.get().getProcessingDuration() : 100;
-		contents.appliedRecipe = false;
+		inventory.remainingTime = recipe.isPresent() ? recipe.get().getProcessingDuration() : 100;
+		inventory.appliedRecipe = false;
 	}
 
 	public void clear() {
@@ -212,7 +212,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	}
 
 	public boolean isOccupied() {
-		return hasEntity() || !contents.isEmpty();
+		return hasEntity() || !inventory.isEmpty();
 	}
 
 	public boolean hasEntity() {

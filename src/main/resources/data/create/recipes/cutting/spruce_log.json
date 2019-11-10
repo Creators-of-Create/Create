@@ -1,0 +1,16 @@
+{
+    "type": "create:cutting",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:spruce_log"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:stripped_spruce_log",
+			"count": 1
+		}
+	],
+	"processingTime": 50
+}

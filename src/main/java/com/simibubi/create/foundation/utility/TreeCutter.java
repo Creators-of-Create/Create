@@ -66,8 +66,8 @@ public class TreeCutter {
 			visited.add(currentPos);
 
 			BlockState blockState = reader.getBlockState(currentPos);
-			boolean isLog = !isLog(blockState);
-			boolean isLeaf = !isLeaf(blockState);
+			boolean isLog = isLog(blockState);
+			boolean isLeaf = isLeaf(blockState);
 
 			if (!isLog && !isLeaf)
 				continue;
@@ -108,7 +108,7 @@ public class TreeCutter {
 
 			if (!isLog(reader.getBlockState(currentPos)))
 				continue;
-			if (isLog(reader.getBlockState(currentPos.down())))
+			if (!pos.equals(currentPos.down()) && isLog(reader.getBlockState(currentPos.down())))
 				return false;
 
 			for (Direction direction : Direction.values()) {
@@ -127,7 +127,7 @@ public class TreeCutter {
 
 	private static void addNeighbours(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited) {
 		BlockPos.getAllInBox(pos.add(-1, -1, -1), pos.add(1, 1, 1)).filter(Predicates.not(visited::contains))
-				.forEach(frontier::add);
+				.forEach(p -> frontier.add(new BlockPos(p)));
 	}
 
 	private static boolean isLog(BlockState state) {

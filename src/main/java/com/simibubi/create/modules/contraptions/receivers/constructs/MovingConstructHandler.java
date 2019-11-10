@@ -26,8 +26,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
@@ -166,8 +164,9 @@ public class MovingConstructHandler {
 		return movingPistons.get(mechanicalPistonTileEntity.getWorld());
 	}
 
-	@SubscribeEvent
-	public static void onRenderWorld(RenderWorldLastEvent event) {
+//	@SubscribeEvent
+//	@OnlyIn(value = Dist.CLIENT)
+//	public static void onRenderWorld(RenderWorldLastEvent event) {
 //		for (AxisAlignedBB bb : renderedBBs) {
 //			TessellatorHelper.prepareForDrawing();
 //			GlStateManager.disableTexture();
@@ -179,6 +178,6 @@ public class MovingConstructHandler {
 //			GlStateManager.enableTexture();
 //			TessellatorHelper.cleanUpAfterDrawing();
 //		}
-	}
+//	}
 
 }

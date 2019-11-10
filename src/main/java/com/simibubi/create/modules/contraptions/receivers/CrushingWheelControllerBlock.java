@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
@@ -39,7 +40,7 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
 		return false;
@@ -148,6 +149,23 @@ public class CrushingWheelControllerBlock extends Block implements IWithoutBlock
 				return VoxelShapes.empty();
 		}
 		return VoxelShapes.fullCube();
+	}
+
+	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (worldIn.getTileEntity(pos) == null)
+			return;
+
+		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn.getTileEntity(pos);
+		for (int slot = 0; slot < te.inventory.getSizeInventory(); slot++) {
+			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
+					te.inventory.getStackInSlot(slot));
+		}
+
+		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			worldIn.removeTileEntity(pos);
+		}
+
 	}
 
 }

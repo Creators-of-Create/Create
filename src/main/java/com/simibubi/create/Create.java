@@ -56,6 +56,9 @@ public class Create {
 		modEventBus.addGenericListener(IRecipeSerializer.class, Create::registerRecipes);
 		modEventBus.addGenericListener(TileEntityType.class, Create::registerTileEntities);
 		modEventBus.addGenericListener(ContainerType.class, Create::registerContainers);
+		modEventBus.addGenericListener(VillagerProfession.class, Create::registerVillagerProfessions);
+		modEventBus.addGenericListener(PointOfInterestType.class, Create::registerPointsOfInterest);
+		modEventBus.addGenericListener(EntityType.class, Create::registerEntities);
 		modEventBus.addListener(Create::createConfigs);
 		CreateClient.addListeners(modEventBus);
 
@@ -95,12 +98,10 @@ public class Create {
 		AllRecipes.register(event);
 	}
 
-	@SubscribeEvent
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		AllEntities.register(event);
 	}
 
-	@SubscribeEvent
 	public static void registerVillagerProfessions(RegistryEvent.Register<VillagerProfession> event) {
 		LogisticianHandler.registerVillagerProfessions(event);
 	}
@@ -110,7 +111,6 @@ public class Create {
 		LogisticianHandler.registerPointsOfInterest(event);
 	}
 
-	@SubscribeEvent
 	public static void createConfigs(ModConfig.ModConfigEvent event) {
 		if (event.getConfig().getSpec() == CreateConfig.specification)
 			config = event.getConfig();

@@ -1,0 +1,16 @@
+{
+    "type": "create:cutting",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:oak_log"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:stripped_oak_log",
+			"count": 1
+		}
+	],
+	"processingTime": 50
+}

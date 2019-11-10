@@ -22,6 +22,10 @@ public class FilteredTileEntityRenderer {
 			float partialTicks, int destroyStage) {
 		BlockState state = tileEntityIn.getBlockState();
 		IBlockWithFilter block = (IBlockWithFilter) state.getBlock();
+
+		if (!block.isFilterVisible(state))
+			return;
+
 		Direction facing = block.getFilterFacing(state);
 		float scale = block.getItemHitboxScale();
 
@@ -31,13 +35,13 @@ public class FilteredTileEntityRenderer {
 		BlockPos pos = tileEntityIn.getPos();
 		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
 
-		renderFilterItem(tileEntityIn.getFilter(), position, facing, scale - 2 / 16f);
+		renderFilterItem(tileEntityIn.getFilter(), position, facing, scale - 2 / 16f, block.getFilterAngle(state));
 
 		TessellatorHelper.cleanUpAfterDrawing();
 
 	}
 
-	private void renderFilterItem(ItemStack stack, Vec3d position, Direction facing, float scaleDiff) {
+	private void renderFilterItem(ItemStack stack, Vec3d position, Direction facing, float scaleDiff, float angle) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		boolean vertical = facing.getAxis().isVertical();
 
@@ -46,11 +50,11 @@ public class FilteredTileEntityRenderer {
 
 		float offX = 0;
 		float offY = 0;
-		float offZ = !blockItem ? 1 / 4f + 2 * scaleDiff - 1/16f : 1/16f;
+		float offZ = !blockItem ? 1 / 4f + 2 * scaleDiff - 1 / 16f : 1 / 16f;
 		if (vertical)
 			offZ = -offZ;
 
-		float rotX = vertical ? 90 : 0 - (blockItem ? -67.5f : 67.5f);
+		float rotX = vertical ? 90 : 0 - (blockItem ? -90f + angle : 90 - angle);
 		float rotY = vertical ? 0 : facing.getHorizontalAngle() + (blockItem ? 180 : 0);
 		float rotZ = vertical && facing == Direction.DOWN ? 180 : 0;
 		if (facing.getAxis() == Axis.X) {
