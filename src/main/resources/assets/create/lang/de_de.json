@@ -387,7 +387,7 @@
 	"block.create.cocoa_log.tooltip.condition1": "Wenn reif",
 	"block.create.cocoa_log.tooltip.behaviour1": "Lässt _Kakao_ auf allen Seiten wachsen",
 
-	"item.create.empty_blueprint.tooltip": "LEERER BAUPÖAN",
+	"item.create.empty_blueprint.tooltip": "LEERER BAUPLAN",
 	"item.create.empty_blueprint.tooltip.summary": "Wird für die Herstellung und das Schreiben auf dem _Bauplantisch_ verwendet",
 
 	"item.create.blueprint.tooltip": "BAUPLAN",
