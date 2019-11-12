@@ -76,12 +76,6 @@ public class RotationPropagator {
 			return connected ? 1 : 0;
 		}
 
-		// Attached Fans
-		if (ENCASED_FAN.typeOf(stateFrom) && ENCASED_FAN.typeOf(stateTo)) {
-			if (stateFrom.get(AXIS) == stateTo.get(AXIS))
-				return 1;
-		}
-
 		// Large Gear <-> Large Gear
 		if (isLargeToLargeGear(stateFrom, stateTo, diff)) {
 			Axis sourceAxis = stateFrom.get(AXIS);

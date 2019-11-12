@@ -1,114 +1,81 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
-import java.nio.ByteBuffer;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.BufferManipulator;
+import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer.BlockModelSpinner;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
-public class BeltTileEntityRenderer extends KineticTileEntityRenderer {
+@SuppressWarnings("deprecation")
+public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 
-	protected static class BeltModelAnimator extends BufferManipulator {
-		protected static TextureAtlasSprite beltTextures;
-		protected static TextureAtlasSprite originalTexture;
+	@Override
+	public void render(BeltTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
+		super.render(te, x, y, z, partialTicks, destroyStage);
+		if (te.isController()) {
+			GlStateManager.pushMatrix();
+			GlStateManager.translated(x + .5, y + 13 / 16f + .25, z + .5);
 
-		public BeltModelAnimator(ByteBuffer template) {
-			super(template);
-			if (beltTextures == null)
-				initSprites();
-		}
-
-		private void initSprites() {
-			AtlasTexture textureMap = Minecraft.getInstance().getTextureMap();
-			originalTexture = textureMap.getSprite(new ResourceLocation(Create.ID, "block/belt"));
-			beltTextures = textureMap.getSprite(new ResourceLocation(Create.ID, "block/belt_animated"));
-		}
-
-		public ByteBuffer getTransformed(BeltTileEntity te, float x, float y, float z, int color) {
-			original.rewind();
-			mutable.rewind();
-
-			float textureOffsetX = 0;
-			float textureOffsetY = 0;
-
-			if (te.getSpeed() != 0) {
-				float time = AnimationTickHolder.getRenderTick();
-				Direction direction = te.getBlockState().get(BlockStateProperties.HORIZONTAL_FACING);
-				if (direction == Direction.EAST || direction == Direction.NORTH)
-					time = -time;
-				int textureIndex = (int) ((te.getSpeed() * time / 8) % 16);
-				if (textureIndex < 0)
-					textureIndex += 16;
-
-				textureOffsetX = beltTextures.getInterpolatedU((textureIndex % 4) * 4) - originalTexture.getMinU();
-				textureOffsetY = beltTextures.getInterpolatedV((textureIndex / 4) * 4) - originalTexture.getMinV();
+			for (TransportedItemStack transported : te.getInventory().items) {
+				GlStateManager.pushMatrix();
+				Vec3i direction = te.getBeltChainDirection();
+				float offset = transported.beltPosition;
+				Vec3d offsetVec = new Vec3d(direction).scale(offset);
+				GlStateManager.translated(offsetVec.x, offsetVec.y, offsetVec.z);
+				Minecraft.getInstance().getItemRenderer().renderItem(transported.stack, TransformType.FIXED);
+				GlStateManager.popMatrix();
 			}
 
-			final BlockState blockState = te.getBlockState();
-			int packedLightCoords = blockState.getPackedLightmapCoords(te.getWorld(), te.getPos());
-			float texOffX = textureOffsetX;
-			float texOffY = textureOffsetY;
-
-			boolean defaultColor = color == -1;
-			int b = defaultColor ? 128 : color & 0xFF;
-			int g = defaultColor ? 128 : (color >> 8) & 0xFF;
-			int r = defaultColor ? 128 : (color >> 16) & 0xFF;
-
-			for (int vertex = 0; vertex < vertexCount(original); vertex++) {
-				putPos(mutable, vertex, getX(original, vertex) + x, getY(original, vertex) + y,
-						getZ(original, vertex) + z);
-				putLight(mutable, vertex, packedLightCoords);
-
-				int bufferPosition = getBufferPosition(vertex);
-				mutable.putFloat(bufferPosition + 16, original.getFloat(bufferPosition + 16) + texOffX);
-				mutable.putFloat(bufferPosition + 20, original.getFloat(bufferPosition + 20) + texOffY);
-
-				byte lumByte = getR(original, vertex);
-				float lum = (lumByte < 0 ? 255 + lumByte : lumByte) / 256f;
-
-				int r2 = (int) (r * lum);
-				int g2 = (int) (g * lum);
-				int b2 = (int) (b * lum);
-				putColor(mutable, vertex, (byte) r2, (byte) g2, (byte) b2, (byte) 255);
-			}
-
-			return mutable;
+			GlStateManager.popMatrix();
 		}
+
+		TessellatorHelper.prepareFastRender();
+		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
+		renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, Tessellator.getInstance().getBuffer());
+		TessellatorHelper.draw();
 	}
 
 	@Override
-	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
+	public void renderTileEntityFast(BeltTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
-		BeltTileEntity beltEntity = (BeltTileEntity) te;
 
-		if (beltEntity.hasPulley())
-			super.renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, buffer);
+		if (te.hasPulley()) {
+			final BlockState state = getRenderedBlockState(te);
+			KineticTileEntityRenderer.cacheIfMissing(state, getWorld(), BlockModelSpinner::new);
+			final BlockPos pos = te.getPos();
+			Axis axis = ((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState());
+			float angle = KineticTileEntityRenderer.getAngleForTe(te, pos, axis);
+			KineticTileEntityRenderer.renderFromCache(buffer, state, getWorld(), (float) x, (float) y, (float) z, pos,
+					axis, angle);
+		}
 
-		cacheIfMissing(beltEntity.getBlockState(), getWorld(), BeltModelAnimator::new);
-		renderBeltFromCache(beltEntity, (float) x, (float) y, (float) z, buffer);
+		KineticTileEntityRenderer.cacheIfMissing(te.getBlockState(), getWorld(), BeltModelAnimator::new);
+		renderBeltFromCache(te, (float) x, (float) y, (float) z, buffer);
 	}
 
-	@Override
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
 		return AllBlocks.BELT_PULLEY.get().getDefaultState().with(BlockStateProperties.AXIS,
 				((IRotate) AllBlocks.BELT.get()).getRotationAxis(te.getBlockState()));
 	}
 
 	public void renderBeltFromCache(BeltTileEntity te, float x, float y, float z, BufferBuilder buffer) {
-		buffer.putBulkData(
-				((BeltModelAnimator) cachedBuffers.get(te.getBlockState())).getTransformed(te, x, y, z, te.color));
+		buffer.putBulkData(((BeltModelAnimator) KineticTileEntityRenderer.cachedBuffers.get(te.getBlockState()))
+				.getTransformed(te, x, y, z, te.color));
 	}
 }
