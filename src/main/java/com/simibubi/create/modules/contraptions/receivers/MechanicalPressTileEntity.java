@@ -6,13 +6,17 @@ import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.InWorldProcessing;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -85,31 +89,45 @@ public class MechanicalPressTileEntity extends KineticTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		if (!running)
 			return;
 
 		if (runningTicks == 30) {
-			AxisAlignedBB bb = new AxisAlignedBB(pos.down(beltMode ? 2 : 1));
-			for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(null, bb)) {
-				if (!(entity instanceof ItemEntity))
-					continue;
-				ItemEntity itemEntity = (ItemEntity) entity;
 
-				if (world.isRemote) {
-					for (int i = 0; i < 20; i++) {
-						Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .25f).mul(1, 0, 1);
-						world.addParticle(new ItemParticleData(ParticleTypes.ITEM, itemEntity.getItem()), entity.posX,
-								entity.posY, entity.posZ, motion.x, motion.y, motion.z);
+			if (!beltMode) {
+				AxisAlignedBB bb = new AxisAlignedBB(pos.down(beltMode ? 2 : 1));
+				for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(null, bb)) {
+					if (!(entity instanceof ItemEntity))
+						continue;
+
+					ItemEntity itemEntity = (ItemEntity) entity;
+					makeParticleEffect(entity.getPositionVec(), itemEntity.getItem());
+
+					if (!world.isRemote) {
+						Optional<PressingRecipe> recipe = getRecipe(itemEntity.getItem());
+						if (recipe.isPresent())
+							InWorldProcessing.applyRecipeOn(itemEntity, recipe.get());
+					}
+				}
+			}
+
+			if (beltMode && world.isRemote) {
+				TileEntity te = world.getTileEntity(pos.down(2));
+				if (te != null && te instanceof BeltTileEntity) {
+					BeltTileEntity beltTE = (BeltTileEntity) te;
+					TileEntity controller = world.getTileEntity(beltTE.getController());
+					if (controller != null && controller instanceof BeltTileEntity) {
+						TransportedItemStack stackAtOffset = ((BeltTileEntity) controller).getInventory()
+								.getStackAtOffset(beltTE.index);
+						if (stackAtOffset != null)
+							makeParticleEffect(VecHelper.getCenterOf(pos.down(2)).add(0, 5 / 16f, 0),
+									stackAtOffset.stack);
 					}
 				}
 
-				if (!world.isRemote) {
-					Optional<PressingRecipe> recipe = getRecipe(itemEntity);
-					if (recipe.isPresent())
-						InWorldProcessing.applyRecipeOn(itemEntity, recipe.get());
-				}
 			}
+
 			if (!world.isRemote) {
 				world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, .5f, 1f);
 				world.playSound(null, getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, .125f, 1f);
@@ -128,8 +146,18 @@ public class MechanicalPressTileEntity extends KineticTileEntity {
 		runningTicks++;
 	}
 
-	public Optional<PressingRecipe> getRecipe(ItemEntity itemEntity) {
-		pressingInv.setInventorySlotContents(0, itemEntity.getItem());
+	public void makeParticleEffect(Vec3d pos, ItemStack stack) {
+		if (world.isRemote) {
+			for (int i = 0; i < 20; i++) {
+				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .25f).mul(1, 0, 1);
+				world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z, motion.x,
+						motion.y, motion.z);
+			}
+		}
+	}
+
+	public Optional<PressingRecipe> getRecipe(ItemStack item) {
+		pressingInv.setInventorySlotContents(0, item);
 		Optional<PressingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.PRESSING, pressingInv,
 				world);
 		return recipe;

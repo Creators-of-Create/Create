@@ -3,7 +3,6 @@ package com.simibubi.create.modules.logistics.block.belts;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
@@ -129,16 +128,20 @@ public class EntityDetectorBlock extends HorizontalBlock
 	}
 
 	@Override
-	public List<BlockPos> getPotentialAttachmentLocations(BeltTileEntity te) {
-		Direction side = te.getBlockState().get(BeltBlock.HORIZONTAL_FACING).rotateY();
-		return Arrays.asList(te.getPos().offset(side), te.getPos().offset(side.getOpposite()));
+	public List<BlockPos> getPotentialAttachmentPositions(IWorld world, BlockPos pos, BlockState beltState) {
+		Direction side = beltState.get(BeltBlock.HORIZONTAL_FACING).rotateY();
+		return Arrays.asList(pos.offset(side), pos.offset(side.getOpposite()));
 	}
 
 	@Override
-	public Optional<BlockPos> getValidBeltPositionFor(IWorld world, BlockPos pos, BlockState state) {
-		if (!state.get(BELT))
-			return Optional.empty();
-		return Optional.of(pos.offset(state.get(HORIZONTAL_FACING)));
+	public BlockPos getBeltPositionForAttachment(IWorld world, BlockPos pos, BlockState state) {
+		return pos.offset(state.get(HORIZONTAL_FACING));
+	}
+
+	@Override
+	public boolean isAttachedCorrectly(IWorld world, BlockPos attachmentPos, BlockPos beltPos, BlockState attachmentState,
+			BlockState beltState) {
+		return attachmentState.get(BELT);
 	}
 
 	@Override
@@ -178,11 +181,11 @@ public class EntityDetectorBlock extends HorizontalBlock
 	}
 
 	@Override
-	public boolean handleEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
+	public boolean processEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
 
 		if (te.getWorld().isRemote)
 			return false;
-		
+
 		if (state.processingEntity != entity) {
 			state.processingEntity = entity;
 			state.processingDuration = 0;

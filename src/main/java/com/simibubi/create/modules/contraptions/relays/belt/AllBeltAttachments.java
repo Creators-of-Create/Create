@@ -2,11 +2,11 @@ package com.simibubi.create.modules.contraptions.relays.belt;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -33,32 +34,52 @@ public enum AllBeltAttachments {
 	}
 
 	public interface IBeltAttachment {
-		public List<BlockPos> getPotentialAttachmentLocations(BeltTileEntity te);
 
-		public Optional<BlockPos> getValidBeltPositionFor(IWorld world, BlockPos pos, BlockState state);
+		public List<BlockPos> getPotentialAttachmentPositions(IWorld world, BlockPos pos, BlockState beltState);
 
-		public boolean handleEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state);
+		public BlockPos getBeltPositionForAttachment(IWorld world, BlockPos pos, BlockState state);
+
+		default boolean isAttachedCorrectly(IWorld world, BlockPos attachmentPos, BlockPos beltPos, BlockState attachmentState,
+				BlockState beltState) {
+			return true;
+		}
+
+		default boolean processEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
+			return false;
+		}
+
+		default boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+			return false;
+		}
+
+		default boolean processItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+			return false;
+		}
 
 		default void onAttachmentPlaced(IWorld world, BlockPos pos, BlockState state) {
-			Optional<BlockPos> beltPos = getValidBeltPositionFor(world, pos, state);
-			if (!beltPos.isPresent())
+			BlockPos beltPos = getBeltPositionForAttachment(world, pos, state);
+			TileEntity te = world.getTileEntity(beltPos);
+			if (te == null || !(te instanceof BeltTileEntity))
 				return;
-			BeltTileEntity te = (BeltTileEntity) world.getTileEntity(beltPos.get());
-			if (te == null)
+			BeltTileEntity belt = (BeltTileEntity) te;
+			if (!isAttachedCorrectly(world, pos, belt.getPos(), state, belt.getBlockState()))
 				return;
-			te.attachmentTracker.addAttachment(world, pos);
-			te.sendData();
+			belt.attachmentTracker.addAttachment(world, pos);
+			belt.markDirty();
+			belt.sendData();
 		}
 
 		default void onAttachmentRemoved(IWorld world, BlockPos pos, BlockState state) {
-			Optional<BlockPos> beltPos = getValidBeltPositionFor(world, pos, state);
-			if (!beltPos.isPresent())
+			BlockPos beltPos = getBeltPositionForAttachment(world, pos, state);
+			TileEntity te = world.getTileEntity(beltPos);
+			if (te == null || !(te instanceof BeltTileEntity))
 				return;
-			BeltTileEntity te = (BeltTileEntity) world.getTileEntity(beltPos.get());
-			if (te == null)
+			BeltTileEntity belt = (BeltTileEntity) te;
+			if (!isAttachedCorrectly(world, pos, belt.getPos(), state, belt.getBlockState()))
 				return;
-			te.attachmentTracker.removeAttachment(pos);
-			te.sendData();
+			belt.attachmentTracker.removeAttachment(pos);
+			belt.markDirty();
+			belt.sendData();
 		}
 	}
 
@@ -67,6 +88,7 @@ public enum AllBeltAttachments {
 		public BlockPos attachmentPos;
 		public int processingDuration;
 		public Entity processingEntity;
+		public TransportedItemStack processingStack;
 
 		public BeltAttachmentState(IBeltAttachment attachment, BlockPos attachmentPos) {
 			this.attachment = attachment;
@@ -86,19 +108,25 @@ public enum AllBeltAttachments {
 
 		public void findAttachments(BeltTileEntity belt) {
 			for (AllBeltAttachments ba : AllBeltAttachments.values()) {
-				List<BlockPos> attachmentPositions = ba.attachment.getPotentialAttachmentLocations(belt);
 				World world = belt.getWorld();
+				BlockPos beltPos = belt.getPos();
+				BlockState beltState = belt.getBlockState();
+				List<BlockPos> attachmentPositions = ba.attachment.getPotentialAttachmentPositions(world, beltPos,
+						beltState);
+
 				for (BlockPos potentialPos : attachmentPositions) {
 					if (!world.isBlockPresent(potentialPos))
 						continue;
 					BlockState state = world.getBlockState(potentialPos);
-					if (!(state.getBlock() instanceof IBeltAttachment)) 
+					if (!(state.getBlock() instanceof IBeltAttachment))
 						continue;
-					Optional<BlockPos> validBeltPos = ((IBeltAttachment) state.getBlock()).getValidBeltPositionFor(world, potentialPos, state);
-					if (!validBeltPos.isPresent())
+					IBeltAttachment attachment = (IBeltAttachment) state.getBlock();
+					if (!attachment.getBeltPositionForAttachment(world, potentialPos, state).equals(beltPos))
 						continue;
-					if (validBeltPos.get().equals(belt.getPos()))
-						addAttachment(world, potentialPos);
+					if (!attachment.isAttachedCorrectly(world, potentialPos, beltPos, state, beltState))
+						continue;
+
+					addAttachment(world, potentialPos);
 				}
 			}
 		}

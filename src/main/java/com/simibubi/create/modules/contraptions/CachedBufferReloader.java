@@ -4,7 +4,6 @@ import com.simibubi.create.foundation.utility.ColoredIndicatorRenderer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ContraptionRenderer;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.relays.belt.FastItemRenderer;
 
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
@@ -23,7 +22,6 @@ public class CachedBufferReloader extends ReloadListener<String> {
 		ContraptionRenderer.invalidateCache();
 		MechanicalBearingTileEntityRenderer.invalidateCache();
 		ColoredIndicatorRenderer.invalidateCache();
-		FastItemRenderer.invalidateCache();
 	}
 
 

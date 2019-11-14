@@ -93,7 +93,7 @@ public class BeltMovementHandler {
 
 		// Attachment pauses movement
 		for (BeltAttachmentState state : belt.attachmentTracker.attachments) {
-			if (state.attachment.handleEntity(belt, entityIn, state)) {
+			if (state.attachment.processEntity(belt, entityIn, state)) {
 				info.ticksSinceLastCollision--;
 				return;
 			}

@@ -7,21 +7,22 @@ import java.util.Optional;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.utility.ItemHelper;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -99,8 +100,8 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public List<BlockPos> getPotentialAttachmentLocations(BeltTileEntity te) {
-		return Arrays.asList(te.getPos().up(2));
+	public List<BlockPos> getPotentialAttachmentPositions(IWorld world, BlockPos pos, BlockState beltState) {
+		return Arrays.asList(pos.up(2));
 	}
 
 	@Override
@@ -112,15 +113,35 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public Optional<BlockPos> getValidBeltPositionFor(IWorld world, BlockPos pos, BlockState state) {
-		BlockState blockState = world.getBlockState(pos.down(2));
-		if (!AllBlocks.BELT.typeOf(blockState) || blockState.get(BeltBlock.SLOPE) != Slope.HORIZONTAL)
-			return Optional.empty();
-		return Optional.of(pos.down(2));
+	public BlockPos getBeltPositionForAttachment(IWorld world, BlockPos pos, BlockState state) {
+		return pos.down(2);
 	}
 
 	@Override
-	public boolean handleEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
+	public boolean isAttachedCorrectly(IWorld world, BlockPos attachmentPos, BlockPos beltPos,
+			BlockState attachmentState, BlockState beltState) {
+		return AllBlocks.BELT.typeOf(beltState) && beltState.get(BeltBlock.SLOPE) == Slope.HORIZONTAL;
+	}
+
+	@Override
+	public boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+		MechanicalPressTileEntity pressTe = (MechanicalPressTileEntity) te.getWorld()
+				.getTileEntity(state.attachmentPos);
+
+		if (pressTe == null || pressTe.getSpeed() == 0)
+			return false;
+		if (pressTe.running)
+			return false;
+		if (!pressTe.getRecipe(transported.stack).isPresent())
+			return false;
+
+		state.processingDuration = 1;
+		pressTe.start(true);
+		return true;
+	}
+
+	@Override
+	public boolean processItem(BeltTileEntity te, TransportedItemStack transportedStack, BeltAttachmentState state) {
 		MechanicalPressTileEntity pressTe = (MechanicalPressTileEntity) te.getWorld()
 				.getTileEntity(state.attachmentPos);
 
@@ -128,42 +149,23 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 		if (pressTe == null || pressTe.getSpeed() == 0)
 			return false;
 
-		// Not an Item
-		if (!(entity instanceof ItemEntity))
-			return false;
-
 		// Running
 		if (pressTe.running) {
-			double distanceTo = entity.getPositionVec().distanceTo(VecHelper.getCenterOf(te.getPos()));
-			if (distanceTo < .32f)
-				return true;
-			if (distanceTo < .4f) {
-				entity.setPosition(te.getPos().getX() + .5f, entity.posY, te.getPos().getZ() + .5f);
-				return true;
+			if (pressTe.runningTicks == 30) {
+				Optional<PressingRecipe> recipe = pressTe.getRecipe(transportedStack.stack);
+				if (!recipe.isPresent())
+					return false;
+				ItemStack out = recipe.get().getRecipeOutput().copy();
+				List<ItemStack> multipliedOutput = ItemHelper.multipliedOutput(transportedStack.stack, out);
+				if (multipliedOutput.isEmpty())
+					transportedStack.stack = ItemStack.EMPTY;
+				transportedStack.stack = multipliedOutput.get(0);
+
+				TileEntity controllerTE = te.getWorld().getTileEntity(te.getController());
+				if (controllerTE != null && controllerTE instanceof BeltTileEntity)
+					((SyncedTileEntity) controllerTE).sendData();
 			}
-			return false;
-		}
-
-		// Start process
-		if (state.processingEntity != entity) {
-			state.processingEntity = entity;
-			if (!pressTe.getRecipe((ItemEntity) entity).isPresent()) {
-				state.processingDuration = -1;
-			} else {
-				state.processingDuration = 1;
-				pressTe.start(true);
-			}
-			return false;
-		}
-
-		// Already processed
-		if (state.processingDuration == -1)
-			return false;
-
-		// Just Finished
-		if (pressTe.finished) {
-			state.processingDuration = -1;
-			return false;
+			return true;
 		}
 
 		return false;

@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.IHaveFilter;
 
 import net.minecraft.entity.item.ItemEntity;
@@ -24,15 +26,23 @@ import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 
 	public ProcessingInventory inventory;
 	private int recipeIndex;
 	private ItemStack filter;
+	private LazyOptional<IItemHandler> invProvider = LazyOptional.empty();
 
 	public SawTileEntity() {
 		super(AllTileEntities.SAW.type);
@@ -40,6 +50,7 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 		inventory.remainingTime = -1;
 		filter = ItemStack.EMPTY;
 		recipeIndex = 0;
+		invProvider = LazyOptional.of(() -> inventory);
 	}
 
 	@Override
@@ -78,12 +89,17 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 			return;
 		if (getSpeed() == 0)
 			return;
-		if (inventory.remainingTime == -1)
+		if (inventory.remainingTime == -1) {
+			if (!inventory.isEmpty() && !inventory.appliedRecipe)
+				start();
 			return;
+		}
 
 		float processingSpeed = MathHelper.clamp(Math.abs(getSpeed()) / 32, 1, 128);
 		inventory.remainingTime -= processingSpeed;
-		spawnParticles(inventory.getStackInSlot(0));
+
+		if (inventory.remainingTime > 0)
+			spawnParticles(inventory.getStackInSlot(0));
 
 		if (world.isRemote)
 			return;
@@ -95,10 +111,69 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 			return;
 		}
 
-		Vec3d outPos = VecHelper.getCenterOf(pos).add(getItemMovementVec().scale(.5f).add(0, .5, 0));
-		Vec3d outMotion = getItemMovementVec().scale(.0625).add(0, .125, 0);
+		Vec3d itemMovement = getItemMovementVec();
+		Direction itemMovementFacing = Direction.getFacingFromVector(itemMovement.x, itemMovement.y, itemMovement.z);
+		Vec3d outPos = VecHelper.getCenterOf(pos).add(itemMovement.scale(.5f).add(0, .5, 0));
+		Vec3d outMotion = itemMovement.scale(.0625).add(0, .125, 0);
 
 		if (inventory.remainingTime <= 0) {
+
+			// Try moving items onto the belt
+			BlockPos nextPos = pos.add(itemMovement.x, itemMovement.y, itemMovement.z);
+			if (AllBlocks.BELT.typeOf(world.getBlockState(nextPos))) {
+				TileEntity te = world.getTileEntity(nextPos);
+				if (te != null && te instanceof BeltTileEntity) {
+					for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+						ItemStack stack = inventory.getStackInSlot(slot);
+						if (stack.isEmpty())
+							continue;
+
+						if (itemMovementFacing.getAxis() == Axis.Z)
+							itemMovementFacing = itemMovementFacing.getOpposite();
+						if (((BeltTileEntity) te).tryInsertingFromSide(itemMovementFacing, stack, false))
+							inventory.setInventorySlotContents(slot, ItemStack.EMPTY);
+						else {
+							inventory.remainingTime = 0;
+							return;
+						}
+					}
+					inventory.clear();
+					inventory.remainingTime = -1;
+					sendData();
+				}
+			}
+
+			// Try moving items onto next saw
+			if (AllBlocks.SAW.typeOf(world.getBlockState(nextPos))) {
+				TileEntity te = world.getTileEntity(nextPos);
+				if (te != null && te instanceof SawTileEntity) {
+					SawTileEntity sawTileEntity = (SawTileEntity) te;
+					Vec3d otherMovement = sawTileEntity.getItemMovementVec();
+					if (Direction.getFacingFromVector(otherMovement.x, otherMovement.y,
+							otherMovement.z) != itemMovementFacing.getOpposite()) {
+						for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+							ItemStack stack = inventory.getStackInSlot(slot);
+							if (stack.isEmpty())
+								continue;
+
+							ProcessingInventory sawInv = sawTileEntity.inventory;
+							if (sawInv.isEmpty()) {
+								sawInv.insertItem(0, stack, false);
+								inventory.setInventorySlotContents(slot, ItemStack.EMPTY);
+
+							} else {
+								inventory.remainingTime = 0;
+								return;
+							}
+						}
+						inventory.clear();
+						inventory.remainingTime = -1;
+						sendData();
+					}
+				}
+			}
+
+			// Eject Items
 			for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
 				ItemStack stack = inventory.getStackInSlot(slot);
 				if (stack.isEmpty())
@@ -108,12 +183,26 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 				world.addEntity(entityIn);
 			}
 			inventory.clear();
+			world.updateComparatorOutputLevel(pos, getBlockState().getBlock());
 			inventory.remainingTime = -1;
 			sendData();
 			return;
 		}
 
 		return;
+	}
+
+	@Override
+	public void remove() {
+		super.remove();
+		invProvider.invalidate();
+	}
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return invProvider.cast();
+		return super.getCapability(cap, side);
 	}
 
 	protected void spawnParticles(ItemStack stack) {
@@ -198,6 +287,17 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 
 		inventory.clear();
 		inventory.setInventorySlotContents(0, entity.getItem().copy());
+		entity.remove();
+		start();
+	}
+
+	public void start() {
+		if (!canProcess())
+			return;
+		if (inventory.isEmpty())
+			return;
+		if (world.isRemote)
+			return;
 
 		List<IRecipe<?>> recipes = getRecipes();
 		boolean valid = !recipes.isEmpty();
@@ -206,7 +306,6 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 		if (recipes.isEmpty()) {
 			inventory.remainingTime = inventory.recipeDuration = 10;
 			inventory.appliedRecipe = false;
-			entity.remove();
 			sendData();
 			return;
 		}
@@ -222,11 +321,9 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 			time = ((CuttingRecipe) recipe).getProcessingDuration();
 		}
 
-		inventory.remainingTime = time * Math.max(1, (entity.getItem().getCount() / 5));
+		inventory.remainingTime = time * Math.max(1, (inventory.getStackInSlot(0).getCount() / 5));
 		inventory.recipeDuration = inventory.remainingTime;
 		inventory.appliedRecipe = false;
-		entity.remove();
-
 		sendData();
 	}
 

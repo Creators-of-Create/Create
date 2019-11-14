@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltMovementHandler.TransportedEntityInfo;
 
 import net.minecraft.block.Block;
@@ -38,7 +39,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockItem, IWithTileEntity<BeltTileEntity> {
 
@@ -99,10 +100,14 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 		if (entityIn instanceof ItemEntity && entityIn.isAlive()) {
 			if (worldIn.isRemote)
 				return;
+			if (entityIn.getMotion().y > 0)
+				return;
 			withTileEntityDo(worldIn, pos, te -> {
 				ItemEntity itemEntity = (ItemEntity) entityIn;
-				ItemStack remainder = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-						.orElseGet(() -> new ItemStackHandler(0)).insertItem(0, itemEntity.getItem().copy(), false);
+				IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+				if (handler == null)
+					return;
+				ItemStack remainder = handler.insertItem(0, itemEntity.getItem().copy(), false);
 				if (remainder.isEmpty())
 					itemEntity.remove();
 			});
@@ -133,19 +138,42 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 		if (player.isSneaking() || !player.isAllowEdit())
 			return false;
 		ItemStack heldItem = player.getHeldItem(handIn);
-		if (!Tags.Items.DYES.contains(heldItem.getItem()))
-			return false;
-		if (worldIn.isRemote)
+		boolean isShaft = heldItem.getItem() == AllBlocks.SHAFT.get().asItem();
+		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
+
+		if (isShaft) {
+			TileEntity te = worldIn.getTileEntity(pos);
+			if (te == null || !(te instanceof BeltTileEntity))
+				return false;
+			BeltTileEntity belt = (BeltTileEntity) te;
+			if (belt.hasPulley())
+				return false;
+			if (worldIn.isRemote)
+				return true;
+			if (!player.isCreative())
+				heldItem.shrink(1);
+			belt.hasPulley = true;
+			belt.markDirty();
+			belt.sendData();
+			belt.attachKinetics();
 			return true;
-		withTileEntityDo(worldIn, pos, te -> {
-			DyeColor dyeColor = DyeColor.getColor(heldItem);
-			if (dyeColor == null)
-				return;
-			te.applyColor(dyeColor);
-		});
-		if (!player.isCreative())
-			heldItem.shrink(1);
-		return true;
+		}
+
+		if (isDye) {
+			if (worldIn.isRemote)
+				return true;
+			withTileEntityDo(worldIn, pos, te -> {
+				DyeColor dyeColor = DyeColor.getColor(heldItem);
+				if (dyeColor == null)
+					return;
+				te.applyColor(dyeColor);
+			});
+			if (!player.isCreative())
+				heldItem.shrink(1);
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -177,8 +205,15 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	@Override
 	public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
 		withTileEntityDo(worldIn, pos, te -> {
-			if (te.hasPulley())
+			if (worldIn.isRemote)
+				return;
+			if (te.hasPulley() && (player == null || !player.isCreative()))
 				Block.spawnDrops(AllBlocks.SHAFT.get().getDefaultState(), worldIn, pos);
+			if (te.isController()) {
+				BeltInventory inv = te.getInventory();
+				for (TransportedItemStack stack : inv.items)
+					inv.eject(stack);
+			}
 		});
 		super.onBlockHarvested(worldIn, pos, state, player);
 	}
@@ -211,16 +246,20 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 					break;
 
 				BeltTileEntity te = (BeltTileEntity) worldIn.getTileEntity(toDestroy);
-				boolean hasPulley = te.hasPulley();
+				if (te.isController()) {
+					BeltInventory inv = te.getInventory();
+					for (TransportedItemStack stack : inv.items)
+						inv.eject(stack);
+				}
+
 				te.setSource(null);
 				te.remove();
 
-				if (hasPulley) {
+				if (te.hasPulley())
 					worldIn.setBlockState(toDestroy, AllBlocks.SHAFT.get().getDefaultState()
 							.with(BlockStateProperties.AXIS, getRotationAxis(destroyedBlock)), 3);
-				} else {
+				else
 					worldIn.destroyBlock(toDestroy, false);
-				}
 
 				if (destroyedBlock.get(PART) == Part.END)
 					break;

@@ -20,11 +20,13 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.Tracker;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltMovementHandler.TransportedEntityInfo;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -197,6 +199,13 @@ public class BeltTileEntity extends KineticTileEntity {
 		return getSpeed() / 1600f;
 	}
 
+	public float getDirectionAwareBeltMovementSpeed() {
+		int offset = getBeltFacing().getAxisDirection().getOffset();
+		if (getBeltFacing().getAxis() == Axis.X)
+			offset *= -1;
+		return getSpeed() / 1600f * offset;
+	}
+
 	public boolean hasPulley() {
 		if (!AllBlocks.BELT.typeOf(getBlockState()))
 			return false;
@@ -268,6 +277,46 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (inventory == null)
 			inventory = new BeltInventory(this);
 		return inventory;
+	}
+
+	public boolean tryInsertingFromSide(Direction side, ItemStack stack, boolean simulate) {
+		return tryInsertingFromSide(side, new TransportedItemStack(stack), simulate);
+	}
+
+	public boolean tryInsertingFromSide(Direction side, TransportedItemStack transportedStack, boolean simulate) {
+		BlockPos controller = getController();
+		if (!world.isBlockPresent(controller))
+			return false;
+		TileEntity te = world.getTileEntity(controller);
+		if (te == null || !(te instanceof BeltTileEntity))
+			return false;
+		BeltTileEntity nextBeltController = (BeltTileEntity) te;
+		BeltInventory nextInventory = nextBeltController.getInventory();
+
+		if (!nextInventory.canInsertFrom(index, side))
+			return false;
+		if (simulate)
+			return true;
+
+		transportedStack.beltPosition = index + .5f;
+
+		Direction movementFacing = getMovementFacing();
+		if (!side.getAxis().isVertical()) {
+			if (movementFacing != side)
+				transportedStack.sideOffset = side.getAxisDirection().getOffset() * .35f;
+			else
+				transportedStack.beltPosition = getDirectionAwareBeltMovementSpeed() > 0 ? index : index + 1;
+			if (side.getAxis() == Axis.X ^ movementFacing.getAxis() == Axis.X)
+				transportedStack.sideOffset *= -1;
+		}
+
+		transportedStack.prevSideOffset = transportedStack.sideOffset;
+		transportedStack.insertedAt = index;
+		transportedStack.insertedFrom = side;
+		transportedStack.prevBeltPosition = transportedStack.beltPosition;
+		nextInventory.insert(transportedStack);
+		nextBeltController.sendData();
+		return true;
 	}
 
 }

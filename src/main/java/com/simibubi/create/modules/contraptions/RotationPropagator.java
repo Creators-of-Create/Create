@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions;
 
 import static com.simibubi.create.AllBlocks.BELT;
 import static com.simibubi.create.AllBlocks.COGWHEEL;
-import static com.simibubi.create.AllBlocks.ENCASED_FAN;
 import static com.simibubi.create.AllBlocks.LARGE_COGWHEEL;
 import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;

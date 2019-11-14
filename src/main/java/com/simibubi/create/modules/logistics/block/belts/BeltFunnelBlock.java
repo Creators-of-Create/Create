@@ -2,31 +2,24 @@ package com.simibubi.create.modules.logistics.block.belts;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.IInventoryManipulator;
-import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -49,7 +42,7 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
@@ -79,7 +72,7 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
 		return !neighbour.getShape(worldIn, pos).isEmpty();
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = getDefaultState();
@@ -138,33 +131,32 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 	}
 
 	@Override
-	public List<BlockPos> getPotentialAttachmentLocations(BeltTileEntity te) {
-		return Arrays.asList(te.getPos().up());
+	public List<BlockPos> getPotentialAttachmentPositions(IWorld world, BlockPos pos, BlockState beltState) {
+		return Arrays.asList(pos.up());
 	}
 
 	@Override
-	public Optional<BlockPos> getValidBeltPositionFor(IWorld world, BlockPos pos, BlockState state) {
-		BlockPos validPos = pos.down();
-		BlockState blockState = world.getBlockState(validPos);
-		if (!AllBlocks.BELT.typeOf(blockState)
-				|| blockState.get(HORIZONTAL_FACING).getAxis() != state.get(HORIZONTAL_FACING).getAxis())
-			return Optional.empty();
-		return Optional.of(validPos);
+	public BlockPos getBeltPositionForAttachment(IWorld world, BlockPos pos, BlockState state) {
+		return pos.down();
 	}
 
 	@Override
-	public boolean handleEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
-		boolean isItem = entity instanceof ItemEntity;
-		if (!isItem && !(entity instanceof CardboardBoxEntity))
-			return false;
-		boolean slope = te.getBlockState().get(BeltBlock.SLOPE) != Slope.HORIZONTAL;
-		if (isItem && entity.getPositionVec().distanceTo(VecHelper.getCenterOf(te.getPos())) > (slope ? .6f : .4f))
-			return false;
-		entity.setMotion(Vec3d.ZERO);
-		withTileEntityDo(te.getWorld(), state.attachmentPos, funnelTE -> {
-			funnelTE.tryToInsert(entity);
-		});
+	public boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+		return process(te, transported, state);
+	}
 
+	@Override
+	public boolean processItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+		return process(te, transported, state);
+	}
+
+	public boolean process(BeltTileEntity belt, TransportedItemStack transported, BeltAttachmentState state) {
+		TileEntity te = belt.getWorld().getTileEntity(state.attachmentPos);
+		if (te == null || !(te instanceof BeltFunnelTileEntity))
+			return false;
+		BeltFunnelTileEntity funnel = (BeltFunnelTileEntity) te;
+		ItemStack stack = funnel.tryToInsert(transported.stack);
+		transported.stack = stack;
 		return true;
 	}
 
