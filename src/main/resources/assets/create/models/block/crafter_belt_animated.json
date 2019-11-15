@@ -1,0 +1,18 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/cube",
+	"textures": {
+		"3": "create:block/crafter_thingies"
+	},
+	"elements": [
+		{
+			"name": "belt_animated",
+			"from": [6, 15.5, 12],
+			"to": [10, 16.5, 20],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 17, 8]},
+			"faces": {
+				"up": {"uv": [0, 6, 4, 14], "rotation": 180, "texture": "#3"}
+			}
+		}
+	]
+}

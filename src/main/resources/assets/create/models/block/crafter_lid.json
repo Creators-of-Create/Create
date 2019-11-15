@@ -1,0 +1,17 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/cube",
+	"textures": {
+		"3": "create:block/crafter_thingies"
+	},
+	"elements": [
+		{
+			"name": "valve_lid",
+			"from": [5, 16, 5],
+			"to": [11, 17, 11],
+			"faces": {
+				"up": {"uv": [0, 0, 6, 6], "texture": "#3"}
+			}
+		}
+	]
+}
