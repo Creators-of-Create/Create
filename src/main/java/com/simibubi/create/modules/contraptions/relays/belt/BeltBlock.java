@@ -15,16 +15,21 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltMovementHandler.
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -35,6 +40,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
@@ -45,10 +51,11 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
+	public static final BooleanProperty CASING = BooleanProperty.create("casing");
 
 	public BeltBlock() {
 		super(Properties.from(Blocks.BROWN_WOOL));
-		setDefaultState(getDefaultState().with(SLOPE, Slope.HORIZONTAL).with(PART, Part.START));
+		setDefaultState(getDefaultState().with(SLOPE, Slope.HORIZONTAL).with(PART, Part.START).with(CASING, false));
 	}
 
 	@Override
@@ -68,6 +75,16 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
 			PlayerEntity player) {
 		return AllItems.BELT_CONNECTOR.asStack();
+	}
+
+	@Override
+	public Material getMaterial(BlockState state) {
+		return state.get(CASING) ? Material.WOOD : Material.WOOL;
+	}
+
+	@Override
+	public boolean isFlammable(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+		return false;
 	}
 
 	@Override
@@ -139,25 +156,8 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 			return false;
 		ItemStack heldItem = player.getHeldItem(handIn);
 		boolean isShaft = heldItem.getItem() == AllBlocks.SHAFT.get().asItem();
+		boolean isCasing = heldItem.getItem() == AllBlocks.LOGISTICAL_CASING.get().asItem();
 		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
-
-		if (isShaft) {
-			TileEntity te = worldIn.getTileEntity(pos);
-			if (te == null || !(te instanceof BeltTileEntity))
-				return false;
-			BeltTileEntity belt = (BeltTileEntity) te;
-			if (belt.hasPulley())
-				return false;
-			if (worldIn.isRemote)
-				return true;
-			if (!player.isCreative())
-				heldItem.shrink(1);
-			belt.hasPulley = true;
-			belt.markDirty();
-			belt.sendData();
-			belt.attachKinetics();
-			return true;
-		}
 
 		if (isDye) {
 			if (worldIn.isRemote)
@@ -173,12 +173,72 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 			return true;
 		}
 
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te == null || !(te instanceof BeltTileEntity))
+			return false;
+		BeltTileEntity belt = (BeltTileEntity) te;
+
+		if (isShaft) {
+			if (state.get(PART) != Part.MIDDLE)
+				return false;
+			if (worldIn.isRemote)
+				return true;
+			if (!player.isCreative())
+				heldItem.shrink(1);
+			worldIn.setBlockState(pos, state.with(PART, Part.PULLEY), 2);
+			belt.attachKinetics();
+			return true;
+		}
+
+		if (isCasing) {
+			if (state.get(CASING))
+				return false;
+			if (state.get(SLOPE) == Slope.VERTICAL)
+				return false;
+			if (!player.isCreative())
+				heldItem.shrink(1);
+			worldIn.setBlockState(pos, state.with(CASING, true), 2);
+			return true;
+		}
+
 		return false;
 	}
 
 	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		World world = context.getWorld();
+		TileEntity te = world.getTileEntity(context.getPos());
+		if (te == null || !(te instanceof BeltTileEntity))
+			return ActionResultType.PASS;
+		BeltTileEntity belt = (BeltTileEntity) te;
+		PlayerEntity player = context.getPlayer();
+
+		if (state.get(CASING)) {
+			if (world.isRemote)
+				return ActionResultType.SUCCESS;
+			world.setBlockState(context.getPos(), state.with(CASING, false), 2);
+			if (!player.isCreative())
+				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.LOGISTICAL_CASING.block));
+			return ActionResultType.SUCCESS;
+		}
+
+		if (state.get(PART) == Part.PULLEY) {
+			if (world.isRemote)
+				return ActionResultType.SUCCESS;
+			world.setBlockState(context.getPos(), state.with(PART, Part.MIDDLE), 2);
+			belt.detachKinetics();
+			belt.attachKinetics();
+			if (!player.isCreative())
+				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.SHAFT.block));
+			return ActionResultType.SUCCESS;
+		}
+
+		return super.onWrenched(state, context);
+	}
+
+	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(SLOPE, PART);
+		builder.add(SLOPE, PART, CASING);
 		super.fillStateContainer(builder);
 	}
 
@@ -189,7 +249,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return BeltShapes.getShape(state, worldIn, pos, context);
+		return VoxelShapes.or(BeltShapes.getShape(state), BeltShapes.getCasingShape(state));
 	}
 
 	@Override
@@ -198,8 +258,8 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return false;
+	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
+		return state.get(CASING) && layer == getRenderLayer();
 	}
 
 	@Override
@@ -221,6 +281,8 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (worldIn.isRemote)
+			return;
+		if (state.getBlock() == newState.getBlock())
 			return;
 
 		boolean endWasDestroyed = state.get(PART) == Part.END;
@@ -294,7 +356,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	}
 
 	public enum Part implements IStringSerializable {
-		START, MIDDLE, END;
+		START, MIDDLE, END, PULLEY;
 
 		@Override
 		public String getName() {
@@ -331,6 +393,36 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 		} while (limit-- > 0);
 
 		return positions;
+	}
+
+	@Override
+	protected boolean hasStaticPart() {
+		return false;
+	}
+
+	public static boolean canAccessFromSide(Direction facing, BlockState belt) {
+		if (facing == null)
+			return true;
+		if (!belt.get(BeltBlock.CASING))
+			return false;
+		Part part = belt.get(BeltBlock.PART);
+		if (part != Part.MIDDLE && facing.getAxis() == belt.get(HORIZONTAL_FACING).rotateY().getAxis())
+			return false;
+
+		Slope slope = belt.get(BeltBlock.SLOPE);
+		if (slope != Slope.HORIZONTAL) {
+			if (slope == Slope.DOWNWARD && part == Part.END)
+				return true;
+			if (slope == Slope.UPWARD && part == Part.START)
+				return true;
+			Direction beltSide = belt.get(HORIZONTAL_FACING);
+			if (slope == Slope.DOWNWARD)
+				beltSide = beltSide.getOpposite();
+			if (beltSide == facing)
+				return false;
+		}
+
+		return true;
 	}
 
 }

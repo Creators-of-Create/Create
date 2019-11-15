@@ -100,6 +100,8 @@ public class BeltConnectorItem extends Item {
 		for (BlockPos pos : beltsToCreate) {
 			BeltBlock.Part part = pos.equals(start) ? Part.START : pos.equals(end) ? Part.END : Part.MIDDLE;
 			boolean pulley = AllBlocks.SHAFT.typeOf(world.getBlockState(pos));
+			if (part == Part.MIDDLE && pulley)
+				part = Part.PULLEY;
 			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope).with(BeltBlock.PART, part)
 					.with(BeltBlock.HORIZONTAL_FACING, facing), 3);
 
@@ -108,7 +110,6 @@ public class BeltConnectorItem extends Item {
 				te.setController(start);
 				te.beltLength = beltsToCreate.size();
 				te.index = index;
-				te.hasPulley = pulley;
 			}
 
 			index++;

@@ -83,7 +83,7 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 					itemRenderer.renderItem(transported.stack, TransformType.FIXED);
 					GlStateManager.popMatrix();
 					GlStateManager.rotated(10, 0, 1, 0);
-					GlStateManager.translated(0, 1/16d, 0);
+					GlStateManager.translated(0, 1 / 16d, 0);
 				}
 
 				RenderHelper.disableStandardItemLighting();
@@ -108,7 +108,8 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 					axis, angle);
 		}
 
-		KineticTileEntityRenderer.cacheIfMissing(te.getBlockState(), getWorld(), BeltModelAnimator::new);
+		KineticTileEntityRenderer.cacheIfMissing(te.getBlockState().with(BeltBlock.CASING, false), getWorld(),
+				BeltModelAnimator::new);
 		renderBeltFromCache(te, (float) x, (float) y, (float) z, buffer);
 	}
 
@@ -118,7 +119,7 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 	}
 
 	public void renderBeltFromCache(BeltTileEntity te, float x, float y, float z, BufferBuilder buffer) {
-		buffer.putBulkData(((BeltModelAnimator) KineticTileEntityRenderer.cachedBuffers.get(te.getBlockState()))
-				.getTransformed(te, x, y, z, te.color));
+		buffer.putBulkData(((BeltModelAnimator) KineticTileEntityRenderer.cachedBuffers
+				.get(te.getBlockState().with(BeltBlock.CASING, false))).getTransformed(te, x, y, z, te.color));
 	}
 }

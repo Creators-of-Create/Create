@@ -48,7 +48,6 @@ public class BeltTileEntity extends KineticTileEntity {
 	public int color;
 	public int beltLength;
 	public int index;
-	public boolean hasPulley;
 
 	protected BlockPos controller;
 	protected BeltInventory inventory;
@@ -132,8 +131,11 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return itemHandler.cast();
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			if (side == Direction.UP || BeltBlock.canAccessFromSide(side, getBlockState())) {
+				return itemHandler.cast();
+			}
+		}
 		return super.getCapability(cap, side);
 	}
 
@@ -150,7 +152,6 @@ public class BeltTileEntity extends KineticTileEntity {
 		compound.putInt("Color", color);
 		compound.putInt("Length", beltLength);
 		compound.putInt("Index", index);
-		compound.putBoolean("Pulley", hasPulley);
 
 		if (isController())
 			compound.put("Inventory", getInventory().write());
@@ -164,7 +165,6 @@ public class BeltTileEntity extends KineticTileEntity {
 		color = compound.getInt("Color");
 		beltLength = compound.getInt("Length");
 		index = compound.getInt("Index");
-		hasPulley = compound.getBoolean("Pulley");
 
 		if (isController())
 			getInventory().read(compound.getCompound("Inventory"));
@@ -209,8 +209,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	public boolean hasPulley() {
 		if (!AllBlocks.BELT.typeOf(getBlockState()))
 			return false;
-		Part part = getBlockState().get(BeltBlock.PART);
-		return part == END || part == Part.START || hasPulley;
+		return getBlockState().get(BeltBlock.PART) != Part.MIDDLE;
 	}
 
 	protected boolean isLastBelt() {

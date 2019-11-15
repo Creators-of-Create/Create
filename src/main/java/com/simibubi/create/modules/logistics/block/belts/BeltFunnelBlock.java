@@ -3,10 +3,12 @@ package com.simibubi.create.modules.logistics.block.belts;
 import java.util.Arrays;
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.IInventoryManipulator;
 
@@ -70,6 +72,11 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		BlockPos neighbourPos = pos.offset(state.get(HORIZONTAL_FACING));
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
+
+		if (AllBlocks.BELT.typeOf(neighbour)) {
+			return BeltBlock.canAccessFromSide(state.get(HORIZONTAL_FACING), neighbour);
+		}
+
 		return !neighbour.getShape(worldIn, pos).isEmpty();
 	}
 

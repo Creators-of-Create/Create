@@ -39,7 +39,7 @@ import net.minecraftforge.common.IPlantable;
 
 public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBehavior {
 
-	private static VoxelShaper SHAPER = VoxelShaper.forHorizontalBlock(Block.makeCuboidShape(0, 2, 0, 16, 14, 3));
+	private static VoxelShaper SHAPER = VoxelShaper.forHorizontal(Block.makeCuboidShape(0, 2, 0, 16, 14, 3));
 
 	public HarvesterBlock() {
 		super(Properties.from(Blocks.IRON_BLOCK));
