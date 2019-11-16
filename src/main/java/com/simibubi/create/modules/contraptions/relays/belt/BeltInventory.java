@@ -9,6 +9,7 @@ import java.util.Random;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,6 +20,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -362,8 +364,8 @@ public class BeltInventory {
 	public void eject(TransportedItemStack stack) {
 		ItemStack ejected = stack.stack;
 		Vec3d outPos = getVectorForOffset(stack.beltPosition);
-		Vec3d outMotion = new Vec3d(belt.getBeltChainDirection()).scale(Math.abs(belt.getBeltMovementSpeed())).add(0,
-				1 / 8f, 0);
+		float movementSpeed = Math.max(Math.abs(belt.getBeltMovementSpeed()), 1 / 8f);
+		Vec3d outMotion = new Vec3d(belt.getBeltChainDirection()).scale(movementSpeed).add(0, 1 / 8f, 0);
 		outPos.add(outMotion.normalize());
 		ItemEntity entity = new ItemEntity(belt.getWorld(), outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);
 		entity.setMotion(outMotion);
@@ -372,8 +374,16 @@ public class BeltInventory {
 	}
 
 	private Vec3d getVectorForOffset(float offset) {
+		Slope slope = belt.getBlockState().get(BeltBlock.SLOPE);
+		int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
+		float verticalMovement = verticality;
+		if (offset < .5)
+			verticalMovement = 0;
+		verticalMovement = verticalMovement * (Math.min(offset, belt.beltLength - .5f) - .5f);
+
 		Vec3d vec = VecHelper.getCenterOf(belt.getPos());
-		vec = vec.add(new Vec3d(belt.getBeltFacing().getDirectionVec()).scale(offset - .5f));
+		vec = vec.add(new Vec3d(belt.getBeltFacing().getDirectionVec()).scale(offset - .5f)).add(0, verticalMovement,
+				0);
 		return vec;
 	}
 
@@ -388,7 +398,11 @@ public class BeltInventory {
 	private BlockPos getPositionForOffset(int offset) {
 		BlockPos pos = belt.getPos();
 		Vec3i vec = belt.getBeltFacing().getDirectionVec();
-		return pos.add(offset * vec.getX(), offset * vec.getY(), offset * vec.getZ());
+		Slope slope = belt.getBlockState().get(BeltBlock.SLOPE);
+		int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
+
+		return pos.add(offset * vec.getX(), MathHelper.clamp(offset, 0, belt.beltLength - 1) * verticality,
+				offset * vec.getZ());
 	}
 
 	private boolean movingPositive() {

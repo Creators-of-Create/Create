@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
+import java.util.Random;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.IndependentShadowRenderer;
@@ -8,6 +10,7 @@ import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer.BlockModelSpinner;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 
 import net.minecraft.block.BlockState;
@@ -44,13 +47,26 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 			Vec3i directionVec = te.getBeltFacing().getDirectionVec();
 			Vec3d beltStartOffset = new Vec3d(directionVec).scale(-.5).add(.5, 13 / 16f + .125f, .5);
 			GlStateManager.translated(x + beltStartOffset.x, y + beltStartOffset.y, z + beltStartOffset.z);
+			Slope slope = te.getBlockState().get(BeltBlock.SLOPE);
+			int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
+			boolean slopeAlongX = te.getBeltFacing().getAxis() == Axis.X;
 
 			for (TransportedItemStack transported : te.getInventory().items) {
 				GlStateManager.pushMatrix();
 				float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
-
 				float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
-				Vec3d offsetVec = new Vec3d(directionVec).scale(offset);
+				float verticalMovement = verticality;
+
+				if (offset < .5)
+					verticalMovement = 0;
+				verticalMovement = verticalMovement * (Math.min(offset, te.beltLength - .5f) - .5f);
+				Vec3d offsetVec = new Vec3d(directionVec).scale(offset).add(0, verticalMovement, 0);
+				boolean onSlope = slope != Slope.HORIZONTAL
+						&& MathHelper.clamp(offset, .5f, te.beltLength - .5f) == offset;
+				float slopeAngle = onSlope
+						? slope == Slope.DOWNWARD ^ te.getDirectionAwareBeltMovementSpeed() > 0 ? -45 : 45
+						: 0;
+
 				GlStateManager.translated(offsetVec.x, offsetVec.y, offsetVec.z);
 
 				boolean alongX = te.getBeltFacing().rotateY().getAxis() == Axis.X;
@@ -70,6 +86,11 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 				RenderHelper.enableStandardItemLighting();
 
 				int count = (int) (MathHelper.log2((int) (transported.stack.getCount()))) / 2;
+				GlStateManager.rotated(slopeAngle, slopeAlongX ? 0 : 1, 0, slopeAlongX ? 1 : 0);
+				if (onSlope)
+					GlStateManager.translated(0, 1 / 8f, 0);
+				Random r = new Random(transported.angle);
+
 				for (int i = 0; i <= count; i++) {
 					GlStateManager.pushMatrix();
 
@@ -79,11 +100,18 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 						GlStateManager.rotated(90, 1, 0, 0);
 					}
 
+					if (blockItem) {
+						GlStateManager.translated(r.nextFloat() * .25f, 0, r.nextFloat() * .25f);
+					}
+
 					GlStateManager.scaled(.5, .5, .5);
 					itemRenderer.renderItem(transported.stack, TransformType.FIXED);
 					GlStateManager.popMatrix();
-					GlStateManager.rotated(10, 0, 1, 0);
-					GlStateManager.translated(0, 1 / 16d, 0);
+
+					if (!blockItem)
+						GlStateManager.rotated(10, 0, 1, 0);
+					GlStateManager.translated(0, blockItem ? 1 / 64d : 1 / 16d, 0);
+
 				}
 
 				RenderHelper.disableStandardItemLighting();

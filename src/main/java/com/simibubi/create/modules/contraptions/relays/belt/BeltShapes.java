@@ -42,7 +42,7 @@ public class BeltShapes {
 		if (slope == Slope.VERTICAL)
 			return VERTICAL_STRAIGHT.get(axis);
 
-		if (part != Part.MIDDLE) {
+		if (part != Part.MIDDLE && part != Part.PULLEY) {
 			boolean upward = slope == Slope.UPWARD;
 			if (part == Part.START)
 				upward = !upward;
