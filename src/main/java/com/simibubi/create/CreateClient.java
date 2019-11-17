@@ -3,6 +3,9 @@ package com.simibubi.create;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.simibubi.create.foundation.block.CTModel;
+import com.simibubi.create.foundation.block.IHaveConnectedTextures;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.CachedBufferReloader;
 import com.simibubi.create.modules.contraptions.WrenchModel;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanParticleHandler;
@@ -27,6 +30,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -41,7 +45,7 @@ public class CreateClient {
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static EncasedFanParticleHandler fanParticles;
 	public static int renderTicks;
-	
+
 	public static ModConfig config;
 
 	public static void addListeners(IEventBus modEventBus) {
@@ -50,6 +54,7 @@ public class CreateClient {
 			modEventBus.addListener(CreateClient::createConfigs);
 			modEventBus.addListener(CreateClient::onModelBake);
 			modEventBus.addListener(CreateClient::onModelRegistry);
+			modEventBus.addListener(CreateClient::onTextureStitch);
 		});
 	}
 
@@ -87,15 +92,32 @@ public class CreateClient {
 	}
 
 	@OnlyIn(Dist.CLIENT)
+	public static void onTextureStitch(TextureStitchEvent.Pre event) {
+		if (!event.getMap().getBasePath().equals("textures"))
+			return;
+		for (AllBlocks allBlocks : AllBlocks.values()) {
+			if (!(allBlocks.get() instanceof IHaveConnectedTextures))
+				continue;
+			event.addSprite(new ResourceLocation(Create.ID, "block/connected/" + Lang.asId(allBlocks.name())));
+		}
+	}
+
+	@OnlyIn(Dist.CLIENT)
 	public static void onModelBake(ModelBakeEvent event) {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
+
+		for (AllBlocks allBlocks : AllBlocks.values()) {
+			if (!(allBlocks.get() instanceof IHaveConnectedTextures))
+				continue;
+			swapModels(modelRegistry, getBlockModelLocation(allBlocks, ""),
+					t -> new CTModel(t, Lang.asId(allBlocks.name())));
+		}
 
 		swapModels(modelRegistry, getItemModelLocation(AllItems.SYMMETRY_WAND),
 				t -> new SymmetryWandModel(t).loadPartials(event));
 		swapModels(modelRegistry, getItemModelLocation(AllItems.PLACEMENT_HANDGUN),
 				t -> new BuilderGunModel(t).loadPartials(event));
-		swapModels(modelRegistry, getItemModelLocation(AllItems.WRENCH),
-				t -> new WrenchModel(t).loadPartials(event));
+		swapModels(modelRegistry, getItemModelLocation(AllItems.WRENCH), t -> new WrenchModel(t).loadPartials(event));
 		swapModels(modelRegistry, getItemModelLocation(AllItems.DEFORESTER),
 				t -> new DeforesterModel(t).loadPartials(event));
 		swapModels(modelRegistry,

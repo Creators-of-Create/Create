@@ -61,6 +61,7 @@ import com.simibubi.create.modules.logistics.management.base.LogisticalControlle
 import com.simibubi.create.modules.logistics.management.index.LogisticalIndexBlock;
 import com.simibubi.create.modules.logistics.transport.villager.LogisticiansTableBlock;
 import com.simibubi.create.modules.logistics.transport.villager.PackageFunnelBlock;
+import com.simibubi.create.modules.palettes.CTGlassBlock;
 import com.simibubi.create.modules.palettes.GlassPaneBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
@@ -173,6 +174,7 @@ public enum AllBlocks {
 	__PALETTES__(),
 	TILED_GLASS(new GlassBlock(Properties.from(Blocks.GLASS))),
 	TILED_GLASS_PANE(new GlassPaneBlock(Properties.from(Blocks.GLASS))),
+	FRAMED_GLASS(new CTGlassBlock(true)),
 
 	ANDESITE_BRICKS(new Block(Properties.from(Blocks.ANDESITE))),
 	DIORITE_BRICKS(new Block(Properties.from(Blocks.DIORITE))),
@@ -264,7 +266,7 @@ public enum AllBlocks {
 			blockItem = new MechanicalMixerBlockItem(standardItemProperties);
 		else
 			blockItem = new BlockItem(blockIn, standardItemProperties);
-		
+
 		registry.register(blockItem.setRegistryName(blockIn.getRegistryName()));
 	}
 

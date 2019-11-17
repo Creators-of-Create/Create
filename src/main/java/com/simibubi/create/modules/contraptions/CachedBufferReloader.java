@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions;
 
+import com.simibubi.create.foundation.block.CTModelTextureHandler;
 import com.simibubi.create.foundation.utility.ColoredIndicatorRenderer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ContraptionRenderer;
@@ -22,6 +23,7 @@ public class CachedBufferReloader extends ReloadListener<String> {
 		ContraptionRenderer.invalidateCache();
 		MechanicalBearingTileEntityRenderer.invalidateCache();
 		ColoredIndicatorRenderer.invalidateCache();
+		CTModelTextureHandler.reloadUVs();
 	}
 
 
