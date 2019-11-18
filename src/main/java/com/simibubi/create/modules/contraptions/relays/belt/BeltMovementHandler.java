@@ -86,7 +86,7 @@ public class BeltMovementHandler {
 		// Lock entities in place
 		boolean isPlayer = entityIn instanceof PlayerEntity;
 		if (entityIn instanceof LivingEntity && !isPlayer) {
-			((LivingEntity) entityIn).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 1, 9, false, false));
+			((LivingEntity) entityIn).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 10, 1, false, false));
 		}
 
 		BeltTileEntity belt = (BeltTileEntity) te;
@@ -115,7 +115,7 @@ public class BeltMovementHandler {
 
 		Part part = blockState.get(BeltBlock.PART);
 		float top = 13 / 16f;
-		boolean onSlope = notHorizontal && (part == Part.MIDDLE
+		boolean onSlope = notHorizontal && (part == Part.MIDDLE || part == Part.PULLEY
 				|| part == (slope == Slope.UPWARD ? Part.END : Part.START) && entityIn.posY - pos.getY() < top
 				|| part == (slope == Slope.UPWARD ? Part.START : Part.END) && entityIn.posY - pos.getY() > top);
 
@@ -142,7 +142,7 @@ public class BeltMovementHandler {
 
 		// Entity Collisions
 		if (Math.abs(movementSpeed) < .5f) {
-			Vec3d checkDistance = movement.scale(2f).add(movement.normalize());
+			Vec3d checkDistance = movement.normalize().scale(0.5);
 			AxisAlignedBB bb = entityIn.getBoundingBox();
 			AxisAlignedBB checkBB = new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
 			if (!world

@@ -17,11 +17,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
@@ -38,6 +40,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -52,6 +55,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty CASING = BooleanProperty.create("casing");
+	private final VoxelShape collisionMask = makeCuboidShape(0, 0, 0, 16, 19, 16);
 
 	public BeltBlock() {
 		super(Properties.from(Blocks.BROWN_WOOL));
@@ -248,8 +252,30 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	}
 
 	@Override
+	public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
+		return PathNodeType.DANGER_OTHER;
+	}
+	
+	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return VoxelShapes.or(BeltShapes.getShape(state), BeltShapes.getCasingShape(state));
+	}
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
+			ISelectionContext context) {
+		VoxelShape shape = getShape(state, worldIn, pos, context);
+		BeltTileEntity belt = (BeltTileEntity) worldIn.getTileEntity(pos);
+		if (belt == null || context.getEntity() == null)
+			return shape;
+		BeltTileEntity controller = (BeltTileEntity) worldIn.getTileEntity(belt.getController());
+		if (controller == null)
+			return shape;
+		if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity())) {
+			return VoxelShapes.combine(collisionMask, shape, IBooleanFunction.AND);
+		}
+
+		return shape;
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.I
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
 
@@ -181,6 +182,34 @@ public class EntityDetectorBlock extends HorizontalBlock
 	}
 
 	@Override
+	public boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+		
+		state.processingDuration = 0;
+		withTileEntityDo(te.getWorld(), state.attachmentPos, detectorTE -> {
+			ItemStack filter = detectorTE.getFilter();
+			if (filter.isEmpty())
+				return;
+			
+			// Todo: Package filters 
+			if (!ItemStack.areItemsEqual(transported.stack, filter)) {
+				state.processingDuration = -1;
+				return;
+			}
+		});
+		
+		World world = te.getWorld();
+		BlockState blockState = world.getBlockState(state.attachmentPos);
+		if (state.processingDuration == 0) {
+			world.setBlockState(state.attachmentPos, blockState.with(POWERED, true));
+			world.getPendingBlockTicks().scheduleTick(state.attachmentPos, this, 6);
+			world.notifyNeighborsOfStateChange(state.attachmentPos, this);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
 	public boolean processEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
 
 		if (te.getWorld().isRemote)
@@ -193,6 +222,8 @@ public class EntityDetectorBlock extends HorizontalBlock
 				ItemStack filter = detectorTE.getFilter();
 				if (filter.isEmpty())
 					return;
+				
+				// Todo: Package filters 
 				if (!(entity instanceof ItemEntity)
 						|| !ItemStack.areItemsEqual(((ItemEntity) entity).getItem(), filter)) {
 					state.processingDuration = -1;

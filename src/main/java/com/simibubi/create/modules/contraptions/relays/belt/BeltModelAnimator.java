@@ -14,14 +14,12 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 
-class BeltModelAnimator extends BufferManipulator {
+public class BeltModelAnimator extends BufferManipulator {
 	protected static TextureAtlasSprite beltTextures;
 	protected static TextureAtlasSprite originalTexture;
 
 	public BeltModelAnimator(ByteBuffer template) {
 		super(template);
-		if (beltTextures == null)
-			initSprites();
 	}
 
 	private void initSprites() {
@@ -46,6 +44,8 @@ class BeltModelAnimator extends BufferManipulator {
 			if (textureIndex < 0)
 				textureIndex += 16;
 
+			if (beltTextures == null)
+				initSprites();
 			textureOffsetX = beltTextures.getInterpolatedU((textureIndex % 4) * 4) - originalTexture.getMinU();
 			textureOffsetY = beltTextures.getInterpolatedV((textureIndex / 4) * 4) - originalTexture.getMinV();
 		}
@@ -61,8 +61,7 @@ class BeltModelAnimator extends BufferManipulator {
 		int r = defaultColor ? 128 : (color >> 16) & 0xFF;
 
 		for (int vertex = 0; vertex < vertexCount(original); vertex++) {
-			putPos(mutable, vertex, getX(original, vertex) + x, getY(original, vertex) + y,
-					getZ(original, vertex) + z);
+			putPos(mutable, vertex, getX(original, vertex) + x, getY(original, vertex) + y, getZ(original, vertex) + z);
 			putLight(mutable, vertex, packedLightCoords);
 
 			int bufferPosition = getBufferPosition(vertex);
@@ -79,5 +78,9 @@ class BeltModelAnimator extends BufferManipulator {
 		}
 
 		return mutable;
+	}
+
+	public static void invalidateCache() {
+		beltTextures = null;
 	}
 }

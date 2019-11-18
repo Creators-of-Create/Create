@@ -150,4 +150,5 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 		buffer.putBulkData(((BeltModelAnimator) KineticTileEntityRenderer.cachedBuffers
 				.get(te.getBlockState().with(BeltBlock.CASING, false))).getTransformed(te, x, y, z, te.color));
 	}
+	
 }
