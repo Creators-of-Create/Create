@@ -64,7 +64,8 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 				boolean onSlope = slope != Slope.HORIZONTAL
 						&& MathHelper.clamp(offset, .5f, te.beltLength - .5f) == offset;
 				float slopeAngle = onSlope
-						? slope == Slope.DOWNWARD ^ te.getDirectionAwareBeltMovementSpeed() > 0 ? -45 : 45
+						? slope == Slope.DOWNWARD ^ te.getDirectionAwareBeltMovementSpeed() > 0
+								^ te.getBeltMovementSpeed() < 0 ? -45 : 45
 						: 0;
 
 				GlStateManager.translated(offsetVec.x, offsetVec.y, offsetVec.z);
@@ -150,5 +151,5 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 		buffer.putBulkData(((BeltModelAnimator) KineticTileEntityRenderer.cachedBuffers
 				.get(te.getBlockState().with(BeltBlock.CASING, false))).getTransformed(te, x, y, z, te.color));
 	}
-	
+
 }

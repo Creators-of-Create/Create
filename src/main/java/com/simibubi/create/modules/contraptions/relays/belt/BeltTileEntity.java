@@ -263,7 +263,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		return new Vec3i(movement.getX(), movingUp ? 1 : -1, movement.getZ());
 	}
 
-	protected Direction getMovementFacing() {
+	public Direction getMovementFacing() {
 		return Direction.getFacingFromAxisDirection(getBeltFacing().getAxis(),
 				getBeltMovementSpeed() < 0 ? POSITIVE : NEGATIVE);
 	}

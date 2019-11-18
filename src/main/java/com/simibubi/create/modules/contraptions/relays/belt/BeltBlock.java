@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -114,6 +115,8 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 		BeltTileEntity belt = null;
 		belt = (BeltTileEntity) worldIn.getTileEntity(pos);
 
+		if (state.get(SLOPE) == Slope.VERTICAL)
+			return;
 		if (entityIn instanceof PlayerEntity && entityIn.isSneaking())
 			return;
 		if (belt == null || belt.getSpeed() == 0)
@@ -162,6 +165,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 		boolean isShaft = heldItem.getItem() == AllBlocks.SHAFT.get().asItem();
 		boolean isCasing = heldItem.getItem() == AllBlocks.LOGISTICAL_CASING.get().asItem();
 		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
+		boolean isHand = heldItem.isEmpty() && handIn == Hand.MAIN_HAND;
 
 		if (isDye) {
 			if (worldIn.isRemote)
@@ -181,6 +185,25 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 		if (te == null || !(te instanceof BeltTileEntity))
 			return false;
 		BeltTileEntity belt = (BeltTileEntity) te;
+
+		if (isHand) {
+			TileEntity controllerTe = worldIn.getTileEntity(belt.getController());
+			if (controllerTe == null || !(controllerTe instanceof BeltTileEntity))
+				return false;
+			if (worldIn.isRemote)
+				return true;
+			BeltTileEntity controllerBelt = (BeltTileEntity) controllerTe;
+			for (Iterator<TransportedItemStack> iterator = controllerBelt.getInventory().items.iterator(); iterator
+					.hasNext();) {
+				TransportedItemStack transportedItemStack = iterator.next();
+				if (Math.abs(belt.index + .5 - transportedItemStack.beltPosition) < .75f) {
+					player.inventory.placeItemBackInInventory(worldIn, transportedItemStack.stack);
+					iterator.remove();
+					controllerBelt.markDirty();
+					controllerBelt.sendData();
+				}
+			}
+		}
 
 		if (isShaft) {
 			if (state.get(PART) != Part.MIDDLE)
@@ -255,7 +278,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
 		return PathNodeType.DANGER_OTHER;
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return VoxelShapes.or(BeltShapes.getShape(state), BeltShapes.getCasingShape(state));

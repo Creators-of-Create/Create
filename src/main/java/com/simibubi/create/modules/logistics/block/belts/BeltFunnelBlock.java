@@ -1,27 +1,35 @@
 package com.simibubi.create.modules.logistics.block.belts;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
 import com.simibubi.create.modules.logistics.block.IInventoryManipulator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -30,7 +38,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment, IWithTileEntity<BeltFunnelTileEntity> {
+public class BeltFunnelBlock extends HorizontalBlock
+		implements IBeltAttachment, IWithTileEntity<BeltFunnelTileEntity>, IBlockWithFilter {
 
 	public static final VoxelShape SHAPE_NORTH = makeCuboidShape(3, -4, -1, 13, 8, 5),
 			SHAPE_SOUTH = makeCuboidShape(3, -4, 11, 13, 8, 17), SHAPE_WEST = makeCuboidShape(-1, -4, 3, 5, 8, 13),
@@ -38,6 +47,7 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 
 	public BeltFunnelBlock() {
 		super(Properties.from(Blocks.ANDESITE));
+		cacheItemPositions();
 	}
 
 	@Override
@@ -154,6 +164,12 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 
 	@Override
 	public boolean processItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+		Direction movementFacing = te.getMovementFacing();
+		if (movementFacing.getAxis() == Axis.Z)
+			movementFacing = movementFacing.getOpposite();
+		if (movementFacing != te.getWorld().getBlockState(state.attachmentPos)
+				.get(HORIZONTAL_FACING))
+			return false;
 		return process(te, transported, state);
 	}
 
@@ -165,6 +181,56 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 		ItemStack stack = funnel.tryToInsert(transported.stack);
 		transported.stack = stack;
 		return true;
+	}
+
+	@Override
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+			BlockRayTraceResult hit) {
+		return handleActivatedFilterSlots(state, worldIn, pos, player, handIn, hit);
+	}
+
+	private static final List<Vec3d> itemPositions = new ArrayList<>(Direction.values().length);
+
+	private void cacheItemPositions() {
+		itemPositions.clear();
+
+		Vec3d position = Vec3d.ZERO;
+		Vec3d shift = VecHelper.getCenterOf(BlockPos.ZERO);
+		float zFightOffset = 1 / 128f;
+
+		for (int i = 0; i < 4; i++) {
+			Direction facing = Direction.byHorizontalIndex(i);
+			position = new Vec3d(8f / 16f + zFightOffset, 9f / 16f, 2.25f / 16f);
+
+			float angle = facing.getHorizontalAngle();
+			if (facing.getAxis() == Axis.X)
+				angle = -angle;
+
+			position = VecHelper.rotate(position.subtract(shift), angle, Axis.Y).add(shift);
+
+			itemPositions.add(position);
+		}
+	}
+
+	@Override
+	public boolean showsCount() {
+		return true;
+	}
+	
+	@Override
+	public float getItemHitboxScale() {
+		return 1.76f / 16f;
+	}
+
+	@Override
+	public Vec3d getFilterPosition(BlockState state) {
+		Direction facing = state.get(HORIZONTAL_FACING).getOpposite();
+		return itemPositions.get(facing.getHorizontalIndex());
+	}
+
+	@Override
+	public Direction getFilterFacing(BlockState state) {
+		return state.get(HORIZONTAL_FACING).getOpposite();
 	}
 
 }

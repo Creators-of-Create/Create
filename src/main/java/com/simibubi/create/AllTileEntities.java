@@ -44,6 +44,7 @@ import com.simibubi.create.modules.logistics.block.LinkedTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntity;
 import com.simibubi.create.modules.logistics.block.StockswitchTileEntity;
 import com.simibubi.create.modules.logistics.block.belts.BeltFunnelTileEntity;
+import com.simibubi.create.modules.logistics.block.belts.BeltFunnelTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.belts.EntityDetectorTileEntity;
 import com.simibubi.create.modules.logistics.block.belts.EntityDetectorTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.belts.ExtractorTileEntity;
@@ -180,6 +181,7 @@ public enum AllTileEntities {
 		bind(RedstoneBridgeTileEntity.class, new LinkedTileEntityRenderer());
 		bind(LinkedExtractorTileEntity.class, new LinkedExtractorTileEntityRenderer());
 		bind(ExtractorTileEntity.class, new ExtractorTileEntityRenderer());
+		bind(BeltFunnelTileEntity.class, new BeltFunnelTileEntityRenderer());
 		bind(EntityDetectorTileEntity.class, new EntityDetectorTileEntityRenderer());
 		bind(MechanicalPressTileEntity.class, new MechanicalPressTileEntityRenderer());
 		bind(FlexpeaterTileEntity.class, new FlexpeaterTileEntityRenderer());

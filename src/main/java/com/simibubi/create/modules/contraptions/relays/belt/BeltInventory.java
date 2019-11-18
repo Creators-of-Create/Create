@@ -121,8 +121,8 @@ public class BeltInventory {
 				// See if any new belt processing catches the item
 				int upcomingSegment = (int) (current.beltPosition + (beltMovementPositive ? .5f : -.5f));
 				for (int segment = upcomingSegment; beltMovementPositive
-						? segment <= current.beltPosition + limitedMovement
-						: segment >= current.beltPosition + limitedMovement; segment += beltMovementPositive ? 1 : -1) {
+						? segment + .5f <= current.beltPosition + limitedMovement
+						: segment + .5f >= current.beltPosition + limitedMovement; segment += beltMovementPositive ? 1 : -1) {
 					BeltTileEntity beltSegment = getBeltSegment(segmentBefore);
 					if (beltSegment == null)
 						break;
