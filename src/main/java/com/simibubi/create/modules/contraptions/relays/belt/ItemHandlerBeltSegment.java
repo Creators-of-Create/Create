@@ -35,6 +35,8 @@ public class ItemHandlerBeltSegment implements IItemHandler {
 				newStack.beltPosition = offset + .5f;
 				newStack.prevBeltPosition = newStack.beltPosition;
 				this.beltInventory.insert(newStack);
+				this.beltInventory.belt.markDirty();
+				this.beltInventory.belt.sendData();
 			}
 			return ItemStack.EMPTY;
 		}
