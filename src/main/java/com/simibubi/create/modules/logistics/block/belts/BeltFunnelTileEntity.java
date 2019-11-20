@@ -3,7 +3,7 @@ package com.simibubi.create.modules.logistics.block.belts;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.ItemHandlerSegment;
+import com.simibubi.create.modules.contraptions.relays.belt.ItemHandlerBeltSegment;
 import com.simibubi.create.modules.logistics.block.IHaveFilter;
 import com.simibubi.create.modules.logistics.block.IInventoryManipulator;
 
@@ -113,7 +113,7 @@ public class BeltFunnelTileEntity extends SyncedTileEntity
 	public ItemStack tryToInsert(ItemStack stack) {
 		if (!inventory.isPresent())
 			return stack;
-		if (waitingForInventorySpace && !(inventory.orElse(null) instanceof ItemHandlerSegment))
+		if (waitingForInventorySpace && !(inventory.orElse(null) instanceof ItemHandlerBeltSegment))
 			return stack;
 		if (!filter.isEmpty() && !ItemStack.areItemsEqual(filter, stack))
 			return stack;

@@ -123,7 +123,22 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 	}
 
 	default boolean hasSpaceForExtracting() {
-		return getWorld().getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(getPos())).isEmpty();
+		BlockPos pos = getPos();
+		World world = getWorld();
+
+		if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
+			TileEntity te = world.getTileEntity(pos.down());
+			if (te != null && te instanceof BeltTileEntity) {
+				BeltTileEntity belt = (BeltTileEntity) te;
+				BeltTileEntity controller = belt.getControllerTE();
+				if (controller != null) {
+					if (!controller.getInventory().canInsertFrom(belt.index, Direction.UP))
+						return false;
+				}
+			}
+		}
+
+		return world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(getPos())).isEmpty();
 	}
 
 	default ItemStack extract(boolean simulate) {
@@ -131,7 +146,6 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 		ItemStack extracting = ItemStack.EMPTY;
 		ItemStack filterItem = (this instanceof IHaveFilter) ? ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
 		World world = getWorld();
-		BlockPos pos = getPos();
 		int extractionCount = filterItem.isEmpty() ? CreateConfig.parameters.extractorAmount.get()
 				: filterItem.getCount();
 		boolean checkHasEnoughItems = !filterItem.isEmpty();
@@ -176,15 +190,6 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 			else
 				break Extraction;
 		} while (true);
-
-		if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
-			TileEntity te = world.getTileEntity(pos.down());
-			if (te != null && te instanceof BeltTileEntity && !extracting.isEmpty()) {
-				if (((BeltTileEntity) te).tryInsertingFromSide(Direction.UP, extracting.copy(), simulate))
-					return extracting;
-				return ItemStack.EMPTY;
-			}
-		}
 
 		if (!simulate && hasEnoughItems) {
 			Vec3d entityPos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);

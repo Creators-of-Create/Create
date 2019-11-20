@@ -5,6 +5,7 @@ import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
 import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.simibubi.create.AllBlockTags;
@@ -14,6 +15,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.InWorldProcessing;
 import com.simibubi.create.modules.logistics.InWorldProcessing.Type;
 
@@ -51,6 +53,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	protected boolean findFrontBlock;
 	protected BlockState frontBlock;
 	protected boolean isGenerator;
+	protected List<BeltTileEntity> affectedBelts = Collections.emptyList();
 
 	public EncasedFanTileEntity() {
 		super(AllTileEntities.ENCASED_FAN.type);
@@ -67,6 +70,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 		super.readClientUpdate(tag);
 		updateFrontBlock();
 		updateBBs();
+		affectedBelts = EncasedFanBeltHandler.findBelts(this);
 	}
 
 	@Override
@@ -140,6 +144,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 			backBB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 		}
 
+		affectedBelts = EncasedFanBeltHandler.findBelts(this);
 		sendData();
 	}
 
@@ -190,6 +195,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 		if (getSpeed() == 0 || isGenerator)
 			return;
 
+		EncasedFanBeltHandler.tickBelts(this, affectedBelts);
+		
 		List<Entity> frontEntities = world.getEntitiesWithinAABBExcludingEntity(null, frontBB);
 		for (Entity entity : frontEntities) {
 			moveEntity(entity, true);
@@ -238,7 +245,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 				return;
 
 			if (canProcess((ItemEntity) entity))
-				InWorldProcessing.process((ItemEntity) entity, getProcessingType());
+				InWorldProcessing.applyProcessing((ItemEntity) entity, getProcessingType());
 
 		} else {
 			if (getProcessingType() == Type.SMOKING) {

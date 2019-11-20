@@ -13,8 +13,8 @@ import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.I
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
 import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
 
 import net.minecraft.block.Block;

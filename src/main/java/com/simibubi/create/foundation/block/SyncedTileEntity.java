@@ -28,9 +28,9 @@ public abstract class SyncedTileEntity extends TileEntity {
 	}
 
 	public void sendData() {
-		world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 2 | 16);
+		world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 2 | 4 | 16);
 	}
-	
+
 	public void causeBlockUpdate() {
 		world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 1);
 	}

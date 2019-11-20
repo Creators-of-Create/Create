@@ -1,10 +1,11 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
+import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -122,13 +123,14 @@ public class BeltInventory {
 				int upcomingSegment = (int) (current.beltPosition + (beltMovementPositive ? .5f : -.5f));
 				for (int segment = upcomingSegment; beltMovementPositive
 						? segment + .5f <= current.beltPosition + limitedMovement
-						: segment + .5f >= current.beltPosition + limitedMovement; segment += beltMovementPositive ? 1 : -1) {
+						: segment + .5f >= current.beltPosition + limitedMovement; segment += beltMovementPositive ? 1
+								: -1) {
 					BeltTileEntity beltSegment = getBeltSegment(segmentBefore);
 					if (beltSegment == null)
 						break;
 					for (BeltAttachmentState attachmentState : beltSegment.attachmentTracker.attachments) {
 						if (attachmentState.attachment.startProcessingItem(beltSegment, current, attachmentState)) {
-							current.beltPosition += (segment + .5f) - current.beltPosition;
+							current.beltPosition = segment + .5f + (beltMovementPositive ? 1 / 64f : -1 / 64f);
 							current.locked = true;
 							belt.sendData();
 							continue Items;
@@ -230,63 +232,6 @@ public class BeltInventory {
 
 	}
 
-	public static class TransportedItemStack implements Comparable<TransportedItemStack> {
-		public ItemStack stack;
-		public float beltPosition;
-		public float sideOffset;
-		public int angle;
-		public int insertedAt;
-		public Direction insertedFrom;
-		public boolean locked;
-
-		public float prevBeltPosition;
-		public float prevSideOffset;
-
-		public TransportedItemStack(ItemStack stack) {
-			this.stack = stack;
-			angle = new Random().nextInt(360);
-			sideOffset = prevSideOffset = getTargetSideOffset();
-			insertedFrom = Direction.UP;
-		}
-
-		public float getTargetSideOffset() {
-			return (angle - 180) / (360 * 3f);
-		}
-
-		@Override
-		public int compareTo(TransportedItemStack o) {
-			return beltPosition < o.beltPosition ? 1 : beltPosition > o.beltPosition ? -1 : 0;
-		}
-
-		public CompoundNBT serializeNBT() {
-			CompoundNBT nbt = new CompoundNBT();
-			nbt.put("Item", stack.serializeNBT());
-			nbt.putFloat("Pos", beltPosition);
-			nbt.putFloat("PrevPos", prevBeltPosition);
-			nbt.putFloat("Offset", sideOffset);
-			nbt.putFloat("PrevOffset", prevSideOffset);
-			nbt.putInt("InSegment", insertedAt);
-			nbt.putInt("Angle", angle);
-			nbt.putInt("InDirection", insertedFrom.getIndex());
-			nbt.putBoolean("Locked", locked);
-			return nbt;
-		}
-
-		public static TransportedItemStack read(CompoundNBT nbt) {
-			TransportedItemStack stack = new TransportedItemStack(ItemStack.read(nbt.getCompound("Item")));
-			stack.beltPosition = nbt.getFloat("Pos");
-			stack.prevBeltPosition = nbt.getFloat("PrevPos");
-			stack.sideOffset = nbt.getFloat("Offset");
-			stack.prevSideOffset = nbt.getFloat("PrevOffset");
-			stack.insertedAt = nbt.getInt("InSegment");
-			stack.angle = nbt.getInt("Angle");
-			stack.insertedFrom = Direction.byIndex(nbt.getInt("InDirection"));
-			stack.locked = nbt.getBoolean("Locked");
-			return stack;
-		}
-
-	}
-
 	public boolean canInsertAt(int segment) {
 		return canInsertFrom(segment, Direction.UP);
 	}
@@ -328,9 +273,6 @@ public class BeltInventory {
 			}
 			items.add(index, newStack);
 		}
-
-		belt.markDirty();
-		belt.sendData();
 	}
 
 	public TransportedItemStack getStackAtOffset(int offset) {
@@ -373,7 +315,7 @@ public class BeltInventory {
 		belt.getWorld().addEntity(entity);
 	}
 
-	private Vec3d getVectorForOffset(float offset) {
+	public Vec3d getVectorForOffset(float offset) {
 		Slope slope = belt.getBlockState().get(BeltBlock.SLOPE);
 		int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
 		float verticalMovement = verticality;
@@ -409,70 +351,30 @@ public class BeltInventory {
 		return belt.getDirectionAwareBeltMovementSpeed() > 0;
 	}
 
-	public class ItemHandlerSegment implements IItemHandler {
-		int offset;
-
-		public ItemHandlerSegment(int offset) {
-			this.offset = offset;
-		}
-
-		@Override
-		public int getSlots() {
-			return 1;
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int slot) {
-			TransportedItemStack stackAtOffset = getStackAtOffset(offset);
-			if (stackAtOffset == null)
-				return ItemStack.EMPTY;
-			return stackAtOffset.stack;
-		}
-
-		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			if (canInsertAt(offset)) {
-				if (!simulate) {
-					TransportedItemStack newStack = new TransportedItemStack(stack);
-					newStack.insertedAt = offset;
-					newStack.beltPosition = offset + .5f;
-					newStack.prevBeltPosition = newStack.beltPosition;
-					insert(newStack);
-				}
-				return ItemStack.EMPTY;
-			}
-			return stack;
-		}
-
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			TransportedItemStack transported = getStackAtOffset(offset);
-			if (transported == null)
-				return ItemStack.EMPTY;
-
-			amount = Math.min(amount, transported.stack.getCount());
-			ItemStack extracted = simulate ? transported.stack.copy().split(amount) : transported.stack.split(amount);
-			if (!simulate) {
-				belt.markDirty();
-				belt.sendData();
-			}
-			return extracted;
-		}
-
-		@Override
-		public int getSlotLimit(int slot) {
-			return Math.min(getStackInSlot(slot).getMaxStackSize(), 64);
-		}
-
-		@Override
-		public boolean isItemValid(int slot, ItemStack stack) {
-			return true;
-		}
-
+	public IItemHandler createHandlerForSegment(int segment) {
+		return new ItemHandlerBeltSegment(this, segment);
 	}
 
-	public IItemHandler createHandlerForSegment(int segment) {
-		return new ItemHandlerSegment(segment);
+	public void forEachWithin(float position, float distance,
+			Function<TransportedItemStack, List<TransportedItemStack>> callback) {
+		List<TransportedItemStack> toBeAdded = new ArrayList<>();
+		boolean dirty = false;
+		for (Iterator<TransportedItemStack> iterator = items.iterator(); iterator.hasNext();) {
+			TransportedItemStack transportedItemStack = iterator.next();
+			if (Math.abs(position - transportedItemStack.beltPosition) < distance) {
+				List<TransportedItemStack> apply = callback.apply(transportedItemStack);
+				if (apply == null)
+					continue;
+				dirty = true;
+				toBeAdded.addAll(apply);
+				iterator.remove();
+			}
+		}
+		toBeAdded.forEach(this::insert);
+		if (dirty) {
+			belt.markDirty();
+			belt.sendData();
+		}
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltMovementHandler.TransportedEntityInfo;
 
 import net.minecraft.block.Block;
@@ -91,7 +90,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	public boolean isFlammable(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
 		return false;
 	}
-
+	
 	@Override
 	public void onLanded(IBlockReader worldIn, Entity entityIn) {
 		super.onLanded(worldIn, entityIn);
@@ -187,22 +186,15 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 		BeltTileEntity belt = (BeltTileEntity) te;
 
 		if (isHand) {
-			TileEntity controllerTe = worldIn.getTileEntity(belt.getController());
-			if (controllerTe == null || !(controllerTe instanceof BeltTileEntity))
+			BeltTileEntity controllerBelt = belt.getControllerTE();
+			if (controllerBelt == null)
 				return false;
 			if (worldIn.isRemote)
 				return true;
-			BeltTileEntity controllerBelt = (BeltTileEntity) controllerTe;
-			for (Iterator<TransportedItemStack> iterator = controllerBelt.getInventory().items.iterator(); iterator
-					.hasNext();) {
-				TransportedItemStack transportedItemStack = iterator.next();
-				if (Math.abs(belt.index + .5 - transportedItemStack.beltPosition) < .75f) {
-					player.inventory.placeItemBackInInventory(worldIn, transportedItemStack.stack);
-					iterator.remove();
-					controllerBelt.markDirty();
-					controllerBelt.sendData();
-				}
-			}
+			controllerBelt.getInventory().forEachWithin(belt.index, .75f, (transportedItemStack) -> {
+				player.inventory.placeItemBackInInventory(worldIn, transportedItemStack.stack);
+				return Collections.emptyList();
+			});
 		}
 
 		if (isShaft) {

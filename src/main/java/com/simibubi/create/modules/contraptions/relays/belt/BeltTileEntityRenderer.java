@@ -11,7 +11,6 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer.BlockModelSpinner;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -56,6 +55,11 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 				float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
 				float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
 				float verticalMovement = verticality;
+				
+				if (te.getSpeed() == 0) {
+					offset = transported.beltPosition;
+					sideOffset = transported.sideOffset;
+				}
 
 				if (offset < .5)
 					verticalMovement = 0;

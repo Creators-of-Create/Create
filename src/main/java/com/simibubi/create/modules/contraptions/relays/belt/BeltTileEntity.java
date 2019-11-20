@@ -20,7 +20,6 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.Tracker;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltInventory.TransportedItemStack;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltMovementHandler.TransportedEntityInfo;
 
 import net.minecraft.block.BlockState;
@@ -183,6 +182,15 @@ public class BeltTileEntity extends KineticTileEntity {
 		}
 	}
 
+	public BeltTileEntity getControllerTE() {
+		if (!world.isBlockPresent(controller))
+			return null;
+		TileEntity te = world.getTileEntity(controller);
+		if (te == null || !(te instanceof BeltTileEntity))
+			return null;
+		return (BeltTileEntity) te;
+	}
+
 	public void setController(BlockPos controller) {
 		this.controller = controller;
 	}
@@ -283,13 +291,9 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public boolean tryInsertingFromSide(Direction side, TransportedItemStack transportedStack, boolean simulate) {
-		BlockPos controller = getController();
-		if (!world.isBlockPresent(controller))
+		BeltTileEntity nextBeltController = getControllerTE();
+		if (nextBeltController == null)
 			return false;
-		TileEntity te = world.getTileEntity(controller);
-		if (te == null || !(te instanceof BeltTileEntity))
-			return false;
-		BeltTileEntity nextBeltController = (BeltTileEntity) te;
 		BeltInventory nextInventory = nextBeltController.getInventory();
 
 		if (!nextInventory.canInsertFrom(index, side))
@@ -314,6 +318,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		transportedStack.insertedFrom = side;
 		transportedStack.prevBeltPosition = transportedStack.beltPosition;
 		nextInventory.insert(transportedStack);
+		nextBeltController.markDirty();
 		nextBeltController.sendData();
 		return true;
 	}
