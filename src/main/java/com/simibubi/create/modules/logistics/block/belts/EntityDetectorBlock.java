@@ -3,7 +3,6 @@ package com.simibubi.create.modules.logistics.block.belts;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
@@ -15,6 +14,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
 import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
 
 import net.minecraft.block.Block;
@@ -129,16 +129,20 @@ public class EntityDetectorBlock extends HorizontalBlock
 	}
 
 	@Override
-	public List<BlockPos> getPotentialAttachmentLocations(BeltTileEntity te) {
-		Direction side = te.getBlockState().get(BeltBlock.HORIZONTAL_FACING).rotateY();
-		return Arrays.asList(te.getPos().offset(side), te.getPos().offset(side.getOpposite()));
+	public List<BlockPos> getPotentialAttachmentPositions(IWorld world, BlockPos pos, BlockState beltState) {
+		Direction side = beltState.get(BeltBlock.HORIZONTAL_FACING).rotateY();
+		return Arrays.asList(pos.offset(side), pos.offset(side.getOpposite()));
 	}
 
 	@Override
-	public Optional<BlockPos> getValidBeltPositionFor(IWorld world, BlockPos pos, BlockState state) {
-		if (!state.get(BELT))
-			return Optional.empty();
-		return Optional.of(pos.offset(state.get(HORIZONTAL_FACING)));
+	public BlockPos getBeltPositionForAttachment(IWorld world, BlockPos pos, BlockState state) {
+		return pos.offset(state.get(HORIZONTAL_FACING));
+	}
+
+	@Override
+	public boolean isAttachedCorrectly(IWorld world, BlockPos attachmentPos, BlockPos beltPos, BlockState attachmentState,
+			BlockState beltState) {
+		return attachmentState.get(BELT);
 	}
 
 	@Override
@@ -178,11 +182,39 @@ public class EntityDetectorBlock extends HorizontalBlock
 	}
 
 	@Override
-	public boolean handleEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
+	public boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+		
+		state.processingDuration = 0;
+		withTileEntityDo(te.getWorld(), state.attachmentPos, detectorTE -> {
+			ItemStack filter = detectorTE.getFilter();
+			if (filter.isEmpty())
+				return;
+			
+			// Todo: Package filters 
+			if (!ItemStack.areItemsEqual(transported.stack, filter)) {
+				state.processingDuration = -1;
+				return;
+			}
+		});
+		
+		World world = te.getWorld();
+		BlockState blockState = world.getBlockState(state.attachmentPos);
+		if (state.processingDuration == 0) {
+			world.setBlockState(state.attachmentPos, blockState.with(POWERED, true));
+			world.getPendingBlockTicks().scheduleTick(state.attachmentPos, this, 6);
+			world.notifyNeighborsOfStateChange(state.attachmentPos, this);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public boolean processEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
 
 		if (te.getWorld().isRemote)
 			return false;
-		
+
 		if (state.processingEntity != entity) {
 			state.processingEntity = entity;
 			state.processingDuration = 0;
@@ -190,6 +222,8 @@ public class EntityDetectorBlock extends HorizontalBlock
 				ItemStack filter = detectorTE.getFilter();
 				if (filter.isEmpty())
 					return;
+				
+				// Todo: Package filters 
 				if (!(entity instanceof ItemEntity)
 						|| !ItemStack.areItemsEqual(((ItemEntity) entity).getItem(), filter)) {
 					state.processingDuration = -1;

@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions;
 
 import static com.simibubi.create.AllBlocks.BELT;
 import static com.simibubi.create.AllBlocks.COGWHEEL;
-import static com.simibubi.create.AllBlocks.ENCASED_FAN;
 import static com.simibubi.create.AllBlocks.LARGE_COGWHEEL;
 import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
@@ -74,12 +73,6 @@ public class RotationPropagator {
 					&& stateFrom.get(EncasedBeltBlock.CONNECTED_FACE) == direction
 					&& stateTo.get(EncasedBeltBlock.CONNECTED_FACE) == direction.getOpposite();
 			return connected ? 1 : 0;
-		}
-
-		// Attached Fans
-		if (ENCASED_FAN.typeOf(stateFrom) && ENCASED_FAN.typeOf(stateTo)) {
-			if (stateFrom.get(AXIS) == stateTo.get(AXIS))
-				return 1;
 		}
 
 		// Large Gear <-> Large Gear

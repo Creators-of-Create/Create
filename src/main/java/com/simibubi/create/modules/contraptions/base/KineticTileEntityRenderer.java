@@ -34,7 +34,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTileEntity> {
 
-	protected static Map<BlockState, BufferManipulator> cachedBuffers;
+	public static Map<BlockState, BufferManipulator> cachedBuffers;
 	public static boolean rainbowMode = false;
 
 	public static class BlockModelSpinner extends BufferManipulator {

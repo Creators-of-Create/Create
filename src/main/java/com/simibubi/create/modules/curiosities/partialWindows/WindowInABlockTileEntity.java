@@ -20,7 +20,7 @@ public class WindowInABlockTileEntity extends SyncedTileEntity {
 
 	private BlockState partialBlock = Blocks.AIR.getDefaultState();
 	private BlockState windowBlock = Blocks.AIR.getDefaultState();
-	
+
 	@OnlyIn(value = Dist.CLIENT)
 	private IModelData modelData;
 
@@ -64,7 +64,7 @@ public class WindowInABlockTileEntity extends SyncedTileEntity {
 			windowBlock = getWindowBlock().updatePostPlacement(side, world.getBlockState(offsetPos), world, pos,
 					offsetPos);
 		}
-		sendData();
+		world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 2 | 16);
 		markDirty();
 	}
 

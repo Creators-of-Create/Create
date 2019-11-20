@@ -24,16 +24,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 @SuppressWarnings("deprecation")
 public class SawTileEntityRenderer extends TileEntityRenderer<SawTileEntity> {
 
 	FilteredTileEntityRenderer filterRenderer;
-	
+
 	public SawTileEntityRenderer() {
 		filterRenderer = new FilteredTileEntityRenderer();
 	}
-	
+
 	@Override
 	public void render(SawTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
 		super.render(te, x, y, z, partialTicks, destroyStage);
@@ -43,9 +44,11 @@ public class SawTileEntityRenderer extends TileEntityRenderer<SawTileEntity> {
 			boolean alongZ = !te.getBlockState().get(SawBlock.AXIS_ALONG_FIRST_COORDINATE);
 			GlStateManager.pushMatrix();
 
-			float offset = te.inventory.recipeDuration != 0
-					? (float) (te.inventory.remainingTime) / te.inventory.recipeDuration
-					: 0;
+			boolean moving = te.inventory.recipeDuration != 0;
+			float offset = moving ? (float) (te.inventory.remainingTime) / te.inventory.recipeDuration : 0;
+			if (moving)
+				offset = MathHelper.clamp(offset + (-partialTicks + .5f) / te.inventory.recipeDuration, 0, 1);
+
 			if (te.getSpeed() == 0)
 				offset = .5f;
 			if (te.getSpeed() < 0 ^ alongZ)
@@ -69,7 +72,7 @@ public class SawTileEntityRenderer extends TileEntityRenderer<SawTileEntity> {
 
 		// Filter
 		filterRenderer.render(te, x, y, z, partialTicks, destroyStage);
-		
+
 		// Kinetic renders
 		final BlockState state = getRenderedBlockState(te);
 		KineticTileEntityRenderer.cacheIfMissing(state, getWorld(), BlockModelSpinner::new);

@@ -4,10 +4,11 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class ProcessingInventory extends RecipeWrapper {
+public class ProcessingInventory extends RecipeWrapper implements IItemHandler {
 	protected int remainingTime;
 	protected int recipeDuration;
 	protected boolean appliedRecipe;
@@ -50,8 +51,40 @@ public class ProcessingInventory extends RecipeWrapper {
 		return inventory;
 	}
 
+	@Override
+	public int getInventoryStackLimit() {
+		return 64;
+	}
+
 	public ItemStackHandler getItems() {
 		return (ItemStackHandler) inv;
+	}
+
+	@Override
+	public int getSlots() {
+		return 9;
+	}
+
+	@Override
+	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		if (!isItemValid(slot, stack))
+			return stack;
+		return inv.insertItem(slot, stack, simulate);
+	}
+
+	@Override
+	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return 64;
+	}
+
+	@Override
+	public boolean isItemValid(int slot, ItemStack stack) {
+		return slot == 0 && isEmpty();
 	}
 
 }

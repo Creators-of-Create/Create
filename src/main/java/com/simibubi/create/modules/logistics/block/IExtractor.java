@@ -2,8 +2,10 @@ package com.simibubi.create.modules.logistics.block;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
 import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
 
@@ -11,10 +13,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -119,13 +123,29 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 	}
 
 	default boolean hasSpaceForExtracting() {
-		return getWorld().getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(getPos())).isEmpty();
+		BlockPos pos = getPos();
+		World world = getWorld();
+
+		if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
+			TileEntity te = world.getTileEntity(pos.down());
+			if (te != null && te instanceof BeltTileEntity) {
+				BeltTileEntity belt = (BeltTileEntity) te;
+				BeltTileEntity controller = belt.getControllerTE();
+				if (controller != null) {
+					if (!controller.getInventory().canInsertFrom(belt.index, Direction.UP))
+						return false;
+				}
+			}
+		}
+
+		return world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(getPos())).isEmpty();
 	}
 
 	default ItemStack extract(boolean simulate) {
 		IItemHandler inv = getInventory().orElse(null);
 		ItemStack extracting = ItemStack.EMPTY;
 		ItemStack filterItem = (this instanceof IHaveFilter) ? ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
+		World world = getWorld();
 		int extractionCount = filterItem.isEmpty() ? CreateConfig.parameters.extractorAmount.get()
 				: filterItem.getCount();
 		boolean checkHasEnoughItems = !filterItem.isEmpty();
@@ -172,17 +192,16 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 		} while (true);
 
 		if (!simulate && hasEnoughItems) {
-			World world = getWorld();
-			Vec3d pos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);
+			Vec3d entityPos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);
 			Entity entityIn = null;
 
 			if (extracting.getItem() instanceof CardboardBoxItem) {
 				Direction face = getWorld().getBlockState(getPos()).get(HORIZONTAL_FACING).getOpposite();
-				entityIn = new CardboardBoxEntity(world, pos, extracting, face);
+				entityIn = new CardboardBoxEntity(world, entityPos, extracting, face);
 				world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .25f, .05f);
 
 			} else {
-				entityIn = new ItemEntity(world, pos.x, pos.y, pos.z, extracting);
+				entityIn = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, extracting);
 				entityIn.setMotion(Vec3d.ZERO);
 				world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f, .1f);
 			}

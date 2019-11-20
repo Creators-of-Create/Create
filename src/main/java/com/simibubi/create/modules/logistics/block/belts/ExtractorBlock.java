@@ -3,7 +3,9 @@ package com.simibubi.create.modules.logistics.block.belts;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
 import com.simibubi.create.modules.logistics.block.IExtractor;
 
@@ -91,11 +93,17 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		BlockPos neighbourPos = pos.offset(state.get(HORIZONTAL_FACING));
+		Direction facing = state.get(HORIZONTAL_FACING);
+		BlockPos neighbourPos = pos.offset(facing);
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
+
+		if (AllBlocks.BELT.typeOf(neighbour)) {
+			return BeltBlock.canAccessFromSide(facing, neighbour);
+		}
+
 		return !neighbour.getShape(worldIn, pos).isEmpty();
 	}
-	
+
 	@Override
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		if (world.isRemote())
@@ -121,7 +129,7 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 			boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
-		
+
 		Direction blockFacing = state.get(HORIZONTAL_FACING);
 		if (fromPos.equals(pos.offset(blockFacing))) {
 			if (!isValidPosition(state, worldIn, pos)) {

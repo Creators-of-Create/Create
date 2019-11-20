@@ -1,8 +1,6 @@
 {
 	"replace": false,
 	"values": [
-		"create:belt", 
-		"create:crushing_wheel", 
 		"create:limestone_wall",
 		"create:limestone_bricks_wall",
 		"create:weathered_limestone_wall",

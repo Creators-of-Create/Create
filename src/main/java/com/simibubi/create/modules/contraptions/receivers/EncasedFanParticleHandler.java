@@ -26,7 +26,7 @@ public class EncasedFanParticleHandler {
 	
 	private void initEffects() {
 		List<FanEffect> standardFX = new ArrayList<>(2);
-		standardFX.add(new FanEffect(ParticleTypes.BUBBLE_POP, 1 / 4f, 1 / 4f, 1 / 3f, 1));
+		standardFX.add(new FanEffect(ParticleTypes.BUBBLE_POP, 1 / 4f, 1 / 4f, 1 / 8f, 1));
 		standardFX.add(new FanEffect(new RedstoneParticleData(1, 1, 1, 1), 1 / 2f, 1 / 32f, 1/16f, 512f));
 		effects.put(Blocks.AIR, standardFX);
 

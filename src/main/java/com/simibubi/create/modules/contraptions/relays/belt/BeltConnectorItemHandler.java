@@ -23,7 +23,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class BeltItemHandler {
+public class BeltConnectorItemHandler {
 
 	private static Random r = new Random();
 
@@ -73,7 +73,7 @@ public class BeltItemHandler {
 			if (!selected.withinDistance(first, CreateConfig.parameters.maxBeltLength.get()))
 				return;
 
-			boolean canConnect = BeltItem.validateAxis(world, selected) && BeltItem.canConnect(world, first, selected);
+			boolean canConnect = BeltConnectorItem.validateAxis(world, selected) && BeltConnectorItem.canConnect(world, first, selected);
 
 			Vec3d start = new Vec3d(first);
 			Vec3d end = new Vec3d(selected);

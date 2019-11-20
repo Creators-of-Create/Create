@@ -91,6 +91,19 @@ public abstract class BufferManipulator {
 		buffer.put(bufferPosition + 15, a);
 	}
 
+	public ByteBuffer getTranslated(float xIn, float yIn, float zIn, int packedLightCoords) {
+		original.rewind();
+		mutable.rewind();
+
+		for (int vertex = 0; vertex < vertexCount(original); vertex++) {
+			putPos(mutable, vertex, getX(original, vertex) + xIn, getY(original, vertex) + yIn,
+					getZ(original, vertex) + zIn);
+			putLight(mutable, vertex, packedLightCoords);
+		}
+
+		return mutable;
+	}
+
 	public static ByteBuffer remanipulateBuffer(ByteBuffer buffer, float x, float y, float z, float xOrigin,
 			float yOrigin, float zOrigin, float yaw, float pitch) {
 		buffer.rewind();

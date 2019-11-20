@@ -6,6 +6,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.relays.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 
@@ -22,9 +23,9 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BeltItem extends Item {
+public class BeltConnectorItem extends Item {
 
-	public BeltItem(Properties properties) {
+	public BeltConnectorItem(Properties properties) {
 		super(properties);
 	}
 
@@ -95,11 +96,23 @@ public class BeltItem extends Item {
 		List<BlockPos> beltsToCreate = getBeltChainBetween(start, end, slope, facing);
 		BlockState beltBlock = AllBlocks.BELT.get().getDefaultState();
 
+		int index = 0;
 		for (BlockPos pos : beltsToCreate) {
 			BeltBlock.Part part = pos.equals(start) ? Part.START : pos.equals(end) ? Part.END : Part.MIDDLE;
+			boolean pulley = AllBlocks.SHAFT.typeOf(world.getBlockState(pos));
+			if (part == Part.MIDDLE && pulley)
+				part = Part.PULLEY;
 			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope).with(BeltBlock.PART, part)
 					.with(BeltBlock.HORIZONTAL_FACING, facing), 3);
-			connectBelt(world, pos, start);
+
+			BeltTileEntity te = (BeltTileEntity) world.getTileEntity(pos);
+			if (te != null) {
+				te.setController(start);
+				te.beltLength = beltsToCreate.size();
+				te.index = index;
+			}
+
+			index++;
 		}
 	}
 
@@ -151,12 +164,6 @@ public class BeltItem extends Item {
 		return positions;
 	}
 
-	private void connectBelt(World world, BlockPos pos, BlockPos target) {
-		BeltTileEntity te = (BeltTileEntity) world.getTileEntity(pos);
-		if (te != null)
-			te.setController(target);
-	}
-
 	public static boolean canConnect(World world, BlockPos first, BlockPos second) {
 		if (!world.isAreaLoaded(first, 1))
 			return false;
@@ -190,11 +197,15 @@ public class BeltItem extends Item {
 		int limit = 1000;
 		for (BlockPos currentPos = first.add(step); !currentPos.equals(second)
 				&& limit-- > 0; currentPos = currentPos.add(step)) {
-			if (!world.getBlockState(currentPos).getMaterial().isReplaceable())
+			BlockState blockState = world.getBlockState(currentPos);
+			if (AllBlocks.SHAFT.typeOf(blockState) && blockState.get(ShaftBlock.AXIS) == axis)
+				continue;
+			if (!blockState.getMaterial().isReplaceable())
 				return false;
 		}
 
 		return true;
+
 	}
 
 	public static boolean validateAxis(World world, BlockPos pos) {

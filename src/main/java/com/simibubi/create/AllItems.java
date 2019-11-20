@@ -6,7 +6,7 @@ import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.WrenchItem;
 import com.simibubi.create.modules.contraptions.WrenchItemRenderer;
 import com.simibubi.create.modules.contraptions.relays.VerticalGearboxItem;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltItem;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItem;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItemRenderer;
@@ -82,7 +82,7 @@ public enum AllItems {
 	BLUEPRINT(new SchematicItem(standardItemProperties())),
 
 	__CONTRAPTIONS__(),
-	BELT_CONNECTOR(new BeltItem(standardItemProperties())),
+	BELT_CONNECTOR(new BeltConnectorItem(standardItemProperties())),
 	VERTICAL_GEARBOX(new VerticalGearboxItem(new Properties())),
 	FLOUR(ingredient()),
 	DOUGH(ingredient()),
