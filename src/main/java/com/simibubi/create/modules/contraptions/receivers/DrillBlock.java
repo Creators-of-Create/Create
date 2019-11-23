@@ -1,10 +1,10 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VoxelShapers;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
@@ -80,8 +80,8 @@ public class DrillBlock extends DirectionalKineticBlock
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public ByteBuffer renderInConstruct(MovementContext context) {
-		return DrillTileEntityRenderer.renderInConstruct(context);
+	public SuperByteBuffer renderInContraption(MovementContext context) {
+		return DrillTileEntityRenderer.renderInContraption(context);
 	}
 
 	@Override

@@ -1,10 +1,10 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
 
@@ -74,8 +74,8 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public ByteBuffer renderInConstruct(MovementContext context) {
-		return HarvesterTileEntityRenderer.renderInConstruct(context);
+	public SuperByteBuffer renderInContraption(MovementContext context) {
+		return HarvesterTileEntityRenderer.renderInContraption(context);
 	}
 
 	@Override

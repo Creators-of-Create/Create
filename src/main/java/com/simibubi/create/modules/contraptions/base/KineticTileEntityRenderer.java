@@ -1,86 +1,38 @@
 package com.simibubi.create.modules.contraptions.base;
 
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.function.Function;
-
-import org.lwjgl.opengl.GL11;
-
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.BufferManipulator;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
 import com.simibubi.create.modules.contraptions.KineticDebugger;
 import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.animation.TileEntityRendererFast;
-import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTileEntity> {
 
-	public static Map<BlockState, BufferManipulator> cachedBuffers;
+	public static final Compartment<BlockState> KINETIC_TILE = new Compartment<>();
 	public static boolean rainbowMode = false;
-
-	public static class BlockModelSpinner extends BufferManipulator {
-
-		public BlockModelSpinner(ByteBuffer original) {
-			super(original);
-		}
-
-		public ByteBuffer getTransformed(float xIn, float yIn, float zIn, float angle, Axis axis,
-				int packedLightCoords) {
-			original.rewind();
-			mutable.rewind();
-			float cos = MathHelper.cos(angle);
-			float sin = MathHelper.sin(angle);
-			float x, y, z = 0;
-
-			for (int vertex = 0; vertex < vertexCount(original); vertex++) {
-				x = getX(original, vertex) - .5f;
-				y = getY(original, vertex) - .5f;
-				z = getZ(original, vertex) - .5f;
-
-				putPos(mutable, vertex, rotateX(x, y, z, sin, cos, axis) + .5f + xIn,
-						rotateY(x, y, z, sin, cos, axis) + .5f + yIn, rotateZ(x, y, z, sin, cos, axis) + .5f + zIn);
-				putLight(mutable, vertex, packedLightCoords);
-			}
-
-			return mutable;
-		}
-	}
-
-	public KineticTileEntityRenderer() {
-		cachedBuffers = new HashMap<>();
-	}
 
 	@Override
 	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
+		renderRotatingKineticBlock(te, getWorld(), getRenderedBlockState(te), x, y, z, buffer);
+	}
 
-		final BlockState state = getRenderedBlockState(te);
-		cacheIfMissing(state, getWorld(), BlockModelSpinner::new);
-
-		final BlockPos pos = te.getPos();
-		Axis axis = ((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState());
-		float angle = getAngleForTe(te, pos, axis);
-
-		renderFromCache(buffer, state, getWorld(), (float) x, (float) y, (float) z, pos, axis, angle);
+	public static void renderRotatingKineticBlock(KineticTileEntity te, World world, BlockState renderedState, double x,
+			double y, double z, BufferBuilder buffer) {
+		SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockState(KINETIC_TILE, renderedState);
+		buffer.putBulkData(standardKineticRotationTransform(superByteBuffer, te, world).translate(x, y, z).build());
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
@@ -90,45 +42,26 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 		return angle;
 	}
 
-	public static void renderFromCache(BufferBuilder buffer, BlockState state, World world, float x, float y,
-			float z, BlockPos pos, Axis axis, float angle) {
-		int packedLightmapCoords = state.getPackedLightmapCoords(world, pos);
-		ByteBuffer transformed = ((BlockModelSpinner) getBuffer(state)).getTransformed(x, y, z, angle, axis,
-				packedLightmapCoords);
+	public static SuperByteBuffer standardKineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te,
+			World world) {
+		final BlockPos pos = te.getPos();
+		Axis axis = ((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState());
+		return kineticRotationTransform(buffer, te, axis, getAngleForTe(te, pos, axis), world);
+	}
+
+	public static SuperByteBuffer kineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te, Axis axis,
+			float angle, World world) {
+		int packedLightmapCoords = te.getBlockState().getPackedLightmapCoords(world, te.getPos());
+		buffer.light(packedLightmapCoords);
+		buffer.rotateCentered(axis, angle);
 
 		if (KineticDebugger.isActive()) {
 			rainbowMode = true;
-			TileEntity tileEntity = world.getTileEntity(pos);
-			if (tileEntity instanceof KineticTileEntity && ((KineticTileEntity) tileEntity).hasNetwork()) {
-				int color = LogisticalActorTileEntity.colorFromUUID(((KineticTileEntity) tileEntity).getNetworkID());
-				BufferManipulator.recolorBuffer(transformed, color);
-			}
+			if (te.hasNetwork())
+				buffer.color(LogisticalActorTileEntity.colorFromUUID(te.getNetworkID()));
 		}
 
-		buffer.putBulkData(transformed);
-	}
-
-	public static BufferManipulator getBuffer(BlockState state) {
-		return cachedBuffers.get(state);
-	}
-
-	public static void cacheIfMissing(final BlockState state, World world,
-			Function<ByteBuffer, BufferManipulator> factory) {
-		if (!cachedBuffers.containsKey(state)) {
-			BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-			BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
-			IBakedModel originalModel = dispatcher.getModelForState(state);
-			BufferBuilder builder = new BufferBuilder(0);
-			Random random = new Random();
-
-			builder.setTranslation(0, 1, 0);
-			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-			blockRenderer.renderModelFlat(world, originalModel, state, BlockPos.ZERO.down(), builder, true, random, 42,
-					EmptyModelData.INSTANCE);
-			builder.finishDrawing();
-
-			cachedBuffers.put(state, factory.apply(builder.getByteBuffer()));
-		}
+		return buffer;
 	}
 
 	protected static float getRotationOffsetForPosition(KineticTileEntity te, final BlockPos pos, final Axis axis) {
@@ -143,11 +76,6 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
 		return te.getBlockState();
-	}
-
-	public static void invalidateCache() {
-		if (cachedBuffers != null)
-			cachedBuffers.clear();
 	}
 
 }

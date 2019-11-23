@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
-import java.nio.ByteBuffer;
-
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -49,7 +48,7 @@ public interface IHaveMovementBehavior {
 		public Direction getMovementDirection() {
 			return Direction.getFacingFromVector(motion.x, motion.y, motion.z);
 		}
-		
+
 		public float getAnimationSpeed() {
 			int modifier = moverType == MoverType.MINECART ? 1000 : 200;
 			return ((int) (motion.length() * modifier)) / 100 * 100;
@@ -76,7 +75,7 @@ public interface IHaveMovementBehavior {
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	default ByteBuffer renderInConstruct(MovementContext context) {
+	default SuperByteBuffer renderInContraption(MovementContext context) {
 		return null;
 	}
 

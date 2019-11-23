@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -41,6 +42,11 @@ public class MechanicalBearingBlock extends DirectionalKineticBlock
 	@Override
 	protected boolean hasStaticPart() {
 		return true;
+	}
+	
+	@Override
+	public Axis getRotationAxis(BlockState state) {
+		return state.get(FACING).getAxis();
 	}
 
 }

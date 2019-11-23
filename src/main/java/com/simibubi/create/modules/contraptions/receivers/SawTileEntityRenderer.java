@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer.BlockModelSpinner;
 import com.simibubi.create.modules.logistics.block.FilteredTileEntityRenderer;
 
 import net.minecraft.block.BlockState;
@@ -22,23 +21,27 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 @SuppressWarnings("deprecation")
 public class SawTileEntityRenderer extends TileEntityRenderer<SawTileEntity> {
 
-	FilteredTileEntityRenderer filterRenderer;
-
-	public SawTileEntityRenderer() {
-		filterRenderer = new FilteredTileEntityRenderer();
-	}
-
 	@Override
 	public void render(SawTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-		super.render(te, x, y, z, partialTicks, destroyStage);
+		renderItems(te, x, y, z, partialTicks);
+		FilteredTileEntityRenderer.render(te, x, y, z, partialTicks, destroyStage);
+		renderShaft(te, x, y, z);
+	}
 
+	protected void renderShaft(SawTileEntity te, double x, double y, double z) {
+		TessellatorHelper.prepareFastRender();
+		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
+		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getWorld(), getRenderedBlockState(te), x, y, z,
+				Tessellator.getInstance().getBuffer());
+		TessellatorHelper.draw();
+	}
+
+	protected void renderItems(SawTileEntity te, double x, double y, double z, float partialTicks) {
 		boolean processingMode = te.getBlockState().get(SawBlock.FACING) == Direction.UP;
 		if (processingMode && !te.inventory.isEmpty()) {
 			boolean alongZ = !te.getBlockState().get(SawBlock.AXIS_ALONG_FIRST_COORDINATE);
@@ -69,22 +72,6 @@ public class SawTileEntityRenderer extends TileEntityRenderer<SawTileEntity> {
 			itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
 			GlStateManager.popMatrix();
 		}
-
-		// Filter
-		filterRenderer.render(te, x, y, z, partialTicks, destroyStage);
-
-		// Kinetic renders
-		final BlockState state = getRenderedBlockState(te);
-		KineticTileEntityRenderer.cacheIfMissing(state, getWorld(), BlockModelSpinner::new);
-		final BlockPos pos = te.getPos();
-		Axis axis = ((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState());
-		float angle = KineticTileEntityRenderer.getAngleForTe(te, pos, axis);
-
-		TessellatorHelper.prepareFastRender();
-		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
-		KineticTileEntityRenderer.renderFromCache(Tessellator.getInstance().getBuffer(), state, getWorld(), (float) x,
-				(float) y, (float) z, pos, axis, angle);
-		TessellatorHelper.draw();
 	}
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {

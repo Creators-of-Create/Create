@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ContraptionRenderer;
-import com.simibubi.create.modules.contraptions.receivers.constructs.ContraptionVertexBuffer;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -12,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -74,20 +74,19 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 			}
 		}
 
-		ContraptionRenderer.cacheContraptionIfMissing(entity.contraption);
+		BlockPos anchor = entity.contraption.getAnchor();
+		Vec3d rotationOffset = VecHelper.getCenterOf(anchor);
+//		Vec3d offset = VecHelper.getCenterOf(anchor).scale(-1);
+
 		TessellatorHelper.prepareFastRender();
 		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
-		ContraptionVertexBuffer buffer = ContraptionRenderer.get(entity.contraption);
-		if (buffer != null) {
-			BlockPos anchor = entity.contraption.getAnchor();
-			Vec3d rotationOffset = VecHelper.getCenterOf(anchor);
-			Vec3d offset = VecHelper.getCenterOf(anchor).scale(-1);
-			Tessellator.getInstance().getBuffer().putBulkData(buffer.getTranslatedAndRotated(entity.world, (float) x,
-					(float) y, (float) z, angleYaw, -anglePitch, offset, rotationOffset));
-			ContraptionRenderer.renderActors(entity.world, entity.contraption, (float) (x + offset.x),
-					(float) (y + offset.y), (float) (z + offset.z), angleYaw, -anglePitch,
-					Tessellator.getInstance().getBuffer());
-		}
+		ContraptionRenderer.render(entity.world, entity.contraption, superByteBuffer -> {
+			superByteBuffer.translate(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
+			superByteBuffer.rotate(Axis.Y, angleYaw);
+			superByteBuffer.rotate(Axis.Z, anglePitch);
+			superByteBuffer.translate(x, y, z);
+
+		}, Tessellator.getInstance().getBuffer());
 		TessellatorHelper.draw();
 		GlStateManager.popMatrix();
 

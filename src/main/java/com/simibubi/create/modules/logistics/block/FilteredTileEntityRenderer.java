@@ -18,7 +18,7 @@ import net.minecraft.util.math.Vec3d;
 @SuppressWarnings("deprecation")
 public class FilteredTileEntityRenderer {
 
-	public <T extends TileEntity & IHaveFilter> void render(T tileEntityIn, double x, double y, double z,
+	public static <T extends TileEntity & IHaveFilter> void render(T tileEntityIn, double x, double y, double z,
 			float partialTicks, int destroyStage) {
 		BlockState state = tileEntityIn.getBlockState();
 		IBlockWithFilter block = (IBlockWithFilter) state.getBlock();
@@ -41,7 +41,8 @@ public class FilteredTileEntityRenderer {
 
 	}
 
-	private void renderFilterItem(ItemStack stack, Vec3d position, Direction facing, float scaleDiff, float angle) {
+	private static void renderFilterItem(ItemStack stack, Vec3d position, Direction facing, float scaleDiff,
+			float angle) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		boolean vertical = facing.getAxis().isVertical();
 

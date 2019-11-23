@@ -1,7 +1,9 @@
 package com.simibubi.create.modules.contraptions.relays;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 
@@ -18,22 +20,19 @@ public class SplitShaftTileEntityRenderer extends KineticTileEntityRenderer {
 	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
+		final BlockState defaultState = AllBlocks.SHAFT_HALF.get().getDefaultState();
 		final BlockPos pos = te.getPos();
 		float time = AnimationTickHolder.getRenderTick();
-		final BlockState defaultState = AllBlocks.SHAFT_HALF.get().getDefaultState();
 
 		for (Direction direction : Direction.values()) {
-			final Axis axis = direction.getAxis();
+			Axis axis = direction.getAxis();
 			if (boxAxis != axis)
 				continue;
-
-			BlockState state = defaultState.with(BlockStateProperties.FACING, direction);
-			cacheIfMissing(state, getWorld(), BlockModelSpinner::new);
 
 			float offset = getRotationOffsetForPosition(te, pos, axis);
 			float angle = (time * te.getSpeed()) % 360;
 			float modifier = 1;
-			
+
 			if (te instanceof SplitShaftTileEntity)
 				modifier = ((SplitShaftTileEntity) te).getRotationSpeedModifier(direction);
 
@@ -41,7 +40,11 @@ public class SplitShaftTileEntityRenderer extends KineticTileEntityRenderer {
 			angle += offset;
 			angle = angle / 180f * (float) Math.PI;
 
-			renderFromCache(buffer, state, getWorld(), (float) x, (float) y, (float) z, pos, axis, angle);
+			BlockState state = defaultState.with(BlockStateProperties.FACING, direction);
+			SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockState(KINETIC_TILE, state);
+			kineticRotationTransform(superByteBuffer, te, axis, angle, getWorld());
+			superByteBuffer.translate(x, y, z).renderInto(buffer);
+
 		}
 	}
 

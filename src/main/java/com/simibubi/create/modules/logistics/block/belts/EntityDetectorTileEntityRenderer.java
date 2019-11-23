@@ -8,12 +8,6 @@ import net.minecraft.state.properties.BlockStateProperties;
 
 public class EntityDetectorTileEntityRenderer extends TileEntityRenderer<EntityDetectorTileEntity> {
 
-	private FilteredTileEntityRenderer filterRenderer;
-
-	public EntityDetectorTileEntityRenderer() {
-		filterRenderer = new FilteredTileEntityRenderer();
-	}
-
 	@Override
 	public void render(EntityDetectorTileEntity tileEntityIn, double x, double y, double z, float partialTicks,
 			int destroyStage) {
@@ -25,7 +19,7 @@ public class EntityDetectorTileEntityRenderer extends TileEntityRenderer<EntityD
 		int k = i / 65536;
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float) j, (float) k);
 
-		filterRenderer.render(tileEntityIn, x, y, z, partialTicks, destroyStage);
+		FilteredTileEntityRenderer.render(tileEntityIn, x, y, z, partialTicks, destroyStage);
 	}
 
 }

@@ -6,9 +6,11 @@ import java.util.function.Function;
 import com.simibubi.create.foundation.block.CTModel;
 import com.simibubi.create.foundation.block.IHaveConnectedTextures;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.contraptions.CachedBufferReloader;
+import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.modules.contraptions.WrenchModel;
+import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanParticleHandler;
+import com.simibubi.create.modules.contraptions.receivers.constructs.ContraptionRenderer;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterModel;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
@@ -44,6 +46,7 @@ public class CreateClient {
 	public static SchematicHologram schematicHologram;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static EncasedFanParticleHandler fanParticles;
+	public static SuperByteBufferCache bufferCache;
 	public static int renderTicks;
 
 	public static ModConfig config;
@@ -65,6 +68,10 @@ public class CreateClient {
 		schematicAndQuillHandler = new SchematicAndQuillHandler();
 		fanParticles = new EncasedFanParticleHandler();
 
+		bufferCache = new SuperByteBufferCache();
+		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
+		bufferCache.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
+
 		AllKeys.register();
 		AllContainers.registerScreenFactories();
 		AllTileEntities.registerRenderers();
@@ -74,7 +81,7 @@ public class CreateClient {
 
 		IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)
-			((IReloadableResourceManager) resourceManager).addReloadListener(new CachedBufferReloader());
+			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 	}
 
 	public static void createConfigs(ModConfig.ModConfigEvent event) {

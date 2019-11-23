@@ -8,11 +8,9 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 public class LinkedExtractorTileEntityRenderer extends TileEntityRenderer<LinkedExtractorTileEntity> {
 
 	LinkedTileEntityRenderer linkRenderer;
-	FilteredTileEntityRenderer filterRenderer;
 
 	public LinkedExtractorTileEntityRenderer() {
 		linkRenderer = new LinkedTileEntityRenderer();
-		filterRenderer = new FilteredTileEntityRenderer();
 	}
 
 	@Override
@@ -20,7 +18,7 @@ public class LinkedExtractorTileEntityRenderer extends TileEntityRenderer<Linked
 			int destroyStage) {
 		super.render(tileEntityIn, x, y, z, partialTicks, destroyStage);
 		linkRenderer.render(tileEntityIn, x, y, z, partialTicks, destroyStage);
-		filterRenderer.render(tileEntityIn, x, y, z, partialTicks, destroyStage);
+		FilteredTileEntityRenderer.render(tileEntityIn, x, y, z, partialTicks, destroyStage);
 	}
 
 }

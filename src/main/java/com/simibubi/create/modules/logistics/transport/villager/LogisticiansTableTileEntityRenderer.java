@@ -1,10 +1,9 @@
 package com.simibubi.create.modules.logistics.transport.villager;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.utility.ColoredIndicatorRenderer;
+import com.simibubi.create.foundation.block.ColoredOverlayTileEntityRenderer;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 
 import net.minecraft.block.BlockState;
@@ -15,29 +14,32 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 
 public class LogisticiansTableTileEntityRenderer extends TileEntityRenderer<LogisticiansTableTileEntity> {
+
+	public void render(LogisticiansTableTileEntity te, double x, double y, double z, float partialTicks,
+			int destroyStage) {
+		renderColoredIndicator(te, x, y, z);
+		renderBook(te, x, y, z);
+	}
+
+	protected void renderColoredIndicator(LogisticiansTableTileEntity te, double x, double y, double z) {
+		TessellatorHelper.prepareFastRender();
+		BlockState renderedState = AllBlocks.LOGISTICIANS_TABLE_INDICATOR.get().getDefaultState();
+		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
+		SuperByteBuffer render = ColoredOverlayTileEntityRenderer.render(getWorld(), te.getPos(), renderedState,
+				te.getColor());
+		Tessellator.getInstance().getBuffer().putBulkData(render.translate(x, y, z).build());
+		TessellatorHelper.draw();
+	}
+
 	private static final ResourceLocation bookLocation = new ResourceLocation(
 			"textures/entity/enchanting_table_book.png");
 	private final BookModel bookModel = new BookModel();
 
-	public void render(LogisticiansTableTileEntity tileEntityIn, double x, double y, double z, float partialTicks,
-			int destroyStage) {
-		TessellatorHelper.prepareFastRender();
-
-		BlockPos pos = tileEntityIn.getPos();
-		BlockState blockState = tileEntityIn.getBlockState();
-		BlockState renderedState = AllBlocks.LOGISTICIANS_TABLE_INDICATOR.get().getDefaultState();
-		int packedLightmapCoords = blockState.getPackedLightmapCoords(getWorld(), pos);
-		Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		int color = tileEntityIn.getColor();
-		Tessellator.getInstance().getBuffer().putBulkData(ColoredIndicatorRenderer.get(renderedState)
-				.getTransformed((float) x, (float) y, (float) z, color, packedLightmapCoords));
-		Tessellator.getInstance().draw();
+	protected void renderBook(LogisticiansTableTileEntity te, double x, double y, double z) {
 		RenderHelper.enableStandardItemLighting();
-
-		BlockState blockstate = tileEntityIn.getBlockState();
+		BlockState blockstate = te.getBlockState();
 		GlStateManager.pushMatrix();
 		GlStateManager.translatef((float) x + 0.5F, (float) y + 1.0F + 0.0625F, (float) z + 0.5F);
 		float f = blockstate.get(BlockStateProperties.HORIZONTAL_FACING).rotateY().getHorizontalAngle();
@@ -49,6 +51,5 @@ public class LogisticiansTableTileEntityRenderer extends TileEntityRenderer<Logi
 		this.bookModel.render(0.0F, 0.1F, 0.9F, 1.2F, 0.0F, 0.0625F);
 		GlStateManager.disableCull();
 		GlStateManager.popMatrix();
-
 	}
 }

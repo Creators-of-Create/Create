@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
 
+@Deprecated
 public abstract class BufferManipulator {
 
 	public static final int FORMAT_LENGTH = DefaultVertexFormats.BLOCK.getSize();

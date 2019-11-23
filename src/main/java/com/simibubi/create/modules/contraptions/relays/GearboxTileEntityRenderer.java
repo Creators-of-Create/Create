@@ -1,7 +1,9 @@
 package com.simibubi.create.modules.contraptions.relays;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 
@@ -28,8 +30,6 @@ public class GearboxTileEntityRenderer extends KineticTileEntityRenderer {
 				continue;
 
 			BlockState state = defaultState.with(BlockStateProperties.FACING, direction);
-			cacheIfMissing(state, getWorld(), BlockModelSpinner::new);
-
 			float offset = getRotationOffsetForPosition(te, pos, axis);
 			float angle = (time * te.getSpeed()) % 360;
 
@@ -45,7 +45,9 @@ public class GearboxTileEntityRenderer extends KineticTileEntityRenderer {
 			angle += offset;
 			angle = angle / 180f * (float) Math.PI;
 
-			renderFromCache(buffer, state, getWorld(), (float) x, (float) y, (float) z, pos, axis, angle);
+			SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockState(KINETIC_TILE, state);
+			kineticRotationTransform(superByteBuffer, te, axis, angle, getWorld());
+			superByteBuffer.translate(x, y, z).renderInto(buffer);
 		}
 	}
 

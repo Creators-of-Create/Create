@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.foundation.block.CTModelTextureHandler.TextureEntry;
+import com.simibubi.create.foundation.block.SpriteShifter.SpriteShiftEntry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -24,7 +24,7 @@ import net.minecraftforge.client.model.data.ModelProperty;
 public class CTModel extends BakedModelWrapper<IBakedModel> {
 
 	private static ModelProperty<CTData> CT_PROPERTY = new ModelProperty<>();
-	private TextureEntry texture;
+	private SpriteShiftEntry texture;
 
 	private class CTData {
 		int[] textures;
@@ -45,7 +45,7 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 
 	public CTModel(IBakedModel originalModel, String blockId) {
 		super(originalModel);
-		texture = CTModelTextureHandler.get(blockId);
+		texture = SpriteShifter.getCT(blockId);
 	}
 
 	@Override
@@ -82,8 +82,8 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 			float uShift = (index % 8) * textureSize;
 			float vShift = (index / 8) * textureSize * 2;
 
-			uShift = texture.connectedTextures.getInterpolatedU((index % 8) * 2) - texture.originalTexture.getMinU();
-			vShift = texture.connectedTextures.getInterpolatedV((index / 8) * 2) - texture.originalTexture.getMinV();
+			uShift = texture.target.getInterpolatedU((index % 8) * 2) - texture.original.getMinU();
+			vShift = texture.target.getInterpolatedV((index / 8) * 2) - texture.original.getMinV();
 
 			BakedQuad newQuad = new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length),
 					quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(),

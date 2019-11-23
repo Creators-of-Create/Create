@@ -8,9 +8,9 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.PlacementSimulationWorld;
-import com.simibubi.create.modules.contraptions.base.IRotate;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 
@@ -23,7 +23,6 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -36,28 +35,17 @@ public class MechanicalBearingTileEntityRenderer extends KineticTileEntityRender
 	@Override
 	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
+		super.renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, buffer);
+
 		MechanicalBearingTileEntity bearingTe = (MechanicalBearingTileEntity) te;
 		final Direction facing = te.getBlockState().get(BlockStateProperties.FACING);
-		final BlockPos pos = te.getPos();
-		float time = AnimationTickHolder.getRenderTick();
-		BlockState shaftState = AllBlocks.SHAFT_HALF.get().getDefaultState().with(BlockStateProperties.FACING,
-				facing.getOpposite());
 		BlockState capState = AllBlocks.MECHANICAL_BEARING_TOP.get().getDefaultState().with(BlockStateProperties.FACING,
 				facing);
 
-		cacheIfMissing(shaftState, getWorld(), BlockModelSpinner::new);
-		cacheIfMissing(capState, getWorld(), BlockModelSpinner::new);
-
-		float offset = getRotationOffsetForPosition(te, pos, facing.getAxis());
-		float angle = (time * te.getSpeed()) % 360;
-
-		angle += offset;
-		angle = angle / 180f * (float) Math.PI;
+		SuperByteBuffer superBuffer = CreateClient.bufferCache.renderBlockState(KINETIC_TILE, capState);
 		float interpolatedAngle = bearingTe.getInterpolatedAngle(partialTicks);
-
-		renderFromCache(buffer, shaftState, getWorld(), (float) x, (float) y, (float) z, pos, facing.getAxis(), angle);
-		renderFromCache(buffer, capState, getWorld(), (float) x, (float) y, (float) z, pos, facing.getAxis(),
-				interpolatedAngle);
+		kineticRotationTransform(superBuffer, bearingTe, facing.getAxis(), interpolatedAngle, getWorld());
+		superBuffer.translate(x, y, z).renderInto(buffer);
 
 		if (!bearingTe.running)
 			return;
@@ -108,8 +96,8 @@ public class MechanicalBearingTileEntityRenderer extends KineticTileEntityRender
 
 	@Override
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return AllBlocks.SHAFT.block.getDefaultState().with(BlockStateProperties.AXIS,
-				((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState()));
+		return AllBlocks.SHAFT_HALF.get().getDefaultState().with(BlockStateProperties.FACING,
+				te.getBlockState().get(BlockStateProperties.FACING).getOpposite());
 	}
 
 	public static void invalidateCache() {

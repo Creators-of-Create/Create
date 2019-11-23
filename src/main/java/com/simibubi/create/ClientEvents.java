@@ -47,7 +47,7 @@ public class ClientEvents {
 
 		if (!KineticDebugger.isActive() && KineticTileEntityRenderer.rainbowMode) {
 			KineticTileEntityRenderer.rainbowMode = false;
-			KineticTileEntityRenderer.invalidateCache();
+			CreateClient.bufferCache.invalidate();
 		}
 
 		ScreenOpener.tick();

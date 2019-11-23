@@ -66,24 +66,23 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 
 	public float getRenderedHeadOffset(float partialTicks) {
 		int localTick = 0;
+		float offset = 0;
 		if (running) {
 			if (runningTicks < 20) {
 				localTick = runningTicks;
 				float num = (localTick + partialTicks) / 20f;
 				num = ((2 - MathHelper.cos((float) (num * Math.PI))) / 2);
-				return num - .5f;
-			}
-			if (runningTicks <= 20) {
-				return 1;
-			}
-			if (runningTicks > 20) {
+				offset = num - .5f;
+			} else if (runningTicks <= 20) {
+				offset = 1;
+			} else if (runningTicks > 20) {
 				localTick = 40 - runningTicks;
 				float num = (localTick - partialTicks) / 20f;
 				num = ((2 - MathHelper.cos((float) (num * Math.PI))) / 2);
-				return num - .5f;
+				offset = num - .5f;
 			}
 		}
-		return 0;
+		return offset + 7 / 16f;
 	}
 
 	public float getRenderedHeadRotationSpeed(float partialTicks) {

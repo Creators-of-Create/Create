@@ -1,10 +1,11 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEntityRenderer.HeadTranslator;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -19,22 +20,23 @@ public class MechanicalMixerTileEntityRenderer extends KineticTileEntityRenderer
 			int destroyStage, BufferBuilder buffer) {
 		super.renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, buffer);
 
-		final BlockState poleState = AllBlocks.MECHANICAL_MIXER_POLE.get().getDefaultState();
-		final BlockState headState = AllBlocks.MECHANICAL_MIXER_HEAD.get().getDefaultState();
-		cacheIfMissing(poleState, getWorld(), HeadTranslator::new);
-		cacheIfMissing(headState, getWorld(), HeadTranslator::new);
-		final BlockPos pos = te.getPos();
+		MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) te;
+		BlockState poleState = AllBlocks.MECHANICAL_MIXER_POLE.get().getDefaultState();
+		BlockState headState = AllBlocks.MECHANICAL_MIXER_HEAD.get().getDefaultState();
+		BlockPos pos = te.getPos();
 
 		int packedLightmapCoords = poleState.getPackedLightmapCoords(getWorld(), pos);
-		float speed = ((MechanicalMixerTileEntity) te).getRenderedHeadRotationSpeed(partialTicks);
-		float renderedHeadOffset = ((MechanicalMixerTileEntity) te).getRenderedHeadOffset(partialTicks) + 7 / 16f;
+		float renderedHeadOffset = mixer.getRenderedHeadOffset(partialTicks);
+		float speed = mixer.getRenderedHeadRotationSpeed(partialTicks);
 		float time = AnimationTickHolder.getRenderTick();
 		float angle = (float) (((time * speed * 2) % 360) / 180 * (float) Math.PI);
 
-		buffer.putBulkData(((HeadTranslator) cachedBuffers.get(poleState)).getTransformed((float) x, (float) y,
-				(float) z, renderedHeadOffset, packedLightmapCoords));
-		buffer.putBulkData(((HeadTranslator) cachedBuffers.get(headState)).getTransformedRotated((float) x, (float) y,
-				(float) z, renderedHeadOffset, angle, packedLightmapCoords));
+		SuperByteBuffer poleRender = CreateClient.bufferCache.renderGenericBlockModel(poleState);
+		poleRender.translate(x, y - renderedHeadOffset, z).light(packedLightmapCoords).renderInto(buffer);
+
+		SuperByteBuffer headRender = CreateClient.bufferCache.renderGenericBlockModel(headState);
+		headRender.rotateCentered(Axis.Y, angle).translate(x, y - renderedHeadOffset, z).light(packedLightmapCoords)
+				.renderInto(buffer);
 	}
 
 	@Override
