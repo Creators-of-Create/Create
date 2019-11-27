@@ -132,5 +132,10 @@ public class MechanicalMixerBlock extends KineticBlock
 			return 0;
 		return tileEntity.currentValue;
 	}
+	
+	@Override
+	public SpeedLevel getMinimumRequiredSpeedLevel() {
+		return SpeedLevel.MEDIUM;
+	}
 
 }

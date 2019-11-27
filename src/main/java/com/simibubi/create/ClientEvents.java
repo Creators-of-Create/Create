@@ -8,11 +8,13 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.TooltipHelper;
 import com.simibubi.create.modules.contraptions.KineticDebugger;
+import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.TurntableHandler;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItemHandler;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -131,6 +133,7 @@ public class ClientEvents {
 			TooltipHelper.getTooltip(stack).addInformation(toolTip);
 			event.getToolTip().addAll(1, toolTip);
 		}
+		
 	}
 
 	@SubscribeEvent

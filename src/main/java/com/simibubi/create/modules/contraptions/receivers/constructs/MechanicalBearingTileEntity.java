@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 
 import net.minecraft.block.BlockState;
@@ -43,7 +42,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity {
 
 	@Override
 	public float getAddedStressCapacity() {
-		return isWindmill ? CreateConfig.parameters.mechanicalBearingCapacity.get().floatValue() : 0;
+		return isWindmill ? super.getAddedStressCapacity() : 0;
 	}
 
 	public void neighbourChanged() {
@@ -52,9 +51,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity {
 			return;
 
 		isWindmill = shouldWindmill;
-		if (isWindmill && !running) 
+		if (isWindmill && !running)
 			assembleNextTick = true;
-		if (isWindmill && running) 
+		if (isWindmill && running)
 			updateGeneratedRotation();
 
 		if (!isWindmill && running) {

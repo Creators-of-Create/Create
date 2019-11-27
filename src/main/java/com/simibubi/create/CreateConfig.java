@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
@@ -60,11 +61,12 @@ public class CreateConfig {
 			inWorldProcessingTime;
 	public IntValue maxChassisForTranslation, maxChassisForRotation, maxChassisRange, maxPistonPoles;
 
-	public DoubleValue waterWheelCapacity;
-	public DoubleValue generatingFanCapacity;
-	public DoubleValue mechanicalBearingCapacity;
-	public DoubleValue motorCapacity;
-	public Map<String, DoubleValue> stressEntries = new HashMap<>();
+	public Map<ResourceLocation, DoubleValue> stressCapacityEntries = new HashMap<>();
+	public Map<ResourceLocation, DoubleValue> stressEntries = new HashMap<>();
+
+	public DoubleValue mediumSpeed, fastSpeed;
+	public DoubleValue mediumStressImpact, highStressImpact;
+	public DoubleValue mediumCapacity, highCapacity;
 
 	// Logistics
 	public IntValue extractorDelay, extractorAmount, linkRange;
@@ -332,6 +334,36 @@ public class CreateConfig {
 	}
 
 	private void initStress(final ForgeConfigSpec.Builder builder) {
+		builder.comment("Configure speed/capacity levels for requirements and indicators.").push("rotationLevels");
+		String basePath = "create.config.rotationLevels.";
+		String name = "";
+
+		name = "mediumSpeed";
+		mediumSpeed = builder.comment("", "[in Degrees/Tick]", "Minimum speed of rotation to be considered 'medium'")
+				.translation(basePath + name).defineInRange(name, 32D, 0D, 4096D);
+
+		name = "fastSpeed";
+		mediumSpeed = builder.comment("", "[in Degrees/Tick]", "Minimum speed of rotation to be considered 'fast'")
+				.translation(basePath + name).defineInRange(name, 512D, 0D, 65535D);
+
+		name = "mediumStressImpact";
+		mediumStressImpact = builder.comment("", "Minimum stress impact to be considered 'medium'")
+				.translation(basePath + name).defineInRange(name, 8D, 0D, 4096D);
+
+		name = "highStressImpact";
+		highStressImpact = builder.comment("", "Minimum stress impact to be considered 'high'")
+				.translation(basePath + name).defineInRange(name, 32D, 0D, 65535D);
+
+		name = "mediumCapacity";
+		mediumCapacity = builder.comment("", "Minimum added Capacity by sources to be considered 'medium'")
+				.translation(basePath + name).defineInRange(name, 128D, 0D, 4096D);
+
+		name = "highCapacity";
+		highCapacity = builder.comment("", "Minimum added Capacity by sources to be considered 'high'")
+				.translation(basePath + name).defineInRange(name, 512D, 0D, 65535D);
+
+		builder.pop();
+
 		builder.comment(
 				"Configure the individual stress impact of mechanical blocks. Note that this cost is doubled for every speed increase it receives.")
 				.push("stress");
@@ -345,18 +377,10 @@ public class CreateConfig {
 
 		builder.comment("Configure how much stress a source can accommodate.").push("capacity");
 
-		String basePath = "create.config.capacity.";
-		String name = "";
-
-		name = "waterWheelCapacity";
-		waterWheelCapacity = builder.comment("").translation(basePath + name).defineInRange(name, 32D, 0D, 4096D);
-		name = "generatingFanCapacity";
-		generatingFanCapacity = builder.comment("").translation(basePath + name).defineInRange(name, 64D, 0D, 4096D);
-		name = "mechanicalBearingCapacity";
-		mechanicalBearingCapacity = builder.comment("").translation(basePath + name).defineInRange(name, 256D, 0D,
-				4096D);
-		name = "motorCapacity";
-		motorCapacity = builder.comment("").translation(basePath + name).defineInRange(name, 1024D, 0D, 4096D);
+		for (AllBlocks block : AllBlocks.values()) {
+			if (block.get() instanceof KineticBlock)
+				initStressCapacityEntry(block, builder);
+		}
 
 		builder.pop();
 
@@ -365,8 +389,34 @@ public class CreateConfig {
 	private void initStressEntry(AllBlocks block, final ForgeConfigSpec.Builder builder) {
 		String basePath = "create.config.stress.";
 		String name = block.name();
-		stressEntries.put(block.get().getRegistryName().getPath(), builder.comment("").translation(basePath + name)
+		stressEntries.put(block.get().getRegistryName(), builder.comment("").translation(basePath + name)
 				.defineInRange(name, getDefaultStressImpact(block), 0, 2048));
+	}
+
+	private void initStressCapacityEntry(AllBlocks block, final ForgeConfigSpec.Builder builder) {
+		double defaultStressCapacity = getDefaultStressCapacity(block);
+		if (defaultStressCapacity == -1)
+			return;
+		String basePath = "create.config.stressCapacity.";
+		String name = block.name();
+		stressCapacityEntries.put(block.get().getRegistryName(),
+				builder.comment("").translation(basePath + name).defineInRange(name, defaultStressCapacity, 0, 4096D));
+	}
+
+	public static double getDefaultStressCapacity(AllBlocks block) {
+
+		switch (block) {
+		case MOTOR:
+			return 1024;
+		case ENCASED_FAN:
+			return 64;
+		case WATER_WHEEL:
+			return 32;
+		case MECHANICAL_BEARING:
+			return 128;
+		default:
+			return -1;
+		}
 	}
 
 	public static double getDefaultStressImpact(AllBlocks block) {

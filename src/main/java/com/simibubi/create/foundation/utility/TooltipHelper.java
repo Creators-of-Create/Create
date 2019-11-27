@@ -10,8 +10,8 @@ import java.util.Map;
 import com.mojang.bridge.game.Language;
 import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 import com.simibubi.create.modules.IModule;
+import com.simibubi.create.modules.contraptions.base.IRotate;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.BlockItem;
@@ -80,7 +80,7 @@ public class TooltipHelper {
 
 	public static boolean hasTooltip(ItemStack stack) {
 		checkLocale();
-		cachedTooltips.clear();
+//		cachedTooltips.clear();
 		String key = getTooltipTranslationKey(stack);
 		if (cachedTooltips.containsKey(key))
 			return cachedTooltips.get(key) != ItemDescription.MISSING;
@@ -101,20 +101,29 @@ public class TooltipHelper {
 	private static boolean findTooltip(ItemStack stack) {
 		String key = getTooltipTranslationKey(stack);
 		if (I18n.hasKey(key)) {
-			cachedTooltips.put(key, buildToolTip(key, IModule.of(stack)));
+			cachedTooltips.put(key, buildToolTip(key, stack));
 			return true;
 		}
 		cachedTooltips.put(key, ItemDescription.MISSING);
 		return false;
 	}
 
-	private static ItemDescription buildToolTip(String translationKey, IModule module) {
+	private static ItemDescription buildToolTip(String translationKey, ItemStack stack) {
+		IModule module = IModule.of(stack);
 		ItemDescription tooltip = new ItemDescription(module.getToolTipColor());
 		String summaryKey = translationKey + ".summary";
 
 		// Summary
 		if (I18n.hasKey(summaryKey))
 			tooltip = tooltip.withSummary(I18n.format(summaryKey));
+
+		// Requirements
+		if (stack.getItem() instanceof BlockItem) {
+			BlockItem item = (BlockItem) stack.getItem();
+			if (item.getBlock() instanceof IRotate) {
+				tooltip = tooltip.withKineticStats((IRotate) item.getBlock());
+			}
+		}
 
 		// Behaviours
 		for (int i = 1; i < 100; i++) {
@@ -138,14 +147,7 @@ public class TooltipHelper {
 	}
 
 	public static String getTooltipTranslationKey(ItemStack stack) {
-		if (stack.getItem() instanceof BlockItem) {
-			return getTooltipTranslationKey(((BlockItem) stack.getItem()).getBlock());
-		}
 		return stack.getItem().getTranslationKey() + ".tooltip";
-	}
-
-	public static String getTooltipTranslationKey(Block block) {
-		return block.getTranslationKey() + ".tooltip";
 	}
 
 }

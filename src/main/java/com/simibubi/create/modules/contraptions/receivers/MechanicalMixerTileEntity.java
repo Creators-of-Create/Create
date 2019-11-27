@@ -179,7 +179,7 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 			return;
 		}
 
-		if (speed < 32)
+		if (!isSpeedRequirementFulfilled())
 			return;
 		if (!checkBasin)
 			return;

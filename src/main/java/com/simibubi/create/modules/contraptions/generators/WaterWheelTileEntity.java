@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -58,11 +57,6 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 		for (Integer i : flows.values())
 			speed += i;
 		return speed;
-	}
-
-	@Override
-	public float getAddedStressCapacity() {
-		return CreateConfig.parameters.waterWheelCapacity.get().floatValue();
 	}
 
 }

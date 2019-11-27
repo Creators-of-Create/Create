@@ -91,7 +91,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 
 	@Override
 	public float getAddedStressCapacity() {
-		return isGenerator ? CreateConfig.parameters.generatingFanCapacity.get().floatValue() : 0;
+		return isGenerator ? super.getAddedStressCapacity() : 0;
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 			return;
 
 		EncasedFanBeltHandler.tickBelts(this, affectedBelts);
-		
+
 		List<Entity> frontEntities = world.getEntitiesWithinAABBExcludingEntity(null, frontBB);
 		for (Entity entity : frontEntities) {
 			moveEntity(entity, true);

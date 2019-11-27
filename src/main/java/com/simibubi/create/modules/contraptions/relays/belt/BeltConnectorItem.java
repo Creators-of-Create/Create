@@ -11,7 +11,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.item.Item;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -23,12 +23,17 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BeltConnectorItem extends Item {
+public class BeltConnectorItem extends BlockItem {
 
 	public BeltConnectorItem(Properties properties) {
-		super(properties);
+		super(AllBlocks.BELT.block, properties);
 	}
-
+	
+	@Override
+	public String getTranslationKey() {
+		return getDefaultTranslationKey();
+	}
+	
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		if (context.isPlacerSneaking()) {
@@ -218,4 +223,5 @@ public class BeltConnectorItem extends Item {
 		return true;
 	}
 
+	
 }

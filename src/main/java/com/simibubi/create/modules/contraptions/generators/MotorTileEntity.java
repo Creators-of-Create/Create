@@ -31,11 +31,6 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public float getAddedStressCapacity() {
-		return CreateConfig.parameters.motorCapacity.get().floatValue();
-	}
-
-	@Override
 	public boolean hasFastRenderer() {
 		return true;
 	}

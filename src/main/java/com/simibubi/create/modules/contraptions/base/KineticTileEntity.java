@@ -14,13 +14,16 @@ import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
+import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 
@@ -59,12 +62,16 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 	}
 
 	public float getAddedStressCapacity() {
-		return 0;
+		Map<ResourceLocation, DoubleValue> capacityMap = CreateConfig.parameters.stressCapacityEntries;
+		ResourceLocation path = getBlockState().getBlock().getRegistryName();
+		if (!capacityMap.containsKey(path))
+			return 0;
+		return capacityMap.get(path).get().floatValue();
 	}
 
 	public float getStressApplied() {
-		Map<String, DoubleValue> stressEntries = CreateConfig.parameters.stressEntries;
-		String path = getBlockState().getBlock().getRegistryName().getPath();
+		Map<ResourceLocation, DoubleValue> stressEntries = CreateConfig.parameters.stressEntries;
+		ResourceLocation path = getBlockState().getBlock().getRegistryName();
 		if (!stressEntries.containsKey(path))
 			return 1;
 		return stressEntries.get(path).get().floatValue();
@@ -282,11 +289,25 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 		}
 	}
 
+	public boolean isSpeedRequirementFulfilled() {
+		BlockState state = getBlockState();
+		if (!(getBlockState().getBlock() instanceof IRotate))
+			return true;
+		IRotate def = (IRotate) state.getBlock();
+		SpeedLevel minimumRequiredSpeedLevel = def.getMinimumRequiredSpeedLevel();
+		if (minimumRequiredSpeedLevel == null)
+			return true;
+		if (minimumRequiredSpeedLevel == SpeedLevel.MEDIUM)
+			return Math.abs(getSpeed()) >= CreateConfig.parameters.mediumSpeed.get();
+		if (minimumRequiredSpeedLevel == SpeedLevel.FAST)
+			return Math.abs(getSpeed()) >= CreateConfig.parameters.fastSpeed.get();
+		return true;
+	}
+
 	public void addDebugInformation(List<String> lines) {
 		lines.add("Speed: " + GREEN + speed);
 		lines.add("Cost: " + GREEN + getStressApplied() + WHITE + "/" + GREEN + getAddedStressCapacity());
 		lines.add("Stress: " + GREEN + currentStress + WHITE + "/" + GREEN + maxStress);
-//		lines.add("Network: " + (hasNetwork() ? networkID.toString() : "Missing"));
 	}
 
 }

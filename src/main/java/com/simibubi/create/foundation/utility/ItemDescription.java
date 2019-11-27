@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.utility;
 
+import static com.simibubi.create.CreateConfig.parameters;
 import static com.simibubi.create.foundation.utility.TooltipHelper.cutString;
 import static net.minecraft.util.text.TextFormatting.AQUA;
 import static net.minecraft.util.text.TextFormatting.BLUE;
@@ -20,7 +21,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.simibubi.create.modules.contraptions.base.IRotate;
+import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
+import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
+
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -66,6 +73,58 @@ public class ItemDescription {
 		add(linesOnShift, cutString(summary, palette.color, palette.hColor));
 		add(linesOnShift, "");
 		return this;
+	}
+
+	public ItemDescription withKineticStats(IRotate block) {
+		SpeedLevel minimumRequiredSpeedLevel = block.getMinimumRequiredSpeedLevel();
+		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE;
+		ResourceLocation id = ((Block) block).getRegistryName();
+		boolean hasStressImpact = parameters.stressEntries.containsKey(id);
+		boolean hasStressCapacity = parameters.stressCapacityEntries.containsKey(id);
+
+		if (hasSpeedRequirement) {
+			List<String> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
+			int index = minimumRequiredSpeedLevel.ordinal();
+			String level = minimumRequiredSpeedLevel.getColor() + makeProgressBar(3, index) + speedLevels.get(index);
+			add(linesOnShift, GRAY + Lang.translate("tooltip.speedRequirement"));
+			add(linesOnShift, level);
+		}
+		if (hasStressImpact) {
+			List<String> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
+			double impact = parameters.stressEntries.get(id).get();
+			StressImpact impactId = impact >= parameters.highStressImpact.get() ? StressImpact.HIGH
+					: (impact >= parameters.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
+			int index = impactId.ordinal();
+			String level = impactId.getColor() + makeProgressBar(3, index) + stressLevels.get(index);
+			add(linesOnShift, GRAY + Lang.translate("tooltip.stressImpact"));
+			add(linesOnShift, level);
+
+		}
+		if (hasStressCapacity) {
+			List<String> stressCapacityLevels = Lang.translatedOptions("tooltip.capacityProvided", "low", "medium",
+					"high");
+			double capacity = parameters.stressCapacityEntries.get(id).get();
+			StressImpact impactId = capacity >= parameters.highCapacity.get() ? StressImpact.LOW
+					: (capacity >= parameters.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
+			int index = StressImpact.values().length - 1 - impactId.ordinal();
+			String level = impactId.getColor() + makeProgressBar(3, index) + stressCapacityLevels.get(index);
+			add(linesOnShift, GRAY + Lang.translate("tooltip.capacityProvided"));
+			add(linesOnShift, level);
+		}
+
+		if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
+			add(linesOnShift, "");
+		return this;
+	}
+
+	protected String makeProgressBar(int length, int filledLength) {
+		String bar = " ";
+		int emptySpaces = length - 1 - filledLength;
+		for (int i = 0; i <= filledLength; i++)
+			bar += "\u2588";
+		for (int i = 0; i < emptySpaces; i++)
+			bar += "\u2592";
+		return bar + " ";
 	}
 
 	public ItemDescription withBehaviour(String condition, String behaviour) {
