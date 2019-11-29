@@ -30,6 +30,7 @@ import com.simibubi.create.modules.contraptions.receivers.constructs.RotationCha
 import com.simibubi.create.modules.contraptions.receivers.constructs.TranslationChassisBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.CartAssemblerBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.CartAssemblerBlock.MinecartAnchorBlock;
+import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.CogWheelBlock;
@@ -40,7 +41,7 @@ import com.simibubi.create.modules.contraptions.relays.GearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.ShaftHalfBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltSupportBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelBlock;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.CrossPlaneSymmetryBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.PlaneSymmetryBlock;
@@ -106,7 +107,6 @@ public enum AllBlocks {
 	GEARSHIFT(new GearshiftBlock()),
 	GEARBOX(new GearboxBlock()),
 	BELT(new BeltBlock()),
-	BELT_SUPPORT(new BeltSupportBlock()),
 	BELT_PULLEY(new RenderUtilityAxisBlock()),
 	BELT_ANIMATION(new RenderUtilityBlock()),
 	MOTOR(new MotorBlock()),
@@ -124,7 +124,9 @@ public enum AllBlocks {
 	MECHANICAL_MIXER_POLE(new RenderUtilityBlock()),
 	MECHANICAL_MIXER_HEAD(new RenderUtilityBlock()),
 	BASIN(new BasinBlock()),
-
+	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
+	MECHANICAL_CRAFTER_LID(new MechanicalCrafterBlock.Lid()),
+	
 	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
 	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
 	MECHANICAL_PISTON_HEAD(new MechanicalPistonHeadBlock()),
@@ -150,6 +152,8 @@ public enum AllBlocks {
 	EXTRACTOR(new ExtractorBlock()),
 	LINKED_EXTRACTOR(new LinkedExtractorBlock()),
 	BELT_FUNNEL(new BeltFunnelBlock()),
+	BELT_TUNNEL(new BeltTunnelBlock()),
+	BELT_TUNNEL_FLAP(new RenderUtilityBlock()),
 	ENTITY_DETECTOR(new EntityDetectorBlock()),
 	PULSE_REPEATER(new PulseRepeaterBlock()),
 	FLEXPEATER(new FlexpeaterBlock()),

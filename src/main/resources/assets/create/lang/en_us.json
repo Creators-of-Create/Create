@@ -68,7 +68,6 @@
 	"block.create.harvester": "Mechanical Harvester",
 	"block.create.saw": "Mechanical Saw",
 	"block.create.water_wheel": "Water Wheel",
-	"block.create.belt_support": "Belt Support",
 	"block.create.mechanical_press": "Mechanical Press",
 	"block.create.mechanical_mixer": "Mechanical Mixer",
 	"block.create.basin": "Basin",
@@ -96,9 +95,11 @@
 	"block.create.logistical_index": "Logistical Index",
 	"block.create.logisticians_table": "Logisticians Table",
 	"block.create.package_funnel": "Package Funnel",
+	"block.create.belt_tunnel": "Conveyor Tunnel",
 	
 	"block.create.tiled_glass": "Tiled Glass",
 	"block.create.tiled_glass_pane": "Tiled Glass Pane",
+	"block.create.framed_glass": "Framed Glass",
 
 	"block.create.window_in_a_block": "Block with Glass Pane",
 	"block.create.andesite_bricks": "Andesite Bricks",

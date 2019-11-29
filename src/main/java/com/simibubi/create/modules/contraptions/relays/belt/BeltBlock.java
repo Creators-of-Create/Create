@@ -90,7 +90,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	public boolean isFlammable(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
 		return false;
 	}
-	
+
 	@Override
 	public void onLanded(IBlockReader worldIn, Entity entityIn) {
 		super.onLanded(worldIn, entityIn);
@@ -150,6 +150,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		updateNeighbouringTunnel(worldIn, pos, state);
 		withTileEntityDo(worldIn, pos, te -> {
 			te.attachmentTracker.findAttachments(te);
 		});
@@ -235,7 +236,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 		if (state.get(CASING)) {
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
-			world.setBlockState(context.getPos(), state.with(CASING, false), 2);
+			world.setBlockState(context.getPos(), state.with(CASING, false), 3);
 			if (!player.isCreative())
 				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.LOGISTICAL_CASING.block));
 			return ActionResultType.SUCCESS;
@@ -325,7 +326,9 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 			return;
 		if (state.getBlock() == newState.getBlock())
 			return;
+		updateNeighbouringTunnel(worldIn, pos, state);
 
+		// Destroy chain
 		boolean endWasDestroyed = state.get(PART) == Part.END;
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 		if (tileEntity == null)
@@ -385,6 +388,16 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 
 		} while (limit-- > 0);
 
+	}
+
+	private void updateNeighbouringTunnel(World world, BlockPos pos, BlockState beltState) {
+		boolean isEnd = beltState.get(PART) != Part.END;
+		if (isEnd && beltState.get(PART) != Part.START)
+			return;
+		int offset = isEnd ? -1 : 1;
+		BlockPos tunnelPos = pos.offset(beltState.get(HORIZONTAL_FACING), offset).up();
+		if (AllBlocks.BELT_TUNNEL.typeOf(world.getBlockState(tunnelPos)))
+			BeltTunnelBlock.updateTunnel(world, tunnelPos);
 	}
 
 	public enum Slope implements IStringSerializable {

@@ -29,6 +29,7 @@ import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalB
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.modules.contraptions.relays.ClutchTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedShaftTileEntityRenderer;
@@ -39,6 +40,8 @@ import com.simibubi.create.modules.contraptions.relays.ShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.SplitShaftTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelTileEntityRenderer;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockTileEntity;
 import com.simibubi.create.modules.logistics.block.LinkedTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntity;
@@ -96,9 +99,13 @@ public enum AllTileEntities {
 	CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH),
 	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT),
 	BELT(BeltTileEntity::new, AllBlocks.BELT),
+	BELT_TUNNEL(BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
 	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING),
-	CHASSIS(ChassisTileEntity::new, AllBlocks.ROTATION_CHASSIS, AllBlocks.TRANSLATION_CHASSIS,
+	CHASSIS(
+			ChassisTileEntity::new,
+			AllBlocks.ROTATION_CHASSIS,
+			AllBlocks.TRANSLATION_CHASSIS,
 			AllBlocks.TRANSLATION_CHASSIS_SECONDARY),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
 	SAW(SawTileEntity::new, AllBlocks.SAW),
@@ -109,6 +116,7 @@ public enum AllTileEntities {
 	MECHANICAL_PRESS(MechanicalPressTileEntity::new, AllBlocks.MECHANICAL_PRESS),
 	MECHANICAL_MIXER(MechanicalMixerTileEntity::new, AllBlocks.MECHANICAL_MIXER),
 	BASIN(BasinTileEntity::new, AllBlocks.BASIN),
+	MECHANICAL_CRAFTER(MechanicalCrafterTileEntity::new, AllBlocks.MECHANICAL_CRAFTER),
 
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
@@ -182,6 +190,7 @@ public enum AllTileEntities {
 		bind(LinkedExtractorTileEntity.class, new LinkedExtractorTileEntityRenderer());
 		bind(ExtractorTileEntity.class, new ExtractorTileEntityRenderer());
 		bind(BeltFunnelTileEntity.class, new BeltFunnelTileEntityRenderer());
+		bind(BeltTunnelTileEntity.class, new BeltTunnelTileEntityRenderer());
 		bind(EntityDetectorTileEntity.class, new EntityDetectorTileEntityRenderer());
 		bind(MechanicalPressTileEntity.class, new MechanicalPressTileEntityRenderer());
 		bind(FlexpeaterTileEntity.class, new FlexpeaterTileEntityRenderer());

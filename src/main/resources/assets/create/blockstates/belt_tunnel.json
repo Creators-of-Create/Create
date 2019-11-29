@@ -1,0 +1,16 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "shape": {
+      "straight": { "model": "create:block/belt_tunnel/straight" },
+      "window": { "model": "create:block/belt_tunnel/window" },
+      "t_left": { "model": "create:block/belt_tunnel/t_left" },
+      "t_right": { "model": "create:block/belt_tunnel/t_right" },
+      "cross": { "model": "create:block/belt_tunnel/cross" }
+    },
+    "axis": {
+      "x": { },
+      "z": { "y": 90 }
+    }
+  }
+}

@@ -436,6 +436,7 @@ public class CreateConfig {
 		case ENCASED_FAN:
 		case MECHANICAL_MIXER:
 		case MECHANICAL_BEARING:
+		case MECHANICAL_CRAFTER:
 			return 8;
 
 		case WATER_WHEEL:
