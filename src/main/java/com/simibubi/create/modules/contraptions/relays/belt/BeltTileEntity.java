@@ -320,6 +320,18 @@ public class BeltTileEntity extends KineticTileEntity {
 		nextInventory.insert(transportedStack);
 		nextBeltController.markDirty();
 		nextBeltController.sendData();
+
+		if (side.getAxis().isHorizontal()) {
+			if (AllBlocks.BELT_TUNNEL.typeOf(world.getBlockState(pos.up()))) {
+				TileEntity tileEntity = world.getTileEntity(pos.up());
+				if (tileEntity != null && tileEntity instanceof BeltTunnelTileEntity) {
+					if (side.getAxis() == Axis.X)
+						side = side.getOpposite();
+					((BeltTunnelTileEntity) tileEntity).flap(side, side.getAxis() == Axis.X);
+				}
+			}
+		}
+
 		return true;
 	}
 

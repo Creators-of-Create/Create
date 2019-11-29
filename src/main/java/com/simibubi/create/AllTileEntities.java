@@ -30,6 +30,7 @@ import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalB
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.ClutchTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedShaftTileEntityRenderer;
@@ -102,10 +103,7 @@ public enum AllTileEntities {
 	BELT_TUNNEL(BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
 	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING),
-	CHASSIS(
-			ChassisTileEntity::new,
-			AllBlocks.ROTATION_CHASSIS,
-			AllBlocks.TRANSLATION_CHASSIS,
+	CHASSIS(ChassisTileEntity::new, AllBlocks.ROTATION_CHASSIS, AllBlocks.TRANSLATION_CHASSIS,
 			AllBlocks.TRANSLATION_CHASSIS_SECONDARY),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
 	SAW(SawTileEntity::new, AllBlocks.SAW),
@@ -198,6 +196,7 @@ public enum AllTileEntities {
 		bind(LogisticiansTableTileEntity.class, new LogisticiansTableTileEntityRenderer());
 		bind(HarvesterTileEntity.class, new HarvesterTileEntityRenderer());
 		bind(MechanicalMixerTileEntity.class, new MechanicalMixerTileEntityRenderer());
+		bind(MechanicalCrafterTileEntity.class, new MechanicalCrafterTileEntityRenderer());
 		bind(BasinTileEntity.class, new BasinTileEntityRenderer());
 	}
 

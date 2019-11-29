@@ -91,6 +91,9 @@ public class SuperByteBuffer {
 		}
 
 		t.setIdentity();
+		shouldShiftUV = false;
+		shouldColor = false;
+		shouldLight = false;
 		return mutable;
 	}
 
@@ -138,6 +141,13 @@ public class SuperByteBuffer {
 		shouldShiftUV = true;
 		uShift = to.getInterpolatedU(sheetX * 16f / to.getWidth()) - from.getMinU();
 		vShift = to.getInterpolatedV(sheetY * 16f / to.getHeight()) - from.getMinV();
+		return this;
+	}
+
+	public SuperByteBuffer dontShiftUV() {
+		shouldShiftUV = false;
+		uShift = 0;
+		vShift = 0;
 		return this;
 	}
 

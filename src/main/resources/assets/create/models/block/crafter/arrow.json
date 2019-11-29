@@ -1,0 +1,43 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"3": "create:block/crafter_thingies"
+	},
+	"elements": [
+		{
+			"name": "arrow",
+			"from": [5, 16, 12],
+			"to": [11, 17, 14],
+			"faces": {
+				"north": {"uv": [12, 0, 13, 6], "rotation": 90, "texture": "#3"},
+				"east": {"uv": [12, 0, 14, 1], "rotation": 180, "texture": "#3"},
+				"south": {"uv": [13, 0, 14, 6], "rotation": 90, "texture": "#3"},
+				"west": {"uv": [12, 5, 14, 6], "texture": "#3"},
+				"up": {"uv": [12, 0, 14, 6], "rotation": 90, "texture": "#3"}
+			}
+		},
+		{
+			"name": "arrow",
+			"from": [6, 16, 14],
+			"to": [10, 17, 15],
+			"faces": {
+				"east": {"uv": [14, 1, 15, 2], "rotation": 180, "texture": "#3"},
+				"south": {"uv": [14, 1, 15, 5], "rotation": 90, "texture": "#3"},
+				"west": {"uv": [14, 4, 15, 5], "texture": "#3"},
+				"up": {"uv": [14, 1, 15, 5], "rotation": 90, "texture": "#3"}
+			}
+		},
+		{
+			"name": "arrow",
+			"from": [7, 16, 15],
+			"to": [9, 17, 16],
+			"faces": {
+				"east": {"uv": [15, 2, 16, 3], "rotation": 180, "texture": "#3"},
+				"south": {"uv": [15, 2, 16, 4], "rotation": 90, "texture": "#3"},
+				"west": {"uv": [15, 3, 16, 4], "texture": "#3"},
+				"up": {"uv": [15, 2, 16, 4], "rotation": 90, "texture": "#3"}
+			}
+		}
+	]
+}

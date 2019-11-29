@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 
@@ -19,12 +20,14 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class BeltTunnelBlock extends Block {
+public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnelTileEntity> {
 
 	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 	public static final IProperty<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
@@ -42,12 +45,28 @@ public class BeltTunnelBlock extends Block {
 			return Lang.asId(name());
 		}
 	}
-	
+
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
+	@Override
+	public boolean isSolid(BlockState state) {
+		return false;
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		return BeltTunnelShapes.getFilledShape(state);
+	}
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
+			ISelectionContext context) {
+		return BeltTunnelShapes.getFrameShape(state);
+	}
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new BeltTunnelTileEntity();
@@ -80,6 +99,7 @@ public class BeltTunnelBlock extends Block {
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
+		withTileEntityDo(worldIn, currentPos, BeltTunnelTileEntity::initFlaps);
 		return getTunnelState(worldIn, currentPos);
 	}
 

@@ -63,18 +63,22 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 		beltBuffer.color(te.color == -1 ? 0x808080 : te.color);
 
 		// UV shift
-		if (te.getSpeed() != 0) {
-			if (animatedTexture == null)
-				animatedTexture = SpriteShifter.get("block/belt", "block/belt_animated");
-
+		float speed = te.getSpeed();
+		if (animatedTexture == null)
+			animatedTexture = SpriteShifter.get("block/belt", "block/belt_animated");
+		if (speed != 0) {
 			float time = AnimationTickHolder.getRenderTick()
 					* te.getBlockState().get(HORIZONTAL_FACING).getAxisDirection().getOffset();
-			int textureIndex = (int) ((te.getSpeed() * time / 8) % 16);
+			if (renderedState.get(BeltBlock.HORIZONTAL_FACING).getAxis() == Axis.X)
+				speed = -speed;
+			int textureIndex = (int) ((speed * time / 8) % 16);
 			if (textureIndex < 0)
 				textureIndex += 16;
 
 			beltBuffer.shiftUVtoSheet(animatedTexture.getOriginal(), animatedTexture.getTarget(),
 					(textureIndex % 4) * 16, (textureIndex / 4) * 16);
+		} else {
+			beltBuffer.shiftUVtoSheet(animatedTexture.getOriginal(), animatedTexture.getTarget(), 0, 0);
 		}
 
 		int packedLightmapCoords = te.getBlockState().getPackedLightmapCoords(getWorld(), te.getPos());
@@ -148,7 +152,7 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 					}
 
 					if (blockItem) {
-						GlStateManager.translated(r.nextFloat() * .25f, 0, r.nextFloat() * .25f);
+						GlStateManager.translated(r.nextFloat() * .0625f * i, 0, r.nextFloat() * .0625f * i);
 					}
 
 					GlStateManager.scaled(.5, .5, .5);

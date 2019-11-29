@@ -20,6 +20,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -139,6 +140,16 @@ public class BeltInventory {
 				}
 			}
 
+			// Client: Belt tunnel flaps
+			if (onClient) {
+				int seg1 = (int) current.beltPosition;
+				int seg2 = (int) (current.beltPosition + limitedMovement);
+				if (seg1 != seg2) {
+					flapTunnel(seg1, belt.getMovementFacing(), false);
+					flapTunnel(seg2, belt.getMovementFacing().getOpposite(), true);
+				}
+			}
+
 			// Apply Movement
 			current.beltPosition += limitedMovement;
 			current.sideOffset += (current.getTargetSideOffset() - current.sideOffset) * Math.abs(limitedMovement) * 2f;
@@ -168,6 +179,7 @@ public class BeltInventory {
 				if (world.isRemote)
 					continue;
 
+				int lastOffset = beltMovementPositive ? belt.beltLength - 1 : 0;
 				BlockPos nextPosition = getPositionForOffset(beltMovementPositive ? belt.beltLength : -1);
 				BlockState state = world.getBlockState(nextPosition);
 				Direction movementFacing = belt.getMovementFacing();
@@ -189,6 +201,7 @@ public class BeltInventory {
 							if (remainder.isEmpty()) {
 								iterator.remove();
 								current = null;
+								flapTunnel(lastOffset, belt.getMovementFacing(), false);
 							}
 
 							belt.sendData();
@@ -203,6 +216,7 @@ public class BeltInventory {
 						eject(current);
 						iterator.remove();
 						current = null;
+						flapTunnel(lastOffset, belt.getMovementFacing(), false);
 						belt.sendData();
 					}
 					continue;
@@ -223,6 +237,7 @@ public class BeltInventory {
 				if (nextBelt.tryInsertingFromSide(movementFacing, current, false)) {
 					iterator.remove();
 					current = null;
+					flapTunnel(lastOffset, belt.getMovementFacing(), false);
 					belt.sendData();
 				}
 
@@ -230,6 +245,20 @@ public class BeltInventory {
 
 		}
 
+	}
+
+	private void flapTunnel(int offset, Direction side, boolean inward) {
+		if (belt.getBlockState().get(BeltBlock.SLOPE) != Slope.HORIZONTAL)
+			return;
+		BlockPos pos = getPositionForOffset(offset).up();
+		if (!AllBlocks.BELT_TUNNEL.typeOf(belt.getWorld().getBlockState(pos)))
+			return;
+		TileEntity te = belt.getWorld().getTileEntity(pos);
+		if (te == null || !(te instanceof BeltTunnelTileEntity))
+			return;
+		if (side.getAxis() == Axis.Z)
+			side = side.getOpposite();
+		((BeltTunnelTileEntity) te).flap(side, inward ^ side.getAxis() == Axis.Z);
 	}
 
 	public boolean canInsertAt(int segment) {

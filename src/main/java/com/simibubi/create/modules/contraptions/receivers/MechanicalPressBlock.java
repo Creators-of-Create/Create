@@ -37,7 +37,7 @@ import net.minecraft.world.World;
 public class MechanicalPressBlock extends HorizontalKineticBlock
 		implements IWithTileEntity<MechanicalPressTileEntity>, IBeltAttachment {
 
-	public static VoxelShape SHAPE = makeCuboidShape(0, 2, 0, 16, 16, 16);
+	public static VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 16, 16);
 
 	public MechanicalPressBlock() {
 		super(Properties.from(Blocks.PISTON));

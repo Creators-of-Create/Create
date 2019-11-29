@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
+import com.simibubi.create.foundation.block.RenderUtilityDirectionalBlock;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.generators.MotorBlock;
@@ -125,7 +126,10 @@ public enum AllBlocks {
 	MECHANICAL_MIXER_HEAD(new RenderUtilityBlock()),
 	BASIN(new BasinBlock()),
 	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
-	MECHANICAL_CRAFTER_LID(new MechanicalCrafterBlock.Lid()),
+	MECHANICAL_CRAFTER_LID(new RenderUtilityDirectionalBlock()),
+	MECHANICAL_CRAFTER_ARROW(new RenderUtilityDirectionalBlock()),
+	MECHANICAL_CRAFTER_BELT_FRAME(new RenderUtilityDirectionalBlock()),
+	MECHANICAL_CRAFTER_BELT(new RenderUtilityDirectionalBlock()),
 	
 	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
 	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
