@@ -46,7 +46,7 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 		if (state == State.LOCKED)
 			return;
 
-		if (state == State.ON_COOLDOWN) {
+		if (state == State.ON_COOLDOWN || state == State.WAITING_FOR_INVENTORY) {
 			int cooldown = tickCooldown();
 			if (cooldown <= 0) {
 				setState(State.RUNNING);

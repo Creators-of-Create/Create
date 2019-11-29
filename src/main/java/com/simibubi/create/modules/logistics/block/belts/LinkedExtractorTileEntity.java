@@ -96,6 +96,8 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 	public void setState(State state) {
 		if (state == State.ON_COOLDOWN)
 			cooldown = CreateConfig.parameters.extractorDelay.get();
+		if (state == State.WAITING_FOR_INVENTORY)
+			cooldown = CreateConfig.parameters.extractorInventoryScanDelay.get();
 		this.state = state;
 	}
 

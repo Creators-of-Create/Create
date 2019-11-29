@@ -69,7 +69,7 @@ public class CreateConfig {
 	public DoubleValue mediumCapacity, highCapacity;
 
 	// Logistics
-	public IntValue extractorDelay, extractorAmount, linkRange;
+	public IntValue extractorDelay, extractorInventoryScanDelay, extractorAmount, linkRange;
 
 	// Gardens
 	public DoubleValue cocoaLogGrowthSpeed;
@@ -162,6 +162,11 @@ public class CreateConfig {
 		extractorDelay = builder
 				.comment("", "The amount of game ticks an Extractor waits after pulling an item successfully.")
 				.translation(basePath + name).defineInRange(name, 20, 1, Integer.MAX_VALUE);
+
+		name = "extractorInventoryScanDelay";
+		extractorInventoryScanDelay = builder
+				.comment("", "The amount of game ticks an Extractor waits before checking again if the attached inventory contains items to extract.")
+				.translation(basePath + name).defineInRange(name, 40, 1, Integer.MAX_VALUE);
 
 		name = "extractorAmount";
 		extractorAmount = builder
