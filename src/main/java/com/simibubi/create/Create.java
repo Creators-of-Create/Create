@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.simibubi.create.foundation.world.OreGeneration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,6 +52,7 @@ public class Create {
 	public Create() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(Create::init);
+		modEventBus.addListener(Create::preInit);
 		modEventBus.addGenericListener(Block.class, Create::registerBlocks);
 		modEventBus.addGenericListener(Item.class, Create::registerItems);
 		modEventBus.addGenericListener(IRecipeSerializer.class, Create::registerRecipes);
@@ -64,6 +66,12 @@ public class Create {
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, CreateConfig.specification);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CreateClientConfig.specification);
+	}
+
+	public static void preInit(FMLCommonSetupEvent event) {
+
+		OreGeneration.setupOreGeneration();
+
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
