@@ -134,4 +134,14 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 		return state.get(HORIZONTAL_FACING).getAxis();
 	}
 
+	@Override
+	public float getParticleTargetRadius() {
+		return 1.125f;
+	}
+
+	@Override
+	public float getParticleInitialRadius() {
+		return 1f;
+	}
+	
 }

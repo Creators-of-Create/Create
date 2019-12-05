@@ -1,9 +1,9 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.constructs.piston;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -21,7 +21,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class PistonPoleBlock extends ProperDirectionalBlock {
-
 
 	public PistonPoleBlock() {
 		super(Properties.from(Blocks.PISTON_HEAD));

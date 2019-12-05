@@ -21,7 +21,7 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 	private int cooldown;
 	private LazyOptional<IItemHandler> inventory;
 	private boolean initialize;
-	
+
 	public ExtractorTileEntity() {
 		super(AllTileEntities.EXTRACTOR.type);
 		state = State.ON_COOLDOWN;
@@ -29,12 +29,12 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 		inventory = LazyOptional.empty();
 		filter = ItemStack.EMPTY;
 	}
-	
+
 	@Override
 	public State getState() {
 		return state;
 	}
-	
+
 	@Override
 	public void read(CompoundNBT compound) {
 		filter = ItemStack.read(compound.getCompound("Filter"));
@@ -42,19 +42,19 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 			setState(State.LOCKED);
 		super.read(compound);
 	}
-	
+
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.put("Filter", filter.serializeNBT());
 		compound.putBoolean("Locked", getState() == State.LOCKED);
 		return super.write(compound);
 	}
-	
+
 	@Override
 	public void onLoad() {
 		initialize = true;
 	}
-	
+
 	@Override
 	public void tick() {
 		if (initialize && hasWorld()) {
@@ -65,7 +65,7 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 		}
 		IExtractor.super.tick();
 	}
-	
+
 	@Override
 	public void setState(State state) {
 		if (state == State.ON_COOLDOWN)
@@ -74,7 +74,7 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 			cooldown = CreateConfig.parameters.extractorInventoryScanDelay.get();
 		this.state = state;
 	}
-	
+
 	@Override
 	public int tickCooldown() {
 		return cooldown--;

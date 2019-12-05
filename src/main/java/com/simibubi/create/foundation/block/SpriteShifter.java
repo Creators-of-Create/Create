@@ -24,11 +24,19 @@ public class SpriteShifter {
 			target = textureMap.getSprite(targetTextureLocation);
 		}
 
+		public ResourceLocation getTargetResourceLocation() {
+			return targetTextureLocation;
+		}
+
 		public TextureAtlasSprite getTarget() {
+			if (target == null)
+				loadTextures();
 			return target;
 		}
 
 		public TextureAtlasSprite getOriginal() {
+			if (original == null)
+				loadTextures();
 			return original;
 		}
 	}
@@ -47,7 +55,6 @@ public class SpriteShifter {
 		SpriteShiftEntry entry = new SpriteShiftEntry();
 		entry.originalTextureLocation = new ResourceLocation(Create.ID, originalLocation);
 		entry.targetTextureLocation = new ResourceLocation(Create.ID, targetLocation);
-		entry.loadTextures();
 		textures.put(key, entry);
 		return entry;
 	}

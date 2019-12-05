@@ -25,6 +25,10 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	protected MountedContraption contraption;
 	protected float initialAngle;
+	
+	enum MovementType {
+		TRANSLATION, ROTATION, MOUNTED;
+	}
 
 	// Not synchronizing any of these
 	public float targetYaw;

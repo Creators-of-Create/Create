@@ -164,8 +164,8 @@ public class CreateConfig {
 				.translation(basePath + name).defineInRange(name, 20, 1, Integer.MAX_VALUE);
 
 		name = "extractorInventoryScanDelay";
-		extractorInventoryScanDelay = builder
-				.comment("", "The amount of game ticks an Extractor waits before checking again if the attached inventory contains items to extract.")
+		extractorInventoryScanDelay = builder.comment("",
+				"The amount of game ticks an Extractor waits before checking again if the attached inventory contains items to extract.")
 				.translation(basePath + name).defineInRange(name, 40, 1, Integer.MAX_VALUE);
 
 		name = "extractorAmount";
@@ -348,7 +348,7 @@ public class CreateConfig {
 				.translation(basePath + name).defineInRange(name, 32D, 0D, 4096D);
 
 		name = "fastSpeed";
-		mediumSpeed = builder.comment("", "[in Degrees/Tick]", "Minimum speed of rotation to be considered 'fast'")
+		fastSpeed = builder.comment("", "[in Degrees/Tick]", "Minimum speed of rotation to be considered 'fast'")
 				.translation(basePath + name).defineInRange(name, 512D, 0D, 65535D);
 
 		name = "mediumStressImpact";

@@ -14,6 +14,7 @@
 	"item.create.blueprint_and_quill": "Schematic and Quill",
 	"item.create.blueprint": "Schematic",
 	"item.create.belt_connector": "Mechanical Belt",
+	"item.create.goggles": "Engineer's Goggles",
 	"item.create.filter": "Filter",
 	"item.create.rose_quartz": "Rose Quartz",
 	"item.create.refined_rose_quartz": "Refined Rose Quartz",
@@ -78,8 +79,8 @@
 	"block.create.mechanical_piston_head": "Mechanical Piston Head",
 	"block.create.piston_pole": "Piston Extension Pole",
 	"block.create.mechanical_bearing": "Mechanical Bearing",
-	"block.create.translation_chassis": "Translation Chassis",
-	"block.create.rotation_chassis": "Rotation Chassis",
+	"block.create.translation_chassis": "Linear Chassis",
+	"block.create.rotation_chassis": "Radial Chassis",
 
 	"block.create.contact": "Redstone Contact",
 	"block.create.redstone_bridge": "Redstone Link",
@@ -107,6 +108,8 @@
 	"block.create.diorite_bricks": "Diorite Bricks",
 	"block.create.granite_bricks": "Granite Bricks",
 
+	"block.create.volcanic_rock": "Basalt",
+	
 	"block.create.gabbro": "Gabbro",
 	"block.create.gabbro_stairs": "Gabbro Stairs",
 	"block.create.gabbro_slab": "Gabbro Slab",
@@ -515,10 +518,10 @@
 	"item.create.belt_connector.tooltip.control2": "R-Click while Sneaking",
 	"item.create.belt_connector.tooltip.action2": "_Resets_ the first selected position for the Belt",
 
-	"block.create.belt_support.tooltip": "BELT SUPPORT",
-	"block.create.belt_support.tooltip.summary": "A _purely_ _decorational_ block suitable for mounting _Mechanical_ _Belts_ to the Ground.",
-	"block.create.belt_support.tooltip.condition1": "When placed below a Belt",
-	"block.create.belt_support.tooltip.behaviour1": "Supports the top of the Belt, hiding the bottom layer.",
+	"item.create.goggles.tooltip": "GOGGLES",
+	"item.create.goggles.tooltip.summary": "A pair of glasses to augment your vision with useful _kinetic_ _information._",
+	"item.create.goggles.tooltip.condition1": "When worn",
+	"item.create.goggles.tooltip.behaviour1": "Shows _colored_ _indicators_ corresponding to the _Speed_ _Level_ of a placed kinetic component.",
 
 	"block.create.motor.tooltip": "MOTOR",
 	"block.create.motor.tooltip.summary": "A configurable source of _Rotational_ _Force_",
@@ -549,6 +552,13 @@
 	"block.create.mechanical_press.tooltip.behaviour1": "_Starts_ to compress items dropped below it.",
 	"block.create.mechanical_press.tooltip.condition2": "When Above a Mechanical Belt",
 	"block.create.mechanical_press.tooltip.behaviour2": "_Automatically_ compresses bypassing items on the Belt.",
+	
+	"block.create.mechanical_mixer.tooltip": "MECHANICAL MIXER",
+	"block.create.mechanical_mixer.tooltip.summary": "A kinetic whisk for applying any shapeless crafting recipes to items beneath it. Requires constant _Rotational_ _Force_ and a _Basin_ placed below (with a gap inbetween).",
+	"block.create.mechanical_mixer.tooltip.condition1": "When above Basin",
+	"block.create.mechanical_mixer.tooltip.behaviour1": "Starts to mix items in the basin whenever all necessary ingredients are present.",
+	"block.create.mechanical_mixer.tooltip.condition2": "When used with Wrench",
+	"block.create.mechanical_mixer.tooltip.behaviour2": "_Configures_ the minimum amount of _different_ _ingredients_ required before the mixer should begin. Use this option to rule out unwanted recipes with similar but less ingredients.",
 
 	"block.create.mechanical_piston.tooltip": "MECHANICAL PISTON",
 	"block.create.mechanical_piston.tooltip.summary": "A more advanced version of the _Piston,_ using _Rotational_ _Force_ to precisely move attached structures. _Piston_ _Extension_ _Poles_ at the rear define the _Range_ of this Device. Without extensions, the piston will not move. Use _Translation_ _Chassis_ to move more than a single line of blocks.",

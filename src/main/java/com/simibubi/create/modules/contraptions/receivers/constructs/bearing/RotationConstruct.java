@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.constructs.bearing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +11,8 @@ import java.util.Set;
 import com.simibubi.create.AllBlockTags;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
+import com.simibubi.create.modules.contraptions.receivers.constructs.ChassisTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.RadialChassisBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PistonBlock;
@@ -87,7 +89,7 @@ public class RotationConstruct {
 
 	private List<BlockInfo> getAttachedBlocksByChassis(World world, Direction direction, List<BlockInfo> chassis) {
 		List<BlockInfo> blocks = new ArrayList<>();
-		RotationChassisBlock def = (RotationChassisBlock) AllBlocks.ROTATION_CHASSIS.block;
+		RadialChassisBlock def = (RadialChassisBlock) AllBlocks.ROTATION_CHASSIS.block;
 
 		for (BlockInfo chassisBlock : chassis) {
 			blocks.add(chassisBlock);

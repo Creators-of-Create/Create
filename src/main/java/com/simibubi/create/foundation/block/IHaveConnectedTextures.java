@@ -2,6 +2,10 @@ package com.simibubi.create.foundation.block;
 
 import java.util.function.BiPredicate;
 
+import com.google.common.collect.ImmutableList;
+import com.simibubi.create.foundation.block.SpriteShifter.SpriteShiftEntry;
+
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.util.Direction;
@@ -20,7 +24,9 @@ public interface IHaveConnectedTextures {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public boolean appliesTo(BakedQuad quad);
+	default boolean appliesTo(BakedQuad quad) {
+		return true;
+	}
 
 	default boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader, BlockPos pos,
 			BlockPos otherPos, Direction face) {
@@ -32,6 +38,10 @@ public interface IHaveConnectedTextures {
 			return false;
 
 		return state.getBlock() == other.getBlock();
+	}
+
+	default Iterable<SpriteShiftEntry> getSpriteShifts() {
+		return ImmutableList.of(SpriteShifter.getCT(((Block) this).getRegistryName().getPath()));
 	}
 
 	default int getTextureIndex(IEnviromentBlockReader reader, BlockPos pos, BlockState state, Direction face) {
@@ -57,16 +67,32 @@ public interface IHaveConnectedTextures {
 			return connectsTo(state, reader.getBlockState(p), reader, pos, p, face);
 		};
 
+		boolean up = connection.test(0, 1);
+		boolean down = connection.test(0, -1);
+		boolean left = connection.test(-1, 0);
+		boolean right = connection.test(1, 0);
+		boolean topLeft = connection.test(-1, 1);
+		boolean topRight = connection.test(1, 1);
+		boolean bottomLeft = connection.test(-1, -1);
+		boolean bottomRight = connection.test(1, -1);
+
+		boolean flip = shouldFlipUVs(state, face);
 		CTContext context = new CTContext();
-		context.up = connection.test(0, 1);
-		context.down = connection.test(0, -1);
-		context.left = connection.test(-1, 0);
-		context.right = connection.test(1, 0);
-		context.topLeft = connection.test(-1, 1);
-		context.topRight = connection.test(1, 1);
-		context.bottomLeft = connection.test(-1, -1);
-		context.bottomRight = connection.test(1, -1);
+
+		context.up = flip ? down : up;
+		context.down = flip ? up : down;
+		context.left = flip ? right : left;
+		context.right = flip ? left : right;
+		context.topLeft = flip ? bottomRight : topLeft;
+		context.topRight = flip ? bottomLeft : topRight;
+		context.bottomLeft = flip ? topRight : bottomLeft;
+		context.bottomRight = flip ? topLeft : bottomRight;
+
 		return context;
+	}
+
+	default boolean shouldFlipUVs(BlockState state, Direction face) {
+		return false;
 	}
 
 	default int getTextureIndexForContext(IEnviromentBlockReader reader, BlockPos pos, BlockState state, Direction face,

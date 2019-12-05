@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.base;
 
+import com.simibubi.create.CreateConfig;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
@@ -17,6 +19,17 @@ public interface IRotate {
 		public TextFormatting getColor() {
 			return this == NONE ? TextFormatting.GREEN
 					: this == MEDIUM ? TextFormatting.AQUA : TextFormatting.LIGHT_PURPLE;
+		}
+		
+		public static SpeedLevel of(float speed) {
+			speed = Math.abs(speed);
+
+			if (speed >= CreateConfig.parameters.fastSpeed.get()) {
+				return FAST;
+			} else if (speed >= CreateConfig.parameters.mediumSpeed.get()) {
+				return MEDIUM;
+			}
+			return NONE;
 		}
 	}
 

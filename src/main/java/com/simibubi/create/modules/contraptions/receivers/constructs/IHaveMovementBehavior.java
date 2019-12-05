@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.receivers.constructs;
 
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;

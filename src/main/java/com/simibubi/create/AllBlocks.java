@@ -23,14 +23,14 @@ import com.simibubi.create.modules.contraptions.receivers.MechanicalMixerBlock.M
 import com.simibubi.create.modules.contraptions.receivers.MechanicalPressBlock;
 import com.simibubi.create.modules.contraptions.receivers.SawBlock;
 import com.simibubi.create.modules.contraptions.receivers.TurntableBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonHeadBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.PistonPoleBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.RotationChassisBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.TranslationChassisBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.LinearChassisBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.RadialChassisBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.bearing.MechanicalBearingBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.CartAssemblerBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.CartAssemblerBlock.MinecartAnchorBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonHeadBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.PistonPoleBlock;
 import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.ClutchBlock;
@@ -65,6 +65,7 @@ import com.simibubi.create.modules.logistics.transport.villager.LogisticiansTabl
 import com.simibubi.create.modules.logistics.transport.villager.PackageFunnelBlock;
 import com.simibubi.create.modules.palettes.CTGlassBlock;
 import com.simibubi.create.modules.palettes.GlassPaneBlock;
+import com.simibubi.create.modules.palettes.VolcanicRockBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
@@ -86,6 +87,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllBlocks {
@@ -130,16 +132,16 @@ public enum AllBlocks {
 	MECHANICAL_CRAFTER_ARROW(new RenderUtilityDirectionalBlock()),
 	MECHANICAL_CRAFTER_BELT_FRAME(new RenderUtilityDirectionalBlock()),
 	MECHANICAL_CRAFTER_BELT(new RenderUtilityDirectionalBlock()),
-	
+
 	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
 	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
 	MECHANICAL_PISTON_HEAD(new MechanicalPistonHeadBlock()),
 	PISTON_POLE(new PistonPoleBlock()),
 	MECHANICAL_BEARING(new MechanicalBearingBlock()),
 	MECHANICAL_BEARING_TOP(new ShaftHalfBlock()),
-	TRANSLATION_CHASSIS(new TranslationChassisBlock()),
-	TRANSLATION_CHASSIS_SECONDARY(new TranslationChassisBlock()),
-	ROTATION_CHASSIS(new RotationChassisBlock()),
+	TRANSLATION_CHASSIS(new LinearChassisBlock()),
+	TRANSLATION_CHASSIS_SECONDARY(new LinearChassisBlock()),
+	ROTATION_CHASSIS(new RadialChassisBlock()),
 	DRILL(new DrillBlock()),
 	DRILL_HEAD(new DrillHeadBlock()),
 	SAW(new SawBlock()),
@@ -209,6 +211,8 @@ public enum AllBlocks {
 	POLISHED_DOLOMITE(new Block(Properties.from(DOLOMITE.block))),
 	DOLOMITE_PILLAR(new RotatedPillarBlock(Properties.from(DOLOMITE.block))),
 
+	VOLCANIC_ROCK(new VolcanicRockBlock()),
+
 	;
 
 	private enum ComesWith {
@@ -242,7 +246,9 @@ public enum AllBlocks {
 			alsoRegistered[i] = makeRelatedBlock(block, comesWith[i]);
 	}
 
-	public static void registerBlocks(IForgeRegistry<Block> registry) {
+	public static void register(RegistryEvent.Register<Block> event) {
+		IForgeRegistry<Block> registry = event.getRegistry();
+
 		for (AllBlocks block : values()) {
 			if (block.get() == null)
 				continue;

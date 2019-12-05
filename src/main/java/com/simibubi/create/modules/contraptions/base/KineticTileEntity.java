@@ -12,10 +12,13 @@ import java.util.UUID;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
+import com.simibubi.create.modules.contraptions.particle.RotationIndicatorParticleData;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -24,10 +27,15 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 
 public abstract class KineticTileEntity extends SyncedTileEntity implements ITickableTileEntity {
+
+	int particleSpawnCountdown;
 
 	// Speed related
 	public float speed;
@@ -254,6 +262,10 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 		if (world.isRemote)
 			return;
 
+		if (particleSpawnCountdown > 0)
+			if (--particleSpawnCountdown == 0)
+				spawnRotationIndicators();
+
 		if (initNetwork) {
 			initNetwork = false;
 
@@ -308,6 +320,55 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 		lines.add("Speed: " + GREEN + speed);
 		lines.add("Cost: " + GREEN + getStressApplied() + WHITE + "/" + GREEN + getAddedStressCapacity());
 		lines.add("Stress: " + GREEN + currentStress + WHITE + "/" + GREEN + maxStress);
+	}
+
+	public void queueRotationIndicators() {
+		// wait a few ticks for network jamming etc
+		particleSpawnCountdown = 2;
+	}
+
+	protected void spawnRotationIndicators() {
+		if (getSpeed() == 0)
+			return;
+
+		BlockState state = getBlockState();
+		Block block = state.getBlock();
+		if (!(block instanceof KineticBlock))
+			return;
+
+		KineticBlock kb = (KineticBlock) block;
+		float radius1 = kb.getParticleInitialRadius();
+		float radius2 = kb.getParticleTargetRadius();
+
+		Axis axis = kb.getRotationAxis(state);
+		if (axis == null)
+			return;
+		char axisChar = axis.name().charAt(0);
+		Vec3d vec = VecHelper.getCenterOf(pos);
+
+		int color = 0x22FF22;
+		int particleSpeed = 10;
+
+		switch (SpeedLevel.of(getSpeed())) {
+		case FAST:
+			color = 16733695;
+			particleSpeed = 30;
+			break;
+		case MEDIUM:
+			color = 0x0084FF;
+			particleSpeed = 20;
+			break;
+		default:
+			break;
+		}
+
+		particleSpeed *= Math.signum(getSpeed());
+
+		if (getWorld() instanceof ServerWorld) {
+			RotationIndicatorParticleData particleData = new RotationIndicatorParticleData(color, particleSpeed,
+					radius1, radius2, 10, axisChar);
+			((ServerWorld) getWorld()).spawnParticle(particleData, vec.x, vec.y, vec.z, 20, 0, 0, 0, 1);
+		}
 	}
 
 }

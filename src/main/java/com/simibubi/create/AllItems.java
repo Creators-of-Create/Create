@@ -3,6 +3,7 @@ package com.simibubi.create;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
+import com.simibubi.create.modules.contraptions.GogglesItem;
 import com.simibubi.create.modules.contraptions.WrenchItem;
 import com.simibubi.create.modules.contraptions.WrenchItemRenderer;
 import com.simibubi.create.modules.contraptions.relays.VerticalGearboxItem;
@@ -32,6 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -88,6 +90,7 @@ public enum AllItems {
 	DOUGH(ingredient()),
 	PROPELLER(ingredient()),
 	WRENCH(new WrenchItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.WRENCH)))),
+	GOGGLES(new GogglesItem(standardItemProperties())),
 
 	CRUSHED_IRON(ingredient()),
 	CRUSHED_GOLD(ingredient()),
@@ -146,12 +149,16 @@ public enum AllItems {
 		return new Item(standardItemProperties().rarity(rarity));
 	}
 
-	public static void registerItems(IForgeRegistry<Item> iForgeRegistry) {
+	public static void register(RegistryEvent.Register<Item> event) {
+		IForgeRegistry<Item> registry = event.getRegistry();
+
 		for (AllItems item : values()) {
 			if (item.get() == null)
 				continue;
-			iForgeRegistry.register(item.get());
+			registry.register(item.get());
 		}
+		
+		AllBlocks.registerItemBlocks(registry);
 	}
 
 	public Item get() {

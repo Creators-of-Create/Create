@@ -3,6 +3,8 @@ package com.simibubi.create.modules.contraptions.base;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
+
 import net.minecraft.tileentity.TileEntityType;
 
 public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
@@ -24,6 +26,14 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 		float speed = getGeneratedSpeed();
 
 		if (this.speed != speed) {
+
+			if (!world.isRemote) {
+				SpeedLevel levelBefore = SpeedLevel.of(this.speed);
+				SpeedLevel levelafter = SpeedLevel.of(speed);
+				if (levelBefore != levelafter)
+					queueRotationIndicators();
+			}
+
 			if (speed == 0) {
 				if (hasSource())
 					notifyStressCapacityChange(0);

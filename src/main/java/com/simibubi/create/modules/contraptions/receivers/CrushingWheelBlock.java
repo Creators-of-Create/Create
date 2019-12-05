@@ -167,5 +167,15 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 	protected boolean hasStaticPart() {
 		return false;
 	}
+	
+	@Override
+	public float getParticleTargetRadius() {
+		return 1.125f;
+	}
+
+	@Override
+	public float getParticleInitialRadius() {
+		return 1f;
+	}
 
 }

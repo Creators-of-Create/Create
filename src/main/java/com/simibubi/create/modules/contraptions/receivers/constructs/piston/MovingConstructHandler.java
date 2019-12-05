@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.constructs.piston;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.modules.contraptions.receivers.constructs.Contraption;
 
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;

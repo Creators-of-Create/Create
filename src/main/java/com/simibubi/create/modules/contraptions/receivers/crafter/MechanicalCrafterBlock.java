@@ -40,7 +40,7 @@ public class MechanicalCrafterBlock extends DirectionalKineticBlock
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(FACING).getAxis();
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
@@ -49,10 +49,20 @@ public class MechanicalCrafterBlock extends DirectionalKineticBlock
 			return getDefaultState().with(FACING, blockState.get(FACING));
 		return super.getStateForPlacement(context);
 	}
-	
+
 	@Override
 	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT_MIPPED;
+	}
+
+	@Override
+	public float getParticleTargetRadius() {
+		return .85f;
+	}
+
+	@Override
+	public float getParticleInitialRadius() {
+		return .75f;
 	}
 
 }

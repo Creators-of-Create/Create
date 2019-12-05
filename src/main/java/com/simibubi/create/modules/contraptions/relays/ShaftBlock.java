@@ -37,6 +37,16 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 		return state.get(AXIS) == Axis.X ? AXIS_X : state.get(AXIS) == Axis.Z ? AXIS_Z : AXIS_Y;
 	}
 
+	@Override
+	public float getParticleTargetRadius() {
+		return .25f;
+	}
+
+	@Override
+	public float getParticleInitialRadius() {
+		return 0f;
+	}
+
 	// IRotate:
 
 	@Override

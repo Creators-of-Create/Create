@@ -37,20 +37,23 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 	}
 
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capabitily, Direction side) {
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
 
-		if (capabitily == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			if (!this.cap.isPresent()) {
 				if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
 					TileEntity teBelow = world.getTileEntity(pos.down());
-					if (teBelow != null)
-						cap = LazyOptional.of(() -> teBelow.getCapability(capabitily, Direction.UP).orElse(null))
-								.cast();
+					if (teBelow != null) {
+						T capBelow = teBelow.getCapability(capability, Direction.UP).orElse(null);
+						if (capBelow != null) {
+							cap = LazyOptional.of(() -> capBelow).cast();
+						}
+					}
 				}
 			}
 			return this.cap.cast();
 		}
-		return super.getCapability(capabitily, side);
+		return super.getCapability(capability, side);
 	}
 
 	@Override

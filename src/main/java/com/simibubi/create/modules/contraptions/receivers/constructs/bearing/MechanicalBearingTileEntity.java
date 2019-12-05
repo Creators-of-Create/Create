@@ -1,7 +1,8 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.constructs.bearing;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.ChassisTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

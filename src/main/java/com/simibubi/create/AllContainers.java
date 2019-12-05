@@ -22,8 +22,8 @@ import net.minecraft.inventory.container.ContainerType.IFactory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
-import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllContainers {
 
@@ -32,7 +32,7 @@ public enum AllContainers {
 	FLEXCRATE(FlexcrateContainer::new),
 	LOGISTICAL_INDEX(LogisticalIndexContainer::new),
 	LOGISTICAL_CONTROLLER(LogisticalInventoryControllerContainer::new),
-	
+
 	;
 
 	public ContainerType<? extends Container> type;
@@ -42,11 +42,11 @@ public enum AllContainers {
 		this.factory = factory;
 	}
 
-	public static void registerContainers(IForgeRegistry<ContainerType<?>> iForgeRegistry) {
+	public static void register(RegistryEvent.Register<ContainerType<?>> event) {
 		for (AllContainers container : values()) {
 			container.type = new ContainerType<>(container.factory)
 					.setRegistryName(new ResourceLocation(Create.ID, Lang.asId(container.name())));
-			iForgeRegistry.register(container.type);
+			event.getRegistry().register(container.type);
 		}
 	}
 

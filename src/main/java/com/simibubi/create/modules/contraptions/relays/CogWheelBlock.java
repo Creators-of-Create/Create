@@ -74,6 +74,16 @@ public class CogWheelBlock extends ShaftBlock {
 		return isLarge ? LARGE_GEAR_Y : GEAR_Y;
 	}
 
+	@Override
+	public float getParticleTargetRadius() {
+		return isLarge ? 1.125f : .65f;
+	}
+
+	@Override
+	public float getParticleInitialRadius() {
+		return isLarge ? 1f : .75f;
+	}
+
 	// IRotate
 
 	@Override

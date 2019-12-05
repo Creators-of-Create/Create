@@ -1,7 +1,7 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.constructs.piston;
 
 import static com.simibubi.create.CreateConfig.parameters;
-import static com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.STATE;
+import static com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonBlock.STATE;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -12,9 +12,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.Create;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MoverType;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;

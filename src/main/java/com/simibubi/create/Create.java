@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MovingConstructHandler;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MovingConstructHandler;
 import com.simibubi.create.modules.logistics.FrequencyHandler;
 import com.simibubi.create.modules.logistics.management.LogisticalNetworkHandler;
 import com.simibubi.create.modules.logistics.transport.villager.LogisticianHandler;
@@ -18,6 +18,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.village.PointOfInterestType;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -51,14 +52,17 @@ public class Create {
 	public Create() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(Create::init);
-		modEventBus.addGenericListener(Block.class, Create::registerBlocks);
-		modEventBus.addGenericListener(Item.class, Create::registerItems);
-		modEventBus.addGenericListener(IRecipeSerializer.class, Create::registerRecipes);
-		modEventBus.addGenericListener(TileEntityType.class, Create::registerTileEntities);
-		modEventBus.addGenericListener(ContainerType.class, Create::registerContainers);
+
+		modEventBus.addGenericListener(Block.class, AllBlocks::register);
+		modEventBus.addGenericListener(Item.class, AllItems::register);
+		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipes::register);
+		modEventBus.addGenericListener(TileEntityType.class, AllTileEntities::register);
+		modEventBus.addGenericListener(ContainerType.class, AllContainers::register);
 		modEventBus.addGenericListener(VillagerProfession.class, Create::registerVillagerProfessions);
 		modEventBus.addGenericListener(PointOfInterestType.class, Create::registerPointsOfInterest);
-		modEventBus.addGenericListener(EntityType.class, Create::registerEntities);
+		modEventBus.addGenericListener(EntityType.class, AllEntities::register);
+		modEventBus.addGenericListener(ParticleType.class, AllParticles::register);
+
 		modEventBus.addListener(Create::createConfigs);
 		CreateClient.addListeners(modEventBus);
 
@@ -75,31 +79,6 @@ public class Create {
 
 		CraftingHelper.register(new ModuleLoadedCondition.Serializer());
 		AllPackets.registerPackets();
-	}
-
-	public static void registerItems(RegistryEvent.Register<Item> event) {
-		AllItems.registerItems(event.getRegistry());
-		AllBlocks.registerItemBlocks(event.getRegistry());
-	}
-
-	public static void registerBlocks(RegistryEvent.Register<Block> event) {
-		AllBlocks.registerBlocks(event.getRegistry());
-	}
-
-	public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-		AllTileEntities.registerTileEntities(event.getRegistry());
-	}
-
-	public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
-		AllContainers.registerContainers(event.getRegistry());
-	}
-
-	public static void registerRecipes(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-		AllRecipes.register(event);
-	}
-
-	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-		AllEntities.register(event);
 	}
 
 	public static void registerVillagerProfessions(RegistryEvent.Register<VillagerProfession> event) {

@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.constructs.piston;
 
 import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
 import static com.simibubi.create.AllBlocks.PISTON_POLE;
@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.modules.contraptions.receivers.constructs.Contraption;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;

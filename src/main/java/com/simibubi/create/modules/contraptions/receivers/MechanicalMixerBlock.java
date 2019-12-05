@@ -134,6 +134,16 @@ public class MechanicalMixerBlock extends KineticBlock
 	}
 	
 	@Override
+	public float getParticleTargetRadius() {
+		return .85f;
+	}
+
+	@Override
+	public float getParticleInitialRadius() {
+		return .75f;
+	}
+	
+	@Override
 	public SpeedLevel getMinimumRequiredSpeedLevel() {
 		return SpeedLevel.MEDIUM;
 	}

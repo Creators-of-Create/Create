@@ -1,6 +1,10 @@
 package com.simibubi.create.modules.contraptions.receivers.constructs;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.block.IHaveConnectedTextures;
+import com.simibubi.create.foundation.block.SpriteShifter;
+import com.simibubi.create.foundation.block.SpriteShifter.SpriteShiftEntry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,13 +15,14 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IEnviromentBlockReader;
 
-public class TranslationChassisBlock extends AbstractChassisBlock {
+public class LinearChassisBlock extends AbstractChassisBlock implements IHaveConnectedTextures {
 
 	public static final BooleanProperty STICKY_TOP = BooleanProperty.create("sticky_top");
 	public static final BooleanProperty STICKY_BOTTOM = BooleanProperty.create("sticky_bottom");
 
-	public TranslationChassisBlock() {
+	public LinearChassisBlock() {
 		super(Properties.from(Blocks.PISTON));
 		setDefaultState(getDefaultState().with(STICKY_TOP, false).with(STICKY_BOTTOM, false));
 	}
@@ -45,7 +50,7 @@ public class TranslationChassisBlock extends AbstractChassisBlock {
 			return null;
 		return face.getAxisDirection() == AxisDirection.POSITIVE ? STICKY_TOP : STICKY_BOTTOM;
 	}
-	
+
 	@Override
 	public String getTranslationKey() {
 		Block block = AllBlocks.TRANSLATION_CHASSIS.get();
@@ -60,6 +65,27 @@ public class TranslationChassisBlock extends AbstractChassisBlock {
 
 	public static boolean sameKind(BlockState state1, BlockState state2) {
 		return state1.getBlock() == state2.getBlock();
+	}
+
+	@Override
+	public Iterable<SpriteShiftEntry> getSpriteShifts() {
+		return ImmutableList.of(
+				SpriteShifter.get("block/translation_chassis_top", "block/connected/translation_chassis_top"),
+				SpriteShifter.get("block/translation_chassis_top_sticky",
+						"block/connected/translation_chassis_top_sticky"));
+	}
+
+	@Override
+	public boolean shouldFlipUVs(BlockState state, Direction face) {
+		if (state.get(AXIS).isHorizontal() && face.getAxisDirection() == AxisDirection.POSITIVE)
+			return true;
+		return IHaveConnectedTextures.super.shouldFlipUVs(state, face);
+	}
+
+	@Override
+	public boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader, BlockPos pos,
+			BlockPos otherPos, Direction face) {
+		return sameKind(state, other) && state.get(AXIS) == other.get(AXIS);
 	}
 
 }

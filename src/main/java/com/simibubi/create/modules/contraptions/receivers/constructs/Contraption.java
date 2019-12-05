@@ -43,9 +43,9 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class Contraption {
 
-	protected Map<BlockPos, BlockInfo> blocks;
-	protected List<MutablePair<BlockInfo, MovementContext>> actors;
-	protected AxisAlignedBB constructCollisionBox;
+	public Map<BlockPos, BlockInfo> blocks;
+	public List<MutablePair<BlockInfo, MovementContext>> actors;
+	public AxisAlignedBB constructCollisionBox;
 	protected Set<BlockPos> cachedColliders;
 	protected Direction cachedColliderDirection;
 	protected BlockPos anchor;
@@ -74,9 +74,9 @@ public class Contraption {
 				return null;
 
 			BlockState state = world.getBlockState(current);
-			if (!isChassis(state))
+			if (!isLinearChassis(state))
 				continue;
-			if (!TranslationChassisBlock.sameKind(anchorChassis, state))
+			if (!LinearChassisBlock.sameKind(anchorChassis, state))
 				continue;
 			if (state.get(AXIS) != axis)
 				continue;
@@ -157,8 +157,11 @@ public class Contraption {
 			return true;
 		if (!canPush(world, pos, direction))
 			return false;
-		if (isChassis(state) && !moveChassis(world, pos, direction, frontier, visited))
+		if (isLinearChassis(state) && !moveLinearChassis(world, pos, direction, frontier, visited))
 			return false;
+		if (isRadialChassis(state) && !moveRadialChassis(world, pos, direction, frontier, visited))
+			return false;
+
 		if (state.getBlock() instanceof SlimeBlock)
 			for (Direction offset : Direction.values()) {
 				BlockPos offsetPos = pos.offset(offset);
@@ -177,7 +180,7 @@ public class Contraption {
 		return true;
 	}
 
-	private boolean moveChassis(World world, BlockPos pos, Direction movementDirection, List<BlockPos> frontier,
+	private boolean moveLinearChassis(World world, BlockPos pos, Direction movementDirection, List<BlockPos> frontier,
 			Set<BlockPos> visited) {
 		List<BlockInfo> cluster = getChassisClusterAt(world, pos);
 
@@ -223,7 +226,7 @@ public class Contraption {
 				BlockState chassisState = world.getBlockState(currentChassisPos);
 
 				// Not attached to a chassis
-				if (!isChassis(chassisState) || chassisState.get(AXIS) != chassisAxis)
+				if (!isLinearChassis(chassisState) || chassisState.get(AXIS) != chassisAxis)
 					continue;
 				if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state)
 						&& state.get(FACING) == chassisDirection.getOpposite())
@@ -300,8 +303,96 @@ public class Contraption {
 		return true;
 	}
 
-	private static boolean isChassis(BlockState state) {
-		return TranslationChassisBlock.isChassis(state);
+	private boolean moveRadialChassis(World world, BlockPos pos, Direction movementDirection, List<BlockPos> frontier,
+			Set<BlockPos> visited) {
+		RadialChassisBlock def = (RadialChassisBlock) AllBlocks.ROTATION_CHASSIS.block;
+
+		List<BlockPos> chassisPositions = new ArrayList<>();
+		BlockState chassisState = world.getBlockState(pos);
+		Axis axis = chassisState.get(RadialChassisBlock.AXIS);
+		chassisPositions.add(pos);
+
+		// Collect chain of chassis
+		for (int offset : new int[] { -1, 1 }) {
+			for (int distance = 1; distance <= parameters.maxChassisForTranslation.get(); distance++) {
+				Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
+				BlockPos currentPos = pos.offset(direction, distance * offset);
+				if (!world.isBlockPresent(currentPos))
+					return false;
+
+				BlockState state = world.getBlockState(currentPos);
+				if (!AllBlocks.ROTATION_CHASSIS.typeOf(state))
+					break;
+				if (direction.getAxis() != state.get(BlockStateProperties.AXIS))
+					break;
+
+				chassisPositions.add(currentPos);
+			}
+		}
+
+		// Add attached blocks to frontier
+		for (BlockPos chassisPos : chassisPositions) {
+			add(chassisPos, capture(world, chassisPos));
+			visited.add(chassisPos);
+
+			BlockPos currentPos = chassisPos;
+			BlockState state = world.getBlockState(currentPos);
+			TileEntity tileEntity = world.getTileEntity(currentPos);
+
+			if (!(tileEntity instanceof ChassisTileEntity))
+				return false;
+
+			int chassisRange = ((ChassisTileEntity) tileEntity).getRange();
+
+			for (Direction facing : Direction.values()) {
+				if (facing.getAxis() == axis)
+					continue;
+				if (!state.get(def.getGlueableSide(state, facing)))
+					continue;
+
+				BlockPos startPos = currentPos.offset(facing);
+				List<BlockPos> localFrontier = new LinkedList<>();
+				Set<BlockPos> localVisited = new HashSet<>();
+				localFrontier.add(startPos);
+
+				while (!localFrontier.isEmpty()) {
+					BlockPos searchPos = localFrontier.remove(0);
+					BlockState searchedState = world.getBlockState(searchPos);
+
+					if (localVisited.contains(searchPos))
+						continue;
+					if (!searchPos.withinDistance(currentPos, chassisRange + .5f))
+						continue;
+					if (searchedState.getMaterial().isReplaceable() || state.isAir(world, searchPos))
+						continue;
+					if (searchedState.getCollisionShape(world, searchPos).isEmpty())
+						continue;
+
+					localVisited.add(searchPos);
+					if (!visited.contains(searchPos))
+						frontier.add(searchPos);
+
+					for (Direction offset : Direction.values()) {
+						if (offset.getAxis() == axis)
+							continue;
+						if (searchPos.equals(currentPos) && offset != facing)
+							continue;
+
+						localFrontier.add(searchPos.offset(offset));
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	private static boolean isLinearChassis(BlockState state) {
+		return LinearChassisBlock.isChassis(state);
+	}
+
+	private static boolean isRadialChassis(BlockState state) {
+		return AllBlocks.ROTATION_CHASSIS.typeOf(state);
 	}
 
 	private boolean notSupportive(World world, BlockPos pos, Direction facing) {
@@ -315,7 +406,7 @@ public class Contraption {
 
 	protected static boolean canPush(World world, BlockPos pos, Direction direction) {
 		BlockState blockState = world.getBlockState(pos);
-		if (isChassis(blockState))
+		if (isLinearChassis(blockState) || isRadialChassis(blockState))
 			return true;
 		if (blockState.getBlock() instanceof ShulkerBoxBlock)
 			return false;
@@ -365,7 +456,7 @@ public class Contraption {
 			MovementContext context = MovementContext.readNBT(comp);
 			getActors().add(MutablePair.of(info, context));
 		});
-		
+
 		if (nbt.contains("BoundsFront"))
 			constructCollisionBox = readAABB(nbt.getList("BoundsFront", 5));
 
@@ -387,7 +478,7 @@ public class Contraption {
 				c.put("Data", block.nbt);
 			blocks.add(c);
 		}
-		
+
 		ListNBT actorsNBT = new ListNBT();
 		for (MutablePair<BlockInfo, MovementContext> actor : getActors()) {
 			CompoundNBT compound = new CompoundNBT();

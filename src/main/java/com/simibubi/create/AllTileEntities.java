@@ -25,10 +25,10 @@ import com.simibubi.create.modules.contraptions.receivers.SawTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.SawTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ChassisTileEntity;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingTileEntity;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalBearingTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntity;
-import com.simibubi.create.modules.contraptions.receivers.constructs.MechanicalPistonTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.constructs.bearing.MechanicalBearingTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.bearing.MechanicalBearingTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.ClutchTileEntity;
@@ -81,8 +81,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllTileEntities {
 
@@ -153,7 +153,7 @@ public enum AllTileEntities {
 		return te.getType().equals(type);
 	}
 
-	public static void registerTileEntities(IForgeRegistry<TileEntityType<?>> registry) {
+	public static void register(RegistryEvent.Register<TileEntityType<?>> event) {
 		for (AllTileEntities tileEntity : values()) {
 			Block[] blocks = new Block[tileEntity.blocks.length];
 			for (int i = 0; i < blocks.length; i++)
@@ -162,7 +162,7 @@ public enum AllTileEntities {
 			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, Lang.asId(tileEntity.name()));
 			tileEntity.type = TileEntityType.Builder.create(tileEntity.supplier, blocks).build(null)
 					.setRegistryName(resourceLocation);
-			registry.register(tileEntity.type);
+			event.getRegistry().register(tileEntity.type);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.constructs.piston;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;

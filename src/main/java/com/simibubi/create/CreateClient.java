@@ -1,11 +1,15 @@
 package com.simibubi.create;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 import com.simibubi.create.foundation.block.CTModel;
+import com.simibubi.create.foundation.block.ColoredVertexModel;
+import com.simibubi.create.foundation.block.IBlockWithColoredVertices;
 import com.simibubi.create.foundation.block.IHaveConnectedTextures;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.block.SpriteShifter.SpriteShiftEntry;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.modules.contraptions.WrenchModel;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
@@ -20,6 +24,7 @@ import com.simibubi.create.modules.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHologram;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -58,6 +63,7 @@ public class CreateClient {
 			modEventBus.addListener(CreateClient::onModelBake);
 			modEventBus.addListener(CreateClient::onModelRegistry);
 			modEventBus.addListener(CreateClient::onTextureStitch);
+			modEventBus.addListener(AllParticles::registerFactories);
 		});
 	}
 
@@ -103,9 +109,11 @@ public class CreateClient {
 		if (!event.getMap().getBasePath().equals("textures"))
 			return;
 		for (AllBlocks allBlocks : AllBlocks.values()) {
-			if (!(allBlocks.get() instanceof IHaveConnectedTextures))
+			Block block = allBlocks.get();
+			if (!(block instanceof IHaveConnectedTextures))
 				continue;
-			event.addSprite(new ResourceLocation(Create.ID, "block/connected/" + Lang.asId(allBlocks.name())));
+			for (SpriteShiftEntry spriteShiftEntry : ((IHaveConnectedTextures) block).getSpriteShifts())
+				event.addSprite(spriteShiftEntry.getTargetResourceLocation());
 		}
 	}
 
@@ -114,10 +122,17 @@ public class CreateClient {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
 
 		for (AllBlocks allBlocks : AllBlocks.values()) {
-			if (!(allBlocks.get() instanceof IHaveConnectedTextures))
+			Block block = allBlocks.get();
+			if (block == null)
 				continue;
-			swapModels(modelRegistry, getBlockModelLocation(allBlocks, ""),
-					t -> new CTModel(t, Lang.asId(allBlocks.name())));
+
+			List<ModelResourceLocation> blockModelLocations = getAllBlockStateModelLocations(allBlocks);
+			if (block instanceof IHaveConnectedTextures)
+				swapModels(modelRegistry, blockModelLocations, t -> new CTModel(t, (IHaveConnectedTextures) block));
+			if (block instanceof IBlockWithColoredVertices)
+				swapModels(modelRegistry, blockModelLocations,
+						t -> new ColoredVertexModel(t, (IBlockWithColoredVertices) block));
+
 		}
 
 		swapModels(modelRegistry, getItemModelLocation(AllItems.SYMMETRY_WAND),
@@ -151,10 +166,21 @@ public class CreateClient {
 			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	protected static ModelResourceLocation getItemModelLocation(AllItems item) {
 		return new ModelResourceLocation(item.item.getRegistryName(), "inventory");
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	protected static List<ModelResourceLocation> getAllBlockStateModelLocations(AllBlocks block) {
+		List<ModelResourceLocation> models = new ArrayList<>();
+		block.get().getStateContainer().getValidStates().forEach(state -> {
+			models.add(getBlockModelLocation(block, BlockModelShapes.getPropertyMapString(state.getValues())));
+		});
+		return models;
+	}
+
+	@OnlyIn(Dist.CLIENT)
 	protected static ModelResourceLocation getBlockModelLocation(AllBlocks block, String suffix) {
 		return new ModelResourceLocation(block.block.getRegistryName(), suffix);
 	}
@@ -163,6 +189,14 @@ public class CreateClient {
 	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
 			ModelResourceLocation location, Function<IBakedModel, T> factory) {
 		modelRegistry.put(location, factory.apply(modelRegistry.get(location)));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
+			List<ModelResourceLocation> locations, Function<IBakedModel, T> factory) {
+		locations.forEach(location -> {
+			swapModels(modelRegistry, location, factory);
+		});
 	}
 
 }

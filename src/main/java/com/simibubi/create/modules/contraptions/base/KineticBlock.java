@@ -6,6 +6,8 @@ import com.simibubi.create.modules.contraptions.RotationPropagator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
@@ -77,6 +79,26 @@ public abstract class KineticBlock extends Block implements IRotate {
 	@Override
 	public boolean isSolid(BlockState state) {
 		return false;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (tileEntity == null || !(tileEntity instanceof KineticTileEntity))
+			return;
+		if (worldIn.isRemote)
+			return;
+
+		KineticTileEntity kte = (KineticTileEntity) tileEntity;
+		kte.queueRotationIndicators();
+	}
+
+	public float getParticleTargetRadius() {
+		return .65f;
+	}
+
+	public float getParticleInitialRadius() {
+		return .75f;
 	}
 
 }

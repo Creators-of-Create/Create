@@ -24,7 +24,7 @@ import net.minecraftforge.client.model.data.ModelProperty;
 public class CTModel extends BakedModelWrapper<IBakedModel> {
 
 	private static ModelProperty<CTData> CT_PROPERTY = new ModelProperty<>();
-	private SpriteShiftEntry texture;
+	private Iterable<SpriteShiftEntry> textures;
 
 	private class CTData {
 		int[] textures;
@@ -43,9 +43,9 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 		}
 	}
 
-	public CTModel(IBakedModel originalModel, String blockId) {
+	public CTModel(IBakedModel originalModel, IHaveConnectedTextures block) {
 		super(originalModel);
-		texture = SpriteShifter.getCT(blockId);
+		textures = block.getSpriteShifts();
 	}
 
 	@Override
@@ -74,9 +74,20 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 			BakedQuad quad = quads.get(i);
 			if (!texDef.appliesTo(quad))
 				continue;
+
+			SpriteShiftEntry texture = null;
+			for (SpriteShiftEntry entry : textures) {
+				if (entry.getOriginal() == quad.getSprite()) {
+					texture = entry;
+					break;
+				}
+			}
+			if (texture == null)
+				continue;
+
 			int index = data.get(quad.getFace());
 			if (index == -1)
-				return quads;
+				continue;
 
 			float textureSize = 16f / 128f / 8f;
 			float uShift = (index % 8) * textureSize;

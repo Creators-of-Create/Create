@@ -1,9 +1,10 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.constructs.piston;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.constructs.ContraptionRenderer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
