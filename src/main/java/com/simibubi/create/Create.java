@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.simibubi.create.foundation.world.OreGeneration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,6 +66,7 @@ public class Create {
 
 		modEventBus.addListener(Create::createConfigs);
 		CreateClient.addListeners(modEventBus);
+		OreGeneration.setupOreGeneration();
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, CreateConfig.specification);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CreateClientConfig.specification);
@@ -85,7 +87,6 @@ public class Create {
 		LogisticianHandler.registerVillagerProfessions(event);
 	}
 
-	@SubscribeEvent
 	public static void registerPointsOfInterest(RegistryEvent.Register<PointOfInterestType> event) {
 		LogisticianHandler.registerPointsOfInterest(event);
 	}
