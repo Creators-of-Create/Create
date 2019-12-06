@@ -44,7 +44,6 @@ public class Events {
 	public static void onLoadWorld(WorldEvent.Load event) {
 		IWorld world = event.getWorld();
 		Create.frequencyHandler.onLoadWorld(world);
-		Create.constructHandler.onLoadWorld(world);
 		Create.logisticalNetworkHandler.onLoadWorld(world);
 		Create.torquePropagator.onLoadWorld(world);
 	}
@@ -53,7 +52,6 @@ public class Events {
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		IWorld world = event.getWorld();
 		Create.frequencyHandler.onUnloadWorld(world);
-		Create.constructHandler.onUnloadWorld(world);
 		Create.logisticalNetworkHandler.onUnloadWorld(world);
 		Create.torquePropagator.onUnloadWorld(world);
 	}

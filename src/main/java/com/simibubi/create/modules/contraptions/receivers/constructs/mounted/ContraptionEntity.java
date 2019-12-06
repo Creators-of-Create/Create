@@ -2,35 +2,36 @@ package com.simibubi.create.modules.contraptions.receivers.constructs.mounted;
 
 import com.simibubi.create.AllEntities;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.receivers.constructs.Contraption;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.FMLPlayMessages.SpawnEntity;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
 
-	protected MountedContraption contraption;
+	private Contraption contraption;
 	protected float initialAngle;
-	
-	enum MovementType {
-		TRANSLATION, ROTATION, MOUNTED;
-	}
 
-	// Not synchronizing any of these
+	protected BlockPos controllerPos;
+	protected IControlContraption controllerTE;
+
+	// Not synchronizing any of these yet
 	public float targetYaw;
 	public float targetPitch;
 	public float contraptionYaw;
@@ -44,7 +45,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		this(AllEntities.CONTRAPTION.type, world);
 	}
 
-	public ContraptionEntity(World world, MountedContraption contraption, float initialAngle) {
+	public ContraptionEntity(World world, Contraption contraption, float initialAngle) {
 		this(world);
 		this.contraption = contraption;
 		this.initialAngle = initialAngle;
@@ -53,16 +54,19 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		this.targetYaw = initialAngle;
 	}
 
-	@Override
-	protected void registerData() {
+	public <T extends TileEntity & IControlContraption> ContraptionEntity controlledBy(T controller) {
+		this.controllerPos = controller.getPos();
+		this.controllerTE = controller;
+		return this;
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
+		attachToController();
 		Entity e = getRidingEntity();
 		if (e == null)
-			remove();
+			return;
 		else {
 			Vec3d movementVector = e.getMotion();
 			Vec3d motion = movementVector.normalize();
@@ -86,7 +90,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public void tickActors(Vec3d movementVector) {
-		contraption.getActors().forEach(pair -> {
+		getContraption().getActors().forEach(pair -> {
 			MovementContext context = pair.right;
 			float deg = -contraptionYaw + initialAngle;
 			context.motion = VecHelper.rotate(movementVector, deg, Axis.Y);
@@ -94,15 +98,15 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			if (context.world == null)
 				context.world = world;
 
-			Vec3d offset = new Vec3d(pair.left.pos.subtract(contraption.getAnchor()));
+			Vec3d offset = new Vec3d(pair.left.pos.subtract(getContraption().getAnchor()));
 			world.addParticle(ParticleTypes.BUBBLE, offset.x, offset.y, offset.z, 0, 0, 0);
-			
+
 			offset = VecHelper.rotate(offset, deg, Axis.Y);
 			world.addParticle(ParticleTypes.CRIT, offset.x, offset.y, offset.z, 0, 0, 0);
-			
+
 			offset = offset.add(new Vec3d(getPosition()).add(0.5, 0, 0.5));
 			world.addParticle(ParticleTypes.NOTE, offset.x, offset.y, offset.z, 0, 10, 0);
-			
+
 			if (world.isRemote)
 				return;
 
@@ -114,6 +118,20 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			IHaveMovementBehavior actor = (IHaveMovementBehavior) pair.left.state.getBlock();
 			actor.visitPosition(context);
 		});
+	}
+
+	@Override
+	public void setPosition(double x, double y, double z) {
+		this.posX = x;
+		this.posY = y;
+		this.posZ = z;
+		if (this.isAddedToWorld() && !this.world.isRemote && world instanceof ServerWorld)
+			((ServerWorld) this.world).chunkCheck(this); // Forge - Process chunk registration after moving.
+		if (contraption != null) {
+			AxisAlignedBB cbox = contraption.getCollisionBoxFront();
+			if (cbox != null)
+				this.setBoundingBox(cbox.offset(x, y, z));
+		}
 	}
 
 	public static float yawFromMotion(Vec3d motion) {
@@ -137,49 +155,46 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		return current + shortest_angle * pct;
 	}
 
-	public boolean hitByEntity(Entity entityIn) {
-		return entityIn instanceof PlayerEntity
-				? this.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) entityIn), 0.0F)
-				: false;
-	}
-
-	public boolean attackEntityFrom(DamageSource source, float amount) {
-		if (this.isInvulnerableTo(source)) {
-			return false;
-		} else {
-			if (this.isAlive() && !this.world.isRemote) {
-				this.remove();
-				this.markVelocityChanged();
-			}
-
-			return true;
-		}
-	}
-
 	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
 		@SuppressWarnings("unchecked")
 		EntityType.Builder<ContraptionEntity> entityBuilder = (EntityType.Builder<ContraptionEntity>) builder;
-		return entityBuilder.setCustomClientFactory(ContraptionEntity::spawn).size(1, 1);
+		return entityBuilder.size(1, 1);
 	}
 
-	public static ContraptionEntity spawn(SpawnEntity spawnEntity, World world) {
-		return new ContraptionEntity(world);
+	@Override
+	protected void registerData() {
 	}
 
 	@Override
 	protected void readAdditional(CompoundNBT compound) {
-		contraption = new MountedContraption();
-		contraption.readNBT(compound.getCompound("Contraption"));
+		contraption = Contraption.fromNBT(compound.getCompound("Contraption"));
 		initialAngle = compound.getFloat("InitialAngle");
+		if (compound.contains("Controller"))
+			controllerPos = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 		prevRotationYaw = initialAngle;
 		contraptionYaw = initialAngle;
 		targetYaw = initialAngle;
 	}
 
+	public void attachToController() {
+		if (controllerPos != null && controllerTE == null) {
+			if (!world.isBlockPresent(controllerPos))
+				return;
+			TileEntity te = world.getTileEntity(controllerPos);
+			if (te == null || !(te instanceof IControlContraption))
+				remove();
+			IControlContraption controllerTE = (IControlContraption) te;
+			this.controllerTE = controllerTE;
+			controllerTE.attach(this);
+		}
+	}
+
 	@Override
 	protected void writeAdditional(CompoundNBT compound) {
-		compound.put("Contraption", contraption.writeNBT());
+		compound.put("Contraption", getContraption().writeNBT());
 		compound.putFloat("InitialAngle", initialAngle);
+		if (controllerPos != null)
+			compound.put("Controller", NBTUtil.writeBlockPos(controllerPos));
 	}
 
 	@Override
@@ -197,6 +212,17 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	@Override
 	public void readSpawnData(PacketBuffer additionalData) {
 		readAdditional(additionalData.readCompoundTag());
+	}
+
+	public void disassemble() {
+		if (getContraption() != null)
+			getContraption().disassemble(world, new BlockPos(getPositionVec().add(.5, .5, .5)), contraptionYaw,
+					contraptionPitch);
+		remove();
+	}
+
+	public Contraption getContraption() {
+		return contraption;
 	}
 
 }

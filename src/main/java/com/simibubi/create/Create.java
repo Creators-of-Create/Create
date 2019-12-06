@@ -1,12 +1,11 @@
 package com.simibubi.create;
 
-import com.simibubi.create.foundation.world.OreGeneration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.simibubi.create.foundation.world.OreGeneration;
 import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
-import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MovingConstructHandler;
 import com.simibubi.create.modules.logistics.FrequencyHandler;
 import com.simibubi.create.modules.logistics.management.LogisticalNetworkHandler;
 import com.simibubi.create.modules.logistics.transport.villager.LogisticianHandler;
@@ -25,7 +24,6 @@ import net.minecraft.village.PointOfInterestType;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -43,7 +41,6 @@ public class Create {
 	public static ItemGroup creativeTab = new CreateItemGroup();
 	public static ServerSchematicLoader schematicReceiver;
 	public static FrequencyHandler frequencyHandler;
-	public static MovingConstructHandler constructHandler;
 	public static LogisticalNetworkHandler logisticalNetworkHandler;
 	public static TorquePropagator torquePropagator;
 	public static LogisticianHandler logisticianHandler;
@@ -75,7 +72,6 @@ public class Create {
 	public static void init(final FMLCommonSetupEvent event) {
 		schematicReceiver = new ServerSchematicLoader();
 		frequencyHandler = new FrequencyHandler();
-		constructHandler = new MovingConstructHandler();
 		logisticalNetworkHandler = new LogisticalNetworkHandler();
 		torquePropagator = new TorquePropagator();
 

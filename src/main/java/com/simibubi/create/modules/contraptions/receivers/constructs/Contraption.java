@@ -20,6 +20,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.receivers.SawBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.MountedContraption;
+import com.simibubi.create.modules.contraptions.receivers.constructs.piston.PistonContraption;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
@@ -117,13 +119,13 @@ public class Contraption {
 		return cachedColliders;
 	}
 
-	protected boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
+	public boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
 		List<BlockPos> frontier = new ArrayList<>();
 		Set<BlockPos> visited = new HashSet<>();
 		anchor = pos;
 
 		if (constructCollisionBox == null)
-			constructCollisionBox = new AxisAlignedBB(pos);
+			constructCollisionBox = new AxisAlignedBB(BlockPos.ZERO);
 
 		frontier.add(pos);
 		if (!addToInitialFrontier(world, pos, direction, frontier))
@@ -433,12 +435,24 @@ public class Contraption {
 		return compoundnbt;
 	}
 
-	protected void add(BlockPos pos, BlockInfo block) {
-		BlockInfo blockInfo = new BlockInfo(pos, block.state, block.nbt);
-		blocks.put(pos, blockInfo);
+	public void add(BlockPos pos, BlockInfo block) {
+		BlockPos localPos = pos.subtract(anchor);
+		BlockInfo blockInfo = new BlockInfo(localPos, block.state, block.nbt);
+		blocks.put(localPos, blockInfo);
 		if (block.state.getBlock() instanceof IHaveMovementBehavior)
 			getActors().add(MutablePair.of(blockInfo, null));
-		constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(pos));
+		constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(localPos));
+	}
+
+	public static Contraption fromNBT(CompoundNBT nbt) {
+		String type = nbt.getString("Type");
+		Contraption contraption = new Contraption();
+		if (type.equals("Piston"))
+			contraption = new PistonContraption();
+		if (type.equals("Mounted"))
+			contraption = new MountedContraption();
+		contraption.readNBT(nbt);
+		return contraption;
 	}
 
 	public void readNBT(CompoundNBT nbt) {
@@ -469,6 +483,12 @@ public class Contraption {
 
 	public CompoundNBT writeNBT() {
 		CompoundNBT nbt = new CompoundNBT();
+
+		if (this instanceof PistonContraption)
+			nbt.putString("Type", "Piston");
+		if (this instanceof MountedContraption)
+			nbt.putString("Type", "Mounted");
+
 		ListNBT blocks = new ListNBT();
 		for (BlockInfo block : this.blocks.values()) {
 			CompoundNBT c = new CompoundNBT();
@@ -520,7 +540,12 @@ public class Contraption {
 		return CreateConfig.parameters.freezePistonConstructs.get();
 	}
 
-	public void disassemble(IWorld world, BlockPos offset, BiPredicate<BlockPos, BlockState> customPlacement) {
+	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch) {
+		disassemble(world, offset, yaw, pitch, (pos, state) -> false);
+	}
+
+	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch,
+			BiPredicate<BlockPos, BlockState> customPlacement) {
 		for (BlockInfo block : blocks.values()) {
 			BlockPos targetPos = block.pos.add(offset);
 			BlockState state = block.state;
@@ -548,6 +573,10 @@ public class Contraption {
 
 	public List<MutablePair<BlockInfo, MovementContext>> getActors() {
 		return actors;
+	}
+
+	public BlockPos getAnchor() {
+		return anchor;
 	}
 
 }

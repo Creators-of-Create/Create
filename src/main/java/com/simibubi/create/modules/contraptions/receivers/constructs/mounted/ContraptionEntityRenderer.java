@@ -2,9 +2,9 @@ package com.simibubi.create.modules.contraptions.receivers.constructs.mounted;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ContraptionRenderer;
 
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -13,7 +13,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -32,18 +31,17 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 	public void doRender(ContraptionEntity entity, double x, double y, double z, float yaw, float partialTicks) {
 		if (!entity.isAlive())
 			return;
-		if (entity.contraption == null)
+		if (entity.getContraption() == null)
 			return;
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translated(0, .5, 0);
-
 		float angleYaw = (float) (entity.getYaw(partialTicks) / 180 * Math.PI);
 		float anglePitch = (float) (entity.getPitch(partialTicks) / 180 * Math.PI);
 
 		Entity ridingEntity = entity.getRidingEntity();
 		if (ridingEntity != null && ridingEntity instanceof AbstractMinecartEntity) {
 			AbstractMinecartEntity cart = (AbstractMinecartEntity) ridingEntity;
+			GlStateManager.translated(0, .5, 0);
 
 			long i = (long) entity.getEntityId() * 493286711L;
 			i = i * i * 4392167121L + i * 98761L;
@@ -74,21 +72,27 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 			}
 		}
 
-		BlockPos anchor = entity.contraption.getAnchor();
-		Vec3d rotationOffset = VecHelper.getCenterOf(anchor);
+//		BlockPos anchor = entity.getContraption().getAnchor();
+//		Vec3d rotationOffset = VecHelper.getCenterOf(anchor);
 //		Vec3d offset = VecHelper.getCenterOf(anchor).scale(-1);
 
 		TessellatorHelper.prepareFastRender();
 		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
-		ContraptionRenderer.render(entity.world, entity.contraption, superByteBuffer -> {
-			superByteBuffer.translate(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
+		ContraptionRenderer.render(entity.world, entity.getContraption(), superByteBuffer -> {
+//			superByteBuffer.translate(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
 			superByteBuffer.rotate(Axis.Y, angleYaw);
 			superByteBuffer.rotate(Axis.Z, anglePitch);
 			superByteBuffer.translate(x, y, z);
+			superByteBuffer.offsetLighting(-x + entity.posX, -y + entity.posY, -z + entity.posZ);
 
 		}, Tessellator.getInstance().getBuffer());
 		TessellatorHelper.draw();
+
 		GlStateManager.popMatrix();
+		GlStateManager.shadeModel(7424);
+		GlStateManager.alphaFunc(516, 0.1F);
+		GlStateManager.matrixMode(5888);
+		RenderHelper.enableStandardItemLighting();
 
 		super.doRender(entity, x, y, z, yaw, partialTicks);
 	}

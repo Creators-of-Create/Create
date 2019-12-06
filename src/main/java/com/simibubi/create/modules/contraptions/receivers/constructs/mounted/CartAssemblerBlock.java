@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.receivers.constructs.mounted;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
+import com.simibubi.create.modules.contraptions.receivers.constructs.Contraption;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
@@ -72,7 +73,7 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 		if (!cart.getPassengers().isEmpty())
 			return;
 
-		MountedContraption contraption = MountedContraption.assembleMinecart(world, pos, cart);
+		Contraption contraption = MountedContraption.assembleMinecart(world, pos, cart);
 		ContraptionEntity entity = new ContraptionEntity(world, contraption,
 				ContraptionEntity.yawFromMotion(cart.getMotion()));
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
@@ -86,11 +87,11 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 		Entity entity = cart.getPassengers().get(0);
 		if (!(entity instanceof ContraptionEntity))
 			return;
-		MountedContraption contraption = ((ContraptionEntity) entity).contraption;
+		Contraption contraption = ((ContraptionEntity) entity).getContraption();
 		if (contraption == null)
 			return;
 
-		contraption.disassemble(world, pos.subtract(contraption.getAnchor()), (targetPos, state) -> {
+		contraption.disassemble(world, pos.subtract(contraption.getAnchor()), 0, 0, (targetPos, state) -> {
 			return targetPos.equals(pos);
 		});
 

@@ -31,7 +31,7 @@ public class ContraptionRenderer {
 	public static void render(World world, Contraption c, Consumer<SuperByteBuffer> transform, BufferBuilder buffer) {
 		SuperByteBuffer contraptionBuffer = CreateClient.bufferCache.get(CONTRAPTION, c, () -> renderContraption(c));
 		transform.accept(contraptionBuffer);
-		buffer.putBulkData(contraptionBuffer.build());
+		contraptionBuffer.light((lx, ly, lz) -> world.getCombinedLight(new BlockPos(lx, ly, lz), 0)).renderInto(buffer);
 		renderActors(world, c, transform, buffer);
 	}
 

@@ -26,7 +26,7 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class MountedContraption extends Contraption {
 
-	public static MountedContraption assembleMinecart(World world, BlockPos pos, AbstractMinecartEntity cart) {
+	public static Contraption assembleMinecart(World world, BlockPos pos, AbstractMinecartEntity cart) {
 		if (isFrozen())
 			return null;
 
@@ -34,7 +34,7 @@ public class MountedContraption extends Contraption {
 		if (!state.has(RAIL_SHAPE))
 			return null;
 
-		MountedContraption contraption = new MountedContraption();
+		Contraption contraption = new MountedContraption();
 		Vec3d vec = cart.getMotion();
 		if (!contraption.searchMovedStructure(world, pos, Direction.getFacingFromVector(vec.x, vec.y, vec.z)))
 			return null;
@@ -81,10 +81,6 @@ public class MountedContraption extends Contraption {
 		if (AllBlocks.CART_ASSEMBLER.typeOf(capture.state))
 			return new BlockInfo(capture.pos, CartAssemblerBlock.createAnchor(capture.state), null);
 		return capture;
-	}
-
-	public BlockPos getAnchor() {
-		return anchor;
 	}
 
 }
