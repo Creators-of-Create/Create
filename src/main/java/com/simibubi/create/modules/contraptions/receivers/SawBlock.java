@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.receivers;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.VoxelShapers;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior;
 import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
 
 import net.minecraft.block.Block;

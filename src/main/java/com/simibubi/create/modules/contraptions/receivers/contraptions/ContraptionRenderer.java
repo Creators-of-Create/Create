@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.contraptions;
 
 import java.util.Random;
 import java.util.function.Consumer;
@@ -10,7 +10,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.PlacementSimulationWorld;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MovementContext;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelRenderer;

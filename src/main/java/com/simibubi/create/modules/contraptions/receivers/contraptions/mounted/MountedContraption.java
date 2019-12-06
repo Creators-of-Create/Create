@@ -1,15 +1,15 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs.mounted;
+package com.simibubi.create.modules.contraptions.receivers.contraptions.mounted;
 
-import static com.simibubi.create.modules.contraptions.receivers.constructs.mounted.CartAssemblerBlock.RAIL_SHAPE;
+import static com.simibubi.create.modules.contraptions.receivers.contraptions.mounted.CartAssemblerBlock.RAIL_SHAPE;
 
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.modules.contraptions.receivers.constructs.Contraption;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MoverType;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.Contraption;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MoverType;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -21,6 +21,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
@@ -45,10 +46,9 @@ public class MountedContraption extends Contraption {
 				null));
 
 		for (BlockInfo block : contraption.blocks.values()) {
-			BlockPos startPos = pos;
-			if (startPos.equals(block.pos))
+			if (BlockPos.ZERO.equals(block.pos))
 				continue;
-			world.setBlockState(block.pos, Blocks.AIR.getDefaultState(), 67);
+			world.setBlockState(block.pos.add(pos), Blocks.AIR.getDefaultState(), 67);
 		}
 
 		for (MutablePair<BlockInfo, MovementContext> pair : contraption.getActors()) {
@@ -81,6 +81,11 @@ public class MountedContraption extends Contraption {
 		if (AllBlocks.CART_ASSEMBLER.typeOf(capture.state))
 			return new BlockInfo(capture.pos, CartAssemblerBlock.createAnchor(capture.state), null);
 		return capture;
+	}
+
+	@Override
+	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch) {
+		super.disassemble(world, offset, yaw, pitch, (pos, state) -> AllBlocks.MINECART_ANCHOR.typeOf(state));
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.contraptions.chassis;
 
 import com.simibubi.create.foundation.packet.TileEntityConfigurationPacket;
 

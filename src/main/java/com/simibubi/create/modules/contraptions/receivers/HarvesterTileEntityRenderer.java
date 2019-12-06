@@ -7,7 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MovementContext;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;

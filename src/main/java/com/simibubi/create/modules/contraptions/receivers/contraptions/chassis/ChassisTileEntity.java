@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.contraptions.chassis;
 
 import static com.simibubi.create.CreateConfig.parameters;
 

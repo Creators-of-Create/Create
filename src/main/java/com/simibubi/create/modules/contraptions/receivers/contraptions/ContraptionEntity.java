@@ -1,13 +1,12 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs.mounted;
+package com.simibubi.create.modules.contraptions.receivers.contraptions;
 
 import com.simibubi.create.AllEntities;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.receivers.constructs.Contraption;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MovementContext;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
@@ -31,11 +30,17 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected BlockPos controllerPos;
 	protected IControlContraption controllerTE;
 
-	// Not synchronizing any of these yet
+	public float prevYaw;
+	public float prevPitch;
+	public float prevRoll;
+
+	public float yaw;
+	public float pitch;
+	public float roll;
+
+	// Mounted Contraptions
 	public float targetYaw;
 	public float targetPitch;
-	public float contraptionYaw;
-	public float contraptionPitch;
 
 	public ContraptionEntity(EntityType<?> entityTypeIn, World worldIn) {
 		super(entityTypeIn, worldIn);
@@ -49,8 +54,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		this(world);
 		this.contraption = contraption;
 		this.initialAngle = initialAngle;
-		this.prevRotationYaw = initialAngle;
-		this.contraptionYaw = initialAngle;
+		this.prevYaw = initialAngle;
+		this.yaw = initialAngle;
 		this.targetYaw = initialAngle;
 	}
 
@@ -64,10 +69,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public void tick() {
 		super.tick();
 		attachToController();
+
 		Entity e = getRidingEntity();
-		if (e == null)
-			return;
-		else {
+		if (e != null) {
 			Vec3d movementVector = e.getMotion();
 			Vec3d motion = movementVector.normalize();
 			if (motion.length() > 0) {
@@ -75,24 +79,29 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 				targetPitch = (float) ((Math.atan(motion.y) * 73.0D) / Math.PI * 180);
 				if (targetYaw < 0)
 					targetYaw += 360;
-				if (contraptionYaw < 0)
-					contraptionYaw += 360;
+				if (yaw < 0)
+					yaw += 360;
 			}
 
 			float speed = 0.2f;
-			prevRotationYaw = contraptionYaw;
-			contraptionYaw = angleLerp(speed, contraptionYaw, targetYaw);
-			prevRotationPitch = contraptionPitch;
-			contraptionPitch = angleLerp(speed, contraptionPitch, targetPitch);
+			prevYaw = yaw;
+			yaw = angleLerp(speed, yaw, targetYaw);
+			prevPitch = pitch;
+			pitch = angleLerp(speed, pitch, targetPitch);
 
 			tickActors(movementVector);
+			return;
 		}
+
+		prevYaw = yaw;
+		prevPitch = pitch;
+		prevRoll = roll;
 	}
 
 	public void tickActors(Vec3d movementVector) {
 		getContraption().getActors().forEach(pair -> {
 			MovementContext context = pair.right;
-			float deg = -contraptionYaw + initialAngle;
+			float deg = -yaw + initialAngle;
 			context.motion = VecHelper.rotate(movementVector, deg, Axis.Y);
 
 			if (context.world == null)
@@ -120,8 +129,39 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		});
 	}
 
+	public void moveTo(double x, double y, double z) {
+		move(x - posX, y - posY, z - posZ);
+	}
+
+	public void move(double x, double y, double z) {
+
+		// Collision and stuff
+
+		setPosition(posX + x, posY + y, posZ + z);
+	}
+
+	public void rotateTo(double roll, double yaw, double pitch) {
+		rotate(getShortestAngleDiff(this.roll, roll), getShortestAngleDiff(this.yaw, yaw),
+				getShortestAngleDiff(this.pitch, pitch));
+	}
+
+	public void rotate(double roll, double yaw, double pitch) {
+
+		// Collision and stuff
+
+		this.yaw += yaw;
+		this.pitch += pitch;
+		this.roll += roll;
+	}
+
 	@Override
 	public void setPosition(double x, double y, double z) {
+		Entity e = getRidingEntity();
+		if (e != null && e instanceof AbstractMinecartEntity) {
+			x -= .5;
+			z -= .5;
+		}
+
 		this.posX = x;
 		this.posY = y;
 		this.posZ = z;
@@ -134,25 +174,37 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		}
 	}
 
+	@Override
+	public void stopRiding() {
+		super.stopRiding();
+		if (!world.isRemote)
+			disassemble();
+	}
+
 	public static float yawFromMotion(Vec3d motion) {
 		return (float) ((Math.PI / 2 - Math.atan2(motion.z, motion.x)) / Math.PI * 180);
 	}
 
 	public float getYaw(float partialTicks) {
-		float yaw = contraptionYaw;
-		return (partialTicks == 1.0F ? yaw : angleLerp(partialTicks, this.prevRotationYaw, yaw)) - initialAngle;
+		return (partialTicks == 1.0F ? yaw : angleLerp(partialTicks, prevYaw, yaw)) - initialAngle;
 	}
 
 	public float getPitch(float partialTicks) {
-		float pitch = contraptionPitch;
-		return partialTicks == 1.0F ? pitch : angleLerp(partialTicks, this.prevRotationPitch, pitch);
+		return partialTicks == 1.0F ? pitch : angleLerp(partialTicks, prevPitch, pitch);
+	}
+
+	public float getRoll(float partialTicks) {
+		return partialTicks == 1.0F ? roll : angleLerp(partialTicks, prevRoll, roll);
 	}
 
 	private float angleLerp(float pct, float current, float target) {
+		return current + getShortestAngleDiff(current, target) * pct;
+	}
+
+	private float getShortestAngleDiff(double current, double target) {
 		current = current % 360;
 		target = target % 360;
-		float shortest_angle = ((((target - current) % 360) + 540) % 360) - 180;
-		return current + shortest_angle * pct;
+		return (float) (((((target - current) % 360) + 540) % 360) - 180);
 	}
 
 	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
@@ -171,8 +223,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		initialAngle = compound.getFloat("InitialAngle");
 		if (compound.contains("Controller"))
 			controllerPos = NBTUtil.readBlockPos(compound.getCompound("Controller"));
-		prevRotationYaw = initialAngle;
-		contraptionYaw = initialAngle;
+		prevYaw = initialAngle;
+		yaw = initialAngle;
 		targetYaw = initialAngle;
 	}
 
@@ -216,8 +268,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public void disassemble() {
 		if (getContraption() != null)
-			getContraption().disassemble(world, new BlockPos(getPositionVec().add(.5, .5, .5)), contraptionYaw,
-					contraptionPitch);
+			getContraption().disassemble(world, new BlockPos(getPositionVec().add(.5, .5, .5)), yaw, pitch);
 		remove();
 	}
 

@@ -6,7 +6,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VoxelShaper;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

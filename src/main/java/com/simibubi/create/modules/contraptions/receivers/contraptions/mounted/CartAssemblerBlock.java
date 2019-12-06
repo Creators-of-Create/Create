@@ -1,15 +1,15 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs.mounted;
+package com.simibubi.create.modules.contraptions.receivers.contraptions.mounted;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.Contraption;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.Contraption;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.ContraptionEntity;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -84,17 +84,8 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 	protected void disassemble(World world, BlockPos pos, AbstractMinecartEntity cart) {
 		if (cart.getPassengers().isEmpty())
 			return;
-		Entity entity = cart.getPassengers().get(0);
-		if (!(entity instanceof ContraptionEntity))
+		if (!(cart.getPassengers().get(0) instanceof ContraptionEntity))
 			return;
-		Contraption contraption = ((ContraptionEntity) entity).getContraption();
-		if (contraption == null)
-			return;
-
-		contraption.disassemble(world, pos.subtract(contraption.getAnchor()), 0, 0, (targetPos, state) -> {
-			return targetPos.equals(pos);
-		});
-
 		cart.removePassengers();
 	}
 

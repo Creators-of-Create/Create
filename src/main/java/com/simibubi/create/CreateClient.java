@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.modules.contraptions.WrenchModel;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.EncasedFanParticleHandler;
-import com.simibubi.create.modules.contraptions.receivers.constructs.ContraptionRenderer;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.ContraptionRenderer;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterModel;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;

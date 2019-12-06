@@ -24,11 +24,11 @@ import com.simibubi.create.modules.contraptions.receivers.MechanicalPressTileEnt
 import com.simibubi.create.modules.contraptions.receivers.SawTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.SawTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.TurntableTileEntity;
-import com.simibubi.create.modules.contraptions.receivers.constructs.ChassisTileEntity;
-import com.simibubi.create.modules.contraptions.receivers.constructs.bearing.MechanicalBearingTileEntity;
-import com.simibubi.create.modules.contraptions.receivers.constructs.bearing.MechanicalBearingTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonTileEntity;
-import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.bearing.MechanicalBearingTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.bearing.MechanicalBearingTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.chassis.ChassisTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.piston.MechanicalPistonTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.piston.MechanicalPistonTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.ClutchTileEntity;

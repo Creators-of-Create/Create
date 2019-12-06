@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.modules.contraptions.generators.ConfigureMotorPacket;
 import com.simibubi.create.modules.contraptions.receivers.ConfigureMixerPacket;
-import com.simibubi.create.modules.contraptions.receivers.constructs.ConfigureChassisPacket;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.chassis.ConfigureChassisPacket;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunBeamPacket;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.modules.logistics.block.diodes.ConfigureFlexpeaterPacket;

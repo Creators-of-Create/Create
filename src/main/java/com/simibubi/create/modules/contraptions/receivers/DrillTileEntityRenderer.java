@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MovementContext;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction.Axis;

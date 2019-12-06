@@ -1,28 +1,25 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs.piston;
+package com.simibubi.create.modules.contraptions.receivers.contraptions.piston;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MoverType;
-import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.ContraptionEntity;
-import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.IControlContraption;
-import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.ContraptionEntity;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IControlContraption;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MoverType;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class MechanicalPistonTileEntity extends KineticTileEntity implements IControlContraption {
 
@@ -50,17 +47,6 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 		if (!world.isRemote)
 			disassembleConstruct();
 		super.remove();
-	}
-
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return INFINITE_EXTENT_AABB;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public double getMaxRenderDistanceSquared() {
-		return super.getMaxRenderDistanceSquared() * 16;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs.mounted;
+package com.simibubi.create.modules.contraptions.receivers.contraptions;
 
 public interface IControlContraption {
 

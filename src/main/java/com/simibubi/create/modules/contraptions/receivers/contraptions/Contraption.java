@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.receivers.constructs;
+package com.simibubi.create.modules.contraptions.receivers.contraptions;
 
 import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
@@ -19,9 +19,14 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.receivers.SawBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior.MovementContext;
-import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.MountedContraption;
-import com.simibubi.create.modules.contraptions.receivers.constructs.piston.PistonContraption;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.bearing.BearingContraption;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.chassis.AbstractChassisBlock;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.chassis.ChassisTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.chassis.LinearChassisBlock;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.chassis.RadialChassisBlock;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.mounted.MountedContraption;
+import com.simibubi.create.modules.contraptions.receivers.contraptions.piston.PistonContraption;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
@@ -451,6 +456,8 @@ public class Contraption {
 			contraption = new PistonContraption();
 		if (type.equals("Mounted"))
 			contraption = new MountedContraption();
+		if (type.equals("Bearing"))
+			contraption = new BearingContraption();
 		contraption.readNBT(nbt);
 		return contraption;
 	}
@@ -488,6 +495,8 @@ public class Contraption {
 			nbt.putString("Type", "Piston");
 		if (this instanceof MountedContraption)
 			nbt.putString("Type", "Mounted");
+		if (this instanceof BearingContraption)
+			nbt.putString("Type", "Bearing");
 
 		ListNBT blocks = new ListNBT();
 		for (BlockInfo block : this.blocks.values()) {
