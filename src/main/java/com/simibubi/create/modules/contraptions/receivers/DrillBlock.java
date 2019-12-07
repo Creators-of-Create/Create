@@ -94,7 +94,7 @@ public class DrillBlock extends DirectionalKineticBlock
 
 		World world = context.world;
 		BlockPos pos = context.currentGridPos;
-		pos = pos.offset(movement);
+//		pos = pos.offset(movement);
 		BlockState stateVisited = world.getBlockState(pos);
 
 		if (stateVisited.getCollisionShape(world, pos).isEmpty())

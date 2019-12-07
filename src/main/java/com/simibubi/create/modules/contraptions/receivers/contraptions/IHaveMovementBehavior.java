@@ -36,14 +36,12 @@ public interface IHaveMovementBehavior {
 		public BlockPos currentGridPos;
 		public Vec3d motion;
 		public float movementSpeedModifier = 1;
-
-		public MoverType moverType;
 		public World world;
 		public BlockState state;
 
-		public MovementContext(BlockState state, MoverType moverType) {
+		public MovementContext(World world, BlockState state) {
+			this.world = world;
 			this.state = state;
-			this.moverType = moverType;
 		}
 
 		public Direction getMovementDirection() {
@@ -51,13 +49,12 @@ public interface IHaveMovementBehavior {
 		}
 
 		public float getAnimationSpeed() {
-			int modifier = moverType == MoverType.MINECART ? 1000 : 200;
+			int modifier = 1000;
 			return ((int) (motion.length() * modifier)) / 100 * 100;
 		}
 
-		public static MovementContext readNBT(CompoundNBT nbt) {
-			MovementContext context = new MovementContext(NBTUtil.readBlockState(nbt.getCompound("State")),
-					MoverType.valueOf(nbt.getString("MoverType")));
+		public static MovementContext readNBT(World world, CompoundNBT nbt) {
+			MovementContext context = new MovementContext(world, NBTUtil.readBlockState(nbt.getCompound("State")));
 			context.motion = VecHelper.readNBT(nbt.getList("Motion", NBT.TAG_DOUBLE));
 			context.movementSpeedModifier = nbt.getFloat("SpeedModifier");
 			context.currentGridPos = NBTUtil.readBlockPos(nbt.getCompound("GridPos"));
@@ -66,7 +63,6 @@ public interface IHaveMovementBehavior {
 
 		public CompoundNBT writeToNBT(CompoundNBT nbt) {
 			nbt.put("State", NBTUtil.writeBlockState(state));
-			nbt.putString("MoverType", moverType.name());
 			nbt.put("Motion", VecHelper.writeNBT(motion));
 			nbt.putFloat("SpeedModifier", movementSpeedModifier);
 			nbt.put("GridPos", NBTUtil.writeBlockPos(currentGridPos));

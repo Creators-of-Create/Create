@@ -21,6 +21,7 @@ public class BearingContraption extends Contraption {
 		construct.facing = direction;
 		if (!construct.searchMovedStructure(world, pos.offset(direction), direction))
 			return null;
+		construct.initActors(world);
 		return construct;
 	}
 
@@ -40,12 +41,12 @@ public class BearingContraption extends Contraption {
 	}
 
 	@Override
-	public void readNBT(CompoundNBT tag) {
+	public void readNBT(World world, CompoundNBT tag) {
 		sailBlocks = tag.getInt("Sails");
 		facing = Direction.byIndex(tag.getInt("Facing"));
-		super.readNBT(tag);
+		super.readNBT(world, tag);
 	}
-	
+
 	public int getSailBlocks() {
 		return sailBlocks;
 	}

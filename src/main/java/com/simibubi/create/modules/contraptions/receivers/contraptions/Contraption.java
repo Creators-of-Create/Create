@@ -29,6 +29,7 @@ import com.simibubi.create.modules.contraptions.receivers.contraptions.mounted.M
 import com.simibubi.create.modules.contraptions.receivers.contraptions.piston.PistonContraption;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FallingBlock;
 import net.minecraft.block.PistonBlock;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -44,6 +45,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -449,7 +451,7 @@ public class Contraption {
 		constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(localPos));
 	}
 
-	public static Contraption fromNBT(CompoundNBT nbt) {
+	public static Contraption fromNBT(World world, CompoundNBT nbt) {
 		String type = nbt.getString("Type");
 		Contraption contraption = new Contraption();
 		if (type.equals("Piston"))
@@ -458,11 +460,11 @@ public class Contraption {
 			contraption = new MountedContraption();
 		if (type.equals("Bearing"))
 			contraption = new BearingContraption();
-		contraption.readNBT(nbt);
+		contraption.readNBT(world, nbt);
 		return contraption;
 	}
 
-	public void readNBT(CompoundNBT nbt) {
+	public void readNBT(World world, CompoundNBT nbt) {
 		nbt.getList("Blocks", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
 			BlockInfo info = new BlockInfo(NBTUtil.readBlockPos(comp.getCompound("Pos")),
@@ -474,7 +476,7 @@ public class Contraption {
 		nbt.getList("Actors", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
 			BlockInfo info = blocks.get(NBTUtil.readBlockPos(comp.getCompound("Pos")));
-			MovementContext context = MovementContext.readNBT(comp);
+			MovementContext context = MovementContext.readNBT(world, comp);
 			getActors().add(MutablePair.of(info, context));
 		});
 
@@ -553,6 +555,19 @@ public class Contraption {
 		disassemble(world, offset, yaw, pitch, (pos, state) -> false);
 	}
 
+	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
+		removeBlocksFromWorld(world, offset, (pos, state) -> false);
+	}
+
+	public void removeBlocksFromWorld(IWorld world, BlockPos offset, BiPredicate<BlockPos, BlockState> customRemoval) {
+		for (BlockInfo block : blocks.values()) {
+			BlockPos add = block.pos.add(anchor).add(offset);
+			if (customRemoval.test(add, block.state))
+				continue;
+			world.setBlockState(add, Blocks.AIR.getDefaultState(), 67);
+		}
+	}
+
 	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch,
 			BiPredicate<BlockPos, BlockState> customPlacement) {
 		for (BlockInfo block : blocks.values()) {
@@ -577,6 +592,16 @@ public class Contraption {
 				block.nbt.putInt("z", targetPos.getZ());
 				tileEntity.read(block.nbt);
 			}
+		}
+	}
+
+	public void initActors(World world) {
+		for (MutablePair<BlockInfo, MovementContext> pair : actors) {
+			MovementContext context = new MovementContext(world, pair.left.state);
+			context.world = world;
+			context.motion = Vec3d.ZERO;
+			context.currentGridPos = BlockPos.ZERO;
+			pair.setRight(context);
 		}
 	}
 

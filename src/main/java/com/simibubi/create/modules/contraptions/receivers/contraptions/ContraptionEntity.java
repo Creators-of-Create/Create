@@ -67,7 +67,6 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	@Override
 	public void tick() {
-		super.tick();
 		attachToController();
 
 		Entity e = getRidingEntity();
@@ -90,31 +89,32 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			pitch = angleLerp(speed, pitch, targetPitch);
 
 			tickActors(movementVector);
+			super.tick();
 			return;
 		}
 
 		prevYaw = yaw;
 		prevPitch = pitch;
 		prevRoll = roll;
+
+		tickActors(new Vec3d(posX - prevPosX, posY - prevPosY, posZ - prevPosZ));
+		super.tick();
 	}
 
 	public void tickActors(Vec3d movementVector) {
 		getContraption().getActors().forEach(pair -> {
 			MovementContext context = pair.right;
-			float deg = -yaw + initialAngle;
+			float deg = (getRidingEntity() != null ? yaw + 180 : yaw) + initialAngle;
 			context.motion = VecHelper.rotate(movementVector, deg, Axis.Y);
 
 			if (context.world == null)
 				context.world = world;
 
-			Vec3d offset = new Vec3d(pair.left.pos.subtract(getContraption().getAnchor()));
-			world.addParticle(ParticleTypes.BUBBLE, offset.x, offset.y, offset.z, 0, 0, 0);
-
+			Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
+			Vec3d offset = new Vec3d(pair.left.pos);
 			offset = VecHelper.rotate(offset, deg, Axis.Y);
-			world.addParticle(ParticleTypes.CRIT, offset.x, offset.y, offset.z, 0, 0, 0);
-
-			offset = offset.add(new Vec3d(getPosition()).add(0.5, 0, 0.5));
-			world.addParticle(ParticleTypes.NOTE, offset.x, offset.y, offset.z, 0, 10, 0);
+			offset = offset.add(rotationOffset);
+			offset = offset.add(posX, posY, posZ);
 
 			if (world.isRemote)
 				return;
@@ -219,7 +219,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	@Override
 	protected void readAdditional(CompoundNBT compound) {
-		contraption = Contraption.fromNBT(compound.getCompound("Contraption"));
+		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"));
 		initialAngle = compound.getFloat("InitialAngle");
 		if (compound.contains("Controller"))
 			controllerPos = NBTUtil.readBlockPos(compound.getCompound("Controller"));

@@ -113,8 +113,8 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 		BlockState block = context.state;
 		BlockPos pos = context.currentGridPos;
 
-		if (movement != block.get(HORIZONTAL_FACING))
-			return;
+//		if (movement != block.get(HORIZONTAL_FACING))
+//			return;
 
 		BlockState stateVisited = world.getBlockState(pos);
 		boolean notCropButCuttable = false;

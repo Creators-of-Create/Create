@@ -1,17 +1,12 @@
 package com.simibubi.create.modules.contraptions.receivers.contraptions.piston;
 
-import org.apache.commons.lang3.tuple.MutablePair;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.receivers.contraptions.IControlContraption;
-import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MovementContext;
-import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MoverType;
 import com.simibubi.create.modules.contraptions.receivers.contraptions.piston.MechanicalPistonBlock.PistonState;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -19,7 +14,6 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class MechanicalPistonTileEntity extends KineticTileEntity implements IControlContraption {
 
@@ -85,23 +79,8 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 		offset = contraption.initialExtensionProgress;
 		sendData();
 
-		getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66);
-		for (BlockInfo block : contraption.blocks.values()) {
-			BlockPos startPos = block.pos.offset(direction, contraption.initialExtensionProgress);
-			BlockPos add = startPos.add(contraption.getAnchor());
-			if (add.equals(pos))
-				continue;
-			getWorld().setBlockState(add, Blocks.AIR.getDefaultState(), 67);
-		}
-
-		for (MutablePair<BlockInfo, MovementContext> pair : contraption.getActors()) {
-			MovementContext context = new MovementContext(pair.left.state, MoverType.PISTON);
-			context.world = world;
-			context.motion = new Vec3d(direction.getDirectionVec()).scale(getMovementSpeed()).normalize();
-			context.currentGridPos = pair.left.pos.offset(direction, getModulatedOffset(offset));
-			pair.setRight(context);
-		}
-
+		BlockPos startPos = BlockPos.ZERO.offset(direction, contraption.initialExtensionProgress);
+		contraption.removeBlocksFromWorld(world, startPos);
 		movedContraption = new ContraptionEntity(getWorld(), contraption, 0).controlledBy(this);
 		moveContraption();
 		world.addEntity(movedContraption);

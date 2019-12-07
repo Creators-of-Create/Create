@@ -4,15 +4,10 @@ import static com.simibubi.create.modules.contraptions.receivers.contraptions.mo
 
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.MutablePair;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.receivers.contraptions.Contraption;
-import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MovementContext;
-import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MoverType;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
@@ -44,20 +39,8 @@ public class MountedContraption extends Contraption {
 		contraption.add(pos, new BlockInfo(pos,
 				AllBlocks.MINECART_ANCHOR.block.getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis),
 				null));
-
-		for (BlockInfo block : contraption.blocks.values()) {
-			if (BlockPos.ZERO.equals(block.pos))
-				continue;
-			world.setBlockState(block.pos.add(pos), Blocks.AIR.getDefaultState(), 67);
-		}
-
-		for (MutablePair<BlockInfo, MovementContext> pair : contraption.getActors()) {
-			MovementContext context = new MovementContext(pair.left.state, MoverType.MINECART);
-			context.world = world;
-			context.motion = vec;
-			context.currentGridPos = pair.left.pos;
-			pair.setRight(context);
-		}
+		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
+		contraption.initActors(world);
 
 		return contraption;
 	}
@@ -81,6 +64,11 @@ public class MountedContraption extends Contraption {
 		if (AllBlocks.CART_ASSEMBLER.typeOf(capture.state))
 			return new BlockInfo(capture.pos, CartAssemblerBlock.createAnchor(capture.state), null);
 		return capture;
+	}
+
+	@Override
+	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
+		super.removeBlocksFromWorld(world, offset, (pos, state) -> pos.equals(anchor));
 	}
 
 	@Override

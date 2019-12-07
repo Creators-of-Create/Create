@@ -43,6 +43,7 @@ public class PistonContraption extends Contraption {
 			return null;
 		if (!construct.searchMovedStructure(world, construct.anchor, retract ? direction.getOpposite() : direction))
 			return null;
+		construct.initActors(world);
 		return construct;
 	}
 
@@ -155,8 +156,21 @@ public class PistonContraption extends Contraption {
 	}
 
 	@Override
-	public void readNBT(CompoundNBT nbt) {
-		super.readNBT(nbt);
+	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
+		super.removeBlocksFromWorld(world, offset, (pos, state) -> {
+			BlockPos pistonPos = anchor.offset(orientation, -initialExtensionProgress - 1);
+			BlockState blockState = world.getBlockState(pos);
+			if (pos.equals(pistonPos) && blockState.getBlock() instanceof MechanicalPistonBlock) {
+				world.setBlockState(pos, blockState.with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66);
+				return true;
+			}
+			return false;
+		});
+	}
+
+	@Override
+	public void readNBT(World world, CompoundNBT nbt) {
+		super.readNBT(world, nbt);
 		extensionLength = nbt.getInt("ExtensionLength");
 		initialExtensionProgress = nbt.getInt("InitialLength");
 		orientation = Direction.byIndex(nbt.getInt("Orientation"));

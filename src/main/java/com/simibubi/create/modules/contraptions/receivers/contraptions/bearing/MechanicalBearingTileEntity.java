@@ -6,14 +6,12 @@ import com.simibubi.create.modules.contraptions.receivers.contraptions.Contrapti
 import com.simibubi.create.modules.contraptions.receivers.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.receivers.contraptions.IControlContraption;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity implements IControlContraption {
 
@@ -64,6 +62,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public float getGeneratedSpeed() {
 		if (!running || !isWindmill)
 			return 0;
+		if (movedContraption == null)
+			return 0;
 		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks();
 		return MathHelper.clamp(sails, 0, 128);
 	}
@@ -109,6 +109,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			return;
 		movedContraption = new ContraptionEntity(world, contraption, 0).controlledBy(this);
 		BlockPos anchor = pos.offset(direction);
+		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		world.addEntity(movedContraption);
 
@@ -116,10 +117,6 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		running = true;
 		angle = 0;
 		sendData();
-
-		for (BlockInfo info : contraption.blocks.values()) {
-			getWorld().setBlockState(info.pos.add(contraption.getAnchor()), Blocks.AIR.getDefaultState(), 67);
-		}
 
 		updateGeneratedRotation();
 	}

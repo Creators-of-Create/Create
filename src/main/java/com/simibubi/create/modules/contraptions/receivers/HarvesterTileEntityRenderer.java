@@ -29,11 +29,12 @@ public class HarvesterTileEntityRenderer extends TileEntityRenderer<HarvesterTil
 	public static SuperByteBuffer renderInContraption(MovementContext context) {
 		BlockState state = context.state;
 		Direction facing = context.getMovementDirection();
-		float speed = (float) (facing == state.get(HORIZONTAL_FACING)
-				? context.getAnimationSpeed() * facing.getAxisDirection().getOffset()
-				: 0);
-		if (facing.getAxis() == Axis.X)
-			speed = -speed;
+		float speed = -500 * state.get(HORIZONTAL_FACING).getAxisDirection().getOffset();
+//		float speed = (float) (facing != state.get(HORIZONTAL_FACING)
+//				? context.getAnimationSpeed() * facing.getAxisDirection().getOffset()
+//				: 0);
+//		if (facing.getAxis() == Axis.X)
+//			speed = -speed;
 		float time = AnimationTickHolder.getRenderTick();
 		float angle = (float) (((time * speed) % 360) / 180 * (float) Math.PI);
 
