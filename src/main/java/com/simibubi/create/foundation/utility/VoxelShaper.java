@@ -15,6 +15,8 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 
 public class VoxelShaper {
 
+	//big todo lul
+
 	private Map<Direction, VoxelShape> shapes = new HashMap<>();
 
 	public VoxelShape get(Direction direction) {
@@ -42,6 +44,16 @@ public class VoxelShaper {
 				continue;
 			Direction facing = axisAsFace(axis);
 			voxelShaper.shapes.put(facing, rotatedCopy(zShape, 0, (int) -facing.getHorizontalAngle()));
+		}
+		return voxelShaper;
+	}
+
+	public static VoxelShaper forVerticalBelt(VoxelShape southBeltShape){
+		VoxelShaper voxelShaper = new VoxelShaper();
+		for (Direction facing : Direction.values()) {
+			if (facing.getAxis().isVertical())
+				continue;
+			voxelShaper.shapes.put(facing, rotatedCopy(rotatedCopy(southBeltShape, facing.getAxisDirection() == AxisDirection.NEGATIVE ? 90 : 270, 0),0,(int) -facing.getHorizontalAngle()));
 		}
 		return voxelShaper;
 	}
