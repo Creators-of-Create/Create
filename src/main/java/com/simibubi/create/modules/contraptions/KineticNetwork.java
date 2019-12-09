@@ -89,9 +89,8 @@ public class KineticNetwork {
 	}
 
 	public void sync() {
-		for (KineticTileEntity te : members.keySet()) {
+		for (KineticTileEntity te : members.keySet())
 			te.sync(maxStress, currentStress);
-		}
 	}
 
 	public void updateStressCapacity() {

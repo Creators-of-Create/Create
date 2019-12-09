@@ -346,22 +346,9 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 		char axisChar = axis.name().charAt(0);
 		Vec3d vec = VecHelper.getCenterOf(pos);
 
-		int color = 0x22FF22;
-		int particleSpeed = 10;
-
-		switch (SpeedLevel.of(getSpeed())) {
-		case FAST:
-			color = 16733695;
-			particleSpeed = 30;
-			break;
-		case MEDIUM:
-			color = 0x0084FF;
-			particleSpeed = 20;
-			break;
-		default:
-			break;
-		}
-
+		SpeedLevel speedLevel = SpeedLevel.of(getSpeed());
+		int color = speedLevel.getColor();
+		int particleSpeed = speedLevel.getParticleSpeed();
 		particleSpeed *= Math.signum(getSpeed());
 
 		if (getWorld() instanceof ServerWorld) {

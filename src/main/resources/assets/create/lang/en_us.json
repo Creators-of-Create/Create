@@ -73,6 +73,8 @@
 	"block.create.mechanical_mixer": "Mechanical Mixer",
 	"block.create.basin": "Basin",
 	"block.create.mechanical_crafter": "Mechanical Crafter",
+	"block.create.speed_gauge": "Speedometer",
+	"block.create.stress_gauge": "Stress Gauge",
 
 	"block.create.sticky_mechanical_piston": "Sticky Mechanical Piston",
 	"block.create.mechanical_piston": "Mechanical Piston",
@@ -681,6 +683,16 @@
 
 	"block.create.flexpeater.tooltip": "FLEX REPEATER",
 	"block.create.flexpeater.tooltip.summary": "An advanced _Redstone_ _Repeater_ with a _configurable_ _Delay_ up to 30 Minutes.",
+	
+	"block.create.speed_gauge.tooltip": "SPEEDOMETER",
+	"block.create.speed_gauge.tooltip.summary": "Measures and displays the _rotational_ _speed_ of attached kinetic components.",
+	"block.create.speed_gauge.tooltip.condition1": "When Rotated",
+	"block.create.speed_gauge.tooltip.behaviour1": "Indicates a color corresponding to the level of speed. _Green_ indicates Slow, _Blue_ moderate and _Purple_ fast rotation. Some mechanical components require a sufficient level of speed to work properly.",
+	
+	"block.create.stress_gauge.tooltip": "STRESS GAUGE",
+	"block.create.stress_gauge.tooltip.summary": "Measures and displays the _overall_ _stress_ of the attached kinetic network.",
+	"block.create.stress_gauge.tooltip.condition1": "When Rotated",
+	"block.create.stress_gauge.tooltip.behaviour1": "Indicates a color corresponding to the level of stress. _Over-stressed_ _networks_ will cease to move. Stress can be relieved by adding more _rotational_ _sources_ to the network.",
 	
 	"item.create.logistical_controller_calculation.tooltip": "WIP",
 	"item.create.logistical_controller_request.tooltip": "WIP",

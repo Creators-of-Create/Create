@@ -1,0 +1,6 @@
+{
+    "variants": {
+		"type=speed": { "model": "create:block/gauge/speed" },
+		"type=stress": { "model": "create:block/gauge/stress" }
+	}
+}

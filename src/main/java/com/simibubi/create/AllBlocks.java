@@ -43,6 +43,7 @@ import com.simibubi.create.modules.contraptions.relays.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.ShaftHalfBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelBlock;
+import com.simibubi.create.modules.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.CrossPlaneSymmetryBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.PlaneSymmetryBlock;
@@ -132,6 +133,11 @@ public enum AllBlocks {
 	MECHANICAL_CRAFTER_ARROW(new RenderUtilityDirectionalBlock()),
 	MECHANICAL_CRAFTER_BELT_FRAME(new RenderUtilityDirectionalBlock()),
 	MECHANICAL_CRAFTER_BELT(new RenderUtilityDirectionalBlock()),
+	SPEED_GAUGE(new GaugeBlock(GaugeBlock.Type.SPEED)),
+	STRESS_GAUGE(new GaugeBlock(GaugeBlock.Type.STRESS)),
+	GAUGE_DIAL(new RenderUtilityBlock()),
+	GAUGE_INDICATOR(new RenderUtilityBlock()),
+	GAUGE_HEAD(new GaugeBlock.Head()),
 
 	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
 	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),

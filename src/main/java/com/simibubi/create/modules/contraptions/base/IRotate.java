@@ -16,11 +16,19 @@ public interface IRotate {
 	public enum SpeedLevel {
 		NONE, MEDIUM, FAST;
 
-		public TextFormatting getColor() {
+		public TextFormatting getTextColor() {
 			return this == NONE ? TextFormatting.GREEN
 					: this == MEDIUM ? TextFormatting.AQUA : TextFormatting.LIGHT_PURPLE;
 		}
+
+		public int getColor() {
+			return this == NONE ? 0x22FF22 : this == MEDIUM ? 0x0084FF : 0xFF55FF;
+		}
 		
+		public int getParticleSpeed() {
+			return this == NONE ? 10 : this == MEDIUM ? 20 : 30;
+		}
+
 		public static SpeedLevel of(float speed) {
 			speed = Math.abs(speed);
 
@@ -35,10 +43,9 @@ public interface IRotate {
 
 	public enum StressImpact {
 		LOW, MEDIUM, HIGH;
-		
+
 		public TextFormatting getColor() {
-			return this == LOW ? TextFormatting.YELLOW
-					: this == MEDIUM ? TextFormatting.GOLD : TextFormatting.RED;
+			return this == LOW ? TextFormatting.YELLOW : this == MEDIUM ? TextFormatting.GOLD : TextFormatting.RED;
 		}
 	}
 

@@ -459,6 +459,8 @@ public class CreateConfig {
 		case ENCASED_BELT:
 		case ENCASED_SHAFT:
 		case SHAFT:
+		case SPEED_GAUGE:
+		case STRESS_GAUGE:
 		default:
 			return 1;
 		}

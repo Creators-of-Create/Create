@@ -86,7 +86,7 @@ public class ItemDescription {
 		if (hasSpeedRequirement) {
 			List<String> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
-			String level = minimumRequiredSpeedLevel.getColor() + makeProgressBar(3, index) + speedLevels.get(index);
+			String level = minimumRequiredSpeedLevel.getTextColor() + makeProgressBar(3, index) + speedLevels.get(index);
 			add(linesOnShift, GRAY + Lang.translate("tooltip.speedRequirement"));
 			add(linesOnShift, level);
 		}

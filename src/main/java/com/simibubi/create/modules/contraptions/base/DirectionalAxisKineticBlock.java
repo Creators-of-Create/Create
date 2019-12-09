@@ -24,14 +24,23 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 		super.fillStateContainer(builder);
 	}
 
+	protected Direction getFacingForPlacement(BlockItemUseContext context) {
+		Direction facing = context.getNearestLookingDirection().getOpposite();
+		if (context.isPlacerSneaking())
+			facing = facing.getOpposite();
+		return facing;
+	}
+	
+	protected boolean getAxisAlignmentForPlacement(BlockItemUseContext context) {
+		return context.getPlacementHorizontalFacing().getAxis() == Axis.X;
+	}
+
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction facing = context.getNearestLookingDirection().getOpposite();
+		Direction facing = getFacingForPlacement(context);
 		BlockPos pos = context.getPos();
 		World world = context.getWorld();
 		boolean alongFirst = false;
-		if (context.isPlacerSneaking())
-			facing = facing.getOpposite();
 
 		if (facing.getAxis().isHorizontal()) {
 			alongFirst = facing.getAxis() == Axis.Z;
@@ -48,7 +57,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 		}
 
 		if (facing.getAxis().isVertical()) {
-			alongFirst = context.getPlacementHorizontalFacing().getAxis() == Axis.X;
+			alongFirst = getAxisAlignmentForPlacement(context);
 			Direction prefferedSide = null;
 			for (Direction side : Direction.values()) {
 				if (side.getAxis().isVertical())
@@ -72,7 +81,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 
 		return this.getDefaultState().with(FACING, facing).with(AXIS_ALONG_FIRST_COORDINATE, alongFirst);
 	}
-	
+
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		Axis pistonAxis = state.get(FACING).getAxis();
@@ -87,7 +96,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 
 		return super.getRotationAxis(state);
 	}
-	
+
 	@Override
 	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == getRotationAxis(state);

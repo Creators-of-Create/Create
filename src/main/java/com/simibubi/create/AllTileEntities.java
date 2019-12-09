@@ -43,6 +43,10 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.gauge.GaugeBlock;
+import com.simibubi.create.modules.contraptions.relays.gauge.GaugeTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.gauge.SpeedGaugeTileEntity;
+import com.simibubi.create.modules.contraptions.relays.gauge.StressGaugeTileEntity;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockTileEntity;
 import com.simibubi.create.modules.logistics.block.LinkedTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntity;
@@ -115,6 +119,8 @@ public enum AllTileEntities {
 	MECHANICAL_MIXER(MechanicalMixerTileEntity::new, AllBlocks.MECHANICAL_MIXER),
 	BASIN(BasinTileEntity::new, AllBlocks.BASIN),
 	MECHANICAL_CRAFTER(MechanicalCrafterTileEntity::new, AllBlocks.MECHANICAL_CRAFTER),
+	SPEED_GAUGE(SpeedGaugeTileEntity::new, AllBlocks.SPEED_GAUGE),
+	STRESS_GAUGE(StressGaugeTileEntity::new, AllBlocks.STRESS_GAUGE),
 
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
@@ -198,6 +204,8 @@ public enum AllTileEntities {
 		bind(MechanicalMixerTileEntity.class, new MechanicalMixerTileEntityRenderer());
 		bind(MechanicalCrafterTileEntity.class, new MechanicalCrafterTileEntityRenderer());
 		bind(BasinTileEntity.class, new BasinTileEntityRenderer());
+		bind(SpeedGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.SPEED));
+		bind(StressGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.STRESS));
 	}
 
 	@OnlyIn(Dist.CLIENT)
