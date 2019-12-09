@@ -58,13 +58,7 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return BeltTunnelShapes.getFilledShape(state);
-	}
-
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
-			ISelectionContext context) {
-		return BeltTunnelShapes.getFrameShape(state);
+		return BeltTunnelShapes.getShape(state);
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -77,22 +77,22 @@ public class BeltShapes {
 
 	//Vertical Shapes
 	private static final VoxelShaper
-			VERTICAL_FULL = VoxelShaper.forVerticalBelt(FLAT_FULL_PART),
-			VERTICAL_END = VoxelShaper.forVerticalBelt(compose(FLAT_END_PART, FLAT_FULL_PART)),
-			VERTICAL_START = VoxelShaper.forVerticalBelt(compose(FLAT_FULL_PART, FLAT_END_PART));
+			VERTICAL_FULL = VerticalBeltShaper.make(FLAT_FULL_PART),
+			VERTICAL_END = VerticalBeltShaper.make(compose(FLAT_END_PART, FLAT_FULL_PART)),
+			VERTICAL_START = VerticalBeltShaper.make(compose(FLAT_FULL_PART, FLAT_END_PART));
 	//Flat Shapes
 	private static final VoxelShaper
-			FLAT_FULL = VoxelShaper.forHorizontalAxis(FLAT_FULL_PART),
-			FLAT_END = VoxelShaper.forHorizontal(compose(FLAT_END_PART, FLAT_FULL_PART)),
-			FLAT_START = VoxelShaper.forHorizontal(compose(FLAT_FULL_PART, FLAT_END_PART));
+			FLAT_FULL = VoxelShaper.forHorizontalAxis(FLAT_FULL_PART, Direction.SOUTH),
+			FLAT_END = VoxelShaper.forHorizontal(compose(FLAT_END_PART, FLAT_FULL_PART), Direction.SOUTH),
+			FLAT_START = VoxelShaper.forHorizontal(compose(FLAT_FULL_PART, FLAT_END_PART), Direction.SOUTH);
 	//Sloped Shapes
 	private static final VoxelShaper
-			SLOPE_DESC = VoxelShaper.forHorizontal(SLOPE_DESC_PART),
-			SLOPE_ASC = VoxelShaper.forHorizontal(SLOPE_ASC_PART),
-			SLOPE_DESC_END = VoxelShaper.forHorizontal(compose(FLAT_END_PART, SLOPE_DESC_PART)),
-			SLOPE_DESC_START = VoxelShaper.forHorizontal(compose(SLOPE_DESC_PART, FLAT_END_PART)),
-			SLOPE_ASC_END = VoxelShaper.forHorizontal(compose(FLAT_END_PART, SLOPE_ASC_PART)),
-			SLOPE_ASC_START = VoxelShaper.forHorizontal(compose(SLOPE_ASC_PART, FLAT_END_PART));
+			SLOPE_DESC = VoxelShaper.forHorizontal(SLOPE_DESC_PART, Direction.SOUTH),
+			SLOPE_ASC = VoxelShaper.forHorizontal(SLOPE_ASC_PART, Direction.SOUTH),
+			SLOPE_DESC_END = VoxelShaper.forHorizontal(compose(FLAT_END_PART, SLOPE_DESC_PART), Direction.SOUTH),
+			SLOPE_DESC_START = VoxelShaper.forHorizontal(compose(SLOPE_DESC_PART, FLAT_END_PART), Direction.SOUTH),
+			SLOPE_ASC_END = VoxelShaper.forHorizontal(compose(FLAT_END_PART, SLOPE_ASC_PART), Direction.SOUTH),
+			SLOPE_ASC_START = VoxelShaper.forHorizontal(compose(SLOPE_ASC_PART, FLAT_END_PART), Direction.SOUTH);
 
 
 
@@ -132,7 +132,7 @@ public class BeltShapes {
 
 	private static final VoxelShape CASING_HORIZONTAL = makeCuboidShape(0, 0, 0, 16, 11, 16);
 	//todo still need to remove these two
-	private static final VoxelShaper CASING_TOP_END = VoxelShaper.forHorizontal(makeCuboidShape(0, 0, 0, 16, 11, 11));
+	private static final VoxelShaper CASING_TOP_END = VoxelShaper.forHorizontal(makeCuboidShape(0, 0, 0, 16, 11, 11), Direction.SOUTH);
 
 	public static VoxelShape getShape(BlockState state) {
 		Direction facing = state.get(BeltBlock.HORIZONTAL_FACING);
@@ -197,6 +197,14 @@ public class BeltShapes {
 			facing = facing.getOpposite();
 
 		return CASING_TOP_END.get(facing.getOpposite());
+	}
+
+	private static class VerticalBeltShaper extends VoxelShaper {
+
+		public static VoxelShaper make(VoxelShape southBeltShape){
+			return forDirectionsWithRotation(southBeltShape, Direction.Plane.HORIZONTAL,//idk, this can probably be improved :S
+					direction -> new Vec3d(direction.getAxisDirection() == Direction.AxisDirection.NEGATIVE ? 90 : 270, -direction.getHorizontalAngle(), 0));
+		}
 	}
 
 }

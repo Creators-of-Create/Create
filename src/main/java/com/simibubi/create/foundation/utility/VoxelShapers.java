@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.block.Block;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -37,7 +36,8 @@ public class VoxelShapers {
 	public static final VoxelShaper
 		SHORT_CASING = VoxelShaper.forDirectional(makeCuboidShape(0, 0, 0, 16, 12, 16), Direction.UP),
 		LOGISTICAL_CASING_MIDDLE = VoxelShaper.forDirectional(LOGISTICAL_CASING_MIDDLE_SHAPE, Direction.UP),
-		LOGISTICAL_CASING_CAP = VoxelShaper.forDirectional(LOGISTICAL_CASING_CAP_SHAPE, Direction.UP)
+		LOGISTICAL_CASING_CAP = VoxelShaper.forDirectional(LOGISTICAL_CASING_CAP_SHAPE, Direction.UP),
+		HARVESTER_BASE = VoxelShaper.forHorizontal(makeCuboidShape(0, 2, 0, 16, 14, 3), Direction.SOUTH)
 
 				;
 

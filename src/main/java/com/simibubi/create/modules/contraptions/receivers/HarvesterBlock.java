@@ -5,7 +5,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.VoxelShaper;
+import com.simibubi.create.foundation.utility.VoxelShapers;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
 
 import net.minecraft.block.Block;
@@ -39,8 +39,6 @@ import net.minecraftforge.common.IPlantable;
 
 public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBehavior {
 
-	private static VoxelShaper SHAPER = VoxelShaper.forHorizontal(Block.makeCuboidShape(0, 2, 0, 16, 14, 3));
-
 	public HarvesterBlock() {
 		super(Properties.from(Blocks.IRON_BLOCK));
 	}
@@ -63,7 +61,7 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		Direction direction = state.get(HORIZONTAL_FACING);
-		return SHAPER.get(direction);
+		return VoxelShapers.HARVESTER_BASE.get(direction);
 	}
 
 	@Override
