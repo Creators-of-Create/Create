@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility;
+package com.simibubi.create.foundation.item;
 
 import java.util.ArrayList;
 import java.util.List;

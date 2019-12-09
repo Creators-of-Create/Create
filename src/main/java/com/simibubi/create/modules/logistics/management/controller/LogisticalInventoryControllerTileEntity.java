@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.block.IWithContainer;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.type.CombinedCountedItemsList;
 import com.simibubi.create.foundation.type.CountedItemsList;
 import com.simibubi.create.foundation.type.CountedItemsList.ItemStackEntry;
-import com.simibubi.create.foundation.utility.ItemHelper;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
 import com.simibubi.create.modules.logistics.management.LogisticalNetwork;
 import com.simibubi.create.modules.logistics.management.base.LogisticalCasingTileEntity;

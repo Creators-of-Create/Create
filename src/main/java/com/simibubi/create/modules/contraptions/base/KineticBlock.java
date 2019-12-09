@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.base;
 
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
+import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
 
 import net.minecraft.block.Block;

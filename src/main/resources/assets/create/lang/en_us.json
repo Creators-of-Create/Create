@@ -401,6 +401,18 @@
 	"create.tooltip.capacityProvided.medium": "Medium",
 	"create.tooltip.capacityProvided.high": "Large",
 
+	"create.tooltip.wip": "WIP",
+	"create.tooltip.workInProgress": "Work in progress!",
+	
+	"create.tooltip.randomWipDescription0": "Please keep this item away from children.",
+	"create.tooltip.randomWipDescription1": "A baby panda dies everytime you use this item.",
+	"create.tooltip.randomWipDescription2": "Use at your own risk.",
+	"create.tooltip.randomWipDescription3": "Nothing to see here, please disperse.",
+	"create.tooltip.randomWipDescription4": "This item will self-destruct in 10 seconds.",
+	"create.tooltip.randomWipDescription5": "Believe me, it's useless.",
+	"create.tooltip.randomWipDescription6": "By using this item, you hereby consent to our disclaimer and agree to its terms.",
+	"create.tooltip.randomWipDescription7": "This one maybe isn't for you.",
+	"create.tooltip.randomWipDescription8": "Use it and regret your decision immediately.",
 
 	"create.mechanical_mixer.min_ingredients": "Min. Ingredients",
 
@@ -669,6 +681,16 @@
 
 	"block.create.flexpeater.tooltip": "FLEX REPEATER",
 	"block.create.flexpeater.tooltip.summary": "An advanced _Redstone_ _Repeater_ with a _configurable_ _Delay_ up to 30 Minutes.",
+	
+	"item.create.logistical_controller_calculation.tooltip": "WIP",
+	"item.create.logistical_controller_request.tooltip": "WIP",
+	"item.create.logistical_controller_storage.tooltip": "WIP",
+	"item.create.logistical_controller_supply.tooltip": "WIP",
+	"item.create.logistical_controller_transactions.tooltip": "WIP",
+	"block.create.logistical_index.tooltip": "WIP",
+	"block.create.package_funnel.tooltip": "WIP",
+	"block.create.logisticians_table.tooltip": "WIP",
+	"item.create.logistical_dial.tooltip": "WIP",
 
 	"itemGroup.create": "Create"
 }

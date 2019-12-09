@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import com.simibubi.create.foundation.item.AbstractToolItem;
 import com.simibubi.create.foundation.item.AllToolTypes;
-import com.simibubi.create.foundation.utility.ItemHelper;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;

@@ -1,7 +1,7 @@
-package com.simibubi.create.foundation.utility;
+package com.simibubi.create.foundation.item;
 
 import static com.simibubi.create.CreateConfig.parameters;
-import static com.simibubi.create.foundation.utility.TooltipHelper.cutString;
+import static com.simibubi.create.foundation.item.TooltipHelper.cutString;
 import static net.minecraft.util.text.TextFormatting.AQUA;
 import static net.minecraft.util.text.TextFormatting.BLUE;
 import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
@@ -68,7 +69,7 @@ public class ItemDescription {
 		linesOnShift = new ArrayList<>();
 		linesOnCtrl = new ArrayList<>();
 	}
-
+	
 	public ItemDescription withSummary(String summary) {
 		add(linesOnShift, cutString(summary, palette.color, palette.hColor));
 		add(linesOnShift, "");

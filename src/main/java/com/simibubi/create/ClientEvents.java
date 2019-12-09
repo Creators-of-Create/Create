@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.TooltipHelper;
 import com.simibubi.create.modules.contraptions.KineticDebugger;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
@@ -129,9 +129,11 @@ public class ClientEvents {
 			return;
 
 		if (TooltipHelper.hasTooltip(stack)) {
+			List<ITextComponent> itemTooltip = event.getToolTip();
 			List<ITextComponent> toolTip = new ArrayList<>();
+			toolTip.add(itemTooltip.remove(0));
 			TooltipHelper.getTooltip(stack).addInformation(toolTip);
-			event.getToolTip().addAll(1, toolTip);
+			itemTooltip.addAll(0, toolTip);
 		}
 		
 	}

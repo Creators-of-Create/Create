@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility;
+package com.simibubi.create.foundation.item;
 
 import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
 
@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.bridge.game.Language;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
+import com.simibubi.create.foundation.item.ItemDescription.Palette;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 
@@ -110,6 +111,9 @@ public class TooltipHelper {
 
 	private static ItemDescription buildToolTip(String translationKey, ItemStack stack) {
 		IModule module = IModule.of(stack);
+		if (I18n.format(translationKey).equals("WIP"))
+			return new WipScription(module.getToolTipColor());
+
 		ItemDescription tooltip = new ItemDescription(module.getToolTipColor());
 		String summaryKey = translationKey + ".summary";
 
@@ -147,7 +151,7 @@ public class TooltipHelper {
 	}
 
 	public static String getTooltipTranslationKey(ItemStack stack) {
-		return stack.getItem().getTranslationKey() + ".tooltip";
+		return stack.getItem().getTranslationKey(stack) + ".tooltip";
 	}
 
 }

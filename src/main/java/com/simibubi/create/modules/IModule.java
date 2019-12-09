@@ -3,7 +3,7 @@ package com.simibubi.create.modules;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateConfig;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
+import com.simibubi.create.foundation.item.ItemDescription.Palette;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;

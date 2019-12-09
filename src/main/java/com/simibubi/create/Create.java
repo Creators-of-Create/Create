@@ -1,9 +1,9 @@
 package com.simibubi.create;
 
-import com.simibubi.create.foundation.world.OreGeneration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.simibubi.create.foundation.world.OreGeneration;
 import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MovingConstructHandler;
@@ -25,7 +25,6 @@ import net.minecraft.village.PointOfInterestType;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;

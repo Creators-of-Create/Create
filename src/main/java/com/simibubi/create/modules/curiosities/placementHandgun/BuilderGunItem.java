@@ -12,9 +12,9 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.ItemDescription;
-import com.simibubi.create.foundation.utility.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
