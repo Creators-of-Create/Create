@@ -45,7 +45,6 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -597,10 +596,9 @@ public class Contraption {
 
 	public void initActors(World world) {
 		for (MutablePair<BlockInfo, MovementContext> pair : actors) {
-			MovementContext context = new MovementContext(world, pair.left.state);
-			context.world = world;
-			context.motion = Vec3d.ZERO;
-			context.currentGridPos = BlockPos.ZERO;
+			BlockState blockState = pair.left.state;
+			MovementContext context = new MovementContext(world, blockState);
+			((IHaveMovementBehavior) blockState.getBlock()).startMoving(context);
 			pair.setRight(context);
 		}
 	}

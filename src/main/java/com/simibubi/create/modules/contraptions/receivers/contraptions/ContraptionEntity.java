@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers.contraptions;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import com.simibubi.create.AllEntities;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior.MovementContext;
@@ -11,24 +13,24 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
 
-	private Contraption contraption;
+	protected Contraption contraption;
 	protected float initialAngle;
-
 	protected BlockPos controllerPos;
 	protected IControlContraption controllerTE;
+
+	public float movementSpeedModifier;
 
 	public float prevYaw;
 	public float prevPitch;
@@ -57,6 +59,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		this.prevYaw = initialAngle;
 		this.yaw = initialAngle;
 		this.targetYaw = initialAngle;
+		movementSpeedModifier = 1;
 	}
 
 	public <T extends TileEntity & IControlContraption> ContraptionEntity controlledBy(T controller) {
@@ -82,11 +85,17 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 					yaw += 360;
 			}
 
-			float speed = 0.2f;
-			prevYaw = yaw;
-			yaw = angleLerp(speed, yaw, targetYaw);
-			prevPitch = pitch;
-			pitch = angleLerp(speed, pitch, targetPitch);
+			if (Math.abs(getShortestAngleDiff(yaw, targetYaw)) >= 175) {
+				initialAngle += 180;
+				yaw += 180;
+				prevYaw = yaw;
+			} else {
+				float speed = 0.2f;
+				prevYaw = yaw;
+				yaw = angleLerp(speed, yaw, targetYaw);
+				prevPitch = pitch;
+				pitch = angleLerp(speed, pitch, targetPitch);
+			}
 
 			tickActors(movementVector);
 			super.tick();
@@ -102,31 +111,48 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public void tickActors(Vec3d movementVector) {
-		getContraption().getActors().forEach(pair -> {
+		movementSpeedModifier = 1;
+
+		float anglePitch = getPitch(1);
+		float angleYaw = getYaw(1);
+		float angleRoll = getRoll(1);
+		Vec3d rotationVec = new Vec3d(angleRoll, angleYaw, anglePitch);
+		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
+
+		for (MutablePair<BlockInfo, MovementContext> pair : contraption.actors) {
 			MovementContext context = pair.right;
-			float deg = (getRidingEntity() != null ? yaw + 180 : yaw) + initialAngle;
-			context.motion = VecHelper.rotate(movementVector, deg, Axis.Y);
+			BlockInfo blockInfo = pair.left;
+			IHaveMovementBehavior actor = (IHaveMovementBehavior) blockInfo.state.getBlock();
 
-			if (context.world == null)
-				context.world = world;
+			Vec3d actorPosition = new Vec3d(blockInfo.pos);
+			actorPosition = actorPosition.add(actor.getActiveAreaOffset(context));
+			actorPosition = VecHelper.rotate(actorPosition, angleRoll, angleYaw, anglePitch);
+			actorPosition = actorPosition.add(rotationOffset).add(posX, posY, posZ);
 
-			Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
-			Vec3d offset = new Vec3d(pair.left.pos);
-			offset = VecHelper.rotate(offset, deg, Axis.Y);
-			offset = offset.add(rotationOffset);
-			offset = offset.add(posX, posY, posZ);
+			Vec3d previousPosition = context.position;
+			BlockPos gridPosition = new BlockPos(actorPosition);
+			boolean newPosVisited = true;
 
-			if (world.isRemote)
-				return;
+			if (previousPosition != null) {
+				context.motion = actorPosition.subtract(previousPosition);
+				Vec3d relativeMotion = context.motion;
+				relativeMotion = VecHelper.rotate(relativeMotion, -angleRoll, -angleYaw, -anglePitch);
+				context.relativeMotion = relativeMotion;
+				newPosVisited = !new BlockPos(previousPosition).equals(gridPosition);
+			}
 
-			BlockPos gridPos = new BlockPos(offset);
-			if (context.currentGridPos.equals(gridPos))
-				return;
-			context.currentGridPos = gridPos;
+			context.rotation = rotationVec;
+			context.position = actorPosition;
+			
+			if (actor.isActive(context)) {
+				if (newPosVisited)
+					actor.visitNewPosition(context, gridPosition);
+				actor.tick(context);
+			}
 
-			IHaveMovementBehavior actor = (IHaveMovementBehavior) pair.left.state.getBlock();
-			actor.visitPosition(context);
-		});
+			if (movementSpeedModifier > context.movementSpeedModifier)
+				movementSpeedModifier = context.movementSpeedModifier;
+		}
 	}
 
 	public void moveTo(double x, double y, double z) {
@@ -182,11 +208,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public static float yawFromMotion(Vec3d motion) {
-		return (float) ((Math.PI / 2 - Math.atan2(motion.z, motion.x)) / Math.PI * 180);
+		return (float) ((3 * Math.PI / 2 + Math.atan2(motion.z, motion.x)) / Math.PI * 180);
 	}
 
 	public float getYaw(float partialTicks) {
-		return (partialTicks == 1.0F ? yaw : angleLerp(partialTicks, prevYaw, yaw)) - initialAngle;
+		return (getRidingEntity() == null ? 1 : -1)
+				* (partialTicks == 1.0F ? yaw : angleLerp(partialTicks, prevYaw, yaw)) + initialAngle;
 	}
 
 	public float getPitch(float partialTicks) {

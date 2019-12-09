@@ -36,6 +36,13 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 			return;
 
 		GlStateManager.pushMatrix();
+		long randomBits = (long) entity.getEntityId() * 493286711L;
+		randomBits = randomBits * randomBits * 4392167121L + randomBits * 98761L;
+		float xNudge = (((float) (randomBits >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		float yNudge = (((float) (randomBits >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		float zNudge = (((float) (randomBits >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		GlStateManager.translatef(xNudge, yNudge, zNudge);
+
 		float angleYaw = (float) (entity.getYaw(partialTicks) / 180 * Math.PI);
 		float anglePitch = (float) (entity.getPitch(partialTicks) / 180 * Math.PI);
 		float angleRoll = (float) (entity.getRoll(partialTicks) / 180 * Math.PI);
@@ -44,20 +51,12 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 		if (ridingEntity != null && ridingEntity instanceof AbstractMinecartEntity) {
 			AbstractMinecartEntity cart = (AbstractMinecartEntity) ridingEntity;
 
-			long i = (long) entity.getEntityId() * 493286711L;
-			i = i * i * 4392167121L + i * 98761L;
-			float f = (((float) (i >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-			float f1 = (((float) (i >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-			float f2 = (((float) (i >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-			GlStateManager.translatef(f, f1, f2);
-
 			double cartX = MathHelper.lerp((double) partialTicks, cart.lastTickPosX, cart.posX);
 			double cartY = MathHelper.lerp((double) partialTicks, cart.lastTickPosY, cart.posY);
 			double cartZ = MathHelper.lerp((double) partialTicks, cart.lastTickPosZ, cart.posZ);
 			Vec3d cartPos = cart.getPos(cartX, cartY, cartZ);
 
 			if (cartPos != null) {
-
 				Vec3d cartPosFront = cart.getPosOffset(cartX, cartY, cartZ, (double) 0.3F);
 				Vec3d cartPosBack = cart.getPosOffset(cartX, cartY, cartZ, (double) -0.3F);
 				if (cartPosFront == null)
@@ -73,10 +72,7 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 			}
 		}
 
-//		BlockPos anchor = entity.getContraption().getAnchor();
 		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
-//		Vec3d offset = VecHelper.getCenterOf(anchor).scale(-1);
-
 		TessellatorHelper.prepareFastRender();
 		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
 		ContraptionRenderer.render(entity.world, entity.getContraption(), superByteBuffer -> {

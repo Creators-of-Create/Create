@@ -5,6 +5,7 @@ import java.util.List;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.VoxelShapers;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.modules.contraptions.receivers.contraptions.IHaveMovementBehavior;
@@ -85,18 +86,22 @@ public class DrillBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public void visitPosition(MovementContext context) {
-		Direction movement = context.getMovementDirection();
-		
-//		BlockState block = context.state;
-//		if (movement == block.get(FACING).getOpposite())
-//			return;
+	public boolean isActive(MovementContext context) {
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.get(FACING).getOpposite());
+	}
 
+	@Override
+	public Vec3d getActiveAreaOffset(MovementContext context) {
+		return new Vec3d(context.state.get(FACING).getDirectionVec()).scale(.65f);
+	}
+
+	@Override
+	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		World world = context.world;
-		BlockPos pos = context.currentGridPos;
-//		pos = pos.offset(movement);
 		BlockState stateVisited = world.getBlockState(pos);
 
+		if (world.isRemote)
+			return;
 		if (stateVisited.getCollisionShape(world, pos).isEmpty())
 			return;
 		if (stateVisited.getBlockHardness(world, pos) == -1)
@@ -108,8 +113,7 @@ public class DrillBlock extends DirectionalKineticBlock
 
 		for (ItemStack stack : drops) {
 			ItemEntity itemEntity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + .25f, pos.getZ() + .5f, stack);
-			itemEntity.setMotion(
-					new Vec3d(movement.getDirectionVec()).add(0, 0.5f, 0).scale(world.rand.nextFloat() * .3f));
+			itemEntity.setMotion(context.motion.add(0, 0.5f, 0).scale(world.rand.nextFloat() * .3f));
 			world.addEntity(itemEntity);
 		}
 	}
