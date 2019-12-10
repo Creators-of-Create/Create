@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
@@ -35,9 +36,6 @@ import net.minecraft.world.World;
 public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter {
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
-	public static final VoxelShape SHAPE_NORTH = makeCuboidShape(4, 2, -1, 12, 10, 5),
-			SHAPE_SOUTH = makeCuboidShape(4, 2, 11, 12, 10, 17), SHAPE_WEST = makeCuboidShape(-1, 2, 4, 5, 10, 12),
-			SHAPE_EAST = makeCuboidShape(11, 2, 4, 17, 10, 12);
 	private static final List<Vec3d> itemPositions = new ArrayList<>(Direction.values().length);
 
 	public ExtractorBlock() {
@@ -150,18 +148,7 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		Direction facing = state.get(HORIZONTAL_FACING);
-
-		if (facing == Direction.EAST)
-			return SHAPE_EAST;
-		if (facing == Direction.WEST)
-			return SHAPE_WEST;
-		if (facing == Direction.SOUTH)
-			return SHAPE_SOUTH;
-		if (facing == Direction.NORTH)
-			return SHAPE_NORTH;
-
-		return VoxelShapes.empty();
+		return AllShapes.BELT_EXTRACTOR.get(state.get(HORIZONTAL_FACING));
 	}
 
 	private void cacheItemPositions() {

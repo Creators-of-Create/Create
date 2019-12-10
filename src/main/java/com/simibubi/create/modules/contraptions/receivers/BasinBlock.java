@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.receivers;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 
+import com.simibubi.create.foundation.utility.AllShapes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -24,8 +25,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity> {
-
-	public static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 13, 16);
 
 	public BasinBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -85,7 +84,7 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return SHAPE;
+		return AllShapes.BASIN_BLOCK_SHAPE;
 	}
 	
 	@Override

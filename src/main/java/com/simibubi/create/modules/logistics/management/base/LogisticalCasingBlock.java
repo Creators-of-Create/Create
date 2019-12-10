@@ -11,6 +11,8 @@ import java.util.Set;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 
+import com.simibubi.create.foundation.utility.VoxelShaper;
+import com.simibubi.create.foundation.utility.AllShapes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,7 +33,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
@@ -47,9 +48,6 @@ public class LogisticalCasingBlock extends Block implements IWithTileEntity<Logi
 	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
-
-	public static final VoxelShape SINGLE_SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 2, 16),
-			makeCuboidShape(1, 1, 1, 15, 15, 15), makeCuboidShape(0, 14, 0, 16, 16, 16));
 
 	public LogisticalCasingBlock() {
 		super(Properties.from(Blocks.DARK_OAK_PLANKS));
@@ -115,7 +113,20 @@ public class LogisticalCasingBlock extends Block implements IWithTileEntity<Logi
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return state.get(PART) == Part.NONE ? SINGLE_SHAPE : VoxelShapes.fullCube();
+		Part part = state.get(PART);
+
+		if (part == Part.NONE)
+			return AllShapes.LOGISTICAL_CASING_SINGLE_SHAPE;
+
+		if (part == Part.MIDDLE)
+			return AllShapes.LOGISTICAL_CASING_MIDDLE.get(state.get(AXIS));
+
+		Direction facing = VoxelShaper.axisAsFace(state.get(AXIS));
+		if (part == Part.END)
+			facing = facing.getOpposite();
+
+		return AllShapes.LOGISTICAL_CASING_CAP.get(facing);
+		//return state.get(PART) == Part.NONE ? VoxelShapers.LOGISTICAL_CASING_SINGLE_SHAPE : VoxelShapes.fullCube();
 	}
 
 	@Override

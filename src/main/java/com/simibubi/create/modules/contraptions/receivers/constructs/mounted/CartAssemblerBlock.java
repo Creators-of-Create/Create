@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.receivers.constructs.mounted;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 
+import com.simibubi.create.foundation.utility.AllShapes;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -17,6 +18,7 @@ import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -30,9 +32,6 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 	public static IProperty<RailShape> RAIL_SHAPE = EnumProperty.create("shape", RailShape.class, RailShape.EAST_WEST,
 			RailShape.NORTH_SOUTH);
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
-
-	public static VoxelShape X_SHAPE = VoxelShapes.or(VoxelShapes.fullCube(), makeCuboidShape(1, 0, -2, 15, 13, 18));
-	public static VoxelShape Z_SHAPE = VoxelShapes.or(VoxelShapes.fullCube(), makeCuboidShape(-2, 0, 1, 18, 13, 15));
 
 	public CartAssemblerBlock() {
 		super(true, Properties.from(Blocks.PISTON));
@@ -118,7 +117,7 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return state.get(RAIL_SHAPE) == RailShape.EAST_WEST ? X_SHAPE : Z_SHAPE;
+		return AllShapes.CART_ASSEMBLER.get(state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Direction.Axis.Z : Direction.Axis.X);
 	}
 
 	@Override
@@ -126,7 +125,7 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 			ISelectionContext context) {
 		if (context.getEntity() instanceof AbstractMinecartEntity)
 			return VoxelShapes.empty();
-		return VoxelShapes.fullCube();
+		return getShape(state, worldIn, pos, context);
 	}
 
 	@Override

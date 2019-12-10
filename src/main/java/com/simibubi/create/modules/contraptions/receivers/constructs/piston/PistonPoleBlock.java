@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.receivers.constructs.piston;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
@@ -16,7 +17,6 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -73,17 +73,7 @@ public class PistonPoleBlock extends ProperDirectionalBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-
-		switch (state.get(FACING).getAxis()) {
-		case X:
-			return MechanicalPistonHeadBlock.AXIS_SHAPE_X;
-		case Y:
-			return MechanicalPistonHeadBlock.AXIS_SHAPE_Y;
-		case Z:
-			return MechanicalPistonHeadBlock.AXIS_SHAPE_Z;
-		}
-
-		return VoxelShapes.empty();
+		return AllShapes.FOUR_VOXEL_POLE.get(state.get(FACING).getAxis());
 	}
 
 	@Override

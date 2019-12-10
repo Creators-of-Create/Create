@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
@@ -21,6 +22,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
@@ -37,15 +39,16 @@ import net.minecraft.world.World;
 public class MechanicalPressBlock extends HorizontalKineticBlock
 		implements IWithTileEntity<MechanicalPressTileEntity>, IBeltAttachment {
 
-	public static VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 16, 16);
-
 	public MechanicalPressBlock() {
 		super(Properties.from(Blocks.PISTON));
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return SHAPE;
+		if (context.getEntity() instanceof PlayerEntity)
+			return AllShapes.SHORT_CASING_14_VOXEL.get(Direction.DOWN);
+
+		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;
 	}
 
 	@Override

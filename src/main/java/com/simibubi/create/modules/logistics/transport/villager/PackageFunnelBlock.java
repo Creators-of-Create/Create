@@ -3,6 +3,7 @@ package com.simibubi.create.modules.logistics.transport.villager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.logistics.management.base.ILogisticalCasingAttachment;
 import com.simibubi.create.modules.logistics.management.base.LogisticalCasingTileEntity;
 import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
@@ -22,13 +23,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class PackageFunnelBlock extends ProperDirectionalBlock
-		implements IWithTileEntity<PackageFunnelTileEntity>, ILogisticalCasingAttachment {
-
-	public static final VoxelShape UP_SHAPE = makeCuboidShape(1, -1, 1, 15, 3, 15),
-			DOWN_SHAPE = makeCuboidShape(1, 13, 1, 15, 17, 15), SOUTH_SHAPE = makeCuboidShape(1, 1, -1, 15, 15, 3),
-			NORTH_SHAPE = makeCuboidShape(1, 1, 13, 15, 15, 17), EAST_SHAPE = makeCuboidShape(-1, 1, 1, 3, 15, 15),
-			WEST_SHAPE = makeCuboidShape(13, 1, 1, 17, 15, 15);
+public class PackageFunnelBlock extends ProperDirectionalBlock implements IWithTileEntity<PackageFunnelTileEntity>, ILogisticalCasingAttachment {
 
 	public PackageFunnelBlock() {
 		super(Properties.from(Blocks.PISTON));
@@ -82,22 +77,7 @@ public class PackageFunnelBlock extends ProperDirectionalBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		Direction facing = state.get(FACING);
-
-		if (facing == Direction.UP)
-			return UP_SHAPE;
-		if (facing == Direction.DOWN)
-			return DOWN_SHAPE;
-		if (facing == Direction.EAST)
-			return EAST_SHAPE;
-		if (facing == Direction.WEST)
-			return WEST_SHAPE;
-		if (facing == Direction.NORTH)
-			return NORTH_SHAPE;
-		if (facing == Direction.SOUTH)
-			return SOUTH_SHAPE;
-
-		return VoxelShapes.empty();
+		return AllShapes.PACKAGE_FUNNEL.get(state.get(FACING));
 	}
 
 	@Override

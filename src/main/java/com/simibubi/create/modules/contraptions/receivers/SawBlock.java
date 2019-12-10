@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.utility.VoxelShapers;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
 import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
@@ -82,7 +82,7 @@ public class SawBlock extends DirectionalAxisKineticBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return VoxelShapers.SHORT_CASING.get(state.get(FACING));
+		return AllShapes.SHORT_CASING_12_VOXEL.get(state.get(FACING));
 	}
 
 	@Override

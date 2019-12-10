@@ -1,54 +1,75 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
-import static com.simibubi.create.foundation.utility.VoxelShaper.forHorizontalAxis;
-import static net.minecraft.block.Block.makeCuboidShape;
-import static net.minecraft.util.math.shapes.VoxelShapes.or;
-
 import com.simibubi.create.foundation.utility.VoxelShaper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 
+import static net.minecraft.block.Block.makeCuboidShape;
+
 public class BeltTunnelShapes {
 
-	private static final VoxelShape TOP = makeCuboidShape(0, 8, 0, 16, 16, 16),
-			INNER = makeCuboidShape(2, -5, 2, 14, 16, 14);
+	private static VoxelShape block = makeCuboidShape(0, -5, 0, 16, 16, 16);
 
-	private static final VoxelShaper WALL = VoxelShaper.forHorizontal(makeCuboidShape(0, -5, 14, 16, 16, 16)),
-			POLES = VoxelShaper
-					.forHorizontal(or(makeCuboidShape(0, -5, 14, 2, 16, 16), makeCuboidShape(14, -5, 14, 16, 16, 16)));
+	private static VoxelShaper opening = VoxelShaper.forHorizontal( makeCuboidShape(2, -5, 14, 14, 8, 16), Direction.SOUTH);
+	private static VoxelShaper notch = VoxelShaper.forHorizontal(makeCuboidShape(2, 14, 14, 14, 16, 16), Direction.SOUTH);
 
-	private static final VoxelShaper STRAIGHT = forHorizontalAxis(
-			VoxelShapes.or(TOP, WALL.get(Direction.EAST), WALL.get(Direction.WEST))),
-			T_LEFT = forHorizontalAxis(VoxelShapes.or(TOP, WALL.get(Direction.EAST), POLES.get(Direction.WEST))),
-			T_RIGHT = forHorizontalAxis(VoxelShapes.or(TOP, POLES.get(Direction.EAST), WALL.get(Direction.WEST))),
-			CROSS = forHorizontalAxis(VoxelShapes.or(TOP, POLES.get(Direction.EAST), POLES.get(Direction.WEST)));
+	private static final VoxelShaper
+			STRAIGHT = VoxelShaper.forHorizontalAxis(
+					VoxelShapes.combineAndSimplify(
+							block,
+							VoxelShapes.or(
+									opening.get(Direction.SOUTH),
+									opening.get(Direction.NORTH),
+									notch.get(Direction.WEST),
+									notch.get(Direction.EAST)
+							),
+							IBooleanFunction.NOT_SAME),
+					Direction.SOUTH),
 
-	public static VoxelShape getFrameShape(BlockState state) {
-		VoxelShaper shaper = null;
-		switch (state.get(BeltTunnelBlock.SHAPE)) {
-		case CROSS:
-			shaper = CROSS;
-			break;
-		case T_LEFT:
-			shaper = T_LEFT;
-			break;
-		case T_RIGHT:
-			shaper = T_RIGHT;
-			break;
-		case STRAIGHT:
-		case WINDOW:
-		default:
-			shaper = STRAIGHT;
-			break;
-		}
-		return shaper.get(state.get(BeltTunnelBlock.HORIZONTAL_AXIS));
+			TEE = VoxelShaper.forHorizontal(
+					VoxelShapes.combineAndSimplify(
+							block,
+							VoxelShapes.or(
+									notch.get(Direction.SOUTH),
+									opening.get(Direction.NORTH),
+									opening.get(Direction.WEST),
+									opening.get(Direction.EAST)
+							),
+							IBooleanFunction.NOT_SAME),
+					Direction.SOUTH);
+
+	private static final VoxelShape
+			CROSS = VoxelShapes.combineAndSimplify(
+					block,
+					VoxelShapes.or(
+							opening.get(Direction.SOUTH),
+							opening.get(Direction.NORTH),
+							opening.get(Direction.WEST),
+							opening.get(Direction.EAST)
+					),
+					IBooleanFunction.NOT_SAME);
+
+
+	public static VoxelShape getShape(BlockState state) {
+		BeltTunnelBlock.Shape shape = state.get(BeltTunnelBlock.SHAPE);
+		Direction.Axis axis = state.get(BeltTunnelBlock.HORIZONTAL_AXIS);
+
+		if (shape == BeltTunnelBlock.Shape.CROSS)
+			return CROSS;
+
+		if (shape == BeltTunnelBlock.Shape.STRAIGHT || shape == BeltTunnelBlock.Shape.WINDOW)
+			return STRAIGHT.get(axis);
+
+		if (shape == BeltTunnelBlock.Shape.T_LEFT)
+			return TEE.get(axis == Direction.Axis.Z ? Direction.EAST : Direction.NORTH);
+
+		if (shape == BeltTunnelBlock.Shape.T_RIGHT)
+			return TEE.get(axis == Direction.Axis.Z ? Direction.WEST : Direction.SOUTH);
+
+		//something went wrong
+		return VoxelShapes.fullCube();
 	}
-
-	public static VoxelShape getFilledShape(BlockState state) {
-		return or(getFrameShape(state), INNER);
-	}
-
 }

@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.generators;
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -19,11 +20,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class MotorBlock extends HorizontalKineticBlock
-		implements IWithTileEntity<MotorTileEntity>, IBlockWithScrollableValue {
-
-	protected static final VoxelShape MOTOR_X = makeCuboidShape(0, 3, 3, 16, 13, 13);
-	protected static final VoxelShape MOTOR_Z = makeCuboidShape(3, 3, 0, 13, 13, 16);
+public class MotorBlock extends HorizontalKineticBlock implements IWithTileEntity<MotorTileEntity>, IBlockWithScrollableValue {
 
 	private static final Vec3d valuePos = new Vec3d(15 / 16f, 5 / 16f, 5 / 16f);
 
@@ -33,7 +30,7 @@ public class MotorBlock extends HorizontalKineticBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return state.get(HORIZONTAL_FACING).getAxis() == Axis.X ? MOTOR_X : MOTOR_Z;
+		return AllShapes.MOTOR_BLOCK.get(state.get(HORIZONTAL_FACING));
 	}
 
 	@Override

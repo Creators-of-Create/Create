@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.Block;
@@ -27,22 +28,6 @@ import net.minecraft.world.World;
 public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements IWithoutBlockItem {
 
 	public static final EnumProperty<PistonType> TYPE = BlockStateProperties.PISTON_TYPE;
-
-	public static final VoxelShape AXIS_SHAPE_X = makeCuboidShape(0, 6, 6, 16, 10, 10),
-			AXIS_SHAPE_Y = makeCuboidShape(6, 0, 6, 10, 16, 10), AXIS_SHAPE_Z = makeCuboidShape(6, 6, 0, 10, 10, 16),
-
-			TOP_SHAPE_UP = makeCuboidShape(0, 12, 0, 16, 16, 16), TOP_SHAPE_DOWN = makeCuboidShape(0, 0, 0, 16, 4, 16),
-			TOP_SHAPE_EAST = makeCuboidShape(12, 0, 0, 16, 16, 16),
-			TOP_SHAPE_WEST = makeCuboidShape(0, 0, 0, 4, 16, 16),
-			TOP_SHAPE_SOUTH = makeCuboidShape(0, 0, 12, 16, 16, 16),
-			TOP_SHAPE_NORTH = makeCuboidShape(0, 0, 0, 16, 16, 4),
-
-			EXTENSION_SHAPE_UP = VoxelShapes.or(AXIS_SHAPE_Y, TOP_SHAPE_UP),
-			EXTENSION_SHAPE_DOWN = VoxelShapes.or(AXIS_SHAPE_Y, TOP_SHAPE_DOWN),
-			EXTENSION_SHAPE_EAST = VoxelShapes.or(AXIS_SHAPE_X, TOP_SHAPE_EAST),
-			EXTENSION_SHAPE_WEST = VoxelShapes.or(AXIS_SHAPE_X, TOP_SHAPE_WEST),
-			EXTENSION_SHAPE_SOUTH = VoxelShapes.or(AXIS_SHAPE_Z, TOP_SHAPE_SOUTH),
-			EXTENSION_SHAPE_NORTH = VoxelShapes.or(AXIS_SHAPE_Z, TOP_SHAPE_NORTH);
 
 	public MechanicalPistonHeadBlock() {
 		super(Properties.from(Blocks.PISTON_HEAD));
@@ -95,22 +80,6 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-
-		switch (state.get(FACING)) {
-		case DOWN:
-			return EXTENSION_SHAPE_DOWN;
-		case EAST:
-			return EXTENSION_SHAPE_EAST;
-		case NORTH:
-			return EXTENSION_SHAPE_NORTH;
-		case SOUTH:
-			return EXTENSION_SHAPE_SOUTH;
-		case UP:
-			return EXTENSION_SHAPE_UP;
-		case WEST:
-			return EXTENSION_SHAPE_WEST;
-		}
-
-		return VoxelShapes.empty();
+		return AllShapes.MECHANICAL_PISTON_HEAD.get(state.get(FACING));
 	}
 }
