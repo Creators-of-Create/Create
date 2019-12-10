@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.relays.belt;
 
 import static net.minecraft.block.Block.makeCuboidShape;
 
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
@@ -94,6 +95,8 @@ public class BeltShapes {
 			SLOPE_ASC_END = VoxelShaper.forHorizontal(compose(FLAT_END_PART, SLOPE_ASC_PART), Direction.SOUTH),
 			SLOPE_ASC_START = VoxelShaper.forHorizontal(compose(SLOPE_ASC_PART, FLAT_END_PART), Direction.SOUTH);
 
+	private static final VoxelShaper
+			PARTIAL_CASING = VoxelShaper.forHorizontal(makeCuboidShape(0, 0, 5, 16, 11, 16), Direction.SOUTH);
 
 
 	private static VoxelShape compose(VoxelShape southPart, VoxelShape northPart){
@@ -129,10 +132,6 @@ public class BeltShapes {
 	private static VoxelShape makeFlatFull(){
 		return makeCuboidShape(1,3,0,15,13,16);
 	}
-
-	private static final VoxelShape CASING_HORIZONTAL = makeCuboidShape(0, 0, 0, 16, 11, 16);
-	//todo still need to remove these two
-	private static final VoxelShaper CASING_TOP_END = VoxelShaper.forHorizontal(makeCuboidShape(0, 0, 0, 16, 11, 11), Direction.SOUTH);
 
 	public static VoxelShape getShape(BlockState state) {
 		Direction facing = state.get(BeltBlock.HORIZONTAL_FACING);
@@ -170,7 +169,7 @@ public class BeltShapes {
 
 	}
 
-	public static VoxelShape getCasingShape(BlockState state) {//todo
+	public static VoxelShape getCasingShape(BlockState state) {
 		if (!state.get(BeltBlock.CASING))
 			return VoxelShapes.empty();
 
@@ -178,25 +177,23 @@ public class BeltShapes {
 		Part part = state.get(BeltBlock.PART);
 		Slope slope = state.get(BeltBlock.SLOPE);
 
-		if (slope == Slope.HORIZONTAL)
-			return CASING_HORIZONTAL;
 		if (slope == Slope.VERTICAL)
 			return VoxelShapes.empty();
 
-		if (part != Part.MIDDLE) {
-			boolean upward = slope == Slope.UPWARD;
-			if (part == Part.START)
-				upward = !upward;
-			else
-				facing = facing.getOpposite();
-
-			return upward ? CASING_TOP_END.get(facing) : CASING_HORIZONTAL;
+		if (slope == Slope.HORIZONTAL) {
+			return AllShapes.SHORT_CASING_11_VOXEL.get(Direction.UP);
 		}
 
-		if (slope == Slope.DOWNWARD)
-			facing = facing.getOpposite();
+		if (part == Part.MIDDLE || part == Part.PULLEY)
+			return PARTIAL_CASING.get(slope == Slope.UPWARD ? facing : facing.getOpposite());
 
-		return CASING_TOP_END.get(facing.getOpposite());
+		if (part == Part.START)
+			return slope == Slope.UPWARD ? AllShapes.SHORT_CASING_11_VOXEL.get(Direction.UP) : PARTIAL_CASING.get(facing.getOpposite());
+		if (part == Part.END)
+			return slope == Slope.DOWNWARD ? AllShapes.SHORT_CASING_11_VOXEL.get(Direction.UP) : PARTIAL_CASING.get(facing);
+
+		//something went wrong
+		return VoxelShapes.fullCube();
 	}
 
 	private static class VerticalBeltShaper extends VoxelShaper {

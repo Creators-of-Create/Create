@@ -35,7 +35,7 @@ public class VoxelShaper {
 		return forDirectionsWithRotation(shape, facing, Arrays.asList(Direction.SOUTH, Direction.EAST), new HorizontalRotationValues());
 	}
 
-	public static VoxelShaper forRotatedPillar(VoxelShape zShape) {//dunno what this was intended for
+	public static VoxelShaper forRotatedPillar(VoxelShape zShape) {//todo dunno what this was intended for
 		VoxelShaper voxelShaper = new VoxelShaper();
 		for (Axis axis : Axis.values()) {
 			Direction facing = axisAsFace(axis);
@@ -71,7 +71,6 @@ public class VoxelShaper {
 		VoxelShaper voxelShaper = new VoxelShaper();
 		for (Direction dir : directions) {
 			voxelShaper.shapes.put(dir, rotate(shape, facing, dir, rotationValues));
-			//voxelShaper.shapes.put(dir, rotatedCopy(shape, rotationValues.apply(dir)));
 		}
 		return voxelShaper;
 	}
