@@ -202,8 +202,14 @@ public class BeltShapes {
 	private static class VerticalBeltShaper extends VoxelShaper {
 
 		public static VoxelShaper make(VoxelShape southBeltShape){
-			return forDirectionsWithRotation(southBeltShape, Direction.Plane.HORIZONTAL,//idk, this can probably be improved :S
-					direction -> new Vec3d(direction.getAxisDirection() == Direction.AxisDirection.NEGATIVE ? 90 : 270, -direction.getHorizontalAngle(), 0));
+			return forDirectionsWithRotation(
+					rotatedCopy(southBeltShape, new Vec3d(-90,0,0)),
+					Direction.SOUTH,
+					Direction.Plane.HORIZONTAL,//idk, this can probably be improved :S
+					direction -> new Vec3d(
+							direction.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 0 : 180,
+							-direction.getHorizontalAngle(),
+							0));
 		}
 	}
 

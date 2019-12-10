@@ -5,7 +5,7 @@ import java.util.List;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.VoxelShapers;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
 
@@ -49,7 +49,7 @@ public class DrillBlock extends DirectionalKineticBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return VoxelShapers.SHORT_CASING.get(state.get(FACING));
+		return AllShapes.SHORT_CASING.get(state.get(FACING));
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 
 import com.simibubi.create.foundation.utility.VoxelShaper;
-import com.simibubi.create.foundation.utility.VoxelShapers;
+import com.simibubi.create.foundation.utility.AllShapes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -33,7 +33,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
@@ -117,16 +116,16 @@ public class LogisticalCasingBlock extends Block implements IWithTileEntity<Logi
 		Part part = state.get(PART);
 
 		if (part == Part.NONE)
-			return VoxelShapers.LOGISTICAL_CASING_SINGLE_SHAPE;
+			return AllShapes.LOGISTICAL_CASING_SINGLE_SHAPE;
 
 		if (part == Part.MIDDLE)
-			return VoxelShapers.LOGISTICAL_CASING_MIDDLE.get(state.get(AXIS));
+			return AllShapes.LOGISTICAL_CASING_MIDDLE.get(state.get(AXIS));
 
 		Direction facing = VoxelShaper.axisAsFace(state.get(AXIS));
 		if (part == Part.END)
 			facing = facing.getOpposite();
 
-		return VoxelShapers.LOGISTICAL_CASING_CAP.get(facing);
+		return AllShapes.LOGISTICAL_CASING_CAP.get(facing);
 		//return state.get(PART) == Part.NONE ? VoxelShapers.LOGISTICAL_CASING_SINGLE_SHAPE : VoxelShapes.fullCube();
 	}
 

@@ -25,7 +25,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class ShopShelfBlock extends HorizontalBlock implements IWithoutBlockItem {
 
-	public static final VoxelShape TOP_SHAPE = makeCuboidShape(0, 14, 0, 16, 16, 16);
+	public static final VoxelShape TOP_SHAPE = makeCuboidShape(0, 14, 0, 16, 16, 16);//todo review
 
 	public static final VoxelShape BODY_SOUTH_SHAPE = makeCuboidShape(0, 0, 0, 16, 14, 14);
 	public static final VoxelShape BODY_NORTH_SHAPE = makeCuboidShape(0, 0, 2, 16, 14, 16);

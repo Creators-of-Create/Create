@@ -55,7 +55,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockIt
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty CASING = BooleanProperty.create("casing");
-	private final VoxelShape collisionMask = makeCuboidShape(0, 0, 0, 16, 19, 16);
+	private final VoxelShape collisionMask = makeCuboidShape(0, 0, 0, 16, 19, 16);//todo review
 
 	public BeltBlock() {
 		super(Properties.from(Blocks.BROWN_WOOL));

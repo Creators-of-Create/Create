@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.receivers;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 
@@ -44,7 +45,7 @@ public class MechanicalMixerBlock extends KineticBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return MechanicalPressBlock.SHAPE;
+		return AllShapes.MECHANICAL_PRESS_SHAPE;
 	}
 
 	@Override

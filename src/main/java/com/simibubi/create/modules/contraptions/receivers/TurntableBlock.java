@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.receivers;
 
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -23,10 +24,6 @@ import net.minecraft.world.World;
 
 public class TurntableBlock extends KineticBlock {
 
-	protected static final VoxelShape SHAPE = VoxelShapes.or(
-			Block.makeCuboidShape(1.0D, 6.0D, 1.0D, 15.0D, 8.0D, 15.0D),
-			Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D));
-
 	public TurntableBlock() {
 		super(Properties.from(Blocks.STRIPPED_SPRUCE_LOG));
 	}
@@ -38,7 +35,7 @@ public class TurntableBlock extends KineticBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return SHAPE;
+		return AllShapes.TURNTABLE_SHAPE;
 	}
 
 	@Override

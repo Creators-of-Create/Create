@@ -28,13 +28,11 @@ public class VoxelShaper {
 	}
 
 	public static VoxelShaper forHorizontal(VoxelShape shape, Direction facing){
-		shape = rotateUp(shape, facing);
-		return forDirectionsWithRotation(shape, Direction.Plane.HORIZONTAL, new DefaultRotationValues());
+		return forDirectionsWithRotation(shape, facing, Direction.Plane.HORIZONTAL, new HorizontalRotationValues());
 	}
 
 	public static VoxelShaper forHorizontalAxis(VoxelShape shape, Direction facing){
-		shape = rotateUp(shape, facing);
-		return forDirectionsWithRotation(shape, Arrays.asList(Direction.SOUTH, Direction.EAST), new DefaultRotationValues());
+		return forDirectionsWithRotation(shape, facing, Arrays.asList(Direction.SOUTH, Direction.EAST), new HorizontalRotationValues());
 	}
 
 	public static VoxelShaper forRotatedPillar(VoxelShape zShape) {//dunno what this was intended for
@@ -47,21 +45,16 @@ public class VoxelShaper {
 	}
 
 	public static VoxelShaper forDirectional(VoxelShape shape, Direction facing){
-		shape = rotateUp(shape, facing);
-		return forDirectionsWithRotation(shape, Arrays.asList(Direction.values()), new DefaultRotationValues());
+		return forDirectionsWithRotation(shape, facing, Arrays.asList(Direction.values()), new DefaultRotationValues());
 	}
 
-	protected static VoxelShaper forDirectionsWithRotation(VoxelShape shape, Iterable<Direction> directions, Function<Direction, Vec3d> rotationValues){
-		VoxelShaper voxelShaper = new VoxelShaper();
-		for (Direction dir : directions) {
-			voxelShaper.shapes.put(dir, rotatedCopy(shape, rotationValues.apply(dir)));
-		}
-		return voxelShaper;
+	public static VoxelShaper forDirectionalAxis(VoxelShape shape, Axis along){
+		return forDirectionsWithRotation(shape, axisAsFace(along), Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.UP), new DefaultRotationValues());
 	}
 
 	public VoxelShaper withVerticalShapes(VoxelShape upShape) {
 		shapes.put(Direction.UP, upShape);
-		shapes.put(Direction.DOWN, rotatedCopy(upShape, new Vec3d(0, 180, 0)));
+		shapes.put(Direction.DOWN, rotatedCopy(upShape, new Vec3d(180, 0, 0)));
 		return this;
 	}
 
@@ -74,15 +67,26 @@ public class VoxelShaper {
 		return Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
 	}
 
-	private static VoxelShape rotateUp(VoxelShape shape, Direction facing){
-		if (facing != Direction.UP) {
-			Vec3d rot = new DefaultRotationValues().apply(facing);
-			shape = rotatedCopy(shape, new Vec3d(360, 360,360).subtract(rot));
+	protected static VoxelShaper forDirectionsWithRotation(VoxelShape shape, Direction facing, Iterable<Direction> directions, Function<Direction, Vec3d> rotationValues){
+		VoxelShaper voxelShaper = new VoxelShaper();
+		for (Direction dir : directions) {
+			voxelShaper.shapes.put(dir, rotate(shape, facing, dir, rotationValues));
+			//voxelShaper.shapes.put(dir, rotatedCopy(shape, rotationValues.apply(dir)));
 		}
-		return shape;
+		return voxelShaper;
+	}
+
+	protected static VoxelShape rotate(VoxelShape shape, Direction from, Direction to, Function<Direction, Vec3d> usingValues){
+		if (from == to)
+			return shape;
+
+		return rotatedCopy(shape, usingValues.apply(from).inverse().add(usingValues.apply(to)));
 	}
 
 	protected static VoxelShape rotatedCopy(VoxelShape shape, Vec3d rotation){
+		if (rotation.equals(Vec3d.ZERO))
+			return shape;
+
 		MutableObject<VoxelShape> result = new MutableObject<>(VoxelShapes.empty());
 		Vec3d center = new Vec3d(8, 8, 8);
 
@@ -106,13 +110,23 @@ public class VoxelShaper {
 	}
 
 	protected static class DefaultRotationValues implements Function<Direction, Vec3d> {
-
 		//assume facing up as the default rotation
 		@Override
 		public Vec3d apply(Direction direction) {
 			return new Vec3d(
 					direction == Direction.UP ? 0 : (Direction.Plane.VERTICAL.test(direction) ? 180 : 90),
 					Direction.Plane.VERTICAL.test(direction) ? 0 : (int) -direction.getHorizontalAngle(),
+					0
+			);
+		}
+	}
+
+	protected static class HorizontalRotationValues implements Function<Direction, Vec3d> {
+		@Override
+		public Vec3d apply(Direction direction) {
+			return new Vec3d(
+					0,
+					-direction.getHorizontalAngle(),
 					0
 			);
 		}

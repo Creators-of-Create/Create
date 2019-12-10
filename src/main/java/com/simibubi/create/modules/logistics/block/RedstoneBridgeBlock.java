@@ -3,6 +3,7 @@ package com.simibubi.create.modules.logistics.block;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.AllShapes;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
@@ -36,13 +37,6 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements IBloc
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty RECEIVER = BooleanProperty.create("receiver");
 	private static final List<Pair<Vec3d, Vec3d>> itemPositions = new ArrayList<>(Direction.values().length);
-
-	public static final VoxelShape UP_SHAPE = makeCuboidShape(2, 0, 2, 14, 3, 14),
-			DOWN_SHAPE = makeCuboidShape(2, 13, 2, 14, 16, 14);
-
-	public static final VoxelShape SOUTH_SHAPE = makeCuboidShape(3, 1, -1, 13, 15, 3),
-			NORTH_SHAPE = makeCuboidShape(3, 1, 13, 13, 15, 17), EAST_SHAPE = makeCuboidShape(-1, 1, 3, 3, 15, 13),
-			WEST_SHAPE = makeCuboidShape(13, 1, 3, 17, 15, 13);
 
 	public RedstoneBridgeBlock() {
 		super(Properties.from(Blocks.DARK_OAK_LOG));
@@ -174,22 +168,7 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements IBloc
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		Direction facing = state.get(FACING);
-
-		if (facing == Direction.UP)
-			return UP_SHAPE;
-		if (facing == Direction.DOWN)
-			return DOWN_SHAPE;
-		if (facing == Direction.EAST)
-			return EAST_SHAPE;
-		if (facing == Direction.WEST)
-			return WEST_SHAPE;
-		if (facing == Direction.NORTH)
-			return NORTH_SHAPE;
-		if (facing == Direction.SOUTH)
-			return SOUTH_SHAPE;
-
-		return VoxelShapes.empty();
+		return AllShapes.REDSTONE_BRIDGE.get(state.get(FACING));
 	}
 
 	private void cacheItemPositions() {

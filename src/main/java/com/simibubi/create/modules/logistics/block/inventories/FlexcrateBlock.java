@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.logistics.block.inventories;
 
+import com.simibubi.create.foundation.utility.AllShapes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -18,15 +19,13 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class FlexcrateBlock extends Block {
 
-	public static final VoxelShape SHAPE = makeCuboidShape(1, 0, 1, 15, 14, 15);
-
 	public FlexcrateBlock() {
 		super(Properties.from(Blocks.ANDESITE));
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return SHAPE;
+		return AllShapes.CRATE_BLOCK_SHAPE;
 	}
 
 	@Override

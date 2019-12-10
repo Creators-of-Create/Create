@@ -4,6 +4,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IBlockWithColorHandler;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 
+import com.simibubi.create.foundation.utility.AllShapes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -29,12 +30,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class LogisticalIndexBlock extends HorizontalBlock
-		implements IBlockWithColorHandler, IWithTileEntity<LogisticalIndexTileEntity> {
-
-	public static final VoxelShape SOUTH_SHAPE = makeCuboidShape(3, 1, -1, 13, 15, 3),
-			NORTH_SHAPE = makeCuboidShape(3, 1, 13, 13, 15, 17), EAST_SHAPE = makeCuboidShape(-1, 1, 3, 3, 15, 13),
-			WEST_SHAPE = makeCuboidShape(13, 1, 3, 17, 15, 13);
+public class LogisticalIndexBlock extends HorizontalBlock implements IBlockWithColorHandler, IWithTileEntity<LogisticalIndexTileEntity> {
 
 	public LogisticalIndexBlock() {
 		super(Properties.from(Blocks.GRANITE));
@@ -126,18 +122,7 @@ public class LogisticalIndexBlock extends HorizontalBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		Direction facing = state.get(HORIZONTAL_FACING);
-
-		if (facing == Direction.EAST)
-			return EAST_SHAPE;
-		if (facing == Direction.WEST)
-			return WEST_SHAPE;
-		if (facing == Direction.NORTH)
-			return NORTH_SHAPE;
-		if (facing == Direction.SOUTH)
-			return SOUTH_SHAPE;
-
-		return VoxelShapes.empty();
+		return AllShapes.LOGISTICAL_INDEX.get(state.get(HORIZONTAL_FACING));
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.ItemHelper;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
@@ -37,15 +38,13 @@ import net.minecraft.world.World;
 public class MechanicalPressBlock extends HorizontalKineticBlock
 		implements IWithTileEntity<MechanicalPressTileEntity>, IBeltAttachment {
 
-	public static VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 16, 16);
-
 	public MechanicalPressBlock() {
 		super(Properties.from(Blocks.PISTON));
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return SHAPE;
+		return AllShapes.MECHANICAL_PRESS_SHAPE;
 	}
 
 	@Override

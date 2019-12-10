@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
@@ -38,12 +39,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class BeltFunnelBlock extends HorizontalBlock
-		implements IBeltAttachment, IWithTileEntity<BeltFunnelTileEntity>, IBlockWithFilter {
-
-	public static final VoxelShape SHAPE_NORTH = makeCuboidShape(3, -4, -1, 13, 8, 5),
-			SHAPE_SOUTH = makeCuboidShape(3, -4, 11, 13, 8, 17), SHAPE_WEST = makeCuboidShape(-1, -4, 3, 5, 8, 13),
-			SHAPE_EAST = makeCuboidShape(11, -4, 3, 17, 8, 13);
+public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment, IWithTileEntity<BeltFunnelTileEntity>, IBlockWithFilter {
 
 	public BeltFunnelBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -105,18 +101,7 @@ public class BeltFunnelBlock extends HorizontalBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		Direction facing = state.get(HORIZONTAL_FACING);
-
-		if (facing == Direction.EAST)
-			return SHAPE_EAST;
-		if (facing == Direction.WEST)
-			return SHAPE_WEST;
-		if (facing == Direction.SOUTH)
-			return SHAPE_SOUTH;
-		if (facing == Direction.NORTH)
-			return SHAPE_NORTH;
-
-		return VoxelShapes.empty();
+		return AllShapes.BELT_FUNNEL.get(state.get(HORIZONTAL_FACING));
 	}
 
 	@Override
