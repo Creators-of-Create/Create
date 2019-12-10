@@ -67,6 +67,10 @@ public class VoxelShaper {
 		return Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
 	}
 
+	protected static float horizontalAngleFromDirection(Direction direction){
+		return (float)((Math.max(direction.getHorizontalIndex(), 0) & 3) * 90);
+	}
+
 	protected static VoxelShaper forDirectionsWithRotation(VoxelShape shape, Direction facing, Iterable<Direction> directions, Function<Direction, Vec3d> rotationValues){
 		VoxelShaper voxelShaper = new VoxelShaper();
 		for (Direction dir : directions) {
@@ -114,7 +118,7 @@ public class VoxelShaper {
 		public Vec3d apply(Direction direction) {
 			return new Vec3d(
 					direction == Direction.UP ? 0 : (Direction.Plane.VERTICAL.test(direction) ? 180 : 90),
-					Direction.Plane.VERTICAL.test(direction) ? 0 : (int) -direction.getHorizontalAngle(),
+					-horizontalAngleFromDirection(direction),
 					0
 			);
 		}
@@ -125,7 +129,7 @@ public class VoxelShaper {
 		public Vec3d apply(Direction direction) {
 			return new Vec3d(
 					0,
-					-direction.getHorizontalAngle(),
+					-horizontalAngleFromDirection(direction),
 					0
 			);
 		}
