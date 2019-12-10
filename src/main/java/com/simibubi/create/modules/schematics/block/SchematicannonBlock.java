@@ -2,6 +2,7 @@ package com.simibubi.create.modules.schematics.block;
 
 import com.simibubi.create.AllItems;
 
+import com.simibubi.create.foundation.utility.AllShapes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,6 +15,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -46,6 +49,11 @@ public class SchematicannonBlock extends Block {
 	@Override
 	public boolean isSolid(BlockState state) {
 		return false;
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		return AllShapes.SCHEMATICANNON_SHAPE;
 	}
 
 	@Override
