@@ -1,14 +1,11 @@
 package com.simibubi.create.modules.contraptions.relays.gauge;
 
-import java.util.Random;
-
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -28,24 +25,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 public class GaugeBlock extends DirectionalAxisKineticBlock {
 
 	protected Type type;
-
-	protected VoxelShape LOG = makeCuboidShape(1, 2, 2, 15, 14, 14);
-	protected VoxelShaper PLATE = VoxelShaper.forDirectional(makeCuboidShape(0, 1, 0, 16, 15, 2));
-
-	protected VoxelShaper ON_WALL_HORIZONTAL = VoxelShaper
-			.forHorizontal(VoxelShapes.or(PLATE.get(Direction.SOUTH), LOG));
-	protected VoxelShaper ON_WALL_VERTICAL = VoxelShaper
-			.forHorizontal(VoxelShapes.or(makeCuboidShape(1, 0, 0, 15, 16, 2), makeCuboidShape(2, 1, 2, 14, 15, 14)));
-	protected VoxelShaper ON_GROUND = VoxelShaper.forHorizontalAxis(VoxelShapes.or(PLATE.get(Direction.UP), LOG));
-	protected VoxelShaper ON_CEILING = VoxelShaper.forHorizontalAxis(VoxelShapes.or(PLATE.get(Direction.DOWN), LOG));
 
 	public enum Type implements IStringSerializable {
 		SPEED, STRESS;
@@ -169,21 +157,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		Direction facing = state.get(FACING);
-		Axis axis = getRotationAxis(state);
-
-		if (facing.getAxis().isHorizontal()) {
-			if (axis.isHorizontal())
-				return ON_WALL_HORIZONTAL.get(facing);
-			return ON_WALL_VERTICAL.get(facing);
-		}
-
-		axis = axis == Axis.X ? Axis.Z : Axis.X;
-		if (facing == Direction.UP)
-			return ON_GROUND.get(axis);
-		if (facing == Direction.DOWN)
-			return ON_CEILING.get(axis);
-		return VoxelShapes.empty();
+		return AllShapes.GAUGE.get(state.get(FACING), state.get(AXIS_ALONG_FIRST_COORDINATE));
 	}
 
 	public static class Head extends RenderUtilityBlock {

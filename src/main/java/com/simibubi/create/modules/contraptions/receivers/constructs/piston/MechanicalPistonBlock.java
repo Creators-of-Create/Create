@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.receivers.constructs.piston;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 
@@ -32,20 +33,6 @@ import net.minecraftforge.common.Tags;
 public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 
 	public static final EnumProperty<PistonState> STATE = EnumProperty.create("state", PistonState.class);
-
-	protected static final VoxelShape BASE_SHAPE_UP = makeCuboidShape(0, 0, 0, 16, 12, 16),
-			BASE_SHAPE_DOWN = makeCuboidShape(0, 4, 0, 16, 16, 16),
-			BASE_SHAPE_EAST = makeCuboidShape(0, 0, 0, 12, 16, 16),
-			BASE_SHAPE_WEST = makeCuboidShape(4, 0, 0, 16, 16, 16),
-			BASE_SHAPE_SOUTH = makeCuboidShape(0, 0, 0, 16, 16, 12),
-			BASE_SHAPE_NORTH = makeCuboidShape(0, 0, 4, 16, 16, 16),
-
-			EXTENDED_SHAPE_UP = VoxelShapes.or(BASE_SHAPE_UP, MechanicalPistonHeadBlock.AXIS_SHAPE_Y),
-			EXTENDED_SHAPE_DOWN = VoxelShapes.or(BASE_SHAPE_DOWN, MechanicalPistonHeadBlock.AXIS_SHAPE_Y),
-			EXTENDED_SHAPE_EAST = VoxelShapes.or(BASE_SHAPE_EAST, MechanicalPistonHeadBlock.AXIS_SHAPE_X),
-			EXTENDED_SHAPE_WEST = VoxelShapes.or(BASE_SHAPE_WEST, MechanicalPistonHeadBlock.AXIS_SHAPE_X),
-			EXTENDED_SHAPE_SOUTH = VoxelShapes.or(BASE_SHAPE_SOUTH, MechanicalPistonHeadBlock.AXIS_SHAPE_Z),
-			EXTENDED_SHAPE_NORTH = VoxelShapes.or(BASE_SHAPE_NORTH, MechanicalPistonHeadBlock.AXIS_SHAPE_Z);
 
 	protected boolean isSticky;
 
@@ -155,36 +142,10 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 
 		if (state.get(STATE) == PistonState.EXTENDED)
-			switch (state.get(FACING)) {
-			case DOWN:
-				return EXTENDED_SHAPE_DOWN;
-			case EAST:
-				return EXTENDED_SHAPE_EAST;
-			case NORTH:
-				return EXTENDED_SHAPE_NORTH;
-			case SOUTH:
-				return EXTENDED_SHAPE_SOUTH;
-			case UP:
-				return EXTENDED_SHAPE_UP;
-			case WEST:
-				return EXTENDED_SHAPE_WEST;
-			}
+			return AllShapes.MECHANICAL_PISTON_EXTENDED.get(state.get(FACING));
 
 		if (state.get(STATE) == PistonState.MOVING)
-			switch (state.get(FACING)) {
-			case DOWN:
-				return BASE_SHAPE_DOWN;
-			case EAST:
-				return BASE_SHAPE_EAST;
-			case NORTH:
-				return BASE_SHAPE_NORTH;
-			case SOUTH:
-				return BASE_SHAPE_SOUTH;
-			case UP:
-				return BASE_SHAPE_UP;
-			case WEST:
-				return BASE_SHAPE_WEST;
-			}
+			return AllShapes.MECHANICAL_PISTON.get(state.get(FACING));
 
 		return VoxelShapes.fullCube();
 	}

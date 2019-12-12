@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.receivers;
 import static com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerBlock.VALID;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
@@ -23,8 +24,6 @@ import net.minecraft.world.World;
 
 public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 
-	public static final VoxelShape COLLISION_SHAPE = makeCuboidShape(0, 0, 0, 16, 22, 16);
-
 	public CrushingWheelBlock() {
 		super(Properties.from(Blocks.DIORITE));
 	}
@@ -42,7 +41,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 			ISelectionContext context) {
-		return COLLISION_SHAPE;
+		return AllShapes.CRUSHING_WHEEL_COLLISION_SHAPE;
 	}
 
 	@Override

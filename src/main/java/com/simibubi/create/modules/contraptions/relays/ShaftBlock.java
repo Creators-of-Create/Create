@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays;
 
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -13,10 +14,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class ShaftBlock extends RotatedPillarKineticBlock {
-
-	public static final VoxelShape AXIS_X = makeCuboidShape(0, 5, 5, 16, 11, 11);
-	public static final VoxelShape AXIS_Y = makeCuboidShape(5, 0, 5, 11, 16, 11);
-	public static final VoxelShape AXIS_Z = makeCuboidShape(5, 5, 0, 11, 11, 16);
 
 	public ShaftBlock(Properties properties) {
 		super(properties);
@@ -34,7 +31,7 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return state.get(AXIS) == Axis.X ? AXIS_X : state.get(AXIS) == Axis.Z ? AXIS_Z : AXIS_Y;
+		return AllShapes.SIX_VOXEL_POLE.get(state.get(AXIS));
 	}
 
 	@Override

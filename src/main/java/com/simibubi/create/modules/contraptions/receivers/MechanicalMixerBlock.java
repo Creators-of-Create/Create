@@ -3,11 +3,13 @@ package com.simibubi.create.modules.contraptions.receivers;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
@@ -44,7 +46,10 @@ public class MechanicalMixerBlock extends KineticBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return MechanicalPressBlock.SHAPE;
+		if (context.getEntity() instanceof PlayerEntity)
+			return AllShapes.SHORT_CASING_14_VOXEL.get(Direction.DOWN);
+
+		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;
 	}
 
 	@Override

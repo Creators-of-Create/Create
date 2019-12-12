@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.block.IWithContainer;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.logistics.management.base.LogisticalCasingBlock.Part;
 import com.simibubi.create.modules.logistics.management.controller.CalculationTileEntity;
 import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerTileEntity;
@@ -52,7 +53,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -62,11 +62,6 @@ public class LogisticalControllerBlock extends DirectionalBlock
 		implements IWithoutBlockItem, IWithTileEntity<LogisticalActorTileEntity> {
 
 	public static final IProperty<Type> TYPE = EnumProperty.create("type", Type.class);
-
-	public static final VoxelShape UP_SHAPE = makeCuboidShape(2, -1, 2, 14, 3, 14),
-			DOWN_SHAPE = makeCuboidShape(2, 13, 2, 14, 17, 14), SOUTH_SHAPE = makeCuboidShape(2, 2, -1, 14, 14, 3),
-			NORTH_SHAPE = makeCuboidShape(2, 2, 13, 14, 14, 17), EAST_SHAPE = makeCuboidShape(-1, 2, 2, 3, 14, 14),
-			WEST_SHAPE = makeCuboidShape(13, 2, 2, 17, 14, 14);
 
 	public LogisticalControllerBlock() {
 		super(Properties.from(Blocks.PISTON));
@@ -271,22 +266,7 @@ public class LogisticalControllerBlock extends DirectionalBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		Direction facing = state.get(FACING);
-
-		if (facing == Direction.UP)
-			return UP_SHAPE;
-		if (facing == Direction.DOWN)
-			return DOWN_SHAPE;
-		if (facing == Direction.EAST)
-			return EAST_SHAPE;
-		if (facing == Direction.WEST)
-			return WEST_SHAPE;
-		if (facing == Direction.NORTH)
-			return NORTH_SHAPE;
-		if (facing == Direction.SOUTH)
-			return SOUTH_SHAPE;
-
-		return VoxelShapes.empty();
+		return AllShapes.LOGISTICAL_CONTROLLER.get(state.get(FACING));
 	}
 
 	public static class LogisticalControllerIndicatorBlock extends RenderUtilityBlock {
