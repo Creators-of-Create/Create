@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.components.constructs.piston;
+package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
@@ -33,7 +33,6 @@ import net.minecraftforge.common.Tags;
 public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 
 	public static final EnumProperty<PistonState> STATE = EnumProperty.create("state", PistonState.class);
-
 	protected boolean isSticky;
 
 	public MechanicalPistonBlock(boolean sticky) {

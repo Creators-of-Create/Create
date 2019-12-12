@@ -73,6 +73,7 @@
 	"block.create.mechanical_crafter": "Mechanical Crafter",
 	"block.create.speed_gauge": "Speedometer",
 	"block.create.stress_gauge": "Stress Gauge",
+	"block.create.cart_assembler": "Cart Assembler",
 
 	"block.create.sticky_mechanical_piston": "Sticky Mechanical Piston",
 	"block.create.mechanical_piston": "Mechanical Piston",

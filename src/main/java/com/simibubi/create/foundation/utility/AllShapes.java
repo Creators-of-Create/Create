@@ -1,5 +1,9 @@
 package com.simibubi.create.foundation.utility;
 
+import static net.minecraft.block.Block.makeCuboidShape;
+
+import java.util.Arrays;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.PistonHeadBlock;
@@ -8,10 +12,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-
-import java.util.Arrays;
-
-import static net.minecraft.block.Block.makeCuboidShape;
 
 public class AllShapes {
 

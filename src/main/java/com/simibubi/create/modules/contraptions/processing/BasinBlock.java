@@ -2,8 +2,8 @@ package com.simibubi.create.modules.contraptions.processing;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-
 import com.simibubi.create.foundation.utility.AllShapes;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

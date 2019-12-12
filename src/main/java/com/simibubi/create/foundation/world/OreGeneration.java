@@ -1,6 +1,11 @@
 package com.simibubi.create.foundation.world;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
@@ -11,10 +16,6 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public enum OreGeneration {
 

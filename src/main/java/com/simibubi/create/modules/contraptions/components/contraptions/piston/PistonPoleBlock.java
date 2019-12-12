@@ -1,10 +1,10 @@
-package com.simibubi.create.modules.contraptions.components.constructs.piston;
+package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
-import com.simibubi.create.modules.contraptions.components.constructs.piston.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.components.constructs;
+package com.simibubi.create.modules.contraptions.components.contraptions;
 
 import java.util.Random;
 import java.util.function.Consumer;
@@ -10,7 +10,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.PlacementSimulationWorld;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
-import com.simibubi.create.modules.contraptions.components.constructs.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior.MovementContext;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelRenderer;
@@ -31,7 +31,7 @@ public class ContraptionRenderer {
 	public static void render(World world, Contraption c, Consumer<SuperByteBuffer> transform, BufferBuilder buffer) {
 		SuperByteBuffer contraptionBuffer = CreateClient.bufferCache.get(CONTRAPTION, c, () -> renderContraption(c));
 		transform.accept(contraptionBuffer);
-		buffer.putBulkData(contraptionBuffer.build());
+		contraptionBuffer.light((lx, ly, lz) -> world.getCombinedLight(new BlockPos(lx, ly, lz), 0)).renderInto(buffer);
 		renderActors(world, c, transform, buffer);
 	}
 

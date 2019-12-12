@@ -10,9 +10,9 @@ import java.util.Set;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-
-import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.foundation.utility.VoxelShaper;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

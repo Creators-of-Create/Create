@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.components.constructs.piston;
+package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
 import static com.simibubi.create.AllBlocks.PISTON_POLE;
@@ -10,17 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.modules.contraptions.components.constructs.Contraption;
-import com.simibubi.create.modules.contraptions.components.constructs.piston.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.PistonType;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
@@ -39,9 +41,9 @@ public class PistonContraption extends Contraption {
 		construct.orientation = direction;
 		if (!construct.collectExtensions(world, pos, direction))
 			return null;
-		if (!construct.searchMovedStructure(world, pos.offset(direction, construct.initialExtensionProgress + 1),
-				retract ? direction.getOpposite() : direction))
+		if (!construct.searchMovedStructure(world, construct.anchor, retract ? direction.getOpposite() : direction))
 			return null;
+		construct.initActors(world);
 		return construct;
 	}
 
@@ -93,13 +95,18 @@ public class PistonContraption extends Contraption {
 		initialExtensionProgress = extensionsInFront;
 		pistonCollisionBox = new AxisAlignedBB(end.offset(direction, -extensionsInFront));
 
+		anchor = pos.offset(direction, initialExtensionProgress + 1);
+
+		if (extensionLength == 0)
+			return false;
+
 		for (BlockInfo pole : poles) {
-			BlockPos polePos = pole.pos.offset(direction, -extensionsInFront);
+			BlockPos polePos = pole.pos.offset(direction, -extensionsInFront).subtract(anchor);
 			blocks.put(polePos, new BlockInfo(polePos, pole.state, null));
 			pistonCollisionBox = pistonCollisionBox.union(new AxisAlignedBB(polePos));
 		}
 
-		constructCollisionBox = new AxisAlignedBB(pos.offset(direction, initialExtensionProgress));
+		constructCollisionBox = new AxisAlignedBB(BlockPos.ZERO.offset(direction, -initialExtensionProgress));
 		return true;
 	}
 
@@ -125,14 +132,48 @@ public class PistonContraption extends Contraption {
 		return true;
 	}
 
-	protected void add(BlockPos pos, BlockInfo block) {
+	public void add(BlockPos pos, BlockInfo block) {
+//		super.add(pos, block);
 		super.add(pos.offset(orientation, -initialExtensionProgress), block);
 	}
 
 	@Override
-	public void readNBT(CompoundNBT nbt) {
-		super.readNBT(nbt);
+	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch) {
+		super.disassemble(world, offset, yaw, pitch, (pos, state) -> {
+			BlockPos pistonPos = anchor.offset(orientation, -initialExtensionProgress - 1);
+			BlockState pistonState = world.getBlockState(pistonPos);
+			TileEntity te = world.getTileEntity(pistonPos);
+			if (pos.equals(pistonPos)) {
+				if (te == null || te.isRemoved())
+					return true;
+				if (!AllBlocks.PISTON_POLE.typeOf(state) && pistonState.getBlock() instanceof MechanicalPistonBlock)
+					world.setBlockState(pistonPos, pistonState.with(MechanicalPistonBlock.STATE, PistonState.RETRACTED),
+							3);
+				return true;
+			}
+			return false;
+		});
+	}
+
+	@Override
+	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
+		super.removeBlocksFromWorld(world, offset, (pos, state) -> {
+			BlockPos pistonPos = anchor.offset(orientation, -initialExtensionProgress - 1);
+			BlockState blockState = world.getBlockState(pos);
+			if (pos.equals(pistonPos) && blockState.getBlock() instanceof MechanicalPistonBlock) {
+				world.setBlockState(pos, blockState.with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66);
+				return true;
+			}
+			return false;
+		});
+	}
+
+	@Override
+	public void readNBT(World world, CompoundNBT nbt) {
+		super.readNBT(world, nbt);
 		extensionLength = nbt.getInt("ExtensionLength");
+		initialExtensionProgress = nbt.getInt("InitialLength");
+		orientation = Direction.byIndex(nbt.getInt("Orientation"));
 		if (nbt.contains("BoundsBack"))
 			pistonCollisionBox = readAABB(nbt.getList("BoundsBack", 5));
 	}
@@ -145,7 +186,9 @@ public class PistonContraption extends Contraption {
 			ListNBT bb = writeAABB(pistonCollisionBox);
 			nbt.put("BoundsBack", bb);
 		}
+		nbt.putInt("InitialLength", initialExtensionProgress);
 		nbt.putInt("ExtensionLength", extensionLength);
+		nbt.putInt("Orientation", orientation.getIndex());
 
 		return nbt;
 	}

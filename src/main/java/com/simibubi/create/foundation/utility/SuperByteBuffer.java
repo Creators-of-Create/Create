@@ -31,6 +31,7 @@ public class SuperByteBuffer {
 	// Vertex Lighting
 	private boolean shouldLight;
 	private IVertexLighter vertexLighter;
+	private float lightOffsetX, lightOffsetY, lightOffsetZ;
 	private int packedLightCoords;
 
 	// Vertex Coloring
@@ -84,7 +85,8 @@ public class SuperByteBuffer {
 
 			if (shouldLight) {
 				if (vertexLighter != null)
-					putLight(mutable, vertex, vertexLighter.getPackedLight(x2, y2, z2));
+					putLight(mutable, vertex,
+							vertexLighter.getPackedLight(x2 + lightOffsetX, y2 + lightOffsetY, z2 + lightOffsetZ));
 				else
 					putLight(mutable, vertex, packedLightCoords);
 			}
@@ -153,6 +155,7 @@ public class SuperByteBuffer {
 
 	public SuperByteBuffer light(int packedLightCoords) {
 		shouldLight = true;
+		vertexLighter = null;
 		this.packedLightCoords = packedLightCoords;
 		return this;
 	}
@@ -160,6 +163,13 @@ public class SuperByteBuffer {
 	public SuperByteBuffer light(IVertexLighter lighter) {
 		shouldLight = true;
 		vertexLighter = lighter;
+		return this;
+	}
+
+	public SuperByteBuffer offsetLighting(double x, double y, double z) {
+		lightOffsetX = (float) x;
+		lightOffsetY = (float) y;
+		lightOffsetZ = (float) z;
 		return this;
 	}
 

@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.components.saw;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
-import com.simibubi.create.modules.contraptions.components.constructs.IHaveMovementBehavior;
+import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior;
 import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
 
 import net.minecraft.block.Block;
@@ -21,8 +21,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;

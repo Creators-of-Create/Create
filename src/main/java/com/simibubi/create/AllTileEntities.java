@@ -8,11 +8,11 @@ import com.simibubi.create.modules.contraptions.components.actors.DrillTileEntit
 import com.simibubi.create.modules.contraptions.components.actors.DrillTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterTileEntity;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.components.constructs.ChassisTileEntity;
-import com.simibubi.create.modules.contraptions.components.constructs.bearing.MechanicalBearingTileEntity;
-import com.simibubi.create.modules.contraptions.components.constructs.bearing.MechanicalBearingTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.components.constructs.piston.MechanicalPistonTileEntity;
-import com.simibubi.create.modules.contraptions.components.constructs.piston.MechanicalPistonTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelControllerTileEntity;

@@ -1,18 +1,13 @@
-package com.simibubi.create.modules.contraptions.components.constructs.mounted;
+package com.simibubi.create.modules.contraptions.components.contraptions.mounted;
 
-import static com.simibubi.create.modules.contraptions.components.constructs.mounted.CartAssemblerBlock.RAIL_SHAPE;
+import static com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerBlock.RAIL_SHAPE;
 
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.MutablePair;
-
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.modules.contraptions.components.constructs.Contraption;
-import com.simibubi.create.modules.contraptions.components.constructs.IHaveMovementBehavior.MovementContext;
-import com.simibubi.create.modules.contraptions.components.constructs.IHaveMovementBehavior.MoverType;
+import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
@@ -21,12 +16,13 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class MountedContraption extends Contraption {
 
-	public static MountedContraption assembleMinecart(World world, BlockPos pos, AbstractMinecartEntity cart) {
+	public static Contraption assembleMinecart(World world, BlockPos pos, AbstractMinecartEntity cart) {
 		if (isFrozen())
 			return null;
 
@@ -34,7 +30,7 @@ public class MountedContraption extends Contraption {
 		if (!state.has(RAIL_SHAPE))
 			return null;
 
-		MountedContraption contraption = new MountedContraption();
+		Contraption contraption = new MountedContraption();
 		Vec3d vec = cart.getMotion();
 		if (!contraption.searchMovedStructure(world, pos, Direction.getFacingFromVector(vec.x, vec.y, vec.z)))
 			return null;
@@ -43,21 +39,8 @@ public class MountedContraption extends Contraption {
 		contraption.add(pos, new BlockInfo(pos,
 				AllBlocks.MINECART_ANCHOR.block.getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis),
 				null));
-
-		for (BlockInfo block : contraption.blocks.values()) {
-			BlockPos startPos = pos;
-			if (startPos.equals(block.pos))
-				continue;
-			world.setBlockState(block.pos, Blocks.AIR.getDefaultState(), 67);
-		}
-
-		for (MutablePair<BlockInfo, MovementContext> pair : contraption.getActors()) {
-			MovementContext context = new MovementContext(pair.left.state, MoverType.MINECART);
-			context.world = world;
-			context.motion = vec;
-			context.currentGridPos = pair.left.pos;
-			pair.setRight(context);
-		}
+		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
+		contraption.initActors(world);
 
 		return contraption;
 	}
@@ -83,8 +66,14 @@ public class MountedContraption extends Contraption {
 		return capture;
 	}
 
-	public BlockPos getAnchor() {
-		return anchor;
+	@Override
+	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
+		super.removeBlocksFromWorld(world, offset, (pos, state) -> pos.equals(anchor));
+	}
+
+	@Override
+	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch) {
+		super.disassemble(world, offset, yaw, pitch, (pos, state) -> AllBlocks.MINECART_ANCHOR.typeOf(state));
 	}
 
 }

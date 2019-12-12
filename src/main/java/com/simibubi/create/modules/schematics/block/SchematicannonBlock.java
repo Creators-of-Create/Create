@@ -1,8 +1,8 @@
 package com.simibubi.create.modules.schematics.block;
 
 import com.simibubi.create.AllItems;
-
 import com.simibubi.create.foundation.utility.AllShapes;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

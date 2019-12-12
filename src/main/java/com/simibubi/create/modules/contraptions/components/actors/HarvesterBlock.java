@@ -4,9 +4,10 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.modules.contraptions.components.constructs.IHaveMovementBehavior;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -105,17 +106,24 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 	}
 
 	@Override
-	public void visitPosition(MovementContext context) {
-		Direction movement = context.getMovementDirection();
+	public boolean isActive(MovementContext context) {
+		return !VecHelper.isVecPointingTowards(context.relativeMotion,
+				context.state.get(HORIZONTAL_FACING).getOpposite());
+	}
+
+	@Override
+	public Vec3d getActiveAreaOffset(MovementContext context) {
+		return new Vec3d(context.state.get(HORIZONTAL_FACING).getDirectionVec()).scale(.5);
+	}
+
+	@Override
+	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		World world = context.world;
-		BlockState block = context.state;
-		BlockPos pos = context.currentGridPos;
-
-		if (movement != block.get(HORIZONTAL_FACING))
-			return;
-
 		BlockState stateVisited = world.getBlockState(pos);
 		boolean notCropButCuttable = false;
+
+		if (world.isRemote)
+			return;
 
 		if (stateVisited.getBlock() == Blocks.SUGAR_CANE) {
 			notCropButCuttable = true;
@@ -141,8 +149,7 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 				seedSubtracted = true;
 			}
 			ItemEntity itemEntity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + .25f, pos.getZ() + .5f, stack);
-			itemEntity.setMotion(
-					new Vec3d(movement.getDirectionVec()).add(0, 0.5f, 0).scale(world.rand.nextFloat() * .3f));
+			itemEntity.setMotion(context.motion.add(0, 0.5f, 0).scale(world.rand.nextFloat() * .3f));
 			world.addEntity(itemEntity);
 		}
 	}

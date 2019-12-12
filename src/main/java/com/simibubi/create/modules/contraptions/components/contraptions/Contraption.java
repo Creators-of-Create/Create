@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.components.constructs;
+package com.simibubi.create.modules.contraptions.components.contraptions;
 
 import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
@@ -18,10 +18,18 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
-import com.simibubi.create.modules.contraptions.components.constructs.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.BearingContraption;
+import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.chassis.RadialChassisBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.mounted.MountedContraption;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonContraption;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FallingBlock;
 import net.minecraft.block.PistonBlock;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -117,13 +125,13 @@ public class Contraption {
 		return cachedColliders;
 	}
 
-	protected boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
+	public boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
 		List<BlockPos> frontier = new ArrayList<>();
 		Set<BlockPos> visited = new HashSet<>();
 		anchor = pos;
 
 		if (constructCollisionBox == null)
-			constructCollisionBox = new AxisAlignedBB(pos);
+			constructCollisionBox = new AxisAlignedBB(BlockPos.ZERO);
 
 		frontier.add(pos);
 		if (!addToInitialFrontier(world, pos, direction, frontier))
@@ -433,15 +441,29 @@ public class Contraption {
 		return compoundnbt;
 	}
 
-	protected void add(BlockPos pos, BlockInfo block) {
-		BlockInfo blockInfo = new BlockInfo(pos, block.state, block.nbt);
-		blocks.put(pos, blockInfo);
+	public void add(BlockPos pos, BlockInfo block) {
+		BlockPos localPos = pos.subtract(anchor);
+		BlockInfo blockInfo = new BlockInfo(localPos, block.state, block.nbt);
+		blocks.put(localPos, blockInfo);
 		if (block.state.getBlock() instanceof IHaveMovementBehavior)
 			getActors().add(MutablePair.of(blockInfo, null));
-		constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(pos));
+		constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(localPos));
 	}
 
-	public void readNBT(CompoundNBT nbt) {
+	public static Contraption fromNBT(World world, CompoundNBT nbt) {
+		String type = nbt.getString("Type");
+		Contraption contraption = new Contraption();
+		if (type.equals("Piston"))
+			contraption = new PistonContraption();
+		if (type.equals("Mounted"))
+			contraption = new MountedContraption();
+		if (type.equals("Bearing"))
+			contraption = new BearingContraption();
+		contraption.readNBT(world, nbt);
+		return contraption;
+	}
+
+	public void readNBT(World world, CompoundNBT nbt) {
 		nbt.getList("Blocks", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
 			BlockInfo info = new BlockInfo(NBTUtil.readBlockPos(comp.getCompound("Pos")),
@@ -453,7 +475,7 @@ public class Contraption {
 		nbt.getList("Actors", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
 			BlockInfo info = blocks.get(NBTUtil.readBlockPos(comp.getCompound("Pos")));
-			MovementContext context = MovementContext.readNBT(comp);
+			MovementContext context = MovementContext.readNBT(world, comp);
 			getActors().add(MutablePair.of(info, context));
 		});
 
@@ -469,6 +491,14 @@ public class Contraption {
 
 	public CompoundNBT writeNBT() {
 		CompoundNBT nbt = new CompoundNBT();
+
+		if (this instanceof PistonContraption)
+			nbt.putString("Type", "Piston");
+		if (this instanceof MountedContraption)
+			nbt.putString("Type", "Mounted");
+		if (this instanceof BearingContraption)
+			nbt.putString("Type", "Bearing");
+
 		ListNBT blocks = new ListNBT();
 		for (BlockInfo block : this.blocks.values()) {
 			CompoundNBT c = new CompoundNBT();
@@ -520,7 +550,25 @@ public class Contraption {
 		return CreateConfig.parameters.freezePistonConstructs.get();
 	}
 
-	public void disassemble(IWorld world, BlockPos offset, BiPredicate<BlockPos, BlockState> customPlacement) {
+	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch) {
+		disassemble(world, offset, yaw, pitch, (pos, state) -> false);
+	}
+
+	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
+		removeBlocksFromWorld(world, offset, (pos, state) -> false);
+	}
+
+	public void removeBlocksFromWorld(IWorld world, BlockPos offset, BiPredicate<BlockPos, BlockState> customRemoval) {
+		for (BlockInfo block : blocks.values()) {
+			BlockPos add = block.pos.add(anchor).add(offset);
+			if (customRemoval.test(add, block.state))
+				continue;
+			world.setBlockState(add, Blocks.AIR.getDefaultState(), 67);
+		}
+	}
+
+	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch,
+			BiPredicate<BlockPos, BlockState> customPlacement) {
 		for (BlockInfo block : blocks.values()) {
 			BlockPos targetPos = block.pos.add(offset);
 			BlockState state = block.state;
@@ -546,8 +594,21 @@ public class Contraption {
 		}
 	}
 
+	public void initActors(World world) {
+		for (MutablePair<BlockInfo, MovementContext> pair : actors) {
+			BlockState blockState = pair.left.state;
+			MovementContext context = new MovementContext(world, blockState);
+			((IHaveMovementBehavior) blockState.getBlock()).startMoving(context);
+			pair.setRight(context);
+		}
+	}
+
 	public List<MutablePair<BlockInfo, MovementContext>> getActors() {
 		return actors;
+	}
+
+	public BlockPos getAnchor() {
+		return anchor;
 	}
 
 }

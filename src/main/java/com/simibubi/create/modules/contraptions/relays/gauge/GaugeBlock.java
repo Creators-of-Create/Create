@@ -1,11 +1,14 @@
 package com.simibubi.create.modules.contraptions.relays.gauge;
 
+import java.util.Random;
+
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -28,8 +31,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-
-import java.util.Random;
 
 public class GaugeBlock extends DirectionalAxisKineticBlock {
 

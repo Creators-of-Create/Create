@@ -1,15 +1,16 @@
-package com.simibubi.create.modules.contraptions.components.constructs.mounted;
+package com.simibubi.create.modules.contraptions.components.contraptions.mounted;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
-
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
+import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
+
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -71,7 +72,7 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 		if (!cart.getPassengers().isEmpty())
 			return;
 
-		MountedContraption contraption = MountedContraption.assembleMinecart(world, pos, cart);
+		Contraption contraption = MountedContraption.assembleMinecart(world, pos, cart);
 		ContraptionEntity entity = new ContraptionEntity(world, contraption,
 				ContraptionEntity.yawFromMotion(cart.getMotion()));
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
@@ -82,17 +83,8 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 	protected void disassemble(World world, BlockPos pos, AbstractMinecartEntity cart) {
 		if (cart.getPassengers().isEmpty())
 			return;
-		Entity entity = cart.getPassengers().get(0);
-		if (!(entity instanceof ContraptionEntity))
+		if (!(cart.getPassengers().get(0) instanceof ContraptionEntity))
 			return;
-		MountedContraption contraption = ((ContraptionEntity) entity).contraption;
-		if (contraption == null)
-			return;
-
-		contraption.disassemble(world, pos.subtract(contraption.getAnchor()), (targetPos, state) -> {
-			return targetPos.equals(pos);
-		});
-
 		cart.removePassengers();
 	}
 
@@ -117,7 +109,8 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.CART_ASSEMBLER.get(state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Direction.Axis.Z : Direction.Axis.X);
+		return AllShapes.CART_ASSEMBLER
+				.get(state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Direction.Axis.Z : Direction.Axis.X);
 	}
 
 	@Override
@@ -125,7 +118,7 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 			ISelectionContext context) {
 		if (context.getEntity() instanceof AbstractMinecartEntity)
 			return VoxelShapes.empty();
-		return getShape(state, worldIn, pos, context);
+		return VoxelShapes.fullCube();
 	}
 
 	@Override

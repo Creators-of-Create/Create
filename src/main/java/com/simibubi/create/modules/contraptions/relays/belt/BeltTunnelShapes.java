@@ -1,13 +1,14 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
+import static net.minecraft.block.Block.makeCuboidShape;
+
 import com.simibubi.create.foundation.utility.VoxelShaper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-
-import static net.minecraft.block.Block.makeCuboidShape;
 
 public class BeltTunnelShapes {
 

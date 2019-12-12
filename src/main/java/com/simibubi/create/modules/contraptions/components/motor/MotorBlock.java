@@ -2,8 +2,8 @@ package com.simibubi.create.modules.contraptions.components.motor;
 
 import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;

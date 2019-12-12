@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.components.constructs.bearing;
+package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
 
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;

@@ -7,7 +7,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.modules.contraptions.components.constructs.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior.MovementContext;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -28,12 +29,9 @@ public class HarvesterTileEntityRenderer extends TileEntityRenderer<HarvesterTil
 
 	public static SuperByteBuffer renderInContraption(MovementContext context) {
 		BlockState state = context.state;
-		Direction facing = context.getMovementDirection();
-		float speed = (float) (facing == state.get(HORIZONTAL_FACING)
-				? context.getAnimationSpeed() * facing.getAxisDirection().getOffset()
+		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, state.get(HORIZONTAL_FACING).getOpposite())
+				? context.getAnimationSpeed() * state.get(HORIZONTAL_FACING).getAxisDirection().getOffset()
 				: 0);
-		if (facing.getAxis() == Axis.X)
-			speed = -speed;
 		float time = AnimationTickHolder.getRenderTick();
 		float angle = (float) (((time * speed) % 360) / 180 * (float) Math.PI);
 

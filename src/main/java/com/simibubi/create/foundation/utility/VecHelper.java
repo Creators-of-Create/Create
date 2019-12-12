@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -11,9 +12,15 @@ import net.minecraft.util.math.Vec3i;
 
 public class VecHelper {
 
-	public static Vec3d rotate(Vec3d vec, float deg, Axis axis) {
-		float angle = (float) (deg / 180f * Math.PI);
+	public static Vec3d rotate(Vec3d vec, double xRot, double yRot, double zRot) {
+		return rotate(rotate(rotate(vec, xRot, Axis.X), yRot, Axis.Y), zRot, Axis.Z);
+	}
 
+	public static Vec3d rotate(Vec3d vec, double deg, Axis axis) {
+		if (deg == 0)
+			return vec;
+
+		float angle = (float) (deg / 180f * Math.PI);
 		double sin = MathHelper.sin(angle);
 		double cos = MathHelper.cos(angle);
 		double x = vec.x;
@@ -27,6 +34,10 @@ public class VecHelper {
 		if (axis == Axis.Z)
 			return new Vec3d(x * cos - y * sin, y * cos + x * sin, z);
 		return vec;
+	}
+
+	public static boolean isVecPointingTowards(Vec3d vec, Direction direction) {
+		return new Vec3d(direction.getDirectionVec()).distanceTo(vec.normalize()) < .75;
 	}
 
 	public static Vec3d getCenterOf(Vec3i pos) {
