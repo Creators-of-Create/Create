@@ -15,7 +15,6 @@ import com.simibubi.create.modules.contraptions.receivers.CrushingWheelBlock;
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControllerBlock;
 import com.simibubi.create.modules.contraptions.receivers.DrillBlock;
 import com.simibubi.create.modules.contraptions.receivers.DrillBlock.DrillHeadBlock;
-import com.simibubi.create.modules.contraptions.receivers.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterBlock.HarvesterBladeBlock;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalMixerBlock;
@@ -32,6 +31,7 @@ import com.simibubi.create.modules.contraptions.receivers.constructs.piston.Mech
 import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonHeadBlock;
 import com.simibubi.create.modules.contraptions.receivers.constructs.piston.PistonPoleBlock;
 import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterBlock;
+import com.simibubi.create.modules.contraptions.receivers.fan.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.CogWheelBlock;
@@ -116,7 +116,7 @@ public enum AllBlocks {
 	MOTOR(new MotorBlock()),
 	WATER_WHEEL(new WaterWheelBlock()),
 	ENCASED_FAN(new EncasedFanBlock()),
-	ENCASED_FAN_INNER(new RenderUtilityAxisBlock()),
+	ENCASED_FAN_INNER(new RenderUtilityDirectionalBlock()),
 	TURNTABLE(new TurntableBlock()),
 	SHAFT_HALF(new ShaftHalfBlock()),
 

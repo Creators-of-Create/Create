@@ -8,12 +8,18 @@ import java.util.Optional;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.modules.contraptions.base.ProcessingRecipe;
-import com.simibubi.create.modules.contraptions.receivers.SplashingRecipe;
+import com.simibubi.create.modules.contraptions.receivers.fan.SplashingRecipe;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.BlastingRecipe;
 import net.minecraft.item.crafting.FurnaceRecipe;
@@ -21,9 +27,14 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.SmokingRecipe;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tileentity.BlastFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.SmokerTileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -41,6 +52,21 @@ public class InWorldProcessing {
 
 	public enum Type {
 		SMOKING, BLASTING, SPLASHING
+
+		;
+
+		public static Type byBlock(IBlockReader reader, BlockPos pos) {
+			BlockState blockState = reader.getBlockState(pos);
+			IFluidState fluidState = reader.getFluidState(pos);
+			if (fluidState.getFluid() == Fluids.WATER)
+				return Type.SPLASHING;
+			if (blockState.getBlock() == Blocks.FIRE
+					|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)))
+				return Type.SMOKING;
+			if (blockState.getBlock() == Blocks.LAVA)
+				return Type.BLASTING;
+			return null;
+		}
 	}
 
 	public static boolean canProcess(ItemEntity entity, Type type) {
@@ -105,7 +131,8 @@ public class InWorldProcessing {
 		}
 	}
 
-	public static List<TransportedItemStack> applyProcessing(TransportedItemStack transported, BeltTileEntity belt, Type type) {
+	public static List<TransportedItemStack> applyProcessing(TransportedItemStack transported, BeltTileEntity belt,
+			Type type) {
 		if (transported.processedBy != type) {
 			transported.processedBy = type;
 			transported.processingTime = CreateConfig.parameters.inWorldProcessingTime.get() + 1;
@@ -193,7 +220,7 @@ public class InWorldProcessing {
 		processing.putInt("Time", value);
 		return value;
 	}
-	
+
 	public static void applyRecipeOn(ItemEntity entity, IRecipe<?> recipe) {
 		List<ItemStack> stacks = applyRecipeOn(entity.getItem(), recipe);
 		if (stacks == null)
@@ -241,6 +268,23 @@ public class InWorldProcessing {
 		}
 
 		return stacks;
+	}
+
+	public static void spawnParticlesForProcessing(World world, Vec3d vec, Type type) {
+		if (world.rand.nextInt(4) == 0 && world.isRemote) {
+			if (type == Type.BLASTING)
+				world.addParticle(ParticleTypes.LARGE_SMOKE, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
+			if (type == Type.SMOKING)
+				world.addParticle(ParticleTypes.POOF, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
+			if (type == Type.SPLASHING) {
+				Vec3d color = ColorHelper.getRGB(0x0055FF);
+				world.addParticle(new RedstoneParticleData((float) color.x, (float) color.y, (float) color.z, 1),
+						vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f,
+						vec.z + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+				world.addParticle(ParticleTypes.SPIT, vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f,
+						vec.z + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+			}
+		}
 	}
 
 	public static boolean isFrozen() {

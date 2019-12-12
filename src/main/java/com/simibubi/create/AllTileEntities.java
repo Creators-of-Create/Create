@@ -13,8 +13,6 @@ import com.simibubi.create.modules.contraptions.receivers.CrushingWheelControlle
 import com.simibubi.create.modules.contraptions.receivers.CrushingWheelTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.DrillTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntity;
-import com.simibubi.create.modules.contraptions.receivers.EncasedFanTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.HarvesterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.MechanicalMixerTileEntity;
@@ -31,6 +29,8 @@ import com.simibubi.create.modules.contraptions.receivers.constructs.piston.Mech
 import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MechanicalPistonTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.modules.contraptions.receivers.crafter.MechanicalCrafterTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.receivers.fan.EncasedFanTileEntity;
+import com.simibubi.create.modules.contraptions.receivers.fan.EncasedFanTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.ClutchTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.EncasedShaftTileEntityRenderer;

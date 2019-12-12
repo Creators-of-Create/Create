@@ -5,12 +5,13 @@ import static com.simibubi.create.modules.contraptions.receivers.SawBlock.RUNNIN
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
+import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.IHaveFilter;
@@ -39,6 +40,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 
+	private static final Object cuttingRecipesKey = new Object();
 	public ProcessingInventory inventory;
 	private int recipeIndex;
 	private ItemStack filter;
@@ -235,7 +237,7 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 	}
 
 	private void applyRecipe() {
-		List<IRecipe<?>> recipes = getRecipes();
+		List<? extends IRecipe<?>> recipes = getRecipes();
 		if (recipes.isEmpty())
 			return;
 		if (recipeIndex >= recipes.size())
@@ -267,14 +269,12 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 
 	}
 
-	private List<IRecipe<?>> getRecipes() {
-		List<IRecipe<?>> recipes = world.getRecipeManager().getRecipes().parallelStream()
-				.filter(r -> r.getType() == IRecipeType.STONECUTTING || r.getType() == AllRecipes.Types.CUTTING)
-				.filter(r -> filter.isEmpty() || ItemStack.areItemsEqual(filter, r.getRecipeOutput()))
-				.filter(r -> !r.getIngredients().isEmpty()
-						&& r.getIngredients().get(0).test(inventory.getStackInSlot(0)))
-				.collect(Collectors.toList());
-		return recipes;
+	private List<? extends IRecipe<?>> getRecipes() {
+		return RecipeFinder
+				.get(cuttingRecipesKey, world,
+						RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipes.Types.CUTTING))
+				.search().filter(RecipeConditions.outputMatchesFilter(filter))
+				.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0))).asList();
 	}
 
 	public void insertItem(ItemEntity entity) {
@@ -299,7 +299,7 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 		if (world.isRemote)
 			return;
 
-		List<IRecipe<?>> recipes = getRecipes();
+		List<? extends IRecipe<?>> recipes = getRecipes();
 		boolean valid = !recipes.isEmpty();
 		int time = 100;
 

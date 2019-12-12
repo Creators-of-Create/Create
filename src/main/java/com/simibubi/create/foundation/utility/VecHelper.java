@@ -38,6 +38,11 @@ public class VecHelper {
 				vec.z + (r.nextFloat() - .5f) * 2 * radius);
 	}
 
+	public static Vec3d planeByNormal(Vec3d vec) {
+		vec = vec.normalize();
+		return new Vec3d(1, 1, 1).subtract(Math.abs(vec.x), Math.abs(vec.y), Math.abs(vec.z));
+	}
+
 	public static ListNBT writeNBT(Vec3d vec) {
 		ListNBT listnbt = new ListNBT();
 		listnbt.add(new DoubleNBT(vec.x));

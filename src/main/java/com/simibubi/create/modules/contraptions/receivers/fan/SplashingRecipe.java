@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.receivers;
+package com.simibubi.create.modules.contraptions.receivers.fan;
 
 import java.util.List;
 

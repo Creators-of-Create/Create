@@ -16,7 +16,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction;
 
 public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements IRecipeCategory<T> {
 
@@ -72,12 +72,12 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements 
 
 	protected BlockState renderFanCasing() {
 
-		return AllBlocks.ENCASED_FAN.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.X);
+		return AllBlocks.ENCASED_FAN.get().getDefaultState().with(BlockStateProperties.FACING, Direction.WEST);
 	}
 
 	protected BlockState renderFanInner() {
 
-		return AllBlocks.ENCASED_FAN_INNER.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.X);
+		return AllBlocks.ENCASED_FAN_INNER.get().getDefaultState().with(BlockStateProperties.FACING, Direction.WEST);
 	}
 
 	public abstract void renderAttachedBlock();

@@ -9,7 +9,8 @@
 	"results": [
 		{
 			"item": "minecraft:clay_ball",
-			"count": 2
+			"count": 1,
+			"chance": 0.25
 		}
 	],
 	"processingTime": 100

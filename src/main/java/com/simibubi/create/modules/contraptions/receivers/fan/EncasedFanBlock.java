@@ -1,11 +1,11 @@
-package com.simibubi.create.modules.contraptions.receivers;
+package com.simibubi.create.modules.contraptions.receivers.fan;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.modules.contraptions.relays.EncasedShaftBlock;
+import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -16,7 +16,11 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class EncasedFanBlock extends EncasedShaftBlock implements IWithTileEntity<EncasedFanTileEntity> {
+public class EncasedFanBlock extends DirectionalKineticBlock implements IWithTileEntity<EncasedFanTileEntity> {
+
+	public EncasedFanBlock() {
+		super(Properties.from(Blocks.ANDESITE));
+	}
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
@@ -33,7 +37,7 @@ public class EncasedFanBlock extends EncasedShaftBlock implements IWithTileEntit
 			boolean isMoving) {
 		notifyFanTile(worldIn, pos);
 
-		if (worldIn.isRemote || state.get(AXIS).isHorizontal())
+		if (worldIn.isRemote || getRotationAxis(state).isHorizontal())
 			return;
 
 		withTileEntityDo(worldIn, pos, EncasedFanTileEntity::updateGenerator);
@@ -41,20 +45,15 @@ public class EncasedFanBlock extends EncasedShaftBlock implements IWithTileEntit
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		if (context.isPlacerSneaking())
-			return super.getStateForPlacement(context);
-		BlockState blockState = context.getWorld()
-				.getBlockState(context.getPos().offset(context.getFace().getOpposite()));
-		if (AllBlocks.ENCASED_FAN.typeOf(blockState))
-			return getDefaultState().with(AXIS, blockState.get(AXIS));
-		Axis preferred = getPreferredAxis(context);
-		if (preferred != null)
-			return getDefaultState().with(AXIS, preferred);
-		return super.getStateForPlacement(context);
+		Direction preferredFacing = getPreferredFacing(context);
+		if (preferredFacing == null)
+			preferredFacing = context.getNearestLookingDirection();
+		return getDefaultState().with(FACING,
+				context.isPlacerSneaking() ? preferredFacing : preferredFacing.getOpposite());
 	}
 
 	protected void notifyFanTile(IWorld world, BlockPos pos) {
-		withTileEntityDo(world, pos, EncasedFanTileEntity::updateFrontBlock);
+		withTileEntityDo(world, pos, EncasedFanTileEntity::blockInFrontChanged);
 	}
 
 	@Override
@@ -62,11 +61,19 @@ public class EncasedFanBlock extends EncasedShaftBlock implements IWithTileEntit
 		return BlockRenderLayer.CUTOUT;
 	}
 
-	public static boolean canAirPassThrough(World world, BlockPos pos, Direction direction) {
-		if (!world.isBlockPresent(pos))
-			return true;
-		BlockState state = world.getBlockState(pos);
-		return !Block.hasSolidSide(state, world, pos, direction.getOpposite());
+	@Override
+	public Axis getRotationAxis(BlockState state) {
+		return state.get(FACING).getAxis();
+	}
+
+	@Override
+	protected boolean hasStaticPart() {
+		return true;
+	}
+
+	@Override
+	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+		return face == state.get(FACING).getOpposite();
 	}
 
 }

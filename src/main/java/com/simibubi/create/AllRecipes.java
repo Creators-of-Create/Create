@@ -8,7 +8,7 @@ import com.simibubi.create.modules.contraptions.receivers.CrushingRecipe;
 import com.simibubi.create.modules.contraptions.receivers.CuttingRecipe;
 import com.simibubi.create.modules.contraptions.receivers.MixingRecipe;
 import com.simibubi.create.modules.contraptions.receivers.PressingRecipe;
-import com.simibubi.create.modules.contraptions.receivers.SplashingRecipe;
+import com.simibubi.create.modules.contraptions.receivers.fan.SplashingRecipe;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunUpgradeRecipe;
 
 import net.minecraft.inventory.IInventory;

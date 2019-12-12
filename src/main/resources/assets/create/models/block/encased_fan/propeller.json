@@ -1,0 +1,32 @@
+{
+	"textures": {
+		"axis_top": "create:block/axis_top",
+		"fan_blades": "create:block/fan_blades",
+		"axis": "create:block/axis"
+	},
+	"elements": [
+		{
+			"name": "Shaft",
+			"from": [6, 6, 1.2],
+			"to": [10, 10, 8],
+			"faces": {
+				"north": {"uv": [6, 6, 10, 10], "texture": "#axis_top"},
+				"east": {"uv": [6, 0, 10, 6.8], "rotation": 90, "texture": "#axis"},
+				"south": {"uv": [6, 6, 10, 10], "texture": "#axis_top"},
+				"west": {"uv": [6, 0, 10, 6.8], "rotation": 90, "texture": "#axis"},
+				"up": {"uv": [6, 0, 10, 6.8], "rotation": 90, "texture": "#axis"},
+				"down": {"uv": [6, 0, 10, 6.8], "rotation": 90, "texture": "#axis"}
+			}
+		},
+		{
+			"name": "Fan",
+			"from": [1, 1, 4],
+			"to": [15, 15, 12],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"},
+				"south": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"}
+			}
+		}
+	]
+}

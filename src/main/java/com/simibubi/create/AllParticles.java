@@ -3,6 +3,7 @@ package com.simibubi.create;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.contraptions.particle.AirFlowParticle;
 import com.simibubi.create.modules.contraptions.particle.RotationIndicatorParticle;
 
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 public enum AllParticles {
 
 	ROTATION_INDICATOR(RotationIndicatorParticle.Type::new, RotationIndicatorParticle.Factory::new),
+	AIR_FLOW(AirFlowParticle.Type::new, AirFlowParticle.Factory::new),
 
 	;
 

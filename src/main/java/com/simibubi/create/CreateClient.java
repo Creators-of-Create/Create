@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.block.SpriteShifter.SpriteShiftEntry;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.modules.contraptions.WrenchModel;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.receivers.EncasedFanParticleHandler;
 import com.simibubi.create.modules.contraptions.receivers.constructs.ContraptionRenderer;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterModel;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel;
@@ -50,7 +49,6 @@ public class CreateClient {
 	public static SchematicHandler schematicHandler;
 	public static SchematicHologram schematicHologram;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
-	public static EncasedFanParticleHandler fanParticles;
 	public static SuperByteBufferCache bufferCache;
 	public static int renderTicks;
 
@@ -72,7 +70,6 @@ public class CreateClient {
 		schematicHandler = new SchematicHandler();
 		schematicHologram = new SchematicHologram();
 		schematicAndQuillHandler = new SchematicAndQuillHandler();
-		fanParticles = new EncasedFanParticleHandler();
 
 		bufferCache = new SuperByteBufferCache();
 		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
