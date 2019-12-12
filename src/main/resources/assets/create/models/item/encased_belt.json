@@ -1,3 +1,3 @@
 {
-    "parent": "create:block/encased_belt"
+    "parent": "create:block/encased_belt/single"
 }

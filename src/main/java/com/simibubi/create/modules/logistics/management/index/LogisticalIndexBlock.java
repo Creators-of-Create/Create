@@ -3,8 +3,8 @@ package com.simibubi.create.modules.logistics.management.index;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IBlockWithColorHandler;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-
 import com.simibubi.create.foundation.utility.AllShapes;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -24,7 +24,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;

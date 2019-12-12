@@ -6,9 +6,9 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
-import com.simibubi.create.modules.contraptions.generators.ConfigureMotorPacket;
-import com.simibubi.create.modules.contraptions.receivers.ConfigureMixerPacket;
-import com.simibubi.create.modules.contraptions.receivers.constructs.ConfigureChassisPacket;
+import com.simibubi.create.modules.contraptions.components.constructs.ConfigureChassisPacket;
+import com.simibubi.create.modules.contraptions.components.mixer.ConfigureMixerPacket;
+import com.simibubi.create.modules.contraptions.components.motor.ConfigureMotorPacket;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunBeamPacket;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.modules.logistics.block.diodes.ConfigureFlexpeaterPacket;

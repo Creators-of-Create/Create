@@ -2,8 +2,8 @@ package com.simibubi.create;
 
 import java.util.function.Function;
 
-import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.ContraptionEntity;
-import com.simibubi.create.modules.contraptions.receivers.constructs.mounted.ContraptionEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.constructs.mounted.ContraptionEntity;
+import com.simibubi.create.modules.contraptions.components.constructs.mounted.ContraptionEntityRenderer;
 import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
 import com.simibubi.create.modules.logistics.transport.CardboardBoxEntityRenderer;
 

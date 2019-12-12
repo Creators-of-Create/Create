@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
-import com.simibubi.create.modules.contraptions.receivers.constructs.IHaveMovementBehavior;
+import com.simibubi.create.modules.contraptions.components.constructs.IHaveMovementBehavior;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

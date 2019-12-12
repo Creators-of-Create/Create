@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.modules.contraptions.KineticDebugger;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.receivers.TurntableHandler;
+import com.simibubi.create.modules.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItemHandler;
 
 import net.minecraft.client.Minecraft;

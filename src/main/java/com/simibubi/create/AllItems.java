@@ -6,8 +6,8 @@ import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.GogglesItem;
 import com.simibubi.create.modules.contraptions.WrenchItem;
 import com.simibubi.create.modules.contraptions.WrenchItemRenderer;
-import com.simibubi.create.modules.contraptions.relays.VerticalGearboxItem;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItem;
+import com.simibubi.create.modules.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItem;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItemRenderer;
@@ -94,8 +94,6 @@ public enum AllItems {
 
 	CRUSHED_IRON(ingredient()),
 	CRUSHED_GOLD(ingredient()),
-	TIME_SCARF(ingredient()),
-	MOTION_SCARF(ingredient()),
 
 	__LOGISTICS__(),
 	CARDBOARD_BOX_1616(new CardboardBoxItem(standardItemProperties())),

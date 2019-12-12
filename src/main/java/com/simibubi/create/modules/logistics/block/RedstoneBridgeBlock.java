@@ -3,10 +3,10 @@ package com.simibubi.create.modules.logistics.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.foundation.utility.AllShapes;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;
@@ -27,7 +27,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;

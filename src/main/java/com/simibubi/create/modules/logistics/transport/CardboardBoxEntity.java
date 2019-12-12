@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllEntities;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.receivers.DrillTileEntity;
+import com.simibubi.create.modules.contraptions.components.actors.DrillTileEntity;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
 
 import net.minecraft.block.BlockState;

@@ -9,8 +9,8 @@ import com.simibubi.create.AllRecipes;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.modules.contraptions.base.ProcessingRecipe;
-import com.simibubi.create.modules.contraptions.receivers.fan.SplashingRecipe;
+import com.simibubi.create.modules.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
 

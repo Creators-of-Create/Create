@@ -41,6 +41,7 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 	public float speed;
 	protected Optional<BlockPos> source;
 	public boolean reActivateSource;
+	public int speedChangeCounter;
 
 	// Torque related
 	public float maxStress;
@@ -95,6 +96,7 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 	}
 
 	public void onSpeedChanged() {
+		speedChangeCounter += 5;
 	}
 
 	@Override
@@ -261,6 +263,11 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 	public void tick() {
 		if (world.isRemote)
 			return;
+
+		if (speedChangeCounter > 25)
+			world.destroyBlock(pos, true);
+		if (speedChangeCounter > 0)
+			speedChangeCounter--;
 
 		if (particleSpawnCountdown > 0)
 			if (--particleSpawnCountdown == 0)

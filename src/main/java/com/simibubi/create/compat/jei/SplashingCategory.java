@@ -9,8 +9,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.contraptions.base.StochasticOutput;
-import com.simibubi.create.modules.contraptions.receivers.fan.SplashingRecipe;
+import com.simibubi.create.modules.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.modules.contraptions.processing.StochasticOutput;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;

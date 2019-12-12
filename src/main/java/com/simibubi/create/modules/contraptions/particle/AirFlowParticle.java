@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.particle;
 
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.receivers.fan.EncasedFanTileEntity;
+import com.simibubi.create.modules.contraptions.components.fan.EncasedFanTileEntity;
 import com.simibubi.create.modules.logistics.InWorldProcessing;
 
 import net.minecraft.block.Blocks;

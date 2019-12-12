@@ -28,8 +28,6 @@
 	"item.create.deforester": "Deforester",
 	"item.create.crushed_iron": "Crushed Iron Ore",
 	"item.create.crushed_gold": "Crushed Gold Ore",
-	"item.create.time_scarf": "Scarf with a clock on it",
-	"item.create.motion_scarf": "Scarf of Perpetuality",
 	
 	"item.create.logistical_controller_supply": "Item Supply",
 	"item.create.logistical_controller_request": "Item Request",
@@ -521,9 +519,9 @@
 	"block.create.clutch.tooltip.behaviour1": "_Stops_ conveying rotation to the other side.",
 
 	"block.create.encased_belt.tooltip": "ENCASED_BELT",
-	"block.create.encased_belt.tooltip.summary": "_Relays_ _Rotation_ through its block and to an attached _Encased_ _Belt._",
-	"block.create.encased_belt.tooltip.condition1": "When Attached to other Encased Belt",
-	"block.create.encased_belt.tooltip.behaviour1": "Attached Block will have the exact same rotation speed and direction. Attached Belts do not have to face the same way.",
+	"block.create.encased_belt.tooltip.summary": "_Relays_ _Rotation_ through its block and to attached _Encased_ _Belts._",
+	"block.create.encased_belt.tooltip.condition1": "When Connected",
+	"block.create.encased_belt.tooltip.behaviour1": "Attached Blocks will have the exact _same_ _rotation_ _speed_ and direction. They do not have to face the same way.",
 
 	"item.create.belt_connector.tooltip": "BELT CONNECTOR",
 	"item.create.belt_connector.tooltip.summary": "Connects two _Shafts_ with a _Mechanical_ _Belt._ Connected shafts will have the exact same rotation speed and direction. The Belt can act as a _Conveyor_ for _Entities._",

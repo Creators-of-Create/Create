@@ -3,12 +3,12 @@ package com.simibubi.create;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.contraptions.base.ProcessingRecipeSerializer;
-import com.simibubi.create.modules.contraptions.receivers.CrushingRecipe;
-import com.simibubi.create.modules.contraptions.receivers.CuttingRecipe;
-import com.simibubi.create.modules.contraptions.receivers.MixingRecipe;
-import com.simibubi.create.modules.contraptions.receivers.PressingRecipe;
-import com.simibubi.create.modules.contraptions.receivers.fan.SplashingRecipe;
+import com.simibubi.create.modules.contraptions.components.crusher.CrushingRecipe;
+import com.simibubi.create.modules.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
+import com.simibubi.create.modules.contraptions.components.press.PressingRecipe;
+import com.simibubi.create.modules.contraptions.components.saw.CuttingRecipe;
+import com.simibubi.create.modules.contraptions.processing.ProcessingRecipeSerializer;
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunUpgradeRecipe;
 
 import net.minecraft.inventory.IInventory;

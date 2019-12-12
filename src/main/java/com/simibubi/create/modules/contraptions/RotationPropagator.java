@@ -13,10 +13,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
-import com.simibubi.create.modules.contraptions.relays.EncasedBeltBlock;
-import com.simibubi.create.modules.contraptions.relays.GearboxTileEntity;
-import com.simibubi.create.modules.contraptions.relays.SplitShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
+import com.simibubi.create.modules.contraptions.relays.encased.SplitShaftTileEntity;
+import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -69,9 +69,7 @@ public class RotationPropagator {
 
 		// Attached Encased Belts
 		if (AllBlocks.ENCASED_BELT.typeOf(stateFrom) && AllBlocks.ENCASED_BELT.typeOf(stateTo)) {
-			boolean connected = stateFrom.get(EncasedBeltBlock.CONNECTED) && stateTo.get(EncasedBeltBlock.CONNECTED)
-					&& stateFrom.get(EncasedBeltBlock.CONNECTED_FACE) == direction
-					&& stateTo.get(EncasedBeltBlock.CONNECTED_FACE) == direction.getOpposite();
+			boolean connected = EncasedBeltBlock.areBlocksConnected(stateFrom, stateTo, direction);
 			return connected ? 1 : 0;
 		}
 

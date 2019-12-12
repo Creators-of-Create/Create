@@ -1,7 +1,7 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.block.SpriteShifter;
-import com.simibubi.create.modules.contraptions.receivers.constructs.bearing.MechanicalBearingTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.constructs.bearing.MechanicalBearingTileEntityRenderer;
 
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;

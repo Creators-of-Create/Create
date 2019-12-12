@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.simibubi.create.foundation.world.OreGeneration;
 import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
-import com.simibubi.create.modules.contraptions.receivers.constructs.piston.MovingConstructHandler;
+import com.simibubi.create.modules.contraptions.components.constructs.piston.MovingConstructHandler;
 import com.simibubi.create.modules.logistics.FrequencyHandler;
 import com.simibubi.create.modules.logistics.management.LogisticalNetworkHandler;
 import com.simibubi.create.modules.logistics.transport.villager.LogisticianHandler;

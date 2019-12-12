@@ -28,6 +28,7 @@ public class AllShapes {
 
 				;
 
+	@SuppressWarnings("deprecation")
 	private static final VoxelShape
 		LOGISTICAL_CASING_MIDDLE_SHAPE = VoxelShapes.or(
 		makeCuboidShape(1,0,1,15,16,15),

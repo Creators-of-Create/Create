@@ -8,8 +8,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.contraptions.base.StochasticOutput;
-import com.simibubi.create.modules.contraptions.receivers.PressingRecipe;
+import com.simibubi.create.modules.contraptions.components.press.PressingRecipe;
+import com.simibubi.create.modules.contraptions.processing.StochasticOutput;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
