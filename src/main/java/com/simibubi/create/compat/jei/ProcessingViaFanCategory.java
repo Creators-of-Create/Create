@@ -20,9 +20,11 @@ import net.minecraft.util.Direction;
 
 public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements IRecipeCategory<T> {
 
+	private IDrawable background = new EmptyBackground(177, 70);
+
 	@Override
 	public IDrawable getBackground() {
-		return new ScreenResourceWrapper(ScreenResources.FAN_RECIPE);
+		return background;
 	}
 
 	@Override
@@ -34,20 +36,30 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, T recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 20, 67);
+		itemStacks.init(0, true, 20, 47);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
-		itemStacks.init(1, false, 139, 67);
+		itemStacks.init(1, false, 139, 47);
 		itemStacks.set(1, recipe.getRecipeOutput());
+	}
+
+	protected void renderWidgets(T recipe, double mouseX, double mouseY) {
+		ScreenResources.JEI_SLOT.draw(20, 47);
+		ScreenResources.JEI_SLOT.draw(139, 47);
+		ScreenResources.JEI_SHADOW.draw(47, 29);
+		ScreenResources.JEI_LIGHT.draw(66, 39);
+		ScreenResources.JEI_LONG_ARROW.draw(53, 51);
 	}
 
 	@Override
 	public void draw(T recipe, double mouseX, double mouseY) {
+		renderWidgets(recipe, mouseX, mouseY);
+
 		GlStateManager.pushMatrix();
 		GlStateManager.color3f(1, 1, 1);
 		GlStateManager.enableDepthTest();
 
-		GlStateManager.translated(28, 42, 0);
+		GlStateManager.translated(28, 18, 0);
 		GlStateManager.rotated(10.5, -1f, 0, 0);
 		GlStateManager.rotated(15.5, 0, 1, 0);
 		GlStateManager.scaled(.6f, .6f, .6f);
@@ -71,12 +83,10 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements 
 	}
 
 	protected BlockState renderFanCasing() {
-
 		return AllBlocks.ENCASED_FAN.get().getDefaultState().with(BlockStateProperties.FACING, Direction.WEST);
 	}
 
 	protected BlockState renderFanInner() {
-
 		return AllBlocks.ENCASED_FAN_INNER.get().getDefaultState().with(BlockStateProperties.FACING, Direction.WEST);
 	}
 

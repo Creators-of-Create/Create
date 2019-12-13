@@ -29,12 +29,16 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 
 	private static ResourceLocation ID = new ResourceLocation(Create.ID, "splashing");
 	private IDrawable icon;
-	private IDrawable slot;
+	private IDrawable background = new EmptyBackground(177, 70);
 
 	public SplashingCategory() {
-		slot = new ScreenResourceWrapper(ScreenResources.PROCESSING_RECIPE_SLOT);
 		icon = new DoubleItemIcon(() -> new ItemStack(AllItems.PROPELLER.get()),
 				() -> new ItemStack(Items.WATER_BUCKET));
+	}
+
+	@Override
+	public IDrawable getBackground() {
+		return background;
 	}
 
 	@Override
@@ -66,15 +70,16 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, SplashingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 20, 67);
+		itemStacks.init(0, true, 20, 47);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
 		List<StochasticOutput> results = recipe.getRollableResults();
+		boolean single = results.size() == 1;
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
 			int xOffset = outputIndex % 2 == 0 ? 0 : 19;
 			int yOffset = (outputIndex / 2) * -19;
 
-			itemStacks.init(outputIndex + 1, false, 132 + xOffset, 77 + yOffset);
+			itemStacks.init(outputIndex + 1, false, single ? 139 : 133 + xOffset, 47 + yOffset);
 			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
 		}
 
@@ -89,25 +94,28 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 	}
 
 	@Override
-	public IDrawable getBackground() {
-		return new ScreenResourceWrapper(ScreenResources.WASHING_RECIPE);
-	}
-
-	@Override
-	public void draw(SplashingRecipe recipe, double mouseX, double mouseY) {
-		super.draw(recipe, mouseX, mouseY);
+	protected void renderWidgets(SplashingRecipe recipe, double mouseX, double mouseY) {
 		int size = recipe.getPossibleOutputs().size();
-		for (int i = 4; i < size; i++) {
-			int xOffset = i % 2 == 0 ? 0 : 19;
-			int yOffset = (i / 2) * -19;
-			slot.draw(131 + xOffset, 76 + yOffset);
+
+		ScreenResources.JEI_SLOT.draw(20, 47);
+		ScreenResources.JEI_SHADOW.draw(47, 29);
+		ScreenResources.JEI_SHADOW.draw(66, 39);
+		ScreenResources.JEI_LONG_ARROW.draw(53, 51);
+
+		if (size > 1) {
+			for (int i = 0; i < size; i++) {
+				int xOffset = i % 2 == 0 ? 0 : 19;
+				int yOffset = (i / 2) * -19;
+				ScreenResources.JEI_SLOT.draw(133 + xOffset, 47 + yOffset);
+			}
+		} else {
+			ScreenResources.JEI_SLOT.draw(139, 47);
 		}
 	}
 
 	@Override
 	public void renderAttachedBlock() {
 		BlockState state = Blocks.WATER.getDefaultState().with(FlowingFluidBlock.LEVEL, 8);
-		// This is stupid
 		GlStateManager.pushMatrix();
 		GlStateManager.translated(0, 0, 200);
 

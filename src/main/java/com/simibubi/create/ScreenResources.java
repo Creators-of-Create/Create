@@ -2,6 +2,7 @@ package com.simibubi.create;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 
 public enum ScreenResources {
@@ -62,13 +63,14 @@ public enum ScreenResources {
 	SELECTED_SLOT_INNER("index.png", 18, 172, 18, 18),
 
 	// JEI
-	CRUSHING_RECIPE("recipes1.png", 177, 109),
-	FAN_RECIPE("recipes1.png", 0, 128, 177, 109),
-	BLOCKZAPPER_UPGRADE_RECIPE("recipes2.png", 144, 66),
-	PRESSER_RECIPE("recipes2.png", 0, 108, 177, 109),
-	WASHING_RECIPE("recipes3.png", 177, 109),
-	PROCESSING_RECIPE_SLOT("recipes3.png", 177, 0, 20, 20),
-	
+	JEI_SLOT("jei/widgets.png", 18, 18),
+	JEI_ARROW("jei/widgets.png", 19, 10, 42, 10),
+	JEI_LONG_ARROW("jei/widgets.png", 19, 0, 71, 10),
+	JEI_DOWN_ARROW("jei/widgets.png", 0, 21, 18, 14),
+	JEI_LIGHT("jei/widgets.png", 0, 42, 52, 11),
+	JEI_SHADOW("jei/widgets.png", 0, 56, 52, 11),
+	BLOCKZAPPER_UPGRADE_RECIPE("jei/widgets.png", 0, 75, 144, 66),
+
 	// Widgets
 	PALETTE_BUTTON("palette_picker.png", 0, 236, 20, 20),
 	TEXT_INPUT("widgets.png", 0, 28, 194, 47),
@@ -128,7 +130,7 @@ public enum ScreenResources {
 	I_PRIORITY_VERY_HIGH(112, 0),
 	I_ACTIVE(64, 16),
 	I_PASSIVE(80, 16),
-	
+
 	;
 
 	public static final int FONT_COLOR = 0x575F7A;
@@ -136,6 +138,8 @@ public enum ScreenResources {
 	public final ResourceLocation location;
 	public int width, height;
 	public int startX, startY;
+	static Screen renderer = new Screen(null) {
+	};
 
 	private ScreenResources(String location, int width, int height) {
 		this(location, 0, 0, width, height);
@@ -157,9 +161,13 @@ public enum ScreenResources {
 		Minecraft.getInstance().getTextureManager().bindTexture(location);
 	}
 
-	public void draw(AbstractGui screen, int i, int j) {
+	public void draw(AbstractGui screen, int x, int y) {
 		bind();
-		screen.blit(i, j, startX, startY, width, height);
+		screen.blit(x, y, startX, startY, width, height);
+	}
+
+	public void draw(int x, int y) {
+		draw(renderer, x, y);
 	}
 
 }

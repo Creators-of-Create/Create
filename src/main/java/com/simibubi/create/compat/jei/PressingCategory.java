@@ -25,6 +25,7 @@ public class PressingCategory implements IRecipeCategory<PressingRecipe> {
 	private AnimatedPress press;
 	private static ResourceLocation ID = new ResourceLocation(Create.ID, "pressing");
 	private IDrawable icon;
+	private IDrawable background = new EmptyBackground(177, 70);
 
 	public PressingCategory() {
 		icon = new DoubleItemIcon(() -> new ItemStack(AllBlocks.MECHANICAL_PRESS.get()),
@@ -54,7 +55,7 @@ public class PressingCategory implements IRecipeCategory<PressingRecipe> {
 
 	@Override
 	public IDrawable getBackground() {
-		return new ScreenResourceWrapper(ScreenResources.PRESSER_RECIPE);
+		return background;
 	}
 
 	@Override
@@ -66,20 +67,24 @@ public class PressingCategory implements IRecipeCategory<PressingRecipe> {
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, PressingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 27, 60);
+		itemStacks.init(0, true, 26, 50);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
 		List<StochasticOutput> results = recipe.getRollableResults();
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
-			itemStacks.init(outputIndex + 1, false, 113 + 19 * outputIndex, 60);
+			itemStacks.init(outputIndex + 1, false, 131 + 19 * outputIndex, 50);
 			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
 		}
 	}
-	
+
 	@Override
 	public void draw(PressingRecipe recipe, double mouseX, double mouseY) {
-		press.draw(ScreenResources.PRESSER_RECIPE.width / 2, 30);
-		
+		ScreenResources.JEI_SLOT.draw(26, 50);
+		ScreenResources.JEI_SLOT.draw(131, 50);
+		if (recipe.getRollableResults().size() > 1)
+			ScreenResources.JEI_SLOT.draw(131 + 19, 50);
+		ScreenResources.JEI_LONG_ARROW.draw(52, 54);
+		press.draw(getBackground().getWidth() / 2, 20);
 	}
 
 }

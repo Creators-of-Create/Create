@@ -3,7 +3,6 @@ package com.simibubi.create.compat.jei;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -47,14 +46,8 @@ public class BlastingViaFanCategory extends ProcessingViaFanCategory<AbstractCoo
 	}
 
 	@Override
-	public IDrawable getBackground() {
-		return new ScreenResourceWrapper(ScreenResources.FAN_RECIPE);
-	}
-
-	@Override
 	public void renderAttachedBlock() {
 		BlockState state = Blocks.LAVA.getDefaultState().with(FlowingFluidBlock.LEVEL, 8);
-		// This is stupid
 		GlStateManager.pushMatrix();
 		GlStateManager.translated(0, 0, 200);
 		GlStateManager.enableRescaleNormal();

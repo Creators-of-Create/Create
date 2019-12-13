@@ -26,10 +26,16 @@ public class CrushingCategory implements IRecipeCategory<CrushingRecipe> {
 	private static ResourceLocation ID = new ResourceLocation(Create.ID, "crushing");
 	private AnimatedCrushingWheels crushingWheels = new AnimatedCrushingWheels();
 	private IDrawable icon;
+	private IDrawable background = new EmptyBackground(177, 100);
 
 	public CrushingCategory() {
 		icon = new DoubleItemIcon(() -> new ItemStack(AllBlocks.CRUSHING_WHEEL.get()),
 				() -> new ItemStack(AllItems.FLOUR.get()));
+	}
+
+	@Override
+	public IDrawable getBackground() {
+		return background;
 	}
 
 	@Override
@@ -48,11 +54,6 @@ public class CrushingCategory implements IRecipeCategory<CrushingRecipe> {
 	}
 
 	@Override
-	public IDrawable getBackground() {
-		return new ScreenResourceWrapper(ScreenResources.CRUSHING_RECIPE);
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
@@ -66,12 +67,14 @@ public class CrushingCategory implements IRecipeCategory<CrushingRecipe> {
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, CrushingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 60, 2);
+		itemStacks.init(0, true, 50, 2);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
 		List<StochasticOutput> results = recipe.getRollableResults();
-		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
-			itemStacks.init(outputIndex + 1, false, 60 + 18 * outputIndex, 78);
+		int size = results.size();
+		int offset = -size * 19 / 2;
+		for (int outputIndex = 0; outputIndex < size; outputIndex++) {
+			itemStacks.init(outputIndex + 1, false, getBackground().getWidth() / 2 + offset + 19 * outputIndex, 78);
 			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
 		}
 
@@ -87,7 +90,16 @@ public class CrushingCategory implements IRecipeCategory<CrushingRecipe> {
 
 	@Override
 	public void draw(CrushingRecipe recipe, double mouseX, double mouseY) {
-		crushingWheels.draw(100, 47);
+		List<StochasticOutput> results = recipe.getRollableResults();
+		ScreenResources.JEI_SLOT.draw(50, 2);
+		ScreenResources.JEI_DOWN_ARROW.draw(72, 7);
+
+		int size = results.size();
+		int offset = -size * 19 / 2;
+		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++)
+			ScreenResources.JEI_SLOT.draw(getBackground().getWidth() / 2 + offset + 19 * outputIndex, 78);
+
+		crushingWheels.draw(92, 49);
 	}
 
 }
