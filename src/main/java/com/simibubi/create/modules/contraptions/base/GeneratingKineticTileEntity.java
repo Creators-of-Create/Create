@@ -24,6 +24,7 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 
 	public void updateGeneratedRotation() {
 		float speed = getGeneratedSpeed();
+		float prevSpeed = this.speed;
 
 		if (this.speed != speed) {
 
@@ -71,10 +72,13 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 			}
 		}
 
-		if (hasNetwork() && speed != 0)
+		if (hasNetwork() && speed != 0) {
+			getNetwork().updateCapacityFor(this, getAddedStressCapacity());
 			getNetwork().updateStressCapacity();
+			getNetwork().updateStress();
+		}
 
-		onSpeedChanged();
+		onSpeedChanged(prevSpeed);
 		sendData();
 	}
 

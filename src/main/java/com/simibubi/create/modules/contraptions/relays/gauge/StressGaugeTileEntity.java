@@ -28,8 +28,17 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 			else
 				color = 0xFF0000;
 		}
-		
+
 		sendData();
+	}
+
+	@Override
+	public void onSpeedChanged(float prevSpeed) {
+		super.onSpeedChanged(prevSpeed);
+		if (getSpeed() == 0)
+			dialTarget = 0;
+		else
+			sync(maxStress, currentStress);
 	}
 
 }

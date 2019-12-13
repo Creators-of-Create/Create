@@ -6,17 +6,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.TreeCutter;
+import com.simibubi.create.foundation.utility.TreeCutter.Tree;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.utility.recipe.RecipeFinder.StartedSearch;
+import com.simibubi.create.foundation.utility.recipe.RecipeFinder.StartedSearch.RecipeStream;
+import com.simibubi.create.modules.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.modules.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.IHaveFilter;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -28,6 +35,7 @@ import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -39,7 +47,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
+public class SawTileEntity extends BlockBreakingKineticTileEntity implements IHaveFilter {
 
 	private static final Object cuttingRecipesKey = new Object();
 	public ProcessingInventory inventory;
@@ -62,8 +70,8 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 	}
 
 	@Override
-	public void onSpeedChanged() {
-		super.onSpeedChanged();
+	public void onSpeedChanged(float prevSpeed) {
+		super.onSpeedChanged(prevSpeed);
 		boolean shouldRun = Math.abs(getSpeed()) > 1 / 64f;
 		boolean running = getBlockState().get(RUNNING);
 		if (shouldRun != running)
@@ -88,7 +96,10 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 
 	@Override
 	public void tick() {
+		if (shouldRun() && ticksUntilNextProgress < 0)
+			destroyNextTick();
 		super.tick();
+
 		if (!canProcess())
 			return;
 		if (getSpeed() == 0)
@@ -229,7 +240,7 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 		float offset = inventory.recipeDuration != 0 ? (float) (inventory.remainingTime) / inventory.recipeDuration : 0;
 		offset -= .5f;
 		world.addParticle(particleData, pos.getX() + -vec.x * offset, pos.getY() + .45f, pos.getZ() + -vec.z * offset,
-				vec.x * speed, r.nextFloat() * speed, vec.z * speed);
+				-vec.x * speed, r.nextFloat() * speed, -vec.z * speed);
 	}
 
 	public Vec3d getItemMovementVec() {
@@ -272,11 +283,11 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 	}
 
 	private List<? extends IRecipe<?>> getRecipes() {
-		return RecipeFinder
-				.get(cuttingRecipesKey, world,
-						RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipes.Types.CUTTING))
-				.search().filter(RecipeConditions.outputMatchesFilter(filter))
-				.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0))).asList();
+		StartedSearch startedSearch = RecipeFinder.get(cuttingRecipesKey, world,
+				RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipes.Types.CUTTING));
+		RecipeStream<IRecipe<?>> search = startedSearch.search();
+		return search.filter(Predicates.and(RecipeConditions.outputMatchesFilter(filter),
+				RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0))));
 	}
 
 	public void insertItem(ItemEntity entity) {
@@ -343,6 +354,43 @@ public class SawTileEntity extends KineticTileEntity implements IHaveFilter {
 	@Override
 	public ItemStack getFilter() {
 		return filter;
+	}
+
+	// Block Breaker
+
+	@Override
+	protected boolean shouldRun() {
+		return getBlockState().get(SawBlock.FACING).getAxis().isHorizontal();
+	}
+
+	@Override
+	protected BlockPos getBreakingPos() {
+		return getPos().offset(getBlockState().get(SawBlock.FACING));
+	}
+
+	@Override
+	public void onBlockBroken(BlockState stateToBreak) {
+		super.onBlockBroken(stateToBreak);
+		Tree tree = TreeCutter.cutTree(world, breakingPos);
+		if (tree != null) {
+			for (BlockPos log : tree.logs)
+				BlockHelper.destroyBlock(world, log, 1 / 2f, stack -> dropItemFromCutTree(log, stack));
+			for (BlockPos leaf : tree.leaves)
+				BlockHelper.destroyBlock(world, leaf, 1 / 8f, stack -> dropItemFromCutTree(leaf, stack));
+		}
+	}
+
+	public void dropItemFromCutTree(BlockPos pos, ItemStack stack) {
+		float distance = (float) Math.sqrt(pos.distanceSq(breakingPos));
+		Vec3d dropPos = VecHelper.getCenterOf(pos);
+		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, stack);
+		entity.setMotion(new Vec3d(breakingPos.subtract(this.pos)).scale(distance / 20f));
+		world.addEntity(entity);
+	}
+
+	@Override
+	public boolean canBreak(BlockState stateToBreak, float blockHardness) {
+		return super.canBreak(stateToBreak, blockHardness) && stateToBreak.isIn(BlockTags.LOGS);
 	}
 
 }

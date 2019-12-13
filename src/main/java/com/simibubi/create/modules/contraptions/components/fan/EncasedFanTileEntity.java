@@ -84,8 +84,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public void onSpeedChanged() {
-		super.onSpeedChanged();
+	public void onSpeedChanged(float prevSpeed) {
+		super.onSpeedChanged(prevSpeed);
 		updateAirFlow = true;
 	}
 

@@ -38,11 +38,11 @@ public class KineticNetwork {
 			return;
 		if (te.isSource()) {
 			float capacity = te.getAddedStressCapacity();
-			unloadedStressCapacity -= capacity;
+			unloadedStressCapacity -= capacity * getStressMultiplierForSpeed(te.getGeneratedSpeed());
 			sources.put(te, capacity);
 		}
 		float stressApplied = te.getStressApplied();
-		unloadedStress -= stressApplied;
+		unloadedStress -= stressApplied * getStressMultiplierForSpeed(te.speed);
 		members.put(te, stressApplied);
 	}
 

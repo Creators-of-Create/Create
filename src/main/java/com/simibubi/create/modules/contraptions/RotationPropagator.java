@@ -176,14 +176,14 @@ public class RotationPropagator {
 				continue;
 			if (neighbourTE.hasSource() && neighbourTE.getSource().equals(addedTE.getPos())) {
 				addedTE.setSpeed(neighbourTE.speed * speedModifier);
-				addedTE.onSpeedChanged();
+				addedTE.onSpeedChanged(0);
 				addedTE.sendData();
 				continue;
 			}
 
 			addedTE.setSpeed(neighbourTE.speed * speedModifier);
 			addedTE.setSource(neighbourTE.getPos());
-			addedTE.onSpeedChanged();
+			addedTE.onSpeedChanged(0);
 			addedTE.sendData();
 			propagateNewSource(addedTE);
 			return;
@@ -209,7 +209,8 @@ public class RotationPropagator {
 					&& (newSpeed != 0 && neighbourTE.speed != 0);
 
 			boolean tooFast = Math.abs(newSpeed) > parameters.maxRotationSpeed.get();
-			if (tooFast) {
+			boolean speedChangedTooOften = updateTE.speedChangeCounter > 25;
+			if (tooFast || speedChangedTooOften) {
 				world.destroyBlock(pos, true);
 				return;
 			}
@@ -224,8 +225,9 @@ public class RotationPropagator {
 				if (Math.abs(oppositeSpeed) > Math.abs(updateTE.speed)) {
 					// Neighbour faster, overpower the incoming tree
 					updateTE.setSource(neighbourTE.getPos());
+					float prevSpeed = updateTE.getSpeed();
 					updateTE.setSpeed(neighbourTE.speed * getRotationSpeedModifier(neighbourTE, updateTE));
-					updateTE.onSpeedChanged();
+					updateTE.onSpeedChanged(prevSpeed);
 					updateTE.sendData();
 
 					propagateNewSource(updateTE);
@@ -241,8 +243,9 @@ public class RotationPropagator {
 						}
 
 						neighbourTE.setSource(updateTE.getPos());
+						float prevSpeed = neighbourTE.getSpeed();
 						neighbourTE.setSpeed(updateTE.speed * getRotationSpeedModifier(updateTE, neighbourTE));
-						neighbourTE.onSpeedChanged();
+						neighbourTE.onSpeedChanged(prevSpeed);
 						neighbourTE.sendData();
 						propagateNewSource(neighbourTE);
 					}
@@ -253,9 +256,10 @@ public class RotationPropagator {
 			if (neighbourTE.speed == newSpeed)
 				continue;
 
+			float prevSpeed = neighbourTE.getSpeed();
 			neighbourTE.setSpeed(newSpeed);
 			neighbourTE.setSource(updateTE.getPos());
-			neighbourTE.onSpeedChanged();
+			neighbourTE.onSpeedChanged(prevSpeed);
 			neighbourTE.sendData();
 			propagateNewSource(neighbourTE);
 

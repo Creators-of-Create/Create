@@ -64,8 +64,9 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 		this.currentStress = currentStress;
 		boolean overStressed = maxStress < currentStress;
 		if (overStressed != this.overStressed) {
+			float prevSpeed = getSpeed();
 			this.overStressed = overStressed;
-			onSpeedChanged();
+			onSpeedChanged(prevSpeed);
 			sendData();
 		}
 	}
@@ -95,8 +96,12 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 		return true;
 	}
 
-	public void onSpeedChanged() {
-		speedChangeCounter += 5;
+	public void onSpeedChanged(float previousSpeed) {
+		boolean fromOrToZero = (previousSpeed == 0) != (getSpeed() == 0);
+		boolean directionSwap = !fromOrToZero && Math.signum(previousSpeed) != Math.signum(getSpeed());
+		if (fromOrToZero || directionSwap) {
+			speedChangeCounter += 5;
+		}
 	}
 
 	@Override
@@ -217,8 +222,9 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 		this.source = Optional.empty();
 		newNetworkID = null;
 		updateNetwork = true;
+		float prevSpeed = getSpeed();
 		setSpeed(0);
-		onSpeedChanged();
+		onSpeedChanged(prevSpeed);
 	}
 
 	public KineticNetwork getNetwork() {
@@ -263,9 +269,6 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 	public void tick() {
 		if (world.isRemote)
 			return;
-
-		if (speedChangeCounter > 25)
-			world.destroyBlock(pos, true);
 		if (speedChangeCounter > 0)
 			speedChangeCounter--;
 

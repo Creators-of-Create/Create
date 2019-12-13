@@ -13,13 +13,13 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void onSpeedChanged() {
-		super.onSpeedChanged();
+	public void onSpeedChanged(float prevSpeed) {
+		super.onSpeedChanged(prevSpeed);
 		for (Direction d : Direction.values())
 			((CrushingWheelBlock) getBlockState().getBlock()).updateControllers(getBlockState(), getWorld(), getPos(),
 					d);
 	}
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return new AxisAlignedBB(pos).grow(1);

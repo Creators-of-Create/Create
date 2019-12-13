@@ -14,8 +14,8 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 	}
 
 	@Override
-	public void onSpeedChanged() {
-		super.onSpeedChanged();
+	public void onSpeedChanged(float prevSpeed) {
+		super.onSpeedChanged(prevSpeed);
 		float speed = Math.abs(getSpeed());
 		float medium = CreateConfig.parameters.mediumSpeed.get().floatValue();
 		float fast = CreateConfig.parameters.fastSpeed.get().floatValue();

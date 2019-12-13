@@ -45,7 +45,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		if (!isWindmill && running) {
 			updateGeneratedRotation();
 			if (getSpeed() == 0)
-				disassembleConstruct();
+				assembleNextTick = true;
 		}
 
 		sendData();
@@ -89,8 +89,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	@Override
-	public void onSpeedChanged() {
-		super.onSpeedChanged();
+	public void onSpeedChanged(float prevSpeed) {
+		super.onSpeedChanged(prevSpeed);
 		assembleNextTick = true;
 	}
 

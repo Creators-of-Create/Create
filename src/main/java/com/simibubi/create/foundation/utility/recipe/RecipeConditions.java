@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.utility.recipe;
 
-import java.util.function.Predicate;
+import com.google.common.base.Predicate;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;

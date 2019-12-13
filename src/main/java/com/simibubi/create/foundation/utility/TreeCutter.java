@@ -49,6 +49,8 @@ public class TreeCutter {
 		// Find all logs
 		while (!frontier.isEmpty()) {
 			BlockPos currentPos = frontier.remove(0);
+			if (visited.contains(currentPos))
+				continue;
 			visited.add(currentPos);
 
 			if (!isLog(reader.getBlockState(currentPos)))
@@ -63,6 +65,9 @@ public class TreeCutter {
 		frontier.addAll(logs);
 		while (!frontier.isEmpty()) {
 			BlockPos currentPos = frontier.remove(0);
+			if (!logs.contains(currentPos))
+				if (visited.contains(currentPos))
+					continue;
 			visited.add(currentPos);
 
 			BlockState blockState = reader.getBlockState(currentPos);

@@ -43,5 +43,7 @@ public class Debug {
 		}
 		return text + TextFormatting.GRAY + " ...";
 	}
+	
+	public static void markTemporary() {};
 
 }

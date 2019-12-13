@@ -60,8 +60,8 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void onSpeedChanged() {
-		super.onSpeedChanged();
+	public void onSpeedChanged(float prevSpeed) {
+		super.onSpeedChanged(prevSpeed);
 		checkBasin = true;
 	}
 

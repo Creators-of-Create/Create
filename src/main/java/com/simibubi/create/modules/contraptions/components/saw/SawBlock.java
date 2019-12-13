@@ -148,8 +148,8 @@ public class SawBlock extends DirectionalAxisKineticBlock
 
 	@Override
 	public Vec3d getFilterPosition(BlockState state) {
-		Vec3d x = new Vec3d(8f / 16f, 12.5f / 16f + 1f/256f, 12.25f / 16f);
-		Vec3d z = new Vec3d(12.25f / 16f, 12.5f / 16f + 1f/256f, 8f / 16f);
+		Vec3d x = new Vec3d(8f / 16f, 12.5f / 16f + 1f / 256f, 12.25f / 16f);
+		Vec3d z = new Vec3d(12.25f / 16f, 12.5f / 16f + 1f / 256f, 8f / 16f);
 		return state.get(AXIS_ALONG_FIRST_COORDINATE) ? z : x;
 	}
 
@@ -157,7 +157,7 @@ public class SawBlock extends DirectionalAxisKineticBlock
 	public float getFilterAngle(BlockState state) {
 		return 0;
 	}
-	
+
 	@Override
 	public boolean isFilterVisible(BlockState state) {
 		return state.get(FACING) == Direction.UP;

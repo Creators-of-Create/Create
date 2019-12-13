@@ -59,6 +59,8 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 			rainbowMode = true;
 			if (te.hasNetwork())
 				buffer.color(LogisticalActorTileEntity.colorFromUUID(te.getNetworkID()));
+			else
+				buffer.color(0xFFFFFF);
 		}
 
 		return buffer;

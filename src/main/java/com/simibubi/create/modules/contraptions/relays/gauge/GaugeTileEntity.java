@@ -31,12 +31,6 @@ public class GaugeTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void removeSource() {
-		super.removeSource();
-		dialTarget = 0;
-	}
-	
-	@Override
 	public void tick() {
 		super.tick();
 		prevDialState = dialState;

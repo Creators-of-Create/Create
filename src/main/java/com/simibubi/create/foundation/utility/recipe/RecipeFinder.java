@@ -50,14 +50,9 @@ public class RecipeFinder {
 			public <X extends IRecipe<?>> RecipeStream<X> assumeType(IRecipeType<X> type) {
 				return (RecipeStream<X>) this;
 			}
-			
-			public RecipeStream<R> filter(Predicate<R> condition) {
-				stream.filter(condition);
-				return this;
-			}
-			
-			public List<R> asList() {
-				return stream.collect(Collectors.toList());
+
+			public List<R> filter(Predicate<R> condition) {
+				return stream.filter(condition).collect(Collectors.toList());
 			}
 
 		}

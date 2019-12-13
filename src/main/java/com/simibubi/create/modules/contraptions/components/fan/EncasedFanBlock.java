@@ -29,18 +29,13 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements IWithTil
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		notifyFanTile(worldIn, pos);
+		blockUpdate(state, worldIn, pos);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
-		notifyFanTile(worldIn, pos);
-
-		if (worldIn.isRemote || getRotationAxis(state).isHorizontal())
-			return;
-
-		withTileEntityDo(worldIn, pos, EncasedFanTileEntity::updateGenerator);
+		blockUpdate(state, worldIn, pos);
 	}
 
 	@Override
@@ -50,6 +45,13 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements IWithTil
 			preferredFacing = context.getNearestLookingDirection();
 		return getDefaultState().with(FACING,
 				context.isPlacerSneaking() ? preferredFacing : preferredFacing.getOpposite());
+	}
+
+	protected void blockUpdate(BlockState state, World worldIn, BlockPos pos) {
+		notifyFanTile(worldIn, pos);
+		if (worldIn.isRemote || state.get(FACING) != Direction.DOWN)
+			return;
+		withTileEntityDo(worldIn, pos, EncasedFanTileEntity::updateGenerator);
 	}
 
 	protected void notifyFanTile(IWorld world, BlockPos pos) {
