@@ -43,7 +43,9 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 			results.add(new StochasticOutput(itemstack, chance));
 		}
 
-		int duration = JSONUtils.getInt(json, "processingTime");
+		int duration = -1;
+		if (JSONUtils.hasField(json, "processingTime"))
+			duration = JSONUtils.getInt(json, "processingTime");
 
 		return this.factory.create(recipeId, s, ingredients, results, duration);
 	}

@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions.processing;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
-import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerTileEntity;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -27,7 +26,7 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 			markDirty();
 		}
 	};
-	
+
 	public class BasinInputInventory extends RecipeWrapper {
 		public BasinInputInventory() {
 			super(inputInventory);
@@ -99,15 +98,15 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 		compound.put("OutputItems", outputInventory.serializeNBT());
 		return compound;
 	}
-	
+
 	public void onEmptied() {
 		TileEntity te = world.getTileEntity(pos.up(2));
 		if (te == null)
 			return;
-		if (te instanceof MechanicalMixerTileEntity)
-			((MechanicalMixerTileEntity) te).basinRemoved = true;
+		if (te instanceof BasinOperatingTileEntity)
+			((BasinOperatingTileEntity) te).basinRemoved = true;
 	}
-	
+
 	@Override
 	public void remove() {
 		onEmptied();
@@ -131,8 +130,8 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 		TileEntity te = world.getTileEntity(pos.up(2));
 		if (te == null)
 			return;
-		if (te instanceof MechanicalMixerTileEntity)
-			((MechanicalMixerTileEntity) te).checkBasin = true;
+		if (te instanceof BasinOperatingTileEntity)
+			((BasinOperatingTileEntity) te).checkBasin = true;
 
 	}
 

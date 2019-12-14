@@ -19,7 +19,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
 
 public class CrushingCategory implements IRecipeCategory<CrushingRecipe> {
 
@@ -78,14 +77,7 @@ public class CrushingCategory implements IRecipeCategory<CrushingRecipe> {
 			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
 		}
 
-		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
-			if (input)
-				return;
-			StochasticOutput output = results.get(slotIndex - 1);
-			if (output.getChance() != 1)
-				tooltip.add(1, TextFormatting.GOLD
-						+ Lang.translate("recipe.processing.chance", (int) (output.getChance() * 100)));
-		});
+		CreateJEI.addStochasticTooltip(itemStacks, results);
 	}
 
 	@Override

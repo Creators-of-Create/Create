@@ -1,0 +1,18 @@
+{
+    "type": "create:mixing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:andesite"
+    	},
+		{
+    		"item": "minecraft:iron_nugget"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "create:andesite_alloy_cube",
+			"count": 1
+		}
+	]
+}

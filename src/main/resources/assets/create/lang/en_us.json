@@ -184,7 +184,11 @@
 	"create.recipe.smokingViaFan.fan": "Fan behind Fire",
 	"create.recipe.blastingViaFan": "Bulk Smelting",
 	"create.recipe.blastingViaFan.fan": "Fan behind Lava",
-	"create.recipe.pressing": "Mechanical Press",
+	"create.recipe.pressing": "Pressing",
+	"create.recipe.mixing": "Mixing",
+	"create.recipe.packing": "Compressing",
+	"create.recipe.sawing": "Sawing",
+	"create.recipe.block_cutting": "Block Cutting",
 	"create.recipe.blockzapperUpgrade": "Handheld Blockzapper",
 	"create.recipe.processing.chance": "%1$s%% Chance",
 
@@ -571,7 +575,7 @@
 	"block.create.mechanical_mixer.tooltip.condition1": "When above Basin",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "Starts to mix items in the basin whenever all necessary ingredients are present.",
 	"block.create.mechanical_mixer.tooltip.condition2": "When used with Wrench",
-	"block.create.mechanical_mixer.tooltip.behaviour2": "_Configures_ the minimum amount of _different_ _ingredients_ required before the mixer should begin. Use this option to rule out unwanted recipes with similar but less ingredients.",
+	"block.create.mechanical_mixer.tooltip.behaviour2": "_Configures_ the minimum amount of _total_ _ingredients_ for applied recipes. Use this option to _rule_ _out_ _unwanted_ _recipes_ with similar but less ingredients.",
 
 	"block.create.mechanical_piston.tooltip": "MECHANICAL PISTON",
 	"block.create.mechanical_piston.tooltip.summary": "A more advanced version of the _Piston,_ using _Rotational_ _Force_ to precisely move attached structures. _Piston_ _Extension_ _Poles_ at the rear define the _Range_ of this Device. Without extensions, the piston will not move. Use _Translation_ _Chassis_ to move more than a single line of blocks.",

@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity.Mode;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
@@ -62,7 +63,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 
 		if (worldIn.isBlockPowered(pos)) {
 			if (!te.finished && !te.running && te.getSpeed() != 0)
-				te.start(false);
+				te.start(Mode.WORLD);
 		} else {
 			te.finished = false;
 		}
@@ -139,7 +140,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 			return false;
 
 		state.processingDuration = 1;
-		pressTe.start(true);
+		pressTe.start(Mode.BELT);
 		return true;
 	}
 
@@ -156,6 +157,10 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 		if (pressTe.running) {
 			if (pressTe.runningTicks == 30) {
 				Optional<PressingRecipe> recipe = pressTe.getRecipe(transportedStack.stack);
+				
+				pressTe.pressedItems.clear();
+				pressTe.pressedItems.add(transportedStack.stack);
+				
 				if (!recipe.isPresent())
 					return false;
 				ItemStack out = recipe.get().getRecipeOutput().copy();
@@ -167,6 +172,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 				TileEntity controllerTE = te.getWorld().getTileEntity(te.getController());
 				if (controllerTE != null && controllerTE instanceof BeltTileEntity)
 					((SyncedTileEntity) controllerTE).sendData();
+				pressTe.sendData();
 			}
 			return true;
 		}

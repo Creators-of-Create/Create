@@ -14,6 +14,12 @@ import net.minecraft.util.Direction.Axis;
 
 public class AnimatedPress extends AnimatedKinetics {
 
+	private boolean basin;
+	
+	public AnimatedPress(boolean basin) {
+		this.basin = basin;
+	}
+	
 	@Override
 	public int getWidth() {
 		return 50;
@@ -45,6 +51,12 @@ public class AnimatedPress extends AnimatedKinetics {
 		GlStateManager.pushMatrix();
 		ScreenElementRenderer.renderBlock(this::head);
 		GlStateManager.popMatrix();
+		
+		if (basin) {
+			GlStateManager.pushMatrix();
+			ScreenElementRenderer.renderBlock(this::basin);
+			GlStateManager.popMatrix();
+		}
 
 		GlStateManager.popMatrix();
 	}
@@ -78,6 +90,11 @@ public class AnimatedPress extends AnimatedKinetics {
 		GlStateManager.translated(0, -verticalOffset * 50, 0);
 		return AllBlocks.MECHANICAL_PRESS_HEAD.get().getDefaultState().with(BlockStateProperties.HORIZONTAL_FACING,
 				Direction.EAST);
+	}
+	
+	private BlockState basin() {
+		GlStateManager.translatef(0, 85, 0);
+		return AllBlocks.BASIN.get().getDefaultState();
 	}
 
 }

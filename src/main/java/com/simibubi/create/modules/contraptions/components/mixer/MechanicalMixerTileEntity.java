@@ -3,66 +3,47 @@ package com.simibubi.create.modules.contraptions.components.mixer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
-import com.simibubi.create.modules.contraptions.processing.BasinTileEntity;
+import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.modules.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.modules.contraptions.processing.BasinTileEntity.BasinInventory;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-public class MechanicalMixerTileEntity extends KineticTileEntity {
+public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
+
+	private static Object shapelessOrMixingRecipesKey = new Object();
 
 	public int runningTicks;
 	public int processingTicks;
 	public boolean running;
-	public boolean checkBasin;
-	public boolean basinRemoved;
 
 	public int minIngredients;
 	public int currentValue;
 	public int lastModified;
 
-	private ShapelessRecipe lastRecipe;
-	private LazyOptional<IItemHandler> basinInv = LazyOptional.empty();
-	private List<ItemStack> inputs;
-
 	public MechanicalMixerTileEntity() {
 		super(AllTileEntities.MECHANICAL_MIXER.type);
-		checkBasin = true;
 		minIngredients = currentValue = 1;
 		lastModified = -1;
 		processingTicks = -1;
-	}
-
-	@Override
-	public void onSpeedChanged(float prevSpeed) {
-		super.onSpeedChanged(prevSpeed);
-		checkBasin = true;
 	}
 
 	public float getRenderedHeadOffset(float partialTicks) {
@@ -132,7 +113,6 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 
 	@Override
 	public void tick() {
-		super.tick();
 
 		if (world.isRemote && lastModified != -1) {
 			if (lastModified++ > 10) {
@@ -141,18 +121,12 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 			}
 		}
 
-		if (runningTicks == 40) {
+		super.tick();
+
+		if (runningTicks >= 40) {
 			running = false;
 			runningTicks = 0;
 			return;
-		}
-
-		if (basinRemoved) {
-			basinRemoved = false;
-			if (running) {
-				runningTicks = 40;
-				return;
-			}
 		}
 
 		float speed = Math.abs(getSpeed());
@@ -163,58 +137,21 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 			if (!world.isRemote && runningTicks == 20) {
 				if (processingTicks < 0) {
 					processingTicks = (MathHelper.log2((int) (8000 / speed))) * 15 + 1;
-					return;
-				}
-				processingTicks--;
-				if (processingTicks == 0) {
-					runningTicks++;
-					processingTicks = -1;
-					applyRecipe();
-					sendData();
+				} else {
+					processingTicks--;
+					if (processingTicks == 0) {
+						runningTicks++;
+						processingTicks = -1;
+						applyBasinRecipe();
+						sendData();
+					}
 				}
 			}
 
 			if (runningTicks != 20)
 				runningTicks++;
-
-			return;
 		}
 
-		if (!isSpeedRequirementFulfilled())
-			return;
-		if (!checkBasin)
-			return;
-		checkBasin = false;
-		TileEntity basinTE = world.getTileEntity(pos.down(2));
-		if (basinTE == null || !(basinTE instanceof BasinTileEntity))
-			return;
-		if (!basinInv.isPresent())
-			basinInv = basinTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-		if (!basinInv.isPresent())
-			return;
-
-		if (world.isRemote)
-			return;
-
-		gatherInputs();
-		if (matchRecipe(lastRecipe)) {
-			running = true;
-			runningTicks = 0;
-			sendData();
-			return;
-		}
-
-		List<IRecipe<?>> shapelessRecipe = world.getRecipeManager().getRecipes().parallelStream()
-				.filter(recipe -> recipe.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS)
-				.filter(this::matchRecipe).sorted((r1, r2) -> r1.getIngredients().size() - r2.getIngredients().size())
-				.collect(Collectors.toList());
-		if (shapelessRecipe.isEmpty())
-			return;
-
-		running = true;
-		runningTicks = 0;
-		lastRecipe = (ShapelessRecipe) shapelessRecipe.get(0);
-		sendData();
 	}
 
 	public void renderParticles() {
@@ -240,64 +177,20 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 		}
 	}
 
-	public void gatherInputs() {
-		BasinInventory inv = (BasinInventory) basinInv.orElse(null);
-		inputs = new ArrayList<>();
-		IItemHandlerModifiable inputHandler = inv.getInputHandler();
-		for (int slot = 0; slot < inputHandler.getSlots(); ++slot) {
-			ItemStack itemstack = inputHandler.extractItem(slot, inputHandler.getSlotLimit(slot), true);
-			if (!itemstack.isEmpty()) {
-				inputs.add(itemstack);
-			}
-		}
+	@Override
+	protected <C extends IInventory> boolean matchStaticFilters(IRecipe<C> r) {
+		return (r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS || r.getType() == AllRecipes.MIXING.type)
+				&& !MechanicalPressTileEntity.canCompress(r.getIngredients());
 	}
 
-	public void applyRecipe() {
-		if (lastRecipe == null)
-			return;
-		if (!basinInv.isPresent())
-			return;
-
-		BasinInventory inv = (BasinInventory) basinInv.orElse(null);
-		if (inv == null)
-			return;
-
-		IItemHandlerModifiable inputs = inv.getInputHandler();
-		IItemHandlerModifiable outputs = inv.getOutputHandler();
-		int buckets = 0;
-		Ingredients: for (Ingredient ingredient : lastRecipe.getIngredients()) {
-			for (int slot = 0; slot < inputs.getSlots(); slot++) {
-				if (!ingredient.test(inputs.extractItem(slot, 1, true)))
-					continue;
-				ItemStack extracted = inputs.extractItem(slot, 1, false);
-				if (extracted.getItem() instanceof BucketItem)
-					buckets++;
-				continue Ingredients;
-			}
-			// something wasn't found
-			return;
-		}
-
-		ItemHandlerHelper.insertItemStacked(outputs, lastRecipe.getRecipeOutput().copy(), false);
-		if (buckets > 0)
-			ItemHandlerHelper.insertItemStacked(outputs, new ItemStack(Items.BUCKET, buckets), false);
-
-		// Continue mixing
-		gatherInputs();
-		if (matchRecipe(lastRecipe)) {
-			runningTicks = 20;
-			sendData();
-		}
-	}
-
-	public <C extends IInventory> boolean matchRecipe(IRecipe<C> recipe) {
-		if (!(recipe instanceof ShapelessRecipe))
+	@Override
+	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
+		if (recipe == null)
 			return false;
 		if (recipe.getIngredients().size() < minIngredients)
 			return false;
 
-		ShapelessRecipe shapelessRecipe = (ShapelessRecipe) recipe;
-		NonNullList<Ingredient> ingredients = shapelessRecipe.getIngredients();
+		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		if (!ingredients.stream().allMatch(Ingredient::isSimple))
 			return false;
 
@@ -319,6 +212,35 @@ public class MechanicalMixerTileEntity extends KineticTileEntity {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public void startProcessingBasin() {
+		if (running)
+			return;
+		super.startProcessingBasin();
+		running = true;
+		runningTicks = 0;
+	}
+
+	@Override
+	public boolean continueWithPreviousRecipe() {
+		runningTicks = 20;
+		return true;
+	}
+
+	@Override
+	protected void basinRemoved() {
+		super.basinRemoved();
+		if (running) {
+			runningTicks = 40;
+			running = false;
+		}
+	}
+
+	@Override
+	protected Object getRecipeCacheKey() {
+		return shapelessOrMixingRecipesKey;
 	}
 
 }

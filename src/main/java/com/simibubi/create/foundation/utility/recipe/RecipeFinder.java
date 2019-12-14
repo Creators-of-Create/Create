@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -13,7 +12,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.world.World;
 
 /**
@@ -26,38 +24,7 @@ import net.minecraft.world.World;
  */
 public class RecipeFinder {
 
-	private static Cache<Object, StartedSearch> cachedSearches = CacheBuilder.newBuilder().build();
-
-	public static class StartedSearch {
-		List<IRecipe<?>> findings;
-
-		public StartedSearch(List<IRecipe<?>> findings) {
-			this.findings = findings;
-		}
-
-		public RecipeStream<IRecipe<?>> search() {
-			return new RecipeStream<>(findings.stream());
-		}
-
-		public static class RecipeStream<R extends IRecipe<?>> {
-			Stream<R> stream;
-
-			public RecipeStream(Stream<R> stream) {
-				this.stream = stream;
-			}
-
-			@SuppressWarnings("unchecked")
-			public <X extends IRecipe<?>> RecipeStream<X> assumeType(IRecipeType<X> type) {
-				return (RecipeStream<X>) this;
-			}
-
-			public List<R> filter(Predicate<R> condition) {
-				return stream.filter(condition).collect(Collectors.toList());
-			}
-
-		}
-
-	}
+	private static Cache<Object, List<IRecipe<?>>> cachedSearches = CacheBuilder.newBuilder().build();
 
 	/**
 	 * Find all IRecipes matching the condition predicate. If this search is made
@@ -69,7 +36,7 @@ public class RecipeFinder {
 	 * @param conditions
 	 * @return A started search to continue with more specific conditions.
 	 */
-	public static StartedSearch get(@Nullable Object cacheKey, World world, Predicate<IRecipe<?>> conditions) {
+	public static List<IRecipe<?>> get(@Nullable Object cacheKey, World world, Predicate<IRecipe<?>> conditions) {
 		if (cacheKey == null)
 			return startSearch(world, conditions);
 
@@ -79,13 +46,13 @@ public class RecipeFinder {
 			e.printStackTrace();
 		}
 
-		return new StartedSearch(Collections.emptyList());
+		return Collections.emptyList();
 	}
 
-	private static StartedSearch startSearch(World world, Predicate<? super IRecipe<?>> conditions) {
+	private static List<IRecipe<?>> startSearch(World world, Predicate<? super IRecipe<?>> conditions) {
 		List<IRecipe<?>> list = world.getRecipeManager().getRecipes().stream().filter(conditions)
 				.collect(Collectors.toList());
-		return new StartedSearch(list);
+		return list;
 	}
 
 }

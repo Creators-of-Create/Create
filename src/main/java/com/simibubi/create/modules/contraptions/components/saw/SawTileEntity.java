@@ -5,8 +5,8 @@ import static com.simibubi.create.modules.contraptions.components.saw.SawBlock.R
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
-import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
@@ -16,8 +16,6 @@ import com.simibubi.create.foundation.utility.TreeCutter.Tree;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
-import com.simibubi.create.foundation.utility.recipe.RecipeFinder.StartedSearch;
-import com.simibubi.create.foundation.utility.recipe.RecipeFinder.StartedSearch.RecipeStream;
 import com.simibubi.create.modules.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.modules.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
@@ -283,11 +281,11 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements IHa
 	}
 
 	private List<? extends IRecipe<?>> getRecipes() {
-		StartedSearch startedSearch = RecipeFinder.get(cuttingRecipesKey, world,
+		List<IRecipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, world,
 				RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipes.Types.CUTTING));
-		RecipeStream<IRecipe<?>> search = startedSearch.search();
-		return search.filter(Predicates.and(RecipeConditions.outputMatchesFilter(filter),
-				RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0))));
+		return startedSearch.stream().filter(RecipeConditions.outputMatchesFilter(filter))
+				.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0)))
+				.collect(Collectors.toList());
 	}
 
 	public void insertItem(ItemEntity entity) {
