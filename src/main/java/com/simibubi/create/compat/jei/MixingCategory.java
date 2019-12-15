@@ -12,6 +12,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -20,12 +21,11 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
-public class MixingCategory implements IRecipeCategory<IRecipe<?>> {
+public class MixingCategory implements IRecipeCategory<MixingRecipe> {
 
 	private AnimatedMixer mixer;
 	private static ResourceLocation ID = new ResourceLocation(Create.ID, "mixing");
@@ -59,13 +59,13 @@ public class MixingCategory implements IRecipeCategory<IRecipe<?>> {
 	}
 
 	@Override
-	public void setIngredients(IRecipe<?> recipe, IIngredients ingredients) {
+	public void setIngredients(MixingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
 		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipe<?> recipe, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayout recipeLayout, MixingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 
 		NonNullList<Ingredient> recipeIngredients = recipe.getIngredients();
@@ -91,7 +91,7 @@ public class MixingCategory implements IRecipeCategory<IRecipe<?>> {
 	}
 
 	@Override
-	public void draw(IRecipe<?> recipe, double mouseX, double mouseY) {
+	public void draw(MixingRecipe recipe, double mouseX, double mouseY) {
 		List<Pair<Ingredient, MutableInt>> actualIngredients = ItemHelper.condenseIngredients(recipe.getIngredients());
 
 		int size = actualIngredients.size();
@@ -104,10 +104,9 @@ public class MixingCategory implements IRecipeCategory<IRecipe<?>> {
 		mixer.draw(getBackground().getWidth() / 2 + 20, 8);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public Class<? extends IRecipe<?>> getRecipeClass() {
-		return (Class<? extends IRecipe<?>>) IRecipe.class;
+	public Class<? extends MixingRecipe> getRecipeClass() {
+		return MixingRecipe.class;
 	}
 
 }

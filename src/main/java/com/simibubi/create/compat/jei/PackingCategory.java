@@ -14,6 +14,7 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
@@ -42,10 +43,9 @@ public class PackingCategory implements IRecipeCategory<IRecipe<?>> {
 		return ID;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Class<? extends IRecipe<?>> getRecipeClass() {
-		return (Class<? extends IRecipe<?>>) IRecipe.class;
+		return ICraftingRecipe.class;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import com.simibubi.create.AllRecipes;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.modules.contraptions.processing.StochasticOutput;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateScreen;
@@ -90,11 +91,10 @@ public class CreateJEI implements IModPlugin {
 		registration.addRecipes(findRecipesByTypeExcluding(IRecipeType.SMELTING, IRecipeType.SMOKING),
 				blastingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipes.MIXING), mixingCategory.getUid());
-		registration
-				.addRecipes(
-						findRecipes(r -> r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS
-								&& !MechanicalPressTileEntity.canCompress(r.getIngredients())),
-						mixingCategory.getUid());
+		registration.addRecipes(findRecipes(r -> r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS
+				&& !MechanicalPressTileEntity.canCompress(r.getIngredients())).stream().map(MixingRecipe::of)
+						.collect(Collectors.toList()),
+				mixingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipes.CUTTING), sawingCategory.getUid());
 		registration.addRecipes(
 				CondensedBlockCuttingRecipe.condenseRecipes(findRecipesByType(IRecipeType.STONECUTTING)),
