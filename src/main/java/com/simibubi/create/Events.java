@@ -29,7 +29,7 @@ public class Events {
 
 	@SubscribeEvent
 	public static void onTick(ServerTickEvent event) {
-		if (event.phase == Phase.START)
+		if (event.phase == Phase.END)
 			return;
 
 		Create.tick();

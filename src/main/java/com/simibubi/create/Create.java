@@ -1,5 +1,9 @@
 package com.simibubi.create;
 
+import com.simibubi.create.foundation.command.CreateCommand;
+import com.simibubi.create.foundation.command.ServerLagger;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,12 +48,15 @@ public class Create {
 	public static LogisticalNetworkHandler logisticalNetworkHandler;
 	public static TorquePropagator torquePropagator;
 	public static LogisticianHandler logisticianHandler;
+	public static ServerLagger lagger;
 
 	public static ModConfig config;
 
 	public Create() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(Create::init);
+
+		MinecraftForge.EVENT_BUS.addListener(Create::serverStarting);
 
 		modEventBus.addGenericListener(Block.class, AllBlocks::register);
 		modEventBus.addGenericListener(Item.class, AllItems::register);
@@ -74,9 +81,14 @@ public class Create {
 		frequencyHandler = new FrequencyHandler();
 		logisticalNetworkHandler = new LogisticalNetworkHandler();
 		torquePropagator = new TorquePropagator();
+		lagger = new ServerLagger();
 
 		CraftingHelper.register(new ModuleLoadedCondition.Serializer());
 		AllPackets.registerPackets();
+	}
+
+	public static void serverStarting(FMLServerStartingEvent event){
+		new CreateCommand(event.getCommandDispatcher());
 	}
 
 	public static void registerVillagerProfessions(RegistryEvent.Register<VillagerProfession> event) {
@@ -96,6 +108,8 @@ public class Create {
 		if (schematicReceiver == null)
 			schematicReceiver = new ServerSchematicLoader();
 		schematicReceiver.tick();
+
+		lagger.tick();
 	}
 
 	public static void shutdown() {

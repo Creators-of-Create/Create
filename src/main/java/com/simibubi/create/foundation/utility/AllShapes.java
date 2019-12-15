@@ -28,7 +28,7 @@ public class AllShapes {
 
 				;
 
-	@SuppressWarnings("deprecation")
+
 	private static final VoxelShape
 		LOGISTICAL_CASING_MIDDLE_SHAPE = VoxelShapes.or(
 		makeCuboidShape(1,0,1,15,16,15),
@@ -42,7 +42,7 @@ public class AllShapes {
 		CART_ASSEMBLER_SHAPE = VoxelShapes.or(
 				VoxelShapes.fullCube(),
 				makeCuboidShape(-2, 0, 1, 18, 13, 15)),
-		MECHANICAL_PISTON_HEAD_SHAPE_UP = Blocks.PISTON_HEAD.getShape(Blocks.PISTON_HEAD.getStateContainer().getBaseState().with(DirectionalBlock.FACING, Direction.UP).with(PistonHeadBlock.SHORT, true), null, null, null),
+		MECHANICAL_PISTON_HEAD_SHAPE_UP = Blocks.PISTON_HEAD.getStateContainer().getBaseState().with(DirectionalBlock.FACING, Direction.UP).with(PistonHeadBlock.SHORT, true).getShape(null, null),
 		MECHANICAL_PISTON_EXTENDED_SHAPE_UP = VoxelShapes.or(
 				SHORT_CASING_12_VOXEL.get(Direction.UP),
 				FOUR_VOXEL_POLE.get(Direction.Axis.Y)),
