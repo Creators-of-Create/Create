@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -185,6 +186,11 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 	@Override
 	public Direction getFilterFacing(BlockState state) {
 		return state.get(HORIZONTAL_FACING).getOpposite();
+	}
+
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.BLOCK;
 	}
 
 }

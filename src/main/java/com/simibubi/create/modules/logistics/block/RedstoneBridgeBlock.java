@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -214,6 +215,11 @@ public class RedstoneBridgeBlock extends ProperDirectionalBlock implements IBloc
 	@Override
 	public Direction getFrequencyItemFacing(BlockState state) {
 		return state.get(FACING);
+	}
+
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.BLOCK;
 	}
 
 }

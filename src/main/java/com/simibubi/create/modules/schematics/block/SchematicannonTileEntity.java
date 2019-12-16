@@ -23,6 +23,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -56,7 +57,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 	public static final int NEIGHBOUR_CHECKING = 100;
 	public static final int MAX_ANCHOR_DISTANCE = 256;
-	
+
 	public enum State {
 		STOPPED, PAUSED, RUNNING;
 	}
@@ -169,13 +170,13 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 	public AxisAlignedBB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return super.getMaxRenderDistanceSquared() * 16;
 	}
-	
+
 	public SchematicannonTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		attachedInventories = new LinkedList<>();
@@ -454,15 +455,15 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		}
 
 		BlockState blockState = blockReader.getBlockState(target);
-		if (!shouldPlace(target, blockState)) {
+		ItemStack requiredItem = getItemForBlock(blockState);
+
+		if (!shouldPlace(target, blockState) || requiredItem.isEmpty()) {
 			statusMsg = "searching";
 			blockSkipped = true;
 			return;
 		}
 
-		// Find Item
-		ItemStack requiredItem = getItemForBlock(blockState);
-
+		// Find item
 		if (blockState.has(BlockStateProperties.SLAB_TYPE)
 				&& blockState.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE)
 			requiredItem.setCount(2);
@@ -547,7 +548,8 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	protected ItemStack getItemForBlock(BlockState blockState) {
-		return new ItemStack(BlockItem.BLOCK_TO_ITEM.getOrDefault(blockState.getBlock(), Items.AIR));
+		Item item = BlockItem.BLOCK_TO_ITEM.getOrDefault(blockState.getBlock(), Items.AIR);
+		return item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item);
 	}
 
 	protected boolean findItemInAttachedInventories(ItemStack requiredItem) {
