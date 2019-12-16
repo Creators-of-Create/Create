@@ -3,17 +3,20 @@ package com.simibubi.create.modules.contraptions.relays.belt;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -27,7 +30,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnelTileEntity> {
+public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnelTileEntity>, IWrenchable {
 
 	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 	public static final IProperty<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
@@ -38,7 +41,7 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 	}
 
 	public enum Shape implements IStringSerializable {
-		STRAIGHT, WINDOW, T_LEFT, T_RIGHT, CROSS;
+		STRAIGHT, WINDOW, HALFSHADE, FULLSHADE, T_LEFT, T_RIGHT, CROSS;
 
 		@Override
 		public String getName() {
@@ -80,9 +83,18 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 
 	@Override
 	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-		if (state.get(SHAPE) == Shape.WINDOW)
+		if (hasWindow(state))
 			return layer == BlockRenderLayer.CUTOUT_MIPPED;
 		return super.canRenderInLayer(state, layer);
+	}
+
+	public static boolean hasWindow(BlockState state) {
+		Shape shape = state.get(SHAPE);
+		return shape == Shape.WINDOW || shape == Shape.HALFSHADE || shape == Shape.FULLSHADE;
+	}
+
+	public static boolean isStraight(BlockState state) {
+		return hasWindow(state) || state.get(SHAPE) == Shape.STRAIGHT;
 	}
 
 	@Override
@@ -94,7 +106,14 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 	public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
 		withTileEntityDo(worldIn, currentPos, BeltTunnelTileEntity::initFlaps);
-		return getTunnelState(worldIn, currentPos);
+		BlockState tunnelState = getTunnelState(worldIn, currentPos);
+		
+		if (tunnelState.get(HORIZONTAL_AXIS) == state.get(HORIZONTAL_AXIS)) {
+			if (hasWindow(tunnelState) == hasWindow(state))
+				return state;
+		}
+		
+		return tunnelState;
 	}
 
 	public static void updateTunnel(World world, BlockPos pos) {
@@ -136,6 +155,29 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 		}
 
 		return state;
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		if (!hasWindow(state))
+			return IWrenchable.super.onWrenched(state, context);
+		Shape next = state.get(SHAPE);
+		switch (state.get(SHAPE)) {
+		case FULLSHADE:
+			next = Shape.WINDOW;
+			break;
+		case HALFSHADE:
+			next = Shape.FULLSHADE;
+			break;
+		case WINDOW:
+			next = Shape.HALFSHADE;
+			break;
+		default:
+			break;
+		}
+		if (!context.getWorld().isRemote) 
+			context.getWorld().setBlockState(context.getPos(), state.with(SHAPE, next), 2);
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

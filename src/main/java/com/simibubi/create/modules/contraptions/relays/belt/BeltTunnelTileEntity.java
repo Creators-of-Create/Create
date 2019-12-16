@@ -101,7 +101,7 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 				boolean positive = direction.getAxisDirection() == AxisDirection.POSITIVE
 						^ direction.getAxis() == Axis.Z;
 				Shape shape = tunnelState.get(BeltTunnelBlock.SHAPE);
-				if (shape == Shape.STRAIGHT || shape == Shape.WINDOW)
+				if (BeltTunnelBlock.isStraight(tunnelState))
 					continue;
 				if (positive && shape == Shape.T_LEFT)
 					continue;

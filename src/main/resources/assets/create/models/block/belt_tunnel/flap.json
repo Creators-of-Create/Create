@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "create:block/belttunnel",
-		"particle": "create:block/belttunnel"
+		"0": "create:block/belt_tunnel",
+		"particle": "create:block/belt_tunnel"
 	},
 	"elements": [
 		{
@@ -12,12 +12,12 @@
 			"to": [15.5, 8.5, 14],
 			"rotation": {"angle": 0, "axis": "y", "origin": [-24.5, -7.5, 8]},
 			"faces": {
-				"north": {"uv": [1, 4, 1.5, 9], "texture": "#0"},
-				"east": {"uv": [1, 4, 2.5, 9], "rotation": 180, "texture": "#0"},
-				"south": {"uv": [2, 4, 2.5, 9], "texture": "#0"},
-				"west": {"uv": [1, 4, 2.5, 9], "texture": "#0"},
-				"up": {"uv": [1, 4, 2.5, 4.5], "rotation": 90, "texture": "#0"},
-				"down": {"uv": [1, 4, 2.5, 4.5], "rotation": 270, "texture": "#0"}
+				"north": {"uv": [4, 0, 4.25, 2.5], "texture": "#0"},
+				"east": {"uv": [4, 0, 4.75, 2.5], "rotation": 180, "texture": "#0"},
+				"south": {"uv": [4.5, 0, 4.75, 2.5], "texture": "#0"},
+				"west": {"uv": [4, 0, 4.75, 2.5], "texture": "#0"},
+				"up": {"uv": [4, 1.25, 4.75, 1.5], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [4, 1, 4.75, 1.25], "rotation": 270, "texture": "#0"}
 			}
 		}
 	],

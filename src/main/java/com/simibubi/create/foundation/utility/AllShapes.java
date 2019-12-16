@@ -73,7 +73,9 @@ public class AllShapes {
 				makeCuboidShape(0, 0, 0, 16, 2, 16),
 				makeCuboidShape(1, 1, 1, 15, 15, 15),
 				makeCuboidShape(0, 14, 0, 16, 16, 16)),
-		BASIN_BLOCK_SHAPE = makeCuboidShape(0, 0, 0, 16, 13, 16),//todo can be improved when someone finds the time :D
+		BASIN_BLOCK_SHAPE = VoxelShapes.or(
+				makeCuboidShape(2, 0, 2, 14, 2, 14), 
+				makeCuboidShape(0, 2, 0, 16, 13, 16)),
 		CRUSHING_WHEEL_COLLISION_SHAPE = makeCuboidShape(0, 0, 0, 16, 22, 16),
 		MECHANICAL_PROCESSOR_SHAPE = VoxelShapes.combineAndSimplify(
 				VoxelShapes.fullCube(),

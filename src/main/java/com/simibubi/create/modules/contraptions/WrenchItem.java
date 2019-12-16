@@ -1,7 +1,5 @@
 package com.simibubi.create.modules.contraptions;
 
-import com.simibubi.create.modules.contraptions.base.IRotate;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,9 +25,9 @@ public class WrenchItem extends Item {
 		World world = context.getWorld();
 		BlockPos pos = context.getPos();
 		BlockState state = world.getBlockState(pos);
-		if (!(state.getBlock() instanceof IRotate))
+		if (!(state.getBlock() instanceof IWrenchable))
 			return super.onItemUse(context);
-		IRotate actor = (IRotate) state.getBlock();
+		IWrenchable actor = (IWrenchable) state.getBlock();
 
 		if (player.isSneaking()) {
 			if (world instanceof ServerWorld) {

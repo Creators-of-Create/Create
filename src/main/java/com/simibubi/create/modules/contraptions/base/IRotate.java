@@ -1,17 +1,16 @@
 package com.simibubi.create.modules.contraptions.base;
 
 import com.simibubi.create.CreateConfig;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-public interface IRotate {
+public interface IRotate extends IWrenchable {
 
 	public enum SpeedLevel {
 		NONE, MEDIUM, FAST;
@@ -54,10 +53,6 @@ public interface IRotate {
 	public boolean hasCogsTowards(World world, BlockPos pos, BlockState state, Direction face);
 
 	public Axis getRotationAxis(BlockState state);
-
-	public default ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		return ActionResultType.PASS;
-	}
 
 	public default SpeedLevel getMinimumRequiredSpeedLevel() {
 		return SpeedLevel.NONE;
