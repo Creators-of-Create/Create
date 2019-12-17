@@ -1,0 +1,114 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"3": "create:block/net",
+		"back": "create:block/gearbox",
+		"fan_casing": "create:block/fan_casing",
+		"fan_side": "create:block/fan_side",
+		"particle": "create:block/net"
+	},
+	"elements": [
+		{
+			"name": "Lattice",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "rotation": 180, "texture": "#fan_side"},
+				"east": {"uv": [0, 0, 16, 2], "texture": "#fan_side"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#fan_side"},
+				"west": {"uv": [0, 14, 16, 16], "rotation": 180, "texture": "#fan_side"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#fan_casing"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#fan_casing"}
+			}
+		},
+		{
+			"name": "body",
+			"from": [2, 2, 2],
+			"to": [14, 16, 14],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 8]},
+			"faces": {
+				"north": {"uv": [0, 2, 14, 14], "rotation": 270, "texture": "#3"},
+				"east": {"uv": [2, 2, 16, 14], "rotation": 270, "texture": "#3"},
+				"south": {"uv": [0, 2, 14, 14], "rotation": 270, "texture": "#3"},
+				"west": {"uv": [0, 2, 14, 14], "rotation": 270, "texture": "#3"},
+				"up": {"uv": [0, 2, 12, 14], "rotation": 180, "texture": "#3"},
+				"down": {"uv": [0, 0, 12, 12], "texture": "#3"}
+			}
+		},
+		{
+			"name": "body",
+			"from": [4, 2, 4],
+			"to": [12, 14, 12],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 8]},
+			"faces": {
+				"north": {"uv": [0, 2, 12, 10], "rotation": 270, "texture": "#3"},
+				"east": {"uv": [2, 2, 14, 10], "rotation": 270, "texture": "#3"},
+				"south": {"uv": [0, 2, 12, 10], "rotation": 270, "texture": "#3"},
+				"west": {"uv": [1, 2, 13, 10], "rotation": 90, "texture": "#3"},
+				"up": {"uv": [0, 2, 8, 10], "rotation": 180, "texture": "#3"},
+				"down": {"uv": [0, 0, 8, 8], "texture": "#3"}
+			}
+		},
+		{
+			"name": "rim",
+			"from": [1, 15, 1],
+			"to": [15, 17, 3],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 8]},
+			"faces": {
+				"north": {"uv": [1, 0, 15, 2], "rotation": 180, "texture": "#back"},
+				"east": {"uv": [0, 1, 2, 3], "rotation": 270, "texture": "#back"},
+				"south": {"uv": [1, 2, 15, 4], "texture": "#back"},
+				"west": {"uv": [14, 13, 16, 15], "rotation": 90, "texture": "#back"},
+				"up": {"uv": [1, 13, 15, 15], "rotation": 180, "texture": "#back"},
+				"down": {"uv": [1, 13, 15, 15], "texture": "#back"}
+			}
+		},
+		{
+			"name": "rim",
+			"from": [1, 15, 13],
+			"to": [15, 17, 15],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 8]},
+			"faces": {
+				"north": {"uv": [1, 4, 15, 2], "rotation": 180, "texture": "#back"},
+				"east": {"uv": [0, 3, 2, 1], "rotation": 270, "texture": "#back"},
+				"south": {"uv": [1, 2, 15, 0], "texture": "#back"},
+				"west": {"uv": [14, 15, 16, 13], "rotation": 90, "texture": "#back"},
+				"up": {"uv": [1, 15, 15, 13], "rotation": 180, "texture": "#back"},
+				"down": {"uv": [1, 15, 15, 13], "texture": "#back"}
+			}
+		},
+		{
+			"name": "rim",
+			"from": [13, 15, 3],
+			"to": [15, 17, 13],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 8]},
+			"faces": {
+				"east": {"uv": [0, 3, 2, 13], "rotation": 270, "texture": "#back"},
+				"west": {"uv": [2, 3, 4, 13], "rotation": 90, "texture": "#back"},
+				"up": {"uv": [1, 3, 3, 13], "rotation": 180, "texture": "#back"},
+				"down": {"uv": [13, 3, 15, 13], "texture": "#back"}
+			}
+		},
+		{
+			"name": "rim",
+			"from": [1, 15, 3],
+			"to": [3, 17, 13],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 8]},
+			"faces": {
+				"east": {"uv": [4, 3, 2, 13], "rotation": 270, "texture": "#back"},
+				"west": {"uv": [2, 3, 0, 13], "rotation": 90, "texture": "#back"},
+				"up": {"uv": [3, 3, 1, 13], "rotation": 180, "texture": "#back"},
+				"down": {"uv": [15, 3, 13, 13], "texture": "#back"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "ItemCollector",
+			"origin": [8, 8, 24],
+			"children": [0, 1, 2, 3, 4, 5, 6]
+		}
+	]
+}

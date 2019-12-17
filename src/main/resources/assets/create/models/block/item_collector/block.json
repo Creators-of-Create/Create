@@ -1,0 +1,92 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"3": "create:block/net",
+		"back": "create:block/gearbox",
+		"particle": "create:block/net"
+	},
+	"elements": [
+		{
+			"name": "body",
+			"from": [2, 2, 2],
+			"to": [14, 14, 16],
+			"faces": {
+				"north": {"uv": [0, 2, 12, 14], "texture": "#3"},
+				"east": {"uv": [2, 2, 16, 14], "texture": "#3"},
+				"south": {"uv": [0, 0, 12, 12], "texture": "#3"},
+				"west": {"uv": [0, 2, 14, 14], "rotation": 180, "texture": "#3"},
+				"up": {"uv": [0, 2, 14, 14], "rotation": 270, "texture": "#3"},
+				"down": {"uv": [0, 2, 14, 14], "rotation": 90, "texture": "#3"}
+			}
+		},
+		{
+			"name": "body",
+			"from": [4, 4, 4],
+			"to": [12, 12, 16],
+			"faces": {
+				"north": {"uv": [0, 2, 8, 10], "texture": "#3"},
+				"east": {"uv": [2, 2, 14, 10], "texture": "#3"},
+				"south": {"uv": [0, 0, 8, 8], "texture": "#3"},
+				"west": {"uv": [1, 2, 13, 10], "texture": "#3"},
+				"up": {"uv": [0, 2, 12, 10], "rotation": 270, "texture": "#3"},
+				"down": {"uv": [0, 2, 12, 10], "rotation": 90, "texture": "#3"}
+			}
+		},
+		{
+			"name": "rim",
+			"from": [1, 1, 1],
+			"to": [15, 3, 3],
+			"faces": {
+				"north": {"uv": [1, 13, 15, 15], "texture": "#back"},
+				"east": {"uv": [0, 1, 2, 3], "texture": "#back"},
+				"south": {"uv": [1, 13, 15, 15], "texture": "#back"},
+				"west": {"uv": [14, 13, 16, 15], "texture": "#back"},
+				"up": {"uv": [1, 2, 15, 4], "texture": "#back"},
+				"down": {"uv": [1, 0, 15, 2], "texture": "#back"}
+			}
+		},
+		{
+			"name": "rim",
+			"from": [1, 13, 1],
+			"to": [15, 15, 3],
+			"faces": {
+				"north": {"uv": [1, 15, 15, 13], "texture": "#back"},
+				"east": {"uv": [0, 3, 2, 1], "texture": "#back"},
+				"south": {"uv": [1, 15, 15, 13], "texture": "#back"},
+				"west": {"uv": [14, 15, 16, 13], "texture": "#back"},
+				"up": {"uv": [1, 2, 15, 0], "texture": "#back"},
+				"down": {"uv": [1, 4, 15, 2], "texture": "#back"}
+			}
+		},
+		{
+			"name": "rim",
+			"from": [13, 3, 1],
+			"to": [15, 13, 3],
+			"faces": {
+				"north": {"uv": [1, 3, 3, 13], "texture": "#back"},
+				"east": {"uv": [0, 3, 2, 13], "texture": "#back"},
+				"south": {"uv": [13, 3, 15, 13], "texture": "#back"},
+				"west": {"uv": [2, 3, 4, 13], "texture": "#back"}
+			}
+		},
+		{
+			"name": "rim",
+			"from": [1, 3, 1],
+			"to": [3, 13, 3],
+			"faces": {
+				"north": {"uv": [3, 3, 1, 13], "texture": "#back"},
+				"east": {"uv": [4, 3, 2, 13], "texture": "#back"},
+				"south": {"uv": [15, 3, 13, 13], "texture": "#back"},
+				"west": {"uv": [2, 3, 0, 13], "texture": "#back"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "ItemCollector",
+			"origin": [8, 8, 24],
+			"children": [0, 1, 2, 3, 4, 5]
+		}
+	]
+}
