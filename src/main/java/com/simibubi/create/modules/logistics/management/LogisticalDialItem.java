@@ -2,6 +2,7 @@ package com.simibubi.create.modules.logistics.management;
 
 import java.util.UUID;
 
+import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity;
 
@@ -17,7 +18,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class LogisticalDialItem extends Item implements IItemWithColorHandler {
+public class LogisticalDialItem extends Item implements IItemWithColorHandler, IAddedByOther {
 
 	public LogisticalDialItem(Properties properties) {
 		super(properties);

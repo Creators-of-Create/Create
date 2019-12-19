@@ -41,25 +41,31 @@ import net.minecraftforge.registries.IForgeRegistry;
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD)
 public enum AllItems {
 
-	__CURIOSITIES__(),
-	SYMMETRY_WAND(new SymmetryWandItem(
-			standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SYMMETRY_WAND)))),
-	PLACEMENT_HANDGUN(
-			new BuilderGunItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN)))),
-	DEFORESTER(new DeforesterItem(
-			standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.DEFORESTER)))),
-
 	__MATERIALS__(),
+	COPPER_INGOT(ingredient()),
+	ZINC_CUBE(ingredient()),
+	ANDESITE_ALLOY_CUBE(ingredient()),
+	BRASS_CUBE(ingredient()),
+	COPPER_NUGGET(ingredient()),
+	ZINC_NUGGET(ingredient()),
+	BRASS_NUGGET(ingredient()),
 	IRON_SHEET(ingredient()),
 	GOLD_SHEET(ingredient()),
-	ANDESITE_ALLOY_CUBE(ingredient()),
-	BLAZE_BRASS_CUBE(ingredient()),
-	CHORUS_CHROME_CUBE(ingredient(Rarity.UNCOMMON)),
+	BRASS_SHEET(ingredient()),
+
+	BLAZE_BRASS_CUBE(new Item(new Properties())),
+	CHORUS_CHROME_CUBE(new Item(new Properties().rarity(Rarity.UNCOMMON))),
 	SHADOW_STEEL_CUBE(new Item(new Properties().rarity(Rarity.UNCOMMON))),
 	ROSE_QUARTZ(new Item(new Properties())),
 	REFINED_ROSE_QUARTZ(new Item(new Properties())),
 	CHROMATIC_COMPOUND_CUBE(new ChromaticCompoundCubeItem(new Properties().rarity(Rarity.UNCOMMON))),
 	REFINED_RADIANCE_CUBE(new Item(new Properties().rarity(Rarity.UNCOMMON))),
+
+	CRUSHED_IRON(ingredient()),
+	CRUSHED_GOLD(ingredient()),
+	CRUSHED_COPPER(ingredient()),
+	CRUSHED_ZINC(ingredient()),
+	CRUSHED_BRASS(ingredient()),
 
 //	BLAZING_PICKAXE(new BlazingToolItem(1, -2.8F, standardProperties(), PICKAXE)),
 //	BLAZING_SHOVEL(new BlazingToolItem(1.5F, -3.0F, standardProperties(), SHOVEL)),
@@ -89,11 +95,8 @@ public enum AllItems {
 	FLOUR(ingredient()),
 	DOUGH(ingredient()),
 	PROPELLER(ingredient()),
-	WRENCH(new WrenchItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.WRENCH)))),
-	GOGGLES(new GogglesItem(standardItemProperties())),
-
-	CRUSHED_IRON(ingredient()),
-	CRUSHED_GOLD(ingredient()),
+	WRENCH(new WrenchItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.WRENCH))), true),
+	GOGGLES(new GogglesItem(standardItemProperties()), true),
 
 	__LOGISTICS__(),
 	CARDBOARD_BOX_1616(new CardboardBoxItem(standardItemProperties())),
@@ -109,6 +112,15 @@ public enum AllItems {
 	LOGISTICAL_CONTROLLER_CALCULATION(new LogisticalControllerItem(standardItemProperties(), Type.CALCULATION)),
 	LOGISTICAL_CONTROLLER_TRANSACTIONS(new LogisticalControllerItem(standardItemProperties(), Type.TRANSACTIONS)),
 
+	__CURIOSITIES__(),
+	PLACEMENT_HANDGUN(
+			new BuilderGunItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN))), true),
+	DEFORESTER(
+			new DeforesterItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.DEFORESTER))),
+			true),
+	SYMMETRY_WAND(new SymmetryWandItem(
+			standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SYMMETRY_WAND))), true),
+
 	;
 
 	private static class CategoryTracker {
@@ -119,6 +131,7 @@ public enum AllItems {
 
 	public Item item;
 	public IModule module;
+	public boolean firstInCreativeTab;
 
 	private AllItems() {
 		CategoryTracker.currentModule = new IModule() {
@@ -130,9 +143,14 @@ public enum AllItems {
 	}
 
 	private AllItems(Item item) {
+		this(item, false);
+	}
+
+	private AllItems(Item item, boolean firstInCreativeTab) {
 		this.item = item;
 		this.item.setRegistryName(Create.ID, Lang.asId(name()));
 		this.module = CategoryTracker.currentModule;
+		this.firstInCreativeTab = firstInCreativeTab;
 	}
 
 	public static Properties standardItemProperties() {
@@ -155,7 +173,7 @@ public enum AllItems {
 				continue;
 			registry.register(item.get());
 		}
-		
+
 		AllBlocks.registerItemBlocks(registry);
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
+import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
@@ -23,7 +24,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BeltConnectorItem extends BlockItem {
+public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 
 	public BeltConnectorItem(Properties properties) {
 		super(AllBlocks.BELT.block, properties);

@@ -8,7 +8,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -64,6 +67,10 @@ public class CogWheelBlock extends ShaftBlock {
 	@Override
 	public float getParticleInitialRadius() {
 		return isLarge ? 1f : .75f;
+	}
+
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		items.add(new ItemStack(this));
 	}
 
 	// IRotate

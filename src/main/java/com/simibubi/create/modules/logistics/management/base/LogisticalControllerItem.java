@@ -2,6 +2,7 @@ package com.simibubi.create.modules.logistics.management.base;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.Type;
 
 import net.minecraft.item.BlockItem;
@@ -9,7 +10,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class LogisticalControllerItem extends BlockItem {
+public class LogisticalControllerItem extends BlockItem implements IAddedByOther {
 
 	private Type type;
 

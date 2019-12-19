@@ -14,12 +14,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -29,7 +31,8 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class LogisticalIndexBlock extends HorizontalBlock implements IBlockWithColorHandler, IWithTileEntity<LogisticalIndexTileEntity> {
+public class LogisticalIndexBlock extends HorizontalBlock
+		implements IBlockWithColorHandler, IWithTileEntity<LogisticalIndexTileEntity> {
 
 	public LogisticalIndexBlock() {
 		super(Properties.from(Blocks.GRANITE));
@@ -47,6 +50,17 @@ public class LogisticalIndexBlock extends HorizontalBlock implements IBlockWithC
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(HORIZONTAL_FACING);
 		super.fillStateContainer(builder);
+	}
+
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		super.fillItemGroup(group, items);
+		AllItems[] logisiticalItems = new AllItems[] { AllItems.LOGISTICAL_DIAL, AllItems.LOGISTICAL_CONTROLLER_STORAGE,
+				AllItems.LOGISTICAL_CONTROLLER_SUPPLY, AllItems.LOGISTICAL_CONTROLLER_REQUEST,
+				AllItems.LOGISTICAL_CONTROLLER_CALCULATION, AllItems.LOGISTICAL_CONTROLLER_TRANSACTIONS };
+		for (AllItems item : logisiticalItems) {
+			item.get().fillItemGroup(group, items);
+		}
 	}
 
 	@Override
@@ -85,14 +99,14 @@ public class LogisticalIndexBlock extends HorizontalBlock implements IBlockWithC
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new LogisticalIndexTileEntity();
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (AllItems.LOGISTICAL_DIAL.typeOf(player.getHeldItem(handIn))) {
 			return false;
 		}
-		
+
 		if (worldIn.isRemote) {
 			return true;
 		} else {

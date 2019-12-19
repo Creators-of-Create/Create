@@ -29,6 +29,17 @@
 	"item.create.crushed_iron": "Crushed Iron Ore",
 	"item.create.crushed_gold": "Crushed Gold Ore",
 	
+	"item.create.brass_cube": "Brass",
+	"item.create.brass_sheet": "Brass Sheets",
+	"item.create.brass_nugget": "Brass Nugget",
+	"item.create.crushed_brass": "Crushed Brass",
+	"item.create.zinc_cube": "Zinc Bar",
+	"item.create.zinc_nugget": "Zinc Nugget",
+	"item.create.crushed_zinc": "Crushed Zinc",
+	"item.create.copper_ingot": "Copper Ingot",
+	"item.create.copper_nugget": "Copper Nugget",
+	"item.create.crushed_copper": "Crushed Copper",
+	
 	"item.create.logistical_controller_supply": "Item Supply",
 	"item.create.logistical_controller_request": "Item Request",
 	"item.create.logistical_controller_storage": "Item Storage",

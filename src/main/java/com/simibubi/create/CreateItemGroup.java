@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.block.IWithoutBlockItem;
+import com.simibubi.create.foundation.item.IAddedByOther;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
@@ -17,18 +18,15 @@ public final class CreateItemGroup extends ItemGroup {
 	public ItemStack createIcon() {
 		return new ItemStack(AllBlocks.COGWHEEL.get());
 	}
-	
+
 	@Override
 	public void fill(NonNullList<ItemStack> items) {
-		for (AllItems item : AllItems.values()) {
-			if (item.get() == null)
-				continue;
-			if (!item.module.isEnabled())
-				continue;
-			
-			item.get().fillItemGroup(this, items);
-		}
-		
+		addItems(items, true);
+		addBlocks(items);
+		addItems(items, false);
+	}
+
+	public void addBlocks(NonNullList<ItemStack> items) {
 		for (AllBlocks block : AllBlocks.values()) {
 			if (block.get() == null)
 				continue;
@@ -36,10 +34,27 @@ public final class CreateItemGroup extends ItemGroup {
 				continue;
 			if (block.get() instanceof IWithoutBlockItem)
 				continue;
-			
+			if (block.get() instanceof IAddedByOther)
+				continue;
+
 			block.get().asItem().fillItemGroup(this, items);
 			for (Block alsoRegistered : block.alsoRegistered)
 				alsoRegistered.asItem().fillItemGroup(this, items);
+		}
+	}
+
+	public void addItems(NonNullList<ItemStack> items, boolean prioritized) {
+		for (AllItems item : AllItems.values()) {
+			if (item.get() == null)
+				continue;
+			if (!item.module.isEnabled())
+				continue;
+			if (item.firstInCreativeTab != prioritized)
+				continue;
+			if (item.get() instanceof IAddedByOther)
+				continue;
+
+			item.get().fillItemGroup(this, items);
 		}
 	}
 }

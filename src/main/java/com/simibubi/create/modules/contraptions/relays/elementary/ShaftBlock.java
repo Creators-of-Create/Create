@@ -1,12 +1,16 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -42,6 +46,12 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 	@Override
 	public float getParticleInitialRadius() {
 		return 0f;
+	}
+	
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		super.fillItemGroup(group, items);
+		AllItems.BELT_CONNECTOR.get().fillItemGroup(group, items);
 	}
 
 	// IRotate:
