@@ -29,7 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
-public interface IBlockWithScrollableValue {
+public interface IHaveScrollableValue {
 
 	public static final AxisAlignedBB VALUE_BB = new AxisAlignedBB(0, 0, 0, 2 / 16f, 6 / 16f, 6 / 16f);
 
@@ -71,12 +71,12 @@ public interface IBlockWithScrollableValue {
 		BlockPos blockPos = result.getPos();
 		BlockState state = world.getBlockState(blockPos);
 
-		if (!(state.getBlock() instanceof IBlockWithScrollableValue))
+		if (!(state.getBlock() instanceof IHaveScrollableValue))
 			return;
 		if (!mc.player.isAllowEdit())
 			return;
 
-		IBlockWithScrollableValue block = (IBlockWithScrollableValue) state.getBlock();
+		IHaveScrollableValue block = (IHaveScrollableValue) state.getBlock();
 		Vec3d pos = new Vec3d(blockPos);
 
 		if (block.requiresWrench() && !AllItems.WRENCH.typeOf(mc.player.getHeldItemMainhand()))
@@ -193,12 +193,12 @@ public interface IBlockWithScrollableValue {
 		BlockPos blockPos = result.getPos();
 		BlockState state = world.getBlockState(blockPos);
 
-		if (!(state.getBlock() instanceof IBlockWithScrollableValue))
+		if (!(state.getBlock() instanceof IHaveScrollableValue))
 			return false;
 		if (!mc.player.isAllowEdit())
 			return false;
 
-		IBlockWithScrollableValue block = (IBlockWithScrollableValue) state.getBlock();
+		IHaveScrollableValue block = (IHaveScrollableValue) state.getBlock();
 
 		if (block.requiresWrench() && !AllItems.WRENCH.typeOf(mc.player.getHeldItemMainhand()))
 			return false;

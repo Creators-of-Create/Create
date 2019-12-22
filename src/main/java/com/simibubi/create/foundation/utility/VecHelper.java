@@ -6,6 +6,7 @@ import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -16,6 +17,11 @@ public class VecHelper {
 		return rotate(rotate(rotate(vec, xRot, Axis.X), yRot, Axis.Y), zRot, Axis.Z);
 	}
 
+	public static Vec3d rotateCentered(Vec3d vec, double deg, Axis axis) {
+		Vec3d shift = getCenterOf(BlockPos.ZERO);
+		return VecHelper.rotate(vec.subtract(shift), deg, axis).add(shift);
+	}
+	
 	public static Vec3d rotate(Vec3d vec, double deg, Axis axis) {
 		if (deg == 0)
 			return vec;

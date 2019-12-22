@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.palettes;
 
-import com.simibubi.create.foundation.block.IBlockWithColoredVertices;
+import com.simibubi.create.foundation.block.IHaveColoredVertices;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.Block;
@@ -10,7 +10,7 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 
-public class VolcanicRockBlock extends Block implements IBlockWithColoredVertices {
+public class VolcanicRockBlock extends Block implements IHaveColoredVertices {
 
 	public VolcanicRockBlock() {
 		super(Properties.from(Blocks.ANDESITE));

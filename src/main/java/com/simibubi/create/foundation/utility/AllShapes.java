@@ -23,8 +23,9 @@ public class AllShapes {
 		MOTOR_BLOCK = VoxelShaper.forHorizontal(makeCuboidShape(0, 3, 3, 16, 13, 13), Direction.EAST),
 		FOUR_VOXEL_POLE = VoxelShaper.forDirectionalAxis(makeCuboidShape(6, 0, 6, 10, 16, 10), Direction.Axis.Y),
 		SIX_VOXEL_POLE = VoxelShaper.forDirectionalAxis(makeCuboidShape(5, 0, 5, 11, 16, 11), Direction.Axis.Y),
-		BELT_FUNNEL = VoxelShaper.forHorizontal(makeCuboidShape(3, -4, 11, 13, 8, 17), Direction.SOUTH),
-		BELT_EXTRACTOR = VoxelShaper.forHorizontal(makeCuboidShape(4, 2, 11, 12, 10, 17), Direction.SOUTH)
+		FUNNEL = VoxelShaper.forDirectional(makeCuboidShape(3, -4, 11, 13, 8, 17), Direction.SOUTH),
+		EXTRACTOR = VoxelShaper.forDirectional(makeCuboidShape(4, 2, 11, 12, 10, 17), Direction.SOUTH)
+				.withVerticalShapes(makeCuboidShape(4, 11, 4, 12, 17, 12))
 
 				;
 

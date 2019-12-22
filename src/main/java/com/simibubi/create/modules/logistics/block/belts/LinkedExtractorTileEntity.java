@@ -9,9 +9,10 @@ import com.simibubi.create.modules.logistics.block.IExtractor;
 import com.simibubi.create.modules.logistics.block.IHaveFilter;
 import com.simibubi.create.modules.logistics.block.LinkedTileEntity;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -35,13 +36,13 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 		inventory = LazyOptional.empty();
 		filter = ItemStack.EMPTY;
 	}
-	
+
 	@Override
 	public void onLoad() {
 		super.onLoad();
 		initialize = true;
 	}
-	
+
 	@Override
 	public World getWirelessWorld() {
 		return super.getWorld();
@@ -51,7 +52,7 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 	public void setSignal(boolean powered) {
 		receivedSignal = powered;
 	}
-	
+
 	@Override
 	public void read(CompoundNBT compound) {
 		filter = ItemStack.read(compound.getCompound("Filter"));
@@ -59,14 +60,14 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 			setState(State.LOCKED);
 		super.read(compound);
 	}
-	
+
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.put("Filter", filter.serializeNBT());
 		compound.putBoolean("Locked", getState() == State.LOCKED);
 		return super.write(compound);
 	}
-	
+
 	@Override
 	public void tick() {
 		if (initialize && hasWorld()) {
@@ -75,9 +76,9 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 			neighborChanged();
 			initialize = false;
 		}
-		
+
 		IExtractor.super.tick();
-		
+
 		if (world.isRemote)
 			return;
 		if (receivedSignal != getBlockState().get(POWERED)) {
@@ -108,7 +109,11 @@ public class LinkedExtractorTileEntity extends LinkedTileEntity
 
 	@Override
 	public BlockPos getInventoryPos() {
-		return getPos().offset(getBlockState().get(BlockStateProperties.HORIZONTAL_FACING));
+		BlockState blockState = getBlockState();
+		Block block = blockState.getBlock();
+		if (!(block instanceof ExtractorBlock))
+			return null;
+		return getPos().offset(((ExtractorBlock) block).getBlockFacing(blockState));
 	}
 
 	@Override

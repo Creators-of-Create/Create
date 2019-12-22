@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.logistics.block.IBlockWithFrequency;
 
@@ -25,11 +27,11 @@ import net.minecraft.world.World;
 
 public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFrequency {
 
-	private static final List<Pair<Vec3d, Vec3d>> itemPositions = new ArrayList<>(Direction.values().length);
+	private static final List<Pair<Vec3d, Vec3d>> linkItemLocations = new ArrayList<>();
 
 	public LinkedExtractorBlock() {
 		super();
-		cacheItemPositions();
+		cacheLinkItemLocations();
 	}
 
 	@Override
@@ -41,7 +43,7 @@ public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFr
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new LinkedExtractorTileEntity();
@@ -49,12 +51,32 @@ public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFr
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return super.getStateForPlacement(context).with(POWERED, false);
+		BlockState state = getDefaultState();
+
+		if (context.getFace().getAxis().isHorizontal()) {
+			state = state.with(HORIZONTAL_FACING, context.getFace().getOpposite());
+		} else {
+			state = AllBlocks.VERTICAL_LINKED_EXTRACTOR.get().getDefaultState();
+			state = state.with(VerticalExtractorBlock.UPWARD, context.getFace() != Direction.UP);
+			state = state.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing());
+		}
+
+		return state.with(POWERED, Boolean.valueOf(false));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
+		if (worldIn.isRemote)
+			return;
+
+		Direction blockFacing = getBlockFacing(state);
+		if (fromPos.equals(pos.offset(blockFacing))) {
+			if (!isValidPosition(state, worldIn, pos)) {
+				worldIn.destroyBlock(pos, true);
+				return;
+			}
+		}
 	}
 
 	@Override
@@ -64,30 +86,30 @@ public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFr
 				|| handleActivatedFrequencySlots(state, worldIn, pos, player, handIn, hit);
 	}
 
-	private void cacheItemPositions() {
-		if (!itemPositions.isEmpty())
-			return;
+	private void cacheLinkItemLocations() {
+		linkItemLocations.clear();
 
-		Vec3d first = Vec3d.ZERO;
-		Vec3d second = Vec3d.ZERO;
-		Vec3d shift = VecHelper.getCenterOf(BlockPos.ZERO);
 		float zFightOffset = 1 / 128f;
+		Vec3d first = new Vec3d(11.5f / 16f + zFightOffset, 4f / 16f, 14f / 16f);
+		Vec3d second = new Vec3d(11.5f / 16f + zFightOffset, 8f / 16f, 14f / 16f);
 
+		Vec3d firstUpward = new Vec3d(10f / 16f + zFightOffset, 14f / 16f, 11.5f / 16f);
+		Vec3d secondUpward = new Vec3d(6f / 16f + zFightOffset, 14f / 16f, 11.5f / 16f);
+		Vec3d firstDownward = new Vec3d(10f / 16f + zFightOffset, 2f / 16f, 11.5f / 16f);
+		Vec3d secondDownward = new Vec3d(6f / 16f + zFightOffset, 2f / 16f, 11.5f / 16f);
+
+		cacheForAllSides(first, second);
+		cacheForAllSides(firstUpward, secondUpward);
+		cacheForAllSides(firstDownward, secondDownward);
+	}
+
+	private void cacheForAllSides(Vec3d first, Vec3d second) {
 		for (int i = 0; i < 4; i++) {
 			Direction facing = Direction.byHorizontalIndex(i);
-			first = new Vec3d(11.5f / 16f + zFightOffset, 4f / 16f, 14f / 16f);
-			second = new Vec3d(11.5f / 16f + zFightOffset, 8f / 16f, 14f / 16f);
-
-			float angle = facing.getHorizontalAngle();
-			if (facing.getAxis() == Axis.X)
-				angle = -angle;
-
-			first = VecHelper.rotate(first.subtract(shift), angle, Axis.Y).add(shift);
-			second = VecHelper.rotate(second.subtract(shift), angle, Axis.Y).add(shift);
-
-			itemPositions.add(Pair.of(first, second));
+			float angle = AngleHelper.horizontalAngle(facing);
+			linkItemLocations.add(Pair.of(VecHelper.rotateCentered(first, angle, Axis.Y),
+					VecHelper.rotateCentered(second, angle, Axis.Y)));
 		}
-
 	}
 
 	@Override
@@ -98,12 +120,16 @@ public class LinkedExtractorBlock extends ExtractorBlock implements IBlockWithFr
 	@Override
 	public Pair<Vec3d, Vec3d> getFrequencyItemPositions(BlockState state) {
 		Direction facing = state.get(HORIZONTAL_FACING);
-		return itemPositions.get(facing.getHorizontalIndex());
+		Direction extractorFacing = getBlockFacing(state);
+		int groupOffset = extractorFacing == Direction.UP ? 4 : extractorFacing == Direction.DOWN ? 8 : 0;
+		return linkItemLocations.get(groupOffset + facing.getHorizontalIndex());
 	}
 
 	@Override
 	public Direction getFrequencyItemFacing(BlockState state) {
-		return state.get(HORIZONTAL_FACING).rotateYCCW();
+		if (getBlockFacing(state).getAxis().isHorizontal())
+			return state.get(HORIZONTAL_FACING).rotateYCCW();
+		return state.get(HORIZONTAL_FACING);
 	}
 
 }

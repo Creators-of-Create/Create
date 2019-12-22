@@ -1,5 +1,5 @@
 {
-	"parent": "create:block/extractor",
+	"parent": "create:block/extractor/vertical",
     "textures": {
         "extractor": "create:block/extractor_powered",
 		"particle": "create:block/extractor_powered"

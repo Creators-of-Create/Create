@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.components.crusher;
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IWithoutBlockItem;
+import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
 import net.minecraft.block.Block;
@@ -28,7 +28,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class CrushingWheelControllerBlock extends Block implements IWithoutBlockItem {
+public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockItem {
 
 	public static final BooleanProperty VALID = BooleanProperty.create("valid");
 

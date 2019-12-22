@@ -6,9 +6,10 @@ import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.modules.logistics.block.IExtractor;
 import com.simibubi.create.modules.logistics.block.IHaveFilter;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.LazyOptional;
@@ -82,7 +83,11 @@ public class ExtractorTileEntity extends SyncedTileEntity implements IExtractor,
 
 	@Override
 	public BlockPos getInventoryPos() {
-		return getPos().offset(getBlockState().get(BlockStateProperties.HORIZONTAL_FACING));
+		BlockState blockState = getBlockState();
+		Block block = blockState.getBlock();
+		if (!(block instanceof ExtractorBlock))
+			return null;
+		return getPos().offset(((ExtractorBlock) block).getBlockFacing(blockState));
 	}
 
 	@Override

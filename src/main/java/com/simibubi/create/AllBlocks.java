@@ -1,7 +1,8 @@
 package com.simibubi.create;
 
-import com.simibubi.create.foundation.block.IBlockWithColorHandler;
-import com.simibubi.create.foundation.block.IWithoutBlockItem;
+import com.simibubi.create.foundation.block.IHaveColorHandler;
+import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
+import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
@@ -25,7 +26,6 @@ import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheel
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerBlock;
-import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerBlock.MechanicalMixerBlockItem;
 import com.simibubi.create.modules.contraptions.components.motor.MotorBlock;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressBlock;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
@@ -55,6 +55,8 @@ import com.simibubi.create.modules.logistics.block.belts.BeltFunnelBlock;
 import com.simibubi.create.modules.logistics.block.belts.EntityDetectorBlock;
 import com.simibubi.create.modules.logistics.block.belts.ExtractorBlock;
 import com.simibubi.create.modules.logistics.block.belts.LinkedExtractorBlock;
+import com.simibubi.create.modules.logistics.block.belts.VerticalExtractorBlock;
+import com.simibubi.create.modules.logistics.block.belts.VerticalLinkedExtractorBlock;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterBlock;
 import com.simibubi.create.modules.logistics.block.diodes.PulseRepeaterBlock;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
@@ -162,7 +164,9 @@ public enum AllBlocks {
 	STOCKSWITCH(new StockswitchBlock()),
 	FLEXCRATE(new FlexcrateBlock()),
 	EXTRACTOR(new ExtractorBlock()),
+	VERTICAL_EXTRACTOR(new VerticalExtractorBlock()),
 	LINKED_EXTRACTOR(new LinkedExtractorBlock()),
+	VERTICAL_LINKED_EXTRACTOR(new VerticalLinkedExtractorBlock()),
 	BELT_FUNNEL(new BeltFunnelBlock()),
 	BELT_TUNNEL(new BeltTunnelBlock()),
 	BELT_TUNNEL_FLAP(new RenderUtilityBlock()),
@@ -208,7 +212,10 @@ public enum AllBlocks {
 	POLISHED_LIMESTONE(new Block(Properties.from(LIMESTONE.block)), ComesWith.SLAB),
 	LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(LIMESTONE.block))),
 	WEATHERED_LIMESTONE(new Block(Properties.from(Blocks.ANDESITE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	WEATHERED_LIMESTONE_BRICKS(new Block(Properties.from(WEATHERED_LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB,
+	WEATHERED_LIMESTONE_BRICKS(
+			new Block(Properties.from(WEATHERED_LIMESTONE.block)),
+			ComesWith.STAIRS,
+			ComesWith.SLAB,
 			ComesWith.WALL),
 	POLISHED_WEATHERED_LIMESTONE(new Block(Properties.from(WEATHERED_LIMESTONE.block)), ComesWith.SLAB),
 	WEATHERED_LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(WEATHERED_LIMESTONE.block))),
@@ -269,7 +276,7 @@ public enum AllBlocks {
 		for (AllBlocks block : values()) {
 			if (block.get() == null)
 				continue;
-			if (block.get() instanceof IWithoutBlockItem)
+			if (block.get() instanceof IHaveNoBlockItem)
 				continue;
 
 			registerAsItem(registry, block.get());
@@ -282,8 +289,8 @@ public enum AllBlocks {
 		BlockItem blockItem = null;
 		net.minecraft.item.Item.Properties standardItemProperties = AllItems.standardItemProperties();
 
-		if (blockIn == AllBlocks.MECHANICAL_MIXER.get())
-			blockItem = new MechanicalMixerBlockItem(standardItemProperties);
+		if (blockIn instanceof IHaveCustomBlockItem)
+			blockItem = ((IHaveCustomBlockItem) blockIn).getCustomItem(standardItemProperties);
 		else
 			blockItem = new BlockItem(blockIn, standardItemProperties);
 
@@ -329,8 +336,8 @@ public enum AllBlocks {
 	public static void registerColorHandlers() {
 		BlockColors blockColors = Minecraft.getInstance().getBlockColors();
 		for (AllBlocks block : values()) {
-			if (block.block instanceof IBlockWithColorHandler) {
-				blockColors.register(((IBlockWithColorHandler) block.block).getColorHandler(), block.block);
+			if (block.block instanceof IHaveColorHandler) {
+				blockColors.register(((IHaveColorHandler) block.block).getColorHandler(), block.block);
 			}
 		}
 	}

@@ -13,7 +13,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.I
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
-import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
+import com.simibubi.create.modules.logistics.block.IHaveFilterSlot;
 import com.simibubi.create.modules.logistics.block.IInventoryManipulator;
 
 import net.minecraft.block.Block;
@@ -39,7 +39,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment, IWithTileEntity<BeltFunnelTileEntity>, IBlockWithFilter {
+public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment, IWithTileEntity<BeltFunnelTileEntity>, IHaveFilterSlot {
 
 	public BeltFunnelBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -101,7 +101,7 @@ public class BeltFunnelBlock extends HorizontalBlock implements IBeltAttachment,
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.BELT_FUNNEL.get(state.get(HORIZONTAL_FACING));
+		return AllShapes.FUNNEL.get(state.get(HORIZONTAL_FACING));
 	}
 
 	@Override

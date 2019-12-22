@@ -1,6 +1,6 @@
 package com.simibubi.create;
 
-import com.simibubi.create.foundation.block.IWithoutBlockItem;
+import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.item.IAddedByOther;
 
 import net.minecraft.block.Block;
@@ -32,7 +32,7 @@ public final class CreateItemGroup extends ItemGroup {
 				continue;
 			if (!block.module.isEnabled())
 				continue;
-			if (block.get() instanceof IWithoutBlockItem)
+			if (block.get() instanceof IHaveNoBlockItem)
 				continue;
 			if (block.get() instanceof IAddedByOther)
 				continue;

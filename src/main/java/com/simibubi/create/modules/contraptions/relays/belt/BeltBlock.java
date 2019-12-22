@@ -7,7 +7,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.block.IWithoutBlockItem;
+import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
@@ -51,7 +51,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltBlock extends HorizontalKineticBlock implements IWithoutBlockItem, IWithTileEntity<BeltTileEntity> {
+public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockItem, IWithTileEntity<BeltTileEntity> {
 
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);

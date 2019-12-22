@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.logistics.block.diodes;
 
-import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
+import com.simibubi.create.foundation.block.IHaveScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -18,7 +18,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 
 public class FlexpeaterBlock extends RedstoneDiodeBlock
-		implements IWithTileEntity<FlexpeaterTileEntity>, IBlockWithScrollableValue {
+		implements IWithTileEntity<FlexpeaterTileEntity>, IHaveScrollableValue {
 
 	public static BooleanProperty POWERING = BooleanProperty.create("powering");
 	private static Vec3d VALUE_POS = new Vec3d(2 / 16f, 5 / 16f, 5 / 16f);

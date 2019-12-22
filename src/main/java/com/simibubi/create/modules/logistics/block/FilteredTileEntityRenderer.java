@@ -21,7 +21,7 @@ public class FilteredTileEntityRenderer {
 	public static <T extends TileEntity & IHaveFilter> void render(T tileEntityIn, double x, double y, double z,
 			float partialTicks, int destroyStage) {
 		BlockState state = tileEntityIn.getBlockState();
-		IBlockWithFilter block = (IBlockWithFilter) state.getBlock();
+		IHaveFilterSlot block = (IHaveFilterSlot) state.getBlock();
 
 		if (!block.isFilterVisible(state))
 			return;

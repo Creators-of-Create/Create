@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.foundation.block.CTModel;
 import com.simibubi.create.foundation.block.ColoredVertexModel;
-import com.simibubi.create.foundation.block.IBlockWithColoredVertices;
+import com.simibubi.create.foundation.block.IHaveColoredVertices;
 import com.simibubi.create.foundation.block.IHaveConnectedTextures;
 import com.simibubi.create.foundation.block.SpriteShifter.SpriteShiftEntry;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
@@ -126,9 +126,9 @@ public class CreateClient {
 			List<ModelResourceLocation> blockModelLocations = getAllBlockStateModelLocations(allBlocks);
 			if (block instanceof IHaveConnectedTextures)
 				swapModels(modelRegistry, blockModelLocations, t -> new CTModel(t, (IHaveConnectedTextures) block));
-			if (block instanceof IBlockWithColoredVertices)
+			if (block instanceof IHaveColoredVertices)
 				swapModels(modelRegistry, blockModelLocations,
-						t -> new ColoredVertexModel(t, (IBlockWithColoredVertices) block));
+						t -> new ColoredVertexModel(t, (IHaveColoredVertices) block));
 
 		}
 

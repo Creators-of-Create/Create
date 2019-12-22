@@ -4,7 +4,7 @@ import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior;
-import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
+import com.simibubi.create.modules.logistics.block.IHaveFilterSlot;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -34,7 +34,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class SawBlock extends DirectionalAxisKineticBlock
-		implements IWithTileEntity<SawTileEntity>, IHaveMovementBehavior, IBlockWithFilter {
+		implements IWithTileEntity<SawTileEntity>, IHaveMovementBehavior, IHaveFilterSlot {
 
 	public static final BooleanProperty RUNNING = BooleanProperty.create("running");
 	public static DamageSource damageSourceSaw = new DamageSource("create.saw").setDamageBypassesArmor();

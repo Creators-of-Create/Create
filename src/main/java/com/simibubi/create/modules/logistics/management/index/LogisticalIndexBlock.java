@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.logistics.management.index;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.block.IBlockWithColorHandler;
+import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 
@@ -32,7 +32,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class LogisticalIndexBlock extends HorizontalBlock
-		implements IBlockWithColorHandler, IWithTileEntity<LogisticalIndexTileEntity> {
+		implements IHaveColorHandler, IWithTileEntity<LogisticalIndexTileEntity> {
 
 	public LogisticalIndexBlock() {
 		super(Properties.from(Blocks.GRANITE));

@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.chassis
 
 import java.util.List;
 
-import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
+import com.simibubi.create.foundation.block.IHaveScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
 public abstract class AbstractChassisBlock extends RotatedPillarBlock
-		implements IWithTileEntity<ChassisTileEntity>, IBlockWithScrollableValue {
+		implements IWithTileEntity<ChassisTileEntity>, IHaveScrollableValue {
 
 	private static final Vec3d valuePos = new Vec3d(15 / 16f, 9 / 16f, 9 / 16f);
 

@@ -1,48 +1,50 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "create:block/extractor",
+	"parent": "create:block/extractor/horizontal",
 	"textures": {
 		"2": "create:block/brass_casing",
 		"redstone_antenna": "create:block/redstone_antenna",
-		"extractor": "create:block/extractor",
-		"particle": "create:block/extractor"
+		"particle": "create:block/extractor",
+		"extractor": "create:block/extractor"
 	},
 	"elements": [
 		{
 			"name": "Bottom",
-			"from": [4, 2, -1],
+			"from": [5, 2, -1],
 			"to": [12, 3, 5],
 			"faces": {
-				"north": {"uv": [6, 7, 14, 8], "texture": "#extractor"},
+				"north": {"uv": [6, 7, 13, 8], "texture": "#extractor"},
 				"east": {"uv": [0, 0, 6, 1], "rotation": 180, "texture": "#extractor"},
-				"south": {"uv": [6, 7, 14, 8], "texture": "#extractor"},
-				"west": {"uv": [0, 0, 6, 1], "texture": "#extractor"},
-				"up": {"uv": [0, 0, 6, 8], "rotation": 90, "texture": "#extractor"},
-				"down": {"uv": [0, 0, 6, 8], "rotation": 270, "texture": "#extractor"}
+				"south": {"uv": [6, 7, 13, 8], "texture": "#extractor"},
+				"west": {"uv": [6, 15, 12, 16], "texture": "#extractor"},
+				"up": {"uv": [0, 0, 6, 7], "rotation": 90, "texture": "#extractor"},
+				"down": {"uv": [0, 0, 6, 7], "rotation": 270, "texture": "#extractor"}
 			}
 		},
 		{
 			"name": "Top",
-			"from": [4, 9, -1],
+			"from": [5, 9, -1],
 			"to": [12, 10, 5],
 			"faces": {
-				"north": {"uv": [6, 0, 14, 1], "texture": "#extractor"},
+				"north": {"uv": [6, 0, 13, 1], "texture": "#extractor"},
 				"east": {"uv": [0, 0, 6, 1], "rotation": 180, "texture": "#extractor"},
-				"south": {"uv": [6, 0, 14, 1], "texture": "#extractor"},
-				"west": {"uv": [0, 0, 6, 1], "texture": "#extractor"},
-				"up": {"uv": [0, 0, 6, 8], "rotation": 90, "texture": "#extractor"},
-				"down": {"uv": [0, 0, 6, 8], "rotation": 270, "texture": "#extractor"}
+				"south": {"uv": [6, 0, 13, 1], "texture": "#extractor"},
+				"west": {"uv": [6, 8, 12, 9], "texture": "#extractor"},
+				"up": {"uv": [0, 0, 6, 7], "rotation": 90, "texture": "#extractor"},
+				"down": {"uv": [0, 0, 6, 7], "rotation": 270, "texture": "#extractor"}
 			}
 		},
 		{
 			"name": "Side",
-			"from": [4, 3, -1],
-			"to": [5, 9, 5],
+			"from": [4, 2, -1],
+			"to": [5, 10, 5],
 			"faces": {
-				"north": {"uv": [13, 1, 14, 7], "texture": "#extractor"},
-				"east": {"uv": [0, 1, 6, 7], "rotation": 180, "texture": "#extractor"},
-				"south": {"uv": [6, 1, 7, 7], "texture": "#extractor"},
-				"west": {"uv": [0, 1, 6, 7], "texture": "#extractor"}
+				"north": {"uv": [13, 0, 14, 8], "texture": "#extractor"},
+				"east": {"uv": [0, 1, 6, 9], "rotation": 180, "texture": "#extractor"},
+				"south": {"uv": [6, 1, 7, 9], "texture": "#extractor"},
+				"west": {"uv": [6, 8, 12, 16], "texture": "#extractor"},
+				"up": {"uv": [6, 8, 12, 9], "rotation": 90, "texture": "#extractor"},
+				"down": {"uv": [6, 15, 12, 16], "rotation": 90, "texture": "#extractor"}
 			}
 		},
 		{
@@ -67,14 +69,14 @@
 		},
 		{
 			"name": "FilterSpot",
-			"from": [5, 10, -0.6],
-			"to": [11, 12, 4],
-			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 11, -1]},
+			"from": [5, 10, -1],
+			"to": [11, 11, 4],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 11, -1]},
 			"faces": {
-				"north": {"uv": [13, 1, 15, 7], "rotation": 90, "texture": "#extractor"},
-				"east": {"uv": [0.1, 0, 4.7, 2], "rotation": 180, "texture": "#extractor"},
-				"south": {"uv": [4, 1, 5, 7], "rotation": 270, "texture": "#extractor"},
-				"west": {"uv": [0.1, 0, 4.7, 2], "texture": "#extractor"},
+				"north": {"uv": [0, 9, 1, 15], "rotation": 90, "texture": "#extractor"},
+				"east": {"uv": [0, 14, 5, 15], "rotation": 180, "texture": "#extractor"},
+				"south": {"uv": [4, 9, 5, 15], "rotation": 270, "texture": "#extractor"},
+				"west": {"uv": [0, 9, 5, 10], "texture": "#extractor"},
 				"up": {"uv": [0, 9, 5, 15], "rotation": 90, "texture": "#extractor"}
 			}
 		},

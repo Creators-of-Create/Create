@@ -1,12 +1,9 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "create:block/extractor"
-  },
   "variants": {
     "powered": {
-      "true": { "model": "create:block/extractor_powered" },
-      "false": { "model": "create:block/extractor" }
+      "true": { "model": "create:block/extractor/horizontal_powered" },
+      "false": { "model": "create:block/extractor/horizontal" }
     },
     "facing": {
       "south": { "y": 180 },

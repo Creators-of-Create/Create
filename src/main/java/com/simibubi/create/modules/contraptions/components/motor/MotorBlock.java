@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.motor;
 
-import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
+import com.simibubi.create.foundation.block.IHaveScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
@@ -20,7 +20,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class MotorBlock extends HorizontalKineticBlock implements IWithTileEntity<MotorTileEntity>, IBlockWithScrollableValue {
+public class MotorBlock extends HorizontalKineticBlock implements IWithTileEntity<MotorTileEntity>, IHaveScrollableValue {
 
 	private static final Vec3d valuePos = new Vec3d(15 / 16f, 5 / 16f, 5 / 16f);
 

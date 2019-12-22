@@ -15,7 +15,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
-import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
+import com.simibubi.create.modules.logistics.block.IHaveFilterSlot;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -41,7 +41,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class EntityDetectorBlock extends HorizontalBlock
-		implements IWithTileEntity<EntityDetectorTileEntity>, IBeltAttachment, IBlockWithFilter {
+		implements IWithTileEntity<EntityDetectorTileEntity>, IBeltAttachment, IHaveFilterSlot {
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static BooleanProperty BELT = BooleanProperty.create("belt");

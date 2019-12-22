@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.logistics.block;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 
@@ -16,7 +17,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +31,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
-public interface IBlockWithFilter {
+public interface IHaveFilterSlot {
 
 	public Vec3d getFilterPosition(BlockState state);
 
@@ -88,14 +88,14 @@ public interface IBlockWithFilter {
 		BlockPos pos = result.getPos();
 		BlockState state = world.getBlockState(pos);
 
-		if (!(state.getBlock() instanceof IBlockWithFilter))
+		if (!(state.getBlock() instanceof IHaveFilterSlot))
 			return;
 		TileEntity te = world.getTileEntity(pos);
 		if (te == null || !(te instanceof IHaveFilter))
 			return;
 		IHaveFilter actor = (IHaveFilter) te;
 
-		IBlockWithFilter filterBlock = (IBlockWithFilter) state.getBlock();
+		IHaveFilterSlot filterBlock = (IHaveFilterSlot) state.getBlock();
 		if (!filterBlock.isFilterVisible(state))
 			return;
 
@@ -142,17 +142,17 @@ public interface IBlockWithFilter {
 
 		tessellator.draw();
 
-		GlStateManager.popMatrix();
 		GlStateManager.enableTexture();
 		GlStateManager.depthMask(true);
 
 		if (contains) {
 			float textScale = 1 / 128f;
 			GlStateManager.translated(position.x, position.y, position.z);
-			GlStateManager.rotated(facing.getHorizontalAngle() * (facing.getAxis() == Axis.X ? -1 : 1), 0, 1, 0);
+			GlStateManager.translated(center.x, center.y, center.z);
 			GlStateManager.scaled(textScale, -textScale, textScale);
+			GlStateManager.rotated(AngleHelper.horizontalAngle(facing), 0, 1, 0);
 			GlStateManager.translated(17.5f, -5f, -5f);
-			GlStateManager.rotated(90 - filterAngle, 1, 0, 0);
+			GlStateManager.rotated(90, 1, 0, 0);
 
 			String text = Lang.translate("logistics.filter");
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
@@ -169,7 +169,9 @@ public interface IBlockWithFilter {
 				font.drawString(count, 1, 1, 0x4F4F4F);
 			}
 		}
+		
 		GlStateManager.disableBlend();
+		GlStateManager.popMatrix();
 
 		GlStateManager.lineWidth(1);
 		TessellatorHelper.cleanUpAfterDrawing();

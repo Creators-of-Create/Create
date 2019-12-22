@@ -19,10 +19,10 @@ import net.minecraftforge.client.model.data.ModelProperty;
 
 public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
 
-	private IBlockWithColoredVertices colorer;
+	private IHaveColoredVertices colorer;
 	private static ModelProperty<BlockPos> POSITION_PROPERTY = new ModelProperty<>();
 
-	public ColoredVertexModel(IBakedModel originalModel, IBlockWithColoredVertices colorer) {
+	public ColoredVertexModel(IBakedModel originalModel, IHaveColoredVertices colorer) {
 		super(originalModel);
 		this.colorer = colorer;
 	}

@@ -1,0 +1,8 @@
+{
+	"parent": "create:block/extractor/horizontal_wireless",
+    "textures": {
+		"redstone_antenna": "create:block/redstone_antenna_powered",
+        "extractor": "create:block/extractor_powered",
+		"particle": "create:block/extractor_powered"
+    }
+}

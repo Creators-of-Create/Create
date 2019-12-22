@@ -1,7 +1,8 @@
 package com.simibubi.create.modules.contraptions.components.mixer;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IBlockWithScrollableValue;
+import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
+import com.simibubi.create.foundation.block.IHaveScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
@@ -26,7 +27,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class MechanicalMixerBlock extends KineticBlock
-		implements IWithTileEntity<MechanicalMixerTileEntity>, IBlockWithScrollableValue {
+		implements IWithTileEntity<MechanicalMixerTileEntity>, IHaveScrollableValue, IHaveCustomBlockItem {
 
 	private static final Vec3d valuePos = new Vec3d(15.8f / 16f, 6 / 16f, 5 / 16f);
 
@@ -137,7 +138,7 @@ public class MechanicalMixerBlock extends KineticBlock
 			return 0;
 		return tileEntity.currentValue;
 	}
-	
+
 	@Override
 	public float getParticleTargetRadius() {
 		return .85f;
@@ -147,10 +148,15 @@ public class MechanicalMixerBlock extends KineticBlock
 	public float getParticleInitialRadius() {
 		return .75f;
 	}
-	
+
 	@Override
 	public SpeedLevel getMinimumRequiredSpeedLevel() {
 		return SpeedLevel.MEDIUM;
+	}
+
+	@Override
+	public BlockItem getCustomItem(net.minecraft.item.Item.Properties properties) {
+		return new MechanicalMixerBlockItem(properties);
 	}
 
 }

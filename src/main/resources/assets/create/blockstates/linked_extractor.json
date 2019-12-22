@@ -1,12 +1,9 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "create:block/extractor_wireless"
-  },
   "variants": {
     "powered": {
-      "true": { "model": "create:block/extractor_wireless_powered" },
-      "false": { "model": "create:block/extractor_wireless" }
+      "true": { "model": "create:block/extractor/horizontal_wireless_powered" },
+      "false": { "model": "create:block/extractor/horizontal_wireless" }
     },
     "facing": {
       "south": { "y": 180 },

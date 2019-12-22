@@ -1,5 +1,5 @@
 {
-	"parent": "create:block/extractor_wireless",
+	"parent": "create:block/extractor/vertical_wireless",
     "textures": {
 		"redstone_antenna": "create:block/redstone_antenna_powered",
         "extractor": "create:block/extractor_powered",

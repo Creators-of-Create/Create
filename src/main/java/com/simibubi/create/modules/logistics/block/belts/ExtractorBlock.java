@@ -5,10 +5,11 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.logistics.block.IBlockWithFilter;
 import com.simibubi.create.modules.logistics.block.IExtractor;
+import com.simibubi.create.modules.logistics.block.IHaveFilterSlot;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -33,15 +34,15 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter {
+public class ExtractorBlock extends HorizontalBlock implements IHaveFilterSlot {
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
-	private static final List<Vec3d> itemPositions = new ArrayList<>(Direction.values().length);
+	protected static final List<Vec3d> filterLocations = new ArrayList<>();
 
 	public ExtractorBlock() {
 		super(Properties.from(Blocks.ANDESITE));
 		setDefaultState(getDefaultState().with(POWERED, false));
-		cacheItemPositions();
+		cacheFilterLocations();
 	}
 
 	@Override
@@ -78,6 +79,8 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 		if (context.getFace().getAxis().isHorizontal()) {
 			state = state.with(HORIZONTAL_FACING, context.getFace().getOpposite());
 		} else {
+			state = AllBlocks.VERTICAL_EXTRACTOR.get().getDefaultState();
+			state = state.with(VerticalExtractorBlock.UPWARD, context.getFace() != Direction.UP);
 			state = state.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing());
 		}
 
@@ -91,7 +94,7 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		Direction facing = state.get(HORIZONTAL_FACING);
+		Direction facing = getBlockFacing(state);
 		BlockPos neighbourPos = pos.offset(facing);
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
 
@@ -119,7 +122,7 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 	}
 
 	private boolean isObserving(BlockState state, BlockPos pos, BlockPos observing) {
-		return observing.equals(pos.offset(state.get(HORIZONTAL_FACING)));
+		return observing.equals(pos.offset(getBlockFacing(state)));
 	}
 
 	@Override
@@ -128,7 +131,7 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 		if (worldIn.isRemote)
 			return;
 
-		Direction blockFacing = state.get(HORIZONTAL_FACING);
+		Direction blockFacing = getBlockFacing(state);
 		if (fromPos.equals(pos.offset(blockFacing))) {
 			if (!isValidPosition(state, worldIn, pos)) {
 				worldIn.destroyBlock(pos, true);
@@ -146,29 +149,28 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 		}
 	}
 
-	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.BELT_EXTRACTOR.get(state.get(HORIZONTAL_FACING));
+	public Direction getBlockFacing(BlockState state) {
+		return state.get(HORIZONTAL_FACING);
 	}
 
-	private void cacheItemPositions() {
-		itemPositions.clear();
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		return AllShapes.EXTRACTOR.get(getBlockFacing(state));
+	}
 
-		Vec3d position = Vec3d.ZERO;
-		Vec3d shift = VecHelper.getCenterOf(BlockPos.ZERO);
-		float zFightOffset = 1 / 128f;
+	private void cacheFilterLocations() {
+		filterLocations.clear();
+		float e = 1 / 128f;
+		Vec3d offsetForHorizontal = new Vec3d(8f / 16f, 10.5f / 16f + e, 2f / 16f);
+		Vec3d offsetForUpward = new Vec3d(8f / 16f, 14.15f / 16f - e, 12.75f / 16f);
+		Vec3d offsetForDownward = new Vec3d(8f / 16f, 1.85f / 16f + e, 12.75f / 16f);
 
-		for (int i = 0; i < 4; i++) {
-			Direction facing = Direction.byHorizontalIndex(i);
-			position = new Vec3d(8f / 16f + zFightOffset, 10.5f / 16f, 2.25f / 16f);
-
-			float angle = facing.getHorizontalAngle();
-			if (facing.getAxis() == Axis.X)
-				angle = -angle;
-
-			position = VecHelper.rotate(position.subtract(shift), angle, Axis.Y).add(shift);
-
-			itemPositions.add(position);
+		for (Vec3d offset : new Vec3d[] { offsetForHorizontal, offsetForUpward, offsetForDownward }) {
+			for (int i = 0; i < 4; i++) {
+				Direction facing = Direction.byHorizontalIndex(i);
+				float angle = AngleHelper.horizontalAngle(facing);
+				filterLocations.add(VecHelper.rotateCentered(offset, angle, Axis.Y));
+			}
 		}
 	}
 
@@ -180,7 +182,7 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 	@Override
 	public Vec3d getFilterPosition(BlockState state) {
 		Direction facing = state.get(HORIZONTAL_FACING).getOpposite();
-		return itemPositions.get(facing.getHorizontalIndex());
+		return filterLocations.get(facing.getHorizontalIndex());
 	}
 
 	@Override
@@ -191,6 +193,10 @@ public class ExtractorBlock extends HorizontalBlock implements IBlockWithFilter 
 	@Override
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
+	}
+
+	public float getFilterAngle(BlockState state) {
+		return getBlockFacing(state).getAxis().isHorizontal() ? 0 : 90;
 	}
 
 }
