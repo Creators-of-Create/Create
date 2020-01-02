@@ -15,7 +15,7 @@ public class Lang {
 		return getTranslationComponent(key, args).getFormattedText();
 	}
 
-	private static TranslationTextComponent getTranslationComponent(String key, Object... args) {
+	public static TranslationTextComponent getTranslationComponent(String key, Object... args) {
 		return new TranslationTextComponent(Create.ID + "." + key, args);
 	}
 
