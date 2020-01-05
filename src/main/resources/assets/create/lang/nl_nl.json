@@ -474,11 +474,11 @@
 	"block.create.cocoa_log.tooltip.behaviour1": "Groeit _Cocaobonen_ aan alle kanten",
 
 	"item.create.empty_blueprint.tooltip": "LEGE BOUWTEKENING",
-	"item.create.empty_blueprint.tooltip.summary": "Bruikbaar als ingredient in recepten en voor het schrijven aan de _BOUWTEKENING TAFEL._",
+	"item.create.empty_blueprint.tooltip.summary": "Bruikbaar als ingredient in recepten en voor het schrijven aan de _BOUWTEKENING_ _TAFEL._",
 
 	"item.create.blueprint.tooltip": "BOUWTEKENING",
 	"item.create.blueprint.tooltip.summary": "Holds a structure to be positioned and placed into the world. Position the Hologram as desired and use a _Schematicannon_ to build it.",
-	"item.create.blueprint.tooltip.summary": "Bevat een structuur die gepositioneerd en geplaatst van worden in de wereld. Positineer het Hologram als gewilt en gebruik een  _BOUWTEKENINGKANNON_ om het te bouwen.",
+	"item.create.blueprint.tooltip.summary": "Bevat een structuur die gepositioneerd en geplaatst van worden in de wereld. Positineer het Hologram als gewilt en gebruik een _BOUWTEKENINGKANNON_ om het te bouwen.",
 	"item.create.blueprint.tooltip.condition1": "Wanneer ingedrukt",
 	"item.create.blueprint.tooltip.behaviour1": "Kan gepositioneerd worden met de knoppen op het scherm",
 	"item.create.blueprint.tooltip.control1": "R-Klik terwijl je sluipt",
@@ -494,7 +494,7 @@
 	"item.create.blueprint_and_quill.tooltip.control1": "R-Klik",
 	"item.create.blueprint_and_quill.tooltip.action1": "Selecteer een hoekpunt / opslaan bevestigen",
 	"item.create.blueprint_and_quill.tooltip.control2": "Ctrl Ingedrukt houden",
-	"item.create.blueprint_and_quill.tooltip.action2": "Selecteer punten in _de lucht_. _Scroll_ om de afstand aan te passen.",
+	"item.create.blueprint_and_quill.tooltip.action2": "Selecteer punten in _de lucht._ _Scroll_ om de afstand aan te passen.",
 	"item.create.blueprint_and_quill.tooltip.control3": "R-Klik terwijl je sluipt",
 	"item.create.blueprint_and_quill.tooltip.action3": "_Resets_ en verwijderd de selectie.",
 
@@ -524,7 +524,7 @@
 	"block.create.encased_shaft.tooltip.summary": "_Geeft_ _Rotatie_ _door_ in een rechte lijn. Geschikt voor het doorgeven van rotatie door muren.",
 
 	"block.create.gearbox.tooltip": "VERSNELLINGSBAK",
-	"block.create.gearbox.tooltip.summary": "_Geeft_ _Rotatie_ _door_ in _Vier_ richtingen._ Keert rechte verbindingen om.",
+	"block.create.gearbox.tooltip.summary": "_Geeft_ _Rotatie_ _door_ in _Vier_ _richtingen._ Keert rechte verbindingen om.",
 
 	"block.create.gearshift.tooltip": "VERSNELLINGSPOOK",
 	"block.create.gearshift.tooltip.summary": "Een verstelbare _rotatie_ _schakelaar_ voor aangesloten drijfassen.",
@@ -539,11 +539,10 @@
 	"block.create.encased_belt.tooltip": "OMHULSDE TRANSPORTBAND",
 	"block.create.encased_belt.tooltip.summary": "_Geeft_ _Rotatie_ _door_ aan zichzelf en andere _Omhulsde_ _Transportbanden._",
 	"block.create.encased_belt.tooltip.condition1": "Wanneer aangesloten",
-	"block.create.encased_belt.tooltip.behaviour1": "Attached Blocks will have the exact _same_ _rotation_ _speed_ and direction. They do not have to face the same way.",
 	"block.create.encased_belt.tooltip.behaviour1": "Aangesloten blokken zullen precies _dezelfde_ _Rotatiesnelheid_ en _richting_ hebben. Ze hoeven niet dezelfde kant op te staan.",
 
 	"item.create.belt_connector.tooltip": "TRANSPORTBAND CONNECTOR",
-	"item.create.belt_connector.tooltip.summary": "Verbind twee _Drijfassen_ met een _Mechanische_ _Transportband_. Verbonden drijfassen zullen dezelfde rotatiesneheid en richting hebben. De Transportband kan ook Entiteiten transporteren",
+	"item.create.belt_connector.tooltip.summary": "Verbind twee _Drijfassen_ met een _Mechanische_ _Transportband._ Verbonden drijfassen zullen dezelfde rotatiesneheid en richting hebben. De Transportband kan ook Entiteiten transporteren",
 	"item.create.belt_connector.tooltip.control1": "R-Klikken op drijfas",
 	"item.create.belt_connector.tooltip.action1": "Selecteer de Drijfas als een katrol van de transportband. Beide geselecteerde drijfassen moeten _verticaal_, _horizontaal_ of _diagonaal_ in _één_ _lijn_ staan in de richting van de Transportbanden.",
 	"item.create.belt_connector.tooltip.control2": "R-Klikken terwijl je sluipt",
@@ -558,7 +557,7 @@
 	"block.create.motor.tooltip.summary": "Een instelbare bron van _Rotatiekracht_",
 
 	"block.create.water_wheel.tooltip": "WATERRAD",
-	"block.create.water_wheel.tooltip.summary": "Bied _Rotatiekracht_ van naastgelegen _water_ _stromen_.",
+	"block.create.water_wheel.tooltip.summary": "Bied _Rotatiekracht_ van naastgelegen _water_ _stromen._",
 
 	"block.create.encased_fan.tooltip": "OMHULSDE VENTILATOR",
 	"block.create.encased_fan.tooltip.summary": "Zet _Rotatiekracht_ om naar een _Luchtstroom_ en terug. Heeft een verscheidenheid aan toepassingen.",
@@ -567,7 +566,7 @@
 	"block.create.encased_fan.tooltip.condition2": "Wanneer gedraaid",
 	"block.create.encased_fan.tooltip.behaviour2": "_Duwt_ of _Trekt_ Entiteiten, afhankelijk van de binnenkomende rotatiesnelheid.",
 	"block.create.encased_fan.tooltip.condition3": "Bij het doorblazen van speciale blokken",
-	"block.create.encased_fan.tooltip.behaviour3": "__Vloeitstoffen_ en _Vuur_ zenden deeltjes uit in de luchtstroom. Dit kan gebruikt worden om _objecten_ te _verwerken_",
+	"block.create.encased_fan.tooltip.behaviour3": "_Vloeitstoffen_ en _Vuur_ zenden deeltjes uit in de luchtstroom. Dit kan gebruikt worden om _objecten_ te _verwerken_",
 
 	"block.create.turntable.tooltip": "DRAAISCHIJF",
 	"block.create.turntable.tooltip.summary": "Verandert _Rotatiekracht_ in verfijnde bewegingsziekte.",
@@ -589,21 +588,21 @@
 	"block.create.mechanical_mixer.tooltip.condition1": "Wanneer boven een Bekken",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "Begint objecten in het bekken te mengen wanneer alle benodigde ingrediënten aanwezig zijn.",
 	"block.create.mechanical_mixer.tooltip.condition2": "Wanneer gebruikt met een Sleutel",
-	"block.create.mechanical_mixer.tooltip.behaviour2": "_Configureert_ de minimale hoeveelheid _totale_ _ingredienten_ voor toegepaste recepten. Gebruik deze optie om _ongewenste_ _recepten_ met vergelijkbare maar minder ingrediënten _te_ _vermijden_.",
+	"block.create.mechanical_mixer.tooltip.behaviour2": "_Configureert_ de minimale hoeveelheid _totale_ _ingredienten_ voor toegepaste recepten. Gebruik deze optie om _ongewenste_ _recepten_ met vergelijkbare maar minder ingrediënten _te_ _vermijden._",
 
 	"block.create.mechanical_piston.tooltip": "MECHANISCHE ZUIGER",
-	"block.create.mechanical_piston.tooltip.summary": "Een meer geavanceerde versie van de _Zuiger, _ die _Rotatiekracht_ gebruikt om gekoppelde constructies nauwkeurig te verplaatsen. _Zuiger_ _Verlgenpaalen_ aan de achterzijde definiëren het _Bereik_ van dit apparaat. Zonder verlengingen zal de zuiger niet bewegen. Gebruik _Lineaar_ _Frame_ om meer dan een enkele rij blokken te verplaatsen.",
+	"block.create.mechanical_piston.tooltip.summary": "Een meer geavanceerde versie van de _Zuiger,_ die _Rotatiekracht_ gebruikt om gekoppelde constructies nauwkeurig te verplaatsen. _Zuiger_ _Verlgenpaalen_ aan de achterzijde definiëren het _Bereik_ van dit apparaat. Zonder verlengingen zal de zuiger niet bewegen. Gebruik _Lineaar_ _Frame_ om meer dan een enkele rij blokken te verplaatsen.",
 	"block.create.mechanical_piston.tooltip.condition1": "Wanneer gedraaid",
 	"block.create.mechanical_piston.tooltip.behaviour1": "Begint de bijgevoegde structuur te verplaatsen. Snelheid en richting correleren met de inkomende rotatiesnelheid.",
 
 	"block.create.sticky_mechanical_piston.tooltip": "MECHANISCHE KLEEFZUIGER",
-	"block.create.sticky_mechanical_piston.tooltip.summary": "Een meer geavanceerde versie van de _Kleefzuiger, _ die _Rotatiekracht_ gebruikt om gekoppelde constructies nauwkeurig te verplaatsen. _Zuiger_ _Verlgenpaalen_ aan de achterzijde definiëren het _Bereik_ van dit apparaat. Zonder verlengingen zal de zuiger niet bewegen. Gebruik _Lineaar_ _Frame_ om meer dan een enkele rij blokken te verplaatsen.",
+	"block.create.sticky_mechanical_piston.tooltip.summary": "Een meer geavanceerde versie van de _Kleefzuiger,_ die _Rotatiekracht_ gebruikt om gekoppelde constructies nauwkeurig te verplaatsen. _Zuiger_ _Verlgenpaalen_ aan de achterzijde definiëren het _Bereik_ van dit apparaat. Zonder verlengingen zal de zuiger niet bewegen. Gebruik _Lineaar_ _Frame_ om meer dan een enkele rij blokken te verplaatsen.",
 	"block.create.sticky_mechanical_piston.tooltip.condition1": "Wanneer gedraaid",
 	"block.create.sticky_mechanical_piston.tooltip.behaviour1": "Begint de bijgevoegde structuur te verplaatsen. Snelheid en richting correleren met de inkomende rotatiesnelheid.",
 
 	"block.create.piston_pole.tooltip": "ZUIGER VERLENGPAAL",
 	"block.create.piston_pole.tooltip.summary": "Gebruikt om het bereik van _MECHANISCHE_ _ZUIGERS_ te vergroten.",
-	"block.create.piston_pole.tooltip.condition1": "Wanneer aangesloten op een _MECHANISCHE_ _ZUIGER_",
+	"block.create.piston_pole.tooltip.condition1": "Wanneer aangesloten op een Mechanische zuiger",
 	"block.create.piston_pole.tooltip.behaviour1": "Verlengt het bereik van de zuigers met 1 blok",
 
 	"block.create.mechanical_bearing.tooltip": "MECHANISCHE LAGER",
@@ -614,16 +613,16 @@
 	"block.create.mechanical_bearing.tooltip.behaviour2": "Begint met het aanbieden van _Rotatiekracht_ uit het roteren van de bijbehorende structuur. De structuur moet geschikte _Zijl_ _Blokken_ bevatten (momenteel een wollen blok).",
 
 	"block.create.translation_chassis.tooltip": "LINEAAR FRAME",
-	"block.create.translation_chassis.tooltip.summary": "A configurable base for Structures moved by a _Mechanische _Zuiger._ These Blocks have to form the first Layer of blocks in front of the Zuiger.",
+	"block.create.translation_chassis.tooltip.summary": "A configurable base for Structures moved by a _Mechanische_ _Zuiger._ These Blocks have to form the first Layer of blocks in front of the Zuiger.",
 	"block.create.translation_chassis.tooltip.condition1": "Wanneer bewogen door een Mechanische Zuiger",
 	"block.create.translation_chassis.tooltip.behaviour1": "_Beweegt_ alle _aangesloten_ _Frames_ met dezelfde oriëntatie, en daaraan bevestigde blokken. Wanneer de Zuiger wordt ingetrokken, worden blokken alleen getrokken als het framevlak _Kleverig_ (zie [Ctrl]).",
 	"block.create.translation_chassis.tooltip.control1": "Wanneer R-Geklikt met een slijmbal",
-"block.create.translation_chassis.tooltip.action1": "Maakt het geklikte vlak _Kleverig._ Wanneer de Zuiger zich terugtrekt, zal het frame alle bevestigde blokken in zijn kolom en binnen het geconfigureerde bereik _terugtrekken_.",
+"block.create.translation_chassis.tooltip.action1": "Maakt het geklikte vlak _Kleverig._ Wanneer de Zuiger zich terugtrekt, zal het frame alle bevestigde blokken in zijn kolom en binnen het geconfigureerde bereik _terugtrekken._",
 
 	"block.create.rotation_chassis.tooltip": "ROTATIE FRAME",
-	"block.create.rotation_chassis.tooltip.summary": "Vereist voor het roten van structeren met de _Mechanische _Lager._ ",
+	"block.create.rotation_chassis.tooltip.summary": "Vereist voor het roten van structeren met de _Mechanisch_ _Lager._ ",
 	"block.create.rotation_chassis.tooltip.condition1": "Wanneer gedraaid door een Lager",
-	"block.create.rotation_chassis.tooltip.behaviour1": "_Roteert_ alle blokken bevestigd aan _Klevende_-zijden (zie [Ctrl]) binnen het geconfigureerde bereik rondom zichzelf. _Zendt_ de rotatie over naar verder bevestigd rotatie frame.",
+	"block.create.rotation_chassis.tooltip.behaviour1": "_Roteert_ alle blokken bevestigd aan _Klevende-zijden_ (zie [Ctrl]) binnen het geconfigureerde bereik rondom zichzelf. _Zendt_ de rotatie over naar verder bevestigd rotatie frame.",
 	"block.create.rotation_chassis.tooltip.control1": "Wanneer R-Geklikt met een slijmbal",
 	"block.create.rotation_chassis.tooltip.action1": "Maakt het geklikte vlak _Klevend._ Wanneer het frame roteert, worden alle blokken die aan deze zijde zijn bevestigd mee gedraaid.",
 
@@ -641,7 +640,7 @@
 	"block.create.harvester.tooltip.behaviour1": "_Oogst_ alle _Rijpe_ _Planten_ dat het mes raakt aan en zet ze terug naar hun oorspronkelijke staat van groei.",
 
 	"block.create.stockswitch.tooltip": "VOORRAAD SCHAKELAAR",
-	"block.create.stockswitch.tooltip.summary": "Schakelt eenRedstone signaal op basis van de _Opslagruimte_ in de aangesloten Container.",
+	"block.create.stockswitch.tooltip.summary": "Schakelt een Redstone signaal op basis van de _Opslagruimte_ in de aangesloten Container.",
 	"block.create.stockswitch.tooltip.condition1": "Wanneer onder de laagste limiet",
 	"block.create.stockswitch.tooltip.behaviour1": "Stopt met het aanbieden van _Redstone_ _Kracht_",
 	"block.create.stockswitch.tooltip.condition2": "Wanneer boven de hoogste limiet",
@@ -650,7 +649,7 @@
 	"block.create.stockswitch.tooltip.action1": "Opent de _Configuratie_ _Interface_",
 
 	"block.create.redstone_bridge.tooltip": "REDSTONE BRUG",
-	"block.create.redstone_bridge.tooltip.summary": "Eindpunten voor _Draadloze_ _Redstone_-verbindingen. Kan met elk object _Frequencies_ worden toegewezen. Signaalbereik is beperkt, maar redelijk ver.",
+	"block.create.redstone_bridge.tooltip.summary": "Eindpunten voor _Draadloze_ _Redstone-verbindingen._ Kan met elk object _Frequencies_ worden toegewezen. Signaalbereik is beperkt, maar redelijk ver.",
 	"block.create.redstone_bridge.tooltip.condition1": "Wanneer aangestuurd",
 	"block.create.redstone_bridge.tooltip.behaviour1": "Het ontvangen van verbindingen met dezelfde frequentie levert een Redstone-signaal.",
 	"block.create.redstone_bridge.tooltip.control1": "Wanneer R-Geklikt met een object",
@@ -687,10 +686,10 @@
 	"block.create.linked_extractor.tooltip.action2": "Wijst momenteel _vastgehouden_ _object_ toe als onderdeel van de geluisterde frequentie. Wanneer een zendende _Redstone_ _Brug_ van dezelfde frequentie wordt ingeschakeld, pauzeert deze Extractor.",
 
 	"block.create.belt_funnel.tooltip": "TRANSPORTBAND TRECHTER",
-	"block.create.belt_funnel.tooltip.summary": "Verzamelt inkomende items op een _Mechanische_ _Transportband_ en plaatst deze indien mogelijk in de bijgevoegde _Inventaris_. Moet zich direct op een transportband bevinden, met de opening tegenover de bewegingsrichting van de transportband. Het inventaris moet op dezelfde hoogte zijn als de trechter.",
+	"block.create.belt_funnel.tooltip.summary": "Verzamelt inkomende items op een _Mechanische_ _Transportband_ en plaatst deze indien mogelijk in de bijgevoegde _Inventaris._ Moet zich direct op een transportband bevinden, met de opening tegenover de bewegingsrichting van de transportband. Het inventaris moet op dezelfde hoogte zijn als de trechter.",
 
 	"block.create.entity_detector.tooltip": "TRANSPORTBAND OBSERVEERDER",
-	"block.create.entity_detector.tooltip.summary": "Detecteert passerende items op een _Mechanische_ _Transportband_ ervoor. Werkt goed met een _Zuiger_ bovenop, waardoor bepaalde items worden verwijderd.\n",
+	"block.create.entity_detector.tooltip.summary": "Detecteert passerende items op een _Mechanische_ _Transportband_ ervoor. Werkt goed met een _Zuiger_ bovenop, waardoor bepaalde items worden verwijderd.",
 	"block.create.entity_detector.tooltip.condition1": "Wanneer een object overeenkomt met Filter",
 	"block.create.entity_detector.tooltip.behaviour1": "Biedt een korte _Redstone_ _pulse_ aan alle kanten. Een leeg filter komt overeen met alle passerende objecten.",
 	"block.create.entity_detector.tooltip.control1": "R-Klik op Filter Plek",
