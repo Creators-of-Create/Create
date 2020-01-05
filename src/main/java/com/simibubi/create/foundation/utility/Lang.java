@@ -12,15 +12,15 @@ import net.minecraft.util.text.TranslationTextComponent;
 public class Lang {
 
 	public static String translate(String key, Object... args) {
-		return getTranslationComponent(key, args).getFormattedText();
+		return createTranslationTextComponent(key, args).getFormattedText();
 	}
 
-	public static TranslationTextComponent getTranslationComponent(String key, Object... args) {
+	public static TranslationTextComponent createTranslationTextComponent(String key, Object... args) {
 		return new TranslationTextComponent(Create.ID + "." + key, args);
 	}
 
 	public static void sendStatus(PlayerEntity player, String key, Object... args) {
-		player.sendStatusMessage(getTranslationComponent(key, args), true);
+		player.sendStatusMessage(createTranslationTextComponent(key, args), true);
 	}
 
 	public static List<String> translatedOptions(String prefix, String... keys) {
