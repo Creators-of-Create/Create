@@ -49,20 +49,20 @@ import com.simibubi.create.modules.curiosities.symmetry.block.CrossPlaneSymmetry
 import com.simibubi.create.modules.curiosities.symmetry.block.PlaneSymmetryBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.TriplePlaneSymmetryBlock;
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
-import com.simibubi.create.modules.logistics.block.RedstoneBridgeBlock;
+import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
 import com.simibubi.create.modules.logistics.block.StockswitchBlock;
-import com.simibubi.create.modules.logistics.block.belts.BeltFunnelBlock;
-import com.simibubi.create.modules.logistics.block.belts.EntityDetectorBlock;
-import com.simibubi.create.modules.logistics.block.belts.ExtractorBlock;
-import com.simibubi.create.modules.logistics.block.belts.LinkedExtractorBlock;
-import com.simibubi.create.modules.logistics.block.belts.VerticalExtractorBlock;
-import com.simibubi.create.modules.logistics.block.belts.VerticalLinkedExtractorBlock;
+import com.simibubi.create.modules.logistics.block.belts.BeltObserverBlock;
+import com.simibubi.create.modules.logistics.block.belts.FunnelBlock;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterBlock;
 import com.simibubi.create.modules.logistics.block.diodes.PulseRepeaterBlock;
+import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
+import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorBlock;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
-import com.simibubi.create.modules.logistics.management.base.LogisticalCasingBlock;
+import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBlock;
+import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.LogisticalControllerIndicatorBlock;
+import com.simibubi.create.modules.logistics.management.base.NewLogisticalCasingBlock;
 import com.simibubi.create.modules.logistics.management.index.LogisticalIndexBlock;
 import com.simibubi.create.modules.logistics.transport.villager.LogisticiansTableBlock;
 import com.simibubi.create.modules.logistics.transport.villager.PackageFunnelBlock;
@@ -160,21 +160,26 @@ public enum AllBlocks {
 
 	__LOGISTICS__(),
 	CONTACT(new ContactBlock()),
-	REDSTONE_BRIDGE(new RedstoneBridgeBlock()),
+	REDSTONE_BRIDGE(new RedstoneLinkBlock()),
 	STOCKSWITCH(new StockswitchBlock()),
 	FLEXCRATE(new FlexcrateBlock()),
 	EXTRACTOR(new ExtractorBlock()),
-	VERTICAL_EXTRACTOR(new VerticalExtractorBlock()),
+	VERTICAL_EXTRACTOR(new ExtractorBlock.Vertical()),
 	LINKED_EXTRACTOR(new LinkedExtractorBlock()),
-	VERTICAL_LINKED_EXTRACTOR(new VerticalLinkedExtractorBlock()),
-	BELT_FUNNEL(new BeltFunnelBlock()),
+	VERTICAL_LINKED_EXTRACTOR(new LinkedExtractorBlock.Vertical()),
+	TRANSPOSER(new TransposerBlock()),
+	VERTICAL_TRANSPOSER(new TransposerBlock.Vertical()),
+	LINKED_TRANSPOSER(new LinkedTransposerBlock()),
+	VERTICAL_LINKED_TRANSPOSER(new LinkedTransposerBlock.Vertical()),
+	BELT_FUNNEL(new FunnelBlock()),
+	VERTICAL_FUNNEL(new FunnelBlock.Vertical()),
 	BELT_TUNNEL(new BeltTunnelBlock()),
 	BELT_TUNNEL_FLAP(new RenderUtilityBlock()),
-	ENTITY_DETECTOR(new EntityDetectorBlock()),
+	ENTITY_DETECTOR(new BeltObserverBlock()),
 	PULSE_REPEATER(new PulseRepeaterBlock()),
 	FLEXPEATER(new FlexpeaterBlock()),
 	FLEXPEATER_INDICATOR(new RenderUtilityBlock()),
-	LOGISTICAL_CASING(new LogisticalCasingBlock()),
+	LOGISTICAL_CASING(new NewLogisticalCasingBlock()),
 	LOGISTICAL_CONTROLLER(new LogisticalControllerBlock()),
 	LOGISTICAL_CONTROLLER_INDICATOR(new LogisticalControllerIndicatorBlock()),
 	LOGISTICAL_INDEX(new LogisticalIndexBlock()),
@@ -274,12 +279,13 @@ public enum AllBlocks {
 
 	public static void registerItemBlocks(IForgeRegistry<Item> registry) {
 		for (AllBlocks block : values()) {
-			if (block.get() == null)
+			Block def = block.get();
+			if (def == null)
 				continue;
-			if (block.get() instanceof IHaveNoBlockItem)
+			if (def instanceof IHaveNoBlockItem && !((IHaveNoBlockItem) def).hasBlockItem())
 				continue;
 
-			registerAsItem(registry, block.get());
+			registerAsItem(registry, def);
 			for (Block extra : block.alsoRegistered)
 				registerAsItem(registry, extra);
 		}
@@ -299,6 +305,10 @@ public enum AllBlocks {
 
 	public Block get() {
 		return block;
+	}
+
+	public BlockState getDefault() {
+		return block.getDefaultState();
 	}
 
 	public boolean typeOf(BlockState state) {

@@ -126,7 +126,6 @@ public class LogisticalCasingBlock extends Block implements IWithTileEntity<Logi
 			facing = facing.getOpposite();
 
 		return AllShapes.LOGISTICAL_CASING_CAP.get(facing);
-		//return state.get(PART) == Part.NONE ? VoxelShapers.LOGISTICAL_CASING_SINGLE_SHAPE : VoxelShapes.fullCube();
 	}
 
 	@Override

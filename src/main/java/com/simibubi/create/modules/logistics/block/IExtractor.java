@@ -4,6 +4,8 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
@@ -63,8 +65,7 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 		if (hasSpace && hasInventory) {
 			toExtract = extract(true);
 
-			ItemStack filterItem = (this instanceof IHaveFilter) ? ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
-			if (!filterItem.isEmpty() && !ItemStack.areItemsEqual(toExtract, filterItem))
+			if (!matchesFilter(toExtract))
 				toExtract = ItemStack.EMPTY;
 		}
 
@@ -85,10 +86,14 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 
 			extract(false);
 			setState(State.ON_COOLDOWN);
-
 			return;
 		}
 
+	}
+
+	default boolean matchesFilter(ItemStack stack) {
+		FilteringBehaviour filteringBehaviour = TileEntityBehaviour.get((TileEntity) this, FilteringBehaviour.TYPE);
+		return filteringBehaviour == null || filteringBehaviour.test(stack);
 	}
 
 	public default void setLocked(boolean locked) {
@@ -105,8 +110,7 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 
 		if (hasSpace && hasInventory) {
 			toExtract = extract(true);
-			ItemStack filterItem = (this instanceof IHaveFilter) ? ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
-			if (!filterItem.isEmpty() && !ItemStack.areItemsEqual(toExtract, filterItem))
+			if (!matchesFilter(toExtract))
 				toExtract = ItemStack.EMPTY;
 		}
 
@@ -144,7 +148,8 @@ public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 	default ItemStack extract(boolean simulate) {
 		IItemHandler inv = getInventory().orElse(null);
 		ItemStack extracting = ItemStack.EMPTY;
-		ItemStack filterItem = (this instanceof IHaveFilter) ? ((IHaveFilter) this).getFilter() : ItemStack.EMPTY;
+		FilteringBehaviour filteringBehaviour = TileEntityBehaviour.get((TileEntity) this, FilteringBehaviour.TYPE);
+		ItemStack filterItem = filteringBehaviour == null ? ItemStack.EMPTY : filteringBehaviour.getFilter();
 		World world = getWorld();
 		int extractionCount = filterItem.isEmpty() ? CreateConfig.parameters.extractorAmount.get()
 				: filterItem.getCount();

@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.utility.recipe;
 
 import com.google.common.base.Predicate;
+import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -30,8 +31,9 @@ public class RecipeConditions {
 		return r -> !r.getIngredients().isEmpty() && r.getIngredients().get(0).test(stack);
 	}
 
-	public static Predicate<IRecipe<?>> outputMatchesFilter(ItemStack filter) {
-		return r -> filter.isEmpty() || ItemStack.areItemsEqual(filter, r.getRecipeOutput());
+	public static Predicate<IRecipe<?>> outputMatchesFilter(FilteringBehaviour filtering) {
+		return r -> filtering.test(r.getRecipeOutput());
+
 	}
 
 }

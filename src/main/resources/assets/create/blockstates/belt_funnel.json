@@ -1,9 +1,10 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "create:block/belt_funnel"
-  },
   "variants": {
+    "belt": {
+      "true": { "model": "create:block/funnel/horizontal_belt" },
+      "false": { "model": "create:block/funnel/horizontal" }
+    },
     "facing": {
       "south": { "y": 180 },
       "east": { "y": 90 },

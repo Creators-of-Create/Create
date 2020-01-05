@@ -5,4 +5,8 @@ package com.simibubi.create.foundation.block;
  */
 public interface IHaveNoBlockItem {
 
+	default boolean hasBlockItem() {
+		return false;
+	}
+	
 }

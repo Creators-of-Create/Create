@@ -71,5 +71,9 @@ public class VecHelper {
 	public static Vec3d readNBT(ListNBT list) {
 		return new Vec3d(list.getDouble(0), list.getDouble(1), list.getDouble(2));
 	}
+	
+	public static Vec3d voxelSpace(double x, double y, double z) {
+		return new Vec3d(x, y, z).scale(1 / 16f);
+	}
 
 }

@@ -67,7 +67,7 @@
 		{
 			"name": "FilterSpot",
 			"from": [5, 10, -1],
-			"to": [11, 11, 4],
+			"to": [11, 11.05, 4],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 11, -1]},
 			"faces": {
 				"north": {"uv": [0, 9, 1, 15], "rotation": 90, "texture": "#extractor"},

@@ -5,11 +5,11 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.logistics.block.FilteredTileEntityRenderer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -29,7 +29,7 @@ public class SawTileEntityRenderer extends TileEntityRenderer<SawTileEntity> {
 	@Override
 	public void render(SawTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
 		renderItems(te, x, y, z, partialTicks);
-		FilteredTileEntityRenderer.render(te, x, y, z, partialTicks, destroyStage);
+		FilteringRenderer.renderOnTileEntity(te, x, y, z, partialTicks, destroyStage);
 		renderShaft(te, x, y, z);
 	}
 

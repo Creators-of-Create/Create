@@ -28,16 +28,17 @@ public final class CreateItemGroup extends ItemGroup {
 
 	public void addBlocks(NonNullList<ItemStack> items) {
 		for (AllBlocks block : AllBlocks.values()) {
-			if (block.get() == null)
+			Block def = block.get();
+			if (def == null)
 				continue;
 			if (!block.module.isEnabled())
 				continue;
-			if (block.get() instanceof IHaveNoBlockItem)
+			if (def instanceof IHaveNoBlockItem && !((IHaveNoBlockItem) def).hasBlockItem())
 				continue;
-			if (block.get() instanceof IAddedByOther)
+			if (def instanceof IAddedByOther)
 				continue;
 
-			block.get().asItem().fillItemGroup(this, items);
+			def.asItem().fillItemGroup(this, items);
 			for (Block alsoRegistered : block.alsoRegistered)
 				alsoRegistered.asItem().fillItemGroup(this, items);
 		}

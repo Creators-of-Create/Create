@@ -1,17 +1,17 @@
 {
-    "variants": {
-        "powered=false,facing=up": { "model": "create:block/contact" },
-		"powered=false,facing=down": { "model": "create:block/contact", "x": 180 },
-        "powered=false,facing=north": { "model": "create:block/contact", "x": 90 },
-		"powered=false,facing=south": { "model": "create:block/contact", "x": 90, "y": 180 },
-        "powered=false,facing=east": { "model": "create:block/contact", "x": 90, "y": 90 },
-        "powered=false,facing=west": { "model": "create:block/contact", "x": 90, "y": 270 },
-		
-		"powered=true,facing=up": { "model": "create:block/contact_powered" },
-		"powered=true,facing=down": { "model": "create:block/contact_powered", "x": 180 },
-        "powered=true,facing=north": { "model": "create:block/contact_powered", "x": 90 },
-		"powered=true,facing=south": { "model": "create:block/contact_powered", "x": 90, "y": 180 },
-        "powered=true,facing=east": { "model": "create:block/contact_powered", "x": 90, "y": 90 },
-        "powered=true,facing=west": { "model": "create:block/contact_powered", "x": 90, "y": 270 }
-	}
+  "forge_marker": 1,
+  "variants": {
+  	"powered": {
+  		"true": { "model": "create:block/contact_powered" },
+  		"false": { "model": "create:block/contact" }
+  	},
+    "facing": {
+      "north": { "x": 90 },
+      "south": { "x": 90, "y": 180 },
+      "west": { "x": 90, "y": 270 },
+      "up": { },
+      "down": { "x": 180 },
+      "east": { "x": 90, "y": 90 }
+    }
+  }
 }

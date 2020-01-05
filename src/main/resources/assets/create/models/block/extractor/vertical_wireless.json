@@ -61,8 +61,7 @@
 			"from": [5, 0, 5],
 			"to": [11, 4, 11],
 			"faces": {
-				"up": {"uv": [7, 1, 13, 7], "rotation": 180, "texture": "#extractor"},
-				"down": {"uv": [5, 5, 11, 11], "texture": "#1"}
+				"up": {"uv": [7, 1, 13, 7], "rotation": 180, "texture": "#extractor"}
 			}
 		},
 		{
@@ -116,6 +115,18 @@
 				"up": {"uv": [4, 0, 9, 5], "texture": "#redstone_antenna"},
 				"down": {"uv": [4, 0, 9, 5], "texture": "#redstone_antenna"}
 			}
+		},
+		{
+			"name": "Extension",
+			"from": [4.9, -3, 4.9],
+			"to": [11.1, -1, 11.1],
+			"faces": {
+				"north": {"uv": [3, 0, 5, 6], "rotation": 270, "texture": "#extractor"},
+				"east": {"uv": [3, 0, 5, 6], "rotation": 270, "texture": "#extractor"},
+				"south": {"uv": [3, 0, 5, 6], "rotation": 270, "texture": "#extractor"},
+				"west": {"uv": [3, 0, 5, 6], "rotation": 270, "texture": "#extractor"},
+				"down": {"uv": [5, 5, 11, 11], "texture": "#1"}
+			}
 		}
 	],
 	"display": {
@@ -156,7 +167,7 @@
 		{
 			"name": "vertical",
 			"origin": [8, 8, 8],
-			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 		}
 	]
 }

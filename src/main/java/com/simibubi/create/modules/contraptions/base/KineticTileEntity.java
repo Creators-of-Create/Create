@@ -11,7 +11,8 @@ import java.util.UUID;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateConfig;
-import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
@@ -33,7 +34,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 
-public abstract class KineticTileEntity extends SyncedTileEntity implements ITickableTileEntity {
+public abstract class KineticTileEntity extends SmartTileEntity implements ITickableTileEntity {
 
 	int particleSpawnCountdown;
 
@@ -57,6 +58,10 @@ public abstract class KineticTileEntity extends SyncedTileEntity implements ITic
 		super(typeIn);
 		speed = 0;
 		source = Optional.empty();
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 	}
 
 	public void sync(float maxStress, float currentStress) {

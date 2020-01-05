@@ -2,6 +2,7 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.behaviour.base.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.actors.DrillTileEntity;
@@ -48,20 +49,18 @@ import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxTileEntity
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearshiftTileEntity;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockTileEntity;
-import com.simibubi.create.modules.logistics.block.LinkedTileEntityRenderer;
-import com.simibubi.create.modules.logistics.block.RedstoneBridgeTileEntity;
+import com.simibubi.create.modules.logistics.block.RedstoneLinkTileEntity;
 import com.simibubi.create.modules.logistics.block.StockswitchTileEntity;
-import com.simibubi.create.modules.logistics.block.belts.BeltFunnelTileEntity;
-import com.simibubi.create.modules.logistics.block.belts.BeltFunnelTileEntityRenderer;
-import com.simibubi.create.modules.logistics.block.belts.EntityDetectorTileEntity;
-import com.simibubi.create.modules.logistics.block.belts.EntityDetectorTileEntityRenderer;
-import com.simibubi.create.modules.logistics.block.belts.ExtractorTileEntity;
-import com.simibubi.create.modules.logistics.block.belts.ExtractorTileEntityRenderer;
-import com.simibubi.create.modules.logistics.block.belts.LinkedExtractorTileEntity;
-import com.simibubi.create.modules.logistics.block.belts.LinkedExtractorTileEntityRenderer;
+import com.simibubi.create.modules.logistics.block.belts.BeltObserverTileEntity;
+import com.simibubi.create.modules.logistics.block.belts.BeltObserverTileEntityRenderer;
+import com.simibubi.create.modules.logistics.block.belts.FunnelTileEntity;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterTileEntity;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterTileEntityRenderer;
+import com.simibubi.create.modules.logistics.block.extractor.ExtractorTileEntity;
+import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorTileEntity;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateTileEntity;
+import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerTileEntity;
+import com.simibubi.create.modules.logistics.block.transposer.TransposerTileEntity;
 import com.simibubi.create.modules.logistics.management.base.LogisticalCasingTileEntity;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntityRenderer;
@@ -126,13 +125,18 @@ public enum AllTileEntities {
 	STRESS_GAUGE(StressGaugeTileEntity::new, AllBlocks.STRESS_GAUGE),
 
 	// Logistics
-	REDSTONE_BRIDGE(RedstoneBridgeTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
+	REDSTONE_BRIDGE(RedstoneLinkTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
 	STOCKSWITCH(StockswitchTileEntity::new, AllBlocks.STOCKSWITCH),
 	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE),
 	EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR, AllBlocks.VERTICAL_EXTRACTOR),
 	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR, AllBlocks.VERTICAL_LINKED_EXTRACTOR),
-	BELT_FUNNEL(BeltFunnelTileEntity::new, AllBlocks.BELT_FUNNEL),
-	ENTITY_DETECTOR(EntityDetectorTileEntity::new, AllBlocks.ENTITY_DETECTOR),
+	TRANSPOSER(TransposerTileEntity::new, AllBlocks.TRANSPOSER, AllBlocks.VERTICAL_TRANSPOSER),
+	LINKED_TRANSPOSER(
+			LinkedTransposerTileEntity::new,
+			AllBlocks.LINKED_TRANSPOSER,
+			AllBlocks.VERTICAL_LINKED_TRANSPOSER),
+	BELT_FUNNEL(FunnelTileEntity::new, AllBlocks.BELT_FUNNEL, AllBlocks.VERTICAL_FUNNEL),
+	ENTITY_DETECTOR(BeltObserverTileEntity::new, AllBlocks.ENTITY_DETECTOR),
 	FLEXPEATER(FlexpeaterTileEntity::new, AllBlocks.FLEXPEATER),
 	LOGISTICAL_CASING(LogisticalCasingTileEntity::new, AllBlocks.LOGISTICAL_CASING),
 	LOGISTICAL_SUPPLY_CONTROLLER(SupplyTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
@@ -178,6 +182,7 @@ public enum AllTileEntities {
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRenderers() {
 		bind(SchematicannonTileEntity.class, new SchematicannonRenderer());
+
 		bind(ShaftTileEntity.class, new KineticTileEntityRenderer());
 		bind(TurntableTileEntity.class, new KineticTileEntityRenderer());
 		bind(MotorTileEntity.class, new MotorTileEntityRenderer());
@@ -189,26 +194,32 @@ public enum AllTileEntities {
 		bind(GearshiftTileEntity.class, new SplitShaftTileEntityRenderer());
 		bind(ClutchTileEntity.class, new SplitShaftTileEntityRenderer());
 		bind(BeltTileEntity.class, new BeltTileEntityRenderer());
+		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());
+
 		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());
 		bind(MechanicalBearingTileEntity.class, new MechanicalBearingTileEntityRenderer());
+		bind(HarvesterTileEntity.class, new HarvesterTileEntityRenderer());
+
 		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());
-		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());
-		bind(RedstoneBridgeTileEntity.class, new LinkedTileEntityRenderer());
-		bind(LinkedExtractorTileEntity.class, new LinkedExtractorTileEntityRenderer());
-		bind(ExtractorTileEntity.class, new ExtractorTileEntityRenderer());
-		bind(BeltFunnelTileEntity.class, new BeltFunnelTileEntityRenderer());
-		bind(BeltTunnelTileEntity.class, new BeltTunnelTileEntityRenderer());
-		bind(EntityDetectorTileEntity.class, new EntityDetectorTileEntityRenderer());
 		bind(MechanicalPressTileEntity.class, new MechanicalPressTileEntityRenderer());
+		bind(MechanicalMixerTileEntity.class, new MechanicalMixerTileEntityRenderer());
+		bind(MechanicalCrafterTileEntity.class, new MechanicalCrafterTileEntityRenderer());
+		bind(SpeedGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.SPEED));
+		bind(StressGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.STRESS));
+		bind(BasinTileEntity.class, new BasinTileEntityRenderer());
+
+		bind(RedstoneLinkTileEntity.class, new SmartTileEntityRenderer<>());
+		bind(ExtractorTileEntity.class, new SmartTileEntityRenderer<>());
+		bind(LinkedExtractorTileEntity.class, new SmartTileEntityRenderer<>());
+		bind(TransposerTileEntity.class, new SmartTileEntityRenderer<>());
+		bind(LinkedTransposerTileEntity.class, new SmartTileEntityRenderer<>());
+		bind(FunnelTileEntity.class, new SmartTileEntityRenderer<>());
+
+		bind(BeltTunnelTileEntity.class, new BeltTunnelTileEntityRenderer());
+		bind(BeltObserverTileEntity.class, new BeltObserverTileEntityRenderer());
 		bind(FlexpeaterTileEntity.class, new FlexpeaterTileEntityRenderer());
 		bind(LogisticalControllerTileEntity.class, new LogisticalControllerTileEntityRenderer());
 		bind(LogisticiansTableTileEntity.class, new LogisticiansTableTileEntityRenderer());
-		bind(HarvesterTileEntity.class, new HarvesterTileEntityRenderer());
-		bind(MechanicalMixerTileEntity.class, new MechanicalMixerTileEntityRenderer());
-		bind(MechanicalCrafterTileEntity.class, new MechanicalCrafterTileEntityRenderer());
-		bind(BasinTileEntity.class, new BasinTileEntityRenderer());
-		bind(SpeedGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.SPEED));
-		bind(StressGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.STRESS));
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/transposer/default",
+    "textures": {
+        "extractor": "create:block/extractor_powered",
+		"particle": "create:block/extractor_powered"
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "powered": {
+      "true": { "model": "create:block/transposer/default_powered" },
+      "false": { "model": "create:block/transposer/default" }
+    },
+    "facing": {
+      "north": { "y": 0 },
+      "south": { "y": 180 },
+      "west": { "y": 270 },
+      "east": { "y": 90 }
+    }
+  }
+}

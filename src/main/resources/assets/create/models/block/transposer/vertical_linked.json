@@ -1,0 +1,249 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:block/extractor/horizontal",
+	"textures": {
+		"1": "create:block/brass_casing",
+		"2": "create:block/transposer",
+		"particle": "create:block/extractor",
+		"extractor": "create:block/extractor",
+		"redstone_antenna": "create:block/redstone_antenna"
+	},
+	"elements": [
+		{
+			"name": "Side",
+			"from": [11, 5, 15],
+			"to": [12, 11, 17],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 10, 20]},
+			"faces": {
+				"north": {"uv": [6, 1, 7, 7], "texture": "#extractor"},
+				"east": {"uv": [4, 0, 6, 1], "texture": "#extractor"},
+				"south": {"uv": [13, 1, 14, 7], "texture": "#extractor"},
+				"west": {"uv": [4, 0, 6, 6], "texture": "#extractor"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#extractor"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#extractor"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [4, 5, 15],
+			"to": [5, 11, 17],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 10, 20]},
+			"faces": {
+				"north": {"uv": [13, 1, 14, 7], "texture": "#extractor"},
+				"east": {"uv": [4, 0, 6, 6], "rotation": 180, "texture": "#extractor"},
+				"south": {"uv": [6, 1, 7, 7], "texture": "#extractor"},
+				"west": {"uv": [4, 0, 6, 1], "rotation": 180, "texture": "#extractor"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#extractor"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#extractor"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [4, 11, 15],
+			"to": [12, 12.05, 17],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 10, 20]},
+			"faces": {
+				"north": {"uv": [6, 0, 14, 1], "texture": "#extractor"},
+				"east": {"uv": [4, 0, 6, 1], "texture": "#extractor"},
+				"south": {"uv": [6, 0, 14, 1], "texture": "#extractor"},
+				"west": {"uv": [4, 0, 6, 1], "rotation": 180, "texture": "#extractor"},
+				"up": {"uv": [4, 0, 6, 8], "rotation": 270, "texture": "#extractor"},
+				"down": {"uv": [0, 0, 2, 8], "rotation": 90, "texture": "#extractor"}
+			}
+		},
+		{
+			"name": "Bottom",
+			"from": [4, 4, 15],
+			"to": [12, 5, 17],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 10, 20]},
+			"faces": {
+				"north": {"uv": [6, 7, 14, 8], "texture": "#extractor"},
+				"east": {"uv": [4, 0, 6, 1], "texture": "#extractor"},
+				"south": {"uv": [6, 7, 14, 8], "texture": "#extractor"},
+				"west": {"uv": [4, 0, 6, 1], "rotation": 180, "texture": "#extractor"},
+				"up": {"uv": [4, 0, 6, 8], "rotation": 90, "texture": "#extractor"},
+				"down": {"uv": [4, 0, 6, 8], "rotation": 90, "texture": "#extractor"}
+			}
+		},
+		{
+			"name": "FilterSpot",
+			"from": [5, 12, -1],
+			"to": [11, 13.05, 4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 13, -1]},
+			"faces": {
+				"north": {"uv": [0, 9, 1, 15], "rotation": 90, "texture": "#extractor"},
+				"east": {"uv": [0, 9, 5, 10], "rotation": 180, "texture": "#extractor"},
+				"south": {"uv": [4, 9, 5, 15], "rotation": 270, "texture": "#extractor"},
+				"west": {"uv": [0, 9, 5, 10], "texture": "#extractor"},
+				"up": {"uv": [0, 9, 5, 15], "rotation": 90, "texture": "#extractor"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#extractor"}
+			}
+		},
+		{
+			"name": "Center",
+			"from": [5, 5, 0],
+			"to": [11, 11, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 10, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 6], "rotation": 180, "texture": "#2"},
+				"south": {"uv": [7, 1, 13, 7], "texture": "#extractor"},
+				"west": {"uv": [0, 0, 16, 6], "texture": "#2"},
+				"up": {"uv": [0, 0, 16, 6], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [0, 0, 16, 6], "rotation": 270, "texture": "#2"}
+			}
+		},
+		{
+			"name": "Extension",
+			"from": [4.9, 4.9, -3],
+			"to": [11.1, 11.1, -1],
+			"faces": {
+				"north": {"uv": [5, 5, 11, 11], "rotation": 180, "texture": "#1"},
+				"east": {"uv": [3, 0, 5, 6], "rotation": 180, "texture": "#extractor"},
+				"south": {"uv": [0, 0, 0, 0], "texture": "#extractor"},
+				"west": {"uv": [3, 0, 5, 6], "texture": "#extractor"},
+				"up": {"uv": [3, 0, 5, 6], "rotation": 90, "texture": "#extractor"},
+				"down": {"uv": [3, 0, 5, 6], "rotation": 270, "texture": "#extractor"}
+			}
+		},
+		{
+			"name": "AntennaDish",
+			"from": [10, 15, 0],
+			"to": [15, 15, 5],
+			"rotation": {"angle": 0, "axis": "x", "origin": [13, 9, 3]},
+			"faces": {
+				"up": {"uv": [4, 0, 9, 5], "texture": "#redstone_antenna"},
+				"down": {"uv": [4, 0, 9, 5], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaX",
+			"from": [11, 9, 2],
+			"to": [14, 19, 3],
+			"rotation": {"angle": 0, "axis": "x", "origin": [13, 9, 3]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
+				"south": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
+				"down": {"uv": [0, 9, 3, 10], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaZ",
+			"from": [12, 9, 1],
+			"to": [13, 19, 4],
+			"rotation": {"angle": 0, "axis": "x", "origin": [13, 9, 3]},
+			"faces": {
+				"east": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
+				"west": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaTop",
+			"from": [12, 17, 2],
+			"to": [13, 18, 3],
+			"rotation": {"angle": 0, "axis": "x", "origin": [13, 9, 3]},
+			"faces": {
+				"up": {"uv": [1, 1, 2, 2], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "Bottom",
+			"from": [4, 4, -1],
+			"to": [12, 5, 5],
+			"faces": {
+				"north": {"uv": [6, 7, 14, 8], "texture": "#extractor"},
+				"east": {"uv": [6, 8, 12, 9], "rotation": 180, "texture": "#extractor"},
+				"south": {"uv": [6, 7, 14, 8], "texture": "#extractor"},
+				"west": {"uv": [6, 15, 12, 16], "texture": "#extractor"},
+				"up": {"uv": [0, 0, 6, 8], "rotation": 90, "texture": "#extractor"},
+				"down": {"uv": [6, 8, 12, 16], "rotation": 270, "texture": "#extractor"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [4, 11, -1],
+			"to": [12, 12, 5],
+			"faces": {
+				"north": {"uv": [6, 0, 14, 1], "texture": "#extractor"},
+				"east": {"uv": [0, 0, 6, 1], "rotation": 180, "texture": "#extractor"},
+				"south": {"uv": [6, 0, 14, 1], "texture": "#extractor"},
+				"west": {"uv": [0, 0, 6, 1], "texture": "#extractor"},
+				"up": {"uv": [0, 0, 6, 8], "rotation": 90, "texture": "#extractor"},
+				"down": {"uv": [0, 0, 6, 8], "rotation": 270, "texture": "#extractor"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [4, 5, -1],
+			"to": [5, 11, 5],
+			"faces": {
+				"north": {"uv": [13, 1, 14, 7], "texture": "#extractor"},
+				"east": {"uv": [0, 1, 6, 7], "rotation": 180, "texture": "#extractor"},
+				"south": {"uv": [6, 1, 7, 7], "texture": "#extractor"},
+				"west": {"uv": [0, 1, 6, 7], "texture": "#extractor"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [11, 5, -1],
+			"to": [12, 11, 5],
+			"faces": {
+				"north": {"uv": [6, 1, 7, 7], "texture": "#extractor"},
+				"east": {"uv": [0, 1, 6, 7], "rotation": 180, "texture": "#extractor"},
+				"south": {"uv": [13, 1, 14, 7], "texture": "#extractor"},
+				"west": {"uv": [0, 1, 6, 7], "texture": "#extractor"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, -149, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, -149, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -55, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -55, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 1, 1.25],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"translation": [2.5, -0.5, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 1.75, -4.5],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"groups": [
+		{
+			"name": "transposer",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+		},
+		{
+			"name": "vertical_wireless",
+			"origin": [8, 8, 8],
+			"children": [
+				{
+					"name": "vertical",
+					"origin": [8, 8, 8],
+					"children": [11, 12, 13, 14]
+				}
+			]
+		}
+	]
+}

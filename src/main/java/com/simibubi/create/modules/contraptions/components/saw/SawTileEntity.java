@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour.SlotPositioning;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.TreeCutter.Tree;
@@ -19,7 +22,6 @@ import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import com.simibubi.create.modules.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.modules.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.modules.logistics.block.IHaveFilter;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
@@ -45,21 +47,31 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class SawTileEntity extends BlockBreakingKineticTileEntity implements IHaveFilter {
+public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	private static final Object cuttingRecipesKey = new Object();
+	private static FilteringBehaviour.SlotPositioning slots;
+
 	public ProcessingInventory inventory;
 	private int recipeIndex;
-	private ItemStack filter;
 	private LazyOptional<IItemHandler> invProvider = LazyOptional.empty();
+	private FilteringBehaviour filtering;
 
 	public SawTileEntity() {
 		super(AllTileEntities.SAW.type);
 		inventory = new ProcessingInventory();
 		inventory.remainingTime = -1;
-		filter = ItemStack.EMPTY;
 		recipeIndex = 0;
 		invProvider = LazyOptional.of(() -> inventory);
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		if (slots == null)
+			createSlotPositioning();
+		filtering = new FilteringBehaviour(this).withSlotPositioning(slots);
+		behaviours.add(filtering);
 	}
 
 	@Override
@@ -79,7 +91,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements IHa
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		inventory.write(compound);
-		compound.put("Filter", filter.write(new CompoundNBT()));
 		compound.putInt("RecipeIndex", recipeIndex);
 		return super.write(compound);
 	}
@@ -89,7 +100,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements IHa
 		super.read(compound);
 		inventory = ProcessingInventory.read(compound);
 		recipeIndex = compound.getInt("RecipeIndex");
-		filter = ItemStack.read(compound.getCompound("Filter"));
 	}
 
 	@Override
@@ -283,7 +293,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements IHa
 	private List<? extends IRecipe<?>> getRecipes() {
 		List<IRecipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, world,
 				RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipes.Types.CUTTING));
-		return startedSearch.stream().filter(RecipeConditions.outputMatchesFilter(filter))
+		return startedSearch.stream().filter(RecipeConditions.outputMatchesFilter(filtering))
 				.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0)))
 				.collect(Collectors.toList());
 	}
@@ -342,18 +352,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements IHa
 		return getBlockState().get(SawBlock.FACING) == Direction.UP;
 	}
 
-	@Override
-	public void setFilter(ItemStack stack) {
-		filter = stack.copy();
-		markDirty();
-		sendData();
-	}
-
-	@Override
-	public ItemStack getFilter() {
-		return filter;
-	}
-
 	// Block Breaker
 
 	@Override
@@ -389,6 +387,18 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements IHa
 	@Override
 	public boolean canBreak(BlockState stateToBreak, float blockHardness) {
 		return super.canBreak(stateToBreak, blockHardness) && stateToBreak.isIn(BlockTags.LOGS);
+	}
+
+	protected void createSlotPositioning() {
+		slots = new SlotPositioning(state -> {
+			if (state.get(SawBlock.FACING) != Direction.UP)
+				return null;
+			Vec3d x = VecHelper.voxelSpace(8f, 12.5f, 12.25f);
+			Vec3d z = VecHelper.voxelSpace(12.25f, 12.5f, 8f);
+			return state.get(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? z : x;
+		}, state -> {
+			return new Vec3d(0, state.get(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 270 : 180, 90);
+		}).scale(.4f);
 	}
 
 }

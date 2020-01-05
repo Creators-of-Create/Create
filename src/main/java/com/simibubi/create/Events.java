@@ -43,7 +43,7 @@ public class Events {
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
 		IWorld world = event.getWorld();
-		Create.frequencyHandler.onLoadWorld(world);
+		Create.redstoneLinkNetworkHandler.onLoadWorld(world);
 		Create.logisticalNetworkHandler.onLoadWorld(world);
 		Create.torquePropagator.onLoadWorld(world);
 	}
@@ -51,7 +51,7 @@ public class Events {
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		IWorld world = event.getWorld();
-		Create.frequencyHandler.onUnloadWorld(world);
+		Create.redstoneLinkNetworkHandler.onUnloadWorld(world);
 		Create.logisticalNetworkHandler.onUnloadWorld(world);
 		Create.torquePropagator.onUnloadWorld(world);
 	}
