@@ -31,11 +31,11 @@ public enum AllRecipes {
 	;
 
 	public static class Types {
-		public static IRecipeType<CrushingRecipe> CRUSHING = register("crushing");
-		public static IRecipeType<SplashingRecipe> SPLASHING = register("splashing");
-		public static IRecipeType<PressingRecipe> PRESSING = register("pressing");
-		public static IRecipeType<CuttingRecipe> CUTTING = register("cutting");
-		public static IRecipeType<MixingRecipe> MIXING = register("mixing");
+		public static IRecipeType<CrushingRecipe> CRUSHING = register("create:crushing");
+		public static IRecipeType<SplashingRecipe> SPLASHING = register("create:splashing");
+		public static IRecipeType<PressingRecipe> PRESSING = register("create:pressing");
+		public static IRecipeType<CuttingRecipe> CUTTING = register("create:cutting");
+		public static IRecipeType<MixingRecipe> MIXING = register("create:mixing");
 
 		static <T extends IRecipe<?>> IRecipeType<T> register(final String key) {
 			return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(key), new IRecipeType<T>() {
