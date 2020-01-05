@@ -434,6 +434,14 @@
 
 	"create.mechanical_mixer.min_ingredients": "Min. Ingredients",
 
+	"create.command.killTPSCommand": "killtps",
+	"create.command.killTPSCommand.status.slowed_by.0": "[Create]: Server tick is currently slowed by %s ms",
+	"create.command.killTPSCommand.status.slowed_by.1": "[Create]: Server tick is slowed by %s ms now :)",
+	"create.command.killTPSCommand.status.slowed_by.2": "[Create]: Server tick is back to regular speed",
+	"create.command.killTPSCommand.status.usage.0": "[Create]: use /killtps stop to bring back server tick to regular speed",
+	"create.command.killTPSCommand.status.usage.1": "[Create]: use /killtps start <tickTime> to artificially slow down the server tick",
+	"create.command.killTPSCommand.argument.tickTime": "tickTime",
+
 	"_comment": "-------------------------]  ITEM DESCRIPTIONS  [------------------------------------------------",
 
 	"item.create.example_item.tooltip": "EXAMPLE ITEM (just a marker that this tooltip exists)",
