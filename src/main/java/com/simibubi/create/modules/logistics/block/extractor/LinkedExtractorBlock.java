@@ -5,7 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.logistics.block.belts.AttachedLogisiticalBlock;
+import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -48,8 +48,8 @@ public class LinkedExtractorBlock extends ExtractorBlock {
 		Vec3d secondDownward = VecHelper.voxelSpace(6f, 2f, 11.5f);
 
 		float yRot = AngleHelper.horizontalAngle(state.get(ExtractorBlock.HORIZONTAL_FACING));
-		if (AttachedLogisiticalBlock.isVertical(state)) {
-			Boolean up = state.get(AttachedLogisiticalBlock.UPWARD);
+		if (AttachedLogisticalBlock.isVertical(state)) {
+			Boolean up = state.get(AttachedLogisticalBlock.UPWARD);
 			first = up ? firstUpward : firstDownward;
 			second = up ? secondUpward : secondDownward;
 		}
@@ -60,7 +60,7 @@ public class LinkedExtractorBlock extends ExtractorBlock {
 	}
 
 	public static Vec3d getFrequencySlotOrientation(BlockState state) {
-		boolean vertical = AttachedLogisiticalBlock.isVertical(state);
+		boolean vertical = AttachedLogisticalBlock.isVertical(state);
 		float horizontalAngle = AngleHelper.horizontalAngle(state.get(ExtractorBlock.HORIZONTAL_FACING));
 
 		float xRot = vertical ? (state.get(UPWARD) ? 90 : 270) : 0;

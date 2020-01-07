@@ -2,7 +2,8 @@
 	"parent": "block/block",
     "textures": {
         "particle": "create:block/flex_crate",
-        "flex_crate": "create:block/flex_crate"
+        "side": "create:block/flex_crate",
+        "top": "create:block/brass_casing_14"
     },
     "elements": [
         {
@@ -10,12 +11,12 @@
             "from": [ 1, 0, 1 ], 
             "to": [ 15, 14, 15 ], 
             "faces": {
-                "north": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] },
-                "east": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] },
-                "south": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] },
-                "west": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] },
-                "up": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] },
-                "down": { "texture": "#flex_crate", "uv": [ 1, 1, 15, 15 ] }
+                "north": { "texture": "#side", "uv": [ 1, 1, 15, 15 ] },
+                "east": { "texture": "#side", "uv": [ 1, 1, 15, 15 ] },
+                "south": { "texture": "#side", "uv": [ 1, 1, 15, 15 ] },
+                "west": { "texture": "#side", "uv": [ 1, 1, 15, 15 ] },
+                "up": { "texture": "#top", "uv": [ 1, 1, 15, 15 ] },
+                "down": { "texture": "#top", "uv": [ 1, 1, 15, 15 ] }
             }
         }
     ]

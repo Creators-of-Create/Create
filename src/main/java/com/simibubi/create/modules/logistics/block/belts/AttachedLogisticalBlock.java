@@ -18,11 +18,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public abstract class AttachedLogisiticalBlock extends HorizontalBlock implements IHaveNoBlockItem {
+public abstract class AttachedLogisticalBlock extends HorizontalBlock implements IHaveNoBlockItem {
 
 	public static final BooleanProperty UPWARD = BooleanProperty.create("upward");
 
-	public AttachedLogisiticalBlock() {
+	public AttachedLogisticalBlock() {
 		super(Properties.from(Blocks.ANDESITE));
 	}
 
@@ -97,8 +97,8 @@ public abstract class AttachedLogisiticalBlock extends HorizontalBlock implement
 
 	public static boolean isVertical(BlockState state) {
 		Block block = state.getBlock();
-		return ((block instanceof AttachedLogisiticalBlock)
-				&& (((AttachedLogisiticalBlock) state.getBlock())).isVertical());
+		return ((block instanceof AttachedLogisticalBlock)
+				&& (((AttachedLogisticalBlock) state.getBlock())).isVertical());
 	}
 
 	@Override

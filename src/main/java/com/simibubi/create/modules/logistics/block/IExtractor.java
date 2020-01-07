@@ -25,7 +25,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
-// Its like delegation but better!
+// Its like delegation but worse!
 public interface IExtractor extends ITickableTileEntity, IInventoryManipulator {
 
 	public enum State {

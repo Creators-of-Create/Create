@@ -29,7 +29,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class FunnelBlock extends AttachedLogisiticalBlock
+public class FunnelBlock extends AttachedLogisticalBlock
 		implements IBeltAttachment, IWithTileEntity<FunnelTileEntity> {
 
 	public static final BooleanProperty BELT = BooleanProperty.create("belt");
@@ -59,18 +59,6 @@ public class FunnelBlock extends AttachedLogisiticalBlock
 	@Override
 	protected BlockState getVerticalDefaultState() {
 		return AllBlocks.VERTICAL_FUNNEL.getDefault();
-	}
-
-	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
-		Direction blockFacing = state.get(HORIZONTAL_FACING);
-		if (fromPos.equals(pos.offset(blockFacing))) {
-			if (!isValidPosition(state, worldIn, pos)) {
-				worldIn.destroyBlock(pos, true);
-				return;
-			}
-		}
 	}
 
 	@Override

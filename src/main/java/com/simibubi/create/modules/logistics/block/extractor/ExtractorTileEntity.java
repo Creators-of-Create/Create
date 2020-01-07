@@ -2,32 +2,37 @@ package com.simibubi.create.modules.logistics.block.extractor;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour.SlotPositioning;
-import com.simibubi.create.modules.logistics.block.IExtractor;
-import com.simibubi.create.modules.logistics.block.belts.AttachedLogisiticalBlock;
+import com.simibubi.create.foundation.behaviour.inventory.ExtractingBehaviour;
+import com.simibubi.create.foundation.behaviour.inventory.SingleTargetAutoExtractingBehaviour;
+import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
+import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
+import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 
-public class ExtractorTileEntity extends SmartTileEntity implements IExtractor, ITickableTileEntity {
+public class ExtractorTileEntity extends SmartTileEntity {
 
 	private static FilteringBehaviour.SlotPositioning slots;
 
-	private State state;
-	private int cooldown;
-	private LazyOptional<IItemHandler> inventory;
+	private ExtractingBehaviour extracting;
 	private FilteringBehaviour filtering;
 
 	public ExtractorTileEntity() {
@@ -36,13 +41,16 @@ public class ExtractorTileEntity extends SmartTileEntity implements IExtractor, 
 
 	protected ExtractorTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
-		state = State.ON_COOLDOWN;
-		cooldown = CreateConfig.parameters.extractorDelay.get();
-		inventory = LazyOptional.empty();
 	}
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		int delay = CreateConfig.parameters.extractorDelay.get();
+		extracting = new SingleTargetAutoExtractingBehaviour(this,
+				() -> AttachedLogisticalBlock.getBlockFacing(getBlockState()), this::onExtract, delay)
+						.pauseWhen(this::isPowered).waitUntil(this::canExtract);
+		behaviours.add(extracting);
+
 		if (slots == null)
 			slots = new SlotPositioning(ExtractorBlock::getFilterSlotPosition, ExtractorBlock::getFilterSlotOrientation)
 					.scale(.4f);
@@ -51,73 +59,49 @@ public class ExtractorTileEntity extends SmartTileEntity implements IExtractor, 
 		behaviours.add(filtering);
 	}
 
-	public void filterChanged(ItemStack stack) {
-		neighborChanged();
+	private void onExtract(ItemStack stack) {
+		Vec3d entityPos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);
+		Entity entityIn = null;
+		Direction facing = AttachedLogisticalBlock.getBlockFacing(getBlockState());
+		if (facing == Direction.DOWN)
+			entityPos = entityPos.add(0, .5, 0);
+
+		if (stack.getItem() instanceof CardboardBoxItem) {
+			entityIn = new CardboardBoxEntity(world, entityPos, stack, facing.getOpposite());
+			world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .25f, .05f);
+
+		} else {
+			entityIn = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, stack);
+			entityIn.setMotion(Vec3d.ZERO);
+			((ItemEntity) entityIn).setPickupDelay(5);
+			world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f, .1f);
+		}
+
+		world.addEntity(entityIn);
 	}
 
-	@Override
-	public State getState() {
-		return state;
+	protected boolean isPowered() {
+		return getBlockState().get(ExtractorBlock.POWERED);
 	}
 
-	@Override
-	public void read(CompoundNBT compound) {
-		if (compound.getBoolean("Locked"))
-			setState(State.LOCKED);
-		super.read(compound);
+	private void filterChanged(ItemStack stack) {
+
 	}
 
-	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		compound.putBoolean("Locked", getState() == State.LOCKED);
-		return super.write(compound);
-	}
+	private boolean canExtract() {
+		if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
+			TileEntity te = world.getTileEntity(pos.down());
+			if (te != null && te instanceof BeltTileEntity) {
+				BeltTileEntity belt = (BeltTileEntity) te;
+				BeltTileEntity controller = belt.getControllerTE();
+				if (controller != null) {
+					if (!controller.getInventory().canInsertFrom(belt.index, Direction.UP))
+						return false;
+				}
+			}
+		}
 
-	@Override
-	public void initialize() {
-		super.initialize();
-		if (world.isBlockPowered(pos))
-			state = State.LOCKED;
-		neighborChanged();
-	}
-
-	@Override
-	public void tick() {
-		super.tick();
-		IExtractor.super.tick();
-	}
-
-	@Override
-	public void setState(State state) {
-		if (state == State.ON_COOLDOWN)
-			cooldown = CreateConfig.parameters.extractorDelay.get();
-		if (state == State.WAITING_FOR_INVENTORY)
-			cooldown = CreateConfig.parameters.extractorInventoryScanDelay.get();
-		this.state = state;
-	}
-
-	@Override
-	public int tickCooldown() {
-		return cooldown--;
-	}
-
-	@Override
-	public BlockPos getInventoryPos() {
-		BlockState blockState = getBlockState();
-		Block block = blockState.getBlock();
-		if (!(block instanceof ExtractorBlock))
-			return null;
-		return getPos().offset(AttachedLogisiticalBlock.getBlockFacing(blockState));
-	}
-
-	@Override
-	public LazyOptional<IItemHandler> getInventory() {
-		return inventory;
-	}
-
-	@Override
-	public void setInventory(LazyOptional<IItemHandler> inventory) {
-		this.inventory = inventory;
+		return world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(getPos())).isEmpty();
 	}
 
 }

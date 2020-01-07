@@ -2,9 +2,12 @@ package com.simibubi.create.foundation.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.simibubi.create.CreateConfig;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -83,6 +86,59 @@ public class ItemHelper {
 			return true;
 		}
 		return false;
+	}
+
+	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, boolean simulate) {
+		return extract(inv, test, -1, simulate);
+	}
+
+	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, int exactAmount, boolean simulate) {
+		ItemStack extracting = ItemStack.EMPTY;
+		boolean amountRequired = exactAmount != -1;
+		boolean checkHasEnoughItems = amountRequired;
+		boolean hasEnoughItems = !checkHasEnoughItems;
+		int maxExtractionCount = hasEnoughItems ? CreateConfig.parameters.extractorAmount.get() : exactAmount;
+
+		Extraction: do {
+			extracting = ItemStack.EMPTY;
+
+			for (int slot = 0; slot < inv.getSlots(); slot++) {
+				ItemStack stack = inv.extractItem(slot, maxExtractionCount - extracting.getCount(), true);
+
+				if (!test.test(stack))
+					continue;
+				if (!extracting.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stack, extracting))
+					continue;
+
+				if (extracting.isEmpty())
+					extracting = stack.copy();
+				else
+					extracting.grow(stack.getCount());
+
+				if (!simulate && hasEnoughItems)
+					inv.extractItem(slot, stack.getCount(), false);
+
+				if (extracting.getCount() >= maxExtractionCount) {
+					if (checkHasEnoughItems) {
+						hasEnoughItems = true;
+						checkHasEnoughItems = false;
+						continue Extraction;
+					} else {
+						break Extraction;
+					}
+				}
+			}
+
+			if (checkHasEnoughItems)
+				checkHasEnoughItems = false;
+			else
+				break Extraction;
+		} while (true);
+		
+		if (amountRequired && extracting.getCount() < exactAmount)
+			return ItemStack.EMPTY;
+
+		return extracting;
 	}
 
 }

@@ -165,16 +165,16 @@ public class FunnelTileEntity extends SmartTileEntity implements ITickableTileEn
 			Vec3d vec = offsetForHorizontal;
 
 			float yRot = AngleHelper.horizontalAngle(state.get(ExtractorBlock.HORIZONTAL_FACING));
-			if (AttachedLogisiticalBlock.isVertical(state))
-				vec = state.get(AttachedLogisiticalBlock.UPWARD) ? offsetForUpward : offsetForDownward;
+			if (AttachedLogisticalBlock.isVertical(state))
+				vec = state.get(AttachedLogisticalBlock.UPWARD) ? offsetForUpward : offsetForDownward;
 			else if (state.get(FunnelBlock.BELT))
 				vec = offsetForBelt;
 
 			return VecHelper.rotateCentered(vec, yRot, Axis.Y);
 
 		}, state -> {
-			Direction blockFacing = AttachedLogisiticalBlock.getBlockFacing(state);
-			boolean vertical = AttachedLogisiticalBlock.isVertical(state);
+			Direction blockFacing = AttachedLogisticalBlock.getBlockFacing(state);
+			boolean vertical = AttachedLogisticalBlock.isVertical(state);
 			float horizontalAngle = AngleHelper.horizontalAngle(state.get(ExtractorBlock.HORIZONTAL_FACING));
 
 			float yRot = blockFacing == Direction.DOWN ? horizontalAngle + 180 : horizontalAngle;

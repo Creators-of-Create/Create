@@ -12,10 +12,13 @@ public abstract class TileEntityBehaviour {
 
 	public SmartTileEntity tileEntity;
 	private boolean paused;
+	private int lazyTickRate;
+	private int lazyTickCounter;
 
 	public TileEntityBehaviour(SmartTileEntity te) {
 		tileEntity = te;
 		paused = false;
+		setLazyTickRate(10);
 	}
 
 	public abstract IBehaviourType<?> getType();
@@ -25,7 +28,11 @@ public abstract class TileEntityBehaviour {
 	}
 
 	public void tick() {
-
+		if (lazyTickCounter-- <= 0) {
+			lazyTickCounter = lazyTickRate;
+			lazyTick();
+		}
+			
 	}
 
 	public void readNBT(CompoundNBT nbt) {
@@ -56,14 +63,23 @@ public abstract class TileEntityBehaviour {
 		return paused;
 	}
 
+	public void setLazyTickRate(int slowTickRate) {
+		this.lazyTickRate = slowTickRate;
+		this.lazyTickCounter = slowTickRate;
+	}
+
+	public void lazyTick() {
+
+	}
+
 	public void setPaused(boolean paused) {
 		this.paused = paused;
 	}
-	
+
 	public BlockPos getPos() {
 		return tileEntity.getPos();
 	}
-	
+
 	public World getWorld() {
 		return tileEntity.getWorld();
 	}

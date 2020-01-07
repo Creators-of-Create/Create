@@ -2,7 +2,7 @@ package com.simibubi.create.modules.logistics.block.transposer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AllShapes;
-import com.simibubi.create.modules.logistics.block.belts.AttachedLogisiticalBlock;
+import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,19 +19,19 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class TransposerBlock extends AttachedLogisiticalBlock {
+public class TransposerBlock extends AttachedLogisticalBlock {
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public TransposerBlock() {
 		setDefaultState(getDefaultState().with(POWERED, false));
 	}
-	
+
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new TransposerTileEntity();
@@ -66,10 +66,17 @@ public class TransposerBlock extends AttachedLogisiticalBlock {
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
-		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-
 		if (worldIn.isRemote)
 			return;
+
+		Direction blockFacing = getBlockFacing(state);
+		if (fromPos.equals(pos.offset(blockFacing)) || fromPos.equals(pos.offset(blockFacing.getOpposite()))) {
+			if (!isValidPosition(state, worldIn, pos)) {
+				worldIn.destroyBlock(pos, true);
+				return;
+			}
+		}
+
 		if (!reactsToRedstone())
 			return;
 
