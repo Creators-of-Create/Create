@@ -103,7 +103,8 @@ public class InventoryManagementBehaviour extends TileEntityBehaviour {
 
 	public static class Attachments {
 		public static final Supplier<List<Pair<BlockPos, Direction>>> toward(Supplier<Direction> facing) {
-			return () -> ImmutableList.of(Pair.of(new BlockPos(facing.get().getDirectionVec()), facing.get()));
+			return () -> ImmutableList
+					.of(Pair.of(new BlockPos(facing.get().getDirectionVec()), facing.get().getOpposite()));
 		};
 	}
 

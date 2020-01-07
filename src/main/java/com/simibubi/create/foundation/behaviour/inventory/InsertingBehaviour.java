@@ -8,8 +8,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.foundation.behaviour.base.IBehaviourType;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class InsertingBehaviour extends InventoryManagementBehaviour {
 
@@ -18,6 +21,15 @@ public class InsertingBehaviour extends InventoryManagementBehaviour {
 
 	public InsertingBehaviour(SmartTileEntity te, Supplier<List<Pair<BlockPos, Direction>>> attachments) {
 		super(te, attachments);
+	}
+
+	public ItemStack insert(ItemStack stack, boolean simulate) {
+		for (IItemHandler inv : getInventories()) {
+			stack = ItemHandlerHelper.insertItemStacked(inv, stack, simulate);
+			if (stack.isEmpty())
+				break;
+		}
+		return stack;
 	}
 
 	@Override

@@ -57,6 +57,9 @@ public class SynchronizedExtraction {
 					continue;
 				if (!behaviour.shouldExtract.get())
 					continue;
+				if (!behaviour.inventories.keySet().stream()
+						.anyMatch(p -> p.getKey().add(behaviour.getPos()).equals(pos)))
+					continue;
 
 				list.add(behaviour);
 			}

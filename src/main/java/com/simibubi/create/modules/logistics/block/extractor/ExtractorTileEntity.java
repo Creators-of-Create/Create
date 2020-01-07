@@ -30,10 +30,10 @@ import net.minecraft.util.math.Vec3d;
 
 public class ExtractorTileEntity extends SmartTileEntity {
 
-	private static FilteringBehaviour.SlotPositioning slots;
+	protected static FilteringBehaviour.SlotPositioning slots;
 
-	private ExtractingBehaviour extracting;
-	private FilteringBehaviour filtering;
+	protected ExtractingBehaviour extracting;
+	protected FilteringBehaviour filtering;
 
 	public ExtractorTileEntity() {
 		this(AllTileEntities.EXTRACTOR.type);
@@ -59,7 +59,7 @@ public class ExtractorTileEntity extends SmartTileEntity {
 		behaviours.add(filtering);
 	}
 
-	private void onExtract(ItemStack stack) {
+	protected void onExtract(ItemStack stack) {
 		Vec3d entityPos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);
 		Entity entityIn = null;
 		Direction facing = AttachedLogisticalBlock.getBlockFacing(getBlockState());
@@ -88,7 +88,7 @@ public class ExtractorTileEntity extends SmartTileEntity {
 
 	}
 
-	private boolean canExtract() {
+	protected boolean canExtract() {
 		if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
 			TileEntity te = world.getTileEntity(pos.down());
 			if (te != null && te instanceof BeltTileEntity) {
