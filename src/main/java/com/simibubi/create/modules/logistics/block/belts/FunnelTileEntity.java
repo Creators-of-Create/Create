@@ -7,10 +7,10 @@ import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour.SlotPositioning;
+import com.simibubi.create.foundation.behaviour.inventory.InsertingBehaviour;
+import com.simibubi.create.foundation.behaviour.inventory.InventoryManagementBehaviour.Attachments;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.relays.belt.ItemHandlerBeltSegment;
-import com.simibubi.create.modules.logistics.block.IInventoryManipulator;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
 
 import net.minecraft.item.ItemStack;
@@ -18,30 +18,22 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-public class FunnelTileEntity extends SmartTileEntity implements ITickableTileEntity, IInventoryManipulator {
+public class FunnelTileEntity extends SmartTileEntity {
 
 	private static FilteringBehaviour.SlotPositioning slots;
 	private FilteringBehaviour filtering;
-
-	private LazyOptional<IItemHandler> inventory;
-	protected boolean waitingForInventorySpace;
+	private InsertingBehaviour inserting;
 	private ItemStack justEaten;
 
 	public FunnelTileEntity() {
 		super(AllTileEntities.BELT_FUNNEL.type);
-		inventory = LazyOptional.empty();
 	}
 
 	@Override
@@ -50,22 +42,12 @@ public class FunnelTileEntity extends SmartTileEntity implements ITickableTileEn
 			createSlotPositioning();
 		filtering = new FilteringBehaviour(this).withCallback(this::filterChanged).withSlotPositioning(slots);
 		behaviours.add(filtering);
+		inserting = new InsertingBehaviour(this,
+				Attachments.toward(() -> AttachedLogisticalBlock.getBlockFacing(getBlockState())));
+		behaviours.add(inserting);
 	}
 
 	public void filterChanged(ItemStack stack) {
-		neighborChanged();
-	}
-
-	@Override
-	public void read(CompoundNBT compound) {
-		waitingForInventorySpace = compound.getBoolean("Waiting");
-		super.read(compound);
-	}
-
-	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		compound.putBoolean("Waiting", waitingForInventorySpace);
-		return super.write(compound);
 	}
 
 	@Override
@@ -80,67 +62,29 @@ public class FunnelTileEntity extends SmartTileEntity implements ITickableTileEn
 	@Override
 	public void readClientUpdate(CompoundNBT tag) {
 		super.readClientUpdate(tag);
-		if (!waitingForInventorySpace)
-			neighborChanged();
 		if (tag.contains("Nom"))
 			justEaten = ItemStack.read(tag.getCompound("Nom"));
 	}
 
 	@Override
-	public BlockPos getInventoryPos() {
-		return pos.offset(getBlockState().get(BlockStateProperties.HORIZONTAL_FACING));
-	}
-
-	@Override
-	public LazyOptional<IItemHandler> getInventory() {
-		return inventory;
-	}
-
-	@Override
 	public void tick() {
+		super.tick();
 		if (world.isRemote && justEaten != null) {
 			spawnParticles(justEaten);
 			justEaten = null;
 		}
 	}
 
-	@Override
-	public void initialize() {
-		neighborChanged();
-		super.initialize();
-	}
-
-	@Override
-	public void setInventory(LazyOptional<IItemHandler> inventory) {
-		this.inventory = inventory;
-	}
-
-	@Override
-	public void neighborChanged() {
-		IInventoryManipulator.super.neighborChanged();
-		waitingForInventorySpace = false;
-		if (!world.isRemote)
-			sendData();
-	}
-
 	public ItemStack tryToInsert(ItemStack stack) {
-		if (!inventory.isPresent())
-			return stack;
-		if (waitingForInventorySpace && !(inventory.orElse(null) instanceof ItemHandlerBeltSegment))
-			return stack;
 		if (!filtering.test(stack))
 			return stack;
 
-		IItemHandler inv = inventory.orElse(null);
-		ItemStack inserted = stack.copy();
-		ItemStack remainder = ItemHandlerHelper.insertItemStacked(inv, inserted, false);
-		waitingForInventorySpace = true;
+		ItemStack remainder = inserting.insert(stack.copy(), false);
 
 		if (remainder.isEmpty()) {
 			if (!world.isRemote)
 				world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.BLOCKS, .125f, 1f);
 			justEaten = stack.copy();
-			waitingForInventorySpace = false;
 		}
 
 		sendData();

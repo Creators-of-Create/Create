@@ -1,0 +1,75 @@
+package com.simibubi.create.modules.logistics.block.belts;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.behaviour.inventory.ExtractingBehaviour;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
+import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
+import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
+
+public abstract class ExtractorForBeltsBlock extends AttachedLogisticalBlock implements IBeltAttachment {
+
+	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		onAttachmentPlaced(worldIn, pos, state);
+	}
+
+	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		onAttachmentRemoved(worldIn, pos, state);
+		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			worldIn.removeTileEntity(pos);
+		}
+	}
+
+	@Override
+	public BlockPos getBeltPositionForAttachment(IWorld world, BlockPos pos, BlockState state) {
+		return pos.offset(getBlockFacing(state));
+	}
+
+	@Override
+	public List<BlockPos> getPotentialAttachmentPositions(IWorld world, BlockPos pos, BlockState beltState) {
+		return Arrays.asList(Direction.values()).stream().filter(d -> d != Direction.UP).map(pos::offset)
+				.collect(Collectors.toList());
+	}
+
+	public boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+		BlockPos pos = state.attachmentPos;
+		World world = te.getWorld();
+		ItemStack stack = transported.stack;
+
+		FilteringBehaviour filtering = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
+		ExtractingBehaviour extracting = TileEntityBehaviour.get(world, pos, ExtractingBehaviour.TYPE);
+
+		if (extracting == null)
+			return false;
+		if (filtering != null && (!filtering.test(stack) || stack.getCount() < filtering.getFilter().getCount()))
+			return false;
+
+		return true;
+	}
+
+	public boolean processItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+		BlockPos pos = state.attachmentPos;
+		World world = te.getWorld();
+		ExtractingBehaviour extracting = TileEntityBehaviour.get(world, pos, ExtractingBehaviour.TYPE);
+		
+		if (extracting == null)
+			return false;
+		extracting.extract();
+		return false;
+	}
+
+}

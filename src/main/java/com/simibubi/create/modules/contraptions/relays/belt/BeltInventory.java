@@ -103,6 +103,7 @@ public class BeltInventory {
 			float limitedMovement = beltMovementPositive ? Math.min(movement, diffToEnd)
 					: Math.max(movement, diffToEnd);
 
+			float nextOffset = current.beltPosition + limitedMovement;
 			if (!onClient) {
 				// Don't move if belt attachments want to continue processing
 				if (segmentBefore != -1 && current.locked) {
@@ -122,10 +123,8 @@ public class BeltInventory {
 
 				// See if any new belt processing catches the item
 				int upcomingSegment = (int) (current.beltPosition + (beltMovementPositive ? .5f : -.5f));
-				for (int segment = upcomingSegment; beltMovementPositive
-						? segment + .5f <= current.beltPosition + limitedMovement
-						: segment + .5f >= current.beltPosition + limitedMovement; segment += beltMovementPositive ? 1
-								: -1) {
+				for (int segment = upcomingSegment; beltMovementPositive ? segment + .5f <= nextOffset
+						: segment + .5f >= nextOffset; segment += beltMovementPositive ? 1 : -1) {
 					BeltTileEntity beltSegment = getBeltSegment(segmentBefore);
 					if (beltSegment == null)
 						break;
@@ -140,11 +139,16 @@ public class BeltInventory {
 				}
 			}
 
-			// Client: Belt tunnel flaps
-			if (onClient) {
+			// Belt tunnels
+			{
 				int seg1 = (int) current.beltPosition;
-				int seg2 = (int) (current.beltPosition + limitedMovement);
+				int seg2 = (int) nextOffset;
+				if (!beltMovementPositive && nextOffset == 0)
+					seg2 = -1;
 				if (seg1 != seg2) {
+					if (stuckAtTunnel(seg2, current.stack, belt.getMovementFacing())) {
+						continue;
+					}
 					flapTunnel(seg1, belt.getMovementFacing(), false);
 					flapTunnel(seg2, belt.getMovementFacing().getOpposite(), true);
 				}
@@ -245,6 +249,44 @@ public class BeltInventory {
 
 		}
 
+	}
+
+	private boolean stuckAtTunnel(int offset, ItemStack stack, Direction movementDirection) {
+		BlockPos pos = getPositionForOffset(offset).up();
+		if (!AllBlocks.BELT_TUNNEL.typeOf(belt.getWorld().getBlockState(pos)))
+			return false;
+		TileEntity te = belt.getWorld().getTileEntity(pos);
+		if (te == null || !(te instanceof BeltTunnelTileEntity))
+			return false;
+
+		Direction flapFacing = movementDirection;
+		if (flapFacing.getAxis() == Axis.X)
+			flapFacing = flapFacing.getOpposite();
+
+		BeltTunnelTileEntity tunnel = (BeltTunnelTileEntity) te;
+		if (!tunnel.flaps.containsKey(flapFacing))
+			return false;
+		if (!tunnel.syncedFlaps.containsKey(flapFacing))
+			return false;
+		ItemStack heldItem = tunnel.syncedFlaps.get(flapFacing);
+		if (heldItem == null) {
+			tunnel.syncedFlaps.put(flapFacing, ItemStack.EMPTY);
+			belt.sendData();
+			return false;
+		}
+		if (heldItem == ItemStack.EMPTY) {
+			tunnel.syncedFlaps.put(flapFacing, stack);
+			return true;
+		}
+
+		List<BeltTunnelTileEntity> group = BeltTunnelBlock.getSynchronizedGroup(belt.getWorld(), pos, flapFacing);
+		for (BeltTunnelTileEntity otherTunnel : group)
+			if (otherTunnel.syncedFlaps.get(flapFacing) == ItemStack.EMPTY)
+				return true;
+		for (BeltTunnelTileEntity otherTunnel : group)
+			otherTunnel.syncedFlaps.put(flapFacing, null);
+
+		return true;
 	}
 
 	private void flapTunnel(int offset, Direction side, boolean inward) {

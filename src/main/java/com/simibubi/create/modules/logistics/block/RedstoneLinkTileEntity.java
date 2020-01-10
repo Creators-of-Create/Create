@@ -44,13 +44,13 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehavioursDeferred(List<TileEntityBehaviour> behaviours) {
-		if (slots == null)
-			createSlotPositioning();
 		createLink();
 		behaviours.add(link);
 	}
 
 	protected void createLink() {
+		if (slots == null)
+			createSlotPositioning();
 		if (transmitter)
 			link = LinkBehaviour.transmitter(this, this::getSignal);
 		else

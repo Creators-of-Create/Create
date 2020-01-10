@@ -42,9 +42,9 @@ import net.minecraftforge.registries.IForgeRegistry;
 public enum AllItems {
 
 	__MATERIALS__(),
+	ANDESITE_ALLOY_CUBE(ingredient()),
 	COPPER_INGOT(ingredient()),
 	ZINC_CUBE(ingredient()),
-	ANDESITE_ALLOY_CUBE(ingredient()),
 	BRASS_CUBE(ingredient()),
 	COPPER_NUGGET(ingredient()),
 	ZINC_NUGGET(ingredient()),

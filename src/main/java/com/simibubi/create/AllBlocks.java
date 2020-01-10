@@ -175,6 +175,7 @@ public enum AllBlocks {
 	VERTICAL_FUNNEL(new FunnelBlock.Vertical()),
 	BELT_TUNNEL(new BeltTunnelBlock()),
 	BELT_TUNNEL_FLAP(new RenderUtilityBlock()),
+	BELT_TUNNEL_INDICATOR(new RenderUtilityBlock()),
 	ENTITY_DETECTOR(new BeltObserverBlock()),
 	PULSE_REPEATER(new PulseRepeaterBlock()),
 	FLEXPEATER(new FlexpeaterBlock()),

@@ -159,6 +159,7 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	@Override
 	public void read(CompoundNBT compound) {
+		super.read(compound);
 		trackerUpdateTag = compound;
 		controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 		color = compound.getInt("Color");
@@ -167,7 +168,6 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		if (isController())
 			getInventory().read(compound.getCompound("Inventory"));
-		super.read(compound);
 	}
 
 	public void applyColor(DyeColor colorIn) {

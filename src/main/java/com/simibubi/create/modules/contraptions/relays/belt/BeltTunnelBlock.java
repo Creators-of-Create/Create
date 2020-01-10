@@ -1,5 +1,9 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.Lang;
@@ -107,20 +111,47 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 			BlockPos currentPos, BlockPos facingPos) {
 		withTileEntityDo(worldIn, currentPos, BeltTunnelTileEntity::initFlaps);
 		BlockState tunnelState = getTunnelState(worldIn, currentPos);
-		
+
 		if (tunnelState.get(HORIZONTAL_AXIS) == state.get(HORIZONTAL_AXIS)) {
 			if (hasWindow(tunnelState) == hasWindow(state))
 				return state;
 		}
-		
+
 		return tunnelState;
 	}
 
 	public static void updateTunnel(World world, BlockPos pos) {
 		BlockState tunnel = world.getBlockState(pos);
 		BlockState newTunnel = getTunnelState(world, pos);
-		if (tunnel != newTunnel)
+		if (tunnel != newTunnel) {
 			world.setBlockState(pos, newTunnel, 3);
+			TileEntity te = world.getTileEntity(pos);
+			if (te != null && (te instanceof BeltTunnelTileEntity))
+				((BeltTunnelTileEntity) te).initFlaps();
+		}
+	}
+
+	public static List<BeltTunnelTileEntity> getSynchronizedGroup(World world, BlockPos pos, Direction flapFacing) {
+		List<BeltTunnelTileEntity> group = new ArrayList<>();
+		Direction searchDirection = flapFacing.rotateY();
+
+		for (Direction d : Arrays.asList(searchDirection, searchDirection.getOpposite())) {
+			BlockPos currentPos = pos;
+			while (true) {
+				if (!world.isBlockPresent(currentPos))
+					break;
+				TileEntity te = world.getTileEntity(currentPos);
+				if (te == null || !(te instanceof BeltTunnelTileEntity))
+					break;
+				BeltTunnelTileEntity tunnel = (BeltTunnelTileEntity) te;
+				if (!tunnel.syncedFlaps.containsKey(flapFacing))
+					break;
+				group.add(tunnel);
+				currentPos = currentPos.offset(d);
+			}
+		}
+
+		return group;
 	}
 
 	private static BlockState getTunnelState(IBlockReader reader, BlockPos pos) {
@@ -159,6 +190,12 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+
+		// Toggle sync
+		if (toggleSync(context.getWorld(), context.getPos(), context.getFace()))
+			return ActionResultType.SUCCESS;
+
+		// Toggle windows
 		if (!hasWindow(state))
 			return IWrenchable.super.onWrenched(state, context);
 		Shape next = state.get(SHAPE);
@@ -175,9 +212,17 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 		default:
 			break;
 		}
-		if (!context.getWorld().isRemote) 
+		if (!context.getWorld().isRemote)
 			context.getWorld().setBlockState(context.getPos(), state.with(SHAPE, next), 2);
 		return ActionResultType.SUCCESS;
+	}
+
+	private boolean toggleSync(World world, BlockPos pos, Direction face) {
+		TileEntity te = world.getTileEntity(pos);
+		if (te == null || !(te instanceof BeltTunnelTileEntity))
+			return false;
+		BeltTunnelTileEntity tunnel = (BeltTunnelTileEntity) te;
+		return tunnel.toggleSyncForFlap(face);
 	}
 
 	@Override

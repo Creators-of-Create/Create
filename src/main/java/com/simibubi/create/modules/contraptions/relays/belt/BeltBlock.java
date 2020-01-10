@@ -192,7 +192,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 				return false;
 			if (worldIn.isRemote)
 				return true;
-			controllerBelt.getInventory().forEachWithin(belt.index, .75f, (transportedItemStack) -> {
+			controllerBelt.getInventory().forEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
 				player.inventory.placeItemBackInInventory(worldIn, transportedItemStack.stack);
 				return Collections.emptyList();
 			});

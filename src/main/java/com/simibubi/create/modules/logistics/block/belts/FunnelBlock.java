@@ -10,10 +10,11 @@ import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.B
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
-import com.simibubi.create.modules.logistics.block.IInventoryManipulator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
@@ -26,7 +27,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class FunnelBlock extends AttachedLogisticalBlock
@@ -54,6 +54,22 @@ public class FunnelBlock extends AttachedLogisticalBlock
 	@Override
 	protected boolean isVertical() {
 		return false;
+	}
+	
+	@Override
+	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+		if (worldIn.isRemote)
+			return;
+		if (!(entityIn instanceof ItemEntity))
+			return;
+		ItemEntity itemEntity = (ItemEntity) entityIn;
+		withTileEntityDo(worldIn, pos, te -> {
+			ItemStack remainder = te.tryToInsert(itemEntity.getItem());
+			if (remainder.isEmpty())
+				itemEntity.remove();
+			if (remainder.getCount() < itemEntity.getItem().getCount())
+				itemEntity.setItem(remainder);
+		});
 	}
 
 	@Override
@@ -95,21 +111,6 @@ public class FunnelBlock extends AttachedLogisticalBlock
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		onAttachmentPlaced(worldIn, pos, state);
-		updateObservedInventory(state, worldIn, pos);
-	}
-
-	@Override
-	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-		if (!neighbor.equals(pos.offset(state.get(HORIZONTAL_FACING))))
-			return;
-		updateObservedInventory(state, world, pos);
-	}
-
-	private void updateObservedInventory(BlockState state, IWorldReader world, BlockPos pos) {
-		IInventoryManipulator te = (IInventoryManipulator) world.getTileEntity(pos);
-		if (te == null)
-			return;
-		te.neighborChanged();
 	}
 
 	@Override

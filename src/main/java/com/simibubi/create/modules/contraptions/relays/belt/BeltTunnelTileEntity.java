@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelBlock.Shape;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -24,6 +25,7 @@ import net.minecraftforge.items.IItemHandler;
 public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableTileEntity {
 
 	public HashMap<Direction, InterpolatedChasingValue> flaps;
+	public HashMap<Direction, ItemStack> syncedFlaps;
 	private LazyOptional<IItemHandler> cap = LazyOptional.empty();
 	private boolean initialize;
 
@@ -33,6 +35,7 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 	public BeltTunnelTileEntity() {
 		super(AllTileEntities.BELT_TUNNEL.type);
 		flaps = new HashMap<>();
+		syncedFlaps = new HashMap<>();
 		initialize = true;
 	}
 
@@ -63,6 +66,41 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 	}
 
 	@Override
+	public CompoundNBT write(CompoundNBT compound) {
+		CompoundNBT dyedFlapsNBT = new CompoundNBT();
+		syncedFlaps.forEach((direction, pair) -> {
+			dyedFlapsNBT.putBoolean(direction.name(), true);
+		});
+		compound.put("syncedFlaps", dyedFlapsNBT);
+		return super.write(compound);
+	}
+
+	@Override
+	public void read(CompoundNBT compound) {
+		if (compound.contains("syncedFlaps")) {
+			syncedFlaps.clear();
+			CompoundNBT dyedFlapsNBT = compound.getCompound("syncedFlaps");
+			for (Direction direction : Direction.values()) {
+				if (dyedFlapsNBT.contains(direction.name()))
+					syncedFlaps.put(direction, ItemStack.EMPTY);
+			}
+		}
+		super.read(compound);
+	}
+
+	public boolean toggleSyncForFlap(Direction face) {
+		if (!flaps.containsKey(face))
+			return false;
+		if (syncedFlaps.containsKey(face)) 
+			syncedFlaps.remove(face);
+		else
+			syncedFlaps.put(face, ItemStack.EMPTY);
+		markDirty();
+		sendData();
+		return true;
+	}
+
+	@Override
 	public CompoundNBT writeToClient(CompoundNBT tag) {
 		CompoundNBT writeToClient = super.writeToClient(tag);
 		if (flapToSend != null) {
@@ -86,7 +124,6 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 	public void initFlaps() {
 		if (!world.isRemote) {
 			sendData();
-			return;
 		}
 
 		initialize = false;
@@ -126,10 +163,10 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 
 	@Override
 	public void tick() {
-		if (!world.isRemote)
-			return;
 		if (initialize)
 			initFlaps();
+		if (!world.isRemote)
+			return;
 		flaps.forEach((d, value) -> value.tick());
 	}
 

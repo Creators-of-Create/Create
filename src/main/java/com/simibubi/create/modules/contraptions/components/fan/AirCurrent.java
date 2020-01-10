@@ -255,7 +255,7 @@ public class AirCurrent {
 				continue;
 			World world = belt.getWorld();
 
-			controller.getInventory().forEachWithin(belt.index + .5f, .5f, (transported) -> {
+			controller.getInventory().forEachWithin(belt.index + .5f, .51f, (transported) -> {
 				InWorldProcessing.spawnParticlesForProcessing(world,
 						controller.getInventory().getVectorForOffset(transported.beltPosition), processingType);
 				if (world.isRemote)
