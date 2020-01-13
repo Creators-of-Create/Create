@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.block;
+package com.simibubi.create.foundation.block.render;
 
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;

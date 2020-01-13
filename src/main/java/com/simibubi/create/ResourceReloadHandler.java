@@ -1,6 +1,6 @@
 package com.simibubi.create;
 
-import com.simibubi.create.foundation.block.SpriteShifter;
+import com.simibubi.create.foundation.block.render.SpriteShifter;
 
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;

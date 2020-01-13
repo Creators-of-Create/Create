@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.logistics.block.diodes;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.ColoredOverlayTileEntityRenderer;
+import com.simibubi.create.foundation.block.render.ColoredOverlayTileEntityRenderer;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.BlockState;

@@ -1,11 +1,11 @@
-package com.simibubi.create.foundation.block;
+package com.simibubi.create.foundation.block.connected;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.foundation.block.SpriteShifter.SpriteShiftEntry;
+import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -93,8 +93,8 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 			float uShift = (index % 8) * textureSize;
 			float vShift = (index / 8) * textureSize * 2;
 
-			uShift = texture.target.getInterpolatedU((index % 8) * 2) - texture.original.getMinU();
-			vShift = texture.target.getInterpolatedV((index / 8) * 2) - texture.original.getMinV();
+			uShift = texture.getTarget().getInterpolatedU((index % 8) * 2) - texture.getOriginal().getMinU();
+			vShift = texture.getTarget().getInterpolatedV((index / 8) * 2) - texture.getOriginal().getMinV();
 
 			BakedQuad newQuad = new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length),
 					quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(),

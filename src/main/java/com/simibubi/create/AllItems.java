@@ -66,6 +66,9 @@ public enum AllItems {
 	CRUSHED_COPPER(ingredient()),
 	CRUSHED_ZINC(ingredient()),
 	CRUSHED_BRASS(ingredient()),
+	
+	ELECTRON_TUBE(ingredient()),
+	CIRCUIT(ingredient()),
 
 //	BLAZING_PICKAXE(new BlazingToolItem(1, -2.8F, standardProperties(), PICKAXE)),
 //	BLAZING_SHOVEL(new BlazingToolItem(1.5F, -3.0F, standardProperties(), SHOVEL)),
@@ -104,7 +107,7 @@ public enum AllItems {
 	CARDBOARD_BOX_1416(new CardboardBoxItem(standardItemProperties())),
 	CARDBOARD_BOX_1410(new CardboardBoxItem(standardItemProperties())),
 
-	FILTER(new FilterItem(standardItemProperties())),
+	FILTER(new FilterItem(standardItemProperties()), true),
 	LOGISTICAL_DIAL(new LogisticalDialItem(standardItemProperties())),
 	LOGISTICAL_CONTROLLER_SUPPLY(new LogisticalControllerItem(standardItemProperties(), Type.SUPPLY)),
 	LOGISTICAL_CONTROLLER_REQUEST(new LogisticalControllerItem(standardItemProperties(), Type.REQUEST)),

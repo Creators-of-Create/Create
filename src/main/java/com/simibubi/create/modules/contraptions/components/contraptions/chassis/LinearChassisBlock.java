@@ -2,9 +2,9 @@ package com.simibubi.create.modules.contraptions.components.contraptions.chassis
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IHaveConnectedTextures;
-import com.simibubi.create.foundation.block.SpriteShifter;
-import com.simibubi.create.foundation.block.SpriteShifter.SpriteShiftEntry;
+import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
+import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.block.render.SpriteShifter;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

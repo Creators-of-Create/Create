@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.foundation.block.RenderUtilityDirectionalBlock;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.world.CopperOreBlock;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock.DrillHeadBlock;
@@ -94,6 +95,10 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllBlocks {
+
+	__MATERIALS__(),
+	COPPER_ORE(new CopperOreBlock()),
+	ZINC_ORE(new Block(Properties.from(Blocks.GOLD_ORE))),
 
 	__SCHEMATICS__(),
 	SCHEMATICANNON(new SchematicannonBlock()),

@@ -2,7 +2,7 @@ package com.simibubi.create.modules.logistics.transport.villager;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.ColoredOverlayTileEntityRenderer;
+import com.simibubi.create.foundation.block.render.ColoredOverlayTileEntityRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 

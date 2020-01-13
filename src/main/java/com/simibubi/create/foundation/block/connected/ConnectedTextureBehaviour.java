@@ -1,9 +1,11 @@
-package com.simibubi.create.foundation.block;
+package com.simibubi.create.foundation.block.connected;
 
+import java.util.Map;
 import java.util.function.BiPredicate;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.foundation.block.SpriteShifter.SpriteShiftEntry;
+import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.block.render.SpriteShifter;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,19 +18,20 @@ import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public interface IHaveConnectedTextures {
+public abstract class ConnectedTextureBehaviour {
 
 	class CTContext {
 		boolean up, down, left, right;
 		boolean topLeft, topRight, bottomLeft, bottomRight;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	default boolean appliesTo(BakedQuad quad) {
-		return true;
+	public abstract CTSpriteShiftEntry get(BlockState state, Direction direction);
+
+	boolean shouldFlipUVs(BlockState state, Direction face) {
+		return false;
 	}
 
-	default boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader, BlockPos pos,
+	public boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader, BlockPos pos,
 			BlockPos otherPos, Direction face) {
 
 		BlockPos blockingPos = otherPos.offset(face);
@@ -40,15 +43,7 @@ public interface IHaveConnectedTextures {
 		return state.getBlock() == other.getBlock();
 	}
 
-	default Iterable<SpriteShiftEntry> getSpriteShifts() {
-		return ImmutableList.of(SpriteShifter.getCT(((Block) this).getRegistryName().getPath()));
-	}
-
-	default int getTextureIndex(IEnviromentBlockReader reader, BlockPos pos, BlockState state, Direction face) {
-		return getTextureIndexForContext(reader, pos, state, face, buildContext(reader, pos, state, face));
-	}
-
-	default CTContext buildContext(IEnviromentBlockReader reader, BlockPos pos, BlockState state, Direction face) {
+	CTContext buildContext(IEnviromentBlockReader reader, BlockPos pos, BlockState state, Direction face) {
 		Axis axis = face.getAxis();
 		boolean positive = face.getAxisDirection() == AxisDirection.POSITIVE;
 		Direction h = axis == Axis.X ? Direction.SOUTH : Direction.WEST;
@@ -89,71 +84,6 @@ public interface IHaveConnectedTextures {
 		context.bottomRight = flip ? topLeft : bottomRight;
 
 		return context;
-	}
-
-	default boolean shouldFlipUVs(BlockState state, Direction face) {
-		return false;
-	}
-
-	default int getTextureIndexForContext(IEnviromentBlockReader reader, BlockPos pos, BlockState state, Direction face,
-			CTContext c) {
-		int tileX = 0, tileY = 0;
-		int borders = (!c.up ? 1 : 0) + (!c.down ? 1 : 0) + (!c.left ? 1 : 0) + (!c.right ? 1 : 0);
-
-		if (c.up)
-			tileX++;
-		if (c.down)
-			tileX += 2;
-		if (c.left)
-			tileY++;
-		if (c.right)
-			tileY += 2;
-
-		if (borders == 0) {
-			if (c.topRight)
-				tileX++;
-			if (c.topLeft)
-				tileX += 2;
-			if (c.bottomRight)
-				tileY += 2;
-			if (c.bottomLeft)
-				tileY++;
-		}
-
-		if (borders == 1) {
-			if (!c.right) {
-				if (c.topLeft || c.bottomLeft) {
-					tileY = 4;
-					tileX = -1 + (c.bottomLeft ? 1 : 0) + (c.topLeft ? 1 : 0) * 2;
-				}
-			}
-			if (!c.left) {
-				if (c.topRight || c.bottomRight) {
-					tileY = 5;
-					tileX = -1 + (c.bottomRight ? 1 : 0) + (c.topRight ? 1 : 0) * 2;
-				}
-			}
-			if (!c.down) {
-				if (c.topLeft || c.topRight) {
-					tileY = 6;
-					tileX = -1 + (c.topLeft ? 1 : 0) + (c.topRight ? 1 : 0) * 2;
-				}
-			}
-			if (!c.up) {
-				if (c.bottomLeft || c.bottomRight) {
-					tileY = 7;
-					tileX = -1 + (c.bottomLeft ? 1 : 0) + (c.bottomRight ? 1 : 0) * 2;
-				}
-			}
-		}
-
-		if (borders == 2) {
-			if ((c.up && c.left && c.topLeft) || (c.down && c.left && c.bottomLeft) || (c.up && c.right && c.topRight)
-					|| (c.down && c.right && c.bottomRight))
-				tileX += 3;
-		}
-
-		return tileX + 8 * tileY;
 	}
 
 }

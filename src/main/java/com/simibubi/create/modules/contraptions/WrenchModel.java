@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.foundation.block.CustomRenderItemBakedModel;
+import com.simibubi.create.foundation.block.render.CustomRenderItemBakedModel;
 
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraftforge.client.event.ModelBakeEvent;

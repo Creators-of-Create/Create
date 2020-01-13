@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.foundation.block.WrappedBakedModel;
+import com.simibubi.create.foundation.block.render.WrappedBakedModel;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

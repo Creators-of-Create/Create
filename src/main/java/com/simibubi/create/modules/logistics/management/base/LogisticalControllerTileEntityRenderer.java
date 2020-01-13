@@ -4,7 +4,7 @@ import static com.simibubi.create.modules.logistics.management.base.LogisticalCo
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.ColoredOverlayTileEntityRenderer;
+import com.simibubi.create.foundation.block.render.ColoredOverlayTileEntityRenderer;
 
 import net.minecraft.block.BlockState;
 

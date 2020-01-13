@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.simibubi.create.foundation.block.CTModel;
-import com.simibubi.create.foundation.block.ColoredVertexModel;
 import com.simibubi.create.foundation.block.IHaveColoredVertices;
-import com.simibubi.create.foundation.block.IHaveConnectedTextures;
-import com.simibubi.create.foundation.block.SpriteShifter.SpriteShiftEntry;
+import com.simibubi.create.foundation.block.connected.CTModel;
+import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
+import com.simibubi.create.foundation.block.render.ColoredVertexModel;
+import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.modules.contraptions.WrenchModel;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;

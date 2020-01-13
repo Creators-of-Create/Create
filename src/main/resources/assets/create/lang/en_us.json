@@ -39,6 +39,9 @@
 	"item.create.copper_ingot": "Copper Ingot",
 	"item.create.copper_nugget": "Copper Nugget",
 	"item.create.crushed_copper": "Crushed Copper",
+
+	"item.create.electron_tube": "Electron Tube",
+	"item.create.circuit": "Integrated Circuit",
 	
 	"item.create.logistical_controller_supply": "Item Supply",
 	"item.create.logistical_controller_request": "Item Request",
@@ -60,6 +63,9 @@
 	"item.create.rose_quartz_shovel": "Gilded Quartz Shovel",
 	"item.create.rose_quartz_axe": "Gilded Quartz Axe",
 	"item.create.rose_quartz_sword": "Gilded Quartz Blade",
+
+	"block.create.copper_ore": "Copper Ore",
+	"block.create.zinc_ore": "Zinc Ore",
 
 	"block.create.cogwheel": "Cogwheel",
 	"block.create.large_cogwheel": "Large Cogwheel",

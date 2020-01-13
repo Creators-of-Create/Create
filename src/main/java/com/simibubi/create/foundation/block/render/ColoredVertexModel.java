@@ -1,9 +1,11 @@
-package com.simibubi.create.foundation.block;
+package com.simibubi.create.foundation.block.render;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import com.simibubi.create.foundation.block.IHaveColoredVertices;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;

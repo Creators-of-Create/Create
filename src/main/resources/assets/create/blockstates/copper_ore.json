@@ -1,0 +1,6 @@
+{
+    "variants": {
+		"oxidized=true": { "model": "create:block/copper_ore_oxidized" },
+		"oxidized=false": { "model": "create:block/copper_ore" }
+	}
+}

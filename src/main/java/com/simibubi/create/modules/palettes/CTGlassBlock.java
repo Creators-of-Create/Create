@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.palettes;
 
-import com.simibubi.create.foundation.block.IHaveConnectedTextures;
+import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.block.GlassBlock;
