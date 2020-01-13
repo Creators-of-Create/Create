@@ -1,10 +1,13 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.chassis;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
+
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
+import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
+import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
+import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.block.render.SpriteShifter;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -68,24 +71,44 @@ public class LinearChassisBlock extends AbstractChassisBlock implements IHaveCon
 	}
 
 	@Override
-	public Iterable<SpriteShiftEntry> getSpriteShifts() {
-		return ImmutableList.of(
-				SpriteShifter.get("block/translation_chassis_top", "block/connected/translation_chassis_top"),
-				SpriteShifter.get("block/translation_chassis_top_sticky",
-						"block/connected/translation_chassis_top_sticky"));
+	public ConnectedTextureBehaviour getBehaviour() {
+		return new ChassisCTBehaviour();
 	}
+	
+	private static class ChassisCTBehaviour extends ConnectedTextureBehaviour {
 
-	@Override
-	public boolean shouldFlipUVs(BlockState state, Direction face) {
-		if (state.get(AXIS).isHorizontal() && face.getAxisDirection() == AxisDirection.POSITIVE)
-			return true;
-		return IHaveConnectedTextures.super.shouldFlipUVs(state, face);
-	}
+		static final CTSpriteShiftEntry regular = CTSpriteShifter.get(CTType.OMNIDIRECTIONAL,
+				"translation_chassis_top");
+		static final CTSpriteShiftEntry sticky = CTSpriteShifter.get(CTType.OMNIDIRECTIONAL,
+				"translation_chassis_top_sticky");
 
-	@Override
-	public boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader, BlockPos pos,
-			BlockPos otherPos, Direction face) {
-		return sameKind(state, other) && state.get(AXIS) == other.get(AXIS);
+		@Override
+		public CTSpriteShiftEntry get(BlockState state, Direction direction) {
+			Block block = state.getBlock();
+			BooleanProperty glueableSide = ((LinearChassisBlock) block).getGlueableSide(state, direction);
+			if (glueableSide == null)
+				return null;
+			return state.get(glueableSide) ? sticky : regular;
+		}
+		
+		@Override
+		public Iterable<CTSpriteShiftEntry> getAllCTShifts() {
+			return Arrays.asList(regular, sticky);
+		}
+
+		@Override
+		public boolean shouldFlipUVs(BlockState state, Direction face) {
+			if (state.get(AXIS).isHorizontal() && face.getAxisDirection() == AxisDirection.POSITIVE)
+				return true;
+			return super.shouldFlipUVs(state, face);
+		}
+
+		@Override
+		public boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader, BlockPos pos,
+				BlockPos otherPos, Direction face) {
+			return sameKind(state, other) && state.get(AXIS) == other.get(AXIS);
+		}
+
 	}
 
 }

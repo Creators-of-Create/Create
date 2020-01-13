@@ -1,7 +1,9 @@
 package com.simibubi.create.foundation.block.render;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
 
@@ -25,6 +27,10 @@ public class SpriteShifter {
 
 	public static void reloadUVs() {
 		textures.values().forEach(SpriteShiftEntry::loadTextures);
+	}
+
+	public static List<ResourceLocation> getAllTargetSprites() {
+		return textures.values().stream().map(SpriteShiftEntry::getTargetResourceLocation).collect(Collectors.toList());
 	}
 
 }

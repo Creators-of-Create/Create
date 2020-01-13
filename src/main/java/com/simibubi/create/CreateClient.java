@@ -109,9 +109,10 @@ public class CreateClient {
 			Block block = allBlocks.get();
 			if (!(block instanceof IHaveConnectedTextures))
 				continue;
-			for (SpriteShiftEntry spriteShiftEntry : ((IHaveConnectedTextures) block).getSpriteShifts())
+			for (SpriteShiftEntry spriteShiftEntry : ((IHaveConnectedTextures) block).getBehaviour().getAllCTShifts())
 				event.addSprite(spriteShiftEntry.getTargetResourceLocation());
 		}
+
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -7,6 +7,8 @@ import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.foundation.block.RenderUtilityDirectionalBlock;
+import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
+import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.world.CopperOreBlock;
 import com.simibubi.create.modules.IModule;
@@ -69,6 +71,7 @@ import com.simibubi.create.modules.logistics.transport.villager.LogisticiansTabl
 import com.simibubi.create.modules.logistics.transport.villager.PackageFunnelBlock;
 import com.simibubi.create.modules.palettes.CTGlassBlock;
 import com.simibubi.create.modules.palettes.GlassPaneBlock;
+import com.simibubi.create.modules.palettes.LayeredCTBlock;
 import com.simibubi.create.modules.palettes.VolcanicRockBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
@@ -222,11 +225,12 @@ public enum AllBlocks {
 	LIMESTONE_BRICKS(new Block(Properties.from(LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	POLISHED_LIMESTONE(new Block(Properties.from(LIMESTONE.block)), ComesWith.SLAB),
 	LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(LIMESTONE.block))),
+	LIMESTONE_LAYERS(
+			new LayeredCTBlock(Properties.from(LIMESTONE.block),
+					CTSpriteShifter.get(CTType.HORIZONTAL, "limestone_layers"),
+					CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, "polished_limestone"))),
 	WEATHERED_LIMESTONE(new Block(Properties.from(Blocks.ANDESITE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	WEATHERED_LIMESTONE_BRICKS(
-			new Block(Properties.from(WEATHERED_LIMESTONE.block)),
-			ComesWith.STAIRS,
-			ComesWith.SLAB,
+	WEATHERED_LIMESTONE_BRICKS(new Block(Properties.from(WEATHERED_LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB,
 			ComesWith.WALL),
 	POLISHED_WEATHERED_LIMESTONE(new Block(Properties.from(WEATHERED_LIMESTONE.block)), ComesWith.SLAB),
 	WEATHERED_LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(WEATHERED_LIMESTONE.block))),

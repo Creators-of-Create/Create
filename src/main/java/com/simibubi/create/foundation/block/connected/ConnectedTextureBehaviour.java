@@ -1,22 +1,13 @@
 package com.simibubi.create.foundation.block.connected;
 
-import java.util.Map;
 import java.util.function.BiPredicate;
 
-import com.google.common.collect.ImmutableList;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.block.render.SpriteShifter;
-
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IEnviromentBlockReader;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class ConnectedTextureBehaviour {
 
@@ -26,8 +17,10 @@ public abstract class ConnectedTextureBehaviour {
 	}
 
 	public abstract CTSpriteShiftEntry get(BlockState state, Direction direction);
+	
+	public abstract Iterable<CTSpriteShiftEntry> getAllCTShifts();
 
-	boolean shouldFlipUVs(BlockState state, Direction face) {
+	protected boolean shouldFlipUVs(BlockState state, Direction face) {
 		return false;
 	}
 

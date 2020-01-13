@@ -104,10 +104,11 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 	}
 
 	public void updateSpeed(BlockState state, World world, BlockPos pos) {
-		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) world.getTileEntity(pos);
-
-		if (te == null)
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if (tileEntity == null || !(tileEntity instanceof CrushingWheelControllerTileEntity))
 			return;
+
+		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) tileEntity;
 		if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen()) {
 			if (te.crushingspeed != 0) {
 				te.crushingspeed = 0;

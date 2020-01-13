@@ -11,6 +11,16 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 		this.textureSheetSize = sheetSize;
 	}
 
+	public float getUShift(int index) {
+		return getTarget().getInterpolatedU((index % textureSheetSize) * (16 / textureSheetSize))
+				- getOriginal().getMinU();
+	}
+
+	public float getVShift(int index) {
+		return getTarget().getInterpolatedV((index / textureSheetSize) * (16 / textureSheetSize))
+				- getOriginal().getMinV();
+	}
+
 	public abstract int getTextureIndex(CTContext context);
 
 	public static class Horizontal extends CTSpriteShiftEntry {
@@ -21,7 +31,7 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 
 		@Override
 		public int getTextureIndex(CTContext context) {
-			return (context.left ? 1 : 0) + (context.right ? 2 : 0);
+			return (context.right ? 1 : 0) + (context.left ? 2 : 0);
 		}
 
 	}

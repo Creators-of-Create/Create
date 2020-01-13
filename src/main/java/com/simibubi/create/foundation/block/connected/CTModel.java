@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -24,28 +24,28 @@ import net.minecraftforge.client.model.data.ModelProperty;
 public class CTModel extends BakedModelWrapper<IBakedModel> {
 
 	private static ModelProperty<CTData> CT_PROPERTY = new ModelProperty<>();
-	private Iterable<SpriteShiftEntry> textures;
+	private ConnectedTextureBehaviour behaviour;
 
 	private class CTData {
-		int[] textures;
+		int[] indices;
 
 		public CTData() {
-			textures = new int[6];
-			Arrays.fill(textures, -1);
+			indices = new int[6];
+			Arrays.fill(indices, -1);
 		}
 
 		void put(Direction face, int texture) {
-			textures[face.getIndex()] = texture;
+			indices[face.getIndex()] = texture;
 		}
 
 		int get(Direction face) {
-			return textures[face.getIndex()];
+			return indices[face.getIndex()];
 		}
 	}
 
 	public CTModel(IBakedModel originalModel, IHaveConnectedTextures block) {
 		super(originalModel);
-		textures = block.getSpriteShifts();
+		behaviour = block.getBehaviour();
 	}
 
 	@Override
@@ -53,11 +53,15 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 		if (!(state.getBlock() instanceof IHaveConnectedTextures))
 			return EmptyModelData.INSTANCE;
 		CTData data = new CTData();
-		IHaveConnectedTextures texDef = (IHaveConnectedTextures) state.getBlock();
+
 		for (Direction face : Direction.values()) {
 			if (!Block.shouldSideBeRendered(state, world, pos, face))
 				continue;
-			data.put(face, texDef.getTextureIndex(world, pos, state, face));
+			CTSpriteShiftEntry spriteShift = behaviour.get(state, face);
+			if (spriteShift == null)
+				continue;
+			CTContext ctContext = behaviour.buildContext(world, pos, state, face);
+			data.put(face, spriteShift.getTextureIndex(ctContext));
 		}
 		return new ModelDataMap.Builder().withInitial(CT_PROPERTY, data).build();
 	}
@@ -67,40 +71,27 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 		List<BakedQuad> quads = new ArrayList<>(super.getQuads(state, side, rand, extraData));
 		if (!extraData.hasProperty(CT_PROPERTY))
 			return quads;
-		IHaveConnectedTextures texDef = (IHaveConnectedTextures) state.getBlock();
 		CTData data = extraData.getData(CT_PROPERTY);
 
 		for (int i = 0; i < quads.size(); i++) {
 			BakedQuad quad = quads.get(i);
-			if (!texDef.appliesTo(quad))
-				continue;
 
-			SpriteShiftEntry texture = null;
-			for (SpriteShiftEntry entry : textures) {
-				if (entry.getOriginal() == quad.getSprite()) {
-					texture = entry;
-					break;
-				}
-			}
-			if (texture == null)
+			CTSpriteShiftEntry spriteShift = behaviour.get(state, quad.getFace());
+			if (spriteShift == null)
 				continue;
-
 			int index = data.get(quad.getFace());
 			if (index == -1)
 				continue;
 
-			float textureSize = 16f / 128f / 8f;
-			float uShift = (index % 8) * textureSize;
-			float vShift = (index / 8) * textureSize * 2;
-
-			uShift = texture.getTarget().getInterpolatedU((index % 8) * 2) - texture.getOriginal().getMinU();
-			vShift = texture.getTarget().getInterpolatedV((index / 8) * 2) - texture.getOriginal().getMinV();
+			float uShift = spriteShift.getUShift(index);
+			float vShift = spriteShift.getVShift(index);
 
 			BakedQuad newQuad = new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length),
 					quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(),
 					quad.getFormat());
 			VertexFormat format = quad.getFormat();
 			int[] vertexData = newQuad.getVertexData();
+
 			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
 				int uvOffset = format.getUvOffsetById(0) / 4;
 				int uIndex = vertex + uvOffset;
