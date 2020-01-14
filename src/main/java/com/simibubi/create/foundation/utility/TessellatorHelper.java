@@ -45,6 +45,15 @@ public class TessellatorHelper {
 
 		GlStateManager.color3f(1, 1, 1);
 	}
+	
+	public static void fightZFighting(int id) {
+		long randomBits = (long) id * 493286711L;
+		randomBits = randomBits * randomBits * 4392167121L + randomBits * 98761L;
+		float xNudge = (((float) (randomBits >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		float yNudge = (((float) (randomBits >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		float zNudge = (((float) (randomBits >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		GlStateManager.translatef(xNudge, yNudge, zNudge);
+	}
 
 	public static void begin() {
 		begin(DefaultVertexFormats.POSITION_TEX);

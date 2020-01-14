@@ -47,6 +47,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	public int color;
 	public int beltLength;
 	public int index;
+	public Direction lastInsert;
 
 	protected BlockPos controller;
 	protected BeltInventory inventory;
@@ -272,8 +273,9 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public Direction getMovementFacing() {
-		return Direction.getFacingFromAxisDirection(getBeltFacing().getAxis(),
-				getBeltMovementSpeed() < 0 ? POSITIVE : NEGATIVE);
+		Axis axis = getBeltFacing().getAxis();
+		return Direction.getFacingFromAxisDirection(axis,
+				getBeltMovementSpeed() < 0 ^ axis == Axis.X ? NEGATIVE : POSITIVE);
 	}
 
 	protected Direction getBeltFacing() {
@@ -296,21 +298,23 @@ public class BeltTileEntity extends KineticTileEntity {
 			return false;
 		BeltInventory nextInventory = nextBeltController.getInventory();
 
+		if (getSpeed() == 0)
+			return false;
 		if (!nextInventory.canInsertFrom(index, side))
 			return false;
 		if (simulate)
 			return true;
 
-		transportedStack.beltPosition = index + .5f;
+		transportedStack.beltPosition = index + .5f - Math.signum(getSpeed()) / 16f;
 
 		Direction movementFacing = getMovementFacing();
 		if (!side.getAxis().isVertical()) {
-			if (movementFacing != side)
+			if (movementFacing != side) {
 				transportedStack.sideOffset = side.getAxisDirection().getOffset() * .35f;
-			else
+				if (side.getAxis() == Axis.X)
+					transportedStack.sideOffset *= -1;
+			} else
 				transportedStack.beltPosition = getDirectionAwareBeltMovementSpeed() > 0 ? index : index + 1;
-			if (side.getAxis() == Axis.X ^ movementFacing.getAxis() == Axis.X)
-				transportedStack.sideOffset *= -1;
 		}
 
 		transportedStack.prevSideOffset = transportedStack.sideOffset;
@@ -320,17 +324,6 @@ public class BeltTileEntity extends KineticTileEntity {
 		nextInventory.insert(transportedStack);
 		nextBeltController.markDirty();
 		nextBeltController.sendData();
-
-		if (side.getAxis().isHorizontal()) {
-			if (AllBlocks.BELT_TUNNEL.typeOf(world.getBlockState(pos.up()))) {
-				TileEntity tileEntity = world.getTileEntity(pos.up());
-				if (tileEntity != null && tileEntity instanceof BeltTunnelTileEntity) {
-					if (side.getAxis() == Axis.X)
-						side = side.getOpposite();
-					((BeltTunnelTileEntity) tileEntity).flap(side, side.getAxis() == Axis.X);
-				}
-			}
-		}
 
 		return true;
 	}

@@ -60,6 +60,7 @@ public class BeltInventory {
 		Iterator<TransportedItemStack> iterator = items.iterator();
 
 		float beltSpeed = belt.getDirectionAwareBeltMovementSpeed();
+		Direction movementFacing = belt.getMovementFacing();
 		float spacing = 1;
 
 		Items: while (iterator.hasNext()) {
@@ -111,12 +112,16 @@ public class BeltInventory {
 					if (beltSegment != null) {
 
 						current.locked = false;
-						for (BeltAttachmentState attachmentState : beltSegment.attachmentTracker.attachments) {
+						List<BeltAttachmentState> attachments = beltSegment.attachmentTracker.attachments;
+						for (BeltAttachmentState attachmentState : attachments) {
 							if (attachmentState.attachment.processItem(beltSegment, current, attachmentState))
 								current.locked = true;
 						}
-						if (!current.locked || current.stack.isEmpty())
+						if (!current.locked || current.stack.isEmpty()) {
+							if (!attachments.isEmpty())
+								attachments.add(attachments.remove(0));
 							belt.sendData();
+						}
 						continue;
 					}
 				}
@@ -140,17 +145,17 @@ public class BeltInventory {
 			}
 
 			// Belt tunnels
-			{
+			if (!onClient) {
 				int seg1 = (int) current.beltPosition;
 				int seg2 = (int) nextOffset;
 				if (!beltMovementPositive && nextOffset == 0)
 					seg2 = -1;
 				if (seg1 != seg2) {
-					if (stuckAtTunnel(seg2, current.stack, belt.getMovementFacing())) {
+					if (stuckAtTunnel(seg2, current.stack, movementFacing)) {
 						continue;
 					}
-					flapTunnel(seg1, belt.getMovementFacing(), false);
-					flapTunnel(seg2, belt.getMovementFacing().getOpposite(), true);
+					flapTunnel(seg1, movementFacing, false);
+					flapTunnel(seg2, movementFacing.getOpposite(), true);
 				}
 			}
 
@@ -186,7 +191,6 @@ public class BeltInventory {
 				int lastOffset = beltMovementPositive ? belt.beltLength - 1 : 0;
 				BlockPos nextPosition = getPositionForOffset(beltMovementPositive ? belt.beltLength : -1);
 				BlockState state = world.getBlockState(nextPosition);
-				Direction movementFacing = belt.getMovementFacing();
 
 				// next block is a basin or a saw
 				if (AllBlocks.BASIN.typeOf(state) || AllBlocks.SAW.typeOf(state)) {
@@ -205,7 +209,7 @@ public class BeltInventory {
 							if (remainder.isEmpty()) {
 								iterator.remove();
 								current = null;
-								flapTunnel(lastOffset, belt.getMovementFacing(), false);
+								flapTunnel(lastOffset, movementFacing, false);
 							}
 
 							belt.sendData();
@@ -220,7 +224,7 @@ public class BeltInventory {
 						eject(current);
 						iterator.remove();
 						current = null;
-						flapTunnel(lastOffset, belt.getMovementFacing(), false);
+						flapTunnel(lastOffset, movementFacing, false);
 						belt.sendData();
 					}
 					continue;
@@ -241,7 +245,7 @@ public class BeltInventory {
 				if (nextBelt.tryInsertingFromSide(movementFacing, current, false)) {
 					iterator.remove();
 					current = null;
-					flapTunnel(lastOffset, belt.getMovementFacing(), false);
+					flapTunnel(lastOffset, movementFacing, false);
 					belt.sendData();
 				}
 
@@ -298,8 +302,6 @@ public class BeltInventory {
 		TileEntity te = belt.getWorld().getTileEntity(pos);
 		if (te == null || !(te instanceof BeltTunnelTileEntity))
 			return;
-		if (side.getAxis() == Axis.Z)
-			side = side.getOpposite();
 		((BeltTunnelTileEntity) te).flap(side, inward ^ side.getAxis() == Axis.Z);
 	}
 
@@ -308,24 +310,19 @@ public class BeltInventory {
 	}
 
 	public boolean canInsertFrom(int segment, Direction side) {
-		float min = segment + .5f - (SEGMENT_WINDOW / 2);
-		float max = segment + .5f + (SEGMENT_WINDOW / 2);
+		float segmentPos = segment;
+		if (belt.getMovementFacing() == side.getOpposite())
+			return false;
+		if (belt.getMovementFacing() != side)
+			segmentPos += .5f;
+		else if (!beltMovementPositive)
+			segmentPos += 1f;
 
 		for (TransportedItemStack stack : items) {
 			float currentPos = stack.beltPosition;
 
-			// Searched past relevant stacks
-			if (beltMovementPositive ? currentPos < segment : currentPos - 1 > segment)
-				break;
-
-			// Item inside extraction window
-			if (currentPos > min && currentPos < max)
-				return false;
-
-			// Items on the belt get prioritized if the previous item was inserted on the
-			// same segment
 			if (stack.insertedAt == segment && stack.insertedFrom == side
-					&& (beltMovementPositive ? currentPos <= segment + 1.5 : currentPos - 1.5 >= segment))
+					&& (beltMovementPositive ? currentPos <= segmentPos + 1 : currentPos >= segmentPos - 1))
 				return false;
 
 		}

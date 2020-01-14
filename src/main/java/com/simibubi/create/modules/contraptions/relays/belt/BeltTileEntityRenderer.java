@@ -98,6 +98,7 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 
 			for (TransportedItemStack transported : te.getInventory().items) {
 				GlStateManager.pushMatrix();
+				TessellatorHelper.fightZFighting(transported.angle);
 				float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
 				float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
 				float verticalMovement = verticality;

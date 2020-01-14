@@ -22,12 +22,14 @@ public class AutoExtractingBehaviour extends ExtractingBehaviour {
 	private int timer;
 	Supplier<Boolean> shouldExtract;
 	Supplier<Boolean> shouldPause;
+	private boolean ticking;
 
 	public AutoExtractingBehaviour(SmartTileEntity te, Supplier<List<Pair<BlockPos, Direction>>> attachments,
 			Consumer<ItemStack> onExtract, int delay) {
 		super(te, attachments, onExtract);
 		shouldPause = () -> false;
 		shouldExtract = () -> true;
+		ticking = true;
 		this.delay = delay;
 	}
 
@@ -47,16 +49,22 @@ public class AutoExtractingBehaviour extends ExtractingBehaviour {
 	}
 
 	@Override
-	public boolean extract() {
+	public boolean extract(int amount) {
 		timer = delay;
-		return super.extract();
+		return super.extract(amount);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
+		
+		if (!ticking)
+			return;
+		
+		if (getWorld().isRemote)
+			return;
 
-		if (shouldPause.get()) {
+		if (getShouldPause().get()) {
 			timer = 0;
 			return;
 		}
@@ -66,15 +74,27 @@ public class AutoExtractingBehaviour extends ExtractingBehaviour {
 			return;
 		}
 
-		if (!shouldExtract.get())
+		if (!getShouldExtract().get())
 			return;
 
 		extract();
+	}
+	
+	public void setTicking(boolean ticking) {
+		this.ticking = ticking;
 	}
 
 	@Override
 	public IBehaviourType<?> getType() {
 		return TYPE;
+	}
+
+	public Supplier<Boolean> getShouldExtract() {
+		return shouldExtract;
+	}
+
+	public Supplier<Boolean> getShouldPause() {
+		return shouldPause;
 	}
 
 }

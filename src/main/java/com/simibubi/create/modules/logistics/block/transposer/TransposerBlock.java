@@ -2,7 +2,7 @@ package com.simibubi.create.modules.logistics.block.transposer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AllShapes;
-import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
+import com.simibubi.create.modules.logistics.block.belts.BeltAttachableLogisticalBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,7 +19,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class TransposerBlock extends AttachedLogisticalBlock {
+public class TransposerBlock extends BeltAttachableLogisticalBlock {
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 

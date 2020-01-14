@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
+import com.simibubi.create.modules.logistics.block.belts.BeltAttachableLogisticalBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,7 +22,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class ExtractorBlock extends AttachedLogisticalBlock {
+public class ExtractorBlock extends BeltAttachableLogisticalBlock {
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 

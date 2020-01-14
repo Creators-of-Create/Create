@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -23,6 +23,7 @@ public enum AllBeltAttachments {
 	BELT_FUNNEL(AllBlocks.BELT_FUNNEL),
 	BELT_OBSERVER(AllBlocks.ENTITY_DETECTOR),
 	MECHANICAL_PRESS(AllBlocks.MECHANICAL_PRESS),
+	LOGISTICAL_ATTACHABLES(AllBlocks.EXTRACTOR),
 
 	;
 
@@ -38,8 +39,8 @@ public enum AllBeltAttachments {
 
 		public BlockPos getBeltPositionForAttachment(IWorld world, BlockPos pos, BlockState state);
 
-		default boolean isAttachedCorrectly(IWorld world, BlockPos attachmentPos, BlockPos beltPos, BlockState attachmentState,
-				BlockState beltState) {
+		default boolean isAttachedCorrectly(IWorld world, BlockPos attachmentPos, BlockPos beltPos,
+				BlockState attachmentState, BlockState beltState) {
 			return true;
 		}
 
@@ -47,7 +48,8 @@ public enum AllBeltAttachments {
 			return false;
 		}
 
-		default boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
+		default boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported,
+				BeltAttachmentState state) {
 			return false;
 		}
 
@@ -101,7 +103,7 @@ public enum AllBeltAttachments {
 		private BeltTileEntity te;
 
 		public Tracker(BeltTileEntity te) {
-			attachments = new ArrayList<>(0);
+			attachments = new LinkedList<>();
 			this.te = te;
 		}
 

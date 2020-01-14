@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 public class ItemHandlerBeltSegment implements IItemHandler {
-	
+
 	private final BeltInventory beltInventory;
 	int offset;
 
@@ -32,7 +32,7 @@ public class ItemHandlerBeltSegment implements IItemHandler {
 			if (!simulate) {
 				TransportedItemStack newStack = new TransportedItemStack(stack);
 				newStack.insertedAt = offset;
-				newStack.beltPosition = offset + .5f;
+				newStack.beltPosition = offset + .5f + (beltInventory.beltMovementPositive ? -1 : 1) / 16f;
 				newStack.prevBeltPosition = newStack.beltPosition;
 				this.beltInventory.insert(newStack);
 				this.beltInventory.belt.markDirty();

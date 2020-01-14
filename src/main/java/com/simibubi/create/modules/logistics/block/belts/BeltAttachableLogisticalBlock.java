@@ -6,11 +6,11 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.behaviour.inventory.ExtractingBehaviour;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
+import com.simibubi.create.foundation.behaviour.inventory.SingleTargetAutoExtractingBehaviour;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public abstract class ExtractorForBeltsBlock extends AttachedLogisticalBlock implements IBeltAttachment {
+public abstract class BeltAttachableLogisticalBlock extends AttachedLogisticalBlock implements IBeltAttachment {
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
@@ -51,7 +51,8 @@ public abstract class ExtractorForBeltsBlock extends AttachedLogisticalBlock imp
 		ItemStack stack = transported.stack;
 
 		FilteringBehaviour filtering = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
-		ExtractingBehaviour extracting = TileEntityBehaviour.get(world, pos, ExtractingBehaviour.TYPE);
+		SingleTargetAutoExtractingBehaviour extracting = TileEntityBehaviour.get(world, pos,
+				SingleTargetAutoExtractingBehaviour.TYPE);
 
 		if (extracting == null)
 			return false;
@@ -64,12 +65,23 @@ public abstract class ExtractorForBeltsBlock extends AttachedLogisticalBlock imp
 	public boolean processItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
 		BlockPos pos = state.attachmentPos;
 		World world = te.getWorld();
-		ExtractingBehaviour extracting = TileEntityBehaviour.get(world, pos, ExtractingBehaviour.TYPE);
-		
+		ItemStack stack = transported.stack;
+
+		SingleTargetAutoExtractingBehaviour extracting = TileEntityBehaviour.get(world, pos,
+				SingleTargetAutoExtractingBehaviour.TYPE);
+
 		if (extracting == null)
 			return false;
-		extracting.extract();
-		return false;
+		if (extracting.getShouldPause().get())
+			return false;
+
+		FilteringBehaviour filtering = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
+		if (filtering != null && (!filtering.test(stack) || stack.getCount() < filtering.getFilter().getCount()))
+			return false;
+		if (!extracting.getShouldExtract().get())
+			return !filtering.getFilter().isEmpty();
+
+		return !extracting.extractFromInventory();
 	}
 
 }

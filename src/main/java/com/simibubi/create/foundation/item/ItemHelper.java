@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -134,9 +135,46 @@ public class ItemHelper {
 			else
 				break Extraction;
 		} while (true);
-		
+
 		if (amountRequired && extracting.getCount() < exactAmount)
 			return ItemStack.EMPTY;
+
+		return extracting;
+	}
+
+	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test,
+			Function<ItemStack, Integer> amountFunction, boolean simulate) {
+		ItemStack extracting = ItemStack.EMPTY;
+		int maxExtractionCount = CreateConfig.parameters.extractorAmount.get();
+
+		for (int slot = 0; slot < inv.getSlots(); slot++) {
+			if (extracting.isEmpty()) {
+				ItemStack stackInSlot = inv.getStackInSlot(slot);
+				if (stackInSlot.isEmpty())
+					continue;
+				int maxExtractionCountForItem = amountFunction.apply(stackInSlot);
+				if (maxExtractionCountForItem == 0)
+					continue;
+				maxExtractionCount = Math.min(maxExtractionCount, maxExtractionCountForItem);
+			}
+
+			ItemStack stack = inv.extractItem(slot, maxExtractionCount - extracting.getCount(), true);
+
+			if (!test.test(stack))
+				continue;
+			if (!extracting.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stack, extracting))
+				continue;
+
+			if (extracting.isEmpty())
+				extracting = stack.copy();
+			else
+				extracting.grow(stack.getCount());
+
+			if (!simulate)
+				inv.extractItem(slot, stack.getCount(), false);
+			if (extracting.getCount() == maxExtractionCount)
+				break;
+		}
 
 		return extracting;
 	}

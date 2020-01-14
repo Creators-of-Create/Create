@@ -1,10 +1,15 @@
 package com.simibubi.create.foundation.behaviour;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.behaviour.ValueBox.ItemValueBox;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
+import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FenceBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -14,6 +19,8 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -73,10 +80,26 @@ public class ValueBoxRenderer {
 		IBakedModel modelWithOverrides = itemRenderer.getModelWithOverrides(filter);
 		boolean blockItem = modelWithOverrides.isGui3d();
 		float scale = (!blockItem ? .5f : 1f) - 1 / 64f;
-		float zOffset = (!blockItem ? -.225f : 0);
+		float zOffset = (!blockItem ? -.225f : 0) + customZOffset(filter.getItem());
 		GlStateManager.scaled(scale, scale, scale);
 		GlStateManager.translated(0, 0, zOffset);
 		itemRenderer.renderItem(filter, TransformType.FIXED);
+	}
+
+	private static float customZOffset(Item item) {
+		float NUDGE = -.1f;
+		if (AllItems.FILTER.get() == item)
+			return NUDGE;
+		if (item instanceof BlockItem) {
+			Block block = ((BlockItem) item).getBlock();
+			if (block instanceof CogWheelBlock)
+				return NUDGE;
+			if (block instanceof FenceBlock)
+				return NUDGE;
+			if (block == Blocks.END_ROD)
+				return NUDGE;
+		}
+		return 0;
 	}
 
 }

@@ -9,9 +9,11 @@ import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour.SlotPositioning;
+import com.simibubi.create.foundation.behaviour.inventory.AutoExtractingBehaviour;
 import com.simibubi.create.foundation.behaviour.inventory.ExtractingBehaviour;
 import com.simibubi.create.foundation.behaviour.inventory.SingleTargetAutoExtractingBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
@@ -34,6 +36,7 @@ public class ExtractorTileEntity extends SmartTileEntity {
 
 	protected ExtractingBehaviour extracting;
 	protected FilteringBehaviour filtering;
+	protected boolean extractingToBelt;
 
 	public ExtractorTileEntity() {
 		this(AllTileEntities.EXTRACTOR.type);
@@ -80,6 +83,20 @@ public class ExtractorTileEntity extends SmartTileEntity {
 		world.addEntity(entityIn);
 	}
 
+	protected boolean isAttachedToBelt() {
+		Direction blockFacing = AttachedLogisticalBlock.getBlockFacing(getBlockState());
+		return AllBlocks.BELT.typeOf(world.getBlockState(pos.offset(blockFacing)));
+	}
+
+	protected boolean isTargetingBelt() {
+		if (!AllBlocks.BELT.typeOf(world.getBlockState(pos.down())))
+			return false;
+		TileEntity te = world.getTileEntity(pos.down());
+		if (te == null || !(te instanceof BeltTileEntity))
+			return false;
+		return ((KineticTileEntity) te).getSpeed() != 0;
+	}
+
 	protected boolean isPowered() {
 		return getBlockState().get(ExtractorBlock.POWERED);
 	}
@@ -102,6 +119,17 @@ public class ExtractorTileEntity extends SmartTileEntity {
 		}
 
 		return world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(getPos())).isEmpty();
+	}
+
+	@Override
+	public void tick() {
+		((AutoExtractingBehaviour) extracting).setTicking(!isAttachedToBelt());
+		super.tick();
+		boolean onBelt = isTargetingBelt();
+		if (extractingToBelt != onBelt) {
+			extractingToBelt = onBelt;
+			((AutoExtractingBehaviour) extracting).setDelay(onBelt ? 0 : CreateConfig.parameters.extractorDelay.get());
+		}
 	}
 
 }

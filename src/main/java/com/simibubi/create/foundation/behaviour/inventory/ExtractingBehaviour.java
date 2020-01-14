@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.behaviour.inventory;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -22,43 +23,60 @@ public class ExtractingBehaviour extends InventoryManagementBehaviour {
 	public static IBehaviourType<ExtractingBehaviour> TYPE = new IBehaviourType<ExtractingBehaviour>() {
 	};
 
-	private Predicate<ItemStack> extractionFilter;
+	private Function<ItemStack, Integer> customAmountFilter;
+	private Predicate<ItemStack> customFilter;
 	private Consumer<ItemStack> callback;
 
 	public ExtractingBehaviour(SmartTileEntity te, Supplier<List<Pair<BlockPos, Direction>>> attachments,
 			Consumer<ItemStack> onExtract) {
 		super(te, attachments);
-		extractionFilter = stack -> true;
+		customAmountFilter = stack -> 64;
+		customFilter = stack -> true;
 		callback = onExtract;
 	}
 
-	public ExtractingBehaviour withSpecialFilter(Predicate<ItemStack> filter) {
-		this.extractionFilter = filter;
+	public ExtractingBehaviour withAmountThreshold(Function<ItemStack, Integer> filter) {
+		this.customAmountFilter = filter;
 		return this;
 	}
-
+	
+	public ExtractingBehaviour withAdditionalFilter(Predicate<ItemStack> filter) {
+		this.customFilter = filter;
+		return this;
+	}
+	
 	public boolean extract() {
-		if (getWorld().isRemote)
-			return false;
-
 		int amount = -1;
-		Predicate<ItemStack> test = extractionFilter;
-
 		FilteringBehaviour filter = get(tileEntity, FilteringBehaviour.TYPE);
 		if (filter != null) {
 			ItemStack filterItem = filter.getFilter();
 			amount = filterItem.isEmpty() ? -1 : filterItem.getCount();
-			test = extractionFilter.and(filter::test);
 		}
+		return extract(amount);
+	}
+
+	public boolean extract(int exactAmount) {
+		if (getWorld().isRemote)
+			return false;
+
+		Predicate<ItemStack> test = customFilter;
+		FilteringBehaviour filter = get(tileEntity, FilteringBehaviour.TYPE);
+		if (filter != null)
+			test = customFilter.and(filter::test);
 
 		for (IItemHandler inv : getInventories()) {
-			ItemStack extract = ItemHelper.extract(inv, test, amount, false);
+			ItemStack extract = ItemStack.EMPTY;
+			if (exactAmount != -1)
+				extract = ItemHelper.extract(inv, test, exactAmount, false);
+			else
+				extract = ItemHelper.extract(inv, test, customAmountFilter, false);
+				
 			if (!extract.isEmpty()) {
 				callback.accept(extract);
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 

@@ -1,6 +1,10 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
@@ -11,6 +15,8 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelBlock.Shap
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -19,6 +25,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -29,14 +36,14 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 	private LazyOptional<IItemHandler> cap = LazyOptional.empty();
 	private boolean initialize;
 
-	private Direction flapToSend;
-	private boolean flapInward;
+	private List<Pair<Direction, Boolean>> flapsToSend;
 
 	public BeltTunnelTileEntity() {
 		super(AllTileEntities.BELT_TUNNEL.type);
 		flaps = new HashMap<>();
 		syncedFlaps = new HashMap<>();
 		initialize = true;
+		flapsToSend = new LinkedList<>();
 	}
 
 	@Override
@@ -91,7 +98,7 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 	public boolean toggleSyncForFlap(Direction face) {
 		if (!flaps.containsKey(face))
 			return false;
-		if (syncedFlaps.containsKey(face)) 
+		if (syncedFlaps.containsKey(face))
 			syncedFlaps.remove(face);
 		else
 			syncedFlaps.put(face, ItemStack.EMPTY);
@@ -103,10 +110,16 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 	@Override
 	public CompoundNBT writeToClient(CompoundNBT tag) {
 		CompoundNBT writeToClient = super.writeToClient(tag);
-		if (flapToSend != null) {
-			writeToClient.putInt("Flap", flapToSend.getIndex());
-			writeToClient.putBoolean("FlapInward", flapInward);
-			flapToSend = null;
+		if (!flapsToSend.isEmpty()) {
+			ListNBT flapsNBT = new ListNBT();
+			for (Pair<Direction, Boolean> pair : flapsToSend) {
+				CompoundNBT flap = new CompoundNBT();
+				flap.putInt("Flap", pair.getKey().getIndex());
+				flap.putBoolean("FlapInward", pair.getValue());
+				flapsNBT.add(flap);
+			}
+			writeToClient.put("Flaps", flapsNBT);
+			flapsToSend.clear();
 		}
 		return writeToClient;
 	}
@@ -114,9 +127,13 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 	@Override
 	public void readClientUpdate(CompoundNBT tag) {
 		super.readClientUpdate(tag);
-		if (tag.contains("Flap")) {
-			Direction side = Direction.byIndex(tag.getInt("Flap"));
-			flap(side, tag.getBoolean("FlapInward"));
+		if (tag.contains("Flaps")) {
+			ListNBT flapsNBT = tag.getList("Flaps", NBT.TAG_COMPOUND);
+			for (INBT inbt : flapsNBT) {
+				CompoundNBT flap = (CompoundNBT) inbt;
+				Direction side = Direction.byIndex(flap.getInt("Flap"));
+				flap(side, flap.getBoolean("FlapInward"));
+			}
 		} else
 			initFlaps();
 	}
@@ -156,17 +173,18 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 			return;
 		}
 
-		flapToSend = side;
-		flapInward = inward;
-		sendData();
+		flapsToSend.add(Pair.of(side, inward));
 	}
 
 	@Override
 	public void tick() {
 		if (initialize)
 			initFlaps();
-		if (!world.isRemote)
+		if (!world.isRemote) {
+			if (!flapsToSend.isEmpty())
+				sendData();
 			return;
+		}
 		flaps.forEach((d, value) -> value.tick());
 	}
 

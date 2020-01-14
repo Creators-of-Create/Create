@@ -99,10 +99,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllBlocks {
 
-	__MATERIALS__(),
-	COPPER_ORE(new CopperOreBlock()),
-	ZINC_ORE(new Block(Properties.from(Blocks.GOLD_ORE))),
-
 	__SCHEMATICS__(),
 	SCHEMATICANNON(new SchematicannonBlock()),
 	SCHEMATICANNON_CONNECTOR(new RenderUtilityBlock()),
@@ -241,6 +237,10 @@ public enum AllBlocks {
 
 	VOLCANIC_ROCK(new VolcanicRockBlock()),
 
+	__MATERIALS__(),
+	COPPER_ORE(new CopperOreBlock()),
+	ZINC_ORE(new Block(Properties.from(Blocks.GOLD_ORE))),
+	
 	;
 
 	private enum ComesWith {

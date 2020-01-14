@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.behaviour.base.IBehaviourType;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -30,6 +31,18 @@ public class SingleTargetAutoExtractingBehaviour extends AutoExtractingBehaviour
 	public SingleTargetAutoExtractingBehaviour dontSynchronize() {
 		synced = false;
 		return this;
+	}
+
+	@Override
+	public void writeNBT(CompoundNBT nbt) {
+		nbt.putBoolean("Advantage", advantageOnNextSync);
+		super.writeNBT(nbt);
+	}
+
+	@Override
+	public void readNBT(CompoundNBT nbt) {
+		advantageOnNextSync = nbt.getBoolean("Advantage");
+		super.readNBT(nbt);
 	}
 
 	@Override
