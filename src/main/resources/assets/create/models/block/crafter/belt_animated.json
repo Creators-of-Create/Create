@@ -7,11 +7,10 @@
 	"elements": [
 		{
 			"name": "belt_animated",
-			"from": [6, 15.5, 12],
-			"to": [10, 16.5, 20],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 17, 8]},
+			"from": [-0.5, 12, 6],
+			"to": [0.5, 20, 10],
 			"faces": {
-				"up": {"uv": [0, 6, 4, 14], "rotation": 180, "texture": "#3"}
+				"west": {"uv": [0, 6, 4, 14], "texture": "#3"}
 			}
 		}
 	]

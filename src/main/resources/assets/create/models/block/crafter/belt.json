@@ -7,22 +7,20 @@
 	"elements": [
 		{
 			"name": "belt",
-			"from": [10, 15.5, 12],
-			"to": [11, 16.5, 20],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 17, 8]},
+			"from": [-0.5, 12, 5],
+			"to": [0.5, 20, 6],
 			"faces": {
-				"east": {"uv": [2, 4, 3, 12], "rotation": 90, "texture": "#5"},
-				"up": {"uv": [2, 4, 3, 12], "rotation": 180, "texture": "#5"}
+				"north": {"uv": [2, 4, 3, 12], "rotation": 180, "texture": "#5"},
+				"west": {"uv": [2, 4, 3, 12], "texture": "#5"}
 			}
 		},
 		{
 			"name": "belt",
-			"from": [5, 15.5, 12],
-			"to": [6, 16.5, 20],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 17, 8]},
+			"from": [-0.5, 12, 10],
+			"to": [0.5, 20, 11],
 			"faces": {
-				"west": {"uv": [2, 4, 3, 12], "rotation": 90, "texture": "#5"},
-				"up": {"uv": [13, 4, 14, 12], "rotation": 180, "texture": "#5"}
+				"south": {"uv": [2, 4, 3, 12], "texture": "#5"},
+				"west": {"uv": [13, 4, 14, 12], "texture": "#5"}
 			}
 		}
 	]

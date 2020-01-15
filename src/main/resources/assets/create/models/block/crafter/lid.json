@@ -7,10 +7,10 @@
 	"elements": [
 		{
 			"name": "valve_lid",
-			"from": [5, 16, 5],
-			"to": [11, 17, 11],
+			"from": [-1, 5, 5],
+			"to": [0, 11, 11],
 			"faces": {
-				"up": {"uv": [0, 0, 6, 6], "texture": "#3"}
+				"west": {"uv": [0, 0, 6, 6], "rotation": 270, "texture": "#3"}
 			}
 		}
 	]

@@ -4,13 +4,17 @@
 	"model": "create:block/crafter/casing"
   },
   "variants": {
+	"pointing": {
+	  "up": {},
+	  "left": {},
+	  "down": {},
+	  "right": {}
+	},
     "facing": {
-      "north": { "x": 90 },
-      "south": { "x": 90, "y": 180 },
-      "west": { "x": 90, "y": 270 },
-      "up": { },
-      "down": { "x": 180 },
-      "east": { "x": 90, "y": 90 }
+      "north": { "y": 90 },
+      "south": { "y": 270 },
+      "west": { "y": 0 },
+      "east": { "y": 180 }
     }
   }
 }

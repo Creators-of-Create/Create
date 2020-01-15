@@ -135,10 +135,10 @@ public enum AllBlocks {
 	MECHANICAL_MIXER_HEAD(new RenderUtilityBlock()),
 	BASIN(new BasinBlock()),
 	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
-	MECHANICAL_CRAFTER_LID(new RenderUtilityDirectionalBlock()),
-	MECHANICAL_CRAFTER_ARROW(new RenderUtilityDirectionalBlock()),
-	MECHANICAL_CRAFTER_BELT_FRAME(new RenderUtilityDirectionalBlock()),
-	MECHANICAL_CRAFTER_BELT(new RenderUtilityDirectionalBlock()),
+	MECHANICAL_CRAFTER_LID(new RenderUtilityBlock()),
+	MECHANICAL_CRAFTER_ARROW(new RenderUtilityBlock()),
+	MECHANICAL_CRAFTER_BELT_FRAME(new RenderUtilityBlock()),
+	MECHANICAL_CRAFTER_BELT(new RenderUtilityBlock()),
 	SPEED_GAUGE(new GaugeBlock(GaugeBlock.Type.SPEED)),
 	STRESS_GAUGE(new GaugeBlock(GaugeBlock.Type.STRESS)),
 	GAUGE_DIAL(new RenderUtilityBlock()),
@@ -221,10 +221,9 @@ public enum AllBlocks {
 	LIMESTONE_BRICKS(new Block(Properties.from(LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	POLISHED_LIMESTONE(new Block(Properties.from(LIMESTONE.block)), ComesWith.SLAB),
 	LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(LIMESTONE.block))),
-	LIMESTONE_LAYERS(
-			new LayeredCTBlock(Properties.from(LIMESTONE.block),
-					CTSpriteShifter.get(CTType.HORIZONTAL, "limestone_layers"),
-					CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, "polished_limestone"))),
+	LIMESTONE_LAYERS(new LayeredCTBlock(Properties.from(LIMESTONE.block),
+			CTSpriteShifter.get(CTType.HORIZONTAL, "limestone_layers"),
+			CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, "polished_limestone"))),
 	WEATHERED_LIMESTONE(new Block(Properties.from(Blocks.ANDESITE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	WEATHERED_LIMESTONE_BRICKS(new Block(Properties.from(WEATHERED_LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB,
 			ComesWith.WALL),
@@ -240,7 +239,7 @@ public enum AllBlocks {
 	__MATERIALS__(),
 	COPPER_ORE(new CopperOreBlock()),
 	ZINC_ORE(new Block(Properties.from(Blocks.GOLD_ORE))),
-	
+
 	;
 
 	private enum ComesWith {
