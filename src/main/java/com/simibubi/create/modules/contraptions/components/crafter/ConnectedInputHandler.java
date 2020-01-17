@@ -36,7 +36,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -126,8 +125,8 @@ public class ConnectedInputHandler {
 	}
 
 	public static void toggleConnection(World world, BlockPos pos, BlockPos pos2) {
-		MechanicalCrafterTileEntity crafter1 = getCrafter(world, pos);
-		MechanicalCrafterTileEntity crafter2 = getCrafter(world, pos2);
+		MechanicalCrafterTileEntity crafter1 = CrafterHelper.getCrafter(world, pos);
+		MechanicalCrafterTileEntity crafter2 = CrafterHelper.getCrafter(world, pos2);
 
 		if (crafter1 == null || crafter2 == null)
 			return;
@@ -136,7 +135,7 @@ public class ConnectedInputHandler {
 		BlockPos controllerPos2 = crafter2.getPos().add(crafter2.input.data.get(0));
 
 		if (controllerPos1.equals(controllerPos2)) {
-			MechanicalCrafterTileEntity controller = getCrafter(world, controllerPos1);
+			MechanicalCrafterTileEntity controller = CrafterHelper.getCrafter(world, controllerPos1);
 
 			Set<BlockPos> positions = controller.input.data.stream().map(l -> controllerPos1.add(l))
 					.collect(Collectors.toSet());
@@ -168,9 +167,9 @@ public class ConnectedInputHandler {
 		}
 
 		if (!crafter1.input.isController)
-			crafter1 = getCrafter(world, controllerPos1);
+			crafter1 = CrafterHelper.getCrafter(world, controllerPos1);
 		if (!crafter2.input.isController)
-			crafter2 = getCrafter(world, controllerPos2);
+			crafter2 = CrafterHelper.getCrafter(world, controllerPos2);
 		if (crafter1 == null || crafter2 == null)
 			return;
 
@@ -217,18 +216,6 @@ public class ConnectedInputHandler {
 		crafter1.input.data.add(BlockPos.ZERO.subtract(crafter2.input.data.get(0)));
 	}
 
-	public static MechanicalCrafterTileEntity getCrafter(IEnviromentBlockReader reader, BlockPos pos) {
-		TileEntity te = reader.getTileEntity(pos);
-		if (!(te instanceof MechanicalCrafterTileEntity))
-			return null;
-		return (MechanicalCrafterTileEntity) te;
-	}
-
-	public static ConnectedInput getInput(IEnviromentBlockReader reader, BlockPos pos) {
-		MechanicalCrafterTileEntity crafter = getCrafter(reader, pos);
-		return crafter == null ? null : crafter.input;
-	}
-
 	private static void modifyAndUpdate(World world, BlockPos pos, Consumer<ConnectedInput> callback) {
 		TileEntity te = world.getTileEntity(pos);
 		if (!(te instanceof MechanicalCrafterTileEntity))
@@ -258,13 +245,13 @@ public class ConnectedInputHandler {
 		public IItemHandler getItemHandler(World world, BlockPos pos) {
 			if (!isController) {
 				BlockPos controllerPos = pos.add(data.get(0));
-				ConnectedInput input = getInput(world, controllerPos);
+				ConnectedInput input = CrafterHelper.getInput(world, controllerPos);
 				if (input == this || input == null || !input.isController)
 					return new ItemStackHandler();
 				return input.getItemHandler(world, controllerPos);
 			}
 
-			List<IItemHandlerModifiable> list = data.stream().map(l -> getCrafter(world, pos.add(l)))
+			List<IItemHandlerModifiable> list = data.stream().map(l -> CrafterHelper.getCrafter(world, pos.add(l)))
 					.filter(Predicates.notNull()).map(crafter -> crafter.inventory).collect(Collectors.toList());
 			return new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 		}

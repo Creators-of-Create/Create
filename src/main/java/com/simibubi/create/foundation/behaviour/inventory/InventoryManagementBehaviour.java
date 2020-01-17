@@ -43,6 +43,7 @@ public class InventoryManagementBehaviour extends TileEntityBehaviour {
 	public void initialize() {
 		super.initialize();
 		attachments.get().forEach(offset -> inventories.put(offset, findInventory(offset)));
+		lazyTick();
 	}
 
 	@Override

@@ -31,8 +31,8 @@ public class InputCTBehaviour extends ConnectedTextureBehaviour {
 		if (state.get(HORIZONTAL_FACING) != other.get(HORIZONTAL_FACING))
 			return false;
 
-		ConnectedInput input1 = ConnectedInputHandler.getInput(reader, pos);
-		ConnectedInput input2 = ConnectedInputHandler.getInput(reader, otherPos);
+		ConnectedInput input1 = CrafterHelper.getInput(reader, pos);
+		ConnectedInput input2 = CrafterHelper.getInput(reader, otherPos);
 
 		if (input1 == null || input2 == null)
 			return false;

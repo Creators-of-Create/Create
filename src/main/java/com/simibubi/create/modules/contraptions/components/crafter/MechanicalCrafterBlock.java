@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.crafter;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
@@ -9,6 +10,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
+import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -90,14 +92,26 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (state.getBlock() == newState.getBlock()) {
+			if (getTargetDirection(state) != getTargetDirection(newState)) {
+				MechanicalCrafterTileEntity crafter = CrafterHelper.getCrafter(worldIn, pos);
+				if (crafter != null)
+					crafter.blockChanged();
+			}
+		}
+
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			MechanicalCrafterTileEntity crafter = CrafterHelper.getCrafter(worldIn, pos);
+			if (crafter != null)
+				crafter.ejectWholeGrid();
+
 			for (Direction direction : Direction.values()) {
 				if (direction.getAxis() == state.get(HORIZONTAL_FACING).getAxis())
 					continue;
 
 				BlockPos otherPos = pos.offset(direction);
-				ConnectedInput thisInput = ConnectedInputHandler.getInput(worldIn, pos);
-				ConnectedInput otherInput = ConnectedInputHandler.getInput(worldIn, otherPos);
+				ConnectedInput thisInput = CrafterHelper.getInput(worldIn, pos);
+				ConnectedInput otherInput = CrafterHelper.getInput(worldIn, otherPos);
 
 				if (thisInput == null || otherInput == null)
 					continue;
@@ -130,6 +144,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		if (context.getFace() == state.get(HORIZONTAL_FACING)) {
 			context.getWorld().setBlockState(context.getPos(), state.cycle(POINTING));
+			withTileEntityDo(context.getWorld(), context.getPos(), TileEntity::markDirty);
 			return ActionResultType.SUCCESS;
 		}
 
@@ -148,6 +163,12 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 		MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
 
 		if (hit.getFace() == state.get(HORIZONTAL_FACING)) {
+
+			if (crafter.phase != Phase.IDLE && !AllItems.WRENCH.typeOf(heldItem)) {
+				crafter.ejectWholeGrid();
+				return true;
+			}
+
 			ItemStack inSlot = crafter.inventory.getStackInSlot(0);
 			if (inSlot.isEmpty())
 				return false;

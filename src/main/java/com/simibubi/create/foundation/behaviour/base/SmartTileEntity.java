@@ -17,12 +17,15 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	private Map<IBehaviourType<?>, TileEntityBehaviour> behaviours;
 	private boolean initialized;
 	private boolean firstNbtRead;
+	private int lazyTickRate;
+	private int lazyTickCounter;
 
 	public SmartTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		behaviours = new HashMap<>();
 		initialized = false;
 		firstNbtRead = true;
+		setLazyTickRate(10);
 
 		ArrayList<TileEntityBehaviour> list = new ArrayList<>();
 		addBehaviours(list);
@@ -43,6 +46,11 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 		if (!initialized && hasWorld()) {
 			initialize();
 			initialized = true;
+		}
+
+		if (lazyTickCounter-- <= 0) {
+			lazyTickCounter = lazyTickRate;
+			lazyTick();
 		}
 
 		behaviours.values().forEach(TileEntityBehaviour::tick);
@@ -81,6 +89,15 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	public void remove() {
 		forEachBehaviour(TileEntityBehaviour::remove);
 		super.remove();
+	}
+
+	public void setLazyTickRate(int slowTickRate) {
+		this.lazyTickRate = slowTickRate;
+		this.lazyTickCounter = slowTickRate;
+	}
+
+	public void lazyTick() {
+
 	}
 
 	protected void forEachBehaviour(Consumer<TileEntityBehaviour> action) {

@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 
@@ -95,6 +96,8 @@ public class ValueBoxRenderer {
 			if (block instanceof CogWheelBlock)
 				return NUDGE;
 			if (block instanceof FenceBlock)
+				return NUDGE;
+			if (block.isIn(BlockTags.BUTTONS))
 				return NUDGE;
 			if (block == Blocks.END_ROD)
 				return NUDGE;

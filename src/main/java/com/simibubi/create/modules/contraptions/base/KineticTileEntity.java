@@ -272,6 +272,8 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 
 	@Override
 	public void tick() {
+		super.tick();
+
 		if (world.isRemote)
 			return;
 		if (speedChangeCounter > 0)
