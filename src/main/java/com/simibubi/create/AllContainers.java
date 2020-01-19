@@ -3,6 +3,10 @@ package com.simibubi.create;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateContainer;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateScreen;
+import com.simibubi.create.modules.logistics.item.filter.AttributeFilterContainer;
+import com.simibubi.create.modules.logistics.item.filter.AttributeFilterScreen;
+import com.simibubi.create.modules.logistics.item.filter.FilterContainer;
+import com.simibubi.create.modules.logistics.item.filter.FilterScreen;
 import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerContainer;
 import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerScreen;
 import com.simibubi.create.modules.logistics.management.index.LogisticalIndexContainer;
@@ -33,6 +37,9 @@ public enum AllContainers {
 	LOGISTICAL_INDEX(LogisticalIndexContainer::new),
 	LOGISTICAL_CONTROLLER(LogisticalInventoryControllerContainer::new),
 
+	FILTER(FilterContainer::new),
+	ATTRIBUTE_FILTER(AttributeFilterContainer::new),
+
 	;
 
 	public ContainerType<? extends Container> type;
@@ -57,6 +64,8 @@ public enum AllContainers {
 		bind(FLEXCRATE, FlexcrateScreen::new);
 		bind(LOGISTICAL_INDEX, LogisticalIndexScreen::new);
 		bind(LOGISTICAL_CONTROLLER, LogisticalInventoryControllerScreen::new);
+		bind(FILTER, FilterScreen::new);
+		bind(ATTRIBUTE_FILTER, AttributeFilterScreen::new);
 	}
 
 	@OnlyIn(Dist.CLIENT)

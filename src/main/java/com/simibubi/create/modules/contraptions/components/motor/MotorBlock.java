@@ -20,7 +20,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class MotorBlock extends HorizontalKineticBlock implements IWithTileEntity<MotorTileEntity>, IHaveScrollableValue {
+public class MotorBlock extends HorizontalKineticBlock
+		implements IWithTileEntity<MotorTileEntity>, IHaveScrollableValue {
 
 	private static final Vec3d valuePos = new Vec3d(15 / 16f, 5 / 16f, 5 / 16f);
 
@@ -90,5 +91,10 @@ public class MotorBlock extends HorizontalKineticBlock implements IWithTileEntit
 	@Override
 	public Direction getValueBoxDirection(BlockState state, IWorld world, BlockPos pos) {
 		return state.get(HORIZONTAL_FACING).getOpposite();
+	}
+
+	@Override
+	public boolean hideStressImpact() {
+		return true;
 	}
 }

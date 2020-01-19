@@ -98,4 +98,8 @@ public abstract class TileEntityBehaviour {
 		return ste.getBehaviour(type);
 	}
 
+	public CompoundNBT writeToClient(CompoundNBT compound) {
+		return compound;
+	}
+
 }

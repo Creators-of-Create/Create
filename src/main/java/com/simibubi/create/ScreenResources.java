@@ -33,6 +33,9 @@ public enum ScreenResources {
 	STOCKSWITCH_BOUND_LEFT("flex_crate_and_stockpile_switch.png", 234, 129, 7, 21),
 	STOCKSWITCH_BOUND_RIGHT("flex_crate_and_stockpile_switch.png", 241, 129, 7, 21),
 
+	FILTER("filter.png", 200, 100),
+	ATTRIBUTE_FILTER("filter.png", 0, 100, 200, 86),
+	
 	// Logistical Index
 	INDEX_TOP("index.png", 41, 0, 174, 22),
 	INDEX_TOP_TRIM("index.png", 41, 22, 174, 6),
@@ -130,6 +133,15 @@ public enum ScreenResources {
 	I_PRIORITY_VERY_HIGH(112, 0),
 	I_ACTIVE(64, 16),
 	I_PASSIVE(80, 16),
+	
+	I_BLACKLIST(128, 0),
+	I_WHITELIST(144, 0),
+	I_WHITELIST_OR(160, 0),
+	I_WHITELIST_AND(176, 0),
+	I_WHITELIST_NOT(192, 0),
+	
+	I_RESPECT_NBT(208, 0),
+	I_IGNORE_NBT(224, 0),
 
 	;
 

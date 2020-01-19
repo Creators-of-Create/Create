@@ -3,6 +3,7 @@ package com.simibubi.create;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.foundation.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.block.IHaveScrollableValue;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -100,7 +101,8 @@ public class ClientEvents {
 
 		boolean cancelled = CreateClient.schematicHandler.mouseScrolled(delta)
 				|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta)
-				|| IHaveScrollableValue.onScroll(delta);
+				|| IHaveScrollableValue.onScroll(delta)
+				|| FilteringHandler.onScroll(delta);
 		event.setCanceled(cancelled);
 	}
 

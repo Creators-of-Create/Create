@@ -1,16 +1,25 @@
 package com.simibubi.create.foundation.behaviour.filtering;
 
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.RaycastHelper;
+import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -38,12 +47,54 @@ public class FilteringHandler {
 			return;
 
 		if (behaviour.testHit(ray.getHitVec())) {
-			if (event.getSide() != LogicalSide.CLIENT)
-				behaviour.setFilter(player.getHeldItem(hand));
+			if (event.getSide() != LogicalSide.CLIENT) {
+				ItemStack heldItem = player.getHeldItem(hand).copy();
+				if (!player.isCreative()) {
+					if (behaviour.getFilter().getItem() instanceof FilterItem)
+						player.inventory.placeItemBackInInventory(world, behaviour.getFilter());
+					if (heldItem.getItem() instanceof FilterItem)
+						player.getHeldItem(hand).shrink(1);
+				}
+				if (heldItem.getItem() instanceof FilterItem)
+					heldItem.setCount(1);
+				behaviour.setFilter(heldItem);
+			}
 			event.setCanceled(true);
 			event.setCancellationResult(ActionResultType.SUCCESS);
 			world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f, .1f);
 		}
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static boolean onScroll(double delta) {
+		RayTraceResult objectMouseOver = Minecraft.getInstance().objectMouseOver;
+		if (!(objectMouseOver instanceof BlockRayTraceResult))
+			return false;
+
+		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
+		Minecraft mc = Minecraft.getInstance();
+		ClientWorld world = mc.world;
+		BlockPos blockPos = result.getPos();
+
+		FilteringBehaviour filtering = TileEntityBehaviour.get(world, blockPos, FilteringBehaviour.TYPE);
+		if (filtering == null)
+			return false;
+		if (mc.player.isSneaking())
+			return false;
+		if (!mc.player.isAllowEdit())
+			return false;
+		if (!filtering.isCountVisible())
+			return false;
+		if (!filtering.testHit(objectMouseOver.getHitVec()))
+			return false;
+		if (filtering.getFilter().isEmpty())
+			return false;
+
+		filtering.ticksUntilScrollPacket = 10;
+		filtering.scrollableValue = (int) MathHelper
+				.clamp(filtering.scrollableValue + delta * (AllKeys.ctrlDown() ? 16 : 1), 0, 64);
+
+		return true;
 	}
 
 }

@@ -1,11 +1,11 @@
 package com.simibubi.create.foundation.behaviour;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.behaviour.ValueBox.ItemValueBox;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -67,12 +67,20 @@ public class ValueBoxRenderer {
 		}
 
 		if (box instanceof ItemValueBox) {
-			String count = ((ItemValueBox) box).count + "";
-			GlStateManager.translated(-7 - font.getStringWidth(count), 10, 10 + 1 / 4f);
-			GlStateManager.scaled(1.5, 1.5, 1.5);
-			font.drawString(count, 0, 0, 0xEDEDED);
-			GlStateManager.translated(0, 0, -1 / 4f);
-			font.drawString(count, 1, 1, 0x4F4F4F);
+			ItemValueBox itemValueBox = (ItemValueBox) box;
+			String count = itemValueBox.count == 0 ? "*" : itemValueBox.count + "";
+
+			boolean isFilter = itemValueBox.stack.getItem() instanceof FilterItem;
+			if (isFilter)
+				GlStateManager.translated(3, 8, 7.25f);
+			else
+				GlStateManager.translated(-7 - font.getStringWidth(count), 10, 10 + 1 / 4f);
+
+			double scale = 1.5;
+			GlStateManager.scaled(scale, scale, scale);
+			font.drawString(count, 0, 0, isFilter ? 0xFFFFFF : 0xEDEDED);
+			GlStateManager.translated(0, 0, -1 / 16f);
+			font.drawString(count, 1 - 1 / 8f, 1 - 1 / 8f, 0x4F4F4F);
 		}
 	}
 
@@ -89,7 +97,7 @@ public class ValueBoxRenderer {
 
 	private static float customZOffset(Item item) {
 		float NUDGE = -.1f;
-		if (AllItems.FILTER.get() == item)
+		if (item instanceof FilterItem)
 			return NUDGE;
 		if (item instanceof BlockItem) {
 			Block block = ((BlockItem) item).getBlock();

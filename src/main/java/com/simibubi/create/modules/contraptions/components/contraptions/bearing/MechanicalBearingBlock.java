@@ -43,10 +43,15 @@ public class MechanicalBearingBlock extends DirectionalKineticBlock
 	protected boolean hasStaticPart() {
 		return true;
 	}
-	
+
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(FACING).getAxis();
+	}
+
+	@Override
+	public boolean showCapacityWithAnnotation() {
+		return true;
 	}
 
 }

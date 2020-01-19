@@ -4,6 +4,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.behaviour.filtering.FilteringCountUpdatePacket;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ConfigureChassisPacket;
@@ -12,6 +13,7 @@ import com.simibubi.create.modules.contraptions.components.motor.ConfigureMotorP
 import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunBeamPacket;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.modules.logistics.block.diodes.ConfigureFlexpeaterPacket;
+import com.simibubi.create.modules.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.modules.logistics.management.controller.LogisticalControllerConfigurationPacket;
 import com.simibubi.create.modules.logistics.management.index.IndexContainerUpdatePacket;
 import com.simibubi.create.modules.logistics.management.index.IndexOrderRequest;
@@ -43,6 +45,8 @@ public enum AllPackets {
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new),
 	INDEX_ORDER_REQUEST(IndexOrderRequest.class, IndexOrderRequest::new),
+	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new),
+	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),

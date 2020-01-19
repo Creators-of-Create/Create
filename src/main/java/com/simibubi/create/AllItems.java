@@ -17,7 +17,7 @@ import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandItemRenderer;
 import com.simibubi.create.modules.gardens.TreeFertilizerItem;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
-import com.simibubi.create.modules.logistics.item.FilterItem;
+import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 import com.simibubi.create.modules.logistics.management.LogisticalDialItem;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.Type;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerItem;
@@ -108,6 +108,8 @@ public enum AllItems {
 	CARDBOARD_BOX_1410(new CardboardBoxItem(standardItemProperties())),
 
 	FILTER(new FilterItem(standardItemProperties()), true),
+	PROPERTY_FILTER(new FilterItem(standardItemProperties()), true),
+	LOGISTICAL_FILTER(new FilterItem(standardItemProperties())),
 	LOGISTICAL_DIAL(new LogisticalDialItem(standardItemProperties())),
 	LOGISTICAL_CONTROLLER_SUPPLY(new LogisticalControllerItem(standardItemProperties(), Type.SUPPLY)),
 	LOGISTICAL_CONTROLLER_REQUEST(new LogisticalControllerItem(standardItemProperties(), Type.REQUEST)),

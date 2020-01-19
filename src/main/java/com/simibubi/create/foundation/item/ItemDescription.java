@@ -69,7 +69,7 @@ public class ItemDescription {
 		linesOnShift = new ArrayList<>();
 		linesOnCtrl = new ArrayList<>();
 	}
-	
+
 	public ItemDescription withSummary(String summary) {
 		add(linesOnShift, cutString(summary, palette.color, palette.hColor));
 		add(linesOnShift, "");
@@ -86,11 +86,12 @@ public class ItemDescription {
 		if (hasSpeedRequirement) {
 			List<String> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
-			String level = minimumRequiredSpeedLevel.getTextColor() + makeProgressBar(3, index) + speedLevels.get(index);
+			String level = minimumRequiredSpeedLevel.getTextColor() + makeProgressBar(3, index)
+					+ speedLevels.get(index);
 			add(linesOnShift, GRAY + Lang.translate("tooltip.speedRequirement"));
 			add(linesOnShift, level);
 		}
-		if (hasStressImpact) {
+		if (hasStressImpact && !block.hideStressImpact()) {
 			List<String> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
 			double impact = parameters.stressEntries.get(id).get();
 			StressImpact impactId = impact >= parameters.highStressImpact.get() ? StressImpact.HIGH
@@ -109,6 +110,10 @@ public class ItemDescription {
 					: (capacity >= parameters.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
 			int index = StressImpact.values().length - 1 - impactId.ordinal();
 			String level = impactId.getColor() + makeProgressBar(3, index) + stressCapacityLevels.get(index);
+			if (block.showCapacityWithAnnotation())
+				level += " " + DARK_GRAY + TextFormatting.ITALIC
+						+ Lang.translate("tooltip.capacityProvided.asGenerator");
+
 			add(linesOnShift, GRAY + Lang.translate("tooltip.capacityProvided"));
 			add(linesOnShift, level);
 		}

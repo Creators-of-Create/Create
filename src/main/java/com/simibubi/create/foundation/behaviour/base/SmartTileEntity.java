@@ -69,6 +69,12 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 		behaviours.values().forEach(tb -> tb.writeNBT(compound));
 		return super.write(compound);
 	}
+	
+	@Override
+	public CompoundNBT writeToClient(CompoundNBT compound) {
+		behaviours.values().forEach(tb -> tb.writeToClient(compound));
+		return super.writeToClient(compound);
+	}
 
 	@Override
 	public void read(CompoundNBT compound) {

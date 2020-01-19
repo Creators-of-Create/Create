@@ -39,19 +39,17 @@ public class ExtractingBehaviour extends InventoryManagementBehaviour {
 		this.customAmountFilter = filter;
 		return this;
 	}
-	
+
 	public ExtractingBehaviour withAdditionalFilter(Predicate<ItemStack> filter) {
 		this.customFilter = filter;
 		return this;
 	}
-	
+
 	public boolean extract() {
 		int amount = -1;
 		FilteringBehaviour filter = get(tileEntity, FilteringBehaviour.TYPE);
-		if (filter != null) {
-			ItemStack filterItem = filter.getFilter();
-			amount = filterItem.isEmpty() ? -1 : filterItem.getCount();
-		}
+		if (filter != null && !filter.anyAmount())
+			amount = filter.getAmount();
 		return extract(amount);
 	}
 
@@ -70,7 +68,7 @@ public class ExtractingBehaviour extends InventoryManagementBehaviour {
 				extract = ItemHelper.extract(inv, test, exactAmount, false);
 			else
 				extract = ItemHelper.extract(inv, test, customAmountFilter, false);
-				
+
 			if (!extract.isEmpty()) {
 				callback.accept(extract);
 				return true;

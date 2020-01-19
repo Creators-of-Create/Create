@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.behaviour;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 
@@ -28,10 +29,12 @@ public class ValueBox {
 	}
 
 	public static class ItemValueBox extends ValueBox {
+		ItemStack stack;
 		int count;
 
-		public ItemValueBox(String label, AxisAlignedBB bb, int count) {
+		public ItemValueBox(String label, AxisAlignedBB bb, ItemStack stack, int count) {
 			super(label, bb);
+			this.stack = stack;
 			this.count = count;
 		}
 

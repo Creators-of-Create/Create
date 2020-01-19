@@ -77,5 +77,10 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements IWithTil
 	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.get(FACING).getOpposite();
 	}
+	
+	@Override
+	public boolean showCapacityWithAnnotation() {
+		return true;
+	}
 
 }

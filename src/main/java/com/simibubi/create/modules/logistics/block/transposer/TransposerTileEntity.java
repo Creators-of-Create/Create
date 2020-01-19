@@ -57,7 +57,7 @@ public class TransposerTileEntity extends ExtractorTileEntity {
 			return te.tryInsertingFromSide(facing, stack, true);
 		}
 
-		if (filtering.getFilter().isEmpty())
+		if (filtering.anyAmount())
 			return true;
 		return inserting.insert(stack, true).isEmpty();
 	}

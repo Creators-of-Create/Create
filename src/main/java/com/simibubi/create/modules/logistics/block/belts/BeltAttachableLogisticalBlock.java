@@ -56,7 +56,7 @@ public abstract class BeltAttachableLogisticalBlock extends AttachedLogisticalBl
 
 		if (extracting == null)
 			return false;
-		if (filtering != null && (!filtering.test(stack) || stack.getCount() < filtering.getFilter().getCount()))
+		if (filtering != null && (!filtering.test(stack) || stack.getCount() < filtering.getAmount()))
 			return false;
 
 		return true;
@@ -76,10 +76,10 @@ public abstract class BeltAttachableLogisticalBlock extends AttachedLogisticalBl
 			return false;
 
 		FilteringBehaviour filtering = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
-		if (filtering != null && (!filtering.test(stack) || stack.getCount() < filtering.getFilter().getCount()))
+		if (filtering != null && (!filtering.test(stack) || stack.getCount() < filtering.getAmount()))
 			return false;
 		if (!extracting.getShouldExtract().get())
-			return !filtering.getFilter().isEmpty();
+			return !filtering.anyAmount();
 
 		return !extracting.extractFromInventory();
 	}

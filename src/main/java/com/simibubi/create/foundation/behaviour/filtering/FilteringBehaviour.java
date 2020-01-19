@@ -3,9 +3,11 @@ package com.simibubi.create.foundation.behaviour.filtering;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.behaviour.base.IBehaviourType;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -22,7 +24,12 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	Vec3d textShift;
 
 	private ItemStack filter;
+	public int count;
 	private Consumer<ItemStack> callback;
+
+	int scrollableValue;
+	int ticksUntilScrollPacket;
+	boolean forceClientState;
 
 	public FilteringBehaviour(SmartTileEntity te) {
 		super(te);
@@ -32,18 +39,52 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		callback = stack -> {
 		};
 		textShift = Vec3d.ZERO;
+		count = -1;
+		ticksUntilScrollPacket = -1;
 	}
 
 	@Override
 	public void writeNBT(CompoundNBT nbt) {
 		nbt.put("Filter", getFilter().serializeNBT());
+		nbt.putInt("FilterAmount", count);
 		super.writeNBT(nbt);
 	}
 
 	@Override
 	public void readNBT(CompoundNBT nbt) {
 		filter = ItemStack.read(nbt.getCompound("Filter"));
+		count = nbt.getInt("FilterAmount");
+		if (nbt.contains("ForceScrollable")) {
+			scrollableValue = count;
+			ticksUntilScrollPacket = -1;
+		}
 		super.readNBT(nbt);
+	}
+
+	@Override
+	public CompoundNBT writeToClient(CompoundNBT compound) {
+		if (forceClientState) {
+			compound.putBoolean("ForceScrollable", true);
+			forceClientState = false;
+		}
+		return super.writeToClient(compound);
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+
+		if (!getWorld().isRemote)
+			return;
+		if (ticksUntilScrollPacket == -1)
+			return;
+		if (ticksUntilScrollPacket > 0) {
+			ticksUntilScrollPacket--;
+			return;
+		}
+
+		AllPackets.channel.sendToServer(new FilteringCountUpdatePacket(getPos(), scrollableValue));
+		ticksUntilScrollPacket = -1;
 	}
 
 	public FilteringBehaviour withCallback(Consumer<ItemStack> filterCallback) {
@@ -65,10 +106,23 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		textShift = shift;
 		return this;
 	}
+	
+	@Override
+	public void initialize() {
+		super.initialize();
+		scrollableValue = count;
+	}
 
 	public void setFilter(ItemStack stack) {
 		filter = stack.copy();
 		callback.accept(filter);
+
+		if (filter.getItem() instanceof FilterItem)
+			count = 0;
+		else
+			count = stack.getCount();
+		forceClientState = true;
+		
 		tileEntity.markDirty();
 		tileEntity.sendData();
 	}
@@ -82,7 +136,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	}
 
 	public boolean test(ItemStack stack) {
-		return filter.isEmpty() || ItemStack.areItemsEqual(filter, stack);
+		return filter.isEmpty() || FilterItem.test(stack, filter);
 	}
 
 	@Override
@@ -97,6 +151,14 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 			return false;
 		Vec3d localHit = hit.subtract(new Vec3d(tileEntity.getPos()));
 		return localHit.distanceTo(offset) < slotPositioning.scale / 2;
+	}
+	
+	public int getAmount() {
+		return count;
+	}
+	
+	public boolean anyAmount() {
+		return count == 0;
 	}
 
 	public static class SlotPositioning {

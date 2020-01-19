@@ -57,5 +57,13 @@ public interface IRotate extends IWrenchable {
 	public default SpeedLevel getMinimumRequiredSpeedLevel() {
 		return SpeedLevel.NONE;
 	}
+	
+	public default boolean hideStressImpact() {
+		return false;
+	}
+	
+	public default boolean showCapacityWithAnnotation() {
+		return false;
+	}
 
 }

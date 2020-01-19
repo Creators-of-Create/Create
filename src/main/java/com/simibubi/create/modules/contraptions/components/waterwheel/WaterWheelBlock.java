@@ -144,4 +144,9 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 		return 1f;
 	}
 	
+	@Override
+	public boolean hideStressImpact() {
+		return true;
+	}
+	
 }

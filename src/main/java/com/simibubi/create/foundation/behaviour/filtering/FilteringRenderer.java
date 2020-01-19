@@ -10,10 +10,12 @@ import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour.Slo
 import com.simibubi.create.foundation.utility.GlHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
+import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -41,6 +43,8 @@ public class FilteringRenderer {
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
 		if (behaviour == null)
 			return;
+		if (Minecraft.getInstance().player.isSneaking())
+			return;
 
 		TessellatorHelper.prepareForDrawing();
 		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
@@ -50,7 +54,10 @@ public class FilteringRenderer {
 
 			AxisAlignedBB bb = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(.25f);
 			String label = Lang.translate("logistics.filter");
-			ValueBox box = behaviour.isCountVisible() ? new ItemValueBox(label, bb, behaviour.getFilter().getCount())
+			ItemStack filter = behaviour.getFilter();
+			if (filter.getItem() instanceof FilterItem)
+				label = "";
+			ValueBox box = behaviour.isCountVisible() ? new ItemValueBox(label, bb, filter, behaviour.scrollableValue)
 					: new ValueBox(label, bb);
 			box.offsetLabel(behaviour.textShift).withColors(0x7777BB, 0xCCBBFF);
 			ValueBoxRenderer.renderBox(box, behaviour.testHit(target.getHitVec()));

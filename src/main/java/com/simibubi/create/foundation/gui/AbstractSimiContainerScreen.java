@@ -29,7 +29,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 
 	protected List<Widget> widgets;
 
-	protected AbstractSimiContainerScreen(T container, PlayerInventory inv, ITextComponent title) {
+	public AbstractSimiContainerScreen(T container, PlayerInventory inv, ITextComponent title) {
 		super(container, inv, title);
 		widgets = new ArrayList<>();
 	}
@@ -126,7 +126,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	}
 
 	protected void renderWindowForeground(int mouseX, int mouseY, float partialTicks) {
-		super.renderHoveredToolTip(mouseX, mouseY);
+		renderHoveredToolTip(mouseX, mouseY);
 		for (Widget widget : widgets) {
 			if (!widget.isHovered())
 				continue;

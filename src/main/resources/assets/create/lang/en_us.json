@@ -16,6 +16,8 @@
 	"item.create.belt_connector": "Mechanical Belt",
 	"item.create.goggles": "Engineer's Goggles",
 	"item.create.filter": "Filter",
+	"item.create.property_filter": "Attribute Filter",
+	"item.create.logistical_filter": "Address Filter",
 	"item.create.rose_quartz": "Rose Quartz",
 	"item.create.refined_rose_quartz": "Refined Rose Quartz",
 	"item.create.refined_radiance_cube": "Refined Radiance",
@@ -406,6 +408,37 @@
 	"create.gui.requester.requestedItemCount": "Requested Amount",
 	"create.gui.storage.passiveModeOnly": "Item Storage is Passive only",
 
+	"create.gui.filter.blacklist": "Blacklist",
+	"create.gui.filter.blacklist.description": "Items pass if they do NOT match any of the above. An empty Blacklist accepts everything.",
+	"create.gui.filter.whitelist": "Whitelist",
+	"create.gui.filter.whitelist.description": "Items pass if they match any of the above. An empty Whitelist rejects anything.",
+	"create.gui.filter.respect_data": "Respect Data",
+	"create.gui.filter.respect_data.description": "Items only match if their durability, enchantments and other attributes match as well.",
+	"create.gui.filter.ignore_data": "Ignore Data",
+	"create.gui.filter.ignore_data.description": "Items match regardless of their attributes.",
+	
+	"create.item_attributes.placeable": "is placeable",
+	"create.item_attributes.consumable": "can be eaten",
+	"create.item_attributes.enchanted": "is enchanted",
+	"create.item_attributes.damaged": "is damaged",
+	"create.item_attributes.badly_damaged": "is heavily damaged",
+	"create.item_attributes.not_stackable": "cannot stack",
+	"create.item_attributes.equipable": "can be equipped",
+	"create.item_attributes.furnace_fuel": "is furnace fuel",
+	"create.item_attributes.in_tag": "is tagged %1$s",
+	"create.item_attributes.in_item_group": "belongs to %1$s",
+	"create.item_attributes.added_by": "was added by %1$s",
+	
+	"create.gui.attribute_filter.no_selected_attributes": "No attributes selected",
+	"create.gui.attribute_filter.selected_attributes": "Selected attributes:",
+	"create.gui.attribute_filter.whitelist_disjunctive": "Whitelist (Any)",
+	"create.gui.attribute_filter.whitelist_disjunctive.description": "Items pass if they have at least one of the selected attributes.",
+	"create.gui.attribute_filter.whitelist_conjunctive": "Whitelist (All)",
+	"create.gui.attribute_filter.whitelist_conjunctive.description": "Items pass only if they have ALL of the selected attributes.",
+	"create.gui.attribute_filter.blacklist": "Blacklist",
+	"create.gui.attribute_filter.blacklist.description": "Items pass if they do NOT have any of the selected attributes.",
+	"create.gui.attribute_filter.add_reference_item": "Add Reference Item",
+
 	"create.tooltip.holdKey": "Hold [%1$s]",
 	"create.tooltip.holdKeyOrKey": "Hold [%1$s] or [%2$s]",
 	"create.tooltip.keyShift": "Shift",
@@ -425,6 +458,7 @@
 	"create.tooltip.capacityProvided.low": "Small",
 	"create.tooltip.capacityProvided.medium": "Medium",
 	"create.tooltip.capacityProvided.high": "Large",
+	"create.tooltip.capacityProvided.asGenerator": "(As Generator)",
 
 	"create.tooltip.wip": "WIP",
 	"create.tooltip.workInProgress": "Work in progress!",
@@ -484,7 +518,21 @@
 	"item.create.tree_fertilizer.tooltip.summary": "A powerful combination of minerals suitable for common tree types",
 	"item.create.tree_fertilizer.tooltip.condition1": "When used on Sapling",
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Grows Trees regardless of their spacing Conditions",
-
+	
+	"item.create.filter.tooltip": "FILTER",
+	"item.create.filter.tooltip.summary": "_Controls_ _outputs_ and inputs of logistical devices with more _precision,_ matching them against a _set_ _of_ _items_ or several _nested_ _filters._",
+	"item.create.filter.tooltip.condition1": "When in filter slot",
+	"item.create.filter.tooltip.behaviour1": "_Controls_ item flow according to its _configuration._",
+	"item.create.filter.tooltip.condition2": "When R-Clicked",
+	"item.create.filter.tooltip.behaviour2": "Opens the _configuration_ _interface._",
+	
+	"item.create.property_filter.tooltip": "ATTRIBUTE FILTER",
+	"item.create.property_filter.tooltip.summary": "_Controls_ _outputs_ and inputs of logistical devices with more _precision,_ matching them against a _set_ _of_ item _attributes_ and _categories._",
+	"item.create.property_filter.tooltip.condition1": "When in filter slot",
+	"item.create.property_filter.tooltip.behaviour1": "_Controls_ item flow according to its _configuration._",
+	"item.create.property_filter.tooltip.condition2": "When R-Clicked",
+	"item.create.property_filter.tooltip.behaviour2": "Opens the _configuration_ _interface._",
+	
 	"block.create.cocoa_log.tooltip": "COCOA LOG",
 	"block.create.cocoa_log.tooltip.summary": "An augmented jungle log allowing for easier automation of _Cocoa_ _Beans_",
 	"block.create.cocoa_log.tooltip.condition1": "When Mature",
@@ -734,6 +782,7 @@
 	"block.create.package_funnel.tooltip": "WIP",
 	"block.create.logisticians_table.tooltip": "WIP",
 	"item.create.logistical_dial.tooltip": "WIP",
+	"item.create.logistical_filter.tooltip": "WIP",
 
 	"itemGroup.create": "Create"
 }
