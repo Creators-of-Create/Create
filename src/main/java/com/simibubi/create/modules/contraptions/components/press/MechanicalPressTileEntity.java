@@ -257,7 +257,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	public Optional<PressingRecipe> getRecipe(ItemStack item) {
 		pressingInv.setInventorySlotContents(0, item);
-		Optional<PressingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.PRESSING, pressingInv,
+		Optional<PressingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.PRESSING.getType(), pressingInv,
 				world);
 		return recipe;
 	}

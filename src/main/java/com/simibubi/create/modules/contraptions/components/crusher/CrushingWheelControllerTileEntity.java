@@ -56,12 +56,12 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			else
 				processingEntity = search.get(0);
 		}
-		
+
 		if (!isOccupied())
 			return;
 		if (crushingspeed == 0)
 			return;
-		
+
 		float speed = crushingspeed / 2.5f;
 
 		if (!hasEntity()) {
@@ -141,7 +141,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	}
 
 	private void applyRecipe() {
-		Optional<CrushingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.CRUSHING, inventory,
+		Optional<CrushingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.CRUSHING.getType(), inventory,
 				world);
 
 		if (recipe.isPresent()) {
@@ -200,7 +200,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	private void insertItem(ItemEntity entity) {
 		inventory.clear();
 		inventory.setInventorySlotContents(0, entity.getItem());
-		Optional<CrushingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.CRUSHING, inventory,
+		Optional<CrushingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.CRUSHING.getType(), inventory,
 				world);
 
 		inventory.remainingTime = recipe.isPresent() ? recipe.get().getProcessingDuration() : 100;
@@ -219,7 +219,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	public boolean hasEntity() {
 		return processingEntity != null;
 	}
-	
+
 	public static boolean isFrozen() {
 		return CreateConfig.parameters.freezeCrushing.get();
 	}

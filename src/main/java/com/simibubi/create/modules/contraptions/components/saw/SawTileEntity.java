@@ -292,7 +292,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	private List<? extends IRecipe<?>> getRecipes() {
 		List<IRecipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, world,
-				RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipes.Types.CUTTING));
+				RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipes.CUTTING.getType()));
 		return startedSearch.stream().filter(RecipeConditions.outputMatchesFilter(filtering))
 				.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0)))
 				.collect(Collectors.toList());

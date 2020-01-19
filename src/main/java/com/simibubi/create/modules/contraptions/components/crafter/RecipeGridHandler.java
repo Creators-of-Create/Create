@@ -14,12 +14,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllRecipes;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterBlock.Pointing;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
@@ -116,29 +115,16 @@ public class RecipeGridHandler {
 	}
 
 	public static ItemStack tryToApplyRecipe(World world, GroupedItems items) {
-		CraftingInventory craftinginventory = getCraftingInventory(items);
+		items.calcStats();
+		CraftingInventory craftinginventory = new MechanicalCraftingInventory(items);
 		ItemStack result = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftinginventory, world)
 				.map(r -> r.getCraftingResult(craftinginventory)).orElse(null);
+		if (result == null)
+			result = world.getRecipeManager()
+					.getRecipe(AllRecipes.MECHANICAL_CRAFTING.getType(), craftinginventory, world)
+					.map(r -> r.getCraftingResult(craftinginventory)).orElse(null);
+
 		return result;
-	}
-
-	private static CraftingInventory getCraftingInventory(GroupedItems items) {
-		items.calcStats();
-		CraftingInventory craftinginventory = new CraftingInventory(new Container(null, -1) {
-			public boolean canInteractWith(PlayerEntity playerIn) {
-				return false;
-			}
-		}, items.width, items.height);
-
-		for (int y = 0; y < items.height; y++) {
-			for (int x = 0; x < items.width; x++) {
-				ItemStack stack = items.grid.get(Pair.of(x + items.minX, y + items.minY));
-				craftinginventory.setInventorySlotContents(x + (items.height - y - 1) * items.width,
-						stack == null ? ItemStack.EMPTY : stack.copy());
-			}
-		}
-
-		return craftinginventory;
 	}
 
 	public static class GroupedItems {

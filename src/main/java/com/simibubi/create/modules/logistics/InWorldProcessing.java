@@ -105,7 +105,7 @@ public class InWorldProcessing {
 
 		if (type == Type.SPLASHING) {
 			splashingInv.setInventorySlotContents(0, stack);
-			Optional<SplashingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.SPLASHING,
+			Optional<SplashingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.SPLASHING.getType(),
 					splashingInv, world);
 			return recipe.isPresent();
 		}
@@ -158,7 +158,7 @@ public class InWorldProcessing {
 	private static List<ItemStack> process(ItemStack stack, Type type, World world) {
 		if (type == Type.SPLASHING) {
 			splashingInv.setInventorySlotContents(0, stack);
-			Optional<SplashingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.Types.SPLASHING,
+			Optional<SplashingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.SPLASHING.getType(),
 					splashingInv, world);
 			if (recipe.isPresent())
 				return applyRecipeOn(stack, recipe.get());
