@@ -1,9 +1,0 @@
-{
-	"forgemarker": 1,
-	"defaults": {
-		"model": "create:block/belt/belt_textures"
-	},
-    "variants": {
-        "": { "model": "create:block/belt/belt_textures" }
-	}
-}

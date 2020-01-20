@@ -1,6 +1,6 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
-	"parent": "block/cube",
+	"parent": "block/block",
     "textures": {
         "particle": "create:block/contact_side",
         "0": "create:block/brass_casing",

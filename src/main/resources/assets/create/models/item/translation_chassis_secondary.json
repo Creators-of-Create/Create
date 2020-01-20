@@ -1,6 +1,3 @@
 {
-    "parent": "create:block/translation_chassis",
-    "textures": {
-    	"side": "create:block/translation_chassis_side_alt"
-    }
+    "parent": "create:block/translation_chassis/alt"
 }

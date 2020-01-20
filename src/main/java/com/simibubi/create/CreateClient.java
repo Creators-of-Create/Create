@@ -105,6 +105,8 @@ public class CreateClient {
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {
 		if (!event.getMap().getBasePath().equals("textures"))
 			return;
+		
+		event.addSprite(new ResourceLocation(Create.ID, "block/belt_animated"));
 		for (AllBlocks allBlocks : AllBlocks.values()) {
 			Block block = allBlocks.get();
 			if (!(block instanceof IHaveConnectedTextures))
@@ -112,7 +114,6 @@ public class CreateClient {
 			for (SpriteShiftEntry spriteShiftEntry : ((IHaveConnectedTextures) block).getBehaviour().getAllCTShifts())
 				event.addSprite(spriteShiftEntry.getTargetResourceLocation());
 		}
-
 	}
 
 	@OnlyIn(Dist.CLIENT)

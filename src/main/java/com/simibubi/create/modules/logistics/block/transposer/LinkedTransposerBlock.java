@@ -5,6 +5,7 @@ import com.simibubi.create.AllBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockReader;
 
 public class LinkedTransposerBlock extends TransposerBlock {
@@ -33,6 +34,11 @@ public class LinkedTransposerBlock extends TransposerBlock {
 		@Override
 		protected boolean isVertical() {
 			return true;
+		}
+		
+		@Override
+		public ResourceLocation getLootTable() {
+			return AllBlocks.LINKED_TRANSPOSER.get().getLootTable();
 		}
 	}
 

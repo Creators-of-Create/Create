@@ -1,41 +1,22 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "block/cube_bottom_top",
-		"textures": {
-			"side": "create:block/translation_chassis_side"
-		},
-		"transform": "forge:default-block"
-	},
-	"variants": {
-		"axis": {
-			"x": { "x": 90, "y": 90 },
-			"y": { },
-			"z": { "x": 90, "y": 180 }
-		},
-		"sticky_top": {
-			"false": {
-				"textures": {
-					"top": "create:block/translation_chassis_top"
-				}
-			},
-			"true": {
-				"textures": {
-					"top": "create:block/translation_chassis_top_sticky"
-				}
-			}
-		},
-		"sticky_bottom": {
-			"false": {
-				"textures": {
-					"bottom": "create:block/translation_chassis_top"
-				}
-			},
-			"true": {
-				"textures": {
-					"bottom": "create:block/translation_chassis_top_sticky"
-				}
-			}
-		}
-	}
+  "forge_marker": 1,
+  "variants": {
+
+	"sticky_top=false,sticky_bottom=false,axis=x": { "model": "create:block/translation_chassis/regular", "x": 90, "y": 90 },
+	"sticky_top=false,sticky_bottom=false,axis=y": { "model": "create:block/translation_chassis/regular" },
+	"sticky_top=false,sticky_bottom=false,axis=z": { "model": "create:block/translation_chassis/regular", "x": 90, "y": 180 },
+
+	"sticky_top=false,sticky_bottom=true,axis=x": { "model": "create:block/translation_chassis/regular_bottom_sticky", "x": 90, "y": 90 },
+	"sticky_top=false,sticky_bottom=true,axis=y": { "model": "create:block/translation_chassis/regular_bottom_sticky" },
+	"sticky_top=false,sticky_bottom=true,axis=z": { "model": "create:block/translation_chassis/regular_bottom_sticky", "x": 90, "y": 180 },
+
+	"sticky_top=true,sticky_bottom=false,axis=x": { "model": "create:block/translation_chassis/regular_top_sticky", "x": 90, "y": 90 },
+	"sticky_top=true,sticky_bottom=false,axis=y": { "model": "create:block/translation_chassis/regular_top_sticky" },
+	"sticky_top=true,sticky_bottom=false,axis=z": { "model": "create:block/translation_chassis/regular_top_sticky", "x": 90, "y": 180 },
+
+	"sticky_top=true,sticky_bottom=true,axis=x": { "model": "create:block/translation_chassis/regular_both_sticky", "x": 90, "y": 90 },
+	"sticky_top=true,sticky_bottom=true,axis=y": { "model": "create:block/translation_chassis/regular_both_sticky" },
+	"sticky_top=true,sticky_bottom=true,axis=z": { "model": "create:block/translation_chassis/regular_both_sticky", "x": 90, "y": 180 }
+	
+  }
 }

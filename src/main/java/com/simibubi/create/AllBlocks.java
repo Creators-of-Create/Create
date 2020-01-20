@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.block.RenderUtilityDirectionalBlock;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.world.CopperOreBlock;
+import com.simibubi.create.foundation.world.OxidizingBlock;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock.DrillHeadBlock;
@@ -94,6 +94,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -118,7 +119,6 @@ public enum AllBlocks {
 	GEARBOX(new GearboxBlock()),
 	BELT(new BeltBlock()),
 	BELT_PULLEY(new RenderUtilityAxisBlock()),
-	BELT_ANIMATION(new RenderUtilityBlock()),
 	MOTOR(new MotorBlock()),
 	WATER_WHEEL(new WaterWheelBlock()),
 	ENCASED_FAN(new EncasedFanBlock()),
@@ -237,8 +237,8 @@ public enum AllBlocks {
 	VOLCANIC_ROCK(new VolcanicRockBlock()),
 
 	__MATERIALS__(),
-	COPPER_ORE(new CopperOreBlock()),
-	ZINC_ORE(new Block(Properties.from(Blocks.GOLD_ORE))),
+	COPPER_ORE(new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1)),
+	ZINC_ORE(new Block(Properties.from(Blocks.GOLD_ORE).harvestLevel(2).harvestTool(ToolType.PICKAXE))),
 
 	;
 

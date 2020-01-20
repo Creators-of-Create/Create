@@ -1,6 +1,6 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
-	"parent": "block/cube",
+	"parent": "block/block",
     "textures": {
         "0": "create:block/gearbox_top",
         "1": "create:block/gearbox",

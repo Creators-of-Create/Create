@@ -3,32 +3,33 @@ package com.simibubi.create;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.contraptions.particle.AirFlowParticle;
-import com.simibubi.create.modules.contraptions.particle.RotationIndicatorParticle;
+import com.simibubi.create.modules.contraptions.particle.AirFlowParticleData;
+import com.simibubi.create.modules.contraptions.particle.ICustomParticle;
+import com.simibubi.create.modules.contraptions.particle.RotationIndicatorParticleData;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllParticles {
 
-	ROTATION_INDICATOR(RotationIndicatorParticle.Type::new, RotationIndicatorParticle.Factory::new),
-	AIR_FLOW(AirFlowParticle.Type::new, AirFlowParticle.Factory::new),
+	ROTATION_INDICATOR(RotationIndicatorParticleData::new),
+	AIR_FLOW(AirFlowParticleData::new),
 
 	;
 
 	private ParticleEntry<?> entry;
 
-	private <D extends IParticleData> AllParticles(Supplier<? extends ParticleType<D>> typeFactory,
-			IParticleMetaFactory<D> particleFactory) {
+	private <D extends IParticleData> AllParticles(Supplier<? extends ICustomParticle<D>> typeFactory) {
 		String asId = Lang.asId(this.name().toLowerCase());
-		entry = new ParticleEntry<D>(new ResourceLocation(Create.ID, asId), typeFactory, particleFactory);
+		entry = new ParticleEntry<D>(new ResourceLocation(Create.ID, asId), typeFactory);
 	}
 
 	public static void register(RegistryEvent.Register<ParticleType<?>> event) {
@@ -36,9 +37,10 @@ public enum AllParticles {
 			particle.entry.register(event.getRegistry());
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static void registerFactories(ParticleFactoryRegisterEvent event) {
 		ParticleManager particles = Minecraft.getInstance().particles;
-		for (AllParticles particle : values())
+		for (AllParticles particle : values()) 
 			particle.entry.registerFactory(particles);
 	}
 
@@ -51,16 +53,13 @@ public enum AllParticles {
 	}
 
 	private class ParticleEntry<D extends IParticleData> {
-		Supplier<? extends ParticleType<D>> typeFactory;
-		IParticleMetaFactory<D> particleFactory;
+		Supplier<? extends ICustomParticle<D>> typeFactory;
 		ParticleType<D> type;
 		ResourceLocation id;
 
-		public ParticleEntry(ResourceLocation id, Supplier<? extends ParticleType<D>> typeFactory,
-				IParticleMetaFactory<D> particleFactory) {
+		public ParticleEntry(ResourceLocation id, Supplier<? extends ICustomParticle<D>> typeFactory) {
 			this.id = id;
 			this.typeFactory = typeFactory;
-			this.particleFactory = particleFactory;
 		}
 
 		ParticleType<?> getType() {
@@ -75,14 +74,15 @@ public enum AllParticles {
 
 		void makeType() {
 			if (type == null) {
-				type = typeFactory.get();
+				type = typeFactory.get().createType();
 				type.setRegistryName(id);
 			}
 		}
 
+		@OnlyIn(Dist.CLIENT)
 		void registerFactory(ParticleManager particles) {
 			makeType();
-			particles.registerFactory(type, particleFactory);
+			particles.registerFactory(type, typeFactory.get().getFactory());
 		}
 
 	}

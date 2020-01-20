@@ -6,12 +6,15 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.AllParticles;
 
+import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AirFlowParticleData implements IParticleData {
+public class AirFlowParticleData implements IParticleData, ICustomParticle<AirFlowParticleData> {
 
 	public static final IParticleData.IDeserializer<AirFlowParticleData> DESERIALIZER = new IParticleData.IDeserializer<AirFlowParticleData>() {
 		public AirFlowParticleData deserialize(ParticleType<AirFlowParticleData> particleTypeIn, StringReader reader)
@@ -43,6 +46,10 @@ public class AirFlowParticleData implements IParticleData {
 		this.posY = posY;
 		this.posZ = posZ;
 	}
+	
+	public AirFlowParticleData() {
+		this(0, 0, 0);
+	}
 
 	@Override
 	public ParticleType<?> getType() {
@@ -59,6 +66,17 @@ public class AirFlowParticleData implements IParticleData {
 	@Override
 	public String getParameters() {
 		return String.format(Locale.ROOT, "%s %d %d %d", AllParticles.ROTATION_INDICATOR.parameter(), posX, posY, posZ);
+	}
+
+	@Override
+	public IDeserializer<AirFlowParticleData> getDeserializer() {
+		return DESERIALIZER;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public IParticleMetaFactory<AirFlowParticleData> getFactory() {
+		return AirFlowParticle.Factory::new;
 	}
 
 }

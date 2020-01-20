@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/cube",
+	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
 		"6": "create:block/mixer_head",

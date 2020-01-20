@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/cube",
+	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
 		"2": "block/spruce_log_top",

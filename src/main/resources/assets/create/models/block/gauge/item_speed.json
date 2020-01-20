@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/cube",
+	"parent": "block/block",
 	"textures": {
 		"0": "create:block/axis",
 		"1": "create:block/axis_top",

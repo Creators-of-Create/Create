@@ -12,7 +12,6 @@ import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.particles.BlockParticleData;
-import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -149,12 +148,6 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 
 	private void selectSprite(int index) {
 		setSprite(field_217584_C.get(index, 8));
-	}
-
-	public static class Type extends ParticleType<AirFlowParticleData> {
-		public Type() {
-			super(false, AirFlowParticleData.DESERIALIZER);
-		}
 	}
 
 	public static class Factory implements IParticleFactory<AirFlowParticleData> {

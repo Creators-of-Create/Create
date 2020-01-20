@@ -6,12 +6,15 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.AllParticles;
 
+import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.Direction.Axis;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class RotationIndicatorParticleData implements IParticleData {
+public class RotationIndicatorParticleData implements IParticleData, ICustomParticle<RotationIndicatorParticleData> {
 
 	public static final IParticleData.IDeserializer<RotationIndicatorParticleData> DESERIALIZER = new IParticleData.IDeserializer<RotationIndicatorParticleData>() {
 		public RotationIndicatorParticleData deserialize(ParticleType<RotationIndicatorParticleData> particleTypeIn,
@@ -55,6 +58,10 @@ public class RotationIndicatorParticleData implements IParticleData {
 		this.axis = axis;
 	}
 
+	public RotationIndicatorParticleData() {
+		this(0, 0, 0, 0, 0, '0');
+	}
+
 	@Override
 	public ParticleType<?> getType() {
 		return AllParticles.ROTATION_INDICATOR.get();
@@ -71,12 +78,24 @@ public class RotationIndicatorParticleData implements IParticleData {
 		buffer.writeFloat(radius1);
 		buffer.writeFloat(radius2);
 		buffer.writeInt(lifeSpan);
+		buffer.writeChar(axis);
 	}
 
 	@Override
 	public String getParameters() {
 		return String.format(Locale.ROOT, "%s %d %.2f %.2f %.2f %d %c", AllParticles.ROTATION_INDICATOR.parameter(),
 				color, speed, radius1, radius2, lifeSpan, axis);
+	}
+
+	@Override
+	public IDeserializer<RotationIndicatorParticleData> getDeserializer() {
+		return DESERIALIZER;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public IParticleMetaFactory<RotationIndicatorParticleData> getFactory() {
+		return RotationIndicatorParticle.Factory::new;
 	}
 
 }

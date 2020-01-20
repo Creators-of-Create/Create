@@ -1,5 +1,5 @@
 {
-	"parent": "block/cube",
+	"parent": "block/block",
 	"display": {
         "gui": {
         	"rotation": [ 30, 225, 0 ],

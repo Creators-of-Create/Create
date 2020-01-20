@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/cube",
+	"parent": "block/block",
 	"textures": {
 		"1": "create:block/encased_belt",
 		"2": "create:block/encased_belt_end",

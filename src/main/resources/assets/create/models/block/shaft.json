@@ -1,6 +1,6 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
-	"parent": "block/cube",
+	"parent": "block/block",
     "textures": {
 		"particle": "create:block/axis",
         "0": "create:block/axis",

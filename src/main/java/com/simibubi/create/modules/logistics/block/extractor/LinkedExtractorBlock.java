@@ -10,6 +10,7 @@ import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
@@ -74,6 +75,11 @@ public class LinkedExtractorBlock extends ExtractorBlock {
 		@Override
 		protected boolean isVertical() {
 			return true;
+		}
+
+		@Override
+		public ResourceLocation getLootTable() {
+			return AllBlocks.LINKED_EXTRACTOR.get().getLootTable();
 		}
 	}
 

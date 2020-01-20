@@ -1,6 +1,6 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
-    "parent": "block/cube",
+    "parent": "block/block",
     "textures": {
 		"particle": "block/iron_block",
         "0": "block/chiseled_stone_bricks",
