@@ -15,17 +15,20 @@ public class CTSpriteShifter extends SpriteShifter {
 		return get(type, blockTextureName, blockTextureName);
 	}
 	
+	
 	public static CTSpriteShiftEntry get(CTType type, String blockTextureName, String connectedTextureName) {
-		String originalLocation = "block/" + blockTextureName;
+		return get(type, new ResourceLocation(Create.ID, "block/" + blockTextureName), connectedTextureName);
+	}
+	
+	public static CTSpriteShiftEntry get(CTType type, ResourceLocation blockTexture, String connectedTextureName) {
 		String targetLocation = "block/connected/" + connectedTextureName;
-		String key = type.name() + ":" + originalLocation + "->" + targetLocation;
+		String key = type.name() + ":" + blockTexture.getNamespace() + ":" + blockTexture.getPath() + "->" + targetLocation;
 		if (textures.containsKey(key))
 			return (CTSpriteShiftEntry) textures.get(key);
 
 		CTSpriteShiftEntry entry = create(type);
-		ResourceLocation originalTextureLocation = new ResourceLocation(Create.ID, originalLocation);
 		ResourceLocation targetTextureLocation = new ResourceLocation(Create.ID, targetLocation);
-		entry.set(originalTextureLocation, targetTextureLocation);
+		entry.set(blockTexture, targetTextureLocation);
 
 		textures.put(key, entry);
 		return entry;

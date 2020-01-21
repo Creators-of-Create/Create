@@ -68,6 +68,10 @@
 
 	"block.create.copper_ore": "Copper Ore",
 	"block.create.zinc_ore": "Zinc Ore",
+	
+	"block.create.andesite_casing": "Andesite Casing",
+	"block.create.brass_casing": "Brass Casing",
+	"block.create.copper_casing": "Copper Casing",
 
 	"block.create.cogwheel": "Cogwheel",
 	"block.create.large_cogwheel": "Large Cogwheel",
@@ -127,8 +131,11 @@
 
 	"block.create.window_in_a_block": "Block with Glass Pane",
 	"block.create.andesite_bricks": "Andesite Bricks",
+	"block.create.andesite_layers": "Layered Andesite",
 	"block.create.diorite_bricks": "Diorite Bricks",
+	"block.create.diorite_layers": "Layered Diorite",
 	"block.create.granite_bricks": "Granite Bricks",
+	"block.create.granite_layers": "Layered Granite",
 
 	"block.create.volcanic_rock": "Basalt",
 	
@@ -146,6 +153,7 @@
 	"block.create.indented_gabbro_slab": "Indented Gabbro Slab",
 	"block.create.slightly_mossy_gabbro_bricks": "Mossy Gabbro Bricks",
 	"block.create.mossy_gabbro_bricks": "Overgrown Gabbro Bricks",
+	"block.create.gabbro_layers": "Layered Gabbro",
 
 	"block.create.weathered_limestone": "Weathered Limestone",
 	"block.create.weathered_limestone_stairs": "Weathered Limestone Stairs",
@@ -158,6 +166,7 @@
 	"block.create.weathered_limestone_bricks_wall": "Weathered Limestone Brick Wall",
 	"block.create.weathered_limestone_bricks_slab": "Weathered Limestone Brick Slab",
 	"block.create.weathered_limestone_pillar": "Weathered Limestone Pillar",
+	"block.create.weathered_limestone_layers": "Weathered Layered Limestone",
 
 	"block.create.dolomite_pillar": "Dolomite Pillar",
 	"block.create.dolomite": "Dolomite",
@@ -169,6 +178,7 @@
 	"block.create.dolomite_bricks_stairs": "Dolomite Brick Stairs",
 	"block.create.dolomite_bricks_slab": "Dolomite Brick Slab",
 	"block.create.polished_dolomite": "Polished Dolomite",
+	"block.create.dolomite_layers": "Layered Dolomite",
 
 	"block.create.limesand": "Limesand",
 	"block.create.limestone": "Limestone",
@@ -182,7 +192,7 @@
 	"block.create.polished_limestone": "Polished Limestone",
 	"block.create.polished_limestone_slab": "Polished Limestone Slab",
 	"block.create.limestone_pillar": "Limestone Pillar",
-	"block.create.limestone_layers": "Limestone Layers",
+	"block.create.limestone_layers": "Layered Limestone",
 
 	"block.create.schematicannon": "Schematicannon",
 	"block.create.schematic_table": "Schematic Table",

@@ -1,0 +1,5 @@
+{
+    "variants": {
+		"": { "model": "create:block/brass_casing" }
+	}
+}
