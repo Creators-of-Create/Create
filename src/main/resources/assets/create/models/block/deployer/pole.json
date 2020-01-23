@@ -1,0 +1,42 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:item/placement_handgun",
+	"ambientocclusion": false,
+	"textures": {
+		"mechanical_press_pole": "create:block/mechanical_press_pole"
+	},
+	"elements": [
+		{
+			"name": "Pole1Core",
+			"from": [6, 6, 4],
+			"to": [10, 10, 12],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 10]},
+			"faces": {
+				"east": {"uv": [1, 6, 5, 14], "rotation": 90, "texture": "#mechanical_press_pole"},
+				"west": {"uv": [1, 6, 5, 14], "rotation": 270, "texture": "#mechanical_press_pole"},
+				"up": {"uv": [1, 6, 5, 14], "texture": "#mechanical_press_pole"},
+				"down": {"uv": [6, 6, 10, 14], "rotation": 180, "texture": "#mechanical_press_pole"}
+			}
+		},
+		{
+			"name": "Pole2Core",
+			"from": [6, 6, -9],
+			"to": [10, 10, 4],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 10]},
+			"faces": {
+				"north": {"uv": [11, 6, 15, 10], "rotation": 270, "texture": "#mechanical_press_pole"},
+				"east": {"uv": [1, 0, 5, 13], "rotation": 90, "texture": "#mechanical_press_pole"},
+				"west": {"uv": [1, 0, 5, 13], "rotation": 270, "texture": "#mechanical_press_pole"},
+				"up": {"uv": [1, 0, 5, 13], "texture": "#mechanical_press_pole"},
+				"down": {"uv": [1, 0, 5, 13], "rotation": 180, "texture": "#mechanical_press_pole"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "head",
+			"origin": [8, 8, 8],
+			"children": [0, 1]
+		}
+	]
+}

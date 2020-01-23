@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.behaviour.ValueBox.ItemValueBox;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
-import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 
 import net.minecraft.block.Block;
@@ -101,7 +101,7 @@ public class ValueBoxRenderer {
 			return NUDGE;
 		if (item instanceof BlockItem) {
 			Block block = ((BlockItem) item).getBlock();
-			if (block instanceof CogWheelBlock)
+			if (block instanceof ShaftBlock)
 				return NUDGE;
 			if (block instanceof FenceBlock)
 				return NUDGE;

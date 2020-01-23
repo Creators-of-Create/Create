@@ -28,6 +28,7 @@ import com.simibubi.create.modules.contraptions.components.contraptions.piston.P
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterBlock;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelBlock;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelControllerBlock;
+import com.simibubi.create.modules.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerBlock;
 import com.simibubi.create.modules.contraptions.components.motor.MotorBlock;
@@ -136,6 +137,11 @@ public enum AllBlocks {
 	MECHANICAL_MIXER_POLE(new RenderUtilityBlock()),
 	MECHANICAL_MIXER_HEAD(new RenderUtilityBlock()),
 	BASIN(new BasinBlock()),
+	DEPLOYER(new DeployerBlock()),
+	DEPLOYER_POLE(new RenderUtilityBlock()),
+	DEPLOYER_HAND_POINTING(new RenderUtilityBlock()),
+	DEPLOYER_HAND_PUNCHING(new RenderUtilityBlock()),
+	DEPLOYER_HAND_HOLDING(new RenderUtilityBlock()),
 	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
 	MECHANICAL_CRAFTER_LID(new RenderUtilityBlock()),
 	MECHANICAL_CRAFTER_ARROW(new RenderUtilityBlock()),

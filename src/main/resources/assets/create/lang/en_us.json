@@ -92,6 +92,7 @@
 	"block.create.water_wheel": "Water Wheel",
 	"block.create.mechanical_press": "Mechanical Press",
 	"block.create.mechanical_mixer": "Mechanical Mixer",
+	"block.create.deployer": "Deployer",
 	"block.create.basin": "Basin",
 	"block.create.mechanical_crafter": "Mechanical Crafter",
 	"block.create.speed_gauge": "Speedometer",

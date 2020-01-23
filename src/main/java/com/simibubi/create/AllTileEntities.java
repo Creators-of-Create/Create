@@ -18,6 +18,8 @@ import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCra
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelControllerTileEntity;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelTileEntity;
+import com.simibubi.create.modules.contraptions.components.deployer.DeployerTileEntity;
+import com.simibubi.create.modules.contraptions.components.deployer.DeployerTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.fan.EncasedFanTileEntity;
 import com.simibubi.create.modules.contraptions.components.fan.EncasedFanTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerTileEntity;
@@ -119,6 +121,7 @@ public enum AllTileEntities {
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
 	MECHANICAL_PRESS(MechanicalPressTileEntity::new, AllBlocks.MECHANICAL_PRESS),
 	MECHANICAL_MIXER(MechanicalMixerTileEntity::new, AllBlocks.MECHANICAL_MIXER),
+	DEPLOYER(DeployerTileEntity::new, AllBlocks.DEPLOYER),
 	BASIN(BasinTileEntity::new, AllBlocks.BASIN),
 	MECHANICAL_CRAFTER(MechanicalCrafterTileEntity::new, AllBlocks.MECHANICAL_CRAFTER),
 	SPEED_GAUGE(SpeedGaugeTileEntity::new, AllBlocks.SPEED_GAUGE),
@@ -207,6 +210,7 @@ public enum AllTileEntities {
 		bind(SpeedGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.SPEED));
 		bind(StressGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.STRESS));
 		bind(BasinTileEntity.class, new BasinTileEntityRenderer());
+		bind(DeployerTileEntity.class, new DeployerTileEntityRenderer());
 
 		bind(RedstoneLinkTileEntity.class, new SmartTileEntityRenderer<>());
 		bind(ExtractorTileEntity.class, new SmartTileEntityRenderer<>());
