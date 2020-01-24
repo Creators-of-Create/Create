@@ -23,6 +23,7 @@ public enum ScreenResources {
 	SCHEMATICANNON_FUEL("schematicannon.png", 0, 215, 82, 4),
 
 	FLEXCRATE("flex_crate_and_stockpile_switch.png", 125, 129),
+	FLEXCRATE_DOUBLE("double_flexcrate.png", 197, 129),
 	FLEXCRATE_LOCKED_SLOT("flex_crate_and_stockpile_switch.png", 138, 0, 18, 18),
 
 	STOCKSWITCH("flex_crate_and_stockpile_switch.png", 0, 129, 205, 93),

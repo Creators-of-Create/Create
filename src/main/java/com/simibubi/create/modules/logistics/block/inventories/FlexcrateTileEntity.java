@@ -1,17 +1,21 @@
 package com.simibubi.create.modules.logistics.block.inventories;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -24,7 +28,7 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 
 	public class Inv extends ItemStackHandler {
 		public Inv() {
-			super(16);
+			super(32);
 		}
 
 		@Override
@@ -77,17 +81,70 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 		return new FlexcrateContainer(id, inventory, this);
 	}
 
+	public boolean isDoubleCrate() {
+		return getBlockState().get(FlexcrateBlock.DOUBLE);
+	}
+
+	public FlexcrateTileEntity getMainCrate() {
+		if (isDoubleCrate() && getFacing().getAxisDirection() == AxisDirection.NEGATIVE)
+			return getOtherCrate();
+		return this;
+	}
+
+	public FlexcrateTileEntity getOtherCrate() {
+		if (!AllBlocks.FLEXCRATE.typeOf(getBlockState()))
+			return null;
+		TileEntity tileEntity = world.getTileEntity(pos.offset(getFacing()));
+		if (tileEntity instanceof FlexcrateTileEntity)
+			return (FlexcrateTileEntity) tileEntity;
+		return null;
+	}
+
+	public Direction getFacing() {
+		return getBlockState().get(FlexcrateBlock.FACING);
+	}
+
+	public void onDestroyed() {
+		FlexcrateTileEntity other = getOtherCrate();
+		if (other == null) {
+			for (int slot = 0; slot < inventory.getSlots(); slot++) 
+				drop(slot);
+			return;
+		}
+		
+		FlexcrateTileEntity main = getMainCrate();
+		if (this == main) {
+			for (int slot = 0; slot < inventory.getSlots(); slot++) {
+				other.inventory.setStackInSlot(slot, inventory.getStackInSlot(slot));
+				inventory.setStackInSlot(slot, ItemStack.EMPTY);
+			}
+			other.allowedAmount = Math.min(1024, allowedAmount);
+		}
+		
+		for (int slot = 16; slot < other.inventory.getSlots(); slot++) 
+			other.drop(slot);
+	}
+	
+	private void drop(int slot) {
+		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(slot));
+	}
+
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		compound.putInt("AllowedAmount", allowedAmount);
-		compound.put("Inventory", inventory.serializeNBT());
+		if (getMainCrate() == this) {
+			compound.putBoolean("Main", true);
+			compound.putInt("AllowedAmount", allowedAmount);
+			compound.put("Inventory", inventory.serializeNBT());
+		}
 		return super.write(compound);
 	}
 
 	@Override
 	public void read(CompoundNBT compound) {
-		allowedAmount = compound.getInt("AllowedAmount");
-		inventory.deserializeNBT(compound.getCompound("Inventory"));
+		if (compound.contains("Main")) {
+			allowedAmount = compound.getInt("AllowedAmount");
+			inventory.deserializeNBT(compound.getCompound("Inventory"));
+		}
 		super.read(compound);
 	}
 
@@ -110,7 +167,7 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return invHandler.cast();
+			return getMainCrate().invHandler.cast();
 		return super.getCapability(capability, facing);
 	}
 

@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "create:block/double_flexcrate_side",
+		"3": "create:block/brass_casing_14",
+		"particle": "create:block/flex_crate"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 14, 15],
+			"faces": {
+				"north": {"uv": [0.5, 8.5, 7.5, 15.5], "texture": "#0"},
+				"east": {"uv": [0.5, 8.5, 7.5, 15.5], "texture": "#0"},
+				"south": {"uv": [0.5, 8.5, 7.5, 15.5], "texture": "#0"},
+				"west": {"uv": [0.5, 8.5, 7.5, 15.5], "texture": "#0"},
+				"up": {"uv": [1, 1, 15, 15], "rotation": 90, "texture": "#3"}
+			}
+		}
+	]
+}

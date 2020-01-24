@@ -39,7 +39,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		callback = stack -> {
 		};
 		textShift = Vec3d.ZERO;
-		count = -1;
+		count = 0;
 		ticksUntilScrollPacket = -1;
 	}
 

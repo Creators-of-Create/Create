@@ -110,7 +110,7 @@
 	"block.create.contact": "Redstone Contact",
 	"block.create.redstone_bridge": "Redstone Link",
 	"block.create.stockswitch": "Stockpile Switch",
-	"block.create.flexcrate": "FlexCrate",
+	"block.create.flexcrate": "Adjustable Crate",
 	"block.create.extractor": "Extractor",
 	"block.create.belt_funnel": "Funnel",
 	"block.create.linked_extractor": "Linked Extractor",
@@ -291,7 +291,7 @@
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
 
-	"create.gui.flexcrate.title": "FlexCrate",
+	"create.gui.flexcrate.title": "Adjustable Crate",
 	"create.gui.flexcrate.storageSpace": "Storage Space",
 
 	"create.gui.stockswitch.title": "Stockpile Switch",
@@ -737,7 +737,7 @@
 	"block.create.contact.tooltip.condition2": "When moved by Mechanical Piston",
 	"block.create.contact.tooltip.behaviour2": "Triggers all stationary Contacts passing by",
 
-	"block.create.flexcrate.tooltip": "FLEXCRATE",
+	"block.create.flexcrate.tooltip": "ADJUSTABLE CRATE",
 	"block.create.flexcrate.tooltip.summary": "This _Storage_ _Container_ allows Manual control over its capacity. It can hold up to _16_ _Stacks_ of any Item",
 	"block.create.flexcrate.tooltip.control1": "When R-Clicked",
 	"block.create.flexcrate.tooltip.action1": "Opens the _Interface_",

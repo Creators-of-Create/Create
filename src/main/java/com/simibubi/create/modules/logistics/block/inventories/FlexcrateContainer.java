@@ -16,6 +16,7 @@ public class FlexcrateContainer extends Container {
 
 	public FlexcrateTileEntity te;
 	public PlayerInventory playerInventory;
+	public boolean doubleCrate;
 
 	public FlexcrateContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
 		super(AllContainers.FLEXCRATE.type, id);
@@ -34,9 +35,12 @@ public class FlexcrateContainer extends Container {
 	}
 
 	private void init() {
+		doubleCrate = te.isDoubleCrate();
+		int x = doubleCrate ? 52 : 124;
+		int maxCol = doubleCrate ? 8 : 4;
 		for (int row = 0; row < 4; ++row) {
-			for (int col = 0; col < 4; ++col) {
-				this.addSlot(new SlotItemHandler(te.inventory, col + row * 4, 124 + col * 18, 25 + row * 18));
+			for (int col = 0; col < maxCol; ++col) {
+				this.addSlot(new SlotItemHandler(te.inventory, col + row * maxCol, x + col * 18, 25 + row * 18));
 			}
 		}
 
@@ -55,7 +59,7 @@ public class FlexcrateContainer extends Container {
 
 		detectAndSendChanges();
 	}
-	
+
 	@Override
 	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
 		Slot clickedSlot = getSlot(index);
@@ -66,8 +70,7 @@ public class FlexcrateContainer extends Container {
 		if (index < 16) {
 			mergeItemStack(stack, 16, inventorySlots.size(), false);
 			te.inventory.onContentsChanged(index);
-		}
-		else
+		} else
 			mergeItemStack(stack, 0, 15, false);
 
 		return ItemStack.EMPTY;

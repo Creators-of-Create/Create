@@ -3,7 +3,9 @@ package com.simibubi.create.foundation.behaviour.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
@@ -44,6 +46,11 @@ public class SynchronizedExtraction {
 		if (blockState.getBlock() instanceof ChestBlock)
 			if (blockState.get(ChestBlock.TYPE) != ChestType.SINGLE)
 				inventoryPositions.add(inventoryPos.offset(ChestBlock.getDirectionToAttached(blockState)));
+
+		// Sync across flexcrates
+		if (AllBlocks.FLEXCRATE.typeOf(blockState))
+			if (blockState.get(FlexcrateBlock.DOUBLE))
+				inventoryPositions.add(inventoryPos.offset(blockState.get(FlexcrateBlock.FACING)));
 
 		for (BlockPos pos : inventoryPositions) {
 			for (Direction direction : Direction.values()) {

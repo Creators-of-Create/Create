@@ -1,5 +1,17 @@
 {
     "variants": {
-		"": { "model": "create:block/flex_crate" }
+		"double=true,facing=up": { "model": "create:block/flexcrate/double_bottom" },
+		"double=true,facing=down": { "model": "create:block/flexcrate/double_top" },
+		"double=true,facing=west": { "model": "create:block/flexcrate/double_left", "y": 90 },
+		"double=true,facing=east": { "model": "create:block/flexcrate/double_right", "y": 90 },
+		"double=true,facing=north": { "model": "create:block/flexcrate/double_right" },
+		"double=true,facing=south": { "model": "create:block/flexcrate/double_left" },
+		
+		"double=false,facing=up": { "model": "create:block/flexcrate/single" },
+		"double=false,facing=down": { "model": "create:block/flexcrate/single" },
+		"double=false,facing=west": { "model": "create:block/flexcrate/single" },
+		"double=false,facing=east": { "model": "create:block/flexcrate/single" },
+		"double=false,facing=north": { "model": "create:block/flexcrate/single" },
+		"double=false,facing=south": { "model": "create:block/flexcrate/single" }
 	}
 }

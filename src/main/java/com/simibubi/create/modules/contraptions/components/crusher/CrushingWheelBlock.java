@@ -72,7 +72,8 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 		boolean controllerShouldExist = false;
 		boolean controllerShouldBeValid = false;
 
-		if (AllBlocks.CRUSHING_WHEEL.typeOf(world.getBlockState(otherWheelPos))) {
+		BlockState otherState = world.getBlockState(otherWheelPos);
+		if (AllBlocks.CRUSHING_WHEEL.typeOf(otherState)) {
 			controllerShouldExist = true;
 			KineticTileEntity te = (KineticTileEntity) world.getTileEntity(pos);
 			KineticTileEntity otherTe = (KineticTileEntity) world.getTileEntity(otherWheelPos);
@@ -80,6 +81,8 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 				float signum = Math.signum(te.getSpeed()) * (state.get(AXIS) == Axis.X ? -1 : 1);
 				controllerShouldBeValid = facing.getAxisDirection().getOffset() != signum;
 			}
+			if (otherState.get(AXIS) != state.get(AXIS))
+				controllerShouldExist = false;
 		}
 
 		if (!controllerShouldExist) {
