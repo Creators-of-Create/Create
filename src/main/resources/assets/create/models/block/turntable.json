@@ -1,52 +1,56 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+	"credit": "Made with Blockbench",
 	"parent": "block/block",
-    "textures": {
-		"particle": "block/stripped_spruce_log",
-        "0": "create:block/axis",
-        "1": "block/stripped_spruce_log",
-        "2": "block/stripped_spruce_log_top",
-		"3": "create:block/axis_top"
-    },
-    "elements": [
-        {
-            "name": "Axis",
-            "from": [ 6.0, 0.0, 6.0 ], 
-            "to": [ 10.0, 7.0, 10.0 ],
-			"shade": false,			
-            "faces": {
-                "north": { "texture": "#0", "uv": [ 6.0, 0.0, 10.0, 7.0 ] },
-                "east": { "texture": "#0", "uv": [ 6.0, 0.0, 10.0, 7.0 ] },
-                "south": { "texture": "#0", "uv": [ 6.0, 0.0, 10.0, 7.0 ] },
-                "west": { "texture": "#0", "uv": [ 6.0, 0.0, 10.0, 7.0 ] },
-                "down": { "texture": "#3", "uv": [ 6.0, 6.0, 10.0, 10.0 ] }
-            }
-        },
-        {
-            "name": "GearCaseInner",
-            "from": [ 1.0, 6.0, 1.0 ], 
-            "to": [ 15.0, 8.0, 15.0 ], 
-            "faces": {
-                "north": { "texture": "#1", "uv": [ 1.0, 0.0, 15.0, 2.0 ] },
-                "east": { "texture": "#1", "uv": [ 1.0, 0.0, 15.0, 2.0 ] },
-                "south": { "texture": "#1", "uv": [ 1.0, 0.0, 15.0, 2.0 ] },
-                "west": { "texture": "#1", "uv": [ 1.0, 0.0, 15.0, 2.0 ] },
-                "up": { "texture": "#2", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
-                "down": { "texture": "#2", "uv": [ 1.0, 1.0, 15.0, 15.0 ] }
-            }
-        },
-        {
-            "name": "GearCaseOuter",
-            "from": [ 4.0, 5.0, 4.0 ], 
-            "to": [ 12.0, 6.0, 12.0 ], 
-            "faces": {
-                "north": { "texture": "#1", "uv": [ 4.0, 0.0, 12.0, 1.0 ] },
-                "east": { "texture": "#1", "uv": [ 4.0, 0.0, 12.0, 1.0 ] },
-                "south": { "texture": "#1", "uv": [ 4.0, 0.0, 12.0, 1.0 ] },
-                "west": { "texture": "#1", "uv": [ 4.0, 0.0, 12.0, 1.0 ] },
-                "up": { "texture": "#2", "uv": [ 4.0, 4.0, 12.0, 12.0 ] },
-                "down": { "texture": "#2", "uv": [ 4.0, 4.0, 12.0, 12.0 ] }
-            }
-        }
-    ]
+	"textures": {
+		"0": "create:block/axis",
+		"1": "block/stripped_spruce_log",
+		"2": "block/stripped_spruce_log_top",
+		"3": "create:block/axis_top",
+		"5": "create:block/gearbox_top",
+		"6": "create:block/encased_belt",
+		"particle": "block/stripped_spruce_log"
+	},
+	"elements": [
+		{
+			"name": "Axis",
+			"from": [6, 0, 6],
+			"to": [10, 7, 10],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [6, 9, 10, 16], "texture": "#0"},
+				"east": {"uv": [6, 9, 10, 16], "texture": "#0"},
+				"south": {"uv": [6, 9, 10, 16], "texture": "#0"},
+				"west": {"uv": [6, 9, 10, 16], "texture": "#0"},
+				"down": {"uv": [6, 6, 10, 10], "texture": "#3"}
+			}
+		},
+		{
+			"name": "GearCaseInner",
+			"from": [1, 5.9, 1],
+			"to": [15, 7.9, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8.9, 8]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 3], "texture": "#6"},
+				"east": {"uv": [1, 1, 15, 3], "texture": "#6"},
+				"south": {"uv": [1, 1, 15, 3], "texture": "#6"},
+				"west": {"uv": [1, 1, 15, 3], "texture": "#6"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#5"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#2"}
+			}
+		},
+		{
+			"name": "GearCaseInner",
+			"from": [1, 3.9, 1],
+			"to": [15, 5.9, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8.9, 8]},
+			"faces": {
+				"north": {"uv": [1, 3, 15, 5], "texture": "#6"},
+				"east": {"uv": [1, 3, 15, 5], "texture": "#6"},
+				"south": {"uv": [1, 3, 15, 5], "texture": "#6"},
+				"west": {"uv": [1, 3, 15, 5], "texture": "#6"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#2"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#1"}
+			}
+		}
+	]
 }

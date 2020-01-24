@@ -10,8 +10,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
@@ -80,6 +83,8 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) tileEntity;
 		if (te.isOccupied())
 			return;
+		if ((entityIn instanceof PlayerEntity) && ((PlayerEntity) entityIn).isCreative()) 
+			return;
 
 		te.startCrushing(entityIn);
 	}
@@ -140,6 +145,14 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 
 		Entity entity = context.getEntity();
 		if (entity != null) {
+			if (entity != null) {
+				CompoundNBT data = entity.getPersistentData();
+				if (data.contains("BypassCrushingWheel")) {
+					if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
+						return VoxelShapes.empty();
+				}
+			}
+
 			if (new AxisAlignedBB(pos).contains(entity.getPositionVec()))
 				return VoxelShapes.empty();
 

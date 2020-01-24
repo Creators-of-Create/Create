@@ -88,8 +88,8 @@ public class AllShapes {
 				makeCuboidShape(4, 0, 4, 12, 16, 12),
 				IBooleanFunction.ONLY_FIRST),
 		TURNTABLE_SHAPE = VoxelShapes.or(
-				makeCuboidShape(1, 6, 1, 15, 8, 15),
-				makeCuboidShape(5, 0, 5, 11, 6, 11)),
+				makeCuboidShape(1, 4, 1, 15, 8, 15),
+				makeCuboidShape(5, 0, 5, 11, 4, 11)),
 		CRATE_BLOCK_SHAPE = makeCuboidShape(1, 0, 1, 15, 14, 15),
 		LOGISTICS_TABLE_BASE = TABLE_POLE_SHAPE,
 		BELT_COLLISION_MASK = makeCuboidShape(0, 0, 0, 16, 19, 16),

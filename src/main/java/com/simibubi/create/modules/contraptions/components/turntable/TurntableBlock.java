@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -54,31 +55,29 @@ public class TurntableBlock extends KineticBlock {
 		if (e.posY < pos.getY() + .5f)
 			return;
 
-		Vec3d origin = VecHelper.getCenterOf(pos);
-		Vec3d offset = e.getPositionVec().subtract(origin);
-
-		if (!world.isRemote && (e instanceof PlayerEntity))
-			return;
-
-		if (offset.length() > 1 / 4f) {
-			offset = VecHelper.rotate(offset, speed / 1f, Axis.Y);
-			Vec3d movement = origin.add(offset).subtract(e.getPositionVec());
-			e.setMotion(e.getMotion().add(movement));
-			e.velocityChanged = true;
+		if (world.isRemote && (e instanceof PlayerEntity)) {
+			if (worldIn.getBlockState(e.getPosition()) != state) {
+				Vec3d origin = VecHelper.getCenterOf(pos);
+				Vec3d offset = e.getPositionVec().subtract(origin);
+				offset = VecHelper.rotate(offset, MathHelper.clamp(speed, -16, 16) / 1f, Axis.Y);
+				Vec3d movement = origin.add(offset).subtract(e.getPositionVec());
+				e.setMotion(e.getMotion().add(movement));
+				e.velocityChanged = true;
+			}
 		}
 
-		if (world.isRemote)
-			return;
 		if ((e instanceof PlayerEntity))
+			return;
+		if (world.isRemote)
 			return;
 		if ((e instanceof LivingEntity)) {
 			float diff = e.getRotationYawHead() - speed;
 			((LivingEntity) e).setIdleTime(20);
 			e.setRenderYawOffset(diff);
 			e.setRotationYawHead(diff);
-			return;
+			e.onGround = false;
+			e.velocityChanged = true;
 		}
-
 		e.rotationYaw -= speed;
 
 	}

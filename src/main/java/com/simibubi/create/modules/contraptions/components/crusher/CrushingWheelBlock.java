@@ -18,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
@@ -45,13 +44,6 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
-		updateControllers(stateIn, worldIn.getWorld(), currentPos, facing);
-		return stateIn;
-	}
-
-	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 
 		for (Direction d : Direction.values()) {
@@ -64,12 +56,6 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			worldIn.removeTileEntity(pos);
 		}
-	}
-
-	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		for (Direction d : Direction.values())
-			updateControllers(state, worldIn, pos, d);
 	}
 
 	public void updateControllers(BlockState state, World world, BlockPos pos, Direction facing) {
@@ -143,9 +129,12 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 		for (Direction direction : Direction.values()) {
 			BlockPos neighbourPos = pos.offset(direction);
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
+			Axis stateAxis = state.get(AXIS);
+			if (AllBlocks.CRUSHING_WHEEL_CONTROLLER.typeOf(neighbourState) && direction.getAxis() != stateAxis)
+				return false;
 			if (!AllBlocks.CRUSHING_WHEEL.typeOf(neighbourState))
 				continue;
-			if (neighbourState.get(AXIS) != state.get(AXIS) || state.get(AXIS) != direction.getAxis())
+			if (neighbourState.get(AXIS) != stateAxis || stateAxis != direction.getAxis())
 				return false;
 		}
 
@@ -166,7 +155,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 	protected boolean hasStaticPart() {
 		return false;
 	}
-	
+
 	@Override
 	public float getParticleTargetRadius() {
 		return 1.125f;

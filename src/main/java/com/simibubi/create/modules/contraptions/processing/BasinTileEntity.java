@@ -12,6 +12,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -38,6 +39,16 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 			updateProcessing = true;
 			sendData();
 			markDirty();
+		};
+		
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			for (int i = 0; i < getSlots(); i++) {
+				ItemStack stackInSlot = getStackInSlot(i);
+				if (ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
+					if (stackInSlot.getCount() == getStackLimit(i, stackInSlot))
+						return stack;
+			}
+			return super.insertItem(slot, stack, simulate);
 		};
 	};
 

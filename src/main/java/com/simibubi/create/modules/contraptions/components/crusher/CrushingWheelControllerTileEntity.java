@@ -9,6 +9,7 @@ import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.processing.ProcessingInventory;
 
 import net.minecraft.entity.Entity;
@@ -22,14 +23,10 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 
 public class CrushingWheelControllerTileEntity extends SyncedTileEntity implements ITickableTileEntity {
-
-	private static DamageSource damageSource = new DamageSource("create.crush").setDamageBypassesArmor()
-			.setDifficultyScaled();
 
 	public Entity processingEntity;
 	private UUID entityUUID;
@@ -63,6 +60,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			return;
 
 		float speed = crushingspeed / 2.5f;
+		Vec3d outPos = VecHelper.getCenterOf(pos);
 
 		if (!hasEntity()) {
 
@@ -80,7 +78,6 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 				return;
 			}
 
-			Vec3d outPos = new Vec3d(pos).add(.5, -.5, .5);
 			if (inventory.remainingTime <= 0) {
 				for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
 					ItemStack stack = inventory.getStackInSlot(slot);
@@ -88,6 +85,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 						continue;
 					ItemEntity entityIn = new ItemEntity(world, outPos.x, outPos.y, outPos.z, stack);
 					entityIn.setMotion(Vec3d.ZERO);
+					entityIn.getPersistentData().put("BypassCrushingWheel", NBTUtil.writeBlockPos(pos));
 					world.addEntity(entityIn);
 				}
 				inventory.clear();
@@ -104,13 +102,22 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			return;
 		}
 
-		processingEntity.setMotion(new Vec3d(0, Math.max(-speed / 4f, -.5f), 0));
+		double xMotion = ((pos.getX() + .5f) - processingEntity.posX) / 2f;
+		double zMotion = ((pos.getZ() + .5f) - processingEntity.posZ) / 2f;
+		if (processingEntity.isSneaking())
+			xMotion = zMotion = 0;
+
+		processingEntity.setMotion(new Vec3d(xMotion, Math.max(-speed / 4f, -.5f), zMotion));
 
 		if (world.isRemote)
 			return;
 
 		if (!(processingEntity instanceof ItemEntity)) {
-			processingEntity.attackEntityFrom(damageSource, CreateConfig.parameters.crushingDamage.get());
+			processingEntity.attackEntityFrom(CrushingWheelTileEntity.damageSource,
+					CreateConfig.parameters.crushingDamage.get());
+			if (!processingEntity.isAlive()) {
+				processingEntity.setPosition(outPos.x, outPos.y - .75f, outPos.z);
+			}
 			return;
 		}
 
