@@ -52,15 +52,23 @@ public class DeployerTileEntityRenderer extends TileEntityRenderer<DeployerTileE
 		GlStateManager.translated(offset.x + x, offset.y + y, offset.z + z);
 
 		Direction facing = deployerState.get(FACING);
+		boolean punching = te.mode == Mode.PUNCH;
+		
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
 		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
+		
 		GlStateManager.rotatef(yRot, 0, 1, 0);
 		GlStateManager.rotatef(zRot, 1, 0, 0);
 		GlStateManager.translated(0, 0, -11 / 16f);
-		float scale = .5f;
+		
+		if (punching) {
+			GlStateManager.translatef(0, 1/8f, -1/16f);
+//			GlStateManager.rotatef(punching ? -45 : 0, 1, 0, 0);
+		}
+		
+		float scale = punching ? .75f : .5f;
 		GlStateManager.scaled(scale, scale, scale);
-
-		TransformType transform = te.mode == Mode.PUNCH ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIXED;
+		TransformType transform = punching ? TransformType.THIRD_PERSON_RIGHT_HAND : TransformType.FIXED;
 		Minecraft.getInstance().getItemRenderer().renderItem(te.heldItem, transform);
 
 		GlStateManager.popMatrix();

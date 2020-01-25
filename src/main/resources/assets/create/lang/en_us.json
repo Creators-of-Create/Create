@@ -209,6 +209,7 @@
 	"death.attack.create.fan_fire": "%1$s was burned to death by hot air",
 	"death.attack.create.fan_lava": "%1$s was burned to death by lava fan",
 	"death.attack.create.drill": "%1$s was impaled by Mechanical Drill",
+	"create.block.deployer.damage_source_name": "a rogue Deployer",
 
 	"create.recipe.crushing": "Crushing",
 	"create.recipe.splashing": "Bulk Washing",

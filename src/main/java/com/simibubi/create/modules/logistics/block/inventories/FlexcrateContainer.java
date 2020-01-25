@@ -67,11 +67,12 @@ public class FlexcrateContainer extends Container {
 			return ItemStack.EMPTY;
 
 		ItemStack stack = clickedSlot.getStack();
-		if (index < 16) {
-			mergeItemStack(stack, 16, inventorySlots.size(), false);
+		int crateSize = doubleCrate ? 32 : 16;
+		if (index < crateSize) {
+			mergeItemStack(stack, crateSize, inventorySlots.size(), false);
 			te.inventory.onContentsChanged(index);
 		} else
-			mergeItemStack(stack, 0, 15, false);
+			mergeItemStack(stack, 0, crateSize - 1, false);
 
 		return ItemStack.EMPTY;
 	}

@@ -107,11 +107,11 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 	public void onDestroyed() {
 		FlexcrateTileEntity other = getOtherCrate();
 		if (other == null) {
-			for (int slot = 0; slot < inventory.getSlots(); slot++) 
+			for (int slot = 0; slot < inventory.getSlots(); slot++)
 				drop(slot);
 			return;
 		}
-		
+
 		FlexcrateTileEntity main = getMainCrate();
 		if (this == main) {
 			for (int slot = 0; slot < inventory.getSlots(); slot++) {
@@ -120,11 +120,14 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 			}
 			other.allowedAmount = Math.min(1024, allowedAmount);
 		}
-		
-		for (int slot = 16; slot < other.inventory.getSlots(); slot++) 
+
+		for (int slot = 16; slot < other.inventory.getSlots(); slot++)
 			other.drop(slot);
+
+		other.invHandler.invalidate();
+		other.invHandler = LazyOptional.of(() -> other.inventory);
 	}
-	
+
 	private void drop(int slot) {
 		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(slot));
 	}

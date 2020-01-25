@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.deployer;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -54,10 +55,26 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IWithT
 		}
 		return super.onWrenched(state, context);
 	}
+	
+	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			withTileEntityDo(worldIn, pos, te -> {
+				te.player.inventory.dropAllItems();
+				te.overflowItems.forEach(itemstack -> te.player.dropItem(itemstack, true, false));
+			});
+			
+	         worldIn.removeTileEntity(pos);
+	      }
+	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
+		ItemStack held = player.getHeldItem(handIn);
+		if (AllItems.WRENCH.typeOf(held))
+			return false;
+		
 		if (hit.getFace() == state.get(FACING)) {
 			if (!worldIn.isRemote)
 				withTileEntityDo(worldIn, pos, te -> {
@@ -66,6 +83,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IWithT
 						return;
 					player.inventory.placeItemBackInInventory(worldIn, heldItemMainhand);
 					te.player.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
+					te.sendData();
 				});
 			return true;
 		}

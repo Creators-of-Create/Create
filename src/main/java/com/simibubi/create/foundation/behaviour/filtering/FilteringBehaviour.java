@@ -7,12 +7,15 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.behaviour.base.IBehaviourType;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 public class FilteringBehaviour extends TileEntityBehaviour {
 
@@ -127,6 +130,17 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		tileEntity.sendData();
 	}
 
+	@Override
+	public void remove() {
+		if (filter.getItem() instanceof FilterItem) {
+			Vec3d pos = VecHelper.getCenterOf(getPos());
+			World world = getWorld();
+			world.addEntity(new ItemEntity(world, pos.x, pos.y, pos.z, filter.copy()));
+		}
+		
+		super.remove();
+	}
+	
 	public ItemStack getFilter() {
 		return filter.copy();
 	}

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.Multimap;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
@@ -21,16 +22,31 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.BucketItem;
+import net.minecraft.item.FlintAndSteelItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -42,9 +58,14 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.ITickList;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
+import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -61,8 +82,10 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected DeployerFakePlayer player;
 	protected int timer;
 	protected float reach;
+	protected List<ItemStack> overflowItems = new ArrayList<>();
+	protected Pair<BlockPos, Float> blockBreakingProgress;
 
-	private List<ItemStack> overflowItems = new ArrayList<>();
+	private ListNBT deferredInventoryList;
 
 	enum State {
 		WAITING, EXPANDING, RETRACTING, DUMPING;
@@ -94,8 +117,15 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (!world.isRemote)
+		if (!world.isRemote) {
 			player = new DeployerFakePlayer((ServerWorld) world);
+			if (deferredInventoryList != null) {
+				player.inventory.read(deferredInventoryList);
+				deferredInventoryList = null;
+				heldItem = player.getHeldItemMainhand();
+				sendData();
+			}
+		}
 	}
 
 	protected void onExtract(ItemStack stack) {
@@ -109,7 +139,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	protected int getTimerSpeed() {
-		return (int) (getSpeed() == 0 ? 0 : MathHelper.clamp(Math.abs(getSpeed()) / 4, 1, 512));
+		return (int) (getSpeed() == 0 ? 0 : MathHelper.clamp(Math.abs(getSpeed()) / 2, 8, 512));
 	}
 
 	@Override
@@ -118,6 +148,12 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		if (getSpeed() == 0)
 			return;
+		if (!world.isRemote && blockBreakingProgress != null) {
+			if (world.isAirBlock(blockBreakingProgress.getKey())) {
+				world.sendBlockBreakProgress(player.getEntityId(), blockBreakingProgress.getKey(), -1);
+				blockBreakingProgress = null;
+			}
+		}
 		if (timer > 0) {
 			timer -= getTimerSpeed();
 			return;
@@ -125,6 +161,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		if (world.isRemote)
 			return;
 
+		ItemStack stack = player.getHeldItemMainhand();
 		if (state == State.WAITING) {
 			if (!overflowItems.isEmpty()) {
 				tryDisposeOfItems();
@@ -133,24 +170,34 @@ public class DeployerTileEntity extends KineticTileEntity {
 				return;
 			}
 
-			if (!filtering.test(player.getHeldItemMainhand())) {
-				if (!player.getHeldItemMainhand().isEmpty()) {
-					overflowItems.add(player.getHeldItemMainhand());
+			if (!filtering.test(stack)) {
+				if (!stack.isEmpty()) {
+					overflowItems.add(stack);
 					player.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
 					sendData();
 					return;
 				}
 				extracting.extract(1);
-				if (!filtering.test(player.getHeldItemMainhand()))
+				if (!filtering.test(stack))
 					timer = getTimerSpeed() * 10;
 				return;
 			}
 
-			if (filtering.getFilter().isEmpty() && player.getHeldItemMainhand().isEmpty())
+			if (filtering.getFilter().isEmpty() && stack.isEmpty())
 				extracting.extract(1);
 
-			if (player.getHeldItemMainhand().getItem() instanceof BlockItem) {
-				if (!world.getBlockState(pos.offset(getBlockState().get(FACING), 2)).getMaterial().isReplaceable()) {
+			Direction facing = getBlockState().get(FACING);
+			if (stack.getItem() instanceof BlockItem) {
+				if (!world.getBlockState(pos.offset(facing, 2)).getMaterial().isReplaceable()) {
+					timer = getTimerSpeed() * 10;
+					return;
+				}
+			}
+
+			if (stack.getItem() instanceof BucketItem) {
+				BucketItem bucketItem = (BucketItem) stack.getItem();
+				Fluid fluid = bucketItem.getFluid();
+				if (fluid != Fluids.EMPTY && world.getFluidState(pos.offset(facing, 2)).getFluid() == fluid) {
 					timer = getTimerSpeed() * 10;
 					return;
 				}
@@ -161,7 +208,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 			Vec3d rayOrigin = VecHelper.getCenterOf(pos).add(movementVector.scale(3 / 2f));
 			Vec3d rayTarget = VecHelper.getCenterOf(pos).add(movementVector.scale(5 / 2f));
 			RayTraceContext rayTraceContext = new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE,
-					FluidMode.SOURCE_ONLY, player);
+					FluidMode.NONE, player);
 			BlockRayTraceResult result = world.rayTraceBlocks(rayTraceContext);
 			reach = (float) (.5f + Math.min(result.getHitVec().subtract(rayOrigin).length(), .75f));
 
@@ -171,7 +218,12 @@ public class DeployerTileEntity extends KineticTileEntity {
 		}
 
 		if (state == State.EXPANDING) {
+			Multimap<String, AttributeModifier> attributeModifiers = stack
+					.getAttributeModifiers(EquipmentSlotType.MAINHAND);
+			player.getAttributes().applyAttributeModifiers(attributeModifiers);
 			activate();
+			player.getAttributes().removeAttributeModifiers(attributeModifiers);
+
 			state = State.RETRACTING;
 			timer = 1000;
 			sendData();
@@ -189,57 +241,180 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	protected void activate() {
+		// Update player position and angle
 		Vec3d movementVector = getMovementVector();
 		Direction direction = getBlockState().get(FACING);
+		Vec3d center = VecHelper.getCenterOf(pos);
+		Vec3d rayOrigin = center.add(movementVector.scale(3 / 2f + 1 / 64f));
+		Vec3d rayTarget = center.add(movementVector.scale(5 / 2f - 1 / 64f));
+		BlockPos clickedPos = pos.offset(direction, 2);
 
-		player.rotationYaw = AngleHelper.horizontalAngle(direction);
+		player.rotationYaw = AngleHelper.horizontalAngle(direction) + 180;
 		player.rotationPitch = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
+		player.setPosition(rayOrigin.x, rayOrigin.y, rayOrigin.z);
 
-		BlockPos clicked = pos.offset(direction, 2);
 		ItemStack stack = player.getHeldItemMainhand();
+		Item item = stack.getItem();
 
-		List<LivingEntity> entities = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(clicked));
+		// Check for entities
+		World world = this.world;
+		List<LivingEntity> entities = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(clickedPos));
+		Hand hand = Hand.MAIN_HAND;
 		if (!entities.isEmpty()) {
-			stack.interactWithEntity(player, entities.get(world.rand.nextInt(entities.size())), Hand.MAIN_HAND);
+			LivingEntity entity = entities.get(world.rand.nextInt(entities.size()));
+			List<ItemEntity> capturedDrops = new ArrayList<>();
+			boolean success = false;
+			entity.captureDrops(capturedDrops);
+
+			// Use on entity
+			if (mode == Mode.USE) {
+				ActionResultType cancelResult = ForgeHooks.onInteractEntity(player, entity, hand);
+				if (cancelResult == ActionResultType.FAIL) {
+					entity.captureDrops(null);
+					return;
+				}
+				if (cancelResult == null) {
+					if (entity.processInitialInteract(player, hand))
+						success = true;
+					else if (stack.interactWithEntity(player, entity, hand))
+						success = true;
+				}
+			}
+
+			// Punch entity
+			if (mode == Mode.PUNCH) {
+				player.resetCooldown();
+				player.attackTargetEntityWithCurrentItem(entity);
+				success = true;
+			}
+
+			entity.captureDrops(null);
+			capturedDrops.forEach(e -> player.inventory.placeItemBackInInventory(this.world, e.getItem()));
+			if (success)
+				return;
+		}
+
+		// Shoot ray
+		RayTraceContext rayTraceContext = new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE, FluidMode.NONE,
+				player);
+		BlockRayTraceResult result = world.rayTraceBlocks(rayTraceContext);
+		BlockState clickedState = world.getBlockState(clickedPos);
+
+		// Left click
+		if (mode == Mode.PUNCH) {
+			LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, clickedPos, direction.getOpposite());
+			if (event.isCanceled())
+				return;
+			if (!world.isBlockModifiable(player, clickedPos))
+				return;
+			if (world.extinguishFire(player, clickedPos, direction.getOpposite()))
+				return;
+			if (clickedState.isAir(world, clickedPos))
+				return;
+			if (event.getUseBlock() != Result.DENY)
+				clickedState.onBlockClicked(world, clickedPos, player);
+			if (stack.isEmpty())
+				return;
+
+			float progress = clickedState.getPlayerRelativeBlockHardness(player, world, clickedPos) * 16;
+			float before = 0;
+			if (blockBreakingProgress != null)
+				before = blockBreakingProgress.getValue();
+			progress += before;
+
+			if (progress >= 1) {
+				player.interactionManager.tryHarvestBlock(clickedPos);
+				world.sendBlockBreakProgress(player.getEntityId(), clickedPos, -1);
+				blockBreakingProgress = null;
+				return;
+			}
+
+			if ((int) (before * 10) != (int) (progress * 10))
+				world.sendBlockBreakProgress(player.getEntityId(), clickedPos, (int) (progress * 10));
+			blockBreakingProgress = Pair.of(clickedPos, progress);
 			return;
 		}
 
-		Vec3d rayOrigin = VecHelper.getCenterOf(pos).add(movementVector.scale(3 / 2f + 1 / 64f));
-		Vec3d rayTarget = VecHelper.getCenterOf(pos).add(movementVector.scale(5 / 2f - 1 / 64f));
-		RayTraceContext rayTraceContext = new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE,
-				FluidMode.SOURCE_ONLY, player);
-		BlockRayTraceResult result = world.rayTraceBlocks(rayTraceContext);
-		ItemUseContext itemusecontext = new ItemUseContext(player, Hand.MAIN_HAND, result);
+		// Right click
+		ItemUseContext itemusecontext = new ItemUseContext(player, hand, result);
+		RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, direction.getOpposite());
 
-		RightClickBlock event = ForgeHooks.onRightClickBlock(player, Hand.MAIN_HAND, clicked, direction.getOpposite());
-
+		// Item has active use (food for instance)
 		if (event.getUseItem() != DENY) {
 			ActionResultType actionresult = stack.onItemUseFirst(itemusecontext);
 			if (actionresult != ActionResultType.PASS)
 				return;
-			player.setHeldItem(Hand.MAIN_HAND, stack.onItemUseFinish(world, player));
+			player.setHeldItem(hand, stack.onItemUseFinish(world, player));
 		}
 
-		BlockState clickedState = world.getBlockState(clicked);
 		boolean holdingSomething = !player.getHeldItemMainhand().isEmpty();
 		boolean flag1 = !(player.isSneaking() && holdingSomething)
-				|| (stack.doesSneakBypassUse(world, clicked, player));
+				|| (stack.doesSneakBypassUse(world, clickedPos, player));
 
-		if (event.getUseBlock() != DENY && flag1
-				&& clickedState.onBlockActivated(world, player, Hand.MAIN_HAND, result))
+		// Use on block
+		if (event.getUseBlock() != DENY && flag1 && clickedState.onBlockActivated(world, player, hand, result))
 			return;
 		if (stack.isEmpty())
 			return;
 		if (event.getUseItem() == DENY)
 			return;
-		if (stack.getItem() instanceof BlockItem
-				&& !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
+		if (item instanceof BlockItem && !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
 			return;
 
+		// Reposition fire placement for convenience
+		if (item == Items.FLINT_AND_STEEL) {
+			Direction newFace = result.getFace();
+			BlockPos newPos = result.getPos();
+			if (!FlintAndSteelItem.canSetFire(clickedState, world, clickedPos))
+				newFace = Direction.UP;
+			if (clickedState.getMaterial() == Material.AIR)
+				newPos = newPos.offset(direction);
+			result = new BlockRayTraceResult(result.getHitVec(), newFace, newPos, result.isInside());
+			itemusecontext = new ItemUseContext(player, hand, result);
+		}
+
+		// 'Inert' item use behaviour & block placement
 		ActionResultType onItemUse = stack.onItemUse(itemusecontext);
 		if (onItemUse == ActionResultType.SUCCESS)
 			return;
-		stack.getItem().onItemRightClick(world, player, Hand.MAIN_HAND);
+
+		// some items use hard-coded eye positions
+		if (item == Items.SNOWBALL || item == Items.EGG)
+			player.posY -= 1.5f;
+		if (item == Items.ENDER_PEARL)
+			return;
+
+		// buckets create their own ray, We use a fake wall to contain the active area
+		if (item instanceof BucketItem) {
+			world = new WrappedWorld(world) {
+
+				@Override
+				public BlockState getBlockState(BlockPos position) {
+					if (pos.offset(direction, 3).equals(position) || pos.offset(direction, 1).equals(position))
+						return Blocks.BEDROCK.getDefaultState();
+					return world.getBlockState(position);
+				}
+
+				@Override
+				public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
+					world.notifyBlockUpdate(pos, oldState, newState, flags);
+				}
+
+				@Override
+				public ITickList<Block> getPendingBlockTicks() {
+					return world.getPendingBlockTicks();
+				}
+
+				@Override
+				public ITickList<Fluid> getPendingFluidTicks() {
+					return world.getPendingFluidTicks();
+				}
+
+			};
+		}
+
+		ActionResult<ItemStack> onItemRightClick = item.onItemRightClick(world, player, hand);
+		player.setHeldItem(hand, onItemRightClick.getResult());
 	}
 
 	protected void returnAndDeposit() {
@@ -264,8 +439,21 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	protected void tryDisposeOfItems() {
+		boolean noInv = extracting.getInventories().isEmpty();
 		for (Iterator<ItemStack> iterator = overflowItems.iterator(); iterator.hasNext();) {
 			ItemStack itemStack = iterator.next();
+
+			if (noInv) {
+				Vec3d offset = getMovementVector();
+				Vec3d outPos = VecHelper.getCenterOf(pos).add(offset.scale(-.65f));
+				Vec3d motion = offset.scale(-.25f);
+				ItemEntity e = new ItemEntity(world, outPos.x, outPos.y, outPos.z, itemStack.copy());
+				e.setMotion(motion);
+				world.addEntity(e);
+				iterator.remove();
+				continue;
+			}
+
 			itemStack = insert(itemStack, false);
 			if (itemStack.isEmpty())
 				iterator.remove();
@@ -292,6 +480,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		state = NBTHelper.readEnum(compound.getString("State"), State.class);
 		mode = NBTHelper.readEnum(compound.getString("Mode"), Mode.class);
 		timer = compound.getInt("Timer");
+		deferredInventoryList = compound.getList("Inventory", NBT.TAG_COMPOUND);
+		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 		super.read(compound);
 	}
 
@@ -300,6 +490,12 @@ public class DeployerTileEntity extends KineticTileEntity {
 		compound.putString("Mode", NBTHelper.writeEnum(mode));
 		compound.putString("State", NBTHelper.writeEnum(state));
 		compound.putInt("Timer", timer);
+		if (player != null) {
+			ListNBT invNBT = new ListNBT();
+			player.inventory.write(invNBT);
+			compound.put("Inventory", invNBT);
+			compound.put("Overflow", NBTHelper.writeItemList(overflowItems));
+		}
 		return super.write(compound);
 	}
 
@@ -326,6 +522,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	@Override
 	public void remove() {
+		if (!world.isRemote && blockBreakingProgress != null)
+			world.sendBlockBreakProgress(player.getEntityId(), blockBreakingProgress.getKey(), -1);
 		super.remove();
 		player = null;
 	}
