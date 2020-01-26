@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "AAA",
+            "ASA",
+			"AAA"
+        ],
+        "key": {
+			"A": {
+                "tag": "minecraft:planks"
+            },
+			"S": {
+                "item": "create:andesite_alloy"
+            }
+        },
+	"result": {
+		"item": "create:andesite_casing",
+		"count": 4
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "BBB",
+            "BSB",
+			"BBB"
+        ],
+        "key": {
+            "B": {
+                "tag": "minecraft:wooden_buttons"
+            },
+			"S": {
+                "item": "create:andesite_alloy"
+            }
+        },
+	"result": {
+		"item": "create:cogwheel",
+		"count": 8
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

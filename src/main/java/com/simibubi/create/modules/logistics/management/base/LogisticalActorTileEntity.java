@@ -87,13 +87,6 @@ public abstract class LogisticalActorTileEntity extends SyncedTileEntity
 		return colorFromUUID(networkId);
 	}
 
-	public static int colorFromUUID(UUID uuid) {
-		if (uuid == null)
-			return 0x333333;
-		int rainbowColor = ColorHelper.rainbowColor((int) uuid.getLeastSignificantBits());
-		return ColorHelper.mixColors(rainbowColor, 0xFFFFFF, .5f);
-	}
-
 	public <T> LazyOptional<T> getCasingCapability(Capability<T> cap, Direction side) {
 		return LazyOptional.empty();
 	}

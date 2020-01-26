@@ -1,7 +1,9 @@
 package com.simibubi.create.compat.jei;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -13,6 +15,7 @@ import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
+import com.simibubi.create.modules.contraptions.processing.ProcessingIngredient;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -70,6 +73,17 @@ public class MixingCategory implements IRecipeCategory<MixingRecipe> {
 
 		NonNullList<Ingredient> recipeIngredients = recipe.getIngredients();
 		List<Pair<Ingredient, MutableInt>> actualIngredients = ItemHelper.condenseIngredients(recipeIngredients);
+		
+		Map<Integer, Float> catalystIndices = new HashMap<>(9);
+		for (int i = 0; i < actualIngredients.size(); i++) {
+			for (ProcessingIngredient processingIngredient : recipe.getRollableIngredients()) {
+				if (processingIngredient.isCatalyst() && ItemHelper
+						.matchIngredients(processingIngredient.getIngredient(), actualIngredients.get(i).getKey())) {
+					catalystIndices.put(i, processingIngredient.getOutputChance());
+					break;
+				}
+			}
+		}
 
 		int size = actualIngredients.size();
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
@@ -88,16 +102,29 @@ public class MixingCategory implements IRecipeCategory<MixingRecipe> {
 
 		itemStacks.init(i, false, 141, 50);
 		itemStacks.set(i, recipe.getRecipeOutput().getStack());
+
+		CreateJEI.addCatalystTooltip(itemStacks, catalystIndices);
 	}
 
 	@Override
 	public void draw(MixingRecipe recipe, double mouseX, double mouseY) {
+		// this might actually be pretty bad with big ingredients. ^ its a draw method 
+		
 		List<Pair<Ingredient, MutableInt>> actualIngredients = ItemHelper.condenseIngredients(recipe.getIngredients());
 
 		int size = actualIngredients.size();
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
-		for (int i = 0; i < size; i++)
-			ScreenResources.JEI_SLOT.draw(16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19);
+		for (int i = 0; i < size; i++) {
+			ScreenResources jeiSlot = ScreenResources.JEI_SLOT;
+			for (ProcessingIngredient processingIngredient : recipe.getRollableIngredients()) {
+				if (processingIngredient.isCatalyst() && ItemHelper
+						.matchIngredients(processingIngredient.getIngredient(), actualIngredients.get(i).getKey())) {
+					jeiSlot = ScreenResources.JEI_CATALYST_SLOT;
+					break;
+				}
+			}
+			jeiSlot.draw(16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19);
+		}
 		ScreenResources.JEI_SLOT.draw(141, 50);
 		ScreenResources.JEI_DOWN_ARROW.draw(136, 32);
 		ScreenResources.JEI_SHADOW.draw(81, 57);

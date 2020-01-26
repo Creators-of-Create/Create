@@ -14,7 +14,7 @@
 		{
 			"item": "minecraft:quartz",
 			"count": 1,
-			"chance": 0.5
+			"chance": 0.125
 		}
 	],
 	"processingTime": 200

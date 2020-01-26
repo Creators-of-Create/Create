@@ -7,10 +7,6 @@ import com.simibubi.create.modules.logistics.item.filter.AttributeFilterContaine
 import com.simibubi.create.modules.logistics.item.filter.AttributeFilterScreen;
 import com.simibubi.create.modules.logistics.item.filter.FilterContainer;
 import com.simibubi.create.modules.logistics.item.filter.FilterScreen;
-import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerContainer;
-import com.simibubi.create.modules.logistics.management.controller.LogisticalInventoryControllerScreen;
-import com.simibubi.create.modules.logistics.management.index.LogisticalIndexContainer;
-import com.simibubi.create.modules.logistics.management.index.LogisticalIndexScreen;
 import com.simibubi.create.modules.schematics.block.SchematicTableContainer;
 import com.simibubi.create.modules.schematics.block.SchematicTableScreen;
 import com.simibubi.create.modules.schematics.block.SchematicannonContainer;
@@ -34,8 +30,8 @@ public enum AllContainers {
 	SCHEMATIC_TABLE(SchematicTableContainer::new),
 	SCHEMATICANNON(SchematicannonContainer::new),
 	FLEXCRATE(FlexcrateContainer::new),
-	LOGISTICAL_INDEX(LogisticalIndexContainer::new),
-	LOGISTICAL_CONTROLLER(LogisticalInventoryControllerContainer::new),
+//	LOGISTICAL_INDEX(LogisticalIndexContainer::new),
+//	LOGISTICAL_CONTROLLER(LogisticalInventoryControllerContainer::new),
 
 	FILTER(FilterContainer::new),
 	ATTRIBUTE_FILTER(AttributeFilterContainer::new),
@@ -62,8 +58,8 @@ public enum AllContainers {
 		bind(SCHEMATIC_TABLE, SchematicTableScreen::new);
 		bind(SCHEMATICANNON, SchematicannonScreen::new);
 		bind(FLEXCRATE, FlexcrateScreen::new);
-		bind(LOGISTICAL_INDEX, LogisticalIndexScreen::new);
-		bind(LOGISTICAL_CONTROLLER, LogisticalInventoryControllerScreen::new);
+//		bind(LOGISTICAL_INDEX, LogisticalIndexScreen::new);
+//		bind(LOGISTICAL_CONTROLLER, LogisticalInventoryControllerScreen::new);
 		bind(FILTER, FilterScreen::new);
 		bind(ATTRIBUTE_FILTER, AttributeFilterScreen::new);
 	}

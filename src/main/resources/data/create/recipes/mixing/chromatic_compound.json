@@ -1,0 +1,37 @@
+{
+    "type": "create:mixing",
+    "group": "minecraft:misc",
+    "ingredients": [
+		{
+    		"tag": "forge:dusts/glowstone"
+    	},
+		{
+    		"tag": "forge:dusts/glowstone"
+    	},
+		{
+    		"tag": "forge:dusts/glowstone"
+    	},
+		{
+    		"item": "create:polished_rose_quartz"
+    	},
+		{
+			"item": "create:obsidian_dust"
+		},
+		{
+			"item": "create:obsidian_dust"
+		},
+		{
+			"item": "create:obsidian_dust"
+		},
+		{
+			"item": "minecraft:dragon_breath",
+			"return_chance": 0.94
+		}
+    ], 
+	"results": [
+		{
+			"item": "create:chromatic_compound",
+			"count": 1
+		}
+	]
+}

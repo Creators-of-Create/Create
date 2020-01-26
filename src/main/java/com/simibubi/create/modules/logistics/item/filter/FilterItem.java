@@ -118,8 +118,6 @@ public class FilterItem extends Item implements INamedContainerProvider {
 		ItemStack heldItem = player.getHeldItem(hand);
 
 		if (!player.isSneaking() && hand == Hand.MAIN_HAND) {
-			if (AllItems.LOGISTICAL_FILTER.typeOf(heldItem))
-				return ActionResult.newResult(ActionResultType.FAIL, heldItem);
 			if (!world.isRemote && player instanceof ServerPlayerEntity)
 				NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {
 					buf.writeItemStack(heldItem);

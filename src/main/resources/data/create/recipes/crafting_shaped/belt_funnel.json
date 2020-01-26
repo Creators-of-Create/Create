@@ -1,0 +1,29 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"NN",
+            "PD",
+			"PD"
+        ],
+        "key": {
+			"D": {
+                "item": "minecraft:dried_kelp"
+            },
+			"N": {
+                "item": "create:brass_sheet"
+            },
+			"P": {
+                "tag": "minecraft:planks"
+            }
+        },
+	"result": {
+		"item": "create:belt_funnel",
+		"count": 4
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "logistics"
+		}
+	]
+}

@@ -23,12 +23,12 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 			float progress = (float) ((mc.player.getYaw(pt)) / 180 * Math.PI)
 					+ (AnimationTickHolder.getRenderTick() * 1f);
 			if (layer == 0)
-				return ColorHelper.mixColors(0xDDDDDD, 0xDDDDDD, ((float) MathHelper.sin(progress) + 1) / 2);
+				return ColorHelper.mixColors(0x6e5773, 0x6B3074, ((float) MathHelper.sin(progress) + 1) / 2);
 			if (layer == 1)
-				return ColorHelper.mixColors(0x72A498, 0xB9D6FF,
+				return ColorHelper.mixColors(0xd45d79, 0x6e5773,
 						((float) MathHelper.sin((float) (progress + Math.PI)) + 1) / 2);
 			if (layer == 2)
-				return ColorHelper.mixColors(0x5082CE, 0x91C5B7,
+				return ColorHelper.mixColors(0xea9085, 0xd45d79,
 						((float) MathHelper.sin((float) (progress * 1.5f + Math.PI)) + 1) / 2);
 			return 0;
 		}

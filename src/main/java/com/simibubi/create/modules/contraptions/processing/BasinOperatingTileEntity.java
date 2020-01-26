@@ -120,6 +120,8 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
 		IItemHandlerModifiable inputs = inv.getInputHandler();
 		IItemHandlerModifiable outputs = inv.getOutputHandler();
+		List<ItemStack> catalysts = new ArrayList<>();
+		
 		int buckets = 0;
 		Ingredients: for (Ingredient ingredient : lastRecipe.getIngredients()) {
 			for (int slot = 0; slot < inputs.getSlots(); slot++) {
@@ -128,6 +130,12 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 				ItemStack extracted = inputs.extractItem(slot, 1, false);
 				if (extracted.getItem() instanceof BucketItem)
 					buckets++;
+				
+				if ((lastRecipe instanceof ProcessingRecipe)) {
+					ProcessingRecipe<?> pr = (ProcessingRecipe<?>) lastRecipe;
+					if (pr.getRollableIngredients().get(slot).remains())
+						catalysts.add(extracted.copy());
+				}
 				continue Ingredients;
 			}
 			// something wasn't found
@@ -137,6 +145,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		ItemHandlerHelper.insertItemStacked(outputs, lastRecipe.getRecipeOutput().copy(), false);
 		if (buckets > 0)
 			ItemHandlerHelper.insertItemStacked(outputs, new ItemStack(Items.BUCKET, buckets), false);
+		catalysts.forEach(c -> ItemHandlerHelper.insertItemStacked(outputs, c, false));
 
 		// Continue mixing
 		gatherInputs();

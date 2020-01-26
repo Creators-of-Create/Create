@@ -1,0 +1,32 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "ABA",
+            "RSR",
+			"ABA"
+        ],
+        "key": {
+            "B": {
+                "item": "minecraft:iron_bars"
+            },
+			"A": {
+                "item": "create:andesite_alloy"
+            },
+			"S": {
+                "item": "create:propeller"
+            },
+			"R": {
+                "tag": "minecraft:logs"
+            }
+        },
+	"result": {
+		"item": "create:encased_fan",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

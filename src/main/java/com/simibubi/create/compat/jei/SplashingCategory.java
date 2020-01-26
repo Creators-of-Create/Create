@@ -10,7 +10,7 @@ import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.fan.SplashingRecipe;
-import com.simibubi.create.modules.contraptions.processing.StochasticOutput;
+import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -72,7 +72,7 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 		itemStacks.init(0, true, 20, 47);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
-		List<StochasticOutput> results = recipe.getRollableResults();
+		List<ProcessingOutput> results = recipe.getRollableResults();
 		boolean single = results.size() == 1;
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
 			int xOffset = outputIndex % 2 == 0 ? 0 : 19;

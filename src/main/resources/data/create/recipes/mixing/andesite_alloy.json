@@ -6,12 +6,12 @@
     		"item": "minecraft:andesite"
     	},
 		{
-    		"item": "minecraft:iron_nugget"
+    		"tag": "forge:nuggets/iron"
     	}
     ], 
 	"results": [
 		{
-			"item": "create:andesite_alloy_cube",
+			"item": "create:andesite_alloy",
 			"count": 1
 		}
 	]

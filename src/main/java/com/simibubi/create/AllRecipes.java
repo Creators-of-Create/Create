@@ -12,7 +12,8 @@ import com.simibubi.create.modules.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipeSerializer;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipeSerializer.IRecipeFactory;
-import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunUpgradeRecipe;
+import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperUpgradeRecipe;
+import com.simibubi.create.modules.curiosities.tools.SandPaperPolishingRecipe;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
@@ -25,13 +26,14 @@ import net.minecraftforge.event.RegistryEvent;
 
 public enum AllRecipes {
 
-	BLOCKZAPPER_UPGRADE(BuilderGunUpgradeRecipe.Serializer::new, IRecipeType.CRAFTING),
+	BLOCKZAPPER_UPGRADE(BlockzapperUpgradeRecipe.Serializer::new, IRecipeType.CRAFTING),
 	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
 	CRUSHING(processingSerializer(CrushingRecipe::new)),
 	SPLASHING(processingSerializer(SplashingRecipe::new)),
 	PRESSING(processingSerializer(PressingRecipe::new)),
 	CUTTING(processingSerializer(CuttingRecipe::new)),
 	MIXING(processingSerializer(MixingRecipe::new)),
+	SANDPAPER_POLISHING(processingSerializer(SandPaperPolishingRecipe::new)),
 
 	;
 

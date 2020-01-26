@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
+import java.util.UUID;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.util.math.Vec3d;
@@ -59,6 +61,13 @@ public class ColorHelper {
 		int g = (color >> 8) & 0xFF;
 		int b = color & 0xFF;
 		return new Vec3d(r, g, b).scale(1 / 256d);
+	}
+	
+	public static int colorFromUUID(UUID uuid) {
+		if (uuid == null)
+			return 0x333333;
+		int rainbowColor = ColorHelper.rainbowColor((int) uuid.getLeastSignificantBits());
+		return ColorHelper.mixColors(rainbowColor, 0xFFFFFF, .5f);
 	}
 
 }

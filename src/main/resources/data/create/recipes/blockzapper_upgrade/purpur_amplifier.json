@@ -7,10 +7,10 @@
         ],
         "key": {
             "B": {
-                "item": "create:chorus_chrome_cube"
+                "item": "create:chromatic_compound"
             },
 			"R": {
-                "item": "minecraft:end_rod"
+                "item": "create:refined_radiance"
             },
             "E": {
                 "item": "create:placement_handgun"
@@ -21,5 +21,5 @@
 		"count": 1
 	},
 	"component": "Amplifier",
-	"tier": "ChorusChrome"
+	"tier": "Chromatic"
 }

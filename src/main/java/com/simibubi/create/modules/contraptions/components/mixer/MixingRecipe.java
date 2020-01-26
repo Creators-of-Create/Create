@@ -7,8 +7,9 @@ import java.util.List;
 
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.modules.contraptions.processing.BasinTileEntity.BasinInputInventory;
+import com.simibubi.create.modules.contraptions.processing.ProcessingIngredient;
+import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.modules.contraptions.processing.StochasticOutput;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -19,11 +20,26 @@ import net.minecraft.world.World;
 
 public class MixingRecipe extends ProcessingRecipe<BasinInputInventory> {
 
-	public MixingRecipe(ResourceLocation id, String group, List<Ingredient> ingredients, List<StochasticOutput> results,
-			int processingDuration) {
+	public MixingRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
+			List<ProcessingOutput> results, int processingDuration) {
 		super(AllRecipes.MIXING, id, group, ingredients, results, processingDuration);
 	}
 
+	@Override
+	protected int getMaxInputCount() {
+		return 9;
+	}
+	
+	@Override
+	protected int getMaxOutputCount() {
+		return 1;
+	}
+	
+	@Override
+	protected boolean canHaveCatalysts() {
+		return true;
+	}
+	
 	@Override
 	public boolean matches(BasinInputInventory inv, World worldIn) {
 		if (inv.isEmpty())
@@ -56,12 +72,11 @@ public class MixingRecipe extends ProcessingRecipe<BasinInputInventory> {
 			return false;
 		}
 		return true;
-
 	}
 
 	public static MixingRecipe of(IRecipe<?> recipe) {
-		return new MixingRecipe(recipe.getId(), recipe.getGroup(), recipe.getIngredients(),
-				Arrays.asList(new StochasticOutput(recipe.getRecipeOutput(), 1)), -1);
+		return new MixingRecipe(recipe.getId(), recipe.getGroup(), ProcessingIngredient.list(recipe.getIngredients()),
+				Arrays.asList(new ProcessingOutput(recipe.getRecipeOutput(), 1)), -1);
 	}
 
 }

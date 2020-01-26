@@ -14,10 +14,11 @@ import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.modules.contraptions.WrenchModel;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionRenderer;
+import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperModel;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterModel;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel;
-import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunModel;
 import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandModel;
+import com.simibubi.create.modules.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
 import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 import com.simibubi.create.modules.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHandler;
@@ -134,10 +135,15 @@ public class CreateClient {
 
 		}
 
+		swapModels(modelRegistry, getItemModelLocation(AllItems.SAND_PAPER),
+				t -> new SandPaperModel(t));
+		swapModels(modelRegistry, getItemModelLocation(AllItems.RED_SAND_PAPER),
+				t -> new SandPaperModel(t));
+		
 		swapModels(modelRegistry, getItemModelLocation(AllItems.SYMMETRY_WAND),
 				t -> new SymmetryWandModel(t).loadPartials(event));
 		swapModels(modelRegistry, getItemModelLocation(AllItems.PLACEMENT_HANDGUN),
-				t -> new BuilderGunModel(t).loadPartials(event));
+				t -> new BlockzapperModel(t).loadPartials(event));
 		swapModels(modelRegistry, getItemModelLocation(AllItems.WRENCH), t -> new WrenchModel(t).loadPartials(event));
 		swapModels(modelRegistry, getItemModelLocation(AllItems.DEFORESTER),
 				t -> new DeforesterModel(t).loadPartials(event));
@@ -157,7 +163,7 @@ public class CreateClient {
 	public static void onModelRegistry(ModelRegistryEvent event) {
 		for (String location : SymmetryWandModel.getCustomModelLocations())
 			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
-		for (String location : BuilderGunModel.getCustomModelLocations())
+		for (String location : BlockzapperModel.getCustomModelLocations())
 			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
 		for (String location : WrenchModel.getCustomModelLocations())
 			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));

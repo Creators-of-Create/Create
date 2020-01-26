@@ -12,7 +12,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunUpgradeRecipe;
+import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperUpgradeRecipe;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -30,7 +30,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class BlockzapperUpgradeCategory implements IRecipeCategory<BuilderGunUpgradeRecipe> {
+public class BlockzapperUpgradeCategory implements IRecipeCategory<BlockzapperUpgradeRecipe> {
 
 	private static ResourceLocation ID = new ResourceLocation(Create.ID, "blockzapper_upgrade");
 	private IDrawable icon;
@@ -51,8 +51,8 @@ public class BlockzapperUpgradeCategory implements IRecipeCategory<BuilderGunUpg
 	}
 
 	@Override
-	public Class<? extends BuilderGunUpgradeRecipe> getRecipeClass() {
-		return BuilderGunUpgradeRecipe.class;
+	public Class<? extends BlockzapperUpgradeRecipe> getRecipeClass() {
+		return BlockzapperUpgradeRecipe.class;
 	}
 
 	@Override
@@ -66,13 +66,13 @@ public class BlockzapperUpgradeCategory implements IRecipeCategory<BuilderGunUpg
 	}
 
 	@Override
-	public void setIngredients(BuilderGunUpgradeRecipe recipe, IIngredients ingredients) {
+	public void setIngredients(BlockzapperUpgradeRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
 		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, BuilderGunUpgradeRecipe recipe, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayout recipeLayout, BlockzapperUpgradeRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		ShapedRecipe shape = recipe.getRecipe();
 		NonNullList<Ingredient> shapedIngredients = shape.getIngredients();
@@ -93,7 +93,7 @@ public class BlockzapperUpgradeCategory implements IRecipeCategory<BuilderGunUpg
 	}
 
 	@Override
-	public List<String> getTooltipStrings(BuilderGunUpgradeRecipe recipe, double mouseX, double mouseY) {
+	public List<String> getTooltipStrings(BlockzapperUpgradeRecipe recipe, double mouseX, double mouseY) {
 		List<String> list = new ArrayList<>();
 		if (mouseX < 91 || mouseX > 91 + 52 || mouseY < 1 || mouseY > 53)
 			return list;
@@ -106,7 +106,7 @@ public class BlockzapperUpgradeCategory implements IRecipeCategory<BuilderGunUpg
 	}
 
 	@Override
-	public void draw(BuilderGunUpgradeRecipe recipe, double mouseX, double mouseY) {
+	public void draw(BlockzapperUpgradeRecipe recipe, double mouseX, double mouseY) {
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
 		String componentName = Lang
 				.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent().name()));

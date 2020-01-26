@@ -6,7 +6,7 @@
         ],
         "key": {
             "B": {
-                "item": "create:chorus_chrome_cube"
+                "item": "create:chromatic_compound"
             },
 			"G": {
                 "item": "minecraft:glass"
@@ -20,5 +20,5 @@
 		"count": 1
 	},
 	"component": "Scope",
-	"tier": "ChorusChrome"
+	"tier": "Chromatic"
 }

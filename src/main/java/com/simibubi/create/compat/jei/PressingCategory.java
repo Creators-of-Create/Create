@@ -9,7 +9,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.press.PressingRecipe;
-import com.simibubi.create.modules.contraptions.processing.StochasticOutput;
+import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -70,7 +70,7 @@ public class PressingCategory implements IRecipeCategory<PressingRecipe> {
 		itemStacks.init(0, true, 26, 50);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
-		List<StochasticOutput> results = recipe.getRollableResults();
+		List<ProcessingOutput> results = recipe.getRollableResults();
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
 			itemStacks.init(outputIndex + 1, false, 131 + 19 * outputIndex, 50);
 			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());

@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -86,6 +87,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected Pair<BlockPos, Float> blockBreakingProgress;
 
 	private ListNBT deferredInventoryList;
+	private ItemStack spawnItemEffects;
 
 	enum State {
 		WAITING, EXPANDING, RETRACTING, DUMPING;
@@ -223,6 +225,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 			player.getAttributes().applyAttributeModifiers(attributeModifiers);
 			activate();
 			player.getAttributes().removeAttributeModifiers(attributeModifiers);
+			heldItem = player.getHeldItemMainhand();
 
 			state = State.RETRACTING;
 			timer = 1000;
@@ -339,12 +342,11 @@ public class DeployerTileEntity extends KineticTileEntity {
 		ItemUseContext itemusecontext = new ItemUseContext(player, hand, result);
 		RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, direction.getOpposite());
 
-		// Item has active use (food for instance)
+		// Item has custom active use
 		if (event.getUseItem() != DENY) {
 			ActionResultType actionresult = stack.onItemUseFirst(itemusecontext);
 			if (actionresult != ActionResultType.PASS)
 				return;
-			player.setHeldItem(hand, stack.onItemUseFinish(world, player));
 		}
 
 		boolean holdingSomething = !player.getHeldItemMainhand().isEmpty();
@@ -385,7 +387,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 			return;
 
 		// buckets create their own ray, We use a fake wall to contain the active area
-		if (item instanceof BucketItem) {
+		if (item instanceof BucketItem || item instanceof SandPaperItem) {
 			world = new WrappedWorld(world) {
 
 				@Override
@@ -415,6 +417,17 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		ActionResult<ItemStack> onItemRightClick = item.onItemRightClick(world, player, hand);
 		player.setHeldItem(hand, onItemRightClick.getResult());
+
+		CompoundNBT tag = stack.getOrCreateTag();
+		if (stack.getItem() instanceof SandPaperItem && tag.contains("Polishing"))
+			spawnItemEffects = ItemStack.read(tag.getCompound("Polishing"));
+		if (stack.isFood())
+			spawnItemEffects = stack.copy();
+
+		if (!player.getActiveItemStack().isEmpty())
+			player.setHeldItem(hand, stack.onItemUseFinish(world, player));
+
+		player.resetActiveHand();
 	}
 
 	protected void returnAndDeposit() {
@@ -504,6 +517,10 @@ public class DeployerTileEntity extends KineticTileEntity {
 		compound.putFloat("Reach", reach);
 		if (player != null)
 			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
+		if (spawnItemEffects != null) {
+			compound.put("Particle", spawnItemEffects.serializeNBT());
+			spawnItemEffects = null;
+		}
 		return super.writeToClient(compound);
 	}
 
@@ -512,6 +529,12 @@ public class DeployerTileEntity extends KineticTileEntity {
 		reach = tag.getFloat("Reach");
 		if (tag.contains("HeldItem"))
 			heldItem = ItemStack.read(tag.getCompound("HeldItem"));
+		if (tag.contains("Particle")) {
+			ItemStack particleStack = ItemStack.read(tag.getCompound("Particle"));
+			SandPaperItem.spawnParticles(VecHelper.getCenterOf(pos).add(getMovementVector().scale(2f)), particleStack,
+					this.world);
+		}
+
 		super.readClientUpdate(tag);
 	}
 

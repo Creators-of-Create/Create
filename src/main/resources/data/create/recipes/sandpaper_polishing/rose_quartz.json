@@ -1,0 +1,15 @@
+{
+    "type": "create:sandpaper_polishing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "create:rose_quartz"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "create:polished_rose_quartz",
+			"count": 1
+		}
+	]
+}

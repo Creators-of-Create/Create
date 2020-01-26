@@ -6,7 +6,7 @@
         ],
         "key": {
             "B": {
-                "item": "create:blaze_brass_cube"
+                "item": "create:brass_ingot"
             },
 			"G": {
                 "item": "minecraft:glass"
@@ -20,5 +20,5 @@
 		"count": 1
 	},
 	"component": "Scope",
-	"tier": "BlazeBrass"
+	"tier": "Brass"
 }

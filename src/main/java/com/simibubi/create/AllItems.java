@@ -9,18 +9,16 @@ import com.simibubi.create.modules.contraptions.WrenchItemRenderer;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItem;
 import com.simibubi.create.modules.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
+import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem;
+import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItemRenderer;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItem;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItemRenderer;
-import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItem;
-import com.simibubi.create.modules.curiosities.placementHandgun.BuilderGunItemRenderer;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandItemRenderer;
+import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
+import com.simibubi.create.modules.curiosities.tools.SandPaperItemRenderer;
 import com.simibubi.create.modules.gardens.TreeFertilizerItem;
-import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
 import com.simibubi.create.modules.logistics.item.filter.FilterItem;
-import com.simibubi.create.modules.logistics.management.LogisticalDialItem;
-import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.Type;
-import com.simibubi.create.modules.logistics.management.base.LogisticalControllerItem;
 import com.simibubi.create.modules.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.modules.schematics.item.SchematicItem;
 
@@ -42,47 +40,37 @@ import net.minecraftforge.registries.IForgeRegistry;
 public enum AllItems {
 
 	__MATERIALS__(),
-	ANDESITE_ALLOY_CUBE(ingredient()),
-	COPPER_INGOT(ingredient()),
-	ZINC_CUBE(ingredient()),
-	BRASS_CUBE(ingredient()),
 	COPPER_NUGGET(ingredient()),
 	ZINC_NUGGET(ingredient()),
 	BRASS_NUGGET(ingredient()),
 	IRON_SHEET(ingredient()),
 	GOLD_SHEET(ingredient()),
+	COPPER_SHEET(ingredient()),
 	BRASS_SHEET(ingredient()),
-
-	BLAZE_BRASS_CUBE(new Item(new Properties())),
-	CHORUS_CHROME_CUBE(new Item(new Properties().rarity(Rarity.UNCOMMON))),
-	SHADOW_STEEL_CUBE(new Item(new Properties().rarity(Rarity.UNCOMMON))),
-	ROSE_QUARTZ(new Item(new Properties())),
-	REFINED_ROSE_QUARTZ(new Item(new Properties())),
-	CHROMATIC_COMPOUND_CUBE(new ChromaticCompoundCubeItem(new Properties().rarity(Rarity.UNCOMMON))),
-	REFINED_RADIANCE_CUBE(new Item(new Properties().rarity(Rarity.UNCOMMON))),
+	LAPIS_PLATE(ingredient()),
 
 	CRUSHED_IRON(ingredient()),
 	CRUSHED_GOLD(ingredient()),
 	CRUSHED_COPPER(ingredient()),
 	CRUSHED_ZINC(ingredient()),
 	CRUSHED_BRASS(ingredient()),
-	
-	ELECTRON_TUBE(ingredient()),
-	CIRCUIT(ingredient()),
 
-//	BLAZING_PICKAXE(new BlazingToolItem(1, -2.8F, standardProperties(), PICKAXE)),
-//	BLAZING_SHOVEL(new BlazingToolItem(1.5F, -3.0F, standardProperties(), SHOVEL)),
-//	BLAZING_AXE(new BlazingToolItem(5.0F, -3.0F, standardProperties(), AXE)),
-//	BLAZING_SWORD(new BlazingToolItem(3, -2.4F, standardProperties(), SWORD)),
-//	
-//	ROSE_QUARTZ_PICKAXE(new RoseQuartzToolItem(1, -2.8F, standardProperties(), PICKAXE)),
-//	ROSE_QUARTZ_SHOVEL(new RoseQuartzToolItem(1.5F, -3.0F, standardProperties(), SHOVEL)),
-//	ROSE_QUARTZ_AXE(new RoseQuartzToolItem(5.0F, -3.0F, standardProperties(), AXE)),
-//	ROSE_QUARTZ_SWORD(new RoseQuartzToolItem(3, -2.4F, standardProperties(), SWORD)),
-//
-//	SHADOW_STEEL_PICKAXE(new ShadowSteelToolItem(2.5F, -2.0F, standardProperties(), PICKAXE)),
-//	SHADOW_STEEL_MATTOCK(new ShadowSteelToolItem(2.5F, -1.5F, standardProperties(), SHOVEL, AXE, HOE)),
-//	SHADOW_STEEL_SWORD(new ShadowSteelToolItem(3, -2.0F, standardProperties(), SWORD)),
+	ANDESITE_ALLOY(ingredient()),
+	COPPER_INGOT(ingredient()),
+	ZINC_INGOT(ingredient()),
+	BRASS_INGOT(ingredient()),
+	SAND_PAPER(
+			new SandPaperItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SAND_PAPER)))),
+	RED_SAND_PAPER(
+			new SandPaperItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SAND_PAPER)))),
+	OBSIDIAN_DUST(ingredient()),
+	ROSE_QUARTZ(ingredient()),
+	POLISHED_ROSE_QUARTZ(ingredient()),
+	CHROMATIC_COMPOUND(new ChromaticCompoundCubeItem(standardItemProperties().rarity(Rarity.UNCOMMON))),
+	SHADOW_STEEL(new Item(standardItemProperties().rarity(Rarity.UNCOMMON))),
+	REFINED_RADIANCE(new Item(standardItemProperties().rarity(Rarity.UNCOMMON))),
+	ELECTRON_TUBE(ingredient()),
+	INTEGRATED_CIRCUIT(ingredient()),
 
 	__GARDENS__(),
 	TREE_FERTILIZER(new TreeFertilizerItem(standardItemProperties())),
@@ -102,24 +90,25 @@ public enum AllItems {
 	GOGGLES(new GogglesItem(standardItemProperties()), true),
 
 	__LOGISTICS__(),
-	CARDBOARD_BOX_1616(new CardboardBoxItem(standardItemProperties())),
-	CARDBOARD_BOX_1612(new CardboardBoxItem(standardItemProperties())),
-	CARDBOARD_BOX_1416(new CardboardBoxItem(standardItemProperties())),
-	CARDBOARD_BOX_1410(new CardboardBoxItem(standardItemProperties())),
+//	CARDBOARD_BOX(new CardboardBoxItem(standardItemProperties())),
+//	CARDBOARD_BOX_1(new CardboardBoxItem(standardItemProperties())),
+//	CARDBOARD_BOX_2(new CardboardBoxItem(standardItemProperties())),
+//	CARDBOARD_BOX_3(new CardboardBoxItem(standardItemProperties())),
 
 	FILTER(new FilterItem(standardItemProperties()), true),
 	PROPERTY_FILTER(new FilterItem(standardItemProperties()), true),
-	LOGISTICAL_FILTER(new FilterItem(standardItemProperties())),
-	LOGISTICAL_DIAL(new LogisticalDialItem(standardItemProperties())),
-	LOGISTICAL_CONTROLLER_SUPPLY(new LogisticalControllerItem(standardItemProperties(), Type.SUPPLY)),
-	LOGISTICAL_CONTROLLER_REQUEST(new LogisticalControllerItem(standardItemProperties(), Type.REQUEST)),
-	LOGISTICAL_CONTROLLER_STORAGE(new LogisticalControllerItem(standardItemProperties(), Type.STORAGE)),
-	LOGISTICAL_CONTROLLER_CALCULATION(new LogisticalControllerItem(standardItemProperties(), Type.CALCULATION)),
-	LOGISTICAL_CONTROLLER_TRANSACTIONS(new LogisticalControllerItem(standardItemProperties(), Type.TRANSACTIONS)),
+//	LOGISTICAL_FILTER(new FilterItem(standardItemProperties())),
+//	LOGISTICAL_DIAL(new LogisticalDialItem(standardItemProperties())),
+//	LOGISTICAL_CONTROLLER_SUPPLY(new LogisticalControllerItem(standardItemProperties(), Type.SUPPLY)),
+//	LOGISTICAL_CONTROLLER_REQUEST(new LogisticalControllerItem(standardItemProperties(), Type.REQUEST)),
+//	LOGISTICAL_CONTROLLER_STORAGE(new LogisticalControllerItem(standardItemProperties(), Type.STORAGE)),
+//	LOGISTICAL_CONTROLLER_CALCULATION(new LogisticalControllerItem(standardItemProperties(), Type.CALCULATION)),
+//	LOGISTICAL_CONTROLLER_TRANSACTIONS(new LogisticalControllerItem(standardItemProperties(), Type.TRANSACTIONS)),
 
 	__CURIOSITIES__(),
 	PLACEMENT_HANDGUN(
-			new BuilderGunItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN))), true),
+			new BlockzapperItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN))),
+			true),
 	DEFORESTER(
 			new DeforesterItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.DEFORESTER))),
 			true),
@@ -197,7 +186,7 @@ public enum AllItems {
 	// Client
 
 	private enum AllItemRenderers {
-		SYMMETRY_WAND, BUILDER_GUN, WRENCH, DEFORESTER;
+		SYMMETRY_WAND, BUILDER_GUN, WRENCH, DEFORESTER, SAND_PAPER;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -217,11 +206,13 @@ public enum AllItems {
 		case SYMMETRY_WAND:
 			return new SymmetryWandItemRenderer();
 		case BUILDER_GUN:
-			return new BuilderGunItemRenderer();
+			return new BlockzapperItemRenderer();
 		case WRENCH:
 			return new WrenchItemRenderer();
 		case DEFORESTER:
 			return new DeforesterItemRenderer();
+		case SAND_PAPER:
+			return new SandPaperItemRenderer();
 		default:
 			return null;
 		}

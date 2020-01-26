@@ -1,0 +1,29 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "ABA",
+            "BSB",
+			"ABA"
+        ],
+        "key": {
+            "B": {
+                "item": "create:cogwheel"
+            },
+			"A": {
+                "item": "create:andesite_alloy"
+            },
+			"S": {
+                "tag": "minecraft:planks"
+            }
+        },
+	"result": {
+		"item": "create:gearbox",
+		"count": 2
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

@@ -1,0 +1,33 @@
+{
+    "type": "create:mechanical_crafting",
+        "pattern": [
+			" L ",
+			"RRR",
+            " C ",
+			"NNN"
+        ],
+        "key": {
+			"L": {
+                "item": "create:lapis_plate"
+            },
+            "R": {
+                "tag": "forge:dusts/redstone"
+            },
+			"C": {
+                "tag": "forge:plates/iron"
+            },
+			"N": {
+                "tag": "forge:nuggets/copper"
+            }
+        },
+	"result": {
+		"item": "create:integrated_circuit",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

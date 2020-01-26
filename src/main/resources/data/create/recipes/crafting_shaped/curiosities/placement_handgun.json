@@ -1,0 +1,29 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "  E",
+            " A ",
+            "AO "
+        ],
+        "key": {
+            "E": {
+                "item": "create:refined_radiance"
+            },
+            "O": {
+                "item": "minecraft:obsidian"
+            },
+            "A": {
+                "item": "create:andesite_alloy"
+            }
+        },
+	"result": {
+		"item": "create:placement_handgun",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "curiosities"
+		}
+	]
+}

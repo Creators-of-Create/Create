@@ -1,0 +1,32 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            " GE",
+            "LEG",
+            "OL "
+        ],
+        "key": {
+            "E": {
+                "item": "create:refined_radiance"
+            },
+			"L": {
+                "tag": "forge:dyes/light_blue"
+            },
+            "O": {
+                "item": "minecraft:obsidian"
+            },
+            "G": {
+                "tag": "forge:glass_panes/white"
+            }
+        },
+	"result": {
+		"item": "create:symmetry_wand",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "curiosities"
+		}
+	]
+}

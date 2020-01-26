@@ -7,7 +7,7 @@
         ],
         "key": {
             "B": {
-                "item": "create:blaze_brass_cube"
+                "item": "create:brass_ingot"
             },
             "E": {
                 "item": "create:placement_handgun"
@@ -18,5 +18,5 @@
 		"count": 1
 	},
 	"component": "Body",
-	"tier": "BlazeBrass"
+	"tier": "Brass"
 }

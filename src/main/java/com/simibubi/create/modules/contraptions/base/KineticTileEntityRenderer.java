@@ -3,10 +3,10 @@ package com.simibubi.create.modules.contraptions.base;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
 import com.simibubi.create.modules.contraptions.KineticDebugger;
-import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -58,7 +58,7 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 		if (KineticDebugger.isActive()) {
 			rainbowMode = true;
 			if (te.hasNetwork())
-				buffer.color(LogisticalActorTileEntity.colorFromUUID(te.getNetworkID()));
+				buffer.color(ColorHelper.colorFromUUID(te.getNetworkID()));
 			else
 				buffer.color(0xFFFFFF);
 		}

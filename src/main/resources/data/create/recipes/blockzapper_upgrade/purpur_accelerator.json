@@ -6,7 +6,7 @@
         ],
         "key": {
             "B": {
-                "item": "create:chorus_chrome_cube"
+                "item": "create:chromatic_compound"
             },
 			"S": {
                 "item": "minecraft:sugar"
@@ -20,5 +20,5 @@
 		"count": 1
 	},
 	"component": "Accelerator",
-	"tier": "ChorusChrome"
+	"tier": "Chromatic"
 }

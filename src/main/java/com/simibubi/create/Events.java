@@ -44,16 +44,16 @@ public class Events {
 	public static void onLoadWorld(WorldEvent.Load event) {
 		IWorld world = event.getWorld();
 		Create.redstoneLinkNetworkHandler.onLoadWorld(world);
-		Create.logisticalNetworkHandler.onLoadWorld(world);
 		Create.torquePropagator.onLoadWorld(world);
+//		Create.logisticalNetworkHandler.onLoadWorld(world);
 	}
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		IWorld world = event.getWorld();
 		Create.redstoneLinkNetworkHandler.onUnloadWorld(world);
-		Create.logisticalNetworkHandler.onUnloadWorld(world);
 		Create.torquePropagator.onUnloadWorld(world);
+//		Create.logisticalNetworkHandler.onUnloadWorld(world);
 	}
 
 	@SubscribeEvent

@@ -17,7 +17,6 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
-import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -70,8 +69,8 @@ public class ExtractorTileEntity extends SmartTileEntity {
 			entityPos = entityPos.add(0, .5, 0);
 
 		if (stack.getItem() instanceof CardboardBoxItem) {
-			entityIn = new CardboardBoxEntity(world, entityPos, stack, facing.getOpposite());
-			world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .25f, .05f);
+//			entityIn = new CardboardBoxEntity(world, entityPos, stack, facing.getOpposite());
+//			world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .25f, .05f);
 
 		} else {
 			entityIn = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, stack);

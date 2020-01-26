@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
+import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
@@ -163,7 +163,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 			return false;
 		ItemStack heldItem = player.getHeldItem(handIn);
 		boolean isShaft = heldItem.getItem() == AllBlocks.SHAFT.get().asItem();
-		boolean isCasing = heldItem.getItem() == AllBlocks.LOGISTICAL_CASING.get().asItem();
+		boolean isCasing = heldItem.getItem() == AllBlocks.BRASS_CASING.get().asItem();
 		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
 		boolean isHand = heldItem.isEmpty() && handIn == Hand.MAIN_HAND;
 
@@ -238,7 +238,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 				return ActionResultType.SUCCESS;
 			world.setBlockState(context.getPos(), state.with(CASING, false), 3);
 			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.LOGISTICAL_CASING.block));
+				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.BRASS_CASING.block));
 			return ActionResultType.SUCCESS;
 		}
 

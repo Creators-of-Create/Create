@@ -1,0 +1,23 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+	"parent": "block/block",
+    "textures": {
+        "particle": "create:entity/cardboard_box/particle",
+        "cardboard_box_1612": "create:entity/cardboard_box/box_1612"
+    },
+    "elements": [
+        {
+            "name": "Box",
+            "from": [ 0, 0, 0 ], 
+            "to": [ 16, 12, 16 ], 
+            "faces": {
+                "north": { "texture": "#cardboard_box_1612", "uv": [ 8, 8, 16, 14 ] },
+                "east": { "texture": "#cardboard_box_1612", "uv": [ 0, 2, 8, 8 ] },
+                "south": { "texture": "#cardboard_box_1612", "uv": [ 8, 8, 16, 14 ] },
+                "west": { "texture": "#cardboard_box_1612", "uv": [ 0, 2, 8, 8 ] },
+                "up": { "texture": "#cardboard_box_1612", "uv": [ 8, 0, 16, 8 ] },
+                "down": { "texture": "#cardboard_box_1612", "uv": [ 0, 8, 8, 16 ] }
+            }
+        }
+    ]
+}

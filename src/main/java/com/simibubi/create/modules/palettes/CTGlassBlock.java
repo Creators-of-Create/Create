@@ -1,10 +1,10 @@
 package com.simibubi.create.modules.palettes;
 
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
+import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
 import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.block.GlassBlock;

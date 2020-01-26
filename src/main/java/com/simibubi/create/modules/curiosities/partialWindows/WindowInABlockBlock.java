@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
+import com.simibubi.create.foundation.block.IWithTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

@@ -1,0 +1,22 @@
+{
+    "type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "create:crushed_zinc"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "create:zinc_nugget",
+			"count": 10,
+			"chance": 1
+		},
+		{
+			"item": "create:zinc_nugget",
+			"count": 5,
+			"chance": 0.5
+		}
+	],
+	"processingTime": 100
+}

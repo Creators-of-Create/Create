@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
@@ -27,12 +26,12 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 	public T read(ResourceLocation recipeId, JsonObject json) {
 		String s = JSONUtils.getString(json, "group", "");
 
-		List<Ingredient> ingredients = new ArrayList<>();
+		List<ProcessingIngredient> ingredients = new ArrayList<>();
 		for (JsonElement e : JSONUtils.getJsonArray(json, "ingredients")) {
-			ingredients.add(Ingredient.deserialize(e));
+			ingredients.add(ProcessingIngredient.parse(e.getAsJsonObject()));
 		}
 
-		List<StochasticOutput> results = new ArrayList<>();
+		List<ProcessingOutput> results = new ArrayList<>();
 		for (JsonElement e : JSONUtils.getJsonArray(json, "results")) {
 			String s1 = JSONUtils.getString(e.getAsJsonObject().get("item"), "item");
 			int i = JSONUtils.getInt(e.getAsJsonObject().get("count"), "count");
@@ -40,7 +39,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 			if (JSONUtils.hasField((JsonObject) e, "chance"))
 				chance = JSONUtils.getFloat(e.getAsJsonObject().get("chance"), "chance");
 			ItemStack itemstack = new ItemStack(Registry.ITEM.getOrDefault(new ResourceLocation(s1)), i);
-			results.add(new StochasticOutput(itemstack, chance));
+			results.add(new ProcessingOutput(itemstack, chance));
 		}
 
 		int duration = -1;
@@ -53,15 +52,15 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 	public T read(ResourceLocation recipeId, PacketBuffer buffer) {
 		String s = buffer.readString(32767);
 
-		List<Ingredient> ingredients = new ArrayList<>();
+		List<ProcessingIngredient> ingredients = new ArrayList<>();
 		int ingredientCount = buffer.readInt();
 		for (int i = 0; i < ingredientCount; i++)
-			ingredients.add(Ingredient.read(buffer));
+			ingredients.add(ProcessingIngredient.parse(buffer));
 
-		List<StochasticOutput> results = new ArrayList<>();
+		List<ProcessingOutput> results = new ArrayList<>();
 		int outputCount = buffer.readInt();
 		for (int i = 0; i < outputCount; i++)
-			results.add(StochasticOutput.read(buffer));
+			results.add(ProcessingOutput.read(buffer));
 
 		int duration = buffer.readInt();
 
@@ -81,7 +80,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 	}
 
 	public interface IRecipeFactory<T extends ProcessingRecipe<?>> {
-		T create(ResourceLocation id, String group, List<Ingredient> ingredients, List<StochasticOutput> results,
+		T create(ResourceLocation id, String group, List<ProcessingIngredient> ingredients, List<ProcessingOutput> results,
 				int duration);
 	}
 

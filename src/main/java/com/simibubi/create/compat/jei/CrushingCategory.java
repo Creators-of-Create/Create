@@ -9,7 +9,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingRecipe;
-import com.simibubi.create.modules.contraptions.processing.StochasticOutput;
+import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -69,7 +69,7 @@ public class CrushingCategory implements IRecipeCategory<CrushingRecipe> {
 		itemStacks.init(0, true, 50, 2);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
-		List<StochasticOutput> results = recipe.getRollableResults();
+		List<ProcessingOutput> results = recipe.getRollableResults();
 		int size = results.size();
 		int offset = -size * 19 / 2;
 		for (int outputIndex = 0; outputIndex < size; outputIndex++) {
@@ -82,7 +82,7 @@ public class CrushingCategory implements IRecipeCategory<CrushingRecipe> {
 
 	@Override
 	public void draw(CrushingRecipe recipe, double mouseX, double mouseY) {
-		List<StochasticOutput> results = recipe.getRollableResults();
+		List<ProcessingOutput> results = recipe.getRollableResults();
 		ScreenResources.JEI_SLOT.draw(50, 2);
 		ScreenResources.JEI_DOWN_ARROW.draw(72, 7);
 

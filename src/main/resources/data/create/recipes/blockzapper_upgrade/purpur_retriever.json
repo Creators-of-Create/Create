@@ -6,7 +6,7 @@
         ],
         "key": {
             "B": {
-                "item": "create:chorus_chrome_cube"
+                "item": "create:chromatic_compound"
             },
 			"R": {
                 "item": "minecraft:ender_pearl"
@@ -20,5 +20,5 @@
 		"count": 1
 	},
 	"component": "Retriever",
-	"tier": "ChorusChrome"
+	"tier": "Chromatic"
 }

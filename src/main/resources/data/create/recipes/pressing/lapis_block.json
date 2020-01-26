@@ -1,0 +1,16 @@
+{
+    "type": "create:pressing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:lapis_block"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "create:lapis_plate",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}

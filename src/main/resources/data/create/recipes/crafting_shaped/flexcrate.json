@@ -1,0 +1,29 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "ABA",
+            "BSB",
+			"ABA"
+        ],
+        "key": {
+            "B": {
+                "tag": "minecraft:planks"
+            },
+			"A": {
+                "item": "create:brass_sheet"
+            },
+			"S": {
+                "item": "minecraft:chest"
+            }
+        },
+	"result": {
+		"item": "create:flexcrate",
+		"count": 2
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "logistics"
+		}
+	]
+}

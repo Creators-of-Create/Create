@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "create:crushed_iron",
+    "create:crushed_gold",
+    "create:crushed_brass",
+    "create:crushed_zinc",
+    "create:crushed_copper"
+  ]
+}

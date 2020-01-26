@@ -1,10 +1,10 @@
 package com.simibubi.create.modules.contraptions;
 
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
+import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
 import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

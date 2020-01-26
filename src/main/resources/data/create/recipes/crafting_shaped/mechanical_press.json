@@ -1,0 +1,35 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "APA",
+            "BCB",
+			"AIA"
+        ],
+        "key": {
+            "B": {
+                "tag": "minecraft:planks"
+            },
+			"A": {
+                "item": "create:andesite_alloy"
+            },
+			"P": {
+                "item": "create:piston_pole"
+            },
+			"I": {
+                "item": "minecraft:iron_block"
+            },
+			"C": {
+                "item": "create:cogwheel"
+            }
+        },
+	"result": {
+		"item": "create:mechanical_press",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

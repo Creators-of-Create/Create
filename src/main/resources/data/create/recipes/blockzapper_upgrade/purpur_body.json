@@ -7,7 +7,7 @@
         ],
         "key": {
             "B": {
-                "item": "create:chorus_chrome_cube"
+                "item": "create:chromatic_compound"
             },
             "E": {
                 "item": "create:placement_handgun"
@@ -18,5 +18,5 @@
 		"count": 1
 	},
 	"component": "Body",
-	"tier": "ChorusChrome"
+	"tier": "Chromatic"
 }

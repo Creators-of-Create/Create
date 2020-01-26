@@ -6,10 +6,10 @@
         ],
         "key": {
             "B": {
-                "item": "create:blaze_brass_cube"
+                "item": "create:brass_ingot"
             },
 			"R": {
-                "item": "minecraft:end_rod"
+                "item": "create:refined_radiance"
             },
             "E": {
                 "item": "create:placement_handgun"
@@ -20,5 +20,5 @@
 		"count": 1
 	},
 	"component": "Amplifier",
-	"tier": "BlazeBrass"
+	"tier": "Brass"
 }

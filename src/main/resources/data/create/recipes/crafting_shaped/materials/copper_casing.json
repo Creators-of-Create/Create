@@ -1,0 +1,29 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "AAA",
+            "CSC",
+			"AAA"
+        ],
+        "key": {
+			"A": {
+                "tag": "minecraft:planks"
+            },
+			"S": {
+                "tag": "minecraft:logs"
+            },
+			"C": {
+				"tag": "forge:plates/copper"
+			}
+        },
+	"result": {
+		"item": "create:copper_casing",
+		"count": 4
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

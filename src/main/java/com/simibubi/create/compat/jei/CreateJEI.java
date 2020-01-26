@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.jei;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
@@ -12,7 +13,7 @@ import com.simibubi.create.compat.jei.BlockCuttingCategory.CondensedBlockCutting
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.modules.contraptions.processing.StochasticOutput;
+import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateScreen;
 import com.simibubi.create.modules.schematics.block.SchematicannonScreen;
 
@@ -171,14 +172,27 @@ public class CreateJEI implements IModPlugin {
 		return byType;
 	}
 
-	static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<StochasticOutput> results) {
+	static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results) {
 		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 			if (input)
 				return;
-			StochasticOutput output = results.get(slotIndex - 1);
+			ProcessingOutput output = results.get(slotIndex - 1);
 			if (output.getChance() != 1)
 				tooltip.add(1, TextFormatting.GOLD
 						+ Lang.translate("recipe.processing.chance", (int) (output.getChance() * 100)));
+		});
+	}
+
+	static void addCatalystTooltip(IGuiItemStackGroup itemStacks, Map<Integer, Float> catalystIndices) {
+		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+			if (!input)
+				return;
+			if (!catalystIndices.containsKey(slotIndex))
+				return;
+			Float chance = catalystIndices.get(slotIndex);
+			tooltip.add(1, TextFormatting.YELLOW + Lang.translate("recipe.processing.catalyst"));
+			tooltip.add(2, TextFormatting.GOLD
+					+ Lang.translate("recipe.processing.chanceToReturn", (int) (chance.floatValue() * 100)));
 		});
 	}
 

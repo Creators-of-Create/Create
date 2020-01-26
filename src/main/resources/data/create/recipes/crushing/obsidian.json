@@ -1,0 +1,22 @@
+{
+    "type": "create:crushing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "minecraft:obsidian"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "create:obsidian_dust",
+			"count": 1,
+			"chance": 1
+		},
+		{
+			"item": "minecraft:obsidian",
+			"count": 1,
+			"chance": 0.875
+		}
+	],
+	"processingTime": 500
+}

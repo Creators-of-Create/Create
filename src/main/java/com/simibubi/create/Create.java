@@ -1,18 +1,14 @@
 package com.simibubi.create;
 
-import com.simibubi.create.foundation.command.CreateCommand;
-import com.simibubi.create.foundation.command.ServerLagger;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.simibubi.create.foundation.command.CreateCommand;
+import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.world.OreGeneration;
 import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
-import com.simibubi.create.modules.logistics.management.LogisticalNetworkHandler;
-import com.simibubi.create.modules.logistics.transport.villager.LogisticianHandler;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 
 import net.minecraft.block.Block;
@@ -25,6 +21,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.village.PointOfInterestType;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -32,6 +29,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(Create.ID)
@@ -45,10 +43,10 @@ public class Create {
 	public static ItemGroup creativeTab = new CreateItemGroup();
 	public static ServerSchematicLoader schematicReceiver;
 	public static RedstoneLinkNetworkHandler redstoneLinkNetworkHandler;
-	public static LogisticalNetworkHandler logisticalNetworkHandler;
 	public static TorquePropagator torquePropagator;
-	public static LogisticianHandler logisticianHandler;
 	public static ServerLagger lagger;
+//	public static LogisticalNetworkHandler logisticalNetworkHandler;
+//	public static LogisticianHandler logisticianHandler;
 
 	public static ModConfig config;
 
@@ -79,7 +77,7 @@ public class Create {
 	public static void init(final FMLCommonSetupEvent event) {
 		schematicReceiver = new ServerSchematicLoader();
 		redstoneLinkNetworkHandler = new RedstoneLinkNetworkHandler();
-		logisticalNetworkHandler = new LogisticalNetworkHandler();
+//		logisticalNetworkHandler = new LogisticalNetworkHandler();
 		torquePropagator = new TorquePropagator();
 		lagger = new ServerLagger();
 
@@ -92,11 +90,11 @@ public class Create {
 	}
 
 	public static void registerVillagerProfessions(RegistryEvent.Register<VillagerProfession> event) {
-		LogisticianHandler.registerVillagerProfessions(event);
+//		LogisticianHandler.registerVillagerProfessions(event);
 	}
 
 	public static void registerPointsOfInterest(RegistryEvent.Register<PointOfInterestType> event) {
-		LogisticianHandler.registerPointsOfInterest(event);
+//		LogisticianHandler.registerPointsOfInterest(event);
 	}
 
 	public static void createConfigs(ModConfig.ModConfigEvent event) {

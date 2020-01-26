@@ -6,7 +6,7 @@
         ],
         "key": {
             "B": {
-                "item": "create:blaze_brass_cube"
+                "item": "create:brass_ingot"
             },
 			"R": {
                 "item": "minecraft:redstone"
@@ -20,5 +20,5 @@
 		"count": 1
 	},
 	"component": "Retriever",
-	"tier": "BlazeBrass"
+	"tier": "Brass"
 }

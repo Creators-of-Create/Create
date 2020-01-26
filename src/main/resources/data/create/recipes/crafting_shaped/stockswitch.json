@@ -1,0 +1,32 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "GAG",
+            "PRP",
+			"GPG"
+        ],
+        "key": {
+			"P": {
+                "tag": "minecraft:planks"
+            },
+			"A": {
+                "item": "minecraft:heavy_weighted_pressure_plate"
+            },
+			"R": {
+                "item": "minecraft:comparator"
+            },
+			"G": {
+                "item": "create:brass_sheet"
+            }
+        },
+	"result": {
+		"item": "create:stockswitch",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "logistics"
+		}
+	]
+}

@@ -1,66 +1,71 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
-    "ambientocclusion": true,
-	"display": {
-		"firstperson_righthand": {
-            "rotation": [ 10, 0, 10 ],
-            "translation": [ 1, 4, 1],
-            "scale":[ 1, 1, 1 ]
-        },
-		"thirdperson_righthand": {
-            "rotation": [ 15, 0, 0 ],
-            "translation": [ 0, 4, -2.5],
-            "scale":[ 0.8, 0.8, 0.8 ]
-        },
-        "gui": {
-            "rotation": [ 42, 315, 0 ],
-            "translation": [ -1, 3, 0],
-            "scale":[ 1, 1, 1 ]
-        },
-		"ground": {
-            "rotation": [ 0, 0, 0 ],
-            "translation": [ 0, 4.2, 0],
-            "scale":[ 0.4, 0.4, 0.4 ]
-        },
-        "fixed": {
-            "rotation": [ 0, 90, 0 ],
-            "translation": [ 0, -5, 0 ],
-            "scale": [ 1, 1, 1 ]
-        }
-    },
-    "textures": {
-        "smooth_stone_slab_side": "block/smooth_stone_slab_side",
-        "4": "minecraft:block/obsidian",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "block/obsidian",
+		"1": "block/smooth_stone_slab_side",
 		"particle": "block/obsidian"
-    },
-    "elements": [
-        {
-            "name": "Grip",
-            "from": [ 7.1, 1, 12 ], 
-            "to": [ 8.9, 5, 15 ], 
-            "rotation": { "origin": [ 8, 2, 14 ], "axis": "x", "angle": -22.5 },
-            "faces": {
-                "north": { "texture": "#smooth_stone_slab_side", "uv": [ 5, 7, 6.8, 11 ] },
-                "east": { "texture": "#smooth_stone_slab_side", "uv": [ 13, 7, 16, 11 ] },
-                "south": { "texture": "#smooth_stone_slab_side", "uv": [ 7, 7, 8.8, 11 ] },
-                "west": { "texture": "#smooth_stone_slab_side", "uv": [ 16, 7, 13, 11 ] },
-                "up": { "texture": "#smooth_stone_slab_side", "uv": [ 5, 2, 6.8, 5 ] },
-                "down": { "texture": "#smooth_stone_slab_side", "uv": [ 7, 11, 8.8, 14 ] }
-            }
-        },
-        {
-            "name": "Trigger",
-            "from": [ 7.5, 3, 11 ], 
-            "to": [ 8.5, 6, 13 ], 
-            "rotation": { "origin": [ 8, 2, 14 ], "axis": "x", "angle": -22.5 },
-            "faces": {
-                "north": { "texture": "#4", "uv": [ 6, 4, 7, 7 ] },
-                "east": { "texture": "#4", "uv": [ 6, 4, 8, 7 ] },
-                "south": { "texture": "#4", "uv": [ 6, 4, 7, 7 ] },
-                "west": { "texture": "#4", "uv": [ 5, 4, 7, 7 ] },
-                "up": { "texture": "#4", "uv": [ 6, 6, 7, 8 ] },
-                "down": { "texture": "#4", "uv": [ 5, 6, 6, 8 ] }
-            }
-        }
-    ]
+	},
+	"elements": [
+		{
+			"name": "Grip",
+			"from": [7.1, 1, 12],
+			"to": [8.9, 5, 15],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 2, 14]},
+			"faces": {
+				"north": {"uv": [5, 7, 6.8, 11], "texture": "#1"},
+				"east": {"uv": [13, 7, 16, 11], "texture": "#1"},
+				"south": {"uv": [7, 7, 8.8, 11], "texture": "#1"},
+				"west": {"uv": [16, 7, 13, 11], "texture": "#1"},
+				"up": {"uv": [5, 2, 6.8, 5], "texture": "#1"},
+				"down": {"uv": [7, 11, 8.8, 14], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Trigger",
+			"from": [7.5, 3, 11],
+			"to": [8.5, 6, 13],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 2, 14]},
+			"faces": {
+				"north": {"uv": [6, 4, 7, 7], "texture": "#0"},
+				"east": {"uv": [6, 4, 8, 7], "texture": "#0"},
+				"south": {"uv": [6, 4, 7, 7], "texture": "#0"},
+				"west": {"uv": [5, 4, 7, 7], "texture": "#0"},
+				"up": {"uv": [6, 6, 7, 8], "texture": "#0"},
+				"down": {"uv": [5, 6, 6, 8], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [1, 0, 0],
+			"translation": [0, 4, -2.5],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [1, 0, 0],
+			"translation": [0, 4, -2.5],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"firstperson_righthand": {
+			"rotation": [10, 0, 10],
+			"translation": [1, 4, 1]
+		},
+		"firstperson_lefthand": {
+			"rotation": [10, 0, 10],
+			"translation": [1, 4, 1]
+		},
+		"ground": {
+			"rotation": [0, 0, 90],
+			"translation": [-2.25, -1, -0.75],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"translation": [-0.5, 3.5, 0]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [-1.25, 4.25, -1]
+		}
+	}
 }

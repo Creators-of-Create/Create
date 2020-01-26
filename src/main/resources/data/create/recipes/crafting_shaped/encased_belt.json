@@ -1,0 +1,29 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "ABA",
+            "BSB",
+			"ABA"
+        ],
+        "key": {
+            "B": {
+                "tag": "minecraft:planks"
+            },
+			"A": {
+                "item": "create:andesite_alloy"
+            },
+			"S": {
+                "item": "create:belt_connector"
+            }
+        },
+	"result": {
+		"item": "create:encased_belt",
+		"count": 2
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

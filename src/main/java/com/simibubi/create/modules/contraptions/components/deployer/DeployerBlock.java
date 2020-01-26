@@ -15,8 +15,8 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -55,7 +55,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IWithT
 		}
 		return super.onWrenched(state, context);
 	}
-	
+
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
@@ -63,31 +63,34 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IWithT
 				te.player.inventory.dropAllItems();
 				te.overflowItems.forEach(itemstack -> te.player.dropItem(itemstack, true, false));
 			});
-			
-	         worldIn.removeTileEntity(pos);
-	      }
+
+			worldIn.removeTileEntity(pos);
+		}
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-		ItemStack held = player.getHeldItem(handIn);
-		if (AllItems.WRENCH.typeOf(held))
+		ItemStack heldByPlayer = player.getHeldItem(handIn).copy();
+		if (AllItems.WRENCH.typeOf(heldByPlayer))
 			return false;
-		
-		if (hit.getFace() == state.get(FACING)) {
-			if (!worldIn.isRemote)
-				withTileEntityDo(worldIn, pos, te -> {
-					ItemStack heldItemMainhand = te.player.getHeldItemMainhand();
-					if (heldItemMainhand.isEmpty())
-						return;
-					player.inventory.placeItemBackInInventory(worldIn, heldItemMainhand);
-					te.player.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
-					te.sendData();
-				});
+
+		if (hit.getFace() != state.get(FACING))
+			return false;
+		if (worldIn.isRemote)
 			return true;
-		}
-		return false;
+
+		withTileEntityDo(worldIn, pos, te -> {
+			ItemStack heldByDeployer = te.player.getHeldItemMainhand().copy();
+			if (heldByDeployer.isEmpty() && heldByPlayer.isEmpty())
+				return;
+
+			player.setHeldItem(handIn, heldByDeployer);
+			te.player.setHeldItem(Hand.MAIN_HAND, heldByPlayer);
+			te.sendData();
+		});
+
+		return true;
 	}
 
 	public static Vec3d getFilterSlotPosition(BlockState state) {

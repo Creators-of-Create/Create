@@ -1,0 +1,16 @@
+{
+    "type": "create:cutting",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "create:andesite_alloy"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "create:shaft",
+			"count": 6
+		}
+	],
+	"processingTime": 200
+}

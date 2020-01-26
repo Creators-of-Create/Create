@@ -1,0 +1,22 @@
+{
+    "type": "create:mixing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "create:crushed_copper"
+    	},
+		{
+    		"item": "create:crushed_zinc"
+    	},
+		{
+			"item": "minecraft:blaze_rod",
+			"return_chance": 0.94
+		}
+    ], 
+	"results": [
+		{
+			"item": "create:crushed_brass",
+			"count": 2
+		}
+	]
+}
