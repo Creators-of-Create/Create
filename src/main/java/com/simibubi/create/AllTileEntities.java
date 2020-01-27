@@ -129,15 +129,6 @@ public enum AllTileEntities {
 	BELT_FUNNEL(FunnelTileEntity::new, AllBlocks.BELT_FUNNEL, AllBlocks.VERTICAL_FUNNEL),
 	ENTITY_DETECTOR(BeltObserverTileEntity::new, AllBlocks.ENTITY_DETECTOR),
 	FLEXPEATER(FlexpeaterTileEntity::new, AllBlocks.FLEXPEATER),
-//	LOGISTICAL_CASING(LogisticalCasingTileEntity::new, AllBlocks.LOGISTICAL_CASING),
-//	LOGISTICAL_SUPPLY_CONTROLLER(SupplyTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
-//	LOGISTICAL_REQUEST_CONTROLLER(RequestTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
-//	LOGISTICAL_STORAGE_CONTROLLER(StorageTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
-//	LOGISTICAL_CALCULATION_CONTROLLER(CalculationTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
-//	LOGISTICAL_TRANSATIONS_CONTROLLER(TransactionsTileEntity::new, AllBlocks.LOGISTICAL_CONTROLLER),
-//	LOGISTICAL_INDEX(LogisticalIndexTileEntity::new, AllBlocks.LOGISTICAL_INDEX),
-//	LOGISTICIANS_TABLE(LogisticiansTableTileEntity::new, AllBlocks.LOGISTICIANS_TABLE),
-//	PACKAGE_FUNNEL(PackageFunnelTileEntity::new, AllBlocks.PACKAGE_FUNNEL),
 
 	// Curiosities
 	WINDOW_IN_A_BLOCK(WindowInABlockTileEntity::new, AllBlocks.WINDOW_IN_A_BLOCK),

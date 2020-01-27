@@ -36,19 +36,15 @@ public enum AllPackets {
 	CONFIGURE_CHASSIS(ConfigureChassisPacket.class, ConfigureChassisPacket::new),
 	CONFIGURE_MOTOR(ConfigureMotorPacket.class, ConfigureMotorPacket::new),
 	CONFIGURE_FLEXPEATER(ConfigureFlexpeaterPacket.class, ConfigureFlexpeaterPacket::new),
-//	CONFIGURE_LOGISTICAL_CONTROLLER(LogisticalControllerConfigurationPacket.class,
-//			LogisticalControllerConfigurationPacket::new),
 	CONFIGURE_MIXER(ConfigureMixerPacket.class, ConfigureMixerPacket::new),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new),
-//	INDEX_ORDER_REQUEST(IndexOrderRequest.class, IndexOrderRequest::new),
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new),
 	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),
 	BEAM_EFFECT(BlockzapperBeamPacket.class, BlockzapperBeamPacket::new),
-//	INDEX_CONTAINER_UPDATE(IndexContainerUpdatePacket.class, IndexContainerUpdatePacket::new),
 
 	;
 

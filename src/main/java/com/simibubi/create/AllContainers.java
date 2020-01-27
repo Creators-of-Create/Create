@@ -30,9 +30,6 @@ public enum AllContainers {
 	SCHEMATIC_TABLE(SchematicTableContainer::new),
 	SCHEMATICANNON(SchematicannonContainer::new),
 	FLEXCRATE(FlexcrateContainer::new),
-//	LOGISTICAL_INDEX(LogisticalIndexContainer::new),
-//	LOGISTICAL_CONTROLLER(LogisticalInventoryControllerContainer::new),
-
 	FILTER(FilterContainer::new),
 	ATTRIBUTE_FILTER(AttributeFilterContainer::new),
 

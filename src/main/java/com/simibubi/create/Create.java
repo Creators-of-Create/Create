@@ -13,17 +13,14 @@ import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.village.PointOfInterestType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -45,8 +42,6 @@ public class Create {
 	public static RedstoneLinkNetworkHandler redstoneLinkNetworkHandler;
 	public static TorquePropagator torquePropagator;
 	public static ServerLagger lagger;
-//	public static LogisticalNetworkHandler logisticalNetworkHandler;
-//	public static LogisticianHandler logisticianHandler;
 
 	public static ModConfig config;
 
@@ -61,8 +56,6 @@ public class Create {
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipes::register);
 		modEventBus.addGenericListener(TileEntityType.class, AllTileEntities::register);
 		modEventBus.addGenericListener(ContainerType.class, AllContainers::register);
-		modEventBus.addGenericListener(VillagerProfession.class, Create::registerVillagerProfessions);
-		modEventBus.addGenericListener(PointOfInterestType.class, Create::registerPointsOfInterest);
 		modEventBus.addGenericListener(EntityType.class, AllEntities::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticles::register);
 
@@ -77,7 +70,6 @@ public class Create {
 	public static void init(final FMLCommonSetupEvent event) {
 		schematicReceiver = new ServerSchematicLoader();
 		redstoneLinkNetworkHandler = new RedstoneLinkNetworkHandler();
-//		logisticalNetworkHandler = new LogisticalNetworkHandler();
 		torquePropagator = new TorquePropagator();
 		lagger = new ServerLagger();
 
@@ -87,14 +79,6 @@ public class Create {
 
 	public static void serverStarting(FMLServerStartingEvent event){
 		new CreateCommand(event.getCommandDispatcher());
-	}
-
-	public static void registerVillagerProfessions(RegistryEvent.Register<VillagerProfession> event) {
-//		LogisticianHandler.registerVillagerProfessions(event);
-	}
-
-	public static void registerPointsOfInterest(RegistryEvent.Register<PointOfInterestType> event) {
-//		LogisticianHandler.registerPointsOfInterest(event);
 	}
 
 	public static void createConfigs(ModConfig.ModConfigEvent event) {

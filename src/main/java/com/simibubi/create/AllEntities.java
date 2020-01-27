@@ -18,7 +18,6 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public enum AllEntities {
 
-//	CARDBOARD_BOX(CardboardBoxEntity::new, 30, 3, CardboardBoxEntity::build),
 	CONTRAPTION(ContraptionEntity::new, 30, 3, ContraptionEntity::build),
 
 	;

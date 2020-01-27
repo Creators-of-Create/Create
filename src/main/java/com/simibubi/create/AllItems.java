@@ -94,20 +94,8 @@ public enum AllItems {
 	GOGGLES(new GogglesItem(standardItemProperties()), true),
 
 	__LOGISTICS__(),
-//	CARDBOARD_BOX(new CardboardBoxItem(standardItemProperties())),
-//	CARDBOARD_BOX_1(new CardboardBoxItem(standardItemProperties())),
-//	CARDBOARD_BOX_2(new CardboardBoxItem(standardItemProperties())),
-//	CARDBOARD_BOX_3(new CardboardBoxItem(standardItemProperties())),
-
 	FILTER(new FilterItem(standardItemProperties()), true),
 	PROPERTY_FILTER(new FilterItem(standardItemProperties()), true),
-//	LOGISTICAL_FILTER(new FilterItem(standardItemProperties())),
-//	LOGISTICAL_DIAL(new LogisticalDialItem(standardItemProperties())),
-//	LOGISTICAL_CONTROLLER_SUPPLY(new LogisticalControllerItem(standardItemProperties(), Type.SUPPLY)),
-//	LOGISTICAL_CONTROLLER_REQUEST(new LogisticalControllerItem(standardItemProperties(), Type.REQUEST)),
-//	LOGISTICAL_CONTROLLER_STORAGE(new LogisticalControllerItem(standardItemProperties(), Type.STORAGE)),
-//	LOGISTICAL_CONTROLLER_CALCULATION(new LogisticalControllerItem(standardItemProperties(), Type.CALCULATION)),
-//	LOGISTICAL_CONTROLLER_TRANSACTIONS(new LogisticalControllerItem(standardItemProperties(), Type.TRANSACTIONS)),
 
 	__CURIOSITIES__(),
 	PLACEMENT_HANDGUN(
