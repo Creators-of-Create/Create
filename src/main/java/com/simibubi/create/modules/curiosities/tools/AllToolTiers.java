@@ -5,14 +5,15 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllItems;
 
 import net.minecraft.item.IItemTier;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.LazyLoadBase;
 
 public enum AllToolTiers implements IItemTier {
 
-//	BLAZING(3, 750, 10.0F, 2.5F, 16, () -> {
-//		return Ingredient.fromItems(AllItems.BLAZE_BRASS_CUBE.item);
-//	}),
+	BLAZING(3, 750, 10.0F, 2.5F, 16, () -> {
+		return Ingredient.fromItems(Items.BLAZE_ROD);
+	}),
 
 	ROSE_QUARTZ(3, 1644, 7.0F, 2.0F, 24, () -> {
 		return Ingredient.fromItems(AllItems.POLISHED_ROSE_QUARTZ.item);

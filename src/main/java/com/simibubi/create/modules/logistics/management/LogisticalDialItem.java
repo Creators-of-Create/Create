@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
+import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.modules.logistics.management.base.LogisticalActorTileEntity;
 
 import net.minecraft.client.renderer.color.IItemColor;
@@ -28,7 +29,7 @@ public class LogisticalDialItem extends Item implements IItemWithColorHandler, I
 	public IItemColor getColorHandler() {
 		return (stack, layer) -> {
 			if (layer == 1 && stack.getOrCreateTag().contains("NetworkIDLeast"))
-				return LogisticalActorTileEntity.colorFromUUID(stack.getTag().getUniqueId("NetworkID"));
+				return ColorHelper.colorFromUUID(stack.getTag().getUniqueId("NetworkID"));
 			return 0xFFFFFF;
 		};
 	}

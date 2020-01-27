@@ -105,13 +105,13 @@ public class CardboardBoxEntity extends LivingEntity implements IEntityAdditiona
 	public EntitySize getSize(Pose poseIn) {
 		if (box == null)
 			return super.getSize(poseIn);
-		if (AllItems.CARDBOARD_BOX_1410.typeOf(box))
+		if (AllItems.CARDBOARD_BOX.typeOf(box))
 			return new EntitySize(14 / 16f, 10 / 16f, true);
-		if (AllItems.CARDBOARD_BOX_1416.typeOf(box))
+		if (AllItems.CARDBOARD_BOX_1.typeOf(box))
 			return new EntitySize(14 / 16f, 1f, true);
-		if (AllItems.CARDBOARD_BOX_1612.typeOf(box))
+		if (AllItems.CARDBOARD_BOX_2.typeOf(box))
 			return new EntitySize(1f, 12 / 16f, true);
-		if (AllItems.CARDBOARD_BOX_1616.typeOf(box))
+		if (AllItems.CARDBOARD_BOX_3.typeOf(box))
 			return new EntitySize(1f, 1f, true);
 
 		return super.getSize(poseIn);

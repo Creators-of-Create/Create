@@ -87,7 +87,7 @@ public class LogisticalInventoryControllerScreen
 		controllerLightState = AllBlocks.LOGISTICAL_CONTROLLER_INDICATOR.get().getDefaultState()
 				.with(FACING, controllerState.get(FACING)).with(TYPE, controllerState.get(TYPE));
 		nameTagItem = new ItemStack(Items.NAME_TAG);
-		boxItem = AllItems.CARDBOARD_BOX_1410.asStack();
+		boxItem = AllItems.CARDBOARD_BOX.asStack();
 	}
 
 	@Override

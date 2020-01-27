@@ -9,6 +9,8 @@ import com.simibubi.create.foundation.world.OreGeneration;
 import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
+import com.simibubi.create.modules.logistics.management.LogisticalNetworkHandler;
+import com.simibubi.create.modules.logistics.transport.villager.LogisticianHandler;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 
 import net.minecraft.block.Block;
@@ -45,8 +47,8 @@ public class Create {
 	public static RedstoneLinkNetworkHandler redstoneLinkNetworkHandler;
 	public static TorquePropagator torquePropagator;
 	public static ServerLagger lagger;
-//	public static LogisticalNetworkHandler logisticalNetworkHandler;
-//	public static LogisticianHandler logisticianHandler;
+	public static LogisticalNetworkHandler logisticalNetworkHandler;
+	public static LogisticianHandler logisticianHandler;
 
 	public static ModConfig config;
 
@@ -77,7 +79,7 @@ public class Create {
 	public static void init(final FMLCommonSetupEvent event) {
 		schematicReceiver = new ServerSchematicLoader();
 		redstoneLinkNetworkHandler = new RedstoneLinkNetworkHandler();
-//		logisticalNetworkHandler = new LogisticalNetworkHandler();
+		logisticalNetworkHandler = new LogisticalNetworkHandler();
 		torquePropagator = new TorquePropagator();
 		lagger = new ServerLagger();
 
@@ -90,11 +92,11 @@ public class Create {
 	}
 
 	public static void registerVillagerProfessions(RegistryEvent.Register<VillagerProfession> event) {
-//		LogisticianHandler.registerVillagerProfessions(event);
+		LogisticianHandler.registerVillagerProfessions(event);
 	}
 
 	public static void registerPointsOfInterest(RegistryEvent.Register<PointOfInterestType> event) {
-//		LogisticianHandler.registerPointsOfInterest(event);
+		LogisticianHandler.registerPointsOfInterest(event);
 	}
 
 	public static void createConfigs(ModConfig.ModConfigEvent event) {

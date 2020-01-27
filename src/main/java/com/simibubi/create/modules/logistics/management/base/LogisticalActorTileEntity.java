@@ -84,7 +84,7 @@ public abstract class LogisticalActorTileEntity extends SyncedTileEntity
 	}
 
 	public int getColor() {
-		return colorFromUUID(networkId);
+		return ColorHelper.colorFromUUID(networkId);
 	}
 
 	public <T> LazyOptional<T> getCasingCapability(Capability<T> cap, Direction side) {

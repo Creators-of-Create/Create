@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntityRenderer;
+import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public enum AllEntities {
 
-//	CARDBOARD_BOX(CardboardBoxEntity::new, 30, 3, CardboardBoxEntity::build),
+	CARDBOARD_BOX(CardboardBoxEntity::new, 30, 3, CardboardBoxEntity::build),
 	CONTRAPTION(ContraptionEntity::new, 30, 3, ContraptionEntity::build),
 
 	;
