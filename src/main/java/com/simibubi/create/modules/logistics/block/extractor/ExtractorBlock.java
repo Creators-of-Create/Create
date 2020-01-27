@@ -15,7 +15,6 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -40,6 +39,11 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock {
 	@Override
 	protected BlockState getVerticalDefaultState() {
 		return AllBlocks.VERTICAL_EXTRACTOR.getDefault();
+	}
+	
+	@Override
+	protected BlockState getHorizontalDefaultState() {
+		return AllBlocks.EXTRACTOR.getDefault();
 	}
 
 	@Override
@@ -112,11 +116,6 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock {
 		@Override
 		protected boolean isVertical() {
 			return true;
-		}
-		
-		@Override
-		public ResourceLocation getLootTable() {
-			return AllBlocks.EXTRACTOR.get().getLootTable();
 		}
 	}
 

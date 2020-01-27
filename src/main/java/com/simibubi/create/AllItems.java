@@ -9,6 +9,8 @@ import com.simibubi.create.modules.contraptions.WrenchItemRenderer;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItem;
 import com.simibubi.create.modules.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
+import com.simibubi.create.modules.curiosities.RefinedRadianceItem;
+import com.simibubi.create.modules.curiosities.ShadowSteelItem;
 import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem;
 import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItemRenderer;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItem;
@@ -67,8 +69,8 @@ public enum AllItems {
 	ROSE_QUARTZ(ingredient()),
 	POLISHED_ROSE_QUARTZ(ingredient()),
 	CHROMATIC_COMPOUND(new ChromaticCompoundCubeItem(standardItemProperties().rarity(Rarity.UNCOMMON))),
-	SHADOW_STEEL(new Item(standardItemProperties().rarity(Rarity.UNCOMMON))),
-	REFINED_RADIANCE(new Item(standardItemProperties().rarity(Rarity.UNCOMMON))),
+	SHADOW_STEEL(new ShadowSteelItem(standardItemProperties().rarity(Rarity.UNCOMMON))),
+	REFINED_RADIANCE(new RefinedRadianceItem(standardItemProperties().rarity(Rarity.UNCOMMON))),
 	ELECTRON_TUBE(ingredient()),
 	INTEGRATED_CIRCUIT(ingredient()),
 

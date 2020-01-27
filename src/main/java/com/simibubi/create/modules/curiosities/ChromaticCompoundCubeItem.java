@@ -1,14 +1,34 @@
 package com.simibubi.create.modules.curiosities;
 
+import java.util.Random;
+
+import com.simibubi.create.AllItems;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.BeaconTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceContext.BlockMode;
+import net.minecraft.util.math.RayTraceContext.FluidMode;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,6 +56,142 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 
 	public ChromaticCompoundCubeItem(Properties properties) {
 		super(properties);
+	}
+
+	@Override
+	public boolean shouldSyncTag() {
+		return true;
+	}
+
+	@Override
+	public double getDurabilityForDisplay(ItemStack stack) {
+		int light = stack.getOrCreateTag().getInt("CollectingLight");
+		return 1 - light / (float) CreateConfig.parameters.lightSourceCountForRefinedRadiance.get();
+	}
+
+	@Override
+	public boolean showDurabilityBar(ItemStack stack) {
+		int light = stack.getOrCreateTag().getInt("CollectingLight");
+		return light > 0;
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack) {
+		return ColorHelper.mixColors(0x413c69, 0xFFFFFF, (float) (1 - getDurabilityForDisplay(stack)));
+	}
+
+	@Override
+	public int getItemStackLimit(ItemStack stack) {
+		return showDurabilityBar(stack) ? 1 : 16;
+	}
+
+	@Override
+	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
+		double y = entity.posY;
+		double yMotion = entity.getMotion().y;
+		World world = entity.world;
+		CompoundNBT data = entity.getPersistentData();
+		CompoundNBT itemData = entity.getItem().getOrCreateTag();
+
+		Vec3d positionVec = entity.getPositionVec();
+		if (world.isRemote) {
+			int light = itemData.getInt("CollectingLight");
+			if (random.nextInt(CreateConfig.parameters.lightSourceCountForRefinedRadiance.get() + 20) < light) {
+				Vec3d start = VecHelper.offsetRandomly(positionVec, random, 3);
+				Vec3d motion = positionVec.subtract(start).normalize().scale(.2f);
+				world.addParticle(ParticleTypes.END_ROD, start.x, start.y, start.z, motion.x, motion.y, motion.z);
+			}
+			return false;
+		}
+
+		// Convert to Shadow steel if in void
+		if (y < 0 && y - yMotion < -10 && CreateConfig.parameters.enableShadowSteelRecipe.get()) {
+			ItemStack newStack = AllItems.SHADOW_STEEL.asStack();
+			newStack.setCount(stack.getCount());
+			data.putBoolean("FromVoid", true);
+			entity.setItem(newStack);
+		}
+
+		if (!CreateConfig.parameters.enableRefinedRadianceRecipe.get())
+			return false;
+
+		// Convert to Refined Radiance if eaten enough light sources
+		if (itemData.getInt("CollectingLight") >= CreateConfig.parameters.lightSourceCountForRefinedRadiance.get()) {
+			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
+			ItemEntity newEntity = new ItemEntity(world, entity.posX, entity.posY, entity.posZ, newStack);
+			newEntity.setMotion(entity.getMotion());
+			newEntity.getPersistentData().putBoolean("FromLight", true);
+			itemData.remove("CollectingLight");
+			world.addEntity(newEntity);
+
+			stack.split(1);
+			entity.setItem(stack);
+			if (stack.isEmpty())
+				entity.remove();
+			return false;
+		}
+
+		// Is inside beacon beam?
+		boolean isOverBeacon = false;
+		MutableBlockPos testPos = new MutableBlockPos(entity.getPosition());
+		while (testPos.getY() > 0) {
+			testPos.move(Direction.DOWN);
+			BlockState state = world.getBlockState(testPos);
+			if (state.getOpacity(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
+				break;
+			if (state.getBlock() == Blocks.BEACON) {
+				TileEntity te = world.getTileEntity(testPos);
+				if (!(te instanceof BeaconTileEntity))
+					break;
+				BeaconTileEntity bte = (BeaconTileEntity) te;
+				if (bte.getLevels() != 0)
+					isOverBeacon = true;
+				break;
+			}
+		}
+
+		if (isOverBeacon) {
+			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
+			newStack.setCount(stack.getCount());
+			data.putBoolean("FromLight", true);
+			entity.setItem(newStack);
+			return false;
+		}
+
+		// Find a light source and eat it.
+		Random r = world.rand;
+		int range = 3;
+		float rate = 1 / 2f;
+		if (r.nextFloat() > rate)
+			return false;
+
+		BlockPos randomOffset = new BlockPos(VecHelper.offsetRandomly(positionVec, r, range));
+		BlockState state = world.getBlockState(randomOffset);
+		if (state.getLightValue(world, randomOffset) == 0)
+			return false;
+		if (state.getBlockHardness(world, randomOffset) == -1)
+			return false;
+		if (state.getBlock() == Blocks.BEACON)
+			return false;
+
+		RayTraceContext context = new RayTraceContext(positionVec, VecHelper.getCenterOf(randomOffset),
+				BlockMode.COLLIDER, FluidMode.NONE, entity);
+		if (!randomOffset.equals(world.rayTraceBlocks(context).getPos()))
+			return false;
+
+		world.destroyBlock(randomOffset, false);
+
+		ItemStack newStack = stack.split(1);
+		newStack.getOrCreateTag().putInt("CollectingLight", itemData.getInt("CollectingLight") + 1);
+		ItemEntity newEntity = new ItemEntity(world, entity.posX, entity.posY, entity.posZ, newStack);
+		newEntity.setMotion(entity.getMotion());
+		newEntity.setDefaultPickupDelay();
+		world.addEntity(newEntity);
+		entity.lifespan = 6000;
+		if (stack.isEmpty())
+			entity.remove();
+
+		return false;
 	}
 
 	@Override

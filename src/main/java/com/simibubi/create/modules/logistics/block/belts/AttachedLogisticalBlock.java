@@ -10,11 +10,16 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
@@ -30,10 +35,12 @@ public abstract class AttachedLogisticalBlock extends HorizontalBlock implements
 	public boolean hasBlockItem() {
 		return !isVertical();
 	}
-
+	
 	protected abstract boolean isVertical();
 
 	protected abstract BlockState getVerticalDefaultState();
+	
+	protected abstract BlockState getHorizontalDefaultState();
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
@@ -48,6 +55,21 @@ public abstract class AttachedLogisticalBlock extends HorizontalBlock implements
 		}
 
 		return state;
+	}
+	
+	@Override
+	public ResourceLocation getLootTable() {
+		if (isVertical())
+			return getHorizontalDefaultState().getBlock().getLootTable();
+		return super.getLootTable();
+	}
+
+	@Override
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
+			PlayerEntity player) {
+		if (isVertical())
+			return getHorizontalDefaultState().getBlock().getPickBlock(state, target, world, pos, player);
+		return super.getPickBlock(state, target, world, pos, player);
 	}
 
 	@Override

@@ -68,7 +68,7 @@ public enum ScreenResources {
 
 	// JEI
 	JEI_SLOT("jei/widgets.png", 18, 18),
-	JEI_CATALYST_SLOT("jei/widgets.png", 0, 136, 18, 18),
+	JEI_CATALYST_SLOT("jei/widgets.png", 0, 156, 18, 18),
 	JEI_ARROW("jei/widgets.png", 19, 10, 42, 10),
 	JEI_LONG_ARROW("jei/widgets.png", 19, 0, 71, 10),
 	JEI_DOWN_ARROW("jei/widgets.png", 0, 21, 18, 14),

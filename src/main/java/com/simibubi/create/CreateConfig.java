@@ -54,6 +54,10 @@ public class CreateConfig {
 	// Curiosities
 	public IntValue maxSymmetryWandRange;
 	public BooleanValue allowGlassPanesInPartialBlocks;
+	public IntValue lightSourceCountForRefinedRadiance;
+	public BooleanValue enableRefinedRadianceRecipe;
+	public BooleanValue enableShadowSteelRecipe;
+	public BooleanValue enableSandPaperToolPolishing;
 
 	// Contraptions
 	public IntValue maxBeltLength, crushingDamage, maxMotorSpeed, maxRotationSpeed;
@@ -279,6 +283,26 @@ public class CreateConfig {
 				.comment("", "Allow Glass Panes to be put inside Blocks like Stairs, Slabs, Fences etc.")
 				.translation(basePath + name).define(name, true);
 
+		name = "enableShadowSteelRecipe";
+		enableShadowSteelRecipe = builder
+				.comment("", "Allow the standard Shadow Steel recipe.")
+				.translation(basePath + name).define(name, true);
+		
+		name = "enableRefinedRadianceRecipe";
+		enableRefinedRadianceRecipe = builder
+				.comment("", "Allow the standard Refined Radiance recipes.")
+				.translation(basePath + name).define(name, true);
+		
+		name = "lightSourceCountForRefinedRadiance";
+		lightSourceCountForRefinedRadiance = builder
+				.comment("", "The amount of Light sources destroyed before Chromatic Compound turns into Refined Radiance.")
+				.translation(basePath + name).defineInRange(name, 10, 1, Integer.MAX_VALUE);
+		
+		name = "enableSandPaperToolPolishing";
+		enableSandPaperToolPolishing = builder
+				.comment("", "Enable the tool repairing mechanic involving sand paper.")
+				.translation(basePath + name).define(name, true);
+		
 		builder.pop();
 	}
 

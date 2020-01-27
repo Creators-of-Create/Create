@@ -22,7 +22,6 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -75,6 +74,11 @@ public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachm
 	@Override
 	protected BlockState getVerticalDefaultState() {
 		return AllBlocks.VERTICAL_FUNNEL.getDefault();
+	}
+
+	@Override
+	protected BlockState getHorizontalDefaultState() {
+		return AllBlocks.BELT_FUNNEL.getDefault();
 	}
 
 	@Override
@@ -180,11 +184,6 @@ public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachm
 		@Override
 		protected boolean isVertical() {
 			return true;
-		}
-		
-		@Override
-		public ResourceLocation getLootTable() {
-			return AllBlocks.BELT_FUNNEL.get().getLootTable();
 		}
 	}
 

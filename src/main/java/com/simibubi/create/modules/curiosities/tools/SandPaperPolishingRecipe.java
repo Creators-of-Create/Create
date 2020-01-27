@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.simibubi.create.AllRecipes;
+import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.processing.ProcessingIngredient;
 import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
@@ -33,14 +34,15 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 	}
 
 	public static boolean canPolish(World world, ItemStack stack) {
-		return stack.isDamageable() || !getMatchingRecipes(world, stack).isEmpty();
+		return (stack.isDamageable() && CreateConfig.parameters.enableSandPaperToolPolishing.get())
+				|| !getMatchingRecipes(world, stack).isEmpty();
 	}
 
 	public static ItemStack applyPolish(World world, Vec3d position, ItemStack stack, ItemStack sandPaperStack) {
 		List<IRecipe<SandPaperInv>> matchingRecipes = getMatchingRecipes(world, stack);
 		if (!matchingRecipes.isEmpty())
 			return matchingRecipes.get(0).getCraftingResult(new SandPaperInv(stack)).copy();
-		if (stack.isDamageable()) {
+		if (stack.isDamageable() && CreateConfig.parameters.enableSandPaperToolPolishing.get()) {
 
 			stack.setDamage(stack.getDamage() - (stack.getMaxDamage() - stack.getDamage()) / 2);
 
@@ -76,12 +78,12 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 	public boolean matches(SandPaperInv inv, World worldIn) {
 		return ingredients.get(0).test(inv.getStackInSlot(0));
 	}
-	
+
 	public static List<IRecipe<SandPaperInv>> getMatchingRecipes(World world, ItemStack stack) {
 		return world.getRecipeManager().getRecipes(AllRecipes.SANDPAPER_POLISHING.getType(), new SandPaperInv(stack),
 				world);
 	}
-	
+
 	@Override
 	protected int getMaxOutputCount() {
 		return 1;
@@ -95,7 +97,5 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 		}
 
 	}
-
-	
 
 }

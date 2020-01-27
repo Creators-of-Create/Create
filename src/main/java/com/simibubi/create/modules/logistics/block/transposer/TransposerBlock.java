@@ -12,7 +12,6 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -56,6 +55,11 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 	@Override
 	protected BlockState getVerticalDefaultState() {
 		return AllBlocks.VERTICAL_TRANSPOSER.getDefault();
+	}
+	
+	@Override
+	protected BlockState getHorizontalDefaultState() {
+		return AllBlocks.TRANSPOSER.getDefault();
 	}
 
 	@Override
@@ -101,11 +105,6 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 		@Override
 		protected boolean isVertical() {
 			return true;
-		}
-		
-		@Override
-		public ResourceLocation getLootTable() {
-			return AllBlocks.TRANSPOSER.get().getLootTable();
 		}
 	}
 

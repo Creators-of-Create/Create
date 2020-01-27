@@ -170,6 +170,7 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 				GlStateManager.popMatrix();
 			}
 
+			GlStateManager.disableBlend();
 			GlStateManager.popMatrix();
 		}
 	}
