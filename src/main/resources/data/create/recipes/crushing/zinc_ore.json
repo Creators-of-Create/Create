@@ -3,16 +3,16 @@
     "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"tag": "forge:ores/iron"
+    		"tag": "forge:ores/zinc"
     	}
     ], 
 	"results": [
 		{
-			"item": "create:crushed_iron",
+			"item": "create:crushed_zinc",
 			"count": 1
 		},
 		{
-			"item": "create:crushed_iron",
+			"item": "create:crushed_zinc",
 			"count": 2,
 			"chance": 0.3
 		},
@@ -22,5 +22,5 @@
 			"chance": 0.125
 		}
 	],
-	"processingTime": 400
+	"processingTime": 350
 }

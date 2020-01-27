@@ -2,7 +2,7 @@
     "type": "crafting_shaped",
         "pattern": [
             "AAA",
-            "ASA",
+            "CSC",
 			"AAA"
         ],
         "key": {
@@ -10,8 +10,11 @@
                 "tag": "minecraft:planks"
             },
 			"S": {
-                "item": "create:andesite_alloy"
-            }
+                "tag": "minecraft:logs"
+            },
+			"C": {
+				"item": "create:andesite_alloy"
+			}
         },
 	"result": {
 		"item": "create:andesite_casing",

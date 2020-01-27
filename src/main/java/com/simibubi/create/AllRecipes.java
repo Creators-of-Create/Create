@@ -2,6 +2,7 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingRecipe;
@@ -34,6 +35,7 @@ public enum AllRecipes {
 	CUTTING(processingSerializer(CuttingRecipe::new)),
 	MIXING(processingSerializer(MixingRecipe::new)),
 	SANDPAPER_POLISHING(processingSerializer(SandPaperPolishingRecipe::new)),
+	CONVERSION(processingSerializer(ConversionRecipe::new)),
 
 	;
 

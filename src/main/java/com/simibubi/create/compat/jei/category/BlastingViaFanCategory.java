@@ -1,8 +1,9 @@
-package com.simibubi.create.compat.jei;
+package com.simibubi.create.compat.jei.category;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.utility.Lang;
 

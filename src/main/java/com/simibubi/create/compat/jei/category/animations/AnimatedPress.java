@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.jei;
+package com.simibubi.create.compat.jei.category.animations;
 
 import static com.simibubi.create.foundation.utility.AnimationTickHolder.ticks;
 

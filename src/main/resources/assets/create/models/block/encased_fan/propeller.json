@@ -1,4 +1,5 @@
 {
+	"credit": "Made with Blockbench",
 	"textures": {
 		"axis_top": "create:block/axis_top",
 		"fan_blades": "create:block/fan_blades",
@@ -24,8 +25,7 @@
 			"to": [15, 15, 12],
 			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 8, 8]},
 			"faces": {
-				"north": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"},
-				"south": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"}
+				"north": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"}
 			}
 		}
 	]

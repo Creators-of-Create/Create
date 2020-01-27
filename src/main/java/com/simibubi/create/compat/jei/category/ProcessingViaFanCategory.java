@@ -1,10 +1,12 @@
-package com.simibubi.create.compat.jei;
+package com.simibubi.create.compat.jei.category;
 
 import java.util.Arrays;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.ScreenResources;
+import com.simibubi.create.compat.jei.EmptyBackground;
+import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 
 import mezz.jei.api.constants.VanillaTypes;

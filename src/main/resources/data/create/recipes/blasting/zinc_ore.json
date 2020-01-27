@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "tag": "forge:ores/zinc"
+  },
+  "result": "create:zinc_ingot",
+  "experience": 0.1,
+  "cookingtime": 100
+}

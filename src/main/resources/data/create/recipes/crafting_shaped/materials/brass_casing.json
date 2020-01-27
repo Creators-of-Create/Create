@@ -2,7 +2,7 @@
     "type": "crafting_shaped",
         "pattern": [
             "AAA",
-            "SSS",
+            "CSC",
 			"AAA"
         ],
         "key": {
@@ -10,8 +10,11 @@
                 "tag": "minecraft:planks"
             },
 			"S": {
-                "tag": "forge:plates/brass"
-            }
+                "tag": "minecraft:logs"
+            },
+			"C": {
+				"tag": "forge:plates/brass"
+			}
         },
 	"result": {
 		"item": "create:brass_casing",

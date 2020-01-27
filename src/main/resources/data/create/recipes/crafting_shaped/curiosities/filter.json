@@ -1,0 +1,24 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "NWN"
+        ],
+        "key": {
+            "N": {
+                "tag": "forge:nuggets/iron"
+            },
+            "W": {
+                "tag": "minecraft:wool"
+            }
+        },
+	"result": {
+		"item": "create:filter",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "curiosities"
+		}
+	]
+}

@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.jei;
+package com.simibubi.create.compat.jei.category;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +7,10 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
-import com.simibubi.create.compat.jei.BlockCuttingCategory.CondensedBlockCuttingRecipe;
+import com.simibubi.create.compat.jei.DoubleItemIcon;
+import com.simibubi.create.compat.jei.EmptyBackground;
+import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
+import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Lang;
 

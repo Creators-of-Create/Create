@@ -3,7 +3,7 @@
     "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"item": "minecraft:gold_ore"
+    		"tag": "forge:ores/gold"
     	}
     ], 
 	"results": [

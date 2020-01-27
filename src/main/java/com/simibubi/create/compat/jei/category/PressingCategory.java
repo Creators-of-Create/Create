@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.jei;
+package com.simibubi.create.compat.jei.category;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +7,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
+import com.simibubi.create.compat.jei.CreateJEI;
+import com.simibubi.create.compat.jei.DoubleItemIcon;
+import com.simibubi.create.compat.jei.EmptyBackground;
+import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;

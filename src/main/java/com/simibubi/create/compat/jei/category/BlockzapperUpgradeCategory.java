@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.jei;
+package com.simibubi.create.compat.jei.category;
 
 import static com.simibubi.create.ScreenResources.BLOCKZAPPER_UPGRADE_RECIPE;
 
@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.jei.DoubleItemIcon;
+import com.simibubi.create.compat.jei.ScreenResourceWrapper;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperUpgradeRecipe;

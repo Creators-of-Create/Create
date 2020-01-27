@@ -88,6 +88,8 @@ public enum AllItems {
 	FLOUR(ingredient()),
 	DOUGH(ingredient()),
 	PROPELLER(ingredient()),
+	WHISK(ingredient()),
+	BRASS_HAND(ingredient()),
 	WRENCH(new WrenchItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.WRENCH))), true),
 	GOGGLES(new GogglesItem(standardItemProperties()), true),
 

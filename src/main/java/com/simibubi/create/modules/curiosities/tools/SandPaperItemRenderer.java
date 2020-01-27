@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.block.render.CustomRenderItemBakedModel;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -35,9 +36,11 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 		GlStateManager.translatef(.5f, .5f, .5f);
 
 		CompoundNBT tag = stack.getOrCreateTag();
+		boolean jeiMode = tag.contains("JEI");
+
 		if (tag.contains("Polishing")) {
 			GlStateManager.pushMatrix();
-			
+
 			if (mainModel.transformType == TransformType.GUI) {
 				GlStateManager.translatef(0.0F, .2f, 1.0F);
 				GlStateManager.scalef(.75f, .75f, .75f);
@@ -45,18 +48,19 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 				int modifier = leftHand ? -1 : 1;
 				GlStateManager.rotatef(modifier * 40, 0, 1, 0);
 			}
-			
+
 			// Reverse bobbing
-			float time = (float) player.getItemInUseCount() - partialTicks + 1.0F;
+			float time = (float) (!jeiMode ? player.getItemInUseCount()
+					: (-AnimationTickHolder.ticks) % stack.getUseDuration()) - partialTicks + 1.0F;
 			if (time / (float) stack.getUseDuration() < 0.8F) {
 				float bobbing = -MathHelper.abs(MathHelper.cos(time / 4.0F * (float) Math.PI) * 0.1F);
-				
-				if (mainModel.transformType == TransformType.GUI) 
+
+				if (mainModel.transformType == TransformType.GUI)
 					GlStateManager.translatef(bobbing, bobbing, 0.0F);
-				else 
+				else
 					GlStateManager.translatef(0.0f, bobbing, 0.0F);
 			}
-			
+
 			ItemStack toPolish = ItemStack.read(tag.getCompound("Polishing"));
 			itemRenderer.renderItem(toPolish, itemRenderer.getModelWithOverrides(toPolish).getBakedModel());
 

@@ -9,7 +9,19 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.Create;
-import com.simibubi.create.compat.jei.BlockCuttingCategory.CondensedBlockCuttingRecipe;
+import com.simibubi.create.compat.jei.category.BlastingViaFanCategory;
+import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
+import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
+import com.simibubi.create.compat.jei.category.BlockzapperUpgradeCategory;
+import com.simibubi.create.compat.jei.category.CrushingCategory;
+import com.simibubi.create.compat.jei.category.MixingCategory;
+import com.simibubi.create.compat.jei.category.MysteriousItemConversionCategory;
+import com.simibubi.create.compat.jei.category.PackingCategory;
+import com.simibubi.create.compat.jei.category.PolishingCategory;
+import com.simibubi.create.compat.jei.category.PressingCategory;
+import com.simibubi.create.compat.jei.category.SawingCategory;
+import com.simibubi.create.compat.jei.category.SmokingViaFanCategory;
+import com.simibubi.create.compat.jei.category.SplashingCategory;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity;
@@ -50,6 +62,8 @@ public class CreateJEI implements IModPlugin {
 	private SawingCategory sawingCategory;
 	private BlockCuttingCategory blockCuttingCategory;
 	private PackingCategory packingCategory;
+	private PolishingCategory polishingCategory;
+	private MysteriousItemConversionCategory mysteryConversionCategory;
 
 	@Override
 	public ResourceLocation getPluginUid() {
@@ -67,6 +81,8 @@ public class CreateJEI implements IModPlugin {
 		sawingCategory = new SawingCategory();
 		blockCuttingCategory = new BlockCuttingCategory();
 		packingCategory = new PackingCategory();
+		polishingCategory = new PolishingCategory();
+		mysteryConversionCategory = new MysteriousItemConversionCategory();
 	}
 
 	@Override
@@ -78,7 +94,7 @@ public class CreateJEI implements IModPlugin {
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		registration.addRecipeCategories(crushingCategory, splashingCategory, pressingCategory, smokingCategory,
 				blastingCategory, blockzapperCategory, mixingCategory, sawingCategory, blockCuttingCategory,
-				packingCategory);
+				packingCategory, polishingCategory, mysteryConversionCategory);
 	}
 
 	@Override
@@ -103,6 +119,8 @@ public class CreateJEI implements IModPlugin {
 		registration.addRecipes(findRecipes(
 				r -> (r instanceof ICraftingRecipe) && MechanicalPressTileEntity.canCompress(r.getIngredients())),
 				packingCategory.getUid());
+		registration.addRecipes(findRecipes(AllRecipes.SANDPAPER_POLISHING), polishingCategory.getUid());
+		registration.addRecipes(MysteriousItemConversionCategory.getRecipes(), mysteryConversionCategory.getUid());
 	}
 
 	@Override
@@ -129,6 +147,8 @@ public class CreateJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(Blocks.STONECUTTER), blockCuttingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_PRESS.get()), packingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.BASIN.get()), packingCategory.getUid());
+		registration.addRecipeCatalyst(AllItems.SAND_PAPER.asStack(), polishingCategory.getUid());
+		registration.addRecipeCatalyst(AllItems.RED_SAND_PAPER.asStack(), polishingCategory.getUid());
 	}
 
 	@Override
@@ -172,7 +192,7 @@ public class CreateJEI implements IModPlugin {
 		return byType;
 	}
 
-	static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results) {
+	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results) {
 		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 			if (input)
 				return;
@@ -183,7 +203,7 @@ public class CreateJEI implements IModPlugin {
 		});
 	}
 
-	static void addCatalystTooltip(IGuiItemStackGroup itemStacks, Map<Integer, Float> catalystIndices) {
+	public static void addCatalystTooltip(IGuiItemStackGroup itemStacks, Map<Integer, Float> catalystIndices) {
 		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 			if (!input)
 				return;

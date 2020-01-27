@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.jei;
+package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllBlocks;

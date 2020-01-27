@@ -1,9 +1,9 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            "  E",
-            " O ",
-            "OA "
+            "EG",
+            "EO",
+            " O"
         ],
         "key": {
             "E": {
@@ -12,12 +12,12 @@
             "O": {
                 "item": "minecraft:obsidian"
             },
-            "A": {
-                "item": "create:andesite_alloy"
+            "G": {
+                "item": "create:cogwheel"
             }
         },
 	"result": {
-		"item": "create:placement_handgun",
+		"item": "create:deforester",
 		"count": 1
 	},
 	"conditions": [
