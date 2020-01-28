@@ -47,7 +47,7 @@ public enum AllParticles {
 	public ParticleType<?> get() {
 		return entry.getType();
 	}
-
+	
 	public String parameter() {
 		return Lang.asId(name());
 	}

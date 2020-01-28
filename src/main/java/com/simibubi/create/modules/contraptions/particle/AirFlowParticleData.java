@@ -40,13 +40,13 @@ public class AirFlowParticleData implements IParticleData, ICustomParticle<AirFl
 	public AirFlowParticleData(Vec3i pos) {
 		this(pos.getX(), pos.getY(), pos.getZ());
 	}
-	
+
 	public AirFlowParticleData(int posX, int posY, int posZ) {
 		this.posX = posX;
 		this.posY = posY;
 		this.posZ = posZ;
 	}
-	
+
 	public AirFlowParticleData() {
 		this(0, 0, 0);
 	}
@@ -65,7 +65,7 @@ public class AirFlowParticleData implements IParticleData, ICustomParticle<AirFl
 
 	@Override
 	public String getParameters() {
-		return String.format(Locale.ROOT, "%s %d %d %d", AllParticles.ROTATION_INDICATOR.parameter(), posX, posY, posZ);
+		return String.format(Locale.ROOT, "%s %d %d %d", AllParticles.AIR_FLOW.parameter(), posX, posY, posZ);
 	}
 
 	@Override

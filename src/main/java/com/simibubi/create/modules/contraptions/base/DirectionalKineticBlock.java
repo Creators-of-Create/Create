@@ -44,7 +44,10 @@ public abstract class DirectionalKineticBlock extends KineticBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(FACING, context.getFace());
+		Direction preferred = getPreferredFacing(context);
+		if (preferred == null || context.isPlacerSneaking())
+			return getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
+		return getDefaultState().with(FACING, preferred.getOpposite());
 	}
 
 	@Override
