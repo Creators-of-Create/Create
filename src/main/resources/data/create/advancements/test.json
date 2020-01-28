@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "create:wrench"
+    },
+    "title": {
+      "translate": "advancement.create:test"
+    },
+    "description": {
+      "translate": "advancement.create:test.desc"
+    }
+  },
+  "parent": "create:root",
+  "criteria": {
+    "flower": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:wrench"
+          }
+        ]
+      }
+    }
+  }
+}

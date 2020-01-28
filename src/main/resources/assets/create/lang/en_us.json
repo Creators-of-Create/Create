@@ -506,6 +506,11 @@
 	"create.command.killTPSCommand.status.usage.1": "[Create]: use /killtps start <tickTime> to artificially slow down the server tick",
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
+	"advancement.create:root": "Create Advancements",
+	"advancement.create:root.desc": "~ todo",
+	"advancement.create:test": "test advancement",
+	"advancement.create:test.desc": "test advancement description",
+
 	"_comment": "-------------------------]  ITEM DESCRIPTIONS  [------------------------------------------------",
 
 	"item.create.example_item.tooltip": "EXAMPLE ITEM (just a marker that this tooltip exists)",

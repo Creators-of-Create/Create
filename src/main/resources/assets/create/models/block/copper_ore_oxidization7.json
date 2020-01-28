@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "create:block/copper_ore_oxidization7"
+    }
+}

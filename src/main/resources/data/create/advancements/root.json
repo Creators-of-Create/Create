@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "create:cogwheel"
+    },
+    "title": {
+      "translate": "advancement.create:root"
+    },
+    "description": {
+      "translate": "advancement.create:root.desc"
+    },
+    "background": "create:textures/block/brass_casing_side.png",
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "flower": {
+      "trigger": "minecraft:inventory_changed"
+    }
+  }
+}
