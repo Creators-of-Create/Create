@@ -88,6 +88,8 @@
 	"block.create.encased_belt": "Encased Belt",
 	"block.create.encased_shaft": "Encased Shaft",
 	"block.create.encased_fan": "Encased Fan",
+	"block.create.nozzle": "Nozzle",
+	"block.create.hand_crank": "Hand Crank",
 	"block.create.motor": "Motor",
 	"block.create.belt": "Mechanical Belt",
 	"block.create.crushing_wheel": "Crushing Wheel",

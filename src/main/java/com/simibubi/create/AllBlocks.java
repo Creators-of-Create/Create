@@ -26,10 +26,12 @@ import com.simibubi.create.modules.contraptions.components.contraptions.piston.M
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonHeadBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonPoleBlock;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterBlock;
+import com.simibubi.create.modules.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelBlock;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.modules.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
+import com.simibubi.create.modules.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerBlock;
 import com.simibubi.create.modules.contraptions.components.motor.MotorBlock;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressBlock;
@@ -120,8 +122,11 @@ public enum AllBlocks {
 	WATER_WHEEL(new WaterWheelBlock()),
 	ENCASED_FAN(new EncasedFanBlock()),
 	ENCASED_FAN_INNER(new RenderUtilityDirectionalBlock()),
+	NOZZLE(new NozzleBlock()),
 	TURNTABLE(new TurntableBlock()),
 	SHAFT_HALF(new ShaftHalfBlock()),
+	HAND_CRANK(new HandCrankBlock()),
+	HAND_CRANK_HANDLE(new RenderUtilityDirectionalBlock()),
 
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),

@@ -1,0 +1,29 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            " L ",
+            "PPP",
+			"  A"
+        ],
+        "key": {
+            "L": {
+                "tag": "minecraft:logs"
+            },
+			"P": {
+                "tag": "minecraft:planks"
+            },
+			"A": {
+                "item": "create:andesite_alloy"
+            }
+        },
+	"result": {
+		"item": "create:hand_crank",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

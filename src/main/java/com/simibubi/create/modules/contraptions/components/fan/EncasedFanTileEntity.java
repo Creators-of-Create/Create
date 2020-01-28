@@ -71,8 +71,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	public float getMaxDistance() {
 		float speed = Math.abs(this.getSpeed());
 		float distanceFactor = Math.min(speed / parameters.fanRotationArgmax.get(), 1);
-		float pushDistance = MathHelper.lerp(distanceFactor, 3, parameters.fanMaxPushDistance.get());
-		float pullDistance = MathHelper.lerp(distanceFactor, 1.5f, parameters.fanMaxPullDistance.get());
+		float pushDistance = MathHelper.lerp(distanceFactor, 3, parameters.fanPushDistance.get());
+		float pullDistance = MathHelper.lerp(distanceFactor, 3f, parameters.fanPullDistance.get());
 		return this.getSpeed() > 0 ? pushDistance : pullDistance;
 	}
 
@@ -118,80 +118,5 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 
 		airCurrent.tick();
 	}
-
-//	public void processEntity(Entity entity) {
-//		if (InWorldProcessing.isFrozen())
-//			return;
-//
-//		if (entity instanceof ItemEntity) {
-//			if (world.rand.nextInt(4) == 0) {
-//				Type processingType = getProcessingType();
-//				if (processingType == Type.BLASTING)
-//					world.addParticle(ParticleTypes.LARGE_SMOKE, entity.posX, entity.posY + .25f, entity.posZ, 0,
-//							1 / 16f, 0);
-//				if (processingType == Type.SMOKING)
-//					world.addParticle(ParticleTypes.CLOUD, entity.posX, entity.posY + .25f, entity.posZ, 0, 1 / 16f, 0);
-//				if (processingType == Type.SPLASHING)
-//					world.addParticle(ParticleTypes.BUBBLE_POP, entity.posX + (world.rand.nextFloat() - .5f) * .5f,
-//							entity.posY + .25f, entity.posZ + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 16f, 0);
-//			}
-//
-//			if (world.isRemote)
-//				return;
-//
-//			if (canProcess((ItemEntity) entity))
-//				InWorldProcessing.applyProcessing((ItemEntity) entity, getProcessingType());
-//
-//		} else {
-//			if (getProcessingType() == Type.SMOKING) {
-//				entity.setFire(2);
-//				entity.attackEntityFrom(damageSourceFire, 4);
-//			}
-//			if (getProcessingType() == Type.BLASTING) {
-//				entity.setFire(10);
-//				entity.attackEntityFrom(damageSourceLava, 8);
-//			}
-//			if (getProcessingType() == Type.SPLASHING) {
-//				if (entity.isBurning()) {
-//					entity.extinguish();
-//					world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-//							SoundCategory.NEUTRAL, 0.7F,
-//							1.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.4F);
-//				}
-//			}
-//		}
-//	}
-//
-//	protected boolean canProcess() {
-//		return getProcessingType() != null;
-//	}
-//
-//	protected boolean canProcess(ItemEntity entity) {
-//		return canProcess() && InWorldProcessing.canProcess(entity, getProcessingType());
-//	}
-//
-//	protected void moveEntity(Entity entity, boolean push) {
-//		if ((entity instanceof ItemEntity) && AllBlocks.BELT.typeOf(world.getBlockState(entity.getPosition()))
-//				&& getAirFlowDirection() != Direction.UP) {
-//			return;
-//		}
-//
-//		Vec3d center = VecHelper.getCenterOf(pos);
-//		Vec3i flow = getAirFlowDirection().getDirectionVec();
-//
-//		float sneakModifier = entity.isSneaking() ? 4096f : 512f;
-//		float acceleration = (float) (getSpeed() * 1 / sneakModifier
-//				/ (entity.getPositionVec().distanceTo(center) / (push ? pushDistance : pullDistance)));
-//		Vec3d previousMotion = entity.getMotion();
-//		float maxAcceleration = 5;
-//
-//		double xIn = MathHelper.clamp(flow.getX() * acceleration - previousMotion.x, -maxAcceleration, maxAcceleration);
-//		double yIn = MathHelper.clamp(flow.getY() * acceleration - previousMotion.y, -maxAcceleration, maxAcceleration);
-//		double zIn = MathHelper.clamp(flow.getZ() * acceleration - previousMotion.z, -maxAcceleration, maxAcceleration);
-//
-//		entity.setMotion(
-//				previousMotion.add(new Vec3d(xIn, yIn, zIn).mul(flow.getX(), flow.getY(), flow.getZ()).scale(1 / 8f)));
-//		entity.fallDistance = 0;
-//	}
 
 }

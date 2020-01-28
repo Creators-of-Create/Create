@@ -70,7 +70,17 @@ public class AllShapes {
 				makeCuboidShape(0, 14, 6, 16, 18, 1)),
 		GAUGE_SHAPE_UP = VoxelShapes.or(
 				makeCuboidShape(1, 0, 0, 15, 2, 16),//plate
-				makeCuboidShape(2, 2, 1, 14, 14, 15))//log
+				makeCuboidShape(2, 2, 1, 14, 14, 15)),//log
+		NOZZLE_SHAPE_UP = VoxelShapes.or(
+				makeCuboidShape(2, 0, 2, 14, 14, 14),
+				VoxelShapes.combine(
+						makeCuboidShape(1, 13, 1, 15, 15, 15), 
+						makeCuboidShape(3, 13, 3, 13, 15, 13), 
+						IBooleanFunction.ONLY_FIRST)),
+		CRANK_SHAPE_UP = VoxelShapes.or(
+				makeCuboidShape(5, 0, 5, 11, 6, 11),
+				makeCuboidShape(1, 3, 1, 15, 8, 15)
+				)
 
 				;
 
@@ -105,6 +115,8 @@ public class AllShapes {
 	public static final VoxelShaper
 		LOGISTICAL_CASING_MIDDLE = VoxelShaper.forDirectional(LOGISTICAL_CASING_MIDDLE_SHAPE, Direction.UP),
 		LOGISTICAL_CASING_CAP = VoxelShaper.forDirectional(LOGISTICAL_CASING_CAP_SHAPE, Direction.UP),
+		NOZZLE = VoxelShaper.forDirectional(NOZZLE_SHAPE_UP, Direction.UP),
+		CRANK = VoxelShaper.forDirectional(CRANK_SHAPE_UP, Direction.UP),
 		CART_ASSEMBLER = VoxelShaper.forHorizontalAxis(CART_ASSEMBLER_SHAPE, Direction.SOUTH),
 		MECHANICAL_PISTON_HEAD = VoxelShaper.forDirectional(MECHANICAL_PISTON_HEAD_SHAPE_UP, Direction.UP),
 		MECHANICAL_PISTON = SHORT_CASING_12_VOXEL,

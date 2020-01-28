@@ -16,12 +16,15 @@ import com.simibubi.create.modules.contraptions.components.contraptions.piston.M
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.crank.HandCrankTileEntity;
+import com.simibubi.create.modules.contraptions.components.crank.HandCrankTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelControllerTileEntity;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelTileEntity;
 import com.simibubi.create.modules.contraptions.components.deployer.DeployerTileEntity;
 import com.simibubi.create.modules.contraptions.components.deployer.DeployerTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.fan.EncasedFanTileEntity;
 import com.simibubi.create.modules.contraptions.components.fan.EncasedFanTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.fan.NozzleTileEntity;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerTileEntity;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.motor.MotorTileEntity;
@@ -91,8 +94,10 @@ public enum AllTileEntities {
 	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
 	ENCASED_SHAFT(EncasedShaftTileEntity::new, AllBlocks.ENCASED_SHAFT, AllBlocks.ENCASED_BELT),
 	ENCASED_FAN(EncasedFanTileEntity::new, AllBlocks.ENCASED_FAN),
+	NOZZLE(NozzleTileEntity::new, AllBlocks.NOZZLE),
 	CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH),
 	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT),
+	HAND_CRANK(HandCrankTileEntity::new, AllBlocks.HAND_CRANK),
 	BELT(BeltTileEntity::new, AllBlocks.BELT),
 	BELT_TUNNEL(BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
@@ -179,6 +184,7 @@ public enum AllTileEntities {
 		bind(ClutchTileEntity.class, new SplitShaftTileEntityRenderer());
 		bind(BeltTileEntity.class, new BeltTileEntityRenderer());
 		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());
+		bind(HandCrankTileEntity.class, new HandCrankTileEntityRenderer());
 
 		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());
 		bind(MechanicalBearingTileEntity.class, new MechanicalBearingTileEntityRenderer());

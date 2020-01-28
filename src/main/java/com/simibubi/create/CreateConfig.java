@@ -61,7 +61,7 @@ public class CreateConfig {
 
 	// Contraptions
 	public IntValue maxBeltLength, crushingDamage, maxMotorSpeed, maxRotationSpeed;
-	public IntValue fanMaxPushDistance, fanMaxPullDistance, fanBlockCheckRate, fanRotationArgmax, generatingFanSpeed,
+	public IntValue fanPushDistance, fanPullDistance, fanBlockCheckRate, fanRotationArgmax, generatingFanSpeed,
 			inWorldProcessingTime;
 	public IntValue maxChassisForTranslation, maxChassisForRotation, maxChassisRange, maxPistonPoles;
 
@@ -206,13 +206,13 @@ public class CreateConfig {
 					.comment("", "Game ticks between Fans checking for anything blocking their air flow.")
 					.translation(basePath + name).defineInRange(name, 30, 10, Integer.MAX_VALUE);
 
-			name = "fanMaxPushDistance";
-			fanMaxPushDistance = builder.comment("", "Maximum distance in blocks Fans can push entities.")
-					.translation(basePath + name).defineInRange(name, 20, 1, Integer.MAX_VALUE);
+			name = "fanPushDistance";
+			fanPushDistance = builder.comment("", "Maximum distance in blocks Fans can push entities.")
+					.translation(basePath + name).defineInRange(name, 20, 5, Integer.MAX_VALUE);
 
-			name = "fanMaxPullDistance";
-			fanMaxPullDistance = builder.comment("", "Maximum distance in blocks from where Fans can pull entities.")
-					.translation(basePath + name).defineInRange(name, 10, 1, Integer.MAX_VALUE);
+			name = "fanPullDistance";
+			fanPullDistance = builder.comment("", "Maximum distance in blocks from where Fans can pull entities.")
+					.translation(basePath + name).defineInRange(name, 20, 5, Integer.MAX_VALUE);
 
 			name = "fanRotationArgmax";
 			fanRotationArgmax = builder.comment("", "Rotation speed at which the maximum stats of fans are reached.")
@@ -438,6 +438,7 @@ public class CreateConfig {
 		case MOTOR:
 			return 1024;
 		case ENCASED_FAN:
+		case HAND_CRANK:
 			return 64;
 		case WATER_WHEEL:
 			return 32;
@@ -485,6 +486,7 @@ public class CreateConfig {
 		case SHAFT:
 		case SPEED_GAUGE:
 		case STRESS_GAUGE:
+		case HAND_CRANK:
 		default:
 			return 1;
 		}
