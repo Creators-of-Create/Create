@@ -1,0 +1,63 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+	"parent": "block/block",
+    "textures": {
+        "flexpeater_off": "create:block/flexpulsepeater_off",
+		"torch": "minecraft:block/redstone_torch_off",
+        "smooth_stone": "minecraft:block/smooth_stone",
+        "particle": "create:block/flexpulsepeater_off"
+    },
+    "elements": [
+        {
+            "name": "Top",
+            "from": [ 5, 2.1, 5 ], 
+            "to": [ 11, 3.1, 11 ], 
+            "faces": {
+                "north": { "texture": "#flexpeater_off", "uv": [ 5, 5, 11, 6 ], "rotation": 180 },
+                "east": { "texture": "#flexpeater_off", "uv": [ 10, 5, 11, 11 ], "rotation": 90 },
+                "south": { "texture": "#flexpeater_off", "uv": [ 5, 10, 11, 11 ] },
+                "west": { "texture": "#flexpeater_off", "uv": [ 5, 11, 6, 5 ], "rotation": 90 },
+                "up": { "texture": "#flexpeater_off", "uv": [ 5, 5, 11, 11 ] }
+            }
+        },
+		{
+            "name": "circuit",
+            "from": [ 0, 0, 0 ], 
+            "to": [ 16, 2, 16 ], 
+            "faces": {
+                "north": { "texture": "#smooth_stone", "uv": [ 0, 0, 16, 2 ] },
+                "east": { "texture": "#smooth_stone", "uv": [ 0, 0, 16, 2 ] },
+                "south": { "texture": "#smooth_stone", "uv": [ 0, 0, 16, 2 ] },
+                "west": { "texture": "#smooth_stone", "uv": [ 0, 0, 16, 2 ] },
+                "up": { "texture": "#flexpeater_off", "uv": [ 0, 0, 16, 16 ] },
+                "down": { "texture": "#smooth_stone", "uv": [ 0, 0, 16, 16 ] }
+            }
+        },
+        {
+            "name": "Front Torch",
+            "from": [ 6, 2, 2 ], 
+            "to": [ 10, 8, 4 ], 
+            "faces": {
+                "north": { "texture": "#torch", "uv": [ 6, 5, 10, 11 ] },
+                "south": { "texture": "#torch", "uv": [ 6, 5, 10, 11 ] }
+            }
+        },
+        {
+            "name": "Front Torch",
+            "from": [ 7, 2, 1 ], 
+            "to": [ 9, 8, 5 ], 
+            "faces": {
+                "east": { "texture": "#torch", "uv": [ 6, 5, 10, 11 ] },
+                "west": { "texture": "#torch", "uv": [ 6, 5, 10, 11 ] }
+            }
+        },
+        {
+            "name": "Front Torch Top",
+            "from": [ 7, 6, 2 ], 
+            "to": [ 9, 7, 4 ], 
+            "faces": {
+                "up": { "texture": "#torch", "uv": [ 7, 6, 9, 8 ] }
+            }
+        }
+    ]
+}

@@ -1,5 +1,5 @@
 {
-	"parent": "create:block/flexpeater",
+	"parent": "create:block/repeaters/flexpeater",
     "textures": {
 		"torch": "minecraft:block/redstone_torch"
     }

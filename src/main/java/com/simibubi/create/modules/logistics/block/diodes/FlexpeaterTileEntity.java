@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.block.SyncedTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 
 public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableTileEntity {
@@ -21,7 +22,11 @@ public class FlexpeaterTileEntity extends SyncedTileEntity implements ITickableT
 	public boolean forceClientState;
 
 	public FlexpeaterTileEntity() {
-		super(AllTileEntities.FLEXPEATER.type);
+		this(AllTileEntities.FLEXPEATER.type);
+	}
+
+	protected FlexpeaterTileEntity(TileEntityType<?> type) {
+		super(type);
 		lastModified  = -1;
 		maxState = newMaxState = 1;
 	}

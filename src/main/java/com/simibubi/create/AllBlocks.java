@@ -189,6 +189,7 @@ public enum AllBlocks {
 	ENTITY_DETECTOR(new BeltObserverBlock()),
 	PULSE_REPEATER(new PulseRepeaterBlock()),
 	FLEXPEATER(new FlexpeaterBlock()),
+	FLEXPULSEPEATER(new FlexpeaterBlock()),
 	FLEXPEATER_INDICATOR(new RenderUtilityBlock()),
 
 	__CURIOSITIES__(),

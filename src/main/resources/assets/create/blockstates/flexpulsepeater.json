@@ -1,0 +1,24 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"powered=false,powering=false,facing=north": { "model": "create:block/repeaters/flexpulsepeater", "y": 180 },
+		"powered=false,powering=false,facing=east": { "model": "create:block/repeaters/flexpulsepeater", "y": 270 },
+		"powered=false,powering=false,facing=south": { "model": "create:block/repeaters/flexpulsepeater", "y": 0 },
+		"powered=false,powering=false,facing=west": { "model": "create:block/repeaters/flexpulsepeater", "y": 90 },
+		
+		"powered=true,powering=false,facing=north": { "model": "create:block/repeaters/flexpulsepeater_powered", "y": 180 },
+		"powered=true,powering=false,facing=east": { "model": "create:block/repeaters/flexpulsepeater_powered", "y": 270 },
+		"powered=true,powering=false,facing=south": { "model": "create:block/repeaters/flexpulsepeater_powered", "y": 0 },
+		"powered=true,powering=false,facing=west": { "model": "create:block/repeaters/flexpulsepeater_powered", "y": 90 },
+		
+		"powered=false,powering=true,facing=north": { "model": "create:block/repeaters/flexpulsepeater_powering", "y": 180 },
+		"powered=false,powering=true,facing=east": { "model": "create:block/repeaters/flexpulsepeater_powering", "y": 270 },
+		"powered=false,powering=true,facing=south": { "model": "create:block/repeaters/flexpulsepeater_powering", "y": 0 },
+		"powered=false,powering=true,facing=west": { "model": "create:block/repeaters/flexpulsepeater_powering", "y": 90 },
+		
+		"powered=true,powering=true,facing=north": { "model": "create:block/repeaters/flexpulsepeater_powered_powering", "y": 180 },
+		"powered=true,powering=true,facing=east": { "model": "create:block/repeaters/flexpulsepeater_powered_powering", "y": 270 },
+		"powered=true,powering=true,facing=south": { "model": "create:block/repeaters/flexpulsepeater_powered_powering", "y": 0 },
+		"powered=true,powering=true,facing=west": { "model": "create:block/repeaters/flexpulsepeater_powered_powering", "y": 90 }
+	}
+}

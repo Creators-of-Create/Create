@@ -1,5 +1,5 @@
 {
     "variants": {
-		"": { "model": "create:block/flexpeater_indicator" }
+		"": { "model": "create:block/repeaters/flexpeater_indicator" }
 	}
 }

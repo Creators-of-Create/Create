@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -16,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 
 public abstract class KineticBlock extends Block implements IRotate {
 
@@ -23,6 +25,25 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 	public KineticBlock(Properties properties) {
 		super(properties);
+	}
+	
+	@Override
+	public ToolType getHarvestTool(BlockState state) {
+		return null;
+	}
+
+	@Override
+	public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
+		for (ToolType toolType : player.getHeldItemMainhand().getToolTypes()) {
+			if (isToolEffective(state, toolType))
+				return true;
+		}		
+		return super.canHarvestBlock(state, world, pos, player);
+	}
+	
+	@Override
+	public boolean isToolEffective(BlockState state, ToolType tool) {
+		return tool == ToolType.AXE || tool == ToolType.PICKAXE;
 	}
 
 	// IRotate

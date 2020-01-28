@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
@@ -35,6 +36,7 @@ public class WrenchItem extends Item {
 					Block.getDrops(state, (ServerWorld) world, pos, world.getTileEntity(pos)).forEach(itemStack -> {
 						player.inventory.placeItemBackInInventory(world, itemStack);
 					});
+				state.spawnAdditionalDrops(world, pos, ItemStack.EMPTY);
 				world.destroyBlock(pos, false);
 			}
 			return ActionResultType.SUCCESS;

@@ -9,6 +9,9 @@ import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 
 public class CasingBlock extends Block implements IHaveConnectedTextures {
@@ -21,8 +24,22 @@ public class CasingBlock extends Block implements IHaveConnectedTextures {
 	}
 
 	@Override
+	public ToolType getHarvestTool(BlockState state) {
+		return null;
+	}
+
+	@Override
+	public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
+		for (ToolType toolType : player.getHeldItemMainhand().getToolTypes()) {
+			if (isToolEffective(state, toolType))
+				return true;
+		}		
+		return super.canHarvestBlock(state, world, pos, player);
+	}
+	
+	@Override
 	public boolean isToolEffective(BlockState state, ToolType tool) {
-		return tool == ToolType.PICKAXE || tool == ToolType.AXE;
+		return tool == ToolType.AXE || tool == ToolType.PICKAXE;
 	}
 
 	@Override

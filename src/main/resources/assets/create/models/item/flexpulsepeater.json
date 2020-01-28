@@ -1,7 +1,7 @@
 {
-    "parent": "create:block/repeaters/flexpeater",
+    "parent": "create:block/repeaters/flexpulsepeater",
 	"textures": {
-		"flexpeater_off": "create:block/flexpeater_item"
+		"flexpeater_off": "create:block/flexpulsepeater_item"
 	},
 	"display": {
         "fixed": {

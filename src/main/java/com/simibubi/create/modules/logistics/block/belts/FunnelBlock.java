@@ -16,13 +16,16 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -168,6 +171,24 @@ public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachm
 		if (movementFacing != te.getWorld().getBlockState(state.attachmentPos).get(HORIZONTAL_FACING))
 			return false;
 		return process(te, transported, state);
+	}
+
+	@Override
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+			BlockRayTraceResult hit) {
+
+		if (hit.getFace() == getBlockFacing(state).getOpposite()) {
+			if (!worldIn.isRemote)
+				withTileEntityDo(worldIn, pos, te -> {
+					ItemStack heldItem = player.getHeldItem(handIn).copy();
+					ItemStack remainder = te.tryToInsert(heldItem);
+					if (!ItemStack.areItemStacksEqual(remainder, heldItem))
+						player.setHeldItem(handIn, remainder);
+				});
+			return true;
+		}
+
+		return false;
 	}
 
 	public boolean process(BeltTileEntity belt, TransportedItemStack transported, BeltAttachmentState state) {

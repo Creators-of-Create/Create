@@ -86,6 +86,31 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 		return state.get(CASING) ? Material.WOOD : Material.WOOL;
 	}
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.storage.loot.LootContext.Builder builder) {
+		List<ItemStack> drops = super.getDrops(state, builder);
+		if (state.get(CASING))
+			drops.addAll(AllBlocks.BRASS_CASING.getDefault()
+					.getDrops(builder));
+		return drops;
+	}
+	
+	@Override
+	public void spawnAdditionalDrops(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
+		withTileEntityDo(worldIn, pos, te -> {
+			if (worldIn.isRemote)
+				return;
+			if (te.hasPulley())
+				Block.spawnDrops(AllBlocks.SHAFT.get().getDefaultState(), worldIn, pos);
+			if (te.isController()) {
+				BeltInventory inv = te.getInventory();
+				for (TransportedItemStack s : inv.items)
+					inv.eject(s);
+			}
+		});
+	}
+
 	@Override
 	public boolean isFlammable(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
 		return false;
@@ -305,22 +330,6 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 	}
 
 	@Override
-	public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-		withTileEntityDo(worldIn, pos, te -> {
-			if (worldIn.isRemote)
-				return;
-			if (te.hasPulley() && (player == null || !player.isCreative()))
-				Block.spawnDrops(AllBlocks.SHAFT.get().getDefaultState(), worldIn, pos);
-			if (te.isController()) {
-				BeltInventory inv = te.getInventory();
-				for (TransportedItemStack stack : inv.items)
-					inv.eject(stack);
-			}
-		});
-		super.onBlockHarvested(worldIn, pos, state, player);
-	}
-
-	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
@@ -361,6 +370,8 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 				te.setSource(null);
 				te.remove();
 
+				if (destroyedBlock.get(CASING))
+					Block.spawnAsEntity(worldIn, toDestroy, new ItemStack(AllBlocks.BRASS_CASING.get()));
 				if (te.hasPulley())
 					worldIn.setBlockState(toDestroy, AllBlocks.SHAFT.get().getDefaultState()
 							.with(BlockStateProperties.AXIS, getRotationAxis(destroyedBlock)), 3);

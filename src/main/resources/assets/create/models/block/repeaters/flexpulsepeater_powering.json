@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/repeaters/flexpulsepeater",
+    "textures": {
+		"torch": "minecraft:block/redstone_torch"
+    }
+}

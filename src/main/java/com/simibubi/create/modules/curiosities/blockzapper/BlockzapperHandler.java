@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
@@ -89,20 +90,6 @@ public class BlockzapperHandler {
 				.add(barrelPosNoTransform.rotatePitch(pitch).rotateYaw(yaw));
 		return barrelPos;
 	}
-
-//	@SubscribeEvent(priority = EventPriority.HIGHEST)
-//	public static void onBlockBroken(BreakEvent event) {
-//		PlayerEntity player = event.getPlayer();
-//		if (player == null)
-//			return;
-//		if (!AllItems.PLACEMENT_HANDGUN.typeOf(player.getHeldItemMainhand()))
-//			return;
-//
-//		if (event.getState().isNormalCube(player.world, event.getPos())) {
-//			player.getHeldItemMainhand().getTag().put("BlockUsed", NBTUtil.writeBlockState(event.getState()));
-//		}
-//		event.setCanceled(true);
-//	}
 
 	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event) {
@@ -185,73 +172,77 @@ public class BlockzapperHandler {
 
 	@SubscribeEvent
 	public static void onRenderPlayerHand(RenderSpecificHandEvent event) {
-		if (AllItems.PLACEMENT_HANDGUN.typeOf(event.getItemStack())) {
-			Minecraft mc = Minecraft.getInstance();
-			boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ mc.player.getPrimaryHand() == HandSide.LEFT;
+		ItemStack heldItem = event.getItemStack();
+		if (!AllItems.PLACEMENT_HANDGUN.typeOf(heldItem))
+			return;
 
-			GlStateManager.pushMatrix();
+		boolean idle = !heldItem.getOrCreateTag().contains("BlockUsed");
+		Minecraft mc = Minecraft.getInstance();
+		boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ mc.player.getPrimaryHand() == HandSide.LEFT;
 
-			float recoil = rightHand
-					? MathHelper.lerp(event.getPartialTicks(), lastRightHandAnimation, rightHandAnimation)
-					: MathHelper.lerp(event.getPartialTicks(), lastLeftHandAnimation, leftHandAnimation);
+		GlStateManager.pushMatrix();
 
-			float equipProgress = event.getEquipProgress();
+		float recoil = rightHand ? MathHelper.lerp(event.getPartialTicks(), lastRightHandAnimation, rightHandAnimation)
+				: MathHelper.lerp(event.getPartialTicks(), lastLeftHandAnimation, leftHandAnimation);
 
-			if (rightHand && (rightHandAnimation > .01f || dontReequipRight))
-				equipProgress = 0;
-			if (!rightHand && (leftHandAnimation > .01f || dontReequipLeft))
-				equipProgress = 0;
+		float equipProgress = event.getEquipProgress();
 
-			// Render arm
-			float f = rightHand ? 1.0F : -1.0F;
-			float f1 = MathHelper.sqrt(event.getSwingProgress());
-			float f2 = -0.3F * MathHelper.sin(f1 * (float) Math.PI);
-			float f3 = 0.4F * MathHelper.sin(f1 * ((float) Math.PI * 2F));
-			float f4 = -0.4F * MathHelper.sin(event.getSwingProgress() * (float) Math.PI);
-			GlStateManager.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
-					f4 + -0.71999997F + .3f + recoil);
-			GlStateManager.rotatef(f * 75.0F, 0.0F, 1.0F, 0.0F);
-			float f5 = MathHelper.sin(event.getSwingProgress() * event.getSwingProgress() * (float) Math.PI);
-			float f6 = MathHelper.sin(f1 * (float) Math.PI);
-			GlStateManager.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
-			GlStateManager.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
-			AbstractClientPlayerEntity abstractclientplayerentity = mc.player;
-			mc.getTextureManager().bindTexture(abstractclientplayerentity.getLocationSkin());
-			GlStateManager.translatef(f * -1.0F, 3.6F, 3.5F);
-			GlStateManager.rotatef(f * 120.0F, 0.0F, 0.0F, 1.0F);
-			GlStateManager.rotatef(200.0F, 1.0F, 0.0F, 0.0F);
-			GlStateManager.rotatef(f * -135.0F, 0.0F, 1.0F, 0.0F);
-			GlStateManager.translatef(f * 5.6F, 0.0F, 0.0F);
-			GlStateManager.rotatef(f * 40.0F, 0.0F, 1.0F, 0.0F);
-			PlayerRenderer playerrenderer = mc.getRenderManager().getRenderer(abstractclientplayerentity);
-			GlStateManager.disableCull();
-			if (rightHand) {
-				playerrenderer.renderRightArm(abstractclientplayerentity);
-			} else {
-				playerrenderer.renderLeftArm(abstractclientplayerentity);
-			}
-			GlStateManager.enableCull();
-			GlStateManager.popMatrix();
+		if (rightHand && (rightHandAnimation > .01f || dontReequipRight))
+			equipProgress = 0;
+		if (!rightHand && (leftHandAnimation > .01f || dontReequipLeft))
+			equipProgress = 0;
+		if (idle)
+			equipProgress = 1 - event.getEquipProgress();
 
-			// Render gun
-			GlStateManager.pushMatrix();
-			GlStateManager.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
-					f4 + -0.71999997F - 0.1f + recoil);
-			GlStateManager.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
-			GlStateManager.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
-
-			GlStateManager.translatef(f * -0.1f, 0.1f, -0.4f);
-			GlStateManager.rotatef(f * 5.0F, 0.0F, 1.0F, 0.0F);
-
-			FirstPersonRenderer firstPersonRenderer = mc.getFirstPersonRenderer();
-			firstPersonRenderer.renderItemSide(mc.player, event.getItemStack(),
-					rightHand ? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
-							: ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
-					!rightHand);
-			GlStateManager.popMatrix();
-
-			event.setCanceled(true);
+		// Render arm
+		float f = rightHand ? 1.0F : -1.0F;
+		float f1 = MathHelper.sqrt(event.getSwingProgress());
+		float f2 = -0.3F * MathHelper.sin(f1 * (float) Math.PI);
+		float f3 = 0.4F * MathHelper.sin(f1 * ((float) Math.PI * 2F));
+		float f4 = -0.4F * MathHelper.sin(event.getSwingProgress() * (float) Math.PI);
+		GlStateManager.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
+				f4 + -0.71999997F + .3f + recoil);
+		GlStateManager.rotatef(f * 75.0F, 0.0F, 1.0F, 0.0F);
+		float f5 = MathHelper.sin(event.getSwingProgress() * event.getSwingProgress() * (float) Math.PI);
+		float f6 = MathHelper.sin(f1 * (float) Math.PI);
+		GlStateManager.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
+		AbstractClientPlayerEntity abstractclientplayerentity = mc.player;
+		mc.getTextureManager().bindTexture(abstractclientplayerentity.getLocationSkin());
+		GlStateManager.translatef(f * -1.0F, 3.6F, 3.5F);
+		GlStateManager.rotatef(f * 120.0F, 0.0F, 0.0F, 1.0F);
+		GlStateManager.rotatef(200.0F, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotatef(f * -135.0F, 0.0F, 1.0F, 0.0F);
+		GlStateManager.translatef(f * 5.6F, 0.0F, 0.0F);
+		GlStateManager.rotatef(f * 40.0F, 0.0F, 1.0F, 0.0F);
+		PlayerRenderer playerrenderer = mc.getRenderManager().getRenderer(abstractclientplayerentity);
+		GlStateManager.disableCull();
+		if (rightHand) {
+			playerrenderer.renderRightArm(abstractclientplayerentity);
+		} else {
+			playerrenderer.renderLeftArm(abstractclientplayerentity);
 		}
+		GlStateManager.enableCull();
+		GlStateManager.popMatrix();
+
+		// Render gun
+		GlStateManager.pushMatrix();
+		GlStateManager.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
+				f4 + -0.71999997F - 0.1f + recoil);
+		GlStateManager.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
+
+		GlStateManager.translatef(f * -0.1f, 0.1f, -0.4f);
+		GlStateManager.rotatef(f * 5.0F, 0.0F, 1.0F, 0.0F);
+
+		FirstPersonRenderer firstPersonRenderer = mc.getFirstPersonRenderer();
+		firstPersonRenderer.renderItemSide(mc.player, heldItem,
+				rightHand ? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
+						: ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
+				!rightHand);
+		GlStateManager.popMatrix();
+
+		event.setCanceled(true);
 	}
 
 	public static void dontAnimateItem(Hand hand) {

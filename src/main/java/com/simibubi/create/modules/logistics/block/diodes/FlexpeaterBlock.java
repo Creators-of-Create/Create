@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.logistics.block.diodes;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IHaveScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.Lang;
@@ -41,7 +42,7 @@ public class FlexpeaterBlock extends RedstoneDiodeBlock
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new FlexpeaterTileEntity();
+		return AllBlocks.FLEXPEATER.get() == this ? new FlexpeaterTileEntity() : new FlexPulsepeaterTileEntity();
 	}
 
 	@Override

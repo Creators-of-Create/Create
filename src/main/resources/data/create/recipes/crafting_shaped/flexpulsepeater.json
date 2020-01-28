@@ -1,0 +1,24 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "SP"
+        ],
+        "key": {
+			"P": {
+                "item": "create:flexpeater"
+            },
+			"S": {
+                "item": "create:pulse_repeater"
+            }
+        },
+	"result": {
+		"item": "create:flexpulsepeater",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "logistics"
+		}
+	]
+}

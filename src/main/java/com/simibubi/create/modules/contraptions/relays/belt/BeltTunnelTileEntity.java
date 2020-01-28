@@ -102,6 +102,7 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 			syncedFlaps.remove(face);
 		else
 			syncedFlaps.put(face, ItemStack.EMPTY);
+		
 		markDirty();
 		sendData();
 		return true;

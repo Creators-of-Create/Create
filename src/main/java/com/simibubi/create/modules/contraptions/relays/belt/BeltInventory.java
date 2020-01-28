@@ -145,7 +145,7 @@ public class BeltInventory {
 			}
 
 			// Belt tunnels
-			if (!onClient) {
+			{
 				int seg1 = (int) current.beltPosition;
 				int seg2 = (int) nextOffset;
 				if (!beltMovementPositive && nextOffset == 0)
@@ -154,8 +154,10 @@ public class BeltInventory {
 					if (stuckAtTunnel(seg2, current.stack, movementFacing)) {
 						continue;
 					}
-					flapTunnel(seg1, movementFacing, false);
-					flapTunnel(seg2, movementFacing.getOpposite(), true);
+					if (!onClient) {
+						flapTunnel(seg1, movementFacing, false);
+						flapTunnel(seg2, movementFacing.getOpposite(), true);
+					}
 				}
 			}
 
@@ -263,10 +265,8 @@ public class BeltInventory {
 		if (te == null || !(te instanceof BeltTunnelTileEntity))
 			return false;
 
-		Direction flapFacing = movementDirection;
-		if (flapFacing.getAxis() == Axis.X)
-			flapFacing = flapFacing.getOpposite();
-
+		Direction flapFacing = movementDirection.getOpposite();
+		
 		BeltTunnelTileEntity tunnel = (BeltTunnelTileEntity) te;
 		if (!tunnel.flaps.containsKey(flapFacing))
 			return false;

@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/repeaters/flexpulsepeater",
+    "textures": {
+        "flexpeater_off": "create:block/flexpulsepeater_on",
+		"particle": "create:block/flexpulsepeater_on"
+    }
+}

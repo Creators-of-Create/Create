@@ -56,6 +56,7 @@ import com.simibubi.create.modules.logistics.block.StockswitchTileEntity;
 import com.simibubi.create.modules.logistics.block.belts.BeltObserverTileEntity;
 import com.simibubi.create.modules.logistics.block.belts.BeltObserverTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.belts.FunnelTileEntity;
+import com.simibubi.create.modules.logistics.block.diodes.FlexPulsepeaterTileEntity;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterTileEntity;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterTileEntityRenderer;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorTileEntity;
@@ -129,6 +130,7 @@ public enum AllTileEntities {
 	BELT_FUNNEL(FunnelTileEntity::new, AllBlocks.BELT_FUNNEL, AllBlocks.VERTICAL_FUNNEL),
 	ENTITY_DETECTOR(BeltObserverTileEntity::new, AllBlocks.ENTITY_DETECTOR),
 	FLEXPEATER(FlexpeaterTileEntity::new, AllBlocks.FLEXPEATER),
+	FLEXPULSEPEATER(FlexPulsepeaterTileEntity::new, AllBlocks.FLEXPULSEPEATER),
 
 	// Curiosities
 	WINDOW_IN_A_BLOCK(WindowInABlockTileEntity::new, AllBlocks.WINDOW_IN_A_BLOCK),
