@@ -1,25 +1,23 @@
 {
     "type": "crafting_shaped",
+        "type": "crafting_shaped",
         "pattern": [
-            "APA",
-            "BCB",
-			"AIA"
+            " B ",
+            "SCS",
+			" I "
         ],
         "key": {
-            "B": {
-                "tag": "minecraft:planks"
+            "S": {
+                "item": "create:cogwheel"
             },
-			"A": {
+			"B": {
                 "item": "create:andesite_alloy"
             },
-			"P": {
-                "item": "create:piston_pole"
+			"C": {
+                "item": "create:andesite_casing"
             },
 			"I": {
-                "item": "minecraft:iron_block"
-            },
-			"C": {
-                "item": "create:cogwheel"
+                "tag": "forge:storage_blocks/iron"
             }
         },
 	"result": {

@@ -1,24 +1,17 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            "ALA",
-            "PLP",
-			"ALA"
+            "A A",
+			"AAA"
         ],
         "key": {
-			"L": {
-                "tag": "minecraft:logs"
-            },
 			"A": {
                 "item": "create:andesite_alloy"
-            },
-			"P": {
-                "tag": "minecraft:planks"
             }
         },
 	"result": {
-		"item": "create:rotation_chassis",
-		"count": 4
+		"item": "create:basin",
+		"count": 1
 	},
 	"conditions": [
 		{

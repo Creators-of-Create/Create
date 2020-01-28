@@ -1,22 +1,19 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            "ABA",
-            "RSR",
-			"ABA"
+            " B ",
+            "SCS",
+			" B "
         ],
         "key": {
-            "B": {
-                "tag": "minecraft:planks"
-            },
-			"A": {
-                "item": "create:iron_sheet"
-            },
-			"S": {
+            "S": {
                 "item": "create:shaft"
             },
-			"R": {
-                "item": "minecraft:redstone"
+			"B": {
+                "tag": "forge:dusts/redstone"
+            },
+			"C": {
+                "item": "create:andesite_casing"
             }
         },
 	"result": {

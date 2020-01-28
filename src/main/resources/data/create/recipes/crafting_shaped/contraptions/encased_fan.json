@@ -1,26 +1,29 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            "PPP",
-            "CIC",
-			"CGC"
+            " S ",
+            "RAR",
+			"BPB"
         ],
         "key": {
-			"I": {
-                "item": "minecraft:iron_ingot"
+            "B": {
+                "item": "minecraft:iron_bars"
             },
-			"G": {
+			"S": {
                 "item": "create:shaft"
             },
-			"C": {
-                "item": "minecraft:cobblestone"
+			"A": {
+                "item": "create:andesite_alloy"
             },
 			"P": {
+                "item": "create:propeller"
+            },
+			"R": {
                 "tag": "minecraft:logs"
             }
         },
 	"result": {
-		"item": "create:mechanical_bearing",
+		"item": "create:encased_fan",
 		"count": 1
 	},
 	"conditions": [

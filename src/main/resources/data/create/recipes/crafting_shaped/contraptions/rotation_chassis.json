@@ -1,21 +1,21 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            " I ",
-            "ISI",
-			" I "
+            " L ",
+            "PLP",
+			" L "
         ],
         "key": {
-            "I": {
-                "tag": "forge:plates/iron"
+			"L": {
+                "tag": "minecraft:logs"
             },
-			"S": {
+			"P": {
                 "item": "create:andesite_alloy"
             }
         },
 	"result": {
-		"item": "create:propeller",
-		"count": 1
+		"item": "create:rotation_chassis",
+		"count": 3
 	},
 	"conditions": [
 		{

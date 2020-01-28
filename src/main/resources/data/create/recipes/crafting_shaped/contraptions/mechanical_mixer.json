@@ -1,32 +1,32 @@
 {
     "type": "crafting_shaped",
-    "pattern": [
+	"pattern": [
 		" B ",
 		"SCS",
 		" I "
 	],
 	"key": {
 		"S": {
-			"tag": "forge:plates/brass"
+			"item": "create:cogwheel"
 		},
 		"B": {
 			"item": "create:electron_tube"
 		},
 		"C": {
-			"item": "minecraft:dried_kelp"
+			"item": "create:andesite_casing"
 		},
 		"I": {
-			"tag": "minecraft:planks"
+			"item": "create:whisk"
 		}
 	},
 	"result": {
-		"item": "create:extractor",
-		"count": 4
+		"item": "create:mechanical_mixer",
+		"count": 1
 	},
 	"conditions": [
 		{
 			"type": "create:module",
-			"module": "logistics"
+			"module": "contraptions"
 		}
 	]
 }

@@ -1,24 +1,27 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            "APA",
-            "LLL",
-			"APA"
+            " L ",
+            "CRC",
+			"LTL"
         ],
         "key": {
 			"L": {
                 "tag": "minecraft:logs"
             },
-			"A": {
-                "item": "create:andesite_alloy"
+			"R": {
+                "tag": "forge:dusts/redstone"
             },
-			"P": {
-                "tag": "minecraft:planks"
+			"T": {
+                "item": "minecraft:rail"
+            },
+			"C": {
+                "item": "create:andesite_alloy"
             }
         },
 	"result": {
-		"item": "create:translation_chassis",
-		"count": 4
+		"item": "create:cart_assembler",
+		"count": 1
 	},
 	"conditions": [
 		{

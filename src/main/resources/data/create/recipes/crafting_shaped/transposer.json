@@ -1,26 +1,24 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            " I ",
-            "ISI",
-			" I "
+            "SP"
         ],
         "key": {
-            "I": {
-                "tag": "forge:plates/iron"
+			"P": {
+                "item": "create:belt_funnel"
             },
 			"S": {
-                "item": "create:andesite_alloy"
+                "item": "create:extractor"
             }
         },
 	"result": {
-		"item": "create:propeller",
+		"item": "create:transposer",
 		"count": 1
 	},
 	"conditions": [
 		{
 			"type": "create:module",
-			"module": "contraptions"
+			"module": "logistics"
 		}
 	]
 }

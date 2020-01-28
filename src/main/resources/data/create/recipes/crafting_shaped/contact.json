@@ -1,24 +1,21 @@
 {
     "type": "crafting_shaped",
-        "pattern": [
-            "GAG",
-            "PRP",
-			"GPG"
-        ],
-        "key": {
-			"P": {
-                "tag": "minecraft:planks"
-            },
-			"A": {
-                "item": "create:andesite_alloy"
-            },
-			"R": {
-                "item": "minecraft:redstone"
-            },
-			"G": {
-                "item": "create:brass_sheet"
-            }
-        },
+	"pattern": [
+		"SCS",
+		" B ",
+		"SCS"
+	],
+	"key": {
+		"S": {
+			"tag": "forge:dusts/redstone"
+		},
+		"B": {
+			"tag": "forge:ingots/iron"
+		},
+		"C": {
+			"item": "create:brass_casing"
+		}
+	},
 	"result": {
 		"item": "create:contact",
 		"count": 2

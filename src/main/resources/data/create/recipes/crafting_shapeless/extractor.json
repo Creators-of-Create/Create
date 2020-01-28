@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:linked_extractor"
+    }
+  ],
+  "result": {
+    "item": "create:extractor",
+    "count": 1
+  },
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "logistics"
+		}
+	]
+}

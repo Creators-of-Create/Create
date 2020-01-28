@@ -1,21 +1,23 @@
 {
     "type": "crafting_shaped",
-        "pattern": [
-            "ABA",
-            "BSB",
-			"ABA"
-        ],
-        "key": {
-            "B": {
-                "tag": "minecraft:planks"
-            },
-			"A": {
-                "item": "create:brass_sheet"
-            },
-			"S": {
-                "item": "minecraft:observer"
-            }
-        },
+    "pattern": [
+		"RCI",
+		" B "
+	],
+	"key": {
+		"R": {
+			"tag": "forge:dusts/redstone"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"C": {
+			"item": "minecraft:observer"
+		},
+		"B": {
+			"item": "create:brass_casing"
+		}
+	},
 	"result": {
 		"item": "create:entity_detector",
 		"count": 1

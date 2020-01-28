@@ -1,23 +1,22 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            " I ",
-            "IAI",
-			"CCC"
+            " C ",
+			"SAS"
         ],
         "key": {
 			"A": {
-                "item": "create:iron_sheet"
+                "item": "create:andesite_casing"
             },
-			"I": {
-                "item": "minecraft:iron_nugget"
+			"S": {
+                "item": "create:shaft"
             },
 			"C": {
-                "item": "minecraft:cobblestone"
+                "item": "minecraft:compass"
             }
         },
 	"result": {
-		"item": "create:harvester",
+		"item": "create:speed_gauge",
 		"count": 1
 	},
 	"conditions": [

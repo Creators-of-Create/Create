@@ -2,16 +2,21 @@
     "type": "crafting_shaped",
         "pattern": [
             "BBB",
-            "B B",
-			"BBB"
+			"PAP"
         ],
         "key": {
-            "B": {
-                "item": "create:brass_casing"
+			"A": {
+                "item": "minecraft:dried_kelp"
+            },
+			"P": {
+                "tag": "forge:plates/brass"
+            },
+			"B": {
+                "tag": "forge:ingots/brass"
             }
         },
 	"result": {
-		"item": "create:flexcrate",
+		"item": "create:belt_tunnel",
 		"count": 4
 	},
 	"conditions": [

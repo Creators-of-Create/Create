@@ -1,26 +1,23 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            "ABA",
-            "RSR",
-			"ABA"
+            " A ",
+            "AIA",
+			" C "
         ],
         "key": {
-            "B": {
-                "item": "minecraft:iron_bars"
+			"C": {
+                "item": "create:andesite_casing"
+            },
+			"I": {
+                "tag": "forge:ingots/iron"
             },
 			"A": {
                 "item": "create:andesite_alloy"
-            },
-			"S": {
-                "item": "create:propeller"
-            },
-			"R": {
-                "tag": "minecraft:logs"
             }
         },
 	"result": {
-		"item": "create:encased_fan",
+		"item": "create:drill",
 		"count": 1
 	},
 	"conditions": [

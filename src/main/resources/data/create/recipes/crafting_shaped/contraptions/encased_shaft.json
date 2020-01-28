@@ -1,26 +1,18 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            " AA",
-            "CIA",
-			"SC "
+			"CS"
         ],
         "key": {
-			"A": {
-                "item": "create:andesite_alloy"
-            },
-			"I": {
-                "item": "minecraft:iron_block"
+            "C": {
+                "item": "create:andesite_casing"
             },
 			"S": {
                 "item": "create:shaft"
-            },
-			"C": {
-                "item": "minecraft:cobblestone"
             }
         },
 	"result": {
-		"item": "create:drill",
+		"item": "create:encased_shaft",
 		"count": 1
 	},
 	"conditions": [

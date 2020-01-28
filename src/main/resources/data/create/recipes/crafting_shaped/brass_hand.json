@@ -1,24 +1,21 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            "ABA",
-            "BSB",
-			"ABA"
+            " A ",
+            "III",
+			" I "
         ],
         "key": {
-            "B": {
-                "item": "create:cogwheel"
-            },
 			"A": {
                 "item": "create:andesite_alloy"
             },
-			"S": {
-                "tag": "minecraft:planks"
+			"I": {
+                "tag": "forge:plates/brass"
             }
         },
 	"result": {
-		"item": "create:gearbox",
-		"count": 2
+		"item": "create:brass_hand",
+		"count": 1
 	},
 	"conditions": [
 		{

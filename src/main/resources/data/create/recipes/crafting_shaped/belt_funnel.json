@@ -1,21 +1,24 @@
 {
     "type": "crafting_shaped",
-        "pattern": [
-			"NN",
-            "PD",
-			"PD"
-        ],
-        "key": {
-			"D": {
-                "item": "minecraft:dried_kelp"
-            },
-			"N": {
-                "item": "create:brass_sheet"
-            },
-			"P": {
-                "tag": "minecraft:planks"
-            }
-        },
+    "pattern": [
+		" B ",
+		"SCS",
+		"ICI"
+	],
+	"key": {
+		"S": {
+			"tag": "forge:plates/brass"
+		},
+		"B": {
+			"item": "create:electron_tube"
+		},
+		"C": {
+			"item": "minecraft:dried_kelp"
+		},
+		"I": {
+			"tag": "minecraft:planks"
+		}
+	},
 	"result": {
 		"item": "create:belt_funnel",
 		"count": 4

@@ -1,24 +1,24 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            "ABA",
-            "BSB",
-			"ABA"
+            "AIA",
+            "AIA",
+			" C "
         ],
         "key": {
-            "B": {
-                "tag": "minecraft:planks"
+			"C": {
+                "item": "create:andesite_casing"
+            },
+			"I": {
+                "tag": "forge:plates/iron"
             },
 			"A": {
                 "item": "create:andesite_alloy"
-            },
-			"S": {
-                "item": "create:shaft"
             }
         },
 	"result": {
-		"item": "create:encased_shaft",
-		"count": 2
+		"item": "create:harvester",
+		"count": 1
 	},
 	"conditions": [
 		{

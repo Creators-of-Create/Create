@@ -1,20 +1,20 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            " I ",
-            "ISI",
-			" I "
+            " A ",
+            "IAI",
+			"III"
         ],
         "key": {
-            "I": {
-                "tag": "forge:plates/iron"
-            },
-			"S": {
+			"A": {
                 "item": "create:andesite_alloy"
+            },
+			"I": {
+                "tag": "forge:plates/iron"
             }
         },
 	"result": {
-		"item": "create:propeller",
+		"item": "create:whisk",
 		"count": 1
 	},
 	"conditions": [

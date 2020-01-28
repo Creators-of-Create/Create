@@ -1,24 +1,23 @@
 {
     "type": "crafting_shaped",
-        "pattern": [
-            "GAG",
-            "PRP",
-			"GPG"
-        ],
-        "key": {
-			"P": {
-                "tag": "minecraft:planks"
-            },
-			"A": {
-                "item": "minecraft:heavy_weighted_pressure_plate"
-            },
-			"R": {
-                "item": "minecraft:comparator"
-            },
-			"G": {
-                "item": "create:brass_sheet"
-            }
-        },
+	"pattern": [
+		"RCI",
+		" B "
+	],
+	"key": {
+		"R": {
+			"tag": "forge:dusts/redstone"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"C": {
+			"item": "minecraft:comparator"
+		},
+		"B": {
+			"item": "create:brass_casing"
+		}
+	},
 	"result": {
 		"item": "create:stockswitch",
 		"count": 1

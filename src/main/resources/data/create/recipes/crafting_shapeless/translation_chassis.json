@@ -1,0 +1,18 @@
+{
+    "type": "crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "create:translation_chassis_secondary"
+		}
+	],
+	"result": {
+		"item": "create:translation_chassis",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}
