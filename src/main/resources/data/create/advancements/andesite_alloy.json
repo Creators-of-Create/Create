@@ -1,0 +1,30 @@
+{
+    "display": {
+        "title": {
+            "text": "Andesite Alloy"
+        },
+        "description": {
+            "text": "A basic building block of create"
+        },
+        "icon": {
+            "item": "create:andesite_alloy"
+        },
+        "frame": "task",
+        "show_toast": false,
+        "announce_to_chat": false,
+        "hidden": true
+    },
+    "criteria": {
+        "alloy": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:andesite_alloy"
+                    }
+                ]
+            }
+        }
+    },
+    "parent": "create:root"
+}

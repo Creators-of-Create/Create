@@ -1,0 +1,32 @@
+{
+    "display": {
+        "title": {
+            "text": "Polished Rose Quartz",
+            "color": "red"
+        },
+        "description": {
+            "text": "Description"
+        },
+        "icon": {
+            "item": "create:polished_rose_quartz"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": false,
+        "hidden": false
+    },
+    "criteria": {
+        "quartz": {
+            "comment_": "TODO replace this with a custom trigger for sand paper use or maybe item durability change",
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:polished_rose_quartz"
+                    }
+                ]
+            }
+        }
+    },
+    "parent": "create:sand_paper"
+}

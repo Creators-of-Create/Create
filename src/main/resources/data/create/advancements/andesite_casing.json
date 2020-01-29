@@ -1,0 +1,31 @@
+{
+    "display": {
+        "title": {
+            "text": "Andesite Casing",
+            "color": "gray"
+        },
+        "description": {
+            "text": "Use some Andesite, Metal and Wood to create a basic Casing"
+        },
+        "icon": {
+            "item": "create:andesite_casing"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "casing": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:andesite_casing"
+                    }
+                ]
+            }
+        }
+    },
+    "parent": "create:andesite_alloy"
+}

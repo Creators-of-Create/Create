@@ -1,0 +1,30 @@
+{
+    "display": {
+        "title": {
+            "text": "brass_casing"
+        },
+        "description": {
+            "text": "Description"
+        },
+        "icon": {
+            "item": "create:brass_casing"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "casing": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:brass_casing"
+                    }
+                ]
+            }
+        }
+    },
+    "parent": "create:brass"
+}

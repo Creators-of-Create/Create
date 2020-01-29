@@ -1,0 +1,30 @@
+{
+    "display": {
+        "title": {
+            "text": "mixer"
+        },
+        "description": {
+            "text": "mixer_desc"
+        },
+        "icon": {
+            "item": "create:mechanical_mixer"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "mixer": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:mechanical_mixer"
+                    }
+                ]
+            }
+        }
+    },
+    "parent": "create:mechanical_press"
+}

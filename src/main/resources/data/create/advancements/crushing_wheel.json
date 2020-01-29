@@ -1,0 +1,34 @@
+{
+    "display": {
+        "title": {
+            "text": "I've got a crush on you"
+        },
+        "description": {
+            "text": "create a pair of crushing wheels"
+        },
+        "icon": {
+            "item": "create:crushing_wheel"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "crushers": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:crushing_wheel",
+                        "count": {
+                            "min": 2,
+                            "max": 2
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "parent": "create:andesite_alloy"
+}

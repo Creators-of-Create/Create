@@ -1,0 +1,48 @@
+{
+    "display": {
+        "title": {
+            "text": "Squeezing real hard"
+        },
+        "description": {
+            "text": "Make a Mechanical Press and use it to create some plates"
+        },
+        "icon": {
+            "item": "create:mechanical_press"
+        },
+        "frame": "goal",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "press": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:mechanical_press"
+                    }
+                ]
+            }
+        },
+        "plate": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "tag": "forge:plates"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "press"
+        ],
+        [
+            "plate"
+        ]
+    ],
+    "parent": "create:andesite_casing"
+}

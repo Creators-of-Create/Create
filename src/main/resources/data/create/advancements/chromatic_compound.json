@@ -1,0 +1,32 @@
+{
+    "display": {
+        "title": {
+            "text": "Chromatic Compound",
+            "color": "dark_purple"
+        },
+        "description": {
+            "text": "Description"
+        },
+        "icon": {
+            "item": "create:chromatic_compound"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "alloy": {
+            "comment_": "TODO introduce trigger for mixer recipes",
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:chromatic_compound"
+                    }
+                ]
+            }
+        }
+    },
+    "parent": "create:mechanical_mixer"
+}

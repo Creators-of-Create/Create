@@ -1,0 +1,31 @@
+{
+    "display": {
+        "title": {
+            "text": "SHINY!!!",
+            "color": "white"
+        },
+        "description": {
+            "text": "Description"
+        },
+        "icon": {
+            "item": "create:refined_radiance"
+        },
+        "frame": "goal",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "radiance": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:refined_radiance"
+                    }
+                ]
+            }
+        }
+    },
+    "parent": "create:chromatic_compound"
+}

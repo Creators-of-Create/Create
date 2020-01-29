@@ -1,0 +1,31 @@
+{
+    "display": {
+        "title": {
+            "text": "Not quite as shiny",
+            "color": "black"
+        },
+        "description": {
+            "text": "Description"
+        },
+        "icon": {
+            "item": "create:shadow_steel"
+        },
+        "frame": "goal",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "alloy": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:shadow_steel"
+                    }
+                ]
+            }
+        }
+    },
+    "parent": "create:chromatic_compound"
+}

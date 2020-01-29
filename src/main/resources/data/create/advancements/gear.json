@@ -1,0 +1,46 @@
+{
+    "display": {
+        "title": {
+            "text": "Know what really grinds my Gears?"
+        },
+        "description": {
+            "text": "sand paper."
+        },
+        "icon": {
+            "item": "create:cogwheel"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": true
+    },
+    "criteria": {
+        "gearSmall": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:cogwheel"
+                    }
+                ]
+            }
+        },
+        "gearBig": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "create:large_cogwheel"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "gearSmall",
+            "gearBig"
+        ]
+    ],
+    "parent": "create:andesite_alloy"
+}
