@@ -209,7 +209,7 @@ public class RotationPropagator {
 					&& (newSpeed != 0 && neighbourTE.speed != 0);
 
 			boolean tooFast = Math.abs(newSpeed) > parameters.maxRotationSpeed.get();
-			boolean speedChangedTooOften = updateTE.speedChangeCounter > 25;
+			boolean speedChangedTooOften = updateTE.speedChangeCounter > 50;
 			if (tooFast || speedChangedTooOften) {
 				world.destroyBlock(pos, true);
 				return;

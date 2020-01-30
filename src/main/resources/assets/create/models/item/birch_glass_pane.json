@@ -1,0 +1,7 @@
+{
+    "parent": "create:item/pane",
+	"textures": {
+		"pane": "create:block/birch_window",
+		"edge": "block/birch_planks"
+	}
+}

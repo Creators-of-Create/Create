@@ -1,0 +1,7 @@
+{
+    "parent": "create:block/template_glass_pane_side_alt",
+    "textures": {
+        "edge": "block/acacia_planks",
+        "pane": "create:block/acacia_window"
+    }
+}

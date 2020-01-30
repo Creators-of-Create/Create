@@ -1,0 +1,7 @@
+{
+    "parent": "create:block/template_glass_pane_side_alt",
+    "textures": {
+        "edge": "block/jungle_planks",
+        "pane": "create:block/jungle_window"
+    }
+}

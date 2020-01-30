@@ -2,6 +2,9 @@ package com.simibubi.create.modules.palettes;
 
 import java.util.Arrays;
 
+import javax.annotation.Nullable;
+
+import com.simibubi.create.AllCTs;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
@@ -14,13 +17,13 @@ public class LayeredCTBlock extends Block implements IHaveConnectedTextures {
 
 	private LayeredCTBehaviour behaviour;
 
-	public LayeredCTBlock(Properties properties, CTSpriteShiftEntry layerShift) {
+	public LayeredCTBlock(Properties properties, AllCTs layerShift) {
 		this(properties, layerShift, null);
 	}
 
-	public LayeredCTBlock(Properties properties, CTSpriteShiftEntry layerShift, CTSpriteShiftEntry topShift) {
+	public LayeredCTBlock(Properties properties, AllCTs layerShift, @Nullable AllCTs topShift) {
 		super(properties);
-		behaviour = new LayeredCTBehaviour(layerShift, topShift);
+		behaviour = new LayeredCTBehaviour(layerShift.get(), topShift == null ? null : topShift.get());
 	}
 
 	@Override
@@ -28,7 +31,7 @@ public class LayeredCTBlock extends Block implements IHaveConnectedTextures {
 		return behaviour;
 	}
 
-	private static class LayeredCTBehaviour extends ConnectedTextureBehaviour {
+	static class LayeredCTBehaviour extends ConnectedTextureBehaviour {
 
 		CTSpriteShiftEntry topShift;
 		CTSpriteShiftEntry layerShift;

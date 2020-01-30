@@ -1,0 +1,7 @@
+{
+    "parent": "create:item/pane",
+	"textures": {
+		"pane": "create:block/iron_window",
+		"edge": "create:block/gabbro"
+	}
+}

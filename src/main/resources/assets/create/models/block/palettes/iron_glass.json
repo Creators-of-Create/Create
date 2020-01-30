@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "end": "create:block/iron_window_top",
+        "side": "create:block/iron_window"
+    }
+}

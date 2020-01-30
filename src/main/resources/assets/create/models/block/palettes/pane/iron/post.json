@@ -1,0 +1,7 @@
+{
+    "parent": "create:block/template_glass_pane_post",
+    "textures": {
+        "edge": "create:block/gabbro",
+        "pane": "create:block/iron_window"
+    }
+}

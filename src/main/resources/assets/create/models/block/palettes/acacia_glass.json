@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "end": "block/acacia_planks",
+        "side": "create:block/acacia_window"
+    }
+}

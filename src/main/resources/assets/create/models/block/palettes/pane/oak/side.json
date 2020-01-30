@@ -1,0 +1,7 @@
+{
+    "parent": "create:block/template_glass_pane_side",
+    "textures": {
+        "edge": "block/oak_planks",
+        "pane": "create:block/oak_window"
+    }
+}

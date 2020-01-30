@@ -97,10 +97,10 @@ public class LinearChassisBlock extends AbstractChassisBlock implements IHaveCon
 		}
 
 		@Override
-		public boolean shouldFlipUVs(BlockState state, Direction face) {
+		public boolean reverseUVs(BlockState state, Direction face) {
 			if (state.get(AXIS).isHorizontal() && face.getAxisDirection() == AxisDirection.POSITIVE)
 				return true;
-			return super.shouldFlipUVs(state, face);
+			return super.reverseUVs(state, face);
 		}
 
 		@Override

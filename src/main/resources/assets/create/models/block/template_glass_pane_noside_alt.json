@@ -1,0 +1,14 @@
+{
+    "ambientocclusion": false,
+    "textures": {
+        "particle": "#pane"
+    },
+    "elements": [
+        {   "from": [ 7, 0, 7 ],
+            "to": [ 9, 16, 9 ],
+            "faces": {
+                "east": { "uv": [  7, 0,  9, 16 ], "texture": "#pane" }
+            }
+        }
+    ]
+}

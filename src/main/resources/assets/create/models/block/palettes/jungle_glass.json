@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "end": "block/jungle_planks",
+        "side": "create:block/jungle_window"
+    }
+}

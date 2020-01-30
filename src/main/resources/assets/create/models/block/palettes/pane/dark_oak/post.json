@@ -1,0 +1,7 @@
+{
+    "parent": "create:block/template_glass_pane_post",
+    "textures": {
+        "edge": "block/dark_oak_planks",
+        "pane": "create:block/dark_oak_window"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"LLL",
+            "LWL",
+			"LLL"
+        ],
+        "key": {
+			"L": {
+                "tag": "forge:glass"
+            },
+			"W": {
+                "item": "minecraft:jungle_planks"
+            }
+        },
+	"result": {
+		"item": "create:jungle_glass",
+		"count": 8
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

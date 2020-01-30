@@ -1,0 +1,22 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "SSS",
+			"SSS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:framed_glass"
+            }
+        },
+	"result": {
+		"item": "create:framed_glass_pane",
+		"count": 16
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"LLL",
+            "LWL",
+			"LLL"
+        ],
+        "key": {
+			"L": {
+                "tag": "forge:glass"
+            },
+			"W": {
+                "item": "create:andesite_alloy"
+            }
+        },
+	"result": {
+		"item": "create:iron_glass",
+		"count": 8
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

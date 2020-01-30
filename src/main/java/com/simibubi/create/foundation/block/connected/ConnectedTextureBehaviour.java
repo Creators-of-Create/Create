@@ -17,11 +17,19 @@ public abstract class ConnectedTextureBehaviour {
 	}
 
 	public abstract CTSpriteShiftEntry get(BlockState state, Direction direction);
-	
+
 	public abstract Iterable<CTSpriteShiftEntry> getAllCTShifts();
 
-	protected boolean shouldFlipUVs(BlockState state, Direction face) {
+	protected boolean reverseUVs(BlockState state, Direction face) {
 		return false;
+	}
+
+	protected boolean reverseUVsHorizontally(BlockState state, Direction face) {
+		return reverseUVs(state, face);
+	}
+
+	protected boolean reverseUVsVertically(BlockState state, Direction face) {
+		return reverseUVs(state, face);
 	}
 
 	public boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader, BlockPos pos,
@@ -54,27 +62,21 @@ public abstract class ConnectedTextureBehaviour {
 			BlockPos p = pos.offset(horizontal, x).offset(vertical, y);
 			return connectsTo(state, reader.getBlockState(p), reader, pos, p, face);
 		};
+		
+		boolean flipH = reverseUVsHorizontally(state, face);
+		boolean flipV = reverseUVsVertically(state, face);
+		int sh = flipH ? -1 : 1;
+		int sv = flipV ? -1 : 1;
 
-		boolean up = connection.test(0, 1);
-		boolean down = connection.test(0, -1);
-		boolean left = connection.test(-1, 0);
-		boolean right = connection.test(1, 0);
-		boolean topLeft = connection.test(-1, 1);
-		boolean topRight = connection.test(1, 1);
-		boolean bottomLeft = connection.test(-1, -1);
-		boolean bottomRight = connection.test(1, -1);
-
-		boolean flip = shouldFlipUVs(state, face);
 		CTContext context = new CTContext();
-
-		context.up = flip ? down : up;
-		context.down = flip ? up : down;
-		context.left = flip ? right : left;
-		context.right = flip ? left : right;
-		context.topLeft = flip ? bottomRight : topLeft;
-		context.topRight = flip ? bottomLeft : topRight;
-		context.bottomLeft = flip ? topRight : bottomLeft;
-		context.bottomRight = flip ? topLeft : bottomRight;
+		context.up = connection.test(0, sv);
+		context.down = connection.test(0, -sv);
+		context.left = connection.test(-sh, 0);
+		context.right = connection.test(sh, 0);
+		context.topLeft = connection.test(-sh, sv);
+		context.topRight = connection.test(sh, sv);
+		context.bottomLeft = connection.test(-sh, -sv);
+		context.bottomRight = connection.test(sh, -sv);
 
 		return context;
 	}

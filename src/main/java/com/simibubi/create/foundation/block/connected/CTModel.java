@@ -55,7 +55,7 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 		CTData data = new CTData();
 
 		for (Direction face : Direction.values()) {
-			if (!Block.shouldSideBeRendered(state, world, pos, face))
+			if (state.isNormalCube(world, pos) && !Block.shouldSideBeRendered(state, world, pos, face))
 				continue;
 			CTSpriteShiftEntry spriteShift = behaviour.get(state, face);
 			if (spriteShift == null)

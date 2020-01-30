@@ -43,7 +43,7 @@ public class InputCTBehaviour extends ConnectedTextureBehaviour {
 	}
 
 	@Override
-	protected boolean shouldFlipUVs(BlockState state, Direction direction) {
+	protected boolean reverseUVs(BlockState state, Direction direction) {
 		if (!direction.getAxis().isVertical())
 			return false;
 		Direction facing = state.get(HORIZONTAL_FACING);

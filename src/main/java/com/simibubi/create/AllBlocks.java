@@ -7,8 +7,6 @@ import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.foundation.block.RenderUtilityDirectionalBlock;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.world.OxidizingBlock;
 import com.simibubi.create.modules.IModule;
@@ -68,8 +66,11 @@ import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 import com.simibubi.create.modules.palettes.CTGlassBlock;
+import com.simibubi.create.modules.palettes.CTGlassPaneBlock;
 import com.simibubi.create.modules.palettes.GlassPaneBlock;
+import com.simibubi.create.modules.palettes.HorizontalCTGlassBlock;
 import com.simibubi.create.modules.palettes.LayeredCTBlock;
+import com.simibubi.create.modules.palettes.VerticalCTGlassBlock;
 import com.simibubi.create.modules.palettes.VolcanicRockBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
@@ -90,7 +91,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
@@ -208,22 +208,37 @@ public enum AllBlocks {
 
 	__PALETTES__(),
 	TILED_GLASS(new GlassBlock(Properties.from(Blocks.GLASS))),
+	FRAMED_GLASS(new CTGlassBlock(AllCTs.FRAMED_GLASS, false)),
+	HORIZONTAL_FRAMED_GLASS(new HorizontalCTGlassBlock(AllCTs.HORIZONTAL_FRAMED_GLASS, AllCTs.FRAMED_GLASS, false)),
+	VERTICAL_FRAMED_GLASS(new VerticalCTGlassBlock(AllCTs.VERTICAL_FRAMED_GLASS, false)),
+	
+	OAK_GLASS(new VerticalCTGlassBlock(AllCTs.OAK_GLASS, false)),
+	SPRUCE_GLASS(new VerticalCTGlassBlock(AllCTs.SPRUCE_GLASS, false)),
+	BIRCH_GLASS(new VerticalCTGlassBlock(AllCTs.BIRCH_GLASS, true)),
+	JUNGLE_GLASS(new VerticalCTGlassBlock(AllCTs.JUNGLE_GLASS, false)),
+	DARK_OAK_GLASS(new VerticalCTGlassBlock(AllCTs.DARK_OAK_GLASS, false)),
+	ACACIA_GLASS(new VerticalCTGlassBlock(AllCTs.ACACIA_GLASS, false)),
+	IRON_GLASS(new VerticalCTGlassBlock(AllCTs.IRON_GLASS, false)),
+	
 	TILED_GLASS_PANE(new GlassPaneBlock(Properties.from(Blocks.GLASS))),
-	FRAMED_GLASS(new CTGlassBlock(true)),
+	FRAMED_GLASS_PANE(new CTGlassPaneBlock(FRAMED_GLASS.block)),
+	HORIZONTAL_FRAMED_GLASS_PANE(new CTGlassPaneBlock(HORIZONTAL_FRAMED_GLASS.block)),
+	VERTICAL_FRAMED_GLASS_PANE(new CTGlassPaneBlock(VERTICAL_FRAMED_GLASS.block)),
+	OAK_GLASS_PANE(new CTGlassPaneBlock(OAK_GLASS.block)),
+	SPRUCE_GLASS_PANE(new CTGlassPaneBlock(SPRUCE_GLASS.block)),
+	BIRCH_GLASS_PANE(new CTGlassPaneBlock(BIRCH_GLASS.block)),
+	JUNGLE_GLASS_PANE(new CTGlassPaneBlock(JUNGLE_GLASS.block)),
+	DARK_OAK_GLASS_PANE(new CTGlassPaneBlock(DARK_OAK_GLASS.block)),
+	ACACIA_GLASS_PANE(new CTGlassPaneBlock(ACACIA_GLASS.block)),
+	IRON_GLASS_PANE(new CTGlassPaneBlock(IRON_GLASS.block)),
 
 	GRANITE_BRICKS(new Block(Properties.from(Blocks.GRANITE))),
-	GRANITE_LAYERS(new LayeredCTBlock(Properties.from(Blocks.GRANITE),
-			CTSpriteShifter.get(CTType.HORIZONTAL, "granite_layers"),
-			CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, new ResourceLocation("block/polished_granite"), "polished_granite"))),
+	GRANITE_LAYERS(new LayeredCTBlock(Properties.from(Blocks.GRANITE), AllCTs.GRANITE_LAYERS, AllCTs.POLISHED_GRANITE)),
 	DIORITE_BRICKS(new Block(Properties.from(Blocks.DIORITE))),
-	DIORITE_LAYERS(new LayeredCTBlock(Properties.from(Blocks.DIORITE),
-			CTSpriteShifter.get(CTType.HORIZONTAL, "diorite_layers"),
-			CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, new ResourceLocation("block/polished_diorite"), "polished_diorite"))),
+	DIORITE_LAYERS(new LayeredCTBlock(Properties.from(Blocks.DIORITE), AllCTs.DIORITE_LAYERS, AllCTs.POLISHED_DIORITE)),
 	ANDESITE_BRICKS(new Block(Properties.from(Blocks.ANDESITE))),
-	ANDESITE_LAYERS(new LayeredCTBlock(Properties.from(Blocks.ANDESITE),
-			CTSpriteShifter.get(CTType.HORIZONTAL, "andesite_layers"),
-			CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, new ResourceLocation("block/polished_andesite"),
-					"polished_andesite"))),
+	ANDESITE_LAYERS(
+			new LayeredCTBlock(Properties.from(Blocks.ANDESITE), AllCTs.ANDESITE_LAYERS, AllCTs.POLISHED_ANDESITE)),
 
 	GABBRO(new Block(Properties.from(Blocks.GRANITE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	POLISHED_GABBRO(new Block(Properties.from(GABBRO.block))),
@@ -232,32 +247,26 @@ public enum AllBlocks {
 	INDENTED_GABBRO(new Block(Properties.from(GABBRO.block)), ComesWith.SLAB),
 	SLIGHTLY_MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
 	MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
-	GABBRO_LAYERS(
-			new LayeredCTBlock(Properties.from(GABBRO.block), CTSpriteShifter.get(CTType.HORIZONTAL, "gabbro_layers"),
-					CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, "polished_gabbro"))),
+	GABBRO_LAYERS(new LayeredCTBlock(Properties.from(GABBRO.block), AllCTs.GABBRO_LAYERS, AllCTs.POLISHED_GABBRO)),
 	LIMESAND(new FallingBlock(Properties.from(Blocks.SAND))),
 	LIMESTONE(new Block(Properties.from(Blocks.SANDSTONE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	LIMESTONE_BRICKS(new Block(Properties.from(LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	POLISHED_LIMESTONE(new Block(Properties.from(LIMESTONE.block)), ComesWith.SLAB),
 	LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(LIMESTONE.block))),
-	LIMESTONE_LAYERS(new LayeredCTBlock(Properties.from(LIMESTONE.block),
-			CTSpriteShifter.get(CTType.HORIZONTAL, "limestone_layers"),
-			CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, "polished_limestone"))),
+	LIMESTONE_LAYERS(
+			new LayeredCTBlock(Properties.from(LIMESTONE.block), AllCTs.LIMESTONE_LAYERS, AllCTs.POLISHED_LIMESTONE)),
 	WEATHERED_LIMESTONE(new Block(Properties.from(Blocks.ANDESITE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	WEATHERED_LIMESTONE_BRICKS(new Block(Properties.from(WEATHERED_LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB,
 			ComesWith.WALL),
 	POLISHED_WEATHERED_LIMESTONE(new Block(Properties.from(WEATHERED_LIMESTONE.block)), ComesWith.SLAB),
 	WEATHERED_LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(WEATHERED_LIMESTONE.block))),
 	WEATHERED_LIMESTONE_LAYERS(new LayeredCTBlock(Properties.from(WEATHERED_LIMESTONE.block),
-			CTSpriteShifter.get(CTType.HORIZONTAL, "weathered_limestone_layers"),
-			CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, "polished_weathered_limestone"))),
+			AllCTs.WEATHERED_LIMESTONE_LAYERS, AllCTs.POLISHED_WEATHERED_LIMESTONE)),
 	DOLOMITE(new Block(Properties.from(Blocks.QUARTZ_BLOCK)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	DOLOMITE_BRICKS(new Block(Properties.from(DOLOMITE.block))),
 	POLISHED_DOLOMITE(new Block(Properties.from(DOLOMITE.block))),
 	DOLOMITE_PILLAR(new RotatedPillarBlock(Properties.from(DOLOMITE.block))),
-	DOLOMITE_LAYERS(new LayeredCTBlock(Properties.from(DOLOMITE.block),
-			CTSpriteShifter.get(CTType.HORIZONTAL, "dolomite_layers"),
-			CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, "polished_dolomite"))),
+	DOLOMITE_LAYERS(new LayeredCTBlock(Properties.from(DOLOMITE.block), AllCTs.DOLOMITE_LAYERS, AllCTs.POLISHED_DOLOMITE)),
 
 	VOLCANIC_ROCK(new VolcanicRockBlock()),
 

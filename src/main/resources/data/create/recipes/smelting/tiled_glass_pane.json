@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "create:tiled_glass_pane"
+  },
+  "result": "minecraft:glass_pane",
+  "cookingtime": 100,
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

@@ -1,6 +1,7 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "create:block/tiled_glass"
-  }
+    "parent": "create:item/pane",
+	"textures": {
+		"pane": "create:block/tiled_glass",
+		"edge": "block/glass_pane_top"
+	}
 }

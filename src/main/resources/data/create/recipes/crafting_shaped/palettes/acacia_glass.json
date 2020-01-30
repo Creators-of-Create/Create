@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"LLL",
+            "LWL",
+			"LLL"
+        ],
+        "key": {
+			"L": {
+                "tag": "forge:glass"
+            },
+			"W": {
+                "item": "minecraft:acacia_planks"
+            }
+        },
+	"result": {
+		"item": "create:acacia_glass",
+		"count": 8
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

@@ -1,0 +1,7 @@
+{
+    "parent": "create:item/pane",
+	"textures": {
+		"pane": "create:block/acacia_window",
+		"edge": "block/acacia_planks"
+	}
+}
