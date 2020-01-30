@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.Create;
+import com.simibubi.create.CreateClientConfig;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
@@ -61,7 +63,7 @@ public class KineticDebugger {
 	}
 
 	public static boolean isActive() {
-		return Minecraft.getInstance().gameSettings.showDebugInfo;
+		return Minecraft.getInstance().gameSettings.showDebugInfo && CreateClientConfig.instance.enableRainbowDebug.get();
 	}
 
 	public static KineticTileEntity getSelectedTE() {

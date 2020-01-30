@@ -21,6 +21,7 @@ public class CreateClientConfig {
 
 	public BooleanValue enableTooltips;
 	public DoubleValue fanParticleDensity;
+	public BooleanValue enableRainbowDebug;
 
 	CreateClientConfig(final ForgeConfigSpec.Builder builder) {
 		builder.comment(
@@ -35,6 +36,11 @@ public class CreateClientConfig {
 		name = "fanParticleDensity";
 		fanParticleDensity = builder.comment("", "Controls the average amount of fan particles spawned per tick.")
 				.translation(basePath + name).defineInRange(name, .5D, 0D, 1D);
+
+		name = "enableRainbowDebug";
+		enableRainbowDebug = builder.comment("", "Show colorful debug information while the F3-Menu is open.")
+				.translation(basePath + name).define(name, true);
+
 
 		builder.pop();
 	}

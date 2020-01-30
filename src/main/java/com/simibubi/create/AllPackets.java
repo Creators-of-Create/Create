@@ -5,6 +5,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.behaviour.filtering.FilteringCountUpdatePacket;
+import com.simibubi.create.foundation.command.ConfigureConfigPacket;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ConfigureChassisPacket;
@@ -45,6 +46,7 @@ public enum AllPackets {
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),
 	BEAM_EFFECT(BlockzapperBeamPacket.class, BlockzapperBeamPacket::new),
+	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
 
 	;
 
