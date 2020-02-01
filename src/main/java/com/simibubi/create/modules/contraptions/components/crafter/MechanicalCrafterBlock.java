@@ -35,7 +35,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
 
 public class MechanicalCrafterBlock extends HorizontalKineticBlock
 		implements IWithTileEntity<MechanicalCrafterTileEntity>, IHaveConnectedTextures {
@@ -149,7 +153,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 			return ActionResultType.SUCCESS;
 		}
 
-		return super.onWrenched(state, context);
+		return ActionResultType.PASS;
 	}
 
 	@Override
@@ -167,6 +171,20 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 
 			if (crafter.phase != Phase.IDLE && !AllItems.WRENCH.typeOf(heldItem)) {
 				crafter.ejectWholeGrid();
+				return true;
+			}
+
+			if (crafter.phase == Phase.IDLE && !isHand) {
+				if (worldIn.isRemote)
+					return true;
+				LazyOptional<IItemHandler> capability = crafter
+						.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+				if (!capability.isPresent())
+					return false;
+				ItemStack remainder = ItemHandlerHelper.insertItem(capability.orElse(new ItemStackHandler()),
+						heldItem.copy(), false);
+				if (remainder.getCount() != heldItem.getCount())
+					player.setHeldItem(handIn, remainder);
 				return true;
 			}
 

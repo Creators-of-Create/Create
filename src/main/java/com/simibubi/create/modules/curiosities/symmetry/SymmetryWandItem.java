@@ -172,7 +172,8 @@ public class SymmetryWandItem extends Item {
 		Vec3d mirrorPos = symmetry.getPosition();
 		if (mirrorPos.distanceTo(new Vec3d(pos)) > parameters.maxSymmetryWandRange.get())
 			return;
-		if (!player.isCreative() && BlockHelper.findAndRemoveInInventory(block, player, 1) == 0)
+		if (!player.isCreative() && isHoldingBlock(player, block)
+				&& BlockHelper.findAndRemoveInInventory(block, player, 1) == 0)
 			return;
 
 		symmetry.process(blockSet);
@@ -211,6 +212,12 @@ public class SymmetryWandItem extends Item {
 
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
 				new SymmetryEffectPacket(to, targets));
+	}
+
+	private static boolean isHoldingBlock(PlayerEntity player, BlockState block) {
+		ItemStack itemBlock = BlockHelper.getRequiredItem(block);
+		return player.getHeldItemMainhand().isItemEqual(itemBlock)
+				|| player.getHeldItemOffhand().isItemEqual(itemBlock);
 	}
 
 	public static void remove(World world, ItemStack wand, PlayerEntity player, BlockPos pos) {

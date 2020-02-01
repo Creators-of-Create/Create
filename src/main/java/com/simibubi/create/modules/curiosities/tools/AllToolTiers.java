@@ -23,7 +23,7 @@ public enum AllToolTiers implements IItemTier {
 		return Ingredient.fromItems(AllItems.SHADOW_STEEL.item);
 	}),
 
-	RADIANT(4, 2303, 16.0F, 3.5F, 10, () -> {
+	RADIANT(4, 1024, 16.0F, 3.5F, 10, () -> {
 		return Ingredient.fromItems(AllItems.REFINED_RADIANCE.item);
 	}),
 

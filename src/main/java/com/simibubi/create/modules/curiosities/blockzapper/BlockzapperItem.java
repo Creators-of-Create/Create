@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -61,6 +62,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -253,9 +256,18 @@ public class BlockzapperItem extends Item {
 						world.getBlockState(placed.offset(updateDirection)), world, placed,
 						placed.offset(updateDirection));
 
+			BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, placed);
 			IFluidState ifluidstate = world.getFluidState(placed);
 			world.setBlockState(placed, ifluidstate.getBlockState(), 18);
 			world.setBlockState(placed, stateToUse);
+			if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
+				blocksnapshot.restore(true, false);
+				return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
+			}
+
+			if (player instanceof ServerPlayerEntity)
+				CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, placed,
+						new ItemStack(stateToUse.getBlock()));
 
 		}
 

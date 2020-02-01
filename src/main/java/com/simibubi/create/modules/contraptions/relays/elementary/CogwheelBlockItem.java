@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;

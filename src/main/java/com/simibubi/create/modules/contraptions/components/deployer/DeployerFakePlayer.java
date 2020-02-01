@@ -42,7 +42,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		super(world, DEPLOYER_PROFILE);
 		connection = new FakePlayNetHandler(world.getServer(), this);
 	}
-
+	
 	@Override
 	public OptionalInt openContainer(INamedContainerProvider container) {
 		return OptionalInt.empty();

@@ -44,7 +44,7 @@ public class TreeCutter {
 			return null;
 
 		visited.add(pos);
-		addNeighbours(pos, frontier, visited);
+		BlockPos.getAllInBox(pos.add(-1, 0, -1), pos.add(1, 1, 1)).forEach(p -> frontier.add(new BlockPos(p)));
 
 		// Find all logs
 		while (!frontier.isEmpty()) {
@@ -105,19 +105,24 @@ public class TreeCutter {
 	private static boolean validateCut(IBlockReader reader, BlockPos pos) {
 		Set<BlockPos> visited = new HashSet<>();
 		List<BlockPos> frontier = new LinkedList<>();
+		frontier.add(pos);
 		frontier.add(pos.up());
+		int posY = pos.getY();
 
 		while (!frontier.isEmpty()) {
 			BlockPos currentPos = frontier.remove(0);
 			visited.add(currentPos);
+			boolean lowerLayer = currentPos.getY() == posY;
 
 			if (!isLog(reader.getBlockState(currentPos)))
 				continue;
-			if (!pos.equals(currentPos.down()) && isLog(reader.getBlockState(currentPos.down())))
+			if (!lowerLayer && !pos.equals(currentPos.down()) && isLog(reader.getBlockState(currentPos.down())))
 				return false;
 
 			for (Direction direction : Direction.values()) {
-				if (direction.getAxis().isVertical())
+				if (direction == Direction.DOWN)
+					continue;
+				if (direction == Direction.UP && !lowerLayer)
 					continue;
 				BlockPos offset = currentPos.offset(direction);
 				if (visited.contains(offset))

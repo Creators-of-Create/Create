@@ -252,7 +252,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		Vec3d rayTarget = center.add(movementVector.scale(5 / 2f - 1 / 64f));
 		BlockPos clickedPos = pos.offset(direction, 2);
 
-		player.rotationYaw = AngleHelper.horizontalAngle(direction) + 180;
+		player.rotationYaw = AngleHelper.horizontalAngle(direction);
 		player.rotationPitch = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
 		player.setPosition(rayOrigin.x, rayOrigin.y, rayOrigin.z);
 
@@ -379,10 +379,6 @@ public class DeployerTileEntity extends KineticTileEntity {
 		ActionResultType onItemUse = stack.onItemUse(itemusecontext);
 		if (onItemUse == ActionResultType.SUCCESS)
 			return;
-
-		// some items use hard-coded eye positions
-		if (item == Items.SNOWBALL || item == Items.EGG)
-			player.posY -= 1.5f;
 		if (item == Items.ENDER_PEARL)
 			return;
 

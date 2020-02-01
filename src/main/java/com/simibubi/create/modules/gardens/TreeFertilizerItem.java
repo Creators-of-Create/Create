@@ -52,8 +52,8 @@ public class TreeFertilizerItem extends Item {
 				if (!world.getBlockState(pos).isNormalCube(world, pos)
 						&& context.getWorld().getBlockState(actualPos).isNormalCube(context.getWorld(), actualPos))
 					continue;
-				if (world.getBlockState(pos).getBlock() == Blocks.PODZOL
-						&& context.getWorld().getBlockState(actualPos).getBlock() != Blocks.GRASS_BLOCK)
+				if (world.getBlockState(pos).getBlock() == Blocks.GRASS_BLOCK
+						|| world.getBlockState(pos).getBlock() == Blocks.PODZOL)
 					continue;
 
 				context.getWorld().setBlockState(actualPos, world.getBlockState(pos));
@@ -80,7 +80,7 @@ public class TreeFertilizerItem extends Item {
 				return Blocks.GRASS_BLOCK.getDefaultState();
 			return super.getBlockState(pos);
 		}
-		
+
 	}
 
 }

@@ -88,6 +88,11 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
+	public boolean addEntity(Entity entityIn) {
+		return world.addEntity(entityIn);
+	}
+	
+	@Override
 	public void registerMapData(MapData mapDataIn) {
 	}
 

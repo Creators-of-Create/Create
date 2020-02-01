@@ -4,15 +4,18 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.TreeCutter.Tree;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
@@ -40,15 +43,18 @@ public class DeforesterItem extends AxeItem {
 		if (world == null)
 			return;
 
+		Vec3d vec = player.getLookVec();
 		for (BlockPos log : tree.logs)
 			BlockHelper.destroyBlock(world, log, 1 / 2f, item -> {
-				if (dropBlock)
-					Block.spawnAsEntity(world, log, item);
+				if (dropBlock) {
+					dropItemFromCutTree(world, pos, vec, log, item);
+					stack.damageItem(1, player, p -> p.sendBreakAnimation(Hand.MAIN_HAND));
+				}
 			});
 		for (BlockPos leaf : tree.leaves)
 			BlockHelper.destroyBlock(world, leaf, 1 / 8f, item -> {
 				if (dropBlock)
-					Block.spawnAsEntity(world, leaf, item);
+					dropItemFromCutTree(world, pos, vec, leaf, item);
 			});
 	}
 
@@ -58,6 +64,15 @@ public class DeforesterItem extends AxeItem {
 		if (!AllItems.DEFORESTER.typeOf(heldItemMainhand))
 			return;
 		destroyTree(heldItemMainhand, event.getWorld(), event.getState(), event.getPos(), event.getPlayer());
+	}
+
+	public static void dropItemFromCutTree(World world, BlockPos breakingPos, Vec3d fallDirection, BlockPos pos,
+			ItemStack stack) {
+		float distance = (float) Math.sqrt(pos.distanceSq(breakingPos));
+		Vec3d dropPos = VecHelper.getCenterOf(pos);
+		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, stack);
+		entity.setMotion(fallDirection.scale(distance / 20f));
+		world.addEntity(entity);
 	}
 
 }

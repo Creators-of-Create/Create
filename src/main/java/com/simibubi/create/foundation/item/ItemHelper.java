@@ -99,17 +99,22 @@ public class ItemHelper {
 		boolean checkHasEnoughItems = amountRequired;
 		boolean hasEnoughItems = !checkHasEnoughItems;
 		int maxExtractionCount = hasEnoughItems ? CreateConfig.parameters.extractorAmount.get() : exactAmount;
-
+		boolean potentialOtherMatch = false;
+		
 		Extraction: do {
 			extracting = ItemStack.EMPTY;
 
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
 				ItemStack stack = inv.extractItem(slot, maxExtractionCount - extracting.getCount(), true);
 
+				if (stack.isEmpty())
+					continue;
 				if (!test.test(stack))
 					continue;
-				if (!extracting.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stack, extracting))
+				if (!extracting.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stack, extracting)) {
+					potentialOtherMatch = true;
 					continue;
+				}
 
 				if (extracting.isEmpty())
 					extracting = stack.copy();
@@ -129,11 +134,18 @@ public class ItemHelper {
 					}
 				}
 			}
-
+			
+			if (!extracting.isEmpty() && !hasEnoughItems && potentialOtherMatch) {
+				ItemStack blackListed = extracting.copy();
+				test = test.and(i -> !ItemHandlerHelper.canItemStacksStack(i, blackListed));
+				continue;
+			}
+			
 			if (checkHasEnoughItems)
 				checkHasEnoughItems = false;
 			else
 				break Extraction;
+			
 		} while (true);
 
 		if (amountRequired && extracting.getCount() < exactAmount)
