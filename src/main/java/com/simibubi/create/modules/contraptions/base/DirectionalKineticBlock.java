@@ -3,12 +3,16 @@ package com.simibubi.create.modules.contraptions.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public abstract class DirectionalKineticBlock extends KineticBlock {
 
@@ -40,6 +44,31 @@ public abstract class DirectionalKineticBlock extends KineticBlock {
 			}
 		}
 		return prefferedSide;
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		Direction facing = turnBackOnWrenched() ? context.getFace().getOpposite() : context.getFace();
+		World world = context.getWorld();
+		if (facing == state.get(FACING))
+			return ActionResultType.PASS;
+
+		BlockState with = state.with(FACING, facing);
+		if (!with.isValidPosition(world, context.getPos()))
+			return ActionResultType.PASS;
+
+		if (!world.isRemote) {
+			BlockPos pos = context.getPos();
+			world.removeTileEntity(pos);
+			world.setBlockState(pos, with, 3);
+			KineticTileEntity tileEntity = (KineticTileEntity) world.getTileEntity(pos);
+			tileEntity.attachKinetics();
+		}
+		return ActionResultType.SUCCESS;
+	}
+
+	protected boolean turnBackOnWrenched() {
+		return false;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class GearshiftBlock extends EncasedShaftBlock {
@@ -55,7 +56,7 @@ public class GearshiftBlock extends EncasedShaftBlock {
 		}
 	}
 
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return super.hasShaftTowards(world, pos, state, face);
 	}
 

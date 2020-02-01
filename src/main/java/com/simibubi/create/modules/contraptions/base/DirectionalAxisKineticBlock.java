@@ -3,11 +3,14 @@ package com.simibubi.create.modules.contraptions.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBlock {
@@ -30,7 +33,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 			facing = facing.getOpposite();
 		return facing;
 	}
-	
+
 	protected boolean getAxisAlignmentForPlacement(BlockItemUseContext context) {
 		return context.getPlacementHorizontalFacing().getAxis() == Axis.X;
 	}
@@ -83,6 +86,23 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 	}
 
 	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		World world = context.getWorld();
+		Direction face = context.getFace();
+		if ((turnBackOnWrenched() ? face.getOpposite() : face) == state.get(FACING)) {
+			if (!world.isRemote) {
+				BlockPos pos = context.getPos();
+				world.removeTileEntity(pos);
+				world.setBlockState(pos, state.cycle(AXIS_ALONG_FIRST_COORDINATE), 3);
+				KineticTileEntity tileEntity = (KineticTileEntity) world.getTileEntity(pos);
+				tileEntity.attachKinetics();
+			}
+			return ActionResultType.SUCCESS;
+		}
+		return super.onWrenched(state, context);
+	}
+
+	@Override
 	public Axis getRotationAxis(BlockState state) {
 		Axis pistonAxis = state.get(FACING).getAxis();
 		boolean alongFirst = state.get(AXIS_ALONG_FIRST_COORDINATE);
@@ -98,7 +118,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 	}
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == getRotationAxis(state);
 	}
 

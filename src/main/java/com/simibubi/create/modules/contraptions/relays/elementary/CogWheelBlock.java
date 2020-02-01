@@ -1,25 +1,27 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
 
-public class CogWheelBlock extends ShaftBlock {
+public class CogWheelBlock extends ShaftBlock implements IHaveCustomBlockItem {
 
 	private boolean isLarge;
 
@@ -53,8 +55,12 @@ public class CogWheelBlock extends ShaftBlock {
 		Block block = placedAgainst.getBlock();
 
 		if (!(block instanceof IRotate) || !(((IRotate) block).hasCogsTowards(context.getWorld(), placedOnPos,
-				placedAgainst, context.getFace())))
-			return super.getStateForPlacement(context);
+				placedAgainst, context.getFace()))) {
+			Axis preferredAxis = getPreferredAxis(context);
+			if (preferredAxis != null)
+				return this.getDefaultState().with(AXIS, preferredAxis);
+			return this.getDefaultState().with(AXIS, context.getFace().getAxis());
+		}
 
 		return getDefaultState().with(AXIS, ((IRotate) block).getRotationAxis(placedAgainst));
 	}
@@ -76,8 +82,13 @@ public class CogWheelBlock extends ShaftBlock {
 	// IRotate
 
 	@Override
-	public boolean hasCogsTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return !isLarge && face.getAxis() != state.get(AXIS);
+	}
+
+	@Override
+	public BlockItem getCustomItem(net.minecraft.item.Item.Properties properties) {
+		return new CogwheelBlockItem(this, properties, isLarge);
 	}
 
 }

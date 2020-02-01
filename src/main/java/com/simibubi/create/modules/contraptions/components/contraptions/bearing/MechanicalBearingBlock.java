@@ -11,6 +11,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class MechanicalBearingBlock extends DirectionalKineticBlock
@@ -35,12 +36,17 @@ public class MechanicalBearingBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.get(FACING).getOpposite();
 	}
 
 	@Override
 	protected boolean hasStaticPart() {
+		return true;
+	}
+
+	@Override
+	protected boolean turnBackOnWrenched() {
 		return true;
 	}
 

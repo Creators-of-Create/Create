@@ -125,7 +125,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 	}
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return state.get(HORIZONTAL_FACING).getAxis() == face.getAxis();
 	}
 

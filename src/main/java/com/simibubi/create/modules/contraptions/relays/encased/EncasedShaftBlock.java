@@ -11,7 +11,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorldReader;
 
 public class EncasedShaftBlock extends RotatedPillarKineticBlock {
 
@@ -44,7 +44,7 @@ public class EncasedShaftBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == state.get(AXIS);
 	}
 

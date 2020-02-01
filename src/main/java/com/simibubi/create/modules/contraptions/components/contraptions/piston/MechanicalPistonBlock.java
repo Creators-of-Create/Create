@@ -10,11 +10,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
@@ -81,6 +83,18 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 
 	@Override
 	protected boolean hasStaticPart() {
+		return true;
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		if (state.get(STATE) != PistonState.RETRACTED)
+			return ActionResultType.PASS;
+		return super.onWrenched(state, context);
+	}
+
+	@Override
+	protected boolean turnBackOnWrenched() {
 		return true;
 	}
 

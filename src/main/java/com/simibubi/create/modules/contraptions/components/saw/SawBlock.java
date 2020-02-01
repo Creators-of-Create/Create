@@ -26,6 +26,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class SawBlock extends DirectionalAxisKineticBlock
@@ -112,7 +113,7 @@ public class SawBlock extends DirectionalAxisKineticBlock
 	}
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return isHorizontal(state) ? face == state.get(FACING).getOpposite()
 				: super.hasShaftTowards(world, pos, state, face);
 	}

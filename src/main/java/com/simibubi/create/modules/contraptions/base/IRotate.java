@@ -8,7 +8,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorldReader;
 
 public interface IRotate extends IWrenchable {
 
@@ -61,9 +61,9 @@ public interface IRotate extends IWrenchable {
 		}
 	}
 
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face);
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face);
 
-	public boolean hasCogsTowards(World world, BlockPos pos, BlockState state, Direction face);
+	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face);
 
 	public Axis getRotationAxis(BlockState state);
 

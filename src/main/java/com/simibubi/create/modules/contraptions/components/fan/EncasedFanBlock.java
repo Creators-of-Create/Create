@@ -14,6 +14,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class EncasedFanBlock extends DirectionalKineticBlock implements IWithTileEntity<EncasedFanTileEntity> {
@@ -74,7 +75,7 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements IWithTil
 	}
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.get(FACING).getOpposite();
 	}
 	

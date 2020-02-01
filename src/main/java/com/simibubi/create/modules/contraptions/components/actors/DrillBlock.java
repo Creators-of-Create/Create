@@ -26,6 +26,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -65,7 +66,7 @@ public class DrillBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.get(FACING).getOpposite();
 	}
 
@@ -78,7 +79,7 @@ public class DrillBlock extends DirectionalKineticBlock
 	protected boolean hasStaticPart() {
 		return true;
 	}
-
+	
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
 	public SuperByteBuffer renderInContraption(MovementContext context) {

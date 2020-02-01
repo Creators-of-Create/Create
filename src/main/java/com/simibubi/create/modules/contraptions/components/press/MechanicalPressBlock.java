@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
 import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.modules.contraptions.components.mixer.BasinOperatorBlockItem;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity.Mode;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
@@ -24,6 +26,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
@@ -35,10 +38,11 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class MechanicalPressBlock extends HorizontalKineticBlock
-		implements IWithTileEntity<MechanicalPressTileEntity>, IBeltAttachment {
+		implements IWithTileEntity<MechanicalPressTileEntity>, IBeltAttachment, IHaveCustomBlockItem {
 
 	public MechanicalPressBlock() {
 		super(Properties.from(Blocks.PISTON));
@@ -50,6 +54,11 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 			return AllShapes.SHORT_CASING_14_VOXEL.get(Direction.DOWN);
 
 		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;
+	}
+
+	@Override
+	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		return !AllBlocks.BASIN.typeOf(worldIn.getBlockState(pos.down()));
 	}
 
 	@Override
@@ -89,7 +98,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == state.get(HORIZONTAL_FACING).getAxis();
 	}
 
@@ -157,10 +166,10 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 		if (pressTe.running) {
 			if (pressTe.runningTicks == 30) {
 				Optional<PressingRecipe> recipe = pressTe.getRecipe(transportedStack.stack);
-				
+
 				pressTe.pressedItems.clear();
 				pressTe.pressedItems.add(transportedStack.stack);
-				
+
 				if (!recipe.isPresent())
 					return false;
 				ItemStack out = recipe.get().getRecipeOutput().copy();
@@ -191,6 +200,11 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 			builder.add(HORIZONTAL_FACING);
 			super.fillStateContainer(builder);
 		}
+	}
+	
+	@Override
+	public BlockItem getCustomItem(net.minecraft.item.Item.Properties properties) {
+		return new BasinOperatorBlockItem(AllBlocks.MECHANICAL_PRESS, properties);
 	}
 
 }

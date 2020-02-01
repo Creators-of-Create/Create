@@ -3,12 +3,16 @@ package com.simibubi.create.modules.contraptions.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public abstract class HorizontalKineticBlock extends KineticBlock {
 
@@ -47,6 +51,24 @@ public abstract class HorizontalKineticBlock extends KineticBlock {
 			}
 		}
 		return prefferedSide;
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		Direction facing = context.getFace();
+		if (facing.getAxis().isVertical())
+			return ActionResultType.PASS;
+		World world = context.getWorld();
+		if (facing == state.get(HORIZONTAL_FACING))
+			return ActionResultType.PASS;
+		if (!world.isRemote) {
+			BlockPos pos = context.getPos();
+			world.removeTileEntity(pos);
+			world.setBlockState(pos, state.with(HORIZONTAL_FACING, facing), 3);
+			KineticTileEntity tileEntity = (KineticTileEntity) world.getTileEntity(pos);
+			tileEntity.attachKinetics();
+		}
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

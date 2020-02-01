@@ -20,7 +20,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.storage.loot.LootContext.Builder;
 
 public class GearboxBlock extends RotatedPillarKineticBlock {
@@ -69,7 +69,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	// IRotate:
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() != state.get(AXIS);
 	}
 

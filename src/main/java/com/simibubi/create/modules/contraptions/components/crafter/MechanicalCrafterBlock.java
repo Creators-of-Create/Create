@@ -33,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -62,7 +63,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public boolean hasCogsTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return state.get(HORIZONTAL_FACING).getAxis() != face.getAxis();
 	}
 

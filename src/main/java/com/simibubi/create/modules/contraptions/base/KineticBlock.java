@@ -16,6 +16,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
@@ -49,12 +50,12 @@ public abstract class KineticBlock extends Block implements IRotate {
 	// IRotate
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return false;
 	}
 
 	@Override
-	public boolean hasCogsTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return false;
 	}
 

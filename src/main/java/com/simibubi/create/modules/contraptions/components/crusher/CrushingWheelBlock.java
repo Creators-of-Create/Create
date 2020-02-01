@@ -145,7 +145,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == state.get(AXIS);
 	}
 

@@ -12,9 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -24,7 +22,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorldReader;
 
 public class MechanicalMixerBlock extends KineticBlock
 		implements IWithTileEntity<MechanicalMixerTileEntity>, IHaveScrollableValue, IHaveCustomBlockItem {
@@ -43,6 +41,11 @@ public class MechanicalMixerBlock extends KineticBlock
 	@Override
 	protected boolean hasStaticPart() {
 		return true;
+	}
+	
+	@Override
+	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		return !AllBlocks.BASIN.typeOf(worldIn.getBlockState(pos.down()));
 	}
 
 	@Override
@@ -64,36 +67,13 @@ public class MechanicalMixerBlock extends KineticBlock
 	}
 
 	@Override
-	public boolean hasShaftTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return false;
 	}
 
 	@Override
-	public boolean hasCogsTowards(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis().isHorizontal();
-	}
-
-	public static class MechanicalMixerBlockItem extends BlockItem {
-
-		public MechanicalMixerBlockItem(Properties builder) {
-			super(AllBlocks.MECHANICAL_MIXER.get(), builder);
-		}
-
-		@Override
-		public ActionResultType tryPlace(BlockItemUseContext context) {
-
-			BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
-			BlockState placedOnState = context.getWorld().getBlockState(placedOnPos);
-			if (AllBlocks.BASIN.typeOf(placedOnState)) {
-				if (context.getWorld().getBlockState(placedOnPos.up(2)).getMaterial().isReplaceable())
-					context = BlockItemUseContext.func_221536_a(context, placedOnPos.up(2), Direction.UP);
-				else
-					return ActionResultType.FAIL;
-			}
-
-			return super.tryPlace(context);
-		}
-
 	}
 
 	@Override
@@ -156,7 +136,7 @@ public class MechanicalMixerBlock extends KineticBlock
 
 	@Override
 	public BlockItem getCustomItem(net.minecraft.item.Item.Properties properties) {
-		return new MechanicalMixerBlockItem(properties);
+		return new BasinOperatorBlockItem(AllBlocks.MECHANICAL_MIXER, properties);
 	}
 
 }
