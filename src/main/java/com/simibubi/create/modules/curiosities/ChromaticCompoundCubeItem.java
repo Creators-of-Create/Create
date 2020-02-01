@@ -41,7 +41,7 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 			Minecraft mc = Minecraft.getInstance();
 			float pt = mc.getRenderPartialTicks();
 			float progress = (float) ((mc.player.getYaw(pt)) / 180 * Math.PI)
-					+ (AnimationTickHolder.getRenderTick() * 1f);
+					+ (AnimationTickHolder.getRenderTick() / 10f);
 			if (layer == 0)
 				return ColorHelper.mixColors(0x6e5773, 0x6B3074, ((float) MathHelper.sin(progress) + 1) / 2);
 			if (layer == 1)

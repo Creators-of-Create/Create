@@ -99,7 +99,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 				flow = flowVec.y > 0 ^ !clockwise ? -flowVec.y * clockwiseMultiplier : -flowVec.y;
 		}
 
-		te.setFlow(f, (int) (flow * 20));
+		te.setFlow(f, (int) (flow * 5));
 	}
 
 	private void updateWheelSpeed(IWorld world, BlockPos pos) {

@@ -31,7 +31,7 @@ public class DeforesterItemRenderer extends ItemStackTileEntityRenderer {
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastCoordx, lastCoordy);
 		GlStateManager.enableLighting();
 		
-		float angle = worldTime * -10 % 360;
+		float angle = worldTime * -.5f % 360;
 		float xOffset = 0;
 		float zOffset = 0;
 		GlStateManager.translatef(-xOffset, 0, -zOffset);

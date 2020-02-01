@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
@@ -81,9 +82,13 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 		if (!(tileEntity instanceof CrushingWheelControllerTileEntity))
 			return;
 		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) tileEntity;
+		if (te.crushingspeed == 0)
+			return;
+		if (entityIn instanceof ItemEntity)
+			((ItemEntity) entityIn).setPickupDelay(10);
 		if (te.isOccupied())
 			return;
-		if ((entityIn instanceof PlayerEntity) && ((PlayerEntity) entityIn).isCreative()) 
+		if ((entityIn instanceof PlayerEntity) && ((PlayerEntity) entityIn).isCreative())
 			return;
 
 		te.startCrushing(entityIn);
@@ -167,16 +172,15 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (worldIn.getTileEntity(pos) == null)
-			return;
-
-		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn.getTileEntity(pos);
-		for (int slot = 0; slot < te.inventory.getSizeInventory(); slot++) {
-			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
-					te.inventory.getStackInSlot(slot));
-		}
-
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			if (worldIn.getTileEntity(pos) == null)
+				return;
+			CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn.getTileEntity(pos);
+			for (int slot = 0; slot < te.inventory.getSizeInventory(); slot++) {
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
+						te.inventory.getStackInSlot(slot));
+			}
+
 			worldIn.removeTileEntity(pos);
 		}
 

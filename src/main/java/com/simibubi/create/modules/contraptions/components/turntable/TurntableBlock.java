@@ -47,7 +47,7 @@ public class TurntableBlock extends KineticBlock {
 		if (e.getMotion().y > 0)
 			return;
 
-		float speed = ((KineticTileEntity) te).getSpeed() / 20;
+		float speed = ((KineticTileEntity) te).getSpeed() * 3/10;
 		World world = e.getEntityWorld();
 
 		if (speed == 0)

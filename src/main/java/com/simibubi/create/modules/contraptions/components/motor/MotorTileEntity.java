@@ -53,12 +53,7 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 		if (newGeneratedSpeed == speed)
 			return;
 		Integer max = CreateConfig.parameters.maxMotorSpeed.get();
-		if (newGeneratedSpeed > 0 && speed == 0)
-			newGeneratedSpeed = -1;
-		else if (newGeneratedSpeed < 0 && speed == 0)
-			newGeneratedSpeed = 1;
-		else
-			newGeneratedSpeed = MathHelper.clamp(speed, -max, max);
+		newGeneratedSpeed = MathHelper.clamp(speed, -max, max);
 		this.lastModified = 0;
 	}
 

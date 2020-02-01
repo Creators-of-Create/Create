@@ -34,7 +34,7 @@ public class DrillTileEntityRenderer extends KineticTileEntityRenderer {
 				? context.getAnimationSpeed()
 				: 0);
 		Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
-		float time = AnimationTickHolder.getRenderTick();
+		float time = AnimationTickHolder.getRenderTick() / 20;
 		float angle = (float) (((time * speed) % 360) / 180 * (float) Math.PI);
 
 		return buffer.rotateCentered(axis, angle);

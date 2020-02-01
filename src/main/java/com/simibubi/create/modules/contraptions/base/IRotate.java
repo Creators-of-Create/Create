@@ -23,7 +23,7 @@ public interface IRotate extends IWrenchable {
 		public int getColor() {
 			return this == NONE ? 0x22FF22 : this == MEDIUM ? 0x0084FF : 0xFF55FF;
 		}
-		
+
 		public int getParticleSpeed() {
 			return this == NONE ? 10 : this == MEDIUM ? 20 : 30;
 		}
@@ -38,6 +38,19 @@ public interface IRotate extends IWrenchable {
 			}
 			return NONE;
 		}
+
+		public float getSpeedValue() {
+			switch (this) {
+			case FAST:
+				return CreateConfig.parameters.fastSpeed.get().floatValue();
+			case MEDIUM:
+				return CreateConfig.parameters.mediumSpeed.get().floatValue();
+			case NONE:
+			default:
+				return 0;
+			}
+		}
+
 	}
 
 	public enum StressImpact {
@@ -57,11 +70,11 @@ public interface IRotate extends IWrenchable {
 	public default SpeedLevel getMinimumRequiredSpeedLevel() {
 		return SpeedLevel.NONE;
 	}
-	
+
 	public default boolean hideStressImpact() {
 		return false;
 	}
-	
+
 	public default boolean showCapacityWithAnnotation() {
 		return false;
 	}

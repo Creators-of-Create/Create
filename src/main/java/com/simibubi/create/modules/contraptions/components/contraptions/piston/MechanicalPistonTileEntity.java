@@ -236,7 +236,7 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);
 		int movementModifier = pistonDirection.getAxisDirection().getOffset()
 				* (pistonDirection.getAxis() == Axis.Z ? -1 : 1);
-		return getSpeed() * -movementModifier / 1024f;
+		return getSpeed() * -movementModifier / 512f;
 	}
 
 	public Vec3d getConstructOffset(float partialTicks) {

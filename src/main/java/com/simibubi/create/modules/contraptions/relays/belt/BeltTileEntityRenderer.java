@@ -71,7 +71,7 @@ public class BeltTileEntityRenderer extends TileEntityRenderer<BeltTileEntity> {
 					* te.getBlockState().get(HORIZONTAL_FACING).getAxisDirection().getOffset();
 			if (renderedState.get(BeltBlock.HORIZONTAL_FACING).getAxis() == Axis.X)
 				speed = -speed;
-			int textureIndex = (int) ((speed * time / 8) % 16);
+			int textureIndex = (int) ((speed * time / 36) % 16);
 			if (textureIndex < 0)
 				textureIndex += 16;
 

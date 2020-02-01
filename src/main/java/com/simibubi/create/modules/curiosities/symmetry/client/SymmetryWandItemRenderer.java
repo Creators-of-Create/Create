@@ -17,7 +17,7 @@ public class SymmetryWandItemRenderer extends ItemStackTileEntityRenderer {
 
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		SymmetryWandModel mainModel = (SymmetryWandModel) itemRenderer.getModelWithOverrides(stack);
-		float worldTime = AnimationTickHolder.getRenderTick();
+		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translatef(0.5F, 0.5F, 0.5F);

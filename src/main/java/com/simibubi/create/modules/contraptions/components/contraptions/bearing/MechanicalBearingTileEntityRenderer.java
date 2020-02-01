@@ -25,7 +25,7 @@ public class MechanicalBearingTileEntityRenderer extends KineticTileEntityRender
 
 		SuperByteBuffer superBuffer = CreateClient.bufferCache.renderBlockState(KINETIC_TILE, capState);
 		float interpolatedAngle = bearingTe.getInterpolatedAngle(partialTicks);
-		kineticRotationTransform(superBuffer, bearingTe, facing.getAxis(), interpolatedAngle, getWorld());
+		kineticRotationTransform(superBuffer, bearingTe, facing.getAxis(), (float) (interpolatedAngle / 180 * Math.PI), getWorld());
 		superBuffer.translate(x, y, z).renderInto(buffer);
 	}
 

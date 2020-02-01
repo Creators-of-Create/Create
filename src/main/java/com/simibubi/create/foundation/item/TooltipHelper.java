@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.bridge.game.Language;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
@@ -15,6 +16,7 @@ import com.simibubi.create.modules.contraptions.base.IRotate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -24,6 +26,7 @@ public class TooltipHelper {
 	public static final int maxCharsPerLine = 35;
 	public static final Map<String, ItemDescription> cachedTooltips = new HashMap<>();
 	public static Language cachedLanguage;
+	private static boolean gogglesMode;
 
 	public static String holdShift(Palette color, boolean highlighted) {
 		TextFormatting colorFormat = highlighted ? color.hColor : color.color;
@@ -81,7 +84,13 @@ public class TooltipHelper {
 
 	public static boolean hasTooltip(ItemStack stack) {
 		checkLocale();
-//		cachedTooltips.clear();
+		
+		boolean hasGlasses = AllItems.GOGGLES.typeOf(Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+		if (hasGlasses != gogglesMode) {
+			gogglesMode = hasGlasses;
+			cachedTooltips.clear();
+		}
+		
 		String key = getTooltipTranslationKey(stack);
 		if (cachedTooltips.containsKey(key))
 			return cachedTooltips.get(key) != ItemDescription.MISSING;

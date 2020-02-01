@@ -51,6 +51,17 @@ public class SandPaperItem extends Item {
 			return new ActionResult<>(ActionResultType.PASS, itemstack);
 		}
 
+		Hand otherHand = handIn == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND;
+		ItemStack itemInOtherHand = playerIn.getHeldItem(otherHand);
+		if (SandPaperPolishingRecipe.canPolish(worldIn, itemInOtherHand)) {
+			ItemStack item = itemInOtherHand.copy();
+			ItemStack toPolish = item.split(1);
+			playerIn.setActiveHand(handIn);
+			itemstack.getOrCreateTag().put("Polishing", toPolish.serializeNBT());
+			playerIn.setHeldItem(otherHand, item);
+			return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+		}
+
 		RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.NONE);
 		if (!(raytraceresult instanceof BlockRayTraceResult))
 			return FAIL;

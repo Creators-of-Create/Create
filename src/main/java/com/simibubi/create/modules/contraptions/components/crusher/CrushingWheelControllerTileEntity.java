@@ -24,6 +24,7 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class CrushingWheelControllerTileEntity extends SyncedTileEntity implements ITickableTileEntity {
@@ -59,12 +60,14 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 		if (crushingspeed == 0)
 			return;
 
-		float speed = crushingspeed / 2.5f;
+		float speed = crushingspeed * 4;
 		Vec3d outPos = VecHelper.getCenterOf(pos);
 
 		if (!hasEntity()) {
 
-			float processingSpeed = speed / (!inventory.appliedRecipe ? inventory.getStackInSlot(0).getCount() : 1);
+			float processingSpeed = MathHelper.clamp(
+					(speed) / (!inventory.appliedRecipe ? MathHelper.log2(inventory.getStackInSlot(0).getCount()) : 1),
+					.25f, 20);
 			inventory.remainingTime -= processingSpeed;
 			spawnParticles(inventory.getStackInSlot(0));
 
@@ -122,6 +125,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 		}
 
 		ItemEntity itemEntity = (ItemEntity) processingEntity;
+		itemEntity.setPickupDelay(20);
 		if (processingEntity.posY < pos.getY() + .25f) {
 			insertItem(itemEntity);
 			itemEntity.remove();

@@ -49,6 +49,11 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	public float getAddedStressCapacity() {
 		return isGenerator ? super.getAddedStressCapacity() : 0;
 	}
+	
+	@Override
+	public float getStressApplied() {
+		return isGenerator ? 0 : super.getStressApplied();
+	}
 
 	@Override
 	public float getGeneratedSpeed() {

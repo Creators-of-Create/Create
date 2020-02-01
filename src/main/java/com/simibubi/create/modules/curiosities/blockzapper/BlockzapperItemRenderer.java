@@ -31,7 +31,7 @@ public class BlockzapperItemRenderer extends ItemStackTileEntityRenderer {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		BlockzapperModel mainModel = (BlockzapperModel) itemRenderer.getModelWithOverrides(stack);
 		float pt = Minecraft.getInstance().getRenderPartialTicks();
-		float worldTime = AnimationTickHolder.getRenderTick();
+		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translatef(0.5F, 0.5F, 0.5F);

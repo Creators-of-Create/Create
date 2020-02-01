@@ -29,7 +29,7 @@ public class MechanicalMixerTileEntityRenderer extends KineticTileEntityRenderer
 		float renderedHeadOffset = mixer.getRenderedHeadOffset(partialTicks);
 		float speed = mixer.getRenderedHeadRotationSpeed(partialTicks);
 		float time = AnimationTickHolder.getRenderTick();
-		float angle = (float) (((time * speed * 2) % 360) / 180 * (float) Math.PI);
+		float angle = (float) (((time * speed * 6 / 10f) % 360) / 180 * (float) Math.PI);
 
 		SuperByteBuffer poleRender = CreateClient.bufferCache.renderGenericBlockModel(poleState);
 		poleRender.translate(x, y - renderedHeadOffset, z).light(packedLightmapCoords).renderInto(buffer);

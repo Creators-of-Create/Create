@@ -30,6 +30,11 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public float getAddedStressCapacity() {
 		return isWindmill ? super.getAddedStressCapacity() : 0;
 	}
+	
+	@Override
+	public float getStressApplied() {
+		return isWindmill ? 0 : super.getStressApplied();
+	}
 
 	public void neighbourChanged() {
 		boolean shouldWindmill = world.isBlockPowered(pos);
@@ -64,8 +69,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			return 0;
 		if (movedContraption == null)
 			return 0;
-		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks();
-		return MathHelper.clamp(sails, 0, 128);
+		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks() / 8;
+		return MathHelper.clamp(sails, 1, 64);
 	}
 
 	@Override
@@ -95,7 +100,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	public float getAngularSpeed() {
-		return getSpeed() / 2048;
+		return getSpeed() * 3 / 10f;
 	}
 
 	public void assembleConstruct() {
@@ -143,7 +148,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {
-				boolean canDisassemble = Math.abs(angle) < Math.PI / 4f || Math.abs(angle) > 7 * Math.PI / 4f;
+				boolean canDisassemble = Math.abs(angle) < 45 || Math.abs(angle) > 7 * 45;
 				if (speed == 0 && (canDisassemble || movedContraption == null
 						|| movedContraption.getContraption().blocks.isEmpty())) {
 					disassembleConstruct();
@@ -162,14 +167,14 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 		float angularSpeed = getAngularSpeed();
 		float newAngle = angle + angularSpeed;
-		angle = (float) (newAngle % (2 * Math.PI));
+		angle = (float) (newAngle % 360);
 		applyRotation();
 	}
 
 	private void applyRotation() {
 		if (movedContraption != null) {
 			Direction direction = getBlockState().get(BlockStateProperties.FACING);
-			Vec3d vec = new Vec3d(1, 1, 1).scale(angle * 180 / Math.PI).mul(new Vec3d(direction.getDirectionVec()));
+			Vec3d vec = new Vec3d(1, 1, 1).scale(angle).mul(new Vec3d(direction.getDirectionVec()));
 			movedContraption.rotateTo(vec.x, vec.y, -vec.z);
 		}
 	}

@@ -266,6 +266,8 @@
 	"create.generic.unit.ticks": "Ticks",
 	"create.generic.unit.seconds": "Seconds",
 	"create.generic.unit.minutes": "Minutes",
+	"create.generic.unit.rpm": "rpm",
+	"create.generic.unit.stress": "sU",
 
 	"create.action.scroll": "Scroll",
 	"create.action.confirm": "Confirm",
@@ -324,6 +326,18 @@
 	"create.logistics.filter": "Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
+
+	"create.gui.goggles.generator_stats": "Generator Stats:",
+	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
+	"create.gui.goggles.at_current_speed": "At current Speed",
+	"create.gui.goggles.base_value": "Base Value",
+	
+	"create.gui.gauge.info_header": "Gauge Information:",
+	"create.gui.speed_gauge.title": "Rotation Speed",
+	"create.gui.stress_gauge.title": "Network Stress",
+	"create.gui.stress_gauge.capacity": "Remaining Capacity",
+	"create.gui.stress_gauge.overstressed": "Overstressed",
+	"create.gui.stress_gauge.no_rotation": "No Rotation",
 
 	"create.gui.flexcrate.title": "Adjustable Crate",
 	"create.gui.flexcrate.storageSpace": "Storage Space",

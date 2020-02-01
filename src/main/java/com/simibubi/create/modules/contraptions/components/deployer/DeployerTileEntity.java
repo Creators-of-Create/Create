@@ -141,7 +141,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	protected int getTimerSpeed() {
-		return (int) (getSpeed() == 0 ? 0 : MathHelper.clamp(Math.abs(getSpeed()) / 2, 8, 512));
+		return (int) (getSpeed() == 0 ? 0 : MathHelper.clamp(Math.abs(getSpeed() * 2), 8, 512));
 	}
 
 	@Override

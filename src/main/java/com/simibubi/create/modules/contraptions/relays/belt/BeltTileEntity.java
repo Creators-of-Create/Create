@@ -106,6 +106,13 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
+	public float getStressApplied() {
+		if (!isController())
+			return 0;
+		return super.getStressApplied();
+	}
+
+	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		if (!isController())
 			return super.getRenderBoundingBox();
@@ -205,14 +212,14 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public float getBeltMovementSpeed() {
-		return getSpeed() / 1600f;
+		return getSpeed() / 480f;
 	}
 
 	public float getDirectionAwareBeltMovementSpeed() {
 		int offset = getBeltFacing().getAxisDirection().getOffset();
 		if (getBeltFacing().getAxis() == Axis.X)
 			offset *= -1;
-		return getSpeed() / 1600f * offset;
+		return getBeltMovementSpeed() * offset;
 	}
 
 	public boolean hasPulley() {

@@ -31,7 +31,7 @@ public class GearboxTileEntityRenderer extends KineticTileEntityRenderer {
 
 			BlockState state = defaultState.with(BlockStateProperties.FACING, direction);
 			float offset = getRotationOffsetForPosition(te, pos, axis);
-			float angle = (time * te.getSpeed()) % 360;
+			float angle = (time * te.getSpeed() * 3f / 10) % 360;
 
 			if (te.getSpeed() != 0 && te.hasSource()) {
 				BlockPos source = te.getSource().subtract(te.getPos());

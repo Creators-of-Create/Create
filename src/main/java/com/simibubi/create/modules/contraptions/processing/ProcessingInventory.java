@@ -9,8 +9,8 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class ProcessingInventory extends RecipeWrapper implements IItemHandler {
-	public int remainingTime;
-	public int recipeDuration;
+	public float remainingTime;
+	public float recipeDuration;
 	public boolean appliedRecipe;
 
 	public ProcessingInventory() {
@@ -32,8 +32,8 @@ public class ProcessingInventory extends RecipeWrapper implements IItemHandler {
 			stacks.add(stack);
 		}
 		ItemStackHelper.saveAllItems(nbt, stacks);
-		nbt.putInt("ProcessingTime", remainingTime);
-		nbt.putInt("RecipeTime", recipeDuration);
+		nbt.putFloat("ProcessingTime", remainingTime);
+		nbt.putFloat("RecipeTime", recipeDuration);
 		nbt.putBoolean("AppliedRecipe", appliedRecipe);
 	}
 
@@ -44,8 +44,8 @@ public class ProcessingInventory extends RecipeWrapper implements IItemHandler {
 
 		for (int slot = 0; slot < stacks.size(); slot++)
 			inventory.setInventorySlotContents(slot, stacks.get(slot));
-		inventory.remainingTime = nbt.getInt("ProcessingTime");
-		inventory.recipeDuration = nbt.getInt("RecipeTime");
+		inventory.remainingTime = nbt.getFloat("ProcessingTime");
+		inventory.recipeDuration = nbt.getFloat("RecipeTime");
 		inventory.appliedRecipe = nbt.getBoolean("AppliedRecipe");
 
 		return inventory;

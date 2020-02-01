@@ -23,7 +23,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -48,11 +49,13 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	public float maxStress;
 	public float currentStress;
 	protected boolean overStressed;
-
 	public UUID networkID;
 	public UUID newNetworkID;
 	public boolean updateNetwork;
 	protected boolean initNetwork;
+
+	// Client
+	float overStressedEffect;
 
 	public KineticTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -161,6 +164,21 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		super.read(compound);
 	}
 
+	@Override
+	public void readClientUpdate(CompoundNBT tag) {
+		boolean overStressedBefore = overStressed;
+		super.readClientUpdate(tag);
+		if (overStressedBefore != overStressed && speed != 0) {
+			if (overStressed) {
+				overStressedEffect = 1;
+				spawnEffect(ParticleTypes.SMOKE, 0.2f, 5);
+			} else {
+				overStressedEffect = -1;
+				spawnEffect(ParticleTypes.CLOUD, .075f, 2);
+			}
+		}
+	}
+
 	public boolean isSource() {
 		return getGeneratedSpeed() != 0;
 	}
@@ -177,15 +195,6 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 
 	public void setSpeed(float speed) {
 		this.speed = speed;
-		if (hasWorld() && speed != 0 && world.isRemote) {
-			Random r = getWorld().rand;
-			for (int i = 0; i < 2; i++) {
-				float x = getPos().getX() + (r.nextFloat() - .5f) / 2f + .5f;
-				float y = getPos().getY() + (r.nextFloat() - .5f) / 2f + .5f;
-				float z = getPos().getZ() + (r.nextFloat() - .5f) / 2f + .5f;
-				this.getWorld().addParticle(new RedstoneParticleData(1, 1, 1, 1), x, y, z, 0, 0, 0);
-			}
-		}
 	}
 
 	public boolean hasSource() {
@@ -274,8 +283,15 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	public void tick() {
 		super.tick();
 
-		if (world.isRemote)
+		if (world.isRemote) {
+			if (overStressedEffect != 0) {
+				overStressedEffect -= overStressedEffect * .1f;
+				if (Math.abs(overStressedEffect) < 1 / 128f)
+					overStressedEffect = 0;
+			}
 			return;
+		}
+
 		if (speedChangeCounter > 0)
 			speedChangeCounter--;
 
@@ -342,6 +358,19 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	public void queueRotationIndicators() {
 		// wait a few ticks for network jamming etc
 		particleSpawnCountdown = 2;
+	}
+
+	protected void spawnEffect(IParticleData particle, float maxMotion, int amount) {
+		if (!hasWorld())
+			return;
+		if (!world.isRemote)
+			return;
+		Random r = getWorld().rand;
+		for (int i = 0; i < amount; i++) {
+			Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, r, maxMotion);
+			Vec3d position = VecHelper.getCenterOf(pos);
+			this.getWorld().addParticle(particle, position.x, position.y, position.z, motion.x, motion.y, motion.z);
+		}
 	}
 
 	protected void spawnRotationIndicators() {

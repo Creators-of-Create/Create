@@ -32,7 +32,7 @@ public class HarvesterTileEntityRenderer extends TileEntityRenderer<HarvesterTil
 		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, state.get(HORIZONTAL_FACING).getOpposite())
 				? context.getAnimationSpeed() * state.get(HORIZONTAL_FACING).getAxisDirection().getOffset()
 				: 0);
-		float time = AnimationTickHolder.getRenderTick();
+		float time = AnimationTickHolder.getRenderTick() / 20;
 		float angle = (float) (((time * speed) % 360) / 180 * (float) Math.PI);
 
 		return renderHead(context.world, BlockPos.ZERO, state, angle);

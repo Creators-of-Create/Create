@@ -38,7 +38,7 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
 		float time = AnimationTickHolder.getRenderTick();
 		float offset = getRotationOffsetForPosition(te, pos, axis);
-		float angle = (float) (((time * te.getSpeed() + offset) % 360) / 180 * (float) Math.PI);
+		float angle = ((time * te.getSpeed() * 3f/10 + offset) % 360) / 180 * (float) Math.PI;
 		return angle;
 	}
 
@@ -55,12 +55,21 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 		buffer.light(packedLightmapCoords);
 		buffer.rotateCentered(axis, angle);
 
+		int white = 0xFFFFFF;
 		if (KineticDebugger.isActive()) {
 			rainbowMode = true;
 			if (te.hasNetwork())
 				buffer.color(ColorHelper.colorFromUUID(te.getNetworkID()));
 			else
-				buffer.color(0xFFFFFF);
+				buffer.color(white);
+		} else {
+			if (te.overStressedEffect != 0) 
+				if (te.overStressedEffect > 0) 
+					buffer.color(ColorHelper.mixColors(white, 0xFF0000, te.overStressedEffect));
+				else
+					buffer.color(ColorHelper.mixColors(white, 0x00FFBB, -te.overStressedEffect));
+			else
+				buffer.color(white);
 		}
 
 		return buffer;

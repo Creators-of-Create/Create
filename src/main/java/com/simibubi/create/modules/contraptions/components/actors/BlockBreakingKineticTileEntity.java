@@ -144,7 +144,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	protected float getBreakSpeed() {
-		return Math.abs(speed / 100f);
+		return Math.abs(getSpeed() / 100f);
 	}
 
 }

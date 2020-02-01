@@ -30,7 +30,7 @@ public class SplitShaftTileEntityRenderer extends KineticTileEntityRenderer {
 				continue;
 
 			float offset = getRotationOffsetForPosition(te, pos, axis);
-			float angle = (time * te.getSpeed()) % 360;
+			float angle = (time * te.getSpeed() * 3f / 10) % 360;
 			float modifier = 1;
 
 			if (te instanceof SplitShaftTileEntity)

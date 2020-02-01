@@ -21,7 +21,7 @@ public class WrenchItemRenderer extends ItemStackTileEntityRenderer {
 		GlStateManager.translatef(0.5F, 0.5F, 0.5F);
 		itemRenderer.renderItem(stack, mainModel.getBakedModel());
 
-		float angle = worldTime * -10 % 360;
+		float angle = worldTime * -.5f % 360;
 		
 		float xOffset = -1/32f;
 		float zOffset = 0;

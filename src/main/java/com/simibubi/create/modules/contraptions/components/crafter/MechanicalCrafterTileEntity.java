@@ -178,7 +178,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	public int getCountDownSpeed() {
 		if (getSpeed() == 0)
 			return 0;
-		return MathHelper.clamp((int) Math.abs(getSpeed() / 2), 1, 250);
+		return MathHelper.clamp((int) Math.abs(getSpeed()), 4, 250);
 	}
 
 	@Override

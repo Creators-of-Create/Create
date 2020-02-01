@@ -21,12 +21,12 @@ public class EncasedFanTileEntityRenderer extends KineticTileEntityRenderer {
 		super.renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, buffer);
 
 		float time = AnimationTickHolder.getRenderTick();
-		float speed = te.getSpeed() * 20;
+		float speed = te.getSpeed() * 5;
 		if (speed > 0)
 			speed = MathHelper.clamp(speed, 80, 64 * 20);
 		if (speed < 0)
 			speed = MathHelper.clamp(speed, -64 * 20, -80);
-		float angle = (time * speed) % 360;
+		float angle = (time * speed * 3/10f) % 360;
 		angle = angle / 180f * (float) Math.PI;
 
 		SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockState(KINETIC_TILE,

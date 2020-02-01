@@ -22,10 +22,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.BlockItem;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -53,23 +55,24 @@ public class DeployerTileEntityRenderer extends TileEntityRenderer<DeployerTileE
 
 		Direction facing = deployerState.get(FACING);
 		boolean punching = te.mode == Mode.PUNCH;
-		
+
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
 		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
-		
+
 		GlStateManager.rotatef(yRot, 0, 1, 0);
 		GlStateManager.rotatef(zRot, 1, 0, 0);
 		GlStateManager.translated(0, 0, -11 / 16f);
-		
-		if (punching) {
-			GlStateManager.translatef(0, 1/8f, -1/16f);
-//			GlStateManager.rotatef(punching ? -45 : 0, 1, 0, 0);
-		}
-		
-		float scale = punching ? .75f : .5f;
+
+		if (punching)
+			GlStateManager.translatef(0, 1 / 8f, -1 / 16f);
+
+		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+		boolean isBlockItem = (te.heldItem.getItem() instanceof BlockItem)
+				&& itemRenderer.getModelWithOverrides(te.heldItem).isGui3d();
+		float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
 		GlStateManager.scaled(scale, scale, scale);
 		TransformType transform = punching ? TransformType.THIRD_PERSON_RIGHT_HAND : TransformType.FIXED;
-		Minecraft.getInstance().getItemRenderer().renderItem(te.heldItem, transform);
+		itemRenderer.renderItem(te.heldItem, transform);
 
 		GlStateManager.popMatrix();
 	}
@@ -103,7 +106,7 @@ public class DeployerTileEntityRenderer extends TileEntityRenderer<DeployerTileE
 
 		float handLength = te.getHandPose() == AllBlocks.DEPLOYER_HAND_POINTING ? 0
 				: te.getHandPose() == AllBlocks.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
-		float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (te.reach + handLength), 21/16f);
+		float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (te.reach + handLength), 21 / 16f);
 		Vec3d offset = new Vec3d(blockState.get(FACING).getDirectionVec()).scale(distance);
 		return offset;
 	}

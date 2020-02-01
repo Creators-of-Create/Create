@@ -23,7 +23,7 @@ public class TurntableHandler {
 			return;
 
 		KineticTileEntity te = (KineticTileEntity) mc.world.getTileEntity(pos);
-		float speed = te.getSpeed() / 19;
+		float speed = te.getSpeed() * 3/10;
 
 		if (speed == 0)
 			return;
