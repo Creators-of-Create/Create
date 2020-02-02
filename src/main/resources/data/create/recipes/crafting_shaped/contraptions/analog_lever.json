@@ -1,0 +1,25 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "A",
+            "C"
+        ],
+        "key": {
+            "A": {
+                "tag": "forge:rods/wooden"
+            },
+			"C": {
+                "item": "create:andesite_casing"
+            }
+        },
+	"result": {
+		"item": "create:analog_lever",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

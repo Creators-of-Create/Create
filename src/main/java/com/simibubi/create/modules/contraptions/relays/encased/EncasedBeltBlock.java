@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays.encased;
 
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
+import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.Block;
@@ -33,6 +34,11 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 		setDefaultState(getDefaultState().with(PART, Part.NONE));
 	}
 
+	@Override
+	public boolean shouldCheckWeakPower(BlockState state, IWorldReader world, BlockPos pos, Direction side) {
+		return false;
+	}
+	
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder.add(PART, CONNECTED_ALONG_FIRST_COORDINATE));
@@ -73,7 +79,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 		if (axis == faceAxis)
 			return stateIn;
 
-		if (neighbour.getBlock() != this) {
+		if (!(neighbour.getBlock() instanceof EncasedBeltBlock)) {
 			if (facingAlongFirst != connectionAlongFirst || part == Part.NONE)
 				return stateIn;
 			if (part == Part.MIDDLE)
@@ -139,6 +145,16 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 			return true;
 
 		return false;
+	}
+
+	public static float getRotationSpeedModifier(KineticTileEntity from, KineticTileEntity to) {
+		float fromMod = 1;
+		float toMod = 1;
+		if (from instanceof AdjustablePulleyTileEntity)
+			fromMod = ((AdjustablePulleyTileEntity) from).getModifier();
+		if (to instanceof AdjustablePulleyTileEntity)
+			toMod = ((AdjustablePulleyTileEntity) to).getModifier();
+		return fromMod / toMod;
 	}
 
 	@Override

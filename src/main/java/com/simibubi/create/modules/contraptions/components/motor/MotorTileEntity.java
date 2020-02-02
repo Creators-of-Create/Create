@@ -12,7 +12,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class MotorTileEntity extends GeneratingKineticTileEntity {
 
-	public static final int DEFAULT_SPEED = 64;
+	public static final int DEFAULT_SPEED = 16;
 	public int newGeneratedSpeed;
 	public int generatedSpeed;
 	public int lastModified;

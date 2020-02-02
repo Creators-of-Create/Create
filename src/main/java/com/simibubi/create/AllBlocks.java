@@ -37,12 +37,14 @@ import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
 import com.simibubi.create.modules.contraptions.components.turntable.TurntableBlock;
 import com.simibubi.create.modules.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.modules.contraptions.processing.BasinBlock;
+import com.simibubi.create.modules.contraptions.redstone.AnalogLeverBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftHalfBlock;
+import com.simibubi.create.modules.contraptions.relays.encased.AdjustablePulleyBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedShaftBlock;
@@ -112,10 +114,11 @@ public enum AllBlocks {
 	LARGE_COGWHEEL(new CogWheelBlock(true)),
 	SHAFTLESS_COGWHEEL(new RenderUtilityAxisBlock()),
 	ENCASED_SHAFT(new EncasedShaftBlock()),
-	ENCASED_BELT(new EncasedBeltBlock()),
+	GEARBOX(new GearboxBlock()),
 	CLUTCH(new ClutchBlock()),
 	GEARSHIFT(new GearshiftBlock()),
-	GEARBOX(new GearboxBlock()),
+	ENCASED_BELT(new EncasedBeltBlock()),
+	ADJUSTABLE_PULLEY(new AdjustablePulleyBlock()),
 	BELT(new BeltBlock()),
 	BELT_PULLEY(new RenderUtilityAxisBlock()),
 	MOTOR(new MotorBlock()),
@@ -136,11 +139,6 @@ public enum AllBlocks {
 	MECHANICAL_MIXER_POLE(new RenderUtilityBlock()),
 	MECHANICAL_MIXER_HEAD(new RenderUtilityBlock()),
 	BASIN(new BasinBlock()),
-	DEPLOYER(new DeployerBlock()),
-	DEPLOYER_POLE(new RenderUtilityBlock()),
-	DEPLOYER_HAND_POINTING(new RenderUtilityBlock()),
-	DEPLOYER_HAND_PUNCHING(new RenderUtilityBlock()),
-	DEPLOYER_HAND_HOLDING(new RenderUtilityBlock()),
 	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
 	MECHANICAL_CRAFTER_LID(new RenderUtilityBlock()),
 	MECHANICAL_CRAFTER_ARROW(new RenderUtilityBlock()),
@@ -166,8 +164,16 @@ public enum AllBlocks {
 	SAW(new SawBlock()),
 	HARVESTER(new HarvesterBlock()),
 	HARVESTER_BLADE(new HarvesterBladeBlock()),
+	DEPLOYER(new DeployerBlock()),
+	DEPLOYER_POLE(new RenderUtilityBlock()),
+	DEPLOYER_HAND_POINTING(new RenderUtilityBlock()),
+	DEPLOYER_HAND_PUNCHING(new RenderUtilityBlock()),
+	DEPLOYER_HAND_HOLDING(new RenderUtilityBlock()),
 	CART_ASSEMBLER(new CartAssemblerBlock()),
 	MINECART_ANCHOR(new MinecartAnchorBlock()),
+	ANALOG_LEVER(new AnalogLeverBlock()),
+	ANALOG_LEVER_HANDLE(new RenderUtilityBlock()),
+	ANALOG_LEVER_INDICATOR(new RenderUtilityBlock()),
 
 	ANDESITE_CASING(new CasingBlock("andesite_casing")),
 	COPPER_CASING(new CasingBlock("copper_casing")),
@@ -211,7 +217,7 @@ public enum AllBlocks {
 	FRAMED_GLASS(new CTGlassBlock(AllCTs.FRAMED_GLASS, false)),
 	HORIZONTAL_FRAMED_GLASS(new HorizontalCTGlassBlock(AllCTs.HORIZONTAL_FRAMED_GLASS, AllCTs.FRAMED_GLASS, false)),
 	VERTICAL_FRAMED_GLASS(new VerticalCTGlassBlock(AllCTs.VERTICAL_FRAMED_GLASS, false)),
-	
+
 	OAK_GLASS(new VerticalCTGlassBlock(AllCTs.OAK_GLASS, false)),
 	SPRUCE_GLASS(new VerticalCTGlassBlock(AllCTs.SPRUCE_GLASS, false)),
 	BIRCH_GLASS(new VerticalCTGlassBlock(AllCTs.BIRCH_GLASS, true)),
@@ -219,7 +225,7 @@ public enum AllBlocks {
 	DARK_OAK_GLASS(new VerticalCTGlassBlock(AllCTs.DARK_OAK_GLASS, false)),
 	ACACIA_GLASS(new VerticalCTGlassBlock(AllCTs.ACACIA_GLASS, false)),
 	IRON_GLASS(new VerticalCTGlassBlock(AllCTs.IRON_GLASS, false)),
-	
+
 	TILED_GLASS_PANE(new GlassPaneBlock(Properties.from(Blocks.GLASS))),
 	FRAMED_GLASS_PANE(new CTGlassPaneBlock(FRAMED_GLASS.block)),
 	HORIZONTAL_FRAMED_GLASS_PANE(new CTGlassPaneBlock(HORIZONTAL_FRAMED_GLASS.block)),
@@ -266,7 +272,8 @@ public enum AllBlocks {
 	DOLOMITE_BRICKS(new Block(Properties.from(DOLOMITE.block))),
 	POLISHED_DOLOMITE(new Block(Properties.from(DOLOMITE.block))),
 	DOLOMITE_PILLAR(new RotatedPillarBlock(Properties.from(DOLOMITE.block))),
-	DOLOMITE_LAYERS(new LayeredCTBlock(Properties.from(DOLOMITE.block), AllCTs.DOLOMITE_LAYERS, AllCTs.POLISHED_DOLOMITE)),
+	DOLOMITE_LAYERS(
+			new LayeredCTBlock(Properties.from(DOLOMITE.block), AllCTs.DOLOMITE_LAYERS, AllCTs.POLISHED_DOLOMITE)),
 
 	VOLCANIC_ROCK(new VolcanicRockBlock()),
 

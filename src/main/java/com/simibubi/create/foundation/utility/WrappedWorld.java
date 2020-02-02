@@ -14,7 +14,6 @@ import net.minecraft.tags.NetworkTagManager;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EmptyTickList;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
@@ -28,30 +27,35 @@ public class WrappedWorld extends World {
 				world.getProfiler(), world.isRemote);
 		this.world = world;
 	}
-	
+
 	@Override
 	public World getWorld() {
 		return world;
 	}
-	
+
 	@Override
 	public int getLight(BlockPos pos) {
 		return 15;
 	}
-	
+
 	@Override
 	public int getLightSubtracted(BlockPos pos, int amount) {
 		return 15 - amount;
 	}
 
 	@Override
+	public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
+		world.notifyBlockUpdate(pos, oldState, newState, flags);
+	}
+
+	@Override
 	public ITickList<Block> getPendingBlockTicks() {
-		return EmptyTickList.get();
+		return world.getPendingBlockTicks();
 	}
 
 	@Override
 	public ITickList<Fluid> getPendingFluidTicks() {
-		return EmptyTickList.get();
+		return world.getPendingFluidTicks();
 	}
 
 	@Override
@@ -61,10 +65,6 @@ public class WrappedWorld extends World {
 	@Override
 	public List<? extends PlayerEntity> getPlayers() {
 		return Collections.emptyList();
-	}
-
-	@Override
-	public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
 	}
 
 	@Override
@@ -89,9 +89,10 @@ public class WrappedWorld extends World {
 
 	@Override
 	public boolean addEntity(Entity entityIn) {
+		entityIn.setWorld(world);
 		return world.addEntity(entityIn);
 	}
-	
+
 	@Override
 	public void registerMapData(MapData mapDataIn) {
 	}
@@ -119,7 +120,7 @@ public class WrappedWorld extends World {
 	public NetworkTagManager getTags() {
 		return world.getTags();
 	}
-	
+
 	@Override
 	public int getMaxHeight() {
 		return 256;

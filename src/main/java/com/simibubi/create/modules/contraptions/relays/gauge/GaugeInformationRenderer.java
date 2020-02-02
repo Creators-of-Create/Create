@@ -1,8 +1,10 @@
 package com.simibubi.create.modules.contraptions.relays.gauge;
 
+import static net.minecraft.util.text.TextFormatting.AQUA;
 import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class GaugeInformationRenderer {
+
+	private static DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
 	@SubscribeEvent
 	public static void lookingAtBlocksThroughGogglesShowsTooltip(RenderGameOverlayEvent.Post event) {
@@ -101,11 +105,20 @@ public class GaugeInformationRenderer {
 		if (stressApplied == 0)
 			return;
 
-		tooltip.add(spacing + Lang.translate("gui.goggles.kinetic_stats"));
-		tooltip.add(spacing + GRAY + Lang.translate("tooltip.stressImpact"));
-		String addedCapacity = TextFormatting.AQUA + "" + stressApplied + Lang.translate("generic.unit.stress") + " "
-				+ DARK_GRAY + Lang.translate("gui.goggles.at_current_speed");
-		tooltip.add(spacing + " " + addedCapacity);
+		String _kineticStatsTitle = Lang.translate("gui.goggles.kinetic_stats");
+		String _stressImpact = Lang.translate("tooltip.stressImpact");
+		String _atCurrentSpeed = Lang.translate("gui.goggles.at_current_speed");
+		String _stressUnit = Lang.translate("generic.unit.stress");
+		String _baseValue = Lang.translate("gui.goggles.base_value");
+
+		tooltip.add(spacing + _kineticStatsTitle);
+		tooltip.add(spacing + GRAY + _stressImpact);
+
+		String addedStress = AQUA + "" + format(stressApplied) + _stressUnit + " " + DARK_GRAY + _atCurrentSpeed;
+		String addedStressAtBase = GRAY + "" + format(stressApplied * te.getSpeed()) + _stressUnit + " " + DARK_GRAY
+				+ _baseValue;
+		tooltip.add(spacing + " " + addedStress);
+		tooltip.add(spacing + " " + addedStressAtBase);
 	}
 
 	private static void addGeneratorTooltip(BlockState state, List<String> tooltip, GeneratingKineticTileEntity te) {
@@ -114,25 +127,45 @@ public class GaugeInformationRenderer {
 		if (addedStressCapacity == 0)
 			return;
 
-		tooltip.add(spacing + Lang.translate("gui.goggles.generator_stats"));
-		tooltip.add(spacing + GRAY + Lang.translate("tooltip.capacityProvided"));
+		String _stressUnit = Lang.translate("generic.unit.stress");
+		String _atCurrentSpeed = Lang.translate("gui.goggles.at_current_speed");
+		String _baseValue = Lang.translate("gui.goggles.base_value");
+		String _generatorStatsTitle = Lang.translate("gui.goggles.generator_stats");
+		String _capacityProvided = Lang.translate("tooltip.capacityProvided");
+
+		if (te.speed != te.getGeneratedSpeed() && te.speed != 0)
+			addedStressCapacity *= (te.getGeneratedSpeed() / te.speed);
+
+		tooltip.add(spacing + _generatorStatsTitle);
+		tooltip.add(spacing + GRAY + _capacityProvided);
 
 		float actualSpeed = Math.abs(te.speed);
 		float relativeCap = 0;
 		if (actualSpeed != 0)
 			relativeCap = addedStressCapacity * actualSpeed;
 
-		String addedCapacity = TextFormatting.AQUA + "" + addedStressCapacity + Lang.translate("generic.unit.stress")
-				+ " " + DARK_GRAY + Lang.translate("gui.goggles.at_current_speed");
-		String addedCapacityAtBase = GRAY + "" + (relativeCap) + Lang.translate("generic.unit.stress") + " " + DARK_GRAY
-				+ Lang.translate("gui.goggles.base_value");
+		String addedCapacity = AQUA + "" + format(addedStressCapacity) + _stressUnit + " " + DARK_GRAY
+				+ _atCurrentSpeed;
+		String addedCapacityAtBase = GRAY + "" + format(relativeCap) + _stressUnit + " " + DARK_GRAY + _baseValue;
 		tooltip.add(spacing + " " + addedCapacity);
 		tooltip.add(spacing + " " + addedCapacityAtBase);
 	}
 
 	private static void addGaugeTooltip(BlockState state, List<String> tooltip, TileEntity te) {
+
+		String _rpmUnit = Lang.translate("generic.unit.rpm");
+		String _speedGaugeTitle = Lang.translate("gui.speed_gauge.title");
+		String _infoHeader = Lang.translate("gui.gauge.info_header");
+		String _overStressed = Lang.translate("gui.stress_gauge.overstressed");
+		String _noRotation = Lang.translate("gui.stress_gauge.no_rotation");
+		String _capacity = Lang.translate("gui.stress_gauge.capacity");
+		String _stressGaugeTitle = Lang.translate("gui.stress_gauge.title");
+		String _stressUnit = Lang.translate("generic.unit.stress");
+		String _atCurrentSpeed = Lang.translate("gui.goggles.at_current_speed");
+		String _baseValue = Lang.translate("gui.goggles.base_value");
+
 		String spacing = "    ";
-		tooltip.add(spacing + Lang.translate("gui.gauge.info_header"));
+		tooltip.add(spacing + _infoHeader);
 
 		if (AllBlocks.STRESS_GAUGE.typeOf(state)) {
 			if (!(te instanceof StressGaugeTileEntity))
@@ -154,8 +187,7 @@ public class GaugeInformationRenderer {
 			if (impactId == StressImpact.HIGH)
 				color = TextFormatting.GOLD;
 
-			String level = TextFormatting.DARK_RED + ItemDescription.makeProgressBar(3, 2) + ""
-					+ Lang.translate("gui.stress_gauge.overstressed");
+			String level = TextFormatting.DARK_RED + ItemDescription.makeProgressBar(3, 2) + "" + _overStressed;
 			if (impactId != null) {
 				int index = impactId.ordinal();
 				level = color + ItemDescription.makeProgressBar(3, index) + stressLevels.get(index);
@@ -165,25 +197,20 @@ public class GaugeInformationRenderer {
 
 			float actualSpeed = stressGauge.speed;
 			if (actualSpeed == 0)
-				level = DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
-						+ Lang.translate("gui.stress_gauge.no_rotation");
+				level = DARK_GRAY + ItemDescription.makeProgressBar(3, -1) + _noRotation;
 
-			tooltip.add(spacing + GRAY + Lang.translate("gui.stress_gauge.title"));
+			tooltip.add(spacing + GRAY + _stressGaugeTitle);
 			tooltip.add(spacing + level);
 
 			if (actualSpeed != 0) {
-				tooltip.add(spacing + GRAY + Lang.translate("gui.stress_gauge.capacity"));
+				tooltip.add(spacing + GRAY + _capacity);
 
-				String capacity = color + "" + ((cap - stress) / Math.abs(actualSpeed))
-						+ Lang.translate("generic.unit.stress") + " " + DARK_GRAY
-						+ Lang.translate("gui.goggles.at_current_speed");
-				String capacityAtBase = GRAY + "" + (cap - stress) + Lang.translate("generic.unit.stress") + " " + DARK_GRAY
-						+ Lang.translate("gui.goggles.base_value");
+				String capacity = color + "" + format((cap - stress) / Math.abs(actualSpeed)) + _stressUnit + " "
+						+ DARK_GRAY + _atCurrentSpeed;
+				String capacityAtBase = GRAY + "" + format(cap - stress) + _stressUnit + " " + DARK_GRAY + _baseValue;
 				tooltip.add(spacing + " " + capacity);
 				tooltip.add(spacing + " " + capacityAtBase);
-
 			}
-
 		}
 
 		if (AllBlocks.SPEED_GAUGE.typeOf(state)) {
@@ -201,14 +228,18 @@ public class GaugeInformationRenderer {
 			int index = speedLevel.ordinal();
 			String level = color + ItemDescription.makeProgressBar(3, index)
 					+ (speedLevel != SpeedLevel.NONE ? speedLevels.get(index) : "");
-			level += " (" + Math.abs(speedGauge.speed) + "" + Lang.translate("generic.unit.rpm") + ") ";
+			level += " (" + format(Math.abs(speedGauge.speed)) + "" + _rpmUnit + ") ";
 
-			tooltip.add(spacing + GRAY + Lang.translate("gui.speed_gauge.title"));
+			tooltip.add(spacing + GRAY + _speedGaugeTitle);
 			tooltip.add(spacing + level);
 
 			if (overstressed)
-				tooltip.add(spacing + TextFormatting.DARK_RED + Lang.translate("gui.stress_gauge.overstressed"));
+				tooltip.add(spacing + TextFormatting.DARK_RED + _overStressed);
 		}
+	}
+
+	private static String format(double d) {
+		return decimalFormat.format(d);
 	}
 
 }

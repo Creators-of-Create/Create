@@ -20,6 +20,11 @@ public class EncasedShaftBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
+	public boolean shouldCheckWeakPower(BlockState state, IWorldReader world, BlockPos pos, Direction side) {
+		return false;
+	}
+
+	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new EncasedShaftTileEntity();
 	}

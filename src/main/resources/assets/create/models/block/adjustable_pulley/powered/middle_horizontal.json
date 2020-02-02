@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/encased_belt/middle_horizontal",
+	"textures": {
+		"0": "create:block/adjustable_pulley_on",
+		"particle": "create:block/adjustable_pulley_on"
+	}
+}

@@ -78,7 +78,6 @@ public class ClientEvents {
 
 	public static void onRenderHotbar() {
 		CreateClient.schematicHandler.renderOverlay();
-		KineticDebugger.renderOverlayText();
 	}
 
 	@SubscribeEvent

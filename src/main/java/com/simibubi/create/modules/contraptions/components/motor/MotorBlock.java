@@ -75,8 +75,19 @@ public class MotorBlock extends HorizontalKineticBlock
 	@Override
 	public void onScroll(BlockState state, IWorld world, BlockPos pos, double delta) {
 		withTileEntityDo(world, pos, te -> {
-			int d = Math.abs(te.newGeneratedSpeed) < 32 ? 4 : 16;
-			te.setSpeedValueLazily((int) (te.newGeneratedSpeed + delta * d));
+			boolean forward = delta > 0;
+			int step = forward ? 1 : -1;
+			int currentSpeed = te.newGeneratedSpeed;
+			int magnitude = Math.abs(currentSpeed) - (forward == currentSpeed > 0 ? 0 : 1);
+
+			if (magnitude >= 4)
+				step *= 4;
+			if (magnitude >= 32)
+				step *= 4;
+			if (magnitude >= 128)
+				step *= 4;
+
+			te.setSpeedValueLazily(currentSpeed + step);
 		});
 	}
 

@@ -88,6 +88,7 @@
 	"block.create.encased_belt": "Encased Belt",
 	"block.create.encased_shaft": "Encased Shaft",
 	"block.create.encased_fan": "Encased Fan",
+	"block.create.adjustable_pulley": "Analog Belt Pulley",
 	"block.create.nozzle": "Nozzle",
 	"block.create.hand_crank": "Hand Crank",
 	"block.create.motor": "Motor",
@@ -105,6 +106,7 @@
 	"block.create.speed_gauge": "Speedometer",
 	"block.create.stress_gauge": "Stress Gauge",
 	"block.create.cart_assembler": "Cart Assembler",
+	"block.create.analog_lever": "Analog Lever",
 
 	"block.create.sticky_mechanical_piston": "Sticky Mechanical Piston",
 	"block.create.mechanical_piston": "Mechanical Piston",

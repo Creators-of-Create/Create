@@ -19,14 +19,12 @@ import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour.SlotPositioning;
 import com.simibubi.create.foundation.behaviour.inventory.ExtractingBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -59,7 +57,6 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
@@ -252,7 +249,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		Vec3d rayTarget = center.add(movementVector.scale(5 / 2f - 1 / 64f));
 		BlockPos clickedPos = pos.offset(direction, 2);
 
-		player.rotationYaw = AngleHelper.horizontalAngle(direction);
+		player.rotationYaw = direction.getHorizontalAngle();
 		player.rotationPitch = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
 		player.setPosition(rayOrigin.x, rayOrigin.y, rayOrigin.z);
 
@@ -386,26 +383,22 @@ public class DeployerTileEntity extends KineticTileEntity {
 		if (item instanceof BucketItem || item instanceof SandPaperItem) {
 			world = new WrappedWorld(world) {
 
+				boolean rayMode = false;
+
+				@Override
+				public BlockRayTraceResult rayTraceBlocks(RayTraceContext context) {
+					rayMode = true;
+					BlockRayTraceResult rayTraceBlocks = super.rayTraceBlocks(context);
+					rayMode = false;
+					return rayTraceBlocks;
+				};
+
 				@Override
 				public BlockState getBlockState(BlockPos position) {
-					if (pos.offset(direction, 3).equals(position) || pos.offset(direction, 1).equals(position))
+					if (rayMode
+							&& (pos.offset(direction, 3).equals(position) || pos.offset(direction, 1).equals(position)))
 						return Blocks.BEDROCK.getDefaultState();
 					return world.getBlockState(position);
-				}
-
-				@Override
-				public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
-					world.notifyBlockUpdate(pos, oldState, newState, flags);
-				}
-
-				@Override
-				public ITickList<Block> getPendingBlockTicks() {
-					return world.getPendingBlockTicks();
-				}
-
-				@Override
-				public ITickList<Fluid> getPendingFluidTicks() {
-					return world.getPendingFluidTicks();
 				}
 
 			};

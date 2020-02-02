@@ -1,8 +1,5 @@
 package com.simibubi.create.modules.contraptions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.CreateClientConfig;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -33,36 +30,23 @@ public class KineticDebugger {
 
 		TessellatorHelper.prepareForDrawing();
 		GlStateManager.disableTexture();
-		GlStateManager.lineWidth(2);
+		GlStateManager.lineWidth(3);
+		GlStateManager.pushMatrix();
+		GlStateManager.translated(toOutline.getX(), toOutline.getY(), toOutline.getZ());
+		float f = 1 + 1 / 128f;
+		GlStateManager.scaled(f, f, f);
 
-		WorldRenderer.drawShape(shape, toOutline.getX(), toOutline.getY(), toOutline.getZ(), te.hasSource() ? .5f : 1,
-				.75f, .75f, 1);
+		WorldRenderer.drawShape(shape, 0, 0, 0, te.hasSource() ? .5f : 1, .75f, .75f, 1);
 
+		GlStateManager.popMatrix();
 		GlStateManager.lineWidth(1);
 		GlStateManager.enableTexture();
 		TessellatorHelper.cleanUpAfterDrawing();
 	}
 
-	public static void renderOverlayText() {
-		if (!isActive())
-			return;
-		KineticTileEntity te = getSelectedTE();
-		if (te == null)
-			return;
-
-		List<String> info = new ArrayList<>();
-		te.addDebugInformation(info);
-		Minecraft mc = Minecraft.getInstance();
-		int x = mc.mainWindow.getScaledWidth() / 2 - 25;
-		int y = mc.mainWindow.getScaledHeight() / 2 + 25;
-		for (String text : info) {
-			mc.fontRenderer.drawStringWithShadow(text, x, y, 0xFFFFFF);
-			y += 10;
-		}
-	}
-
 	public static boolean isActive() {
-		return Minecraft.getInstance().gameSettings.showDebugInfo && CreateClientConfig.instance.enableRainbowDebug.get();
+		return Minecraft.getInstance().gameSettings.showDebugInfo
+				&& CreateClientConfig.instance.enableRainbowDebug.get();
 	}
 
 	public static KineticTileEntity getSelectedTE() {

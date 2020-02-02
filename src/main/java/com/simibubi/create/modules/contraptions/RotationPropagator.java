@@ -9,7 +9,6 @@ import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateConfig;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -25,6 +24,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class RotationPropagator {
+
+	private static final int MAX_FLICKER_SCORE = 128;
 
 	/**
 	 * Determines the change in rotation between two attached kinetic entities. For
@@ -68,9 +69,9 @@ public class RotationPropagator {
 		}
 
 		// Attached Encased Belts
-		if (AllBlocks.ENCASED_BELT.typeOf(stateFrom) && AllBlocks.ENCASED_BELT.typeOf(stateTo)) {
+		if (stateFrom.getBlock() instanceof EncasedBeltBlock && stateTo.getBlock() instanceof EncasedBeltBlock) {
 			boolean connected = EncasedBeltBlock.areBlocksConnected(stateFrom, stateTo, direction);
-			return connected ? 1 : 0;
+			return connected ? EncasedBeltBlock.getRotationSpeedModifier(from, to) : 0;
 		}
 
 		// Large Gear <-> Large Gear
@@ -209,7 +210,7 @@ public class RotationPropagator {
 					&& (newSpeed != 0 && neighbourTE.speed != 0);
 
 			boolean tooFast = Math.abs(newSpeed) > parameters.maxRotationSpeed.get();
-			boolean speedChangedTooOften = updateTE.speedChangeCounter > 50;
+			boolean speedChangedTooOften = updateTE.speedChangeCounter > MAX_FLICKER_SCORE;
 			if (tooFast || speedChangedTooOften) {
 				world.destroyBlock(pos, true);
 				return;
@@ -307,6 +308,7 @@ public class RotationPropagator {
 		List<KineticTileEntity> potentialNewSources = new LinkedList<>();
 		List<BlockPos> frontier = new LinkedList<>();
 		frontier.add(updateTE.getPos());
+		BlockPos missingSource = updateTE.hasSource() ? updateTE.getSource() : null;
 
 		while (!frontier.isEmpty()) {
 			final BlockPos pos = frontier.remove(0);
@@ -316,6 +318,8 @@ public class RotationPropagator {
 			currentTE.sendData();
 
 			for (KineticTileEntity neighbourTE : getConnectedNeighbours(currentTE)) {
+				if (neighbourTE.getPos().equals(missingSource))
+					continue;
 				if (!neighbourTE.hasSource())
 					continue;
 
@@ -324,9 +328,8 @@ public class RotationPropagator {
 					continue;
 				}
 
-				if (neighbourTE.isSource()) {
+				if (neighbourTE.isSource())
 					potentialNewSources.add(neighbourTE);
-				}
 
 				frontier.add(neighbourTE.getPos());
 			}

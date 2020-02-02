@@ -51,8 +51,8 @@ public class GearshiftBlock extends EncasedShaftBlock {
 
 		boolean previouslyPowered = state.get(POWERED);
 		if (previouslyPowered != worldIn.isBlockPowered(pos)) {
-			worldIn.setBlockState(pos, state.cycle(POWERED), 2 | 16);
 			RotationPropagator.handleRemoved(worldIn, pos, (KineticTileEntity) worldIn.getTileEntity(pos));
+			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
 		}
 	}
 
