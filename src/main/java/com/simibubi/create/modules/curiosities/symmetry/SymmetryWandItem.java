@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandModel;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.CrossPlaneMirror;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.PlaneMirror;
@@ -18,6 +21,7 @@ import com.simibubi.create.modules.curiosities.symmetry.mirror.SymmetryMirror;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -39,7 +43,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SymmetryWandItem extends Item {
+public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 
 	public static final String SYMMETRY = "symmetry";
 	private static final String ENABLE = "enable";
@@ -266,6 +270,12 @@ public class SymmetryWandItem extends Item {
 
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
 				new SymmetryEffectPacket(to, targets));
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public CustomRenderedItemModel createModel(IBakedModel original) {
+		return new SymmetryWandModel(original);
 	}
 
 }

@@ -1,11 +1,7 @@
 package com.simibubi.create.modules.curiosities.tools;
 
-import javax.vecmath.Matrix4f;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.foundation.block.render.CustomRenderItemBakedModel;
+import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
@@ -17,7 +13,6 @@ import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.client.event.ModelBakeEvent;
 
 @SuppressWarnings("deprecation")
 public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
@@ -27,10 +22,11 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		SandPaperModel mainModel = (SandPaperModel) itemRenderer.getModelWithOverrides(stack);
+		TransformType perspective = mainModel.getCurrentPerspective();
 		float partialTicks = Minecraft.getInstance().getRenderPartialTicks();
 
-		boolean leftHand = mainModel.transformType == TransformType.FIRST_PERSON_LEFT_HAND;
-		boolean firstPerson = leftHand || mainModel.transformType == TransformType.FIRST_PERSON_RIGHT_HAND;
+		boolean leftHand = perspective == TransformType.FIRST_PERSON_LEFT_HAND;
+		boolean firstPerson = leftHand || perspective == TransformType.FIRST_PERSON_RIGHT_HAND;
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translatef(.5f, .5f, .5f);
@@ -41,7 +37,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 		if (tag.contains("Polishing")) {
 			GlStateManager.pushMatrix();
 
-			if (mainModel.transformType == TransformType.GUI) {
+			if (perspective == TransformType.GUI) {
 				GlStateManager.translatef(0.0F, .2f, 1.0F);
 				GlStateManager.scalef(.75f, .75f, .75f);
 			} else {
@@ -55,7 +51,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 			if (time / (float) stack.getUseDuration() < 0.8F) {
 				float bobbing = -MathHelper.abs(MathHelper.cos(time / 4.0F * (float) Math.PI) * 0.1F);
 
-				if (mainModel.transformType == TransformType.GUI)
+				if (perspective == TransformType.GUI)
 					GlStateManager.translatef(bobbing, bobbing, 0.0F);
 				else
 					GlStateManager.translatef(0.0f, bobbing, 0.0F);
@@ -83,23 +79,15 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 		GlStateManager.popMatrix();
 	}
 
-	public static class SandPaperModel extends CustomRenderItemBakedModel {
-
-		TransformType transformType;
+	public static class SandPaperModel extends CustomRenderedItemModel {
 
 		public SandPaperModel(IBakedModel template) {
-			super(template);
+			super(template, "");
 		}
 
 		@Override
-		public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
-			transformType = cameraTransformType;
-			return super.handlePerspective(cameraTransformType);
-		}
-
-		@Override
-		public CustomRenderItemBakedModel loadPartials(ModelBakeEvent event) {
-			return this;
+		public ItemStackTileEntityRenderer createRenderer() {
+			return new SandPaperItemRenderer();
 		}
 
 	}

@@ -47,7 +47,7 @@ public class SchematicItem extends Item {
 	}
 
 	public static ItemStack create(String schematic, String owner) {
-		ItemStack blueprint = new ItemStack(AllItems.BLUEPRINT.item);
+		ItemStack blueprint = AllItems.BLUEPRINT.asStack();
 
 		CompoundNBT tag = new CompoundNBT();
 		tag.putBoolean("Deployed", false);

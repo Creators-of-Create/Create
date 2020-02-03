@@ -16,15 +16,15 @@ public enum AllToolTiers implements IItemTier {
 	}),
 
 	ROSE_QUARTZ(3, 1644, 7.0F, 2.0F, 24, () -> {
-		return Ingredient.fromItems(AllItems.POLISHED_ROSE_QUARTZ.item);
+		return Ingredient.fromItems(AllItems.POLISHED_ROSE_QUARTZ.get());
 	}),
 
 	SHADOW_STEEL(4, 2303, 16.0F, 3.5F, 10, () -> {
-		return Ingredient.fromItems(AllItems.SHADOW_STEEL.item);
+		return Ingredient.fromItems(AllItems.SHADOW_STEEL.get());
 	}),
 
 	RADIANT(4, 1024, 16.0F, 3.5F, 10, () -> {
-		return Ingredient.fromItems(AllItems.REFINED_RADIANCE.item);
+		return Ingredient.fromItems(AllItems.REFINED_RADIANCE.get());
 	}),
 
 	;

@@ -31,13 +31,13 @@ public class SymmetryWandItemRenderer extends ItemStackTileEntityRenderer {
 		lastCoordy = GLX.lastBrightnessY;
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, 240, 240);
 
-		itemRenderer.renderItem(stack, mainModel.core);
+		itemRenderer.renderItem(stack, mainModel.getPartial("core"));
 
 		float floating = MathHelper.sin(worldTime) * .05f;
 		GlStateManager.translated(0, floating, 0);
 		float angle = worldTime * -10 % 360;
 		GlStateManager.rotated(angle, 0, 1, 0);
-		itemRenderer.renderItem(stack, mainModel.bits);
+		itemRenderer.renderItem(stack, mainModel.getPartial("bits"));
 
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastCoordx, lastCoordy);
 		GlStateManager.enableLighting();

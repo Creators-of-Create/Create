@@ -15,7 +15,7 @@
 	"conditions": [
 		{
 			"type": "create:module",
-			"module": "gardens"
+			"module": "curiosities"
 		}
 	]
 }

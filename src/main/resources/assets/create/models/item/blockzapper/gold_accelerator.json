@@ -2,7 +2,7 @@
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
     "parent": "create:item/placement_handgun",
     "textures": {
-        "cog": "minecraft:block/yellow_concrete_powder"
+        "cog": "create:block/brass_block"
     },
     "elements": [
         {

@@ -1,6 +1,8 @@
 package com.simibubi.create.modules.curiosities.deforester;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.TreeCutter.Tree;
@@ -8,6 +10,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
@@ -18,13 +21,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 @EventBusSubscriber(bus = Bus.FORGE)
-public class DeforesterItem extends AxeItem {
+public class DeforesterItem extends AxeItem implements IHaveCustomItemModel {
 
 	public DeforesterItem(Properties builder) {
 		super(AllToolTiers.RADIANT, 10.0F, -3.1F, builder);
@@ -73,6 +78,12 @@ public class DeforesterItem extends AxeItem {
 		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, stack);
 		entity.setMotion(fallDirection.scale(distance / 20f));
 		world.addEntity(entity);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public CustomRenderedItemModel createModel(IBakedModel original) {
+		return new DeforesterModel(original);
 	}
 
 }

@@ -1,24 +1,22 @@
 package com.simibubi.create;
 
+import java.util.function.Function;
+
+import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.GogglesItem;
 import com.simibubi.create.modules.contraptions.WrenchItem;
-import com.simibubi.create.modules.contraptions.WrenchItemRenderer;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItem;
 import com.simibubi.create.modules.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
 import com.simibubi.create.modules.curiosities.RefinedRadianceItem;
 import com.simibubi.create.modules.curiosities.ShadowSteelItem;
 import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem;
-import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItemRenderer;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItem;
-import com.simibubi.create.modules.curiosities.deforester.DeforesterItemRenderer;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
-import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandItemRenderer;
 import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
-import com.simibubi.create.modules.curiosities.tools.SandPaperItemRenderer;
 import com.simibubi.create.modules.gardens.TreeFertilizerItem;
 import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 import com.simibubi.create.modules.schematics.item.SchematicAndQuillItem;
@@ -41,71 +39,63 @@ import net.minecraftforge.registries.IForgeRegistry;
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD)
 public enum AllItems {
 
-	__MATERIALS__(),
-	COPPER_NUGGET(ingredient()),
-	ZINC_NUGGET(ingredient()),
-	BRASS_NUGGET(ingredient()),
-	IRON_SHEET(ingredient()),
-	GOLD_SHEET(ingredient()),
-	COPPER_SHEET(ingredient()),
-	BRASS_SHEET(ingredient()),
-	LAPIS_PLATE(ingredient()),
+	__MATERIALS__(module()),
+	COPPER_NUGGET,
+	ZINC_NUGGET,
+	BRASS_NUGGET,
+	IRON_SHEET,
+	GOLD_SHEET,
+	COPPER_SHEET,
+	BRASS_SHEET,
+	LAPIS_PLATE,
 
-	CRUSHED_IRON(ingredient()),
-	CRUSHED_GOLD(ingredient()),
-	CRUSHED_COPPER(ingredient()),
-	CRUSHED_ZINC(ingredient()),
-	CRUSHED_BRASS(ingredient()),
+	CRUSHED_IRON,
+	CRUSHED_GOLD,
+	CRUSHED_COPPER,
+	CRUSHED_ZINC,
+	CRUSHED_BRASS,
 
-	ANDESITE_ALLOY(ingredient()),
-	COPPER_INGOT(ingredient()),
-	ZINC_INGOT(ingredient()),
-	BRASS_INGOT(ingredient()),
-	SAND_PAPER(
-			new SandPaperItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SAND_PAPER)))),
-	RED_SAND_PAPER(
-			new SandPaperItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SAND_PAPER)))),
-	OBSIDIAN_DUST(ingredient()),
-	ROSE_QUARTZ(ingredient()),
-	POLISHED_ROSE_QUARTZ(ingredient()),
-	CHROMATIC_COMPOUND(new ChromaticCompoundCubeItem(standardItemProperties().rarity(Rarity.UNCOMMON))),
-	SHADOW_STEEL(new ShadowSteelItem(standardItemProperties().rarity(Rarity.UNCOMMON))),
-	REFINED_RADIANCE(new RefinedRadianceItem(standardItemProperties().rarity(Rarity.UNCOMMON))),
-	ELECTRON_TUBE(ingredient()),
-	INTEGRATED_CIRCUIT(ingredient()),
+	ANDESITE_ALLOY,
+	COPPER_INGOT,
+	ZINC_INGOT,
+	BRASS_INGOT,
 
-	__GARDENS__(),
-	TREE_FERTILIZER(new TreeFertilizerItem(standardItemProperties())),
+	SAND_PAPER(SandPaperItem::new),
+	RED_SAND_PAPER(SandPaperItem::new),
+	OBSIDIAN_DUST,
+	ROSE_QUARTZ,
+	POLISHED_ROSE_QUARTZ,
+	CHROMATIC_COMPOUND(ChromaticCompoundCubeItem::new, rarity(Rarity.UNCOMMON)),
+	SHADOW_STEEL(ShadowSteelItem::new, rarity(Rarity.UNCOMMON)),
+	REFINED_RADIANCE(RefinedRadianceItem::new, rarity(Rarity.UNCOMMON)),
+	ELECTRON_TUBE,
+	INTEGRATED_CIRCUIT,
 
-	__SCHEMATICS__(),
-	EMPTY_BLUEPRINT(new Item(standardItemProperties().maxStackSize(1))),
-	BLUEPRINT_AND_QUILL(new SchematicAndQuillItem(standardItemProperties().maxStackSize(1))),
-	BLUEPRINT(new SchematicItem(standardItemProperties())),
+	__SCHEMATICS__(module()),
+	EMPTY_BLUEPRINT(Item::new, stackSize(1)),
+	BLUEPRINT_AND_QUILL(SchematicAndQuillItem::new, stackSize(1)),
+	BLUEPRINT(SchematicItem::new),
 
-	__CONTRAPTIONS__(),
-	BELT_CONNECTOR(new BeltConnectorItem(standardItemProperties())),
-	VERTICAL_GEARBOX(new VerticalGearboxItem(new Properties())),
-	FLOUR(ingredient()),
-	DOUGH(ingredient()),
-	PROPELLER(ingredient()),
-	WHISK(ingredient()),
-	BRASS_HAND(ingredient()),
-	WRENCH(new WrenchItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.WRENCH))), true),
-	GOGGLES(new GogglesItem(standardItemProperties()), true),
+	__CONTRAPTIONS__(module()),
+	BELT_CONNECTOR(BeltConnectorItem::new),
+	VERTICAL_GEARBOX(VerticalGearboxItem::new),
+	FLOUR,
+	DOUGH,
+	PROPELLER,
+	WHISK,
+	BRASS_HAND,
+	WRENCH(WrenchItem::new),
+	GOGGLES(GogglesItem::new),
 
-	__LOGISTICS__(),
-	FILTER(new FilterItem(standardItemProperties()), true),
-	PROPERTY_FILTER(new FilterItem(standardItemProperties()), true),
+	__LOGISTICS__(module()),
+	FILTER(FilterItem::new),
+	PROPERTY_FILTER(FilterItem::new),
 
-	__CURIOSITIES__(),
-	PLACEMENT_HANDGUN(
-			new BlockzapperItem(new Properties().setTEISR(() -> () -> renderUsing(AllItemRenderers.BUILDER_GUN))),
-			true),
-	DEFORESTER(
-			new DeforesterItem(standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.DEFORESTER))),
-			true),
-	SYMMETRY_WAND(new SymmetryWandItem(
-			standardItemProperties().setTEISR(() -> () -> renderUsing(AllItemRenderers.SYMMETRY_WAND))), true),
+	__CURIOSITIES__(module()),
+	TREE_FERTILIZER(TreeFertilizerItem::new),
+	PLACEMENT_HANDGUN(BlockzapperItem::new),
+	DEFORESTER(DeforesterItem::new),
+	SYMMETRY_WAND(SymmetryWandItem::new),
 
 	;
 
@@ -115,11 +105,12 @@ public enum AllItems {
 
 	// Common
 
-	public Item item;
 	public IModule module;
-	public boolean firstInCreativeTab;
+	private Function<Properties, Properties> specialProperties;
+	private Function<Properties, Item> itemSupplier;
+	private Item item;
 
-	private AllItems() {
+	private AllItems(int moduleMarker) {
 		CategoryTracker.currentModule = new IModule() {
 			@Override
 			public String getModuleName() {
@@ -128,36 +119,51 @@ public enum AllItems {
 		};
 	}
 
-	private AllItems(Item item) {
-		this(item, false);
+	private AllItems() {
+		this(Item::new);
 	}
 
-	private AllItems(Item item, boolean firstInCreativeTab) {
-		this.item = item;
-		this.item.setRegistryName(Create.ID, Lang.asId(name()));
+	private AllItems(Function<Properties, Item> itemSupplier) {
+		this(itemSupplier, Function.identity());
+	}
+
+	private AllItems(Function<Properties, Item> itemSupplier, Function<Properties, Properties> specialProperties) {
+		this.itemSupplier = itemSupplier;
 		this.module = CategoryTracker.currentModule;
-		this.firstInCreativeTab = firstInCreativeTab;
+		this.specialProperties = specialProperties;
 	}
 
-	public static Properties standardItemProperties() {
+	private static Function<Properties, Properties> rarity(Rarity rarity) {
+		return p -> p.rarity(rarity);
+	}
+
+	private static Function<Properties, Properties> stackSize(int stackSize) {
+		return p -> p.maxStackSize(stackSize);
+	}
+
+	private static Properties defaultProperties(AllItems item) {
+		return includeInItemGroup().setTEISR(() -> item::getRenderer);
+	}
+
+	private static int module() {
+		return 0;
+	}
+
+	public static Properties includeInItemGroup() {
 		return new Properties().group(Create.creativeTab);
-	}
-
-	private static Item ingredient() {
-		return ingredient(Rarity.COMMON);
-	}
-
-	private static Item ingredient(Rarity rarity) {
-		return new Item(standardItemProperties().rarity(rarity));
 	}
 
 	public static void register(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();
 
-		for (AllItems item : values()) {
-			if (item.get() == null)
+		for (AllItems entry : values()) {
+			if (entry.itemSupplier == null)
 				continue;
-			registry.register(item.get());
+
+			entry.item = entry.itemSupplier.apply(new Properties());
+			entry.item = entry.itemSupplier.apply(entry.specialProperties.apply(defaultProperties(entry)));
+			entry.item.setRegistryName(Create.ID, Lang.asId(entry.name()));
+			registry.register(entry.item);
 		}
 
 		AllBlocks.registerItemBlocks(registry);
@@ -177,8 +183,12 @@ public enum AllItems {
 
 	// Client
 
-	private enum AllItemRenderers {
-		SYMMETRY_WAND, BUILDER_GUN, WRENCH, DEFORESTER, SAND_PAPER;
+	@OnlyIn(Dist.CLIENT)
+	public ItemStackTileEntityRenderer getRenderer() {
+		if (!(item instanceof IHaveCustomItemModel))
+			return null;
+		IHaveCustomItemModel specialItem = (IHaveCustomItemModel) item;
+		return specialItem.createModel(null).getRenderer();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -188,25 +198,6 @@ public enum AllItems {
 			if (item.item instanceof IItemWithColorHandler) {
 				itemColors.register(((IItemWithColorHandler) item.item).getColorHandler(), item.item);
 			}
-		}
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static ItemStackTileEntityRenderer renderUsing(AllItemRenderers renderer) {
-		switch (renderer) {
-
-		case SYMMETRY_WAND:
-			return new SymmetryWandItemRenderer();
-		case BUILDER_GUN:
-			return new BlockzapperItemRenderer();
-		case WRENCH:
-			return new WrenchItemRenderer();
-		case DEFORESTER:
-			return new DeforesterItemRenderer();
-		case SAND_PAPER:
-			return new SandPaperItemRenderer();
-		default:
-			return null;
 		}
 	}
 

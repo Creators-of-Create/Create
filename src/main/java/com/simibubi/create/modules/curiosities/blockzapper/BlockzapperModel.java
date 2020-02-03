@@ -1,79 +1,32 @@
 package com.simibubi.create.modules.curiosities.blockzapper;
 
-import java.util.Arrays;
-import java.util.List;
+import javax.annotation.Nullable;
 
-import javax.vecmath.Matrix4f;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.simibubi.create.foundation.block.render.CustomRenderItemBakedModel;
+import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.ComponentTier;
 
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 
-@SuppressWarnings("deprecation")
-public class BlockzapperModel extends CustomRenderItemBakedModel {
-
-	public boolean showBlock;
-
-	public IBakedModel core;
-	public IBakedModel body;
-	public IBakedModel ampCore;
-	public IBakedModel acc;
-
-	public IBakedModel goldBody;
-	public IBakedModel goldScope;
-	public IBakedModel goldAmp;
-	public IBakedModel goldRetriever;
-	public IBakedModel goldAcc;
-
-	public IBakedModel chorusBody;
-	public IBakedModel chorusScope;
-	public IBakedModel chorusAmp;
-	public IBakedModel chorusRetriever;
-	public IBakedModel chorusAcc;
+public class BlockzapperModel extends CustomRenderedItemModel {
 
 	public BlockzapperModel(IBakedModel template) {
-		super(template);
-	}
-
-	public static List<String> getCustomModelLocations() {
-		String p = "blockzapper/";
-		return Arrays.asList(p + "core", p + "body", p + "amplifier_core", p + "accelerator", p + "gold_body",
-				p + "gold_scope", p + "gold_amplifier", p + "gold_retriever", p + "gold_accelerator", p + "chorus_body",
-				p + "chorus_amplifier", p + "chorus_retriever", p + "chorus_accelerator");
+		super(template, "blockzapper");
+		addPartials("core", "body", "amplifier_core", "accelerator", "gold_body", "gold_scope", "gold_amplifier",
+				"gold_retriever", "gold_accelerator", "chorus_body", "chorus_amplifier", "chorus_retriever",
+				"chorus_accelerator");
 	}
 
 	@Override
-	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
-		showBlock = cameraTransformType == TransformType.GUI;
-		return super.handlePerspective(cameraTransformType);
+	public ItemStackTileEntityRenderer createRenderer() {
+		return new BlockzapperItemRenderer();
 	}
 
-	@Override
-	public CustomRenderItemBakedModel loadPartials(ModelBakeEvent event) {
-		String p = "blockzapper/";
-
-		this.core = loadCustomModel(event, p + "core");
-		this.body = loadCustomModel(event, p + "body");
-		this.ampCore = loadCustomModel(event, p + "amplifier_core");
-		this.acc = loadCustomModel(event, p + "accelerator");
-
-		this.goldBody = loadCustomModel(event, p + "gold_body");
-		this.goldScope = loadCustomModel(event, p + "gold_scope");
-		this.goldAmp = loadCustomModel(event, p + "gold_amplifier");
-		this.goldRetriever = loadCustomModel(event, p + "gold_retriever");
-		this.goldAcc = loadCustomModel(event, p + "gold_accelerator");
-
-		this.chorusBody = loadCustomModel(event, p + "chorus_body");
-		this.chorusScope = loadCustomModel(event, p + "chorus_scope");
-		this.chorusAmp = loadCustomModel(event, p + "chorus_amplifier");
-		this.chorusRetriever = loadCustomModel(event, p + "chorus_retriever");
-		this.chorusAcc = loadCustomModel(event, p + "chorus_accelerator");
-
-		return this;
+	@Nullable
+	IBakedModel getComponentPartial(BlockzapperItem.ComponentTier tier, BlockzapperItem.Components component) {
+		String prefix = tier == ComponentTier.Chromatic ? "chorus_" : tier == ComponentTier.Brass ? "gold_" : "";
+		return getPartial(prefix + Lang.asId(component.name()));
 	}
 
 }

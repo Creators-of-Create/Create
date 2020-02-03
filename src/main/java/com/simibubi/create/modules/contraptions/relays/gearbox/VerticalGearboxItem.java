@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays.gearbox;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 
 import net.minecraft.block.BlockState;
@@ -13,7 +14,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class VerticalGearboxItem extends BlockItem {
+public class VerticalGearboxItem extends BlockItem implements IAddedByOther {
 
 	public VerticalGearboxItem(Properties builder) {
 		super(AllBlocks.GEARBOX.get(), builder);

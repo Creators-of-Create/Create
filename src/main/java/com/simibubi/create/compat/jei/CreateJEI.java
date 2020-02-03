@@ -94,7 +94,7 @@ public class CreateJEI implements IModPlugin {
 
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistration registration) {
-		registration.useNbtForSubtypes(AllItems.PLACEMENT_HANDGUN.item);
+		registration.useNbtForSubtypes(AllItems.PLACEMENT_HANDGUN.get());
 	}
 
 	@Override

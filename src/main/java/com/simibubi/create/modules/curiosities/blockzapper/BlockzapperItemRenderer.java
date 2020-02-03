@@ -18,12 +18,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 
+@SuppressWarnings("deprecation")
 public class BlockzapperItemRenderer extends ItemStackTileEntityRenderer {
 
 	@Override
@@ -40,13 +42,14 @@ public class BlockzapperItemRenderer extends ItemStackTileEntityRenderer {
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, Math.min(lastCoordx + 60, 240), Math.min(lastCoordy + 120, 240));
 
 		itemRenderer.renderItem(stack, mainModel.getBakedModel());
-		renderComponent(stack, Body, itemRenderer, mainModel.body, mainModel.goldBody, mainModel.chorusBody);
-		renderComponent(stack, Amplifier, itemRenderer, null, mainModel.goldAmp, mainModel.chorusAmp);
-		renderComponent(stack, Retriever, itemRenderer, null, mainModel.goldRetriever, mainModel.chorusRetriever);
-		renderComponent(stack, Scope, itemRenderer, null, mainModel.goldScope, mainModel.chorusScope);
+		renderComponent(stack, mainModel, Body, itemRenderer);
+		renderComponent(stack, mainModel, Amplifier, itemRenderer);
+		renderComponent(stack, mainModel, Retriever, itemRenderer);
+		renderComponent(stack, mainModel, Scope, itemRenderer);
 
 		// Block indicator
-		if (mainModel.showBlock && stack.hasTag() && stack.getTag().contains("BlockUsed"))
+		if (mainModel.getCurrentPerspective() == TransformType.GUI && stack.hasTag()
+				&& stack.getTag().contains("BlockUsed"))
 			renderBlockUsed(stack, itemRenderer);
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
@@ -66,9 +69,9 @@ public class BlockzapperItemRenderer extends ItemStackTileEntityRenderer {
 			multiplier = animation;
 		}
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, multiplier * 240, 120);
-		itemRenderer.renderItem(stack, mainModel.core);
+		itemRenderer.renderItem(stack, mainModel.getPartial("core"));
 		if (BlockzapperItem.getTier(Amplifier, stack) != ComponentTier.None)
-			itemRenderer.renderItem(stack, mainModel.ampCore);
+			itemRenderer.renderItem(stack, mainModel.getPartial("amplifier_core"));
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastCoordx, lastCoordy);
 		GlStateManager.enableLighting();
 
@@ -82,7 +85,7 @@ public class BlockzapperItemRenderer extends ItemStackTileEntityRenderer {
 		GlStateManager.translatef(0, offset, 0);
 		GlStateManager.rotatef(angle, 0, 0, 1);
 		GlStateManager.translatef(0, -offset, 0);
-		renderComponent(stack, Accelerator, itemRenderer, mainModel.acc, mainModel.goldAcc, mainModel.chorusAcc);
+		renderComponent(stack, mainModel, Accelerator, itemRenderer);
 
 		GlStateManager.popMatrix();
 	}
@@ -98,23 +101,17 @@ public class BlockzapperItemRenderer extends ItemStackTileEntityRenderer {
 		if (state.getBlock() instanceof FourWayBlock)
 			modelForState = Minecraft.getInstance().getItemRenderer()
 					.getModelWithOverrides(new ItemStack(state.getBlock()));
-		
+
 		itemRenderer.renderItem(new ItemStack(state.getBlock()), modelForState);
 		GlStateManager.popMatrix();
 	}
 
-	public void renderComponent(ItemStack stack, Components component, ItemRenderer itemRenderer, IBakedModel none,
-			IBakedModel gold, IBakedModel chorus) {
+	public void renderComponent(ItemStack stack, BlockzapperModel model, Components component,
+			ItemRenderer itemRenderer) {
 		ComponentTier tier = BlockzapperItem.getTier(component, stack);
-
-		IBakedModel model = tier == ComponentTier.Chromatic ? chorus : gold;
-		if (tier == ComponentTier.None) {
-			if (none == null)
-				return;
-			model = none;
-		}
-
-		itemRenderer.renderItem(stack, model);
+		IBakedModel partial = model.getComponentPartial(tier, component);
+		if (partial != null)
+			itemRenderer.renderItem(stack, partial);
 	}
 
 }

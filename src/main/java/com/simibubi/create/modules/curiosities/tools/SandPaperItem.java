@@ -1,8 +1,12 @@
 package com.simibubi.create.modules.curiosities.tools;
 
+import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.deployer.DeployerFakePlayer;
+import com.simibubi.create.modules.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
 
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
@@ -24,8 +28,10 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class SandPaperItem extends Item {
+public class SandPaperItem extends Item implements IHaveCustomItemModel {
 
 	public SandPaperItem(Properties properties) {
 		super(properties);
@@ -175,6 +181,12 @@ public class SandPaperItem extends Item {
 	@Override
 	public int getMaxDamage(ItemStack stack) {
 		return 8;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public CustomRenderedItemModel createModel(IBakedModel original) {
+		return new SandPaperModel(original);
 	}
 
 }

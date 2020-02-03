@@ -1,7 +1,11 @@
 package com.simibubi.create.modules.contraptions;
 
+import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.item.IHaveCustomItemModel;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,8 +14,10 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class WrenchItem extends Item {
+public class WrenchItem extends Item implements IHaveCustomItemModel {
 
 	public WrenchItem(Properties properties) {
 		super(properties);
@@ -43,6 +49,12 @@ public class WrenchItem extends Item {
 		}
 
 		return actor.onWrenched(state, context);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public CustomRenderedItemModel createModel(IBakedModel original) {
+		return new WrenchModel(original);
 	}
 
 }

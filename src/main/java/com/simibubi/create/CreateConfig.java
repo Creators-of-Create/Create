@@ -35,7 +35,6 @@ public class CreateConfig {
 	public BooleanValue enableContraptions;
 	public BooleanValue enablePalettes;
 	public BooleanValue enableLogistics;
-	public BooleanValue enableGardens;
 
 	// Damage Control
 	public BooleanValue freezeRotationPropagator;
@@ -102,9 +101,6 @@ public class CreateConfig {
 
 		name = "enableCuriosities";
 		enableCuriosities = builder.translation(basePath + name).define(name, true);
-
-		name = "enableGardens";
-		enableGardens = builder.translation(basePath + name).define(name, true);
 
 		name = "enableLogistics";
 		enableLogistics = builder.translation(basePath + name).define(name, true);

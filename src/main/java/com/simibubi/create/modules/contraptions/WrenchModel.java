@@ -1,29 +1,20 @@
 package com.simibubi.create.modules.contraptions;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.simibubi.create.foundation.block.render.CustomRenderItemBakedModel;
+import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 
-public class WrenchModel extends CustomRenderItemBakedModel {
+public class WrenchModel extends CustomRenderedItemModel {
 
-	public IBakedModel gear;
-	
 	public WrenchModel(IBakedModel template) {
-		super(template);
+		super(template, "wrench");
+		addPartials("gear");
 	}
 
-	public static List<String> getCustomModelLocations() {
-		return Arrays.asList("wrench/gear");
-	}
-	
 	@Override
-	public CustomRenderItemBakedModel loadPartials(ModelBakeEvent event) {
-		this.gear = loadCustomModel(event, "wrench/gear");
-		return this;
+	public ItemStackTileEntityRenderer createRenderer() {
+		return new WrenchItemRenderer();
 	}
 
 }

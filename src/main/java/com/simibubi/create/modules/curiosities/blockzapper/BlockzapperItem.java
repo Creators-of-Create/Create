@@ -11,7 +11,9 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -23,6 +25,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -67,7 +70,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class BlockzapperItem extends Item {
+public class BlockzapperItem extends Item implements IHaveCustomItemModel {
 
 	public static enum ComponentTier {
 		None(TextFormatting.DARK_GRAY), Brass(TextFormatting.GOLD), Chromatic(TextFormatting.LIGHT_PURPLE),
@@ -587,6 +590,12 @@ public class BlockzapperItem extends Item {
 
 	public static void setTier(Components component, ComponentTier tier, ItemStack stack) {
 		stack.getOrCreateTag().putString(component.name(), NBTHelper.writeEnum(tier));
+	}
+
+	@Override
+	@OnlyIn(value = Dist.CLIENT)
+	public CustomRenderedItemModel createModel(IBakedModel original) {
+		return new BlockzapperModel(original);
 	}
 
 }

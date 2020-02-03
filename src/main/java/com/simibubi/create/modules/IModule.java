@@ -28,8 +28,6 @@ public interface IModule {
 			return conf.enableLogistics.get();
 		case "schematics":
 			return conf.enableSchematics.get();
-		case "gardens":
-			return conf.enableGardens.get();
 		default:
 			return false;
 		}
@@ -45,15 +43,13 @@ public interface IModule {
 		case "contraptions":
 			return Palette.Red;
 		case "palettes":
-			return Palette.Yellow;
+			return Palette.Green;
 		case "curiosities":
 			return Palette.Purple;
 		case "logistics":
 			return Palette.Yellow;
 		case "schematics":
 			return Palette.Blue;
-		case "gardens":
-			return Palette.Green;
 		default:
 			return Palette.Purple;
 		}

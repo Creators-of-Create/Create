@@ -9,16 +9,13 @@ import com.simibubi.create.foundation.block.IHaveColoredVertices;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
 import com.simibubi.create.foundation.block.render.ColoredVertexModel;
+import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
-import com.simibubi.create.modules.contraptions.WrenchModel;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionRenderer;
-import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperModel;
-import com.simibubi.create.modules.curiosities.deforester.DeforesterModel;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockModel;
-import com.simibubi.create.modules.curiosities.symmetry.client.SymmetryWandModel;
-import com.simibubi.create.modules.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
 import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 import com.simibubi.create.modules.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHandler;
@@ -106,7 +103,7 @@ public class CreateClient {
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {
 		if (!event.getMap().getBasePath().equals("textures"))
 			return;
-		
+
 		event.addSprite(new ResourceLocation(Create.ID, "block/belt_animated"));
 		for (AllBlocks allBlocks : AllBlocks.values()) {
 			Block block = allBlocks.get();
@@ -121,6 +118,7 @@ public class CreateClient {
 	public static void onModelBake(ModelBakeEvent event) {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
 
+		// Swap Models for CT Blocks and Blocks with colored Vertices
 		for (AllBlocks allBlocks : AllBlocks.values()) {
 			Block block = allBlocks.get();
 			if (block == null)
@@ -135,22 +133,19 @@ public class CreateClient {
 
 		}
 
-		swapModels(modelRegistry, getItemModelLocation(AllItems.SAND_PAPER),
-				t -> new SandPaperModel(t));
-		swapModels(modelRegistry, getItemModelLocation(AllItems.RED_SAND_PAPER),
-				t -> new SandPaperModel(t));
-		
-		swapModels(modelRegistry, getItemModelLocation(AllItems.SYMMETRY_WAND),
-				t -> new SymmetryWandModel(t).loadPartials(event));
-		swapModels(modelRegistry, getItemModelLocation(AllItems.PLACEMENT_HANDGUN),
-				t -> new BlockzapperModel(t).loadPartials(event));
-		swapModels(modelRegistry, getItemModelLocation(AllItems.WRENCH), t -> new WrenchModel(t).loadPartials(event));
-		swapModels(modelRegistry, getItemModelLocation(AllItems.DEFORESTER),
-				t -> new DeforesterModel(t).loadPartials(event));
-		swapModels(modelRegistry,
-				getBlockModelLocation(AllBlocks.WINDOW_IN_A_BLOCK,
-						BlockModelShapes
-								.getPropertyMapString(AllBlocks.WINDOW_IN_A_BLOCK.get().getDefaultState().getValues())),
+		// Swap Models for custom rendered item models
+		for (AllItems item : AllItems.values()) {
+			if (!(item.get() instanceof IHaveCustomItemModel))
+				continue;
+
+			IHaveCustomItemModel specialItem = (IHaveCustomItemModel) item.get();
+			ModelResourceLocation location = new ModelResourceLocation(item.get().getRegistryName(), "inventory");
+			CustomRenderedItemModel model = specialItem.createModel(modelRegistry.get(location));
+			model.loadPartials(event);
+			modelRegistry.put(location, model);
+		}
+
+		swapModels(modelRegistry, getAllBlockStateModelLocations(AllBlocks.WINDOW_IN_A_BLOCK),
 				WindowInABlockModel::new);
 		swapModels(modelRegistry,
 				getBlockModelLocation(AllBlocks.WINDOW_IN_A_BLOCK,
@@ -161,19 +156,20 @@ public class CreateClient {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void onModelRegistry(ModelRegistryEvent event) {
-		for (String location : SymmetryWandModel.getCustomModelLocations())
-			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
-		for (String location : BlockzapperModel.getCustomModelLocations())
-			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
-		for (String location : WrenchModel.getCustomModelLocations())
-			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
-		for (String location : DeforesterModel.getCustomModelLocations())
-			ModelLoader.addSpecialModel(new ResourceLocation(Create.ID, "item/" + location));
+		// Register submodels for custom rendered item models
+		for (AllItems item : AllItems.values()) {
+			if (!(item.get() instanceof IHaveCustomItemModel))
+				continue;
+
+			IHaveCustomItemModel specialItem = (IHaveCustomItemModel) item.get();
+			CustomRenderedItemModel model = specialItem.createModel(null);
+			model.getModelLocations().forEach(ModelLoader::addSpecialModel);
+		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	protected static ModelResourceLocation getItemModelLocation(AllItems item) {
-		return new ModelResourceLocation(item.item.getRegistryName(), "inventory");
+		return new ModelResourceLocation(item.get().getRegistryName(), "inventory");
 	}
 
 	@OnlyIn(Dist.CLIENT)

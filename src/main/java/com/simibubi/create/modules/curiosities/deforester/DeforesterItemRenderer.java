@@ -26,8 +26,8 @@ public class DeforesterItemRenderer extends ItemStackTileEntityRenderer {
 
 		GlStateManager.disableLighting();
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, 240, 120);
-		itemRenderer.renderItem(stack, mainModel.light);
-		itemRenderer.renderItem(stack, mainModel.blade);
+		itemRenderer.renderItem(stack, mainModel.getPartial("light"));
+		itemRenderer.renderItem(stack, mainModel.getPartial("blade"));
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastCoordx, lastCoordy);
 		GlStateManager.enableLighting();
 		
@@ -38,7 +38,7 @@ public class DeforesterItemRenderer extends ItemStackTileEntityRenderer {
 		GlStateManager.rotated(angle, 0, 1, 0);
 		GlStateManager.translatef(xOffset, 0, zOffset);
 		
-		itemRenderer.renderItem(stack, mainModel.gear);
+		itemRenderer.renderItem(stack, mainModel.getPartial("gear"));
 		
 
 		GlStateManager.popMatrix();

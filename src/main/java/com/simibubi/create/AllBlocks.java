@@ -208,8 +208,6 @@ public enum AllBlocks {
 	SYMMETRY_CROSSPLANE(new CrossPlaneSymmetryBlock()),
 	SYMMETRY_TRIPLEPLANE(new TriplePlaneSymmetryBlock()),
 	WINDOW_IN_A_BLOCK(new WindowInABlockBlock()),
-
-	__GARDENS__(),
 	COCOA_LOG(new CocoaLogBlock()),
 
 	__PALETTES__(),
@@ -343,7 +341,7 @@ public enum AllBlocks {
 
 	private static void registerAsItem(IForgeRegistry<Item> registry, Block blockIn) {
 		BlockItem blockItem = null;
-		net.minecraft.item.Item.Properties standardItemProperties = AllItems.standardItemProperties();
+		Item.Properties standardItemProperties = AllItems.includeInItemGroup();
 
 		if (blockIn instanceof IHaveCustomBlockItem)
 			blockItem = ((IHaveCustomBlockItem) blockIn).getCustomItem(standardItemProperties);

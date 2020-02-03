@@ -29,7 +29,7 @@ public class WrenchItemRenderer extends ItemStackTileEntityRenderer {
 		GlStateManager.rotated(angle, 0, 1, 0);
 		GlStateManager.translatef(xOffset, 0, zOffset);
 		
-		itemRenderer.renderItem(stack, mainModel.gear);
+		itemRenderer.renderItem(stack, mainModel.getPartial("gear"));
 
 		GlStateManager.popMatrix();
 	}
