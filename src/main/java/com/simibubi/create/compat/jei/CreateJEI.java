@@ -14,6 +14,7 @@ import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.BlockzapperUpgradeCategory;
 import com.simibubi.create.compat.jei.category.CrushingCategory;
+import com.simibubi.create.compat.jei.category.MechanicalCraftingCategory;
 import com.simibubi.create.compat.jei.category.MixingCategory;
 import com.simibubi.create.compat.jei.category.MysteriousItemConversionCategory;
 import com.simibubi.create.compat.jei.category.PackingCategory;
@@ -23,6 +24,7 @@ import com.simibubi.create.compat.jei.category.SawingCategory;
 import com.simibubi.create.compat.jei.category.SmokingViaFanCategory;
 import com.simibubi.create.compat.jei.category.SplashingCategory;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
@@ -44,6 +46,7 @@ import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -64,6 +67,8 @@ public class CreateJEI implements IModPlugin {
 	private PackingCategory packingCategory;
 	private PolishingCategory polishingCategory;
 	private MysteriousItemConversionCategory mysteryConversionCategory;
+	private MechanicalCraftingCategory smallMechanicalCraftingCategory;
+	private MechanicalCraftingCategory largeMechanicalCraftingCategory;
 
 	@Override
 	public ResourceLocation getPluginUid() {
@@ -83,6 +88,8 @@ public class CreateJEI implements IModPlugin {
 		packingCategory = new PackingCategory();
 		polishingCategory = new PolishingCategory();
 		mysteryConversionCategory = new MysteriousItemConversionCategory();
+		smallMechanicalCraftingCategory = new MechanicalCraftingCategory(false);
+		largeMechanicalCraftingCategory = new MechanicalCraftingCategory(true);
 	}
 
 	@Override
@@ -94,7 +101,8 @@ public class CreateJEI implements IModPlugin {
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		registration.addRecipeCategories(crushingCategory, splashingCategory, pressingCategory, smokingCategory,
 				blastingCategory, blockzapperCategory, mixingCategory, sawingCategory, blockCuttingCategory,
-				packingCategory, polishingCategory, mysteryConversionCategory);
+				packingCategory, polishingCategory, mysteryConversionCategory, smallMechanicalCraftingCategory,
+				largeMechanicalCraftingCategory);
 	}
 
 	@Override
@@ -121,6 +129,18 @@ public class CreateJEI implements IModPlugin {
 				packingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipes.SANDPAPER_POLISHING), polishingCategory.getUid());
 		registration.addRecipes(MysteriousItemConversionCategory.getRecipes(), mysteryConversionCategory.getUid());
+
+		registration.addRecipes(findRecipes(
+				r -> (r instanceof MechanicalCraftingRecipe) && MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
+				smallMechanicalCraftingCategory.getUid());
+		registration.addRecipes(
+				findRecipes(r -> (r instanceof ShapedRecipe) && !(r instanceof MechanicalCraftingRecipe)
+						&& MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
+				smallMechanicalCraftingCategory.getUid());
+		registration.addRecipes(
+				findRecipes(r -> (r instanceof ShapedRecipe) && !MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
+				largeMechanicalCraftingCategory.getUid());
+
 	}
 
 	@Override
@@ -149,6 +169,10 @@ public class CreateJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.BASIN.get()), packingCategory.getUid());
 		registration.addRecipeCatalyst(AllItems.SAND_PAPER.asStack(), polishingCategory.getUid());
 		registration.addRecipeCatalyst(AllItems.RED_SAND_PAPER.asStack(), polishingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_CRAFTER.get()),
+				smallMechanicalCraftingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_CRAFTER.get()),
+				largeMechanicalCraftingCategory.getUid());
 	}
 
 	@Override
