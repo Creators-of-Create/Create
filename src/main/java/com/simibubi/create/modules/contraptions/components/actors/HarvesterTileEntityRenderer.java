@@ -1,10 +1,9 @@
 package com.simibubi.create.modules.contraptions.components.actors;
 
-import static com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer.KINETIC_TILE;
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
+import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.block.SafeTileEntityRendererFast;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -12,16 +11,15 @@ import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMov
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class HarvesterTileEntityRenderer extends TileEntityRenderer<HarvesterTileEntity> {
+public class HarvesterTileEntityRenderer extends SafeTileEntityRendererFast<HarvesterTileEntity> {
 
 	@Override
-	public void renderTileEntityFast(HarvesterTileEntity te, double x, double y, double z, float partialTicks,
+	public void renderFast(HarvesterTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
 		SuperByteBuffer superBuffer = renderHead(getWorld(), te.getPos(), te.getBlockState(), 0);
 		superBuffer.translate(x, y, z).renderInto(buffer);
@@ -39,10 +37,7 @@ public class HarvesterTileEntityRenderer extends TileEntityRenderer<HarvesterTil
 	}
 
 	public static SuperByteBuffer renderHead(World world, BlockPos pos, BlockState state, float angle) {
-		BlockState renderedState = AllBlocks.HARVESTER_BLADE.get().getDefaultState().with(HORIZONTAL_FACING,
-				state.get(HORIZONTAL_FACING));
-		SuperByteBuffer buffer = CreateClient.bufferCache.renderBlockState(KINETIC_TILE, renderedState);
-
+		SuperByteBuffer buffer = AllBlockPartials.HARVESTER_BLADE.renderOnHorizontal(state);
 		int lightMapCoords = state.getPackedLightmapCoords(world, pos);
 		Direction facing = state.get(HORIZONTAL_FACING);
 		Axis axis = facing.rotateYCCW().getAxis();

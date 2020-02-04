@@ -1,0 +1,55 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"5": "block/spruce_log",
+		"6": "block/spruce_log_top",
+		"particle": "block/spruce_log"
+	},
+	"elements": [
+		{
+			"name": "Cube",
+			"from": [3, 11, 0],
+			"to": [13, 20, 3],
+			"faces": {
+				"north": {"uv": [3, 3, 13, 12], "texture": "#6"},
+				"east": {"uv": [0, 3, 3, 12], "texture": "#6"},
+				"south": {"uv": [3, 2, 13, 11], "texture": "#5"},
+				"west": {"uv": [13, 3, 16, 12], "texture": "#6"},
+				"up": {"uv": [3, 0, 13, 3], "rotation": 180, "texture": "#6"}
+			}
+		},
+		{
+			"name": "Cube",
+			"from": [3, 11, 13],
+			"to": [13, 20, 16],
+			"faces": {
+				"north": {"uv": [3, 2, 13, 11], "texture": "#5"},
+				"east": {"uv": [3, 3, 0, 12], "texture": "#6"},
+				"south": {"uv": [13, 3, 3, 12], "texture": "#6"},
+				"west": {"uv": [16, 3, 13, 12], "texture": "#6"},
+				"up": {"uv": [3, 3, 13, 0], "rotation": 180, "texture": "#6"}
+			}
+		},
+		{
+			"name": "Cube",
+			"from": [1, 7, 0],
+			"to": [15, 11, 16],
+			"faces": {
+				"north": {"uv": [12, 1, 16, 15], "rotation": 90, "texture": "#6"},
+				"east": {"uv": [6, 0, 10, 16], "rotation": 90, "texture": "#5"},
+				"south": {"uv": [12, 1, 16, 15], "rotation": 90, "texture": "#6"},
+				"west": {"uv": [8, 0, 12, 16], "rotation": 90, "texture": "#5"},
+				"up": {"uv": [1, 0, 15, 16], "texture": "#5"},
+				"down": {"uv": [1, 0, 15, 16], "texture": "#5"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Connector",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2]
+		}
+	]
+}

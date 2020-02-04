@@ -1,12 +1,12 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.client.renderer.model.IBakedModel;
 
 public class AnimatedMixer extends AnimatedKinetics {
 
@@ -31,7 +31,7 @@ public class AnimatedMixer extends AnimatedKinetics {
 		GlStateManager.scaled(.45f, .45f, .45f);
 
 		GlStateManager.pushMatrix();
-		ScreenElementRenderer.renderBlock(this::cogwheel);
+		ScreenElementRenderer.renderModel(this::cogwheel);
 		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
@@ -39,11 +39,11 @@ public class AnimatedMixer extends AnimatedKinetics {
 		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
-		ScreenElementRenderer.renderBlock(this::pole);
+		ScreenElementRenderer.renderModel(this::pole);
 		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
-		ScreenElementRenderer.renderBlock(this::head);
+		ScreenElementRenderer.renderModel(this::head);
 		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
@@ -53,30 +53,30 @@ public class AnimatedMixer extends AnimatedKinetics {
 		GlStateManager.popMatrix();
 	}
 
-	private BlockState cogwheel() {
+	private IBakedModel cogwheel() {
 		float t = 25;
 		GlStateManager.translatef(t, -t, -t);
 		GlStateManager.rotated(getCurrentAngle() * 2, 0, 1, 0);
 		GlStateManager.translatef(-t, t, t);
-		return AllBlocks.SHAFTLESS_COGWHEEL.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.Y);
+		return AllBlockPartials.SHAFTLESS_COGWHEEL.get();
 	}
 
 	private BlockState body() {
 		return AllBlocks.MECHANICAL_MIXER.get().getDefaultState();
 	}
 
-	private BlockState pole() {
+	private IBakedModel pole() {
 		GlStateManager.translatef(0, 51, 0);
-		return AllBlocks.MECHANICAL_MIXER_POLE.get().getDefaultState();
+		return AllBlockPartials.MECHANICAL_MIXER_POLE.get();
 	}
 
-	private BlockState head() {
+	private IBakedModel head() {
 		float t = 25;
 		GlStateManager.translatef(0, 51, 0);
 		GlStateManager.translatef(t, -t, -t);
 		GlStateManager.rotated(getCurrentAngle() * 4, 0, 1, 0);
 		GlStateManager.translatef(-t, t, t);
-		return AllBlocks.MECHANICAL_MIXER_HEAD.get().getDefaultState();
+		return AllBlockPartials.MECHANICAL_MIXER_HEAD.get();
 	}
 
 	private BlockState basin() {

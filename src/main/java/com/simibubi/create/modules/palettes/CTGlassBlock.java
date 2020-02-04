@@ -28,9 +28,7 @@ public class CTGlassBlock extends GlassBlock implements IHaveConnectedTextures {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
-		return adjacentBlockState.getBlock() instanceof CTGlassBlock
-				? (!state.canRenderInLayer(BlockRenderLayer.TRANSLUCENT) && side.getAxis().isHorizontal()
-						|| state.getBlock() == adjacentBlockState.getBlock())
+		return adjacentBlockState.getBlock() instanceof CTGlassBlock ? true
 				: super.isSideInvisible(state, adjacentBlockState, side);
 	}
 

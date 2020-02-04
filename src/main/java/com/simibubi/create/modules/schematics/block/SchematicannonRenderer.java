@@ -3,20 +3,27 @@ package com.simibubi.create.modules.schematics.block;
 import java.util.Random;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.TessellatorHelper;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public class SchematicannonRenderer extends TileEntityRenderer<SchematicannonTileEntity> {
+public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
 
 	@Override
-	public void render(SchematicannonTileEntity tileEntityIn, double x, double y, double z, float partialTicks,
+	public void renderWithGL(SchematicannonTileEntity tileEntityIn, double x, double y, double z, float partialTicks,
 			int destroyStage) {
 
 		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
@@ -100,38 +107,40 @@ public class SchematicannonRenderer extends TileEntityRenderer<SchematicannonTil
 						double sX = cannonOffset.x * .01f;
 						double sY = (cannonOffset.y + 1) * .01f;
 						double sZ = cannonOffset.z * .01f;
-						double rX = r.nextFloat()  - sX * 40;
+						double rX = r.nextFloat() - sX * 40;
 						double rY = r.nextFloat() - sY * 40;
 						double rZ = r.nextFloat() - sZ * 40;
-						tileEntityIn.getWorld().addParticle(ParticleTypes.CLOUD, start.x + rX, start.y + rY, start.z + rZ,
-								sX, sY, sZ);
+						tileEntityIn.getWorld().addParticle(ParticleTypes.CLOUD, start.x + rX, start.y + rY,
+								start.z + rZ, sX, sY, sZ);
 					}
 				}
 
 			}
 		}
 
+		TessellatorHelper.prepareFastRender();
+		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
 		GlStateManager.pushMatrix();
-		GlStateManager.translated(x + .5f, y, z + 1 - .5f);
-		GlStateManager.rotated(yaw, 0, 1, 0);
-		GlStateManager.translated(-0.5f, 0, 0.5f);
-		Minecraft.getInstance().getBlockRendererDispatcher()
-				.renderBlockBrightness(AllBlocks.SCHEMATICANNON_CONNECTOR.get().getDefaultState(), 1);
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		BlockState state = tileEntityIn.getBlockState();
+		int lightCoords = state.getPackedLightmapCoords(getWorld(), pos);
+
+		SuperByteBuffer connector = AllBlockPartials.SCHEMATICANNON_CONNECTOR.renderOn(state);
+		connector.translate(-.5f, 0, -.5f);
+		connector.rotate(Axis.Y, (float) ((yaw + 90) / 180 * Math.PI));
+		connector.translate(.5f, 0, .5f);
+		connector.translate(x, y, z).light(lightCoords).renderInto(buffer);
+
+		SuperByteBuffer pipe = AllBlockPartials.SCHEMATICANNON_PIPE.renderOn(state);
+		pipe.translate(0, -recoil / 100, 0);
+		pipe.translate(-.5f, -15 / 16f, -.5f);
+		pipe.rotate(Axis.Z, (float) (pitch / 180 * Math.PI));
+		pipe.rotate(Axis.Y, (float) ((yaw + 90) / 180 * Math.PI));
+		pipe.translate(.5f, 15 / 16f, .5f);
+		pipe.translate(x, y, z).light(lightCoords).renderInto(buffer);
+
+		TessellatorHelper.draw();
 		GlStateManager.popMatrix();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(x + .5f, y + .90f, z + 1 - .5f);
-		GlStateManager.rotated(yaw, 0, 1, 0);
-		GlStateManager.rotated(pitch, 1, 0, 0);
-		GlStateManager.translated(-0.5f, -.90f, 0.5f);
-
-		GlStateManager.translated(0, -recoil / 100, 0);
-
-		Minecraft.getInstance().getBlockRendererDispatcher()
-				.renderBlockBrightness(AllBlocks.SCHEMATICANNON_PIPE.get().getDefaultState(), 1);
-		GlStateManager.popMatrix();
-
-		super.render(tileEntityIn, x, y, z, partialTicks, destroyStage);
 	}
 
 }

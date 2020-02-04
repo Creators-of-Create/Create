@@ -59,9 +59,10 @@ public abstract class CustomRenderedItemModel extends WrappedBakedModel {
 			this.partials.put(name, null);
 	}
 
-	public void loadPartials(ModelBakeEvent event) {
+	public CustomRenderedItemModel loadPartials(ModelBakeEvent event) {
 		for (String name : partials.keySet())
 			partials.put(name, loadModel(event, name));
+		return this;
 	}
 
 	private IBakedModel loadModel(ModelBakeEvent event, String name) {

@@ -1,15 +1,17 @@
 package com.simibubi.create.modules.contraptions.components.crafter;
 
+import static com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
+import static com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer.standardKineticRotationTransform;
+
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
+import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
 import com.simibubi.create.modules.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
 
@@ -19,10 +21,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -30,20 +30,16 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 @SuppressWarnings("deprecation")
-public class MechanicalCrafterTileEntityRenderer extends TileEntityRenderer<MechanicalCrafterTileEntity> {
+public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<MechanicalCrafterTileEntity> {
 
 	public static SpriteShiftEntry animatedTexture = SpriteShifter.get("block/crafter_thingies",
 			"block/crafter_thingies");
 
 	@Override
-	public void render(MechanicalCrafterTileEntity te, double x, double y, double z, float partialTicks,
+	public void renderWithGL(MechanicalCrafterTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage) {
-		super.render(te, x, y, z, partialTicks, destroyStage);
-		if (!AllBlocks.MECHANICAL_CRAFTER.typeOf(te.getBlockState()))
-			return;
-
 		GlStateManager.pushMatrix();
-		Direction facing = te.getBlockState().get(MechanicalCrafterBlock.HORIZONTAL_FACING);
+		Direction facing = te.getBlockState().get(HORIZONTAL_FACING);
 		Vec3d vec = new Vec3d(facing.getDirectionVec()).scale(.58).add(.5, .5, .5);
 
 		if (te.phase == Phase.EXPORTING) {
@@ -137,24 +133,27 @@ public class MechanicalCrafterTileEntityRenderer extends TileEntityRenderer<Mech
 	}
 
 	@Override
-	public void renderTileEntityFast(MechanicalCrafterTileEntity te, double x, double y, double z, float partialTicks,
+	public void renderFast(MechanicalCrafterTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
 		BlockState blockState = te.getBlockState();
-		BlockState renderedState = AllBlocks.SHAFTLESS_COGWHEEL.get().getDefaultState().with(BlockStateProperties.AXIS,
-				blockState.get(MechanicalCrafterBlock.HORIZONTAL_FACING).getAxis());
-		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getWorld(), renderedState, x, y, z, buffer);
+
+		SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
+		superBuffer.rotateCentered(Axis.X, (float) (Math.PI / 2));
+		superBuffer.rotateCentered(Axis.Y,
+				(float) (blockState.get(HORIZONTAL_FACING).getAxis() != Axis.X ? 0 : Math.PI / 2));
+		standardKineticRotationTransform(superBuffer, te, getWorld()).translate(x, y, z).renderInto(buffer);
 
 		Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(blockState);
 		BlockPos pos = te.getPos();
 
 		if (te.phase != Phase.IDLE && te.phase != Phase.CRAFTING && te.phase != Phase.INSERTING) {
-			SuperByteBuffer lidBuffer = renderAndTransform(AllBlocks.MECHANICAL_CRAFTER_LID, blockState, pos);
+			SuperByteBuffer lidBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_LID, blockState, pos);
 			lidBuffer.translate(x, y, z).renderInto(buffer);
 		}
 
 		if (MechanicalCrafterBlock.isValidTarget(getWorld(), pos.offset(targetDirection), blockState)) {
-			SuperByteBuffer beltBuffer = renderAndTransform(AllBlocks.MECHANICAL_CRAFTER_BELT, blockState, pos);
-			SuperByteBuffer beltFrameBuffer = renderAndTransform(AllBlocks.MECHANICAL_CRAFTER_BELT_FRAME, blockState,
+			SuperByteBuffer beltBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_BELT, blockState, pos);
+			SuperByteBuffer beltFrameBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_BELT_FRAME, blockState,
 					pos);
 
 			if (te.phase == Phase.EXPORTING) {
@@ -169,16 +168,16 @@ public class MechanicalCrafterTileEntityRenderer extends TileEntityRenderer<Mech
 			beltFrameBuffer.translate(x, y, z).renderInto(buffer);
 
 		} else {
-			SuperByteBuffer arrowBuffer = renderAndTransform(AllBlocks.MECHANICAL_CRAFTER_ARROW, blockState, pos);
+			SuperByteBuffer arrowBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_ARROW, blockState, pos);
 			arrowBuffer.translate(x, y, z).renderInto(buffer);
 		}
 
 	}
 
-	private SuperByteBuffer renderAndTransform(AllBlocks renderBlock, BlockState crafterState, BlockPos pos) {
-		SuperByteBuffer buffer = CreateClient.bufferCache.renderGenericBlockModel(renderBlock.getDefault());
+	private SuperByteBuffer renderAndTransform(AllBlockPartials renderBlock, BlockState crafterState, BlockPos pos) {
+		SuperByteBuffer buffer = renderBlock.renderOn(crafterState);
 		float xRot = crafterState.get(MechanicalCrafterBlock.POINTING).getXRotation();
-		float yRot = AngleHelper.horizontalAngle(crafterState.get(MechanicalCrafterBlock.HORIZONTAL_FACING));
+		float yRot = AngleHelper.horizontalAngle(crafterState.get(HORIZONTAL_FACING));
 		buffer.rotateCentered(Axis.X, (float) ((xRot) / 180 * Math.PI));
 		buffer.rotateCentered(Axis.Y, (float) ((yRot + 90) / 180 * Math.PI));
 		buffer.light(crafterState.getPackedLightmapCoords(getWorld(), pos));

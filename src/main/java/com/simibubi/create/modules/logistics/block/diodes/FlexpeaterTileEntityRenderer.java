@@ -1,10 +1,9 @@
 package com.simibubi.create.modules.logistics.block.diodes;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.block.render.ColoredOverlayTileEntityRenderer;
 import com.simibubi.create.foundation.utility.ColorHelper;
-
-import net.minecraft.block.BlockState;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 public class FlexpeaterTileEntityRenderer extends ColoredOverlayTileEntityRenderer<FlexpeaterTileEntity> {
 
@@ -14,8 +13,8 @@ public class FlexpeaterTileEntityRenderer extends ColoredOverlayTileEntityRender
 	}
 
 	@Override
-	protected BlockState getOverlayState(FlexpeaterTileEntity te) {
-		return AllBlocks.FLEXPEATER_INDICATOR.get().getDefaultState();
+	protected SuperByteBuffer getOverlayBuffer(FlexpeaterTileEntity te) {
+		return AllBlockPartials.FLEXPEATER_INDICATOR.renderOn(te.getBlockState());
 	}
 
 }

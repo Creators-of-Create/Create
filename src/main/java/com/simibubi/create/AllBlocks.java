@@ -4,17 +4,12 @@ import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.block.ProperStairsBlock;
-import com.simibubi.create.foundation.block.RenderUtilityAxisBlock;
-import com.simibubi.create.foundation.block.RenderUtilityBlock;
-import com.simibubi.create.foundation.block.RenderUtilityDirectionalBlock;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.world.OxidizingBlock;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.CasingBlock;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
-import com.simibubi.create.modules.contraptions.components.actors.DrillBlock.DrillHeadBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
-import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock.HarvesterBladeBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.RadialChassisBlock;
@@ -43,7 +38,6 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.modules.contraptions.relays.elementary.ShaftHalfBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.AdjustablePulleyBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
@@ -69,6 +63,7 @@ import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBl
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 import com.simibubi.create.modules.palettes.CTGlassBlock;
 import com.simibubi.create.modules.palettes.CTGlassPaneBlock;
+import com.simibubi.create.modules.palettes.CTWindowBlock;
 import com.simibubi.create.modules.palettes.GlassPaneBlock;
 import com.simibubi.create.modules.palettes.HorizontalCTGlassBlock;
 import com.simibubi.create.modules.palettes.LayeredCTBlock;
@@ -103,8 +98,6 @@ public enum AllBlocks {
 
 	__SCHEMATICS__(),
 	SCHEMATICANNON(new SchematicannonBlock()),
-	SCHEMATICANNON_CONNECTOR(new RenderUtilityBlock()),
-	SCHEMATICANNON_PIPE(new RenderUtilityBlock()),
 	CREATIVE_CRATE(new CreativeCrateBlock()),
 	SCHEMATIC_TABLE(new SchematicTableBlock()),
 
@@ -112,7 +105,6 @@ public enum AllBlocks {
 	SHAFT(new ShaftBlock(Properties.from(Blocks.ANDESITE))),
 	COGWHEEL(new CogWheelBlock(false)),
 	LARGE_COGWHEEL(new CogWheelBlock(true)),
-	SHAFTLESS_COGWHEEL(new RenderUtilityAxisBlock()),
 	ENCASED_SHAFT(new EncasedShaftBlock()),
 	GEARBOX(new GearboxBlock()),
 	CLUTCH(new ClutchBlock()),
@@ -120,60 +112,37 @@ public enum AllBlocks {
 	ENCASED_BELT(new EncasedBeltBlock()),
 	ADJUSTABLE_PULLEY(new AdjustablePulleyBlock()),
 	BELT(new BeltBlock()),
-	BELT_PULLEY(new RenderUtilityAxisBlock()),
 	MOTOR(new MotorBlock()),
 	WATER_WHEEL(new WaterWheelBlock()),
 	ENCASED_FAN(new EncasedFanBlock()),
-	ENCASED_FAN_INNER(new RenderUtilityDirectionalBlock()),
 	NOZZLE(new NozzleBlock()),
 	TURNTABLE(new TurntableBlock()),
-	SHAFT_HALF(new ShaftHalfBlock()),
 	HAND_CRANK(new HandCrankBlock()),
-	HAND_CRANK_HANDLE(new RenderUtilityDirectionalBlock()),
 
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
 	MECHANICAL_PRESS(new MechanicalPressBlock()),
-	MECHANICAL_PRESS_HEAD(new MechanicalPressBlock.Head()),
 	MECHANICAL_MIXER(new MechanicalMixerBlock()),
-	MECHANICAL_MIXER_POLE(new RenderUtilityBlock()),
-	MECHANICAL_MIXER_HEAD(new RenderUtilityBlock()),
 	BASIN(new BasinBlock()),
 	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
-	MECHANICAL_CRAFTER_LID(new RenderUtilityBlock()),
-	MECHANICAL_CRAFTER_ARROW(new RenderUtilityBlock()),
-	MECHANICAL_CRAFTER_BELT_FRAME(new RenderUtilityBlock()),
-	MECHANICAL_CRAFTER_BELT(new RenderUtilityBlock()),
 	SPEED_GAUGE(new GaugeBlock(GaugeBlock.Type.SPEED)),
 	STRESS_GAUGE(new GaugeBlock(GaugeBlock.Type.STRESS)),
-	GAUGE_DIAL(new RenderUtilityBlock()),
-	GAUGE_INDICATOR(new RenderUtilityBlock()),
-	GAUGE_HEAD(new GaugeBlock.Head()),
 
 	MECHANICAL_PISTON(new MechanicalPistonBlock(false)),
 	STICKY_MECHANICAL_PISTON(new MechanicalPistonBlock(true)),
 	MECHANICAL_PISTON_HEAD(new MechanicalPistonHeadBlock()),
 	PISTON_POLE(new PistonPoleBlock()),
 	MECHANICAL_BEARING(new MechanicalBearingBlock()),
-	MECHANICAL_BEARING_TOP(new ShaftHalfBlock()),
 	TRANSLATION_CHASSIS(new LinearChassisBlock()),
 	TRANSLATION_CHASSIS_SECONDARY(new LinearChassisBlock()),
 	ROTATION_CHASSIS(new RadialChassisBlock()),
 	DRILL(new DrillBlock()),
-	DRILL_HEAD(new DrillHeadBlock()),
 	SAW(new SawBlock()),
 	HARVESTER(new HarvesterBlock()),
-	HARVESTER_BLADE(new HarvesterBladeBlock()),
 	DEPLOYER(new DeployerBlock()),
-	DEPLOYER_POLE(new RenderUtilityBlock()),
-	DEPLOYER_HAND_POINTING(new RenderUtilityBlock()),
-	DEPLOYER_HAND_PUNCHING(new RenderUtilityBlock()),
-	DEPLOYER_HAND_HOLDING(new RenderUtilityBlock()),
 	CART_ASSEMBLER(new CartAssemblerBlock()),
 	MINECART_ANCHOR(new MinecartAnchorBlock()),
 	ANALOG_LEVER(new AnalogLeverBlock()),
-	ANALOG_LEVER_HANDLE(new RenderUtilityBlock()),
-	ANALOG_LEVER_INDICATOR(new RenderUtilityBlock()),
 
 	ANDESITE_CASING(new CasingBlock("andesite_casing")),
 	COPPER_CASING(new CasingBlock("copper_casing")),
@@ -195,13 +164,10 @@ public enum AllBlocks {
 	BELT_FUNNEL(new FunnelBlock()),
 	VERTICAL_FUNNEL(new FunnelBlock.Vertical()),
 	BELT_TUNNEL(new BeltTunnelBlock()),
-	BELT_TUNNEL_FLAP(new RenderUtilityBlock()),
-	BELT_TUNNEL_INDICATOR(new RenderUtilityBlock()),
 	ENTITY_DETECTOR(new BeltObserverBlock()),
 	PULSE_REPEATER(new PulseRepeaterBlock()),
 	FLEXPEATER(new FlexpeaterBlock()),
 	FLEXPULSEPEATER(new FlexpeaterBlock()),
-	FLEXPEATER_INDICATOR(new RenderUtilityBlock()),
 
 	__CURIOSITIES__(),
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),
@@ -216,13 +182,13 @@ public enum AllBlocks {
 	HORIZONTAL_FRAMED_GLASS(new HorizontalCTGlassBlock(AllCTs.HORIZONTAL_FRAMED_GLASS, AllCTs.FRAMED_GLASS, false)),
 	VERTICAL_FRAMED_GLASS(new VerticalCTGlassBlock(AllCTs.VERTICAL_FRAMED_GLASS, false)),
 
-	OAK_GLASS(new VerticalCTGlassBlock(AllCTs.OAK_GLASS, false)),
-	SPRUCE_GLASS(new VerticalCTGlassBlock(AllCTs.SPRUCE_GLASS, false)),
-	BIRCH_GLASS(new VerticalCTGlassBlock(AllCTs.BIRCH_GLASS, true)),
-	JUNGLE_GLASS(new VerticalCTGlassBlock(AllCTs.JUNGLE_GLASS, false)),
-	DARK_OAK_GLASS(new VerticalCTGlassBlock(AllCTs.DARK_OAK_GLASS, false)),
-	ACACIA_GLASS(new VerticalCTGlassBlock(AllCTs.ACACIA_GLASS, false)),
-	IRON_GLASS(new VerticalCTGlassBlock(AllCTs.IRON_GLASS, false)),
+	OAK_GLASS(new CTWindowBlock(AllCTs.OAK_GLASS, false)),
+	SPRUCE_GLASS(new CTWindowBlock(AllCTs.SPRUCE_GLASS, false)),
+	BIRCH_GLASS(new CTWindowBlock(AllCTs.BIRCH_GLASS, true)),
+	JUNGLE_GLASS(new CTWindowBlock(AllCTs.JUNGLE_GLASS, false)),
+	DARK_OAK_GLASS(new CTWindowBlock(AllCTs.DARK_OAK_GLASS, false)),
+	ACACIA_GLASS(new CTWindowBlock(AllCTs.ACACIA_GLASS, false)),
+	IRON_GLASS(new CTWindowBlock(AllCTs.IRON_GLASS, false)),
 
 	TILED_GLASS_PANE(new GlassPaneBlock(Properties.from(Blocks.GLASS))),
 	FRAMED_GLASS_PANE(new CTGlassPaneBlock(FRAMED_GLASS.block)),

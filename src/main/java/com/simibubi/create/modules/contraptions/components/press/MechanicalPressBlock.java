@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
-import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -24,12 +23,10 @@ import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -189,19 +186,6 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 		return false;
 	}
 
-	public static class Head extends HorizontalBlock implements IRenderUtilityBlock {
-
-		public Head() {
-			super(Properties.from(Blocks.AIR));
-		}
-
-		@Override
-		protected void fillStateContainer(Builder<Block, BlockState> builder) {
-			builder.add(HORIZONTAL_FACING);
-			super.fillStateContainer(builder);
-		}
-	}
-	
 	@Override
 	public BlockItem getCustomItem(net.minecraft.item.Item.Properties properties) {
 		return new BasinOperatorBlockItem(AllBlocks.MECHANICAL_PRESS, properties);

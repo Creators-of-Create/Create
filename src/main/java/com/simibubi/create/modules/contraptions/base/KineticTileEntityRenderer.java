@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.base;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.block.SafeTileEntityRendererFast;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -14,31 +15,35 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.model.animation.TileEntityRendererFast;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
-public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTileEntity> {
+public class KineticTileEntityRenderer extends SafeTileEntityRendererFast<KineticTileEntity> {
 
 	public static final Compartment<BlockState> KINETIC_TILE = new Compartment<>();
 	public static boolean rainbowMode = false;
 
 	@Override
-	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
+	public void renderFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
-		renderRotatingKineticBlock(te, getWorld(), getRenderedBlockState(te), x, y, z, buffer);
+		renderRotatingBuffer(te, getWorld(), getRotatedModel(te), x, y, z, buffer);
 	}
 
 	public static void renderRotatingKineticBlock(KineticTileEntity te, World world, BlockState renderedState, double x,
 			double y, double z, BufferBuilder buffer) {
-		SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockState(KINETIC_TILE, renderedState);
-		buffer.putBulkData(standardKineticRotationTransform(superByteBuffer, te, world).translate(x, y, z).build());
+		SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, renderedState);
+		renderRotatingBuffer(te, world, superByteBuffer, x, y, z, buffer);
+	}
+	
+	public static void renderRotatingBuffer(KineticTileEntity te, World world, SuperByteBuffer superBuffer, double x,
+			double y, double z, BufferBuilder buffer) {
+		buffer.putBulkData(standardKineticRotationTransform(superBuffer, te, world).translate(x, y, z).build());
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
 		float time = AnimationTickHolder.getRenderTick();
 		float offset = getRotationOffsetForPosition(te, pos, axis);
-		float angle = ((time * te.getSpeed() * 3f/10 + offset) % 360) / 180 * (float) Math.PI;
+		float angle = ((time * te.getSpeed() * 3f / 10 + offset) % 360) / 180 * (float) Math.PI;
 		return angle;
 	}
 
@@ -63,8 +68,8 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 			else
 				buffer.color(white);
 		} else {
-			if (te.overStressedEffect != 0) 
-				if (te.overStressedEffect > 0) 
+			if (te.overStressedEffect != 0)
+				if (te.overStressedEffect > 0)
 					buffer.color(ColorHelper.mixColors(white, 0xFF0000, te.overStressedEffect));
 				else
 					buffer.color(ColorHelper.mixColors(white, 0x00FFBB, -te.overStressedEffect));
@@ -89,4 +94,8 @@ public class KineticTileEntityRenderer extends TileEntityRendererFast<KineticTil
 		return te.getBlockState();
 	}
 
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+		return CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, getRenderedBlockState(te));
+	}
+	
 }

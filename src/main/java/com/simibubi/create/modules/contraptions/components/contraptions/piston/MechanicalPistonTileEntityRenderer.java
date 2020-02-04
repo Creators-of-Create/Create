@@ -12,9 +12,9 @@ import net.minecraft.state.properties.BlockStateProperties;
 public class MechanicalPistonTileEntityRenderer extends KineticTileEntityRenderer {
 
 	@Override
-	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
+	public void renderFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
-		super.renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, buffer);
+		super.renderFast(te, x, y, z, partialTicks, destroyStage, buffer);
 	}
 
 	@Override

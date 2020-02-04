@@ -61,7 +61,7 @@ public final class CreateItemGroup extends ItemGroup {
 			if (!item.module.isEnabled())
 				continue;
 			IBakedModel model = itemRenderer.getModelWithOverrides(item.asStack());
-			if ((model.isBuiltInRenderer() || model.isGui3d()) != specialItems)
+			if (model.isGui3d() != specialItems)
 				continue;
 			if (item.get() instanceof IAddedByOther)
 				continue;

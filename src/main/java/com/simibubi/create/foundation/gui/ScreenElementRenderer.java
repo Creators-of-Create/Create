@@ -8,10 +8,13 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FireBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
@@ -40,6 +43,15 @@ public class ScreenElementRenderer {
 	}
 
 	public static void renderBlock(Supplier<BlockState> transformsAndState, int color) {
+		render(transformsAndState, null, -1);
+	}
+
+	public static void renderModel(Supplier<IBakedModel> transformsAndModel) {
+		render(null, transformsAndModel, -1);
+	}
+
+	private static void render(Supplier<BlockState> transformsAndState, Supplier<IBakedModel> transformsAndModel,
+			int color) {
 		GlStateManager.pushMatrix();
 
 		GlStateManager.enableBlend();
@@ -51,32 +63,47 @@ public class ScreenElementRenderer {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.translated(0, 0, 200);
 
-		BlockState toRender = transformsAndState.get();
-
-		GlStateManager.scaled(50, -50, 50);
 		Minecraft mc = Minecraft.getInstance();
-		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		BlockRendererDispatcher blockRenderer = mc.getBlockRendererDispatcher();
+		IBakedModel modelToRender = null;
+		BlockState blockToRender = null;
+		boolean stateMode = transformsAndModel == null;
+		boolean fire = false;
 
-		if (color == -1) {
-			mc.getBlockRendererDispatcher().renderBlockBrightness(toRender, 1);
+		if (stateMode) {
+			blockToRender = transformsAndState.get();
+			fire = (blockToRender.getBlock() instanceof FireBlock);
+			modelToRender = blockRenderer.getModelForState(blockToRender);
 		} else {
-			GlStateManager.disableLighting();
-			GlStateManager.rotated(90, 0, 1, 0);
-			Vec3d rgb = ColorHelper.getRGB(color);
-			mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(
-					mc.getBlockRendererDispatcher().getModelForState(toRender), 1, (float) rgb.x, (float) rgb.y,
-					(float) rgb.z);
-			GlStateManager.enableLighting();
+			modelToRender = transformsAndModel.get();
 		}
 
-		if (!toRender.getFluidState().isEmpty()) {
+		GlStateManager.scaled(50, -50, 50);
+		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+
+		
+		GlStateManager.pushMatrix();
+		if (fire) {
+			blockRenderer.renderBlockBrightness(blockToRender, 1);
+		} else {
+			GlStateManager.rotated(90, 0, 1, 0);
+			if (color == -1) {
+				blockRenderer.getBlockModelRenderer().renderModelBrightnessColor(modelToRender, 1, 1, 1, 1);
+			} else {
+				Vec3d rgb = ColorHelper.getRGB(color);
+				blockRenderer.getBlockModelRenderer().renderModelBrightnessColor(modelToRender, 1, (float) rgb.x,
+						(float) rgb.y, (float) rgb.z);
+			}
+		}
+		GlStateManager.popMatrix();
+
+		if (stateMode && !blockToRender.getFluidState().isEmpty()) {
 			RenderHelper.disableStandardItemLighting();
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder bufferbuilder = tessellator.getBuffer();
 			bufferbuilder.setTranslation(0, -300, 0);
 			bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-			mc.getBlockRendererDispatcher().renderFluid(new BlockPos(0, 300, 0), mc.world, bufferbuilder,
-					toRender.getFluidState());
+			blockRenderer.renderFluid(new BlockPos(0, 300, 0), mc.world, bufferbuilder, blockToRender.getFluidState());
 			Tessellator.getInstance().draw();
 			bufferbuilder.setTranslation(0, 0, 0);
 		}

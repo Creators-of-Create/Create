@@ -1,28 +1,24 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
+import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.block.SafeTileEntityRendererFast;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.animation.TileEntityRendererFast;
 
-public class BeltTunnelTileEntityRenderer extends TileEntityRendererFast<BeltTunnelTileEntity> {
+public class BeltTunnelTileEntityRenderer extends SafeTileEntityRendererFast<BeltTunnelTileEntity> {
 
 	@Override
-	public void renderTileEntityFast(BeltTunnelTileEntity te, double x, double y, double z, float partialTicks,
+	public void renderFast(BeltTunnelTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
-		BlockState flapState = AllBlocks.BELT_TUNNEL_FLAP.get().getDefaultState();
-		BlockState indicatorState = AllBlocks.BELT_TUNNEL_INDICATOR.get().getDefaultState();
-		SuperByteBuffer flapBuffer = CreateClient.bufferCache.renderGenericBlockModel(flapState);
-		SuperByteBuffer indicatorBuffer = CreateClient.bufferCache.renderGenericBlockModel(indicatorState);
+		SuperByteBuffer flapBuffer = AllBlockPartials.BELT_TUNNEL_FLAP.renderOn(te.getBlockState());
+		SuperByteBuffer indicatorBuffer = AllBlockPartials.BELT_TUNNEL_INDICATOR.renderOn(te.getBlockState());
 		BlockPos pos = te.getPos();
 		World world = getWorld();
 

@@ -3,11 +3,11 @@ package com.simibubi.create.modules.contraptions.processing;
 import java.util.Random;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -15,12 +15,10 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 @SuppressWarnings("deprecation")
-public class BasinTileEntityRenderer extends TileEntityRenderer<BasinTileEntity> {
+public class BasinTileEntityRenderer extends SafeTileEntityRenderer<BasinTileEntity> {
 
 	@Override
-	public void render(BasinTileEntity basin, double x, double y, double z, float partialTicks, int destroyStage) {
-		super.render(basin, x, y, z, partialTicks, destroyStage);
-
+	public void renderWithGL(BasinTileEntity basin, double x, double y, double z, float partialTicks, int destroyStage) {
 		GlStateManager.pushMatrix();
 		BlockPos pos = basin.getPos();
 		GlStateManager.translated(x + .5, y + .2f, z + .5);

@@ -1,13 +1,11 @@
 package com.simibubi.create.modules.contraptions.relays.encased;
 
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -17,10 +15,9 @@ import net.minecraft.util.math.BlockPos;
 public class SplitShaftTileEntityRenderer extends KineticTileEntityRenderer {
 
 	@Override
-	public void renderTileEntityFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
+	public void renderFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
-		final BlockState defaultState = AllBlocks.SHAFT_HALF.get().getDefaultState();
 		final BlockPos pos = te.getPos();
 		float time = AnimationTickHolder.getRenderTick();
 
@@ -40,8 +37,8 @@ public class SplitShaftTileEntityRenderer extends KineticTileEntityRenderer {
 			angle += offset;
 			angle = angle / 180f * (float) Math.PI;
 
-			BlockState state = defaultState.with(BlockStateProperties.FACING, direction);
-			SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockState(KINETIC_TILE, state);
+			SuperByteBuffer superByteBuffer = AllBlockPartials.SHAFT_HALF.renderOnDirectional(te.getBlockState(),
+					direction);
 			kineticRotationTransform(superByteBuffer, te, axis, angle, getWorld());
 			superByteBuffer.translate(x, y, z).renderInto(buffer);
 

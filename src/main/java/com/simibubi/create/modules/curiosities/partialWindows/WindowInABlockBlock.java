@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.simibubi.create.foundation.block.IHaveCustomBlockModel;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 
@@ -13,6 +14,7 @@ import net.minecraft.block.FourWayBlock;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
@@ -44,7 +46,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class WindowInABlockBlock extends PaneBlock
-		implements IWithTileEntity<WindowInABlockTileEntity>, IHaveNoBlockItem {
+		implements IWithTileEntity<WindowInABlockTileEntity>, IHaveNoBlockItem, IHaveCustomBlockModel {
 
 	public WindowInABlockBlock() {
 		super(Properties.create(Material.ROCK));
@@ -215,6 +217,12 @@ public class WindowInABlockBlock extends PaneBlock
 	@OnlyIn(Dist.CLIENT)
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return false;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public IBakedModel createModel(IBakedModel original) {
+		return new WindowInABlockModel(original);
 	}
 
 }

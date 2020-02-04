@@ -2,17 +2,15 @@ package com.simibubi.create.modules.logistics.block.belts;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
+import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.state.properties.BlockStateProperties;
 
-public class BeltObserverTileEntityRenderer extends TileEntityRenderer<BeltObserverTileEntity> {
+public class BeltObserverTileEntityRenderer extends SafeTileEntityRenderer<BeltObserverTileEntity> {
 
 	@Override
-	public void render(BeltObserverTileEntity tileEntityIn, double x, double y, double z, float partialTicks,
+	public void renderWithGL(BeltObserverTileEntity tileEntityIn, double x, double y, double z, float partialTicks,
 			int destroyStage) {
-		super.render(tileEntityIn, x, y, z, partialTicks, destroyStage);
-
 		int i = tileEntityIn.getWorld().getCombinedLight(tileEntityIn.getPos().up()
 				.offset(tileEntityIn.getBlockState().get(BlockStateProperties.HORIZONTAL_FACING)), 0);
 		int j = i % 65536;

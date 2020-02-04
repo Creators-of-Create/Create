@@ -3,6 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.EmptyBackground;
@@ -16,6 +17,7 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -66,14 +68,19 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements 
 		GlStateManager.rotated(15.5, 0, 1, 0);
 		GlStateManager.scaled(.6f, .6f, .6f);
 		ScreenElementRenderer.renderBlock(this::renderFanCasing);
-
+		
 		GlStateManager.pushMatrix();
 		float angle = AnimatedKinetics.getCurrentAngle() * 12;
 		float t = 25;
 		GlStateManager.translatef(t, -t, t);
 		GlStateManager.rotated(angle, 0, 0, 1);
 		GlStateManager.translatef(-t, t, -t);
-		ScreenElementRenderer.renderBlock(this::renderFanInner);
+		
+		GlStateManager.translatef(t, 0, 175);
+		GlStateManager.rotated(90, 0, 1, 0);
+		GlStateManager.translatef(-t, 0, -175);
+		
+		ScreenElementRenderer.renderModel(this::renderFanInner);
 		GlStateManager.popMatrix();
 
 		GlStateManager.translated(-10, 0, 95);
@@ -88,8 +95,8 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements 
 		return AllBlocks.ENCASED_FAN.get().getDefaultState().with(BlockStateProperties.FACING, Direction.WEST);
 	}
 
-	protected BlockState renderFanInner() {
-		return AllBlocks.ENCASED_FAN_INNER.get().getDefaultState().with(BlockStateProperties.FACING, Direction.WEST);
+	protected IBakedModel renderFanInner() {
+		return AllBlockPartials.ENCASED_FAN_INNER.get();
 	}
 
 	public abstract void renderAttachedBlock();

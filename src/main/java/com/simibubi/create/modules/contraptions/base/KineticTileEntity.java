@@ -55,6 +55,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	protected boolean initNetwork;
 
 	// Client
+	int overStressedTime;
 	float overStressedEffect;
 
 	public KineticTileEntity(TileEntityType<?> typeIn) {
@@ -168,15 +169,8 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	public void readClientUpdate(CompoundNBT tag) {
 		boolean overStressedBefore = overStressed;
 		super.readClientUpdate(tag);
-		if (overStressedBefore != overStressed && speed != 0) {
-			if (overStressed) {
-				overStressedEffect = 1;
-				spawnEffect(ParticleTypes.SMOKE, 0.2f, 5);
-			} else {
-				overStressedEffect = -1;
-				spawnEffect(ParticleTypes.CLOUD, .075f, 2);
-			}
-		}
+		if (overStressedBefore != overStressed && speed != 0)
+			overStressedTime = overStressedTime == 0 ? 2 : 0;
 	}
 
 	public boolean isSource() {
@@ -284,6 +278,16 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		super.tick();
 
 		if (world.isRemote) {
+			if (overStressedTime > 0)
+				if (--overStressedTime == 0)
+					if (overStressed) {
+						overStressedEffect = 1;
+						spawnEffect(ParticleTypes.SMOKE, 0.2f, 5);
+					} else {
+						overStressedEffect = -1;
+						spawnEffect(ParticleTypes.CLOUD, .075f, 2);
+					}
+
 			if (overStressedEffect != 0) {
 				overStressedEffect -= overStressedEffect * .1f;
 				if (Math.abs(overStressedEffect) < 1 / 128f)

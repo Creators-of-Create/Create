@@ -3,7 +3,6 @@ package com.simibubi.create.modules.contraptions.components.actors;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -218,25 +217,6 @@ public class HarvesterBlock extends HorizontalBlock implements IHaveMovementBeha
 		}
 
 		return Blocks.AIR.getDefaultState();
-	}
-
-	public static class HarvesterBladeBlock extends HorizontalBlock implements IRenderUtilityBlock {
-
-		public HarvesterBladeBlock() {
-			super(Properties.from(Blocks.AIR));
-		}
-
-		@Override
-		protected void fillStateContainer(Builder<Block, BlockState> builder) {
-			builder.add(HORIZONTAL_FACING);
-			super.fillStateContainer(builder);
-		}
-
-		@Override
-		public BlockRenderLayer getRenderLayer() {
-			return BlockRenderLayer.SOLID;
-		}
-
 	}
 
 }

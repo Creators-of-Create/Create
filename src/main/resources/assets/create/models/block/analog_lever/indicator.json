@@ -10,6 +10,7 @@
 		{
 			"from": [4.99, 1, 3.99],
 			"to": [11.01, 2, 12.01],
+			"shade": false,
 			"faces": {
 				"north": {"uv": [2, 10, 3, 16], "rotation": 270, "texture": "#4"},
 				"east": {"uv": [3, 9, 11.02, 10], "texture": "#4"},

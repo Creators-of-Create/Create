@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions.relays.gauge;
 
 import java.util.Random;
 
-import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
@@ -16,9 +15,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.RedstoneParticleData;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IProperty;
-import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -159,15 +155,6 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.GAUGE.get(state.get(FACING), state.get(AXIS_ALONG_FIRST_COORDINATE));
-	}
-
-	public static class Head extends RenderUtilityBlock {
-		public static final IProperty<Type> TYPE = EnumProperty.create("type", Type.class);
-
-		@Override
-		protected void fillStateContainer(Builder<Block, BlockState> builder) {
-			super.fillStateContainer(builder.add(TYPE));
-		}
 	}
 
 }

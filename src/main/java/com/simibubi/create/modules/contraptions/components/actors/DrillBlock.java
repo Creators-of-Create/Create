@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions.components.actors;
 
 import java.util.List;
 
-import com.simibubi.create.foundation.block.IRenderUtilityBlock;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -13,11 +12,9 @@ import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMov
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -117,20 +114,6 @@ public class DrillBlock extends DirectionalKineticBlock
 			itemEntity.setMotion(context.motion.add(0, 0.5f, 0).scale(world.rand.nextFloat() * .3f));
 			world.addEntity(itemEntity);
 		}
-	}
-
-	public static class DrillHeadBlock extends DirectionalBlock implements IRenderUtilityBlock {
-
-		public DrillHeadBlock() {
-			super(Properties.from(Blocks.AIR));
-		}
-
-		@Override
-		protected void fillStateContainer(Builder<Block, BlockState> builder) {
-			builder.add(FACING);
-			super.fillStateContainer(builder);
-		}
-
 	}
 
 }

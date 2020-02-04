@@ -2,8 +2,7 @@ package com.simibubi.create.modules.contraptions.components.actors;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -18,17 +17,17 @@ import net.minecraft.util.Direction.Axis;
 public class DrillTileEntityRenderer extends KineticTileEntityRenderer {
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return getRenderedBlockState(te.getBlockState());
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+		return getRotatingModel(te.getBlockState());
 	}
 
-	private static BlockState getRenderedBlockState(BlockState state) {
-		return AllBlocks.DRILL_HEAD.get().getDefaultState().with(FACING, state.get(FACING));
+	protected static SuperByteBuffer getRotatingModel(BlockState state) {
+		return AllBlockPartials.DRILL.renderOnDirectional(state);
 	}
 
 	public static SuperByteBuffer renderInContraption(MovementContext context) {
 		BlockState state = context.state;
-		SuperByteBuffer buffer = CreateClient.bufferCache.renderBlockState(KINETIC_TILE, getRenderedBlockState(state));
+		SuperByteBuffer buffer = getRotatingModel(state);
 
 		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, state.get(FACING).getOpposite())
 				? context.getAnimationSpeed()

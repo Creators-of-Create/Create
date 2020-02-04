@@ -142,7 +142,6 @@ public class BlockzapperItem extends Item implements IHaveCustomItemModel {
 				setTier(c, ComponentTier.Chromatic, gunWithPurpurStuff);
 			items.add(gunWithPurpurStuff);
 		}
-		super.fillItemGroup(group, items);
 	}
 
 	@Override

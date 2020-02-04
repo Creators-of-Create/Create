@@ -1,0 +1,74 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"3": "block/anvil",
+		"4": "create:block/schematicannon",
+		"particle": "block/spruce_log"
+	},
+	"elements": [
+		{
+			"name": "Cube",
+			"from": [4, 30, 4],
+			"to": [12, 32, 12],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 15, 0]},
+			"faces": {
+				"north": {"uv": [6, 0, 14, 2], "texture": "#3"},
+				"east": {"uv": [3, 0, 11, 2], "texture": "#3"},
+				"south": {"uv": [5, 0, 13, 2], "texture": "#3"},
+				"west": {"uv": [2, 0, 10, 2], "texture": "#3"},
+				"up": {"uv": [0, 8, 8, 16], "texture": "#4"},
+				"down": {"uv": [4, 4, 12, 12], "texture": "#3"}
+			}
+		},
+		{
+			"name": "Cube",
+			"from": [4.5, 20, 4.5],
+			"to": [11.5, 31, 11.5],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 15, 0]},
+			"faces": {
+				"north": {"uv": [8, 1, 15, 12], "texture": "#3"},
+				"east": {"uv": [1, 1, 8, 12], "texture": "#3"},
+				"south": {"uv": [8, 1, 15, 12], "texture": "#3"},
+				"west": {"uv": [1, 1, 8, 12], "texture": "#3"},
+				"up": {"uv": [4, 7, 11, 14], "texture": "#3"},
+				"down": {"uv": [0, 0, 7, 7], "texture": "#3"}
+			}
+		},
+		{
+			"name": "Cube",
+			"from": [6, 13, -1.5],
+			"to": [10, 17, 17.5],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 15, 0]},
+			"faces": {
+				"north": {"uv": [10, 8, 14, 12], "texture": "#3"},
+				"east": {"uv": [0, 0, 16, 4], "texture": "#3"},
+				"south": {"uv": [10, 8, 14, 12], "texture": "#3"},
+				"west": {"uv": [0, 8, 16, 12], "texture": "#3"},
+				"up": {"uv": [3, 0, 7, 16], "texture": "#3"},
+				"down": {"uv": [12, 0, 16, 16], "texture": "#3"}
+			}
+		},
+		{
+			"name": "Cube",
+			"from": [3.5, 10, 3.5],
+			"to": [12.5, 20, 12.5],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 15, 0]},
+			"faces": {
+				"north": {"uv": [4, 6, 13, 16], "texture": "#3"},
+				"east": {"uv": [4, 6, 13, 16], "texture": "#3"},
+				"south": {"uv": [4, 6, 13, 16], "texture": "#3"},
+				"west": {"uv": [4, 6, 13, 16], "texture": "#3"},
+				"up": {"uv": [4, 7, 13, 16], "texture": "#3"},
+				"down": {"uv": [4, 7, 13, 16], "texture": "#3"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Pipe",
+			"origin": [8.5, 14.5, 8],
+			"children": [0, 1, 2, 3]
+		}
+	]
+}

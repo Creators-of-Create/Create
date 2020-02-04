@@ -1,7 +1,0 @@
-{
-    "variants": {
-		"axis=y": { "model": "create:block/belt_pulley" },
-        "axis=z": { "model": "create:block/belt_pulley", "x": 90 },
-        "axis=x": { "model": "create:block/belt_pulley", "x": 90, "y": 90 }
-	}
-}

@@ -5,9 +5,10 @@ import static com.simibubi.create.modules.contraptions.base.DirectionalKineticBl
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
+import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -25,7 +26,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.BlockItem;
 import net.minecraft.util.Direction;
@@ -35,13 +35,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 @SuppressWarnings("deprecation")
-public class DeployerTileEntityRenderer extends TileEntityRenderer<DeployerTileEntity> {
+public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
 
 	@Override
-	public void render(DeployerTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-		if (!AllBlocks.DEPLOYER.typeOf(te.getBlockState()))
-			return;
-
+	public void renderWithGL(DeployerTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
 		renderItem(te, x, y, z, partialTicks);
 		FilteringRenderer.renderOnTileEntity(te, x, y, z, partialTicks, destroyStage);
 		renderComponents(te, x, y, z, partialTicks);
@@ -87,7 +84,7 @@ public class DeployerTileEntityRenderer extends TileEntityRenderer<DeployerTileE
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
 
-		SuperByteBuffer pole = renderAndTransform(AllBlocks.DEPLOYER_POLE, blockState, pos, true);
+		SuperByteBuffer pole = renderAndTransform(AllBlockPartials.DEPLOYER_POLE, blockState, pos, true);
 		SuperByteBuffer hand = renderAndTransform(te.getHandPose(), blockState, pos, false);
 
 		Vec3d offset = getHandOffset(te, partialTicks, blockState);
@@ -104,8 +101,8 @@ public class DeployerTileEntityRenderer extends TileEntityRenderer<DeployerTileE
 		if (te.state == State.RETRACTING)
 			progress = (te.timer - partialTicks * te.getTimerSpeed()) / 1000f;
 
-		float handLength = te.getHandPose() == AllBlocks.DEPLOYER_HAND_POINTING ? 0
-				: te.getHandPose() == AllBlocks.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
+		float handLength = te.getHandPose() == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
+				: te.getHandPose() == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
 		float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (te.reach + handLength), 21 / 16f);
 		Vec3d offset = new Vec3d(blockState.get(FACING).getDirectionVec()).scale(distance);
 		return offset;
@@ -118,9 +115,9 @@ public class DeployerTileEntityRenderer extends TileEntityRenderer<DeployerTileE
 		return AllBlocks.SHAFT.block.getDefaultState().with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
 	}
 
-	private SuperByteBuffer renderAndTransform(AllBlocks renderBlock, BlockState deployerState, BlockPos pos,
+	private SuperByteBuffer renderAndTransform(AllBlockPartials renderBlock, BlockState deployerState, BlockPos pos,
 			boolean axisDirectionMatters) {
-		SuperByteBuffer buffer = CreateClient.bufferCache.renderGenericBlockModel(renderBlock.getDefault());
+		SuperByteBuffer buffer = renderBlock.renderOn(deployerState);
 		Direction facing = deployerState.get(FACING);
 
 		float zRotFirst = axisDirectionMatters

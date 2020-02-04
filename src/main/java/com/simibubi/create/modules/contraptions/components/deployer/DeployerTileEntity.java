@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
@@ -540,9 +541,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 		player = null;
 	}
 
-	public AllBlocks getHandPose() {
-		return mode == Mode.PUNCH ? AllBlocks.DEPLOYER_HAND_PUNCHING
-				: heldItem.isEmpty() ? AllBlocks.DEPLOYER_HAND_POINTING : AllBlocks.DEPLOYER_HAND_HOLDING;
+	public AllBlockPartials getHandPose() {
+		return mode == Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING
+				: heldItem.isEmpty() ? AllBlockPartials.DEPLOYER_HAND_POINTING : AllBlockPartials.DEPLOYER_HAND_HOLDING;
 	}
 
 	@Override

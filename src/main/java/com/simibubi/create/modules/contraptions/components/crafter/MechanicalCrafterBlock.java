@@ -174,7 +174,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 				return true;
 			}
 
-			if (crafter.phase == Phase.IDLE && !isHand) {
+			if (crafter.phase == Phase.IDLE && !isHand && !AllItems.WRENCH.typeOf(heldItem)) {
 				if (worldIn.isRemote)
 					return true;
 				LazyOptional<IItemHandler> capability = crafter

@@ -3,11 +3,13 @@ package com.simibubi.create.compat.jei.category.animations;
 import static com.simibubi.create.foundation.utility.AnimationTickHolder.ticks;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -49,7 +51,7 @@ public class AnimatedPress extends AnimatedKinetics {
 		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
-		ScreenElementRenderer.renderBlock(this::head);
+		ScreenElementRenderer.renderModel(this::head);
 		GlStateManager.popMatrix();
 		
 		if (basin) {
@@ -63,18 +65,18 @@ public class AnimatedPress extends AnimatedKinetics {
 
 	private BlockState shaft() {
 		float t = 25;
-		GlStateManager.translatef(t, -t, t);
-		GlStateManager.rotated(getCurrentAngle() * 2, 0, 0, 1);
-		GlStateManager.translatef(-t, t, -t);
-		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.X);
+		GlStateManager.translatef(t, -t, -t);
+		GlStateManager.rotated(getCurrentAngle() * 2, 1, 0, 0);
+		GlStateManager.translatef(-t, t, t);
+		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.Z);
 	}
 
 	private BlockState body() {
 		return AllBlocks.MECHANICAL_PRESS.get().getDefaultState().with(BlockStateProperties.HORIZONTAL_FACING,
-				Direction.EAST);
+				Direction.SOUTH);
 	}
 
-	private BlockState head() {
+	private IBakedModel head() {
 		float cycle = (ticks + Minecraft.getInstance().getRenderPartialTicks()) % 30;
 		float verticalOffset = 0;
 		if (cycle < 10) {
@@ -88,8 +90,7 @@ public class AnimatedPress extends AnimatedKinetics {
 			verticalOffset = 0;
 		}
 		GlStateManager.translated(0, -verticalOffset * 50, 0);
-		return AllBlocks.MECHANICAL_PRESS_HEAD.get().getDefaultState().with(BlockStateProperties.HORIZONTAL_FACING,
-				Direction.EAST);
+		return AllBlockPartials.MECHANICAL_PRESS_HEAD.get();
 	}
 	
 	private BlockState basin() {

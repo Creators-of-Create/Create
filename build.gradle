@@ -71,7 +71,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.115'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.2.0'
     
     // compile against the JEI API but do not include it at runtime
  	compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.26:api")
