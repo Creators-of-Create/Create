@@ -1,0 +1,35 @@
+{
+    "type": "create:mechanical_crafting",
+        "pattern": [
+			"PPB",
+			"DCA",
+			"PPB"
+        ],
+        "key": {
+			"P": {
+                "tag": "forge:plates/brass"
+            },
+			"D": {
+                "tag": "forge:plates/copper"
+            },
+            "A": {
+                "item": "minecraft:piston"
+            },
+			"C": {
+                "item": "create:brass_casing"
+            },
+			"B": {
+                "tag": "forge:ingots/brass"
+            }
+        },
+	"result": {
+		"item": "create:furnace_engine",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

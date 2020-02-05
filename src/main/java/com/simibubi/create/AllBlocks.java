@@ -25,6 +25,8 @@ import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheel
 import com.simibubi.create.modules.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.components.fan.NozzleBlock;
+import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelBlock;
+import com.simibubi.create.modules.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerBlock;
 import com.simibubi.create.modules.contraptions.components.motor.MotorBlock;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressBlock;
@@ -118,13 +120,17 @@ public enum AllBlocks {
 	NOZZLE(new NozzleBlock()),
 	TURNTABLE(new TurntableBlock()),
 	HAND_CRANK(new HandCrankBlock()),
-
+	
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
 	MECHANICAL_PRESS(new MechanicalPressBlock()),
 	MECHANICAL_MIXER(new MechanicalMixerBlock()),
 	BASIN(new BasinBlock()),
 	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
+	
+	FLYWHEEL(new FlywheelBlock()),
+	FURNACE_ENGINE(new FurnaceEngineBlock()),
+	
 	SPEED_GAUGE(new GaugeBlock(GaugeBlock.Type.SPEED)),
 	STRESS_GAUGE(new GaugeBlock(GaugeBlock.Type.STRESS)),
 

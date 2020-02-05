@@ -103,6 +103,8 @@
 	"block.create.deployer": "Deployer",
 	"block.create.basin": "Basin",
 	"block.create.mechanical_crafter": "Mechanical Crafter",
+	"block.create.flywheel": "Flywheel",
+	"block.create.furnace_engine": "Furnace Engine",
 	"block.create.speed_gauge": "Speedometer",
 	"block.create.stress_gauge": "Stress Gauge",
 	"block.create.cart_assembler": "Cart Assembler",

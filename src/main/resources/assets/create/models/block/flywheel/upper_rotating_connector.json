@@ -1,0 +1,27 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/steam_engine_wheel",
+		"particle": "create:block/steam_engine_wheel"
+	},
+	"elements": [
+		{
+			"from": [7, 7, 7],
+			"to": [9, 9, 23],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 8, 23]},
+			"faces": {
+				"east": {"uv": [0, 9, 8, 10], "rotation": 180, "texture": "#0"},
+				"west": {"uv": [0, 9, 8, 10], "rotation": 180, "texture": "#0"},
+				"up": {"uv": [0, 9, 8, 10], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [0, 9, 8, 10], "rotation": 90, "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "transmission",
+			"origin": [-8, 8, 8],
+			"children": [0]
+		}
+	]
+}

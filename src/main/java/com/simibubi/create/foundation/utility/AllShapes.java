@@ -30,7 +30,10 @@ public class AllShapes {
 		TRANSPOSER = VoxelShaper.forDirectional(VoxelShapes.or(
 				makeCuboidShape(4, 4, -1, 12, 12, 1), 
 				makeCuboidShape(5, 5, 0, 11, 11, 16), 
-				makeCuboidShape(4, 4, 11, 12, 12, 17)), Direction.SOUTH)
+				makeCuboidShape(4, 4, 11, 12, 12, 17)), Direction.SOUTH),
+		FURNACE_ENGINE = VoxelShaper.forHorizontal(VoxelShapes.or(
+				makeCuboidShape(1, 1, 0, 15, 15, 16), 
+				makeCuboidShape(0, 0, 9, 16, 16, 14)), Direction.SOUTH)
 
 				;
 

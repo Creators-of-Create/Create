@@ -25,6 +25,10 @@ import com.simibubi.create.modules.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.modules.contraptions.components.fan.EncasedFanTileEntity;
 import com.simibubi.create.modules.contraptions.components.fan.EncasedFanTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.fan.NozzleTileEntity;
+import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelRenderer;
+import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelTileEntity;
+import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineRenderer;
+import com.simibubi.create.modules.contraptions.components.flywheel.engine.FurnaceEngineTileEntity;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerTileEntity;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.motor.MotorTileEntity;
@@ -111,6 +115,8 @@ public enum AllTileEntities {
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
 	SAW(SawTileEntity::new, AllBlocks.SAW),
 	HARVESTER(HarvesterTileEntity::new, AllBlocks.HARVESTER),
+	FLYWHEEL(FlywheelTileEntity::new, AllBlocks.FLYWHEEL),
+	FURNACE_ENGINE(FurnaceEngineTileEntity::new, AllBlocks.FURNACE_ENGINE),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
@@ -200,6 +206,8 @@ public enum AllTileEntities {
 		bind(StressGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.STRESS));
 		bind(BasinTileEntity.class, new BasinTileEntityRenderer());
 		bind(DeployerTileEntity.class, new DeployerTileEntityRenderer());
+		bind(FlywheelTileEntity.class, new FlywheelRenderer());
+		bind(FurnaceEngineTileEntity.class, new EngineRenderer<>());
 
 		bind(RedstoneLinkTileEntity.class, new SmartTileEntityRenderer<>());
 		bind(ExtractorTileEntity.class, new SmartTileEntityRenderer<>());

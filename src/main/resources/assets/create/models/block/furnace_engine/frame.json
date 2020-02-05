@@ -1,0 +1,89 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "create:block/steam_engine_wheel",
+		"1_1": "create:block/furnace_cylinder"
+	},
+	"elements": [
+		{
+			"name": "Cylinder",
+			"from": [1.1, 1.1, -1.9],
+			"to": [14.9, 14.9, 0.1],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 7]},
+			"faces": {
+				"north": {"uv": [8, 0, 15, 7], "texture": "#1_1"},
+				"east": {"uv": [14, 0, 15, 7], "texture": "#1_1"},
+				"south": {"uv": [7, 7, 16, 16], "texture": "#1_1"},
+				"west": {"uv": [14, 0, 15, 7], "rotation": 180, "texture": "#1_1"},
+				"up": {"uv": [14, 0, 15, 7], "rotation": 270, "texture": "#1_1"},
+				"down": {"uv": [14, 0, 15, 7], "rotation": 90, "texture": "#1_1"}
+			}
+		},
+		{
+			"from": [-0.9, 12, -0.9],
+			"to": [16.9, 16.1, 16.9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 7]},
+			"faces": {
+				"north": {"uv": [7, 7, 16, 9], "texture": "#1_1"},
+				"east": {"uv": [7, 7, 16, 9], "texture": "#1_1"},
+				"south": {"uv": [7, 7, 16, 9], "texture": "#1_1"},
+				"west": {"uv": [7, 7, 16, 9], "texture": "#1_1"},
+				"up": {"uv": [7, 7, 16, 16], "rotation": 270, "texture": "#1_1"},
+				"down": {"uv": [7, 7, 16, 16], "rotation": 90, "texture": "#1_1"}
+			}
+		},
+		{
+			"from": [-0.9, 8, -0.9],
+			"to": [16.9, 12, 16.9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 7]},
+			"faces": {
+				"north": {"uv": [7, 14, 16, 16], "texture": "#1_1"},
+				"east": {"uv": [7, 14, 16, 16], "texture": "#1_1"},
+				"south": {"uv": [7, 14, 16, 16], "texture": "#1_1"},
+				"west": {"uv": [7, 14, 16, 16], "texture": "#1_1"},
+				"up": {"uv": [7, 7, 16, 16], "rotation": 270, "texture": "#1_1"},
+				"down": {"uv": [7, 7, 16, 16], "rotation": 90, "texture": "#1_1"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, -67, 0],
+			"translation": [0, 2.5, -2],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, -67, 0],
+			"translation": [0, 2.5, -2],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -91, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -91, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"rotation": [90, 0, 0],
+			"translation": [0, 2, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"translation": [-0.25, 0.75, 0],
+			"scale": [0.35, 0.35, 0.35]
+		},
+		"fixed": {
+			"scale": [0.45, 0.45, 0.45]
+		}
+	},
+	"groups": [
+		{
+			"name": "SteamCylinder",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2]
+		}
+	]
+}

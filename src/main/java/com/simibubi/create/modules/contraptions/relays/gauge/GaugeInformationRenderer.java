@@ -115,8 +115,8 @@ public class GaugeInformationRenderer {
 		tooltip.add(spacing + GRAY + _stressImpact);
 
 		String addedStress = AQUA + "" + format(stressApplied) + _stressUnit + " " + DARK_GRAY + _atCurrentSpeed;
-		String addedStressAtBase = GRAY + "" + format(stressApplied * te.getSpeed()) + _stressUnit + " " + DARK_GRAY
-				+ _baseValue;
+		String addedStressAtBase = GRAY + "" + format(stressApplied * Math.abs(te.getSpeed())) + _stressUnit + " "
+				+ DARK_GRAY + _baseValue;
 		tooltip.add(spacing + " " + addedStress);
 		tooltip.add(spacing + " " + addedStressAtBase);
 	}

@@ -52,6 +52,12 @@ public enum AllBlockPartials {
 	BELT_TUNNEL_FLAP("belt_tunnel/flap"),
 	BELT_TUNNEL_INDICATOR("belt_tunnel/indicator"),
 	FLEXPEATER_INDICATOR("repeaters/flexpeater_indicator"),
+	FLYWHEEL("flywheel/wheel"),
+	FLYWHEEL_UPPER_ROTATING("flywheel/upper_rotating_connector"),
+	FLYWHEEL_LOWER_ROTATING("flywheel/lower_rotating_connector"),
+	FLYWHEEL_UPPER_SLIDING("flywheel/upper_sliding_connector"),
+	FLYWHEEL_LOWER_SLIDING("flywheel/lower_sliding_connector"),
+	FURNACE_GENERATOR_FRAME("furnace_engine/frame"),
 
 	;
 
