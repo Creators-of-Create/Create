@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            " S ",
+            "SAS",
+			" S "
+        ],
+        "key": {
+			"S": {
+                "tag": "forge:gunpowder"
+            },
+			"A": {
+                "item": "create:cuckoo_clock"
+            }
+        },
+	"result": {
+		"item": "create:mysterious_cuckoo_clock",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "contraptions"
+		}
+	]
+}

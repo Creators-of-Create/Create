@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"3": "create:block/cuckoo_clock"
+	},
+	"elements": [
+		{
+			"name": "RightDoor",
+			"from": [1.5, 10, 8],
+			"to": [2.5, 14, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [2, 10, 10]},
+			"faces": {
+				"north": {"uv": [1.5, 12.5, 2, 14.5], "texture": "#3"},
+				"east": {"uv": [3, 12, 4, 14], "texture": "#3"},
+				"south": {"uv": [9, 10.5, 9.5, 12.5], "texture": "#3"},
+				"west": {"uv": [8.5, 10.5, 9.5, 12.5], "texture": "#3"},
+				"up": {"uv": [8.5, 10.5, 9.5, 11], "rotation": 90, "texture": "#3"},
+				"down": {"uv": [8.5, 12, 9.5, 12.5], "rotation": 270, "texture": "#3"}
+			}
+		}
+	]
+}

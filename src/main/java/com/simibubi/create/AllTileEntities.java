@@ -9,6 +9,8 @@ import com.simibubi.create.modules.contraptions.components.actors.DrillTileEntit
 import com.simibubi.create.modules.contraptions.components.actors.DrillTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterTileEntity;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.clock.CuckooClockRenderer;
+import com.simibubi.create.modules.contraptions.components.clock.CuckooClockTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
@@ -106,6 +108,8 @@ public enum AllTileEntities {
 	CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH),
 	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT),
 	HAND_CRANK(HandCrankTileEntity::new, AllBlocks.HAND_CRANK),
+	CUCKOO_CLOCK(CuckooClockTileEntity::new, AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK),
+
 	BELT(BeltTileEntity::new, AllBlocks.BELT),
 	BELT_TUNNEL(BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
@@ -192,6 +196,7 @@ public enum AllTileEntities {
 		bind(BeltTileEntity.class, new BeltTileEntityRenderer());
 		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());
 		bind(HandCrankTileEntity.class, new HandCrankTileEntityRenderer());
+		bind(CuckooClockTileEntity.class, new CuckooClockRenderer());
 		bind(AnalogLeverTileEntity.class, new AnalogLeverTileEntityRenderer());
 
 		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());

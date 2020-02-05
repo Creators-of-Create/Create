@@ -10,6 +10,7 @@ import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.CasingBlock;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
+import com.simibubi.create.modules.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.RadialChassisBlock;
@@ -120,6 +121,8 @@ public enum AllBlocks {
 	NOZZLE(new NozzleBlock()),
 	TURNTABLE(new TurntableBlock()),
 	HAND_CRANK(new HandCrankBlock()),
+	CUCKOO_CLOCK(new CuckooClockBlock(false)),
+	MYSTERIOUS_CUCKOO_CLOCK(new CuckooClockBlock(true)),
 	
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),

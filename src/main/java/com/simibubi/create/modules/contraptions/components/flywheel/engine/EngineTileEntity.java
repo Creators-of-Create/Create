@@ -52,7 +52,6 @@ public class EngineTileEntity extends SmartTileEntity {
 			return;
 		if (poweredWheel != null && poweredWheel.isRemoved())
 			poweredWheel = null;
-
 		if (poweredWheel == null)
 			attachWheel();
 	}
@@ -70,6 +69,8 @@ public class EngineTileEntity extends SmartTileEntity {
 				&& FlywheelBlock.getConnection(wheelState) != engineFacing.getOpposite())
 			return;
 		TileEntity te = world.getTileEntity(wheelPos);
+		if (te.isRemoved())
+			return;
 		if (te instanceof FlywheelTileEntity) {
 			if (!FlywheelBlock.isConnected(wheelState))
 				FlywheelBlock.setConnection(world, te.getPos(), te.getBlockState(), engineFacing.getOpposite());
@@ -79,6 +80,8 @@ public class EngineTileEntity extends SmartTileEntity {
 	}
 
 	public void detachWheel() {
+		if (poweredWheel.isRemoved())
+			return;
 		poweredWheel.setRotation(0, 0);
 		FlywheelBlock.setConnection(world, poweredWheel.getPos(), poweredWheel.getBlockState(), null);
 	}

@@ -45,6 +45,9 @@ public class StressConfigDefaults {
 		case BELT:
 			return 2;
 			
+		case CUCKOO_CLOCK:
+			return 1;
+			
 		default:
 			return 0;
 		}

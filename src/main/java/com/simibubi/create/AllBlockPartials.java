@@ -58,7 +58,13 @@ public enum AllBlockPartials {
 	FLYWHEEL_UPPER_SLIDING("flywheel/upper_sliding_connector"),
 	FLYWHEEL_LOWER_SLIDING("flywheel/lower_sliding_connector"),
 	FURNACE_GENERATOR_FRAME("furnace_engine/frame"),
-
+	CUCKOO_MINUTE_HAND("cuckoo_clock/minute_hand"),
+	CUCKOO_HOUR_HAND("cuckoo_clock/hour_hand"),
+	CUCKOO_LEFT_DOOR("cuckoo_clock/left_door"),
+	CUCKOO_RIGHT_DOOR("cuckoo_clock/right_door"),
+	CUCKOO_PIG("cuckoo_clock/pig"),
+	CUCKOO_CREEPER("cuckoo_clock/creeper"),
+	
 	;
 
 	private ResourceLocation modelLocation;

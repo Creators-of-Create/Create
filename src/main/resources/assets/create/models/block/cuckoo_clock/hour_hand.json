@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"3": "create:block/cuckoo_clock"
+	},
+	"elements": [
+		{
+			"name": "ClockHourHand",
+			"from": [1.6, 6, 7.5],
+			"to": [2.15, 7.75, 8.5],
+			"rotation": {"angle": 0, "axis": "x", "origin": [2, 6, 8]},
+			"faces": {
+				"north": {"uv": [9, 9.5, 9.5, 10], "rotation": 270, "texture": "#3"},
+				"east": {"uv": [9, 9.5, 9.5, 10], "rotation": 180, "texture": "#3"},
+				"south": {"uv": [9, 9.5, 9.5, 10], "rotation": 90, "texture": "#3"},
+				"west": {"uv": [9, 9.5, 9.5, 10], "texture": "#3"},
+				"up": {"uv": [9, 9.5, 9.5, 10], "rotation": 90, "texture": "#3"},
+				"down": {"uv": [9, 9.5, 9.5, 10], "rotation": 270, "texture": "#3"}
+			}
+		}
+	]
+}

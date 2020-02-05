@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"3": "create:block/cuckoo_clock"
+	},
+	"elements": [
+		{
+			"name": "LeftDoor",
+			"from": [1.5, 10, 6],
+			"to": [2.5, 14, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [2, 11, 6]},
+			"faces": {
+				"north": {"uv": [7.5, 10.5, 8, 12.5], "texture": "#3"},
+				"east": {"uv": [3, 12, 4, 14], "texture": "#3"},
+				"south": {"uv": [1.5, 12.5, 2, 14.5], "texture": "#3"},
+				"west": {"uv": [7.5, 10.5, 8.5, 12.5], "texture": "#3"},
+				"up": {"uv": [7.5, 10.5, 8.5, 11], "rotation": 90, "texture": "#3"},
+				"down": {"uv": [7.5, 12, 8.5, 12.5], "rotation": 270, "texture": "#3"}
+			}
+		}
+	]
+}
