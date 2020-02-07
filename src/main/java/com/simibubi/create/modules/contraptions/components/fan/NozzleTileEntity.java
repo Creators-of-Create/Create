@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -69,12 +69,14 @@ public class NozzleTileEntity extends SmartTileEntity {
 		float range = calcRange();
 		if (this.range != range)
 			setRange(range);
-		
+
 		Vec3d center = VecHelper.getCenterOf(pos);
 		if (world.isRemote && range != 0) {
-			if (world.rand.nextInt(MathHelper.clamp((CreateConfig.parameters.fanPushDistance.get() - (int) range), 1, 10)) == 0) {
+			if (world.rand.nextInt(
+					MathHelper.clamp((AllConfigs.SERVER.kinetics.fanPushDistance.get() - (int) range), 1, 10)) == 0) {
 				Vec3d start = VecHelper.offsetRandomly(center, world.rand, pushing ? 1 : range / 2);
-				Vec3d motion = center.subtract(start).normalize().scale(MathHelper.clamp(range * (pushing ? .025f : 1f), 0, .5f) * (pushing ? -1 : 1));
+				Vec3d motion = center.subtract(start).normalize()
+						.scale(MathHelper.clamp(range * (pushing ? .025f : 1f), 0, .5f) * (pushing ? -1 : 1));
 				world.addParticle(ParticleTypes.POOF, start.x, start.y, start.z, motion.x, motion.y, motion.z);
 			}
 		}

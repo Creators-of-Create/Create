@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipes;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.modules.contraptions.components.fan.SplashingRecipe;
@@ -51,7 +51,9 @@ public class InWorldProcessing {
 	public static SplashingInv splashingInv = new SplashingInv();
 
 	public enum Type {
-		SMOKING, BLASTING, SPLASHING
+		SMOKING,
+		BLASTING,
+		SPLASHING
 
 		;
 
@@ -105,8 +107,8 @@ public class InWorldProcessing {
 
 		if (type == Type.SPLASHING) {
 			splashingInv.setInventorySlotContents(0, stack);
-			Optional<SplashingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.SPLASHING.getType(),
-					splashingInv, world);
+			Optional<SplashingRecipe> recipe =
+				world.getRecipeManager().getRecipe(AllRecipes.SPLASHING.getType(), splashingInv, world);
 			return recipe.isPresent();
 		}
 
@@ -135,7 +137,7 @@ public class InWorldProcessing {
 			Type type) {
 		if (transported.processedBy != type) {
 			transported.processedBy = type;
-			transported.processingTime = CreateConfig.parameters.inWorldProcessingTime.get() + 1;
+			transported.processingTime = AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() + 1;
 			if (!canProcess(transported.stack, type, belt.getWorld()))
 				transported.processingTime = -1;
 			return null;
@@ -158,8 +160,8 @@ public class InWorldProcessing {
 	private static List<ItemStack> process(ItemStack stack, Type type, World world) {
 		if (type == Type.SPLASHING) {
 			splashingInv.setInventorySlotContents(0, stack);
-			Optional<SplashingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.SPLASHING.getType(),
-					splashingInv, world);
+			Optional<SplashingRecipe> recipe =
+				world.getRecipeManager().getRecipe(AllRecipes.SPLASHING.getType(), splashingInv, world);
 			if (recipe.isPresent())
 				return applyRecipeOn(stack, recipe.get());
 			return null;
@@ -174,8 +176,8 @@ public class InWorldProcessing {
 			FurnaceTileEntity furnace = new FurnaceTileEntity();
 			furnace.setWorld(world);
 			furnace.setInventorySlotContents(0, stack);
-			Optional<FurnaceRecipe> smeltingRecipe = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, furnace,
-					world);
+			Optional<FurnaceRecipe> smeltingRecipe =
+				world.getRecipeManager().getRecipe(IRecipeType.SMELTING, furnace, world);
 
 			if (!smokingRecipe.isPresent()) {
 				if (smeltingRecipe.isPresent())
@@ -184,8 +186,8 @@ public class InWorldProcessing {
 				BlastFurnaceTileEntity blastFurnace = new BlastFurnaceTileEntity();
 				blastFurnace.setWorld(world);
 				blastFurnace.setInventorySlotContents(0, stack);
-				Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager().getRecipe(IRecipeType.BLASTING,
-						blastFurnace, world);
+				Optional<BlastingRecipe> blastingRecipe =
+					world.getRecipeManager().getRecipe(IRecipeType.BLASTING, blastFurnace, world);
 
 				if (blastingRecipe.isPresent())
 					return applyRecipeOn(stack, blastingRecipe.get());
@@ -213,7 +215,7 @@ public class InWorldProcessing {
 
 		if (!processing.contains("Type") || Type.valueOf(processing.getString("Type")) != type) {
 			processing.putString("Type", type.name());
-			processing.putInt("Time", CreateConfig.parameters.inWorldProcessingTime.get() + 1);
+			processing.putInt("Time", AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() + 1);
 		}
 
 		int value = processing.getInt("Time") - 1;
@@ -288,7 +290,7 @@ public class InWorldProcessing {
 	}
 
 	public static boolean isFrozen() {
-		return CreateConfig.parameters.freezeInWorldProcessing.get();
+		return AllConfigs.SERVER.control.freezeInWorldProcessing.get();
 	}
 
 }

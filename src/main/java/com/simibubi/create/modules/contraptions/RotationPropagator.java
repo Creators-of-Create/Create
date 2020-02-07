@@ -3,13 +3,12 @@ package com.simibubi.create.modules.contraptions;
 import static com.simibubi.create.AllBlocks.BELT;
 import static com.simibubi.create.AllBlocks.COGWHEEL;
 import static com.simibubi.create.AllBlocks.LARGE_COGWHEEL;
-import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
@@ -51,9 +50,9 @@ public class RotationPropagator {
 				if (axis.getCoordinate(diff.getX(), diff.getY(), diff.getZ()) != 0)
 					alignedAxes = false;
 
-		boolean connectedByAxis = alignedAxes
-				&& definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
-				&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
+		boolean connectedByAxis =
+			alignedAxes && definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
+					&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
 
 		boolean connectedByGears = definitionFrom.hasCogsTowards(world, from.getPos(), stateFrom, direction)
 				&& definitionTo.hasCogsTowards(world, to.getPos(), stateTo, direction.getOpposite());
@@ -206,10 +205,10 @@ public class RotationPropagator {
 			final float newSpeed = updateTE.speed * modFromTo;
 			float oppositeSpeed = neighbourTE.speed * modToFrom;
 
-			boolean incompatible = Math.signum(newSpeed) != Math.signum(neighbourTE.speed)
-					&& (newSpeed != 0 && neighbourTE.speed != 0);
+			boolean incompatible =
+				Math.signum(newSpeed) != Math.signum(neighbourTE.speed) && (newSpeed != 0 && neighbourTE.speed != 0);
 
-			boolean tooFast = Math.abs(newSpeed) > parameters.maxRotationSpeed.get();
+			boolean tooFast = Math.abs(newSpeed) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
 			boolean speedChangedTooOften = updateTE.speedChangeCounter > MAX_FLICKER_SCORE;
 			if (tooFast || speedChangedTooOften) {
 				world.destroyBlock(pos, true);
@@ -397,7 +396,7 @@ public class RotationPropagator {
 	}
 
 	public static boolean isFrozen() {
-		return CreateConfig.parameters.freezeRotationPropagator.get();
+		return AllConfigs.SERVER.control.freezeRotationPropagator.get();
 	}
 
 }

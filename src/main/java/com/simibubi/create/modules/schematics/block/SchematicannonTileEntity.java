@@ -1,7 +1,5 @@
 package com.simibubi.create.modules.schematics.block;
 
-import static com.simibubi.create.CreateConfig.parameters;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +7,8 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.config.CSchematics;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.foundation.type.Cuboid;
 import com.simibubi.create.modules.schematics.MaterialChecklist;
@@ -363,7 +363,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		refillFuelIfPossible();
 
 		// Update Printer
-		skipsLeft = parameters.schematicannonSkips.get();
+		skipsLeft = config().schematicannonSkips.get();
 		blockSkipped = true;
 
 		while (blockSkipped && skipsLeft-- > 0)
@@ -378,6 +378,10 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 			sendUpdate = false;
 			world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 6);
 		}
+	}
+
+	public CSchematics config() {
+		return AllConfigs.SERVER.schematics;
 	}
 
 	protected void tickPrinter() {
@@ -492,14 +496,14 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 		else
 			statusMsg = "clearing";
 		launchBlock(target, blockState);
-		printerCooldown = parameters.schematicannonDelay.get();
+		printerCooldown = config().schematicannonDelay.get();
 		fuelLevel -= getFuelUsageRate();
 		sendUpdate = true;
 		missingBlock = null;
 	}
 
 	public double getFuelUsageRate() {
-		return parameters.schematicannonFuelUsage.get() / 100f;
+		return config().schematicannonFuelUsage.get() / 100f;
 	}
 
 	protected void initializePrinter(ItemStack blueprint) {
@@ -706,7 +710,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	public double getFuelAddedByGunPowder() {
-		return parameters.schematicannonGunpowderWorth.get() / 100f;
+		return config().schematicannonGunpowderWorth.get() / 100f;
 	}
 
 	protected void tickPaperPrinter() {

@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.base.IBehaviourType;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
@@ -55,6 +56,8 @@ public class ExtractingBehaviour extends InventoryManagementBehaviour {
 
 	public boolean extract(int exactAmount) {
 		if (getWorld().isRemote)
+			return false;
+		if (AllConfigs.SERVER.control.freezeExtractors.get())
 			return false;
 
 		Predicate<ItemStack> test = customFilter;

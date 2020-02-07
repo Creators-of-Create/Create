@@ -3,7 +3,8 @@ package com.simibubi.create.modules.curiosities;
 import java.util.Random;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.config.CCuriosities;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -40,8 +41,8 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 		public int getColor(ItemStack stack, int layer) {
 			Minecraft mc = Minecraft.getInstance();
 			float pt = mc.getRenderPartialTicks();
-			float progress = (float) ((mc.player.getYaw(pt)) / 180 * Math.PI)
-					+ (AnimationTickHolder.getRenderTick() / 10f);
+			float progress =
+				(float) ((mc.player.getYaw(pt)) / 180 * Math.PI) + (AnimationTickHolder.getRenderTick() / 10f);
 			if (layer == 0)
 				return ColorHelper.mixColors(0x6e5773, 0x6B3074, ((float) MathHelper.sin(progress) + 1) / 2);
 			if (layer == 1)
@@ -66,7 +67,7 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		int light = stack.getOrCreateTag().getInt("CollectingLight");
-		return 1 - light / (float) CreateConfig.parameters.lightSourceCountForRefinedRadiance.get();
+		return 1 - light / (float) AllConfigs.SERVER.curiosities.lightSourceCountForRefinedRadiance.get();
 	}
 
 	@Override
@@ -94,9 +95,10 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 		CompoundNBT itemData = entity.getItem().getOrCreateTag();
 
 		Vec3d positionVec = entity.getPositionVec();
+		CCuriosities config = AllConfigs.SERVER.curiosities;
 		if (world.isRemote) {
 			int light = itemData.getInt("CollectingLight");
-			if (random.nextInt(CreateConfig.parameters.lightSourceCountForRefinedRadiance.get() + 20) < light) {
+			if (random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {
 				Vec3d start = VecHelper.offsetRandomly(positionVec, random, 3);
 				Vec3d motion = positionVec.subtract(start).normalize().scale(.2f);
 				world.addParticle(ParticleTypes.END_ROD, start.x, start.y, start.z, motion.x, motion.y, motion.z);
@@ -105,18 +107,18 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 		}
 
 		// Convert to Shadow steel if in void
-		if (y < 0 && y - yMotion < -10 && CreateConfig.parameters.enableShadowSteelRecipe.get()) {
+		if (y < 0 && y - yMotion < -10 && config.enableShadowSteelRecipe.get()) {
 			ItemStack newStack = AllItems.SHADOW_STEEL.asStack();
 			newStack.setCount(stack.getCount());
 			data.putBoolean("FromVoid", true);
 			entity.setItem(newStack);
 		}
 
-		if (!CreateConfig.parameters.enableRefinedRadianceRecipe.get())
+		if (!config.enableRefinedRadianceRecipe.get())
 			return false;
 
 		// Convert to Refined Radiance if eaten enough light sources
-		if (itemData.getInt("CollectingLight") >= CreateConfig.parameters.lightSourceCountForRefinedRadiance.get()) {
+		if (itemData.getInt("CollectingLight") >= config.lightSourceCountForRefinedRadiance.get()) {
 			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			ItemEntity newEntity = new ItemEntity(world, entity.posX, entity.posY, entity.posZ, newStack);
 			newEntity.setMotion(entity.getMotion());

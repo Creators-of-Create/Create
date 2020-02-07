@@ -1,4 +1,6 @@
-package com.simibubi.create;
+package com.simibubi.create.config;
+
+import com.simibubi.create.AllBlocks;
 
 public class StressConfigDefaults {
 

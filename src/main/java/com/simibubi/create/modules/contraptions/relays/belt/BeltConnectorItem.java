@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
@@ -29,12 +29,12 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 	public BeltConnectorItem(Properties properties) {
 		super(AllBlocks.BELT.block, properties);
 	}
-	
+
 	@Override
 	public String getTranslationKey() {
 		return getDefaultTranslationKey();
 	}
-	
+
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		if (context.isPlacerSneaking()) {
@@ -175,7 +175,7 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 			return false;
 		if (!world.isAreaLoaded(second, 1))
 			return false;
-		if (!second.withinDistance(first, CreateConfig.parameters.maxBeltLength.get()))
+		if (!second.withinDistance(first, AllConfigs.SERVER.kinetics.maxBeltLength.get()))
 			return false;
 
 		BlockPos diff = second.subtract(first);
@@ -201,8 +201,8 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 
 		BlockPos step = new BlockPos(Math.signum(diff.getX()), Math.signum(diff.getY()), Math.signum(diff.getZ()));
 		int limit = 1000;
-		for (BlockPos currentPos = first.add(step); !currentPos.equals(second)
-				&& limit-- > 0; currentPos = currentPos.add(step)) {
+		for (BlockPos currentPos = first.add(step); !currentPos.equals(second) && limit-- > 0; currentPos =
+			currentPos.add(step)) {
 			BlockState blockState = world.getBlockState(currentPos);
 			if (AllBlocks.SHAFT.typeOf(blockState) && blockState.get(ShaftBlock.AXIS) == axis)
 				continue;
@@ -224,5 +224,4 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 		return true;
 	}
 
-	
 }

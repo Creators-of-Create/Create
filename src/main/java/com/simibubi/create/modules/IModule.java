@@ -2,7 +2,8 @@ package com.simibubi.create.modules;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.config.CServer;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 
 import net.minecraft.block.Block;
@@ -16,10 +17,10 @@ public interface IModule {
 		if (module.equals("materials"))
 			return true;
 
-		CreateConfig conf = CreateConfig.parameters;
+		CServer conf = AllConfigs.SERVER;
 		switch (module) {
 		case "contraptions":
-			return conf.enableContraptions.get();
+			return true;
 		case "palettes":
 			return conf.enablePalettes.get();
 		case "curiosities":

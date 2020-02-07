@@ -3,13 +3,13 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
 import static com.simibubi.create.AllBlocks.PISTON_POLE;
 import static com.simibubi.create.AllBlocks.STICKY_MECHANICAL_PISTON;
-import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
@@ -63,7 +63,7 @@ public class PistonContraption extends Contraption {
 				extensionsInFront++;
 				nextBlock = world.getBlockState(actualStart.offset(direction));
 
-				if (extensionsInFront > parameters.maxPistonPoles.get())
+				if (extensionsInFront > MechanicalPistonBlock.maxAllowedPistonPoles())
 					return false;
 			}
 		}
@@ -87,7 +87,7 @@ public class PistonContraption extends Contraption {
 			extensionsInBack++;
 			nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
 
-			if (extensionsInFront + extensionsInBack > parameters.maxPistonPoles.get())
+			if (extensionsInFront + extensionsInBack > MechanicalPistonBlock.maxAllowedPistonPoles())
 				return false;
 		}
 
@@ -112,7 +112,7 @@ public class PistonContraption extends Contraption {
 
 	@Override
 	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, List<BlockPos> frontier) {
-		for (int offset = 1; offset <= parameters.maxChassisRange.get(); offset++) {
+		for (int offset = 1; offset <= AllConfigs.SERVER.kinetics.maxChassisRange.get(); offset++) {
 			BlockPos currentPos = pos.offset(direction, offset);
 			if (!world.isAreaLoaded(currentPos, 1))
 				return false;

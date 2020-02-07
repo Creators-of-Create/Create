@@ -1,7 +1,5 @@
 package com.simibubi.create.modules.schematics;
 
-import static com.simibubi.create.CreateConfig.parameters;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -18,6 +16,8 @@ import java.util.stream.Stream;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.config.CSchematics;
 import com.simibubi.create.foundation.type.DimensionPos;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
@@ -54,7 +54,7 @@ public class ServerSchematicLoader {
 	}
 
 	public String getSchematicPath() {
-		return parameters.schematicPath.get();
+		return "schematics/uploaded";
 	}
 
 	public void tick() {
@@ -63,7 +63,7 @@ public class ServerSchematicLoader {
 		for (String upload : activeUploads.keySet()) {
 			SchematicUploadEntry entry = activeUploads.get(upload);
 
-			if (entry.idleTime++ > parameters.schematicIdleTimeout.get()) {
+			if (entry.idleTime++ > getConfig().schematicIdleTimeout.get()) {
 				Create.logger.warn("Schematic Upload timed out: " + upload);
 				deadEntries.add(upload);
 			}
@@ -90,7 +90,7 @@ public class ServerSchematicLoader {
 		}
 
 		// Too big
-		Integer maxFileSize = parameters.maxTotalSchematicSize.get();
+		Integer maxFileSize = getConfig().maxTotalSchematicSize.get();
 		if (size > maxFileSize * 1000) {
 			player.sendMessage(new TranslationTextComponent("create.schematics.uploadTooLarge")
 					.appendSibling(new StringTextComponent(" (" + size / 1000 + " KB).")));
@@ -114,7 +114,7 @@ public class ServerSchematicLoader {
 
 			// Too many Schematics
 			Stream<Path> list = Files.list(Paths.get(playerPath));
-			if (list.count() >= parameters.maxSchematics.get()) {
+			if (list.count() >= getConfig().maxSchematics.get()) {
 				Stream<Path> list2 = Files.list(Paths.get(playerPath));
 				Optional<Path> lastFilePath = list2.filter(f -> !Files.isDirectory(f))
 						.min(Comparator.comparingLong(f -> f.toFile().lastModified()));
@@ -126,8 +126,8 @@ public class ServerSchematicLoader {
 			list.close();
 
 			// Open Stream
-			OutputStream writer = Files.newOutputStream(Paths.get(getSchematicPath(), playerSchematicId),
-					StandardOpenOption.CREATE_NEW);
+			OutputStream writer =
+				Files.newOutputStream(Paths.get(getSchematicPath(), playerSchematicId), StandardOpenOption.CREATE_NEW);
 			activeUploads.put(playerSchematicId, new SchematicUploadEntry(writer, size, dimPos));
 
 			// Notify Tile Entity
@@ -140,6 +140,10 @@ public class ServerSchematicLoader {
 		}
 	}
 
+	public CSchematics getConfig() {
+		return AllConfigs.SERVER.schematics;
+	}
+
 	public void handleWriteRequest(ServerPlayerEntity player, String schematic, byte[] data) {
 		String playerSchematicId = player.getName().getFormattedText() + "/" + schematic;
 
@@ -148,7 +152,7 @@ public class ServerSchematicLoader {
 			entry.bytesUploaded += data.length;
 
 			// Size Validations
-			if (data.length > parameters.maxSchematicPacketSize.get()) {
+			if (data.length > getConfig().maxSchematicPacketSize.get()) {
 				Create.logger.warn("Oversized Upload Packet received: " + playerSchematicId);
 				cancelUpload(playerSchematicId);
 				return;
@@ -167,8 +171,8 @@ public class ServerSchematicLoader {
 				if (!AllBlocks.SCHEMATIC_TABLE.typeOf(blockState))
 					return;
 
-				SchematicTableTileEntity tileEntity = (SchematicTableTileEntity) entry.tablePos.world
-						.getTileEntity(entry.tablePos.pos);
+				SchematicTableTileEntity tileEntity =
+					(SchematicTableTileEntity) entry.tablePos.world.getTileEntity(entry.tablePos.pos);
 				tileEntity.uploadingProgress = (float) ((double) entry.bytesUploaded / entry.totalBytes);
 				tileEntity.sendUpdate = true;
 

@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -33,7 +33,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public abstract class KineticTileEntity extends SmartTileEntity implements ITickableTileEntity {
 
@@ -81,7 +81,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	}
 
 	public float getAddedStressCapacity() {
-		Map<ResourceLocation, DoubleValue> capacityMap = CreateConfig.parameters.stressCapacityEntries;
+		Map<ResourceLocation, ConfigValue<Double>> capacityMap = AllConfigs.SERVER.kinetics.stressValues.impacts;
 		ResourceLocation path = getBlockState().getBlock().getRegistryName();
 		if (!capacityMap.containsKey(path))
 			return 0;
@@ -89,7 +89,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	}
 
 	public float getStressApplied() {
-		Map<ResourceLocation, DoubleValue> stressEntries = CreateConfig.parameters.stressEntries;
+		Map<ResourceLocation, ConfigValue<Double>> stressEntries = AllConfigs.SERVER.kinetics.stressValues.capacities;
 		ResourceLocation path = getBlockState().getBlock().getRegistryName();
 		if (!stressEntries.containsKey(path))
 			return 1;
@@ -347,9 +347,9 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		if (minimumRequiredSpeedLevel == null)
 			return true;
 		if (minimumRequiredSpeedLevel == SpeedLevel.MEDIUM)
-			return Math.abs(getSpeed()) >= CreateConfig.parameters.mediumSpeed.get();
+			return Math.abs(getSpeed()) >= AllConfigs.SERVER.kinetics.mediumSpeed.get();
 		if (minimumRequiredSpeedLevel == SpeedLevel.FAST)
-			return Math.abs(getSpeed()) >= CreateConfig.parameters.fastSpeed.get();
+			return Math.abs(getSpeed()) >= AllConfigs.SERVER.kinetics.fastSpeed.get();
 		return true;
 	}
 
@@ -402,8 +402,8 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		particleSpeed *= Math.signum(getSpeed());
 
 		if (getWorld() instanceof ServerWorld) {
-			RotationIndicatorParticleData particleData = new RotationIndicatorParticleData(color, particleSpeed,
-					radius1, radius2, 10, axisChar);
+			RotationIndicatorParticleData particleData =
+				new RotationIndicatorParticleData(color, particleSpeed, radius1, radius2, 10, axisChar);
 			((ServerWorld) getWorld()).spawnParticle(particleData, vec.x, vec.y, vec.z, 20, 0, 0, 0, 1);
 		}
 	}

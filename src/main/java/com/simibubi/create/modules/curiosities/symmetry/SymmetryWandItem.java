@@ -1,13 +1,12 @@
 package com.simibubi.create.modules.curiosities.symmetry;
 
-import static com.simibubi.create.CreateConfig.parameters;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
@@ -174,7 +173,7 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundNBT) wand.getTag().getCompound(SYMMETRY));
 
 		Vec3d mirrorPos = symmetry.getPosition();
-		if (mirrorPos.distanceTo(new Vec3d(pos)) > parameters.maxSymmetryWandRange.get())
+		if (mirrorPos.distanceTo(new Vec3d(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
 			return;
 		if (!player.isCreative() && isHoldingBlock(player, block)
 				&& BlockHelper.findAndRemoveInInventory(block, player, 1) == 0)
@@ -236,7 +235,7 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundNBT) wand.getTag().getCompound(SYMMETRY));
 
 		Vec3d mirrorPos = symmetry.getPosition();
-		if (mirrorPos.distanceTo(new Vec3d(pos)) > parameters.maxSymmetryWandRange.get())
+		if (mirrorPos.distanceTo(new Vec3d(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
 			return;
 
 		symmetry.process(blockSet);

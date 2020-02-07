@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.simibubi.create.AllRecipes;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.contraptions.processing.ProcessingIngredient;
 import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
@@ -34,15 +34,18 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 	}
 
 	public static boolean canPolish(World world, ItemStack stack) {
-		return (stack.isDamageable() && CreateConfig.parameters.enableSandPaperToolPolishing.get())
-				|| !getMatchingRecipes(world, stack).isEmpty();
+		return (stack.isDamageable() && isPolishingEnabled()) || !getMatchingRecipes(world, stack).isEmpty();
+	}
+
+	public static Boolean isPolishingEnabled() {
+		return AllConfigs.SERVER.curiosities.enableSandPaperToolPolishing.get();
 	}
 
 	public static ItemStack applyPolish(World world, Vec3d position, ItemStack stack, ItemStack sandPaperStack) {
 		List<IRecipe<SandPaperInv>> matchingRecipes = getMatchingRecipes(world, stack);
 		if (!matchingRecipes.isEmpty())
 			return matchingRecipes.get(0).getCraftingResult(new SandPaperInv(stack)).copy();
-		if (stack.isDamageable() && CreateConfig.parameters.enableSandPaperToolPolishing.get()) {
+		if (stack.isDamageable() && isPolishingEnabled()) {
 
 			stack.setDamage(stack.getDamage() - (stack.getMaxDamage() - stack.getDamage()) / 2);
 

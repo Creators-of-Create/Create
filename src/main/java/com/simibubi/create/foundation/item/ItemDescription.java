@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.item;
 
-import static com.simibubi.create.CreateConfig.parameters;
 import static com.simibubi.create.foundation.item.TooltipHelper.cutString;
 import static net.minecraft.util.text.TextFormatting.AQUA;
 import static net.minecraft.util.text.TextFormatting.BLUE;
@@ -20,8 +19,11 @@ import static net.minecraft.util.text.TextFormatting.YELLOW;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.config.CKinetics;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
@@ -35,12 +37,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public class ItemDescription {
 
 	public static final ItemDescription MISSING = new ItemDescription(null);
-	public static ITextComponent trim = new StringTextComponent(
-			WHITE + "" + STRIKETHROUGH + "                          ");
+	public static ITextComponent trim =
+		new StringTextComponent(WHITE + "" + STRIKETHROUGH + "                          ");
 
 	public enum Palette {
 
@@ -80,21 +83,23 @@ public class ItemDescription {
 	}
 
 	public ItemDescription withKineticStats(IRotate block) {
+		CKinetics config = AllConfigs.SERVER.kinetics;
 		SpeedLevel minimumRequiredSpeedLevel = block.getMinimumRequiredSpeedLevel();
 		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE;
 		ResourceLocation id = ((Block) block).getRegistryName();
-		boolean hasStressImpact = parameters.stressEntries.containsKey(id)
-				&& parameters.stressEntries.get(id).get() > 0;
-		boolean hasStressCapacity = parameters.stressCapacityEntries.containsKey(id);
-		boolean hasGlasses = AllItems.GOGGLES
-				.typeOf(Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+		Map<ResourceLocation, ConfigValue<Double>> impacts = config.stressValues.capacities;
+		Map<ResourceLocation, ConfigValue<Double>> capacities = config.stressValues.impacts;
+		boolean hasStressImpact = impacts.containsKey(id) && impacts.get(id).get() > 0;
+		boolean hasStressCapacity = capacities.containsKey(id);
+		boolean hasGlasses =
+			AllItems.GOGGLES.typeOf(Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD));
 
 		String rpmUnit = Lang.translate("generic.unit.rpm");
 		if (hasSpeedRequirement) {
 			List<String> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
-			String level = minimumRequiredSpeedLevel.getTextColor() + makeProgressBar(3, index)
-					+ speedLevels.get(index);
+			String level =
+				minimumRequiredSpeedLevel.getTextColor() + makeProgressBar(3, index) + speedLevels.get(index);
 
 			if (hasGlasses)
 				level += " (" + minimumRequiredSpeedLevel.getSpeedValue() + rpmUnit + "+)";
@@ -105,33 +110,33 @@ public class ItemDescription {
 		String stressUnit = Lang.translate("generic.unit.stress");
 		if (hasStressImpact && !block.hideStressImpact()) {
 			List<String> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
-			double impact = parameters.stressEntries.get(id).get();
-			StressImpact impactId = impact >= parameters.highStressImpact.get() ? StressImpact.HIGH
-					: (impact >= parameters.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
+			double impact = impacts.get(id).get();
+			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
+					: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			int index = impactId.ordinal();
 			String level = impactId.getColor() + makeProgressBar(3, index) + stressLevels.get(index);
 
 			if (hasGlasses)
-				level += " (" + parameters.stressEntries.get(id).get() + stressUnit + ")";
+				level += " (" + impacts.get(id).get() + stressUnit + ")";
 
 			add(linesOnShift, GRAY + Lang.translate("tooltip.stressImpact"));
 			add(linesOnShift, level);
 
 		}
 		if (hasStressCapacity) {
-			List<String> stressCapacityLevels = Lang.translatedOptions("tooltip.capacityProvided", "low", "medium",
-					"high");
-			double capacity = parameters.stressCapacityEntries.get(id).get();
-			StressImpact impactId = capacity >= parameters.highCapacity.get() ? StressImpact.LOW
-					: (capacity >= parameters.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
+			List<String> stressCapacityLevels =
+				Lang.translatedOptions("tooltip.capacityProvided", "low", "medium", "high");
+			double capacity = capacities.get(id).get();
+			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
+					: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
 			int index = StressImpact.values().length - 1 - impactId.ordinal();
 			String level = impactId.getColor() + makeProgressBar(3, index) + stressCapacityLevels.get(index);
 
 			if (hasGlasses)
 				level += " (" + capacity + stressUnit + ")";
 			if (block.showCapacityWithAnnotation())
-				level += " " + DARK_GRAY + TextFormatting.ITALIC
-						+ Lang.translate("tooltip.capacityProvided.asGenerator");
+				level +=
+					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
 
 			add(linesOnShift, GRAY + Lang.translate("tooltip.capacityProvided"));
 			add(linesOnShift, level);

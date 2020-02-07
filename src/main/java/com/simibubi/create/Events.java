@@ -2,6 +2,7 @@ package com.simibubi.create;
 
 import java.util.Arrays;
 
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockTileEntity;
 
 import net.minecraft.block.BlockState;
@@ -64,7 +65,7 @@ public class Events {
 			return;
 		if (!event.getPlayer().isAllowEdit())
 			return;
-		if (!CreateConfig.parameters.allowGlassPanesInPartialBlocks.get())
+		if (!AllConfigs.SERVER.curiosities.allowGlassPanesInPartialBlocks.get())
 			return;
 
 		ItemStack stack = event.getItemStack();

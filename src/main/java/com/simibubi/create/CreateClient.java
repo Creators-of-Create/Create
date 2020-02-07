@@ -33,7 +33,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CreateClient {
@@ -45,12 +44,9 @@ public class CreateClient {
 	public static SuperByteBufferCache bufferCache;
 	public static int renderTicks;
 
-	public static ModConfig config;
-
 	public static void addListeners(IEventBus modEventBus) {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			modEventBus.addListener(CreateClient::clientInit);
-			modEventBus.addListener(CreateClient::createConfigs);
 			modEventBus.addListener(CreateClient::onModelBake);
 			modEventBus.addListener(CreateClient::onModelRegistry);
 			modEventBus.addListener(CreateClient::onTextureStitch);
@@ -78,13 +74,6 @@ public class CreateClient {
 		IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
-	}
-
-	public static void createConfigs(ModConfig.ModConfigEvent event) {
-		if (event.getConfig().getSpec() == CreateConfig.specification)
-			return;
-
-		config = event.getConfig();
 	}
 
 	public static void gameTick() {

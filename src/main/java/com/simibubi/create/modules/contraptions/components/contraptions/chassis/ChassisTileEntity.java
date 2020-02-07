@@ -1,10 +1,8 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.chassis;
 
-import static com.simibubi.create.CreateConfig.parameters;
-
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -19,7 +17,7 @@ public class ChassisTileEntity extends SyncedTileEntity implements ITickableTile
 
 	public ChassisTileEntity() {
 		super(AllTileEntities.CHASSIS.type);
-		newRange = range = CreateConfig.parameters.maxChassisRange.get() / 2;
+		newRange = range = AllConfigs.SERVER.kinetics.maxChassisRange.get() / 2;
 	}
 
 	@Override
@@ -46,7 +44,7 @@ public class ChassisTileEntity extends SyncedTileEntity implements ITickableTile
 	}
 
 	public void setRangeLazily(int range) {
-		this.newRange = MathHelper.clamp(range, 1, parameters.maxChassisRange.get());
+		this.newRange = MathHelper.clamp(range, 1, AllConfigs.SERVER.kinetics.maxChassisRange.get());
 		if (newRange == this.range)
 			return;
 		this.lastModified = 0;

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.processing.ProcessingInventory;
@@ -117,7 +117,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 		if (!(processingEntity instanceof ItemEntity)) {
 			processingEntity.attackEntityFrom(CrushingWheelTileEntity.damageSource,
-					CreateConfig.parameters.crushingDamage.get());
+					AllConfigs.SERVER.kinetics.crushingDamage.get());
 			if (!processingEntity.isAlive()) {
 				processingEntity.setPosition(outPos.x, outPos.y - .75f, outPos.z);
 			}
@@ -232,7 +232,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	}
 
 	public static boolean isFrozen() {
-		return CreateConfig.parameters.freezeCrushing.get();
+		return AllConfigs.SERVER.control.freezeCrushing.get();
 	}
 
 }

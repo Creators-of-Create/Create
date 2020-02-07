@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays.gauge;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 
@@ -17,9 +17,9 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
 		float speed = Math.abs(getSpeed());
-		float medium = CreateConfig.parameters.mediumSpeed.get().floatValue();
-		float fast = CreateConfig.parameters.fastSpeed.get().floatValue();
-		float max = CreateConfig.parameters.maxRotationSpeed.get().floatValue();
+		float medium = AllConfigs.SERVER.kinetics.mediumSpeed.get().floatValue();
+		float fast = AllConfigs.SERVER.kinetics.fastSpeed.get().floatValue();
+		float max = AllConfigs.SERVER.kinetics.maxRotationSpeed.get().floatValue();
 		color = ColorHelper.mixColors(SpeedLevel.of(speed).getColor(), 0xffffff, .25f);
 
 		if (speed == 0) {

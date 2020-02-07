@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
-import static com.simibubi.create.CreateConfig.parameters;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
@@ -17,7 +16,7 @@ import java.util.function.Function;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior.MovementContext;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.BearingContraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
@@ -72,7 +71,7 @@ public class Contraption {
 		search.add(pos);
 
 		while (!search.isEmpty()) {
-			if (chassis.size() > parameters.maxChassisForTranslation.get())
+			if (chassis.size() > AllConfigs.SERVER.kinetics.maxChassisForTranslation.get())
 				return null;
 
 			BlockPos current = search.remove(0);
@@ -202,13 +201,13 @@ public class Contraption {
 
 		BlockInfo anchorChassis = cluster.get(0);
 		Axis chassisAxis = anchorChassis.state.get(AXIS);
-		int chassisCoord = chassisAxis.getCoordinate(anchorChassis.pos.getX(), anchorChassis.pos.getY(),
-				anchorChassis.pos.getZ());
+		int chassisCoord =
+			chassisAxis.getCoordinate(anchorChassis.pos.getX(), anchorChassis.pos.getY(), anchorChassis.pos.getZ());
 
-		Function<BlockPos, BlockPos> getChassisPos = position -> new BlockPos(
-				chassisAxis == Axis.X ? chassisCoord : position.getX(),
-				chassisAxis == Axis.Y ? chassisCoord : position.getY(),
-				chassisAxis == Axis.Z ? chassisCoord : position.getZ());
+		Function<BlockPos, BlockPos> getChassisPos =
+			position -> new BlockPos(chassisAxis == Axis.X ? chassisCoord : position.getX(),
+					chassisAxis == Axis.Y ? chassisCoord : position.getY(),
+					chassisAxis == Axis.Z ? chassisCoord : position.getZ());
 
 		// Collect blocks on both sides
 		for (AxisDirection axisDirection : AxisDirection.values()) {
@@ -268,8 +267,8 @@ public class Contraption {
 						continue;
 
 					// Skip if pushed column ended already
-					for (BlockPos posInbetween = currentPos; !posInbetween.equals(
-							currentChassisPos); posInbetween = posInbetween.offset(chassisDirection.getOpposite())) {
+					for (BlockPos posInbetween = currentPos; !posInbetween.equals(currentChassisPos); posInbetween =
+						posInbetween.offset(chassisDirection.getOpposite())) {
 						BlockState blockState = world.getBlockState(posInbetween);
 
 						if (!chassisSticky && (blockState.getMaterial().isReplaceable()))
@@ -322,7 +321,7 @@ public class Contraption {
 
 		// Collect chain of chassis
 		for (int offset : new int[] { -1, 1 }) {
-			for (int distance = 1; distance <= parameters.maxChassisForTranslation.get(); distance++) {
+			for (int distance = 1; distance <= AllConfigs.SERVER.kinetics.maxChassisForRotation.get(); distance++) {
 				Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
 				BlockPos currentPos = pos.offset(direction, distance * offset);
 				if (!world.isBlockPresent(currentPos))
@@ -547,7 +546,7 @@ public class Contraption {
 	}
 
 	public static boolean isFrozen() {
-		return CreateConfig.parameters.freezePistonConstructs.get();
+		return AllConfigs.SERVER.control.freezePistonConstructs.get();
 	}
 
 	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch) {

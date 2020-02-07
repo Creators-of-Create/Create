@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -52,7 +52,7 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 	public void setSpeedValueLazily(int speed) {
 		if (newGeneratedSpeed == speed)
 			return;
-		Integer max = CreateConfig.parameters.maxMotorSpeed.get();
+		Integer max = AllConfigs.SERVER.kinetics.maxMotorSpeed.get();
 		newGeneratedSpeed = MathHelper.clamp(speed, -max, max);
 		this.lastModified = 0;
 	}

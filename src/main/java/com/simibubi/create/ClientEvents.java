@@ -3,6 +3,7 @@ package com.simibubi.create;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.block.IHaveScrollableValue;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -119,7 +120,7 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void addToItemTooltip(ItemTooltipEvent event) {
-		if (!CreateClientConfig.instance.enableTooltips.get())
+		if (!AllConfigs.CLIENT.tooltips.get())
 			return;
 
 		ItemStack stack = event.getItemStack();

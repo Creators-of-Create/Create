@@ -3,9 +3,9 @@ package com.simibubi.create;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.command.CreateCommand;
 import com.simibubi.create.foundation.command.ServerLagger;
-import com.simibubi.create.foundation.world.OreGeneration;
 import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
@@ -22,9 +22,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -43,8 +41,6 @@ public class Create {
 	public static TorquePropagator torquePropagator;
 	public static ServerLagger lagger;
 
-	public static ModConfig config;
-
 	public Create() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(Create::init);
@@ -59,12 +55,10 @@ public class Create {
 		modEventBus.addGenericListener(EntityType.class, AllEntities::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticles::register);
 
-		modEventBus.addListener(Create::createConfigs);
+		AllConfigs.registerAll();
+		modEventBus.addListener(AllConfigs::onLoad);
+		modEventBus.addListener(AllConfigs::onReload);
 		CreateClient.addListeners(modEventBus);
-		OreGeneration.setupOreGeneration();
-
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, CreateConfig.specification);
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CreateClientConfig.specification);
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
@@ -77,13 +71,8 @@ public class Create {
 		AllPackets.registerPackets();
 	}
 
-	public static void serverStarting(FMLServerStartingEvent event){
+	public static void serverStarting(FMLServerStartingEvent event) {
 		new CreateCommand(event.getCommandDispatcher());
-	}
-
-	public static void createConfigs(ModConfig.ModConfigEvent event) {
-		if (event.getConfig().getSpec() == CreateConfig.specification)
-			config = event.getConfig();
 	}
 
 	public static void tick() {

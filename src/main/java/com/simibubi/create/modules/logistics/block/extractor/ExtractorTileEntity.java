@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
@@ -47,17 +47,17 @@ public class ExtractorTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		int delay = CreateConfig.parameters.extractorDelay.get();
-		extracting = new SingleTargetAutoExtractingBehaviour(this,
-				() -> AttachedLogisticalBlock.getBlockFacing(getBlockState()), this::onExtract, delay)
-						.pauseWhen(this::isPowered).waitUntil(this::canExtract);
+		int delay = AllConfigs.SERVER.logistics.extractorDelay.get();
+		extracting =
+			new SingleTargetAutoExtractingBehaviour(this, () -> AttachedLogisticalBlock.getBlockFacing(getBlockState()),
+					this::onExtract, delay).pauseWhen(this::isPowered).waitUntil(this::canExtract);
 		behaviours.add(extracting);
 
 		if (slots == null)
 			slots = new SlotPositioning(ExtractorBlock::getFilterSlotPosition, ExtractorBlock::getFilterSlotOrientation)
 					.scale(.4f);
-		filtering = new FilteringBehaviour(this).withCallback(this::filterChanged).withSlotPositioning(slots)
-				.showCount();
+		filtering =
+			new FilteringBehaviour(this).withCallback(this::filterChanged).withSlotPositioning(slots).showCount();
 		behaviours.add(filtering);
 	}
 
@@ -127,7 +127,8 @@ public class ExtractorTileEntity extends SmartTileEntity {
 		boolean onBelt = isTargetingBelt();
 		if (extractingToBelt != onBelt) {
 			extractingToBelt = onBelt;
-			((AutoExtractingBehaviour) extracting).setDelay(onBelt ? 0 : CreateConfig.parameters.extractorDelay.get());
+			((AutoExtractingBehaviour) extracting)
+					.setDelay(onBelt ? 0 : AllConfigs.SERVER.logistics.extractorDelay.get());
 		}
 	}
 

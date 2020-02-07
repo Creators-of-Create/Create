@@ -1,10 +1,9 @@
 package com.simibubi.create.modules.contraptions.components.fan;
 
-import static com.simibubi.create.CreateConfig.parameters;
-
 import com.simibubi.create.AllBlockTags;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.config.CKinetics;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -49,7 +48,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	public float getAddedStressCapacity() {
 		return isGenerator ? super.getAddedStressCapacity() : 0;
 	}
-	
+
 	@Override
 	public float getStressApplied() {
 		return isGenerator ? 0 : super.getStressApplied();
@@ -57,7 +56,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 
 	@Override
 	public float getGeneratedSpeed() {
-		return isGenerator ? CreateConfig.parameters.generatingFanSpeed.get() : 0;
+		return isGenerator ? AllConfigs.SERVER.kinetics.generatingFanSpeed.get() : 0;
 	}
 
 	public void updateGenerator() {
@@ -75,9 +74,10 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 
 	public float getMaxDistance() {
 		float speed = Math.abs(this.getSpeed());
-		float distanceFactor = Math.min(speed / parameters.fanRotationArgmax.get(), 1);
-		float pushDistance = MathHelper.lerp(distanceFactor, 3, parameters.fanPushDistance.get());
-		float pullDistance = MathHelper.lerp(distanceFactor, 3f, parameters.fanPullDistance.get());
+		CKinetics config = AllConfigs.SERVER.kinetics;
+		float distanceFactor = Math.min(speed / config.fanRotationArgmax.get(), 1);
+		float pushDistance = MathHelper.lerp(distanceFactor, 3, config.fanPushDistance.get());
+		float pullDistance = MathHelper.lerp(distanceFactor, 3f, config.fanPullDistance.get());
 		return this.getSpeed() > 0 ? pushDistance : pullDistance;
 	}
 
@@ -103,7 +103,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 		super.tick();
 
 		if (!world.isRemote && airCurrentUpdateCooldown-- <= 0) {
-			airCurrentUpdateCooldown = parameters.fanBlockCheckRate.get();
+			airCurrentUpdateCooldown = AllConfigs.SERVER.kinetics.fanBlockCheckRate.get();
 			updateAirFlow = true;
 		}
 

@@ -1,13 +1,14 @@
 package com.simibubi.create.foundation.command;
 
-import com.simibubi.create.CreateClientConfig;
+import java.util.function.Supplier;
+
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
+
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class ConfigureConfigPacket extends SimplePacketBase {
 
@@ -20,8 +21,8 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 	}
 
 	public ConfigureConfigPacket(PacketBuffer buffer) {
-		this.option = buffer.readString();
-		this.value = buffer.readString();
+		this.option = buffer.readString(32767);
+		this.value = buffer.readString(32767);
 	}
 
 	@Override
@@ -33,8 +34,8 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			if (option.equals("rainbowDebug")){
-				CreateClientConfig.instance.enableRainbowDebug.set(Boolean.parseBoolean(value));
+			if (option.equals("rainbowDebug")) {
+				AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
 			}
 		}));
 

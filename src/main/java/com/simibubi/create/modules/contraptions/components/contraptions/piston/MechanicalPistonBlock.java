@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
@@ -99,7 +99,9 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 	}
 
 	public enum PistonState implements IStringSerializable {
-		RETRACTED, MOVING, EXTENDED;
+		RETRACTED,
+		MOVING,
+		EXTENDED;
 
 		@Override
 		public String getName() {
@@ -114,7 +116,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 		BlockPos pistonBase = pos;
 		boolean dropBlocks = player == null || !player.isCreative();
 
-		Integer maxPoles = CreateConfig.parameters.maxPistonPoles.get();
+		Integer maxPoles = maxAllowedPistonPoles();
 		for (int offset = 1; offset < maxPoles; offset++) {
 			BlockPos currentPos = pos.offset(direction, offset);
 			BlockState block = worldIn.getBlockState(currentPos);
@@ -149,6 +151,10 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 		}
 
 		super.onBlockHarvested(worldIn, pos, state, player);
+	}
+
+	public static int maxAllowedPistonPoles() {
+		return AllConfigs.SERVER.kinetics.maxPistonPoles.get();
 	}
 
 	@Override

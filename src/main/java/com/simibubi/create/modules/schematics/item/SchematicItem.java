@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.CreateConfig;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.schematics.client.SchematicEditScreen;
@@ -99,7 +98,7 @@ public class SchematicItem extends Item {
 		String filepath = "";
 
 		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER)
-			filepath = CreateConfig.parameters.schematicPath.get() + "/" + owner + "/" + schematic;
+			filepath = "schematics/uploaded/" + owner + "/" + schematic;
 		else
 			filepath = "schematics/" + schematic;
 

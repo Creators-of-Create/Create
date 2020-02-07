@@ -71,7 +71,7 @@ import com.simibubi.create.modules.palettes.GlassPaneBlock;
 import com.simibubi.create.modules.palettes.HorizontalCTGlassBlock;
 import com.simibubi.create.modules.palettes.LayeredCTBlock;
 import com.simibubi.create.modules.palettes.VerticalCTGlassBlock;
-import com.simibubi.create.modules.palettes.VolcanicRockBlock;
+import com.simibubi.create.modules.palettes.ScoriaBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
@@ -248,7 +248,7 @@ public enum AllBlocks {
 	DOLOMITE_LAYERS(
 			new LayeredCTBlock(Properties.from(DOLOMITE.block), AllCTs.DOLOMITE_LAYERS, AllCTs.POLISHED_DOLOMITE)),
 
-	VOLCANIC_ROCK(new VolcanicRockBlock()),
+	SCORIA(new ScoriaBlock()),
 
 	__MATERIALS__(),
 	COPPER_ORE(new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1)),

@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.base;
 
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.BlockState;
@@ -13,7 +13,9 @@ import net.minecraft.world.IWorldReader;
 public interface IRotate extends IWrenchable {
 
 	public enum SpeedLevel {
-		NONE, MEDIUM, FAST;
+		NONE,
+		MEDIUM,
+		FAST;
 
 		public TextFormatting getTextColor() {
 			return this == NONE ? TextFormatting.GREEN
@@ -31,9 +33,9 @@ public interface IRotate extends IWrenchable {
 		public static SpeedLevel of(float speed) {
 			speed = Math.abs(speed);
 
-			if (speed >= CreateConfig.parameters.fastSpeed.get()) {
+			if (speed >= AllConfigs.SERVER.kinetics.fastSpeed.get()) {
 				return FAST;
-			} else if (speed >= CreateConfig.parameters.mediumSpeed.get()) {
+			} else if (speed >= AllConfigs.SERVER.kinetics.mediumSpeed.get()) {
 				return MEDIUM;
 			}
 			return NONE;
@@ -42,9 +44,9 @@ public interface IRotate extends IWrenchable {
 		public float getSpeedValue() {
 			switch (this) {
 			case FAST:
-				return CreateConfig.parameters.fastSpeed.get().floatValue();
+				return AllConfigs.SERVER.kinetics.fastSpeed.get().floatValue();
 			case MEDIUM:
-				return CreateConfig.parameters.mediumSpeed.get().floatValue();
+				return AllConfigs.SERVER.kinetics.mediumSpeed.get().floatValue();
 			case NONE:
 			default:
 				return 0;
@@ -54,7 +56,9 @@ public interface IRotate extends IWrenchable {
 	}
 
 	public enum StressImpact {
-		LOW, MEDIUM, HIGH;
+		LOW,
+		MEDIUM,
+		HIGH;
 
 		public TextFormatting getColor() {
 			return this == LOW ? TextFormatting.YELLOW : this == MEDIUM ? TextFormatting.GOLD : TextFormatting.RED;

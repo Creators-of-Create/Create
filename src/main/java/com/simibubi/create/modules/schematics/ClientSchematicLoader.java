@@ -1,7 +1,5 @@
 package com.simibubi.create.modules.schematics;
 
-import static com.simibubi.create.CreateConfig.parameters;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -18,6 +16,7 @@ import java.util.Map;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.schematics.packet.SchematicUploadPacket;
@@ -67,7 +66,7 @@ public class ClientSchematicLoader {
 			long size = Files.size(path);
 
 			// Too big
-			Integer maxSize = parameters.maxTotalSchematicSize.get();
+			Integer maxSize = AllConfigs.SERVER.schematics.maxTotalSchematicSize.get();
 			if (size > maxSize * 1000) {
 				Minecraft.getInstance().player.sendMessage(new StringTextComponent(
 						Lang.translate("schematics.uploadTooLarge") + " (" + size / 1000 + " KB)."));
@@ -86,7 +85,7 @@ public class ClientSchematicLoader {
 
 	private void continueUpload(String schematic) {
 		if (activeUploads.containsKey(schematic)) {
-			Integer maxPacketSize = parameters.maxSchematicPacketSize.get();
+			Integer maxPacketSize = AllConfigs.SERVER.schematics.maxSchematicPacketSize.get();
 			byte[] data = new byte[maxPacketSize];
 			try {
 				int status = activeUploads.get(schematic).read(data);

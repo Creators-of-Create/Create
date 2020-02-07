@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -98,9 +98,9 @@ public class ItemHelper {
 		boolean amountRequired = exactAmount != -1;
 		boolean checkHasEnoughItems = amountRequired;
 		boolean hasEnoughItems = !checkHasEnoughItems;
-		int maxExtractionCount = hasEnoughItems ? CreateConfig.parameters.extractorAmount.get() : exactAmount;
+		int maxExtractionCount = hasEnoughItems ? AllConfigs.SERVER.logistics.extractorAmount.get() : exactAmount;
 		boolean potentialOtherMatch = false;
-		
+
 		Extraction: do {
 			extracting = ItemStack.EMPTY;
 
@@ -134,18 +134,18 @@ public class ItemHelper {
 					}
 				}
 			}
-			
+
 			if (!extracting.isEmpty() && !hasEnoughItems && potentialOtherMatch) {
 				ItemStack blackListed = extracting.copy();
 				test = test.and(i -> !ItemHandlerHelper.canItemStacksStack(i, blackListed));
 				continue;
 			}
-			
+
 			if (checkHasEnoughItems)
 				checkHasEnoughItems = false;
 			else
 				break Extraction;
-			
+
 		} while (true);
 
 		if (amountRequired && extracting.getCount() < exactAmount)
@@ -157,7 +157,7 @@ public class ItemHelper {
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test,
 			Function<ItemStack, Integer> amountFunction, boolean simulate) {
 		ItemStack extracting = ItemStack.EMPTY;
-		int maxExtractionCount = CreateConfig.parameters.extractorAmount.get();
+		int maxExtractionCount = AllConfigs.SERVER.logistics.extractorAmount.get();
 
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			if (extracting.isEmpty()) {

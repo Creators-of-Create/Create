@@ -9,7 +9,7 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.linked.LinkBehaviour;
 
 import net.minecraft.item.Item;
@@ -115,7 +115,7 @@ public class RedstoneLinkNetworkHandler {
 	}
 
 	public static boolean withinRange(LinkBehaviour from, LinkBehaviour to) {
-		return from.getPos().withinDistance(to.getPos(), CreateConfig.parameters.linkRange.get());
+		return from.getPos().withinDistance(to.getPos(), AllConfigs.SERVER.logistics.linkRange.get());
 	}
 
 	public Map<Pair<Frequency, Frequency>, Set<LinkBehaviour>> networksIn(IWorld world) {

@@ -6,7 +6,7 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.CreateConfig;
+import com.simibubi.create.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -70,10 +70,11 @@ public class BeltConnectorItemHandler {
 				return;
 			if (!AllBlocks.SHAFT.typeOf(world.getBlockState(selected)))
 				selected = selected.offset(((BlockRayTraceResult) rayTrace).getFace());
-			if (!selected.withinDistance(first, CreateConfig.parameters.maxBeltLength.get()))
+			if (!selected.withinDistance(first, AllConfigs.SERVER.kinetics.maxBeltLength.get()))
 				return;
 
-			boolean canConnect = BeltConnectorItem.validateAxis(world, selected) && BeltConnectorItem.canConnect(world, first, selected);
+			boolean canConnect =
+				BeltConnectorItem.validateAxis(world, selected) && BeltConnectorItem.canConnect(world, first, selected);
 
 			Vec3d start = new Vec3d(first);
 			Vec3d end = new Vec3d(selected);

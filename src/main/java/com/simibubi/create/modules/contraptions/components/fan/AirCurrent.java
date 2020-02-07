@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.CreateClientConfig;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.particle.AirFlowParticleData;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
@@ -60,7 +60,7 @@ public class AirCurrent {
 		if (world.isRemote) {
 			float offset = pushing ? 0.5f : maxDistance + .5f;
 			Vec3d pos = VecHelper.getCenterOf(source.getPos()).add(new Vec3d(facing.getDirectionVec()).scale(offset));
-			if (world.rand.nextFloat() < CreateClientConfig.instance.fanParticleDensity.get())
+			if (world.rand.nextFloat() < AllConfigs.CLIENT.fanParticleDensity.get())
 				world.addParticle(new AirFlowParticleData(source.getPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
 
