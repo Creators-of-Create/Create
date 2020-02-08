@@ -16,7 +16,8 @@ public enum ScreenResources {
 	SCHEMATIC_TABLE_PROGRESS("schematic_table.png", 209, 0, 24, 17),
 	SCHEMATIC("schematic.png", 207, 95),
 
-	SCHEMATICANNON("schematicannon.png", 247, 161),
+	SCHEMATICANNON_BG("schematicannon.png", 247, 161),
+	SCHEMATICANNON_BG_FUEL("schematicannon.png", 247, 161),
 	SCHEMATICANNON_PROGRESS("schematicannon.png", 0, 161, 121, 16),
 	SCHEMATICANNON_PROGRESS_2("schematicannon.png", 122, 161, 16, 15),
 	SCHEMATICANNON_HIGHLIGHT("schematicannon.png", 0, 182, 28, 28),

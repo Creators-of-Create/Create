@@ -81,7 +81,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	}
 
 	public float getAddedStressCapacity() {
-		Map<ResourceLocation, ConfigValue<Double>> capacityMap = AllConfigs.SERVER.kinetics.stressValues.impacts;
+		Map<ResourceLocation, ConfigValue<Double>> capacityMap = AllConfigs.SERVER.kinetics.stressValues.capacities;
 		ResourceLocation path = getBlockState().getBlock().getRegistryName();
 		if (!capacityMap.containsKey(path))
 			return 0;
@@ -89,7 +89,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	}
 
 	public float getStressApplied() {
-		Map<ResourceLocation, ConfigValue<Double>> stressEntries = AllConfigs.SERVER.kinetics.stressValues.capacities;
+		Map<ResourceLocation, ConfigValue<Double>> stressEntries = AllConfigs.SERVER.kinetics.stressValues.impacts;
 		ResourceLocation path = getBlockState().getBlock().getRegistryName();
 		if (!stressEntries.containsKey(path))
 			return 1;

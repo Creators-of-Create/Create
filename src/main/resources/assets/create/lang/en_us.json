@@ -92,8 +92,7 @@
 	"block.create.nozzle": "Nozzle",
 	"block.create.hand_crank": "Hand Crank",
 	"block.create.cuckoo_clock": "Cuckoo Clock",
-	"block.create.mysterious_cuckoo_clock": "Cuckoo Clock",
-	"block.create.motor": "Motor",
+	"block.create.creative_motor": "Motor",
 	"block.create.belt": "Mechanical Belt",
 	"block.create.crushing_wheel": "Crushing Wheel",
 	"block.create.drill": "Mechanical Drill",
@@ -606,9 +605,9 @@
 	"item.create.placement_handgun.tooltip.action3": "Opens the _Configuration_ _Interface_",
 
 	"item.create.tree_fertilizer.tooltip": "TREE FERTILIZER",
-	"item.create.tree_fertilizer.tooltip.summary": "A powerful combination of minerals suitable for common tree types",
+	"item.create.tree_fertilizer.tooltip.summary": "A powerful combination of minerals suitable for growing common tree types more quickly",
 	"item.create.tree_fertilizer.tooltip.condition1": "When used on Sapling",
-	"item.create.tree_fertilizer.tooltip.behaviour1": "Grows Trees regardless of their spacing Conditions",
+	"item.create.tree_fertilizer.tooltip.behaviour1": "Grows Trees _regardless_ of their _spacing_ _conditions_",
 	
 	"item.create.filter.tooltip": "FILTER",
 	"item.create.filter.tooltip.summary": "_Controls_ _outputs_ and inputs of logistical devices with more _precision,_ matching them against a _set_ _of_ _items_ or several _nested_ _filters._",
@@ -694,9 +693,14 @@
 	"block.create.encased_belt.tooltip.summary": "_Relays_ _Rotation_ through its block and to attached _Encased_ _Belts._",
 	"block.create.encased_belt.tooltip.condition1": "When Connected",
 	"block.create.encased_belt.tooltip.behaviour1": "Attached Blocks will have the exact _same_ _rotation_ _speed_ and direction. They do not have to face the same way.",
+	
+	"block.create.adjustable_pulley.tooltip": "ANALOG BELT PULLEY",
+	"block.create.adjustable_pulley.tooltip.summary": "_Relays_ _Rotation_ through its block and to attached _Encased_ _Belts._ Attached encased belts will _rotate_ _faster_ based on the _analog_ _redstone_ _signal_ this block receives.",
+	"block.create.adjustable_pulley.tooltip.condition1": "Redstone control",
+	"block.create.adjustable_pulley.tooltip.behaviour1": "Without a signal it will _not_ _speed_ _up_ connected belts, full signal strength will _double_ _its_ _speed._",
 
 	"item.create.belt_connector.tooltip": "BELT CONNECTOR",
-	"item.create.belt_connector.tooltip.summary": "Connects two _Shafts_ with a _Mechanical_ _Belt._ Connected shafts will have the exact same rotation speed and direction. The Belt can act as a _Conveyor_ for _Entities._",
+	"item.create.belt_connector.tooltip.summary": "Connects two or more _Shafts_ with a _Mechanical_ _Belt._ Connected shafts will have the exact same rotation speed and direction. The Belt can act as a _Conveyor_ for _Items_ and _Entities._",
 	"item.create.belt_connector.tooltip.control1": "R-Clicked on Shaft",
 	"item.create.belt_connector.tooltip.action1": "Selects the shaft as one pulley of the Belt. Both selected Shafts have to _line_ _up_ either _Vertically,_ _Horizontally_ or _Diagonally_ towards the Belt's Direction.",
 	"item.create.belt_connector.tooltip.control2": "R-Click while Sneaking",
@@ -705,10 +709,19 @@
 	"item.create.goggles.tooltip": "GOGGLES",
 	"item.create.goggles.tooltip.summary": "A pair of glasses to augment your vision with useful _kinetic_ _information._",
 	"item.create.goggles.tooltip.condition1": "When worn",
-	"item.create.goggles.tooltip.behaviour1": "Shows _colored_ _indicators_ corresponding to the _Speed_ _Level_ of a placed kinetic component.",
+	"item.create.goggles.tooltip.behaviour1": "Shows _colored_ _indicators_ corresponding to the _Speed_ _Level_ of a placed kinetic component as well as _Stress_ _Impact_ and _Capacity_ of individual components.",
+	"item.create.goggles.tooltip.condition2": "When looking at gauge",
+	"item.create.goggles.tooltip.behaviour2": "Shows detailed information about _Speed_ or _Stress_ of the network the gauge is connected to.",
+	
+	"item.create.wrench.tooltip": "WRENCH",
+	"item.create.wrench.tooltip.summary": "A useful tool for working on kinetic contraptions. Can be used to _Rotate,_ _Dismantle_ and to _Configure_ components.",
+	"item.create.wrench.tooltip.control1": "Right-Click a kinetic block",
+	"item.create.wrench.tooltip.action1": "_Rotates_ _components_ toward or away from the face you interacted with.",
+	"item.create.wrench.tooltip.control2": "R-Click while Sneaking",
+	"item.create.wrench.tooltip.action2": "_Disassembles_ _Kinetic_ _components_ and places them back in _your_ _inventory._",
 
-	"block.create.motor.tooltip": "MOTOR",
-	"block.create.motor.tooltip.summary": "A configurable source of _Rotational_ _Force_",
+	"block.create.creative_motor.tooltip": "MOTOR",
+	"block.create.creative_motor.tooltip.summary": "A configurable source of _Rotational_ _Force_",
 
 	"block.create.water_wheel.tooltip": "WATER WHEEL",
 	"block.create.water_wheel.tooltip.summary": "Provides _Rotational_ _Force_ taken from adjacent _Water_ _Currents._",
@@ -721,6 +734,19 @@
 	"block.create.encased_fan.tooltip.behaviour2": "_Pushes_ or _Pulls_ Entities, depending on the incoming Rotation speed.",
 	"block.create.encased_fan.tooltip.condition3": "When blowing through special blocks",
 	"block.create.encased_fan.tooltip.behaviour3": "_Liquids_ and _Fire_ emit particles into the air flow. This can be used to _process_ _items._",
+
+	"block.create.nozzle.tooltip": "NOZZLE",
+	"block.create.nozzle.tooltip.summary": "Attach to the front of an _Encased_ _Fan_ to distribute its effect on Entities in _all_ _directions._",
+	
+	"block.create.hand_crank.tooltip": "HAND CRANK",
+	"block.create.hand_crank.tooltip.summary": "A simple _source_ of _rotational_ _force_ that requires the interaction of players.",
+	"block.create.hand_crank.tooltip.condition1": "When Used",
+	"block.create.hand_crank.tooltip.behaviour1": "Provides _rotational_ _force_ to its attached contraption. _Sneak_ _to_ _reverse_ its rotation.",	
+	
+	"block.create.cuckoo_clock.tooltip": "CUCKOO CLOCK",
+	"block.create.cuckoo_clock.tooltip.summary": "Fine craftsmanship for _decorating_ your space and helping you in _keeping_ _track_ _of_ the _time._",
+	"block.create.cuckoo_clock.tooltip.condition1": "When Rotated",
+	"block.create.cuckoo_clock.tooltip.behaviour1": "Shows the _current_ _time_ and plays a tune twice a day. _Activates_ once at _noon_ and as soon as _players_ _can_ _sleep_ through the night.",
 
 	"block.create.turntable.tooltip": "TURNTABLE",
 	"block.create.turntable.tooltip.summary": "Turns _Rotational_ _Force_ into refined Motion Sickness.",
@@ -736,6 +762,11 @@
 	"block.create.mechanical_press.tooltip.behaviour1": "_Starts_ to compress items dropped below it.",
 	"block.create.mechanical_press.tooltip.condition2": "When Above a Mechanical Belt",
 	"block.create.mechanical_press.tooltip.behaviour2": "_Automatically_ compresses bypassing items on the Belt.",
+	"block.create.mechanical_mixer.tooltip.condition3": "When above Basin",
+	"block.create.mechanical_mixer.tooltip.behaviour3": "Starts to _compact_ _items_ in the basin whenever all necessary ingredients are present.",
+	
+	"block.create.basin.tooltip": "BASIN",
+	"block.create.basin.tooltip.summary": "A handy _item_ _container_ used for processing with the _Mechanical_ _Mixer_ and the _Mechanical_ _Press._",
 	
 	"block.create.mechanical_mixer.tooltip": "MECHANICAL MIXER",
 	"block.create.mechanical_mixer.tooltip.summary": "A kinetic whisk for applying any shapeless crafting recipes to items beneath it. Requires constant _Rotational_ _Force_ and a _Basin_ placed below (with a gap inbetween).",
@@ -743,6 +774,25 @@
 	"block.create.mechanical_mixer.tooltip.behaviour1": "Starts to mix items in the basin whenever all necessary ingredients are present.",
 	"block.create.mechanical_mixer.tooltip.condition2": "When used with Wrench",
 	"block.create.mechanical_mixer.tooltip.behaviour2": "_Configures_ the minimum amount of _total_ _ingredients_ for applied recipes. Use this option to _rule_ _out_ _unwanted_ _recipes_ with similar but less ingredients.",
+
+	"block.create.mechanical_crafter.tooltip": "MECHANICAL CRAFTER",
+	"block.create.mechanical_crafter.tooltip.summary": "A kinetic assembler for _automating_ any _shaped_ _crafing_ recipe. Place _multiple_ _in_ _a_ _grid_ corresponding to your recipe, and _arrange_ _their_ _belts_ to create a _flow_ that exits the grid on one of the crafters.",
+	"block.create.mechanical_crafter.tooltip.condition1": "When Rotated",
+	"block.create.mechanical_crafter.tooltip.behaviour1": "_Starts_ _the_ _crafting_ _process_ as soon as _all_ _crafters_ in the grid have been _given_ _an_ _item._",
+	"block.create.mechanical_crafter.tooltip.control1": "When Wrenched at Front",
+	"block.create.mechanical_crafter.tooltip.action1": "_Cycles_ _the_ _direction_ an individual crafter _moves_ _its_ _items_ towards. To form a working grid, _arrange_ _the_ _belts_ _in_ _a_ _flow_ which moves all items towards a final crafter, which _points_ _away_ from the grid.",
+	"block.create.mechanical_crafter.tooltip.control2": "When Wrenched at back",
+	"block.create.mechanical_crafter.tooltip.action2": "_Connects_ the _input_ _inventory_ of adjacent crafters. Use this to _combine_ _slots_ in the crafting grid and _save_ _on_ _input_ _work._",
+
+	"block.create.furnace_engine.tooltip": "FURNACE ENGINE",
+	"block.create.furnace_engine.tooltip.summary": "A powerful source of rotational power that requires a _running_ _furnace_ to work.",
+	"block.create.furnace_engine.tooltip.condition1": "When Attached to Lit Furnace",
+	"block.create.furnace_engine.tooltip.behaviour1": "_Starts_ _powering_ a _Flywheel_ placed in front of it (1m apart). Use a Blast Furnace for higher speeds.",
+	
+	"block.create.flywheel.tooltip": "FLYWHEEL",
+	"block.create.flywheel.tooltip.summary": "A large metal wheel to _harness_ _and_ _stabilize_ generated force by an _attached_ _Engine._ Flywheels connect to engines if they are _1m_ _apart_ and at a _90°_ _Angle_ from each other.",
+	"block.create.flywheel.tooltip.condition1": "When Attached to Running Engine",
+	"block.create.flywheel.tooltip.behaviour1": "Provides _Rotational_ _Force_ to a connected contraption based on the generators strength and speed.",
 
 	"block.create.mechanical_piston.tooltip": "MECHANICAL PISTON",
 	"block.create.mechanical_piston.tooltip.summary": "A more advanced version of the _Piston,_ using _Rotational_ _Force_ to precisely move attached structures. _Piston_ _Extension_ _Poles_ at the rear define the _Range_ of this Device. Without extensions, the piston will not move. Use _Translation_ _Chassis_ to move more than a single line of blocks.",
@@ -792,6 +842,13 @@
 	"block.create.harvester.tooltip.condition1": "When Pushed by Mechanical Piston",
 	"block.create.harvester.tooltip.behaviour1": "_Harvests_ all _mature_ _crops_ the blade is running into, and resets them to their initial growth state.",
 
+	"block.create.saw.tooltip": "MECHANICAL SAW",
+	"block.create.saw.tooltip.summary": "Suitable for _cutting_ _trees_ effectively and for _cutting_ _blocks_ into their carpentered counterparts.",
+	"block.create.saw.tooltip.condition1": "When facing up",
+	"block.create.saw.tooltip.behaviour1": "Applies _Sawing_ and _Stonecutting_ _Recipes_ to items dropped onto or inserted into it. When multiple outputs are possible, it cycles through them unless a _filter_ is assigned.",
+	"block.create.saw.tooltip.condition2": "When facing horizonally",
+	"block.create.saw.tooltip.behaviour2": "_Breaks_ _logs_ in front of it. If the log supported a tree on its own, the _tree_ _will_ _collapse_ away from the saw.",
+
 	"block.create.stockswitch.tooltip": "STOCKSWITCH",
 	"block.create.stockswitch.tooltip.summary": "Toggles a Redstone signal based on the _Storage_ _Space_ in the attached Container.",
 	"block.create.stockswitch.tooltip.condition1": "When below Lower Limit",
@@ -829,6 +886,13 @@
 	"block.create.extractor.tooltip.control1": "R-Click on Filter Space",
 	"block.create.extractor.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter._ Extractor will pull the item _type_ and _count_ of the filter stack exclusively.",
 
+	"block.create.deployer.tooltip": "DEPLOYER",
+	"block.create.deployer.tooltip.summary": "_Punches,_ _Uses_ and _Activates._ This machine will try to _imitate_ a _player_ as good as it's able to. Can _Take_ and _Deposit_ _items_ at an adjacent _Inventory._ Can be assigned an item-stack as a _filter._",
+	"block.create.deployer.tooltip.condition1": "When Rotated",
+	"block.create.deployer.tooltip.behaviour1": "Extends its arm and _activates_ in the block space _2m_ _ahead_ of itself.",
+	"block.create.deployer.tooltip.condition2": "R-Clicked with Wrench",
+	"block.create.deployer.tooltip.behaviour2": "Toggles punch mode. In _punch_ _mode,_ the deployer will attempt to use its item to _break_ _blocks_ or _hurt_ _entities._",
+
 	"block.create.linked_extractor.tooltip": "LINKED EXTRACTOR",
 	"block.create.linked_extractor.tooltip.summary": "_Takes_ _items_ from an attached _Inventory_ and drops them onto the ground. Will not drop Items until the space cleared. Can be assigned an item-stack as a _filter._ Can be controlled remotely via a _Redstone_ _Link._",
 	"block.create.linked_extractor.tooltip.condition1": "When Redstone Link Active",
@@ -838,8 +902,20 @@
 	"block.create.linked_extractor.tooltip.control2": "R-Click on Frequency Space",
 	"block.create.linked_extractor.tooltip.action2": "Assigns currently _held_ _item_ as part of the Frequency listened on. Whenever a transmitting _Redstone_ _Link_ of the same frequency is powered, this Extractor will pause.",
 
-	"block.create.belt_funnel.tooltip": "BELT FUNNEL",
-	"block.create.belt_funnel.tooltip.summary": "Collects incoming items on a _Mechanical_ _Belt_ and inserts them into the attached _Inventory_ if possible. Has to be directly _on_ _top_ of a Belt, with the opening facing against the Belts' movement direction. The inventory has to be on the same height as the funnel.",
+	"block.create.belt_funnel.tooltip": "FUNNEL",
+	"block.create.belt_funnel.tooltip.summary": "_Collects_ _incoming_ _items_ and inserts them into the attached _Inventory_ if possible. Can collect items in the _world_ and items on a _belt._",
+
+	"block.create.belt_tunnel.tooltip": "BELT TUNNEL",
+	"block.create.belt_tunnel.tooltip.summary": "An aesthetic option for running your _Mechanical_ _Belts_ through walls. Belts have to be reinforced with _Brass_ _Casing._ Tunnels can _synchronize_ with _their_ _neighbours,_ only letting items pass if all tunnels in the group have one waiting. [Ctrl]",
+	"block.create.belt_tunnel.tooltip.control1": "R-Click with Wrench on Front",
+	"block.create.belt_tunnel.tooltip.action1": "Toggles _synchronized_ _behaviour._ Synchronized tunnels hold items until their neighbours  have an item aswell.",
+	"block.create.belt_tunnel.tooltip.control2": "R-Click with Wrench on Side",
+	"block.create.belt_tunnel.tooltip.action2": "_Adjusts_ _window_ _shutters_ if the tunnel has a window on that face.",
+
+	"block.create.brass_casing.tooltip": "BRASS CASING",
+	"block.create.brass_casing.tooltip.summary": "Sturdy machine casing with a variety of uses. Safe for decoration.",
+	"block.create.brass_casing.tooltip.condition1": "When used on Mechanical Belt",
+	"block.create.brass_casing.tooltip.behaviour1": "_Reinforces_ _belts_ with a brass foundation. Reinforced Belts can support _Belt_ _Tunnels_ aswell as _Extractors,_ _Funnels_ and _Transposers_ interacting with the belt from the sides and below.",
 
 	"block.create.entity_detector.tooltip": "BELT OBSERVER",
 	"block.create.entity_detector.tooltip.summary": "Detects items passing by on a _Mechanical_ _Belt_ in front of it. Works well with a _Piston_ on top, pushing certain items off.",
@@ -854,6 +930,12 @@
 	"block.create.flexpeater.tooltip": "FLEX REPEATER",
 	"block.create.flexpeater.tooltip.summary": "An advanced _Redstone_ _Repeater_ with a _configurable_ _Delay_ up to 30 Minutes.",
 	
+	"block.create.flexpulsepeater.tooltip": "FLEX PULSE REPEATER",
+	"block.create.flexpulsepeater.tooltip.summary": "A _Pulse_ _Repeater_ with a _configurable_ _Delay_ up to 30 Minutes.",
+	
+	"block.create.analog_lever.tooltip": "ANALOG LEVER",
+	"block.create.analog_lever.tooltip.summary": "A lever with more _precise_ _control_ over its emitted _signal_ _strength._",
+	
 	"block.create.speed_gauge.tooltip": "SPEEDOMETER",
 	"block.create.speed_gauge.tooltip.summary": "Measures and displays the _rotational_ _speed_ of attached kinetic components.",
 	"block.create.speed_gauge.tooltip.condition1": "When Rotated",
@@ -863,6 +945,12 @@
 	"block.create.stress_gauge.tooltip.summary": "Measures and displays the _overall_ _stress_ of the attached kinetic network.",
 	"block.create.stress_gauge.tooltip.condition1": "When Rotated",
 	"block.create.stress_gauge.tooltip.behaviour1": "Indicates a color corresponding to the level of stress. _Over-stressed_ _networks_ will cease to move. Stress can be relieved by adding more _rotational_ _sources_ to the network.",
+	
+	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
+	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed_ _light._",
+	
+	"item.create.shadow_steel.tooltip": "SHADOW STEEL",
+	"item.create.shadow_steel.tooltip.summary": "A Chromatic material forged _in_ _the_ _void._",
 	
 	"item.create.logistical_controller_calculation.tooltip": "WIP",
 	"item.create.logistical_controller_request.tooltip": "WIP",

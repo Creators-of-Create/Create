@@ -67,7 +67,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	@Override
 	protected void init() {
-		setWindowSize(ScreenResources.SCHEMATICANNON.width + 50, ScreenResources.SCHEMATICANNON.height + 80);
+		setWindowSize(ScreenResources.SCHEMATICANNON_BG.width + 50, ScreenResources.SCHEMATICANNON_BG.height + 80);
 		super.init();
 
 		int x = guiLeft + 20;
@@ -198,7 +198,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
 		ScreenResources.PLAYER_INVENTORY.draw(this, guiLeft - 10, guiTop + 145);
-		ScreenResources.SCHEMATICANNON.draw(this, guiLeft + 20, guiTop);
+		ScreenResources.SCHEMATICANNON_BG.draw(this, guiLeft + 20, guiTop);
 
 		SchematicannonTileEntity te = container.getTileEntity();
 		renderPrintingProgress(te.schematicProgress);

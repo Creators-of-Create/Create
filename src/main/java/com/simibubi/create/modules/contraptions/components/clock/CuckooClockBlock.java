@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.clock;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.Block;
@@ -40,6 +41,13 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
 		if (!mysterious)
 			super.fillItemGroup(group, items);
+	}
+	
+	@Override
+	public String getTranslationKey() {
+		if (this == AllBlocks.MYSTERIOUS_CUCKOO_CLOCK.get())
+			return AllBlocks.CUCKOO_CLOCK.get().getTranslationKey();
+		return super.getTranslationKey();
 	}
 
 	@Override

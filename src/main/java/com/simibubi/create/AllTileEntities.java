@@ -98,7 +98,7 @@ public enum AllTileEntities {
 
 	// Kinetics
 	SHAFT(ShaftTileEntity::new, AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL, AllBlocks.ENCASED_SHAFT),
-	MOTOR(MotorTileEntity::new, AllBlocks.MOTOR),
+	MOTOR(MotorTileEntity::new, AllBlocks.CREATIVE_MOTOR),
 	GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
 	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
 	ENCASED_SHAFT(EncasedShaftTileEntity::new, AllBlocks.ENCASED_SHAFT, AllBlocks.ENCASED_BELT),

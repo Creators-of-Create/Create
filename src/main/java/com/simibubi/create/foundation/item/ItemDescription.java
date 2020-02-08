@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
+import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -82,13 +83,15 @@ public class ItemDescription {
 		return this;
 	}
 
-	public ItemDescription withKineticStats(IRotate block) {
+	public ItemDescription withKineticStats(Block block) {
+	
+		boolean isEngine = block instanceof EngineBlock;
 		CKinetics config = AllConfigs.SERVER.kinetics;
-		SpeedLevel minimumRequiredSpeedLevel = block.getMinimumRequiredSpeedLevel();
+		SpeedLevel minimumRequiredSpeedLevel = isEngine ? SpeedLevel.NONE : ((IRotate) block).getMinimumRequiredSpeedLevel();
 		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE;
 		ResourceLocation id = ((Block) block).getRegistryName();
-		Map<ResourceLocation, ConfigValue<Double>> impacts = config.stressValues.capacities;
-		Map<ResourceLocation, ConfigValue<Double>> capacities = config.stressValues.impacts;
+		Map<ResourceLocation, ConfigValue<Double>> impacts = config.stressValues.impacts;
+		Map<ResourceLocation, ConfigValue<Double>> capacities = config.stressValues.capacities;
 		boolean hasStressImpact = impacts.containsKey(id) && impacts.get(id).get() > 0;
 		boolean hasStressCapacity = capacities.containsKey(id);
 		boolean hasGlasses =
@@ -108,7 +111,7 @@ public class ItemDescription {
 			add(linesOnShift, level);
 		}
 		String stressUnit = Lang.translate("generic.unit.stress");
-		if (hasStressImpact && !block.hideStressImpact()) {
+		if (hasStressImpact && !(!isEngine && ((IRotate) block).hideStressImpact())) {
 			List<String> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
 			double impact = impacts.get(id).get();
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
@@ -134,7 +137,7 @@ public class ItemDescription {
 
 			if (hasGlasses)
 				level += " (" + capacity + stressUnit + ")";
-			if (block.showCapacityWithAnnotation())
+			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
 				level +=
 					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
 

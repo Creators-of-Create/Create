@@ -115,7 +115,7 @@ public enum AllBlocks {
 	ENCASED_BELT(new EncasedBeltBlock()),
 	ADJUSTABLE_PULLEY(new AdjustablePulleyBlock()),
 	BELT(new BeltBlock()),
-	MOTOR(new MotorBlock()),
+	CREATIVE_MOTOR(new MotorBlock()),
 	WATER_WHEEL(new WaterWheelBlock()),
 	ENCASED_FAN(new EncasedFanBlock()),
 	NOZZLE(new NozzleBlock()),

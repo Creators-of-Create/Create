@@ -6,6 +6,7 @@ import java.util.Map;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
+import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -14,8 +15,8 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public class CStress extends ConfigBase {
 
-	public Map<ResourceLocation, ConfigValue<Double>> impacts = new HashMap<>();
 	public Map<ResourceLocation, ConfigValue<Double>> capacities = new HashMap<>();
+	public Map<ResourceLocation, ConfigValue<Double>> impacts = new HashMap<>();
 
 	@Override
 	protected void registerAll(Builder builder) {
@@ -27,7 +28,7 @@ public class CStress extends ConfigBase {
 
 		builder.comment("", Comments.su, Comments.capacity).push("capacity");
 		for (AllBlocks block : AllBlocks.values())
-			if (block.get() instanceof KineticBlock)
+			if (block.get() instanceof KineticBlock || block.get() instanceof EngineBlock)
 				initStressCapacityEntry(block, builder);
 		builder.pop();
 	}
@@ -35,7 +36,7 @@ public class CStress extends ConfigBase {
 	private void initStressEntry(AllBlocks block, final ForgeConfigSpec.Builder builder) {
 		String name = Lang.asId(block.name());
 		double defaultStressImpact = StressConfigDefaults.getDefaultStressImpact(block);
-		capacities.put(block.get().getRegistryName(), builder.define(name, defaultStressImpact));
+		impacts.put(block.get().getRegistryName(), builder.define(name, defaultStressImpact));
 	}
 
 	private void initStressCapacityEntry(AllBlocks block, final ForgeConfigSpec.Builder builder) {
@@ -43,7 +44,7 @@ public class CStress extends ConfigBase {
 		if (defaultStressCapacity == -1)
 			return;
 		String name = Lang.asId(block.name());
-		impacts.put(block.get().getRegistryName(), builder.define(name, defaultStressCapacity));
+		capacities.put(block.get().getRegistryName(), builder.define(name, defaultStressCapacity));
 	}
 
 	@Override

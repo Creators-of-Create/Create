@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.base.IRotate;
+import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -133,8 +134,8 @@ public class TooltipHelper {
 		// Requirements
 		if (stack.getItem() instanceof BlockItem) {
 			BlockItem item = (BlockItem) stack.getItem();
-			if (item.getBlock() instanceof IRotate) {
-				tooltip = tooltip.withKineticStats((IRotate) item.getBlock());
+			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof EngineBlock) {
+				tooltip = tooltip.withKineticStats(item.getBlock());
 			}
 		}
 

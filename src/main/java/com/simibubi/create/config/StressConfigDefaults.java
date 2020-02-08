@@ -7,8 +7,10 @@ public class StressConfigDefaults {
 	public static double getDefaultStressCapacity(AllBlocks block) {
 	
 		switch (block) {
-		case MOTOR:
+		case CREATIVE_MOTOR:
 			return 1024;
+		case FURNACE_ENGINE:
+			return 512;
 		case MECHANICAL_BEARING:
 			return 128;
 		case ENCASED_FAN:
