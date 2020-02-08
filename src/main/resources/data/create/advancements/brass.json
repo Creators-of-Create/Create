@@ -1,11 +1,11 @@
 {
     "display": {
         "title": {
-            "text": "brass",
+            "translate": "advancement.create:brass",
             "color": "gold"
         },
         "description": {
-            "text": "Description"
+            "translate": "advancement.create:brass.desc"
         },
         "icon": {
             "item": "create:crushed_brass"

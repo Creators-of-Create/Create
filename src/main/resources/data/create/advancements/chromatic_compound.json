@@ -1,23 +1,22 @@
 {
     "display": {
         "title": {
-            "text": "Chromatic Compound",
+            "translate": "advancement.create:chromatic_compound",
             "color": "dark_purple"
         },
         "description": {
-            "text": "Description"
+            "translate": "advancement.create:chromatic_compound.desc"
         },
         "icon": {
             "item": "create:chromatic_compound"
         },
         "frame": "task",
         "show_toast": true,
-        "announce_to_chat": true,
+        "announce_to_chat": false,
         "hidden": false
     },
     "criteria": {
         "alloy": {
-            "comment_": "TODO introduce trigger for mixer recipes",
             "trigger": "minecraft:inventory_changed",
             "conditions": {
                 "items": [

@@ -1,17 +1,17 @@
 {
     "display": {
         "title": {
-            "text": "I've got a crush on you"
+            "translate": "advancement.create:crushing_wheel"
         },
         "description": {
-            "text": "create a pair of crushing wheels"
+            "translate": "advancement.create:crushing_wheel.desc"
         },
         "icon": {
             "item": "create:crushing_wheel"
         },
         "frame": "task",
         "show_toast": true,
-        "announce_to_chat": true,
+        "announce_to_chat": false,
         "hidden": false
     },
     "criteria": {
@@ -23,7 +23,7 @@
                         "item": "create:crushing_wheel",
                         "count": {
                             "min": 2,
-                            "max": 2
+                            "max": 64
                         }
                     }
                 ]

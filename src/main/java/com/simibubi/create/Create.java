@@ -1,5 +1,8 @@
 package com.simibubi.create;
 
+import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
+import com.simibubi.create.foundation.advancement.SandpaperUseTrigger;
+import net.minecraft.advancements.CriteriaTriggers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,6 +72,7 @@ public class Create {
 
 		CraftingHelper.register(new ModuleLoadedCondition.Serializer());
 		AllPackets.registerPackets();
+		AllCriterionTriggers.register();
 	}
 
 	public static void serverStarting(FMLServerStartingEvent event) {

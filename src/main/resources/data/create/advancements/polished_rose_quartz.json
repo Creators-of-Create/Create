@@ -1,11 +1,11 @@
 {
     "display": {
         "title": {
-            "text": "Polished Rose Quartz",
+            "translate": "advancement.create:polished_rose_quartz",
             "color": "red"
         },
         "description": {
-            "text": "Description"
+            "translate": "advancement.create:polished_rose_quartz.desc"
         },
         "icon": {
             "item": "create:polished_rose_quartz"
@@ -17,14 +17,14 @@
     },
     "criteria": {
         "quartz": {
-            "comment_": "TODO replace this with a custom trigger for sand paper use or maybe item durability change",
-            "trigger": "minecraft:inventory_changed",
+            "trigger": "create:sandpaper_use",
             "conditions": {
-                "items": [
-                    {
-                        "item": "create:polished_rose_quartz"
-                    }
-                ]
+                "target": {
+                    "item": "create:rose_quartz"
+                },
+                "result": {
+                    "item": "create:polished_rose_quartz"
+                }
             }
         }
     },

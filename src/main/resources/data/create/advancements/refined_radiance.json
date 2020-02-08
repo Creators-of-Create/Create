@@ -1,18 +1,18 @@
 {
     "display": {
         "title": {
-            "text": "SHINY!!!",
+            "translate": "advancement.create:refined_radiance",
             "color": "white"
         },
         "description": {
-            "text": "Description"
+            "translate": "advancement.create:refined_radiance.desc"
         },
         "icon": {
             "item": "create:refined_radiance"
         },
         "frame": "goal",
         "show_toast": true,
-        "announce_to_chat": true,
+        "announce_to_chat": false,
         "hidden": false
     },
     "criteria": {

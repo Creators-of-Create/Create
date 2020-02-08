@@ -1,17 +1,17 @@
 {
     "display": {
         "title": {
-            "text": "Know what really grinds my Gears?"
+            "translate": "advancement.create:gear"
         },
         "description": {
-            "text": "sand paper."
+            "translate": "advancement.create:gear.desc"
         },
         "icon": {
             "item": "create:cogwheel"
         },
         "frame": "task",
         "show_toast": true,
-        "announce_to_chat": true,
+        "announce_to_chat": false,
         "hidden": true
     },
     "criteria": {

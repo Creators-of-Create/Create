@@ -1,10 +1,12 @@
 package com.simibubi.create.modules.curiosities;
 
+import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CCuriosities;
+import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -15,6 +17,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -22,13 +25,10 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -157,6 +157,10 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 			newStack.setCount(stack.getCount());
 			data.putBoolean("FromLight", true);
 			entity.setItem(newStack);
+
+			List<ServerPlayerEntity> players = world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(entity.getPosition()).grow(8));
+			players.forEach(AllCriterionTriggers.ABSORBED_LIGHT::trigger);
+
 			return false;
 		}
 

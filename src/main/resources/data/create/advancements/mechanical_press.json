@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "text": "Squeezing real hard"
+            "translate": "advancement.create:press"
         },
         "description": {
-            "text": "Make a Mechanical Press and use it to create some plates"
+            "translate": "advancement.create:press.desc"
         },
         "icon": {
             "item": "create:mechanical_press"
