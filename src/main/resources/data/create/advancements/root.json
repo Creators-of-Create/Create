@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "create:cogwheel"
+      "item": "create:placement_handgun"
     },
     "title": {
       "translate": "advancement.create:root"
@@ -9,7 +9,7 @@
     "description": {
       "translate": "advancement.create:root.desc"
     },
-    "background": "create:textures/block/brass_casing_side.png",
+    "background": "create:textures/block/gabbro_layers.png",
     "show_toast": false,
     "announce_to_chat": false
   },

@@ -9,6 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.tileentity.TileEntity;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
@@ -81,6 +84,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected DeployerFakePlayer player;
 	protected int timer;
 	protected float reach;
+	protected boolean boop = false;
 	protected List<ItemStack> overflowItems = new ArrayList<>();
 	protected Pair<BlockPos, Float> blockBreakingProgress;
 
@@ -203,6 +207,28 @@ public class DeployerTileEntity extends KineticTileEntity {
 				}
 			}
 
+			//Check for advancement conditions
+			if (mode == Mode.PUNCH && !boop) {
+				if (world.isAirBlock(pos.offset(facing,1)) && world.isAirBlock(pos.offset(facing,2))) {
+					BlockPos otherDeployer = pos.offset(facing, 4);
+					if (world.isBlockPresent(otherDeployer)){
+						TileEntity otherTile = world.getTileEntity(otherDeployer);
+						if (otherTile instanceof DeployerTileEntity){
+							DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
+							if (world.getBlockState(otherDeployer).get(FACING).getOpposite() == facing && deployerTile.mode == Mode.PUNCH) {
+								//two facing deployer
+								boop = true;
+								reach = 1f;
+								timer = 1000;
+								state = State.EXPANDING;
+								sendData();
+								return;
+							}
+						}
+					}
+				}
+			}
+
 			state = State.EXPANDING;
 			Vec3d movementVector = getMovementVector();
 			Vec3d rayOrigin = VecHelper.getCenterOf(pos).add(movementVector.scale(3 / 2f));
@@ -218,6 +244,31 @@ public class DeployerTileEntity extends KineticTileEntity {
 		}
 
 		if (state == State.EXPANDING) {
+			if (boop){
+				TileEntity otherTile = world.getTileEntity(pos.offset(getBlockState().get(FACING),4));
+				if (otherTile instanceof DeployerTileEntity){
+					DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
+					if (deployerTile.boop && deployerTile.state == State.EXPANDING){
+						if(deployerTile.timer <= 0){
+							//everything should be met
+							boop = false;
+							state = State.RETRACTING;
+							timer = 1000;
+							deployerTile.boop = false;
+							deployerTile.state = State.RETRACTING;
+							deployerTile.timer = 1000;
+
+							deployerTile.sendData();
+							sendData();
+
+							//award nearby players
+							List<ServerPlayerEntity> players = world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(pos).grow(9));
+							players.forEach(AllCriterionTriggers.DEPLOYER_BOOP::trigger);
+						}
+					}
+				}
+				return;
+			}
 			Multimap<String, AttributeModifier> attributeModifiers = stack
 					.getAttributeModifiers(EquipmentSlotType.MAINHAND);
 			player.getAttributes().applyAttributeModifiers(attributeModifiers);

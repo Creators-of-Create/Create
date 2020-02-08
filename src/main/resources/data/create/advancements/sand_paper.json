@@ -1,11 +1,11 @@
 {
     "display": {
         "title": {
-            "text": "Sand Paper",
+            "translate": "advancement.create:sand_paper",
             "color": "yellow"
         },
         "description": {
-            "text": "Description"
+            "translate": "advancement.create:sand_paper.desc"
         },
         "icon": {
             "item": "create:sand_paper"

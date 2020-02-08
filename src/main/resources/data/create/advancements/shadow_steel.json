@@ -1,11 +1,11 @@
 {
     "display": {
         "title": {
-            "text": "Not quite as shiny",
+            "translate": "advancement.create:shadow_steel",
             "color": "black"
         },
         "description": {
-            "text": "Description"
+            "translate": "advancement.create:shadow_steel.desc"
         },
         "icon": {
             "item": "create:shadow_steel"

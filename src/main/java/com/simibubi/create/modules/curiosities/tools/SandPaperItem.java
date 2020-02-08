@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.curiosities.tools;
 
+import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
+import com.simibubi.create.foundation.advancement.SandpaperUseTrigger;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -12,6 +14,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -132,8 +135,11 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 			if (!polished.isEmpty()) {
 				if (player instanceof DeployerFakePlayer) {
 					player.dropItem(polished, false, false);
-				} else
+				} else {
+					AllCriterionTriggers.SANDPAPER_USE.trigger((ServerPlayerEntity) player, toPolish, polished);
+
 					player.inventory.placeItemBackInInventory(worldIn, polished);
+				}
 			}
 			tag.remove("Polishing");
 			stack.damageItem(1, entityLiving, p -> p.sendBreakAnimation(p.getActiveHand()));
