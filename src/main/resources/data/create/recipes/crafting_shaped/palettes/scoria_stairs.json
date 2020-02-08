@@ -1,0 +1,23 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "S  ",
+            "SS ",
+			"SSS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:scoria"
+            }
+        },
+	"result": {
+		"item": "create:scoria_stairs",
+		"count": 4
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

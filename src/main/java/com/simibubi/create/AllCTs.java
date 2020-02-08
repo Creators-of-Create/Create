@@ -32,6 +32,7 @@ public enum AllCTs {
 	DOLOMITE_LAYERS(layers("dolomite")),
 	LIMESTONE_LAYERS(layers("limestone")),
 	WEATHERED_LIMESTONE_LAYERS(layers("weathered_limestone")),
+	SCORIA_LAYERS(layers("scoria")),
 	
 	POLISHED_GRANITE(polishedVanilla("granite")),
 	POLISHED_DIORITE(polishedVanilla("diorite")),
@@ -40,6 +41,7 @@ public enum AllCTs {
 	POLISHED_DOLOMITE(polished("dolomite")),
 	POLISHED_LIMESTONE(polished("limestone")),
 	POLISHED_WEATHERED_LIMESTONE(polished("weathered_limestone")),
+	POLISHED_SCORIA(polished("scoria")),
 	
 	;
 

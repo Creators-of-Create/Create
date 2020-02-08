@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:dark_scoria_bricks"
+  },
+  "result": "create:dark_scoria_bricks_wall",
+  "count": 2,
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

@@ -1,0 +1,21 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"SSS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:dark_scoria_tiles"
+            }
+        },
+	"result": {
+		"item": "create:dark_scoria_tiles_slab",
+		"count": 6
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

@@ -10,6 +10,10 @@
 		"create:dolomite_slab",
 		"create:gabbro_slab",
 		"create:indented_gabbro_slab",
-		"create:paved_gabbro_bricks_slab"
+		"create:paved_gabbro_bricks_slab",
+		"create:scoria_slab",
+		"create:dark_scoria_tiles_slab",
+		"create:dark_scoria_bricks_slab",
+		"create:polished_scoria_slab"
 	]
 }

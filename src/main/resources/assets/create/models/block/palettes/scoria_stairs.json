@@ -1,0 +1,8 @@
+{
+    "parent": "block/stairs",
+    "textures": {
+        "bottom": "create:block/scoria",
+        "top": "create:block/scoria",
+        "side": "create:block/scoria"
+    }
+}

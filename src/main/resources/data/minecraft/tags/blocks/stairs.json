@@ -7,6 +7,9 @@
 		"create:weathered_limestone_bricks_stairs",
 		"create:dolomite_stairs",
 		"create:gabbro_stairs",
+		"create:scoria_stairs",
+		"create:dark_scoria_tiles_stairs",
+		"create:dark_scoria_bricks_stairs",
 		"create:gabbro_bricks_stairs"
 	]
 }

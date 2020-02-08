@@ -27,7 +27,7 @@ public enum AllWorldFeatures {
 	WEATHERED_LIMESTONE(new ChanceOreFeature(AllBlocks.WEATHERED_LIMESTONE.get(), 128, 1 / 32f).between(10, 30)),
 	DOLOMITE(new ChanceOreFeature(AllBlocks.DOLOMITE.get(), 128, 1 / 64f).between(20, 70)),
 	GABBRO(new ChanceOreFeature(AllBlocks.GABBRO.get(), 128, 1 / 64f).between(20, 70)),
-	SCORIA(new ChanceOreFeature(AllBlocks.SCORIA.get(), 128, 1 / 32f).between(0, 10)),
+	SCORIA(new ChanceOreFeature(AllBlocks.NATURAL_SCORIA.get(), 128, 1 / 32f).between(0, 10)),
 
 	;
 

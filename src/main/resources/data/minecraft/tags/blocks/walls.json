@@ -7,6 +7,8 @@
 		"create:weathered_limestone_bricks_wall",
 		"create:dolomite_wall",
 		"create:gabbro_wall",
+		"create:scoria_wall",
+		"create:dark_scoria_bricks_wall",
 		"create:gabbro_bricks_wall"
 	]
 }

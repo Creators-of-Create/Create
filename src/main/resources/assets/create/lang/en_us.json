@@ -172,8 +172,6 @@
 	"block.create.granite_bricks": "Granite Bricks",
 	"block.create.granite_layers": "Layered Granite",
 
-	"block.create.volcanic_rock": "Basalt",
-	
 	"block.create.gabbro": "Gabbro",
 	"block.create.gabbro_stairs": "Gabbro Stairs",
 	"block.create.gabbro_slab": "Gabbro Slab",
@@ -228,7 +226,28 @@
 	"block.create.polished_limestone_slab": "Polished Limestone Slab",
 	"block.create.limestone_pillar": "Limestone Pillar",
 	"block.create.limestone_layers": "Layered Limestone",
+	
+	"block.create.natural_scoria": "Natural Scoria",
+	"block.create.scoria": "Scoria",
+	"block.create.scoria_stairs": "Scoria Stairs",
+	"block.create.scoria_slab": "Scoria Slab",
+	"block.create.scoria_wall": "Scoria Wall",
+	"block.create.scoria_bricks": "Scoria Bricks",
+	"block.create.polished_scoria": "Polished Scoria",
+	"block.create.polished_scoria_slab": "Polished Scoria Slab",
+	"block.create.scoria_pillar": "Scoria Pillar",
+	"block.create.scoria_layers": "Layered Scoria",
 
+	"block.create.dark_scoria": "Dark Scoria",
+	"block.create.polished_dark_scoria": "Polished Dark Scoria",
+	"block.create.dark_scoria_tiles": "Dark Scoria Tiles",
+	"block.create.dark_scoria_tiles_stairs": "Dark Scoria Tile Stairs",
+	"block.create.dark_scoria_tiles_slab": "Dark Scoria Tile Slab",
+	"block.create.dark_scoria_bricks": "Dark Scoria Bricks",
+	"block.create.dark_scoria_bricks_stairs": "Dark Scoria Brick Stairs",
+	"block.create.dark_scoria_bricks_slab": "Dark Scoria Brick Slab",
+	"block.create.dark_scoria_bricks_wall": "Dark Scoria Brick Wall",
+	
 	"block.create.schematicannon": "Schematicannon",
 	"block.create.schematic_table": "Schematic Table",
 	"block.create.creative_crate": "Schematicannon Creatifier",

@@ -1,0 +1,22 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "SSS",
+			"SSS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:dark_scoria_bricks"
+            }
+        },
+	"result": {
+		"item": "create:dark_scoria_bricks_wall",
+		"count": 6
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

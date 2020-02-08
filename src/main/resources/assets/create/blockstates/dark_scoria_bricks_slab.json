@@ -1,0 +1,13 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "uvlock": true
+    },
+    "variants": { 
+        "type": {
+			"top": { "model":"create:block/palettes/dark_scoria_bricks_slab_top" },
+			"bottom": { "model":"create:block/palettes/dark_scoria_bricks_slab" },
+			"double": { "model":"create:block/palettes/dark_scoria_bricks" }
+		}
+    }
+}

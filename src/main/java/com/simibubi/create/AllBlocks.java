@@ -123,17 +123,17 @@ public enum AllBlocks {
 	HAND_CRANK(new HandCrankBlock()),
 	CUCKOO_CLOCK(new CuckooClockBlock(false)),
 	MYSTERIOUS_CUCKOO_CLOCK(new CuckooClockBlock(true)),
-	
+
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
 	MECHANICAL_PRESS(new MechanicalPressBlock()),
 	MECHANICAL_MIXER(new MechanicalMixerBlock()),
 	BASIN(new BasinBlock()),
 	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
-	
+
 	FLYWHEEL(new FlywheelBlock()),
 	FURNACE_ENGINE(new FurnaceEngineBlock()),
-	
+
 	SPEED_GAUGE(new GaugeBlock(GaugeBlock.Type.SPEED)),
 	STRESS_GAUGE(new GaugeBlock(GaugeBlock.Type.STRESS)),
 
@@ -227,6 +227,14 @@ public enum AllBlocks {
 	SLIGHTLY_MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
 	MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.block))),
 	GABBRO_LAYERS(new LayeredCTBlock(Properties.from(GABBRO.block), AllCTs.GABBRO_LAYERS, AllCTs.POLISHED_GABBRO)),
+
+	DOLOMITE(new Block(Properties.from(Blocks.QUARTZ_BLOCK)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	DOLOMITE_BRICKS(new Block(Properties.from(DOLOMITE.block))),
+	POLISHED_DOLOMITE(new Block(Properties.from(DOLOMITE.block))),
+	DOLOMITE_PILLAR(new RotatedPillarBlock(Properties.from(DOLOMITE.block))),
+	DOLOMITE_LAYERS(
+			new LayeredCTBlock(Properties.from(DOLOMITE.block), AllCTs.DOLOMITE_LAYERS, AllCTs.POLISHED_DOLOMITE)),
+
 	LIMESAND(new FallingBlock(Properties.from(Blocks.SAND))),
 	LIMESTONE(new Block(Properties.from(Blocks.SANDSTONE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	LIMESTONE_BRICKS(new Block(Properties.from(LIMESTONE.block)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
@@ -241,14 +249,18 @@ public enum AllBlocks {
 	WEATHERED_LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(WEATHERED_LIMESTONE.block))),
 	WEATHERED_LIMESTONE_LAYERS(new LayeredCTBlock(Properties.from(WEATHERED_LIMESTONE.block),
 			AllCTs.WEATHERED_LIMESTONE_LAYERS, AllCTs.POLISHED_WEATHERED_LIMESTONE)),
-	DOLOMITE(new Block(Properties.from(Blocks.QUARTZ_BLOCK)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	DOLOMITE_BRICKS(new Block(Properties.from(DOLOMITE.block))),
-	POLISHED_DOLOMITE(new Block(Properties.from(DOLOMITE.block))),
-	DOLOMITE_PILLAR(new RotatedPillarBlock(Properties.from(DOLOMITE.block))),
-	DOLOMITE_LAYERS(
-			new LayeredCTBlock(Properties.from(DOLOMITE.block), AllCTs.DOLOMITE_LAYERS, AllCTs.POLISHED_DOLOMITE)),
 
-	SCORIA(new ScoriaBlock()),
+	NATURAL_SCORIA(new ScoriaBlock()),
+	SCORIA(new Block(Properties.from(Blocks.ANDESITE)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	POLISHED_SCORIA(new Block(Properties.from(SCORIA.block)), ComesWith.SLAB),
+	SCORIA_BRICKS(new Block(Properties.from(SCORIA.block))),
+	SCORIA_LAYERS(new LayeredCTBlock(Properties.from(SCORIA.block), AllCTs.SCORIA_LAYERS, AllCTs.POLISHED_SCORIA)),
+	SCORIA_PILLAR(new RotatedPillarBlock(Properties.from(SCORIA.block))),
+
+	DARK_SCORIA(new Block(Properties.from(Blocks.ANDESITE))),
+	POLISHED_DARK_SCORIA(new Block(Properties.from(DARK_SCORIA.block))),
+	DARK_SCORIA_TILES(new Block(Properties.from(DARK_SCORIA.block)), ComesWith.STAIRS, ComesWith.SLAB),
+	DARK_SCORIA_BRICKS(new Block(Properties.from(DARK_SCORIA.block)), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 
 	__MATERIALS__(),
 	COPPER_ORE(new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1)),

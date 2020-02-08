@@ -1,0 +1,22 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "SSS",
+			"SSS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:scoria"
+            }
+        },
+	"result": {
+		"item": "create:scoria_wall",
+		"count": 6
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

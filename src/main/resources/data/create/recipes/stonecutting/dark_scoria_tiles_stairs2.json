@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:dark_scoria_tiles"
+  },
+  "result": "create:dark_scoria_tiles_stairs",
+  "count": 1,
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}

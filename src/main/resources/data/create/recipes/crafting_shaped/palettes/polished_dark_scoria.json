@@ -1,0 +1,22 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+			"SS",
+			"SS"
+        ],
+        "key": {
+			"S": {
+                "item": "create:dark_scoria"
+            }
+        },
+	"result": {
+		"item": "create:polished_dark_scoria",
+		"count": 4
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "palettes"
+		}
+	]
+}
