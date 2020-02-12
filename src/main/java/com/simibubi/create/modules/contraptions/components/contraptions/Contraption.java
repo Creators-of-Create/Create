@@ -4,20 +4,24 @@ import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
-import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.BearingContraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
@@ -27,14 +31,14 @@ import com.simibubi.create.modules.contraptions.components.contraptions.mounted.
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonContraption;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FallingBlock;
-import net.minecraft.block.PistonBlock;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.SlimeBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.FloatNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -44,21 +48,30 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class Contraption {
 
 	public Map<BlockPos, BlockInfo> blocks;
+	public Map<BlockPos, MountedStorage> storage;
 	public List<MutablePair<BlockInfo, MovementContext>> actors;
+	public CombinedInvWrapper inventory;
+
 	public AxisAlignedBB constructCollisionBox;
+	public boolean stalled;
+
 	protected Set<BlockPos> cachedColliders;
 	protected Direction cachedColliderDirection;
 	protected BlockPos anchor;
 
 	public Contraption() {
 		blocks = new HashMap<>();
+		storage = new HashMap<>();
 		actors = new ArrayList<>();
 	}
 
@@ -137,13 +150,20 @@ public class Contraption {
 			return false;
 
 		for (int limit = 1000; limit > 0; limit--) {
-			if (frontier.isEmpty())
+			if (frontier.isEmpty()) {
+				onAssembled(world, pos);
 				return true;
+			}
 			if (!moveBlock(world, frontier.remove(0), direction, frontier, visited))
 				return false;
-
 		}
 		return false;
+	}
+
+	protected void onAssembled(World world, BlockPos pos) {
+		List<IItemHandlerModifiable> list =
+			storage.values().stream().map(MountedStorage::getItemHandler).collect(Collectors.toList());
+		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 	}
 
 	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, List<BlockPos> frontier) {
@@ -417,15 +437,16 @@ public class Contraption {
 			return true;
 		if (blockState.getBlock() instanceof ShulkerBoxBlock)
 			return false;
-		return PistonBlock.canPush(blockState, world, pos, direction, true, direction);
+		return blockState.getPushReaction() != PushReaction.BLOCK;
 	}
 
-	protected BlockInfo capture(World world, BlockPos pos) {
+	protected Pair<BlockInfo, TileEntity> capture(World world, BlockPos pos) {
 		BlockState blockstate = world.getBlockState(pos);
 		if (AllBlocks.SAW.typeOf(blockstate))
 			blockstate = blockstate.with(SawBlock.RUNNING, true);
 		CompoundNBT compoundnbt = getTileEntityNBT(world, pos);
-		return new BlockInfo(pos, blockstate, compoundnbt);
+		TileEntity tileentity = world.getTileEntity(pos);
+		return Pair.of(new BlockInfo(pos, blockstate, compoundnbt), tileentity);
 	}
 
 	public static CompoundNBT getTileEntityNBT(World world, BlockPos pos) {
@@ -440,13 +461,20 @@ public class Contraption {
 		return compoundnbt;
 	}
 
-	public void add(BlockPos pos, BlockInfo block) {
+	public void add(BlockPos pos, Pair<BlockInfo, TileEntity> pair) {
+		BlockInfo captured = pair.getKey();
 		BlockPos localPos = pos.subtract(anchor);
-		BlockInfo blockInfo = new BlockInfo(localPos, block.state, block.nbt);
-		blocks.put(localPos, blockInfo);
-		if (block.state.getBlock() instanceof IHaveMovementBehavior)
-			getActors().add(MutablePair.of(blockInfo, null));
+		BlockInfo blockInfo = new BlockInfo(localPos, captured.state, captured.nbt);
+
+		if (blocks.put(localPos, blockInfo) != null)
+			return;
 		constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(localPos));
+
+		TileEntity te = pair.getValue();
+		if (te != null && MountedStorage.canUseAsStorage(te))
+			storage.put(localPos, new MountedStorage(te));
+		if (captured.state.getBlock() instanceof IPortableBlock)
+			getActors().add(MutablePair.of(blockInfo, null));
 	}
 
 	public static Contraption fromNBT(World world, CompoundNBT nbt) {
@@ -463,6 +491,7 @@ public class Contraption {
 	}
 
 	public void readNBT(World world, CompoundNBT nbt) {
+		blocks.clear();
 		nbt.getList("Blocks", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
 			BlockInfo info = new BlockInfo(NBTUtil.readBlockPos(comp.getCompound("Pos")),
@@ -471,21 +500,29 @@ public class Contraption {
 			blocks.put(info.pos, info);
 		});
 
+		actors.clear();
 		nbt.getList("Actors", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
 			BlockInfo info = blocks.get(NBTUtil.readBlockPos(comp.getCompound("Pos")));
 			MovementContext context = MovementContext.readNBT(world, comp);
+			context.contraption = this;
 			getActors().add(MutablePair.of(info, context));
 		});
 
+		storage.clear();
+		nbt.getList("Storage", 10).forEach(c -> {
+			CompoundNBT comp = (CompoundNBT) c;
+			storage.put(NBTUtil.readBlockPos(comp.getCompound("Pos")), new MountedStorage(comp.getCompound("Data")));
+		});
+		List<IItemHandlerModifiable> list =
+			storage.values().stream().map(MountedStorage::getItemHandler).collect(Collectors.toList());
+		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
+
 		if (nbt.contains("BoundsFront"))
-			constructCollisionBox = readAABB(nbt.getList("BoundsFront", 5));
+			constructCollisionBox = NBTHelper.readAABB(nbt.getList("BoundsFront", 5));
 
+		stalled = nbt.getBoolean("Stalled");
 		anchor = NBTUtil.readBlockPos(nbt.getCompound("Anchor"));
-	}
-
-	public AxisAlignedBB getCollisionBoxFront() {
-		return constructCollisionBox;
 	}
 
 	public CompoundNBT writeNBT() {
@@ -498,14 +535,14 @@ public class Contraption {
 		if (this instanceof BearingContraption)
 			nbt.putString("Type", "Bearing");
 
-		ListNBT blocks = new ListNBT();
+		ListNBT blocksNBT = new ListNBT();
 		for (BlockInfo block : this.blocks.values()) {
 			CompoundNBT c = new CompoundNBT();
 			c.put("Block", NBTUtil.writeBlockState(block.state));
 			c.put("Pos", NBTUtil.writeBlockPos(block.pos));
 			if (block.nbt != null)
 				c.put("Data", block.nbt);
-			blocks.add(c);
+			blocksNBT.add(c);
 		}
 
 		ListNBT actorsNBT = new ListNBT();
@@ -515,41 +552,37 @@ public class Contraption {
 			actor.right.writeToNBT(compound);
 			actorsNBT.add(compound);
 		}
+
+		ListNBT storageNBT = new ListNBT();
+		for (BlockPos pos : storage.keySet()) {
+			CompoundNBT c = new CompoundNBT();
+			MountedStorage mountedStorage = storage.get(pos);
+			if (!mountedStorage.isWorking())
+				continue;
+			c.put("Pos", NBTUtil.writeBlockPos(pos));
+			c.put("Data", mountedStorage.serialize());
+			storageNBT.add(c);
+		}
+
+		nbt.put("Blocks", blocksNBT);
 		nbt.put("Actors", actorsNBT);
+		nbt.put("Storage", storageNBT);
+		nbt.put("Anchor", NBTUtil.writeBlockPos(anchor));
+		nbt.putBoolean("Stalled", stalled);
 
 		if (constructCollisionBox != null) {
-			ListNBT bb = writeAABB(constructCollisionBox);
+			ListNBT bb = NBTHelper.writeAABB(constructCollisionBox);
 			nbt.put("BoundsFront", bb);
 		}
-		nbt.put("Blocks", blocks);
-		nbt.put("Anchor", NBTUtil.writeBlockPos(anchor));
+
 		return nbt;
-	}
-
-	public ListNBT writeAABB(AxisAlignedBB bb) {
-		ListNBT bbtag = new ListNBT();
-		bbtag.add(new FloatNBT((float) bb.minX));
-		bbtag.add(new FloatNBT((float) bb.minY));
-		bbtag.add(new FloatNBT((float) bb.minZ));
-		bbtag.add(new FloatNBT((float) bb.maxX));
-		bbtag.add(new FloatNBT((float) bb.maxY));
-		bbtag.add(new FloatNBT((float) bb.maxZ));
-		return bbtag;
-	}
-
-	public AxisAlignedBB readAABB(ListNBT bbtag) {
-		if (bbtag == null || bbtag.isEmpty())
-			return null;
-		return new AxisAlignedBB(bbtag.getFloat(0), bbtag.getFloat(1), bbtag.getFloat(2), bbtag.getFloat(3),
-				bbtag.getFloat(4), bbtag.getFloat(5));
-
 	}
 
 	public static boolean isFrozen() {
 		return AllConfigs.SERVER.control.freezePistonConstructs.get();
 	}
 
-	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch) {
+	public void disassemble(World world, BlockPos offset, float yaw, float pitch) {
 		disassemble(world, offset, yaw, pitch, (pos, state) -> false);
 	}
 
@@ -566,8 +599,9 @@ public class Contraption {
 		}
 	}
 
-	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch,
+	public void disassemble(World world, BlockPos offset, float yaw, float pitch,
 			BiPredicate<BlockPos, BlockState> customPlacement) {
+		stop(world);
 		for (BlockInfo block : blocks.values()) {
 			BlockPos targetPos = block.pos.add(offset);
 			BlockState state = block.state;
@@ -589,7 +623,13 @@ public class Contraption {
 				block.nbt.putInt("y", targetPos.getY());
 				block.nbt.putInt("z", targetPos.getZ());
 				tileEntity.read(block.nbt);
+				if (storage.containsKey(block.pos)) {
+					MountedStorage mountedStorage = storage.get(block.pos);
+					if (mountedStorage.isWorking())
+						mountedStorage.fill(tileEntity);
+				}
 			}
+
 		}
 	}
 
@@ -597,9 +637,14 @@ public class Contraption {
 		for (MutablePair<BlockInfo, MovementContext> pair : actors) {
 			BlockState blockState = pair.left.state;
 			MovementContext context = new MovementContext(world, blockState);
-			((IHaveMovementBehavior) blockState.getBlock()).startMoving(context);
+			context.contraption = this;
+			getMovement(blockState).startMoving(context);
 			pair.setRight(context);
 		}
+	}
+
+	public AxisAlignedBB getCollisionBoxFront() {
+		return constructCollisionBox;
 	}
 
 	public List<MutablePair<BlockInfo, MovementContext>> getActors() {
@@ -608,6 +653,28 @@ public class Contraption {
 
 	public BlockPos getAnchor() {
 		return anchor;
+	}
+
+	public void stop(World world) {
+		foreachActor(world, (behaviour, ctx) -> {
+			behaviour.stopMoving(ctx);
+			ctx.position = null;
+			ctx.motion = Vec3d.ZERO;
+			ctx.relativeMotion = Vec3d.ZERO;
+			ctx.rotation = Vec3d.ZERO;
+		});
+	}
+
+	public void foreachActor(World world, BiConsumer<MovementBehaviour, MovementContext> callBack) {
+		for (MutablePair<BlockInfo, MovementContext> pair : actors)
+			callBack.accept(getMovement(pair.getLeft().state), pair.getRight());
+	}
+
+	protected static MovementBehaviour getMovement(BlockState state) {
+		Block block = state.getBlock();
+		if (!(block instanceof IPortableBlock))
+			return null;
+		return ((IPortableBlock) block).getMovementBehaviour();
 	}
 
 }

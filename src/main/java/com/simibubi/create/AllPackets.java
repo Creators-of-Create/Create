@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.behaviour.filtering.FilteringCountUpdatePa
 import com.simibubi.create.foundation.command.ConfigureConfigPacket;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
+import com.simibubi.create.foundation.utility.ServerSpeedProvider;
+import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionStallPacket;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ConfigureChassisPacket;
 import com.simibubi.create.modules.contraptions.components.mixer.ConfigureMixerPacket;
 import com.simibubi.create.modules.contraptions.components.motor.ConfigureMotorPacket;
@@ -45,8 +47,10 @@ public enum AllPackets {
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),
+	SERVER_SPEED(ServerSpeedProvider.Packet.class, ServerSpeedProvider.Packet::new),
 	BEAM_EFFECT(BlockzapperBeamPacket.class, BlockzapperBeamPacket::new),
 	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
+	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new),
 
 	;
 

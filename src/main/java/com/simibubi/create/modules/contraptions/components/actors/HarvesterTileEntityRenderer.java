@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.block.SafeTileEntityRendererFast;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -19,16 +19,18 @@ import net.minecraft.world.World;
 public class HarvesterTileEntityRenderer extends SafeTileEntityRendererFast<HarvesterTileEntity> {
 
 	@Override
-	public void renderFast(HarvesterTileEntity te, double x, double y, double z, float partialTicks,
-			int destroyStage, BufferBuilder buffer) {
+	public void renderFast(HarvesterTileEntity te, double x, double y, double z, float partialTicks, int destroyStage,
+			BufferBuilder buffer) {
 		SuperByteBuffer superBuffer = renderHead(getWorld(), te.getPos(), te.getBlockState(), 0);
 		superBuffer.translate(x, y, z).renderInto(buffer);
 	}
 
 	public static SuperByteBuffer renderInContraption(MovementContext context) {
 		BlockState state = context.state;
-		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, state.get(HORIZONTAL_FACING).getOpposite())
-				? context.getAnimationSpeed() * state.get(HORIZONTAL_FACING).getAxisDirection().getOffset()
+		Direction facing = state.get(HORIZONTAL_FACING);
+		int offset = facing.getAxisDirection().getOffset() * (facing.getAxis() == Axis.X ? 1 : -1);
+		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite())
+				? context.getAnimationSpeed() * offset
 				: 0);
 		float time = AnimationTickHolder.getRenderTick() / 20;
 		float angle = (float) (((time * speed) % 360) / 180 * (float) Math.PI);

@@ -33,7 +33,7 @@ public class ExtractingBehaviour extends InventoryManagementBehaviour {
 		super(te, attachments);
 		customAmountFilter = stack -> 64;
 		customFilter = stack -> true;
-		callback = onExtract;
+		setCallback(onExtract);
 	}
 
 	public ExtractingBehaviour withAmountThreshold(Function<ItemStack, Integer> filter) {
@@ -47,11 +47,15 @@ public class ExtractingBehaviour extends InventoryManagementBehaviour {
 	}
 
 	public boolean extract() {
+		return extract(getAmountToExtract());
+	}
+
+	public int getAmountToExtract() {
 		int amount = -1;
 		FilteringBehaviour filter = get(tileEntity, FilteringBehaviour.TYPE);
 		if (filter != null && !filter.anyAmount())
 			amount = filter.getAmount();
-		return extract(amount);
+		return amount;
 	}
 
 	public boolean extract(int exactAmount) {
@@ -60,11 +64,7 @@ public class ExtractingBehaviour extends InventoryManagementBehaviour {
 		if (AllConfigs.SERVER.control.freezeExtractors.get())
 			return false;
 
-		Predicate<ItemStack> test = customFilter;
-		FilteringBehaviour filter = get(tileEntity, FilteringBehaviour.TYPE);
-		if (filter != null)
-			test = customFilter.and(filter::test);
-
+		Predicate<ItemStack> test = getFilterTest();
 		for (IItemHandler inv : getInventories()) {
 			ItemStack extract = ItemStack.EMPTY;
 			if (exactAmount != -1)
@@ -81,9 +81,21 @@ public class ExtractingBehaviour extends InventoryManagementBehaviour {
 		return false;
 	}
 
+	public Predicate<ItemStack> getFilterTest() {
+		Predicate<ItemStack> test = customFilter;
+		FilteringBehaviour filter = get(tileEntity, FilteringBehaviour.TYPE);
+		if (filter != null)
+			test = customFilter.and(filter::test);
+		return test;
+	}
+
 	@Override
 	public IBehaviourType<?> getType() {
 		return TYPE;
+	}
+
+	public void setCallback(Consumer<ItemStack> callback) {
+		this.callback = callback;
 	}
 
 }

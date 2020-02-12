@@ -33,7 +33,10 @@ public class AllShapes {
 				makeCuboidShape(4, 4, 11, 12, 12, 17)), Direction.SOUTH),
 		FURNACE_ENGINE = VoxelShaper.forHorizontal(VoxelShapes.or(
 				makeCuboidShape(1, 1, 0, 15, 15, 16), 
-				makeCuboidShape(0, 0, 9, 16, 16, 14)), Direction.SOUTH)
+				makeCuboidShape(0, 0, 9, 16, 16, 14)), Direction.SOUTH),
+		PORTABLE_STORAGE_INTERFACE = VoxelShaper.forDirectional(VoxelShapes.or(
+				makeCuboidShape(0, 0, 0, 16, 12, 16), 
+				makeCuboidShape(3, 12, 3, 13, 16, 13)), Direction.UP)
 
 				;
 

@@ -1,0 +1,16 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+	"model": "create:block/portable_storage_interface"
+  },
+  "variants": {
+    "facing": {
+      "north": { "x": 90 },
+      "south": { "x": 90, "y": 180 },
+      "west": { "x": 90, "y": 270 },
+      "up": { },
+      "down": { "x": 180 },
+      "east": { "x": 90, "y": 90 }
+    }
+  }
+}

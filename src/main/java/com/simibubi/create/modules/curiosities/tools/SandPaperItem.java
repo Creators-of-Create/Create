@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.curiosities.tools;
 
 import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
-import com.simibubi.create.foundation.advancement.SandpaperUseTrigger;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.VecHelper;

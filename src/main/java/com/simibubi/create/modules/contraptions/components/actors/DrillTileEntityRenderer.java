@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior.MovementContext;
+import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction.Axis;
@@ -29,9 +29,10 @@ public class DrillTileEntityRenderer extends KineticTileEntityRenderer {
 		BlockState state = context.state;
 		SuperByteBuffer buffer = getRotatingModel(state);
 
-		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, state.get(FACING).getOpposite())
-				? context.getAnimationSpeed()
-				: 0);
+		float speed = (float) (context.contraption.stalled
+				|| !VecHelper.isVecPointingTowards(context.relativeMotion, state.get(FACING).getOpposite())
+						? context.getAnimationSpeed()
+						: 0);
 		Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
 		float time = AnimationTickHolder.getRenderTick() / 20;
 		float angle = (float) (((time * speed) % 360) / 180 * (float) Math.PI);

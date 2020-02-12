@@ -1,36 +1,28 @@
 package com.simibubi.create.modules.contraptions.components.actors;
 
-import java.util.List;
-
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior;
+import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class DrillBlock extends DirectionalKineticBlock
-		implements IHaveMovementBehavior, IWithTileEntity<DrillTileEntity> {
+public class DrillBlock extends DirectionalKineticBlock implements IPortableBlock, IWithTileEntity<DrillTileEntity> {
+
+	public static MovementBehaviour MOVEMENT = new DrillMovementBehaviour();
 
 	public DrillBlock() {
 		super(Properties.from(Blocks.IRON_BLOCK));
@@ -76,44 +68,10 @@ public class DrillBlock extends DirectionalKineticBlock
 	protected boolean hasStaticPart() {
 		return true;
 	}
-	
-	@Override
-	@OnlyIn(value = Dist.CLIENT)
-	public SuperByteBuffer renderInContraption(MovementContext context) {
-		return DrillTileEntityRenderer.renderInContraption(context);
-	}
 
 	@Override
-	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.get(FACING).getOpposite());
-	}
-
-	@Override
-	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(FACING).getDirectionVec()).scale(.65f);
-	}
-
-	@Override
-	public void visitNewPosition(MovementContext context, BlockPos pos) {
-		World world = context.world;
-		BlockState stateVisited = world.getBlockState(pos);
-
-		if (world.isRemote)
-			return;
-		if (stateVisited.getCollisionShape(world, pos).isEmpty())
-			return;
-		if (stateVisited.getBlockHardness(world, pos) == -1)
-			return;
-
-		world.playEvent(2001, pos, Block.getStateId(stateVisited));
-		List<ItemStack> drops = Block.getDrops(stateVisited, (ServerWorld) world, pos, null);
-		world.setBlockState(pos, Blocks.AIR.getDefaultState());
-
-		for (ItemStack stack : drops) {
-			ItemEntity itemEntity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + .25f, pos.getZ() + .5f, stack);
-			itemEntity.setMotion(context.motion.add(0, 0.5f, 0).scale(world.rand.nextFloat() * .3f));
-			world.addEntity(itemEntity);
-		}
+	public MovementBehaviour getMovementBehaviour() {
+		return MOVEMENT;
 	}
 
 }

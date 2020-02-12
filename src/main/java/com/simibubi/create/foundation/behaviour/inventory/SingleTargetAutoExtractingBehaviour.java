@@ -13,8 +13,9 @@ import net.minecraft.util.math.BlockPos;
 
 public class SingleTargetAutoExtractingBehaviour extends AutoExtractingBehaviour {
 
-	public static IBehaviourType<SingleTargetAutoExtractingBehaviour> TYPE = new IBehaviourType<SingleTargetAutoExtractingBehaviour>() {
-	};
+	public static IBehaviourType<SingleTargetAutoExtractingBehaviour> TYPE =
+		new IBehaviourType<SingleTargetAutoExtractingBehaviour>() {
+		};
 
 	private Supplier<Direction> attachmentDirection;
 	boolean synced;
@@ -28,8 +29,8 @@ public class SingleTargetAutoExtractingBehaviour extends AutoExtractingBehaviour
 		advantageOnNextSync = false;
 	}
 
-	public SingleTargetAutoExtractingBehaviour dontSynchronize() {
-		synced = false;
+	public SingleTargetAutoExtractingBehaviour setSynchronized(boolean sync) {
+		synced = sync;
 		return this;
 	}
 

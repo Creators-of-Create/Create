@@ -6,7 +6,9 @@ import java.util.function.Function;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.FloatNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.math.AxisAlignedBB;
 
 public class NBTHelper {
 
@@ -43,6 +45,25 @@ public class NBTHelper {
 	
 	public static List<ItemStack> readItemList(ListNBT stacks) {
 		return readCompoundList(stacks, ItemStack::read);
+	}
+	
+	public static ListNBT writeAABB(AxisAlignedBB bb) {
+		ListNBT bbtag = new ListNBT();
+		bbtag.add(new FloatNBT((float) bb.minX));
+		bbtag.add(new FloatNBT((float) bb.minY));
+		bbtag.add(new FloatNBT((float) bb.minZ));
+		bbtag.add(new FloatNBT((float) bb.maxX));
+		bbtag.add(new FloatNBT((float) bb.maxY));
+		bbtag.add(new FloatNBT((float) bb.maxZ));
+		return bbtag;
+	}
+
+	public static AxisAlignedBB readAABB(ListNBT bbtag) {
+		if (bbtag == null || bbtag.isEmpty())
+			return null;
+		return new AxisAlignedBB(bbtag.getFloat(0), bbtag.getFloat(1), bbtag.getFloat(2), bbtag.getFloat(3),
+				bbtag.getFloat(4), bbtag.getFloat(5));
+
 	}
 
 }

@@ -10,6 +10,7 @@ import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.CasingBlock;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
+import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.modules.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock;
@@ -70,8 +71,8 @@ import com.simibubi.create.modules.palettes.CTWindowBlock;
 import com.simibubi.create.modules.palettes.GlassPaneBlock;
 import com.simibubi.create.modules.palettes.HorizontalCTGlassBlock;
 import com.simibubi.create.modules.palettes.LayeredCTBlock;
-import com.simibubi.create.modules.palettes.VerticalCTGlassBlock;
 import com.simibubi.create.modules.palettes.ScoriaBlock;
+import com.simibubi.create.modules.palettes.VerticalCTGlassBlock;
 import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
@@ -129,11 +130,6 @@ public enum AllBlocks {
 	MECHANICAL_PRESS(new MechanicalPressBlock()),
 	MECHANICAL_MIXER(new MechanicalMixerBlock()),
 	BASIN(new BasinBlock()),
-	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
-
-	FLYWHEEL(new FlywheelBlock()),
-	FURNACE_ENGINE(new FurnaceEngineBlock()),
-
 	SPEED_GAUGE(new GaugeBlock(GaugeBlock.Type.SPEED)),
 	STRESS_GAUGE(new GaugeBlock(GaugeBlock.Type.STRESS)),
 
@@ -149,6 +145,7 @@ public enum AllBlocks {
 	SAW(new SawBlock()),
 	HARVESTER(new HarvesterBlock()),
 	DEPLOYER(new DeployerBlock()),
+	PORTABLE_STORAGE_INTERFACE(new PortableStorageInterfaceBlock()),
 	CART_ASSEMBLER(new CartAssemblerBlock()),
 	MINECART_ANCHOR(new MinecartAnchorBlock()),
 	ANALOG_LEVER(new AnalogLeverBlock()),
@@ -157,6 +154,10 @@ public enum AllBlocks {
 	COPPER_CASING(new CasingBlock("copper_casing")),
 	BRASS_CASING(new CasingBlock("crafter_top")),
 
+	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
+	FLYWHEEL(new FlywheelBlock()),
+	FURNACE_ENGINE(new FurnaceEngineBlock()),
+	
 	__LOGISTICS__(),
 	CONTACT(new ContactBlock()),
 	REDSTONE_BRIDGE(new RedstoneLinkBlock()),

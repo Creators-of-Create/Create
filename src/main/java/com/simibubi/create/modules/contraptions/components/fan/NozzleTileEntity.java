@@ -57,9 +57,8 @@ public class NozzleTileEntity extends SmartTileEntity {
 
 	@Override
 	public void initialize() {
-		super.initialize();
 		fanPos = pos.offset(getBlockState().get(NozzleBlock.FACING).getOpposite());
-		lazyTick();
+		super.initialize();
 	}
 
 	@Override

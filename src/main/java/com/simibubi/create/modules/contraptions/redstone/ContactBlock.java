@@ -4,8 +4,8 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior;
+import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,15 +16,14 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 
-public class ContactBlock extends ProperDirectionalBlock implements IHaveMovementBehavior {
+public class ContactBlock extends ProperDirectionalBlock implements IPortableBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+	public static MovementBehaviour MOVEMENT = new ContactMovementBehaviour();
 
 	public ContactBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -102,33 +101,8 @@ public class ContactBlock extends ProperDirectionalBlock implements IHaveMovemen
 	}
 
 	@Override
-	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(FACING).getDirectionVec()).scale(.65f);
-	}
-
-	@Override
-	public void visitNewPosition(MovementContext context, BlockPos pos) {
-		BlockState block = context.state;
-		World world = context.world;
-
-		if (world.isRemote)
-			return;
-
-		BlockState visitedState = world.getBlockState(pos);
-		if (!AllBlocks.CONTACT.typeOf(visitedState))
-			return;
-
-		Vec3d contact = new Vec3d(block.get(FACING).getDirectionVec());
-		contact = VecHelper.rotate(contact, context.rotation.x, context.rotation.y, context.rotation.z);
-		Direction direction = Direction.getFacingFromVector(contact.x, contact.y, contact.z);
-
-		if (!hasValidContact(world, pos.offset(direction.getOpposite()), direction))
-			return;
-
-		int ticksToStayActive = 4;
-		world.setBlockState(pos, visitedState.with(POWERED, true));
-		world.getPendingBlockTicks().scheduleTick(pos, this, ticksToStayActive, TickPriority.NORMAL);
-		return;
+	public MovementBehaviour getMovementBehaviour() {
+		return MOVEMENT;
 	}
 
 }

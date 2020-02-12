@@ -37,19 +37,23 @@ public class TransposerTileEntity extends ExtractorTileEntity {
 		inserting = new InsertingBehaviour(this,
 				Attachments.toward(() -> AttachedLogisticalBlock.getBlockFacing(getBlockState()).getOpposite()));
 		behaviours.add(inserting);
+		applyFilteringCallbacks();
+	}
+
+	public void applyFilteringCallbacks() {
 		extracting.withAmountThreshold(this::amountToExtract).withAdditionalFilter(this::shouldExtract);
 	}
 
 	public void filterChanged(ItemStack stack) {
 	}
 
-	protected int amountToExtract(ItemStack stack) {
+	public int amountToExtract(ItemStack stack) {
 		ItemStack tester = stack.copy();
 		tester.setCount(64);
 		return 64 - inserting.insert(tester, true).getCount();
 	}
 
-	protected boolean shouldExtract(ItemStack stack) {
+	public boolean shouldExtract(ItemStack stack) {
 		if (isTargetingBelt()) {
 			Direction facing = AttachedLogisticalBlock.getBlockFacing(getBlockState()).getOpposite();
 			BlockPos targetPos = pos.offset(facing);
@@ -79,7 +83,7 @@ public class TransposerTileEntity extends ExtractorTileEntity {
 	}
 
 	@Override
-	protected void onExtract(ItemStack stack) {
+	public void onExtract(ItemStack stack) {
 		if (isTargetingBelt()) {
 			Direction facing = AttachedLogisticalBlock.getBlockFacing(getBlockState()).getOpposite();
 			BlockPos targetPos = pos.offset(facing);

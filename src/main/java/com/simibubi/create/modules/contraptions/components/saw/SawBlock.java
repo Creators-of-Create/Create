@@ -3,7 +3,9 @@ package com.simibubi.create.modules.contraptions.components.saw;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.IHaveMovementBehavior;
+import com.simibubi.create.modules.contraptions.components.actors.SawMovementBehaviour;
+import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -29,11 +31,11 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class SawBlock extends DirectionalAxisKineticBlock
-		implements IWithTileEntity<SawTileEntity>, IHaveMovementBehavior {
+public class SawBlock extends DirectionalAxisKineticBlock implements IWithTileEntity<SawTileEntity>, IPortableBlock {
 
 	public static final BooleanProperty RUNNING = BooleanProperty.create("running");
 	public static DamageSource damageSourceSaw = new DamageSource("create.saw").setDamageBypassesArmor();
+	public static MovementBehaviour MOVEMENT = new SawMovementBehaviour();
 
 	public SawBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -103,7 +105,7 @@ public class SawBlock extends DirectionalAxisKineticBlock
 		return PushReaction.PUSH_ONLY;
 	}
 
-	public boolean isHorizontal(BlockState state) {
+	public static boolean isHorizontal(BlockState state) {
 		return state.get(FACING).getAxis().isHorizontal();
 	}
 
@@ -133,7 +135,11 @@ public class SawBlock extends DirectionalAxisKineticBlock
 
 			worldIn.removeTileEntity(pos);
 		}
+	}
 
+	@Override
+	public MovementBehaviour getMovementBehaviour() {
+		return MOVEMENT;
 	}
 
 }

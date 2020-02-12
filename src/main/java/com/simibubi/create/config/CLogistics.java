@@ -5,7 +5,7 @@ public class CLogistics extends ConfigBase {
 	public ConfigInt extractorDelay = i(20, 10, "extractorDelay", Comments.extractorDelay);
 	public ConfigInt extractorInventoryScanDelay = i(40, 10, "extractorInventoryScanDelay", Comments.extractorInventoryScanDelay);
 	public ConfigInt extractorAmount = i(16, 1, 64, "extractorAmount", Comments.extractorAmount);
-	public ConfigInt linkRange = i(128, 1, "extractorDelay", Comments.linkRange);
+	public ConfigInt linkRange = i(128, 1, "linkRange", Comments.linkRange);
 	
 	@Override
 	public String getName() {

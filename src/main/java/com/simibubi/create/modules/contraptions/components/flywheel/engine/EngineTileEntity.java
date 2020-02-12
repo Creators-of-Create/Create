@@ -40,12 +40,6 @@ public class EngineTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void initialize() {
-		super.initialize();
-		lazyTick();
-	}
-
-	@Override
 	public void lazyTick() {
 		super.lazyTick();
 		if (world.isRemote)

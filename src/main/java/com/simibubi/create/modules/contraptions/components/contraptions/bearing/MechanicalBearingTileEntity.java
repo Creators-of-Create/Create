@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
@@ -9,6 +10,8 @@ import com.simibubi.create.modules.contraptions.components.contraptions.IControl
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -30,7 +33,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public float getAddedStressCapacity() {
 		return isWindmill ? super.getAddedStressCapacity() : 0;
 	}
-	
+
 	@Override
 	public float getStressApplied() {
 		return isWindmill ? 0 : super.getStressApplied();
@@ -90,6 +93,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	public float getInterpolatedAngle(float partialTicks) {
+		if (movedContraption != null && movedContraption.isStalled())
+			partialTicks = 0;
 		return MathHelper.lerp(partialTicks, angle, angle + getAngularSpeed());
 	}
 
@@ -100,7 +105,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	public float getAngularSpeed() {
-		return getSpeed() * 3 / 10f;
+		float speed = getSpeed() * 3 / 10f;
+		if (world.isRemote)
+			speed *= ServerSpeedProvider.get();
+		return speed;
 	}
 
 	public void assembleConstruct() {
@@ -148,6 +156,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {
+				if (movedContraption != null)
+					movedContraption.getContraption().stop(world);
 				boolean canDisassemble = Math.abs(angle) < 45 || Math.abs(angle) > 7 * 45;
 				if (speed == 0 && (canDisassemble || movedContraption == null
 						|| movedContraption.getContraption().blocks.isEmpty())) {
@@ -165,17 +175,21 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		if (!running)
 			return;
 
-		float angularSpeed = getAngularSpeed();
-		float newAngle = angle + angularSpeed;
-		angle = (float) (newAngle % 360);
+		if (!(movedContraption != null && movedContraption.isStalled())) {
+			float angularSpeed = getAngularSpeed();
+			float newAngle = angle + angularSpeed;
+			angle = (float) (newAngle % 360);
+		}
+
 		applyRotation();
 	}
 
 	private void applyRotation() {
 		if (movedContraption != null) {
-			Direction direction = getBlockState().get(BlockStateProperties.FACING);
+			Axis axis = getBlockState().get(BlockStateProperties.FACING).getAxis();
+			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
 			Vec3d vec = new Vec3d(1, 1, 1).scale(angle).mul(new Vec3d(direction.getDirectionVec()));
-			movedContraption.rotateTo(vec.x, vec.y, -vec.z);
+			movedContraption.rotateTo(vec.x, vec.y, vec.z);
 		}
 	}
 
@@ -183,11 +197,23 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void attach(ContraptionEntity contraption) {
 		if (contraption.getContraption() instanceof BearingContraption) {
 			this.movedContraption = contraption;
+			markDirty();
 			BlockPos anchor = pos.offset(getBlockState().get(BlockStateProperties.FACING));
 			movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 			if (!world.isRemote)
 				sendData();
 		}
+	}
+
+	@Override
+	public void onStall() {
+		if (!world.isRemote)
+			sendData();
+	}
+
+	@Override
+	public boolean isValid() {
+		return !isRemoved();
 	}
 
 }

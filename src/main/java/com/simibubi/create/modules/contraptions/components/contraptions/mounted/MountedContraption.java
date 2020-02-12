@@ -4,6 +4,8 @@ import static com.simibubi.create.modules.contraptions.components.contraptions.m
 
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
@@ -11,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -36,9 +39,9 @@ public class MountedContraption extends Contraption {
 			return null;
 
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.X : Axis.Z;
-		contraption.add(pos, new BlockInfo(pos,
+		contraption.add(pos, Pair.of(new BlockInfo(pos,
 				AllBlocks.MINECART_ANCHOR.block.getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis),
-				null));
+				null), null));
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		contraption.initActors(world);
 
@@ -59,11 +62,13 @@ public class MountedContraption extends Contraption {
 	}
 
 	@Override
-	protected BlockInfo capture(World world, BlockPos pos) {
-		BlockInfo capture = super.capture(world, pos);
+	protected Pair<BlockInfo, TileEntity> capture(World world, BlockPos pos) {
+		Pair<BlockInfo, TileEntity> pair = super.capture(world, pos);
+		BlockInfo capture = pair.getKey();
 		if (AllBlocks.CART_ASSEMBLER.typeOf(capture.state))
-			return new BlockInfo(capture.pos, CartAssemblerBlock.createAnchor(capture.state), null);
-		return capture;
+			return Pair.of(new BlockInfo(capture.pos, CartAssemblerBlock.createAnchor(capture.state), null),
+					pair.getValue());
+		return pair;
 	}
 
 	@Override
@@ -72,7 +77,7 @@ public class MountedContraption extends Contraption {
 	}
 
 	@Override
-	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch) {
+	public void disassemble(World world, BlockPos offset, float yaw, float pitch) {
 		super.disassemble(world, offset, yaw, pitch, (pos, state) -> AllBlocks.MINECART_ANCHOR.typeOf(state));
 	}
 

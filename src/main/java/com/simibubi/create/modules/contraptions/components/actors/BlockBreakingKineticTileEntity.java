@@ -23,7 +23,7 @@ import net.minecraft.world.server.ServerWorld;
 
 public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 
-	private static final AtomicInteger NEXT_BREAKER_ID = new AtomicInteger();
+	public static final AtomicInteger NEXT_BREAKER_ID = new AtomicInteger();
 	protected int ticksUntilNextProgress;
 	protected int destroyProgress;
 	protected int breakerId = -NEXT_BREAKER_ID.incrementAndGet();
@@ -119,6 +119,10 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	public boolean canBreak(BlockState stateToBreak, float blockHardness) {
+		return isBreakable(stateToBreak, blockHardness);
+	}
+
+	public static boolean isBreakable(BlockState stateToBreak, float blockHardness) {
 		return !(stateToBreak.getMaterial().isLiquid() || stateToBreak.getBlock() instanceof AirBlock
 				|| blockHardness == -1);
 	}

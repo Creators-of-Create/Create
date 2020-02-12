@@ -58,6 +58,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 
 	public void initialize() {
 		behaviours.values().forEach(TileEntityBehaviour::initialize);
+		lazyTick();
 	}
 
 	public void updateClient(CompoundNBT compound) {

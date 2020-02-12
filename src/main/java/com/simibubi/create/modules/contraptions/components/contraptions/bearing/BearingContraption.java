@@ -1,9 +1,12 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllBlockTags;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,10 +29,10 @@ public class BearingContraption extends Contraption {
 	}
 
 	@Override
-	public void add(BlockPos pos, BlockInfo block) {
-		if (AllBlockTags.WINDMILL_SAILS.matches(block.state))
+	public void add(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
+		if (AllBlockTags.WINDMILL_SAILS.matches(capture.getKey().state))
 			sailBlocks++;
-		super.add(pos, block);
+		super.add(pos, capture);
 	}
 
 	@Override

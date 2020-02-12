@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.IControlContraption;
@@ -105,6 +106,9 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 	public void tick() {
 		super.tick();
 
+		if (movedContraption != null && movedContraption.isStalled())
+			return;
+
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {
@@ -122,6 +126,8 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 			return;
 
 		float movementSpeed = getMovementSpeed();
+		if (world.isRemote)
+			movementSpeed *= ServerSpeedProvider.get();
 		float newOffset = offset + movementSpeed;
 
 		if (movedContraption == null)
@@ -146,7 +152,8 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 		if (movedContraption != null) {
 			Vec3d constructOffset = getConstructOffset(0.5f);
 			Vec3d vec = constructOffset.add(new Vec3d(movedContraption.getContraption().getAnchor()));
-			movedContraption.setPosition(vec.x, vec.y, vec.z);
+			movedContraption.move(vec.x - movedContraption.posX, vec.y - movedContraption.posY,
+					vec.z - movedContraption.posZ);
 		}
 	}
 
@@ -234,14 +241,14 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 
 	public float getMovementSpeed() {
 		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);
-		int movementModifier = pistonDirection.getAxisDirection().getOffset()
-				* (pistonDirection.getAxis() == Axis.Z ? -1 : 1);
+		int movementModifier =
+			pistonDirection.getAxisDirection().getOffset() * (pistonDirection.getAxis() == Axis.Z ? -1 : 1);
 		return getSpeed() * -movementModifier / 512f;
 	}
 
 	public Vec3d getConstructOffset(float partialTicks) {
-		float interpolatedOffset = MathHelper.clamp(offset + (partialTicks - .5f) * getMovementSpeed(), 0,
-				extensionLength);
+		float interpolatedOffset =
+			MathHelper.clamp(offset + (partialTicks - .5f) * getMovementSpeed(), 0, extensionLength);
 		return new Vec3d(getBlockState().get(BlockStateProperties.FACING).getDirectionVec()).scale(interpolatedOffset);
 	}
 
@@ -252,6 +259,17 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 			if (!world.isRemote)
 				sendData();
 		}
+	}
+
+	@Override
+	public void onStall() {
+		if (!world.isRemote)
+			sendData();
+	}
+
+	@Override
+	public boolean isValid() {
+		return !isRemoved();
 	}
 
 }

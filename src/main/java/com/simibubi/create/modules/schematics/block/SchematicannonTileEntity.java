@@ -9,7 +9,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CSchematics;
-import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.type.Cuboid;
 import com.simibubi.create.modules.schematics.MaterialChecklist;
 import com.simibubi.create.modules.schematics.SchematicWorld;
@@ -34,7 +35,6 @@ import net.minecraft.state.properties.BedPart;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.state.properties.SlabType;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -42,7 +42,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.gen.feature.template.Template;
@@ -51,9 +50,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 
-public class SchematicannonTileEntity extends SyncedTileEntity implements ITickableTileEntity, INamedContainerProvider {
+public class SchematicannonTileEntity extends SmartTileEntity implements INamedContainerProvider {
 
 	public static final int NEIGHBOUR_CHECKING = 100;
 	public static final int MAX_ANCHOR_DISTANCE = 256;
@@ -105,63 +103,6 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 	// Render
 	public boolean firstRenderTick;
 
-	public class SchematicannonInventory extends ItemStackHandler {
-		public SchematicannonInventory() {
-			super(5);
-		}
-
-		@Override
-		protected void onContentsChanged(int slot) {
-			super.onContentsChanged(slot);
-			markDirty();
-		}
-
-		@Override
-		public boolean isItemValid(int slot, ItemStack stack) {
-			switch (slot) {
-			case 0: // Blueprint Slot
-				return AllItems.BLUEPRINT.typeOf(stack);
-			case 1: // Blueprint output
-				return false;
-			case 2: // Book input
-				return stack.isItemEqual(new ItemStack(Items.BOOK))
-						|| stack.isItemEqual(new ItemStack(Items.WRITTEN_BOOK));
-			case 3: // Material List output
-				return false;
-			case 4: // Gunpowder
-				return stack.isItemEqual(new ItemStack(Items.GUNPOWDER));
-			default:
-				return super.isItemValid(slot, stack);
-			}
-		}
-	}
-
-	public class LaunchedBlock {
-		public int totalTicks;
-		public int ticksRemaining;
-		public BlockPos target;
-		public BlockState state;
-
-		public LaunchedBlock(BlockPos target, BlockState state) {
-			this.target = target;
-			this.state = state;
-			totalTicks = (int) (Math.max(10, MathHelper.sqrt(MathHelper.sqrt(target.distanceSq(pos))) * 4f));
-			ticksRemaining = totalTicks;
-		}
-
-		public LaunchedBlock(BlockPos target, BlockState state, int ticksLeft, int total) {
-			this.target = target;
-			this.state = state;
-			this.totalTicks = total;
-			this.ticksRemaining = ticksLeft;
-		}
-
-		public void update() {
-			if (ticksRemaining > 0)
-				ticksRemaining--;
-		}
-	}
-
 	public SchematicannonTileEntity() {
 		this(AllTileEntities.SCHEMATICANNON.type);
 	}
@@ -179,9 +120,10 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 	public SchematicannonTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
+		setLazyTickRate(30);
 		attachedInventories = new LinkedList<>();
 		flyingBlocks = new LinkedList<>();
-		inventory = new SchematicannonInventory();
+		inventory = new SchematicannonInventory(this);
 		statusMsg = "idle";
 		state = State.STOPPED;
 		replaceMode = 2;
@@ -271,7 +213,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 			// Always write to Server tile
 			if (world == null || !world.isRemote) {
-				flyingBlocks.add(new LaunchedBlock(readBlockPos, readBlockState, int1, int2));
+				flyingBlocks.add(new LaunchedBlock(this, readBlockPos, readBlockState, int1, int2));
 				continue;
 			}
 
@@ -284,7 +226,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 			// Add new server side blocks
 			if (i >= flyingBlocks.size()) {
-				flyingBlocks.add(new LaunchedBlock(readBlockPos, readBlockState, int1, int2));
+				flyingBlocks.add(new LaunchedBlock(this, readBlockPos, readBlockState, int1, int2));
 				continue;
 			}
 
@@ -346,6 +288,8 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 
 	@Override
 	public void tick() {
+		super.tick();
+		
 		if (neighbourCheckCooldown-- <= 0) {
 			neighbourCheckCooldown = NEIGHBOUR_CHECKING;
 			findInventories();
@@ -757,7 +701,7 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 	protected void launchBlock(BlockPos target, BlockState state) {
 		if (state.getBlock() != Blocks.AIR)
 			blocksPlaced++;
-		flyingBlocks.add(new LaunchedBlock(target, state));
+		flyingBlocks.add(new LaunchedBlock(this, target, state));
 		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE,
 				SoundCategory.BLOCKS, .1f, 1.1f);
 	}
@@ -815,6 +759,16 @@ public class SchematicannonTileEntity extends SyncedTileEntity implements ITicka
 			}
 		}
 		sendUpdate = true;
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+	}
+	
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		findInventories();
 	}
 
 }

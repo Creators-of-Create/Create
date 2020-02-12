@@ -8,8 +8,11 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
@@ -132,13 +135,13 @@ public class PistonContraption extends Contraption {
 		return true;
 	}
 
-	public void add(BlockPos pos, BlockInfo block) {
-//		super.add(pos, block);
-		super.add(pos.offset(orientation, -initialExtensionProgress), block);
+	@Override
+	public void add(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
+		super.add(pos.offset(orientation, -initialExtensionProgress), capture);
 	}
 
 	@Override
-	public void disassemble(IWorld world, BlockPos offset, float yaw, float pitch) {
+	public void disassemble(World world, BlockPos offset, float yaw, float pitch) {
 		super.disassemble(world, offset, yaw, pitch, (pos, state) -> {
 			BlockPos pistonPos = anchor.offset(orientation, -initialExtensionProgress - 1);
 			BlockState pistonState = world.getBlockState(pistonPos);
@@ -175,7 +178,7 @@ public class PistonContraption extends Contraption {
 		initialExtensionProgress = nbt.getInt("InitialLength");
 		orientation = Direction.byIndex(nbt.getInt("Orientation"));
 		if (nbt.contains("BoundsBack"))
-			pistonCollisionBox = readAABB(nbt.getList("BoundsBack", 5));
+			pistonCollisionBox = NBTHelper.readAABB(nbt.getList("BoundsBack", 5));
 	}
 
 	@Override
@@ -183,7 +186,7 @@ public class PistonContraption extends Contraption {
 		CompoundNBT nbt = super.writeNBT();
 
 		if (pistonCollisionBox != null) {
-			ListNBT bb = writeAABB(pistonCollisionBox);
+			ListNBT bb = NBTHelper.writeAABB(pistonCollisionBox);
 			nbt.put("BoundsBack", bb);
 		}
 		nbt.putInt("InitialLength", initialExtensionProgress);

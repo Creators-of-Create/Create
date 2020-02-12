@@ -1,8 +1,6 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
-import com.simibubi.create.foundation.advancement.SandpaperUseTrigger;
-import net.minecraft.advancements.CriteriaTriggers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -56,7 +56,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		}
 
 		if (!tileEntityIn.flyingBlocks.isEmpty()) {
-			for (SchematicannonTileEntity.LaunchedBlock block : tileEntityIn.flyingBlocks) {
+			for (LaunchedBlock block : tileEntityIn.flyingBlocks) {
 
 				if (block.ticksRemaining == 0)
 					continue;

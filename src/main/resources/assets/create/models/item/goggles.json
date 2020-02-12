@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"textures": {
 		"0": "create:block/brass_casing",
-		"1": "create:block/black_stained_glass",
+		"1": "block/black_stained_glass",
 		"2": "create:item/goggles",
 		"particle": "create:block/brass_casing"
 	},

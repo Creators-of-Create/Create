@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
@@ -62,6 +63,7 @@ public class BeltInventory {
 		float beltSpeed = belt.getDirectionAwareBeltMovementSpeed();
 		Direction movementFacing = belt.getMovementFacing();
 		float spacing = 1;
+		boolean onClient = belt.getWorld().isRemote;
 
 		Items: while (iterator.hasNext()) {
 			stackInFront = current;
@@ -76,9 +78,10 @@ public class BeltInventory {
 			}
 
 			float movement = beltSpeed;
+			if (onClient)
+				movement *= ServerSpeedProvider.get();
 
 			// Don't move if locked
-			boolean onClient = belt.getWorld().isRemote;
 			if (onClient && current.locked)
 				continue;
 
