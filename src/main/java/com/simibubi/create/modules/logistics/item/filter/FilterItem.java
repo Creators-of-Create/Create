@@ -157,6 +157,9 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	}
 
 	private static boolean test(ItemStack stack, ItemStack filter, boolean matchNBT) {
+		if (filter.isEmpty())
+			return true;
+		
 		if (!(filter.getItem() instanceof FilterItem))
 			return (matchNBT ? ItemHandlerHelper.canItemStacksStack(filter, stack)
 					: ItemStack.areItemsEqual(filter, stack));

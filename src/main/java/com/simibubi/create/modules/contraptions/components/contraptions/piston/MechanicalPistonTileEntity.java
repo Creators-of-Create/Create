@@ -93,7 +93,8 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 
 		if (!removed)
 			getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.EXTENDED), 3);
-		movedContraption.disassemble();
+		if (movedContraption != null)
+			movedContraption.disassemble();
 		running = false;
 		movedContraption = null;
 		sendData();

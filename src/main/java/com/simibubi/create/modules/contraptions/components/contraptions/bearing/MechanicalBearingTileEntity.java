@@ -24,9 +24,12 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	protected boolean assembleNextTick;
 	protected boolean isWindmill;
 
+	protected float clientAngleDiff;
+
 	public MechanicalBearingTileEntity() {
 		super(AllTileEntities.MECHANICAL_BEARING.type);
 		isWindmill = false;
+		setLazyTickRate(3);
 	}
 
 	@Override
@@ -92,6 +95,16 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		super.read(tag);
 	}
 
+	@Override
+	public void readClientUpdate(CompoundNBT tag) {
+		float angleBefore = angle;
+		super.readClientUpdate(tag);
+		clientAngleDiff = angle - angleBefore;
+		if (Math.abs(clientAngleDiff) > 20)
+			clientAngleDiff = 0;
+		angle = angleBefore;
+	}
+
 	public float getInterpolatedAngle(float partialTicks) {
 		if (movedContraption != null && movedContraption.isStalled())
 			partialTicks = 0;
@@ -106,8 +119,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 	public float getAngularSpeed() {
 		float speed = getSpeed() * 3 / 10f;
-		if (world.isRemote)
+		if (world.isRemote) {
 			speed *= ServerSpeedProvider.get();
+			speed += clientAngleDiff / 3f;
+		}
 		return speed;
 	}
 
@@ -120,9 +135,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			return;
 		if (isWindmill && contraption.getSailBlocks() == 0)
 			return;
+		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		movedContraption = new ContraptionEntity(world, contraption, 0).controlledBy(this);
 		BlockPos anchor = pos.offset(direction);
-		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		world.addEntity(movedContraption);
 
@@ -150,17 +165,20 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void tick() {
 		super.tick();
 
+		if (world.isRemote)
+			clientAngleDiff /= 2;
+
 		if (running && Contraption.isFrozen())
 			disassembleConstruct();
 
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {
-				if (movedContraption != null)
-					movedContraption.getContraption().stop(world);
 				boolean canDisassemble = Math.abs(angle) < 45 || Math.abs(angle) > 7 * 45;
 				if (speed == 0 && (canDisassemble || movedContraption == null
 						|| movedContraption.getContraption().blocks.isEmpty())) {
+					if (movedContraption != null)
+						movedContraption.getContraption().stop(world);
 					disassembleConstruct();
 				}
 				return;
@@ -182,6 +200,13 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		}
 
 		applyRotation();
+	}
+
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		if (movedContraption != null && !world.isRemote)
+			sendData();
 	}
 
 	private void applyRotation() {

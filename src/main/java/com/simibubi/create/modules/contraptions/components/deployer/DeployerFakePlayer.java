@@ -3,6 +3,8 @@ package com.simibubi.create.modules.contraptions.components.deployer;
 import java.util.OptionalInt;
 import java.util.UUID;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.mojang.authlib.GameProfile;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -12,12 +14,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketDirection;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -35,14 +39,16 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class DeployerFakePlayer extends FakePlayer {
 
 	private static final NetworkManager NETWORK_MANAGER = new NetworkManager(PacketDirection.CLIENTBOUND);
-	public static final GameProfile DEPLOYER_PROFILE = new GameProfile(
-			UUID.fromString("9e2faded-cafe-4ec2-c314-dad129ae971d"), "Deployer");
+	public static final GameProfile DEPLOYER_PROFILE =
+		new GameProfile(UUID.fromString("9e2faded-cafe-4ec2-c314-dad129ae971d"), "Deployer");
+	Pair<BlockPos, Float> blockBreakingProgress;
+	ItemStack spawnedItemEffects;
 
 	public DeployerFakePlayer(ServerWorld world) {
 		super(world, DEPLOYER_PROFILE);
 		connection = new FakePlayNetHandler(world.getServer(), this);
 	}
-	
+
 	@Override
 	public OptionalInt openContainer(INamedContainerProvider container) {
 		return OptionalInt.empty();
@@ -73,7 +79,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		if (event.getEntity() instanceof DeployerFakePlayer)
 			event.setNewHeight(0);
 	}
-	
+
 	@SubscribeEvent
 	public static void deployerCollectsDropsFromKilledEntities(LivingDropsEvent event) {
 		if (!(event.getSource() instanceof EntityDamageSource))
@@ -86,6 +92,13 @@ public class DeployerFakePlayer extends FakePlayer {
 					.forEach(stack -> fakePlayer.inventory.placeItemBackInInventory(trueSource.world, stack.getItem()));
 			event.setCanceled(true);
 		}
+	}
+
+	@Override
+	public void remove(boolean keepData) {
+		if (blockBreakingProgress != null && !world.isRemote)
+			world.sendBlockBreakProgress(getEntityId(), blockBreakingProgress.getKey(), -1);
+		super.remove(keepData);
 	}
 
 	@SubscribeEvent

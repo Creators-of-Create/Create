@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.deployer;
 
 import static com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock.FACING;
-import static net.minecraftforge.eventbus.api.Event.Result.DENY;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,15 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.tileentity.TileEntity;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.google.common.collect.Multimap;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour.SlotPositioning;
@@ -25,32 +21,16 @@ import com.simibubi.create.foundation.behaviour.inventory.ExtractingBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.FlintAndSteelItem;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -61,13 +41,8 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
-import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -86,10 +61,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected float reach;
 	protected boolean boop = false;
 	protected List<ItemStack> overflowItems = new ArrayList<>();
-	protected Pair<BlockPos, Float> blockBreakingProgress;
-
 	private ListNBT deferredInventoryList;
-	private ItemStack spawnItemEffects;
 
 	enum State {
 		WAITING, EXPANDING, RETRACTING, DUMPING;
@@ -152,10 +124,10 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		if (getSpeed() == 0)
 			return;
-		if (!world.isRemote && blockBreakingProgress != null) {
-			if (world.isAirBlock(blockBreakingProgress.getKey())) {
-				world.sendBlockBreakProgress(player.getEntityId(), blockBreakingProgress.getKey(), -1);
-				blockBreakingProgress = null;
+		if (!world.isRemote && player != null && player.blockBreakingProgress != null) {
+			if (world.isAirBlock(player.blockBreakingProgress.getKey())) {
+				world.sendBlockBreakProgress(player.getEntityId(), player.blockBreakingProgress.getKey(), -1);
+				player.blockBreakingProgress = null;
 			}
 		}
 		if (timer > 0) {
@@ -191,50 +163,21 @@ public class DeployerTileEntity extends KineticTileEntity {
 				extracting.extract(1);
 
 			Direction facing = getBlockState().get(FACING);
-			if (stack.getItem() instanceof BlockItem) {
-				if (!world.getBlockState(pos.offset(facing, 2)).getMaterial().isReplaceable()) {
-					timer = getTimerSpeed() * 10;
-					return;
-				}
+			if (mode == Mode.USE && !DeployerHandler.shouldActivate(stack, world, pos.offset(facing, 2))) {
+				timer = getTimerSpeed() * 10;
+				return;
 			}
 
-			if (stack.getItem() instanceof BucketItem) {
-				BucketItem bucketItem = (BucketItem) stack.getItem();
-				Fluid fluid = bucketItem.getFluid();
-				if (fluid != Fluids.EMPTY && world.getFluidState(pos.offset(facing, 2)).getFluid() == fluid) {
-					timer = getTimerSpeed() * 10;
-					return;
-				}
-			}
-
-			//Check for advancement conditions
-			if (mode == Mode.PUNCH && !boop) {
-				if (world.isAirBlock(pos.offset(facing,1)) && world.isAirBlock(pos.offset(facing,2))) {
-					BlockPos otherDeployer = pos.offset(facing, 4);
-					if (world.isBlockPresent(otherDeployer)){
-						TileEntity otherTile = world.getTileEntity(otherDeployer);
-						if (otherTile instanceof DeployerTileEntity){
-							DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
-							if (world.getBlockState(otherDeployer).get(FACING).getOpposite() == facing && deployerTile.mode == Mode.PUNCH) {
-								//two facing deployer
-								boop = true;
-								reach = 1f;
-								timer = 1000;
-								state = State.EXPANDING;
-								sendData();
-								return;
-							}
-						}
-					}
-				}
-			}
+			// Check for advancement conditions
+			if (mode == Mode.PUNCH && !boop && startBoop(facing))
+				return;
 
 			state = State.EXPANDING;
 			Vec3d movementVector = getMovementVector();
 			Vec3d rayOrigin = VecHelper.getCenterOf(pos).add(movementVector.scale(3 / 2f));
 			Vec3d rayTarget = VecHelper.getCenterOf(pos).add(movementVector.scale(5 / 2f));
-			RayTraceContext rayTraceContext = new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE,
-					FluidMode.NONE, player);
+			RayTraceContext rayTraceContext =
+				new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE, FluidMode.NONE, player);
 			BlockRayTraceResult result = world.rayTraceBlocks(rayTraceContext);
 			reach = (float) (.5f + Math.min(result.getHitVec().subtract(rayOrigin).length(), .75f));
 
@@ -244,37 +187,10 @@ public class DeployerTileEntity extends KineticTileEntity {
 		}
 
 		if (state == State.EXPANDING) {
-			if (boop){
-				TileEntity otherTile = world.getTileEntity(pos.offset(getBlockState().get(FACING),4));
-				if (otherTile instanceof DeployerTileEntity){
-					DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
-					if (deployerTile.boop && deployerTile.state == State.EXPANDING){
-						if(deployerTile.timer <= 0){
-							//everything should be met
-							boop = false;
-							state = State.RETRACTING;
-							timer = 1000;
-							deployerTile.boop = false;
-							deployerTile.state = State.RETRACTING;
-							deployerTile.timer = 1000;
-
-							deployerTile.sendData();
-							sendData();
-
-							//award nearby players
-							List<ServerPlayerEntity> players = world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(pos).grow(9));
-							players.forEach(AllCriterionTriggers.DEPLOYER_BOOP::trigger);
-						}
-					}
-				}
-				return;
-			}
-			Multimap<String, AttributeModifier> attributeModifiers = stack
-					.getAttributeModifiers(EquipmentSlotType.MAINHAND);
-			player.getAttributes().applyAttributeModifiers(attributeModifiers);
-			activate();
-			player.getAttributes().removeAttributeModifiers(attributeModifiers);
-			heldItem = player.getHeldItemMainhand();
+			if (boop)
+				triggerBoop();
+			else
+				activate();
 
 			state = State.RETRACTING;
 			timer = 1000;
@@ -292,183 +208,61 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	}
 
+	public boolean startBoop(Direction facing) {
+		if (!world.isAirBlock(pos.offset(facing, 1)) || !world.isAirBlock(pos.offset(facing, 2)))
+			return false;
+		BlockPos otherDeployer = pos.offset(facing, 4);
+		if (!world.isBlockPresent(otherDeployer))
+			return false;
+		TileEntity otherTile = world.getTileEntity(otherDeployer);
+		if (!(otherTile instanceof DeployerTileEntity))
+			return false;
+		DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
+		if (world.getBlockState(otherDeployer).get(FACING).getOpposite() != facing || deployerTile.mode != Mode.PUNCH)
+			return false;
+
+		boop = true;
+		reach = 1f;
+		timer = 1000;
+		state = State.EXPANDING;
+		sendData();
+		return true;
+	}
+
+	public void triggerBoop() {
+		TileEntity otherTile = world.getTileEntity(pos.offset(getBlockState().get(FACING), 4));
+		if (!(otherTile instanceof DeployerTileEntity))
+			return;
+
+		DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
+		if (!deployerTile.boop || deployerTile.state != State.EXPANDING)
+			return;
+		if (deployerTile.timer > 0)
+			return;
+
+		// everything should be met
+		boop = false;
+		deployerTile.boop = false;
+		deployerTile.state = State.RETRACTING;
+		deployerTile.timer = 1000;
+		deployerTile.sendData();
+
+		// award nearby players
+		List<ServerPlayerEntity> players =
+			world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(pos).grow(9));
+		players.forEach(AllCriterionTriggers.DEPLOYER_BOOP::trigger);
+	}
+
 	protected void activate() {
-		// Update player position and angle
 		Vec3d movementVector = getMovementVector();
 		Direction direction = getBlockState().get(FACING);
 		Vec3d center = VecHelper.getCenterOf(pos);
-		Vec3d rayOrigin = center.add(movementVector.scale(3 / 2f + 1 / 64f));
-		Vec3d rayTarget = center.add(movementVector.scale(5 / 2f - 1 / 64f));
 		BlockPos clickedPos = pos.offset(direction, 2);
-
 		player.rotationYaw = direction.getHorizontalAngle();
 		player.rotationPitch = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
-		player.setPosition(rayOrigin.x, rayOrigin.y, rayOrigin.z);
 
-		ItemStack stack = player.getHeldItemMainhand();
-		Item item = stack.getItem();
-
-		// Check for entities
-		World world = this.world;
-		List<LivingEntity> entities = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(clickedPos));
-		Hand hand = Hand.MAIN_HAND;
-		if (!entities.isEmpty()) {
-			LivingEntity entity = entities.get(world.rand.nextInt(entities.size()));
-			List<ItemEntity> capturedDrops = new ArrayList<>();
-			boolean success = false;
-			entity.captureDrops(capturedDrops);
-
-			// Use on entity
-			if (mode == Mode.USE) {
-				ActionResultType cancelResult = ForgeHooks.onInteractEntity(player, entity, hand);
-				if (cancelResult == ActionResultType.FAIL) {
-					entity.captureDrops(null);
-					return;
-				}
-				if (cancelResult == null) {
-					if (entity.processInitialInteract(player, hand))
-						success = true;
-					else if (stack.interactWithEntity(player, entity, hand))
-						success = true;
-				}
-			}
-
-			// Punch entity
-			if (mode == Mode.PUNCH) {
-				player.resetCooldown();
-				player.attackTargetEntityWithCurrentItem(entity);
-				success = true;
-			}
-
-			entity.captureDrops(null);
-			capturedDrops.forEach(e -> player.inventory.placeItemBackInInventory(this.world, e.getItem()));
-			if (success)
-				return;
-		}
-
-		// Shoot ray
-		RayTraceContext rayTraceContext = new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE, FluidMode.NONE,
-				player);
-		BlockRayTraceResult result = world.rayTraceBlocks(rayTraceContext);
-		BlockState clickedState = world.getBlockState(clickedPos);
-
-		// Left click
-		if (mode == Mode.PUNCH) {
-			LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, clickedPos, direction.getOpposite());
-			if (event.isCanceled())
-				return;
-			if (!world.isBlockModifiable(player, clickedPos))
-				return;
-			if (world.extinguishFire(player, clickedPos, direction.getOpposite()))
-				return;
-			if (clickedState.isAir(world, clickedPos))
-				return;
-			if (event.getUseBlock() != Result.DENY)
-				clickedState.onBlockClicked(world, clickedPos, player);
-			if (stack.isEmpty())
-				return;
-
-			float progress = clickedState.getPlayerRelativeBlockHardness(player, world, clickedPos) * 16;
-			float before = 0;
-			if (blockBreakingProgress != null)
-				before = blockBreakingProgress.getValue();
-			progress += before;
-
-			if (progress >= 1) {
-				player.interactionManager.tryHarvestBlock(clickedPos);
-				world.sendBlockBreakProgress(player.getEntityId(), clickedPos, -1);
-				blockBreakingProgress = null;
-				return;
-			}
-
-			if ((int) (before * 10) != (int) (progress * 10))
-				world.sendBlockBreakProgress(player.getEntityId(), clickedPos, (int) (progress * 10));
-			blockBreakingProgress = Pair.of(clickedPos, progress);
-			return;
-		}
-
-		// Right click
-		ItemUseContext itemusecontext = new ItemUseContext(player, hand, result);
-		RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, direction.getOpposite());
-
-		// Item has custom active use
-		if (event.getUseItem() != DENY) {
-			ActionResultType actionresult = stack.onItemUseFirst(itemusecontext);
-			if (actionresult != ActionResultType.PASS)
-				return;
-		}
-
-		boolean holdingSomething = !player.getHeldItemMainhand().isEmpty();
-		boolean flag1 = !(player.isSneaking() && holdingSomething)
-				|| (stack.doesSneakBypassUse(world, clickedPos, player));
-
-		// Use on block
-		if (event.getUseBlock() != DENY && flag1 && clickedState.onBlockActivated(world, player, hand, result))
-			return;
-		if (stack.isEmpty())
-			return;
-		if (event.getUseItem() == DENY)
-			return;
-		if (item instanceof BlockItem && !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
-			return;
-
-		// Reposition fire placement for convenience
-		if (item == Items.FLINT_AND_STEEL) {
-			Direction newFace = result.getFace();
-			BlockPos newPos = result.getPos();
-			if (!FlintAndSteelItem.canSetFire(clickedState, world, clickedPos))
-				newFace = Direction.UP;
-			if (clickedState.getMaterial() == Material.AIR)
-				newPos = newPos.offset(direction);
-			result = new BlockRayTraceResult(result.getHitVec(), newFace, newPos, result.isInside());
-			itemusecontext = new ItemUseContext(player, hand, result);
-		}
-
-		// 'Inert' item use behaviour & block placement
-		ActionResultType onItemUse = stack.onItemUse(itemusecontext);
-		if (onItemUse == ActionResultType.SUCCESS)
-			return;
-		if (item == Items.ENDER_PEARL)
-			return;
-
-		// buckets create their own ray, We use a fake wall to contain the active area
-		if (item instanceof BucketItem || item instanceof SandPaperItem) {
-			world = new WrappedWorld(world) {
-
-				boolean rayMode = false;
-
-				@Override
-				public BlockRayTraceResult rayTraceBlocks(RayTraceContext context) {
-					rayMode = true;
-					BlockRayTraceResult rayTraceBlocks = super.rayTraceBlocks(context);
-					rayMode = false;
-					return rayTraceBlocks;
-				};
-
-				@Override
-				public BlockState getBlockState(BlockPos position) {
-					if (rayMode
-							&& (pos.offset(direction, 3).equals(position) || pos.offset(direction, 1).equals(position)))
-						return Blocks.BEDROCK.getDefaultState();
-					return world.getBlockState(position);
-				}
-
-			};
-		}
-
-		ActionResult<ItemStack> onItemRightClick = item.onItemRightClick(world, player, hand);
-		player.setHeldItem(hand, onItemRightClick.getResult());
-
-		CompoundNBT tag = stack.getOrCreateTag();
-		if (stack.getItem() instanceof SandPaperItem && tag.contains("Polishing"))
-			spawnItemEffects = ItemStack.read(tag.getCompound("Polishing"));
-		if (stack.isFood())
-			spawnItemEffects = stack.copy();
-
-		if (!player.getActiveItemStack().isEmpty())
-			player.setHeldItem(hand, stack.onItemUseFinish(world, player));
-
-		player.resetActiveHand();
+		DeployerHandler.activate(player, center, clickedPos, movementVector, mode);
+		heldItem = player.getHeldItemMainhand();
 	}
 
 	protected void returnAndDeposit() {
@@ -556,11 +350,12 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public CompoundNBT writeToClient(CompoundNBT compound) {
 		compound.putFloat("Reach", reach);
-		if (player != null)
+		if (player != null) {
 			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
-		if (spawnItemEffects != null) {
-			compound.put("Particle", spawnItemEffects.serializeNBT());
-			spawnItemEffects = null;
+			if (player.spawnedItemEffects != null) {
+				compound.put("Particle", player.spawnedItemEffects.serializeNBT());
+				player.spawnedItemEffects = null;
+			}
 		}
 		return super.writeToClient(compound);
 	}
@@ -582,14 +377,6 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public boolean hasFastRenderer() {
 		return false;
-	}
-
-	@Override
-	public void remove() {
-		if (!world.isRemote && blockBreakingProgress != null)
-			world.sendBlockBreakProgress(player.getEntityId(), blockBreakingProgress.getKey(), -1);
-		super.remove();
-		player = null;
 	}
 
 	public AllBlockPartials getHandPose() {

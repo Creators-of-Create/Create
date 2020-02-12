@@ -138,7 +138,8 @@ public class FlexcrateBlock extends ProperDirectionalBlock {
 
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			FlexcrateTileEntity te = (FlexcrateTileEntity) worldIn.getTileEntity(pos);
-			te.onDestroyed();
+			if (!isMoving)
+				te.onDestroyed();
 			worldIn.removeTileEntity(pos);
 		}
 

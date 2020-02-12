@@ -150,17 +150,15 @@ public class Contraption {
 			return false;
 
 		for (int limit = 1000; limit > 0; limit--) {
-			if (frontier.isEmpty()) {
-				onAssembled(world, pos);
+			if (frontier.isEmpty())
 				return true;
-			}
 			if (!moveBlock(world, frontier.remove(0), direction, frontier, visited))
 				return false;
 		}
 		return false;
 	}
 
-	protected void onAssembled(World world, BlockPos pos) {
+	public void gatherStoredItems() {
 		List<IItemHandlerModifiable> list =
 			storage.values().stream().map(MountedStorage::getItemHandler).collect(Collectors.toList());
 		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
@@ -504,7 +502,7 @@ public class Contraption {
 		nbt.getList("Actors", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
 			BlockInfo info = blocks.get(NBTUtil.readBlockPos(comp.getCompound("Pos")));
-			MovementContext context = MovementContext.readNBT(world, comp);
+			MovementContext context = MovementContext.readNBT(world, info, comp);
 			context.contraption = this;
 			getActors().add(MutablePair.of(info, context));
 		});
@@ -549,6 +547,7 @@ public class Contraption {
 		for (MutablePair<BlockInfo, MovementContext> actor : getActors()) {
 			CompoundNBT compound = new CompoundNBT();
 			compound.put("Pos", NBTUtil.writeBlockPos(actor.left.pos));
+			getMovement(actor.left.state).writeExtraData(actor.right);
 			actor.right.writeToNBT(compound);
 			actorsNBT.add(compound);
 		}
@@ -591,6 +590,7 @@ public class Contraption {
 	}
 
 	public void removeBlocksFromWorld(IWorld world, BlockPos offset, BiPredicate<BlockPos, BlockState> customRemoval) {
+		storage.values().forEach(MountedStorage::empty);
 		for (BlockInfo block : blocks.values()) {
 			BlockPos add = block.pos.add(anchor).add(offset);
 			if (customRemoval.test(add, block.state))
@@ -635,10 +635,9 @@ public class Contraption {
 
 	public void initActors(World world) {
 		for (MutablePair<BlockInfo, MovementContext> pair : actors) {
-			BlockState blockState = pair.left.state;
-			MovementContext context = new MovementContext(world, blockState);
+			MovementContext context = new MovementContext(world, pair.left);
 			context.contraption = this;
-			getMovement(blockState).startMoving(context);
+			getMovement(pair.left.state).startMoving(context);
 			pair.setRight(context);
 		}
 	}

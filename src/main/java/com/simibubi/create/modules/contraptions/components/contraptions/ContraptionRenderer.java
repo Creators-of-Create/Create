@@ -69,17 +69,18 @@ public class ContraptionRenderer {
 				context.world = world;
 
 			BlockInfo blockInfo = actor.getLeft();
-			SuperByteBuffer render = Contraption.getMovement(blockInfo.state).renderInContraption(context);
-			if (render == null)
-				continue;
+			for (SuperByteBuffer render : Contraption.getMovement(blockInfo.state).renderListInContraption(context)) {
+				if (render == null)
+					continue;
 
-			int posX = blockInfo.pos.getX();
-			int posY = blockInfo.pos.getY();
-			int posZ = blockInfo.pos.getZ();
+				int posX = blockInfo.pos.getX();
+				int posY = blockInfo.pos.getY();
+				int posZ = blockInfo.pos.getZ();
 
-			render.translate(posX, posY, posZ);
-			transform.accept(render);
-			render.light((lx, ly, lz) -> getLight(world, lx, ly, lz)).renderInto(buffer);
+				render.translate(posX, posY, posZ);
+				transform.accept(render);
+				render.light((lx, ly, lz) -> getLight(world, lx, ly, lz)).renderInto(buffer);
+			}
 		}
 	}
 

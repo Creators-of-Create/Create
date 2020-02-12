@@ -70,6 +70,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		this.prevYaw = initialAngle;
 		this.yaw = initialAngle;
 		this.targetYaw = initialAngle;
+		if (contraption != null)
+			contraption.gatherStoredItems();
 	}
 
 	public <T extends TileEntity & IControlContraption> ContraptionEntity controlledBy(T controller) {
@@ -84,15 +86,15 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			remove();
 			return;
 		}
-		
+
 		attachToController();
-		
+
 		Entity e = getRidingEntity();
 		if (e != null) {
 			Vec3d movementVector = e.getMotion();
 			Vec3d motion = movementVector.normalize();
 			if (motion.length() > 0) {
-				targetYaw = yawFromMotion(motion);
+				targetYaw = yawFromVector(motion);
 				targetPitch = (float) ((Math.atan(motion.y) * 73.0D) / Math.PI * 180);
 				if (targetYaw < 0)
 					targetYaw += 360;
@@ -254,8 +256,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			disassemble();
 	}
 
-	public static float yawFromMotion(Vec3d motion) {
-		return (float) ((3 * Math.PI / 2 + Math.atan2(motion.z, motion.x)) / Math.PI * 180);
+	public static float yawFromVector(Vec3d vec) {
+		return (float) ((3 * Math.PI / 2 + Math.atan2(vec.z, vec.x)) / Math.PI * 180);
+	}
+
+	public static float pitchFromVector(Vec3d vec) {
+		return (float) ((Math.acos(vec.y)) / Math.PI * 180);
 	}
 
 	public float getYaw(float partialTicks) {

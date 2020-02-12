@@ -4,9 +4,9 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class MovementContext {
@@ -17,14 +17,17 @@ public class MovementContext {
 	public Vec3d rotation;
 	public World world;
 	public BlockState state;
+	public CompoundNBT tileData;
 
 	public boolean stall;
 	public CompoundNBT data;
 	public Contraption contraption;
+	public Object temporaryData;
 
-	public MovementContext(World world, BlockState state) {
+	public MovementContext(World world, BlockInfo info) {
 		this.world = world;
-		this.state = state;
+		this.state = info.state;
+		this.tileData = info.nbt;
 
 		motion = Vec3d.ZERO;
 		relativeMotion = Vec3d.ZERO;
@@ -44,9 +47,8 @@ public class MovementContext {
 		return (((int) (length * modifier + 100 * Math.signum(length))) / 100) * 100;
 	}
 
-	public static MovementContext readNBT(World world, CompoundNBT nbt) {
-		BlockState state = NBTUtil.readBlockState(nbt.getCompound("State"));
-		MovementContext context = new MovementContext(world, state);
+	public static MovementContext readNBT(World world, BlockInfo info, CompoundNBT nbt) {
+		MovementContext context = new MovementContext(world, info);
 		context.motion = VecHelper.readNBT(nbt.getList("Motion", NBT.TAG_DOUBLE));
 		context.relativeMotion = VecHelper.readNBT(nbt.getList("RelativeMotion", NBT.TAG_DOUBLE));
 		context.rotation = VecHelper.readNBT(nbt.getList("Rotation", NBT.TAG_DOUBLE));
@@ -58,7 +60,6 @@ public class MovementContext {
 	}
 
 	public CompoundNBT writeToNBT(CompoundNBT nbt) {
-		nbt.put("State", NBTUtil.writeBlockState(state));
 		nbt.put("Motion", VecHelper.writeNBT(motion));
 		nbt.put("RelativeMotion", VecHelper.writeNBT(relativeMotion));
 		nbt.put("Rotation", VecHelper.writeNBT(rotation));

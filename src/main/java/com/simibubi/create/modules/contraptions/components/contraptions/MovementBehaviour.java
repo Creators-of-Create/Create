@@ -1,5 +1,8 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.entity.item.ItemEntity;
@@ -45,7 +48,16 @@ public abstract class MovementBehaviour {
 		return null;
 	}
 	
+	@OnlyIn(value = Dist.CLIENT)
+	public List<SuperByteBuffer> renderListInContraption(MovementContext context) {
+		return Arrays.asList(renderInContraption(context));
+	}
+	
 	public void stopMoving(MovementContext context) {
+		
+	}
+	
+	public void writeExtraData(MovementContext context) {
 		
 	}
 

@@ -76,7 +76,7 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 		if (contraption == null)
 			return;
 		ContraptionEntity entity = new ContraptionEntity(world, contraption,
-				ContraptionEntity.yawFromMotion(cart.getMotion()));
+				ContraptionEntity.yawFromVector(cart.getMotion()));
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		world.addEntity(entity);
 		entity.startRiding(cart);

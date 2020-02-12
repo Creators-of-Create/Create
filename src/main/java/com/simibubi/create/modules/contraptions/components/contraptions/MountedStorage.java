@@ -1,7 +1,5 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
-import com.simibubi.create.AllTileEntities;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -17,9 +15,14 @@ public class MountedStorage {
 
 	ItemStackHandler handler;
 	boolean working;
+	private TileEntity te;
 
 	public MountedStorage(TileEntity te) {
+		this.te = te;
 		handler = dummyHandler;
+	}
+	
+	public void empty() {
 		if (te != null) {
 			IItemHandler teHandler =
 				te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(dummyHandler);
@@ -68,11 +71,8 @@ public class MountedStorage {
 		if (te == null)
 			return false;
 		TileEntityType<?> type = te.getType();
-		if (type == TileEntityType.CHEST || type == TileEntityType.SHULKER_BOX || type == TileEntityType.BARREL)
+		if (type == TileEntityType.BARREL)
 			return true;
-		if (type == AllTileEntities.FLEXCRATE.type)
-			return true;
-
 		return false;
 	}
 

@@ -71,7 +71,7 @@ public class ServerSpeedProvider {
 					return;
 				}
 				float target = ((float) getSyncInterval()) / Math.max(clientTimer, 1);
-				modifier.target(target);
+				modifier.target(Math.min(target, 1));
 				clientTimer = 0;
 
 			});

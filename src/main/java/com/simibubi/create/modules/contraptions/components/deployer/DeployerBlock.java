@@ -6,9 +6,12 @@ import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -25,7 +28,10 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class DeployerBlock extends DirectionalAxisKineticBlock implements IWithTileEntity<DeployerTileEntity> {
+public class DeployerBlock extends DirectionalAxisKineticBlock
+		implements IWithTileEntity<DeployerTileEntity>, IPortableBlock {
+
+	public static MovementBehaviour MOVEMENT = new DeployerMovementBehaviour();
 
 	public DeployerBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -39,6 +45,11 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IWithT
 	@Override
 	protected boolean hasStaticPart() {
 		return true;
+	}
+
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.PUSH_ONLY;
 	}
 
 	@Override
@@ -60,8 +71,12 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IWithT
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			withTileEntityDo(worldIn, pos, te -> {
-				te.player.inventory.dropAllItems();
-				te.overflowItems.forEach(itemstack -> te.player.dropItem(itemstack, true, false));
+				if (te.player != null && !isMoving) {
+					te.player.inventory.dropAllItems();
+					te.overflowItems.forEach(itemstack -> te.player.dropItem(itemstack, true, false));
+					te.player.remove();
+					te.player = null;
+				}
 			});
 
 			worldIn.removeTileEntity(pos);
@@ -110,6 +125,11 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IWithT
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
 		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
 		return new Vec3d(0, yRot, zRot);
+	}
+
+	@Override
+	public MovementBehaviour getMovementBehaviour() {
+		return MOVEMENT;
 	}
 
 }
