@@ -10,6 +10,7 @@ import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
+import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
 public abstract class ConfigBase {
@@ -60,6 +61,10 @@ public abstract class ConfigBase {
 
 	protected ConfigInt i(int current, int min, String name, String... comment) {
 		return i(current, min, Integer.MAX_VALUE, name, comment);
+	}
+	
+	protected <T extends Enum<T>> ConfigEnum<T> e(T defaultValue, String name, String... comment) {
+		return new ConfigEnum<>(name, defaultValue, comment);
 	}
 
 	protected ConfigGroup group(int depth, String name, String... comment) {
@@ -152,6 +157,14 @@ public abstract class ConfigBase {
 		public ConfigBool(String name, boolean def, String... comment) {
 			super(name, builder -> builder.define(name, def), comment);
 		}
+	}
+	
+	public class ConfigEnum<T extends Enum<T>> extends CValue<T, EnumValue<T>> {
+
+		public ConfigEnum(String name, T defaultValue, String[] comment) {
+			super(name, builder -> builder.defineEnum(name, defaultValue), comment);
+		}
+		
 	}
 
 	public class ConfigFloat extends CValue<Double, DoubleValue> {

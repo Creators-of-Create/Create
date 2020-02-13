@@ -137,12 +137,15 @@ public class BeltInventory {
 					if (beltSegment == null)
 						break;
 					for (BeltAttachmentState attachmentState : beltSegment.attachmentTracker.attachments) {
+						ItemStack stackBefore = current.stack.copy();
 						if (attachmentState.attachment.startProcessingItem(beltSegment, current, attachmentState)) {
 							current.beltPosition = segment + .5f + (beltMovementPositive ? 1 / 64f : -1 / 64f);
 							current.locked = true;
 							belt.sendData();
 							continue Items;
 						}
+						if (!stackBefore.equals(current.stack, true))
+							belt.sendData();
 					}
 				}
 			}

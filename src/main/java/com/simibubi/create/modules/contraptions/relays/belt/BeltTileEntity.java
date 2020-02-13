@@ -290,6 +290,12 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public BeltInventory getInventory() {
+		if (!isController()) {
+			BeltTileEntity controllerTE = getControllerTE();
+			if (controllerTE != null)
+				return controllerTE.getInventory();
+			return null;
+		}
 		if (inventory == null)
 			inventory = new BeltInventory(this);
 		return inventory;

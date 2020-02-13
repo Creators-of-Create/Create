@@ -1,8 +1,0 @@
-{
-	"parent": "create:block/entity_detector_with_belt",
-    "textures": {
-        "3": "create:block/extractor_powered",
-        "entity_detector_off": "create:block/entity_detector_on",
-		"particle": "create:block/entity_detector_on"
-    }
-}

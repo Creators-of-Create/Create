@@ -6,6 +6,8 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt crushingDamage = i(4, 0, "crushingDamage", Comments.crushingDamage);
 	public ConfigInt maxMotorSpeed = i(256, 64, "maxMotorSpeed", Comments.rpm, Comments.maxMotorSpeed);
 	public ConfigInt maxRotationSpeed = i(256, 64, "maxRotationSpeed", Comments.rpm, Comments.maxRotationSpeed);
+	public ConfigEnum<DeployerAggroSetting> ignoreDeployerAttacks =
+		e(DeployerAggroSetting.CREEPERS, "ignoreDeployerAttacks", Comments.ignoreDeployerAttacks);
 
 	public ConfigGroup fan = group(0, "encasedFan", "Encased Fan");
 	public ConfigInt fanPushDistance = i(20, 5, "fanPushDistance", Comments.fanPushDistance);
@@ -24,7 +26,8 @@ public class CKinetics extends ConfigBase {
 	public ConfigGroup state = group(0, "stats", Comments.stats);
 	public ConfigFloat mediumSpeed = f(30, 0, 4096, "mediumSpeed", Comments.rpm, Comments.mediumSpeed);
 	public ConfigFloat fastSpeed = f(100, 0, 65535, "fastSpeed", Comments.rpm, Comments.fastSpeed);
-	public ConfigFloat mediumStressImpact = f(8, 0, 4096, "mediumStressImpact", Comments.su, Comments.mediumStressImpact);
+	public ConfigFloat mediumStressImpact =
+		f(8, 0, 4096, "mediumStressImpact", Comments.su, Comments.mediumStressImpact);
 	public ConfigFloat highStressImpact = f(32, 0, 65535, "highStressImpact", Comments.su, Comments.highStressImpact);
 	public ConfigFloat mediumCapacity = f(128, 0, 4096, "mediumCapacity", Comments.su, Comments.mediumCapacity);
 	public ConfigFloat highCapacity = f(512, 0, 65535, "highCapacity", Comments.su, Comments.highCapacity);
@@ -61,6 +64,11 @@ public class CKinetics extends ConfigBase {
 		static String mediumCapacity = "Minimum added Capacity by sources to be considered 'medium'";
 		static String highCapacity = "Minimum added Capacity by sources to be considered 'high'";
 		static String stress = "Fine tune the kinetic stats of individual components";
+		static String ignoreDeployerAttacks = "Select what mobs should ignore Deployers when attacked by them.";
+	}
+
+	public static enum DeployerAggroSetting {
+		ALL, CREEPERS, NONE
 	}
 
 }

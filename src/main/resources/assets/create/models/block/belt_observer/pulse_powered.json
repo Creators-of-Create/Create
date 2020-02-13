@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/belt_observer/base_powered",
+    "textures": {
+        "texture": "create:block/belt_observer_pulse_powered"
+    }
+}

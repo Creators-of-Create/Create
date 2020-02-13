@@ -15,8 +15,8 @@
     },
     "textures": {
         "brass_casing": "create:block/brass_casing",
-        "entity_detector_off": "create:block/entity_detector_off",
-        "entity_detector_front": "create:block/entity_detector_front"
+        "entity_detector_off": "create:block/belt_observer_detect",
+        "entity_detector_front": "create:block/belt_observer_front"
     },
     "elements": [
         {

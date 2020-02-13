@@ -91,8 +91,12 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (context.world.isRemote)
 			return;
 		tryDisposeOfEverything(context);
+		DeployerFakePlayer player = getPlayer(context);
+		if (player == null)
+			return;
+		player.remove();
 	}
-
+	
 	private void tryGrabbingItem(MovementContext context) {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)

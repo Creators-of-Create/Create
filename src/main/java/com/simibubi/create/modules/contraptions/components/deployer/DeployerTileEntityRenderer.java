@@ -13,6 +13,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -62,22 +63,37 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
 		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
+		boolean displayMode = facing == Direction.UP && te.speed == 0 && !punching;
 
 		GlStateManager.rotatef(yRot, 0, 1, 0);
-		GlStateManager.rotatef(zRot, 1, 0, 0);
-		GlStateManager.translated(0, 0, -11 / 16f);
+		if (!displayMode) {
+			GlStateManager.rotatef(zRot, 1, 0, 0);
+			GlStateManager.translated(0, 0, -11 / 16f);
+		}
 
 		if (punching)
 			GlStateManager.translatef(0, 1 / 8f, -1 / 16f);
 
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		boolean isBlockItem =
-			(te.heldItem.getItem() instanceof BlockItem) && itemRenderer.getModelWithOverrides(te.heldItem).isGui3d();
-		float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
-		GlStateManager.scaled(scale, scale, scale);
-		TransformType transform = punching ? TransformType.THIRD_PERSON_RIGHT_HAND : TransformType.FIXED;
-		itemRenderer.renderItem(te.heldItem, transform);
 
+		TransformType transform = TransformType.NONE;
+		boolean isBlockItem = (te.heldItem.getItem() instanceof BlockItem)
+				&& itemRenderer.getModelWithOverrides(te.heldItem).isGui3d();
+		
+		if (displayMode) {
+			float scale = isBlockItem ? 1.25f : 1;
+			GlStateManager.translated(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
+			GlStateManager.scaled(scale, scale, scale);
+			transform = TransformType.GROUND;
+			GlStateManager.rotatef(AnimationTickHolder.getRenderTick(), 0, 1, 0);
+
+		} else {
+			float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
+			GlStateManager.scaled(scale, scale, scale);
+			transform = punching ? TransformType.THIRD_PERSON_RIGHT_HAND : TransformType.FIXED;
+		}
+
+		itemRenderer.renderItem(te.heldItem, transform);
 		GlStateManager.popMatrix();
 	}
 

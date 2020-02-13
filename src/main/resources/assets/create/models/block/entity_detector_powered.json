@@ -1,8 +1,0 @@
-{
-	"parent": "create:block/entity_detector",
-    "textures": {
-        "extractor": "create:block/extractor_powered",
-        "entity_detector_off": "create:block/entity_detector_on",
-		"particle": "create:block/entity_detector_on"
-    }
-}

@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/belt_observer/base",
+    "textures": {
+        "extractor": "create:block/extractor_powered"
+    }
+}
