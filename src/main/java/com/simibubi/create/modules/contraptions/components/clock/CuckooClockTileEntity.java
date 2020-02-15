@@ -1,5 +1,9 @@
 package com.simibubi.create.modules.contraptions.components.clock;
 
+import static com.simibubi.create.foundation.utility.AngleHelper.deg;
+import static com.simibubi.create.foundation.utility.AngleHelper.getShortestAngleDiff;
+import static com.simibubi.create.foundation.utility.AngleHelper.rad;
+
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
@@ -20,7 +24,7 @@ import net.minecraft.world.Explosion;
 public class CuckooClockTileEntity extends KineticTileEntity {
 
 	public static DamageSource CUCKOO_SURPRISE = new DamageSource("create.cuckoo_clock_explosion").setExplosion();
-	
+
 	public InterpolatedChasingValue hourHand = new InterpolatedChasingValue().withSpeed(.2f);
 	public InterpolatedChasingValue minuteHand = new InterpolatedChasingValue().withSpeed(.2f);
 	public InterpolatedValue animationProgress = new InterpolatedValue();
@@ -69,22 +73,23 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 
 		if (!world.isRemote) {
 			if (animationType == null) {
-				if (hours == 12 && minutes < 5) 
+				if (hours == 12 && minutes < 5)
 					startAnimation(Animation.PIG);
-				if (hours == 18 && minutes < 36 && minutes > 31) 
+				if (hours == 18 && minutes < 36 && minutes > 31)
 					startAnimation(Animation.CREEPER);
 			} else {
 				float value = animationProgress.value;
 				animationProgress.set(value + 1);
 				if (value > 100)
 					animationType = null;
-				
+
 				if (animationType == Animation.SURPRISE && animationProgress.value == 50) {
 					Vec3d center = VecHelper.getCenterOf(pos);
 					world.destroyBlock(pos, false);
-					world.createExplosion(null, CUCKOO_SURPRISE, center.x, center.y, center.z, 3, false, Explosion.Mode.BREAK);
+					world.createExplosion(null, CUCKOO_SURPRISE, center.x, center.y, center.z, 3, false,
+							Explosion.Mode.BREAK);
 				}
-				
+
 			}
 		}
 
@@ -150,21 +155,11 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 	}
 
 	public void moveHands(int hours, int minutes) {
-		float hourTarget = (float) (2 * Math.PI / 12 * (hours % 12));
-		float minuteTarget = (float) (2 * Math.PI / 60 * minutes);
+		float hourTarget = (float) (360 / 12 * (hours % 12));
+		float minuteTarget = (float) (360 / 60 * minutes);
 
-		hourHand.target(hourTarget);
-		minuteHand.target(minuteTarget);
-
-		if (minuteTarget - minuteHand.value < 0) {
-			minuteHand.value = (float) (minuteHand.value - Math.PI * 2);
-			minuteHand.lastValue = minuteHand.value;
-		}
-
-		if (hourTarget - hourHand.value < 0) {
-			hourHand.value = (float) (hourHand.value - Math.PI * 2);
-			hourHand.lastValue = hourHand.value;
-		}
+		hourHand.target(hourHand.value + rad(getShortestAngleDiff(deg(hourHand.value), hourTarget)));
+		minuteHand.target(minuteHand.value + rad(getShortestAngleDiff(deg(minuteHand.value), minuteTarget)));
 
 		hourHand.tick();
 		minuteHand.tick();

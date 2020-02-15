@@ -36,7 +36,11 @@ public class AllShapes {
 				makeCuboidShape(0, 0, 9, 16, 16, 14)), Direction.SOUTH),
 		PORTABLE_STORAGE_INTERFACE = VoxelShaper.forDirectional(VoxelShapes.or(
 				makeCuboidShape(0, 0, 0, 16, 12, 16), 
-				makeCuboidShape(3, 12, 3, 13, 16, 13)), Direction.UP)
+				makeCuboidShape(3, 12, 3, 13, 16, 13)), Direction.UP),
+		PULLEY = VoxelShaper.forHorizontalAxis(VoxelShapes.or(
+				makeCuboidShape(0, 0, 0, 16, 16, 2), 
+				makeCuboidShape(1, 1, 2, 15, 15, 14), 
+				makeCuboidShape(0, 0, 14, 16, 16, 16)), Direction.SOUTH)
 
 				;
 
@@ -114,8 +118,11 @@ public class AllShapes {
 		BELT_COLLISION_MASK = makeCuboidShape(0, 0, 0, 16, 19, 16),
 		SCHEMATICANNON_SHAPE = VoxelShapes.or(
 				makeCuboidShape(1, 0, 1, 15, 8, 15),
-				makeCuboidShape(0.5, 8, 0.5, 15.5, 11, 15.5))
-
+				makeCuboidShape(0.5, 8, 0.5, 15.5, 11, 15.5)),
+		PULLEY_MAGNET = VoxelShapes.or(
+				makeCuboidShape(3, 0, 3, 13, 2, 13),
+				FOUR_VOXEL_POLE.get(Direction.UP))
+		
 				;
 
 

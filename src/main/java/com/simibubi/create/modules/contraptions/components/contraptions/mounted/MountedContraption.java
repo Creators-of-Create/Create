@@ -25,6 +25,17 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class MountedContraption extends Contraption {
 
+	private static String type = "Mounted";
+
+	static {
+		register(type, MountedContraption::new);
+	}
+	
+	@Override
+	protected String getType() {
+		return type;
+	}
+	
 	public static Contraption assembleMinecart(World world, BlockPos pos, AbstractMinecartEntity cart) {
 		if (isFrozen())
 			return null;

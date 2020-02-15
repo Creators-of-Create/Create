@@ -37,6 +37,16 @@ public class PistonContraption extends Contraption {
 	protected int initialExtensionProgress;
 	protected Direction orientation;
 
+	private static String type = "Piston";
+
+	static {
+		register(type, PistonContraption::new);
+	}
+	
+	@Override
+	protected String getType() {
+		return type;
+	}
 	public static PistonContraption movePistonAt(World world, BlockPos pos, Direction direction, boolean retract) {
 		if (isFrozen())
 			return null;

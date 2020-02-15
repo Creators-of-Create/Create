@@ -20,6 +20,7 @@ public class MovementContext {
 	public CompoundNBT tileData;
 
 	public boolean stall;
+	public boolean firstMovement;
 	public CompoundNBT data;
 	public Contraption contraption;
 	public Object temporaryData;
@@ -28,7 +29,8 @@ public class MovementContext {
 		this.world = world;
 		this.state = info.state;
 		this.tileData = info.nbt;
-
+		
+		firstMovement = true;
 		motion = Vec3d.ZERO;
 		relativeMotion = Vec3d.ZERO;
 		rotation = Vec3d.ZERO;
@@ -55,6 +57,7 @@ public class MovementContext {
 		if (nbt.contains("Position"))
 			context.position = VecHelper.readNBT(nbt.getList("Position", NBT.TAG_DOUBLE));
 		context.stall = nbt.getBoolean("Stall");
+		context.firstMovement = nbt.getBoolean("FirstMovement");
 		context.data = nbt.getCompound("Data");
 		return context;
 	}
@@ -66,6 +69,7 @@ public class MovementContext {
 		if (position != null)
 			nbt.put("Position", VecHelper.writeNBT(position));
 		nbt.putBoolean("Stall", stall);
+		nbt.putBoolean("FirstMovement", firstMovement);
 		nbt.put("Data", data);
 		return nbt;
 	}

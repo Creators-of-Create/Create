@@ -84,6 +84,7 @@ public enum AllItems {
 	PROPELLER,
 	WHISK,
 	BRASS_HAND,
+	SLOT_COVER,
 	WRENCH(WrenchItem::new),
 	GOGGLES(GogglesItem::new),
 

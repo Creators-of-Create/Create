@@ -22,6 +22,7 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt maxChassisForRotation = i(16, 1, "maxChassisForRotation", Comments.maxChassisForRotation);
 	public ConfigInt maxChassisRange = i(16, 1, "maxChassisRange", Comments.maxChassisRange);
 	public ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
+	public ConfigInt maxRopeLength = i(128, 1, "maxRopeLength", Comments.maxRopeLength);
 
 	public ConfigGroup state = group(0, "stats", Comments.stats);
 	public ConfigFloat mediumSpeed = f(30, 0, 4096, "mediumSpeed", Comments.rpm, Comments.mediumSpeed);
@@ -54,6 +55,7 @@ public class CKinetics extends ConfigBase {
 		static String maxChassisForRotation = "Maximum amount of chassis blocks movable by a Mechanical Bearing.";
 		static String maxChassisRange = "Maximum value of a chassis attachment range.";
 		static String maxPistonPoles = "Maximum amount of extension poles behind a Mechanical Piston.";
+		static String maxRopeLength = "Max length of rope available off a Rope Pulley.";
 		static String stats = "Configure speed/capacity levels for requirements and indicators.";
 		static String rpm = "[in Revolutions per Minute]";
 		static String su = "[in Stress Units]";

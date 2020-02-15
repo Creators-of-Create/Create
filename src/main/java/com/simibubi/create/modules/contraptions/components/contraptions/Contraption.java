@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -22,13 +23,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.modules.contraptions.components.contraptions.bearing.BearingContraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.RadialChassisBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.mounted.MountedContraption;
-import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonContraption;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
 
 import net.minecraft.block.Block;
@@ -57,6 +55,8 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class Contraption {
 
+	protected static Map<String, Supplier<? extends Contraption>> deserializers = new HashMap<>();
+
 	public Map<BlockPos, BlockInfo> blocks;
 	public Map<BlockPos, MountedStorage> storage;
 	public List<MutablePair<BlockInfo, MovementContext>> actors;
@@ -68,6 +68,10 @@ public class Contraption {
 	protected Set<BlockPos> cachedColliders;
 	protected Direction cachedColliderDirection;
 	protected BlockPos anchor;
+
+	protected static void register(String name, Supplier<? extends Contraption> factory) {
+		deserializers.put(name, factory);
+	}
 
 	public Contraption() {
 		blocks = new HashMap<>();
@@ -168,7 +172,7 @@ public class Contraption {
 		return true;
 	}
 
-	private boolean moveBlock(World world, BlockPos pos, Direction direction, List<BlockPos> frontier,
+	protected boolean moveBlock(World world, BlockPos pos, Direction direction, List<BlockPos> frontier,
 			Set<BlockPos> visited) {
 		visited.add(pos);
 		frontier.remove(pos);
@@ -478,12 +482,8 @@ public class Contraption {
 	public static Contraption fromNBT(World world, CompoundNBT nbt) {
 		String type = nbt.getString("Type");
 		Contraption contraption = new Contraption();
-		if (type.equals("Piston"))
-			contraption = new PistonContraption();
-		if (type.equals("Mounted"))
-			contraption = new MountedContraption();
-		if (type.equals("Bearing"))
-			contraption = new BearingContraption();
+		if (deserializers.containsKey(type))
+			contraption = deserializers.get(type).get();
 		contraption.readNBT(world, nbt);
 		return contraption;
 	}
@@ -525,14 +525,7 @@ public class Contraption {
 
 	public CompoundNBT writeNBT() {
 		CompoundNBT nbt = new CompoundNBT();
-
-		if (this instanceof PistonContraption)
-			nbt.putString("Type", "Piston");
-		if (this instanceof MountedContraption)
-			nbt.putString("Type", "Mounted");
-		if (this instanceof BearingContraption)
-			nbt.putString("Type", "Bearing");
-
+		nbt.putString("Type", getType());
 		ListNBT blocksNBT = new ListNBT();
 		for (BlockInfo block : this.blocks.values()) {
 			CompoundNBT c = new CompoundNBT();
@@ -674,6 +667,10 @@ public class Contraption {
 		if (!(block instanceof IPortableBlock))
 			return null;
 		return ((IPortableBlock) block).getMovementBehaviour();
+	}
+
+	protected String getType() {
+		return "Contraption";
 	}
 
 }

@@ -7,7 +7,10 @@ import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,10 +41,14 @@ public class ServerSpeedProvider {
 		return AllConfigs.SERVER.tickrateSyncTimer.get();
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public static void onClientTick(TickEvent.ClientTickEvent event) {
 		if (event.phase == Phase.START)
 			return;
+		if (Minecraft.getInstance().isSingleplayer() && Minecraft.getInstance().isGamePaused())
+			return;
+		
 		modifier.tick();
 		clientTimer++;
 	}

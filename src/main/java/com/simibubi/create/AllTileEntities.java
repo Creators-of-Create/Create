@@ -11,11 +11,14 @@ import com.simibubi.create.modules.contraptions.components.actors.HarvesterTileE
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.clock.CuckooClockRenderer;
 import com.simibubi.create.modules.contraptions.components.clock.CuckooClockTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.BearingTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.ClockworkBearingTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingTileEntity;
-import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyRenderer;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.crank.HandCrankTileEntity;
@@ -114,6 +117,8 @@ public enum AllTileEntities {
 	BELT_TUNNEL(BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
 	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING),
+	CLOCKWORK_BEARING(ClockworkBearingTileEntity::new, AllBlocks.CLOCKWORK_BEARING),
+	ROPE_PULLEY(PulleyTileEntity::new, AllBlocks.ROPE_PULLEY),
 	CHASSIS(ChassisTileEntity::new, AllBlocks.ROTATION_CHASSIS, AllBlocks.TRANSLATION_CHASSIS,
 			AllBlocks.TRANSLATION_CHASSIS_SECONDARY),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
@@ -200,7 +205,9 @@ public enum AllTileEntities {
 		bind(AnalogLeverTileEntity.class, new AnalogLeverTileEntityRenderer());
 
 		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());
-		bind(MechanicalBearingTileEntity.class, new MechanicalBearingTileEntityRenderer());
+		bind(MechanicalBearingTileEntity.class, new BearingTileEntityRenderer());
+		bind(ClockworkBearingTileEntity.class, new BearingTileEntityRenderer());
+		bind(PulleyTileEntity.class, new PulleyRenderer());
 		bind(HarvesterTileEntity.class, new HarvesterTileEntityRenderer());
 
 		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());

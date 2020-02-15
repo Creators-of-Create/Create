@@ -40,7 +40,7 @@ public enum AllBlockPartials {
 	GAUGE_INDICATOR("gauge/indicator"),
 	GAUGE_HEAD_SPEED("gauge/speed"),
 	GAUGE_HEAD_STRESS("gauge/stress"),
-	MECHANICAL_BEARING_TOP,
+	MECHANICAL_BEARING_TOP("bearing/top"),
 	DRILL,
 	HARVESTER_BLADE,
 	DEPLOYER_POLE("deployer/pole"),
@@ -64,6 +64,9 @@ public enum AllBlockPartials {
 	CUCKOO_RIGHT_DOOR("cuckoo_clock/right_door"),
 	CUCKOO_PIG("cuckoo_clock/pig"),
 	CUCKOO_CREEPER("cuckoo_clock/creeper"),
+	ROPE_COIL("pulley/rope_coil"),
+	ROPE_HALF("pulley/rope_half"),
+	ROPE_HALF_MAGNET("pulley/rope_half_magnet"),
 	
 	;
 

@@ -1,7 +1,7 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "create:block/mechanical_bearing_base"
+		"model": "create:block/bearing/regular"
 	},
     "variants": {
 		"facing" : {

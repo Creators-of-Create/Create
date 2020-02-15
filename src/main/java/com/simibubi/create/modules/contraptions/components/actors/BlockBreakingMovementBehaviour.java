@@ -16,6 +16,8 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void startMoving(MovementContext context) {
+		if (context.world.isRemote)
+			return;
 		context.data.putInt("BreakerId", -BlockBreakingKineticTileEntity.NEXT_BREAKER_ID.incrementAndGet());
 	}
 
@@ -40,6 +42,8 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void stopMoving(MovementContext context) {
 		CompoundNBT data = context.data;
+		if (context.world.isRemote)
+			return;
 		if (!data.contains("BreakingPos"))
 			return;
 
@@ -58,6 +62,8 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void tick(MovementContext context) {
 		CompoundNBT data = context.data;
+		if (context.world.isRemote)
+			return;
 		if (!data.contains("BreakingPos"))
 			return;
 		if (context.relativeMotion.equals(Vec3d.ZERO)) {

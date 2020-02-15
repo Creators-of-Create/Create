@@ -30,8 +30,8 @@ import net.minecraft.world.World;
 
 public class CartAssemblerBlock extends AbstractRailBlock {
 
-	public static IProperty<RailShape> RAIL_SHAPE = EnumProperty.create("shape", RailShape.class, RailShape.EAST_WEST,
-			RailShape.NORTH_SOUTH);
+	public static IProperty<RailShape> RAIL_SHAPE =
+		EnumProperty.create("shape", RailShape.class, RailShape.EAST_WEST, RailShape.NORTH_SOUTH);
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public CartAssemblerBlock() {
@@ -75,8 +75,8 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 		Contraption contraption = MountedContraption.assembleMinecart(world, pos, cart);
 		if (contraption == null)
 			return;
-		ContraptionEntity entity = new ContraptionEntity(world, contraption,
-				ContraptionEntity.yawFromVector(cart.getMotion()));
+		float initialAngle = ContraptionEntity.yawFromVector(cart.getMotion());
+		ContraptionEntity entity = ContraptionEntity.createMounted(world, contraption, initialAngle);
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		world.addEntity(entity);
 		entity.startRiding(cart);

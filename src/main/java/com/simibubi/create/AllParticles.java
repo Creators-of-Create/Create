@@ -28,7 +28,7 @@ public enum AllParticles {
 	private ParticleEntry<?> entry;
 
 	private <D extends IParticleData> AllParticles(Supplier<? extends ICustomParticle<D>> typeFactory) {
-		String asId = Lang.asId(this.name().toLowerCase());
+		String asId = Lang.asId(this.name());
 		entry = new ParticleEntry<D>(new ResourceLocation(Create.ID, asId), typeFactory);
 	}
 

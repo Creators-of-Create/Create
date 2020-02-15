@@ -1,25 +1,15 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
 
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class MechanicalBearingBlock extends DirectionalKineticBlock
-		implements IWithTileEntity<MechanicalBearingTileEntity> {
-
-	public MechanicalBearingBlock() {
-		super(Properties.from(Blocks.PISTON));
-	}
+public class MechanicalBearingBlock extends BearingBlock implements IWithTileEntity<MechanicalBearingTileEntity> {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
@@ -33,31 +23,6 @@ public class MechanicalBearingBlock extends DirectionalKineticBlock
 			return;
 
 		withTileEntityDo(worldIn, pos, MechanicalBearingTileEntity::neighbourChanged);
-	}
-
-	@Override
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.get(FACING).getOpposite();
-	}
-
-	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
-	protected boolean turnBackOnWrenched() {
-		return true;
-	}
-
-	@Override
-	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING).getAxis();
-	}
-
-	@Override
-	public boolean showCapacityWithAnnotation() {
-		return true;
 	}
 
 }

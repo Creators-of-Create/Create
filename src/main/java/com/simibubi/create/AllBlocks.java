@@ -12,6 +12,7 @@ import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.modules.contraptions.components.clock.CuckooClockBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.ClockworkBearingBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.RadialChassisBlock;
@@ -20,6 +21,7 @@ import com.simibubi.create.modules.contraptions.components.contraptions.mounted.
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonHeadBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonPoleBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterBlock;
 import com.simibubi.create.modules.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelBlock;
@@ -138,6 +140,12 @@ public enum AllBlocks {
 	MECHANICAL_PISTON_HEAD(new MechanicalPistonHeadBlock()),
 	PISTON_POLE(new PistonPoleBlock()),
 	MECHANICAL_BEARING(new MechanicalBearingBlock()),
+	CLOCKWORK_BEARING(new ClockworkBearingBlock()),
+	ROPE_PULLEY(new PulleyBlock()),
+	ROPE(new PulleyBlock.RopeBlock()),
+	PULLEY_MAGNET(new PulleyBlock.MagnetBlock()),
+	CART_ASSEMBLER(new CartAssemblerBlock()),
+	MINECART_ANCHOR(new MinecartAnchorBlock()),
 	TRANSLATION_CHASSIS(new LinearChassisBlock()),
 	TRANSLATION_CHASSIS_SECONDARY(new LinearChassisBlock()),
 	ROTATION_CHASSIS(new RadialChassisBlock()),
@@ -146,8 +154,6 @@ public enum AllBlocks {
 	HARVESTER(new HarvesterBlock()),
 	DEPLOYER(new DeployerBlock()),
 	PORTABLE_STORAGE_INTERFACE(new PortableStorageInterfaceBlock()),
-	CART_ASSEMBLER(new CartAssemblerBlock()),
-	MINECART_ANCHOR(new MinecartAnchorBlock()),
 	ANALOG_LEVER(new AnalogLeverBlock()),
 
 	ANDESITE_CASING(new CasingBlock("andesite_casing")),

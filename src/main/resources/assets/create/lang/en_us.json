@@ -26,6 +26,7 @@
 	"item.create.propeller": "Propeller",
 	"item.create.whisk": "Whisk",
 	"item.create.brass_hand": "Hand",
+	"item.create.slot_cover": "Crafter Slot Cover",
 	"item.create.flour": "Wheat Flour",
 	"item.create.dough": "Dough",
 	"item.create.wrench": "Wrench",
@@ -117,6 +118,10 @@
 	"block.create.mechanical_piston_head": "Mechanical Piston Head",
 	"block.create.piston_pole": "Piston Extension Pole",
 	"block.create.mechanical_bearing": "Mechanical Bearing",
+	"block.create.clockwork_bearing": "Clockwork Bearing",
+	"block.create.rope_pulley": "Rope Pulley",
+	"block.create.rope": "Rope",
+	"block.create.pulley_magnet": "Pulley Magnet",
 	"block.create.translation_chassis": "Linear Chassis",
 	"block.create.rotation_chassis": "Radial Chassis",
 
@@ -990,6 +995,9 @@
 	
 	"item.create.shadow_steel.tooltip": "SHADOW STEEL",
 	"item.create.shadow_steel.tooltip.summary": "A Chromatic material forged _in_ _the_ _void._",
+	
+	"item.create.slot_cover.tooltip": "SLOT COVER",
+	"item.create.slot_cover.tooltip.summary": "Used to mark a _Mechanical_ _Crafter_ as an empty slot in a recipe. Crafters do not necessarily have to form a full square grid, this cover find its use when there are recipes where _ingredients_ _are_ _diagonal_ to each other.",
 	
 	"item.create.logistical_controller_calculation.tooltip": "WIP",
 	"item.create.logistical_controller_request.tooltip": "WIP",

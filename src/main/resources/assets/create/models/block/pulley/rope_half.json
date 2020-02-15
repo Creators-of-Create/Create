@@ -1,0 +1,24 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"5": "create:block/pulley_rope",
+		"particle": "create:block/pulley_rope"
+	},
+	"elements": [
+		{
+			"name": "rope",
+			"from": [6, 0, 6],
+			"to": [10, 8, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7.75, 0, 8]},
+			"faces": {
+				"north": {"uv": [0, 8, 4, 16], "texture": "#5"},
+				"east": {"uv": [0, 8, 4, 16], "texture": "#5"},
+				"south": {"uv": [0, 8, 4, 16], "texture": "#5"},
+				"west": {"uv": [0, 8, 4, 16], "texture": "#5"},
+				"up": {"uv": [0, 0, 4, 4], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [0, 0, 4, 4], "texture": "#5"}
+			}
+		}
+	]
+}

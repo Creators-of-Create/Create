@@ -1,11 +1,11 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
-import com.simibubi.create.modules.contraptions.components.contraptions.IControlContraption;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -16,14 +16,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity implements IControlContraption {
+public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity implements IBearingTileEntity {
 
+	protected boolean isWindmill;
 	protected ContraptionEntity movedContraption;
 	protected float angle;
 	protected boolean running;
 	protected boolean assembleNextTick;
-	protected boolean isWindmill;
-
 	protected float clientAngleDiff;
 
 	public MechanicalBearingTileEntity() {
@@ -99,12 +98,11 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void readClientUpdate(CompoundNBT tag) {
 		float angleBefore = angle;
 		super.readClientUpdate(tag);
-		clientAngleDiff = angle - angleBefore;
-		if (Math.abs(clientAngleDiff) > 20)
-			clientAngleDiff = 0;
+		clientAngleDiff = AngleHelper.getShortestAngleDiff(angleBefore, angle);
 		angle = angleBefore;
 	}
 
+	@Override
 	public float getInterpolatedAngle(float partialTicks) {
 		if (movedContraption != null && movedContraption.isStalled())
 			partialTicks = 0;
@@ -136,7 +134,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		if (isWindmill && contraption.getSailBlocks() == 0)
 			return;
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
-		movedContraption = new ContraptionEntity(world, contraption, 0).controlledBy(this);
+		movedContraption = ContraptionEntity.createStationary(world, contraption).controlledBy(this);
 		BlockPos anchor = pos.offset(direction);
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		world.addEntity(movedContraption);
@@ -152,8 +150,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void disassembleConstruct() {
 		if (!running)
 			return;
-
-		movedContraption.disassemble();
+		if (movedContraption != null)
+			movedContraption.disassemble();
+		
 		movedContraption = null;
 		running = false;
 		angle = 0;
@@ -209,7 +208,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			sendData();
 	}
 
-	private void applyRotation() {
+	protected void applyRotation() {
 		if (movedContraption != null) {
 			Axis axis = getBlockState().get(BlockStateProperties.FACING).getAxis();
 			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);

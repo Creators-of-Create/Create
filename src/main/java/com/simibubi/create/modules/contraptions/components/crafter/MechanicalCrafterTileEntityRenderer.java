@@ -146,7 +146,7 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 		Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(blockState);
 		BlockPos pos = te.getPos();
 
-		if (te.phase != Phase.IDLE && te.phase != Phase.CRAFTING && te.phase != Phase.INSERTING) {
+		if ((te.covered || te.phase != Phase.IDLE) && te.phase != Phase.CRAFTING && te.phase != Phase.INSERTING) {
 			SuperByteBuffer lidBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_LID, blockState, pos);
 			lidBuffer.translate(x, y, z).renderInto(buffer);
 		}

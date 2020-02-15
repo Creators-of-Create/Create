@@ -1,0 +1,122 @@
+package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.BiPredicate;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+public class ClockworkContraption extends Contraption {
+
+	protected Direction facing;
+	public HandType handType;
+	public int offset;
+	private Set<BlockPos> ignoreBlocks = new HashSet<>();
+
+	private static String type = "Clockwork";
+
+	static {
+		register(type, ClockworkContraption::new);
+	}
+
+	@Override
+	protected String getType() {
+		return type;
+	}
+
+	private void ignoreBlocks(Set<BlockPos> blocks, BlockPos anchor) {
+		for (BlockPos blockPos : blocks)
+			ignoreBlocks.add(anchor.add(blockPos));
+	}
+
+	public static Pair<ClockworkContraption, ClockworkContraption> assembleClockworkAt(World world, BlockPos pos,
+			Direction direction) {
+		if (isFrozen())
+			return null;
+
+		int hourArmBlocks = 0;
+
+		ClockworkContraption hourArm = new ClockworkContraption();
+		ClockworkContraption minuteArm = null;
+
+		hourArm.facing = direction;
+		hourArm.handType = HandType.HOUR;
+		if (!hourArm.searchMovedStructure(world, pos, direction))
+			return null;
+		for (int i = 0; i < 16; i++) {
+			BlockPos offsetPos = BlockPos.ZERO.offset(direction, i);
+			if (hourArm.blocks.containsKey(offsetPos))
+				continue;
+			hourArmBlocks = i;
+			break;
+		}
+
+		if (hourArmBlocks > 0) {
+			minuteArm = new ClockworkContraption();
+			minuteArm.facing = direction;
+			minuteArm.handType = HandType.MINUTE;
+			minuteArm.offset = hourArmBlocks;
+			minuteArm.ignoreBlocks(hourArm.blocks.keySet(), hourArm.anchor);
+			if (!minuteArm.searchMovedStructure(world, pos, direction))
+				return null;
+			if (minuteArm.blocks.isEmpty())
+				minuteArm = null;
+		}
+
+		hourArm.initActors(world);
+		if (minuteArm != null)
+			minuteArm.initActors(world);
+		return Pair.of(hourArm, minuteArm);
+	}
+
+	@Override
+	public boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
+		return super.searchMovedStructure(world, pos.offset(direction, offset + 1), direction);
+	}
+
+	@Override
+	public void disassemble(World world, BlockPos offset, float yaw, float pitch,
+			BiPredicate<BlockPos, BlockState> customPlacement) {
+		super.disassemble(world, offset, yaw, pitch, customPlacement);
+	}
+
+	@Override
+	protected boolean moveBlock(World world, BlockPos pos, Direction direction, List<BlockPos> frontier,
+			Set<BlockPos> visited) {
+		if (ignoreBlocks.contains(pos))
+			return true;
+		return super.moveBlock(world, pos, direction, frontier, visited);
+	}
+
+	@Override
+	public CompoundNBT writeNBT() {
+		CompoundNBT tag = super.writeNBT();
+		tag.putInt("facing", facing.getIndex());
+		tag.putInt("offset", offset);
+		tag.putString("HandType", NBTHelper.writeEnum(handType));
+		return tag;
+	}
+
+	@Override
+	public void readNBT(World world, CompoundNBT tag) {
+		facing = Direction.byIndex(tag.getInt("Facing"));
+		handType = NBTHelper.readEnum(tag.getString("HandType"), HandType.class);
+		offset = tag.getInt("offset");
+		super.readNBT(world, tag);
+	}
+
+	public static enum HandType {
+		HOUR, MINUTE
+	}
+
+}

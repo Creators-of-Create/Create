@@ -2,10 +2,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
-import com.simibubi.create.modules.contraptions.components.contraptions.IControlContraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -13,17 +10,11 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public class MechanicalPistonTileEntity extends KineticTileEntity implements IControlContraption {
+public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
-	protected float offset;
-	protected boolean running;
-	protected boolean assembleNextTick;
 	protected boolean hadCollisionWithOtherPiston;
-
-	protected ContraptionEntity movedContraption;
 	protected int extensionLength;
 
 	public MechanicalPistonTileEntity() {
@@ -31,35 +22,18 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 	}
 
 	@Override
-	public void onSpeedChanged(float prevSpeed) {
-		super.onSpeedChanged(prevSpeed);
-		assembleNextTick = true;
-	}
-
-	@Override
-	public void remove() {
-		this.removed = true;
-		if (!world.isRemote)
-			disassembleConstruct();
-		super.remove();
+	public void read(CompoundNBT tag) {
+		extensionLength = tag.getInt("ExtensionLength");
+		super.read(tag);
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT tag) {
-		tag.putBoolean("Running", running);
-		tag.putFloat("Offset", offset);
 		tag.putInt("ExtensionLength", extensionLength);
 		return super.write(tag);
 	}
 
 	@Override
-	public void read(CompoundNBT tag) {
-		running = tag.getBoolean("Running");
-		offset = tag.getFloat("Offset");
-		extensionLength = tag.getInt("ExtensionLength");
-		super.read(tag);
-	}
-
 	public void assembleConstruct() {
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
@@ -82,19 +56,22 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 
 		BlockPos startPos = BlockPos.ZERO.offset(direction, contraption.initialExtensionProgress);
 		contraption.removeBlocksFromWorld(world, startPos);
-		movedContraption = new ContraptionEntity(getWorld(), contraption, 0).controlledBy(this);
-		moveContraption();
+		movedContraption = ContraptionEntity.createStationary(getWorld(), contraption).controlledBy(this);
+		applyContraptionPosition();
+		forceMove = true;
 		world.addEntity(movedContraption);
 	}
 
+	@Override
 	public void disassembleConstruct() {
 		if (!running)
 			return;
-
 		if (!removed)
 			getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.EXTENDED), 3);
-		if (movedContraption != null)
+		if (movedContraption != null) {
+			applyContraptionPosition();
 			movedContraption.disassemble();
+		}
 		running = false;
 		movedContraption = null;
 		sendData();
@@ -104,58 +81,31 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
-
-		if (movedContraption != null && movedContraption.isStalled())
-			return;
-
-		if (!world.isRemote && assembleNextTick) {
-			assembleNextTick = false;
-			if (running) {
-				if (getSpeed() == 0)
-					disassembleConstruct();
-				else
-					sendData();
-				return;
-			}
-			assembleConstruct();
-			return;
-		}
-
-		if (!running)
-			return;
-
-		float movementSpeed = getMovementSpeed();
-		if (world.isRemote)
-			movementSpeed *= ServerSpeedProvider.get();
-		float newOffset = offset + movementSpeed;
-
-		if (movedContraption == null)
-			return;
-		if (!world.isRemote && getModulatedOffset(newOffset) != getModulatedOffset(offset)) {
-			offset = newOffset;
-			sendData();
-		}
-
-		offset = newOffset;
-		moveContraption();
-
-		if (offset <= 0 || offset >= extensionLength) {
-			offset = offset <= 0 ? 0 : extensionLength;
-			if (!world.isRemote)
-				disassembleConstruct();
-			return;
-		}
+	public float getMovementSpeed() {
+		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);
+		int movementModifier =
+			pistonDirection.getAxisDirection().getOffset() * (pistonDirection.getAxis() == Axis.Z ? -1 : 1);
+		return super.getMovementSpeed() * -movementModifier;
 	}
 
-	public void moveContraption() {
-		if (movedContraption != null) {
-			Vec3d constructOffset = getConstructOffset(0.5f);
-			Vec3d vec = constructOffset.add(new Vec3d(movedContraption.getContraption().getAnchor()));
-			movedContraption.move(vec.x - movedContraption.posX, vec.y - movedContraption.posY,
-					vec.z - movedContraption.posZ);
-		}
+	@Override
+	protected int getExtensionRange() {
+		return extensionLength;
+	}
+
+	@Override
+	protected void visitNewPosition() {
+	}
+
+	@Override
+	protected Vec3d toMotionVector(float speed) {
+		return new Vec3d(getBlockState().get(BlockStateProperties.FACING).getDirectionVec()).scale(speed);
+	}
+
+	@Override
+	protected Vec3d toPosition(float offset) {
+		Vec3d position = new Vec3d(getBlockState().get(BlockStateProperties.FACING).getDirectionVec()).scale(offset);
+		return position.add(new Vec3d(movedContraption.getContraption().getAnchor()));
 	}
 
 //	private boolean hasBlockCollisions(float newOffset) {
@@ -235,42 +185,5 @@ public class MechanicalPistonTileEntity extends KineticTileEntity implements ICo
 //
 //		return false;
 //	}
-
-	private int getModulatedOffset(float offset) {
-		return MathHelper.clamp((int) (offset + .5f), 0, extensionLength);
-	}
-
-	public float getMovementSpeed() {
-		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);
-		int movementModifier =
-			pistonDirection.getAxisDirection().getOffset() * (pistonDirection.getAxis() == Axis.Z ? -1 : 1);
-		return getSpeed() * -movementModifier / 512f;
-	}
-
-	public Vec3d getConstructOffset(float partialTicks) {
-		float interpolatedOffset =
-			MathHelper.clamp(offset + (partialTicks - .5f) * getMovementSpeed(), 0, extensionLength);
-		return new Vec3d(getBlockState().get(BlockStateProperties.FACING).getDirectionVec()).scale(interpolatedOffset);
-	}
-
-	@Override
-	public void attach(ContraptionEntity contraption) {
-		if (contraption.getContraption() instanceof PistonContraption) {
-			this.movedContraption = contraption;
-			if (!world.isRemote)
-				sendData();
-		}
-	}
-
-	@Override
-	public void onStall() {
-		if (!world.isRemote)
-			sendData();
-	}
-
-	@Override
-	public boolean isValid() {
-		return !isRemoved();
-	}
 
 }

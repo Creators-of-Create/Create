@@ -19,5 +19,19 @@ public class AngleHelper {
 	public static float rad(float angle) {
 		return (float) (angle / 180 * Math.PI);
 	}
+	
+	public static float deg(float angle) {
+		return (float) (angle * 180 / Math.PI);
+	}
+	
+	public static  float angleLerp(float pct, float current, float target) {
+		return current + getShortestAngleDiff(current, target) * pct;
+	}
+
+	public static  float getShortestAngleDiff(double current, double target) {
+		current = current % 360;
+		target = target % 360;
+		return (float) (((((target - current) % 360) + 540) % 360) - 180);
+	}
 
 }

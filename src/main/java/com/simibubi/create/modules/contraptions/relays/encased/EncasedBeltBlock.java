@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.encased;
 
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
@@ -185,7 +186,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 
 		@Override
 		public String getName() {
-			return name().toLowerCase();
+			return Lang.asId(name());
 		}
 	}
 

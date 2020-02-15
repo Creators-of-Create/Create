@@ -55,6 +55,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 			if (phase != Phase.IDLE)
 				return stack;
+			if (covered)
+				return stack;
 			return super.insertItem(slot, stack, simulate);
 		};
 
@@ -73,6 +75,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	protected boolean reRender;
 	protected Phase phase;
 	protected int countDown;
+	protected boolean covered;
 
 	protected GroupedItems groupedItemsBeforeCraft; // for rendering on client
 	private InsertingBehaviour inserting;
@@ -120,6 +123,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 		compound.putString("Phase", phase.name());
 		compound.putInt("CountDown", countDown);
+		compound.putBoolean("Cover", covered);
 
 		return super.write(compound);
 	}
@@ -166,6 +170,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			if (phase.name().equals(name))
 				this.phase = phase;
 		countDown = compound.getInt("CountDown");
+		covered = compound.getBoolean("Cover");
 		super.read(compound);
 	}
 
@@ -368,7 +373,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	public boolean craftingItemPresent() {
-		return !inventory.getStackInSlot(0).isEmpty();
+		return !inventory.getStackInSlot(0).isEmpty() || covered;
 	}
 
 	protected void checkCompletedRecipe() {

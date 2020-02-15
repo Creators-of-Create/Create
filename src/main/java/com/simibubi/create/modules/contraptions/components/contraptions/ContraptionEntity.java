@@ -1,5 +1,8 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
+import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
+import static com.simibubi.create.foundation.utility.AngleHelper.getShortestAngleDiff;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllEntities;
@@ -38,6 +41,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected BlockPos controllerPos;
 	protected IControlContraption controllerTE;
 	protected Vec3d motionBeforeStall;
+	protected boolean stationary;
 
 	private static final DataParameter<Boolean> STALLED =
 		EntityDataManager.createKey(ContraptionEntity.class, DataSerializers.BOOLEAN);
@@ -57,21 +61,27 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public ContraptionEntity(EntityType<?> entityTypeIn, World worldIn) {
 		super(entityTypeIn, worldIn);
 		motionBeforeStall = Vec3d.ZERO;
+		stationary = entityTypeIn == AllEntities.STATIONARY_CONTRAPTION.type;
 	}
 
-	protected ContraptionEntity(World world) {
-		this(AllEntities.CONTRAPTION.type, world);
-	}
-
-	public ContraptionEntity(World world, Contraption contraption, float initialAngle) {
-		this(world);
-		this.contraption = contraption;
-		this.initialAngle = initialAngle;
-		this.prevYaw = initialAngle;
-		this.yaw = initialAngle;
-		this.targetYaw = initialAngle;
+	public static ContraptionEntity createMounted(World world, Contraption contraption, float initialAngle) {
+		ContraptionEntity entity = new ContraptionEntity(AllEntities.CONTRAPTION.type, world);
+		entity.contraption = contraption;
+		entity.initialAngle = initialAngle;
+		entity.prevYaw = initialAngle;
+		entity.yaw = initialAngle;
+		entity.targetYaw = initialAngle;
 		if (contraption != null)
 			contraption.gatherStoredItems();
+		return entity;
+	}
+
+	public static ContraptionEntity createStationary(World world, Contraption contraption) {
+		ContraptionEntity entity = new ContraptionEntity(AllEntities.STATIONARY_CONTRAPTION.type, world);
+		entity.contraption = contraption;
+		if (contraption != null)
+			contraption.gatherStoredItems();
+		return entity;
 	}
 
 	public <T extends TileEntity & IControlContraption> ContraptionEntity controlledBy(T controller) {
@@ -131,6 +141,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			return;
 		}
 
+		if (getMotion().length() > 1 / 4098f)
+			move(getMotion().x, getMotion().y, getMotion().z);
+
 		prevYaw = yaw;
 		prevPitch = pitch;
 		prevRoll = roll;
@@ -160,7 +173,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			actorPosition = VecHelper.rotate(actorPosition, angleRoll, angleYaw, anglePitch);
 			actorPosition = actorPosition.add(rotationOffset).add(posX, posY, posZ);
 
-			boolean newPosVisited = context.position == null;
+			boolean newPosVisited = false;
 			BlockPos gridPosition = new BlockPos(actorPosition);
 
 			if (!stalledPreviously) {
@@ -170,7 +183,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 					Vec3d relativeMotion = context.motion;
 					relativeMotion = VecHelper.rotate(relativeMotion, -angleRoll, -angleYaw, -anglePitch);
 					context.relativeMotion = relativeMotion;
-					newPosVisited = !new BlockPos(previousPosition).equals(gridPosition);
+					newPosVisited = !new BlockPos(previousPosition).equals(gridPosition)
+							|| context.relativeMotion.length() > 0 && context.firstMovement;
 				}
 			}
 
@@ -178,16 +192,18 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			context.position = actorPosition;
 
 			if (actor.isActive(context)) {
-				if (newPosVisited && !context.stall)
+				if (newPosVisited && !context.stall) {
 					actor.visitNewPosition(context, gridPosition);
+					context.firstMovement = false;
+				}
 				actor.tick(context);
 				contraption.stalled |= context.stall;
 			}
-
 		}
 
 		if (!world.isRemote) {
 			if (!stalledPreviously && contraption.stalled) {
+				setMotion(Vec3d.ZERO);
 				if (controllerTE != null)
 					controllerTE.onStall();
 				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
@@ -240,6 +256,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		this.posX = x;
 		this.posY = y;
 		this.posZ = z;
+
 		if (this.isAddedToWorld() && !this.world.isRemote && world instanceof ServerWorld)
 			((ServerWorld) this.world).chunkCheck(this); // Forge - Process chunk registration after moving.
 		if (contraption != null) {
@@ -275,16 +292,6 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public float getRoll(float partialTicks) {
 		return partialTicks == 1.0F ? roll : angleLerp(partialTicks, prevRoll, roll);
-	}
-
-	private float angleLerp(float pct, float current, float target) {
-		return current + getShortestAngleDiff(current, target) * pct;
-	}
-
-	private float getShortestAngleDiff(double current, double target) {
-		current = current % 360;
-		target = target % 360;
-		return (float) (((((target - current) % 360) + 540) % 360) - 180);
 	}
 
 	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
@@ -365,6 +372,17 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public boolean isStalled() {
 		return dataManager.get(STALLED);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch,
+			int posRotationIncrements, boolean teleport) {
+		// Stationary Anchors are responsible for keeping position and motion in sync
+		// themselves.
+		if (stationary)
+			return;
+		super.setPositionAndRotationDirect(x, y, z, yaw, pitch, posRotationIncrements, teleport);
 	}
 
 	@OnlyIn(Dist.CLIENT)

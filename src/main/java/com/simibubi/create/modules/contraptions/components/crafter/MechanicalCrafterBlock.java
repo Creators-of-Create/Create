@@ -107,8 +107,11 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			MechanicalCrafterTileEntity crafter = CrafterHelper.getCrafter(worldIn, pos);
-			if (crafter != null)
+			if (crafter != null) {
+				if (crafter.covered)
+					Block.spawnAsEntity(worldIn, pos, AllItems.SLOT_COVER.asStack());
 				crafter.ejectWholeGrid();
+			}
 
 			for (Direction direction : Direction.values()) {
 				if (direction.getAxis() == state.get(HORIZONTAL_FACING).getAxis())
@@ -166,31 +169,55 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 		if (!(te instanceof MechanicalCrafterTileEntity))
 			return false;
 		MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
+		boolean wrenched = AllItems.WRENCH.typeOf(heldItem);
 
 		if (hit.getFace() == state.get(HORIZONTAL_FACING)) {
 
-			if (crafter.phase != Phase.IDLE && !AllItems.WRENCH.typeOf(heldItem)) {
+			if (crafter.phase != Phase.IDLE && !wrenched) {
 				crafter.ejectWholeGrid();
 				return true;
 			}
 
-			if (crafter.phase == Phase.IDLE && !isHand && !AllItems.WRENCH.typeOf(heldItem)) {
+			if (crafter.phase == Phase.IDLE && !isHand && !wrenched) {
 				if (worldIn.isRemote)
 					return true;
-				LazyOptional<IItemHandler> capability = crafter
-						.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+
+				if (AllItems.SLOT_COVER.typeOf(heldItem)) {
+					if (crafter.covered)
+						return false;
+					crafter.covered = true;
+					crafter.markDirty();
+					crafter.sendData();
+					if (!player.isCreative())
+						heldItem.shrink(1);
+					return true;
+				}
+
+				LazyOptional<IItemHandler> capability =
+					crafter.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 				if (!capability.isPresent())
 					return false;
-				ItemStack remainder = ItemHandlerHelper.insertItem(capability.orElse(new ItemStackHandler()),
-						heldItem.copy(), false);
+				ItemStack remainder =
+					ItemHandlerHelper.insertItem(capability.orElse(new ItemStackHandler()), heldItem.copy(), false);
 				if (remainder.getCount() != heldItem.getCount())
 					player.setHeldItem(handIn, remainder);
 				return true;
 			}
 
 			ItemStack inSlot = crafter.inventory.getStackInSlot(0);
-			if (inSlot.isEmpty())
+			if (inSlot.isEmpty()) {
+				if (crafter.covered && !wrenched) {
+					if (worldIn.isRemote)
+						return true;
+					crafter.covered = false;
+					crafter.markDirty();
+					crafter.sendData();
+					if (!player.isCreative())
+						player.inventory.placeItemBackInInventory(worldIn, AllItems.SLOT_COVER.asStack());
+					return true;
+				}
 				return false;
+			}
 			if (!isHand && !ItemHandlerHelper.canItemStacksStack(heldItem, inSlot))
 				return false;
 			if (worldIn.isRemote)

@@ -13,9 +13,20 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class BearingContraption extends Contraption {
-
+	
 	protected int sailBlocks;
 	protected Direction facing;
+
+	private static String type = "Bearing";
+
+	static {
+		register(type, BearingContraption::new);
+	}
+	
+	@Override
+	protected String getType() {
+		return type;
+	}
 
 	public static BearingContraption assembleBearingAt(World world, BlockPos pos, Direction direction) {
 		if (isFrozen())
