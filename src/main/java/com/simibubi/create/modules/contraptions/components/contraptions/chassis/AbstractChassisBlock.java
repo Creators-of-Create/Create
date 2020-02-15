@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.chassis
 
 import java.util.List;
 
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.block.IHaveScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.Lang;
@@ -18,7 +19,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -69,7 +69,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock
 			return true;
 		}
 
-		worldIn.playSound(null, pos, SoundEvents.BLOCK_SLIME_BLOCK_PLACE, SoundCategory.BLOCKS, .5f, 1);
+		worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
 		if (isSlimeBall && !player.isCreative())
 			heldItem.shrink(1);
 		if (!isSlimeBall && !player.isCreative())

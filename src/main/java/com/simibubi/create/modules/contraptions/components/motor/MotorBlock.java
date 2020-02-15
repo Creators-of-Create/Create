@@ -78,6 +78,12 @@ public class MotorBlock extends HorizontalKineticBlock
 			boolean forward = delta > 0;
 			int step = forward ? 1 : -1;
 			int currentSpeed = te.newGeneratedSpeed;
+
+			if (world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ()).isSneaking()){
+				te.setSpeedValueLazily(currentSpeed + step);
+				return;
+			}
+
 			int magnitude = Math.abs(currentSpeed) - (forward == currentSpeed > 0 ? 0 : 1);
 
 			if (magnitude >= 4)

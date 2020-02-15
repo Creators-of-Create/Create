@@ -3,6 +3,7 @@ package com.simibubi.create.modules.logistics.block.belts;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
@@ -24,7 +25,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -96,7 +96,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 
 		if (remainder.isEmpty()) {
 			if (!world.isRemote)
-				world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.BLOCKS, .125f, 1f);
+				world.playSound(null, pos, AllSoundEvents.BLOCK_FUNNEL_EAT.get(), SoundCategory.BLOCKS, .125f, 1f);
 			justEaten = stack.copy();
 		}
 

@@ -57,7 +57,7 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements IWithTileEn
 
 		te.changeState(sneak);
 		float f = .25f + ((te.state + 5) / 15f) * .5f;
-		worldIn.playSound((PlayerEntity) null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.2F, f);
+		worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.2F, f);
 		return true;
 	}
 

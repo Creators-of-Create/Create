@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipes;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -25,7 +26,6 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -190,8 +190,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			}
 
 			if (!world.isRemote) {
-				world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, .5f, 1f);
-				world.playSound(null, getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, .125f, 1f);
+				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ITEM_BREAK.get(), SoundCategory.BLOCKS, .5f, 1f);
+				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.get(), SoundCategory.BLOCKS, .125f, 1f);
 			}
 		}
 
