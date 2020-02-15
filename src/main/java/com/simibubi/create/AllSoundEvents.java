@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.data.ICanGenerateJson;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
@@ -15,7 +16,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
 
 public enum AllSoundEvents implements ICanGenerateJson {
 
@@ -32,42 +32,40 @@ public enum AllSoundEvents implements ICanGenerateJson {
 	BLOCKZAPPER_DENY(SoundEvents.BLOCK_NOTE_BLOCK_BASS),
 	BLOCK_FUNNEL_EAT(SoundEvents.ENTITY_GENERIC_EAT),
 
-
 	;
 
 	String id;
 	SoundEvent event, child;
 
-	//For adding our own sounds at assets/create/sounds/name.ogg
-	AllSoundEvents(){
-		id = name().toLowerCase();
+	// For adding our own sounds at assets/create/sounds/name.ogg
+	AllSoundEvents() {
+		id = Lang.asId(name());
 	}
-
-	AllSoundEvents(String name){
+	
+	AllSoundEvents(String name) {
 		id = name;
 	}
 
-	//For wrapping a existing sound with new subtitle
-	AllSoundEvents(SoundEvent child){
-		id = name().toLowerCase();
+	// For wrapping a existing sound with new subtitle
+	AllSoundEvents(SoundEvent child) {
+		this();
 		this.child = child;
 	}
 
-	//subtitles are taken from the lang file (create.subtitle.sound_event_name)
+	// subtitles are taken from the lang file (create.subtitle.sound_event_name)
 
-	public SoundEvent get(){
+	public SoundEvent get() {
 		return event;
 	}
 
-	private String getName(){
+	private String getName() {
 		return id;
 	}
 
 	public static void register(RegistryEvent.Register<SoundEvent> event) {
 		IForgeRegistry<SoundEvent> registry = event.getRegistry();
 
-		for (AllSoundEvents entry :
-				values()) {
+		for (AllSoundEvents entry : values()) {
 
 			ResourceLocation rec = new ResourceLocation(Create.ID, entry.getName());
 			SoundEvent sound = new SoundEvent(rec).setRegistryName(rec);
@@ -76,24 +74,23 @@ public enum AllSoundEvents implements ICanGenerateJson {
 		}
 	}
 
-	public void generate(Path path, DirectoryCache cache){
+	public void generate(Path path, DirectoryCache cache) {
 		Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
 		path = path.resolve("assets/create");
 
 		try {
 			JsonObject json = new JsonObject();
-			for (AllSoundEvents soundEvent :
-					values()) {
+			for (AllSoundEvents soundEvent : values()) {
 				JsonObject entry = new JsonObject();
 				JsonArray arr = new JsonArray();
-				if (soundEvent.child != null){
-					//wrapper
+				if (soundEvent.child != null) {
+					// wrapper
 					JsonObject s = new JsonObject();
 					s.addProperty("name", soundEvent.child.getName().toString());
 					s.addProperty("type", "event");
 					arr.add(s);
-				} else{
-					//own sound
+				} else {
+					// own sound
 					arr.add(Create.ID + ":" + soundEvent.getName());
 				}
 				entry.add("sounds", arr);
