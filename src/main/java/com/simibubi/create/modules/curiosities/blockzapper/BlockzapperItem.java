@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -50,7 +51,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -196,7 +196,7 @@ public class BlockzapperItem extends Item implements IHaveCustomItemModel {
 		if (nbt.contains("BlockUsed"))
 			stateToUse = NBTUtil.readBlockState(nbt.getCompound("BlockUsed"));
 		else {
-			world.playSound(player, player.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_BASS, SoundCategory.BLOCKS, 1f,
+			world.playSound(player, player.getPosition(), AllSoundEvents.BLOCKZAPPER_DENY.get(), SoundCategory.BLOCKS, 1f,
 					0.5f);
 			player.sendStatusMessage(
 					new StringTextComponent(TextFormatting.RED + Lang.translate("blockzapper.leftClickToSet")), true);
@@ -333,7 +333,7 @@ public class BlockzapperItem extends Item implements IHaveCustomItemModel {
 			return true;
 
 		stack.getTag().put("BlockUsed", NBTUtil.writeBlockState(newState));
-		entity.world.playSound((PlayerEntity) entity, entity.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_BELL,
+		entity.world.playSound((PlayerEntity) entity, entity.getPosition(), AllSoundEvents.BLOCKZAPPER_CONFIRM.get(),
 				SoundCategory.BLOCKS, 0.5f, 0.8f);
 
 		return true;

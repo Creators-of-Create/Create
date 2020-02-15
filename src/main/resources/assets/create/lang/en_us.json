@@ -608,6 +608,16 @@
 	"advancement.create:speed_secret": "Hella fast",
 	"advancement.create:speed_secret.desc": "Watch a Speedometer reach exactly 666 speed",
 
+	"create.subtitle.schematicannon_launch_block": "Schematicannon shoots",
+	"create.subtitle.schematicannon_finish": "Schematicannon finishes",
+	"create.subtitle.slime_added": "Slime squishes",
+	"create.subtitle.mechanical_press_activation": "Mechanical Press activates",
+	"create.subtitle.mechanical_press_item_break": "Metal clanks",
+	"create.subtitle.blockzapper_place": "Blocks zap into place",
+	"create.subtitle.blockzapper_confirm": "Affirmative Ding",
+	"create.subtitle.blockzapper_deny": "Declining Boop",
+	"create.subtitle.block_funnel_eat": "Funnel eats",
+
 	"_comment": "-------------------------]  ITEM DESCRIPTIONS  [------------------------------------------------",
 
 	"item.create.example_item.tooltip": "EXAMPLE ITEM (just a marker that this tooltip exists)",

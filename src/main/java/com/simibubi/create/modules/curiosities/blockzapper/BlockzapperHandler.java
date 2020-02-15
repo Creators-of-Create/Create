@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import com.simibubi.create.AllSoundEvents;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -26,8 +27,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -149,8 +148,7 @@ public class BlockzapperHandler {
 
 	public static void playSound(Hand hand, BlockPos position) {
 		float pitch = hand == Hand.MAIN_HAND ? 2f : 0.9f;
-		SoundEvent sound = SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM;
-		Minecraft.getInstance().world.playSound(position, sound, SoundCategory.BLOCKS, 0.8f, pitch, false);
+		Minecraft.getInstance().world.playSound(position, AllSoundEvents.BLOCKZAPPER_PLACE.get(), SoundCategory.BLOCKS, 0.8f, pitch, false);
 	}
 
 	public static void addBeam(LaserBeam beam) {

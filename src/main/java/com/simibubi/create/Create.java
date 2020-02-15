@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
+import net.minecraft.util.SoundEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,6 +56,7 @@ public class Create {
 		modEventBus.addGenericListener(ContainerType.class, AllContainers::register);
 		modEventBus.addGenericListener(EntityType.class, AllEntities::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticles::register);
+		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
 
 		AllConfigs.registerAll();
 		modEventBus.addListener(AllConfigs::onLoad);

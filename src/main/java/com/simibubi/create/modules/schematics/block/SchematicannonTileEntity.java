@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CSchematics;
@@ -39,7 +40,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -556,7 +556,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			statusMsg = "finished";
 			resetPrinter();
 			target = getPos().add(1, 0, 0);
-			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_NOTE_BLOCK_BELL,
+			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), AllSoundEvents.SCHEMATICANNON_FINISH.get(),
 					SoundCategory.BLOCKS, 1, .7f);
 			sendUpdate = true;
 			return;
@@ -702,7 +702,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (state.getBlock() != Blocks.AIR)
 			blocksPlaced++;
 		flyingBlocks.add(new LaunchedBlock(this, target, state));
-		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE,
+		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), AllSoundEvents.SCHEMATICANNON_LAUNCH_BLOCK.get(),
 				SoundCategory.BLOCKS, .1f, 1.1f);
 	}
 
