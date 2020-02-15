@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.bearing
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlockTags;
+import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -16,16 +17,10 @@ public class BearingContraption extends Contraption {
 	
 	protected int sailBlocks;
 	protected Direction facing;
-
-	private static String type = "Bearing";
-
-	static {
-		register(type, BearingContraption::new);
-	}
 	
 	@Override
-	protected String getType() {
-		return type;
+	protected AllContraptionTypes getType() {
+		return AllContraptionTypes.BEARING;
 	}
 
 	public static BearingContraption assembleBearingAt(World world, BlockPos pos, Direction direction) {

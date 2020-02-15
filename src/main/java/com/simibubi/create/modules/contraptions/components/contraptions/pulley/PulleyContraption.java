@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.pulley;
 
+import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -11,15 +12,9 @@ public class PulleyContraption extends Contraption {
 
 	int initialOffset;
 
-	private static String type = "Pulley";
-
-	static {
-		register(type, PulleyContraption::new);
-	}
-
 	@Override
-	protected String getType() {
-		return type;
+	protected AllContraptionTypes getType() {
+		return AllContraptionTypes.PULLEY;
 	}
 
 	public static PulleyContraption assemblePulleyAt(World world, BlockPos pos, int initialOffset) {

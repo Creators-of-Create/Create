@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
 import net.minecraft.block.BlockState;
@@ -25,15 +26,9 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class MountedContraption extends Contraption {
 
-	private static String type = "Mounted";
-
-	static {
-		register(type, MountedContraption::new);
-	}
-	
 	@Override
-	protected String getType() {
-		return type;
+	protected AllContraptionTypes getType() {
+		return AllContraptionTypes.MOUNTED;
 	}
 	
 	public static Contraption assembleMinecart(World world, BlockPos pos, AbstractMinecartEntity cart) {

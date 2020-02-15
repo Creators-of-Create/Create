@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -53,9 +52,7 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-public class Contraption {
-
-	protected static Map<String, Supplier<? extends Contraption>> deserializers = new HashMap<>();
+public abstract class Contraption {
 
 	public Map<BlockPos, BlockInfo> blocks;
 	public Map<BlockPos, MountedStorage> storage;
@@ -68,10 +65,6 @@ public class Contraption {
 	protected Set<BlockPos> cachedColliders;
 	protected Direction cachedColliderDirection;
 	protected BlockPos anchor;
-
-	protected static void register(String name, Supplier<? extends Contraption> factory) {
-		deserializers.put(name, factory);
-	}
 
 	public Contraption() {
 		blocks = new HashMap<>();
@@ -481,9 +474,7 @@ public class Contraption {
 
 	public static Contraption fromNBT(World world, CompoundNBT nbt) {
 		String type = nbt.getString("Type");
-		Contraption contraption = new Contraption();
-		if (deserializers.containsKey(type))
-			contraption = deserializers.get(type).get();
+		Contraption contraption = AllContraptionTypes.fromType(type);
 		contraption.readNBT(world, nbt);
 		return contraption;
 	}
@@ -525,7 +516,7 @@ public class Contraption {
 
 	public CompoundNBT writeNBT() {
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.putString("Type", getType());
+		nbt.putString("Type", getType().id);
 		ListNBT blocksNBT = new ListNBT();
 		for (BlockInfo block : this.blocks.values()) {
 			CompoundNBT c = new CompoundNBT();
@@ -669,8 +660,6 @@ public class Contraption {
 		return ((IPortableBlock) block).getMovementBehaviour();
 	}
 
-	protected String getType() {
-		return "Contraption";
-	}
+	protected abstract AllContraptionTypes getType();
 
 }

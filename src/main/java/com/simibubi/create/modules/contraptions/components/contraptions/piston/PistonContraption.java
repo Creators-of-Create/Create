@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
@@ -37,16 +38,11 @@ public class PistonContraption extends Contraption {
 	protected int initialExtensionProgress;
 	protected Direction orientation;
 
-	private static String type = "Piston";
-
-	static {
-		register(type, PistonContraption::new);
+	@Override
+	protected AllContraptionTypes getType() {
+		return AllContraptionTypes.PISTON;
 	}
 	
-	@Override
-	protected String getType() {
-		return type;
-	}
 	public static PistonContraption movePistonAt(World world, BlockPos pos, Direction direction, boolean retract) {
 		if (isFrozen())
 			return null;

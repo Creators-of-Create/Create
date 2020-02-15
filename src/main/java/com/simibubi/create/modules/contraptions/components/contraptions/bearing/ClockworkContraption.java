@@ -8,6 +8,7 @@ import java.util.function.BiPredicate;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
 import net.minecraft.block.BlockState;
@@ -23,15 +24,9 @@ public class ClockworkContraption extends Contraption {
 	public int offset;
 	private Set<BlockPos> ignoreBlocks = new HashSet<>();
 
-	private static String type = "Clockwork";
-
-	static {
-		register(type, ClockworkContraption::new);
-	}
-
 	@Override
-	protected String getType() {
-		return type;
+	protected AllContraptionTypes getType() {
+		return AllContraptionTypes.CLOCKWORK;
 	}
 
 	private void ignoreBlocks(Set<BlockPos> blocks, BlockPos anchor) {
