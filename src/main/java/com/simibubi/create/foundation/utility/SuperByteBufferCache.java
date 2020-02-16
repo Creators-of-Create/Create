@@ -30,7 +30,7 @@ public class SuperByteBufferCache {
 
 	public static final Compartment<BlockState> GENERIC_TILE = new Compartment<>();
 	public static final Compartment<AllBlockPartials> PARTIAL = new Compartment<>();
-	
+
 	Map<Compartment<?>, Cache<Object, SuperByteBuffer>> cache;
 
 	public SuperByteBufferCache() {
@@ -42,7 +42,7 @@ public class SuperByteBufferCache {
 	public SuperByteBuffer renderBlock(BlockState toRender) {
 		return getGeneric(toRender, () -> standardBlockRender(toRender));
 	}
-	
+
 	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState) {
 		return get(PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState));
 	}
@@ -51,7 +51,7 @@ public class SuperByteBufferCache {
 		return get(compartment, toRender, () -> standardBlockRender(toRender));
 	}
 
-	 SuperByteBuffer getGeneric(BlockState key, Supplier<SuperByteBuffer> supplier) {
+	SuperByteBuffer getGeneric(BlockState key, Supplier<SuperByteBuffer> supplier) {
 		return get(GENERIC_TILE, key, supplier);
 	}
 
@@ -78,19 +78,19 @@ public class SuperByteBufferCache {
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 		return standardModelRender(dispatcher.getModelForState(renderedState), renderedState);
 	}
-	
+
 	private SuperByteBuffer standardModelRender(IBakedModel model, BlockState referenceState) {
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
 		BufferBuilder builder = new BufferBuilder(0);
 		Random random = new Random();
-		
+
 		builder.setTranslation(0, 1, 0);
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		blockRenderer.renderModelFlat(Minecraft.getInstance().world, model, referenceState, BlockPos.ZERO.down(),
 				builder, true, random, 42, EmptyModelData.INSTANCE);
 		builder.finishDrawing();
-		
+
 		return new SuperByteBuffer(builder.getByteBuffer());
 	}
 

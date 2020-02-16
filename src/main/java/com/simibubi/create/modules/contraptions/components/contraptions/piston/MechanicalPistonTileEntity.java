@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
@@ -82,10 +83,13 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	public float getMovementSpeed() {
+		float movementSpeed = getSpeed() / 512f;
+		if (world.isRemote)
+			movementSpeed *= ServerSpeedProvider.get();
 		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);
 		int movementModifier =
 			pistonDirection.getAxisDirection().getOffset() * (pistonDirection.getAxis() == Axis.Z ? -1 : 1);
-		return super.getMovementSpeed() * -movementModifier;
+		return movementSpeed * -movementModifier + clientOffsetDiff / 2f;
 	}
 
 	@Override
@@ -99,7 +103,8 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	protected Vec3d toMotionVector(float speed) {
-		return new Vec3d(getBlockState().get(BlockStateProperties.FACING).getDirectionVec()).scale(speed);
+		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);
+		return new Vec3d(pistonDirection.getDirectionVec()).scale(speed);
 	}
 
 	@Override

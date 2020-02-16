@@ -2,9 +2,11 @@ package com.simibubi.create.config;
 
 public class CKinetics extends ConfigBase {
 
+	public ConfigBool disableStress = b(false, "disableStress", Comments.disableStress);
 	public ConfigInt maxBeltLength = i(20, 5, "maxBeltLength", Comments.maxBeltLength);
 	public ConfigInt crushingDamage = i(4, 0, "crushingDamage", Comments.crushingDamage);
 	public ConfigInt maxMotorSpeed = i(256, 64, "maxMotorSpeed", Comments.rpm, Comments.maxMotorSpeed);
+	public ConfigInt waterWheelSpeed = i(5, 1, "waterWheelSpeed", Comments.rpm, Comments.waterWheelSpeed);
 	public ConfigInt maxRotationSpeed = i(256, 64, "maxRotationSpeed", Comments.rpm, Comments.maxRotationSpeed);
 	public ConfigEnum<DeployerAggroSetting> ignoreDeployerAttacks =
 		e(DeployerAggroSetting.CREEPERS, "ignoreDeployerAttacks", Comments.ignoreDeployerAttacks);
@@ -67,6 +69,8 @@ public class CKinetics extends ConfigBase {
 		static String highCapacity = "Minimum added Capacity by sources to be considered 'high'";
 		static String stress = "Fine tune the kinetic stats of individual components";
 		static String ignoreDeployerAttacks = "Select what mobs should ignore Deployers when attacked by them.";
+		static String waterWheelSpeed = "Rotation speed gained by a water wheel for each side with running water. (halved if not against blades)";
+		static String disableStress = "Disable the Stress mechanic altogether.";
 	}
 
 	public static enum DeployerAggroSetting {

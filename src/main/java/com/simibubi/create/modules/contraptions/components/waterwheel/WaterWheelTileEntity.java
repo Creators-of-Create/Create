@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.components.waterwheel;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 
@@ -12,14 +13,14 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 
-	private Map<Direction, Integer> flows;
+	private Map<Direction, Float> flows;
 
 	public WaterWheelTileEntity() {
 		super(AllTileEntities.WATER_WHEEL.type);
-		flows = new HashMap<Direction, Integer>();
+		flows = new HashMap<>();
 		for (Direction d : Direction.values())
 			setFlow(d, 0);
-
+		setLazyTickRate(20);
 	}
 
 	@Override
@@ -27,7 +28,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 		super.read(compound);
 		if (compound.contains("Flows")) {
 			for (Direction d : Direction.values())
-				setFlow(d, compound.getCompound("Flows").getInt(d.getName()));
+				setFlow(d, compound.getCompound("Flows").getFloat(d.getName()));
 		}
 	}
 
@@ -41,22 +42,29 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 
 		CompoundNBT flows = new CompoundNBT();
 		for (Direction d : Direction.values())
-			flows.putInt(d.getName(), this.flows.get(d));
+			flows.putFloat(d.getName(), this.flows.get(d));
 		compound.put("Flows", flows);
 
 		return super.write(compound);
 	}
 
-	public void setFlow(Direction direction, int speed) {
+	public void setFlow(Direction direction, float speed) {
 		flows.put(direction, speed);
 	}
 
 	@Override
 	public float getGeneratedSpeed() {
 		float speed = 0;
-		for (Integer i : flows.values())
-			speed += i;
+		for (Float f : flows.values())
+			speed += f;
 		return speed;
 	}
 
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		WaterWheelBlock block = (WaterWheelBlock) AllBlocks.WATER_WHEEL.get();
+		block.updateAllSides(getBlockState(), world, pos);
+	}
+	
 }

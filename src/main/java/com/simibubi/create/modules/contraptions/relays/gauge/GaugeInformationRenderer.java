@@ -102,7 +102,7 @@ public class GaugeInformationRenderer {
 	private static void addStressTooltip(BlockState state, List<String> tooltip, KineticTileEntity te) {
 		String spacing = "    ";
 		float stressApplied = te.getStressApplied();
-		if (stressApplied == 0)
+		if (stressApplied == 0 || !StressImpact.isEnabled())
 			return;
 
 		String _kineticStatsTitle = Lang.translate("gui.goggles.kinetic_stats");
@@ -115,8 +115,8 @@ public class GaugeInformationRenderer {
 		tooltip.add(spacing + GRAY + _stressImpact);
 
 		String addedStress = AQUA + "" + format(stressApplied) + _stressUnit + " " + DARK_GRAY + _atCurrentSpeed;
-		String addedStressAtBase = GRAY + "" + format(stressApplied * Math.abs(te.getSpeed())) + _stressUnit + " "
-				+ DARK_GRAY + _baseValue;
+		String addedStressAtBase =
+			GRAY + "" + format(stressApplied * Math.abs(te.getSpeed())) + _stressUnit + " " + DARK_GRAY + _baseValue;
 		tooltip.add(spacing + " " + addedStress);
 		tooltip.add(spacing + " " + addedStressAtBase);
 	}
@@ -124,7 +124,7 @@ public class GaugeInformationRenderer {
 	private static void addGeneratorTooltip(BlockState state, List<String> tooltip, GeneratingKineticTileEntity te) {
 		String spacing = "    ";
 		float addedStressCapacity = te.getAddedStressCapacity();
-		if (addedStressCapacity == 0)
+		if (addedStressCapacity == 0 || !StressImpact.isEnabled())
 			return;
 
 		String _stressUnit = Lang.translate("generic.unit.stress");
@@ -144,8 +144,8 @@ public class GaugeInformationRenderer {
 		if (actualSpeed != 0)
 			relativeCap = addedStressCapacity * actualSpeed;
 
-		String addedCapacity = AQUA + "" + format(addedStressCapacity) + _stressUnit + " " + DARK_GRAY
-				+ _atCurrentSpeed;
+		String addedCapacity =
+			AQUA + "" + format(addedStressCapacity) + _stressUnit + " " + DARK_GRAY + _atCurrentSpeed;
 		String addedCapacityAtBase = GRAY + "" + format(relativeCap) + _stressUnit + " " + DARK_GRAY + _baseValue;
 		tooltip.add(spacing + " " + addedCapacity);
 		tooltip.add(spacing + " " + addedCapacityAtBase);
@@ -170,6 +170,10 @@ public class GaugeInformationRenderer {
 		if (AllBlocks.STRESS_GAUGE.typeOf(state)) {
 			if (!(te instanceof StressGaugeTileEntity))
 				return;
+			if (!StressImpact.isEnabled()) {
+				tooltip.clear();
+				return;
+			}
 			StressGaugeTileEntity stressGauge = (StressGaugeTileEntity) te;
 			List<String> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
 			double stress = stressGauge.currentStress;

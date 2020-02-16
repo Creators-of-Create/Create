@@ -98,13 +98,16 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void readClientUpdate(CompoundNBT tag) {
 		float angleBefore = angle;
 		super.readClientUpdate(tag);
-		clientAngleDiff = AngleHelper.getShortestAngleDiff(angleBefore, angle);
-		angle = angleBefore;
+		if (running) {
+			clientAngleDiff = AngleHelper.getShortestAngleDiff(angleBefore, angle);
+			angle = angleBefore;
+		} else
+			movedContraption = null;
 	}
 
 	@Override
 	public float getInterpolatedAngle(float partialTicks) {
-		if (movedContraption != null && movedContraption.isStalled())
+		if (movedContraption == null || movedContraption.isStalled())
 			partialTicks = 0;
 		return MathHelper.lerp(partialTicks, angle, angle + getAngularSpeed());
 	}
@@ -133,6 +136,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			return;
 		if (isWindmill && contraption.getSailBlocks() == 0)
 			return;
+		if (contraption.blocks.isEmpty())
+			return;
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		movedContraption = ContraptionEntity.createStationary(world, contraption).controlledBy(this);
 		BlockPos anchor = pos.offset(direction);
@@ -152,7 +157,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			return;
 		if (movedContraption != null)
 			movedContraption.disassemble();
-		
+
 		movedContraption = null;
 		running = false;
 		angle = 0;

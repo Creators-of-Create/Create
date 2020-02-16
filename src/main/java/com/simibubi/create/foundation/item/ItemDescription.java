@@ -84,16 +84,17 @@ public class ItemDescription {
 	}
 
 	public ItemDescription withKineticStats(Block block) {
-	
+
 		boolean isEngine = block instanceof EngineBlock;
 		CKinetics config = AllConfigs.SERVER.kinetics;
-		SpeedLevel minimumRequiredSpeedLevel = isEngine ? SpeedLevel.NONE : ((IRotate) block).getMinimumRequiredSpeedLevel();
+		SpeedLevel minimumRequiredSpeedLevel =
+			isEngine ? SpeedLevel.NONE : ((IRotate) block).getMinimumRequiredSpeedLevel();
 		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE;
 		ResourceLocation id = ((Block) block).getRegistryName();
 		Map<ResourceLocation, ConfigValue<Double>> impacts = config.stressValues.impacts;
 		Map<ResourceLocation, ConfigValue<Double>> capacities = config.stressValues.capacities;
-		boolean hasStressImpact = impacts.containsKey(id) && impacts.get(id).get() > 0;
-		boolean hasStressCapacity = capacities.containsKey(id);
+		boolean hasStressImpact = impacts.containsKey(id) && impacts.get(id).get() > 0 && StressImpact.isEnabled();
+		boolean hasStressCapacity = capacities.containsKey(id) && StressImpact.isEnabled();
 		boolean hasGlasses =
 			AllItems.GOGGLES.typeOf(Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD));
 

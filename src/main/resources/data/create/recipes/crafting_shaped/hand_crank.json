@@ -1,19 +1,19 @@
 {
     "type": "crafting_shaped",
         "pattern": [
-            " L ",
+            " A ",
             "PPP",
-			"  A"
+			"  L"
         ],
         "key": {
             "L": {
-                "tag": "minecraft:logs"
+                "item": "create:andesite_alloy"
             },
 			"P": {
                 "tag": "minecraft:planks"
             },
 			"A": {
-                "item": "create:andesite_alloy"
+                "tag": "forge:plates/brass"
             }
         },
 	"result": {

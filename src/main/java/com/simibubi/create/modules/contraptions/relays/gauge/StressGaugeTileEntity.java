@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.relays.gauge;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
 
 public class StressGaugeTileEntity extends GaugeTileEntity {
 
@@ -13,7 +14,9 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 	public void sync(float maxStress, float currentStress) {
 		super.sync(maxStress, currentStress);
 
-		if (overStressed)
+		if (!StressImpact.isEnabled())
+			dialTarget = 0;
+		else if (overStressed)
 			dialTarget = 1.125f;
 		else if (maxStress == 0)
 			dialTarget = 0;

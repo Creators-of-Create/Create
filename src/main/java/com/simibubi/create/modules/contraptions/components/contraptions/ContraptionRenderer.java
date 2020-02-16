@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -48,7 +49,8 @@ public class ContraptionRenderer {
 
 		for (BlockInfo info : c.blocks.values())
 			renderWorld.setBlockState(info.pos, info.state);
-		for (BlockInfo info : c.blocks.values()) {
+		for (BlockPos pos : c.renderOrder) {
+			BlockInfo info = c.blocks.get(pos);
 			IBakedModel originalModel = dispatcher.getModelForState(info.state);
 			blockRenderer.renderModel(renderWorld, originalModel, info.state, info.pos, builder, true, random, 42,
 					EmptyModelData.INSTANCE);

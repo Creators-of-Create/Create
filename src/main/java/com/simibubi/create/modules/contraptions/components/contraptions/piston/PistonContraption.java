@@ -32,7 +32,7 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class PistonContraption extends Contraption {
 
-	protected AxisAlignedBB pistonCollisionBox;
+	protected AxisAlignedBB pistonExtensionCollisionBox;
 
 	protected int extensionLength;
 	protected int initialExtensionProgress;
@@ -42,7 +42,7 @@ public class PistonContraption extends Contraption {
 	protected AllContraptionTypes getType() {
 		return AllContraptionTypes.PISTON;
 	}
-	
+
 	public static PistonContraption movePistonAt(World world, BlockPos pos, Direction direction, boolean retract) {
 		if (isFrozen())
 			return null;
@@ -100,33 +100,39 @@ public class PistonContraption extends Contraption {
 				return false;
 		}
 
+		anchor = pos.offset(direction, initialExtensionProgress + 1);
 		extensionLength = extensionsInBack + extensionsInFront;
 		initialExtensionProgress = extensionsInFront;
-		pistonCollisionBox = new AxisAlignedBB(end.offset(direction, -extensionsInFront));
-
-		anchor = pos.offset(direction, initialExtensionProgress + 1);
+		pistonExtensionCollisionBox = new AxisAlignedBB(end.offset(direction, -extensionsInFront).subtract(anchor));
 
 		if (extensionLength == 0)
 			return false;
 
+		constructCollisionBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+
 		for (BlockInfo pole : poles) {
-			BlockPos polePos = pole.pos.offset(direction, -extensionsInFront).subtract(anchor);
-			blocks.put(polePos, new BlockInfo(polePos, pole.state, null));
-			pistonCollisionBox = pistonCollisionBox.union(new AxisAlignedBB(polePos));
+			BlockPos relPos = pole.pos.offset(direction, -extensionsInFront);
+			BlockPos localPos = relPos.subtract(anchor);
+			blocks.put(localPos, new BlockInfo(localPos, pole.state, null));
+			pistonExtensionCollisionBox = pistonExtensionCollisionBox.union(new AxisAlignedBB(localPos));
 		}
 
-		constructCollisionBox = new AxisAlignedBB(BlockPos.ZERO.offset(direction, -initialExtensionProgress));
 		return true;
 	}
 
 	@Override
 	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, List<BlockPos> frontier) {
-		for (int offset = 1; offset <= AllConfigs.SERVER.kinetics.maxChassisRange.get(); offset++) {
-			BlockPos currentPos = pos.offset(direction, offset);
-			if (!world.isAreaLoaded(currentPos, 1))
-				return false;
-			if (!world.isBlockPresent(currentPos))
+		frontier.clear();
+		boolean sticky = STICKY_MECHANICAL_PISTON.typeOf(world.getBlockState(pos.offset(orientation, -1)));
+		boolean retracting = direction != orientation;
+		if (retracting && !sticky)
+			return true;
+		for (int offset = 0; offset <= AllConfigs.SERVER.kinetics.maxChassisRange.get(); offset++) {
+			if (offset == 1 && retracting)
 				break;
+			BlockPos currentPos = pos.offset(orientation, offset + initialExtensionProgress);
+			if (!world.isBlockPresent(currentPos))
+				return false;
 			BlockState state = world.getBlockState(currentPos);
 			if (state.getMaterial().isReplaceable())
 				break;
@@ -135,7 +141,7 @@ public class PistonContraption extends Contraption {
 			if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state) && state.get(FACING) == direction.getOpposite())
 				break;
 			if (!canPush(world, currentPos, direction))
-				return false;
+				return retracting;
 			frontier.add(currentPos);
 		}
 		return true;
@@ -149,7 +155,7 @@ public class PistonContraption extends Contraption {
 	@Override
 	public void disassemble(World world, BlockPos offset, float yaw, float pitch) {
 		super.disassemble(world, offset, yaw, pitch, (pos, state) -> {
-			BlockPos pistonPos = anchor.offset(orientation, -initialExtensionProgress - 1);
+			BlockPos pistonPos = anchor.offset(orientation, -1);
 			BlockState pistonState = world.getBlockState(pistonPos);
 			TileEntity te = world.getTileEntity(pistonPos);
 			if (pos.equals(pistonPos)) {
@@ -167,7 +173,7 @@ public class PistonContraption extends Contraption {
 	@Override
 	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
 		super.removeBlocksFromWorld(world, offset, (pos, state) -> {
-			BlockPos pistonPos = anchor.offset(orientation, -initialExtensionProgress - 1);
+			BlockPos pistonPos = anchor.offset(orientation, -1);
 			BlockState blockState = world.getBlockState(pos);
 			if (pos.equals(pistonPos) && blockState.getBlock() instanceof MechanicalPistonBlock) {
 				world.setBlockState(pos, blockState.with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66);
@@ -184,15 +190,15 @@ public class PistonContraption extends Contraption {
 		initialExtensionProgress = nbt.getInt("InitialLength");
 		orientation = Direction.byIndex(nbt.getInt("Orientation"));
 		if (nbt.contains("BoundsBack"))
-			pistonCollisionBox = NBTHelper.readAABB(nbt.getList("BoundsBack", 5));
+			pistonExtensionCollisionBox = NBTHelper.readAABB(nbt.getList("BoundsBack", 5));
 	}
 
 	@Override
 	public CompoundNBT writeNBT() {
 		CompoundNBT nbt = super.writeNBT();
 
-		if (pistonCollisionBox != null) {
-			ListNBT bb = NBTHelper.writeAABB(pistonCollisionBox);
+		if (pistonExtensionCollisionBox != null) {
+			ListNBT bb = NBTHelper.writeAABB(pistonExtensionCollisionBox);
 			nbt.put("BoundsBack", bb);
 		}
 		nbt.putInt("InitialLength", initialExtensionProgress);
@@ -202,7 +208,8 @@ public class PistonContraption extends Contraption {
 		return nbt;
 	}
 
-	public AxisAlignedBB getCollisionBoxBack() {
-		return pistonCollisionBox;
+	@Override
+	public AxisAlignedBB getCollisionBox() {
+		return super.getCollisionBox().union(pistonExtensionCollisionBox);
 	}
 }

@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.waterwheel;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -65,6 +66,10 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		updateAllSides(state, worldIn, pos);
+	}
+	
+	public void updateAllSides(BlockState state, World worldIn, BlockPos pos) {
 		for (Direction d : Direction.values())
 			updateFlowAt(state, worldIn, pos, d);
 		updateWheelSpeed(worldIn, pos);
@@ -99,15 +104,16 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 				flow = flowVec.y > 0 ^ !clockwise ? -flowVec.y * clockwiseMultiplier : -flowVec.y;
 		}
 
-		te.setFlow(f, (int) (flow * 5));
+		te.setFlow(f, (float) (flow * AllConfigs.SERVER.kinetics.waterWheelSpeed.get() / 2f));
 	}
 
 	private void updateWheelSpeed(IWorld world, BlockPos pos) {
 		if (world.isRemote())
 			return;
-		WaterWheelTileEntity te = (WaterWheelTileEntity) world.getTileEntity(pos);
-		if (te == null)
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if (!(tileEntity instanceof WaterWheelTileEntity))
 			return;
+		WaterWheelTileEntity te = (WaterWheelTileEntity) tileEntity;
 		te.updateGeneratedRotation();
 	}
 

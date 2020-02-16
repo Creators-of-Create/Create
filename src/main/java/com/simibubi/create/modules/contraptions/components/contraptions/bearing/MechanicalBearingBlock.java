@@ -15,6 +15,11 @@ public class MechanicalBearingBlock extends BearingBlock implements IWithTileEnt
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new MechanicalBearingTileEntity();
 	}
+	
+	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		withTileEntityDo(worldIn, pos, MechanicalBearingTileEntity::neighbourChanged);
+	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,

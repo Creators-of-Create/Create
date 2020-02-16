@@ -146,6 +146,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 			return;
 		if (contraption.getLeft() == null)
 			return;
+		if (contraption.getLeft().blocks.isEmpty())
+			return;
 		BlockPos anchor = pos.offset(direction);
 
 		contraption.getLeft().removeBlocksFromWorld(world, BlockPos.ZERO);
@@ -229,6 +231,9 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 			clientMinuteAngleDiff = AngleHelper.getShortestAngleDiff(minuteAngleBefore, minuteAngle);
 			hourAngle = hourAngleBefore;
 			minuteAngle = minuteAngleBefore;
+		} else {
+			hourHand = null;
+			minuteHand = null;
 		}
 	}
 
@@ -245,7 +250,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 
 	@Override
 	public float getInterpolatedAngle(float partialTicks) {
-		if (hourHand != null && hourHand.isStalled())
+		if (hourHand == null || hourHand.isStalled())
 			partialTicks = 0;
 		return MathHelper.lerp(partialTicks, hourAngle, hourAngle + getHourArmSpeed());
 	}

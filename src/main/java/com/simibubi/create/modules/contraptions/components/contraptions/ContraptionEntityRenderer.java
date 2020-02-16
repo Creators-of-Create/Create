@@ -74,6 +74,7 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 
 		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
 		TessellatorHelper.prepareFastRender();
+		GlStateManager.enableCull();
 		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
 		ContraptionRenderer.render(entity.world, entity.getContraption(), superByteBuffer -> {
 			superByteBuffer.translate(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
@@ -87,6 +88,7 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 		}, Tessellator.getInstance().getBuffer());
 		TessellatorHelper.draw();
 
+		GlStateManager.disableCull();
 		GlStateManager.popMatrix();
 		GlStateManager.shadeModel(7424);
 		GlStateManager.alphaFunc(516, 0.1F);

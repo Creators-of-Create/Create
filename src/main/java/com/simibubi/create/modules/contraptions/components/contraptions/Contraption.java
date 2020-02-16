@@ -40,6 +40,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -66,10 +67,13 @@ public abstract class Contraption {
 	protected Direction cachedColliderDirection;
 	protected BlockPos anchor;
 
+	List<BlockPos> renderOrder;
+
 	public Contraption() {
 		blocks = new HashMap<>();
 		storage = new HashMap<>();
 		actors = new ArrayList<>();
+		renderOrder = new ArrayList<>();
 	}
 
 	private static List<BlockInfo> getChassisClusterAt(World world, BlockPos pos) {
@@ -432,6 +436,10 @@ public abstract class Contraption {
 			return true;
 		if (blockState.getBlock() instanceof ShulkerBoxBlock)
 			return false;
+		if (blockState.getBlockHardness(world, pos) == -1)
+			return false;
+		if (blockState.getBlock() == Blocks.OBSIDIAN)
+			return false;
 		return blockState.getPushReaction() != PushReaction.BLOCK;
 	}
 
@@ -481,12 +489,21 @@ public abstract class Contraption {
 
 	public void readNBT(World world, CompoundNBT nbt) {
 		blocks.clear();
+		renderOrder.clear();
+
 		nbt.getList("Blocks", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
 			BlockInfo info = new BlockInfo(NBTUtil.readBlockPos(comp.getCompound("Pos")),
 					NBTUtil.readBlockState(comp.getCompound("Block")),
 					comp.contains("Data") ? comp.getCompound("Data") : null);
 			blocks.put(info.pos, info);
+			if (world.isRemote) {
+				BlockRenderLayer renderLayer = info.state.getBlock().getRenderLayer();
+				if (renderLayer == BlockRenderLayer.TRANSLUCENT)
+					renderOrder.add(info.pos);
+				else
+					renderOrder.add(0, info.pos);
+			}
 		});
 
 		actors.clear();
@@ -626,7 +643,7 @@ public abstract class Contraption {
 		}
 	}
 
-	public AxisAlignedBB getCollisionBoxFront() {
+	public AxisAlignedBB getCollisionBox() {
 		return constructCollisionBox;
 	}
 

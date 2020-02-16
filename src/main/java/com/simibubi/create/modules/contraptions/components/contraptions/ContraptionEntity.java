@@ -260,7 +260,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		if (this.isAddedToWorld() && !this.world.isRemote && world instanceof ServerWorld)
 			((ServerWorld) this.world).chunkCheck(this); // Forge - Process chunk registration after moving.
 		if (contraption != null) {
-			AxisAlignedBB cbox = contraption.getCollisionBoxFront();
+			AxisAlignedBB cbox = contraption.getCollisionBox();
 			if (cbox != null)
 				this.setBoundingBox(cbox.offset(x, y, z));
 		}
@@ -399,6 +399,15 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		ce.yaw = packet.yaw;
 		ce.pitch = packet.pitch;
 		ce.roll = packet.roll;
+	}
+
+	@Override
+	public void setMotion(Vec3d motionIn) {
+		// Make sure nothing can move contraptions out of the way
+	}
+	
+	public void setContraptionMotion(Vec3d vec) {
+		super.setMotion(vec);
 	}
 
 }

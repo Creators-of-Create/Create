@@ -136,7 +136,8 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		if (running) {
 			clientOffsetDiff = offset - offsetBefore;
 			offset = offsetBefore;
-		}
+		} else
+			movedContraption = null;
 
 		if (tag.contains("ForceMovement"))
 			if (movedContraption != null)
@@ -157,9 +158,9 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 
 	protected void applyContraptionMotion() {
 		if (movedContraption.isStalled())
-			movedContraption.setMotion(Vec3d.ZERO);
+			movedContraption.setContraptionMotion(Vec3d.ZERO);
 		else
-			movedContraption.setMotion(getMotionVector());
+			movedContraption.setContraptionMotion(getMotionVector());
 	}
 
 	protected void applyContraptionPosition() {

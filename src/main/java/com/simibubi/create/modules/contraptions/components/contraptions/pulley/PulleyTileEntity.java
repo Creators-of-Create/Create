@@ -32,15 +32,18 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		if (offset <= 0 && getSpeed() < 0)
 			return;
 
+		// Collect Construct
 		if (!world.isRemote) {
+			BlockPos anchor = pos.down((int) (offset + 1));
+			PulleyContraption contraption = PulleyContraption.assemblePulleyAt(world, anchor, (int) offset);
+			if (contraption == null && getSpeed() > 0)
+				return;
+			
 			for (int i = ((int) offset); i > 0; i--) {
 				BlockPos offset = pos.down(i);
 				world.setBlockState(offset, Blocks.AIR.getDefaultState(), 66);
 			}
-
-			// Collect Construct
-			BlockPos anchor = pos.down((int) (offset + 1));
-			PulleyContraption contraption = PulleyContraption.assemblePulleyAt(world, anchor, (int) offset);
+			
 			if (contraption != null && !contraption.blocks.isEmpty()) {
 				contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 				movedContraption = ContraptionEntity.createStationary(world, contraption).controlledBy(this);

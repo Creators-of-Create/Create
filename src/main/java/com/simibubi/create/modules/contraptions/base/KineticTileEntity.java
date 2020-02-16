@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
+import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.modules.contraptions.particle.RotationIndicatorParticleData;
 
 import net.minecraft.block.Block;
@@ -71,7 +72,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	public void sync(float maxStress, float currentStress) {
 		this.maxStress = maxStress;
 		this.currentStress = currentStress;
-		boolean overStressed = maxStress < currentStress;
+		boolean overStressed = maxStress < currentStress && StressImpact.isEnabled();
 		if (overStressed != this.overStressed) {
 			float prevSpeed = getSpeed();
 			this.overStressed = overStressed;
@@ -153,7 +154,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		if (compound.contains("Id")) {
 			maxStress = compound.getFloat("MaxStress");
 			currentStress = compound.getFloat("Stress");
-			overStressed = maxStress < currentStress;
+			overStressed = maxStress < currentStress && StressImpact.isEnabled();
 			setNetworkID(NBTUtil.readUniqueId(compound.getCompound("Id")));
 			newNetworkID = networkID;
 			initNetwork = true;

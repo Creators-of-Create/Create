@@ -279,7 +279,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 			return ActionResultType.SUCCESS;
 		}
 
-		return super.onWrenched(state, context);
+		return ActionResultType.FAIL;
 	}
 
 	@Override

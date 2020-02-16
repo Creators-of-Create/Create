@@ -14,10 +14,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class BearingContraption extends Contraption {
-	
+
 	protected int sailBlocks;
 	protected Direction facing;
-	
+
 	@Override
 	protected AllContraptionTypes getType() {
 		return AllContraptionTypes.BEARING;
@@ -36,7 +36,8 @@ public class BearingContraption extends Contraption {
 
 	@Override
 	public void add(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
-		if (AllBlockTags.WINDMILL_SAILS.matches(capture.getKey().state))
+		BlockPos localPos = pos.subtract(anchor);
+		if (!blocks.containsKey(localPos) && AllBlockTags.WINDMILL_SAILS.matches(capture.getKey().state))
 			sailBlocks++;
 		super.add(pos, capture);
 	}

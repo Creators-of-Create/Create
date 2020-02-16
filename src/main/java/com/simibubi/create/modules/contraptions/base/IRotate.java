@@ -63,6 +63,10 @@ public interface IRotate extends IWrenchable {
 		public TextFormatting getColor() {
 			return this == LOW ? TextFormatting.YELLOW : this == MEDIUM ? TextFormatting.GOLD : TextFormatting.RED;
 		}
+		
+		public static boolean isEnabled() {
+			return !AllConfigs.SERVER.kinetics.disableStress.get();
+		}
 	}
 
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face);
