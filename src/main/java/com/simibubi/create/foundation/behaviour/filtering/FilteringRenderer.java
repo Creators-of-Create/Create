@@ -6,8 +6,6 @@ import com.simibubi.create.foundation.behaviour.ValueBox.ItemValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
-import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour.SlotPositioning;
-import com.simibubi.create.foundation.utility.GlHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.logistics.item.filter.FilterItem;
@@ -49,16 +47,18 @@ public class FilteringRenderer {
 		TessellatorHelper.prepareForDrawing();
 		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
 
-		SlotPositioning slotPositioning = behaviour.slotPositioning;
-		renderTransformed(state, slotPositioning, () -> {
+		behaviour.slotPositioning.renderTransformed(state, () -> {
 
 			AxisAlignedBB bb = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(.25f);
 			String label = Lang.translate("logistics.filter");
 			ItemStack filter = behaviour.getFilter();
 			if (filter.getItem() instanceof FilterItem)
 				label = "";
-			ValueBox box = behaviour.isCountVisible() ? new ItemValueBox(label, bb, filter, behaviour.scrollableValue)
-					: new ValueBox(label, bb);
+			boolean showCount = behaviour.isCountVisible();
+			ValueBox box =
+				showCount ? new ItemValueBox(label, bb, filter, behaviour.scrollableValue) : new ValueBox(label, bb);
+			if (showCount)
+				box.scrollTooltip("[" + Lang.translate("action.scroll") + "]");
 			box.offsetLabel(behaviour.textShift).withColors(0x7777BB, 0xCCBBFF);
 			ValueBoxRenderer.renderBox(box, behaviour.testHit(target.getHitVec()));
 
@@ -79,24 +79,15 @@ public class FilteringRenderer {
 			return;
 
 		BlockState state = tileEntityIn.getBlockState();
-		SlotPositioning slotPositioning = behaviour.slotPositioning;
-
 		TessellatorHelper.prepareForDrawing();
 		BlockPos pos = tileEntityIn.getPos();
 		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
 
-		renderTransformed(state, slotPositioning, () -> {
+		behaviour.slotPositioning.renderTransformed(state, () -> {
 			ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter());
 		});
 
 		TessellatorHelper.cleanUpAfterDrawing();
-	}
-
-	private static void renderTransformed(BlockState state, SlotPositioning positioning, Runnable render) {
-		Vec3d position = positioning.offset.apply(state);
-		Vec3d rotation = positioning.rotation.apply(state);
-		float scale = positioning.scale;
-		GlHelper.renderTransformed(position, rotation, scale, render);
 	}
 
 }

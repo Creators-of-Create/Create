@@ -3,9 +3,6 @@ package com.simibubi.create.modules.contraptions.components.contraptions.chassis
 import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.foundation.block.IHaveScrollableValue;
-import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -23,14 +20,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
-public abstract class AbstractChassisBlock extends RotatedPillarBlock
-		implements IWithTileEntity<ChassisTileEntity>, IHaveScrollableValue {
-
-	private static final Vec3d valuePos = new Vec3d(15 / 16f, 9 / 16f, 9 / 16f);
+public abstract class AbstractChassisBlock extends RotatedPillarBlock {
 
 	public AbstractChassisBlock(Properties properties) {
 		super(properties);
@@ -82,34 +75,6 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock
 	public abstract BooleanProperty getGlueableSide(BlockState state, Direction face);
 
 	@Override
-	public int getCurrentValue(BlockState state, IWorld world, BlockPos pos) {
-		ChassisTileEntity tileEntity = (ChassisTileEntity) world.getTileEntity(pos);
-		if (tileEntity == null)
-			return 0;
-		return tileEntity.getRange();
-	}
-
-	@Override
-	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
-		return Lang.translate("generic.range");
-	}
-
-	@Override
-	public boolean requiresWrench() {
-		return true;
-	}
-	
-	@Override
-	public Vec3d getValueBoxPosition(BlockState state, IWorld world, BlockPos pos) {
-		return valuePos;
-	}
-
-	@Override
-	public Direction getValueBoxDirection(BlockState state, IWorld world, BlockPos pos) {
-		return null;
-	}
-
-	@Override
 	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.storage.loot.LootContext.Builder builder) {
 		@SuppressWarnings("deprecation")
 		List<ItemStack> drops = super.getDrops(state, builder);
@@ -119,16 +84,6 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock
 				drops.add(new ItemStack(Items.SLIME_BALL));
 		}
 		return drops;
-	}
-
-	@Override
-	public boolean isValueOnMultipleFaces() {
-		return true;
-	}
-
-	@Override
-	public void onScroll(BlockState state, IWorld world, BlockPos pos, double value) {
-		withTileEntityDo(world, pos, te -> te.setRangeLazily((int) (te.getRange() + value)));
 	}
 
 }

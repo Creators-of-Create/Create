@@ -1,7 +1,5 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.chassis;
 
-import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -9,8 +7,6 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 
 public class RadialChassisBlock extends AbstractChassisBlock {
 
@@ -29,11 +25,6 @@ public class RadialChassisBlock extends AbstractChassisBlock {
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(STICKY_NORTH, STICKY_EAST, STICKY_SOUTH, STICKY_WEST);
 		super.fillStateContainer(builder);
-	}
-
-	@Override
-	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
-		return Lang.translate("generic.radius");
 	}
 
 	@Override

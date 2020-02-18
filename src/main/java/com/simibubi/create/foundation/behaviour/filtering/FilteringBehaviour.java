@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.behaviour.filtering;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.IBehaviourType;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
@@ -22,7 +22,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	public static IBehaviourType<FilteringBehaviour> TYPE = new IBehaviourType<FilteringBehaviour>() {
 	};
 
-	SlotPositioning slotPositioning;
+	ValueBoxTransform slotPositioning;
 	boolean showCount;
 	Vec3d textShift;
 
@@ -34,10 +34,10 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	int ticksUntilScrollPacket;
 	boolean forceClientState;
 
-	public FilteringBehaviour(SmartTileEntity te) {
+	public FilteringBehaviour(SmartTileEntity te, ValueBoxTransform slot) {
 		super(te);
 		filter = ItemStack.EMPTY;
-		slotPositioning = new SlotPositioning(state -> Vec3d.ZERO, state -> Vec3d.ZERO);
+		slotPositioning = slot;
 		showCount = false;
 		callback = stack -> {
 		};
@@ -95,11 +95,6 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		return this;
 	}
 
-	public FilteringBehaviour withSlotPositioning(SlotPositioning mapping) {
-		this.slotPositioning = mapping;
-		return this;
-	}
-
 	public FilteringBehaviour showCount() {
 		showCount = true;
 		return this;
@@ -109,7 +104,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		textShift = shift;
 		return this;
 	}
-	
+
 	@Override
 	public void initialize() {
 		super.initialize();
@@ -125,7 +120,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		else
 			count = stack.getCount();
 		forceClientState = true;
-		
+
 		tileEntity.markDirty();
 		tileEntity.sendData();
 	}
@@ -137,10 +132,10 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 			World world = getWorld();
 			world.addEntity(new ItemEntity(world, pos.x, pos.y, pos.z, filter.copy()));
 		}
-		
+
 		super.remove();
 	}
-	
+
 	public ItemStack getFilter() {
 		return filter.copy();
 	}
@@ -160,38 +155,16 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 
 	public boolean testHit(Vec3d hit) {
 		BlockState state = tileEntity.getBlockState();
-		Vec3d offset = slotPositioning.offset.apply(state);
-		if (offset == null)
-			return false;
 		Vec3d localHit = hit.subtract(new Vec3d(tileEntity.getPos()));
-		return localHit.distanceTo(offset) < slotPositioning.scale / 2;
+		return slotPositioning.testHit(state, localHit);
 	}
-	
+
 	public int getAmount() {
 		return count;
 	}
-	
+
 	public boolean anyAmount() {
 		return count == 0;
-	}
-
-	public static class SlotPositioning {
-		Function<BlockState, Vec3d> offset;
-		Function<BlockState, Vec3d> rotation;
-		float scale;
-
-		public SlotPositioning(Function<BlockState, Vec3d> offsetForState,
-				Function<BlockState, Vec3d> rotationForState) {
-			offset = offsetForState;
-			rotation = rotationForState;
-			scale = 1;
-		}
-
-		public SlotPositioning scale(float scale) {
-			this.scale = scale;
-			return this;
-		}
-
 	}
 
 }

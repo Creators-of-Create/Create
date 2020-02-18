@@ -16,7 +16,6 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour.SlotPositioning;
 import com.simibubi.create.foundation.behaviour.inventory.ExtractingBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -81,9 +80,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		filtering = new FilteringBehaviour(this).withSlotPositioning(
-				new SlotPositioning(DeployerBlock::getFilterSlotPosition, DeployerBlock::getFilterSlotOrientation)
-						.scale(.4f));
+		filtering = new FilteringBehaviour(this, new DeployerFilterSlot());
 		extracting = new ExtractingBehaviour(this, this::getExtractingLocations, this::onExtract);
 
 		behaviours.add(filtering);

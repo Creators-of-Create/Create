@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.behaviour;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.behaviour.ValueBox.ItemValueBox;
+import com.simibubi.create.foundation.behaviour.ValueBox.TextValueBox;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
@@ -52,23 +53,30 @@ public class ValueBoxRenderer {
 
 		float fontScale = -1 / 64f;
 		Vec3d shift = box.labelOffset;
-		GlStateManager.scaled(fontScale, fontScale, fontScale);
-		GlStateManager.translated(17.5f, -5f, 7f);
-		GlStateManager.translated(shift.x, shift.y, shift.z);
-		GlStateManager.rotated(0, 1, 0, 0);
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
+		GlStateManager.scaled(fontScale, fontScale, fontScale);
 
 		if (highlighted) {
-			String text = box.label;
-			font.drawString(text, 0, 0, box.highlightColor);
-			GlStateManager.translated(0, 0, -1 / 4f);
-			font.drawString(text, 1, 1, ColorHelper.mixColors(box.passiveColor, 0, 0.75f));
-			GlStateManager.translated(0, 0, 1 / 4f);
+			GlStateManager.pushMatrix();
+			GlStateManager.translated(17.5f, -5f, 7f);
+			GlStateManager.translated(shift.x, shift.y, shift.z);
+//			GlStateManager.rotated(0, 1, 0, 0);
+			renderText(box, font, box.label);
+			if (!box.sublabel.isEmpty()) {
+				GlStateManager.translated(0, 10, 0);
+				renderText(box, font, box.sublabel);
+			}
+			if (!box.scrollTooltip.isEmpty()) {
+				GlStateManager.translated(0, 10, 0);
+				renderText(font, box.scrollTooltip, 0x998899, 0x111111);
+			}
+			GlStateManager.popMatrix();
 		}
 
 		if (box instanceof ItemValueBox) {
 			ItemValueBox itemValueBox = (ItemValueBox) box;
 			String count = itemValueBox.count == 0 ? "*" : itemValueBox.count + "";
+			GlStateManager.translated(17.5f, -5f, 7f);
 
 			boolean isFilter = itemValueBox.stack.getItem() instanceof FilterItem;
 			if (isFilter)
@@ -77,11 +85,44 @@ public class ValueBoxRenderer {
 				GlStateManager.translated(-7 - font.getStringWidth(count), 10, 10 + 1 / 4f);
 
 			double scale = 1.5;
+			GlStateManager.rotated(0, 1, 0, 0);
 			GlStateManager.scaled(scale, scale, scale);
 			font.drawString(count, 0, 0, isFilter ? 0xFFFFFF : 0xEDEDED);
 			GlStateManager.translated(0, 0, -1 / 16f);
 			font.drawString(count, 1 - 1 / 8f, 1 - 1 / 8f, 0x4F4F4F);
 		}
+
+		if (box instanceof TextValueBox) {
+			double scale = 4;
+			GlStateManager.scaled(scale, scale, 1);
+			GlStateManager.translated(-4, -4, 5);
+
+			String text = ((TextValueBox) box).text;
+			int stringWidth = font.getStringWidth(text);
+			float numberScale = (float) font.FONT_HEIGHT / stringWidth;
+			boolean singleDigit = stringWidth < 10;
+			if (singleDigit)
+				numberScale = numberScale / 2;
+			float verticalMargin = (stringWidth - font.FONT_HEIGHT) / 2f;
+
+			GlStateManager.scaled(numberScale, numberScale, numberScale);
+			GlStateManager.translated(singleDigit ? stringWidth / 2 : 0, singleDigit ? -verticalMargin : verticalMargin,
+					0);
+
+			renderText(font, text, 0xEDEDED, 0x4f4f4f);
+		}
+
+	}
+
+	public static void renderText(ValueBox box, FontRenderer font, String text) {
+		renderText(font, text, box.highlightColor, ColorHelper.mixColors(box.passiveColor, 0, 0.75f));
+	}
+
+	public static void renderText(FontRenderer font, String text, int color, int shadowColor) {
+		font.drawString(text, 0, 0, color);
+		GlStateManager.translated(0, 0, -1 / 4f);
+		font.drawString(text, 1, 1, shadowColor);
+		GlStateManager.translated(0, 0, 1 / 4f);
 	}
 
 	public static void renderItemIntoValueBox(ItemStack filter) {

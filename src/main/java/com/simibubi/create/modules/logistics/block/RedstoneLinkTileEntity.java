@@ -7,23 +7,18 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.linked.LinkBehaviour;
-import com.simibubi.create.foundation.behaviour.linked.LinkBehaviour.SlotPositioning;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 public class RedstoneLinkTileEntity extends SmartTileEntity {
 
-	private static LinkBehaviour.SlotPositioning slots;
 	private boolean receivedSignal;
 	private boolean transmittedSignal;
 	private LinkBehaviour link;
@@ -49,13 +44,10 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	}
 
 	protected void createLink() {
-		if (slots == null)
-			createSlotPositioning();
-		if (transmitter)
-			link = LinkBehaviour.transmitter(this, this::getSignal);
-		else
-			link = LinkBehaviour.receiver(this, this::setSignal);
-		link.withSlotPositioning(slots);
+		Pair<ValueBoxTransform, ValueBoxTransform> slots =
+			ValueBoxTransform.Dual.makeSlots(RedstoneLinkFrequencySlot::new);
+		link = transmitter ? LinkBehaviour.transmitter(this, slots, this::getSignal)
+				: LinkBehaviour.receiver(this, slots, this::setSignal);
 	}
 
 	public boolean getSignal() {
@@ -115,41 +107,6 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 
 	protected Boolean isTransmitterBlock() {
 		return !getBlockState().get(RedstoneLinkBlock.RECEIVER);
-	}
-
-	protected void createSlotPositioning() {
-		slots = new SlotPositioning(state -> {
-			Direction facing = state.get(RedstoneLinkBlock.FACING);
-			Vec3d first = Vec3d.ZERO;
-			Vec3d second = Vec3d.ZERO;
-
-			if (facing.getAxis().isHorizontal()) {
-				first = VecHelper.voxelSpace(10f, 5.5f, 2.5f);
-				second = VecHelper.voxelSpace(10f, 10.5f, 2.5f);
-
-				float angle = facing.getHorizontalAngle();
-				if (facing.getAxis() == Axis.X)
-					angle = -angle;
-
-				first = VecHelper.rotateCentered(first, angle, Axis.Y);
-				second = VecHelper.rotateCentered(second, angle, Axis.Y);
-
-			} else {
-				first = VecHelper.voxelSpace(10f, 2.5f, 5.5f);
-				second = VecHelper.voxelSpace(10f, 2.5f, 10.5f);
-
-				if (facing == Direction.DOWN) {
-					first = VecHelper.rotateCentered(first, 180, Axis.X);
-					second = VecHelper.rotateCentered(second, 180, Axis.X);
-				}
-			}
-			return Pair.of(first, second);
-		}, state -> {
-			Direction facing = state.get(RedstoneLinkBlock.FACING);
-			float yRot = facing.getAxis().isVertical() ? 180 : AngleHelper.horizontalAngle(facing);
-			float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
-			return new Vec3d(0, yRot + 180, zRot);
-		}).scale(.5f);
 	}
 
 }

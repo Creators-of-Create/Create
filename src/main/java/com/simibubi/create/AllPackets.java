@@ -5,17 +5,14 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.behaviour.filtering.FilteringCountUpdatePacket;
+import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.command.ConfigureConfigPacket;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionStallPacket;
-import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ConfigureChassisPacket;
-import com.simibubi.create.modules.contraptions.components.mixer.ConfigureMixerPacket;
-import com.simibubi.create.modules.contraptions.components.motor.ConfigureMotorPacket;
 import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperBeamPacket;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
-import com.simibubi.create.modules.logistics.block.diodes.ConfigureFlexpeaterPacket;
 import com.simibubi.create.modules.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.modules.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.modules.logistics.packet.ConfigureStockswitchPacket;
@@ -36,14 +33,11 @@ public enum AllPackets {
 	CONFIGURE_SCHEMATICANNON(ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket::new),
 	CONFIGURE_FLEXCRATE(ConfigureFlexcratePacket.class, ConfigureFlexcratePacket::new),
 	CONFIGURE_STOCKSWITCH(ConfigureStockswitchPacket.class, ConfigureStockswitchPacket::new),
-	CONFIGURE_CHASSIS(ConfigureChassisPacket.class, ConfigureChassisPacket::new),
-	CONFIGURE_MOTOR(ConfigureMotorPacket.class, ConfigureMotorPacket::new),
-	CONFIGURE_FLEXPEATER(ConfigureFlexpeaterPacket.class, ConfigureFlexpeaterPacket::new),
-	CONFIGURE_MIXER(ConfigureMixerPacket.class, ConfigureMixerPacket::new),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new),
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new),
 	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new),
+	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),

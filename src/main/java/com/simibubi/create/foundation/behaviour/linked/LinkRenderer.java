@@ -2,15 +2,11 @@ package com.simibubi.create.foundation.behaviour.linked;
 
 import java.util.function.Consumer;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.behaviour.ValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
-import com.simibubi.create.foundation.behaviour.linked.LinkBehaviour.SlotPositioning;
-import com.simibubi.create.foundation.utility.GlHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 
@@ -48,11 +44,10 @@ public class LinkRenderer {
 		TessellatorHelper.prepareForDrawing();
 		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
 
-		SlotPositioning slotPositioning = behaviour.slotPositioning;
 		String freq1 = Lang.translate("logistics.firstFrequency");
 		String freq2 = Lang.translate("logistics.secondFrequency");
 
-		renderEachSlot(state, slotPositioning, first -> {
+		renderEachSlot(state, behaviour, first -> {
 			AxisAlignedBB bb = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(.25f);
 			String label = first ? freq2 : freq1;
 			ValueBox box = new ValueBox(label, bb).withColors(0x992266, 0xFF55AA).offsetLabel(behaviour.textShift);
@@ -72,13 +67,11 @@ public class LinkRenderer {
 			return;
 
 		BlockState state = tileEntityIn.getBlockState();
-		SlotPositioning slotPositioning = behaviour.slotPositioning;
-
 		TessellatorHelper.prepareForDrawing();
 		BlockPos pos = tileEntityIn.getPos();
 		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
 
-		renderEachSlot(state, slotPositioning, first -> {
+		renderEachSlot(state, behaviour, first -> {
 			ValueBoxRenderer.renderItemIntoValueBox(
 					first ? behaviour.frequencyFirst.getStack() : behaviour.frequencyLast.getStack());
 		});
@@ -86,13 +79,9 @@ public class LinkRenderer {
 		TessellatorHelper.cleanUpAfterDrawing();
 	}
 
-	private static void renderEachSlot(BlockState state, SlotPositioning positioning, Consumer<Boolean> render) {
-		Pair<Vec3d, Vec3d> position = positioning.offsets.apply(state);
-		Vec3d rotation = positioning.rotation.apply(state);
-		float scale = positioning.scale;
-
-		GlHelper.renderTransformed(position.getKey(), rotation, scale, () -> render.accept(true));
-		GlHelper.renderTransformed(position.getValue(), rotation, scale, () -> render.accept(false));
+	private static void renderEachSlot(BlockState state, LinkBehaviour behaviour, Consumer<Boolean> render) {
+		behaviour.firstSlot.renderTransformed(state, () -> render.accept(true));
+		behaviour.secondSlot.renderTransformed(state, () -> render.accept(false));
 	}
 
 }

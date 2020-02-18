@@ -8,7 +8,6 @@ import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour.SlotPositioning;
 import com.simibubi.create.foundation.behaviour.inventory.AutoExtractingBehaviour;
 import com.simibubi.create.foundation.behaviour.inventory.ExtractingBehaviour;
 import com.simibubi.create.foundation.behaviour.inventory.SingleTargetAutoExtractingBehaviour;
@@ -31,8 +30,6 @@ import net.minecraft.util.math.Vec3d;
 
 public class ExtractorTileEntity extends SmartTileEntity {
 
-	protected static FilteringBehaviour.SlotPositioning slots;
-
 	protected ExtractingBehaviour extracting;
 	protected FilteringBehaviour filtering;
 	protected boolean extractingToBelt;
@@ -53,11 +50,8 @@ public class ExtractorTileEntity extends SmartTileEntity {
 					this::onExtract, delay).pauseWhen(this::isPowered).waitUntil(this::canExtract);
 		behaviours.add(extracting);
 
-		if (slots == null)
-			slots = new SlotPositioning(ExtractorBlock::getFilterSlotPosition, ExtractorBlock::getFilterSlotOrientation)
-					.scale(.4f);
-		filtering =
-			new FilteringBehaviour(this).withCallback(this::filterChanged).withSlotPositioning(slots).showCount();
+		filtering = new FilteringBehaviour(this, new ExtractorSlots.Filter()).withCallback(this::filterChanged);
+		filtering.showCount();
 		behaviours.add(filtering);
 	}
 

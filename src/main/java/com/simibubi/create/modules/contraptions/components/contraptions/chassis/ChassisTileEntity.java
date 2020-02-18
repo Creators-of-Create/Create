@@ -1,65 +1,42 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.chassis;
 
-import com.simibubi.create.AllPackets;
+import java.util.List;
+
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
-import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.behaviour.CenteredSideValueBoxTransform;
+import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.math.MathHelper;
+public class ChassisTileEntity extends SmartTileEntity {
 
-public class ChassisTileEntity extends SyncedTileEntity implements ITickableTileEntity {
-
-	private int range;
-	public int newRange;
-	public int lastModified;
+	ScrollValueBehaviour range;
 
 	public ChassisTileEntity() {
 		super(AllTileEntities.CHASSIS.type);
-		newRange = range = AllConfigs.SERVER.kinetics.maxChassisRange.get() / 2;
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		compound.putInt("Range", range);
-		return super.write(compound);
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		int max = AllConfigs.SERVER.kinetics.maxChassisRange.get();
+		range = new ScrollValueBehaviour(Lang.translate("generic.range"), this, new CenteredSideValueBoxTransform());
+		range.requiresWrench();
+		range.between(1, max);
+		range.value = max / 2;
+		behaviours.add(range);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
-		newRange = range = compound.getInt("Range");
-		super.read(compound);
+	public void initialize() {
+		super.initialize();
+		if (getBlockState().getBlock() instanceof RadialChassisBlock)
+			range.setLabel(Lang.translate("generic.radius"));
 	}
 
 	public int getRange() {
-		if (world.isRemote)
-			return newRange;
-		return range;
-	}
-
-	public void setRange(int range) {
-		this.range = range;
-		sendData();
-	}
-
-	public void setRangeLazily(int range) {
-		this.newRange = MathHelper.clamp(range, 1, AllConfigs.SERVER.kinetics.maxChassisRange.get());
-		if (newRange == this.range)
-			return;
-		this.lastModified = 0;
-	}
-
-	@Override
-	public void tick() {
-		if (!world.isRemote)
-			return;
-		if (lastModified == -1)
-			return;
-		if (lastModified++ > 10) {
-			lastModified = -1;
-			AllPackets.channel.sendToServer(new ConfigureChassisPacket(pos, newRange));
-		}
+		return range.getValue();
 	}
 
 }

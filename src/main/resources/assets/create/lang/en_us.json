@@ -311,6 +311,7 @@
 
 	"create.gui.scrollInput.defaultTitle": "Choose an Option:",
 	"create.gui.scrollInput.scrollToModify": "Scroll to Modify",
+	"create.gui.scrollInput.scrollToAdjustAmount": "Scroll to Adjust Amount",
 	"create.gui.scrollInput.scrollToSelect": "Scroll to Select",
 	"create.gui.scrollInput.shiftScrollsFaster": "Shift to Scroll faster",
 

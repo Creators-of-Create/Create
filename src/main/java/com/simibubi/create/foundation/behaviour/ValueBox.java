@@ -7,6 +7,8 @@ import net.minecraft.util.math.Vec3d;
 public class ValueBox {
 
 	String label = "Value Box";
+	String sublabel = "";
+	String scrollTooltip = "";
 	Vec3d labelOffset = Vec3d.ZERO;
 	int passiveColor;
 	int highlightColor;
@@ -19,6 +21,16 @@ public class ValueBox {
 
 	public ValueBox offsetLabel(Vec3d offset) {
 		this.labelOffset = offset;
+		return this;
+	}
+	
+	public ValueBox subLabel(String sublabel) {
+		this.sublabel = sublabel;
+		return this;
+	}
+	
+	public ValueBox scrollTooltip(String scrollTip) {
+		this.scrollTooltip = scrollTip;
 		return this;
 	}
 
@@ -38,6 +50,16 @@ public class ValueBox {
 			this.count = count;
 		}
 
+	}
+	
+	public static class TextValueBox extends ValueBox {
+		String text;
+
+		public TextValueBox(String label, AxisAlignedBB bb, String text) {
+			super(label, bb);
+			this.text = text;
+		}
+		
 	}
 
 }

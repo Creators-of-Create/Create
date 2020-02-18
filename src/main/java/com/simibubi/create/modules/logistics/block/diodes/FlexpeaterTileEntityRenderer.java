@@ -9,7 +9,7 @@ public class FlexpeaterTileEntityRenderer extends ColoredOverlayTileEntityRender
 
 	@Override
 	protected int getColor(FlexpeaterTileEntity te, float partialTicks) {
-		return ColorHelper.mixColors(0x2C0300, 0xCD0000, te.state / (float) te.maxState);
+		return ColorHelper.mixColors(0x2C0300, 0xCD0000, te.state / (float) te.maxState.getValue());
 	}
 
 	@Override

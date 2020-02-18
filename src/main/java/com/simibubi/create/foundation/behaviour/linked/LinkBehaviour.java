@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.IBehaviourType;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
@@ -29,45 +30,44 @@ public class LinkBehaviour extends TileEntityBehaviour {
 
 	Frequency frequencyFirst;
 	Frequency frequencyLast;
-	SlotPositioning slotPositioning;
+	ValueBoxTransform firstSlot;
+	ValueBoxTransform secondSlot;
 	Vec3d textShift;
 
 	private Mode mode;
 	private Supplier<Boolean> transmission;
 	private Consumer<Boolean> signalCallback;
 
-	protected LinkBehaviour(SmartTileEntity te) {
+	protected LinkBehaviour(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots) {
 		super(te);
-		slotPositioning = new SlotPositioning(state -> Pair.of(Vec3d.ZERO, Vec3d.ZERO), state -> Vec3d.ZERO);
 		frequencyFirst = new Frequency(ItemStack.EMPTY);
 		frequencyLast = new Frequency(ItemStack.EMPTY);
+		firstSlot = slots.getLeft();
+		secondSlot = slots.getRight();
 		textShift = Vec3d.ZERO;
 	}
 
-	public static LinkBehaviour receiver(SmartTileEntity te, Consumer<Boolean> signalCallback) {
-		LinkBehaviour behaviour = new LinkBehaviour(te);
+	public static LinkBehaviour receiver(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots,
+			Consumer<Boolean> signalCallback) {
+		LinkBehaviour behaviour = new LinkBehaviour(te, slots);
 		behaviour.signalCallback = signalCallback;
 		behaviour.mode = Mode.RECEIVE;
 		return behaviour;
 	}
 
-	public static LinkBehaviour transmitter(SmartTileEntity te, Supplier<Boolean> transmission) {
-		LinkBehaviour behaviour = new LinkBehaviour(te);
+	public static LinkBehaviour transmitter(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots,
+			Supplier<Boolean> transmission) {
+		LinkBehaviour behaviour = new LinkBehaviour(te, slots);
 		behaviour.transmission = transmission;
 		behaviour.mode = Mode.TRANSMIT;
 		return behaviour;
 	}
 
-	public LinkBehaviour withSlotPositioning(SlotPositioning mapping) {
-		this.slotPositioning = mapping;
-		return this;
-	}
-	
 	public LinkBehaviour moveText(Vec3d shift) {
 		textShift = shift;
 		return this;
 	}
-	
+
 	public void copyItemsFrom(LinkBehaviour behaviour) {
 		if (behaviour == null)
 			return;
@@ -129,8 +129,8 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		stack = stack.copy();
 		stack.setCount(1);
 		ItemStack toCompare = first ? frequencyFirst.getStack() : frequencyLast.getStack();
-		boolean changed = !ItemStack.areItemsEqual(stack, toCompare)
-				|| !ItemStack.areItemStackTagsEqual(stack, toCompare);
+		boolean changed =
+			!ItemStack.areItemsEqual(stack, toCompare) || !ItemStack.areItemStackTagsEqual(stack, toCompare);
 
 		if (changed)
 			getHandler().removeFromNetwork(this);
@@ -177,12 +177,8 @@ public class LinkBehaviour extends TileEntityBehaviour {
 
 	public boolean testHit(Boolean first, Vec3d hit) {
 		BlockState state = tileEntity.getBlockState();
-		Pair<Vec3d, Vec3d> pair = slotPositioning.offsets.apply(state);
-		Vec3d offset = first ? pair.getKey() : pair.getValue();
-		if (offset == null)
-			return false;
 		Vec3d localHit = hit.subtract(new Vec3d(tileEntity.getPos()));
-		return localHit.distanceTo(offset) < slotPositioning.scale / 3.5f;
+		return (first ? firstSlot : secondSlot).testHit(state, localHit);
 	}
 
 }

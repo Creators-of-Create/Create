@@ -3,7 +3,6 @@
 	"parent": "block/block",
     "textures": {
         "flexpeater_off": "create:block/flexpeater_off",
-		"torch": "minecraft:block/redstone_torch_off",
         "smooth_stone": "minecraft:block/smooth_stone",
         "particle": "create:block/flexpeater_off"
     },

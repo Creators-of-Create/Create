@@ -2,10 +2,8 @@ package com.simibubi.create.modules.contraptions.components.mixer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
-import com.simibubi.create.foundation.block.IHaveScrollableValue;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -17,17 +15,14 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 
 public class MechanicalMixerBlock extends KineticBlock
-		implements IWithTileEntity<MechanicalMixerTileEntity>, IHaveScrollableValue, IHaveCustomBlockItem {
+		implements IWithTileEntity<MechanicalMixerTileEntity>, IHaveCustomBlockItem {
 
-	private static final Vec3d valuePos = new Vec3d(15.8f / 16f, 6 / 16f, 5 / 16f);
 
 	public MechanicalMixerBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -42,7 +37,7 @@ public class MechanicalMixerBlock extends KineticBlock
 	protected boolean hasStaticPart() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		return !AllBlocks.BASIN.typeOf(worldIn.getBlockState(pos.down()));
@@ -74,49 +69,6 @@ public class MechanicalMixerBlock extends KineticBlock
 	@Override
 	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis().isHorizontal();
-	}
-
-	@Override
-	public String getValueName(BlockState state, IWorld world, BlockPos pos) {
-		return Lang.translate("mechanical_mixer.min_ingredients");
-	}
-
-	@Override
-	public Vec3d getValueBoxPosition(BlockState state, IWorld world, BlockPos pos) {
-		return valuePos;
-	}
-
-	@Override
-	public Direction getValueBoxDirection(BlockState state, IWorld world, BlockPos pos) {
-		return null;
-	}
-
-	@Override
-	public boolean isValueOnMultipleFaces() {
-		return true;
-	}
-
-	@Override
-	public boolean requiresWrench() {
-		return true;
-	}
-
-	@Override
-	public boolean isValueOnFace(Direction face) {
-		return face.getAxis().isHorizontal();
-	}
-
-	@Override
-	public void onScroll(BlockState state, IWorld world, BlockPos pos, double value) {
-		withTileEntityDo(world, pos, te -> te.setMinIngredientsLazily((int) (te.currentValue + value)));
-	}
-
-	@Override
-	public int getCurrentValue(BlockState state, IWorld world, BlockPos pos) {
-		MechanicalMixerTileEntity tileEntity = (MechanicalMixerTileEntity) world.getTileEntity(pos);
-		if (tileEntity == null)
-			return 0;
-		return tileEntity.currentValue;
 	}
 
 	@Override

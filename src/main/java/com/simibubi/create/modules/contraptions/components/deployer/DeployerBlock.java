@@ -3,8 +3,6 @@ package com.simibubi.create.modules.contraptions.components.deployer;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
@@ -17,12 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -106,25 +101,6 @@ public class DeployerBlock extends DirectionalAxisKineticBlock
 		});
 
 		return true;
-	}
-
-	public static Vec3d getFilterSlotPosition(BlockState state) {
-		Direction facing = state.get(FACING);
-		Vec3d vec = VecHelper.voxelSpace(8f, 13.5f, 11.5f);
-
-		float yRot = AngleHelper.horizontalAngle(facing);
-		float zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
-		vec = VecHelper.rotateCentered(vec, yRot, Axis.Y);
-		vec = VecHelper.rotateCentered(vec, zRot, Axis.Z);
-
-		return vec;
-	}
-
-	public static Vec3d getFilterSlotOrientation(BlockState state) {
-		Direction facing = state.get(FACING);
-		float yRot = AngleHelper.horizontalAngle(facing) + 180;
-		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
-		return new Vec3d(0, yRot, zRot);
 	}
 
 	@Override

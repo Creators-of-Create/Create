@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringHandler;
-import com.simibubi.create.foundation.block.IHaveScrollableValue;
+import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueHandler;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -100,9 +100,9 @@ public class ClientEvents {
 		double delta = event.getScrollDelta();
 
 		boolean cancelled = CreateClient.schematicHandler.mouseScrolled(delta)
-				|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta)
-				|| IHaveScrollableValue.onScroll(delta)
-				|| FilteringHandler.onScroll(delta);
+				|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta) 
+				|| FilteringHandler.onScroll(delta) 
+				|| ScrollValueHandler.onScroll(delta);
 		event.setCanceled(cancelled);
 	}
 
@@ -135,7 +135,7 @@ public class ClientEvents {
 			TooltipHelper.getTooltip(stack).addInformation(toolTip);
 			itemTooltip.addAll(0, toolTip);
 		}
-		
+
 	}
 
 	@SubscribeEvent

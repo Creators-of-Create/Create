@@ -4,15 +4,16 @@ import static net.minecraft.state.properties.BlockStateProperties.POWERED;
 
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.linked.LinkBehaviour;
-import com.simibubi.create.foundation.behaviour.linked.LinkBehaviour.SlotPositioning;
-import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorBlock;
+import com.simibubi.create.modules.logistics.block.extractor.ExtractorSlots;
 
 public class LinkedTransposerTileEntity extends TransposerTileEntity {
 
-	private static LinkBehaviour.SlotPositioning slots;
 	public boolean receivedSignal;
 	public LinkBehaviour receiver;
 
@@ -22,10 +23,8 @@ public class LinkedTransposerTileEntity extends TransposerTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		if (slots == null)
-			slots = new SlotPositioning(LinkedExtractorBlock::getFrequencySlotPosition,
-					LinkedExtractorBlock::getFrequencySlotOrientation).scale(.4f);
-		receiver = LinkBehaviour.receiver(this, this::setSignal).withSlotPositioning(slots);
+		Pair<ValueBoxTransform, ValueBoxTransform> slots = ValueBoxTransform.Dual.makeSlots(ExtractorSlots.Link::new);
+		receiver = LinkBehaviour.receiver(this, slots, this::setSignal);
 		behaviours.add(receiver);
 		super.addBehaviours(behaviours);
 	}

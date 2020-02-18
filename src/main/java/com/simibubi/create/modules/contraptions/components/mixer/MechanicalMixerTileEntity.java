@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.behaviour.CenteredSideValueBoxTransform;
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.modules.contraptions.processing.BasinOperatingTileEntity;
@@ -35,15 +38,29 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	public int processingTicks;
 	public boolean running;
 
-	public int minIngredients;
-	public int currentValue;
-	public int lastModified;
+	public ScrollValueBehaviour minIngredients;
 
 	public MechanicalMixerTileEntity() {
 		super(AllTileEntities.MECHANICAL_MIXER.type);
-		minIngredients = currentValue = 1;
-		lastModified = -1;
-		processingTicks = -1;
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		CenteredSideValueBoxTransform slot =
+			new CenteredSideValueBoxTransform((state, direction) -> direction.getAxis().isHorizontal()) {
+			
+			@Override
+			protected Vec3d getSouthLocation() {
+				return super.getSouthLocation().add(0, 4/16f, 0);
+			}
+			
+		};
+		minIngredients = new ScrollValueBehaviour(Lang.translate("mechanical_mixer.min_ingredients"), this, slot);
+		minIngredients.between(1, 9);
+		minIngredients.withCallback(i -> checkBasin = true);
+		minIngredients.requiresWrench();
+		behaviours.add(minIngredients);
 	}
 
 	public float getRenderedHeadOffset(float partialTicks) {
@@ -92,7 +109,6 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	public void read(CompoundNBT compound) {
 		running = compound.getBoolean("Running");
 		runningTicks = compound.getInt("Ticks");
-		currentValue = minIngredients = compound.getInt("MinIngredients");
 		super.read(compound);
 	}
 
@@ -100,27 +116,11 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.putBoolean("Running", running);
 		compound.putInt("Ticks", runningTicks);
-		compound.putInt("MinIngredients", minIngredients);
 		return super.write(compound);
-	}
-
-	public void setMinIngredientsLazily(int minIngredients) {
-		this.currentValue = MathHelper.clamp(minIngredients, 1, 9);
-		if (currentValue == this.minIngredients)
-			return;
-		this.lastModified = 0;
 	}
 
 	@Override
 	public void tick() {
-
-		if (world.isRemote && lastModified != -1) {
-			if (lastModified++ > 10) {
-				lastModified = -1;
-				AllPackets.channel.sendToServer(new ConfigureMixerPacket(pos, currentValue));
-			}
-		}
-
 		super.tick();
 
 		if (runningTicks >= 40) {
@@ -187,7 +187,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
 		if (recipe == null)
 			return false;
-		if (recipe.getIngredients().size() < minIngredients)
+		if (recipe.getIngredients().size() < minIngredients.getValue())
 			return false;
 
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
