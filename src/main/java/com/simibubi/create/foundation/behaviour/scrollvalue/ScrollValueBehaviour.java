@@ -143,6 +143,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		callback.accept(value);
 		tileEntity.markDirty();
 		tileEntity.sendData();
+		scrollableValue = value;
 	}
 
 	public int getValue() {

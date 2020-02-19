@@ -75,7 +75,7 @@ public abstract class ValueBoxTransform {
 	
 	public static abstract class Sided extends ValueBoxTransform {
 		
-		Direction direction = Direction.UP;
+		protected Direction direction = Direction.UP;
 		
 		public Sided fromSide(Direction direction) {
 			this.direction = direction;

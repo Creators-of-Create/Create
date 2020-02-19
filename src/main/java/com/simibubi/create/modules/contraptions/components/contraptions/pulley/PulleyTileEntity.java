@@ -3,17 +3,23 @@ package com.simibubi.create.modules.contraptions.components.contraptions.pulley;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.foundation.behaviour.CenteredSideValueBoxTransform;
+import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.LinearActuatorTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class PulleyTileEntity extends LinearActuatorTileEntity {
 
+	protected int initialOffset;
+	
 	public PulleyTileEntity() {
 		super(AllTileEntities.ROPE_PULLEY.type);
 	}
@@ -35,15 +41,16 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		// Collect Construct
 		if (!world.isRemote) {
 			BlockPos anchor = pos.down((int) (offset + 1));
+			initialOffset = (int) (offset);
 			PulleyContraption contraption = PulleyContraption.assemblePulleyAt(world, anchor, (int) offset);
 			if (contraption == null && getSpeed() > 0)
 				return;
-			
+
 			for (int i = ((int) offset); i > 0; i--) {
 				BlockPos offset = pos.down(i);
 				world.setBlockState(offset, Blocks.AIR.getDefaultState(), 66);
 			}
-			
+
 			if (contraption != null && !contraption.blocks.isEmpty()) {
 				contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 				movedContraption = ContraptionEntity.createStationary(world, contraption).controlledBy(this);
@@ -53,6 +60,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			}
 		}
 
+		clientOffsetDiff = 0;
 		running = true;
 		sendData();
 	}
@@ -87,6 +95,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		if (movedContraption != null)
 			movedContraption.remove();
 		movedContraption = null;
+		initialOffset = 0;
 		running = false;
 		sendData();
 	}
@@ -120,13 +129,35 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
+	public void read(CompoundNBT tag) {
+		initialOffset = tag.getInt("InitialOffset");
+		super.read(tag);
+	}
+	
+	@Override
+	public CompoundNBT write(CompoundNBT tag) {
+		tag.putInt("InitialOffset", initialOffset);
+		return super.write(tag);
+	}
+	
+	@Override
 	protected int getExtensionRange() {
 		return Math.min(AllConfigs.SERVER.kinetics.maxRopeLength.get(), pos.getY() - 1);
+	}
+	
+	@Override
+	protected int getInitialOffset() {
+		return initialOffset;
 	}
 
 	@Override
 	protected Vec3d toMotionVector(float speed) {
 		return new Vec3d(0, -speed, 0);
+	}
+
+	@Override
+	protected ValueBoxTransform getMovementModeSlot() {
+		return new CenteredSideValueBoxTransform((state, d) -> d == Direction.UP);
 	}
 
 }

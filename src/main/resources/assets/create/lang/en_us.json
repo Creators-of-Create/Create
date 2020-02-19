@@ -73,6 +73,8 @@
 	"item.create.rose_quartz_sword": "Gilded Quartz Blade",
 
 	"block.create.copper_ore": "Copper Ore",
+	"block.create.copper_block": "Copper Block",
+	"block.create.copper_shingles": "Copper Shingles",
 	"block.create.zinc_ore": "Zinc Ore",
 	
 	"block.create.andesite_casing": "Andesite Casing",
@@ -356,6 +358,14 @@
 	"create.blockzapper.leftClickToSet": "Left-Click a Block to set Material",
 	"create.blockzapper.empty": "Out of Blocks!",
 
+	"create.contraptions.movement_mode": "Movement Mode",
+	"create.contraptions.movement_mode.move_place": "Always Place when Stopped",
+	"create.contraptions.movement_mode.move_place_returned": "Only Place in Starting Position",
+	"create.contraptions.movement_mode.move_never_place": "Only Place when Anchor Destroyed",
+	"create.contraptions.movement_mode.rotate_place": "Always Place when Stopped",
+	"create.contraptions.movement_mode.rotate_place_returned": "Only Place near Initial Angle",
+	"create.contraptions.movement_mode.rotate_never_place": "Only Place when Anchor Destroyed",
+	
 	"create.logistics.filter": "Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",

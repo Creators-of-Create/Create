@@ -2,8 +2,11 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
+import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.DirectionalExtenderScrollOptionSlot;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -11,6 +14,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
@@ -54,6 +58,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		running = true;
 		offset = contraption.initialExtensionProgress;
 		sendData();
+		clientOffsetDiff = 0;
 
 		BlockPos startPos = BlockPos.ZERO.offset(direction, contraption.initialExtensionProgress);
 		contraption.removeBlocksFromWorld(world, startPos);
@@ -89,7 +94,11 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);
 		int movementModifier =
 			pistonDirection.getAxisDirection().getOffset() * (pistonDirection.getAxis() == Axis.Z ? -1 : 1);
-		return movementSpeed * -movementModifier + clientOffsetDiff / 2f;
+		movementSpeed = movementSpeed * -movementModifier + clientOffsetDiff / 2f;
+
+		int extensionRange = getExtensionRange();
+		movementSpeed = MathHelper.clamp(movementSpeed, 0 - offset, extensionRange - offset);
+		return movementSpeed;
 	}
 
 	@Override
@@ -111,6 +120,22 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	protected Vec3d toPosition(float offset) {
 		Vec3d position = new Vec3d(getBlockState().get(BlockStateProperties.FACING).getDirectionVec()).scale(offset);
 		return position.add(new Vec3d(movedContraption.getContraption().getAnchor()));
+	}
+
+	@Override
+	protected ValueBoxTransform getMovementModeSlot() {
+		return new DirectionalExtenderScrollOptionSlot((state, d) -> {
+			Axis axis = d.getAxis();
+			Axis extensionAxis = state.get(MechanicalPistonBlock.FACING).getAxis();
+			Axis shaftAxis = ((IRotate) state.getBlock()).getRotationAxis(state);
+			return extensionAxis != axis && shaftAxis != axis;
+		});
+	}
+
+	@Override
+	protected int getInitialOffset() {
+		return movedContraption == null ? 0
+				: ((PistonContraption) movedContraption.getContraption()).initialExtensionProgress;
 	}
 
 //	private boolean hasBlockCollisions(float newOffset) {

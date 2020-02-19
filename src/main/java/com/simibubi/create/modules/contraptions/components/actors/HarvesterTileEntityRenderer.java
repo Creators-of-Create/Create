@@ -32,6 +32,8 @@ public class HarvesterTileEntityRenderer extends SafeTileEntityRendererFast<Harv
 		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite())
 				? context.getAnimationSpeed() * offset
 				: 0);
+		if (context.contraption.stalled)
+			speed = 0;
 		float time = AnimationTickHolder.getRenderTick() / 20;
 		float angle = (float) (((time * speed) % 360) / 180 * (float) Math.PI);
 

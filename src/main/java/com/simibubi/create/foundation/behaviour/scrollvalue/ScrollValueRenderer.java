@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.behaviour.scrollvalue;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.behaviour.ValueBox;
+import com.simibubi.create.foundation.behaviour.ValueBox.IconValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBox.TextValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform.Sided;
@@ -49,13 +50,19 @@ public class ScrollValueRenderer {
 		if (behaviour.slotPositioning instanceof Sided)
 			((Sided) behaviour.slotPositioning).fromSide(result.getFace());
 		behaviour.slotPositioning.renderTransformed(state, () -> {
-
 			AxisAlignedBB bb =
 				new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(.5f).contract(0, 0, -.5f).offset(0, 0, -.125f);
 			String label = behaviour.label;
-			ValueBox box = new TextValueBox(label, bb, behaviour.formatValue());
-			if (behaviour.unit != null)
-				box.subLabel("(" + behaviour.unit.apply(behaviour.scrollableValue) + ")");
+			ValueBox box;
+
+			if (behaviour instanceof ScrollOptionBehaviour) {
+				box = new IconValueBox(label, ((ScrollOptionBehaviour<?>) behaviour).getIconForSelected(), bb);
+			} else {
+				box = new TextValueBox(label, bb, behaviour.formatValue());
+				if (behaviour.unit != null)
+					box.subLabel("(" + behaviour.unit.apply(behaviour.scrollableValue) + ")");
+			}
+
 			box.scrollTooltip("[" + Lang.translate("action.scroll") + "]");
 			box.offsetLabel(behaviour.textShift.add(20, -10, 0)).withColors(0xbe970b, 0xffe75e);
 			ValueBoxRenderer.renderBox(box, behaviour.testHit(target.getHitVec()));

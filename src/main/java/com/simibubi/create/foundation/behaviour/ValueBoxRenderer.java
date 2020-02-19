@@ -1,8 +1,6 @@
 package com.simibubi.create.foundation.behaviour;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.foundation.behaviour.ValueBox.ItemValueBox;
-import com.simibubi.create.foundation.behaviour.ValueBox.TextValueBox;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
@@ -60,7 +58,6 @@ public class ValueBoxRenderer {
 			GlStateManager.pushMatrix();
 			GlStateManager.translated(17.5f, -5f, 7f);
 			GlStateManager.translated(shift.x, shift.y, shift.z);
-//			GlStateManager.rotated(0, 1, 0, 0);
 			renderText(box, font, box.label);
 			if (!box.sublabel.isEmpty()) {
 				GlStateManager.translated(0, 10, 0);
@@ -73,45 +70,7 @@ public class ValueBoxRenderer {
 			GlStateManager.popMatrix();
 		}
 
-		if (box instanceof ItemValueBox) {
-			ItemValueBox itemValueBox = (ItemValueBox) box;
-			String count = itemValueBox.count == 0 ? "*" : itemValueBox.count + "";
-			GlStateManager.translated(17.5f, -5f, 7f);
-
-			boolean isFilter = itemValueBox.stack.getItem() instanceof FilterItem;
-			if (isFilter)
-				GlStateManager.translated(3, 8, 7.25f);
-			else
-				GlStateManager.translated(-7 - font.getStringWidth(count), 10, 10 + 1 / 4f);
-
-			double scale = 1.5;
-			GlStateManager.rotated(0, 1, 0, 0);
-			GlStateManager.scaled(scale, scale, scale);
-			font.drawString(count, 0, 0, isFilter ? 0xFFFFFF : 0xEDEDED);
-			GlStateManager.translated(0, 0, -1 / 16f);
-			font.drawString(count, 1 - 1 / 8f, 1 - 1 / 8f, 0x4F4F4F);
-		}
-
-		if (box instanceof TextValueBox) {
-			double scale = 4;
-			GlStateManager.scaled(scale, scale, 1);
-			GlStateManager.translated(-4, -4, 5);
-
-			String text = ((TextValueBox) box).text;
-			int stringWidth = font.getStringWidth(text);
-			float numberScale = (float) font.FONT_HEIGHT / stringWidth;
-			boolean singleDigit = stringWidth < 10;
-			if (singleDigit)
-				numberScale = numberScale / 2;
-			float verticalMargin = (stringWidth - font.FONT_HEIGHT) / 2f;
-
-			GlStateManager.scaled(numberScale, numberScale, numberScale);
-			GlStateManager.translated(singleDigit ? stringWidth / 2 : 0, singleDigit ? -verticalMargin : verticalMargin,
-					0);
-
-			renderText(font, text, 0xEDEDED, 0x4f4f4f);
-		}
-
+		box.render(highlighted);
 	}
 
 	public static void renderText(ValueBox box, FontRenderer font, String text) {

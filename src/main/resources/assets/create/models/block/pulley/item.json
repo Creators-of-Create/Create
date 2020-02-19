@@ -8,6 +8,7 @@
 		"4": "create:block/gearbox",
 		"5": "create:block/pulley_rope",
 		"6": "create:block/pulley_magnet",
+		"7": "create:block/andesite_casing_short",
 		"particle": "create:block/pulley_magnet"
 	},
 	"elements": [
@@ -275,6 +276,20 @@
 				"up": {"uv": [0, 0, 10, 10], "texture": "#6"},
 				"down": {"uv": [0, 0, 10, 10], "texture": "#6"}
 			}
+		},
+		{
+			"name": "top",
+			"from": [3, 14, 2],
+			"to": [13, 16, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 10, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 0, 0], "texture": "#7"},
+				"east": {"uv": [2, 14, 14, 16], "texture": "#7"},
+				"south": {"uv": [0, 0, 0, 0], "texture": "#7"},
+				"west": {"uv": [2, 14, 14, 16], "texture": "#7"},
+				"up": {"uv": [2, 5, 14, 15], "rotation": 90, "texture": "#7"},
+				"down": {"uv": [2, 5, 14, 15], "rotation": 90, "texture": "#7"}
+			}
 		}
 	],
 	"display": {
@@ -318,6 +333,5 @@
 			"name": "rope_half_magnet",
 			"origin": [8, 8, 8],
 			"children": [18, 19]
-		}
-	]
+		}, 20]
 }

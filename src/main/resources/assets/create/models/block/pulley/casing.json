@@ -4,6 +4,7 @@
 	"textures": {
 		"3": "create:block/gearbox_top",
 		"4": "create:block/gearbox",
+		"5": "create:block/andesite_casing_short",
 		"particle": "create:block/pulley_rope"
 	},
 	"elements": [
@@ -189,6 +190,18 @@
 				"west": {"uv": [2, 16, 14, 14], "texture": "#3"},
 				"up": {"uv": [14, 14, 2, 16], "rotation": 90, "texture": "#3"},
 				"down": {"uv": [14, 0, 2, 2], "rotation": 90, "texture": "#3"}
+			}
+		},
+		{
+			"name": "top",
+			"from": [3, 14, 2],
+			"to": [13, 16, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 10, 8]},
+			"faces": {
+				"east": {"uv": [2, 14, 14, 16], "texture": "#3"},
+				"west": {"uv": [2, 14, 14, 16], "texture": "#3"},
+				"up": {"uv": [2, 5, 14, 15], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [2, 5, 14, 15], "rotation": 90, "texture": "#5"}
 			}
 		}
 	]

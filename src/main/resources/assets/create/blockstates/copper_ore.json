@@ -1,12 +1,15 @@
 {
+	"forge_marker": 1,
     "variants": {
-		"oxidization=0": { "model": "create:block/copper_ore_oxidization0" },
-		"oxidization=1": { "model": "create:block/copper_ore_oxidization1" },
-		"oxidization=2": { "model": "create:block/copper_ore_oxidization2" },
-		"oxidization=3": { "model": "create:block/copper_ore_oxidization3" },
-		"oxidization=4": { "model": "create:block/copper_ore_oxidization4" },
-		"oxidization=5": { "model": "create:block/copper_ore_oxidization5" },
-		"oxidization=6": { "model": "create:block/copper_ore_oxidization6" },
-		"oxidization=7": { "model": "create:block/copper_ore_oxidization7" }
+		"oxidization": {
+			"0": { "model": "create:block/oxidized/copper_ore/0" },
+			"1": { "model": "create:block/oxidized/copper_ore/1" },
+			"2": { "model": "create:block/oxidized/copper_ore/2" },
+			"3": { "model": "create:block/oxidized/copper_ore/3" },
+			"4": { "model": "create:block/oxidized/copper_ore/4" },
+			"5": { "model": "create:block/oxidized/copper_ore/5" },
+			"6": { "model": "create:block/oxidized/copper_ore/6" },
+			"7": { "model": "create:block/oxidized/copper_ore/7" }
+		}
 	}
 }

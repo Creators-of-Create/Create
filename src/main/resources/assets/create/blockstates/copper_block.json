@@ -1,0 +1,15 @@
+{
+	"forge_marker": 1,
+    "variants": {
+		"oxidization": {
+			"0": { "model": "create:block/oxidized/copper_block/0" },
+			"1": { "model": "create:block/oxidized/copper_block/1" },
+			"2": { "model": "create:block/oxidized/copper_block/2" },
+			"3": { "model": "create:block/oxidized/copper_block/3" },
+			"4": { "model": "create:block/oxidized/copper_block/4" },
+			"5": { "model": "create:block/oxidized/copper_block/5" },
+			"6": { "model": "create:block/oxidized/copper_block/6" },
+			"7": { "model": "create:block/oxidized/copper_block/7" }
+		}
+	}
+}

@@ -331,6 +331,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			IControlContraption controllerTE = (IControlContraption) te;
 			this.controllerTE = controllerTE;
 			controllerTE.attach(this);
+
+			if (world.isRemote)
+				setPosition(posX, posY, posZ);
 		}
 	}
 
@@ -405,7 +408,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public void setMotion(Vec3d motionIn) {
 		// Make sure nothing can move contraptions out of the way
 	}
-	
+
 	public void setContraptionMotion(Vec3d vec) {
 		super.setMotion(vec);
 	}

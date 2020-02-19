@@ -1,5 +1,13 @@
 package com.simibubi.create.foundation.behaviour;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.ScreenResources;
+import com.simibubi.create.foundation.behaviour.scrollvalue.INamedIconOptions;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.logistics.item.filter.FilterItem;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -23,12 +31,12 @@ public class ValueBox {
 		this.labelOffset = offset;
 		return this;
 	}
-	
+
 	public ValueBox subLabel(String sublabel) {
 		this.sublabel = sublabel;
 		return this;
 	}
-	
+
 	public ValueBox scrollTooltip(String scrollTip) {
 		this.scrollTooltip = scrollTip;
 		return this;
@@ -38,6 +46,10 @@ public class ValueBox {
 		this.passiveColor = passive;
 		this.highlightColor = highlight;
 		return this;
+	}
+
+	public void render(boolean highlighted) {
+
 	}
 
 	public static class ItemValueBox extends ValueBox {
@@ -50,8 +62,29 @@ public class ValueBox {
 			this.count = count;
 		}
 
+		@Override
+		public void render(boolean highlighted) {
+			super.render(highlighted);
+			FontRenderer font = Minecraft.getInstance().fontRenderer;
+			String countString = count == 0 ? "*" : count + "";
+			GlStateManager.translated(17.5f, -5f, 7f);
+
+			boolean isFilter = stack.getItem() instanceof FilterItem;
+			if (isFilter)
+				GlStateManager.translated(3, 8, 7.25f);
+			else
+				GlStateManager.translated(-7 - font.getStringWidth(countString), 10, 10 + 1 / 4f);
+
+			double scale = 1.5;
+			GlStateManager.rotated(0, 1, 0, 0);
+			GlStateManager.scaled(scale, scale, scale);
+			font.drawString(countString, 0, 0, isFilter ? 0xFFFFFF : 0xEDEDED);
+			GlStateManager.translated(0, 0, -1 / 16f);
+			font.drawString(countString, 1 - 1 / 8f, 1 - 1 / 8f, 0x4F4F4F);
+		}
+
 	}
-	
+
 	public static class TextValueBox extends ValueBox {
 		String text;
 
@@ -59,7 +92,53 @@ public class ValueBox {
 			super(label, bb);
 			this.text = text;
 		}
+
+		@Override
+		public void render(boolean highlighted) {
+			super.render(highlighted);
+			FontRenderer font = Minecraft.getInstance().fontRenderer;
+			double scale = 4;
+			GlStateManager.scaled(scale, scale, 1);
+			GlStateManager.translated(-4, -4, 5);
+
+			int stringWidth = font.getStringWidth(text);
+			float numberScale = (float) font.FONT_HEIGHT / stringWidth;
+			boolean singleDigit = stringWidth < 10;
+			if (singleDigit)
+				numberScale = numberScale / 2;
+			float verticalMargin = (stringWidth - font.FONT_HEIGHT) / 2f;
+
+			GlStateManager.scaled(numberScale, numberScale, numberScale);
+			GlStateManager.translated(singleDigit ? stringWidth / 2 : 0, singleDigit ? -verticalMargin : verticalMargin,
+					0);
+
+			ValueBoxRenderer.renderText(font, text, 0xEDEDED, 0x4f4f4f);
+		}
+
+	}
+
+	public static class IconValueBox extends ValueBox {
+		ScreenResources icon;
+
+		public IconValueBox(String label, INamedIconOptions iconValue, AxisAlignedBB bb) {
+			super(label, bb);
+			subLabel(Lang.translate(iconValue.getTranslationKey()));
+			icon = iconValue.getIcon();
+		}
 		
+		@Override
+		public void render(boolean highlighted) {
+			super.render(highlighted);
+			double scale = 4;
+			GlStateManager.scaled(scale, scale, 1);
+			GlStateManager.translated(-8, -8, 3/2f);
+			icon.draw(0, 0);
+			GlStateManager.color4f(.25f, .25f, .25f, 1);
+			GlStateManager.translated(.5f, .5f, -1);
+			icon.draw(0, 0);
+			GlStateManager.color4f(1, 1, 1, 1);
+		}
+
 	}
 
 }
