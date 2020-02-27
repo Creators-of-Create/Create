@@ -14,6 +14,7 @@ import com.simibubi.create.modules.logistics.InWorldProcessing;
 import com.simibubi.create.modules.logistics.InWorldProcessing.Type;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -31,7 +32,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 
 public class AirCurrent {
 
@@ -155,7 +158,15 @@ public class AirCurrent {
 			if (!world.isBlockPresent(currentPos))
 				break;
 			BlockState state = world.getBlockState(currentPos);
+			if (shouldAlwaysPass(state))
+				continue;
 			VoxelShape voxelshape = state.getCollisionShape(world, currentPos, ISelectionContext.dummy());
+			if (voxelshape.isEmpty())
+				continue;
+			if (voxelshape == VoxelShapes.fullCube()) {
+				maxDistance = i - 1;
+				break;
+			}
 
 			for (Vec3d offset : offsets) {
 				Vec3d rayStart = VecHelper.getCenterOf(currentPos).subtract(directionVec.scale(.5f + 1 / 32f))
@@ -271,6 +282,14 @@ public class AirCurrent {
 
 	public void readFromNBT(CompoundNBT nbt) {
 
+	}
+
+	private static boolean shouldAlwaysPass(BlockState state) {
+		if (state.isIn(Tags.Blocks.FENCES))
+			return true;
+		if (state.getBlock() == Blocks.IRON_BARS)
+			return true;
+		return false;
 	}
 
 	public InWorldProcessing.Type getSegmentAt(float offset) {

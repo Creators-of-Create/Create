@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.modules.contraptions.KineticDebugger;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.contraptions.ChassisRangeDisplay;
 import com.simibubi.create.modules.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItemHandler;
 
@@ -67,6 +68,7 @@ public class ClientEvents {
 		CreateClient.schematicAndQuillHandler.render();
 		CreateClient.schematicHologram.render();
 		KineticDebugger.renderSourceOutline();
+		ChassisRangeDisplay.renderOutlines(event.getPartialTicks());
 	}
 
 	@SubscribeEvent

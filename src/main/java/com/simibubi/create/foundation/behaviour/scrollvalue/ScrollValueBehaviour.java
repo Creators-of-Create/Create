@@ -26,11 +26,12 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	int min = 0;
 	int max = 1;
 	public int value;
-	int scrollableValue;
+	public int scrollableValue;
 	int ticksUntilScrollPacket;
 	boolean forceClientState;
 	String label;
 	Consumer<Integer> callback;
+	Consumer<Integer> clientCallback;
 	Function<Integer, String> formatter;
 	Function<Integer, String> unit;
 	BiFunction<Integer, Boolean, Integer> step;
@@ -41,6 +42,8 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		this.setLabel(label);
 		slotPositioning = slot;
 		callback = i -> {
+		};
+		clientCallback = i -> {
 		};
 		textShift = Vec3d.ZERO;
 		formatter = i -> Integer.toString(i);
@@ -91,6 +94,11 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		ticksUntilScrollPacket = -1;
 	}
 
+	public ScrollValueBehaviour withClientCallback(Consumer<Integer> valueCallback) {
+		clientCallback = valueCallback;
+		return this;
+	}
+	
 	public ScrollValueBehaviour withCallback(Consumer<Integer> valueCallback) {
 		callback = valueCallback;
 		return this;

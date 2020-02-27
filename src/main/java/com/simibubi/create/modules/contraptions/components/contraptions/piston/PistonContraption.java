@@ -14,6 +14,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
+import com.simibubi.create.modules.contraptions.components.contraptions.BlockMovementTraits;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
@@ -26,6 +27,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -140,9 +142,11 @@ public class PistonContraption extends Contraption {
 				break;
 			if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state) && state.get(FACING) == direction.getOpposite())
 				break;
-			if (!canPush(world, currentPos, direction))
+			if (!BlockMovementTraits.movementAllowed(world, currentPos))
 				return retracting;
 			frontier.add(currentPos);
+			if (BlockMovementTraits.notSupportive(state, orientation))
+				break;
 		}
 		return true;
 	}
@@ -153,8 +157,8 @@ public class PistonContraption extends Contraption {
 	}
 
 	@Override
-	public void disassemble(World world, BlockPos offset, float yaw, float pitch) {
-		super.disassemble(world, offset, yaw, pitch, (pos, state) -> {
+	public void disassemble(World world, BlockPos offset, Vec3d rotation) {
+		super.disassemble(world, offset, rotation, (pos, state) -> {
 			BlockPos pistonPos = anchor.offset(orientation, -1);
 			BlockState pistonState = world.getBlockState(pistonPos);
 			TileEntity te = world.getTileEntity(pistonPos);

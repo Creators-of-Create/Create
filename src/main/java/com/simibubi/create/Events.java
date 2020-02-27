@@ -71,9 +71,11 @@ public class Events {
 		ItemStack stack = event.getItemStack();
 		if (stack.isEmpty())
 			return;
-		if (!stack.getItem().isIn(Tags.Items.GLASS_PANES))
-			return;
 		if (!(stack.getItem() instanceof BlockItem))
+			return;
+		BlockItem item = (BlockItem) stack.getItem();
+		if (!item.isIn(Tags.Items.GLASS_PANES)
+				&& (item.getBlock() == null || !item.getBlock().isIn(Tags.Blocks.GLASS_PANES)))
 			return;
 
 		BlockPos pos = event.getPos();
@@ -89,7 +91,7 @@ public class Events {
 		TileEntity te = world.getTileEntity(pos);
 		if (te != null && te instanceof WindowInABlockTileEntity) {
 			WindowInABlockTileEntity wte = (WindowInABlockTileEntity) te;
-			wte.setWindowBlock(((BlockItem) stack.getItem()).getBlock().getDefaultState());
+			wte.setWindowBlock(item.getBlock().getDefaultState());
 			wte.updateWindowConnections();
 
 			if (blockState.getBlock() instanceof FourWayBlock) {

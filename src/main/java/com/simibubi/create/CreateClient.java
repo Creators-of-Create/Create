@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.contraptions.ChassisRangeDisplay;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionRenderer;
 import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 import com.simibubi.create.modules.schematics.client.SchematicAndQuillHandler;
@@ -81,6 +82,7 @@ public class CreateClient {
 		schematicAndQuillHandler.tick();
 		schematicHandler.tick();
 		schematicHologram.tick();
+		ChassisRangeDisplay.clientTick();
 	}
 
 	@OnlyIn(Dist.CLIENT)

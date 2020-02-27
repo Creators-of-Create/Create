@@ -43,8 +43,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected Vec3d motionBeforeStall;
 	protected boolean stationary;
 
-	private static final DataParameter<Boolean> STALLED =
-		EntityDataManager.createKey(ContraptionEntity.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> STALLED = EntityDataManager.createKey(ContraptionEntity.class,
+			DataSerializers.BOOLEAN);
 
 	public float prevYaw;
 	public float prevPitch;
@@ -365,7 +365,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public void disassemble() {
 		if (getContraption() != null)
-			getContraption().disassemble(world, new BlockPos(getPositionVec().add(.5, .5, .5)), yaw, pitch);
+			getContraption().disassemble(world, new BlockPos(getPositionVec().add(.5, .5, .5)),
+					new Vec3d(getRoll(1), getYaw(1), getPitch(1)));
 		remove();
 	}
 

@@ -1,7 +1,9 @@
 package com.simibubi.create.foundation.behaviour.scrollvalue;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform.Sided;
+import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 
 import net.minecraft.client.Minecraft;
@@ -40,13 +42,29 @@ public class ScrollValueHandler {
 		if (!scrolling.testHit(objectMouseOver.getHitVec()))
 			return false;
 
+		if (scrolling instanceof BulkScrollValueBehaviour && AllKeys.ctrlDown()) {
+			BulkScrollValueBehaviour bulkScrolling = (BulkScrollValueBehaviour) scrolling;
+			for (SmartTileEntity smartTileEntity : bulkScrolling.getBulk()) {
+				ScrollValueBehaviour other = TileEntityBehaviour.get(smartTileEntity, ScrollValueBehaviour.TYPE);
+				if (other != null)
+					applyTo(delta, other);
+			}
+
+		} else
+			applyTo(delta, scrolling);
+
+		return true;
+	}
+
+	protected static void applyTo(double delta, ScrollValueBehaviour scrolling) {
 		scrolling.ticksUntilScrollPacket = 10;
+		int valueBefore = scrolling.scrollableValue;
 		scrolling.scrollableValue = (int) MathHelper.clamp(
 				scrolling.scrollableValue
 						+ Math.signum(delta) * scrolling.step.apply(scrolling.scrollableValue, delta > 0),
 				scrolling.min, scrolling.max);
-
-		return true;
+		if (valueBefore != scrolling.scrollableValue)
+			scrolling.clientCallback.accept(scrolling.scrollableValue);
 	}
 
 }

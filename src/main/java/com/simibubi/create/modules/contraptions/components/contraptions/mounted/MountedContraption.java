@@ -11,7 +11,6 @@ import com.simibubi.create.modules.contraptions.components.contraptions.AllContr
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.tileentity.TileEntity;
@@ -30,8 +29,8 @@ public class MountedContraption extends Contraption {
 	protected AllContraptionTypes getType() {
 		return AllContraptionTypes.MOUNTED;
 	}
-	
-	public static Contraption assembleMinecart(World world, BlockPos pos, AbstractMinecartEntity cart) {
+
+	public static Contraption assembleMinecart(World world, BlockPos pos) {
 		if (isFrozen())
 			return null;
 
@@ -40,8 +39,7 @@ public class MountedContraption extends Contraption {
 			return null;
 
 		Contraption contraption = new MountedContraption();
-		Vec3d vec = cart.getMotion();
-		if (!contraption.searchMovedStructure(world, pos, Direction.getFacingFromVector(vec.x, vec.y, vec.z)))
+		if (!contraption.searchMovedStructure(world, pos, null))
 			return null;
 
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.X : Axis.Z;
@@ -83,8 +81,8 @@ public class MountedContraption extends Contraption {
 	}
 
 	@Override
-	public void disassemble(World world, BlockPos offset, float yaw, float pitch) {
-		super.disassemble(world, offset, yaw, pitch, (pos, state) -> AllBlocks.MINECART_ANCHOR.typeOf(state));
+	public void disassemble(World world, BlockPos offset, Vec3d rotation) {
+		super.disassemble(world, offset, rotation, (pos, state) -> AllBlocks.MINECART_ANCHOR.typeOf(state));
 	}
 
 }

@@ -1,6 +1,5 @@
 {
     "type": "create:crushing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "minecraft:leather_horse_armor"
@@ -9,22 +8,12 @@
 	"results": [
 		{
 			"item": "minecraft:leather",
-			"count": 3
+			"count": 2
 		},
 		{
 			"item": "minecraft:leather",
 			"count": 2,
 			"chance": 0.5
-		},
-		{
-			"item": "minecraft:string",
-			"count": 2,
-			"chance": 0.25
-		},
-		{
-			"item": "minecraft:iron_nugget",
-			"count": 8,
-			"chance": 0.25
 		}
 	],
 	"processingTime": 200

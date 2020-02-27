@@ -138,6 +138,8 @@
 	"block.create.linked_transposer": "Linked Transposer",
 	"block.create.pulse_repeater": "Pulse Repeater",
 	"block.create.flexpulsepeater": "Adjustable Pulse Repeater",
+	"block.create.redstone_latch": "Powered Latch",
+	"block.create.toggle_latch": "Powered Toggle Latch",
 	"block.create.flexpeater": "Adjustable Repeater",
 	"block.create.entity_detector": "Belt Observer",
 	"block.create.logistical_casing": "Logistical Casing",

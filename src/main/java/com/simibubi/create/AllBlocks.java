@@ -61,7 +61,9 @@ import com.simibubi.create.modules.logistics.block.StockswitchBlock;
 import com.simibubi.create.modules.logistics.block.belts.BeltObserverBlock;
 import com.simibubi.create.modules.logistics.block.belts.FunnelBlock;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterBlock;
+import com.simibubi.create.modules.logistics.block.diodes.LatchBlock;
 import com.simibubi.create.modules.logistics.block.diodes.PulseRepeaterBlock;
+import com.simibubi.create.modules.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorBlock;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
@@ -184,6 +186,8 @@ public enum AllBlocks {
 	PULSE_REPEATER(new PulseRepeaterBlock()),
 	FLEXPEATER(new FlexpeaterBlock()),
 	FLEXPULSEPEATER(new FlexpeaterBlock()),
+	REDSTONE_LATCH(new LatchBlock()),
+	TOGGLE_LATCH(new ToggleLatchBlock()),
 
 	__CURIOSITIES__(),
 	SYMMETRY_PLANE(new PlaneSymmetryBlock()),

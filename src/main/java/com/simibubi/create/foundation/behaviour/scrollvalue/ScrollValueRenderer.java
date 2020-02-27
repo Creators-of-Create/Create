@@ -2,11 +2,13 @@ package com.simibubi.create.foundation.behaviour.scrollvalue;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.behaviour.ValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBox.IconValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBox.TextValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform.Sided;
+import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -14,6 +16,7 @@ import com.simibubi.create.foundation.utility.TessellatorHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -36,22 +39,39 @@ public class ScrollValueRenderer {
 		BlockRayTraceResult result = (BlockRayTraceResult) target;
 		ClientWorld world = Minecraft.getInstance().world;
 		BlockPos pos = result.getPos();
-		BlockState state = world.getBlockState(pos);
+		Direction face = result.getFace();
 
 		ScrollValueBehaviour behaviour = TileEntityBehaviour.get(world, pos, ScrollValueBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 		if (behaviour.needsWrench && !AllItems.WRENCH.typeOf(Minecraft.getInstance().player.getHeldItemMainhand()))
 			return;
+		boolean highlight = behaviour.testHit(target.getHitVec());
 
 		TessellatorHelper.prepareForDrawing();
-		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
+		if (behaviour instanceof BulkScrollValueBehaviour && AllKeys.ctrlDown()) {
+			BulkScrollValueBehaviour bulkScrolling = (BulkScrollValueBehaviour) behaviour;
+			for (SmartTileEntity smartTileEntity : bulkScrolling.getBulk()) {
+				GlStateManager.pushMatrix();
+				ScrollValueBehaviour other = TileEntityBehaviour.get(smartTileEntity, ScrollValueBehaviour.TYPE);
+				if (other != null)
+					render(world, smartTileEntity.getPos(), face, other, highlight);
+				GlStateManager.popMatrix();
+			}
+		} else
+			render(world, pos, face, behaviour, highlight);
+		TessellatorHelper.cleanUpAfterDrawing();
+	}
 
+	protected static void render(ClientWorld world, BlockPos pos, Direction face, ScrollValueBehaviour behaviour,
+			boolean highlight) {
+		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
+		BlockState state = world.getBlockState(pos);
 		if (behaviour.slotPositioning instanceof Sided)
-			((Sided) behaviour.slotPositioning).fromSide(result.getFace());
+			((Sided) behaviour.slotPositioning).fromSide(face);
 		behaviour.slotPositioning.renderTransformed(state, () -> {
-			AxisAlignedBB bb =
-				new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(.5f).contract(0, 0, -.5f).offset(0, 0, -.125f);
+			AxisAlignedBB bb = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(.5f).contract(0, 0, -.5f).offset(0, 0,
+					-.125f);
 			String label = behaviour.label;
 			ValueBox box;
 
@@ -65,11 +85,8 @@ public class ScrollValueRenderer {
 
 			box.scrollTooltip("[" + Lang.translate("action.scroll") + "]");
 			box.offsetLabel(behaviour.textShift.add(20, -10, 0)).withColors(0xbe970b, 0xffe75e);
-			ValueBoxRenderer.renderBox(box, behaviour.testHit(target.getHitVec()));
-
+			ValueBoxRenderer.renderBox(box, highlight);
 		});
-
-		TessellatorHelper.cleanUpAfterDrawing();
 	}
 
 }

@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueBehaviour
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 
+import net.minecraft.entity.player.PlayerEntity;
+
 public class MotorTileEntity extends GeneratingKineticTileEntity {
 
 	public static final int DEFAULT_SPEED = 16;
@@ -47,7 +49,8 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	private int step(int current, boolean forward) {
-		if (world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ()).isSneaking())
+		PlayerEntity closestPlayer = world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ());
+		if (closestPlayer != null && closestPlayer.isSneaking())
 			return 1;
 
 		int magnitude = Math.abs(current) - (forward == current > 0 ? 0 : 1);

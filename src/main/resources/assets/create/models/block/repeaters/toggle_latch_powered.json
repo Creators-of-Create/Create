@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/repeaters/toggle_latch",
+    "textures": {
+        "3": "create:block/toggle_latch_powered",
+		"particle": "create:block/toggle_latch_powered"
+    }
+}

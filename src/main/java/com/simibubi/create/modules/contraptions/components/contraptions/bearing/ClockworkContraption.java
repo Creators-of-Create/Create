@@ -3,7 +3,6 @@ package com.simibubi.create.modules.contraptions.components.contraptions.bearing
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiPredicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -11,7 +10,6 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -76,13 +74,7 @@ public class ClockworkContraption extends Contraption {
 
 	@Override
 	public boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
-		return super.searchMovedStructure(world, pos.offset(direction, offset + 1), direction);
-	}
-
-	@Override
-	public void disassemble(World world, BlockPos offset, float yaw, float pitch,
-			BiPredicate<BlockPos, BlockState> customPlacement) {
-		super.disassemble(world, offset, yaw, pitch, customPlacement);
+		return super.searchMovedStructure(world, pos.offset(direction, offset + 1), null);
 	}
 
 	@Override
