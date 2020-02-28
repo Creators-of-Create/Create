@@ -11,7 +11,7 @@ public class ScrollOptionBehaviour<E extends Enum<E> & INamedIconOptions> extend
 		super(label, te, slot);
 		options = enum_.getEnumConstants();
 		between(0, options.length - 1);
-		withStepFunction((i, b) -> -1);
+		withStepFunction((c) -> -1);
 	}
 
 	INamedIconOptions getIconForSelected() {

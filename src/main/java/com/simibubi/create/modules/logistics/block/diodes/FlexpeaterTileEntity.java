@@ -9,6 +9,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -52,8 +53,9 @@ public class FlexpeaterTileEntity extends SmartTileEntity {
 		return super.write(compound);
 	}
 
-	private int step(int value, boolean positive) {
-		if (!positive)
+	private int step(StepContext context) {
+		int value = context.currentValue;
+		if (!context.forward)
 			value--;
 
 		if (value < 20)

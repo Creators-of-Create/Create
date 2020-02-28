@@ -40,6 +40,7 @@ import com.simibubi.create.modules.contraptions.components.waterwheel.WaterWheel
 import com.simibubi.create.modules.contraptions.processing.BasinBlock;
 import com.simibubi.create.modules.contraptions.redstone.AnalogLeverBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
+import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
@@ -165,6 +166,7 @@ public enum AllBlocks {
 	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
 	FLYWHEEL(new FlywheelBlock()),
 	FURNACE_ENGINE(new FurnaceEngineBlock()),
+	ROTATION_SPEED_CONTROLLER(new SpeedControllerBlock()),
 	
 	__LOGISTICS__(),
 	CONTACT(new ContactBlock()),

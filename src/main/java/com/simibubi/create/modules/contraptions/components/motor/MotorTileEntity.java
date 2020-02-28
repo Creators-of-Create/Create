@@ -8,10 +8,9 @@ import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
-
-import net.minecraft.entity.player.PlayerEntity;
 
 public class MotorTileEntity extends GeneratingKineticTileEntity {
 
@@ -39,7 +38,7 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 		generatedSpeed.value = DEFAULT_SPEED;
 		generatedSpeed.withUnit(i -> Lang.translate("generic.unit.rpm"));
 		generatedSpeed.withCallback(i -> this.updateGeneratedRotation());
-		generatedSpeed.withStepFunction(this::step);
+		generatedSpeed.withStepFunction(MotorTileEntity::step);
 		behaviours.add(generatedSpeed);
 	}
 
@@ -48,13 +47,14 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 		return generatedSpeed.getValue();
 	}
 
-	private int step(int current, boolean forward) {
-		PlayerEntity closestPlayer = world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ());
-		if (closestPlayer != null && closestPlayer.isSneaking())
+	public static int step(StepContext context) {
+		if (context.shift)
 			return 1;
 
-		int magnitude = Math.abs(current) - (forward == current > 0 ? 0 : 1);
+		int current = context.currentValue;
+		int magnitude = Math.abs(current) - (context.forward == current > 0 ? 0 : 1);
 		int step = 1;
+
 		if (magnitude >= 4)
 			step *= 4;
 		if (magnitude >= 32)

@@ -31,24 +31,15 @@ public class VoxelShaper {
 		return forDirectionsWithRotation(shape, facing, Direction.Plane.HORIZONTAL, new HorizontalRotationValues());
 	}
 
-	public static VoxelShaper forHorizontalAxis(VoxelShape shape, Direction facing){
-		return forDirectionsWithRotation(shape, facing, Arrays.asList(Direction.SOUTH, Direction.EAST), new HorizontalRotationValues());
-	}
-
-	public static VoxelShaper forRotatedPillar(VoxelShape zShape) {//todo dunno what this was intended for
-		VoxelShaper voxelShaper = new VoxelShaper();
-		for (Axis axis : Axis.values()) {
-			Direction facing = axisAsFace(axis);
-			voxelShaper.shapes.put(facing, rotatedCopy(zShape, new Vec3d(0, (int) -facing.getHorizontalAngle(),0)));
-		}
-		return voxelShaper;
+	public static VoxelShaper forHorizontalAxis(VoxelShape shape, Axis along) {
+		return forDirectionsWithRotation(shape, axisAsFace(along), Arrays.asList(Direction.SOUTH, Direction.EAST), new HorizontalRotationValues());
 	}
 
 	public static VoxelShaper forDirectional(VoxelShape shape, Direction facing){
 		return forDirectionsWithRotation(shape, facing, Arrays.asList(Direction.values()), new DefaultRotationValues());
 	}
 
-	public static VoxelShaper forDirectionalAxis(VoxelShape shape, Axis along){
+	public static VoxelShaper forAxis(VoxelShape shape, Axis along){
 		return forDirectionsWithRotation(shape, axisAsFace(along), Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.UP), new DefaultRotationValues());
 	}
 

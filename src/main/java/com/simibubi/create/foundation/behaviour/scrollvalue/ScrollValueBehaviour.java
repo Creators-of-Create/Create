@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.behaviour.scrollvalue;
 
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -34,7 +33,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	Consumer<Integer> clientCallback;
 	Function<Integer, String> formatter;
 	Function<Integer, String> unit;
-	BiFunction<Integer, Boolean, Integer> step;
+	Function<StepContext, Integer> step;
 	boolean needsWrench;
 
 	public ScrollValueBehaviour(String label, SmartTileEntity te, ValueBoxTransform slot) {
@@ -47,7 +46,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		};
 		textShift = Vec3d.ZERO;
 		formatter = i -> Integer.toString(i);
-		step = (i, b) -> 1;
+		step = (c) -> 1;
 		value = 0;
 		ticksUntilScrollPacket = -1;
 	}
@@ -130,7 +129,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		return this;
 	}
 
-	public ScrollValueBehaviour withStepFunction(BiFunction<Integer, Boolean, Integer> step) {
+	public ScrollValueBehaviour withStepFunction(Function<StepContext, Integer> step) {
 		this.step = step;
 		return this;
 	}
@@ -175,6 +174,13 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+	
+	public static class StepContext {
+		public int currentValue;
+		public boolean forward;
+		public boolean shift;
+		public boolean control;
 	}
 
 }

@@ -1,175 +1,175 @@
 package com.simibubi.create.foundation.utility;
 
 import static net.minecraft.block.Block.makeCuboidShape;
+import static net.minecraft.util.Direction.EAST;
+import static net.minecraft.util.Direction.SOUTH;
+import static net.minecraft.util.Direction.UP;
 
-import java.util.Arrays;
+import java.util.function.BiFunction;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.PistonHeadBlock;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 
 public class AllShapes {
 
+	// Independent Shapers
 	public static final VoxelShaper
-		SHORT_CASING_14_VOXEL = VoxelShaper.forDirectional(makeCuboidShape(0, 0, 0, 16, 14, 16), Direction.UP),
-		SHORT_CASING_12_VOXEL = VoxelShaper.forDirectional(makeCuboidShape(0, 0, 0, 16, 12, 16), Direction.UP),
-		SHORT_CASING_11_VOXEL = VoxelShaper.forDirectional(makeCuboidShape(0, 0, 0, 16, 11, 16), Direction.UP),
-		HARVESTER_BASE = VoxelShaper.forHorizontal(makeCuboidShape(0, 2, 0, 16, 14, 3), Direction.SOUTH),
-		MOTOR_BLOCK = VoxelShaper.forHorizontal(makeCuboidShape(0, 3, 3, 16, 13, 13), Direction.EAST),
-		FOUR_VOXEL_POLE = VoxelShaper.forDirectionalAxis(makeCuboidShape(6, 0, 6, 10, 16, 10), Direction.Axis.Y),
-		SIX_VOXEL_POLE = VoxelShaper.forDirectionalAxis(makeCuboidShape(5, 0, 5, 11, 16, 11), Direction.Axis.Y),
-		BELT_FUNNEL = VoxelShaper.forHorizontal(makeCuboidShape(3, -4, 11, 13, 8, 17), Direction.SOUTH),
-		FUNNEL = VoxelShaper.forDirectional(makeCuboidShape(1, 1, 13, 15, 15, 17), Direction.SOUTH),
-		EXTRACTOR = VoxelShaper.forDirectional(makeCuboidShape(4, 2, 11, 12, 10, 17), Direction.SOUTH)
-				.withVerticalShapes(makeCuboidShape(4, 11, 4, 12, 17, 12)),
-		TRANSPOSER = VoxelShaper.forDirectional(VoxelShapes.or(
-				makeCuboidShape(4, 4, -1, 12, 12, 1), 
-				makeCuboidShape(5, 5, 0, 11, 11, 16), 
-				makeCuboidShape(4, 4, 11, 12, 12, 17)), Direction.SOUTH),
-		FURNACE_ENGINE = VoxelShaper.forHorizontal(VoxelShapes.or(
-				makeCuboidShape(1, 1, 0, 15, 15, 16), 
-				makeCuboidShape(0, 0, 9, 16, 16, 14)), Direction.SOUTH),
-		PORTABLE_STORAGE_INTERFACE = VoxelShaper.forDirectional(VoxelShapes.or(
-				makeCuboidShape(0, 0, 0, 16, 12, 16), 
-				makeCuboidShape(3, 12, 3, 13, 16, 13)), Direction.UP),
-		PULLEY = VoxelShaper.forHorizontalAxis(VoxelShapes.or(
-				makeCuboidShape(0, 0, 0, 16, 16, 2), 
-				makeCuboidShape(1, 1, 2, 15, 15, 14), 
-				makeCuboidShape(0, 0, 14, 16, 16, 16)), Direction.SOUTH)
 
-				;
+	SHORT_CASING_14_VOXEL = shape(0, 0, 0, 16, 14, 16).forDirectional(),
+			SHORT_CASING_12_VOXEL = shape(0, 0, 0, 16, 12, 16).forDirectional(),
+			SHORT_CASING_11_VOXEL = shape(0, 0, 0, 16, 11, 16).forDirectional(),
+			MOTOR_BLOCK = shape(0, 3, 3, 16, 13, 13).forHorizontal(EAST),
+			FOUR_VOXEL_POLE = shape(6, 0, 6, 10, 16, 10).forAxis(),
+			SIX_VOXEL_POLE = shape(5, 0, 5, 11, 16, 11).forAxis(),
+			BELT_FUNNEL = shape(3, -4, 11, 13, 8, 17).forHorizontal(SOUTH),
+			FUNNEL = shape(1, 1, 13, 15, 15, 17).forDirectional(SOUTH),
+			EXTRACTOR = shape(4, 2, 11, 12, 10, 17).forDirectional(SOUTH)
+					.withVerticalShapes(cuboid(4, 11, 4, 12, 17, 12)),
+			TRANSPOSER = shape(4, 4, -1, 12, 12, 1).add(5, 5, 0, 11, 11, 16).add(4, 4, 11, 12, 12, 17)
+					.forDirectional(SOUTH),
+			FURNACE_ENGINE = shape(1, 1, 0, 15, 15, 16).add(0, 0, 9, 16, 16, 14).forHorizontal(Direction.SOUTH),
+			PORTABLE_STORAGE_INTERFACE = shape(0, 0, 0, 16, 12, 16).add(3, 12, 3, 13, 16, 13).forDirectional(),
+			PULLEY = shape(0, 0, 0, 16, 16, 2).add(1, 1, 2, 15, 15, 14).add(0, 0, 14, 16, 16, 16).forHorizontalAxis(),
+			SPEED_CONTROLLER = shape(0, 0, 0, 16, 2, 16).add(1, 1, 1, 15, 15, 15).erase(0, 8, 5, 16, 16, 11)
+					.add(2, 9, 2, 14, 14, 14).erase(6, 11, 0, 10, 16, 16).forHorizontalAxis(),
+			HARVESTER_BASE = shape(0, 2, 0, 16, 14, 3).forDirectional(SOUTH)
 
+	;
 
+	// Internally Shared Shapes (TODO: Use builder pattern)
 	private static final VoxelShape
-		LOGISTICAL_CASING_MIDDLE_SHAPE = VoxelShapes.or(
-		makeCuboidShape(1,0,1,15,16,15),
-		makeCuboidShape(0,0,0,2,16,2),
-		makeCuboidShape(14,0,0,16,16,2),
-		makeCuboidShape(0,0,14,2,16,16),
-		makeCuboidShape(14,0,14,16,16,16)),
-		LOGISTICAL_CASING_CAP_SHAPE = VoxelShapes.or(
-				LOGISTICAL_CASING_MIDDLE_SHAPE,
-				makeCuboidShape(0,0,0,16,2,16)),
-		CART_ASSEMBLER_SHAPE = VoxelShapes.or(
-				VoxelShapes.fullCube(),
-				makeCuboidShape(-2, 0, 1, 18, 13, 15)),
-		MECHANICAL_PISTON_HEAD_SHAPE_UP = Blocks.PISTON_HEAD.getStateContainer().getBaseState().with(DirectionalBlock.FACING, Direction.UP).with(PistonHeadBlock.SHORT, true).getShape(null, null),
-		MECHANICAL_PISTON_EXTENDED_SHAPE_UP = VoxelShapes.or(
-				SHORT_CASING_12_VOXEL.get(Direction.UP),
-				FOUR_VOXEL_POLE.get(Direction.Axis.Y)),
-		SMALL_GEAR_SHAPE =  makeCuboidShape(2, 6, 2, 14, 10, 14),
-		LARGE_GEAR_SHAPE =  makeCuboidShape(0, 6, 0, 16, 10, 16),
-		VERTICAL_TABLET_SHAPE_SOUTH =  makeCuboidShape(3, 1, -1, 13, 15, 3),
-		SQUARE_TABLET_SHAPE_SOUTH = makeCuboidShape(2, 2, -1, 14, 14, 3),
-		PACKAGE_FUNNEL_SHAPE_UP = makeCuboidShape(1, -1, 1, 15, 3, 15),
-		TABLE_POLE_SHAPE = VoxelShapes.or(
-				makeCuboidShape(4, 0, 4, 12, 2, 12),
-				makeCuboidShape(5, 2, 5, 11, 14, 11)),
-		LOGISTICS_TABLE_SLOPE_SOUTH = VoxelShapes.or(
-				makeCuboidShape(0, 10D, 15, 16, 14, 10.667),
-				makeCuboidShape(0, 12, 10.667, 16, 16, 6.333),
-				makeCuboidShape(0, 14, 6.333, 16, 18, 2)),
-		SCHEMATICS_TABLE_SLOPE_SOUTH = VoxelShapes.or(
-				makeCuboidShape(0, 10, 16, 16, 14, 11),
-				makeCuboidShape(0, 12, 11, 16, 16, 6),
-				makeCuboidShape(0, 14, 6, 16, 18, 1)),
-		GAUGE_SHAPE_UP = VoxelShapes.or(
-				makeCuboidShape(1, 0, 0, 15, 2, 16),//plate
-				makeCuboidShape(2, 2, 1, 14, 14, 15)),//log
-		NOZZLE_SHAPE_UP = VoxelShapes.or(
-				makeCuboidShape(2, 0, 2, 14, 14, 14),
-				VoxelShapes.combine(
-						makeCuboidShape(1, 13, 1, 15, 15, 15), 
-						makeCuboidShape(3, 13, 3, 13, 15, 13), 
-						IBooleanFunction.ONLY_FIRST)),
-		CRANK_SHAPE_UP = VoxelShapes.or(
-				makeCuboidShape(5, 0, 5, 11, 6, 11),
-				makeCuboidShape(1, 3, 1, 15, 8, 15)
-				)
 
-				;
+	CART_ASSEMBLER_SHAPE = VoxelShapes.or(VoxelShapes.fullCube(), makeCuboidShape(-2, 0, 1, 18, 13, 15)),
+			MECHANICAL_PISTON_HEAD_SHAPE_UP = Blocks.PISTON_HEAD.getStateContainer().getBaseState()
+					.with(DirectionalBlock.FACING, UP).with(PistonHeadBlock.SHORT, true).getShape(null, null),
+			MECHANICAL_PISTON_EXTENDED_SHAPE_UP = VoxelShapes.or(SHORT_CASING_12_VOXEL.get(UP),
+					FOUR_VOXEL_POLE.get(Direction.Axis.Y)),
+			SMALL_GEAR_SHAPE = makeCuboidShape(2, 6, 2, 14, 10, 14),
+			LARGE_GEAR_SHAPE = makeCuboidShape(0, 6, 0, 16, 10, 16),
+			VERTICAL_TABLET_SHAPE_SOUTH = makeCuboidShape(3, 1, -1, 13, 15, 3),
+			SQUARE_TABLET_SHAPE_SOUTH = makeCuboidShape(2, 2, -1, 14, 14, 3),
+			LOGISTICS_TABLE_SLOPE_SOUTH = VoxelShapes.or(makeCuboidShape(0, 10D, 15, 16, 14, 10.667),
+					makeCuboidShape(0, 12, 10.667, 16, 16, 6.333), makeCuboidShape(0, 14, 6.333, 16, 18, 2)),
+			SCHEMATICS_TABLE_SLOPE_SOUTH = VoxelShapes.or(makeCuboidShape(0, 10, 16, 16, 14, 11),
+					makeCuboidShape(0, 12, 11, 16, 16, 6), makeCuboidShape(0, 14, 6, 16, 18, 1)),
+			NOZZLE_SHAPE_UP = VoxelShapes.or(makeCuboidShape(2, 0, 2, 14, 14, 14),
+					VoxelShapes.combine(makeCuboidShape(1, 13, 1, 15, 15, 15), makeCuboidShape(3, 13, 3, 13, 15, 13),
+							IBooleanFunction.ONLY_FIRST)),
+			CRANK_SHAPE_UP = VoxelShapes.or(makeCuboidShape(5, 0, 5, 11, 6, 11), makeCuboidShape(1, 3, 1, 15, 8, 15))
 
+	;
+
+	// Static Block Shapes
 	public static final VoxelShape
-		LOGISTICAL_CASING_SINGLE_SHAPE = VoxelShapes.or(
-				makeCuboidShape(0, 0, 0, 16, 2, 16),
-				makeCuboidShape(1, 1, 1, 15, 15, 15),
-				makeCuboidShape(0, 14, 0, 16, 16, 16)),
-		BASIN_BLOCK_SHAPE = VoxelShapes.or(
-				makeCuboidShape(2, 0, 2, 14, 2, 14), 
-				VoxelShapes.combine(
-						makeCuboidShape(0, 2, 0, 16, 13, 16),
-						makeCuboidShape(2, 5, 2, 14, 14, 14),
-						IBooleanFunction.ONLY_FIRST)),
-		CRUSHING_WHEEL_COLLISION_SHAPE = makeCuboidShape(0, 0, 0, 16, 22, 16),
-		MECHANICAL_PROCESSOR_SHAPE = VoxelShapes.combineAndSimplify(
-				VoxelShapes.fullCube(),
-				makeCuboidShape(4, 0, 4, 12, 16, 12),
-				IBooleanFunction.ONLY_FIRST),
-		TURNTABLE_SHAPE = VoxelShapes.or(
-				makeCuboidShape(1, 4, 1, 15, 8, 15),
-				makeCuboidShape(5, 0, 5, 11, 4, 11)),
-		CRATE_BLOCK_SHAPE = makeCuboidShape(1, 0, 1, 15, 14, 15),
-		LOGISTICS_TABLE_BASE = TABLE_POLE_SHAPE,
-		BELT_COLLISION_MASK = makeCuboidShape(0, 0, 0, 16, 19, 16),
-		SCHEMATICANNON_SHAPE = VoxelShapes.or(
-				makeCuboidShape(1, 0, 1, 15, 8, 15),
-				makeCuboidShape(0.5, 8, 0.5, 15.5, 11, 15.5)),
-		PULLEY_MAGNET = VoxelShapes.or(
-				makeCuboidShape(3, 0, 3, 13, 2, 13),
-				FOUR_VOXEL_POLE.get(Direction.UP))
-		
-				;
 
+	BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 14, 14).add(2, 0, 2, 14, 2, 14).build(),
+			CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 22, 16),
+			MECHANICAL_PROCESSOR_SHAPE = shape(VoxelShapes.fullCube()).erase(4, 0, 4, 12, 16, 12).build(),
+			TURNTABLE_SHAPE = shape(1, 4, 1, 15, 8, 15).add(5, 0, 5, 11, 4, 11).build(),
+			CRATE_BLOCK_SHAPE = cuboid(1, 0, 1, 15, 14, 15),
+			TABLE_POLE_SHAPE = shape(4, 0, 4, 12, 2, 12).add(5, 2, 5, 11, 14, 11).build(),
+			BELT_COLLISION_MASK = cuboid(0, 0, 0, 16, 19, 16),
+			SCHEMATICANNON_SHAPE = shape(1, 0, 1, 15, 8, 15).add(0.5, 8, 0.5, 15.5, 11, 15.5).build(),
+			PULLEY_MAGNET = shape(3, 0, 3, 13, 2, 13).add(FOUR_VOXEL_POLE.get(UP)).build(),
+			GAUGE_SHAPE_UP = shape(1, 0, 0, 15, 2, 16).add(2, 2, 1, 14, 14, 15).build()
 
+	;
 
-
+	// Advanced Shapers (TODO: Use builder pattern)
 	public static final VoxelShaper
-		LOGISTICAL_CASING_MIDDLE = VoxelShaper.forDirectional(LOGISTICAL_CASING_MIDDLE_SHAPE, Direction.UP),
-		LOGISTICAL_CASING_CAP = VoxelShaper.forDirectional(LOGISTICAL_CASING_CAP_SHAPE, Direction.UP),
-		NOZZLE = VoxelShaper.forDirectional(NOZZLE_SHAPE_UP, Direction.UP),
-		CRANK = VoxelShaper.forDirectional(CRANK_SHAPE_UP, Direction.UP),
-		CART_ASSEMBLER = VoxelShaper.forHorizontalAxis(CART_ASSEMBLER_SHAPE, Direction.SOUTH),
-		MECHANICAL_PISTON_HEAD = VoxelShaper.forDirectional(MECHANICAL_PISTON_HEAD_SHAPE_UP, Direction.UP),
-		MECHANICAL_PISTON = SHORT_CASING_12_VOXEL,
-		MECHANICAL_PISTON_EXTENDED = VoxelShaper.forDirectional(MECHANICAL_PISTON_EXTENDED_SHAPE_UP, Direction.UP),
-		SMALL_GEAR = VoxelShaper.forDirectionalAxis(VoxelShapes.or(SMALL_GEAR_SHAPE, SIX_VOXEL_POLE.get(Direction.Axis.Y)), Direction.Axis.Y),
-		LARGE_GEAR = VoxelShaper.forDirectionalAxis(VoxelShapes.or(LARGE_GEAR_SHAPE, SIX_VOXEL_POLE.get(Direction.Axis.Y)), Direction.Axis.Y),
-		LOGISTICAL_CONTROLLER = VoxelShaper.forDirectional(SQUARE_TABLET_SHAPE_SOUTH, Direction.SOUTH),
-		REDSTONE_BRIDGE = VoxelShaper.forHorizontal(VERTICAL_TABLET_SHAPE_SOUTH, Direction.SOUTH).withVerticalShapes(LOGISTICAL_CONTROLLER.get(Direction.UP)),
-		LOGISTICAL_INDEX = REDSTONE_BRIDGE,
-		PACKAGE_FUNNEL = VoxelShaper.forDirectional(PACKAGE_FUNNEL_SHAPE_UP, Direction.UP),
-		LOGISTICS_TABLE = VoxelShaper.forHorizontal(VoxelShapes.or(TABLE_POLE_SHAPE, LOGISTICS_TABLE_SLOPE_SOUTH), Direction.SOUTH),
-		SCHEMATICS_TABLE = VoxelShaper.forDirectional(VoxelShapes.or(TABLE_POLE_SHAPE, SCHEMATICS_TABLE_SLOPE_SOUTH), Direction.SOUTH)
 
-				;
+	NOZZLE = VoxelShaper.forDirectional(NOZZLE_SHAPE_UP, UP), CRANK = VoxelShaper.forDirectional(CRANK_SHAPE_UP, UP),
+			CART_ASSEMBLER = VoxelShaper.forHorizontalAxis(CART_ASSEMBLER_SHAPE, Axis.Z),
+			MECHANICAL_PISTON_HEAD = VoxelShaper.forDirectional(MECHANICAL_PISTON_HEAD_SHAPE_UP, UP),
+			MECHANICAL_PISTON = SHORT_CASING_12_VOXEL,
+			MECHANICAL_PISTON_EXTENDED = VoxelShaper.forDirectional(MECHANICAL_PISTON_EXTENDED_SHAPE_UP, UP),
+			SMALL_GEAR = VoxelShaper.forAxis(VoxelShapes.or(SMALL_GEAR_SHAPE, SIX_VOXEL_POLE.get(Direction.Axis.Y)),
+					Direction.Axis.Y),
+			LARGE_GEAR = VoxelShaper.forAxis(VoxelShapes.or(LARGE_GEAR_SHAPE, SIX_VOXEL_POLE.get(Direction.Axis.Y)),
+					Direction.Axis.Y),
+			LOGISTICAL_CONTROLLER = VoxelShaper.forDirectional(SQUARE_TABLET_SHAPE_SOUTH, SOUTH),
+			REDSTONE_BRIDGE = VoxelShaper.forHorizontal(VERTICAL_TABLET_SHAPE_SOUTH, SOUTH)
+					.withVerticalShapes(LOGISTICAL_CONTROLLER.get(UP)),
+			LOGISTICS_TABLE = VoxelShaper.forHorizontal(VoxelShapes.or(TABLE_POLE_SHAPE, LOGISTICS_TABLE_SLOPE_SOUTH),
+					SOUTH),
+			SCHEMATICS_TABLE = VoxelShaper
+					.forDirectional(VoxelShapes.or(TABLE_POLE_SHAPE, SCHEMATICS_TABLE_SLOPE_SOUTH), SOUTH)
 
-	public static final GaugeShaper GAUGE = GaugeShaper.make();
+	;
 
-
-	public static class GaugeShaper extends VoxelShaper {
-
-		private VoxelShaper axisFalse, axisTrue;
-
-		private static GaugeShaper make(){
-			GaugeShaper shaper = new GaugeShaper();
-			shaper.axisFalse = forDirectional(AllShapes.GAUGE_SHAPE_UP, Direction.UP);
-			shaper.axisTrue = forDirectional(rotatedCopy(AllShapes.GAUGE_SHAPE_UP, new Vec3d(0, 90, 0)), Direction.UP);
-			//shapes for X axis need to be swapped
-			Arrays.asList(Direction.EAST, Direction.WEST).forEach(direction -> {
-				VoxelShape mem = shaper.axisFalse.get(direction);
-				shaper.axisFalse.withShape(shaper.axisTrue.get(direction), direction);
-				shaper.axisTrue.withShape(mem, direction);
-			});
-			return shaper;
-		}
-
-		public VoxelShape get(Direction direction, boolean axisAlong) {
-			return (axisAlong ? axisTrue : axisFalse).get(direction);
-		}
+	private static Builder shape(VoxelShape shape) {
+		return new Builder(shape);
 	}
+
+	private static Builder shape(double x1, double y1, double z1, double x2, double y2, double z2) {
+		return shape(cuboid(x1, y1, z1, x2, y2, z2));
+	}
+
+	private static VoxelShape cuboid(double x1, double y1, double z1, double x2, double y2, double z2) {
+		return Block.makeCuboidShape(x1, y1, z1, x2, y2, z2);
+	}
+
+	private static class Builder {
+		VoxelShape shape;
+
+		public Builder(VoxelShape shape) {
+			this.shape = shape;
+		}
+
+		Builder add(VoxelShape shape) {
+			this.shape = VoxelShapes.or(this.shape, shape);
+			return this;
+		}
+
+		Builder add(double x1, double y1, double z1, double x2, double y2, double z2) {
+			return add(cuboid(x1, y1, z1, x2, y2, z2));
+		}
+
+		Builder erase(double x1, double y1, double z1, double x2, double y2, double z2) {
+			this.shape = VoxelShapes.combineAndSimplify(shape, cuboid(x1, y1, z1, x2, y2, z2),
+					IBooleanFunction.ONLY_FIRST);
+			return this;
+		}
+
+		VoxelShape build() {
+			return shape;
+		}
+
+		VoxelShaper build(BiFunction<VoxelShape, Direction, VoxelShaper> factory, Direction direction) {
+			return factory.apply(shape, direction);
+		}
+
+		VoxelShaper build(BiFunction<VoxelShape, Axis, VoxelShaper> factory, Axis axis) {
+			return factory.apply(shape, axis);
+		}
+
+		VoxelShaper forDirectional(Direction direction) {
+			return build(VoxelShaper::forDirectional, direction);
+		}
+
+		VoxelShaper forAxis() {
+			return build(VoxelShaper::forAxis, Axis.Y);
+		}
+
+		VoxelShaper forHorizontalAxis() {
+			return build(VoxelShaper::forHorizontalAxis, Axis.Z);
+		}
+
+		VoxelShaper forHorizontal(Direction direction) {
+			return build(VoxelShaper::forHorizontal, direction);
+		}
+
+		VoxelShaper forDirectional() {
+			return forDirectional(UP);
+		}
+
+	}
+
 }

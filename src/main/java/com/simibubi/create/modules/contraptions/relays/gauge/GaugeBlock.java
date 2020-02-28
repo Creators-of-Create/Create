@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions.relays.gauge;
 
 import java.util.Random;
 
-import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -30,6 +29,7 @@ import net.minecraft.world.World;
 
 public class GaugeBlock extends DirectionalAxisKineticBlock {
 
+	public static final GaugeShaper GAUGE = GaugeShaper.make();
 	protected Type type;
 
 	public enum Type implements IStringSerializable {
@@ -154,7 +154,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.GAUGE.get(state.get(FACING), state.get(AXIS_ALONG_FIRST_COORDINATE));
+		return GAUGE.get(state.get(FACING), state.get(AXIS_ALONG_FIRST_COORDINATE));
 	}
 
 }

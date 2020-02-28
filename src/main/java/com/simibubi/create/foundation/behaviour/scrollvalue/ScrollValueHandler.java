@@ -5,6 +5,7 @@ import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
@@ -59,10 +60,16 @@ public class ScrollValueHandler {
 	protected static void applyTo(double delta, ScrollValueBehaviour scrolling) {
 		scrolling.ticksUntilScrollPacket = 10;
 		int valueBefore = scrolling.scrollableValue;
-		scrolling.scrollableValue = (int) MathHelper.clamp(
-				scrolling.scrollableValue
-						+ Math.signum(delta) * scrolling.step.apply(scrolling.scrollableValue, delta > 0),
-				scrolling.min, scrolling.max);
+
+		StepContext context = new StepContext();
+		context.control = AllKeys.ctrlDown();
+		context.shift = AllKeys.shiftDown();
+		context.currentValue = scrolling.scrollableValue;
+		context.forward = delta > 0;
+
+		double newValue = scrolling.scrollableValue + Math.signum(delta) * scrolling.step.apply(context);
+		scrolling.scrollableValue = (int) MathHelper.clamp(newValue, scrolling.min, scrolling.max);
+
 		if (valueBefore != scrolling.scrollableValue)
 			scrolling.clientCallback.accept(scrolling.scrollableValue);
 	}

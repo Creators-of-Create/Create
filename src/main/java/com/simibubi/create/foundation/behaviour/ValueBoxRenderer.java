@@ -44,7 +44,7 @@ public class ValueBoxRenderer {
 		AxisAlignedBB bb = box.bb;
 		WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ,
 				(float) color.x, (float) color.y, (float) color.z, 1f);
-		GlStateManager.lineWidth(2);
+		GlStateManager.lineWidth(1);
 
 		TessellatorHelper.draw();
 		GlStateManager.enableTexture();

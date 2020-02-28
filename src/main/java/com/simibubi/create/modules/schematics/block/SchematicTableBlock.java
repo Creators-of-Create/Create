@@ -45,7 +45,7 @@ public class SchematicTableBlock extends HorizontalBlock {
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.LOGISTICS_TABLE_BASE;
+		return AllShapes.TABLE_POLE_SHAPE;
 	}
 
 	@Override

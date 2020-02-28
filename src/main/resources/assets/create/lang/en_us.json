@@ -114,6 +114,7 @@
 	"block.create.stress_gauge": "Stress Gauge",
 	"block.create.cart_assembler": "Cart Assembler",
 	"block.create.analog_lever": "Analog Lever",
+	"block.create.rotation_speed_controller": "Rotation Speed Controller",
 
 	"block.create.sticky_mechanical_piston": "Sticky Mechanical Piston",
 	"block.create.mechanical_piston": "Mechanical Piston",
@@ -362,8 +363,8 @@
 
 	"create.contraptions.movement_mode": "Movement Mode",
 	"create.contraptions.movement_mode.move_place": "Always Place when Stopped",
-	"create.contraptions.movement_mode.move_place_returned": "Only Place in Starting Position",
-	"create.contraptions.movement_mode.move_never_place": "Only Place when Anchor Destroyed",
+	"create.contraptions.movement_mode.move_place_returned": "Place only in Starting Position",
+	"create.contraptions.movement_mode.move_never_place": "Place only when Anchor Destroyed",
 	"create.contraptions.movement_mode.rotate_place": "Always Place when Stopped",
 	"create.contraptions.movement_mode.rotate_place_returned": "Only Place near Initial Angle",
 	"create.contraptions.movement_mode.rotate_never_place": "Only Place when Anchor Destroyed",

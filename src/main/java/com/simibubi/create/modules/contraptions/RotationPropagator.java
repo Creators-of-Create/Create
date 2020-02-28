@@ -8,9 +8,11 @@ import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.SplitShaftTileEntity;
@@ -50,9 +52,9 @@ public class RotationPropagator {
 				if (axis.getCoordinate(diff.getX(), diff.getY(), diff.getZ()) != 0)
 					alignedAxes = false;
 
-		boolean connectedByAxis =
-			alignedAxes && definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
-					&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
+		boolean connectedByAxis = alignedAxes
+				&& definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
+				&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
 
 		boolean connectedByGears = definitionFrom.hasCogsTowards(world, from.getPos(), stateFrom, direction)
 				&& definitionTo.hasCogsTowards(world, to.getPos(), stateTo, direction.getOpposite());
@@ -88,6 +90,12 @@ public class RotationPropagator {
 			return -2f;
 		if (isLargeToSmallGear(stateTo, stateFrom, diff))
 			return -.5f;
+
+		// Rotation Speed Controller <-> Large Gear
+		if (isLargeGearToSpeedController(stateFrom, stateTo, diff))
+			return SpeedControllerTileEntity.getSpeedModifier(from, to, true);
+		if (isLargeGearToSpeedController(stateTo, stateFrom, diff))
+			return SpeedControllerTileEntity.getSpeedModifier(to, from, false);
 
 		// Gear <-> Gear
 		if (connectedByGears) {
@@ -136,7 +144,7 @@ public class RotationPropagator {
 		return 1;
 	}
 
-	private static boolean isLargeToSmallGear(BlockState from, BlockState to, final BlockPos diff) {
+	private static boolean isLargeToSmallGear(BlockState from, BlockState to, BlockPos diff) {
 		if (!LARGE_COGWHEEL.typeOf(from) || !COGWHEEL.typeOf(to))
 			return false;
 		Axis axisFrom = from.get(AXIS);
@@ -150,6 +158,14 @@ public class RotationPropagator {
 			if (Math.abs(axis.getCoordinate(diff.getX(), diff.getY(), diff.getZ())) != 1)
 				return false;
 		}
+		return true;
+	}
+
+	private static boolean isLargeGearToSpeedController(BlockState from, BlockState to, BlockPos diff) {
+		if (!LARGE_COGWHEEL.typeOf(from) || !AllBlocks.ROTATION_SPEED_CONTROLLER.typeOf(to))
+			return false;
+		if (!diff.equals(BlockPos.ZERO.up()) && !diff.equals(BlockPos.ZERO.down()))
+			return false;
 		return true;
 	}
 
@@ -205,8 +221,8 @@ public class RotationPropagator {
 			final float newSpeed = updateTE.speed * modFromTo;
 			float oppositeSpeed = neighbourTE.speed * modToFrom;
 
-			boolean incompatible =
-				Math.signum(newSpeed) != Math.signum(neighbourTE.speed) && (newSpeed != 0 && neighbourTE.speed != 0);
+			boolean incompatible = Math.signum(newSpeed) != Math.signum(neighbourTE.speed)
+					&& (newSpeed != 0 && neighbourTE.speed != 0);
 
 			boolean tooFast = Math.abs(newSpeed) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
 			boolean speedChangedTooOften = updateTE.speedChangeCounter > MAX_FLICKER_SCORE;

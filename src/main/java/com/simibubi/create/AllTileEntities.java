@@ -48,6 +48,8 @@ import com.simibubi.create.modules.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.modules.contraptions.processing.BasinTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.redstone.AnalogLeverTileEntity;
 import com.simibubi.create.modules.contraptions.redstone.AnalogLeverTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerRenderer;
+import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelTileEntity;
@@ -119,7 +121,10 @@ public enum AllTileEntities {
 	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING),
 	CLOCKWORK_BEARING(ClockworkBearingTileEntity::new, AllBlocks.CLOCKWORK_BEARING),
 	ROPE_PULLEY(PulleyTileEntity::new, AllBlocks.ROPE_PULLEY),
-	CHASSIS(ChassisTileEntity::new, AllBlocks.ROTATION_CHASSIS, AllBlocks.TRANSLATION_CHASSIS,
+	CHASSIS(
+			ChassisTileEntity::new,
+			AllBlocks.ROTATION_CHASSIS,
+			AllBlocks.TRANSLATION_CHASSIS,
 			AllBlocks.TRANSLATION_CHASSIS_SECONDARY),
 	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
 	SAW(SawTileEntity::new, AllBlocks.SAW),
@@ -134,6 +139,7 @@ public enum AllTileEntities {
 	DEPLOYER(DeployerTileEntity::new, AllBlocks.DEPLOYER),
 	BASIN(BasinTileEntity::new, AllBlocks.BASIN),
 	MECHANICAL_CRAFTER(MechanicalCrafterTileEntity::new, AllBlocks.MECHANICAL_CRAFTER),
+	ROTATION_SPEED_CONTROLLER(SpeedControllerTileEntity::new, AllBlocks.ROTATION_SPEED_CONTROLLER),
 	SPEED_GAUGE(SpeedGaugeTileEntity::new, AllBlocks.SPEED_GAUGE),
 	STRESS_GAUGE(StressGaugeTileEntity::new, AllBlocks.STRESS_GAUGE),
 	ANALOG_LEVER(AnalogLeverTileEntity::new, AllBlocks.ANALOG_LEVER),
@@ -145,7 +151,9 @@ public enum AllTileEntities {
 	EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR, AllBlocks.VERTICAL_EXTRACTOR),
 	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR, AllBlocks.VERTICAL_LINKED_EXTRACTOR),
 	TRANSPOSER(TransposerTileEntity::new, AllBlocks.TRANSPOSER, AllBlocks.VERTICAL_TRANSPOSER),
-	LINKED_TRANSPOSER(LinkedTransposerTileEntity::new, AllBlocks.LINKED_TRANSPOSER,
+	LINKED_TRANSPOSER(
+			LinkedTransposerTileEntity::new,
+			AllBlocks.LINKED_TRANSPOSER,
 			AllBlocks.VERTICAL_LINKED_TRANSPOSER),
 	BELT_FUNNEL(FunnelTileEntity::new, AllBlocks.BELT_FUNNEL, AllBlocks.VERTICAL_FUNNEL),
 	ENTITY_DETECTOR(BeltObserverTileEntity::new, AllBlocks.ENTITY_DETECTOR),
@@ -220,6 +228,7 @@ public enum AllTileEntities {
 		bind(DeployerTileEntity.class, new DeployerTileEntityRenderer());
 		bind(FlywheelTileEntity.class, new FlywheelRenderer());
 		bind(FurnaceEngineTileEntity.class, new EngineRenderer<>());
+		bind(SpeedControllerTileEntity.class, new SpeedControllerRenderer());
 
 		bind(RedstoneLinkTileEntity.class, new SmartTileEntityRenderer<>());
 		bind(ExtractorTileEntity.class, new SmartTileEntityRenderer<>());

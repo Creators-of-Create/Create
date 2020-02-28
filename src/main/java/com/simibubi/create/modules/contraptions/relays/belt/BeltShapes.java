@@ -83,7 +83,7 @@ public class BeltShapes {
 			VERTICAL_START = VerticalBeltShaper.make(compose(FLAT_FULL_PART, FLAT_END_PART));
 	//Flat Shapes
 	private static final VoxelShaper
-			FLAT_FULL = VoxelShaper.forHorizontalAxis(FLAT_FULL_PART, Direction.SOUTH),
+			FLAT_FULL = VoxelShaper.forHorizontalAxis(FLAT_FULL_PART, Axis.Z),
 			FLAT_END = VoxelShaper.forHorizontal(compose(FLAT_END_PART, FLAT_FULL_PART), Direction.SOUTH),
 			FLAT_START = VoxelShaper.forHorizontal(compose(FLAT_FULL_PART, FLAT_END_PART), Direction.SOUTH);
 	//Sloped Shapes

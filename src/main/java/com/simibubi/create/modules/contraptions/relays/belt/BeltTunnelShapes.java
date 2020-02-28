@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -19,7 +20,7 @@ public class BeltTunnelShapes {
 
 	private static final VoxelShaper STRAIGHT = VoxelShaper.forHorizontalAxis(VoxelShapes.combineAndSimplify(block,
 			VoxelShapes.or(opening.get(Direction.SOUTH), opening.get(Direction.NORTH)), IBooleanFunction.NOT_SAME),
-			Direction.SOUTH),
+			Axis.Z),
 
 			TEE = VoxelShaper.forHorizontal(
 					VoxelShapes.combineAndSimplify(block, VoxelShapes.or(opening.get(Direction.NORTH),

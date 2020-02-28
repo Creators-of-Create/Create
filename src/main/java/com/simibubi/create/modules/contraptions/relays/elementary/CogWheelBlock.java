@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.IRotate;
+import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,6 +21,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 
 public class CogWheelBlock extends ShaftBlock implements IHaveCustomBlockItem {
 
@@ -51,11 +53,18 @@ public class CogWheelBlock extends ShaftBlock implements IHaveCustomBlockItem {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
-		BlockState placedAgainst = context.getWorld().getBlockState(placedOnPos);
+		World world = context.getWorld();
+		BlockState placedAgainst = world.getBlockState(placedOnPos);
 		Block block = placedAgainst.getBlock();
 
-		if (!(block instanceof IRotate) || !(((IRotate) block).hasCogsTowards(context.getWorld(), placedOnPos,
-				placedAgainst, context.getFace()))) {
+		BlockState stateBelow = world.getBlockState(context.getPos().down());
+		if (AllBlocks.ROTATION_SPEED_CONTROLLER.typeOf(stateBelow) && isLarge) {
+			return this.getDefaultState().with(AXIS,
+					stateBelow.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X);
+		}
+
+		if (!(block instanceof IRotate)
+				|| !(((IRotate) block).hasCogsTowards(world, placedOnPos, placedAgainst, context.getFace()))) {
 			Axis preferredAxis = getPreferredAxis(context);
 			if (preferredAxis != null)
 				return this.getDefaultState().with(AXIS, preferredAxis);
