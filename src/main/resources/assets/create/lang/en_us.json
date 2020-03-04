@@ -741,7 +741,7 @@
 	"block.create.encased_shaft.tooltip.summary": "_Relays_ _Rotation_ in a straight line. Suitable for propagating Rotation through Walls.",
 
 	"block.create.gearbox.tooltip": "GEARBOX",
-	"block.create.gearbox.tooltip.summary": "_Relays_ _Rotation_ to _Four_ _directions._ Reverses straight connections.",
+	"block.create.gearbox.tooltip.summary": "_Relays_ _Rotation_ in _four_ _directions._ Reverses straight connections.",
 
 	"block.create.gearshift.tooltip": "GEARSHIFT",
 	"block.create.gearshift.tooltip.summary": "A controllable _rotation_ _switch_ for connected shafts.",
@@ -784,7 +784,7 @@
 	"item.create.wrench.tooltip.control2": "R-Click while Sneaking",
 	"item.create.wrench.tooltip.action2": "_Disassembles_ _Kinetic_ _components_ and places them back in _your_ _inventory._",
 
-	"block.create.creative_motor.tooltip": "MOTOR",
+	"block.create.creative_motor.tooltip": "CREATIVE MOTOR",
 	"block.create.creative_motor.tooltip.summary": "A configurable source of _Rotational_ _Force_",
 
 	"block.create.water_wheel.tooltip": "WATER WHEEL",
@@ -859,12 +859,12 @@
 	"block.create.flywheel.tooltip.behaviour1": "Provides _Rotational_ _Force_ to a connected contraption based on the generators strength and speed.",
 
 	"block.create.mechanical_piston.tooltip": "MECHANICAL PISTON",
-	"block.create.mechanical_piston.tooltip.summary": "A more advanced version of the _Piston,_ using _Rotational_ _Force_ to precisely move attached structures. _Piston_ _Extension_ _Poles_ at the rear define the _Range_ of this Device. Without extensions, the piston will not move. Use _Translation_ _Chassis_ to move more than a single line of blocks.",
+	"block.create.mechanical_piston.tooltip.summary": "A more advanced version of the _Piston,_ using _Rotational_ _Force_ to precisely move attached structures. _Piston_ _Extension_ _Poles_ at the rear define the _Range_ of this Device. Without extensions, the piston will not move. Use _Chassis_ to move more than a single line of blocks.",
 	"block.create.mechanical_piston.tooltip.condition1": "When Rotated",
 	"block.create.mechanical_piston.tooltip.behaviour1": "Starts moving the attached structure. Speed and direction correlate to the incoming Rotation Speed.",
 
 	"block.create.sticky_mechanical_piston.tooltip": "STICKY MECHANICAL PISTON",
-	"block.create.sticky_mechanical_piston.tooltip.summary": "A more advanced version of the _Sticky_ _Piston,_ using _Rotational_ _Force_ to precisely move attached structures. _Piston_ _Extension_ _Poles_ at the rear define the _Range_ of this Device. Without extensions, the piston will not move. Use _Translation_ _Chassis_ to move more than a single line of blocks.",
+	"block.create.sticky_mechanical_piston.tooltip.summary": "A more advanced version of the _Sticky_ _Piston,_ using _Rotational_ _Force_ to precisely move attached structures. _Piston_ _Extension_ _Poles_ at the rear define the _Range_ of this Device. Without extensions, the piston will not move. Use _Chassis_ to move more than a single line of blocks.",
 	"block.create.sticky_mechanical_piston.tooltip.condition1": "When Rotated",
 	"block.create.sticky_mechanical_piston.tooltip.behaviour1": "Starts moving the attached structure. Speed and direction correlate to the incoming Rotation Speed.",
 
@@ -881,18 +881,22 @@
 	"block.create.mechanical_bearing.tooltip.behaviour2": "Starts providing _Rotational_ _Force_ from rotating its attached structure. The Structure has to include suitable _Sail_ _Blocks_ (Currently any Wool Block).",
 
 	"block.create.translation_chassis.tooltip": "TRANSLATION CHASSIS",
-	"block.create.translation_chassis.tooltip.summary": "A configurable base for Structures moved by a _Mechanical_ _Piston._ These Blocks have to form the first Layer of blocks in front of the Piston.",
-	"block.create.translation_chassis.tooltip.condition1": "When Moved by Mechanical Piston",
-	"block.create.translation_chassis.tooltip.behaviour1": "_Moves_ all _attached_ _Chassis_ with the same orientation, and attached Blocks in front of it. When the Piston retracts, blocks will only be pulled if the chassis' face is _Sticky_ (See [Ctrl]).",
+	"block.create.translation_chassis.tooltip.summary": "A configurable base block connecting structures for movement.",
+	"block.create.translation_chassis.tooltip.condition1": "When Moved",
+	"block.create.translation_chassis.tooltip.behaviour1": "_Moves_ all _attached_ _Chassis_ with the same orientation, and a column of Blocks within its range. Blocks will only be pulled if the chassis' face is _Sticky_ (See [Ctrl]).",
+	"block.create.translation_chassis.tooltip.condition2": "With Wrench",
+	"block.create.translation_chassis.tooltip.behaviour2": "Configure the _range_ for this chassis block. Hold CTRL to modify the range of all attached chassis blocks as well.",
 	"block.create.translation_chassis.tooltip.control1": "When R-Clicked with Slime Ball",
-	"block.create.translation_chassis.tooltip.action1": "Makes the clicked face _Sticky._ When the piston retracts, the chassis will _pull_ _back_ all attached Blocks in its column and within the configured Range.",
+	"block.create.translation_chassis.tooltip.action1": "Makes the clicked face _Sticky._ When moved, the chassis will _pull_ attached Blocks, regardless of the direcion of its movement.",
 
 	"block.create.rotation_chassis.tooltip": "ROTATION CHASSIS",
-	"block.create.rotation_chassis.tooltip.summary": "Required for rotating structures with the _Mechanical_ _Bearing._ ",
-	"block.create.rotation_chassis.tooltip.condition1": "When Rotated by Bearing",
-	"block.create.rotation_chassis.tooltip.behaviour1": "_Rotates_ all blocks attached to _Sticky_ sides (See [Ctrl]) within the configured range around itself. _Transmits_ the rotation to further attached Rotation Chassis.",
+	"block.create.rotation_chassis.tooltip.summary": "A configurable base block connecting structures for movement.",
+	"block.create.rotation_chassis.tooltip.condition1": "When Moved",
+	"block.create.rotation_chassis.tooltip.behaviour1": "_Moves_ all _attached_ _Chassis_ in a column, and a cylinder of blocks around itself. Blocks around it are only moved when they are within range and attached to a sticky side (See [Ctrl]).",
+	"block.create.rotation_chassis.tooltip.condition2": "With Wrench",
+	"block.create.rotation_chassis.tooltip.behaviour2": "Configure the _range_ for this chassis block. Hold CTRL to modify the range of all attached chassis blocks as well.",
 	"block.create.rotation_chassis.tooltip.control1": "When R-Clicked with Slime Ball",
-	"block.create.rotation_chassis.tooltip.action1": "Makes the clicked face _Sticky._ When the Chassis rotates, all blocks attached to this side will be rotated with it.",
+	"block.create.rotation_chassis.tooltip.action1": "Makes the clicked face _Sticky._ When the Chassis gets moved, all blocks attached to this side will be moved with it.",
 
 	"block.create.drill.tooltip": "MECHANICAL DRILL",
 	"block.create.drill.tooltip.summary": "A mechanical device suitable for _breaking_ _blocks._",

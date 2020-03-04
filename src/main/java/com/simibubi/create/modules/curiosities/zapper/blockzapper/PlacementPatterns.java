@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.curiosities.blockzapper;
+package com.simibubi.create.modules.curiosities.zapper.blockzapper;
 
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.utility.Lang;

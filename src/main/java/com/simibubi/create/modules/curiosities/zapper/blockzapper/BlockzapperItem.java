@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.curiosities.blockzapper;
+package com.simibubi.create.modules.curiosities.zapper.blockzapper;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.modules.curiosities.zapper.ZapperItem;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
@@ -33,12 +34,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.IFluidState;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Rarity;
-import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -60,7 +57,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -70,7 +66,11 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class BlockzapperItem extends Item implements IHaveCustomItemModel {
+public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel {
+
+	public BlockzapperItem(Properties properties) {
+		super(properties);
+	}
 
 	public static enum ComponentTier {
 		None(TextFormatting.DARK_GRAY), Brass(TextFormatting.GOLD), Chromatic(TextFormatting.LIGHT_PURPLE),
@@ -89,29 +89,10 @@ public class BlockzapperItem extends Item implements IHaveCustomItemModel {
 		Body, Amplifier, Accelerator, Retriever, Scope
 	}
 
-	public BlockzapperItem(Properties properties) {
-		super(properties.maxStackSize(1).rarity(Rarity.UNCOMMON));
-	}
-
-	@Override
-	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-		return false;
-	}
-
-	@Override
-	public UseAction getUseAction(ItemStack stack) {
-		return UseAction.NONE;
-	}
-
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		if (stack.hasTag() && stack.getTag().contains("BlockUsed")) {
-			String usedblock = NBTUtil.readBlockState(stack.getTag().getCompound("BlockUsed")).getBlock()
-					.getTranslationKey();
-			ItemDescription.add(tooltip, TextFormatting.DARK_GRAY + Lang.translate("blockzapper.usingBlock",
-					TextFormatting.GRAY + new TranslationTextComponent(usedblock).getFormattedText()));
-		}
+		super.addInformation(stack, worldIn, tooltip, flagIn);
 		Palette palette = Palette.Purple;
 		if (Screen.hasShiftDown()) {
 			ItemDescription.add(tooltip, palette.color + Lang.translate("blockzapper.componentUpgrades"));
@@ -142,21 +123,6 @@ public class BlockzapperItem extends Item implements IHaveCustomItemModel {
 				setTier(c, ComponentTier.Chromatic, gunWithPurpurStuff);
 			items.add(gunWithPurpurStuff);
 		}
-	}
-
-	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		// Shift -> open GUI
-		if (context.isPlacerSneaking()) {
-			if (context.getWorld().isRemote) {
-				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-					openHandgunGUI(context.getItem(), context.getHand() == Hand.OFF_HAND);
-				});
-				applyCooldown(context.getPlayer(), context.getItem(), false);
-			}
-			return ActionResultType.SUCCESS;
-		}
-		return super.onItemUse(context);
 	}
 
 	@Override
@@ -381,8 +347,9 @@ public class BlockzapperItem extends Item implements IHaveCustomItemModel {
 		return slotChanged || !AllItems.PLACEMENT_HANDGUN.typeOf(newStack) || differentBlock;
 	}
 
+	@Override
 	@OnlyIn(Dist.CLIENT)
-	private void openHandgunGUI(ItemStack handgun, boolean offhand) {
+	protected void openHandgunGUI(ItemStack handgun, boolean offhand) {
 		ScreenOpener.open(new BlockzapperScreen(handgun, offhand));
 	}
 
@@ -503,7 +470,8 @@ public class BlockzapperItem extends Item implements IHaveCustomItemModel {
 		return 0;
 	}
 
-	public static int getCooldownDelay(ItemStack stack) {
+	@Override
+	protected int getCooldownDelay(ItemStack stack) {
 		ComponentTier tier = getTier(Components.Accelerator, stack);
 		if (tier == ComponentTier.None)
 			return 10;
@@ -511,10 +479,10 @@ public class BlockzapperItem extends Item implements IHaveCustomItemModel {
 			return 6;
 		if (tier == ComponentTier.Chromatic)
 			return 2;
-
+		
 		return 20;
 	}
-
+	
 	public static int getReachDistance(ItemStack stack) {
 		ComponentTier tier = getTier(Components.Scope, stack);
 		if (tier == ComponentTier.None)
@@ -574,11 +542,6 @@ public class BlockzapperItem extends Item implements IHaveCustomItemModel {
 					tileentity))
 				if (!playerIn.inventory.addItemStackToInventory(stack))
 					Block.spawnAsEntity(worldIn, placed, stack);
-	}
-
-	protected static void applyCooldown(PlayerEntity playerIn, ItemStack item, boolean dual) {
-		playerIn.getCooldownTracker().setCooldown(item.getItem(),
-				dual ? getCooldownDelay(item) * 2 / 3 : getCooldownDelay(item));
 	}
 
 	public static ComponentTier getTier(Components component, ItemStack stack) {

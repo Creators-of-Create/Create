@@ -40,7 +40,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IPortableBloc
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.SHORT_CASING_12_VOXEL.get(state.get(FACING));
+		return AllShapes.CASING_12PX.get(state.get(FACING));
 	}
 
 	@Override

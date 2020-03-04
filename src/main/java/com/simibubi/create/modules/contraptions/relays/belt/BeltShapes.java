@@ -181,16 +181,16 @@ public class BeltShapes {
 			return VoxelShapes.empty();
 
 		if (slope == Slope.HORIZONTAL) {
-			return AllShapes.SHORT_CASING_11_VOXEL.get(Direction.UP);
+			return AllShapes.CASING_11PX.get(Direction.UP);
 		}
 
 		if (part == Part.MIDDLE || part == Part.PULLEY)
 			return PARTIAL_CASING.get(slope == Slope.UPWARD ? facing : facing.getOpposite());
 
 		if (part == Part.START)
-			return slope == Slope.UPWARD ? AllShapes.SHORT_CASING_11_VOXEL.get(Direction.UP) : PARTIAL_CASING.get(facing.getOpposite());
+			return slope == Slope.UPWARD ? AllShapes.CASING_11PX.get(Direction.UP) : PARTIAL_CASING.get(facing.getOpposite());
 		if (part == Part.END)
-			return slope == Slope.DOWNWARD ? AllShapes.SHORT_CASING_11_VOXEL.get(Direction.UP) : PARTIAL_CASING.get(facing);
+			return slope == Slope.DOWNWARD ? AllShapes.CASING_11PX.get(Direction.UP) : PARTIAL_CASING.get(facing);
 
 		//something went wrong
 		return VoxelShapes.fullCube();

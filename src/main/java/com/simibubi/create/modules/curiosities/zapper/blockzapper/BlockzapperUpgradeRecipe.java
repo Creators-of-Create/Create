@@ -1,10 +1,10 @@
-package com.simibubi.create.modules.curiosities.blockzapper;
+package com.simibubi.create.modules.curiosities.zapper.blockzapper;
 
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipes;
-import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.ComponentTier;
-import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.Components;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components;
 
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;

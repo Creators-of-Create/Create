@@ -23,7 +23,6 @@ import net.minecraft.world.IWorldReader;
 public class MechanicalMixerBlock extends KineticBlock
 		implements IWithTileEntity<MechanicalMixerTileEntity>, IHaveCustomBlockItem {
 
-
 	public MechanicalMixerBlock() {
 		super(Properties.from(Blocks.ANDESITE));
 	}
@@ -46,7 +45,7 @@ public class MechanicalMixerBlock extends KineticBlock
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		if (context.getEntity() instanceof PlayerEntity)
-			return AllShapes.SHORT_CASING_14_VOXEL.get(Direction.DOWN);
+			return AllShapes.CASING_14PX.get(Direction.DOWN);
 
 		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;
 	}

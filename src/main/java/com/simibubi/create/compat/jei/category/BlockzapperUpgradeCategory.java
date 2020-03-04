@@ -14,7 +14,7 @@ import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.ScreenResourceWrapper;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperUpgradeRecipe;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperUpgradeRecipe;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;

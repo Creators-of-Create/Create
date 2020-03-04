@@ -1,9 +1,9 @@
-package com.simibubi.create.modules.curiosities.blockzapper;
+package com.simibubi.create.modules.curiosities.zapper.blockzapper;
 
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.packet.SimplePacketBase;
-import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperHandler.LaserBeam;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperHandler.LaserBeam;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;

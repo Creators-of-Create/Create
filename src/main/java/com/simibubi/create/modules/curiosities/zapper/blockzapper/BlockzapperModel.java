@@ -1,10 +1,10 @@
-package com.simibubi.create.modules.curiosities.blockzapper;
+package com.simibubi.create.modules.curiosities.zapper.blockzapper;
 
 import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.ComponentTier;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
 
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;

@@ -48,7 +48,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		if (context.getEntity() instanceof PlayerEntity)
-			return AllShapes.SHORT_CASING_14_VOXEL.get(Direction.DOWN);
+			return AllShapes.CASING_14PX.get(Direction.DOWN);
 
 		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;
 	}

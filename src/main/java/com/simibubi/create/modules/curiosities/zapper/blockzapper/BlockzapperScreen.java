@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.curiosities.blockzapper;
+package com.simibubi.create.modules.curiosities.zapper.blockzapper;
 
 import java.util.Collections;
 import java.util.Vector;

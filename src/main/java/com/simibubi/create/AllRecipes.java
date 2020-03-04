@@ -13,8 +13,8 @@ import com.simibubi.create.modules.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipeSerializer;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipeSerializer.IRecipeFactory;
-import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperUpgradeRecipe;
 import com.simibubi.create.modules.curiosities.tools.SandPaperPolishingRecipe;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperUpgradeRecipe;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;

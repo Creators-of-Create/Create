@@ -1,16 +1,16 @@
-package com.simibubi.create.modules.curiosities.blockzapper;
+package com.simibubi.create.modules.curiosities.zapper.blockzapper;
 
-import static com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.Components.Accelerator;
-import static com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.Components.Amplifier;
-import static com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.Components.Body;
-import static com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.Components.Retriever;
-import static com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.Components.Scope;
+import static com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components.Accelerator;
+import static com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components.Amplifier;
+import static com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components.Body;
+import static com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components.Retriever;
+import static com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components.Scope;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.ComponentTier;
-import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperItem.Components;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FourWayBlock;
