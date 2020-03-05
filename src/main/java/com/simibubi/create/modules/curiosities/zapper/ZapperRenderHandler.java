@@ -1,15 +1,14 @@
-package com.simibubi.create.modules.curiosities.zapper.blockzapper;
+package com.simibubi.create.modules.curiosities.zapper;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import com.simibubi.create.AllSoundEvents;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 
 import net.minecraft.client.Minecraft;
@@ -40,7 +39,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @SuppressWarnings("deprecation")
 @EventBusSubscriber(value = Dist.CLIENT)
-public class BlockzapperHandler {
+public class ZapperRenderHandler {
 
 	public static List<LaserBeam> cachedBeams;
 	public static float leftHandAnimation;
@@ -171,10 +170,9 @@ public class BlockzapperHandler {
 	@SubscribeEvent
 	public static void onRenderPlayerHand(RenderSpecificHandEvent event) {
 		ItemStack heldItem = event.getItemStack();
-		if (!AllItems.PLACEMENT_HANDGUN.typeOf(heldItem))
+		if (!(heldItem.getItem() instanceof ZapperItem))
 			return;
 
-		boolean idle = !heldItem.getOrCreateTag().contains("BlockUsed");
 		Minecraft mc = Minecraft.getInstance();
 		boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ mc.player.getPrimaryHand() == HandSide.LEFT;
 
@@ -189,9 +187,7 @@ public class BlockzapperHandler {
 			equipProgress = 0;
 		if (!rightHand && (leftHandAnimation > .01f || dontReequipLeft))
 			equipProgress = 0;
-		if (idle)
-			equipProgress = 1 - event.getEquipProgress();
-
+		
 		// Render arm
 		float f = rightHand ? 1.0F : -1.0F;
 		float f1 = MathHelper.sqrt(event.getSwingProgress());

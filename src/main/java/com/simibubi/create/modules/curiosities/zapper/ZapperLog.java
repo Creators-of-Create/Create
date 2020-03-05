@@ -11,11 +11,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
-public class ZapLog {
+public class ZapperLog {
 
 	private World activeWorld;
 	private List<List<BlockInfo>> log = new LinkedList<>();
-	private int redoIndex;
+//	private int redoIndex;
 
 	/*
 	 * Undo and redo operations applied by tools what information is necessary?
@@ -42,7 +42,7 @@ public class ZapLog {
 		}).collect(Collectors.toList());
 
 		log.add(0, blocks);
-		redoIndex = 0;
+//		redoIndex = 0;
 
 		if (maxLogLength() < log.size())
 			log.remove(log.size() - 1);

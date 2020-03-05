@@ -17,6 +17,7 @@ import com.simibubi.create.modules.curiosities.deforester.DeforesterItem;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
 import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem;
+import com.simibubi.create.modules.curiosities.zapper.terrainzapper.TerrainzapperItem;
 import com.simibubi.create.modules.gardens.TreeFertilizerItem;
 import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 import com.simibubi.create.modules.schematics.item.SchematicAndQuillItem;
@@ -95,6 +96,7 @@ public enum AllItems {
 	__CURIOSITIES__(module()),
 	TREE_FERTILIZER(TreeFertilizerItem::new),
 	PLACEMENT_HANDGUN(BlockzapperItem::new),
+	TERRAIN_ZAPPER(TerrainzapperItem::new),
 	DEFORESTER(DeforesterItem::new),
 	SYMMETRY_WAND(SymmetryWandItem::new),
 

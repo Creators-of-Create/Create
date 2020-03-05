@@ -4,6 +4,8 @@ import static net.minecraft.entity.MoverType.SELF;
 import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
 import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
@@ -62,9 +64,9 @@ public class BeltMovementHandler {
 		TileEntity te = world.getTileEntity(pos);
 		TileEntity tileEntityBelowPassenger = world.getTileEntity(entityIn.getPosition());
 		BlockState blockState = info.lastCollidedState;
-		Direction movementFacing = Direction.getFacingFromAxisDirection(
-				blockState.get(BlockStateProperties.HORIZONTAL_FACING).getAxis(),
-				beltTe.getSpeed() < 0 ? POSITIVE : NEGATIVE);
+		Direction movementFacing =
+			Direction.getFacingFromAxisDirection(blockState.get(BlockStateProperties.HORIZONTAL_FACING).getAxis(),
+					beltTe.getSpeed() < 0 ? POSITIVE : NEGATIVE);
 
 		boolean collidedWithBelt = te instanceof BeltTileEntity;
 		boolean betweenBelts = tileEntityBelowPassenger instanceof BeltTileEntity && tileEntityBelowPassenger != te;
@@ -105,8 +107,8 @@ public class BeltMovementHandler {
 		float movementSpeed = beltTe.getBeltMovementSpeed();
 		final Direction movementDirection = Direction.getFacingFromAxis(axis == Axis.X ? NEGATIVE : POSITIVE, axis);
 
-		Vec3i centeringDirection = Direction.getFacingFromAxis(POSITIVE, beltFacing.rotateY().getAxis())
-				.getDirectionVec();
+		Vec3i centeringDirection =
+			Direction.getFacingFromAxis(POSITIVE, beltFacing.rotateY().getAxis()).getDirectionVec();
 		Vec3d movement = new Vec3d(movementDirection.getDirectionVec()).scale(movementSpeed);
 
 		double diffCenter = axis == Axis.Z ? (pos.getX() + .5f - entityIn.posX) : (pos.getZ() + .5f - entityIn.posZ);
@@ -145,10 +147,11 @@ public class BeltMovementHandler {
 			Vec3d checkDistance = movement.normalize().scale(0.5);
 			AxisAlignedBB bb = entityIn.getBoundingBox();
 			AxisAlignedBB checkBB = new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
-			if (!world
-					.getEntitiesWithinAABBExcludingEntity(entityIn, checkBB.offset(checkDistance)
-							.grow(-Math.abs(checkDistance.x), -Math.abs(checkDistance.y), -Math.abs(checkDistance.z)))
-					.isEmpty()) {
+			checkBB = checkBB.offset(checkDistance).grow(-Math.abs(checkDistance.x), -Math.abs(checkDistance.y),
+					-Math.abs(checkDistance.z));
+			List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(entityIn, checkBB);
+			list.removeIf(e -> entityIn.isRidingOrBeingRiddenBy(e));
+			if (!list.isEmpty()) {
 				entityIn.setMotion(0, 0, 0);
 				info.ticksSinceLastCollision--;
 				return;

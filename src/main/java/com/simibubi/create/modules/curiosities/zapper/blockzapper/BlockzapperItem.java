@@ -3,14 +3,9 @@ package com.simibubi.create.modules.curiosities.zapper.blockzapper;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
-import java.util.function.Predicate;
 
-import com.google.common.base.Predicates;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllPackets;
-import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -20,34 +15,25 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.modules.curiosities.zapper.PlacementPatterns;
 import com.simibubi.create.modules.curiosities.zapper.ZapperItem;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.StairsShape;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.HandSide;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -63,30 +49,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel {
 
 	public BlockzapperItem(Properties properties) {
 		super(properties);
-	}
-
-	public static enum ComponentTier {
-		None(TextFormatting.DARK_GRAY), Brass(TextFormatting.GOLD), Chromatic(TextFormatting.LIGHT_PURPLE),
-
-		;
-
-		public TextFormatting color;
-
-		private ComponentTier(TextFormatting color) {
-			this.color = color;
-		}
-
-	}
-
-	public static enum Components {
-		Body, Amplifier, Accelerator, Retriever, Scope
 	}
 
 	@Override
@@ -99,10 +66,10 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 
 			for (Components c : Components.values()) {
 				ComponentTier tier = getTier(c, stack);
-				ItemDescription.add(tooltip,
-						"> " + TextFormatting.GRAY + Lang.translate("blockzapper.component." + Lang.asId(c.name()))
-								+ ": " + tier.color
-								+ Lang.translate("blockzapper.componentTier." + Lang.asId(tier.name())));
+				String componentName =
+					TextFormatting.GRAY + Lang.translate("blockzapper.component." + Lang.asId(c.name()));
+				String tierName = tier.color + Lang.translate("blockzapper.componentTier." + Lang.asId(tier.name()));
+				ItemDescription.add(tooltip, "> " + componentName + ": " + tierName);
 			}
 		}
 	}
@@ -125,182 +92,50 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 		}
 	}
 
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		ItemStack item = player.getHeldItem(hand);
-		CompoundNBT nbt = item.getOrCreateTag();
-
-		// Shift -> Open GUI
-		if (player.isSneaking()) {
-			if (world.isRemote) {
-				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-					openHandgunGUI(item, hand == Hand.OFF_HAND);
-				});
-				applyCooldown(player, item, false);
-			}
-			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
-		}
-
-		boolean mainHand = hand == Hand.MAIN_HAND;
-		boolean isSwap = item.getTag().contains("_Swap");
-		boolean gunInOtherHand = AllItems.PLACEMENT_HANDGUN
-				.typeOf(player.getHeldItem(mainHand ? Hand.OFF_HAND : Hand.MAIN_HAND));
-
-		// Pass To Offhand
-		if (mainHand && isSwap && gunInOtherHand)
-			return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
-		if (mainHand && !isSwap && gunInOtherHand)
-			item.getTag().putBoolean("_Swap", true);
-		if (!mainHand && isSwap)
-			item.getTag().remove("_Swap");
-		if (!mainHand && gunInOtherHand)
-			player.getHeldItem(Hand.MAIN_HAND).getTag().remove("_Swap");
-		player.setActiveHand(hand);
-
-		// Check if block setting is present
-		BlockState stateToUse = Blocks.AIR.getDefaultState();
-		if (nbt.contains("BlockUsed"))
-			stateToUse = NBTUtil.readBlockState(nbt.getCompound("BlockUsed"));
-		else {
-			world.playSound(player, player.getPosition(), AllSoundEvents.BLOCKZAPPER_DENY.get(), SoundCategory.BLOCKS, 1f,
-					0.5f);
-			player.sendStatusMessage(
-					new StringTextComponent(TextFormatting.RED + Lang.translate("blockzapper.leftClickToSet")), true);
-			return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
-		}
-
-		// Raytrace - Find the target
-		Vec3d start = player.getPositionVec().add(0, player.getEyeHeight(), 0);
-		Vec3d range = player.getLookVec().scale(getReachDistance(item));
-		BlockRayTraceResult raytrace = world.rayTraceBlocks(
-				new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
-		BlockPos pos = raytrace.getPos();
-		BlockState stateReplaced = world.getBlockState(pos);
-
-		// No target
-		if (pos == null || stateReplaced.getBlock() == Blocks.AIR) {
-			applyCooldown(player, item, gunInOtherHand);
-			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
-		}
-
-		// Find exact position of gun barrel for VFX
-		float yaw = (float) ((player.rotationYaw) / -180 * Math.PI);
-		float pitch = (float) ((player.rotationPitch) / -180 * Math.PI);
-		Vec3d barrelPosNoTransform = new Vec3d(mainHand == (player.getPrimaryHand() == HandSide.RIGHT) ? -.35f : .35f,
-				-0.1f, 1);
-		Vec3d barrelPos = start.add(barrelPosNoTransform.rotatePitch(pitch).rotateYaw(yaw));
-
-		// Client side
-		if (world.isRemote) {
-			BlockzapperHandler.dontAnimateItem(hand);
-			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
-		}
-
-		// Server side - Replace Blocks
+	protected boolean activate(World world, PlayerEntity player, ItemStack stack, BlockState selectedState,
+			BlockRayTraceResult raytrace) {
+		CompoundNBT nbt = stack.getOrCreateTag();
 		boolean replace = nbt.contains("Replace") && nbt.getBoolean("Replace");
-		List<BlockPos> selectedBlocks = getSelectedBlocks(item, world, player);
-		applyPattern(selectedBlocks, item);
+
+		List<BlockPos> selectedBlocks = getSelectedBlocks(stack, world, player);
+		PlacementPatterns.applyPattern(selectedBlocks, stack);
 		Direction face = raytrace.getFace();
 
 		for (BlockPos placed : selectedBlocks) {
-			if (world.getBlockState(placed) == stateToUse)
+			if (world.getBlockState(placed) == selectedState)
 				continue;
-			if (!stateToUse.isValidPosition(world, placed))
+			if (!selectedState.isValidPosition(world, placed))
 				continue;
-			if (!player.isCreative() && !canBreak(item, world.getBlockState(placed), world, placed))
+			if (!player.isCreative() && !canBreak(stack, world.getBlockState(placed), world, placed))
 				continue;
-			if (!player.isCreative() && BlockHelper.findAndRemoveInInventory(stateToUse, player, 1) == 0) {
-				player.getCooldownTracker().setCooldown(item.getItem(), 20);
+			if (!player.isCreative() && BlockHelper.findAndRemoveInInventory(selectedState, player, 1) == 0) {
+				player.getCooldownTracker().setCooldown(stack.getItem(), 20);
 				player.sendStatusMessage(
 						new StringTextComponent(TextFormatting.RED + Lang.translate("blockzapper.empty")), true);
-				return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
+				return false;
 			}
 
 			if (!player.isCreative() && replace)
-				dropBlocks(world, player, item, face, placed);
+				dropBlocks(world, player, stack, face, placed);
 
 			for (Direction updateDirection : Direction.values())
-				stateToUse = stateToUse.updatePostPlacement(updateDirection,
+				selectedState = selectedState.updatePostPlacement(updateDirection,
 						world.getBlockState(placed.offset(updateDirection)), world, placed,
 						placed.offset(updateDirection));
 
 			BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, placed);
 			IFluidState ifluidstate = world.getFluidState(placed);
 			world.setBlockState(placed, ifluidstate.getBlockState(), 18);
-			world.setBlockState(placed, stateToUse);
+			world.setBlockState(placed, selectedState);
 			if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
 				blocksnapshot.restore(true, false);
-				return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
+				return false;
 			}
 
 			if (player instanceof ServerPlayerEntity)
 				CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, placed,
-						new ItemStack(stateToUse.getBlock()));
-
+						new ItemStack(selectedState.getBlock()));
 		}
-
-		applyCooldown(player, item, gunInOtherHand);
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> player),
-				new BlockzapperBeamPacket(barrelPos, raytrace.getHitVec(), hand, false));
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player),
-				new BlockzapperBeamPacket(barrelPos, raytrace.getHitVec(), hand, true));
-
-		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
-
-	}
-
-	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos,
-			LivingEntity entityLiving) {
-		if (entityLiving instanceof PlayerEntity && ((PlayerEntity) entityLiving).isCreative()) {
-			worldIn.setBlockState(pos, state);
-			return false;
-		}
-		return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
-	}
-
-	@Override
-	public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-		if (!(entity instanceof PlayerEntity))
-			return false;
-		if (entity.isSneaking())
-			return true;
-
-		Vec3d start = entity.getPositionVec().add(0, entity.getEyeHeight(), 0);
-		Vec3d range = entity.getLookVec().scale(getReachDistance(stack));
-		BlockRayTraceResult raytrace = entity.world.rayTraceBlocks(
-				new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, entity));
-		BlockPos pos = raytrace.getPos();
-		if (pos == null)
-			return true;
-
-		entity.world.sendBlockBreakProgress(entity.getEntityId(), pos, -1);
-		BlockState newState = entity.world.getBlockState(pos);
-
-		if (BlockHelper.getRequiredItem(newState).isEmpty())
-			return true;
-		if (entity.world.getTileEntity(pos) != null)
-			return true;
-		if (newState.has(BlockStateProperties.DOUBLE_BLOCK_HALF))
-			return true;
-		if (newState.has(BlockStateProperties.ATTACHED))
-			return true;
-		if (newState.has(BlockStateProperties.HANGING))
-			return true;
-		if (newState.has(BlockStateProperties.BED_PART))
-			return true;
-		if (newState.has(BlockStateProperties.STAIRS_SHAPE))
-			newState = newState.with(BlockStateProperties.STAIRS_SHAPE, StairsShape.STRAIGHT);
-		if (newState.has(BlockStateProperties.PERSISTENT))
-			newState = newState.with(BlockStateProperties.PERSISTENT, true);
-
-		if (stack.getTag().contains("BlockUsed")
-				&& NBTUtil.readBlockState(stack.getTag().getCompound("BlockUsed")) == newState)
-			return true;
-
-		stack.getTag().put("BlockUsed", NBTUtil.writeBlockState(newState));
-		entity.world.playSound((PlayerEntity) entity, entity.getPosition(), AllSoundEvents.BLOCKZAPPER_CONFIRM.get(),
-				SoundCategory.BLOCKS, 0.5f, 0.8f);
 
 		return true;
 	}
@@ -323,37 +158,12 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 	}
 
 	@Override
-	public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
-		return true;
-	}
-
-	@Override
-	public int getUseDuration(ItemStack stack) {
-		return 0;
-	}
-
-	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
-		super.onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft);
-	}
-
-	@Override
-	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-		boolean differentBlock = true;
-		if (oldStack.hasTag() && newStack.hasTag() && oldStack.getTag().contains("BlockUsed")
-				&& newStack.getTag().contains("BlockUsed"))
-			differentBlock = NBTUtil.readBlockState(oldStack.getTag().getCompound("BlockUsed")) != NBTUtil
-					.readBlockState(newStack.getTag().getCompound("BlockUsed"));
-		return slotChanged || !AllItems.PLACEMENT_HANDGUN.typeOf(newStack) || differentBlock;
-	}
-
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void openHandgunGUI(ItemStack handgun, boolean offhand) {
 		ScreenOpener.open(new BlockzapperScreen(handgun, offhand));
 	}
 
-	public static List<BlockPos> getSelectedBlocks(ItemStack stack, World worldIn, PlayerEntity player) {
+	public List<BlockPos> getSelectedBlocks(ItemStack stack, World worldIn, PlayerEntity player) {
 		List<BlockPos> list = new LinkedList<>();
 		CompoundNBT tag = stack.getTag();
 		if (tag == null)
@@ -368,7 +178,7 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 		List<BlockPos> frontier = new LinkedList<>();
 
 		Vec3d start = player.getPositionVec().add(0, player.getEyeHeight(), 0);
-		Vec3d range = player.getLookVec().scale(getReachDistance(stack));
+		Vec3d range = player.getLookVec().scale(getRange(stack));
 		BlockRayTraceResult raytrace = player.world.rayTraceBlocks(
 				new RayTraceContext(start, start.add(range), BlockMode.COLLIDER, FluidMode.NONE, player));
 		BlockPos pos = raytrace.getPos().toImmutable();
@@ -479,11 +289,12 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 			return 6;
 		if (tier == ComponentTier.Chromatic)
 			return 2;
-		
+
 		return 20;
 	}
-	
-	public static int getReachDistance(ItemStack stack) {
+
+	@Override
+	protected int getRange(ItemStack stack) {
 		ComponentTier tier = getTier(Components.Scope, stack);
 		if (tier == ComponentTier.None)
 			return 15;
@@ -493,37 +304,6 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 			return 100;
 
 		return 0;
-	}
-
-	public static void applyPattern(List<BlockPos> blocksIn, ItemStack stack) {
-		CompoundNBT tag = stack.getTag();
-		PlacementPatterns pattern = !tag.contains("Pattern") ? PlacementPatterns.Solid
-				: PlacementPatterns.valueOf(tag.getString("Pattern"));
-		Random r = new Random();
-		Predicate<BlockPos> filter = Predicates.alwaysFalse();
-
-		switch (pattern) {
-		case Chance25:
-			filter = pos -> r.nextBoolean() || r.nextBoolean();
-			break;
-		case Chance50:
-			filter = pos -> r.nextBoolean();
-			break;
-		case Chance75:
-			filter = pos -> r.nextBoolean() && r.nextBoolean();
-			break;
-		case Checkered:
-			filter = pos -> (pos.getX() + pos.getY() + pos.getZ()) % 2 == 0;
-			break;
-		case InverseCheckered:
-			filter = pos -> (pos.getX() + pos.getY() + pos.getZ()) % 2 != 0;
-			break;
-		case Solid:
-		default:
-			break;
-		}
-
-		blocksIn.removeIf(filter);
 	}
 
 	protected static void dropBlocks(World worldIn, PlayerEntity playerIn, ItemStack item, Direction face,
@@ -552,6 +332,20 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 
 	public static void setTier(Components component, ComponentTier tier, ItemStack stack) {
 		stack.getOrCreateTag().putString(component.name(), NBTHelper.writeEnum(tier));
+	}
+
+	public static enum ComponentTier {
+		None(TextFormatting.DARK_GRAY), Brass(TextFormatting.GOLD), Chromatic(TextFormatting.LIGHT_PURPLE);
+		public TextFormatting color;
+
+		private ComponentTier(TextFormatting color) {
+			this.color = color;
+		}
+
+	}
+
+	public static enum Components {
+		Body, Amplifier, Accelerator, Retriever, Scope
 	}
 
 	@Override

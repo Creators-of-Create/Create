@@ -14,6 +14,7 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.contraptions.ChassisRangeDisplay;
 import com.simibubi.create.modules.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItemHandler;
+import com.simibubi.create.modules.curiosities.zapper.terrainzapper.TerrainZapperRenderHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -60,6 +61,7 @@ public class ClientEvents {
 	public static void onGameTick() {
 		CreateClient.gameTick();
 		BeltConnectorItemHandler.gameTick();
+		TerrainZapperRenderHandler.tick();
 	}
 
 	@SubscribeEvent
@@ -69,6 +71,7 @@ public class ClientEvents {
 		CreateClient.schematicHologram.render();
 		KineticDebugger.renderSourceOutline();
 		ChassisRangeDisplay.renderOutlines(event.getPartialTicks());
+		TerrainZapperRenderHandler.render();
 	}
 
 	@SubscribeEvent

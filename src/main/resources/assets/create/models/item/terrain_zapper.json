@@ -1,0 +1,243 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:item/placement_handgun",
+	"textures": {
+		"0": "create:block/andesite_alloy_mesh",
+		"1": "block/smooth_stone_slab_side",
+		"particle": "block/obsidian",
+		"3_0": "block/obsidian",
+		"mesh": "create:block/terrain_zapper_mesh"
+	},
+	"elements": [
+		{
+			"name": "Connector",
+			"from": [6.5, 4, 0],
+			"to": [9.5, 5, 11],
+			"faces": {
+				"north": {"uv": [0, 0, 3, 1], "texture": "#0"},
+				"east": {"uv": [0, 0, 11, 1], "texture": "#0"},
+				"south": {"uv": [0, 0, 3, 1], "texture": "#0"},
+				"west": {"uv": [0, 0, 11, 1], "texture": "#0"},
+				"up": {"uv": [0, 0, 3, 11], "texture": "#0"},
+				"down": {"uv": [0, 0, 3, 11], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Rod Back Cap",
+			"from": [6.5, 4, 14],
+			"to": [9.5, 7, 15],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 5.5, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 3], "texture": "#mesh"},
+				"east": {"uv": [8, 13, 9, 16], "texture": "#mesh"},
+				"south": {"uv": [2, 7, 5, 10], "texture": "#mesh"},
+				"west": {"uv": [2, 8, 3, 11], "texture": "#mesh"},
+				"up": {"uv": [3, 9, 6, 10], "texture": "#mesh"},
+				"down": {"uv": [7, 7, 10, 8], "texture": "#mesh"}
+			}
+		},
+		{
+			"name": "Rod Back Cap",
+			"from": [7, 4.5, 15],
+			"to": [9, 6.5, 17],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 5.5, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Connector",
+			"from": [6.5, 6, 0],
+			"to": [9.5, 7, 11],
+			"faces": {
+				"north": {"uv": [0, 0, 3, 1], "texture": "#0"},
+				"east": {"uv": [0, 0, 11, 1], "texture": "#0"},
+				"south": {"uv": [0, 0, 3, 1], "texture": "#0"},
+				"west": {"uv": [0, 0, 11, 1], "texture": "#0"},
+				"up": {"uv": [0, 0, 3, 11], "texture": "#0"},
+				"down": {"uv": [0, 0, 3, 11], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Connector",
+			"from": [5.75, 4, 6],
+			"to": [10.25, 8, 8],
+			"rotation": {"angle": 45, "axis": "x", "origin": [8, 4, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 4.5, 4], "texture": "#mesh"},
+				"east": {"uv": [12, 3, 16, 5], "rotation": 90, "texture": "#mesh"},
+				"south": {"uv": [4, 7, 8.5, 11], "texture": "#mesh"},
+				"west": {"uv": [0, 3, 4, 5], "rotation": 270, "texture": "#mesh"},
+				"up": {"uv": [5, 3, 9.5, 5], "texture": "#mesh"},
+				"down": {"uv": [5, 3, 9.5, 5], "texture": "#mesh"}
+			}
+		},
+		{
+			"name": "Connector",
+			"from": [5.75, 4, 8],
+			"to": [10.25, 6, 10],
+			"rotation": {"angle": 45, "axis": "x", "origin": [8, 4, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 4.5, 2], "texture": "#mesh"},
+				"east": {"uv": [12, 3, 14, 5], "rotation": 180, "texture": "#mesh"},
+				"south": {"uv": [5, 3, 9.5, 5], "rotation": 180, "texture": "#mesh"},
+				"west": {"uv": [4, 3, 6, 5], "rotation": 180, "texture": "#mesh"},
+				"up": {"uv": [5, 4, 9.5, 6], "texture": "#mesh"},
+				"down": {"uv": [0, 3, 4.5, 5], "texture": "#mesh"}
+			}
+		},
+		{
+			"name": "Rod Back Cap",
+			"from": [6, 4.5, 9],
+			"to": [10, 6.5, 11],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 5.5, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 4, 2], "texture": "#0"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"south": {"uv": [0, 0, 4, 2], "texture": "#0"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"up": {"uv": [0, 0, 4, 2], "texture": "#0"},
+				"down": {"uv": [0, 0, 4, 2], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Grip",
+			"from": [7.1, 1, 12],
+			"to": [8.9, 5, 15],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 2, 14]},
+			"faces": {
+				"north": {"uv": [5, 7, 6.8, 11], "texture": "#1"},
+				"east": {"uv": [13, 7, 16, 11], "texture": "#1"},
+				"south": {"uv": [7, 7, 8.8, 11], "texture": "#1"},
+				"west": {"uv": [16, 7, 13, 11], "texture": "#1"},
+				"up": {"uv": [5, 2, 6.8, 5], "texture": "#1"},
+				"down": {"uv": [7, 11, 8.8, 14], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Trigger",
+			"from": [7.4, 3, 11],
+			"to": [8.6, 6, 13],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 2, 14]},
+			"faces": {
+				"north": {"uv": [6, 4, 7, 7], "texture": "#3_0"},
+				"east": {"uv": [6, 4, 8, 7], "texture": "#3_0"},
+				"south": {"uv": [6, 4, 7, 7], "texture": "#3_0"},
+				"west": {"uv": [5, 4, 7, 7], "texture": "#3_0"},
+				"up": {"uv": [6, 6, 7, 8], "texture": "#3_0"},
+				"down": {"uv": [5, 6, 6, 8], "texture": "#3_0"}
+			}
+		},
+		{
+			"name": "Scope",
+			"from": [7.5, 7.5, 5.5],
+			"to": [8.5, 8.5, 10.5],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 4]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 1], "texture": "#1"},
+				"east": {"uv": [8, 1, 9, 6], "rotation": 90, "texture": "#mesh"},
+				"south": {"uv": [0, 0, 1, 1], "texture": "#1"},
+				"west": {"uv": [7, 1, 8, 6], "rotation": 270, "texture": "#mesh"},
+				"up": {"uv": [7, 1, 8, 6], "texture": "#mesh"},
+				"down": {"uv": [7, 1, 8, 6], "texture": "#mesh"}
+			}
+		},
+		{
+			"name": "Scope Connector",
+			"from": [7.5, 7, 7],
+			"to": [8.5, 8, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 4]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 1], "texture": "#mesh"},
+				"east": {"uv": [0, 0, 1, 1], "texture": "#mesh"},
+				"south": {"uv": [0, 0, 1, 1], "texture": "#mesh"},
+				"west": {"uv": [0, 0, 1, 1], "texture": "#mesh"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#mesh"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#mesh"}
+			}
+		},
+		{
+			"name": "Amplifier Connector",
+			"from": [6.5, 2, 2],
+			"to": [9.5, 3, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8.5, 8, 8]},
+			"faces": {
+				"north": {"uv": [3, 8, 6, 9], "texture": "#mesh"},
+				"east": {"uv": [0, 12, 7, 13], "rotation": 180, "texture": "#mesh"},
+				"south": {"uv": [1, 8, 4, 9], "texture": "#mesh"},
+				"west": {"uv": [0, 12, 7, 13], "rotation": 180, "texture": "#mesh"},
+				"up": {"uv": [3, 7, 10, 10], "rotation": 90, "texture": "#mesh"},
+				"down": {"uv": [3, 7, 10, 10], "rotation": 90, "texture": "#mesh"}
+			}
+		},
+		{
+			"name": "Amplifier Connector",
+			"from": [6.5, 3, 7],
+			"to": [9.5, 4, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8.5, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 1], "texture": "#mesh"},
+				"east": {"uv": [0, 0, 2, 1], "texture": "#mesh"},
+				"south": {"uv": [0, 0, 3, 1], "texture": "#mesh"},
+				"west": {"uv": [0, 0, 2, 1], "texture": "#mesh"},
+				"up": {"uv": [0, 0, 3, 2], "texture": "#mesh"},
+				"down": {"uv": [0, 0, 3, 2], "texture": "#mesh"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [1, 0, 0],
+			"translation": [0, 4, -2.5],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [1, 0, 0],
+			"translation": [0, 4, -2.5],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"firstperson_righthand": {
+			"rotation": [10, 0, 10],
+			"translation": [1, 4, 1]
+		},
+		"firstperson_lefthand": {
+			"rotation": [10, 0, 10],
+			"translation": [1, 4, 1]
+		},
+		"ground": {
+			"rotation": [0, 0, 90],
+			"translation": [-2.25, -1, -0.75],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"translation": [-0.5, 3.5, 0]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [-1.25, 4.25, -1]
+		}
+	},
+	"groups": [0, 1, 2, 3, 4, 5, 6,
+		{
+			"name": "placement_handgun",
+			"origin": [8, 8, 8],
+			"children": [7, 8]
+		},
+		{
+			"name": "chorus_scope",
+			"origin": [8, 8, 8],
+			"children": [9, 10]
+		},
+		{
+			"name": "chorus_amplifier",
+			"origin": [8, 8, 8],
+			"children": [11, 12]
+		}
+	]
+}

@@ -1,9 +1,9 @@
-package com.simibubi.create.modules.curiosities.zapper.blockzapper;
+package com.simibubi.create.modules.curiosities.zapper;
 
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.packet.SimplePacketBase;
-import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperHandler.LaserBeam;
+import com.simibubi.create.modules.curiosities.zapper.ZapperRenderHandler.LaserBeam;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
@@ -14,21 +14,21 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class BlockzapperBeamPacket extends SimplePacketBase {
+public class ZapperBeamPacket extends SimplePacketBase {
 
 	public Vec3d start;
 	public Vec3d target;
 	public Hand hand;
 	public boolean self;
 
-	public BlockzapperBeamPacket(Vec3d start, Vec3d target, Hand hand, boolean self) {
+	public ZapperBeamPacket(Vec3d start, Vec3d target, Hand hand, boolean self) {
 		this.start = start;
 		this.target = target;
 		this.hand = hand;
 		this.self = self;
 	}
 	
-	public BlockzapperBeamPacket(PacketBuffer buffer) {
+	public ZapperBeamPacket(PacketBuffer buffer) {
 		start = new Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
 		target = new Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
 		hand = buffer.readBoolean()? Hand.MAIN_HAND : Hand.OFF_HAND;
@@ -51,12 +51,12 @@ public class BlockzapperBeamPacket extends SimplePacketBase {
 		context.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			if (Minecraft.getInstance().player.getPositionVector().distanceTo(start) > 100)
 				return;
-			BlockzapperHandler.addBeam(new LaserBeam(start, target).followPlayer(self, hand == Hand.MAIN_HAND));
+			ZapperRenderHandler.addBeam(new LaserBeam(start, target).followPlayer(self, hand == Hand.MAIN_HAND));
 			
 			if (self)
-				BlockzapperHandler.shoot(hand);
+				ZapperRenderHandler.shoot(hand);
 			else
-				BlockzapperHandler.playSound(hand, new BlockPos(start));
+				ZapperRenderHandler.playSound(hand, new BlockPos(start));
 		}));
 		context.get().setPacketHandled(true);
 	}

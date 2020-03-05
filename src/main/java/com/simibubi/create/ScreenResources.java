@@ -10,7 +10,9 @@ public enum ScreenResources {
 	// Inventories
 	PLAYER_INVENTORY("player_inventory.png", 176, 108),
 	WAND_SYMMETRY("wand_symmetry.png", 207, 58),
-	PLACEMENT_GUN("placement_handgun.png", 217, 70),
+	BLOCKZAPPER("zapper.png", 217, 70),
+	TERRAINZAPPER("zapper.png", 0, 70, 217, 105),
+	TERRAINZAPPER_INACTIVE_PARAM("zapper.png", 0, 175, 14, 14),
 
 	SCHEMATIC_TABLE("schematic_table.png", 207, 89),
 	SCHEMATIC_TABLE_PROGRESS("schematic_table.png", 209, 0, 24, 17),
@@ -127,6 +129,15 @@ public enum ScreenResources {
 	I_REPLACE_SOLID(1, 2),
 	I_REPLACE_ANY(2, 2),
 	I_REPLACE_EMPTY(3, 2),
+	I_CENTERED(4, 2),
+	I_ATTACHED(5, 2),
+	I_INSERTED(6, 2),
+	I_FILL(7, 2),
+	I_PLACE(8, 2),
+	I_REPLACE(9, 2),
+	I_CLEAR(10, 2),
+	I_OVERLAY(11, 2),
+	I_FLATTEN(12, 2),
 
 	I_TOOL_DEPLOY(0, 3),
 	I_SKIP_TILES(2, 3),

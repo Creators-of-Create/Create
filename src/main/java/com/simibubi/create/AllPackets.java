@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionStallPacket;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
-import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperBeamPacket;
+import com.simibubi.create.modules.curiosities.zapper.ZapperBeamPacket;
 import com.simibubi.create.modules.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.modules.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.modules.logistics.packet.ConfigureStockswitchPacket;
@@ -42,7 +42,7 @@ public enum AllPackets {
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),
 	SERVER_SPEED(ServerSpeedProvider.Packet.class, ServerSpeedProvider.Packet::new),
-	BEAM_EFFECT(BlockzapperBeamPacket.class, BlockzapperBeamPacket::new),
+	BEAM_EFFECT(ZapperBeamPacket.class, ZapperBeamPacket::new),
 	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
 	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new),
 

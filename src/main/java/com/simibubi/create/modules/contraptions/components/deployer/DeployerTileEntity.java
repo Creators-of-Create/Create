@@ -259,7 +259,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		player.rotationPitch = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
 
 		DeployerHandler.activate(player, center, clickedPos, movementVector, mode);
-		heldItem = player.getHeldItemMainhand();
+		if (player != null)
+			heldItem = player.getHeldItemMainhand();
 	}
 
 	protected void returnAndDeposit() {
