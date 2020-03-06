@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -11,7 +10,7 @@ import net.minecraft.world.IWorld;
 
 public class TorquePropagator {
 
-	static Map<IWorld, Map<UUID, KineticNetwork>> networks = new HashMap<>();
+	static Map<IWorld, Map<Long, KineticNetwork>> networks = new HashMap<>();
 
 	public void onLoadWorld(IWorld world) {
 		networks.put(world, new HashMap<>());
@@ -24,15 +23,15 @@ public class TorquePropagator {
 	}
 
 	public KineticNetwork getNetworkFor(KineticTileEntity te) {
-		UUID id = te.getNetworkID();
+		Long id = te.network;
 		KineticNetwork network;
-		Map<UUID, KineticNetwork> map = networks.get(te.getWorld());
+		Map<Long, KineticNetwork> map = networks.get(te.getWorld());
 		if (id == null)
 			return null;
 
 		if (!map.containsKey(id)) {
 			network = new KineticNetwork();
-			network.id = te.getNetworkID();
+			network.id = te.network;
 			map.put(id, network);
 		}
 		network = map.get(id);

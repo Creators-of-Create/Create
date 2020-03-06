@@ -27,7 +27,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 	public KineticBlock(Properties properties) {
 		super(properties);
 	}
-	
+
 	@Override
 	public ToolType getHarvestTool(BlockState state) {
 		return null;
@@ -38,10 +38,10 @@ public abstract class KineticBlock extends Block implements IRotate {
 		for (ToolType toolType : player.getHeldItemMainhand().getToolTypes()) {
 			if (isToolEffective(state, toolType))
 				return true;
-		}		
+		}
 		return super.canHarvestBlock(state, world, pos, player);
 	}
-	
+
 	@Override
 	public boolean isToolEffective(BlockState state, ToolType tool) {
 		return tool == ToolType.AXE || tool == ToolType.PICKAXE;
@@ -78,6 +78,20 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 	@Override
 	public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
+
+	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (isMoving) {
+			KineticTileEntity tileEntity = (KineticTileEntity) worldIn.getTileEntity(pos);
+			if (tileEntity == null)
+				return;
+			if (worldIn.isRemote())
+				return;
+			tileEntity.network = null;
+			tileEntity.source = null;
+			tileEntity.speed = 0;
+		}
+	}
 
 	@SuppressWarnings("deprecation")
 	@Override

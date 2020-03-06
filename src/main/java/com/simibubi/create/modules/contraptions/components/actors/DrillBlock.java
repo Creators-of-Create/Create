@@ -61,7 +61,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IPortableBloc
 
 	@Override
 	public PushReaction getPushReaction(BlockState state) {
-		return PushReaction.PUSH_ONLY;
+		return PushReaction.NORMAL;
 	}
 
 	@Override

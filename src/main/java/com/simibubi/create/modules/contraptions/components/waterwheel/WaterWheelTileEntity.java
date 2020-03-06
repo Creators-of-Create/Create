@@ -50,6 +50,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 
 	public void setFlow(Direction direction, float speed) {
 		flows.put(direction, speed);
+		markDirty();
 	}
 
 	@Override

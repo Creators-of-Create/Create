@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +22,11 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 
 	public ShaftBlock(Properties properties) {
 		super(properties);
+	}
+	
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.NORMAL;
 	}
 
 	@Override

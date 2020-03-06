@@ -347,7 +347,6 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 			return;
 		BeltTileEntity beltEntity = (BeltTileEntity) tileEntity;
 		BlockPos controller = beltEntity.getController();
-		beltEntity.removeSource();
 		beltEntity.remove();
 
 		int limit = 1000;
@@ -368,7 +367,6 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 						inv.eject(stack);
 				}
 
-				te.removeSource();
 				te.remove();
 
 				if (destroyedBlock.get(CASING))

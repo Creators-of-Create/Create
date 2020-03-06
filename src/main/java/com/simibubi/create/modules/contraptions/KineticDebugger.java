@@ -25,7 +25,7 @@ public class KineticDebugger {
 			return;
 
 		World world = Minecraft.getInstance().world;
-		BlockPos toOutline = te.hasSource() ? te.getSource() : te.getPos();
+		BlockPos toOutline = te.hasSource() ? te.source : te.getPos();
 		VoxelShape shape = world.getBlockState(toOutline).getShape(world, toOutline);
 
 		TessellatorHelper.prepareForDrawing();

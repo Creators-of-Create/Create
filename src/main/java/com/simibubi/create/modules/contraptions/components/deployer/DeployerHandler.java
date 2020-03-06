@@ -153,6 +153,8 @@ public class DeployerHandler {
 		RayTraceContext rayTraceContext =
 			new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE, FluidMode.NONE, player);
 		BlockRayTraceResult result = world.rayTraceBlocks(rayTraceContext);
+		if (result.getPos() != clickedPos)
+			result = new BlockRayTraceResult(result.getHitVec(), result.getFace(), clickedPos, result.isInside());
 		BlockState clickedState = world.getBlockState(clickedPos);
 		Direction face = result.getFace();
 		if (face == null)

@@ -31,7 +31,7 @@ public class GearboxTileEntityRenderer extends KineticTileEntityRenderer {
 			float angle = (time * te.getSpeed() * 3f / 10) % 360;
 
 			if (te.getSpeed() != 0 && te.hasSource()) {
-				BlockPos source = te.getSource().subtract(te.getPos());
+				BlockPos source = te.source.subtract(te.getPos());
 				Direction sourceFacing = Direction.getFacingFromVector(source.getX(), source.getY(), source.getZ());
 				if (sourceFacing.getAxis() == direction.getAxis())
 					angle *= sourceFacing == direction ? 1 : -1;

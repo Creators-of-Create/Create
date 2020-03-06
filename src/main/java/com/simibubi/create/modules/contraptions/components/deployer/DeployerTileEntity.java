@@ -272,8 +272,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 					continue;
 
 				if (list == inv.mainInventory && i == inv.currentItem && filtering.test(itemstack))
-					if (itemstack.getCount() == 1)
-						continue;
+					continue;
 
 				itemstack = insert(itemstack, false);
 				if (!itemstack.isEmpty())

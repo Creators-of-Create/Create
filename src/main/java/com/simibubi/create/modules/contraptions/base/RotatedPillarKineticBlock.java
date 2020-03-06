@@ -11,7 +11,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class RotatedPillarKineticBlock extends KineticBlock {
@@ -79,13 +78,7 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 		World world = context.getWorld();
 		if (axis == state.get(AXIS))
 			return ActionResultType.PASS;
-		if (!world.isRemote) {
-			BlockPos pos = context.getPos();
-			world.removeTileEntity(pos);
-			world.setBlockState(pos, state.with(AXIS, axis), 3);
-			KineticTileEntity tileEntity = (KineticTileEntity) world.getTileEntity(pos);
-			tileEntity.attachKinetics();
-		}
+		KineticTileEntity.switchToBlockState(world, context.getPos(), state.with(AXIS, axis));
 		return ActionResultType.SUCCESS;
 	}
 

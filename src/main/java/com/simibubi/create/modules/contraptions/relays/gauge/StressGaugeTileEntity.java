@@ -11,8 +11,8 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 	}
 
 	@Override
-	public void sync(float maxStress, float currentStress) {
-		super.sync(maxStress, currentStress);
+	public void updateStressFromNetwork(float maxStress, float currentStress) {
+		super.updateStressFromNetwork(maxStress, currentStress);
 
 		if (!StressImpact.isEnabled())
 			dialTarget = 0;
@@ -41,15 +41,15 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		if (getSpeed() == 0)
 			dialTarget = 0;
 		else
-			sync(maxStress, currentStress);
+			updateStressFromNetwork(capacity, stress);
 	}
 	
 	public float getNetworkStress() {
-		return currentStress;
+		return stress;
 	}
 	
 	public float getNetworkCapacity() {
-		return maxStress;
+		return capacity;
 	}
 
 }

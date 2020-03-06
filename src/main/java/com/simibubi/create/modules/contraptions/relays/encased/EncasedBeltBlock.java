@@ -8,6 +8,7 @@ import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -38,6 +39,11 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	@Override
 	public boolean shouldCheckWeakPower(BlockState state, IWorldReader world, BlockPos pos, Direction side) {
 		return false;
+	}
+	
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.NORMAL;
 	}
 	
 	@Override

@@ -44,7 +44,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 
 	private void updateTargetRotation() {
 		if (hasNetwork()) 
-			getNetwork().remove(this);
+			getOrCreateNetwork().remove(this);
 		RotationPropagator.handleRemoved(world, pos, this);
 		removeSource();
 		attachKinetics();
@@ -75,7 +75,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 			return 1;
 		}
 
-		boolean wheelPowersController = speedController.getSource().equals(cogWheel.getPos());
+		boolean wheelPowersController = speedController.source.equals(cogWheel.getPos());
 		
 		if (wheelPowersController) {
 			if (targetingController)

@@ -63,10 +63,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRendererFast<Kineti
 		int white = 0xFFFFFF;
 		if (KineticDebugger.isActive()) {
 			rainbowMode = true;
-			if (te.hasNetwork())
-				buffer.color(ColorHelper.colorFromUUID(te.getNetworkID()));
-			else
-				buffer.color(white);
+			buffer.color(te.hasNetwork() ? ColorHelper.colorFromLong(te.network) : white);
 		} else {
 			float overStressedEffect = te.effects.overStressedEffect;
 			if (overStressedEffect != 0)

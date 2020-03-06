@@ -1,7 +1,5 @@
 package com.simibubi.create.modules.contraptions.base;
 
-import java.util.UUID;
-
 import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 
@@ -17,7 +15,7 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 	}
 
 	protected void notifyStressCapacityChange(float capacity) {
-		getNetwork().updateCapacityFor(this, capacity);
+		getOrCreateNetwork().updateCapacityFor(this, capacity);
 	}
 
 	@Override
@@ -63,8 +61,9 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 		}
 
 		if (hasNetwork() && speed != 0) {
-			KineticNetwork network = getNetwork();
-			network.updateCapacityFor(this, getAddedStressCapacity());
+			KineticNetwork network = getOrCreateNetwork();
+			notifyStressCapacityChange(getAddedStressCapacity());
+			getOrCreateNetwork().updateStressFor(this, getStressApplied());
 			network.updateStress();
 		}
 
@@ -76,36 +75,32 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 
 		// Speed changed to 0
 		if (speed == 0) {
-			if (hasSource() && hasNetwork()) {
-				getNetwork().updateCapacityFor(this, 0);
+			if (hasSource()) {
+				notifyStressCapacityChange(0);
+				getOrCreateNetwork().updateStressFor(this, getStressApplied());
 				return;
 			}
 			detachKinetics();
-			setSpeed(speed);
-			newNetworkID = null;
-			updateNetwork = true;
+			setSpeed(0);
+			setNetwork(null);
 			return;
 		}
 
 		// Now turning - create a new Network
 		if (prevSpeed == 0) {
 			setSpeed(speed);
-			newNetworkID = UUID.randomUUID();
-			updateNetwork = true;
+			setNetwork(createNetworkId());
 			attachKinetics();
 			return;
 		}
 
 		// Change speed when overpowered by other generator
-		if (hasSource() && hasNetwork()) {
+		if (hasSource()) {
 
 			// Staying below Overpowered speed
 			if (Math.abs(prevSpeed) >= Math.abs(speed)) {
-				if (Math.signum(prevSpeed) != Math.signum(speed)) {
+				if (Math.signum(prevSpeed) != Math.signum(speed))
 					world.destroyBlock(pos, true);
-					return;
-				}
-				getNetwork().updateCapacityFor(this, getAddedStressCapacity());
 				return;
 			}
 
@@ -113,8 +108,7 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 			detachKinetics();
 			setSpeed(speed);
 			source = null;
-			newNetworkID = UUID.randomUUID();
-			updateNetwork = true;
+			setNetwork(createNetworkId());
 			attachKinetics();
 			return;
 		}
@@ -123,6 +117,10 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 		detachKinetics();
 		setSpeed(speed);
 		attachKinetics();
+	}
+
+	public Long createNetworkId() {
+		return pos.toLong();
 	}
 
 }

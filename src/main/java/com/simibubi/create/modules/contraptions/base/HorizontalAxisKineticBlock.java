@@ -1,7 +1,5 @@
 package com.simibubi.create.modules.contraptions.base;
 
-import com.simibubi.create.modules.contraptions.RotationPropagator;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -79,16 +77,7 @@ public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 		World world = context.getWorld();
 		if (facing.getAxis() == state.get(HORIZONTAL_AXIS))
 			return ActionResultType.PASS;
-		if (!world.isRemote) {
-			BlockPos pos = context.getPos();
-			KineticTileEntity tileEntity = (KineticTileEntity) world.getTileEntity(pos);
-			if (tileEntity.hasNetwork()) 
-				tileEntity.getNetwork().remove(tileEntity);
-			RotationPropagator.handleRemoved(world, pos, tileEntity);
-			tileEntity.removeSource();
-			world.setBlockState(pos, state.cycle(HORIZONTAL_AXIS), 3);
-			tileEntity.attachKinetics();
-		}
+		KineticTileEntity.switchToBlockState(world, context.getPos(), state.cycle(HORIZONTAL_AXIS));
 		return ActionResultType.SUCCESS;
 	}
 

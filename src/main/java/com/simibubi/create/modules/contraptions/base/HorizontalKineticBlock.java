@@ -11,7 +11,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class HorizontalKineticBlock extends KineticBlock {
@@ -61,13 +60,7 @@ public abstract class HorizontalKineticBlock extends KineticBlock {
 		World world = context.getWorld();
 		if (facing == state.get(HORIZONTAL_FACING))
 			return ActionResultType.PASS;
-		if (!world.isRemote) {
-			BlockPos pos = context.getPos();
-			world.removeTileEntity(pos);
-			world.setBlockState(pos, state.with(HORIZONTAL_FACING, facing), 3);
-			KineticTileEntity tileEntity = (KineticTileEntity) world.getTileEntity(pos);
-			tileEntity.attachKinetics();
-		}
+		KineticTileEntity.switchToBlockState(world, context.getPos(), state.with(HORIZONTAL_FACING, facing));
 		return ActionResultType.SUCCESS;
 	}
 

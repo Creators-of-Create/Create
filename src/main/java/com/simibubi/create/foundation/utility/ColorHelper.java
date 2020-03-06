@@ -62,11 +62,15 @@ public class ColorHelper {
 		int b = color & 0xFF;
 		return new Vec3d(r, g, b).scale(1 / 256d);
 	}
-	
+
 	public static int colorFromUUID(UUID uuid) {
 		if (uuid == null)
 			return 0x333333;
-		int rainbowColor = ColorHelper.rainbowColor((int) uuid.getLeastSignificantBits());
+		return colorFromLong(uuid.getLeastSignificantBits());
+	}
+
+	public static int colorFromLong(long l) {
+		int rainbowColor = ColorHelper.rainbowColor(String.valueOf(l).hashCode());
 		return ColorHelper.mixColors(rainbowColor, 0xFFFFFF, .5f);
 	}
 

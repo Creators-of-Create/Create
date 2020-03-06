@@ -19,6 +19,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
@@ -111,8 +112,8 @@ public abstract class Contraption {
 	}
 
 	public void gatherStoredItems() {
-		List<IItemHandlerModifiable> list = storage.values().stream().map(MountedStorage::getItemHandler)
-				.collect(Collectors.toList());
+		List<IItemHandlerModifiable> list =
+			storage.values().stream().map(MountedStorage::getItemHandler).collect(Collectors.toList());
 		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 	}
 
@@ -251,8 +252,8 @@ public abstract class Contraption {
 			CompoundNBT comp = (CompoundNBT) c;
 			storage.put(NBTUtil.readBlockPos(comp.getCompound("Pos")), new MountedStorage(comp.getCompound("Data")));
 		});
-		List<IItemHandlerModifiable> list = storage.values().stream().map(MountedStorage::getItemHandler)
-				.collect(Collectors.toList());
+		List<IItemHandlerModifiable> list =
+			storage.values().stream().map(MountedStorage::getItemHandler).collect(Collectors.toList());
 		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 
 		if (nbt.contains("BoundsFront"))
@@ -358,6 +359,15 @@ public abstract class Contraption {
 				block.nbt.putInt("y", targetPos.getY());
 				block.nbt.putInt("z", targetPos.getZ());
 				tileEntity.read(block.nbt);
+				
+				if (tileEntity instanceof KineticTileEntity) {
+					KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
+					kineticTileEntity.source = null;
+					kineticTileEntity.setSpeed(0);
+					kineticTileEntity.network = null;
+					kineticTileEntity.attachKinetics();
+				}
+				
 				if (storage.containsKey(block.pos)) {
 					MountedStorage mountedStorage = storage.get(block.pos);
 					if (mountedStorage.isWorking())

@@ -7,14 +7,14 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 public class DirectionalShaftHalvesTileEntity extends KineticTileEntity {
-	
+
 	public DirectionalShaftHalvesTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
 	}
 
 	public Direction getSourceFacing() {
-		BlockPos source = getSource().subtract(getPos());
-		return Direction.getFacingFromVector(source.getX(), source.getY(), source.getZ());
+		BlockPos localSource = source.subtract(getPos());
+		return Direction.getFacingFromVector(localSource.getX(), localSource.getY(), localSource.getZ());
 	}
 
 }

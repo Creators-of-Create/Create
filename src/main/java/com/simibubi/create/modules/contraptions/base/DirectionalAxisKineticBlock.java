@@ -90,13 +90,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 		World world = context.getWorld();
 		Direction face = context.getFace();
 		if ((turnBackOnWrenched() ? face.getOpposite() : face) == state.get(FACING)) {
-			if (!world.isRemote) {
-				BlockPos pos = context.getPos();
-				world.removeTileEntity(pos);
-				world.setBlockState(pos, state.cycle(AXIS_ALONG_FIRST_COORDINATE), 3);
-				KineticTileEntity tileEntity = (KineticTileEntity) world.getTileEntity(pos);
-				tileEntity.attachKinetics();
-			}
+			KineticTileEntity.switchToBlockState(world, context.getPos(), state.cycle(AXIS_ALONG_FIRST_COORDINATE));
 			return ActionResultType.SUCCESS;
 		}
 		return super.onWrenched(state, context);

@@ -102,7 +102,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IWithTileEn
 
 	@Override
 	public PushReaction getPushReaction(BlockState state) {
-		return PushReaction.PUSH_ONLY;
+		return PushReaction.NORMAL;
 	}
 
 	public static boolean isHorizontal(BlockState state) {

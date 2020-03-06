@@ -226,10 +226,13 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	}
 
 	protected void applyContraptionMotion() {
-		if (movedContraption.isStalled())
+		if (movedContraption == null)
+			return;
+		if (movedContraption.isStalled()) {
 			movedContraption.setContraptionMotion(Vec3d.ZERO);
-		else
-			movedContraption.setContraptionMotion(getMotionVector());
+			return;
+		}
+		movedContraption.setContraptionMotion(getMotionVector());
 	}
 
 	protected void applyContraptionPosition() {

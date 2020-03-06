@@ -192,7 +192,7 @@ public class RotationPropagator {
 			float neighbourSpeed = neighbourTE.getTheoreticalSpeed();
 			if (neighbourSpeed == 0)
 				continue;
-			if (neighbourTE.hasSource() && neighbourTE.getSource().equals(addedTE.getPos())) {
+			if (neighbourTE.hasSource() && neighbourTE.source.equals(addedTE.getPos())) {
 				addedTE.setSpeed(neighbourSpeed * speedModifier);
 				addedTE.onSpeedChanged(0);
 				addedTE.sendData();
@@ -235,18 +235,19 @@ public class RotationPropagator {
 				return;
 			}
 
+			// Opposite directions
 			if (incompatible) {
-				// Opposite directions
 				world.destroyBlock(pos, true);
 				return;
 
-			} else {
 				// Same direction: overpower the slower speed
+			} else {
+
+				// Neighbour faster, overpower the incoming tree
 				if (Math.abs(oppositeSpeed) > Math.abs(speedOfCurrent)) {
-					// Neighbour faster, overpower the incoming tree
-					currentTE.setSource(neighbourTE.getPos());
 					float prevSpeed = currentTE.getSpeed();
 					currentTE.setSpeed(speedOfNeighbour * getRotationSpeedModifier(neighbourTE, currentTE));
+					currentTE.setSource(neighbourTE.getPos());
 					currentTE.onSpeedChanged(prevSpeed);
 					currentTE.sendData();
 
@@ -256,18 +257,20 @@ public class RotationPropagator {
 
 				// Current faster, overpower the neighbours' tree
 				if (Math.abs(newSpeed) >= Math.abs(speedOfNeighbour)) {
-					if (!currentTE.canOverPower(neighbourTE)) {
+
+					// Do not overpower you own network -> cycle
+					if (!currentTE.hasNetwork() || currentTE.network.equals(neighbourTE.network)) {
 						if (Math.abs(newSpeed) > Math.abs(speedOfNeighbour))
 							world.destroyBlock(pos, true);
 						continue;
 					}
-					
-					if (currentTE.hasSource() && currentTE.getSource().equals(neighbourTE.getPos()))
+
+					if (currentTE.hasSource() && currentTE.source.equals(neighbourTE.getPos()))
 						currentTE.removeSource();
 
-					neighbourTE.setSource(currentTE.getPos());
 					float prevSpeed = neighbourTE.getSpeed();
 					neighbourTE.setSpeed(speedOfCurrent * getRotationSpeedModifier(currentTE, neighbourTE));
+					neighbourTE.setSource(currentTE.getPos());
 					neighbourTE.onSpeedChanged(prevSpeed);
 					neighbourTE.sendData();
 					propagateNewSource(neighbourTE);
@@ -309,7 +312,7 @@ public class RotationPropagator {
 				continue;
 
 			final KineticTileEntity neighbourTE = (KineticTileEntity) worldIn.getTileEntity(neighbourPos);
-			if (!neighbourTE.hasSource() || !neighbourTE.getSource().equals(pos))
+			if (!neighbourTE.hasSource() || !neighbourTE.source.equals(pos))
 				continue;
 
 			propagateMissingSource(neighbourTE);
@@ -329,7 +332,7 @@ public class RotationPropagator {
 		List<KineticTileEntity> potentialNewSources = new LinkedList<>();
 		List<BlockPos> frontier = new LinkedList<>();
 		frontier.add(updateTE.getPos());
-		BlockPos missingSource = updateTE.hasSource() ? updateTE.getSource() : null;
+		BlockPos missingSource = updateTE.hasSource() ? updateTE.source : null;
 
 		while (!frontier.isEmpty()) {
 			final BlockPos pos = frontier.remove(0);
@@ -344,7 +347,7 @@ public class RotationPropagator {
 				if (!neighbourTE.hasSource())
 					continue;
 
-				if (!neighbourTE.getSource().equals(pos)) {
+				if (!neighbourTE.source.equals(pos)) {
 					potentialNewSources.add(neighbourTE);
 					continue;
 				}

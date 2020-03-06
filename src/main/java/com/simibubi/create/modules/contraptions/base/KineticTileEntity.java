@@ -2,7 +2,8 @@ package com.simibubi.create.modules.contraptions.base;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.config.AllConfigs;
@@ -18,24 +19,24 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public abstract class KineticTileEntity extends SmartTileEntity implements ITickableTileEntity {
 
-	protected UUID networkID;
-	protected UUID newNetworkID;
-	protected float maxStress;
-	protected float currentStress;
-	protected boolean updateNetwork;
+	public @Nullable Long network;
+	public @Nullable BlockPos source;
+	public boolean networkDirty;
 
 	protected KineticEffectHandler effects;
-	protected BlockPos source;
 	protected float speed;
+	protected float capacity;
+	protected float stress;
 	protected boolean overStressed;
-	protected boolean initNetwork;
 
 	private int flickerTally;
 	private int validationCountdown;
@@ -43,6 +44,18 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	public KineticTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
 		effects = new KineticEffectHandler(this);
+	}
+
+	@Override
+	public void initialize() {
+		super.initialize();
+		if (!hasNetwork())
+			return;
+
+		KineticNetwork network = getOrCreateNetwork();
+		if (!network.initialized)
+			network.initFromTE(capacity, stress);
+		network.addSilently(this);
 	}
 
 	@Override
@@ -61,33 +74,10 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		if (getFlickerScore() > 0)
 			flickerTally = getFlickerScore() - 1;
 
-		if (initNetwork) {
-			initNetwork = false;
-
-			KineticNetwork network = getNetwork();
-			if (!network.initialized)
-				network.initFromTE(maxStress, currentStress);
-			network.addSilently(this);
-		}
-
-		if (updateNetwork) {
-			updateNetwork = false;
-
-			if (hasNetwork() && !networkID.equals(newNetworkID)) {
-				getNetwork().remove(this);
-				networkID = null;
-				maxStress = currentStress = 0;
-				overStressed = false;
-			}
-
-			if (newNetworkID != null) {
-				networkID = newNetworkID;
-				KineticNetwork network = getNetwork();
-				network.initialized = true;
-				network.add(this);
-			}
-
-			sendData();
+		if (networkDirty) {
+			if (hasNetwork())
+				getOrCreateNetwork().updateNetwork();
+			networkDirty = false;
 		}
 	}
 
@@ -103,25 +93,21 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 				return;
 			}
 
-			if (hasNetwork() && maxStress == 0) {
-				for (KineticTileEntity kineticTileEntity : getNetwork().members.keySet()) 
-					kineticTileEntity.removeSource();
-				return;
-			}
-
 			return;
 		}
 
 		if (speed != 0) {
 			if (getGeneratedSpeed() == 0)
-				setSpeed(0);
+				speed = 0;
 		}
 	}
 
-	public void sync(float maxStress, float currentStress) {
-		this.maxStress = maxStress;
-		this.currentStress = currentStress;
+	public void updateStressFromNetwork(float maxStress, float currentStress) {
+		networkDirty = false;
+		this.capacity = maxStress;
+		this.stress = currentStress;
 		boolean overStressed = maxStress < currentStress && StressImpact.isEnabled();
+
 		if (overStressed != this.overStressed) {
 			if (speed != 0 && overStressed)
 				AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESSED, world, pos, 8);
@@ -160,7 +146,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	public void remove() {
 		if (!world.isRemote) {
 			if (hasNetwork())
-				getNetwork().remove(this);
+				getOrCreateNetwork().remove(this);
 			detachKinetics();
 		}
 		super.remove();
@@ -174,9 +160,11 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 			compound.put("Source", NBTUtil.writeBlockPos(source));
 
 		if (hasNetwork()) {
-			compound.putFloat("MaxStress", maxStress);
-			compound.putFloat("Stress", currentStress);
-			compound.put("Id", NBTUtil.writeUniqueId(networkID));
+			CompoundNBT networkTag = new CompoundNBT();
+			networkTag.putLong("Id", network);
+			networkTag.putFloat("Stress", stress);
+			networkTag.putFloat("Capacity", capacity);
+			compound.put("Network", networkTag);
 		}
 
 		return super.write(compound);
@@ -185,20 +173,22 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	@Override
 	public void read(CompoundNBT compound) {
 		speed = compound.getFloat("Speed");
+
 		source = null;
-		networkID = newNetworkID = null;
+		network = null;
 		overStressed = false;
+		stress = 0;
+		capacity = 0;
 
 		if (compound.contains("Source"))
 			source = NBTUtil.readBlockPos(compound.getCompound("Source"));
 
-		if (compound.contains("Id")) {
-			maxStress = compound.getFloat("MaxStress");
-			currentStress = compound.getFloat("Stress");
-			overStressed = maxStress < currentStress && StressImpact.isEnabled();
-			networkID = NBTUtil.readUniqueId(compound.getCompound("Id"));
-			newNetworkID = networkID;
-			initNetwork = true;
+		if (compound.contains("Network")) {
+			CompoundNBT networkTag = compound.getCompound("Network");
+			network = networkTag.getLong("Id");
+			stress = networkTag.getFloat("Stress");
+			capacity = networkTag.getFloat("Capacity");
+			overStressed = capacity < stress && StressImpact.isEnabled();
 		}
 
 		super.read(compound);
@@ -210,6 +200,10 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		super.readClientUpdate(tag);
 		if (overStressedBefore != overStressed && speed != 0)
 			effects.triggerOverStressedEffect();
+	}
+
+	public float getGeneratedSpeed() {
+		return 0;
 	}
 
 	public boolean isSource() {
@@ -226,20 +220,12 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		return speed;
 	}
 
-	public float getGeneratedSpeed() {
-		return 0;
-	}
-
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 
 	public boolean hasSource() {
 		return source != null;
-	}
-
-	public BlockPos getSource() {
-		return source;
 	}
 
 	public void setSource(BlockPos source) {
@@ -253,29 +239,42 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 			return;
 		}
 
-		newNetworkID = sourceTe.newNetworkID;
-		updateNetwork = true;
+		setNetwork(sourceTe.network);
 	}
 
 	public void removeSource() {
-		source = null;
-		newNetworkID = null;
-		updateNetwork = true;
 		float prevSpeed = getSpeed();
-		setSpeed(0);
+
+		speed = 0;
+		source = null;
+		setNetwork(null);
+
 		onSpeedChanged(prevSpeed);
 	}
 
-	public KineticNetwork getNetwork() {
+	public void setNetwork(@Nullable Long networkIn) {
+		if (network == networkIn)
+			return;
+		if (network != null)
+			getOrCreateNetwork().remove(this);
+
+		network = networkIn;
+
+		if (networkIn == null)
+			return;
+
+		network = networkIn;
+		KineticNetwork network = getOrCreateNetwork();
+		network.initialized = true;
+		network.add(this);
+	}
+
+	public KineticNetwork getOrCreateNetwork() {
 		return Create.torquePropagator.getNetworkFor(this);
 	}
 
 	public boolean hasNetwork() {
-		return networkID != null;
-	}
-
-	public boolean canOverPower(KineticTileEntity other) {
-		return newNetworkID != null && !newNetworkID.equals(other.newNetworkID);
+		return network != null;
 	}
 
 	public void attachKinetics() {
@@ -284,14 +283,6 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 
 	public void detachKinetics() {
 		RotationPropagator.handleRemoved(world, pos, this);
-	}
-
-	public UUID getNetworkID() {
-		return networkID;
-	}
-
-	public void setNetworkID(UUID networkID) {
-		this.networkID = networkID;
 	}
 
 	public boolean isSpeedRequirementFulfilled() {
@@ -307,6 +298,21 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		if (minimumRequiredSpeedLevel == SpeedLevel.FAST)
 			return Math.abs(getSpeed()) >= AllConfigs.SERVER.kinetics.fastSpeed.get();
 		return true;
+	}
+
+	public static void switchToBlockState(World world, BlockPos pos, BlockState state) {
+		if (world.isRemote)
+			return;
+		TileEntity tileEntityIn = world.getTileEntity(pos);
+		if (!(tileEntityIn instanceof KineticTileEntity))
+			return;
+		KineticTileEntity tileEntity = (KineticTileEntity) tileEntityIn;
+		if (tileEntity.hasNetwork())
+			tileEntity.getOrCreateNetwork().remove(tileEntity);
+		tileEntity.detachKinetics();
+		tileEntity.removeSource();
+		world.setBlockState(pos, state, 3);
+		tileEntity.attachKinetics();
 	}
 
 	@Override

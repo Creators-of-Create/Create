@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.motor;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
@@ -19,9 +18,6 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 
 	public MotorTileEntity() {
 		super(AllTileEntities.MOTOR.type);
-		updateNetwork = true;
-		newNetworkID = UUID.randomUUID();
-		speed = DEFAULT_SPEED;
 	}
 
 	@Override
@@ -40,6 +36,13 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 		generatedSpeed.withCallback(i -> this.updateGeneratedRotation());
 		generatedSpeed.withStepFunction(MotorTileEntity::step);
 		behaviours.add(generatedSpeed);
+	}
+
+	@Override
+	public void initialize() {
+		super.initialize();
+		if (!hasSource())
+			updateGeneratedRotation();
 	}
 
 	@Override
