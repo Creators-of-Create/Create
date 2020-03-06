@@ -1,8 +1,7 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.create:andesite_casing",
-            "color": "gray"
+            "translate": "advancement.create:andesite_casing"
         },
         "description": {
             "translate": "advancement.create:andesite_casing.desc"

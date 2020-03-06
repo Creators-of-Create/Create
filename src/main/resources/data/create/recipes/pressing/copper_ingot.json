@@ -1,6 +1,5 @@
 {
     "type": "create:pressing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"tag": "forge:ingots/copper"
@@ -11,6 +10,5 @@
 			"item": "create:copper_sheet",
 			"count": 1
 		}
-	],
-	"processingTime": 100
+	]
 }

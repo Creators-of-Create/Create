@@ -1,8 +1,7 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.create:shadow_steel",
-            "color": "black"
+            "translate": "advancement.create:shadow_steel"
         },
         "description": {
             "translate": "advancement.create:shadow_steel.desc"

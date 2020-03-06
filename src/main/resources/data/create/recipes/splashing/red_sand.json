@@ -1,6 +1,5 @@
 {
     "type": "create:splashing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "minecraft:red_sand"

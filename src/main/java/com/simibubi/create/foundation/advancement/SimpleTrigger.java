@@ -8,9 +8,9 @@ import net.minecraft.util.ResourceLocation;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class NoArgumentTrigger extends CriterionTriggerBase<NoArgumentTrigger.Instance> {
+public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> {
 
-	public NoArgumentTrigger(String id) {
+	public SimpleTrigger(String id) {
 		super(id);
 	}
 

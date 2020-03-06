@@ -1,6 +1,5 @@
 {
     "type": "create:splashing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "minecraft:magma_block"
@@ -11,6 +10,5 @@
 			"item": "minecraft:obsidian",
 			"count": 1
 		}
-	],
-	"processingTime": 100
+	]
 }

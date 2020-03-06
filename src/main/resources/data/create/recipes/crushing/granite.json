@@ -1,6 +1,5 @@
 {
     "type": "create:crushing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "minecraft:granite"
@@ -8,13 +7,8 @@
     ], 
 	"results": [
 		{
-			"item": "minecraft:diorite",
+			"item": "minecraft:red_sand",
 			"count": 1
-		},
-		{
-			"item": "minecraft:quartz",
-			"count": 1,
-			"chance": 0.125
 		}
 	],
 	"processingTime": 200

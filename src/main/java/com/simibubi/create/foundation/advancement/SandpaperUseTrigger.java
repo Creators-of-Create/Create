@@ -24,22 +24,6 @@ public class SandpaperUseTrigger extends CriterionTriggerBase<SandpaperUseTrigge
 
 	public void trigger(ServerPlayerEntity player, ItemStack target, ItemStack result){
 		trigger(player, Arrays.asList(() -> target, () -> result));
-
-		/*PlayerAdvancements playerAdvancements = player.getAdvancements();
-		Set<Listener<Instance>> playerListeners = this.listeners.get(playerAdvancements);
-		if (playerListeners != null){
-			List<Listener<Instance>> list = new LinkedList<>();
-
-			for (Listener<Instance> listener :
-					playerListeners) {
-				if (listener.getCriterionInstance().test(target, result)) {
-					list.add(listener);
-				}
-			}
-
-			list.forEach(listener -> listener.grantCriterion(playerAdvancements));
-
-		}*/
 	}
 
 	public static class Instance extends CriterionTriggerBase.Instance {

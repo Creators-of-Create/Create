@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "text": "brass_casing"
+            "translate": "advancement.create:brass_casing"
         },
         "description": {
-            "text": "Description"
+            "translate": "advancement.create:brass_casing.desc"
         },
         "icon": {
             "item": "create:brass_casing"

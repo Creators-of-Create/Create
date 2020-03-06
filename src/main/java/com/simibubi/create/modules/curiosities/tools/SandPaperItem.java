@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.curiosities.tools;
 
-import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -135,7 +135,7 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 				if (player instanceof DeployerFakePlayer) {
 					player.dropItem(polished, false, false);
 				} else {
-					AllCriterionTriggers.SANDPAPER_USE.trigger((ServerPlayerEntity) player, toPolish, polished);
+					AllTriggers.SANDPAPER_USE.trigger((ServerPlayerEntity) player, toPolish, polished);
 
 					player.inventory.placeItemBackInInventory(worldIn, polished);
 				}

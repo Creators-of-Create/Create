@@ -1,6 +1,5 @@
 {
     "type": "create:splashing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "create:crushed_zinc"
@@ -17,6 +16,5 @@
 			"count": 5,
 			"chance": 0.5
 		}
-	],
-	"processingTime": 100
+	]
 }

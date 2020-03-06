@@ -1,6 +1,5 @@
 {
     "type": "create:splashing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"tag": "forge:stained_glass_panes"
@@ -11,6 +10,5 @@
 			"item": "minecraft:glass_pane",
 			"count": 1
 		}
-	],
-	"processingTime": 100
+	]
 }

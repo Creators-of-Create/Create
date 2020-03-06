@@ -1,6 +1,5 @@
 {
     "type": "create:cutting",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "minecraft:stripped_birch_log"

@@ -1,6 +1,5 @@
 {
     "type": "create:pressing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "minecraft:lapis_block"

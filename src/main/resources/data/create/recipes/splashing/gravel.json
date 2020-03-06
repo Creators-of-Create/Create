@@ -1,6 +1,5 @@
 {
     "type": "create:splashing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "minecraft:gravel"
@@ -17,6 +16,5 @@
 			"count": 1,
 			"chance": 0.125
 		}
-	],
-	"processingTime": 100
+	]
 }

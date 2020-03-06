@@ -6,7 +6,7 @@ import java.util.Random;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CCuriosities;
-import com.simibubi.create.foundation.advancement.AllCriterionTriggers;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -159,7 +159,7 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 			entity.setItem(newStack);
 
 			List<ServerPlayerEntity> players = world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(entity.getPosition()).grow(8));
-			players.forEach(AllCriterionTriggers.ABSORBED_LIGHT::trigger);
+			players.forEach(AllTriggers.ABSORBED_LIGHT::trigger);
 
 			return false;
 		}

@@ -109,7 +109,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		if (speed != 0) {
 			int dayTime = (int) (world.getDayTime() % 24000);
 			int hours = (dayTime / 1000 + 6) % 24;
-			float hourTarget = (float) (-360 / 12f * (hours % 12));
+			int offset = getBlockState().get(ClockworkBearingBlock.FACING).getAxisDirection().getOffset();
+			float hourTarget = (float) (offset * -360 / 12f * (hours % 12));
 			speed = Math.max(speed, AngleHelper.getShortestAngleDiff(hourAngle, hourTarget));
 		}
 		
@@ -122,7 +123,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		if (speed != 0) {
 			int dayTime = (int) (world.getDayTime() % 24000);
 			int minutes = (dayTime % 1000) * 60 / 1000;
-			float hourTarget = (float) (-360 / 60f * (minutes));
+			int offset = getBlockState().get(ClockworkBearingBlock.FACING).getAxisDirection().getOffset();
+			float hourTarget = (float) (offset * -360 / 60f * (minutes));
 			speed = Math.max(speed, AngleHelper.getShortestAngleDiff(minuteAngle, hourTarget));
 		}
 		

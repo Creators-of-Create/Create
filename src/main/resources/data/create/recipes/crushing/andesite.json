@@ -1,6 +1,5 @@
 {
     "type": "create:crushing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "minecraft:andesite"
@@ -9,13 +8,7 @@
 	"results": [
 		{
 			"item": "minecraft:cobblestone",
-			"count": 1,
-			"chance": 0.5
-		},
-		{
-			"item": "minecraft:diorite",
-			"count": 1,
-			"chance": 0.25
+			"count": 1
 		}
 	],
 	"processingTime": 200

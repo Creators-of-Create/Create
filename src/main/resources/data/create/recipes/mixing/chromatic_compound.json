@@ -1,6 +1,5 @@
 {
     "type": "create:mixing",
-    "group": "minecraft:misc",
     "ingredients": [
 		{
     		"tag": "forge:dusts/glowstone"

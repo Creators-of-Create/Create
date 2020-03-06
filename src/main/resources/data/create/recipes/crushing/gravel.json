@@ -1,6 +1,5 @@
 {
     "type": "create:crushing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "minecraft:gravel"

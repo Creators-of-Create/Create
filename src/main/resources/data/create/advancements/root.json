@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "create:placement_handgun"
+      "item": "create:brass_ingot"
     },
     "title": {
       "translate": "advancement.create:root"
@@ -9,7 +9,7 @@
     "description": {
       "translate": "advancement.create:root.desc"
     },
-    "background": "create:textures/block/gabbro_layers.png",
+    "background": "create:textures/block/scoria_bricks.png",
     "show_toast": false,
     "announce_to_chat": false
   },

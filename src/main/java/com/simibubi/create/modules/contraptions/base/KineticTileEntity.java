@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -74,6 +75,8 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		this.currentStress = currentStress;
 		boolean overStressed = maxStress < currentStress && StressImpact.isEnabled();
 		if (overStressed != this.overStressed) {
+			if (speed != 0 && overStressed)
+				AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESSED, world, pos, 8);
 			float prevSpeed = getSpeed();
 			this.overStressed = overStressed;
 			onSpeedChanged(prevSpeed);
@@ -403,6 +406,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		particleSpeed *= Math.signum(getSpeed());
 
 		if (getWorld() instanceof ServerWorld) {
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.ROTATION, world, pos, 5);
 			RotationIndicatorParticleData particleData =
 				new RotationIndicatorParticleData(color, particleSpeed, radius1, radius2, 10, axisChar);
 			((ServerWorld) getWorld()).spawnParticle(particleData, vec.x, vec.y, vec.z, 20, 0, 0, 0, 1);

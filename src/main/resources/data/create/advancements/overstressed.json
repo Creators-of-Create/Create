@@ -1,0 +1,24 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancement.create:overstressed",
+            "color": "red"
+        },
+        "description": {
+            "translate": "advancement.create:overstressed.desc"
+        },
+        "icon": {
+            "item": "minecraft:barrier"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": false,
+        "hidden": true
+    },
+    "criteria": {
+        "alloy": {
+            "trigger": "create:overstressed"
+        }
+    },
+    "parent": "create:rotation"
+}

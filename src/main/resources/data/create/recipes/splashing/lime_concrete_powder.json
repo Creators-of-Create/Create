@@ -1,6 +1,5 @@
 {
     "type": "create:splashing",
-    "group": "minecraft:misc",
     "ingredients": [
     	{
     		"item": "minecraft:lime_concrete_powder"
@@ -11,6 +10,5 @@
 			"item": "minecraft:lime_concrete",
 			"count": 1
 		}
-	],
-	"processingTime": 100
+	]
 }
