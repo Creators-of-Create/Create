@@ -1,13 +1,16 @@
 package com.simibubi.create.modules.contraptions.base;
 
-import java.util.Optional;
 import java.util.UUID;
 
+import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
 
 public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
+
+	public boolean reActivateSource;
 
 	public GeneratingKineticTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -18,68 +21,108 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void reActivateSource() {
-		updateGeneratedRotation();
+	public void removeSource() {
+		if (hasSource() && isSource())
+			reActivateSource = true;
+		super.removeSource();
+	}
+
+	@Override
+	public void setSource(BlockPos source) {
+		super.setSource(source);
+		KineticTileEntity sourceTe = (KineticTileEntity) world.getTileEntity(source);
+		if (reActivateSource && sourceTe != null && Math.abs(sourceTe.getSpeed()) >= Math.abs(getGeneratedSpeed()))
+			reActivateSource = false;
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		if (reActivateSource) {
+			updateGeneratedRotation();
+			reActivateSource = false;
+		}
 	}
 
 	public void updateGeneratedRotation() {
 		float speed = getGeneratedSpeed();
 		float prevSpeed = this.speed;
 
-		if (this.speed != speed) {
+		if (world.isRemote)
+			return;
 
-			if (!world.isRemote) {
+		if (prevSpeed != speed) {
+			if (!hasSource()) {
 				SpeedLevel levelBefore = SpeedLevel.of(this.speed);
 				SpeedLevel levelafter = SpeedLevel.of(speed);
 				if (levelBefore != levelafter)
-					queueRotationIndicators();
+					effects.queueRotationIndicators();
 			}
 
-			if (speed == 0) {
-				if (hasSource())
-					notifyStressCapacityChange(0);
-				else {
-					detachKinetics();
-					setSpeed(speed);
-					newNetworkID = null;
-					updateNetwork = true;
-				}
-			} else if (this.speed == 0) {
-				setSpeed(speed);
-				newNetworkID = UUID.randomUUID();
-				updateNetwork = true;
-				attachKinetics();
-			} else {
-				if (hasSource()) {
-					if (Math.abs(this.speed) >= Math.abs(speed)) {
-						if (Math.signum(this.speed) == Math.signum(speed))
-							notifyStressCapacityChange(getAddedStressCapacity());
-						else
-							world.destroyBlock(pos, true);
-					} else {
-						detachKinetics();
-						setSpeed(speed);
-						source = Optional.empty();
-						newNetworkID = UUID.randomUUID();
-						updateNetwork = true;
-						attachKinetics();
-					}
-				} else {
-					detachKinetics();
-					setSpeed(speed);
-					attachKinetics();
-				}
-			}
+			applyNewSpeed(prevSpeed, speed);
 		}
 
 		if (hasNetwork() && speed != 0) {
-			getNetwork().updateCapacityFor(this, getAddedStressCapacity());
-			getNetwork().updateStressCapacity();
-			getNetwork().updateStress();
+			KineticNetwork network = getNetwork();
+			network.updateCapacityFor(this, getAddedStressCapacity());
+			network.updateStress();
 		}
 
 		onSpeedChanged(prevSpeed);
 		sendData();
+	}
+
+	public void applyNewSpeed(float prevSpeed, float speed) {
+
+		// Speed changed to 0
+		if (speed == 0) {
+			if (hasSource() && hasNetwork()) {
+				getNetwork().updateCapacityFor(this, 0);
+				return;
+			}
+			detachKinetics();
+			setSpeed(speed);
+			newNetworkID = null;
+			updateNetwork = true;
+			return;
+		}
+
+		// Now turning - create a new Network
+		if (prevSpeed == 0) {
+			setSpeed(speed);
+			newNetworkID = UUID.randomUUID();
+			updateNetwork = true;
+			attachKinetics();
+			return;
+		}
+
+		// Change speed when overpowered by other generator
+		if (hasSource() && hasNetwork()) {
+
+			// Staying below Overpowered speed
+			if (Math.abs(prevSpeed) >= Math.abs(speed)) {
+				if (Math.signum(prevSpeed) != Math.signum(speed)) {
+					world.destroyBlock(pos, true);
+					return;
+				}
+				getNetwork().updateCapacityFor(this, getAddedStressCapacity());
+				return;
+			}
+
+			// Faster than attached network -> become the new source
+			detachKinetics();
+			setSpeed(speed);
+			source = null;
+			newNetworkID = UUID.randomUUID();
+			updateNetwork = true;
+			attachKinetics();
+			return;
+		}
+
+		// Reapply source
+		detachKinetics();
+		setSpeed(speed);
+		attachKinetics();
 	}
 
 }

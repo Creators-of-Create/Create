@@ -10,6 +10,7 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt maxRotationSpeed = i(256, 64, "maxRotationSpeed", Comments.rpm, Comments.maxRotationSpeed);
 	public ConfigEnum<DeployerAggroSetting> ignoreDeployerAttacks =
 		e(DeployerAggroSetting.CREEPERS, "ignoreDeployerAttacks", Comments.ignoreDeployerAttacks);
+	public ConfigInt kineticValidationFrequency = i(60, 5, "kineticValidationFrequency", Comments.kineticValidationFrequency);
 
 	public ConfigGroup fan = group(0, "encasedFan", "Encased Fan");
 	public ConfigInt fanPushDistance = i(20, 5, "fanPushDistance", Comments.fanPushDistance);
@@ -71,6 +72,7 @@ public class CKinetics extends ConfigBase {
 		static String ignoreDeployerAttacks = "Select what mobs should ignore Deployers when attacked by them.";
 		static String waterWheelSpeed = "Rotation speed gained by a water wheel for each side with running water. (halved if not against blades)";
 		static String disableStress = "Disable the Stress mechanic altogether.";
+		static String kineticValidationFrequency = "Game ticks between Kinetic Blocks checking whether their source is still valid.";
 	}
 
 	public static enum DeployerAggroSetting {

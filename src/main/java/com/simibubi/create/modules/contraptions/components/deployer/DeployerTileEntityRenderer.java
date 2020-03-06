@@ -63,7 +63,7 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
 		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
-		boolean displayMode = facing == Direction.UP && te.speed == 0 && !punching;
+		boolean displayMode = facing == Direction.UP && te.getSpeed() == 0 && !punching;
 
 		GlStateManager.rotatef(yRot, 0, 1, 0);
 		if (!displayMode) {

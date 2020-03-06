@@ -68,7 +68,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		updateAllSides(state, worldIn, pos);
 	}
-	
+
 	public void updateAllSides(BlockState state, World worldIn, BlockPos pos) {
 		for (Direction d : Direction.values())
 			updateFlowAt(state, worldIn, pos, d);
@@ -88,7 +88,8 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 
 		flowVec = flowVec.scale(f.getAxisDirection().getOffset());
 		boolean clockwise = wf.getAxisDirection() == AxisDirection.POSITIVE;
-		int clockwiseMultiplier = 2; 
+		int clockwiseMultiplier = 2;
+		flowVec = new Vec3d(Math.signum(flowVec.x), Math.signum(flowVec.y), Math.signum(flowVec.z));
 
 		if (wf.getAxis() == Axis.Z) {
 			if (f.getAxis() == Axis.Y)
@@ -149,10 +150,10 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 	public float getParticleInitialRadius() {
 		return 1f;
 	}
-	
+
 	@Override
 	public boolean hideStressImpact() {
 		return true;
 	}
-	
+
 }

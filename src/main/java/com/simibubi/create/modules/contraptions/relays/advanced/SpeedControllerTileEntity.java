@@ -65,12 +65,13 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 
 		if (targetSpeed == 0)
 			return 0;
-		if (targetingController && cogWheel.speed == 0)
+		float wheelSpeed = cogWheel.getTheoreticalSpeed();
+		if (targetingController && wheelSpeed == 0)
 			return 1;
 
 		if (!speedController.hasSource()) {
 			if (targetingController)
-				return targetSpeed / cogWheel.speed;
+				return targetSpeed / wheelSpeed;
 			return 1;
 		}
 
@@ -78,8 +79,8 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		
 		if (wheelPowersController) {
 			if (targetingController)
-				return targetSpeed / cogWheel.speed;
-			return cogWheel.speed / targetSpeed;
+				return targetSpeed / wheelSpeed;
+			return wheelSpeed / targetSpeed;
 		}
 		
 		if (targetingController)

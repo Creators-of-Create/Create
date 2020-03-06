@@ -14,6 +14,7 @@ import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.contraptions.relays.encased.DirectionalShaftHalvesTileEntity;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.SplitShaftTileEntity;
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxTileEntity;
@@ -52,9 +53,9 @@ public class RotationPropagator {
 				if (axis.getCoordinate(diff.getX(), diff.getY(), diff.getZ()) != 0)
 					alignedAxes = false;
 
-		boolean connectedByAxis = alignedAxes
-				&& definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
-				&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
+		boolean connectedByAxis =
+			alignedAxes && definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
+					&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
 
 		boolean connectedByGears = definitionFrom.hasCogsTowards(world, from.getPos(), stateFrom, direction)
 				&& definitionTo.hasCogsTowards(world, to.getPos(), stateTo, direction.getOpposite());
@@ -130,9 +131,9 @@ public class RotationPropagator {
 	}
 
 	private static float getAxisModifier(KineticTileEntity te, Direction direction) {
-		if (!te.hasSource())
+		if (!te.hasSource() || !(te instanceof DirectionalShaftHalvesTileEntity))
 			return 1;
-		Direction source = te.getSourceFacing();
+		Direction source = ((DirectionalShaftHalvesTileEntity) te).getSourceFacing();
 
 		if (te instanceof GearboxTileEntity)
 			return direction.getAxis() == source.getAxis() ? direction == source ? 1 : -1
@@ -180,7 +181,7 @@ public class RotationPropagator {
 			return;
 		if (!worldIn.isBlockPresent(pos))
 			return;
-		if (addedTE.speed != 0) {
+		if (addedTE.getTheoreticalSpeed() != 0) {
 			propagateNewSource(addedTE);
 			return;
 		}
@@ -188,16 +189,17 @@ public class RotationPropagator {
 		for (KineticTileEntity neighbourTE : getConnectedNeighbours(addedTE)) {
 			final float speedModifier = getRotationSpeedModifier(neighbourTE, addedTE);
 
-			if (neighbourTE.speed == 0)
+			float neighbourSpeed = neighbourTE.getTheoreticalSpeed();
+			if (neighbourSpeed == 0)
 				continue;
 			if (neighbourTE.hasSource() && neighbourTE.getSource().equals(addedTE.getPos())) {
-				addedTE.setSpeed(neighbourTE.speed * speedModifier);
+				addedTE.setSpeed(neighbourSpeed * speedModifier);
 				addedTE.onSpeedChanged(0);
 				addedTE.sendData();
 				continue;
 			}
 
-			addedTE.setSpeed(neighbourTE.speed * speedModifier);
+			addedTE.setSpeed(neighbourSpeed * speedModifier);
 			addedTE.setSource(neighbourTE.getPos());
 			addedTE.onSpeedChanged(0);
 			addedTE.sendData();
@@ -209,23 +211,25 @@ public class RotationPropagator {
 	/**
 	 * Search for sourceless networks attached to the given entity and update them.
 	 * 
-	 * @param updateTE
+	 * @param currentTE
 	 */
-	private static void propagateNewSource(KineticTileEntity updateTE) {
-		BlockPos pos = updateTE.getPos();
-		World world = updateTE.getWorld();
+	private static void propagateNewSource(KineticTileEntity currentTE) {
+		BlockPos pos = currentTE.getPos();
+		World world = currentTE.getWorld();
 
-		for (KineticTileEntity neighbourTE : getConnectedNeighbours(updateTE)) {
-			float modFromTo = getRotationSpeedModifier(updateTE, neighbourTE);
-			float modToFrom = getRotationSpeedModifier(neighbourTE, updateTE);
-			final float newSpeed = updateTE.speed * modFromTo;
-			float oppositeSpeed = neighbourTE.speed * modToFrom;
+		for (KineticTileEntity neighbourTE : getConnectedNeighbours(currentTE)) {
+			float modFromTo = getRotationSpeedModifier(currentTE, neighbourTE);
+			float modToFrom = getRotationSpeedModifier(neighbourTE, currentTE);
+			float speedOfCurrent = currentTE.getTheoreticalSpeed();
+			float speedOfNeighbour = neighbourTE.getTheoreticalSpeed();
+			float newSpeed = speedOfCurrent * modFromTo;
+			float oppositeSpeed = speedOfNeighbour * modToFrom;
 
-			boolean incompatible = Math.signum(newSpeed) != Math.signum(neighbourTE.speed)
-					&& (newSpeed != 0 && neighbourTE.speed != 0);
+			boolean incompatible =
+				Math.signum(newSpeed) != Math.signum(speedOfNeighbour) && (newSpeed != 0 && speedOfNeighbour != 0);
 
 			boolean tooFast = Math.abs(newSpeed) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
-			boolean speedChangedTooOften = updateTE.speedChangeCounter > MAX_FLICKER_SCORE;
+			boolean speedChangedTooOften = currentTE.getFlickerScore() > MAX_FLICKER_SCORE;
 			if (tooFast || speedChangedTooOften) {
 				world.destroyBlock(pos, true);
 				return;
@@ -238,43 +242,45 @@ public class RotationPropagator {
 
 			} else {
 				// Same direction: overpower the slower speed
-				if (Math.abs(oppositeSpeed) > Math.abs(updateTE.speed)) {
+				if (Math.abs(oppositeSpeed) > Math.abs(speedOfCurrent)) {
 					// Neighbour faster, overpower the incoming tree
-					updateTE.setSource(neighbourTE.getPos());
-					float prevSpeed = updateTE.getSpeed();
-					updateTE.setSpeed(neighbourTE.speed * getRotationSpeedModifier(neighbourTE, updateTE));
-					updateTE.onSpeedChanged(prevSpeed);
-					updateTE.sendData();
+					currentTE.setSource(neighbourTE.getPos());
+					float prevSpeed = currentTE.getSpeed();
+					currentTE.setSpeed(speedOfNeighbour * getRotationSpeedModifier(neighbourTE, currentTE));
+					currentTE.onSpeedChanged(prevSpeed);
+					currentTE.sendData();
 
-					propagateNewSource(updateTE);
+					propagateNewSource(currentTE);
 					return;
 				}
-				if (Math.abs(newSpeed) >= Math.abs(neighbourTE.speed)) {
-					if (Math.abs(newSpeed) > Math.abs(neighbourTE.speed) || updateTE.newNetworkID != null
-							&& !updateTE.newNetworkID.equals(neighbourTE.newNetworkID)) {
-						// Current faster, overpower the neighbours' tree
 
-						if (updateTE.hasSource() && updateTE.getSource().equals(neighbourTE.getPos())) {
-							updateTE.removeSource();
-						}
-
-						neighbourTE.setSource(updateTE.getPos());
-						float prevSpeed = neighbourTE.getSpeed();
-						neighbourTE.setSpeed(updateTE.speed * getRotationSpeedModifier(updateTE, neighbourTE));
-						neighbourTE.onSpeedChanged(prevSpeed);
-						neighbourTE.sendData();
-						propagateNewSource(neighbourTE);
+				// Current faster, overpower the neighbours' tree
+				if (Math.abs(newSpeed) >= Math.abs(speedOfNeighbour)) {
+					if (!currentTE.canOverPower(neighbourTE)) {
+						if (Math.abs(newSpeed) > Math.abs(speedOfNeighbour))
+							world.destroyBlock(pos, true);
+						continue;
 					}
+					
+					if (currentTE.hasSource() && currentTE.getSource().equals(neighbourTE.getPos()))
+						currentTE.removeSource();
+
+					neighbourTE.setSource(currentTE.getPos());
+					float prevSpeed = neighbourTE.getSpeed();
+					neighbourTE.setSpeed(speedOfCurrent * getRotationSpeedModifier(currentTE, neighbourTE));
+					neighbourTE.onSpeedChanged(prevSpeed);
+					neighbourTE.sendData();
+					propagateNewSource(neighbourTE);
 					continue;
 				}
 			}
 
-			if (neighbourTE.speed == newSpeed)
+			if (neighbourTE.getTheoreticalSpeed() == newSpeed)
 				continue;
 
 			float prevSpeed = neighbourTE.getSpeed();
 			neighbourTE.setSpeed(newSpeed);
-			neighbourTE.setSource(updateTE.getPos());
+			neighbourTE.setSource(currentTE.getPos());
 			neighbourTE.onSpeedChanged(prevSpeed);
 			neighbourTE.sendData();
 			propagateNewSource(neighbourTE);
@@ -294,7 +300,7 @@ public class RotationPropagator {
 			return;
 		if (removedTE == null)
 			return;
-		if (removedTE.speed == 0)
+		if (removedTE.getTheoreticalSpeed() == 0)
 			return;
 
 		for (BlockPos neighbourPos : getPotentialNeighbourLocations(removedTE)) {

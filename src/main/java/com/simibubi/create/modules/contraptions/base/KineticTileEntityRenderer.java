@@ -24,8 +24,8 @@ public class KineticTileEntityRenderer extends SafeTileEntityRendererFast<Kineti
 	public static boolean rainbowMode = false;
 
 	@Override
-	public void renderFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
-			int destroyStage, BufferBuilder buffer) {
+	public void renderFast(KineticTileEntity te, double x, double y, double z, float partialTicks, int destroyStage,
+			BufferBuilder buffer) {
 		renderRotatingBuffer(te, getWorld(), getRotatedModel(te), x, y, z, buffer);
 	}
 
@@ -34,7 +34,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRendererFast<Kineti
 		SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, renderedState);
 		renderRotatingBuffer(te, world, superByteBuffer, x, y, z, buffer);
 	}
-	
+
 	public static void renderRotatingBuffer(KineticTileEntity te, World world, SuperByteBuffer superBuffer, double x,
 			double y, double z, BufferBuilder buffer) {
 		buffer.putBulkData(standardKineticRotationTransform(superBuffer, te, world).translate(x, y, z).build());
@@ -68,11 +68,12 @@ public class KineticTileEntityRenderer extends SafeTileEntityRendererFast<Kineti
 			else
 				buffer.color(white);
 		} else {
-			if (te.overStressedEffect != 0)
-				if (te.overStressedEffect > 0)
-					buffer.color(ColorHelper.mixColors(white, 0xFF0000, te.overStressedEffect));
+			float overStressedEffect = te.effects.overStressedEffect;
+			if (overStressedEffect != 0)
+				if (overStressedEffect > 0)
+					buffer.color(ColorHelper.mixColors(white, 0xFF0000, overStressedEffect));
 				else
-					buffer.color(ColorHelper.mixColors(white, 0x00FFBB, -te.overStressedEffect));
+					buffer.color(ColorHelper.mixColors(white, 0x00FFBB, -overStressedEffect));
 			else
 				buffer.color(white);
 		}
@@ -97,5 +98,5 @@ public class KineticTileEntityRenderer extends SafeTileEntityRendererFast<Kineti
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
 		return CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, getRenderedBlockState(te));
 	}
-	
+
 }

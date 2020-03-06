@@ -27,22 +27,15 @@ public class TorquePropagator {
 		UUID id = te.getNetworkID();
 		KineticNetwork network;
 		Map<UUID, KineticNetwork> map = networks.get(te.getWorld());
-		if (id == null) {
+		if (id == null)
+			return null;
+
+		if (!map.containsKey(id)) {
 			network = new KineticNetwork();
-
-//			Debug.debugChatAndShowStack(te.getType().getRegistryName().getPath() + " created new Network", 5);
-
-			te.newNetworkID = network.id;
-			te.updateNetwork = true;
+			network.id = te.getNetworkID();
 			map.put(id, network);
-		} else {
-			if (!map.containsKey(id)) {
-				network = new KineticNetwork();
-				network.id = te.getNetworkID();
-				map.put(id, network);
-			}
-			network = map.get(id);
 		}
+		network = map.get(id);
 		return network;
 	}
 

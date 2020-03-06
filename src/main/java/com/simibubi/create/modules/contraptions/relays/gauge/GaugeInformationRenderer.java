@@ -133,13 +133,14 @@ public class GaugeInformationRenderer {
 		String _generatorStatsTitle = Lang.translate("gui.goggles.generator_stats");
 		String _capacityProvided = Lang.translate("tooltip.capacityProvided");
 
-		if (te.speed != te.getGeneratedSpeed() && te.speed != 0)
-			addedStressCapacity *= (te.getGeneratedSpeed() / te.speed);
+		float speed = te.getTheoreticalSpeed();
+		if (speed != te.getGeneratedSpeed() && speed != 0)
+			addedStressCapacity *= (te.getGeneratedSpeed() / speed);
 
 		tooltip.add(spacing + _generatorStatsTitle);
 		tooltip.add(spacing + GRAY + _capacityProvided);
 
-		float actualSpeed = Math.abs(te.speed);
+		float actualSpeed = Math.abs(speed);
 		float relativeCap = 0;
 		if (actualSpeed != 0)
 			relativeCap = addedStressCapacity * actualSpeed;
@@ -176,8 +177,8 @@ public class GaugeInformationRenderer {
 			}
 			StressGaugeTileEntity stressGauge = (StressGaugeTileEntity) te;
 			List<String> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
-			double stress = stressGauge.currentStress;
-			double cap = stressGauge.maxStress;
+			double stress = stressGauge.getNetworkStress();
+			double cap = stressGauge.getNetworkCapacity();
 			double relStress = stress / (cap == 0 ? 1 : cap);
 			StressImpact impactId = relStress > 1 ? null
 					: (relStress > .75f) ? StressImpact.HIGH
@@ -199,17 +200,17 @@ public class GaugeInformationRenderer {
 
 			level += " (" + (int) (relStress * 100) + "%)";
 
-			float actualSpeed = stressGauge.speed;
-			if (actualSpeed == 0)
+			float theoreticalSpeed = stressGauge.getTheoreticalSpeed();
+			if (theoreticalSpeed == 0)
 				level = DARK_GRAY + ItemDescription.makeProgressBar(3, -1) + _noRotation;
 
 			tooltip.add(spacing + GRAY + _stressGaugeTitle);
 			tooltip.add(spacing + level);
 
-			if (actualSpeed != 0) {
+			if (theoreticalSpeed != 0) {
 				tooltip.add(spacing + GRAY + _capacity);
 
-				String capacity = color + "" + format((cap - stress) / Math.abs(actualSpeed)) + _stressUnit + " "
+				String capacity = color + "" + format((cap - stress) / Math.abs(theoreticalSpeed)) + _stressUnit + " "
 						+ DARK_GRAY + _atCurrentSpeed;
 				String capacityAtBase = GRAY + "" + format(cap - stress) + _stressUnit + " " + DARK_GRAY + _baseValue;
 				tooltip.add(spacing + " " + capacity);
@@ -221,9 +222,10 @@ public class GaugeInformationRenderer {
 			if (!(te instanceof SpeedGaugeTileEntity))
 				return;
 			SpeedGaugeTileEntity speedGauge = (SpeedGaugeTileEntity) te;
-			boolean overstressed = speedGauge.currentStress > speedGauge.maxStress && speedGauge.speed != 0;
+			float speed = speedGauge.getTheoreticalSpeed();
+			boolean overstressed = speedGauge.getSpeed() == 0 && speed != 0;
 
-			SpeedLevel speedLevel = SpeedLevel.of(speedGauge.speed);
+			SpeedLevel speedLevel = SpeedLevel.of(speed);
 			String color = speedLevel.getTextColor() + "";
 			if (overstressed)
 				color = DARK_GRAY + "" + TextFormatting.STRIKETHROUGH;
@@ -232,7 +234,7 @@ public class GaugeInformationRenderer {
 			int index = speedLevel.ordinal();
 			String level = color + ItemDescription.makeProgressBar(3, index)
 					+ (speedLevel != SpeedLevel.NONE ? speedLevels.get(index) : "");
-			level += " (" + format(Math.abs(speedGauge.speed)) + "" + _rpmUnit + ") ";
+			level += " (" + format(Math.abs(speed)) + "" + _rpmUnit + ") ";
 
 			tooltip.add(spacing + GRAY + _speedGaugeTitle);
 			tooltip.add(spacing + level);

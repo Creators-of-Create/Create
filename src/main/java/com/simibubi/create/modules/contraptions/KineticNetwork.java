@@ -25,9 +25,9 @@ public class KineticNetwork {
 		members = new HashMap<>();
 	}
 
-	public void initFromTE(KineticTileEntity te) {
-		unloadedStressCapacity = te.maxStress;
-		unloadedStress = te.currentStress;
+	public void initFromTE(float maxStress, float currentStress) {
+		unloadedStressCapacity = maxStress;
+		unloadedStress = currentStress;
 		initialized = true;
 		updateStress();
 		updateStressCapacity();
@@ -42,16 +42,13 @@ public class KineticNetwork {
 			sources.put(te, capacity);
 		}
 		float stressApplied = te.getStressApplied();
-		unloadedStress -= stressApplied * getStressMultiplierForSpeed(te.speed);
+		unloadedStress -= stressApplied * getStressMultiplierForSpeed(te.getTheoreticalSpeed());
 		members.put(te, stressApplied);
 	}
 
 	public void add(KineticTileEntity te) {
 		if (members.containsKey(te))
 			return;
-
-//		Debug.debugChatAndShowStack(te.getType().getRegistryName().getPath() + " added to Network", 5);
-
 		if (te.isSource()) {
 			sources.put(te, te.getAddedStressCapacity());
 			updateStressCapacity();
@@ -75,9 +72,6 @@ public class KineticNetwork {
 	public void remove(KineticTileEntity te) {
 		if (!members.containsKey(te))
 			return;
-
-//		Debug.debugChat(te.getType().getRegistryName().getPath() + " removed from Network");
-
 		if (te.isSource()) {
 			sources.remove(te);
 			updateStressCapacity();
@@ -86,6 +80,9 @@ public class KineticNetwork {
 		members.remove(te);
 		updateStress();
 		sync();
+
+		if (members.isEmpty())
+			TorquePropagator.networks.get(te.getWorld()).remove(this.id);
 	}
 
 	public void sync() {
@@ -101,21 +98,17 @@ public class KineticNetwork {
 		if (maxStress != newMaxStress) {
 			maxStress = newMaxStress;
 			sync();
-//			Debug.debugChatAndShowStack("Current Stress level: " + currentStress + "/" + maxStress, 5);
 		}
-
 	}
 
 	public void updateStress() {
 		float presentStress = 0;
-
 		for (KineticTileEntity te : members.keySet())
-			presentStress += members.get(te) * getStressMultiplierForSpeed(te.speed);
+			presentStress += members.get(te) * getStressMultiplierForSpeed(te.getTheoreticalSpeed());
 		float newStress = presentStress + unloadedStress;
 		if (currentStress != newStress) {
 			currentStress = newStress;
 			sync();
-//			Debug.debugChatAndShowStack("Current Stress level: " + currentStress + "/" + maxStress, 5);
 		}
 	}
 

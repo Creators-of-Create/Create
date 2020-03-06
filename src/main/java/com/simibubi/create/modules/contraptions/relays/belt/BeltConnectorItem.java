@@ -194,8 +194,8 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 		if (axis != world.getBlockState(second).get(BlockStateProperties.AXIS))
 			return false;
 
-		float speed1 = ((KineticTileEntity) world.getTileEntity(first)).speed;
-		float speed2 = ((KineticTileEntity) world.getTileEntity(second)).speed;
+		float speed1 = ((KineticTileEntity) world.getTileEntity(first)).getTheoreticalSpeed();
+		float speed2 = ((KineticTileEntity) world.getTileEntity(second)).getTheoreticalSpeed();
 		if (Math.signum(speed1) != Math.signum(speed2) && speed1 != 0 && speed2 != 0)
 			return false;
 

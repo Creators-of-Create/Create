@@ -112,7 +112,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 			return;
 
 		KineticTileEntity kte = (KineticTileEntity) tileEntity;
-		kte.queueRotationIndicators();
+		kte.effects.queueRotationIndicators();
 	}
 
 	public float getParticleTargetRadius() {

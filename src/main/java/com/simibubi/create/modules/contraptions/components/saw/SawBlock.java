@@ -86,7 +86,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IWithTileEn
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.getSpeed() == 0)
 				return;
-			entityIn.attackEntityFrom(damageSourceSaw, MathHelper.clamp(Math.abs(te.speed / 512f) + 1, 0, 20));
+			entityIn.attackEntityFrom(damageSourceSaw, MathHelper.clamp(Math.abs(te.getSpeed() / 512f) + 1, 0, 20));
 		});
 	}
 

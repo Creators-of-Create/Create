@@ -43,5 +43,13 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		else
 			sync(maxStress, currentStress);
 	}
+	
+	public float getNetworkStress() {
+		return currentStress;
+	}
+	
+	public float getNetworkCapacity() {
+		return maxStress;
+	}
 
 }
