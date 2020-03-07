@@ -20,7 +20,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 
 	public float offset;
 	public boolean running;
-	protected boolean assembleNextTick;
+	public boolean assembleNextTick;
 	public ContraptionEntity movedContraption;
 	protected boolean forceMove;
 	protected ScrollOptionBehaviour<MovementMode> movementMode;

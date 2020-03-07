@@ -48,6 +48,7 @@ public class MountedContraption extends Contraption {
 				null), null));
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		contraption.initActors(world);
+		contraption.expandBoundsAroundAxis(Axis.Y);
 
 		return contraption;
 	}

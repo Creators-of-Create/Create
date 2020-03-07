@@ -67,8 +67,11 @@ public class ClockworkContraption extends Contraption {
 		}
 
 		hourArm.initActors(world);
-		if (minuteArm != null)
+		hourArm.expandBoundsAroundAxis(direction.getAxis());
+		if (minuteArm != null) {
 			minuteArm.initActors(world);
+			minuteArm.expandBoundsAroundAxis(direction.getAxis());
+		}
 		return Pair.of(hourArm, minuteArm);
 	}
 

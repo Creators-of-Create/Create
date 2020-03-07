@@ -19,6 +19,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
@@ -34,6 +35,8 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -50,7 +53,7 @@ public abstract class Contraption {
 	public List<MutablePair<BlockInfo, MovementContext>> actors;
 	public CombinedInvWrapper inventory;
 
-	public AxisAlignedBB constructCollisionBox;
+	public AxisAlignedBB bounds;
 	public boolean stalled;
 
 	protected Set<BlockPos> cachedColliders;
@@ -95,8 +98,8 @@ public abstract class Contraption {
 		Set<BlockPos> visited = new HashSet<>();
 		anchor = pos;
 
-		if (constructCollisionBox == null)
-			constructCollisionBox = new AxisAlignedBB(BlockPos.ZERO);
+		if (bounds == null)
+			bounds = new AxisAlignedBB(BlockPos.ZERO);
 
 		frontier.add(pos);
 		if (!addToInitialFrontier(world, pos, forcedDirection, frontier))
@@ -203,7 +206,7 @@ public abstract class Contraption {
 
 		if (blocks.put(localPos, blockInfo) != null)
 			return;
-		constructCollisionBox = constructCollisionBox.union(new AxisAlignedBB(localPos));
+		bounds = bounds.union(new AxisAlignedBB(localPos));
 
 		TileEntity te = pair.getValue();
 		if (te != null && MountedStorage.canUseAsStorage(te))
@@ -257,7 +260,7 @@ public abstract class Contraption {
 		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 
 		if (nbt.contains("BoundsFront"))
-			constructCollisionBox = NBTHelper.readAABB(nbt.getList("BoundsFront", 5));
+			bounds = NBTHelper.readAABB(nbt.getList("BoundsFront", 5));
 
 		stalled = nbt.getBoolean("Stalled");
 		anchor = NBTUtil.readBlockPos(nbt.getCompound("Anchor"));
@@ -302,8 +305,8 @@ public abstract class Contraption {
 		nbt.put("Anchor", NBTUtil.writeBlockPos(anchor));
 		nbt.putBoolean("Stalled", stalled);
 
-		if (constructCollisionBox != null) {
-			ListNBT bb = NBTHelper.writeAABB(constructCollisionBox);
+		if (bounds != null) {
+			ListNBT bb = NBTHelper.writeAABB(bounds);
 			nbt.put("BoundsFront", bb);
 		}
 
@@ -359,7 +362,7 @@ public abstract class Contraption {
 				block.nbt.putInt("y", targetPos.getY());
 				block.nbt.putInt("z", targetPos.getZ());
 				tileEntity.read(block.nbt);
-				
+
 				if (tileEntity instanceof KineticTileEntity) {
 					KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
 					kineticTileEntity.source = null;
@@ -367,7 +370,7 @@ public abstract class Contraption {
 					kineticTileEntity.network = null;
 					kineticTileEntity.attachKinetics();
 				}
-				
+
 				if (storage.containsKey(block.pos)) {
 					MountedStorage mountedStorage = storage.get(block.pos);
 					if (mountedStorage.isWorking())
@@ -387,8 +390,8 @@ public abstract class Contraption {
 		}
 	}
 
-	public AxisAlignedBB getCollisionBox() {
-		return constructCollisionBox;
+	public AxisAlignedBB getBoundingBox() {
+		return bounds;
 	}
 
 	public List<MutablePair<BlockInfo, MovementContext>> getActors() {
@@ -419,6 +422,27 @@ public abstract class Contraption {
 		if (!(block instanceof IPortableBlock))
 			return null;
 		return ((IPortableBlock) block).getMovementBehaviour();
+	}
+
+	public void expandBoundsAroundAxis(Axis axis) {
+		AxisAlignedBB bb = bounds;
+		double maxXDiff = Math.max(bb.maxX - 1, -bb.minX);
+		double maxYDiff = Math.max(bb.maxY - 1, -bb.minY);
+		double maxZDiff = Math.max(bb.maxZ - 1, -bb.minZ);
+		double maxDiff = 0;
+
+		if (axis == Axis.X)
+			maxDiff = Math.max(maxZDiff, maxYDiff);
+		if (axis == Axis.Y)
+			maxDiff = Math.max(maxZDiff, maxXDiff);
+		if (axis == Axis.Z)
+			maxDiff = Math.max(maxXDiff, maxYDiff);
+
+		Vec3d vec = new Vec3d(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis).getDirectionVec());
+		Vec3d planeByNormal = VecHelper.planeByNormal(vec);
+		Vec3d min = vec.mul(bb.minX, bb.minY, bb.minZ).add(planeByNormal.scale(-maxDiff));
+		Vec3d max = vec.mul(bb.maxX, bb.maxY, bb.maxZ).add(planeByNormal.scale(maxDiff + 1));
+		bounds = new AxisAlignedBB(min, max);
 	}
 
 	protected abstract AllContraptionTypes getType();

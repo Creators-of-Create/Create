@@ -27,6 +27,8 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 
 		if (world.isRemote)
 			return;
+		if (context.firstMovement)
+			return;
 
 		deactivateLastVisitedContact(context);
 		BlockState visitedState = world.getBlockState(pos);

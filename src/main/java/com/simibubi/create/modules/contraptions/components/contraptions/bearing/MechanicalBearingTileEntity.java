@@ -178,6 +178,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		running = false;
 		angle = 0;
 		updateGeneratedRotation();
+		assembleNextTick = false;
 		sendData();
 	}
 

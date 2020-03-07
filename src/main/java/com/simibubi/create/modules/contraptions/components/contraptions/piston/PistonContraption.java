@@ -110,7 +110,7 @@ public class PistonContraption extends Contraption {
 		if (extensionLength == 0)
 			return false;
 
-		constructCollisionBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+		bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
 		for (BlockInfo pole : poles) {
 			BlockPos relPos = pole.pos.offset(direction, -extensionsInFront);
@@ -213,7 +213,7 @@ public class PistonContraption extends Contraption {
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBox() {
-		return super.getCollisionBox().union(pistonExtensionCollisionBox);
+	public AxisAlignedBB getBoundingBox() {
+		return super.getBoundingBox().union(pistonExtensionCollisionBox);
 	}
 }

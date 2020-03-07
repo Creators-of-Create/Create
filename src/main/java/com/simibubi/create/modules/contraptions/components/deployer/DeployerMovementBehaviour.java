@@ -52,7 +52,6 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		Vec3d facingVec = new Vec3d(context.state.get(DeployerBlock.FACING).getDirectionVec());
 		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
 		Vec3d vec = context.position.subtract(facingVec.scale(2));
-
 		player.rotationYaw = ContraptionEntity.yawFromVector(facingVec);
 		player.rotationPitch = ContraptionEntity.pitchFromVector(facingVec) - 90;
 

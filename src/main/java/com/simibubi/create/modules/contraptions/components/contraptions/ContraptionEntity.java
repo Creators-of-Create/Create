@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -43,8 +44,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected Vec3d motionBeforeStall;
 	protected boolean stationary;
 
-	private static final DataParameter<Boolean> STALLED = EntityDataManager.createKey(ContraptionEntity.class,
-			DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> STALLED =
+		EntityDataManager.createKey(ContraptionEntity.class, DataSerializers.BOOLEAN);
 
 	public float prevYaw;
 	public float prevPitch;
@@ -101,39 +102,41 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 		Entity e = getRidingEntity();
 		if (e != null) {
-			Vec3d movementVector = e.getMotion();
+			Entity riding = e;
+			while (riding.getRidingEntity() != null)
+				riding = riding.getRidingEntity();
+			Vec3d movementVector = riding.getMotion();
+			if (riding instanceof BoatEntity)
+				movementVector = new Vec3d(posX - prevPosX, posY - prevPosY, posZ - prevPosZ);
 			Vec3d motion = movementVector.normalize();
 			if (motion.length() > 0) {
 				targetYaw = yawFromVector(motion);
-				targetPitch = (float) ((Math.atan(motion.y) * 73.0D) / Math.PI * 180);
 				if (targetYaw < 0)
 					targetYaw += 360;
 				if (yaw < 0)
 					yaw += 360;
 			}
 
-			if (Math.abs(getShortestAngleDiff(yaw, targetYaw)) >= 175) {
-				initialAngle += 180;
-				yaw += 180;
-				prevYaw = yaw;
-			} else {
-				float speed = 0.2f;
-				prevYaw = yaw;
-				yaw = angleLerp(speed, yaw, targetYaw);
-				prevPitch = pitch;
-				pitch = angleLerp(speed, pitch, targetPitch);
-			}
+//			if (Math.abs(getShortestAngleDiff(yaw, targetYaw)) >= 175) {
+//				initialAngle += 180;
+//				yaw += 180;
+//				prevYaw = yaw;
+//			} else {
+			float speed = 0.2f;
+			prevYaw = yaw;
+			yaw = angleLerp(speed, yaw, targetYaw);
+//			}
 
 			boolean wasStalled = isStalled();
 			tickActors(movementVector);
 			if (isStalled()) {
 				if (!wasStalled)
-					motionBeforeStall = e.getMotion();
-				e.setMotion(0, 0, 0);
+					motionBeforeStall = riding.getMotion();
+				riding.setMotion(0, 0, 0);
 			}
 
 			if (wasStalled && !isStalled()) {
-				e.setMotion(motionBeforeStall);
+				riding.setMotion(motionBeforeStall);
 				motionBeforeStall = Vec3d.ZERO;
 			}
 
@@ -249,8 +252,11 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public void setPosition(double x, double y, double z) {
 		Entity e = getRidingEntity();
 		if (e != null && e instanceof AbstractMinecartEntity) {
-			x -= .5;
-			z -= .5;
+			Entity riding = e;
+			while (riding.getRidingEntity() != null)
+				riding = riding.getRidingEntity();
+			x = riding.posX - .5;
+			z = riding.posZ - .5;
 		}
 
 		this.posX = x;
@@ -260,7 +266,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		if (this.isAddedToWorld() && !this.world.isRemote && world instanceof ServerWorld)
 			((ServerWorld) this.world).chunkCheck(this); // Forge - Process chunk registration after moving.
 		if (contraption != null) {
-			AxisAlignedBB cbox = contraption.getCollisionBox();
+			AxisAlignedBB cbox = contraption.getBoundingBox();
 			if (cbox != null)
 				this.setBoundingBox(cbox.offset(x, y, z));
 		}
@@ -268,9 +274,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	@Override
 	public void stopRiding() {
-		super.stopRiding();
 		if (!world.isRemote)
 			disassemble();
+		super.stopRiding();
 	}
 
 	public static float yawFromVector(Vec3d vec) {
@@ -309,14 +315,17 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected void readAdditional(CompoundNBT compound) {
 		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"));
 		initialAngle = compound.getFloat("InitialAngle");
+		targetYaw = yaw = prevYaw = initialAngle;
+		dataManager.set(STALLED, compound.getBoolean("Stalled"));
 		ListNBT vecNBT = compound.getList("CachedMotion", 6);
-		if (!vecNBT.isEmpty())
+		if (!vecNBT.isEmpty()) {
 			motionBeforeStall = new Vec3d(vecNBT.getDouble(0), vecNBT.getDouble(1), vecNBT.getDouble(2));
+			if (!motionBeforeStall.equals(Vec3d.ZERO))
+				targetYaw = prevYaw = yaw += yawFromVector(motionBeforeStall);
+			setMotion(Vec3d.ZERO);
+		}
 		if (compound.contains("Controller"))
 			controllerPos = NBTUtil.readBlockPos(compound.getCompound("Controller"));
-		prevYaw = initialAngle;
-		yaw = initialAngle;
-		targetYaw = initialAngle;
 	}
 
 	public void attachToController() {
@@ -341,7 +350,10 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected void writeAdditional(CompoundNBT compound) {
 		compound.put("Contraption", getContraption().writeNBT());
 		compound.putFloat("InitialAngle", initialAngle);
-		compound.put("CachedMotion", newDoubleNBTList(motionBeforeStall.x, motionBeforeStall.y, motionBeforeStall.z));
+		if (!stationary)
+			compound.put("CachedMotion",
+					newDoubleNBTList(motionBeforeStall.x, motionBeforeStall.y, motionBeforeStall.z));
+		compound.putBoolean("Stalled", isStalled());
 		if (controllerPos != null)
 			compound.put("Controller", NBTUtil.writeBlockPos(controllerPos));
 	}
@@ -364,9 +376,11 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public void disassemble() {
-		if (getContraption() != null)
+		if (getContraption() != null) {
+			float yaw = getYaw(1);
 			getContraption().disassemble(world, new BlockPos(getPositionVec().add(.5, .5, .5)),
-					new Vec3d(getRoll(1), getYaw(1), getPitch(1)));
+					new Vec3d(getRoll(1), yaw, getPitch(1)));
+		}
 		remove();
 	}
 

@@ -28,9 +28,11 @@ public class BearingContraption extends Contraption {
 			return null;
 		BearingContraption construct = new BearingContraption();
 		construct.facing = direction;
-		if (!construct.searchMovedStructure(world, pos.offset(direction), null))
+		BlockPos offset = pos.offset(direction);
+		if (!construct.searchMovedStructure(world, offset, null))
 			return null;
 		construct.initActors(world);
+		construct.expandBoundsAroundAxis(direction.getAxis());
 		return construct;
 	}
 

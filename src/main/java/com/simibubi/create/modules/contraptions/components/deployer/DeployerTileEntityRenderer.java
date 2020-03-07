@@ -167,11 +167,18 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		SuperByteBuffer pole = renderAndTransform(world, AllBlockPartials.DEPLOYER_POLE, blockState, pos, true);
 		SuperByteBuffer hand = renderAndTransform(world, handPose, blockState, pos, false);
 
-		Vec3d center = VecHelper.getCenterOf(new BlockPos(context.position));
-		double distance = context.position.distanceTo(center);
-		double nextDistance = context.position.add(context.motion).distanceTo(center);
+		double factor;
+		if (context.contraption.stalled) {
+			factor = MathHelper.sin(AnimationTickHolder.getRenderTick() * .5f) * .25f + .25f;
+		} else {
+			Vec3d center = VecHelper.getCenterOf(new BlockPos(context.position));
+			double distance = context.position.distanceTo(center);
+			double nextDistance = context.position.add(context.motion).distanceTo(center);
+			factor = .5f - MathHelper.lerp(Minecraft.getInstance().getRenderPartialTicks(), distance, nextDistance);
+		}
+		
 		Vec3d offset = new Vec3d(blockState.get(FACING).getDirectionVec())
-				.scale(.5f - MathHelper.lerp(Minecraft.getInstance().getRenderPartialTicks(), distance, nextDistance));
+				.scale(factor);
 		pole.translate(offset.x, offset.y, offset.z);
 		hand.translate(offset.x, offset.y, offset.z);
 

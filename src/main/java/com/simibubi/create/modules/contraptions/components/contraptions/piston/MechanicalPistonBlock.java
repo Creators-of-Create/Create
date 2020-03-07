@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
@@ -32,7 +33,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
-public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
+public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
+		implements IWithTileEntity<MechanicalPistonTileEntity> {
 
 	public static final EnumProperty<PistonState> STATE = EnumProperty.create("state", PistonState.class);
 	protected boolean isSticky;
@@ -52,11 +54,18 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-		if (state.get(STATE) != PistonState.RETRACTED)
-			return false;
 		if (!player.isAllowEdit())
 			return false;
-		if (!player.getHeldItem(handIn).getItem().isIn(Tags.Items.SLIMEBALLS))
+		if (player.isSneaking())
+			return false;
+		if (!player.getHeldItem(handIn).getItem().isIn(Tags.Items.SLIMEBALLS)) {
+			if (player.getHeldItem(handIn).isEmpty()) {
+				withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);
+				return true;
+			}
+			return false;
+		}
+		if (state.get(STATE) != PistonState.RETRACTED)
 			return false;
 		Direction direction = state.get(FACING);
 		if (hit.getFace() != direction)
@@ -99,9 +108,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock {
 	}
 
 	public enum PistonState implements IStringSerializable {
-		RETRACTED,
-		MOVING,
-		EXTENDED;
+		RETRACTED, MOVING, EXTENDED;
 
 		@Override
 		public String getName() {

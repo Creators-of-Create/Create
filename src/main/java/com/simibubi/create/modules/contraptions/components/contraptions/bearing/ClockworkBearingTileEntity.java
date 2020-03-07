@@ -104,31 +104,41 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	}
 
 	public float getHourArmSpeed() {
-		float speed = getAngularSpeed() / 2f + clientHourAngleDiff / 3f;
-		
+		float speed = getAngularSpeed() / 2f;
+
 		if (speed != 0) {
 			int dayTime = (int) (world.getDayTime() % 24000);
 			int hours = (dayTime / 1000 + 6) % 24;
 			int offset = getBlockState().get(ClockworkBearingBlock.FACING).getAxisDirection().getOffset();
 			float hourTarget = (float) (offset * -360 / 12f * (hours % 12));
-			speed = Math.max(speed, AngleHelper.getShortestAngleDiff(hourAngle, hourTarget));
+			float shortestAngleDiff = AngleHelper.getShortestAngleDiff(hourAngle, hourTarget);
+			if (shortestAngleDiff < 0) {
+				speed = Math.max(speed, shortestAngleDiff);
+			} else {
+				speed = Math.min(-speed, shortestAngleDiff);
+			}
 		}
-		
-		return speed;
+
+		return speed + clientHourAngleDiff / 3f;
 	}
 
 	public float getMinuteArmSpeed() {
-		float speed = getAngularSpeed() + clientMinuteAngleDiff / 3f;
-		
+		float speed = getAngularSpeed();
+
 		if (speed != 0) {
 			int dayTime = (int) (world.getDayTime() % 24000);
 			int minutes = (dayTime % 1000) * 60 / 1000;
 			int offset = getBlockState().get(ClockworkBearingBlock.FACING).getAxisDirection().getOffset();
-			float hourTarget = (float) (offset * -360 / 60f * (minutes));
-			speed = Math.max(speed, AngleHelper.getShortestAngleDiff(minuteAngle, hourTarget));
+			float minuteTarget = (float) (offset * -360 / 60f * (minutes));
+			float shortestAngleDiff = AngleHelper.getShortestAngleDiff(minuteAngle, minuteTarget);
+			if (shortestAngleDiff < 0) {
+				speed = Math.max(speed, shortestAngleDiff);
+			} else {
+				speed = Math.min(-speed, shortestAngleDiff);
+			}
 		}
-		
-		return speed;
+
+		return speed + clientMinuteAngleDiff / 3f;
 	}
 
 	public float getAngularSpeed() {
@@ -175,16 +185,20 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	public void disassembleConstruct() {
 		if (!running)
 			return;
-		if (hourHand != null)
+		
+		hourAngle = 0;
+		minuteAngle = 0;
+		applyRotations();
+		
+		if (hourHand != null) {
 			hourHand.disassemble();
+		}
 		if (minuteHand != null)
 			minuteHand.disassemble();
 
 		hourHand = null;
 		minuteHand = null;
 		running = false;
-		hourAngle = 0;
-		minuteAngle = 0;
 		sendData();
 	}
 
