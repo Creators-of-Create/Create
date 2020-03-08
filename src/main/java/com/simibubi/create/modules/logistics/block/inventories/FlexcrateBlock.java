@@ -131,9 +131,24 @@ public class FlexcrateBlock extends ProperDirectionalBlock {
 		return new FlexcrateTileEntity();
 	}
 
+	public static void splitCrate(World world, BlockPos pos) {
+		BlockState state = world.getBlockState(pos);
+		if (!AllBlocks.FLEXCRATE.typeOf(state))
+			return;
+		if (!state.get(DOUBLE))
+			return;
+		TileEntity te = world.getTileEntity(pos);
+		if (!(te instanceof FlexcrateTileEntity))
+			return;
+		FlexcrateTileEntity crateTe = (FlexcrateTileEntity) te;
+		crateTe.onSplit();
+		world.setBlockState(pos, state.with(DOUBLE, false));
+		world.setBlockState(crateTe.getOtherCrate().getPos(), state.with(DOUBLE, false));
+	}
+
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (worldIn.getTileEntity(pos) == null)
+		if (!(worldIn.getTileEntity(pos) instanceof FlexcrateTileEntity))
 			return;
 
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {

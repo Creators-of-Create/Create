@@ -59,7 +59,10 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
-		updateFlowAt(stateIn, worldIn.getWorld(), currentPos, facing);
+		World world = worldIn.getWorld();
+		if (world == null)
+			return stateIn;
+		updateFlowAt(stateIn, world, currentPos, facing);
 		updateWheelSpeed(worldIn, currentPos);
 		return stateIn;
 	}

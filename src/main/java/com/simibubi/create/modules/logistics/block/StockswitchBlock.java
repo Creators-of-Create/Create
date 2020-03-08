@@ -41,7 +41,7 @@ public class StockswitchBlock extends HorizontalBlock {
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		updateObservedInventory(state, worldIn, pos);
 	}
-
+	
 	@Override
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		if (world.isRemote())

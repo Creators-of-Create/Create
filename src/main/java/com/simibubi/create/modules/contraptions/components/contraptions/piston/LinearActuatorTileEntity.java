@@ -35,13 +35,6 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		forceMove = true;
 	}
 
-//	@Override
-//	public void initialize() {
-//		super.initialize();
-//		if (!world.isRemote)
-//			
-//	}
-
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);

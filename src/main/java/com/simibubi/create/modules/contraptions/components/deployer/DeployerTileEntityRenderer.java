@@ -168,7 +168,7 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		SuperByteBuffer hand = renderAndTransform(world, handPose, blockState, pos, false);
 
 		double factor;
-		if (context.contraption.stalled) {
+		if (context.contraption.stalled || context.position == null) {
 			factor = MathHelper.sin(AnimationTickHolder.getRenderTick() * .5f) * .25f + .25f;
 		} else {
 			Vec3d center = VecHelper.getCenterOf(new BlockPos(context.position));

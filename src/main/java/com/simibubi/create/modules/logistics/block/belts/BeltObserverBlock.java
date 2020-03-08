@@ -23,6 +23,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -60,6 +61,11 @@ public class BeltObserverBlock extends HorizontalBlock
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new BeltObserverTileEntity();
+	}
+	
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.BLOCK;
 	}
 
 	@Override
@@ -168,6 +174,7 @@ public class BeltObserverBlock extends HorizontalBlock
 		if (newState.getBlock() != this || newState.with(POWERED, false) != state.with(POWERED, false))
 			onAttachmentRemoved(worldIn, pos, state);
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeTileEntity(pos);
 		}
 	}

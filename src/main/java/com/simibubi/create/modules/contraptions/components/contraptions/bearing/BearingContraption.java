@@ -62,5 +62,9 @@ public class BearingContraption extends Contraption {
 	public int getSailBlocks() {
 		return sailBlocks;
 	}
+	
+	public Direction getFacing() {
+		return facing;
+	}
 
 }

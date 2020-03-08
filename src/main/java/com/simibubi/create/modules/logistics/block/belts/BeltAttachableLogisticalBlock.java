@@ -30,6 +30,7 @@ public abstract class BeltAttachableLogisticalBlock extends AttachedLogisticalBl
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		onAttachmentRemoved(worldIn, pos, state);
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeTileEntity(pos);
 		}
 	}

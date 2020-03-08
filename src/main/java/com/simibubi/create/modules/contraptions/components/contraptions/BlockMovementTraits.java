@@ -1,11 +1,11 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -18,8 +18,6 @@ public class BlockMovementTraits {
 		BlockState blockState = world.getBlockState(pos);
 		if (blockState.getBlock() instanceof AbstractChassisBlock)
 			return true;
-		if (blockState.getBlock() instanceof ShulkerBoxBlock)
-			return false;
 		if (blockState.getBlockHardness(world, pos) == -1)
 			return false;
 		if (blockState.getBlock() == Blocks.OBSIDIAN)
@@ -32,6 +30,8 @@ public class BlockMovementTraits {
 			return state.get(BlockStateProperties.FACING) == facing;
 		if (AllBlocks.SAW.typeOf(state))
 			return state.get(BlockStateProperties.FACING) == facing;
+		if (AllBlocks.PORTABLE_STORAGE_INTERFACE.typeOf(state))
+			return state.get(PortableStorageInterfaceBlock.FACING) == facing;
 		if (AllBlocks.HARVESTER.typeOf(state))
 			return state.get(BlockStateProperties.HORIZONTAL_FACING) == facing;
 		return false;

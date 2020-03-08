@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -36,6 +37,11 @@ public class SchematicTableBlock extends HorizontalBlock {
 	@Override
 	public boolean isSolid(BlockState state) {
 		return false;
+	}
+	
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.BLOCK;
 	}
 
 	@Override

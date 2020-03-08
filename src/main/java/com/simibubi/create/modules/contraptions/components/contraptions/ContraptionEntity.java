@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import com.simibubi.create.AllEntities;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.BearingContraption;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -23,6 +24,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -146,12 +148,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 		if (getMotion().length() > 1 / 4098f)
 			move(getMotion().x, getMotion().y, getMotion().z);
+		tickActors(new Vec3d(posX - prevPosX, posY - prevPosY, posZ - prevPosZ));
 
 		prevYaw = yaw;
 		prevPitch = pitch;
 		prevRoll = roll;
 
-		tickActors(new Vec3d(posX - prevPosX, posY - prevPosY, posZ - prevPosZ));
 		super.tick();
 	}
 
@@ -188,6 +190,23 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 					context.relativeMotion = relativeMotion;
 					newPosVisited = !new BlockPos(previousPosition).equals(gridPosition)
 							|| context.relativeMotion.length() > 0 && context.firstMovement;
+				}
+
+				if (getContraption() instanceof BearingContraption) {
+					BearingContraption bc = (BearingContraption) getContraption();
+					Direction facing = bc.getFacing();
+					if (VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis())) {
+						context.motion = new Vec3d(facing.getDirectionVec()).scale(
+								facing.getAxis().getCoordinate(roll - prevRoll, yaw - prevYaw, pitch - prevPitch));
+						context.relativeMotion = context.motion;
+						int timer = context.data.getInt("StationaryTimer");
+						if (timer > 0) {
+							context.data.putInt("StationaryTimer", timer - 1);
+						} else {
+							context.data.putInt("StationaryTimer", 20);
+							newPosVisited = true;
+						}
+					}
 				}
 			}
 

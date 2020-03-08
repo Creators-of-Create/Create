@@ -43,9 +43,13 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 		float zNudge = (((float) (randomBits >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 		GlStateManager.translatef(xNudge, yNudge, zNudge);
 
-		float angleYaw = (float) (entity.getYaw(partialTicks) / 180 * Math.PI);
-		float anglePitch = (float) (entity.getPitch(partialTicks) / 180 * Math.PI);
-		float angleRoll = (float) (entity.getRoll(partialTicks) / 180 * Math.PI);
+		float degYaw = entity.getYaw(partialTicks);
+		float degPitch = entity.getPitch(partialTicks);
+		float degRoll = entity.getRoll(partialTicks);
+
+		float angleYaw = (float) (degYaw / 180 * Math.PI);
+		float anglePitch = (float) (degPitch / 180 * Math.PI);
+		float angleRoll = (float) (degRoll / 180 * Math.PI);
 
 		Entity ridingEntity = entity.getRidingEntity();
 		if (ridingEntity != null && ridingEntity instanceof AbstractMinecartEntity) {
@@ -87,6 +91,19 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 
 		}, Tessellator.getInstance().getBuffer());
 		TessellatorHelper.draw();
+
+		if (!entity.getContraption().customRenderTEs.isEmpty()) {
+			GlStateManager.pushMatrix();
+			GlStateManager.translated(x, y, z);
+			GlStateManager.translated(rotationOffset.x, rotationOffset.y, rotationOffset.z);
+			GlStateManager.rotated(degPitch, 0, 0, 1);
+			GlStateManager.rotated(degYaw, 0, 1, 0);
+			GlStateManager.rotated(degRoll, 1, 0, 0);
+			GlStateManager.translated(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
+			ContraptionRenderer.renderTEsWithGL(entity.world, entity.getContraption(), entity.getPositionVec(),
+					new Vec3d(degRoll, degYaw, degPitch));
+			GlStateManager.popMatrix();
+		}
 
 		GlStateManager.disableCull();
 		GlStateManager.popMatrix();

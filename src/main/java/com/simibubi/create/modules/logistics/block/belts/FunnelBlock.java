@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
@@ -140,6 +142,7 @@ public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachm
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		onAttachmentRemoved(worldIn, pos, state);
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeTileEntity(pos);
 		}
 	}

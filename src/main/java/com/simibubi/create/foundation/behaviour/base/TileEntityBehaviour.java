@@ -58,6 +58,10 @@ public abstract class TileEntityBehaviour {
 	public void remove() {
 
 	}
+	
+	public void destroy() {
+		
+	}
 
 	public boolean isPaused() {
 		return paused;
@@ -87,6 +91,13 @@ public abstract class TileEntityBehaviour {
 	public static <T extends TileEntityBehaviour> T get(IEnviromentBlockReader reader, BlockPos pos,
 			IBehaviourType<T> type) {
 		return get(reader.getTileEntity(pos), type);
+	}
+	
+	public static <T extends TileEntityBehaviour> void destroy(IEnviromentBlockReader reader, BlockPos pos,
+			IBehaviourType<T> type) {
+		T behaviour = get(reader.getTileEntity(pos), type);
+		if (behaviour != null)
+			behaviour.destroy();
 	}
 
 	public static <T extends TileEntityBehaviour> T get(TileEntity te, IBehaviourType<T> type) {

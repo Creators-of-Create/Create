@@ -104,6 +104,30 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 		return getBlockState().get(FlexcrateBlock.FACING);
 	}
 
+	public void onSplit() {
+		FlexcrateTileEntity other = getOtherCrate();
+		if (other == null)
+			return;
+		if (other == getMainCrate()) {
+			other.onSplit();
+			return;
+		}
+
+		other.allowedAmount = Math.max(1, allowedAmount - 1024);
+		for (int slot = 0; slot < other.inventory.getSlots(); slot++)
+			other.inventory.setStackInSlot(slot, ItemStack.EMPTY);
+		for (int slot = 16; slot < inventory.getSlots(); slot++) {
+			other.inventory.setStackInSlot(slot - 16, inventory.getStackInSlot(slot));
+			inventory.setStackInSlot(slot, ItemStack.EMPTY);
+		}
+		allowedAmount = Math.min(1024, allowedAmount);
+
+		invHandler.invalidate();
+		invHandler = LazyOptional.of(() -> inventory);
+		other.invHandler.invalidate();
+		other.invHandler = LazyOptional.of(() -> other.inventory);
+	}
+
 	public void onDestroyed() {
 		FlexcrateTileEntity other = getOtherCrate();
 		if (other == null) {

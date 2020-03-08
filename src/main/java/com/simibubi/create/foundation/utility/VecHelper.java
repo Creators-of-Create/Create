@@ -75,5 +75,23 @@ public class VecHelper {
 	public static Vec3d voxelSpace(double x, double y, double z) {
 		return new Vec3d(x, y, z).scale(1 / 16f);
 	}
+	
+	public static int getCoordinate(Vec3i pos, Axis axis) {
+		return axis.getCoordinate(pos.getX(), pos.getY(), pos.getZ());
+	}
+	
+	public static float getCoordinate(Vec3d vec, Axis axis) {
+		return (float) axis.getCoordinate(vec.x, vec.y, vec.z);
+	}
+	
+	public static boolean onSameAxis(BlockPos pos1, BlockPos pos2, Axis axis) {
+		if (pos1.equals(pos2))
+			return true;
+		for (Axis otherAxis : Axis.values()) 
+			if (axis != otherAxis)
+				if (getCoordinate(pos1, otherAxis) != getCoordinate(pos2, otherAxis))
+					return false;
+		return true;
+	}
 
 }

@@ -48,8 +48,8 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 			return;
 
 		// Check if not at limit already
-		float resultingOffset = contraption.initialExtensionProgress + Math.signum(getMovementSpeed()) * .5f;
 		extensionLength = contraption.extensionLength;
+		float resultingOffset = contraption.initialExtensionProgress + Math.signum(getMovementSpeed()) * .5f;
 		if (resultingOffset <= 0 || resultingOffset >= extensionLength) {
 			return;
 		}

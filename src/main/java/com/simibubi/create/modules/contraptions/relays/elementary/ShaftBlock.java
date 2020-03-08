@@ -4,6 +4,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.item.ItemGroup;
@@ -29,6 +30,11 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 		return PushReaction.NORMAL;
 	}
 
+	@Override
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
+	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new ShaftTileEntity();

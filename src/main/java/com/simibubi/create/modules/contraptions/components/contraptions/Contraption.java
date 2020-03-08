@@ -20,18 +20,23 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
+import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
+import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.block.SlimeBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.state.properties.ChestType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
@@ -52,6 +57,7 @@ public abstract class Contraption {
 	public Map<BlockPos, MountedStorage> storage;
 	public List<MutablePair<BlockInfo, MovementContext>> actors;
 	public CombinedInvWrapper inventory;
+	public List<TileEntity> customRenderTEs;
 
 	public AxisAlignedBB bounds;
 	public boolean stalled;
@@ -67,6 +73,7 @@ public abstract class Contraption {
 		storage = new HashMap<>();
 		actors = new ArrayList<>();
 		renderOrder = new ArrayList<>();
+		customRenderTEs = new ArrayList<>();
 	}
 
 	public Set<BlockPos> getColliders(World world, Direction movementDirection) {
@@ -141,6 +148,8 @@ public abstract class Contraption {
 			return false;
 		if (isChassis(state) && !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
+		if (AllBlocks.FLEXCRATE.typeOf(state))
+			FlexcrateBlock.splitCrate(world, pos);
 
 		if (state.getBlock() instanceof SlimeBlock)
 			for (Direction offset : Direction.values()) {
@@ -182,6 +191,12 @@ public abstract class Contraption {
 		BlockState blockstate = world.getBlockState(pos);
 		if (AllBlocks.SAW.typeOf(blockstate))
 			blockstate = blockstate.with(SawBlock.RUNNING, true);
+		if (blockstate.getBlock() instanceof ChestBlock)
+			blockstate = blockstate.with(ChestBlock.TYPE, ChestType.SINGLE);
+		if (AllBlocks.FLEXCRATE.typeOf(blockstate))
+			blockstate = blockstate.with(FlexcrateBlock.DOUBLE, false);
+		if (AllBlocks.CONTACT.typeOf(blockstate))
+			blockstate = blockstate.with(ContactBlock.POWERED, true);
 		CompoundNBT compoundnbt = getTileEntityNBT(world, pos);
 		TileEntity tileentity = world.getTileEntity(pos);
 		return Pair.of(new BlockInfo(pos, blockstate, compoundnbt), tileentity);
@@ -225,6 +240,7 @@ public abstract class Contraption {
 	public void readNBT(World world, CompoundNBT nbt) {
 		blocks.clear();
 		renderOrder.clear();
+		customRenderTEs.clear();
 
 		nbt.getList("Blocks", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
@@ -233,11 +249,31 @@ public abstract class Contraption {
 					comp.contains("Data") ? comp.getCompound("Data") : null);
 			blocks.put(info.pos, info);
 			if (world.isRemote) {
-				BlockRenderLayer renderLayer = info.state.getBlock().getRenderLayer();
+				Block block = info.state.getBlock();
+				BlockRenderLayer renderLayer = block.getRenderLayer();
 				if (renderLayer == BlockRenderLayer.TRANSLUCENT)
 					renderOrder.add(info.pos);
 				else
 					renderOrder.add(0, info.pos);
+				if (info.nbt == null || block instanceof IPortableBlock)
+					return;
+
+				info.nbt.putInt("x", info.pos.getX());
+				info.nbt.putInt("y", info.pos.getY());
+				info.nbt.putInt("z", info.pos.getZ());
+				TileEntity te = TileEntity.create(info.nbt);
+				te.setWorld(new WrappedWorld(world) {
+
+					@Override
+					public BlockState getBlockState(BlockPos pos) {
+						if (isOutsideBuildHeight(pos) || !pos.equals(te.getPos()))
+							return Blocks.AIR.getDefaultState();
+						return info.state;
+					}
+
+				});
+				te.getBlockState();
+				customRenderTEs.add(te);
 			}
 		});
 
@@ -331,6 +367,7 @@ public abstract class Contraption {
 			BlockPos add = block.pos.add(anchor).add(offset);
 			if (customRemoval.test(add, block.state))
 				continue;
+			world.getWorld().removeTileEntity(add);
 			world.setBlockState(add, Blocks.AIR.getDefaultState(), 67);
 		}
 	}

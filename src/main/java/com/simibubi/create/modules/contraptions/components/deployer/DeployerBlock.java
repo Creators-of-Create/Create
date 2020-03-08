@@ -1,6 +1,8 @@
 package com.simibubi.create.modules.contraptions.components.deployer;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
@@ -73,7 +75,8 @@ public class DeployerBlock extends DirectionalAxisKineticBlock
 					te.player = null;
 				}
 			});
-
+			
+			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeTileEntity(pos);
 		}
 	}

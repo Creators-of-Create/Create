@@ -126,14 +126,14 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public void remove() {
+	public void destroy() {
 		if (filter.getItem() instanceof FilterItem) {
 			Vec3d pos = VecHelper.getCenterOf(getPos());
 			World world = getWorld();
 			world.addEntity(new ItemEntity(world, pos.x, pos.y, pos.z, filter.copy()));
 		}
 
-		super.remove();
+		super.destroy();
 	}
 
 	public ItemStack getFilter() {

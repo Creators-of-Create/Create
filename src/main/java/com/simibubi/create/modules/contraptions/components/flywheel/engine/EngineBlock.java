@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlockPartials;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
@@ -32,6 +33,11 @@ public abstract class EngineBlock extends HorizontalBlock {
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
+	}
+	
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.BLOCK;
 	}
 
 	@Override

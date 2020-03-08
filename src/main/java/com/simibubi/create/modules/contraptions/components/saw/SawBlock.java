@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.saw;
 
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
@@ -132,7 +134,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IWithTileEn
 							te.inventory.getStackInSlot(slot));
 				}
 			});
-
+			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeTileEntity(pos);
 		}
 	}

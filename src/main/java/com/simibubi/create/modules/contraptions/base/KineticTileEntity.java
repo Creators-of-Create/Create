@@ -83,6 +83,11 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 
 	private void validateKinetics() {
 		if (hasSource()) {
+			if (!hasNetwork()) {
+				removeSource();
+				return;
+			}
+
 			if (!world.isBlockPresent(source))
 				return;
 

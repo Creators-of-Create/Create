@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.utility.AllShapes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,6 +39,11 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new BasinTileEntity();
+	}
+	
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.BLOCK;
 	}
 	
 	@Override
