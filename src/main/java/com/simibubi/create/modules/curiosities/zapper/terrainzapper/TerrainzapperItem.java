@@ -30,6 +30,7 @@ public class TerrainzapperItem extends ZapperItem implements IHaveCustomItemMode
 	}
 
 	@Override
+	@OnlyIn(value = Dist.CLIENT)
 	protected void openHandgunGUI(ItemStack item, boolean b) {
 		ScreenOpener.open(new TerrainzapperScreen(item, b));
 	}

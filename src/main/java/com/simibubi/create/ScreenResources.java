@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public enum ScreenResources {
 
@@ -39,7 +41,7 @@ public enum ScreenResources {
 
 	FILTER("filter.png", 200, 100),
 	ATTRIBUTE_FILTER("filter.png", 0, 100, 200, 86),
-	
+
 	// Logistical Index
 	INDEX_TOP("index.png", 41, 0, 174, 22),
 	INDEX_TOP_TRIM("index.png", 41, 22, 174, 6),
@@ -111,7 +113,7 @@ public enum ScreenResources {
 	I_WHITELIST_NOT(12, 0),
 	I_RESPECT_NBT(13, 0),
 	I_IGNORE_NBT(14, 0),
-	
+
 	I_CONFIRM(0, 1),
 	I_NONE(1, 1),
 	I_OPEN_FOLDER(2, 1),
@@ -124,7 +126,7 @@ public enum ScreenResources {
 	I_MOVE_PLACE(9, 1),
 	I_MOVE_PLACE_RETURNED(10, 1),
 	I_MOVE_NEVER_PLACE(11, 1),
-	
+
 	I_DONT_REPLACE(0, 2),
 	I_REPLACE_SOLID(1, 2),
 	I_REPLACE_ANY(2, 2),
@@ -142,7 +144,7 @@ public enum ScreenResources {
 	I_TOOL_DEPLOY(0, 3),
 	I_SKIP_TILES(2, 3),
 	I_SKIP_MISSING(1, 3),
-	
+
 	I_TOOL_MOVE_XZ(0, 4),
 	I_TOOL_MOVE_Y(1, 4),
 	I_TOOL_ROTATE(2, 4),
@@ -156,12 +158,12 @@ public enum ScreenResources {
 	I_PATTERN_CHECKERED(1, 6),
 	I_PATTERN_CHECKERED_INVERSED(2, 6),
 	I_PATTERN_CHANCE_25(3, 6),
-	
+
 	I_PATTERN_CHANCE_50(0, 7),
 	I_PATTERN_CHANCE_75(1, 7),
 	I_FOLLOW_DIAGONAL(2, 7),
 	I_FOLLOW_MATERIAL(3, 7),
-	
+
 	;
 
 	public static final int FONT_COLOR = 0x575F7A;
@@ -169,8 +171,6 @@ public enum ScreenResources {
 	public final ResourceLocation location;
 	public int width, height;
 	public int startX, startY;
-	static Screen renderer = new Screen(null) {
-	};
 
 	private ScreenResources(String location, int width, int height) {
 		this(location, 0, 0, width, height);
@@ -188,17 +188,21 @@ public enum ScreenResources {
 		this.startY = startY;
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public void bind() {
 		Minecraft.getInstance().getTextureManager().bindTexture(location);
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public void draw(AbstractGui screen, int x, int y) {
 		bind();
 		screen.blit(x, y, startX, startY, width, height);
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public void draw(int x, int y) {
-		draw(renderer, x, y);
+		draw(new Screen(null) {
+		}, x, y);
 	}
 
 }

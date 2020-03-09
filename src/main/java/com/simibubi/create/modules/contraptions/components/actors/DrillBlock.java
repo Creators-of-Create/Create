@@ -10,10 +10,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -23,6 +28,7 @@ import net.minecraft.world.World;
 public class DrillBlock extends DirectionalKineticBlock implements IPortableBlock, IWithTileEntity<DrillTileEntity> {
 
 	public static MovementBehaviour MOVEMENT = new DrillMovementBehaviour();
+	public static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
 
 	public DrillBlock() {
 		super(Properties.from(Blocks.IRON_BLOCK));
@@ -31,6 +37,19 @@ public class DrillBlock extends DirectionalKineticBlock implements IPortableBloc
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
+	}
+
+	@Override
+	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+		if (entityIn instanceof ItemEntity)
+			return;
+		if (!new AxisAlignedBB(pos).shrink(.1f).intersects(entityIn.getBoundingBox()))
+			return;
+		withTileEntityDo(worldIn, pos, te -> {
+			if (te.getSpeed() == 0)
+				return;
+			entityIn.attackEntityFrom(damageSourceDrill, MathHelper.clamp(Math.abs(te.getSpeed() / 32f) + 1, 0, 20));
+		});
 	}
 
 	@Override

@@ -66,6 +66,15 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
+	public void initialize() {
+		super.initialize();
+		// 0.1 belt
+		if (beltLength == 0) {
+			world.destroyBlock(pos, true);
+		}
+	}
+	
+	@Override
 	public void tick() {
 		super.tick();
 
