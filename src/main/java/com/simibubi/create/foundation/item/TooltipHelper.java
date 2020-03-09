@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
+import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -85,13 +86,14 @@ public class TooltipHelper {
 
 	public static boolean hasTooltip(ItemStack stack) {
 		checkLocale();
-		
-		boolean hasGlasses = AllItems.GOGGLES.typeOf(Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+
+		boolean hasGlasses =
+			AllItems.GOGGLES.typeOf(Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD));
 		if (hasGlasses != gogglesMode) {
 			gogglesMode = hasGlasses;
 			cachedTooltips.clear();
 		}
-		
+
 		String key = getTooltipTranslationKey(stack);
 		if (cachedTooltips.containsKey(key))
 			return cachedTooltips.get(key) != ItemDescription.MISSING;
@@ -161,6 +163,15 @@ public class TooltipHelper {
 	}
 
 	public static String getTooltipTranslationKey(ItemStack stack) {
+
+		if (stack.getItem() instanceof AbstractToolItem) {
+			AbstractToolItem abstractToolItem = (AbstractToolItem) stack.getItem();
+			if (abstractToolItem.getTier() instanceof AllToolTiers) {
+				AllToolTiers allToolTiers = (AllToolTiers) abstractToolItem.getTier();
+				return "tool.create." + Lang.asId(allToolTiers.name()) + ".tooltip";
+			}
+		}
+
 		return stack.getItem().getTranslationKey(stack) + ".tooltip";
 	}
 

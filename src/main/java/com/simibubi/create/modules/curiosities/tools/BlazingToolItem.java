@@ -11,15 +11,16 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.FurnaceTileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
@@ -57,38 +58,51 @@ public class BlazingToolItem extends AbstractToolItem {
 	}
 
 	@Override
+	public boolean modifiesDrops() {
+		return true;
+	}
+
+	@Override
 	public void modifyDrops(List<ItemStack> drops, IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
 		super.modifyDrops(drops, world, pos, tool, state);
 		World worldIn = world.getWorld();
 		helperFurnace.setWorld(worldIn);
+		
 		RecipeManager recipeManager = worldIn.getRecipeManager();
-
+		int enchantmentLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, tool);
 		List<ItemStack> smeltedStacks = new ArrayList<>();
 		Iterator<ItemStack> dropper = drops.iterator();
 		while (dropper.hasNext()) {
 			ItemStack stack = dropper.next();
 			helperFurnace.setInventorySlotContents(0, stack);
-			Optional<FurnaceRecipe> smeltingRecipe = recipeManager.getRecipe(IRecipeType.SMELTING, helperFurnace,
-					worldIn);
+			Optional<FurnaceRecipe> smeltingRecipe =
+				recipeManager.getRecipe(IRecipeType.SMELTING, helperFurnace, worldIn);
 			if (!smeltingRecipe.isPresent())
 				continue;
-
 			dropper.remove();
 			ItemStack out = smeltingRecipe.get().getRecipeOutput().copy();
+
+			float modifier = 1;
+			if (stack.getItem() instanceof BlockItem && !(out.getItem() instanceof BlockItem))
+				modifier += world.getRandom().nextFloat() * enchantmentLevel;
+
+			out.setCount((int) (out.getCount() * modifier + .4f));
 			smeltedStacks.addAll(ItemHelper.multipliedOutput(stack, out));
 		}
 
-		if (world.isRemote() && !smeltedStacks.isEmpty()) {
-			for (int i = 0; i < 10; i++) {
-				Vec3d flamePos = VecHelper.offsetRandomly(VecHelper.getCenterOf(pos), world.getRandom(), .45f);
-				Vec3d smokePos = VecHelper.offsetRandomly(VecHelper.getCenterOf(pos), world.getRandom(), .45f);
-				world.addParticle(ParticleTypes.FLAME, flamePos.getX(), flamePos.getY(), flamePos.getZ(), 0, .1f, 0);
-				world.addParticle(ParticleTypes.SMOKE, smokePos.getX(), smokePos.getY(), smokePos.getZ(), 0, .1f, 0);
-			}
-			world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, .5f, .1f);
-		}
-
 		drops.addAll(smeltedStacks);
+	}
+
+	@Override
+	public void spawnParticles(IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
+		if (!canHarvestBlock(tool, state))
+			return;
+		for (int i = 0; i < 10; i++) {
+			Vec3d flamePos = VecHelper.offsetRandomly(VecHelper.getCenterOf(pos), world.getRandom(), .45f);
+			Vec3d smokePos = VecHelper.offsetRandomly(VecHelper.getCenterOf(pos), world.getRandom(), .45f);
+			world.addParticle(ParticleTypes.FLAME, flamePos.getX(), flamePos.getY(), flamePos.getZ(), 0, .01f, 0);
+			world.addParticle(ParticleTypes.SMOKE, smokePos.getX(), smokePos.getY(), smokePos.getZ(), 0, .1f, 0);
+		}
 	}
 
 }

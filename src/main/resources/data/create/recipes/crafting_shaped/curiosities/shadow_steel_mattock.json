@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "PPP",
+            "PS ",
+            " S "
+        ],
+        "key": {
+            "S": {
+                "item": "create:zinc_handle"
+            },
+            "P": {
+                "item": "create:shadow_steel"
+            }
+        },
+	"result": {
+		"item": "create:shadow_steel_mattock",
+		"count": 1
+	},
+	"conditions": [
+		{
+			"type": "create:module",
+			"module": "curiosities"
+		}
+	]
+}

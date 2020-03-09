@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringCountUpdatePacket;
 import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.command.ConfigureConfigPacket;
+import com.simibubi.create.foundation.item.AbstractToolItem;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -45,7 +46,8 @@ public enum AllPackets {
 	BEAM_EFFECT(ZapperBeamPacket.class, ZapperBeamPacket::new),
 	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
 	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new),
-
+	TOOL_HARVEST(AbstractToolItem.HarvestPacket.class, AbstractToolItem.HarvestPacket::new),
+	
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = new ResourceLocation(Create.ID, "network");

@@ -49,13 +49,13 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		super.addBehaviours(behaviours);
 		CenteredSideValueBoxTransform slot =
 			new CenteredSideValueBoxTransform((state, direction) -> direction.getAxis().isHorizontal()) {
-			
-			@Override
-			protected Vec3d getSouthLocation() {
-				return super.getSouthLocation().add(0, 4/16f, 0);
-			}
-			
-		};
+
+				@Override
+				protected Vec3d getSouthLocation() {
+					return super.getSouthLocation().add(0, 4 / 16f, 0);
+				}
+
+			};
 		minIngredients = new ScrollValueBehaviour(Lang.translate("mechanical_mixer.min_ingredients"), this, slot);
 		minIngredients.between(1, 9);
 		minIngredients.withCallback(i -> checkBasin = true);
@@ -191,7 +191,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			return false;
 
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		if (!ingredients.stream().allMatch(Ingredient::isSimple))
+		if (!ingredients.stream()
+				.allMatch(ingredient -> (ingredient.isSimple() || ingredient.getMatchingStacks().length == 1)))
 			return false;
 
 		List<ItemStack> remaining = new ArrayList<>();

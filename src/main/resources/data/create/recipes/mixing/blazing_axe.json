@@ -1,0 +1,29 @@
+{
+    "type": "create:mixing",
+    "ingredients": [
+    	{
+    		"item": "minecraft:golden_axe"
+    	},
+		{
+    		"item": "create:obsidian_dust"
+    	},
+		{
+			"item": "minecraft:blaze_powder"
+		},
+		{
+			"item": "minecraft:blaze_powder"
+		},
+		{
+			"item": "minecraft:blaze_powder"
+		},
+		{
+			"item": "minecraft:blaze_powder"
+		}
+    ], 
+	"results": [
+		{
+			"item": "create:blazing_axe",
+			"count": 1
+		}
+	]
+}

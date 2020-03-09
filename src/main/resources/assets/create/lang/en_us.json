@@ -28,6 +28,7 @@
 	"item.create.whisk": "Whisk",
 	"item.create.brass_hand": "Hand",
 	"item.create.slot_cover": "Crafter Slot Cover",
+	"item.create.zinc_handle": "Quality Tool Handle",
 	"item.create.flour": "Wheat Flour",
 	"item.create.dough": "Dough",
 	"item.create.wrench": "Wrench",
@@ -62,7 +63,7 @@
 	"item.create.blazing_pickaxe": "Blazing Pickaxe",
 	"item.create.blazing_shovel": "Blazing Shovel",
 	"item.create.blazing_axe": "Blazing Axe",
-	"item.create.blazing_sword": "Blazing Longsword",
+	"item.create.blazing_sword": "Blazing Cleaver",
 
 	"item.create.shadow_steel_pickaxe": "Shadow Steel Pickaxe",
 	"item.create.shadow_steel_mattock": "Shadow Steel Garden Mattock",
@@ -1112,6 +1113,15 @@
 	
 	"item.create.slot_cover.tooltip": "SLOT COVER",
 	"item.create.slot_cover.tooltip.summary": "Used to mark a _Mechanical_ _Crafter_ as an empty slot in a recipe. Crafters do not necessarily have to form a full square grid, this cover find its use when there are recipes where _ingredients_ _are_ _diagonal_ to each other.",
+	
+	"tool.create.shadow_steel.tooltip": "SHADOW STEEL TOOLS",
+	"tool.create.shadow_steel.tooltip.summary": "This tool breaks blocks _extremely_ _quick,_ but _shatters_ all of their _drops_ with them. Killed mobs can drop _more_ _experience_ based on the _Looting_ modifier of this tool.",
+	
+	"tool.create.blazing.tooltip": "BLAZING TOOLS",
+	"tool.create.blazing.tooltip.summary": "This tool will _melt_ _broken_ _blocks_ and _ignite_ _attacked_ _mobs._ It will not lose Durability while being used in the _Nether._",
+	
+	"tool.create.rose_quartz.tooltip": "ROSE QUARTZ TOOLS",
+	"tool.create.rose_quartz.tooltip.summary": "This tool grants you a _greater_ _reach_ for _breaking_ _blocks_ or _placing_ _blocks_ from the off-hand.",
 	
 	"item.create.logistical_controller_calculation.tooltip": "WIP",
 	"item.create.logistical_controller_request.tooltip": "WIP",
