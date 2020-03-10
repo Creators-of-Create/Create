@@ -102,7 +102,6 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 		List<BlockPos> beltsToCreate = getBeltChainBetween(start, end, slope, facing);
 		BlockState beltBlock = AllBlocks.BELT.get().getDefaultState();
 
-		int index = 0;
 		for (BlockPos pos : beltsToCreate) {
 			BeltBlock.Part part = pos.equals(start) ? Part.START : pos.equals(end) ? Part.END : Part.MIDDLE;
 			boolean pulley = AllBlocks.SHAFT.typeOf(world.getBlockState(pos));
@@ -110,15 +109,6 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 				part = Part.PULLEY;
 			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope).with(BeltBlock.PART, part)
 					.with(BeltBlock.HORIZONTAL_FACING, facing), 3);
-
-			BeltTileEntity te = (BeltTileEntity) world.getTileEntity(pos);
-			if (te != null) {
-				te.setController(start);
-				te.beltLength = beltsToCreate.size();
-				te.index = index;
-			}
-
-			index++;
 		}
 	}
 

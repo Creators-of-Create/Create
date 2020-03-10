@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.curiosities.tools;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -63,13 +64,15 @@ public class BlazingToolItem extends AbstractToolItem {
 	}
 
 	@Override
-	public void modifyDrops(List<ItemStack> drops, IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
+	public void modifyDrops(Collection<ItemStack> drops, IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
 		super.modifyDrops(drops, world, pos, tool, state);
 		World worldIn = world.getWorld();
 		helperFurnace.setWorld(worldIn);
-		
+
 		RecipeManager recipeManager = worldIn.getRecipeManager();
 		int enchantmentLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, tool);
+		if (state == null)
+			enchantmentLevel = 0;
 		List<ItemStack> smeltedStacks = new ArrayList<>();
 		Iterator<ItemStack> dropper = drops.iterator();
 		while (dropper.hasNext()) {

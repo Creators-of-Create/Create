@@ -26,6 +26,8 @@ import com.simibubi.create.modules.contraptions.components.contraptions.chassis.
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 
 import net.minecraft.block.Block;
@@ -48,6 +50,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -150,6 +153,14 @@ public abstract class Contraption {
 			return false;
 		if (AllBlocks.FLEXCRATE.typeOf(state))
 			FlexcrateBlock.splitCrate(world, pos);
+		if (AllBlocks.BELT.typeOf(state)) {
+			BlockPos nextPos = BeltBlock.nextSegmentPosition(state, pos, true);
+			BlockPos prevPos = BeltBlock.nextSegmentPosition(state, pos, false);
+			if (nextPos != null && !visited.contains(nextPos))
+				frontier.add(nextPos);
+			if (prevPos != null && !visited.contains(prevPos))
+				frontier.add(prevPos);
+		}
 
 		if (state.getBlock() instanceof SlimeBlock)
 			for (Direction offset : Direction.values()) {
@@ -248,6 +259,7 @@ public abstract class Contraption {
 					NBTUtil.readBlockState(comp.getCompound("Block")),
 					comp.contains("Data") ? comp.getCompound("Data") : null);
 			blocks.put(info.pos, info);
+			
 			if (world.isRemote) {
 				Block block = info.state.getBlock();
 				BlockRenderLayer renderLayer = block.getRenderLayer();
@@ -255,23 +267,27 @@ public abstract class Contraption {
 					renderOrder.add(info.pos);
 				else
 					renderOrder.add(0, info.pos);
-				if (info.nbt == null || block instanceof IPortableBlock)
+				CompoundNBT tag = info.nbt;
+				if (tag == null || block instanceof IPortableBlock)
 					return;
 
-				info.nbt.putInt("x", info.pos.getX());
-				info.nbt.putInt("y", info.pos.getY());
-				info.nbt.putInt("z", info.pos.getZ());
-				TileEntity te = TileEntity.create(info.nbt);
+				tag.putInt("x", info.pos.getX());
+				tag.putInt("y", info.pos.getY());
+				tag.putInt("z", info.pos.getZ());
+
+				TileEntity te = TileEntity.create(tag);
 				te.setWorld(new WrappedWorld(world) {
 
 					@Override
 					public BlockState getBlockState(BlockPos pos) {
-						if (isOutsideBuildHeight(pos) || !pos.equals(te.getPos()))
+						if (!pos.equals(te.getPos()))
 							return Blocks.AIR.getDefaultState();
 						return info.state;
 					}
 
 				});
+				if (te instanceof KineticTileEntity)
+					((KineticTileEntity) te).setSpeed(0);
 				te.getBlockState();
 				customRenderTEs.add(te);
 			}
@@ -392,13 +408,21 @@ public abstract class Contraption {
 				state = state.with(SawBlock.RUNNING, false);
 
 			world.destroyBlock(targetPos, world.getBlockState(targetPos).getCollisionShape(world, targetPos).isEmpty());
-			world.setBlockState(targetPos, state, 3);
+			world.setBlockState(targetPos, state, 3 | BlockFlags.IS_MOVING);
 			TileEntity tileEntity = world.getTileEntity(targetPos);
-			if (tileEntity != null && block.nbt != null) {
-				block.nbt.putInt("x", targetPos.getX());
-				block.nbt.putInt("y", targetPos.getY());
-				block.nbt.putInt("z", targetPos.getZ());
-				tileEntity.read(block.nbt);
+			CompoundNBT tag = block.nbt;
+			if (tileEntity != null && tag != null) {
+				tag.putInt("x", targetPos.getX());
+				tag.putInt("y", targetPos.getY());
+				tag.putInt("z", targetPos.getZ());
+
+				if (tileEntity instanceof BeltTileEntity) {
+					tag.remove("Length");
+					tag.remove("Index");
+					tag.putBoolean("DontClearAttachments", true);
+				}
+
+				tileEntity.read(tag);
 
 				if (tileEntity instanceof KineticTileEntity) {
 					KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;

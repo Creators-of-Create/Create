@@ -22,6 +22,8 @@ public class BlockMovementTraits {
 			return false;
 		if (blockState.getBlock() == Blocks.OBSIDIAN)
 			return false;
+		if (AllBlocks.BELT.typeOf(blockState))
+			return true;
 		return blockState.getPushReaction() != PushReaction.BLOCK;
 	}
 	

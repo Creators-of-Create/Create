@@ -38,6 +38,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -86,7 +87,7 @@ public class DeployerFakePlayer extends FakePlayer {
 			event.setNewHeight(0);
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void deployerCollectsDropsFromKilledEntities(LivingDropsEvent event) {
 		if (!(event.getSource() instanceof EntityDamageSource))
 			return;

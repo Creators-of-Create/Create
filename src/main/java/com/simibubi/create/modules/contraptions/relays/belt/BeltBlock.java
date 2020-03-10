@@ -1,22 +1,30 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.mutable.MutableInt;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltMovementHandler.TransportedEntityInfo;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.particle.DiggingParticle;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -40,19 +48,21 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockItem, IWithTileEntity<BeltTileEntity> {
+public class BeltBlock extends HorizontalKineticBlock
+		implements IHaveNoBlockItem, IWithTileEntity<BeltTileEntity>, IHaveColorHandler {
 
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
@@ -90,13 +100,14 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 	@SuppressWarnings("deprecation")
 	@Override
 	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.storage.loot.LootContext.Builder builder) {
-		List<ItemStack> drops = super.getDrops(state, builder);
+		List<ItemStack> drops = new ArrayList<>();
+		if (state.get(PART) == Part.START || builder.get(LootParameters.THIS_ENTITY) != null)
+			drops.addAll(super.getDrops(state, builder));
 		if (state.get(CASING))
-			drops.addAll(AllBlocks.BRASS_CASING.getDefault()
-					.getDrops(builder));
+			drops.addAll(AllBlocks.BRASS_CASING.getDefault().getDrops(builder));
 		return drops;
 	}
-	
+
 	@Override
 	public void spawnAdditionalDrops(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
 		withTileEntityDo(worldIn, pos, te -> {
@@ -170,8 +181,10 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 			TransportedEntityInfo info = controller.passengers.get(entityIn);
 			if (info.ticksSinceLastCollision != 0 || pos.equals(entityIn.getPosition()))
 				info.refresh(pos, state);
-		} else
+		} else {
 			controller.passengers.put(entityIn, new TransportedEntityInfo(pos, state));
+			entityIn.onGround = true;
+		}
 	}
 
 	@Override
@@ -295,12 +308,52 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 
 	@Override
 	public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
-		return PathNodeType.DANGER_OTHER;
+		return PathNodeType.RAIL;
+	}
+
+	@Override
+	public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
+		// From Particle Manager, but reduced density for belts with lots of boxes
+		VoxelShape voxelshape = state.getShape(world, pos);
+		MutableInt amtBoxes = new MutableInt(0);
+		voxelshape.forEachBox((x1, y1, z1, x2, y2, z2) -> amtBoxes.increment());
+		double chance = 1d / amtBoxes.getValue();
+
+		voxelshape.forEachBox((x1, y1, z1, x2, y2, z2) -> {
+			double d1 = Math.min(1.0D, x2 - x1);
+			double d2 = Math.min(1.0D, y2 - y1);
+			double d3 = Math.min(1.0D, z2 - z1);
+			int i = Math.max(2, MathHelper.ceil(d1 / 0.25D));
+			int j = Math.max(2, MathHelper.ceil(d2 / 0.25D));
+			int k = Math.max(2, MathHelper.ceil(d3 / 0.25D));
+
+			for (int l = 0; l < i; ++l) {
+				for (int i1 = 0; i1 < j; ++i1) {
+					for (int j1 = 0; j1 < k; ++j1) {
+						if (world.rand.nextDouble() > chance)
+							continue;
+
+						double d4 = ((double) l + 0.5D) / (double) i;
+						double d5 = ((double) i1 + 0.5D) / (double) j;
+						double d6 = ((double) j1 + 0.5D) / (double) k;
+						double d7 = d4 * d1 + x1;
+						double d8 = d5 * d2 + y1;
+						double d9 = d6 * d3 + z1;
+						manager.addEffect(
+								(new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
+										(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state))
+												.setBlockPos(pos));
+					}
+				}
+			}
+
+		});
+		return true;
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return VoxelShapes.or(BeltShapes.getShape(state), BeltShapes.getCasingShape(state));
+		return BeltShapes.getShape(state);
 	}
 
 	@Override
@@ -314,7 +367,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 		if (controller == null)
 			return shape;
 		if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity())) {
-			return VoxelShapes.combine(AllShapes.BELT_COLLISION_MASK, shape, IBooleanFunction.AND);
+			return BeltShapes.getCollisionShape(state);
 		}
 
 		return shape;
@@ -326,41 +379,112 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 	}
 
 	@Override
-	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-		return state.get(CASING) && layer == getRenderLayer();
+	public BlockRenderType getRenderType(BlockState state) {
+		return state.get(CASING) && state.get(SLOPE) != Slope.VERTICAL ? BlockRenderType.MODEL
+				: BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (worldIn.isRemote)
+	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
+		return state.get(CASING) && state.get(SLOPE) != Slope.VERTICAL && layer == getRenderLayer();
+	}
+
+	public static void initBelt(World world, BlockPos pos) {
+		if (world.isRemote)
+			return;
+
+		BlockState state = world.getBlockState(pos);
+		if (!AllBlocks.BELT.typeOf(state))
+			return;
+		// Find controller
+		int limit = 1000;
+		BlockPos currentPos = pos;
+		while (limit-- > 0) {
+			BlockState currentState = world.getBlockState(currentPos);
+			if (!AllBlocks.BELT.typeOf(currentState)) {
+				world.destroyBlock(pos, true);
+				return;
+			}
+			BlockPos nextSegmentPosition = nextSegmentPosition(currentState, currentPos, false);
+			if (nextSegmentPosition == null)
+				break;
+			if (!world.isAreaLoaded(nextSegmentPosition, 0))
+				return;
+			currentPos = nextSegmentPosition;
+		}
+
+		// Init belts
+		int index = 0;
+		List<BlockPos> beltChain = getBeltChain(world, pos);
+		if (beltChain.size() < 2) {
+			world.destroyBlock(pos, true);
+			return;
+		}
+
+		for (BlockPos beltPos : beltChain) {
+			TileEntity tileEntity = world.getTileEntity(beltPos);
+			if (tileEntity instanceof BeltTileEntity) {
+				BeltTileEntity te = (BeltTileEntity) tileEntity;
+				te.setController(pos);
+				te.beltLength = beltChain.size();
+				te.index = index;
+				te.attachKinetics();
+				te.markDirty();
+				te.sendData();
+
+				BlockState currentState = world.getBlockState(beltPos);
+				boolean isVertical = currentState.get(BeltBlock.SLOPE) == Slope.VERTICAL;
+
+				if (currentState.get(CASING) && isVertical) {
+					Block.spawnAsEntity(world, beltPos, new ItemStack(AllBlocks.BRASS_CASING.get()));
+					world.setBlockState(beltPos, currentState.with(CASING, false), 2);
+				}
+
+				if (te.isController() && isVertical) {
+					BeltInventory inventory = te.getInventory();
+					for (TransportedItemStack s : inventory.items)
+						inventory.eject(s);
+					inventory.items.clear();
+				}
+			} else {
+				world.destroyBlock(pos, true);
+				return;
+			}
+			index++;
+		}
+
+	}
+
+	@Override
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (world.isRemote)
 			return;
 		if (state.getBlock() == newState.getBlock())
 			return;
-		updateNeighbouringTunnel(worldIn, pos, state);
+
+		updateNeighbouringTunnel(world, pos, state);
+
+		if (isMoving)
+			return;
+		TileEntity belt = world.getTileEntity(pos);
+		if (belt instanceof BeltTileEntity)
+			belt.remove();
 
 		// Destroy chain
-		boolean endWasDestroyed = state.get(PART) == Part.END;
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
-		if (tileEntity == null)
-			return;
-		if (!(tileEntity instanceof BeltTileEntity))
-			return;
-		BeltTileEntity beltEntity = (BeltTileEntity) tileEntity;
-		BlockPos controller = beltEntity.getController();
-		beltEntity.remove();
+		for (boolean forward : Iterate.trueAndFalse) {
+			BlockPos currentPos = nextSegmentPosition(state, pos, forward);
+			if (currentPos == null)
+				continue;
+			BlockState currentState = world.getBlockState(currentPos);
+			if (!AllBlocks.BELT.typeOf(currentState))
+				continue;
+			if (currentState.get(CASING))
+				Block.spawnAsEntity(world, currentPos, new ItemStack(AllBlocks.BRASS_CASING.get()));
 
-		int limit = 1000;
-		BlockPos toDestroy = controller;
-		BlockState destroyedBlock = null;
-
-		do {
-
-			if (!toDestroy.equals(pos)) {
-				destroyedBlock = worldIn.getBlockState(toDestroy);
-				if (!AllBlocks.BELT.typeOf(destroyedBlock))
-					break;
-
-				BeltTileEntity te = (BeltTileEntity) worldIn.getTileEntity(toDestroy);
+			boolean hasPulley = false;
+			TileEntity tileEntity = world.getTileEntity(currentPos);
+			if (tileEntity instanceof BeltTileEntity) {
+				BeltTileEntity te = (BeltTileEntity) tileEntity;
 				if (te.isController()) {
 					BeltInventory inv = te.getInventory();
 					for (TransportedItemStack stack : inv.items)
@@ -368,36 +492,14 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 				}
 
 				te.remove();
-
-				if (destroyedBlock.get(CASING))
-					Block.spawnAsEntity(worldIn, toDestroy, new ItemStack(AllBlocks.BRASS_CASING.get()));
-				if (te.hasPulley())
-					worldIn.setBlockState(toDestroy, AllBlocks.SHAFT.get().getDefaultState()
-							.with(BlockStateProperties.AXIS, getRotationAxis(destroyedBlock)), 3);
-				else
-					worldIn.destroyBlock(toDestroy, false);
-
-				if (destroyedBlock.get(PART) == Part.END)
-					break;
-			} else {
-				if (endWasDestroyed)
-					break;
+				hasPulley = te.hasPulley();
 			}
 
-			Slope slope = state.get(SLOPE);
-			Direction direction = state.get(HORIZONTAL_FACING);
-
-			if (slope == Slope.VERTICAL) {
-				toDestroy = toDestroy.up(direction.getAxisDirection() == AxisDirection.POSITIVE ? 1 : -1);
-				continue;
-			}
-
-			toDestroy = toDestroy.offset(direction);
-			if (slope != Slope.HORIZONTAL)
-				toDestroy = toDestroy.up(slope == Slope.UPWARD ? 1 : -1);
-
-		} while (limit-- > 0);
-
+			BlockState shaftState =
+				AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS, getRotationAxis(currentState));
+			world.setBlockState(currentPos, hasPulley ? shaftState : Blocks.AIR.getDefaultState(), 3);
+			world.playEvent(2001, currentPos, Block.getStateId(currentState));
+		}
 	}
 
 	private void updateNeighbouringTunnel(World world, BlockPos pos, BlockState beltState) {
@@ -435,28 +537,34 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 		if (!AllBlocks.BELT.typeOf(blockState))
 			return positions;
 
-		Slope slope = blockState.get(SLOPE);
-		Direction direction = blockState.get(HORIZONTAL_FACING);
-
 		int limit = 1000;
 		BlockPos current = controllerPos;
-		do {
+		while (limit-- > 0 && current != null) {
 			positions.add(current);
-
-			if (!AllBlocks.BELT.typeOf(world.getBlockState(current)))
+			BlockState state = world.getBlockState(current);
+			if (!AllBlocks.BELT.typeOf(state))
 				break;
-			if (world.getBlockState(current).get(PART) == Part.END)
-				break;
-			if (slope == Slope.VERTICAL) {
-				current = current.up(direction.getAxisDirection() == AxisDirection.POSITIVE ? 1 : -1);
-				continue;
-			}
-			current = current.offset(direction);
-			if (slope != Slope.HORIZONTAL)
-				current = current.up(slope == Slope.UPWARD ? 1 : -1);
-		} while (limit-- > 0);
+			current = nextSegmentPosition(state, current, true);
+		}
 
 		return positions;
+	}
+
+	public static BlockPos nextSegmentPosition(BlockState state, BlockPos pos, boolean forward) {
+		Direction direction = state.get(HORIZONTAL_FACING);
+		Slope slope = state.get(SLOPE);
+		Part part = state.get(PART);
+
+		int offset = forward ? 1 : -1;
+
+		if (part == Part.END && forward || part == Part.START && !forward)
+			return null;
+		if (slope == Slope.VERTICAL)
+			return pos.up(direction.getAxisDirection() == AxisDirection.POSITIVE ? offset : -offset);
+		pos = pos.offset(direction, offset);
+		if (slope != Slope.HORIZONTAL)
+			return pos.up(slope == Slope.UPWARD ? offset : -offset);
+		return pos;
 	}
 
 	@Override
@@ -487,6 +595,28 @@ public class BeltBlock extends HorizontalKineticBlock implements IHaveNoBlockIte
 		}
 
 		return true;
+	}
+
+	@Override
+	public IBlockColor getColorHandler() {
+		return color;
+	}
+
+	private static BeltColor color = new BeltColor();
+
+	private static class BeltColor implements IBlockColor {
+
+		@Override
+		public int getColor(BlockState state, IEnviromentBlockReader reader, BlockPos pos, int layer) {
+			TileEntity tileEntity = reader.getTileEntity(pos);
+			if (tileEntity instanceof BeltTileEntity) {
+				BeltTileEntity te = (BeltTileEntity) tileEntity;
+				if (te.color != -1)
+					return te.color;
+			}
+			return 0;
+		}
+
 	}
 
 }

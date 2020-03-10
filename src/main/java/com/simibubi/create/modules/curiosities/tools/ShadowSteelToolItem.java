@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.curiosities.tools;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.simibubi.create.foundation.item.AbstractToolItem;
 import com.simibubi.create.foundation.item.AllToolTypes;
@@ -25,7 +25,7 @@ public class ShadowSteelToolItem extends AbstractToolItem {
 	}
 
 	@Override
-	public void modifyDrops(List<ItemStack> drops, IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
+	public void modifyDrops(Collection<ItemStack> drops, IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
 		drops.clear();
 	}
 

@@ -41,7 +41,7 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (!hasSource())
+		if (!hasSource() || getGeneratedSpeed() > getTheoreticalSpeed())
 			updateGeneratedRotation();
 	}
 

@@ -1,7 +1,10 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -93,9 +96,49 @@ public class StructureTransform {
 				return state;
 			}
 
+			if (AllBlocks.BELT.typeOf(state)) {
+				if (state.get(BeltBlock.HORIZONTAL_FACING).getAxis() != rotationAxis) {
+					for (int i = 0; i < rotation.ordinal(); i++) {
+						Slope slope = state.get(BeltBlock.SLOPE);
+						Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
+
+						// Rotate diagonal
+						if (slope != Slope.HORIZONTAL && slope != Slope.VERTICAL) {
+							if (direction.getAxisDirection() == AxisDirection.POSITIVE ^ slope == Slope.DOWNWARD
+									^ direction.getAxis() == Axis.Z) {
+								state =
+									state.with(BeltBlock.SLOPE, slope == Slope.UPWARD ? Slope.DOWNWARD : Slope.UPWARD);
+							} else {
+								state = state.with(BeltBlock.HORIZONTAL_FACING, direction.getOpposite());
+							}
+
+							// Rotate horizontal/vertical
+						} else {
+							if (slope == Slope.HORIZONTAL ^ direction.getAxis() == Axis.Z) {
+								state = state.with(BeltBlock.HORIZONTAL_FACING, direction.getOpposite());
+							}
+							state = state.with(BeltBlock.SLOPE,
+									slope == Slope.HORIZONTAL ? Slope.VERTICAL : Slope.HORIZONTAL);
+						}
+					}
+				} else {
+					if (rotation == Rotation.CLOCKWISE_180) {
+						Slope slope = state.get(BeltBlock.SLOPE);
+						Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
+						if (slope == Slope.UPWARD || slope == Slope.DOWNWARD) {
+							state = state.with(BeltBlock.SLOPE, slope == Slope.UPWARD ? Slope.DOWNWARD
+									: slope == Slope.DOWNWARD ? Slope.UPWARD : slope);
+						} else if (slope == Slope.VERTICAL) {
+							state = state.with(BeltBlock.HORIZONTAL_FACING, direction.getOpposite());
+						}
+					}
+				}
+				return state;
+			}
+
 			if (state.has(BlockStateProperties.FACING)) {
-				state = state.with(BlockStateProperties.FACING,
-						transformFacing(state.get(BlockStateProperties.FACING)));
+				state =
+					state.with(BlockStateProperties.FACING, transformFacing(state.get(BlockStateProperties.FACING)));
 
 			} else if (state.has(BlockStateProperties.AXIS)) {
 				state = state.with(BlockStateProperties.AXIS, transformAxis(state.get(BlockStateProperties.AXIS)));

@@ -408,6 +408,8 @@
 	"create.gui.stress_gauge.capacity": "Remaining Capacity",
 	"create.gui.stress_gauge.overstressed": "Overstressed",
 	"create.gui.stress_gauge.no_rotation": "No Rotation",
+	
+	"create.gui.contraptions.not_fast_enough": "It appears that this %1$s is _not_ rotating with _enough_ _speed._",
 
 	"create.gui.flexcrate.title": "Adjustable Crate",
 	"create.gui.flexcrate.storageSpace": "Storage Space",
@@ -1115,7 +1117,7 @@
 	"item.create.slot_cover.tooltip.summary": "Used to mark a _Mechanical_ _Crafter_ as an empty slot in a recipe. Crafters do not necessarily have to form a full square grid, this cover find its use when there are recipes where _ingredients_ _are_ _diagonal_ to each other.",
 	
 	"tool.create.shadow_steel.tooltip": "SHADOW STEEL TOOLS",
-	"tool.create.shadow_steel.tooltip.summary": "This tool breaks blocks _extremely_ _quick,_ but _shatters_ all of their _drops_ with them. Killed mobs can drop _more_ _experience_ based on the _Looting_ modifier of this tool.",
+	"tool.create.shadow_steel.tooltip.summary": "A fast and powerful tool that _destroys_ _drops_ from any block or entity. Killed mobs can drop _more_ _experience_ based on the _Looting_ modifier of this tool.",
 	
 	"tool.create.blazing.tooltip": "BLAZING TOOLS",
 	"tool.create.blazing.tooltip.summary": "This tool will _melt_ _broken_ _blocks_ and _ignite_ _attacked_ _mobs._ It will not lose Durability while being used in the _Nether._",

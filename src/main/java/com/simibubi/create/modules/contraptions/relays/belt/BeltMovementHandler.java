@@ -78,7 +78,7 @@ public class BeltMovementHandler {
 
 		// Too slow
 		boolean notHorizontal = beltTe.getBlockState().get(BeltBlock.SLOPE) != Slope.HORIZONTAL;
-		if (Math.abs(beltTe.getSpeed()) < (notHorizontal ? 32 : 1))
+		if (Math.abs(beltTe.getSpeed()) < 1)
 			return;
 
 		// Not on top
@@ -157,6 +157,8 @@ public class BeltMovementHandler {
 				return;
 			}
 		}
+
+		entityIn.fallDistance = 0;
 
 		if (movingUp) {
 			float minVelocity = .13f;

@@ -2,6 +2,9 @@ package com.simibubi.create.modules.contraptions.relays.belt;
 
 import static net.minecraft.block.Block.makeCuboidShape;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
@@ -98,6 +101,8 @@ public class BeltShapes {
 	private static final VoxelShaper
 			PARTIAL_CASING = VoxelShaper.forHorizontal(makeCuboidShape(0, 0, 5, 16, 11, 16), Direction.SOUTH);
 
+	static Map<BlockState, VoxelShape> cache = new HashMap<>();
+	static Map<BlockState, VoxelShape> collisionCache = new HashMap<>();
 
 	private static VoxelShape compose(VoxelShape southPart, VoxelShape northPart){
 		return VoxelShapes.or(
@@ -134,6 +139,22 @@ public class BeltShapes {
 	}
 
 	public static VoxelShape getShape(BlockState state) {
+		if (cache.containsKey(state))
+			return cache.get(state);
+		VoxelShape createdShape = VoxelShapes.or(getBeltShape(state), getCasingShape(state));
+		cache.put(state, createdShape);
+		return createdShape;
+	}
+	
+	public static VoxelShape getCollisionShape(BlockState state) {
+		if (collisionCache.containsKey(state))
+			return collisionCache.get(state);
+		VoxelShape createdShape = VoxelShapes.combine(AllShapes.BELT_COLLISION_MASK, getShape(state), IBooleanFunction.AND);
+		collisionCache.put(state, createdShape);
+		return createdShape;
+	}
+
+	private static VoxelShape getBeltShape(BlockState state) {
 		Direction facing = state.get(BeltBlock.HORIZONTAL_FACING);
 		Axis axis = facing.getAxis();
 		Part part = state.get(BeltBlock.PART);
@@ -166,10 +187,9 @@ public class BeltShapes {
 
 		//bad state
 		return VoxelShapes.empty();
-
 	}
 
-	public static VoxelShape getCasingShape(BlockState state) {
+	private static VoxelShape getCasingShape(BlockState state) {
 		if (!state.get(BeltBlock.CASING))
 			return VoxelShapes.empty();
 

@@ -61,22 +61,20 @@ public class BeltTileEntity extends KineticTileEntity {
 		attachmentTracker = new Tracker(this);
 		itemHandler = LazyOptional.empty();
 		color = -1;
-		beltLength = -1;
-		index = -1;
 	}
 
 	@Override
 	public void initialize() {
 		super.initialize();
-		// 0.1 belt
-		if (beltLength == 0) {
-			world.destroyBlock(pos, true);
-		}
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
+
+		// Init belt
+		if (beltLength == 0)
+			BeltBlock.initBelt(world, pos);
 
 		// Initialize Belt Attachments
 		if (world != null && trackerUpdateTag != null) {
@@ -100,9 +98,8 @@ public class BeltTileEntity extends KineticTileEntity {
 		List<Entity> toRemove = new ArrayList<>();
 		passengers.forEach((entity, info) -> {
 			boolean canBeTransported = BeltMovementHandler.canBeTransported(entity);
-			boolean leftTheBelt = info.ticksSinceLastCollision > ((getBlockState().get(BeltBlock.SLOPE) != HORIZONTAL)
-					? 3
-					: 1);
+			boolean leftTheBelt =
+				info.ticksSinceLastCollision > ((getBlockState().get(BeltBlock.SLOPE) != HORIZONTAL) ? 3 : 1);
 			if (!canBeTransported || leftTheBelt) {
 				toRemove.add(entity);
 				return;
@@ -165,6 +162,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	public CompoundNBT write(CompoundNBT compound) {
 		attachmentTracker.write(compound);
 		compound.put("Controller", NBTUtil.writeBlockPos(controller));
+		compound.putBoolean("IsController", isController());
 		compound.putInt("Color", color);
 		compound.putInt("Length", beltLength);
 		compound.putInt("Index", index);
@@ -177,8 +175,13 @@ public class BeltTileEntity extends KineticTileEntity {
 	@Override
 	public void read(CompoundNBT compound) {
 		super.read(compound);
-		trackerUpdateTag = compound;
-		controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
+		if (compound.getBoolean("IsController"))
+			controller = pos;
+		else
+			controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
+
+		if (!compound.contains("DontClearAttachments"))
+			trackerUpdateTag = compound;
 		color = compound.getInt("Color");
 		beltLength = compound.getInt("Length");
 		index = compound.getInt("Index");
@@ -249,8 +252,8 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (part == MIDDLE)
 			return false;
 
-		boolean movingPositively = (getSpeed() > 0 == (direction.getAxisDirection().getOffset() == 1))
-				^ direction.getAxis() == Axis.X;
+		boolean movingPositively =
+			(getSpeed() > 0 == (direction.getAxisDirection().getOffset() == 1)) ^ direction.getAxis() == Axis.X;
 		return part == Part.START ^ movingPositively;
 	}
 
@@ -305,8 +308,9 @@ public class BeltTileEntity extends KineticTileEntity {
 				return controllerTE.getInventory();
 			return null;
 		}
-		if (inventory == null)
+		if (inventory == null) {
 			inventory = new BeltInventory(this);
+		}
 		return inventory;
 	}
 

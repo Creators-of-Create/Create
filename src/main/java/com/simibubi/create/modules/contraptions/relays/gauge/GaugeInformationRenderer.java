@@ -13,6 +13,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
@@ -22,6 +23,7 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -56,21 +58,28 @@ public class GaugeInformationRenderer {
 		BlockPos pos = result.getPos();
 		BlockState state = world.getBlockState(pos);
 		ItemStack goggles = mc.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+		TileEntity te = world.getTileEntity(pos);
+		boolean notFastEnough = (te instanceof KineticTileEntity)
+				&& !((KineticTileEntity) te).isSpeedRequirementFulfilled() && ((KineticTileEntity) te).getSpeed() != 0;
 
-		if (!AllItems.GOGGLES.typeOf(goggles))
+		if (!AllItems.GOGGLES.typeOf(goggles) && !notFastEnough)
 			return;
 		if (mc.player.isSneaking())
 			return;
 
 		List<String> tooltip = new ArrayList<>();
-		TileEntity te = world.getTileEntity(pos);
 
-		if (state.getBlock() instanceof GaugeBlock)
+		if (notFastEnough) {
+			addSpeedRequirementMessage(state, tooltip, (KineticTileEntity) te);
+			goggles = AllItems.GOGGLES.asStack();
+		} else if (state.getBlock() instanceof GaugeBlock)
 			addGaugeTooltip(state, tooltip, te);
-		if (te instanceof GeneratingKineticTileEntity)
-			addGeneratorTooltip(state, tooltip, (GeneratingKineticTileEntity) te);
-		if (te instanceof KineticTileEntity)
-			addStressTooltip(state, tooltip, (KineticTileEntity) te);
+		else {
+			if (te instanceof GeneratingKineticTileEntity)
+				addGeneratorTooltip(state, tooltip, (GeneratingKineticTileEntity) te);
+			if (te instanceof KineticTileEntity)
+				addStressTooltip(state, tooltip, (KineticTileEntity) te);
+		}
 
 		if (tooltip.isEmpty())
 			return;
@@ -91,12 +100,20 @@ public class GaugeInformationRenderer {
 
 		tooltipScreen.init(mc, mc.mainWindow.getScaledWidth(), mc.mainWindow.getScaledHeight());
 		tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
+		ItemStack item = goggles;
 		ScreenElementRenderer.render3DItem(() -> {
 			GlStateManager.translated(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16, 0);
-			return goggles;
+			return item;
 		});
 		GlStateManager.popMatrix();
 
+	}
+
+	private static void addSpeedRequirementMessage(BlockState state, List<String> tooltip, KineticTileEntity te) {
+		String spacing = "    ";
+		tooltip.addAll(TooltipHelper.cutString(spacing
+				+ Lang.translate("gui.contraptions.not_fast_enough", I18n.format(state.getBlock().getTranslationKey())),
+				GRAY, TextFormatting.WHITE));
 	}
 
 	private static void addStressTooltip(BlockState state, List<String> tooltip, KineticTileEntity te) {

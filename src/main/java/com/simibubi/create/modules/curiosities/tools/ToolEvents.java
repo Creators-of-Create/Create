@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.curiosities.tools;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.item.AbstractToolItem;
@@ -12,8 +13,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EntityDamageSource;
@@ -111,15 +114,39 @@ public class ToolEvents {
 	}
 
 	@SubscribeEvent
-	public static void shadowSteelToolsDoNotDropEntityLoot(LivingDropsEvent event) {
+	public static void toolsMayModifyEntityLoot(LivingDropsEvent event) {
 		if (!(event.getSource() instanceof EntityDamageSource))
 			return;
+
 		EntityDamageSource source = (EntityDamageSource) event.getSource();
+		Entity target = event.getEntity();
 		Entity trueSource = source.getTrueSource();
+		World world = target.getEntityWorld();
+
 		if (trueSource != null && trueSource instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) trueSource;
-			if (player.getHeldItemMainhand().getItem() instanceof ShadowSteelToolItem)
+			ItemStack heldItemMainhand = player.getHeldItemMainhand();
+			Item item = heldItemMainhand.getItem();
+
+			if (item instanceof ShadowSteelToolItem)
 				event.setCanceled(true);
+
+			if (item instanceof BlazingToolItem) {
+				BlazingToolItem blazingToolItem = (BlazingToolItem) item;
+				List<ItemStack> drops = event.getDrops().stream().map(entity -> {
+					ItemStack stack = entity.getItem();
+					entity.remove();
+					return stack;
+				}).collect(Collectors.toList());
+				blazingToolItem.modifyDrops(drops, world, player.getPosition(), heldItemMainhand, null);
+				event.getDrops().clear();
+				drops.stream().map(stack -> {
+					ItemEntity entity = new ItemEntity(world, target.posX, target.posY, target.posZ, stack);
+					world.addEntity(entity);
+					return entity;
+				}).forEach(event.getDrops()::add);
+			}
+
 		}
 	}
 

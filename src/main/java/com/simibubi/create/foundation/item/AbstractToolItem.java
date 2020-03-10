@@ -6,8 +6,8 @@ import static com.simibubi.create.foundation.item.AllToolTypes.PICKAXE;
 import static com.simibubi.create.foundation.item.AllToolTypes.SHOVEL;
 import static com.simibubi.create.foundation.item.AllToolTypes.SWORD;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.packet.SimplePacketBase;
@@ -126,7 +126,7 @@ public abstract class AbstractToolItem extends ToolItem {
 		return false;
 	}
 
-	public void modifyDrops(final List<ItemStack> drops, IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
+	public void modifyDrops(final Collection<ItemStack> drops, IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
 	}
 
 	public void spawnParticles(IWorld world, BlockPos pos, ItemStack tool, BlockState state) {

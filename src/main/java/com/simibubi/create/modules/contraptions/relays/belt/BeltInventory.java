@@ -91,8 +91,8 @@ public class BeltInventory {
 				float diff = stackInFront.beltPosition - currentPos;
 				if (Math.abs(diff) <= spacing)
 					continue;
-				movement = beltMovementPositive ? Math.min(movement, diff - spacing)
-						: Math.max(movement, diff + spacing);
+				movement =
+					beltMovementPositive ? Math.min(movement, diff - spacing) : Math.max(movement, diff + spacing);
 			}
 
 			// Determine current segment
@@ -104,8 +104,8 @@ public class BeltInventory {
 
 			// Don't move beyond the edge
 			float diffToEnd = beltMovementPositive ? belt.beltLength - currentPos : -currentPos;
-			float limitedMovement = beltMovementPositive ? Math.min(movement, diffToEnd)
-					: Math.max(movement, diffToEnd);
+			float limitedMovement =
+				beltMovementPositive ? Math.min(movement, diffToEnd) : Math.max(movement, diffToEnd);
 
 			float nextOffset = current.beltPosition + limitedMovement;
 			if (!onClient) {
@@ -204,12 +204,12 @@ public class BeltInventory {
 				if (AllBlocks.BASIN.typeOf(state) || AllBlocks.SAW.typeOf(state)) {
 					TileEntity te = world.getTileEntity(nextPosition);
 					if (te != null) {
-						LazyOptional<IItemHandler> optional = te
-								.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP);
+						LazyOptional<IItemHandler> optional =
+							te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP);
 						if (optional.isPresent()) {
 							IItemHandler itemHandler = optional.orElse(null);
-							ItemStack remainder = ItemHandlerHelper.insertItemStacked(itemHandler, current.stack.copy(),
-									false);
+							ItemStack remainder =
+								ItemHandlerHelper.insertItemStacked(itemHandler, current.stack.copy(), false);
 							if (remainder.equals(current.stack, false))
 								continue;
 
@@ -272,7 +272,7 @@ public class BeltInventory {
 			return false;
 
 		Direction flapFacing = movementDirection.getOpposite();
-		
+
 		BeltTunnelTileEntity tunnel = (BeltTunnelTileEntity) te;
 		if (!tunnel.flaps.containsKey(flapFacing))
 			return false;
@@ -385,6 +385,7 @@ public class BeltInventory {
 		outPos.add(outMotion.normalize());
 		ItemEntity entity = new ItemEntity(belt.getWorld(), outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);
 		entity.setMotion(outMotion);
+		entity.setDefaultPickupDelay();
 		entity.velocityChanged = true;
 		belt.getWorld().addEntity(entity);
 	}
@@ -398,8 +399,12 @@ public class BeltInventory {
 		verticalMovement = verticalMovement * (Math.min(offset, belt.beltLength - .5f) - .5f);
 
 		Vec3d vec = VecHelper.getCenterOf(belt.getPos());
-		vec = vec.add(new Vec3d(belt.getBeltFacing().getDirectionVec()).scale(offset - .5f)).add(0, verticalMovement,
-				0);
+		Vec3d horizontalMovement = new Vec3d(belt.getBeltFacing().getDirectionVec()).scale(offset - .5f);
+		
+		if (slope == Slope.VERTICAL)
+			horizontalMovement = Vec3d.ZERO;
+		
+		vec = vec.add(horizontalMovement).add(0, verticalMovement, 0);
 		return vec;
 	}
 
