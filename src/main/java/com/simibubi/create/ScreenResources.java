@@ -41,6 +41,12 @@ public enum ScreenResources {
 
 	FILTER("filter.png", 200, 100),
 	ATTRIBUTE_FILTER("filter.png", 0, 100, 200, 86),
+	
+	SEQUENCER("sequencer.png", 156, 128),
+	SEQUENCER_INSTRUCTION("sequencer.png", 14, 47, 131, 18),
+	SEQUENCER_WAIT("sequencer.png", 14, 65, 131, 18),
+	SEQUENCER_END("sequencer.png", 14, 83, 131, 18),
+	SEQUENCER_EMPTY("sequencer.png", 14, 101, 131, 18),
 
 	// Logistical Index
 	INDEX_TOP("index.png", 41, 0, 174, 22),

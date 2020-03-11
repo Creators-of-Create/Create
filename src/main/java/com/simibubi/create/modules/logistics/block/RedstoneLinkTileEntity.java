@@ -60,7 +60,8 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 
 	public void transmit(boolean signal) {
 		transmittedSignal = signal;
-		link.notifySignalChange();
+		if (link != null)
+			link.notifySignalChange();
 	}
 
 	@Override

@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/sequenced_gearshift/idle",
+	"textures": {
+		"4": "create:block/sequenced_gearshift_1"
+	}
+}

@@ -41,6 +41,7 @@ import com.simibubi.create.modules.contraptions.processing.BasinBlock;
 import com.simibubi.create.modules.contraptions.redstone.AnalogLeverBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerBlock;
+import com.simibubi.create.modules.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
@@ -164,6 +165,7 @@ public enum AllBlocks {
 	BRASS_CASING(new CasingBlock("crafter_top")),
 
 	MECHANICAL_CRAFTER(new MechanicalCrafterBlock()),
+	SEQUENCED_GEARSHIFT(new SequencedGearshiftBlock()),
 	FLYWHEEL(new FlywheelBlock()),
 	FURNACE_ENGINE(new FurnaceEngineBlock()),
 	ROTATION_SPEED_CONTROLLER(new SpeedControllerBlock()),

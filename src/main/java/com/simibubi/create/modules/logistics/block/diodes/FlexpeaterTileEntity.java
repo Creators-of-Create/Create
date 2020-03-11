@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.MathHelper;
 
 public class FlexpeaterTileEntity extends SmartTileEntity {
 
@@ -36,7 +37,14 @@ public class FlexpeaterTileEntity extends SmartTileEntity {
 		maxState.withStepFunction(this::step);
 		maxState.withFormatter(this::format);
 		maxState.withUnit(this::getUnit);
+		maxState.withCallback(this::onMaxDelayChanged);
+		
 		behaviours.add(maxState);
+	}
+	
+	private void onMaxDelayChanged(int newMax) {
+		state = MathHelper.clamp(state, 0, newMax);
+		sendData();
 	}
 
 	@Override

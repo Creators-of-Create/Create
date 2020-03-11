@@ -1,8 +1,10 @@
 package com.simibubi.create.foundation.gui.widgets;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.util.text.TextFormatting;
@@ -18,6 +20,7 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	protected int min, max;
 	protected int shiftStep;
+	Function<StepContext, Integer> step;
 
 	public ScrollInput(int xIn, int yIn, int widthIn, int heightIn) {
 		super(xIn, yIn, widthIn, heightIn);
@@ -25,8 +28,13 @@ public class ScrollInput extends AbstractSimiWidget {
 		min = 0;
 		max = 1;
 		shiftStep = 5;
+		step = standardStep();
 	}
-	
+
+	public Function<StepContext, Integer> standardStep() {
+		return c -> c.shift ? shiftStep : 1;
+	}
+
 	public ScrollInput withRange(int min, int max) {
 		this.min = min;
 		this.max = max;
@@ -41,6 +49,11 @@ public class ScrollInput extends AbstractSimiWidget {
 	public ScrollInput titled(String title) {
 		this.title = title;
 		updateTooltip();
+		return this;
+	}
+
+	public ScrollInput withStepFunction(Function<StepContext, Integer> step) {
+		this.step = step;
 		return this;
 	}
 
@@ -62,7 +75,7 @@ public class ScrollInput extends AbstractSimiWidget {
 			writeToLabel();
 		return this;
 	}
-	
+
 	public ScrollInput withShiftStep(int step) {
 		shiftStep = step;
 		return this;
@@ -73,18 +86,25 @@ public class ScrollInput extends AbstractSimiWidget {
 		if (!isHovered)
 			return false;
 
+		StepContext context = new StepContext();
+		context.control = AllKeys.ctrlDown();
+		context.shift = AllKeys.shiftDown();
+		context.currentValue = state;
+		context.forward = delta > 0;
+
 		int priorState = state;
 		boolean shifted = AllKeys.shiftDown();
-		int step = (int) Math.signum(delta) * (shifted ? shiftStep : 1);
+		int step = (int) Math.signum(delta) * this.step.apply(context);
+
 		state += step;
 		if (shifted)
 			state -= state % shiftStep;
 
 		clampState();
-		
+
 		if (priorState != state)
 			onChanged();
-		
+
 		return priorState != state;
 	}
 
@@ -94,7 +114,7 @@ public class ScrollInput extends AbstractSimiWidget {
 		if (state < min)
 			state = min;
 	}
-	
+
 	public void onChanged() {
 		if (displayLabel != null)
 			writeToLabel();
@@ -102,7 +122,7 @@ public class ScrollInput extends AbstractSimiWidget {
 			onScroll.accept(state);
 		updateTooltip();
 	}
-	
+
 	protected void writeToLabel() {
 		displayLabel.text = "" + state;
 	}

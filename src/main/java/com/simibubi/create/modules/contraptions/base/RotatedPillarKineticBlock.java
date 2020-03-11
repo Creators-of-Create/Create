@@ -40,7 +40,7 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 		}
 	}
 
-	public Axis getPreferredAxis(BlockItemUseContext context) {
+	public static Axis getPreferredAxis(BlockItemUseContext context) {
 		Axis prefferedAxis = null;
 		for (Direction side : Direction.values()) {
 			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));

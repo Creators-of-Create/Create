@@ -153,8 +153,13 @@ public class BeltBlock extends HorizontalKineticBlock
 
 		if (state.get(SLOPE) == Slope.VERTICAL)
 			return;
-		if (entityIn instanceof PlayerEntity && entityIn.isSneaking())
-			return;
+		if (entityIn instanceof PlayerEntity) {
+			PlayerEntity player = (PlayerEntity) entityIn;
+			if (player.isSneaking())
+				return;
+			if (player.abilities.isFlying)
+				return;
+		}
 		if (belt == null || belt.getSpeed() == 0)
 			return;
 		if (entityIn instanceof ItemEntity && entityIn.isAlive()) {

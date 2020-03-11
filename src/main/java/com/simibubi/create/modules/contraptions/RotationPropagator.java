@@ -67,7 +67,10 @@ public class RotationPropagator {
 
 		// Axis <-> Axis
 		if (connectedByAxis) {
-			return getAxisModifier(from, direction) * getAxisModifier(to, direction.getOpposite());
+			float axisModifier = getAxisModifier(to, direction.getOpposite());
+			if (axisModifier != 0)
+				axisModifier = 1 / axisModifier;
+			return getAxisModifier(from, direction) * axisModifier;
 		}
 
 		// Attached Encased Belts

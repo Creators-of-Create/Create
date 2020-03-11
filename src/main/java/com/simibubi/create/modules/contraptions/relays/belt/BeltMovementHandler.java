@@ -7,6 +7,7 @@ import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
@@ -14,6 +15,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.HangingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -150,7 +152,7 @@ public class BeltMovementHandler {
 			checkBB = checkBB.offset(checkDistance).grow(-Math.abs(checkDistance.x), -Math.abs(checkDistance.y),
 					-Math.abs(checkDistance.z));
 			List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(entityIn, checkBB);
-			list.removeIf(e -> entityIn.isRidingOrBeingRiddenBy(e));
+			list.removeIf(e -> shouldIgnoreBlocking(entityIn, e));
 			if (!list.isEmpty()) {
 				entityIn.setMotion(0, 0, 0);
 				info.ticksSinceLastCollision--;
@@ -184,6 +186,14 @@ public class BeltMovementHandler {
 			entityIn.setMotion(movement);
 			entityIn.velocityChanged = true;
 		}
+	}
+
+	public static boolean shouldIgnoreBlocking(Entity me, Entity other) {
+		if (other instanceof ContraptionEntity)
+			return true;
+		if (other instanceof HangingEntity)
+			return true;
+		return me.isRidingOrBeingRiddenBy(other);
 	}
 
 }

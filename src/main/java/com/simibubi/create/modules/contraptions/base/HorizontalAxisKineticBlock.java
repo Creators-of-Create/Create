@@ -39,7 +39,7 @@ public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 		return this.getDefaultState().with(HORIZONTAL_AXIS, context.getPlacementHorizontalFacing().rotateY().getAxis());
 	}
 
-	public Axis getPreferredHorizontalAxis(BlockItemUseContext context) {
+	public static Axis getPreferredHorizontalAxis(BlockItemUseContext context) {
 		Direction prefferedSide = null;
 		for (Direction side : Direction.values()) {
 			if (side.getAxis().isVertical())

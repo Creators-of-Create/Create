@@ -112,7 +112,7 @@ public abstract class AbstractToolItem extends ToolItem {
 
 	@Override
 	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-		return !(hasType(SWORD) && !player.isCreative());
+		return !hasType(SWORD) || !player.isCreative();
 	}
 
 	@Override
@@ -126,7 +126,8 @@ public abstract class AbstractToolItem extends ToolItem {
 		return false;
 	}
 
-	public void modifyDrops(final Collection<ItemStack> drops, IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
+	public void modifyDrops(final Collection<ItemStack> drops, IWorld world, BlockPos pos, ItemStack tool,
+			BlockState state) {
 	}
 
 	public void spawnParticles(IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
