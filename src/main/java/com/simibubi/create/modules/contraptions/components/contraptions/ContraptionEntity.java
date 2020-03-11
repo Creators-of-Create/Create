@@ -294,7 +294,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	@Override
 	public void stopRiding() {
 		if (!world.isRemote)
-			disassemble();
+			if (isAlive())
+				disassemble();
 		super.stopRiding();
 	}
 

@@ -951,6 +951,13 @@
 	"block.create.clockwork_bearing.tooltip.condition1": "When Rotated",
 	"block.create.clockwork_bearing.tooltip.behaviour1": "Starts rotating the attached Structure towards the _current_ _hour._ If a second structure is present, it will serve as the _minute_ _hand._",
 	
+	"block.create.sequenced_gearshift.tooltip": "SEQUENCED GEARSHIFT",
+	"block.create.sequenced_gearshift.tooltip.summary": "A _programmable_ _utility_ _component,_ which can change its _rotational_ _through-put_ according to up to _5_ _consecutive_ _instructions._ Use this to power Mechanical Bearings, Pistons or Pulleys with more control over timing and speed. May become less precise at higher speeds.",
+	"block.create.sequenced_gearshift.tooltip.condition1": "When Powered by Redstone",
+	"block.create.sequenced_gearshift.tooltip.behaviour1": "_Starts_ _executing_ programmed instructions based on the input speed.",
+	"block.create.sequenced_gearshift.tooltip.condition2": "When R-Clicked",
+	"block.create.sequenced_gearshift.tooltip.behaviour2": "Opens the _configuration_ _interface._",
+	
 	"block.create.cart_assembler.tooltip": "CART ASSEMBLER",
 	"block.create.cart_assembler.tooltip.summary": "Mounts a connected Structure onto a _passing_ _Minecart._",
 	"block.create.cart_assembler.tooltip.condition1": "When Powered by Redstone",

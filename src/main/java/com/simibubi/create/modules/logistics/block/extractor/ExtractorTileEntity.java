@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
-import com.simibubi.create.modules.logistics.item.CardboardBoxItem;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -56,23 +55,24 @@ public class ExtractorTileEntity extends SmartTileEntity {
 	}
 
 	protected void onExtract(ItemStack stack) {
+		if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
+			TileEntity te = world.getTileEntity(pos.down());
+			if (te instanceof BeltTileEntity) {
+				if (((BeltTileEntity) te).tryInsertingFromSide(Direction.UP, stack, false))
+					return;
+			}
+		}
+
 		Vec3d entityPos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);
 		Entity entityIn = null;
 		Direction facing = AttachedLogisticalBlock.getBlockFacing(getBlockState());
 		if (facing == Direction.DOWN)
 			entityPos = entityPos.add(0, .5, 0);
 
-		if (stack.getItem() instanceof CardboardBoxItem) {
-//			entityIn = new CardboardBoxEntity(world, entityPos, stack, facing.getOpposite());
-//			world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .25f, .05f);
-
-		} else {
-			entityIn = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, stack);
-			entityIn.setMotion(Vec3d.ZERO);
-			((ItemEntity) entityIn).setPickupDelay(5);
-			world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f, .1f);
-		}
-
+		entityIn = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, stack);
+		entityIn.setMotion(Vec3d.ZERO);
+		((ItemEntity) entityIn).setPickupDelay(5);
+		world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f, .1f);
 		world.addEntity(entityIn);
 	}
 
@@ -109,9 +109,12 @@ public class ExtractorTileEntity extends SmartTileEntity {
 						return false;
 				}
 			}
+			return true;
 		}
 
-		return world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(getPos())).isEmpty();
+		List<Entity> entitiesWithinAABBExcludingEntity =
+			world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(getPos()));
+		return entitiesWithinAABBExcludingEntity.isEmpty();
 	}
 
 	@Override
