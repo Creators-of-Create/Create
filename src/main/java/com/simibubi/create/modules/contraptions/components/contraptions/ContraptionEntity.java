@@ -9,7 +9,9 @@ import com.simibubi.create.AllEntities;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.BearingContraption;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.LinearActuatorTileEntity;
 
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -93,6 +95,10 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		return this;
 	}
 
+	public boolean collisionEnabled() {
+		return stationary && controllerTE instanceof LinearActuatorTileEntity;
+	}
+
 	@Override
 	public void tick() {
 		if (contraption == null) {
@@ -102,57 +108,64 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 		attachToController();
 
-		Entity e = getRidingEntity();
-		if (e != null) {
-			Entity riding = e;
-			while (riding.getRidingEntity() != null)
-				riding = riding.getRidingEntity();
-			Vec3d movementVector = riding.getMotion();
-			if (riding instanceof BoatEntity)
-				movementVector = new Vec3d(posX - prevPosX, posY - prevPosY, posZ - prevPosZ);
-			Vec3d motion = movementVector.normalize();
-			if (motion.length() > 0) {
-				targetYaw = yawFromVector(motion);
-				if (targetYaw < 0)
-					targetYaw += 360;
-				if (yaw < 0)
-					yaw += 360;
-			}
-
-//			if (Math.abs(getShortestAngleDiff(yaw, targetYaw)) >= 175) {
-//				initialAngle += 180;
-//				yaw += 180;
-//				prevYaw = yaw;
-//			} else {
-			float speed = 0.2f;
-			prevYaw = yaw;
-			yaw = angleLerp(speed, yaw, targetYaw);
-//			}
-
-			boolean wasStalled = isStalled();
-			tickActors(movementVector);
-			if (isStalled()) {
-				if (!wasStalled)
-					motionBeforeStall = riding.getMotion();
-				riding.setMotion(0, 0, 0);
-			}
-
-			if (wasStalled && !isStalled()) {
-				riding.setMotion(motionBeforeStall);
-				motionBeforeStall = Vec3d.ZERO;
-			}
-
-			super.tick();
+		Entity mountedEntity = getRidingEntity();
+		if (mountedEntity != null) {
+			tickAsPassenger(mountedEntity);
 			return;
 		}
 
-		if (getMotion().length() > 1 / 4098f)
-			move(getMotion().x, getMotion().y, getMotion().z);
+		if (getMotion().length() < 1 / 4098f)
+			setMotion(Vec3d.ZERO);
+
+		move(getMotion().x, getMotion().y, getMotion().z);
+		if (ContraptionCollider.collideBlocks(this))
+			controllerTE.collided();
+		
 		tickActors(new Vec3d(posX - prevPosX, posY - prevPosY, posZ - prevPosZ));
 
 		prevYaw = yaw;
 		prevPitch = pitch;
 		prevRoll = roll;
+
+		super.tick();
+	}
+	
+	public void collisionTick() {
+		ContraptionCollider.collideEntities(this);
+	}
+
+	public void tickAsPassenger(Entity e) {
+		Entity riding = e;
+		while (riding.getRidingEntity() != null)
+			riding = riding.getRidingEntity();
+		Vec3d movementVector = riding.getMotion();
+		if (riding instanceof BoatEntity)
+			movementVector = new Vec3d(posX - prevPosX, posY - prevPosY, posZ - prevPosZ);
+		Vec3d motion = movementVector.normalize();
+
+		if (motion.length() > 0) {
+			targetYaw = yawFromVector(motion);
+			if (targetYaw < 0)
+				targetYaw += 360;
+			if (yaw < 0)
+				yaw += 360;
+		}
+
+		prevYaw = yaw;
+		yaw = angleLerp(0.2f, yaw, targetYaw);
+
+		boolean wasStalled = isStalled();
+		tickActors(movementVector);
+		if (isStalled()) {
+			if (!wasStalled)
+				motionBeforeStall = riding.getMotion();
+			riding.setMotion(0, 0, 0);
+		}
+
+		if (wasStalled && !isStalled()) {
+			riding.setMotion(motionBeforeStall);
+			motionBeforeStall = Vec3d.ZERO;
+		}
 
 		super.tick();
 	}
@@ -237,14 +250,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		}
 	}
 
-	public void moveTo(double x, double y, double z) {
-		move(x - posX, y - posY, z - posZ);
-	}
-
 	public void move(double x, double y, double z) {
-
-		// Collision and stuff
-
 		setPosition(posX + x, posY + y, posZ + z);
 	}
 
@@ -259,9 +265,6 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public void rotate(double roll, double yaw, double pitch) {
-
-		// Collision and stuff
-
 		this.yaw += yaw;
 		this.pitch += pitch;
 		this.roll += roll;
@@ -397,9 +400,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public void disassemble() {
 		if (getContraption() != null) {
-			float yaw = getYaw(1);
 			getContraption().disassemble(world, new BlockPos(getPositionVec().add(.5, .5, .5)),
-					new Vec3d(getRoll(1), yaw, getPitch(1)));
+					new Vec3d(getRoll(1), getYaw(1), getPitch(1)));
 		}
 		remove();
 	}
@@ -440,8 +442,13 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	@Override
+	// Make sure nothing can move contraptions out of the way
 	public void setMotion(Vec3d motionIn) {
-		// Make sure nothing can move contraptions out of the way
+	}
+
+	@Override
+	public PushReaction getPushReaction() {
+		return PushReaction.IGNORE;
 	}
 
 	public void setContraptionMotion(Vec3d vec) {

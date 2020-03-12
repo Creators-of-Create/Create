@@ -4,7 +4,6 @@ import com.simibubi.create.modules.contraptions.components.contraptions.AllContr
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -22,7 +21,7 @@ public class PulleyContraption extends Contraption {
 			return null;
 		PulleyContraption construct = new PulleyContraption();
 		construct.initialOffset = initialOffset;
-		if (!construct.searchMovedStructure(world, pos, Direction.DOWN))
+		if (!construct.searchMovedStructure(world, pos, null))
 			return null;
 		construct.initActors(world);
 		return construct;

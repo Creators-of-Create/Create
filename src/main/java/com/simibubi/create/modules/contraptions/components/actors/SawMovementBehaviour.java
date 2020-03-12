@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -22,15 +23,15 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	public boolean isActive(MovementContext context) {
 		return SawBlock.isHorizontal(context.state);
 	}
-	
+
 	@Override
 	public Vec3d getActiveAreaOffset(MovementContext context) {
 		return new Vec3d(context.state.get(SawBlock.FACING).getDirectionVec()).scale(.65f);
 	}
-	
+
 	@Override
-	protected boolean canBreak(BlockState state) {
-		return super.canBreak(state) && state.isIn(BlockTags.LOGS);
+	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
+		return super.canBreak(world, breakingPos, state) && state.isIn(BlockTags.LOGS);
 	}
 
 	@Override
@@ -56,5 +57,10 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, remainder);
 		entity.setMotion(context.relativeMotion.scale(distance / 20f));
 		world.addEntity(entity);
+	}
+
+	@Override
+	protected DamageSource getDamageSource() {
+		return SawBlock.damageSourceSaw;
 	}
 }

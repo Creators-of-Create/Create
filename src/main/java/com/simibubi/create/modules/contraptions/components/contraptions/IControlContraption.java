@@ -68,4 +68,6 @@ public interface IControlContraption {
 
 	}
 
+	public void collided();
+
 }

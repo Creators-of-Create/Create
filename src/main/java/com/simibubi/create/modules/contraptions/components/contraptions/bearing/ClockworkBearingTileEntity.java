@@ -46,7 +46,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		}
 
 		if (running && Contraption.isFrozen())
-			disassembleConstruct();
+			disassemble();
 
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
@@ -57,12 +57,11 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 						hourHand.getContraption().stop(world);
 					if (minuteHand != null)
 						minuteHand.getContraption().stop(world);
-					disassembleConstruct();
+					disassemble();
 				}
 				return;
-			} else {
-				assembleConstruct();
-			}
+			} else
+				assemble();
 			return;
 		}
 
@@ -148,7 +147,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		return speed;
 	}
 
-	public void assembleConstruct() {
+	public void assemble() {
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		// Collect Construct
@@ -182,14 +181,14 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		sendData();
 	}
 
-	public void disassembleConstruct() {
+	public void disassemble() {
 		if (!running)
 			return;
-		
+
 		hourAngle = 0;
 		minuteAngle = 0;
 		applyRotations();
-		
+
 		if (hourHand != null) {
 			hourHand.disassemble();
 		}
@@ -280,8 +279,12 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	@Override
 	public void remove() {
 		if (!world.isRemote)
-			disassembleConstruct();
+			disassemble();
 		super.remove();
+	}
+
+	@Override
+	public void collided() {
 	}
 
 }

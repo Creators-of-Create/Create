@@ -50,16 +50,23 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		super.tick();
 		boolean contraptionPresent = movedContraption != null;
 
-		if (contraptionPresent)
+		if (contraptionPresent) {
+			movedContraption.collisionTick();
 			if (!movedContraption.isAlive())
 				movedContraption = null;
+		}
 
 		if (world.isRemote)
 			clientOffsetDiff *= .75f;
 
-		if (waitingForSpeedChange) {
+		if (waitingForSpeedChange && contraptionPresent) {
+			if (world.isRemote) {
+				float syncSpeed = clientOffsetDiff / 2f;
+				offset += syncSpeed;
+				movedContraption.setContraptionMotion(toMotionVector(syncSpeed));
+				return;
+			}
 			movedContraption.setContraptionMotion(Vec3d.ZERO);
-//			movedContraption.setMotion(Vec3d.ZERO);
 			return;
 		}
 
@@ -72,7 +79,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 					sendData();
 				return;
 			}
-			assembleConstruct();
+			assemble();
 			return;
 		}
 
@@ -96,6 +103,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 			offset = offset <= 0 ? 0 : extensionRange;
 			if (!world.isRemote) {
 				applyContraptionMotion();
+				applyContraptionPosition();
 				tryDisassemble();
 				if (waitingForSpeedChange) {
 					forceMove = true;
@@ -134,7 +142,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	public void remove() {
 		this.removed = true;
 		if (!world.isRemote)
-			disassembleConstruct();
+			disassemble();
 		super.remove();
 	}
 
@@ -185,9 +193,9 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 
 	}
 
-	protected abstract void assembleConstruct();
+	public abstract void disassemble();
 
-	protected abstract void disassembleConstruct();
+	protected abstract void assemble();
 
 	protected abstract int getExtensionRange();
 
@@ -203,7 +211,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 
 	protected void tryDisassemble() {
 		if (removed) {
-			disassembleConstruct();
+			disassemble();
 			return;
 		}
 		if (movementMode.get() == MovementMode.MOVE_NEVER_PLACE) {
@@ -215,7 +223,18 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 			waitingForSpeedChange = true;
 			return;
 		}
-		disassembleConstruct();
+		disassemble();
+	}
+
+	@Override
+	public void collided() {
+		if (world.isRemote) {
+			waitingForSpeedChange = true;
+			return;
+		}
+		offset = getGridOffset(offset - getMovementSpeed());
+		applyContraptionPosition();
+		tryDisassemble();
 	}
 
 	protected void applyContraptionMotion() {
@@ -229,6 +248,8 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	}
 
 	protected void applyContraptionPosition() {
+		if (movedContraption == null)
+			return;
 		Vec3d vec = toPosition(offset);
 		movedContraption.setPosition(vec.x, vec.y, vec.z);
 		if (getSpeed() == 0 || waitingForSpeedChange)

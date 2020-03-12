@@ -53,9 +53,8 @@ public class TooltipHelper {
 
 		for (int i = 0; i < words.length; i++) {
 			String word = words[i];
-			if (word.matches("_.+_")) {
-				word = highlightColor + word.substring(1, word.length() - 1) + defaultColor;
-			}
+			if (word.matches("_.+_.?"))
+				word = highlightColor + word.replaceAll("\\_", "") + defaultColor;
 
 			boolean lastWord = i == words.length - 1;
 

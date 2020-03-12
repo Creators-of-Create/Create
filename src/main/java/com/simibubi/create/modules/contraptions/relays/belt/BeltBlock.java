@@ -53,10 +53,11 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -317,6 +318,7 @@ public class BeltBlock extends HorizontalKineticBlock
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
 		// From Particle Manager, but reduced density for belts with lots of boxes
 		VoxelShape voxelshape = state.getShape(world, pos);
@@ -603,25 +605,9 @@ public class BeltBlock extends HorizontalKineticBlock
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public IBlockColor getColorHandler() {
-		return color;
-	}
-
-	private static BeltColor color = new BeltColor();
-
-	private static class BeltColor implements IBlockColor {
-
-		@Override
-		public int getColor(BlockState state, IEnviromentBlockReader reader, BlockPos pos, int layer) {
-			TileEntity tileEntity = reader.getTileEntity(pos);
-			if (tileEntity instanceof BeltTileEntity) {
-				BeltTileEntity te = (BeltTileEntity) tileEntity;
-				if (te.color != -1)
-					return te.color;
-			}
-			return 0;
-		}
-
+		return new BeltColor();
 	}
 
 }

@@ -81,7 +81,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	@Override
 	public void remove() {
 		if (!world.isRemote)
-			disassembleConstruct();
+			disassemble();
 		super.remove();
 	}
 
@@ -144,7 +144,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		return speed;
 	}
 
-	public void assembleConstruct() {
+	public void assemble() {
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		// Collect Construct
@@ -168,7 +168,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		updateGeneratedRotation();
 	}
 
-	public void disassembleConstruct() {
+	public void disassemble() {
 		if (!running)
 			return;
 		if (movedContraption != null)
@@ -190,7 +190,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			clientAngleDiff /= 2;
 
 		if (running && Contraption.isFrozen())
-			disassembleConstruct();
+			disassemble();
 
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
@@ -201,13 +201,13 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 						|| movedContraption.getContraption().blocks.isEmpty())) {
 					if (movedContraption != null)
 						movedContraption.getContraption().stop(world);
-					disassembleConstruct();
+					disassemble();
 				}
 				return;
 			} else {
 				if (speed == 0 && !isWindmill)
 					return;
-				assembleConstruct();
+				assemble();
 			}
 			return;
 		}
@@ -273,6 +273,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			Axis bearingAxis = state.get(MechanicalBearingBlock.FACING).getAxis();
 			return bearingAxis != axis;
 		});
+	}
+
+	@Override
+	public void collided() {
 	}
 
 }

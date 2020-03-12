@@ -5,6 +5,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
+import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionCollider;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.LinearActuatorTileEntity;
 
@@ -19,7 +20,7 @@ import net.minecraft.util.math.Vec3d;
 public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	protected int initialOffset;
-	
+
 	public PulleyTileEntity() {
 		super(AllTileEntities.ROPE_PULLEY.type);
 	}
@@ -30,7 +31,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	protected void assembleConstruct() {
+	protected void assemble() {
 		if (speed == 0)
 			return;
 		if (offset >= getExtensionRange() && getSpeed() > 0)
@@ -43,6 +44,14 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			BlockPos anchor = pos.down((int) (offset + 1));
 			initialOffset = (int) (offset);
 			PulleyContraption contraption = PulleyContraption.assemblePulleyAt(world, anchor, (int) offset);
+
+			if (contraption != null) {
+				Direction movementDirection = getSpeed() > 0 ? Direction.DOWN : Direction.UP;
+				if (ContraptionCollider.isCollidingWithWorld(world, contraption, anchor.offset(movementDirection),
+						movementDirection))
+					contraption = null;
+			}
+
 			if (contraption == null && getSpeed() > 0)
 				return;
 
@@ -66,7 +75,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	protected void disassembleConstruct() {
+	public void disassemble() {
 		if (!running)
 			return;
 		offset = getGridOffset(offset);
@@ -124,7 +133,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		if (stateBelow.getMaterial().isReplaceable() || stateBelow.getShape(world, posBelow).isEmpty())
 			return;
 
-		disassembleConstruct();
+		disassemble();
 		assembleNextTick = true;
 	}
 
@@ -133,18 +142,18 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		initialOffset = tag.getInt("InitialOffset");
 		super.read(tag);
 	}
-	
+
 	@Override
 	public CompoundNBT write(CompoundNBT tag) {
 		tag.putInt("InitialOffset", initialOffset);
 		return super.write(tag);
 	}
-	
+
 	@Override
 	protected int getExtensionRange() {
 		return Math.min(AllConfigs.SERVER.kinetics.maxRopeLength.get(), pos.getY() - 1);
 	}
-	
+
 	@Override
 	protected int getInitialOffset() {
 		return initialOffset;

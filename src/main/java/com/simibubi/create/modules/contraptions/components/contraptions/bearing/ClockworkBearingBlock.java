@@ -29,7 +29,7 @@ public class ClockworkBearingBlock extends BearingBlock implements IWithTileEnti
 			if (!worldIn.isRemote) {
 				withTileEntityDo(worldIn, pos, te -> {
 					if (te.running) {
-						te.disassembleConstruct();
+						te.disassemble();
 						return;
 					}
 					te.assembleNextTick = true;

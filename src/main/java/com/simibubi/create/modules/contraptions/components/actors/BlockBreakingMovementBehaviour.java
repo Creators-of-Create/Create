@@ -5,8 +5,11 @@ import com.simibubi.create.modules.contraptions.components.contraptions.Movement
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -28,15 +31,26 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 
 		if (world.isRemote)
 			return;
-		if (stateVisited.getCollisionShape(world, pos).isEmpty())
+		if (stateVisited.getCollisionShape(world, pos).isEmpty()) {
+			DamageSource damageSource = getDamageSource();
+			if (damageSource == null)
+				return;
+			for (Entity entity : world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos))) {
+				float damage = (float) MathHelper.clamp(Math.abs(context.relativeMotion.length() * 10) + 1, 5, 20);
+				entity.attackEntityFrom(damageSource, damage);
+				entity.setMotion(entity.getMotion().add(context.relativeMotion.scale(3)));
+			}
 			return;
-		if (stateVisited.getBlockHardness(world, pos) == -1)
-			return;
-		if (!canBreak(stateVisited))
+		}
+		if (!canBreak(world, pos, stateVisited))
 			return;
 
 		context.data.put("BreakingPos", NBTUtil.writeBlockPos(pos));
 		context.stall = true;
+	}
+
+	protected DamageSource getDamageSource() {
+		return null;
 	}
 
 	@Override
@@ -84,7 +98,7 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 		BlockState stateToBreak = world.getBlockState(breakingPos);
 		float blockHardness = stateToBreak.getBlockHardness(world, breakingPos);
 
-		if (!BlockBreakingKineticTileEntity.isBreakable(stateToBreak, blockHardness) || !canBreak(stateToBreak)) {
+		if (!canBreak(world, breakingPos, stateToBreak)) {
 			if (destroyProgress != 0) {
 				destroyProgress = 0;
 				data.remove("Progress");
@@ -117,12 +131,12 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 		data.putInt("Progress", destroyProgress);
 	}
 
-	protected boolean canBreak(BlockState state) {
-		return true;
+	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
+		float blockHardness = state.getBlockHardness(world, breakingPos);
+		return BlockBreakingKineticTileEntity.isBreakable(state, blockHardness);
 	}
 
 	protected void onBlockBroken(MovementContext context, BlockPos pos) {
-
 	}
 
 }

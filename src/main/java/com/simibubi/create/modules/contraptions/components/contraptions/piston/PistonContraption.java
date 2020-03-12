@@ -131,24 +131,24 @@ public class PistonContraption extends Contraption {
 			return true;
 		for (int offset = 0; offset <= AllConfigs.SERVER.kinetics.maxChassisRange.get(); offset++) {
 			if (offset == 1 && retracting)
-				break;
+				return true;
 			BlockPos currentPos = pos.offset(orientation, offset + initialExtensionProgress);
 			if (!world.isBlockPresent(currentPos))
 				return false;
 			BlockState state = world.getBlockState(currentPos);
 			if (state.getMaterial().isReplaceable())
-				break;
+				return true;
 			if (state.getCollisionShape(world, currentPos).isEmpty())
-				break;
+				return true;
 			if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state) && state.get(FACING) == direction.getOpposite())
-				break;
+				return true;
 			if (!BlockMovementTraits.movementAllowed(world, currentPos))
 				return retracting;
 			frontier.add(currentPos);
 			if (BlockMovementTraits.notSupportive(state, orientation))
-				break;
+				return true;
 		}
-		return true;
+		return false; // too many
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class MechanicalBearingBlock extends BearingBlock implements IWithTileEnt
 			if (!worldIn.isRemote) {
 				withTileEntityDo(worldIn, pos, te -> {
 					if (te.running) {
-						te.disassembleConstruct();
+						te.disassemble();
 						return;
 					}
 					te.assembleNextTick = true;

@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
 
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,6 +26,11 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 	@OnlyIn(value = Dist.CLIENT)
 	public SuperByteBuffer renderInContraption(MovementContext context) {
 		return DrillTileEntityRenderer.renderInContraption(context);
+	}
+	
+	@Override
+	protected DamageSource getDamageSource() {
+		return DrillBlock.damageSourceDrill;
 	}
 
 }

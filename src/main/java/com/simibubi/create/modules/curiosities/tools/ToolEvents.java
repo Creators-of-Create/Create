@@ -152,7 +152,10 @@ public class ToolEvents {
 
 	@SubscribeEvent
 	public static void shadowSteelToolsDropMoreXPonKill(LivingExperienceDropEvent event) {
-		ItemStack heldItemMainhand = event.getAttackingPlayer().getHeldItemMainhand();
+		PlayerEntity attackingPlayer = event.getAttackingPlayer();
+		if (attackingPlayer == null)
+			return;
+		ItemStack heldItemMainhand = attackingPlayer.getHeldItemMainhand();
 		if (heldItemMainhand.getItem() instanceof ShadowSteelToolItem) {
 			int level = EnchantmentHelper.getEnchantmentLevel(Enchantments.LOOTING, heldItemMainhand);
 			float modifier = 1 + event.getEntity().world.getRandom().nextFloat() * level;

@@ -5,6 +5,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.base.IRotate;
+import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionCollider;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.DirectionalExtenderScrollOptionSlot;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
@@ -39,11 +40,20 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	public void assembleConstruct() {
+	public void assemble() {
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		// Collect Construct
 		PistonContraption contraption = PistonContraption.movePistonAt(world, pos, direction, getMovementSpeed() < 0);
+		Direction movementDirection = getSpeed() > 0 ? direction : direction.getOpposite();
+
+		if (contraption != null) {
+			BlockPos anchor = contraption.getAnchor().offset(direction, contraption.initialExtensionProgress);
+			if (ContraptionCollider.isCollidingWithWorld(world, contraption, anchor.offset(movementDirection),
+					movementDirection))
+				contraption = null;
+		}
+
 		if (contraption == null)
 			return;
 
@@ -69,7 +79,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	public void disassembleConstruct() {
+	public void disassemble() {
 		if (!running)
 			return;
 		if (!removed)
@@ -84,6 +94,13 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 		if (removed)
 			AllBlocks.MECHANICAL_PISTON.get().onBlockHarvested(world, pos, getBlockState(), null);
+	}
+
+	@Override
+	public void collided() {
+		super.collided();
+		if (!running && getSpeed() > 0)
+			assembleNextTick = true;
 	}
 
 	@Override
@@ -137,83 +154,5 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		return movedContraption == null ? 0
 				: ((PistonContraption) movedContraption.getContraption()).initialExtensionProgress;
 	}
-
-//	private boolean hasBlockCollisions(float newOffset) {
-//		if (PistonContraption.isFrozen())
-//			return true;
-//
-//		Direction movementDirection = getBlockState().get(BlockStateProperties.FACING);
-//		BlockPos relativePos = BlockPos.ZERO.offset(movementDirection, getModulatedOffset(newOffset));
-//
-//		// Other moving Pistons
-//		int maxPossibleRange = parameters.maxPistonPoles.get() + parameters.maxChassisRange.get()
-//				+ parameters.maxChassisForTranslation.get();
-//		Iterator<MechanicalPistonTileEntity> iterator = Create.constructHandler.getOtherMovingPistonsInWorld(this)
-//				.iterator();
-//		pistonLoop: while (iterator.hasNext()) {
-//			MechanicalPistonTileEntity otherPiston = iterator.next();
-//
-//			if (otherPiston == this)
-//				continue;
-//			if (!otherPiston.running || otherPiston.movedContraption == null) {
-//				iterator.remove();
-//				continue;
-//			}
-//			if (otherPiston.pos.manhattanDistance(pos) > maxPossibleRange * 2)
-//				continue;
-//
-//			Direction otherMovementDirection = otherPiston.getBlockState().get(BlockStateProperties.FACING);
-//			BlockPos otherRelativePos = BlockPos.ZERO.offset(otherMovementDirection,
-//					getModulatedOffset(otherPiston.offset));
-//
-//			for (AxisAlignedBB tBB : Arrays.asList(movedContraption.constructCollisionBox,
-//					movedContraption.pistonCollisionBox)) {
-//				for (AxisAlignedBB oBB : Arrays.asList(otherPiston.movedContraption.constructCollisionBox,
-//						otherPiston.movedContraption.pistonCollisionBox)) {
-//					if (tBB == null || oBB == null)
-//						continue;
-//
-//					boolean frontalCollision = otherMovementDirection == movementDirection.getOpposite();
-//					BlockPos thisColliderOffset = relativePos.offset(movementDirection,
-//							frontalCollision ? (getMovementSpeed() > 0 ? 1 : -1) : 0);
-//					AxisAlignedBB thisBB = tBB.offset(thisColliderOffset);
-//					AxisAlignedBB otherBB = oBB.offset(otherRelativePos);
-//
-//					if (thisBB.intersects(otherBB)) {
-//						boolean actuallyColliding = false;
-//						for (BlockPos colliderPos : movedContraption.getColliders(world, movementDirection)) {
-//							colliderPos = colliderPos.add(thisColliderOffset).subtract(otherRelativePos);
-//							if (!otherPiston.movedContraption.blocks.containsKey(colliderPos))
-//								continue;
-//							actuallyColliding = true;
-//						}
-//						if (!actuallyColliding)
-//							continue pistonLoop;
-//						hadCollisionWithOtherPiston = true;
-//						return true;
-//					}
-//
-//				}
-//			}
-//
-//		}
-//
-//		if (!running)
-//			return false;
-//
-//		// Other Blocks in world
-//		for (BlockPos pos : movedContraption.getColliders(world,
-//				getMovementSpeed() > 0 ? movementDirection : movementDirection.getOpposite())) {
-//			BlockPos colliderPos = pos.add(relativePos);
-//
-//			if (!world.isBlockPresent(colliderPos))
-//				return true;
-//			if (!world.getBlockState(colliderPos).getMaterial().isReplaceable()
-//					&& !world.getBlockState(colliderPos).getCollisionShape(world, colliderPos).isEmpty())
-//				return true;
-//		}
-//
-//		return false;
-//	}
 
 }

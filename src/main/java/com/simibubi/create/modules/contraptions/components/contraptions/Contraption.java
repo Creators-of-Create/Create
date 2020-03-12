@@ -192,7 +192,10 @@ public abstract class Contraption {
 			return false;
 		ChassisTileEntity chassis = (ChassisTileEntity) te;
 		chassis.addAttachedChasses(frontier, visited);
-		for (BlockPos blockPos : chassis.getIncludedBlockPositions(movementDirection, false))
+		List<BlockPos> includedBlockPositions = chassis.getIncludedBlockPositions(movementDirection, false);
+		if (includedBlockPositions == null)
+			return false;
+		for (BlockPos blockPos : includedBlockPositions)
 			if (!visited.contains(blockPos))
 				frontier.add(blockPos);
 		return true;
@@ -259,7 +262,7 @@ public abstract class Contraption {
 					NBTUtil.readBlockState(comp.getCompound("Block")),
 					comp.contains("Data") ? comp.getCompound("Data") : null);
 			blocks.put(info.pos, info);
-			
+
 			if (world.isRemote) {
 				Block block = info.state.getBlock();
 				BlockRenderLayer renderLayer = block.getRenderLayer();
@@ -407,6 +410,8 @@ public abstract class Contraption {
 			if (AllBlocks.SAW.typeOf(state))
 				state = state.with(SawBlock.RUNNING, false);
 
+			if (world.getBlockState(targetPos).getBlockHardness(world, targetPos) == -1)
+				continue;
 			world.destroyBlock(targetPos, world.getBlockState(targetPos).getCollisionShape(world, targetPos).isEmpty());
 			world.setBlockState(targetPos, state, 3 | BlockFlags.IS_MOVING);
 			TileEntity tileEntity = world.getTileEntity(targetPos);
