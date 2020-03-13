@@ -66,10 +66,9 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Axis preferredAxis = getPreferredAxis(context);
-		if (preferredAxis != null)
+		if (preferredAxis != null && !context.isPlacerSneaking())
 			return this.getDefaultState().with(AXIS, preferredAxis);
-		return this.getDefaultState().with(AXIS, context.isPlacerSneaking() ? context.getFace().getAxis()
-				: context.getNearestLookingDirection().getAxis());
+		return this.getDefaultState().with(AXIS, context.getNearestLookingDirection().getAxis());
 	}
 
 	@Override

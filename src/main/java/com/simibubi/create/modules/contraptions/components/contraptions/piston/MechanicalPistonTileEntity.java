@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionCollider;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -45,7 +47,9 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 		// Collect Construct
 		PistonContraption contraption = PistonContraption.movePistonAt(world, pos, direction, getMovementSpeed() < 0);
-		Direction movementDirection = getSpeed() > 0 ? direction : direction.getOpposite();
+		Direction positive = Direction.getFacingFromAxis(AxisDirection.POSITIVE, direction.getAxis());
+		Direction movementDirection =
+			getSpeed() > 0 ^ direction.getAxis() != Axis.Z ? positive : positive.getOpposite();
 
 		if (contraption != null) {
 			BlockPos anchor = contraption.getAnchor().offset(direction, contraption.initialExtensionProgress);
@@ -99,7 +103,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	@Override
 	public void collided() {
 		super.collided();
-		if (!running && getSpeed() > 0)
+		if (!running && getMovementSpeed() > 0)
 			assembleNextTick = true;
 	}
 

@@ -49,8 +49,8 @@ public class TreeFertilizerItem extends Item {
 				if (context.getWorld().getBlockState(actualPos).getBlockHardness(context.getWorld(), actualPos) == -1)
 					continue;
 				// Don't replace solid blocks with leaves
-				if (!world.getBlockState(pos).isNormalCube(world, pos)
-						&& context.getWorld().getBlockState(actualPos).isNormalCube(context.getWorld(), actualPos))
+				if (!world.getBlockState(pos).isNormalCube(world, pos) && !context.getWorld().getBlockState(actualPos)
+						.getCollisionShape(context.getWorld(), actualPos).isEmpty())
 					continue;
 				if (world.getBlockState(pos).getBlock() == Blocks.GRASS_BLOCK
 						|| world.getBlockState(pos).getBlock() == Blocks.PODZOL)

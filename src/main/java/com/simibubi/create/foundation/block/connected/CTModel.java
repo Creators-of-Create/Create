@@ -55,7 +55,7 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 		CTData data = new CTData();
 
 		for (Direction face : Direction.values()) {
-			if (state.isNormalCube(world, pos) && !Block.shouldSideBeRendered(state, world, pos, face))
+			if (!Block.shouldSideBeRendered(state, world, pos, face))
 				continue;
 			CTSpriteShiftEntry spriteShift = behaviour.get(state, face);
 			if (spriteShift == null)
@@ -88,9 +88,9 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 			float uShift = spriteShift.getUShift(index);
 			float vShift = spriteShift.getVShift(index);
 
-			BakedQuad newQuad = new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length),
-					quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(),
-					quad.getFormat());
+			BakedQuad newQuad =
+				new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length), quad.getTintIndex(),
+						quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(), quad.getFormat());
 			VertexFormat format = quad.getFormat();
 			int[] vertexData = newQuad.getVertexData();
 

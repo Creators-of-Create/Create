@@ -1,7 +1,5 @@
 package com.simibubi.create.modules.contraptions.relays.advanced.sequencer;
 
-import java.util.Vector;
-
 import com.simibubi.create.foundation.packet.TileEntityConfigurationPacket;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -14,9 +12,9 @@ public class ConfigureSequencedGearshiftPacket extends TileEntityConfigurationPa
 
 	private ListNBT instructions;
 
-	public ConfigureSequencedGearshiftPacket(BlockPos pos, Vector<Instruction> instructions) {
+	public ConfigureSequencedGearshiftPacket(BlockPos pos, ListNBT instructions) {
 		super(pos);
-		this.instructions = Instruction.serializeAll(instructions);
+		this.instructions = instructions;
 	}
 
 	public ConfigureSequencedGearshiftPacket(PacketBuffer buffer) {

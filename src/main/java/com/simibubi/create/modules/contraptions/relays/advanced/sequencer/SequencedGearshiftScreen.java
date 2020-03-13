@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.BlockPos;
 
 public class SequencedGearshiftScreen extends AbstractSimiScreen {
@@ -21,7 +22,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private static final ScreenResources background = ScreenResources.SEQUENCER;
 
 	private final String title = Lang.translate("gui.sequenced_gearshift.title");
-	private int lastModification;
+	private ListNBT compareTag;
 	private Vector<Instruction> instructions;
 	private BlockPos pos;
 
@@ -30,7 +31,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	public SequencedGearshiftScreen(SequencedGearshiftTileEntity te) {
 		this.instructions = te.instructions;
 		this.pos = te.getPos();
-		lastModification = -1;
+		compareTag = Instruction.serializeAll(instructions);
 	}
 
 	@Override
@@ -145,21 +146,11 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		font.drawStringWithShadow(text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
 	}
 
-	@Override
-	public void tick() {
-		super.tick();
-
-		if (lastModification >= 0)
-			lastModification++;
-
-		if (lastModification >= 20) {
-			lastModification = -1;
-			sendPacket();
-		}
-	}
-
 	public void sendPacket() {
-		AllPackets.channel.sendToServer(new ConfigureSequencedGearshiftPacket(pos, instructions));
+		ListNBT serialized = Instruction.serializeAll(instructions);
+		if (serialized.equals(compareTag))
+			return;
+		AllPackets.channel.sendToServer(new ConfigureSequencedGearshiftPacket(pos, serialized));
 	}
 
 	@Override
@@ -176,6 +167,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private void instructionUpdated(int index, int state) {
 		SequencerInstructions newValue = SequencerInstructions.values()[state];
 		instructions.get(index).instruction = newValue;
+		instructions.get(index).value = newValue.defaultValue;
 		updateParamsOfRow(index);
 		if (newValue == SequencerInstructions.END) {
 			for (int i = instructions.size() - 1; i > index; i--) {
