@@ -39,6 +39,7 @@ public class ContraptionCollider {
 		Contraption contraption = contraptionEntity.getContraption();
 		AxisAlignedBB bounds = contraptionEntity.getBoundingBox();
 		Vec3d contraptionPosition = contraptionEntity.getPositionVec();
+		contraptionEntity.collidingEntities.clear();
 
 		if (contraption == null)
 			return;
@@ -60,7 +61,9 @@ public class ContraptionCollider {
 			Vec3d allowedMovement = Entity.getAllowedMovement(relativeMotion, entityBB, world,
 					ISelectionContext.forEntity(entity), potentialHits);
 			potentialHits.createStream()
-					.forEach(voxelShape -> pushEntityOutOfShape(entity, voxelShape, positionOffset));
+					.forEach(voxelShape -> pushEntityOutOfShape(entity, voxelShape, positionOffset, contraptionMotion));
+
+			contraptionEntity.collidingEntities.add(entity);
 
 			if (allowedMovement.equals(relativeMotion))
 				continue;
@@ -79,7 +82,8 @@ public class ContraptionCollider {
 
 	}
 
-	public static void pushEntityOutOfShape(Entity entity, VoxelShape voxelShape, Vec3d positionOffset) {
+	public static void pushEntityOutOfShape(Entity entity, VoxelShape voxelShape, Vec3d positionOffset,
+			Vec3d shapeMotion) {
 		AxisAlignedBB entityBB = entity.getBoundingBox().offset(positionOffset);
 		Vec3d entityMotion = entity.getMotion();
 
@@ -117,18 +121,20 @@ public class ContraptionCollider {
 			double clamped;
 			switch (bestSide.getAxis()) {
 			case X:
-				clamped = positive ? Math.max(0, entityMotion.x) : Math.min(0, entityMotion.x);
+				clamped = positive ? Math.max(shapeMotion.x, entityMotion.x) : Math.min(shapeMotion.x, entityMotion.x);
 				entity.setMotion(clamped, entityMotion.y, entityMotion.z);
 				break;
 			case Y:
-				clamped = positive ? Math.max(0, entityMotion.y) : Math.min(0, entityMotion.y);
+				clamped = positive ? Math.max(shapeMotion.y, entityMotion.y) : Math.min(shapeMotion.y, entityMotion.y);
+				if (bestSide == Direction.UP)
+					clamped = shapeMotion.y;
 				entity.setMotion(entityMotion.x, clamped, entityMotion.z);
 				entity.fall(entity.fallDistance, 1);
 				entity.fallDistance = 0;
 				entity.onGround = true;
 				break;
 			case Z:
-				clamped = positive ? Math.max(0, entityMotion.z) : Math.min(0, entityMotion.z);
+				clamped = positive ? Math.max(shapeMotion.z, entityMotion.z) : Math.min(shapeMotion.z, entityMotion.z);
 				entity.setMotion(entityMotion.x, entityMotion.y, clamped);
 				break;
 			}

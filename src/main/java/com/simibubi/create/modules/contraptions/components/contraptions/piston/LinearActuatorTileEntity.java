@@ -48,9 +48,8 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	@Override
 	public void tick() {
 		super.tick();
-		boolean contraptionPresent = movedContraption != null;
 
-		if (contraptionPresent) {
+		if (movedContraption != null) {
 			movedContraption.collisionTick();
 			if (!movedContraption.isAlive())
 				movedContraption = null;
@@ -59,7 +58,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		if (world.isRemote)
 			clientOffsetDiff *= .75f;
 
-		if (waitingForSpeedChange && contraptionPresent) {
+		if (waitingForSpeedChange && movedContraption != null) {
 			if (world.isRemote) {
 				float syncSpeed = clientOffsetDiff / 2f;
 				offset += syncSpeed;
@@ -86,7 +85,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		if (!running)
 			return;
 
-		contraptionPresent = movedContraption != null;
+		boolean contraptionPresent = movedContraption != null;
 		float movementSpeed = getMovementSpeed();
 		float newOffset = offset + movementSpeed;
 		if ((int) newOffset != (int) offset)
