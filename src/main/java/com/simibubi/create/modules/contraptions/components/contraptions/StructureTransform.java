@@ -1,7 +1,11 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
+import static net.minecraft.state.properties.BlockStateProperties.AXIS;
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
@@ -10,7 +14,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.Half;
 import net.minecraft.state.properties.SlabType;
 import net.minecraft.util.Direction;
@@ -136,12 +139,16 @@ public class StructureTransform {
 				return state;
 			}
 
-			if (state.has(BlockStateProperties.FACING)) {
-				state =
-					state.with(BlockStateProperties.FACING, transformFacing(state.get(BlockStateProperties.FACING)));
+			if (state.has(FACING)) {
+				Direction newFacing = transformFacing(state.get(FACING));
+				if (state.has(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE)) {
+					if (rotationAxis == newFacing.getAxis() && rotation.ordinal() % 2 == 1)
+						state = state.cycle(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE);
+				}
+				state = state.with(FACING, newFacing);
 
-			} else if (state.has(BlockStateProperties.AXIS)) {
-				state = state.with(BlockStateProperties.AXIS, transformAxis(state.get(BlockStateProperties.AXIS)));
+			} else if (state.has(AXIS)) {
+				state = state.with(AXIS, transformAxis(state.get(AXIS)));
 
 			} else if (rotation == Rotation.CLOCKWISE_180) {
 				state = state.rotate(rotation);
@@ -172,7 +179,7 @@ public class StructureTransform {
 		if (rotation == Rotation.NONE)
 			return state;
 
-		BlockState rotated = state.with(BlockStateProperties.AXIS, transformAxis(state.get(BlockStateProperties.AXIS)));
+		BlockState rotated = state.with(AXIS, transformAxis(state.get(AXIS)));
 		AbstractChassisBlock block = (AbstractChassisBlock) state.getBlock();
 
 		for (Direction face : Direction.values()) {

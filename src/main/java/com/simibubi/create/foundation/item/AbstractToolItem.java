@@ -7,13 +7,16 @@ import static com.simibubi.create.foundation.item.AllToolTypes.SHOVEL;
 import static com.simibubi.create.foundation.item.AllToolTypes.SWORD;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.packet.SimplePacketBase;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.enchantment.Enchantment;
@@ -25,6 +28,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -41,7 +45,7 @@ public abstract class AbstractToolItem extends ToolItem {
 
 	public AbstractToolItem(float attackDamageIn, float attackSpeedIn, IItemTier tier, Properties builder,
 			AllToolTypes... types) {
-		super(attackDamageIn, attackSpeedIn, tier, Collections.emptySet(), setToolTypes(builder, tier, types));
+		super(attackDamageIn, attackSpeedIn, tier, getEffectiveBlocks(types), setToolTypes(builder, tier, types));
 		toolTypes = types;
 	}
 
@@ -76,6 +80,32 @@ public abstract class AbstractToolItem extends ToolItem {
 		return canEnchant;
 	}
 
+	private static Set<Block> getEffectiveBlocks(AllToolTypes... types) {
+		Set<Block> blocks = new HashSet<>();
+		for (AllToolTypes type : types) {
+			switch (type) {
+			case AXE:
+				blocks.addAll(EffectiveBlocks.AXE);
+				break;
+			case HOE:
+				break;
+			case PICKAXE:
+				blocks.addAll(EffectiveBlocks.PICKAXE);
+				break;
+			case SHEARS:
+				break;
+			case SHOVEL:
+				blocks.addAll(EffectiveBlocks.SHOVEL);
+				break;
+			case SWORD:
+				break;
+			default:
+				break;
+			}
+		}
+		return blocks;
+	}
+
 	private static Properties setToolTypes(Properties builder, IItemTier tier, AllToolTypes... types) {
 		for (AllToolTypes type : types) {
 			if (type == PICKAXE)
@@ -106,8 +136,21 @@ public abstract class AbstractToolItem extends ToolItem {
 
 	@Override
 	public boolean canHarvestBlock(ItemStack stack, BlockState state) {
-		return super.canHarvestBlock(stack, state) || getToolTypes(stack).contains(state.getHarvestTool())
-				|| hasType(SWORD) && Items.WOODEN_SWORD.canHarvestBlock(stack, state);
+		int i = this.getTier().getHarvestLevel();
+		if (getToolTypes(stack).contains(state.getHarvestTool()))
+			return i >= state.getHarvestLevel();
+		Material material = state.getMaterial();
+		boolean canHarvestMaterial = false;
+		if (hasType(PICKAXE))
+			canHarvestMaterial |= material == Material.ROCK || material == Material.IRON || material == Material.ANVIL;
+		if (hasType(SHOVEL))
+			canHarvestMaterial |= Items.WOODEN_SHOVEL.canHarvestBlock(stack, state);
+		if (hasType(SWORD))
+			canHarvestMaterial |= Items.WOODEN_SWORD.canHarvestBlock(stack, state);
+		if (hasType(AllToolTypes.SHEARS))
+			canHarvestMaterial |= Items.SHEARS.canHarvestBlock(state);
+
+		return canHarvestMaterial;
 	}
 
 	@Override
@@ -117,8 +160,16 @@ public abstract class AbstractToolItem extends ToolItem {
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		if (hasType(SWORD))
-			return Items.WOODEN_SWORD.getDestroySpeed(stack, state);
+		Material material = state.getMaterial();
+		if (hasType(PICKAXE) && (material == Material.IRON || material == Material.ANVIL || material == Material.ROCK))
+			return this.efficiency;
+		if (hasType(AXE) && (material == Material.WOOD || material == Material.PLANTS
+				|| material == Material.TALL_PLANTS || material == Material.BAMBOO))
+			return this.efficiency;
+		if (hasType(SWORD)
+				&& (state.getBlock() == Blocks.COBWEB || material == Material.PLANTS || material == Material.TALL_PLANTS
+						|| material == Material.CORAL || state.isIn(BlockTags.LEAVES) || material == Material.GOURD))
+			return this.efficiency;
 		return super.getDestroySpeed(stack, state);
 	}
 

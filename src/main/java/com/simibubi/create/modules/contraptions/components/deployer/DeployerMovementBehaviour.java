@@ -17,6 +17,7 @@ import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -89,13 +90,15 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	public void stopMoving(MovementContext context) {
 		if (context.world.isRemote)
 			return;
-		tryDisposeOfEverything(context);
+
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
+
+		context.tileData.put("Inventory", player.inventory.write(new ListNBT()));
 		player.remove();
 	}
-	
+
 	private void tryGrabbingItem(MovementContext context) {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
@@ -105,18 +108,6 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 					stack -> FilterItem.test(stack, getFilter(context)), 1, false);
 			player.setHeldItem(Hand.MAIN_HAND, held);
 		}
-	}
-
-	private void tryDisposeOfEverything(MovementContext context) {
-		DeployerFakePlayer player = getPlayer(context);
-		if (player == null)
-			return;
-		ItemStack held = player.getHeldItemMainhand();
-		if (!held.isEmpty()) {
-			dropItem(context, held);
-			player.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
-		}
-		tryDisposeOfExcess(context);
 	}
 
 	private void tryDisposeOfExcess(MovementContext context) {

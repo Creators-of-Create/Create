@@ -80,7 +80,7 @@ public abstract class BeltAttachableLogisticalBlock extends AttachedLogisticalBl
 		if (filtering != null && (!filtering.test(stack) || stack.getCount() < filtering.getAmount()))
 			return false;
 		if (!extracting.getShouldExtract().get())
-			return !filtering.anyAmount();
+			return true;
 
 		return !extracting.extractFromInventory();
 	}

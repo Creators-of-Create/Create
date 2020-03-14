@@ -53,7 +53,7 @@ public class ToolEvents {
 		if (!tool.modifiesDrops())
 			return;
 		BlockState state = event.getState();
-		if (!tool.canHarvestBlock(held, state))
+		if (!tool.canHarvestBlock(held, state) && !state.getMaterial().isToolNotRequired())
 			return;
 
 		IWorld world = event.getWorld();

@@ -1042,6 +1042,8 @@
 	"block.create.extractor.tooltip.summary": "_Takes_ _Items_ from an attached _Inventory_ and drops them onto the ground. Will not drop Items unless the space is clear. Can be assigned an item-stack as a _filter_.",
 	"block.create.extractor.tooltip.condition1": "When Powered by Redstone",
 	"block.create.extractor.tooltip.behaviour1": "_Pauses_ the Extractor.",
+	"block.create.extractor.tooltip.condition2": "Active Belt pulling",
+	"block.create.extractor.tooltip.behaviour2": "Extractors can pull items _from_ _belts_ reinforced with _brass_ _casing_. When the extractor is blocked, the _belt_ _will_ _stall_.",
 	"block.create.extractor.tooltip.control1": "R-Click on Filter Space",
 	"block.create.extractor.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter_. The Extractor will pull the item _type_ and _count_ of the filter stack exclusively.",
 	
@@ -1049,6 +1051,8 @@
 	"block.create.transposer.tooltip.summary": "_Takes_ _items_ from an attached _Inventory_ and immediately puts them into the target _Inventory_. Can be assigned an item-stack as a _filter_.",
 	"block.create.transposer.tooltip.condition1": "When Powered by Redstone",
 	"block.create.transposer.tooltip.behaviour1": "_Pauses_ the Transposer.",
+	"block.create.transposer.tooltip.condition2": "Active Belt pulling",
+	"block.create.transposer.tooltip.behaviour2": "Transposers can pull items _from_ _belts_ reinforced with _brass_ _casing_. When the transposer is backed up, the _belt_ _will_ _stall_.",
 	"block.create.transposer.tooltip.control1": "R-Click on Filter Space",
 	"block.create.transposer.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter_. The Transposer will pull the item _type_ and _count_ of the filter stack exclusively.",
 
@@ -1079,6 +1083,8 @@
 
 	"block.create.belt_funnel.tooltip": "FUNNEL",
 	"block.create.belt_funnel.tooltip.summary": "_Collects_ _incoming_ _items_ and inserts them into the attached _Inventory_ if possible. Can collect items in the _world_ and items on a _belt_.",
+	"block.create.belt_funnel.tooltip.condition1": "Passive Belt pulling",
+	"block.create.belt_funnel.tooltip.behaviour1": "Funnels can pull items _from_ _belts_ when placed above them, either sideways or at the end. When a side-ways funnel is backed up, items on the _belt_ _will_ _not_ _stall_.",
 
 	"block.create.belt_tunnel.tooltip": "BELT TUNNEL",
 	"block.create.belt_tunnel.tooltip.summary": "An aesthetic option for running your _Mechanical_ _Belts_ through walls. Belts have to be reinforced with _Brass_ _Casing_. Tunnels can _synchronize_ with _their_ _neighbours_, only letting items pass if all tunnels in the group have one waiting. [Ctrl]",

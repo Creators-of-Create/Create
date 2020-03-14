@@ -327,6 +327,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		timer = compound.getInt("Timer");
 		deferredInventoryList = compound.getList("Inventory", NBT.TAG_COMPOUND);
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
+		if (compound.contains("HeldItem"))
+			heldItem = ItemStack.read(compound.getCompound("HeldItem"));
 		super.read(compound);
 	}
 
@@ -336,6 +338,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		compound.putString("State", NBTHelper.writeEnum(state));
 		compound.putInt("Timer", timer);
 		if (player != null) {
+			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
 			ListNBT invNBT = new ListNBT();
 			player.inventory.write(invNBT);
 			compound.put("Inventory", invNBT);
@@ -360,8 +363,6 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public void readClientUpdate(CompoundNBT tag) {
 		reach = tag.getFloat("Reach");
-		if (tag.contains("HeldItem"))
-			heldItem = ItemStack.read(tag.getCompound("HeldItem"));
 		if (tag.contains("Particle")) {
 			ItemStack particleStack = ItemStack.read(tag.getCompound("Particle"));
 			SandPaperItem.spawnParticles(VecHelper.getCenterOf(pos).add(getMovementVector().scale(2f)), particleStack,

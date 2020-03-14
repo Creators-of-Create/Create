@@ -2,15 +2,19 @@ package com.simibubi.create.modules.logistics.block.transposer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 import com.simibubi.create.modules.logistics.block.belts.BeltAttachableLogisticalBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -19,7 +23,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class TransposerBlock extends BeltAttachableLogisticalBlock {
+public class TransposerBlock extends BeltAttachableLogisticalBlock implements IWrenchable {
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -56,10 +60,34 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 	protected BlockState getVerticalDefaultState() {
 		return AllBlocks.VERTICAL_TRANSPOSER.getDefault();
 	}
-	
+
 	@Override
 	protected BlockState getHorizontalDefaultState() {
 		return AllBlocks.TRANSPOSER.getDefault();
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		World world = context.getWorld();
+		if (world.isRemote)
+			return ActionResultType.SUCCESS;
+		Direction blockFacing = getBlockFacing(state);
+		BlockState newState = state;
+		if (blockFacing.getAxis().isHorizontal())
+			newState = state.with(HORIZONTAL_FACING, blockFacing.getOpposite());
+		else
+			newState = state.cycle(UPWARD);
+		BlockPos pos = context.getPos();
+		world.setBlockState(pos, newState);
+		TileEntity te = world.getTileEntity(pos);
+		if (te instanceof TransposerTileEntity) {
+			TransposerTileEntity transposer = (TransposerTileEntity) te;
+			CompoundNBT compound = new CompoundNBT();
+			transposer.write(compound);
+			world.removeTileEntity(pos);
+			world.setTileEntity(pos, TileEntity.create(compound));
+		}
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override
@@ -93,8 +121,7 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		Direction back = getBlockFacing(state).getOpposite();
-		return super.isValidPosition(state, worldIn, pos) || canAttachToSide(worldIn, pos, back);
+		return true;
 	}
 
 	protected boolean reactsToRedstone() {

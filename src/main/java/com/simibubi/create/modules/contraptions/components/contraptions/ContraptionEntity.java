@@ -164,7 +164,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		}
 
 		prevYaw = yaw;
-		yaw = angleLerp(0.2f, yaw, targetYaw);
+		yaw = angleLerp(0.4f, yaw, targetYaw);
 
 		boolean wasStalled = isStalled();
 		tickActors(movementVector);
@@ -220,18 +220,23 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 				if (getContraption() instanceof BearingContraption) {
 					BearingContraption bc = (BearingContraption) getContraption();
 					Direction facing = bc.getFacing();
-					if (VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis())) {
-						context.motion = new Vec3d(facing.getDirectionVec()).scale(
-								facing.getAxis().getCoordinate(roll - prevRoll, yaw - prevYaw, pitch - prevPitch));
-						context.relativeMotion = context.motion;
-						int timer = context.data.getInt("StationaryTimer");
-						if (timer > 0) {
-							context.data.putInt("StationaryTimer", timer - 1);
-						} else {
-							context.data.putInt("StationaryTimer", 20);
-							newPosVisited = true;
+					Vec3d activeAreaOffset = actor.getActiveAreaOffset(context);
+					if (activeAreaOffset.mul(VecHelper.planeByNormal(new Vec3d(facing.getDirectionVec())))
+							.equals(Vec3d.ZERO)) {
+						if (VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis())) {
+							context.motion = new Vec3d(facing.getDirectionVec()).scale(
+									facing.getAxis().getCoordinate(roll - prevRoll, yaw - prevYaw, pitch - prevPitch));
+							context.relativeMotion = context.motion;
+							int timer = context.data.getInt("StationaryTimer");
+							if (timer > 0) {
+								context.data.putInt("StationaryTimer", timer - 1);
+							} else {
+								context.data.putInt("StationaryTimer", 20);
+								newPosVisited = true;
+							}
 						}
 					}
+
 				}
 			}
 
@@ -423,6 +428,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public void preventMovedEntitiesFromGettingStuck() {
 		Vec3d stuckTest = new Vec3d(0, -2, 0);
 		for (Entity e : collidingEntities) {
+			e.fallDistance = 0;
+			e.onGround = true;
+
 			Vec3d vec = stuckTest;
 			AxisAlignedBB axisalignedbb = e.getBoundingBox().offset(0, 2, 0);
 			ISelectionContext iselectioncontext = ISelectionContext.forEntity(this);

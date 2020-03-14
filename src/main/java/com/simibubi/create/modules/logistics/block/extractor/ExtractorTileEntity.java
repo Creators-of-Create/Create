@@ -101,8 +101,10 @@ public class ExtractorTileEntity extends SmartTileEntity {
 	protected boolean canExtract() {
 		if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
 			TileEntity te = world.getTileEntity(pos.down());
-			if (te != null && te instanceof BeltTileEntity) {
+			if (te instanceof BeltTileEntity) {
 				BeltTileEntity belt = (BeltTileEntity) te;
+				if (belt.getSpeed() == 0)
+					return false;
 				BeltTileEntity controller = belt.getControllerTE();
 				if (controller != null) {
 					if (!controller.getInventory().canInsertFrom(belt.index, Direction.UP))

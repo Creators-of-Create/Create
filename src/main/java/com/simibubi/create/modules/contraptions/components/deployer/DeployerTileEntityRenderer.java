@@ -77,9 +77,9 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
 		TransformType transform = TransformType.NONE;
-		boolean isBlockItem = (te.heldItem.getItem() instanceof BlockItem)
-				&& itemRenderer.getModelWithOverrides(te.heldItem).isGui3d();
-		
+		boolean isBlockItem =
+			(te.heldItem.getItem() instanceof BlockItem) && itemRenderer.getModelWithOverrides(te.heldItem).isGui3d();
+
 		if (displayMode) {
 			float scale = isBlockItem ? 1.25f : 1;
 			GlStateManager.translated(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
@@ -168,17 +168,17 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		SuperByteBuffer hand = renderAndTransform(world, handPose, blockState, pos, false);
 
 		double factor;
-		if (context.contraption.stalled || context.position == null) {
+		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
 			factor = MathHelper.sin(AnimationTickHolder.getRenderTick() * .5f) * .25f + .25f;
 		} else {
 			Vec3d center = VecHelper.getCenterOf(new BlockPos(context.position));
 			double distance = context.position.distanceTo(center);
 			double nextDistance = context.position.add(context.motion).distanceTo(center);
-			factor = .5f - MathHelper.lerp(Minecraft.getInstance().getRenderPartialTicks(), distance, nextDistance);
+			factor = .5f - MathHelper.clamp(
+					MathHelper.lerp(Minecraft.getInstance().getRenderPartialTicks(), distance, nextDistance), 0, 1);
 		}
-		
-		Vec3d offset = new Vec3d(blockState.get(FACING).getDirectionVec())
-				.scale(factor);
+
+		Vec3d offset = new Vec3d(blockState.get(FACING).getDirectionVec()).scale(factor);
 		pole.translate(offset.x, offset.y, offset.z);
 		hand.translate(offset.x, offset.y, offset.z);
 

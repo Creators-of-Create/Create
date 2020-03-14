@@ -32,7 +32,7 @@ public class StorageInterfaceMovement extends MovementBehaviour {
 
 	@Override
 	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(PortableStorageInterfaceBlock.FACING).getDirectionVec()).scale(.65f);
+		return new Vec3d(context.state.get(PortableStorageInterfaceBlock.FACING).getDirectionVec()).scale(.85f);
 	}
 
 	@Override

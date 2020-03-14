@@ -22,7 +22,6 @@ import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -63,16 +62,6 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 	public void onMinecartPass(BlockState state, World world, BlockPos pos, AbstractMinecartEntity cart) {
 		if (!cart.canBeRidden())
 			return;
-
-		Vec3d p = cart.getPositionVec();
-		Vec3d m = cart.getMotion();
-		Vec3d p2 = p.add(m);
-		Direction facing = Direction.getFacingFromVector(m.x, m.y, m.z);
-		Axis axis = facing.getAxis();
-		double coord = axis.getCoordinate(pos.getX(), pos.getY(), pos.getZ()) + .5 + .25f * facing.getAxisDirection().getOffset();
-		if ((axis.getCoordinate(p.x, p.y, p.z) > coord) == (axis.getCoordinate(p2.x, p2.y, p2.z) % 1 > coord))
-			return;
-
 		if (state.get(POWERED))
 			disassemble(world, pos, cart);
 		else

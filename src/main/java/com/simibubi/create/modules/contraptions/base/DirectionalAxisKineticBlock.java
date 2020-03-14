@@ -8,6 +8,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
@@ -109,6 +110,13 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 			return alongFirst ? Axis.X : Axis.Y;
 
 		return super.getRotationAxis(state);
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, Rotation rot) {
+		if (rot.ordinal() % 2 == 1)
+			state = state.cycle(AXIS_ALONG_FIRST_COORDINATE);
+		return super.rotate(state, rot);
 	}
 
 	@Override

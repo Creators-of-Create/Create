@@ -53,12 +53,6 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		if (world.isRemote)
 			return;
 
-		if (stateVisited.getBlock() == Blocks.SUGAR_CANE) {
-			notCropButCuttable = true;
-			pos = pos.up();
-			stateVisited = world.getBlockState(pos);
-		}
-
 		if (!isValidCrop(world, pos, stateVisited)) {
 			if (isValidOther(world, pos, stateVisited))
 				notCropButCuttable = true;
