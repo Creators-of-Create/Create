@@ -5,11 +5,11 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
+import com.simibubi.create.modules.contraptions.components.contraptions.BlockMovementTraits;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionCollider;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.LinearActuatorTileEntity;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -129,8 +129,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			return;
 
 		BlockPos posBelow = pos.down((int) (offset + getMovementSpeed()) + 1);
-		BlockState stateBelow = world.getBlockState(posBelow);
-		if (stateBelow.getMaterial().isReplaceable() || stateBelow.getShape(world, posBelow).isEmpty())
+		if (!BlockMovementTraits.movementNecessary(world, posBelow))
 			return;
 
 		disassemble();

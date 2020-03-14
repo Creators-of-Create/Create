@@ -165,9 +165,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 					break;
 
 				// Ignore replaceable Blocks and Air-like
-				if (currentState.getMaterial().isReplaceable())
-					break;
-				if (currentState.getCollisionShape(world, current).isEmpty())
+				if (!BlockMovementTraits.movementNecessary(world, current))
 					break;
 				if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(currentState))
 					break;
@@ -212,9 +210,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 					continue;
 				if (!searchPos.withinDistance(pos, chassisRange + .5f))
 					continue;
-				if (searchedState.getMaterial().isReplaceable())
-					continue;
-				if (searchedState.getCollisionShape(world, searchPos).isEmpty())
+				if (!BlockMovementTraits.movementNecessary(world, searchPos))
 					continue;
 
 				localVisited.add(searchPos);

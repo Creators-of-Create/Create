@@ -18,6 +18,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WrappedWorld;
@@ -88,15 +89,12 @@ public abstract class Contraption {
 
 			for (BlockInfo info : blocks.values()) {
 				BlockPos offsetPos = info.pos.offset(movementDirection);
-				boolean hasNext = false;
-				for (BlockInfo otherInfo : blocks.values()) {
-					if (!otherInfo.pos.equals(offsetPos))
-						continue;
-					hasNext = true;
-					break;
-				}
-				if (!hasNext)
-					cachedColliders.add(info.pos);
+				if (info.state.getCollisionShape(world, offsetPos).isEmpty())
+					continue;
+				if (blocks.containsKey(offsetPos)
+						&& !blocks.get(offsetPos).state.getCollisionShape(world, offsetPos).isEmpty())
+					continue;
+				cachedColliders.add(info.pos);
 			}
 
 		}
@@ -142,13 +140,11 @@ public abstract class Contraption {
 
 		if (!world.isBlockPresent(pos))
 			return false;
-		BlockState state = world.getBlockState(pos);
-		if (state.getMaterial().isReplaceable())
-			return true;
-		if (state.getCollisionShape(world, pos).isEmpty())
+		if (!BlockMovementTraits.movementNecessary(world, pos))
 			return true;
 		if (!BlockMovementTraits.movementAllowed(world, pos))
 			return false;
+		BlockState state = world.getBlockState(pos);
 		if (isChassis(state) && !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
 		if (AllBlocks.FLEXCRATE.typeOf(state))
@@ -162,20 +158,21 @@ public abstract class Contraption {
 				frontier.add(prevPos);
 		}
 
-		if (state.getBlock() instanceof SlimeBlock)
-			for (Direction offset : Direction.values()) {
-				BlockPos offsetPos = pos.offset(offset);
-				BlockState blockState = world.getBlockState(offsetPos);
-				if (BlockMovementTraits.movementIgnored(blockState))
-					continue;
-				if (!BlockMovementTraits.movementAllowed(world, offsetPos)) {
-					if (offset == forcedDirection)
-						return false;
-					continue;
-				}
-				if (!visited.contains(offsetPos))
-					frontier.add(offsetPos);
+		boolean isSlimeBlock = state.getBlock() instanceof SlimeBlock;
+		for (Direction offset : Direction.values()) {
+			BlockPos offsetPos = pos.offset(offset);
+			BlockState blockState = world.getBlockState(offsetPos);
+			if (BlockMovementTraits.movementIgnored(blockState))
+				continue;
+			if (!BlockMovementTraits.movementAllowed(world, offsetPos)) {
+				if (offset == forcedDirection && isSlimeBlock)
+					return false;
+				continue;
 			}
+			if (!visited.contains(offsetPos)
+					&& (isSlimeBlock || BlockMovementTraits.isBlockAttachedTowards(blockState, offset.getOpposite())))
+				frontier.add(offsetPos);
+		}
 
 		add(pos, capture(world, pos));
 		return true;
@@ -382,12 +379,17 @@ public abstract class Contraption {
 
 	public void removeBlocksFromWorld(IWorld world, BlockPos offset, BiPredicate<BlockPos, BlockState> customRemoval) {
 		storage.values().forEach(MountedStorage::empty);
-		for (BlockInfo block : blocks.values()) {
-			BlockPos add = block.pos.add(anchor).add(offset);
-			if (customRemoval.test(add, block.state))
-				continue;
-			world.getWorld().removeTileEntity(add);
-			world.setBlockState(add, Blocks.AIR.getDefaultState(), 67);
+		for (boolean brittles : Iterate.trueAndFalse) {
+			for (BlockInfo block : blocks.values()) {
+				if (brittles != BlockMovementTraits.isBrittle(block.state))
+					continue;
+
+				BlockPos add = block.pos.add(anchor).add(offset);
+				if (customRemoval.test(add, block.state))
+					continue;
+				world.getWorld().removeTileEntity(add);
+				world.setBlockState(add, Blocks.AIR.getDefaultState(), 67);
+			}
 		}
 	}
 
@@ -397,51 +399,62 @@ public abstract class Contraption {
 
 		StructureTransform transform = new StructureTransform(offset, rotation);
 
-		for (BlockInfo block : blocks.values()) {
-			BlockPos targetPos = transform.apply(block.pos);
-			BlockState state = transform.apply(block.state);
+		for (boolean nonBrittles : Iterate.trueAndFalse) {
+			for (BlockInfo block : blocks.values()) {
+				if (nonBrittles == BlockMovementTraits.isBrittle(block.state))
+					continue;
 
-			if (customPlacement.test(targetPos, state))
-				continue;
+				BlockPos targetPos = transform.apply(block.pos);
+				BlockState state = transform.apply(block.state);
 
-			for (Direction face : Direction.values())
-				state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world, targetPos,
-						targetPos.offset(face));
-			if (AllBlocks.SAW.typeOf(state))
-				state = state.with(SawBlock.RUNNING, false);
+				if (customPlacement.test(targetPos, state))
+					continue;
 
-			if (world.getBlockState(targetPos).getBlockHardness(world, targetPos) == -1)
-				continue;
-			world.destroyBlock(targetPos, world.getBlockState(targetPos).getCollisionShape(world, targetPos).isEmpty());
-			world.setBlockState(targetPos, state, 3 | BlockFlags.IS_MOVING);
-			TileEntity tileEntity = world.getTileEntity(targetPos);
-			CompoundNBT tag = block.nbt;
-			if (tileEntity != null && tag != null) {
-				tag.putInt("x", targetPos.getX());
-				tag.putInt("y", targetPos.getY());
-				tag.putInt("z", targetPos.getZ());
+				for (Direction face : Direction.values())
+					state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world,
+							targetPos, targetPos.offset(face));
+				if (AllBlocks.SAW.typeOf(state))
+					state = state.with(SawBlock.RUNNING, false);
 
-				if (tileEntity instanceof BeltTileEntity) {
-					tag.remove("Length");
-					tag.remove("Index");
-					tag.putBoolean("DontClearAttachments", true);
+				BlockState blockState = world.getBlockState(targetPos);
+				if (blockState.getBlockHardness(world, targetPos) == -1)
+					continue;
+				if (state.getCollisionShape(world, targetPos).isEmpty()
+						&& !blockState.getCollisionShape(world, targetPos).isEmpty())
+					continue;
+
+				world.destroyBlock(targetPos, blockState.getCollisionShape(world, targetPos).isEmpty());
+				world.setBlockState(targetPos, state, 3 | BlockFlags.IS_MOVING);
+				TileEntity tileEntity = world.getTileEntity(targetPos);
+				CompoundNBT tag = block.nbt;
+				if (tileEntity != null && tag != null) {
+					tag.putInt("x", targetPos.getX());
+					tag.putInt("y", targetPos.getY());
+					tag.putInt("z", targetPos.getZ());
+
+					if (tileEntity instanceof BeltTileEntity) {
+						tag.remove("Length");
+						tag.remove("Index");
+						tag.putBoolean("DontClearAttachments", true);
+					}
+
+					tileEntity.read(tag);
+
+					if (tileEntity instanceof KineticTileEntity) {
+						KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
+						kineticTileEntity.source = null;
+						kineticTileEntity.setSpeed(0);
+						kineticTileEntity.network = null;
+						kineticTileEntity.attachKinetics();
+					}
+
+					if (storage.containsKey(block.pos)) {
+						MountedStorage mountedStorage = storage.get(block.pos);
+						if (mountedStorage.isWorking())
+							mountedStorage.fill(tileEntity);
+					}
 				}
 
-				tileEntity.read(tag);
-
-				if (tileEntity instanceof KineticTileEntity) {
-					KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
-					kineticTileEntity.source = null;
-					kineticTileEntity.setSpeed(0);
-					kineticTileEntity.network = null;
-					kineticTileEntity.attachKinetics();
-				}
-
-				if (storage.containsKey(block.pos)) {
-					MountedStorage mountedStorage = storage.get(block.pos);
-					if (mountedStorage.isWorking())
-						mountedStorage.fill(tileEntity);
-				}
 			}
 
 		}

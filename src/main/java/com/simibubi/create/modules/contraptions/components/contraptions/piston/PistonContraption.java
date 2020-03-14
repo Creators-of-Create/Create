@@ -135,11 +135,9 @@ public class PistonContraption extends Contraption {
 			BlockPos currentPos = pos.offset(orientation, offset + initialExtensionProgress);
 			if (!world.isBlockPresent(currentPos))
 				return false;
+			if (!BlockMovementTraits.movementNecessary(world, currentPos))
+				return true;
 			BlockState state = world.getBlockState(currentPos);
-			if (state.getMaterial().isReplaceable())
-				return true;
-			if (state.getCollisionShape(world, currentPos).isEmpty())
-				return true;
 			if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state) && state.get(FACING) == direction.getOpposite())
 				return true;
 			if (!BlockMovementTraits.movementAllowed(world, currentPos))
