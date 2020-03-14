@@ -19,9 +19,10 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public enum AllEntities {
 
-	CONTRAPTION(ContraptionEntity::new, 30, 3, true, ContraptionEntity::build),
-	STATIONARY_CONTRAPTION(ContraptionEntity::new, 30, 40, false, ContraptionEntity::build),
-
+	CONTRAPTION(ContraptionEntity::new, EntityClassification.MISC, 30, 3, true,
+			ContraptionEntity::build), 
+	STATIONARY_CONTRAPTION(ContraptionEntity::new, EntityClassification.MISC, 30, 40,
+					false, ContraptionEntity::build),
 	;
 
 	private IFactory<?> factory;
@@ -33,9 +34,11 @@ public enum AllEntities {
 
 	public EntityType<? extends Entity> type;
 
-	private AllEntities(IFactory<?> factory, int range, int updateFrequency, boolean sendVelocity,
+	private AllEntities(IFactory<?> factory, EntityClassification group, int range, int updateFrequency,
+			boolean sendVelocity,
 			Function<EntityType.Builder<? extends Entity>, EntityType.Builder<? extends Entity>> propertyBuilder) {
 		this.factory = factory;
+		this.group = group;
 		this.range = range;
 		this.updateFrequency = updateFrequency;
 		this.sendVelocity = sendVelocity;
