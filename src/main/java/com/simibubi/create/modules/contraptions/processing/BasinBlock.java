@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.processing;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
 
 import net.minecraft.block.Block;
@@ -40,12 +41,12 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new BasinTileEntity();
 	}
-	
+
 	@Override
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
@@ -57,11 +58,11 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 		BasinTileEntity te = (BasinTileEntity) worldIn.getTileEntity(pos);
 		IItemHandlerModifiable inv = te.inventory.orElse(new ItemStackHandler(1));
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
-	        player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
-	        inv.setStackInSlot(slot, ItemStack.EMPTY);
+			player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
+			inv.setStackInSlot(slot, ItemStack.EMPTY);
 		}
 		te.onEmptied();
-		
+
 		return true;
 	}
 
@@ -78,12 +79,12 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 		BasinTileEntity te = (BasinTileEntity) worldIn.getTileEntity(entityIn.getPosition());
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 		ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputInventory, itemEntity.getItem().copy(), false);
-		
+
 		if (insertItem.isEmpty()) {
 			itemEntity.remove();
 			return;
 		}
-		
+
 		itemEntity.setItem(insertItem);
 
 	}
@@ -92,7 +93,7 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.BASIN_BLOCK_SHAPE;
 	}
-	
+
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (worldIn.getTileEntity(pos) == null)
@@ -101,8 +102,7 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 		BasinTileEntity te = (BasinTileEntity) worldIn.getTileEntity(pos);
 		IItemHandlerModifiable inv = te.inventory.orElse(new ItemStackHandler(1));
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
-			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
-					inv.getStackInSlot(slot));
+			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), inv.getStackInSlot(slot));
 		}
 
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
@@ -114,6 +114,21 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 	@Override
 	public boolean isSolid(BlockState state) {
 		return false;
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te instanceof BasinTileEntity) {
+			BasinTileEntity basinTileEntity = (BasinTileEntity) te;
+			return ItemHelper.calcRedstoneFromInventory(basinTileEntity.inputInventory);
+		}
+		return 0;
 	}
 
 }

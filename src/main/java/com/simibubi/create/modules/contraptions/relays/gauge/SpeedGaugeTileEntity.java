@@ -37,6 +37,8 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 		} else {
 			dialTarget = MathHelper.lerp((speed - fast) / (max - fast), .75f, 1.125f);
 		}
+		
+		markDirty();
 	}
 
 }

@@ -3,7 +3,6 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionCollider;

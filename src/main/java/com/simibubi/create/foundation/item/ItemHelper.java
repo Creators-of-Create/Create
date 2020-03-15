@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -13,6 +15,7 @@ import com.simibubi.create.config.AllConfigs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -53,6 +56,33 @@ public class ItemHelper {
 				return false;
 		}
 		return true;
+	}
+
+	public static int calcRedstoneFromInventory(@Nullable IItemHandler inv) {
+		if (inv == null)
+			return 0;
+		int i = 0;
+		float f = 0.0F;
+		int totalSlots = inv.getSlots();
+		
+		for (int j = 0; j < inv.getSlots(); ++j) {
+			int slotLimit = inv.getSlotLimit(j);
+			if (slotLimit == 0) {
+				totalSlots--;
+				continue;
+			}
+			ItemStack itemstack = inv.getStackInSlot(j);
+			if (!itemstack.isEmpty()) {
+				f += (float) itemstack.getCount() / (float) Math.min(slotLimit, itemstack.getMaxStackSize());
+				++i;
+			}
+		}
+
+		if (totalSlots == 0)
+			return 0;
+		
+		f = f / totalSlots;
+		return MathHelper.floor(f * 14.0F) + (i > 0 ? 1 : 0);
 	}
 
 	public static List<Pair<Ingredient, MutableInt>> condenseIngredients(NonNullList<Ingredient> recipeIngredients) {

@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.item.AbstractToolItem;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
+import com.simibubi.create.modules.contraptions.components.contraptions.CancelPlayerFallPacket;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionStallPacket;
 import com.simibubi.create.modules.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
@@ -41,6 +42,7 @@ public enum AllPackets {
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new),
 	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new),
 	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new),
+	CANCEL_FALL(CancelPlayerFallPacket.class, CancelPlayerFallPacket::new),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),

@@ -8,6 +8,7 @@ import com.simibubi.create.modules.contraptions.components.actors.BlockBreakingM
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
@@ -23,10 +24,14 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public class ContraptionCollider {
 
 	static Map<Object, AxisAlignedBB> renderedBBs = new HashMap<>();
+	public static boolean wasClientPlayerGrounded;
 
 	public static void collideEntities(ContraptionEntity contraptionEntity) {
 		if (Contraption.isFrozen())
@@ -71,6 +76,7 @@ public class ContraptionCollider {
 				entity.fall(entity.fallDistance, 1);
 				entity.fallDistance = 0;
 				entity.onGround = true;
+				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> checkForClientPlayerCollision(entity));
 			}
 
 			if (entity instanceof PlayerEntity && !world.isRemote)
@@ -80,6 +86,13 @@ public class ContraptionCollider {
 			entity.velocityChanged = true;
 		}
 
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void checkForClientPlayerCollision(Entity entity) {
+		if (entity != Minecraft.getInstance().player)
+			return;
+		wasClientPlayerGrounded = true;
 	}
 
 	public static void pushEntityOutOfShape(Entity entity, VoxelShape voxelShape, Vec3d positionOffset,

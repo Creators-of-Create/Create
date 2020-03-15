@@ -33,21 +33,24 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		}
 
 		sendData();
+		markDirty();
 	}
 
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
-		if (getSpeed() == 0)
+		if (getSpeed() == 0) {
 			dialTarget = 0;
-		else
-			updateStressFromNetwork(capacity, stress);
+			markDirty();
+			return;
+		}
+		updateStressFromNetwork(capacity, stress);
 	}
-	
+
 	public float getNetworkStress() {
 		return stress;
 	}
-	
+
 	public float getNetworkCapacity() {
 		return capacity;
 	}

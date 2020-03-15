@@ -2,12 +2,15 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import java.util.List;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.CancelPlayerFallPacket;
+import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionCollider;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.IControlContraption;
 
@@ -202,11 +205,19 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 
 	protected abstract ValueBoxTransform getMovementModeSlot();
 
-	protected abstract void visitNewPosition();
-
 	protected abstract Vec3d toMotionVector(float speed);
 
 	protected abstract Vec3d toPosition(float offset);
+
+	protected void visitNewPosition() {
+		if (!world.isRemote)
+			return;
+		if (!ContraptionCollider.wasClientPlayerGrounded)
+			return;
+		// Send falldamage-cancel for the colliding player
+		ContraptionCollider.wasClientPlayerGrounded = false;
+		AllPackets.channel.sendToServer(new CancelPlayerFallPacket());
+	}
 
 	protected void tryDisassemble() {
 		if (removed) {

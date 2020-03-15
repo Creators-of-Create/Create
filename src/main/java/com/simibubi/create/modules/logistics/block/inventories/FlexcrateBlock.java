@@ -2,6 +2,7 @@ package com.simibubi.create.modules.logistics.block.inventories;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
 
 import net.minecraft.block.Block;
@@ -158,6 +159,21 @@ public class FlexcrateBlock extends ProperDirectionalBlock {
 			worldIn.removeTileEntity(pos);
 		}
 
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te instanceof FlexcrateTileEntity) {
+			FlexcrateTileEntity flexcrateTileEntity = (FlexcrateTileEntity) te;
+			return ItemHelper.calcRedstoneFromInventory(flexcrateTileEntity.inventory);
+		}
+		return 0;
 	}
 
 }

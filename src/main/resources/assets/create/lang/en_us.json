@@ -113,7 +113,7 @@
 	"block.create.flywheel": "Flywheel",
 	"block.create.furnace_engine": "Furnace Engine",
 	"block.create.speed_gauge": "Speedometer",
-	"block.create.stress_gauge": "Stress Gauge",
+	"block.create.stress_gauge": "Stressometer",
 	"block.create.cart_assembler": "Cart Assembler",
 	"block.create.analog_lever": "Analog Lever",
 	"block.create.rotation_speed_controller": "Rotation Speed Controller",
@@ -887,7 +887,7 @@
 	"block.create.mechanical_mixer.tooltip.behaviour3": "Starts to _compact_ _items_ in the basin whenever all necessary ingredients are present.",
 	
 	"block.create.basin.tooltip": "BASIN",
-	"block.create.basin.tooltip.summary": "A handy _item_ _container_ used in processing with the _Mechanical_ _Mixer_ and the _Mechanical_ _Press_.",
+	"block.create.basin.tooltip.summary": "A handy _item_ _container_ used in processing with the _Mechanical_ _Mixer_ and the _Mechanical_ _Press_. Supports _Redstone_ _Comparators_.",
 	
 	"block.create.mechanical_mixer.tooltip": "MECHANICAL MIXER",
 	"block.create.mechanical_mixer.tooltip.summary": "A kinetic whisk for applying any shapeless crafting recipes to items beneath it. Requires constant _Rotational_ _Force_ and a _Basin_ placed below (with a gap in between).",
@@ -1034,7 +1034,7 @@
 	"block.create.contact.tooltip.behaviour2": "Triggers all stationary Contacts it passes.",
 
 	"block.create.flexcrate.tooltip": "ADJUSTABLE CRATE",
-	"block.create.flexcrate.tooltip.summary": "This _Storage_ _Container_ allows Manual control over its capacity. It can hold up to _16_ _Stacks_ of any Item.",
+	"block.create.flexcrate.tooltip.summary": "This _Storage_ _Container_ allows Manual control over its capacity. It can hold up to _16_ _Stacks_ of any Item. Supports _Redstone_ _Comparators_.",
 	"block.create.flexcrate.tooltip.control1": "When R-Clicked",
 	"block.create.flexcrate.tooltip.action1": "Opens the _Interface_.",
 
@@ -1128,12 +1128,12 @@
 	"block.create.redstone_latch.tooltip.summary": "A lever that can be controlled by _Redstone_ _Signals_. A signal on the _back_ _enables_ it, a signal from the _side_ _will_ _reset_ it.",
 	
 	"block.create.speed_gauge.tooltip": "SPEEDOMETER",
-	"block.create.speed_gauge.tooltip.summary": "Measures and displays the _rotational_ _speed_ of attached kinetic components.",
+	"block.create.speed_gauge.tooltip.summary": "Measures and displays the _rotational_ _speed_ of attached kinetic components. Supports _Redstone_ _Comparators_.",
 	"block.create.speed_gauge.tooltip.condition1": "When Rotated",
 	"block.create.speed_gauge.tooltip.behaviour1": "Indicates a color corresponding to the level of speed. _Green_ indicates Slow, _Blue_ Moderate and _Purple_ Fast rotation. Some mechanical components require a sufficient level of speed to work properly.",
 	
-	"block.create.stress_gauge.tooltip": "STRESS GAUGE",
-	"block.create.stress_gauge.tooltip.summary": "Measures and displays the _overall_ _stress_ of the attached kinetic network.",
+	"block.create.stress_gauge.tooltip": "STRESSOMETER",
+	"block.create.stress_gauge.tooltip.summary": "Measures and displays the _overall_ _stress_ of the attached kinetic network. Supports _Redstone_ _Comparators_.",
 	"block.create.stress_gauge.tooltip.condition1": "When Rotated",
 	"block.create.stress_gauge.tooltip.behaviour1": "Indicates a color corresponding to the level of stress. _Over-stressed_ _networks_ will cease to move. Stress can be relieved by adding more _rotational_ _sources_ to the network.",
 	

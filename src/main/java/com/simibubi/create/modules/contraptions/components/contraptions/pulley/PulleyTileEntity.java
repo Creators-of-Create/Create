@@ -121,6 +121,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	protected void visitNewPosition() {
+		super.visitNewPosition();
 		if (world.isRemote)
 			return;
 		if (movedContraption != null)
