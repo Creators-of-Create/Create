@@ -129,7 +129,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IWithTileEn
 
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			withTileEntityDo(worldIn, pos, te -> {
-				for (int slot = 0; slot < te.inventory.getSizeInventory(); slot++) {
+				for (int slot = 0; slot < te.inventory.getSlots(); slot++) {
 					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
 							te.inventory.getStackInSlot(slot));
 				}

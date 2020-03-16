@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.crusher;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -9,6 +10,7 @@ import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.processing.ProcessingInventory;
 
@@ -23,9 +25,15 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class CrushingWheelControllerTileEntity extends SyncedTileEntity implements ITickableTileEntity {
 
@@ -34,11 +42,21 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	protected boolean searchForEntity;
 
 	public ProcessingInventory inventory;
+	protected LazyOptional<IItemHandlerModifiable> handler = LazyOptional.of(() -> inventory);
+	private RecipeWrapper wrapper;
 	public float crushingspeed;
 
 	public CrushingWheelControllerTileEntity() {
 		super(AllTileEntities.CRUSHING_WHEEL_CONTROLLER.type);
-		inventory = new ProcessingInventory();
+		inventory = new ProcessingInventory(this::itemInserted) {
+
+			@Override
+			public boolean isItemValid(int slot, ItemStack stack) {
+				return super.isItemValid(slot, stack) && processingEntity == null;
+			}
+
+		};
+		wrapper = new RecipeWrapper(inventory);
 	}
 
 	@Override
@@ -82,7 +100,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			}
 
 			if (inventory.remainingTime <= 0) {
-				for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+				for (int slot = 0; slot < inventory.getSlots(); slot++) {
 					ItemStack stack = inventory.getStackInSlot(slot);
 					if (stack.isEmpty())
 						continue;
@@ -127,7 +145,9 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 		ItemEntity itemEntity = (ItemEntity) processingEntity;
 		itemEntity.setPickupDelay(20);
 		if (processingEntity.posY < pos.getY() + .25f) {
-			insertItem(itemEntity);
+			inventory.clear();
+			inventory.setStackInSlot(0, itemEntity.getItem().copy());
+			itemInserted(inventory.getStackInSlot(0));
 			itemEntity.remove();
 			world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 2 | 16);
 		}
@@ -140,8 +160,8 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 		IParticleData particleData = null;
 		if (stack.getItem() instanceof BlockItem)
-			particleData = new BlockParticleData(ParticleTypes.BLOCK,
-					((BlockItem) stack.getItem()).getBlock().getDefaultState());
+			particleData =
+				new BlockParticleData(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock().getDefaultState());
 		else
 			particleData = new ItemParticleData(ParticleTypes.ITEM, stack);
 
@@ -152,28 +172,22 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	}
 
 	private void applyRecipe() {
-		Optional<CrushingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.CRUSHING.getType(), inventory,
-				world);
+		Optional<CrushingRecipe> recipe =
+			world.getRecipeManager().getRecipe(AllRecipes.CRUSHING.getType(), wrapper, world);
 
+		List<ItemStack> list = new ArrayList<>();
 		if (recipe.isPresent()) {
 			int rolls = inventory.getStackInSlot(0).getCount();
 			inventory.clear();
-
 			for (int roll = 0; roll < rolls; roll++) {
 				List<ItemStack> rolledResults = recipe.get().rollResults();
-
 				for (int i = 0; i < rolledResults.size(); i++) {
 					ItemStack stack = rolledResults.get(i);
-
-					for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
-						stack = inventory.getItems().insertItem(slot, stack, false);
-
-						if (stack.isEmpty())
-							break;
-					}
+					ItemHelper.addToList(stack, list);
 				}
 			}
-
+			for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
+				inventory.setStackInSlot(slot + 1, list.get(slot));
 		} else {
 			inventory.clear();
 		}
@@ -184,7 +198,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	public CompoundNBT write(CompoundNBT compound) {
 		if (hasEntity() && !isFrozen())
 			compound.put("Entity", NBTUtil.writeUniqueId(entityUUID));
-		inventory.write(compound);
+		compound.put("Inventory", inventory.serializeNBT());
 		compound.putFloat("Speed", crushingspeed);
 
 		return super.write(compound);
@@ -199,8 +213,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			this.searchForEntity = true;
 		}
 		crushingspeed = compound.getFloat("Speed");
-		inventory = ProcessingInventory.read(compound);
-
+		inventory.deserializeNBT(compound.getCompound("Inventory"));
 	}
 
 	public void startCrushing(Entity entity) {
@@ -208,14 +221,18 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 		entityUUID = entity.getUniqueID();
 	}
 
-	private void insertItem(ItemEntity entity) {
-		inventory.clear();
-		inventory.setInventorySlotContents(0, entity.getItem());
-		Optional<CrushingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.CRUSHING.getType(), inventory,
-				world);
-
+	private void itemInserted(ItemStack stack) {
+		Optional<CrushingRecipe> recipe =
+			world.getRecipeManager().getRecipe(AllRecipes.CRUSHING.getType(), wrapper, world);
 		inventory.remainingTime = recipe.isPresent() ? recipe.get().getProcessingDuration() : 100;
 		inventory.appliedRecipe = false;
+	}
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return handler.cast();
+		return super.getCapability(cap, side);
 	}
 
 	public void clear() {

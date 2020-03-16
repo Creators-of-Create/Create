@@ -201,7 +201,8 @@ public class BeltInventory {
 				BlockState state = world.getBlockState(nextPosition);
 
 				// next block is a basin or a saw
-				if (AllBlocks.BASIN.typeOf(state) || AllBlocks.SAW.typeOf(state)) {
+				if (AllBlocks.BASIN.typeOf(state) || AllBlocks.SAW.typeOf(state)
+						|| AllBlocks.CRUSHING_WHEEL_CONTROLLER.typeOf(state)) {
 					TileEntity te = world.getTileEntity(nextPosition);
 					if (te != null) {
 						LazyOptional<IItemHandler> optional =
@@ -400,10 +401,10 @@ public class BeltInventory {
 
 		Vec3d vec = VecHelper.getCenterOf(belt.getPos());
 		Vec3d horizontalMovement = new Vec3d(belt.getBeltFacing().getDirectionVec()).scale(offset - .5f);
-		
+
 		if (slope == Slope.VERTICAL)
 			horizontalMovement = Vec3d.ZERO;
-		
+
 		vec = vec.add(horizontalMovement).add(0, verticalMovement, 0);
 		return vec;
 	}

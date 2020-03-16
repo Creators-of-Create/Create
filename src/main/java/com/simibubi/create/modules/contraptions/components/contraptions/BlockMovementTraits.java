@@ -5,10 +5,12 @@ import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 
+import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.block.LadderBlock;
 import net.minecraft.block.RedstoneWallTorchBlock;
@@ -59,6 +61,10 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof TorchBlock)
 			return true;
+		if (block instanceof AbstractPressurePlateBlock)
+			return true;
+		if (block instanceof DoorBlock)
+			return true;
 		if (block instanceof HorizontalFaceBlock)
 			return true;
 		if (block instanceof AbstractRailBlock)
@@ -75,6 +81,10 @@ public class BlockMovementTraits {
 			return state.get(LadderBlock.FACING) == direction.getOpposite();
 		if (block instanceof WallTorchBlock)
 			return state.get(WallTorchBlock.HORIZONTAL_FACING) == direction.getOpposite();
+		if (block instanceof AbstractPressurePlateBlock)
+			return direction == Direction.DOWN;
+		if (block instanceof DoorBlock)
+			return direction == Direction.DOWN;
 		if (block instanceof RedstoneWallTorchBlock)
 			return state.get(RedstoneWallTorchBlock.FACING) == direction.getOpposite();
 		if (block instanceof TorchBlock)

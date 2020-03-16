@@ -176,7 +176,7 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 			if (worldIn.getTileEntity(pos) == null)
 				return;
 			CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn.getTileEntity(pos);
-			for (int slot = 0; slot < te.inventory.getSizeInventory(); slot++) {
+			for (int slot = 0; slot < te.inventory.getSlots(); slot++) {
 				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
 						te.inventory.getStackInSlot(slot));
 			}

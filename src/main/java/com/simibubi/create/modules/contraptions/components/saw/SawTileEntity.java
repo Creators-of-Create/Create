@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.components.saw;
 
 import static com.simibubi.create.modules.contraptions.components.saw.SawBlock.RUNNING;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -12,6 +13,7 @@ import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.TreeCutter.Tree;
@@ -37,7 +39,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -57,7 +58,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	public SawTileEntity() {
 		super(AllTileEntities.SAW.type);
-		inventory = new ProcessingInventory();
+		inventory = new ProcessingInventory(this::start);
 		inventory.remainingTime = -1;
 		recipeIndex = 0;
 		invProvider = LazyOptional.of(() -> inventory);
@@ -86,7 +87,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		inventory.write(compound);
+		compound.put("Inventory", inventory.serializeNBT());
 		compound.putInt("RecipeIndex", recipeIndex);
 		return super.write(compound);
 	}
@@ -94,7 +95,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	@Override
 	public void read(CompoundNBT compound) {
 		super.read(compound);
-		inventory = ProcessingInventory.read(compound);
+		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		recipeIndex = compound.getInt("RecipeIndex");
 	}
 
@@ -110,7 +111,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 		if (inventory.remainingTime == -1) {
 			if (!inventory.isEmpty() && !inventory.appliedRecipe)
-				start();
+				start(inventory.getStackInSlot(0));
 			return;
 		}
 
@@ -142,15 +143,15 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			if (AllBlocks.BELT.typeOf(world.getBlockState(nextPos))) {
 				TileEntity te = world.getTileEntity(nextPos);
 				if (te != null && te instanceof BeltTileEntity) {
-					for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+					for (int slot = 0; slot < inventory.getSlots(); slot++) {
 						ItemStack stack = inventory.getStackInSlot(slot);
 						if (stack.isEmpty())
 							continue;
 
-						if (itemMovementFacing.getAxis() == Axis.Z)
-							itemMovementFacing = itemMovementFacing.getOpposite();
+//						if (itemMovementFacing.getAxis() == Axis.Z)
+//							itemMovementFacing = itemMovementFacing.getOpposite();
 						if (((BeltTileEntity) te).tryInsertingFromSide(itemMovementFacing, stack, false))
-							inventory.setInventorySlotContents(slot, ItemStack.EMPTY);
+							inventory.setStackInSlot(slot, ItemStack.EMPTY);
 						else {
 							inventory.remainingTime = 0;
 							return;
@@ -170,7 +171,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 					Vec3d otherMovement = sawTileEntity.getItemMovementVec();
 					if (Direction.getFacingFromVector(otherMovement.x, otherMovement.y,
 							otherMovement.z) != itemMovementFacing.getOpposite()) {
-						for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+						for (int slot = 0; slot < inventory.getSlots(); slot++) {
 							ItemStack stack = inventory.getStackInSlot(slot);
 							if (stack.isEmpty())
 								continue;
@@ -178,7 +179,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 							ProcessingInventory sawInv = sawTileEntity.inventory;
 							if (sawInv.isEmpty()) {
 								sawInv.insertItem(0, stack, false);
-								inventory.setInventorySlotContents(slot, ItemStack.EMPTY);
+								inventory.setStackInSlot(slot, ItemStack.EMPTY);
 
 							} else {
 								inventory.remainingTime = 0;
@@ -193,7 +194,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			}
 
 			// Eject Items
-			for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+			for (int slot = 0; slot < inventory.getSlots(); slot++) {
 				ItemStack stack = inventory.getStackInSlot(slot);
 				if (stack.isEmpty())
 					continue;
@@ -231,8 +232,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		IParticleData particleData = null;
 		float speed = 1;
 		if (stack.getItem() instanceof BlockItem)
-			particleData = new BlockParticleData(ParticleTypes.BLOCK,
-					((BlockItem) stack.getItem()).getBlock().getDefaultState());
+			particleData =
+				new BlockParticleData(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock().getDefaultState());
 		else {
 			particleData = new ItemParticleData(ParticleTypes.ITEM, stack);
 			speed = .125f;
@@ -265,6 +266,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		int rolls = inventory.getStackInSlot(0).getCount();
 		inventory.clear();
 
+		List<ItemStack> list = new ArrayList<>();
 		for (int roll = 0; roll < rolls; roll++) {
 			List<ItemStack> results = new LinkedList<ItemStack>();
 			if (recipe instanceof CuttingRecipe)
@@ -274,15 +276,11 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 			for (int i = 0; i < results.size(); i++) {
 				ItemStack stack = results.get(i);
-
-				for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
-					stack = inventory.getItems().insertItem(slot, stack, false);
-
-					if (stack.isEmpty())
-						break;
-				}
+				ItemHelper.addToList(stack, list);
 			}
 		}
+		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
+			inventory.setStackInSlot(slot + 1, list.get(slot));
 
 	}
 
@@ -303,12 +301,11 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 
 		inventory.clear();
-		inventory.setInventorySlotContents(0, entity.getItem().copy());
+		inventory.insertItem(0, entity.getItem().copy(), false);
 		entity.remove();
-		start();
 	}
 
-	public void start() {
+	public void start(ItemStack inserted) {
 		if (!canProcess())
 			return;
 		if (inventory.isEmpty())
@@ -338,7 +335,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			time = ((CuttingRecipe) recipe).getProcessingDuration();
 		}
 
-		inventory.remainingTime = time * Math.max(1, (inventory.getStackInSlot(0).getCount() / 5));
+		inventory.remainingTime = time * Math.max(1, (inserted.getCount() / 5));
 		inventory.recipeDuration = inventory.remainingTime;
 		inventory.appliedRecipe = false;
 		sendData();

@@ -7,12 +7,8 @@ import net.minecraft.command.Commands;
 
 public class CreateCommand {
 
-	public CreateCommand(CommandDispatcher<CommandSource> dispatcher){
-
-		KillTPSCommand.register(dispatcher);
-
-		dispatcher.register(Commands.literal("create")
-			.then(ToggleDebugCommand.register())
-		);
+	public CreateCommand(CommandDispatcher<CommandSource> dispatcher) {
+		// KillTPSCommand.register(dispatcher); Commented out for release
+		dispatcher.register(Commands.literal("create").then(ToggleDebugCommand.register()));
 	}
 }

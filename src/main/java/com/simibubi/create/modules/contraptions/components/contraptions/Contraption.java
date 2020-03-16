@@ -35,11 +35,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.SlimeBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.ChestType;
+import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
@@ -156,6 +158,11 @@ public abstract class Contraption {
 				frontier.add(nextPos);
 			if (prevPos != null && !visited.contains(prevPos))
 				frontier.add(prevPos);
+		}
+		if (state.getBlock() instanceof DoorBlock) {
+			BlockPos otherPartPos = pos.up(state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? 1 : -1);
+			if (!visited.contains(otherPartPos))
+				frontier.add(otherPartPos);
 		}
 
 		boolean isSlimeBlock = state.getBlock() instanceof SlimeBlock;
@@ -388,7 +395,8 @@ public abstract class Contraption {
 				if (customRemoval.test(add, block.state))
 					continue;
 				world.getWorld().removeTileEntity(add);
-				world.setBlockState(add, Blocks.AIR.getDefaultState(), 67);
+				int flags = 67 | 32 | 16;
+				world.setBlockState(add, Blocks.AIR.getDefaultState(), flags);
 			}
 		}
 	}
@@ -410,9 +418,11 @@ public abstract class Contraption {
 				if (customPlacement.test(targetPos, state))
 					continue;
 
-				for (Direction face : Direction.values())
-					state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world,
-							targetPos, targetPos.offset(face));
+				if (nonBrittles)
+					for (Direction face : Direction.values())
+						state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world,
+								targetPos, targetPos.offset(face));
+
 				if (AllBlocks.SAW.typeOf(state))
 					state = state.with(SawBlock.RUNNING, false);
 

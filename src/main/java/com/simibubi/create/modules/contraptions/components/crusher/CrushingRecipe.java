@@ -4,14 +4,14 @@ import java.util.List;
 
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.modules.contraptions.processing.ProcessingIngredient;
-import com.simibubi.create.modules.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class CrushingRecipe extends ProcessingRecipe<ProcessingInventory> {
+public class CrushingRecipe extends ProcessingRecipe<RecipeWrapper> {
 
 	public CrushingRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
 			List<ProcessingOutput> results, int processingDuration) {
@@ -19,7 +19,7 @@ public class CrushingRecipe extends ProcessingRecipe<ProcessingInventory> {
 	}
 
 	@Override
-	public boolean matches(ProcessingInventory inv, World worldIn) {
+	public boolean matches(RecipeWrapper inv, World worldIn) {
 		if (inv.isEmpty())
 			return false;
 		return ingredients.get(0).test(inv.getStackInSlot(0));

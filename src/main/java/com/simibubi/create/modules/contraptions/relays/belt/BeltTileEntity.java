@@ -122,7 +122,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	public AxisAlignedBB getRenderBoundingBox() {
 		if (!isController())
 			return super.getRenderBoundingBox();
-		return super.getRenderBoundingBox().grow(beltLength);
+		return super.getRenderBoundingBox().grow(beltLength + 1);
 	}
 
 	protected void initializeItemHandler() {

@@ -40,7 +40,7 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 			sendData();
 			markDirty();
 		};
-		
+
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 			for (int i = 0; i < getSlots(); i++) {
 				ItemStack stackInSlot = getStackInSlot(i);
@@ -85,8 +85,8 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 
 	}
 
-	protected LazyOptional<IItemHandlerModifiable> inventory = LazyOptional
-			.of(() -> new BasinInventory(inputInventory, outputInventory));
+	protected LazyOptional<IItemHandlerModifiable> inventory =
+		LazyOptional.of(() -> new BasinInventory(inputInventory, outputInventory));
 	public BasinInputInventory recipeInventory;
 
 	public BasinTileEntity() {
