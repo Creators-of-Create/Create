@@ -51,9 +51,7 @@ public class InWorldProcessing {
 	public static SplashingInv splashingInv = new SplashingInv();
 
 	public enum Type {
-		SMOKING,
-		BLASTING,
-		SPLASHING
+		SMOKING, BLASTING, SPLASHING
 
 		;
 
@@ -137,7 +135,10 @@ public class InWorldProcessing {
 			Type type) {
 		if (transported.processedBy != type) {
 			transported.processedBy = type;
-			transported.processingTime = AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() + 1;
+			int timeModifierForStackSize = ((transported.stack.getCount() - 1) / 16) + 1;
+			int processingTime =
+				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+			transported.processingTime = processingTime;
 			if (!canProcess(transported.stack, type, belt.getWorld()))
 				transported.processingTime = -1;
 			return null;
@@ -215,7 +216,10 @@ public class InWorldProcessing {
 
 		if (!processing.contains("Type") || Type.valueOf(processing.getString("Type")) != type) {
 			processing.putString("Type", type.name());
-			processing.putInt("Time", AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() + 1);
+			int timeModifierForStackSize = ((entity.getItem().getCount() - 1) / 16) + 1;
+			int processingTime =
+				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+			processing.putInt("Time", processingTime);
 		}
 
 		int value = processing.getInt("Time") - 1;
@@ -273,19 +277,28 @@ public class InWorldProcessing {
 	}
 
 	public static void spawnParticlesForProcessing(World world, Vec3d vec, Type type) {
-		if (world.rand.nextInt(4) == 0 && world.isRemote) {
-			if (type == Type.BLASTING)
-				world.addParticle(ParticleTypes.LARGE_SMOKE, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
-			if (type == Type.SMOKING)
-				world.addParticle(ParticleTypes.POOF, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
-			if (type == Type.SPLASHING) {
-				Vec3d color = ColorHelper.getRGB(0x0055FF);
-				world.addParticle(new RedstoneParticleData((float) color.x, (float) color.y, (float) color.z, 1),
-						vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f,
-						vec.z + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
-				world.addParticle(ParticleTypes.SPIT, vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f,
-						vec.z + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
-			}
+		if (!world.isRemote)
+			return;
+		if (world.rand.nextInt(4) != 0)
+			return;
+
+		switch (type) {
+		case BLASTING:
+			world.addParticle(ParticleTypes.LARGE_SMOKE, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
+			break;
+		case SMOKING:
+			world.addParticle(ParticleTypes.POOF, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
+			break;
+		case SPLASHING:
+			Vec3d color = ColorHelper.getRGB(0x0055FF);
+			world.addParticle(new RedstoneParticleData((float) color.x, (float) color.y, (float) color.z, 1),
+					vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f,
+					vec.z + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+			world.addParticle(ParticleTypes.SPIT, vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f,
+					vec.z + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+			break;
+		default:
+			break;
 		}
 	}
 

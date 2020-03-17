@@ -38,10 +38,10 @@ import net.minecraftforge.common.Tags;
 
 public class AirCurrent {
 
-	private static DamageSource damageSourceFire = new DamageSource("create.fan_fire").setDifficultyScaled()
-			.setFireDamage();
-	private static DamageSource damageSourceLava = new DamageSource("create.fan_lava").setDifficultyScaled()
-			.setFireDamage();
+	private static DamageSource damageSourceFire =
+		new DamageSource("create.fan_fire").setDifficultyScaled().setFireDamage();
+	private static DamageSource damageSourceLava =
+		new DamageSource("create.fan_lava").setDifficultyScaled().setFireDamage();
 
 	public final EncasedFanTileEntity source;
 	public AxisAlignedBB bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
@@ -84,12 +84,12 @@ public class AirCurrent {
 			Vec3d previousMotion = entity.getMotion();
 			float maxAcceleration = 5;
 
-			double xIn = MathHelper.clamp(flow.getX() * acceleration - previousMotion.x, -maxAcceleration,
-					maxAcceleration);
-			double yIn = MathHelper.clamp(flow.getY() * acceleration - previousMotion.y, -maxAcceleration,
-					maxAcceleration);
-			double zIn = MathHelper.clamp(flow.getZ() * acceleration - previousMotion.z, -maxAcceleration,
-					maxAcceleration);
+			double xIn =
+				MathHelper.clamp(flow.getX() * acceleration - previousMotion.x, -maxAcceleration, maxAcceleration);
+			double yIn =
+				MathHelper.clamp(flow.getY() * acceleration - previousMotion.y, -maxAcceleration, maxAcceleration);
+			double zIn =
+				MathHelper.clamp(flow.getZ() * acceleration - previousMotion.z, -maxAcceleration, maxAcceleration);
 
 			entity.setMotion(previousMotion.add(new Vec3d(xIn, yIn, zIn).scale(1 / 8f)));
 			entity.fallDistance = 0;
@@ -99,29 +99,36 @@ public class AirCurrent {
 
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);
-			if (entity instanceof ItemEntity) {
-				InWorldProcessing.spawnParticlesForProcessing(world, entity.getPositionVec(), processingType);
-				if (InWorldProcessing.canProcess(((ItemEntity) entity), processingType))
-					InWorldProcessing.applyProcessing((ItemEntity) entity, processingType);
+			if (processingType != null) {
+				if (entity instanceof ItemEntity) {
+					InWorldProcessing.spawnParticlesForProcessing(world, entity.getPositionVec(), processingType);
+					if (InWorldProcessing.canProcess(((ItemEntity) entity), processingType))
+						InWorldProcessing.applyProcessing((ItemEntity) entity, processingType);
 
-			} else {
-				if (processingType == InWorldProcessing.Type.SMOKING) {
-					entity.setFire(2);
-					entity.attackEntityFrom(damageSourceFire, 2);
-				}
-				if (processingType == InWorldProcessing.Type.BLASTING) {
-					entity.setFire(10);
-					entity.attackEntityFrom(damageSourceLava, 4);
-				}
-				if (processingType == InWorldProcessing.Type.SPLASHING) {
-					if (entity.isBurning()) {
+				} else {
+					switch (processingType) {
+					case BLASTING:
+						entity.setFire(10);
+						entity.attackEntityFrom(damageSourceLava, 4);
+						break;
+					case SMOKING:
+						entity.setFire(2);
+						entity.attackEntityFrom(damageSourceFire, 2);
+						break;
+					case SPLASHING:
+						if (!entity.isBurning())
+							break;
 						entity.extinguish();
 						world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 								SoundCategory.NEUTRAL, 0.7F,
 								1.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.4F);
+						break;
+					default:
+						break;
 					}
 				}
 			}
+
 		}
 
 		tickBelts();
@@ -169,11 +176,11 @@ public class AirCurrent {
 			}
 
 			for (Vec3d offset : offsets) {
-				Vec3d rayStart = VecHelper.getCenterOf(currentPos).subtract(directionVec.scale(.5f + 1 / 32f))
-						.add(offset);
+				Vec3d rayStart =
+					VecHelper.getCenterOf(currentPos).subtract(directionVec.scale(.5f + 1 / 32f)).add(offset);
 				Vec3d rayEnd = rayStart.add(directionVec.scale(1 + 1 / 32f));
-				BlockRayTraceResult blockraytraceresult = world.rayTraceBlocks(rayStart, rayEnd, currentPos, voxelshape,
-						state);
+				BlockRayTraceResult blockraytraceresult =
+					world.rayTraceBlocks(rayStart, rayEnd, currentPos, voxelshape, state);
 				if (blockraytraceresult == null)
 					continue Outer;
 
@@ -240,20 +247,20 @@ public class AirCurrent {
 		affectedBelts.clear();
 		for (int i = 0; i < maxDistance + 1; i++) {
 			Type type = getSegmentAt(i);
-			if (type != null) {
-				BlockPos pos = start.offset(direction, i);
-				TileEntity te = world.getTileEntity(pos);
-				if (te != null && (te instanceof BeltTileEntity))
-					affectedBelts.add(Pair.of((BeltTileEntity) te, type));
-				if (direction.getAxis().isVertical())
-					continue;
-
-				pos = pos.down();
-				te = world.getTileEntity(pos);
-				if (te == null || !(te instanceof BeltTileEntity))
-					continue;
+			if (type == null)
+				continue;
+			BlockPos pos = start.offset(direction, i);
+			TileEntity te = world.getTileEntity(pos);
+			if (te != null && (te instanceof BeltTileEntity))
 				affectedBelts.add(Pair.of((BeltTileEntity) te, type));
-			}
+			if (direction.getAxis().isVertical())
+				continue;
+
+			pos = pos.down();
+			te = world.getTileEntity(pos);
+			if (te == null || !(te instanceof BeltTileEntity))
+				continue;
+			affectedBelts.add(Pair.of((BeltTileEntity) te, type));
 		}
 	}
 

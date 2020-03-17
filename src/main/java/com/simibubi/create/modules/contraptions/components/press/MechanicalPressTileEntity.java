@@ -315,6 +315,9 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	protected void basinRemoved() {
 		pressedItems.clear();
 		super.basinRemoved();
+		running = false;
+		runningTicks = 0;
+		sendData();
 	}
 
 }

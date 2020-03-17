@@ -161,8 +161,10 @@ public enum AllBeltAttachments {
 
 		public void readAndSearch(CompoundNBT nbt, BeltTileEntity belt) {
 			attachments.clear();
-			if (!nbt.contains("HasAttachments"))
+			if (!nbt.contains("HasAttachments")) {
+				findAttachments(belt);
 				return;
+			}
 			if (nbt.contains("AttachmentData")) {
 				ListNBT list = (ListNBT) nbt.get("AttachmentData");
 				for (INBT data : list) {

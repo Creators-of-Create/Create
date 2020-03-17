@@ -38,6 +38,8 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
+		if (getSpeed() == 0)
+			basinRemoved = true;
 		checkBasin = true;
 	}
 
@@ -66,6 +68,8 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
 		if (!isSpeedRequirementFulfilled())
 			return;
+		if (getSpeed() == 0)
+			return;
 		if (!isCheckingBasin())
 			return;
 		if (!checkBasin)
@@ -83,11 +87,6 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			return;
 
 		gatherInputs();
-//		if (matchBasinRecipe(lastRecipe)) {
-//			startProcessingBasin();
-//			sendData();
-//			return;
-//		}
 		List<IRecipe<?>> recipes = getMatchingRecipes();
 		if (recipes.isEmpty())
 			return;
@@ -96,7 +95,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		startProcessingBasin();
 		sendData();
 	}
-	
+
 	protected boolean isCheckingBasin() {
 		return true;
 	}
@@ -121,7 +120,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		IItemHandlerModifiable inputs = inv.getInputHandler();
 		IItemHandlerModifiable outputs = inv.getOutputHandler();
 		List<ItemStack> catalysts = new ArrayList<>();
-		
+
 		int buckets = 0;
 		Ingredients: for (Ingredient ingredient : lastRecipe.getIngredients()) {
 			for (int slot = 0; slot < inputs.getSlots(); slot++) {
@@ -130,7 +129,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 				ItemStack extracted = inputs.extractItem(slot, 1, false);
 				if (extracted.getItem() instanceof BucketItem)
 					buckets++;
-				
+
 				if ((lastRecipe instanceof ProcessingRecipe)) {
 					ProcessingRecipe<?> pr = (ProcessingRecipe<?>) lastRecipe;
 					if (pr.getRollableIngredients().get(slot).remains())
@@ -150,7 +149,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		// Continue mixing
 		gatherInputs();
 		if (matchBasinRecipe(lastRecipe)) {
-			continueWithPreviousRecipe();			
+			continueWithPreviousRecipe();
 			sendData();
 		}
 	}
