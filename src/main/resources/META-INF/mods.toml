@@ -4,12 +4,12 @@ loaderVersion="[28,)"
 
 [[mods]] 
 modId="create"
-version="0.1.1b"
+version="0.2"
 displayName="Create" 
 #updateJSONURL=""
 authors="simibubi" 
 description='''
-A handful of additions to aid the creative survivalist.'''
+Technology that empowers the player.'''
 
 [[dependencies.create]] 
     modId="forge"

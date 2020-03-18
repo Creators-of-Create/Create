@@ -31,8 +31,8 @@ public class CKinetics extends ConfigBase {
 	public ConfigFloat mediumSpeed = f(30, 0, 4096, "mediumSpeed", Comments.rpm, Comments.mediumSpeed);
 	public ConfigFloat fastSpeed = f(100, 0, 65535, "fastSpeed", Comments.rpm, Comments.fastSpeed);
 	public ConfigFloat mediumStressImpact =
-		f(8, 0, 4096, "mediumStressImpact", Comments.su, Comments.mediumStressImpact);
-	public ConfigFloat highStressImpact = f(32, 0, 65535, "highStressImpact", Comments.su, Comments.highStressImpact);
+		f(4, 0, 4096, "mediumStressImpact", Comments.su, Comments.mediumStressImpact);
+	public ConfigFloat highStressImpact = f(8, 0, 65535, "highStressImpact", Comments.su, Comments.highStressImpact);
 	public ConfigFloat mediumCapacity = f(128, 0, 4096, "mediumCapacity", Comments.su, Comments.mediumCapacity);
 	public ConfigFloat highCapacity = f(512, 0, 65535, "highCapacity", Comments.su, Comments.highCapacity);
 

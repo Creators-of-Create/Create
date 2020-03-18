@@ -17,6 +17,7 @@ import com.simibubi.create.modules.contraptions.components.flywheel.engine.Engin
 import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
@@ -86,8 +87,10 @@ public class TooltipHelper {
 	public static boolean hasTooltip(ItemStack stack) {
 		checkLocale();
 
+		ClientPlayerEntity player = Minecraft.getInstance().player;
 		boolean hasGlasses =
-			AllItems.GOGGLES.typeOf(Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+			player != null && AllItems.GOGGLES.typeOf(player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+
 		if (hasGlasses != gogglesMode) {
 			gogglesMode = hasGlasses;
 			cachedTooltips.clear();

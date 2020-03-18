@@ -395,7 +395,9 @@ public abstract class Contraption {
 				if (customRemoval.test(add, block.state))
 					continue;
 				world.getWorld().removeTileEntity(add);
-				int flags = 67 | 32 | 16;
+				int flags = 67;
+				if (world.getBlockState(add).getBlock() instanceof DoorBlock)
+					flags = flags | 32 | 16;
 				world.setBlockState(add, Blocks.AIR.getDefaultState(), flags);
 			}
 		}

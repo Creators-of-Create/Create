@@ -92,7 +92,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		if (movedContraption == null)
 			return 0;
 		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks() / 8;
-		return MathHelper.clamp(sails, 1, 64);
+		return MathHelper.clamp(sails, 1, 16);
 	}
 
 	@Override

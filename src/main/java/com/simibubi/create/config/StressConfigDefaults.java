@@ -12,12 +12,12 @@ public class StressConfigDefaults {
 		case FURNACE_ENGINE:
 			return 512;
 		case MECHANICAL_BEARING:
-			return 128;
+			return 256;
 		case ENCASED_FAN:
 		case HAND_CRANK:
-			return 64;
+			return 16;
 		case WATER_WHEEL:
-			return 32;
+			return 4;
 		default:
 			return -1;
 		}
@@ -28,29 +28,25 @@ public class StressConfigDefaults {
 		switch (block) {
 		case CRUSHING_WHEEL:
 		case MECHANICAL_PRESS:
-			return 32;
+			return 8;
 	
 		case DRILL:
 		case SAW:
 		case DEPLOYER:
-			return 16;
-	
 		case ENCASED_FAN:
 		case MECHANICAL_MIXER:
-		case MECHANICAL_CRAFTER:
-			return 8;
+			return 4;
 	
+		case MECHANICAL_CRAFTER:
 		case TURNTABLE:
 		case MECHANICAL_PISTON:
 		case MECHANICAL_BEARING:
 		case CLOCKWORK_BEARING:
 		case ROPE_PULLEY:
 		case STICKY_MECHANICAL_PISTON:
-			return 4;
-	
-		case BELT:
 			return 2;
 			
+		case BELT:
 		case CUCKOO_CLOCK:
 			return 1;
 			

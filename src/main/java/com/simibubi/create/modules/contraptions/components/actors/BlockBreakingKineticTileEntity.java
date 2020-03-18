@@ -39,6 +39,13 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 		if (destroyProgress == -1)
 			destroyNextTick();
 	}
+	
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		if (ticksUntilNextProgress == -1)
+			destroyNextTick();
+	}
 
 	public void destroyNextTick() {
 		ticksUntilNextProgress = 1;

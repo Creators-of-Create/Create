@@ -20,8 +20,6 @@ public class ToggleDebugCommand {
 				.then(Commands.argument("value", BoolArgumentType.bool())
 						.executes(ctx -> {
 							boolean value = BoolArgumentType.getBool(ctx, "value");
-							System.out.println("Command toggleDebug " + value);
-
 							DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> AllConfigs.CLIENT.rainbowDebug.set(value));
 
 							DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () ->

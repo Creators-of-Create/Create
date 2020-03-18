@@ -100,6 +100,8 @@ public class SuperByteBuffer {
 	}
 
 	public void renderInto(BufferBuilder buffer) {
+		if (original.limit() == 0)
+			return;
 		buffer.putBulkData(build());
 	}
 

@@ -11,9 +11,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoorBlock;
+import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.block.LadderBlock;
+import net.minecraft.block.RedstoneDiodeBlock;
 import net.minecraft.block.RedstoneWallTorchBlock;
+import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.block.TorchBlock;
 import net.minecraft.block.WallTorchBlock;
 import net.minecraft.block.material.PushReaction;
@@ -61,6 +64,8 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof TorchBlock)
 			return true;
+		if (block instanceof FlowerPotBlock)
+			return true;
 		if (block instanceof AbstractPressurePlateBlock)
 			return true;
 		if (block instanceof DoorBlock)
@@ -68,6 +73,10 @@ public class BlockMovementTraits {
 		if (block instanceof HorizontalFaceBlock)
 			return true;
 		if (block instanceof AbstractRailBlock)
+			return true;
+		if (block instanceof RedstoneDiodeBlock)
+			return true;
+		if (block instanceof RedstoneWireBlock)
 			return true;
 		return false;
 	}
@@ -84,6 +93,12 @@ public class BlockMovementTraits {
 		if (block instanceof AbstractPressurePlateBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof DoorBlock)
+			return direction == Direction.DOWN;
+		if (block instanceof FlowerPotBlock)
+			return direction == Direction.DOWN;
+		if (block instanceof RedstoneDiodeBlock)
+			return direction == Direction.DOWN;
+		if (block instanceof RedstoneWireBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof RedstoneWallTorchBlock)
 			return state.get(RedstoneWallTorchBlock.FACING) == direction.getOpposite();
