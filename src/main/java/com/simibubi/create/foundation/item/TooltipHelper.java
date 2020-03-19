@@ -47,17 +47,20 @@ public class TooltipHelper {
 		for (int i = 0; i < indent; i++)
 			lineStart += " ";
 
-		String[] words = s.split(" ");
+		// Apply markup
+		String markedUp = s.replaceAll("_([^_]+)_", highlightColor + "$1" + defaultColor);
+
+		String[] words = markedUp.split(" ");
 		List<String> lines = new ArrayList<>();
 		StringBuilder currentLine = new StringBuilder(lineStart);
+		String word;
 		boolean firstWord = true;
+		boolean lastWord;
 
+		// Apply hard wrap
 		for (int i = 0; i < words.length; i++) {
-			String word = words[i];
-			if (word.matches("_.+_.?"))
-				word = highlightColor + word.replaceAll("\\_", "") + defaultColor;
-
-			boolean lastWord = i == words.length - 1;
+			word = words[i];
+			lastWord = i == words.length - 1;
 
 			if (!lastWord && !firstWord && currentLine.length() + word.length() > maxCharsPerLine) {
 				lines.add(currentLine.toString());
