@@ -1,16 +1,19 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -47,8 +50,8 @@ public class ChassisRangeDisplay {
 			if (positions == null)
 				return shape;
 			for (BlockPos blockPos : positions)
-				shape = VoxelShapes.or(shape,
-						BLOCK_OUTLINE.withOffset(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+				shape =
+					VoxelShapes.or(shape, BLOCK_OUTLINE.withOffset(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
 			return shape;
 		}
 
@@ -68,6 +71,13 @@ public class ChassisRangeDisplay {
 			includedTEs = te.collectChassisGroup();
 			if (includedTEs == null)
 				return shape;
+			
+			// outlining algo is not very scalable -> display only single chassis if group gets too large
+			if (LinearChassisBlock.isChassis(chassis.getBlockState()) && includedTEs.size() > 32)
+				includedTEs = Arrays.asList(chassis);
+			if (AllBlocks.ROTATION_CHASSIS.typeOf(chassis.getBlockState()) && includedTEs.size() > 8)
+				includedTEs = Arrays.asList(chassis);
+			
 			for (ChassisTileEntity chassisTileEntity : includedTEs)
 				shape = VoxelShapes.or(shape, super.createSelection(chassisTileEntity));
 			return shape;

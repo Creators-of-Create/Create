@@ -131,9 +131,9 @@ public class GaugeInformationRenderer {
 		tooltip.add(spacing + _kineticStatsTitle);
 		tooltip.add(spacing + GRAY + _stressImpact);
 
-		String addedStress = AQUA + "" + format(stressApplied) + _stressUnit + " " + DARK_GRAY + _atCurrentSpeed;
+		String addedStress = AQUA + "" + format(stressApplied) + _stressUnit + " " + DARK_GRAY + _baseValue;
 		String addedStressAtBase =
-			GRAY + "" + format(stressApplied * Math.abs(te.getSpeed())) + _stressUnit + " " + DARK_GRAY + _baseValue;
+			GRAY + "" + format(stressApplied * Math.abs(te.getSpeed())) + _stressUnit + " " + DARK_GRAY + _atCurrentSpeed;
 		tooltip.add(spacing + " " + addedStress);
 		tooltip.add(spacing + " " + addedStressAtBase);
 	}
@@ -163,8 +163,8 @@ public class GaugeInformationRenderer {
 			relativeCap = addedStressCapacity * actualSpeed;
 
 		String addedCapacity =
-			AQUA + "" + format(addedStressCapacity) + _stressUnit + " " + DARK_GRAY + _atCurrentSpeed;
-		String addedCapacityAtBase = GRAY + "" + format(relativeCap) + _stressUnit + " " + DARK_GRAY + _baseValue;
+			AQUA + "" + format(addedStressCapacity) + _stressUnit + " " + DARK_GRAY + _baseValue;
+		String addedCapacityAtBase = GRAY + "" + format(relativeCap) + _stressUnit + " " + DARK_GRAY + _atCurrentSpeed;
 		tooltip.add(spacing + " " + addedCapacity);
 		tooltip.add(spacing + " " + addedCapacityAtBase);
 	}
@@ -228,8 +228,8 @@ public class GaugeInformationRenderer {
 				tooltip.add(spacing + GRAY + _capacity);
 
 				String capacity = color + "" + format((cap - stress) / Math.abs(theoreticalSpeed)) + _stressUnit + " "
-						+ DARK_GRAY + _atCurrentSpeed;
-				String capacityAtBase = GRAY + "" + format(cap - stress) + _stressUnit + " " + DARK_GRAY + _baseValue;
+						+ DARK_GRAY + _baseValue;
+				String capacityAtBase = GRAY + "" + format(cap - stress) + _stressUnit + " " + DARK_GRAY + _atCurrentSpeed;
 				tooltip.add(spacing + " " + capacity);
 				tooltip.add(spacing + " " + capacityAtBase);
 			}

@@ -60,8 +60,6 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock {
 						return true;
 					}
 					worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
-					if (!player.isCreative())
-						heldItem.shrink(1);
 					state = state.with(glueableSide, true);
 				}
 			}

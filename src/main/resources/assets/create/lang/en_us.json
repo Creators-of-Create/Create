@@ -212,7 +212,7 @@
 	"block.create.weathered_limestone_bricks_wall": "Weathered Limestone Brick Wall",
 	"block.create.weathered_limestone_bricks_slab": "Weathered Limestone Brick Slab",
 	"block.create.weathered_limestone_pillar": "Weathered Limestone Pillar",
-	"block.create.weathered_limestone_layers": "Weathered Layered Limestone",
+	"block.create.weathered_limestone_layers": "Layered Weathered Limestone",
 
 	"block.create.dolomite_pillar": "Dolomite Pillar",
 	"block.create.dolomite": "Dolomite",
@@ -1144,7 +1144,7 @@
 	"item.create.shadow_steel.tooltip.summary": "A Chromatic material forged _in_ _the_ _void_.",
 	
 	"item.create.slot_cover.tooltip": "SLOT COVER",
-	"item.create.slot_cover.tooltip.summary": "Used to mark a _Mechanical_ _Crafter_ as an empty slot in a recipe. Crafters do not necessarily have to form a full square gri.  This is useful when there are recipes where _ingredients_ _are_ _diagonal_ to each other.",
+	"item.create.slot_cover.tooltip.summary": "Used to mark a _Mechanical_ _Crafter_ as an empty slot in a recipe. Crafters do not necessarily have to form a full square grid. This is useful when there are recipes where _ingredients_ _are_ _diagonal_ to each other.",
 	
 	"tool.create.shadow_steel.tooltip": "SHADOW STEEL TOOLS",
 	"tool.create.shadow_steel.tooltip.summary": "A fast and powerful tool that _destroys_ _drops_ from any block or entity. Killed mobs can drop _more_ _experience_ based on the _Looting_ modifier of this tool.",

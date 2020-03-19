@@ -33,7 +33,6 @@ public class StressConfigDefaults {
 		case DRILL:
 		case SAW:
 		case DEPLOYER:
-		case ENCASED_FAN:
 		case MECHANICAL_MIXER:
 			return 4;
 	
@@ -47,6 +46,7 @@ public class StressConfigDefaults {
 			return 2;
 			
 		case BELT:
+		case ENCASED_FAN:
 		case CUCKOO_CLOCK:
 			return 1;
 			

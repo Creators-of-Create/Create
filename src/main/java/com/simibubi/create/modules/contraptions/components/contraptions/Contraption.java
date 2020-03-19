@@ -115,7 +115,8 @@ public abstract class Contraption {
 		if (!addToInitialFrontier(world, pos, forcedDirection, frontier))
 			return false;
 
-		for (int limit = 1000; limit > 0; limit--) {
+		Integer blockLimit = AllConfigs.SERVER.kinetics.maxBlocksMoved.get();
+		for (int limit = blockLimit; limit > 0; limit--) {
 			if (frontier.isEmpty())
 				return true;
 			if (!moveBlock(world, frontier.remove(0), forcedDirection, frontier, visited))
