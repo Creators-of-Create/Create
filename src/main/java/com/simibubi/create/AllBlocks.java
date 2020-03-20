@@ -65,9 +65,9 @@ import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorBloc
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
+import com.simibubi.create.modules.logistics.management.base.LogisticalCasingBlock;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock;
 import com.simibubi.create.modules.logistics.management.base.LogisticalControllerBlock.LogisticalControllerIndicatorBlock;
-import com.simibubi.create.modules.logistics.management.base.NewLogisticalCasingBlock;
 import com.simibubi.create.modules.logistics.management.index.LogisticalIndexBlock;
 import com.simibubi.create.modules.logistics.transport.villager.LogisticiansTableBlock;
 import com.simibubi.create.modules.logistics.transport.villager.PackageFunnelBlock;
@@ -197,7 +197,7 @@ public enum AllBlocks {
 	FLEXPEATER(new FlexpeaterBlock()),
 	FLEXPEATER_INDICATOR(new RenderUtilityBlock()),
 	
-	LOGISTICAL_CASING(new NewLogisticalCasingBlock()),
+	LOGISTICAL_CASING(new LogisticalCasingBlock()),
 	LOGISTICAL_CONTROLLER(new LogisticalControllerBlock()),
 	LOGISTICAL_CONTROLLER_INDICATOR(new LogisticalControllerIndicatorBlock()),
 	LOGISTICAL_INDEX(new LogisticalIndexBlock()),

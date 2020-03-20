@@ -88,8 +88,9 @@ public class LogisticiansTableBlock extends HorizontalBlock implements IWithTile
 			if (!itemStack.hasTag())
 				continue;
 			withTileEntityDo(worldIn, pos, te -> te.setNetworkId(itemStack.getTag().getUniqueId("NetworkID")));
-			return;
+			break;
 		}
+		tick(state, worldIn, pos, worldIn.rand);
 	}
 
 	public BlockState getStateForPlacement(BlockItemUseContext context) {

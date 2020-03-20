@@ -64,6 +64,8 @@ import com.simibubi.create.modules.logistics.block.inventories.FlexcrateTileEnti
 import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerTileEntity;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerTileEntity;
 import com.simibubi.create.modules.logistics.management.base.LogisticalCasingTileEntity;
+import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntity;
+import com.simibubi.create.modules.logistics.management.base.LogisticalControllerTileEntityRenderer;
 import com.simibubi.create.modules.logistics.management.controller.CalculationTileEntity;
 import com.simibubi.create.modules.logistics.management.controller.RequestTileEntity;
 import com.simibubi.create.modules.logistics.management.controller.StorageTileEntity;
@@ -71,6 +73,7 @@ import com.simibubi.create.modules.logistics.management.controller.SupplyTileEnt
 import com.simibubi.create.modules.logistics.management.controller.TransactionsTileEntity;
 import com.simibubi.create.modules.logistics.management.index.LogisticalIndexTileEntity;
 import com.simibubi.create.modules.logistics.transport.villager.LogisticiansTableTileEntity;
+import com.simibubi.create.modules.logistics.transport.villager.LogisticiansTableTileEntityRenderer;
 import com.simibubi.create.modules.logistics.transport.villager.PackageFunnelTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.modules.schematics.block.SchematicannonRenderer;
@@ -220,8 +223,8 @@ public enum AllTileEntities {
 		bind(BeltObserverTileEntity.class, new BeltObserverTileEntityRenderer());
 		bind(FlexpeaterTileEntity.class, new FlexpeaterTileEntityRenderer());
 		
-//		bind(LogisticalControllerTileEntity.class, new LogisticalControllerTileEntityRenderer());
-//		bind(LogisticiansTableTileEntity.class, new LogisticiansTableTileEntityRenderer());
+		bind(LogisticalControllerTileEntity.class, new LogisticalControllerTileEntityRenderer());
+		bind(LogisticiansTableTileEntity.class, new LogisticiansTableTileEntityRenderer());
 	}
 
 	@OnlyIn(Dist.CLIENT)

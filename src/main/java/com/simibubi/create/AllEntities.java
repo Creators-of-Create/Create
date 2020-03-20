@@ -5,6 +5,7 @@ import java.util.function.Function;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntityRenderer;
 import com.simibubi.create.modules.logistics.transport.CardboardBoxEntity;
+import com.simibubi.create.modules.logistics.transport.CardboardBoxEntityRenderer;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
@@ -57,7 +58,7 @@ public enum AllEntities {
 
 	@OnlyIn(value = Dist.CLIENT)
 	public static void registerRenderers() {
-//		RenderingRegistry.registerEntityRenderingHandler(CardboardBoxEntity.class, CardboardBoxEntityRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(CardboardBoxEntity.class, CardboardBoxEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(ContraptionEntity.class, ContraptionEntityRenderer::new);
 	}
 

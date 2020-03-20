@@ -14,6 +14,9 @@ import com.simibubi.create.modules.curiosities.blockzapper.BlockzapperBeamPacket
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.modules.logistics.block.diodes.ConfigureFlexpeaterPacket;
 import com.simibubi.create.modules.logistics.item.filter.FilterScreenPacket;
+import com.simibubi.create.modules.logistics.management.controller.LogisticalControllerConfigurationPacket;
+import com.simibubi.create.modules.logistics.management.index.IndexContainerUpdatePacket;
+import com.simibubi.create.modules.logistics.management.index.IndexOrderRequest;
 import com.simibubi.create.modules.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.modules.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.modules.schematics.packet.ConfigureSchematicannonPacket;
@@ -36,19 +39,19 @@ public enum AllPackets {
 	CONFIGURE_CHASSIS(ConfigureChassisPacket.class, ConfigureChassisPacket::new),
 	CONFIGURE_MOTOR(ConfigureMotorPacket.class, ConfigureMotorPacket::new),
 	CONFIGURE_FLEXPEATER(ConfigureFlexpeaterPacket.class, ConfigureFlexpeaterPacket::new),
-//	CONFIGURE_LOGISTICAL_CONTROLLER(LogisticalControllerConfigurationPacket.class,
-//			LogisticalControllerConfigurationPacket::new),
+	CONFIGURE_LOGISTICAL_CONTROLLER(LogisticalControllerConfigurationPacket.class,
+			LogisticalControllerConfigurationPacket::new),
 	CONFIGURE_MIXER(ConfigureMixerPacket.class, ConfigureMixerPacket::new),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new),
-//	INDEX_ORDER_REQUEST(IndexOrderRequest.class, IndexOrderRequest::new),
+	INDEX_ORDER_REQUEST(IndexOrderRequest.class, IndexOrderRequest::new),
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new),
 	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),
 	BEAM_EFFECT(BlockzapperBeamPacket.class, BlockzapperBeamPacket::new),
-//	INDEX_CONTAINER_UPDATE(IndexContainerUpdatePacket.class, IndexContainerUpdatePacket::new),
+	INDEX_CONTAINER_UPDATE(IndexContainerUpdatePacket.class, IndexContainerUpdatePacket::new),
 
 	;
 

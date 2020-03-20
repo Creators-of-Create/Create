@@ -39,6 +39,8 @@ public class LogisticalNetworkHandler {
 	}
 
 	public LogisticalNetwork getNetworkByID(IWorld world, UUID id) {
+		if (!networks.containsKey(world))
+			networks.put(world, new HashMap<>());
 		Map<UUID, LogisticalNetwork> worldNets = networks.get(world);
 		if (!worldNets.containsKey(id))
 			worldNets.put(id, new LogisticalNetwork());
