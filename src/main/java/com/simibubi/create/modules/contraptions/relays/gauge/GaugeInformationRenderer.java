@@ -20,6 +20,7 @@ import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
+import com.simibubi.create.modules.contraptions.redstone.AnalogLeverTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -42,6 +43,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class GaugeInformationRenderer {
 
 	private static DecimalFormat decimalFormat = new DecimalFormat("#.##");
+	private static String spacing = "    ";
 
 	@SubscribeEvent
 	public static void lookingAtBlocksThroughGogglesShowsTooltip(RenderGameOverlayEvent.Post event) {
@@ -64,7 +66,7 @@ public class GaugeInformationRenderer {
 
 		if (!AllItems.GOGGLES.typeOf(goggles) && !notFastEnough)
 			return;
-		if (mc.player.isSneaking())
+		if (mc.player.isSneaking() && !(te instanceof AnalogLeverTileEntity))
 			return;
 
 		List<String> tooltip = new ArrayList<>();
@@ -79,6 +81,8 @@ public class GaugeInformationRenderer {
 				addGeneratorTooltip(state, tooltip, (GeneratingKineticTileEntity) te);
 			if (te instanceof KineticTileEntity)
 				addStressTooltip(state, tooltip, (KineticTileEntity) te);
+			if (te instanceof AnalogLeverTileEntity)
+				addLeverTooltip(state, tooltip, (AnalogLeverTileEntity) te);
 		}
 
 		if (tooltip.isEmpty())
@@ -117,7 +121,6 @@ public class GaugeInformationRenderer {
 	}
 
 	private static void addStressTooltip(BlockState state, List<String> tooltip, KineticTileEntity te) {
-		String spacing = "    ";
 		float stressApplied = te.getStressApplied();
 		if (stressApplied == 0 || !StressImpact.isEnabled())
 			return;
@@ -139,7 +142,6 @@ public class GaugeInformationRenderer {
 	}
 
 	private static void addGeneratorTooltip(BlockState state, List<String> tooltip, GeneratingKineticTileEntity te) {
-		String spacing = "    ";
 		float addedStressCapacity = te.getAddedStressCapacity();
 		if (addedStressCapacity == 0 || !StressImpact.isEnabled())
 			return;
@@ -182,7 +184,6 @@ public class GaugeInformationRenderer {
 		String _atCurrentSpeed = Lang.translate("gui.goggles.at_current_speed");
 		String _baseValue = Lang.translate("gui.goggles.base_value");
 
-		String spacing = "    ";
 		tooltip.add(spacing + _infoHeader);
 
 		if (AllBlocks.STRESS_GAUGE.typeOf(state)) {
@@ -259,6 +260,11 @@ public class GaugeInformationRenderer {
 			if (overstressed)
 				tooltip.add(spacing + TextFormatting.DARK_RED + _overStressed);
 		}
+	}
+
+	private static void addLeverTooltip(BlockState state, List<String> tooltip, AnalogLeverTileEntity te) {
+		int leverState = te.getState();
+		tooltip.add(spacing + Lang.translate("tooltip.analogStrength", leverState));
 	}
 
 	private static String format(double d) {

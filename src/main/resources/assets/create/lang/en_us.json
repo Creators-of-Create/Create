@@ -310,7 +310,7 @@
 	"create.generic.unit.ticks": "Ticks",
 	"create.generic.unit.seconds": "Seconds",
 	"create.generic.unit.minutes": "Minutes",
-	"create.generic.unit.rpm": "rpm",
+	"create.generic.unit.rpm": "RPM",
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "°",
 
@@ -607,6 +607,9 @@
 	"create.tooltip.capacityProvided.medium": "Medium",
 	"create.tooltip.capacityProvided.high": "Large",
 	"create.tooltip.capacityProvided.asGenerator": "(As Generator)",
+	"create.tooltip.generationSpeed" : "Generates at %1$s %2$s",
+
+	"create.tooltip.analogStrength": "Analog Strength: %1$s/15",
 
 	"create.tooltip.wip": "WIP",
 	"create.tooltip.workInProgress": "Work in progress!",

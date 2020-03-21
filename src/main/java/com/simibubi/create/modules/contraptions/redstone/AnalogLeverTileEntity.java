@@ -69,4 +69,7 @@ public class AnalogLeverTileEntity extends SmartTileEntity {
 		sendData();
 	}
 
+	public int getState() {
+		return state;
+	}
 }
