@@ -13,14 +13,14 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = 'mc1.14.4_v0.2'
+version = 'mc1.15.2_v0.2'
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200119-1.14.3'
+    mappings channel: 'snapshot', version: '20200301-mixed-1.15.2'
     
     runs {		
 		client {
@@ -68,15 +68,20 @@ repositories {
     name = "ModMaven"
     url = "https://modmaven.k-4u.nl"
   }
+  maven {
+    // for mixed mappings
+    name = "tterrag maven"
+    url = "https://maven.tterrag.com/"
+  }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.2.0'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.1.27'
     
     // compile against the JEI API but do not include it at runtime
- 	compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.26:api")
+ 	compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2:api")
   	// at runtime, use the full JEI jar
-  	runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.26")
+  	runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")
 }
 
 jar {
