@@ -39,7 +39,6 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-
 		CompoundNBT flows = new CompoundNBT();
 		for (Direction d : Direction.values())
 			flows.putFloat(d.getName(), this.flows.get(d));

@@ -30,7 +30,11 @@ public class LatchBlock extends ToggleLatchBlock {
 		boolean back = state.get(POWERED);
 		boolean shouldBack = this.shouldBePowered(worldIn, pos, state);
 		boolean side = state.get(POWERED_SIDE);
-		boolean shouldSide = getPowerOnSides(worldIn, pos, state) > 0;
+
+		Direction direction = state.get(HORIZONTAL_FACING);
+		Direction left = direction.rotateY();
+		Direction right = direction.rotateYCCW();
+		boolean shouldSide = worldIn.isBlockPowered(pos.offset(left)) || worldIn.isBlockPowered(pos.offset(right));
 
 		TickPriority tickpriority = TickPriority.HIGH;
 		if (this.isFacingTowardsRepeater(worldIn, pos, state))
@@ -49,7 +53,11 @@ public class LatchBlock extends ToggleLatchBlock {
 		boolean back = state.get(POWERED);
 		boolean shouldBack = this.shouldBePowered(worldIn, pos, state);
 		boolean side = state.get(POWERED_SIDE);
-		boolean shouldSide = getPowerOnSides(worldIn, pos, state) > 0;
+
+		Direction direction = state.get(HORIZONTAL_FACING);
+		Direction left = direction.rotateY();
+		Direction right = direction.rotateYCCW();
+		boolean shouldSide = worldIn.isBlockPowered(pos.offset(left)) || worldIn.isBlockPowered(pos.offset(right));
 		BlockState stateIn = state;
 
 		if (back != shouldBack) {

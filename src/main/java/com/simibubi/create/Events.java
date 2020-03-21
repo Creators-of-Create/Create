@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.ServerTickEvent;
@@ -22,6 +23,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBloc
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
@@ -46,7 +48,8 @@ public class Events {
 		IWorld world = event.getWorld();
 		Create.redstoneLinkNetworkHandler.onLoadWorld(world);
 		Create.torquePropagator.onLoadWorld(world);
-//		Create.logisticalNetworkHandler.onLoadWorld(world);
+		if (event.getWorld().isRemote())
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> CreateClient.bufferCache::invalidate);
 	}
 
 	@SubscribeEvent
@@ -54,7 +57,6 @@ public class Events {
 		IWorld world = event.getWorld();
 		Create.redstoneLinkNetworkHandler.onUnloadWorld(world);
 		Create.torquePropagator.onUnloadWorld(world);
-//		Create.logisticalNetworkHandler.onUnloadWorld(world);
 	}
 
 	@SubscribeEvent

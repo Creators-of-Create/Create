@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = 'mc1.14.4_v0.2'
+version = 'mc1.14.4_v0.2.1'
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
@@ -71,7 +71,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.2.0'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.2.3'
     
     // compile against the JEI API but do not include it at runtime
  	compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.26:api")

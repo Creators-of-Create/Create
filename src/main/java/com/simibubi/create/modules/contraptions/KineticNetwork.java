@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -16,31 +17,42 @@ public class KineticNetwork {
 	private float currentStress;
 	private float unloadedCapacity;
 	private float unloadedStress;
+	private int unloadedMembers;
 
 	public KineticNetwork() {
 		sources = new HashMap<>();
 		members = new HashMap<>();
 	}
 
-	public void initFromTE(float maxStress, float currentStress) {
+	public void initFromTE(float maxStress, float currentStress, int members) {
 		unloadedCapacity = maxStress;
 		unloadedStress = currentStress;
+		unloadedMembers = members;
 		initialized = true;
 		updateStress();
 		updateCapacity();
 	}
 
-	public void addSilently(KineticTileEntity te) {
+	public void addSilently(KineticTileEntity te, float lastCapacity, float lastStress) {
 		if (members.containsKey(te))
 			return;
 		if (te.isSource()) {
 			float capacity = te.getAddedStressCapacity();
 			unloadedCapacity -= capacity * getStressMultiplierForSpeed(te.getGeneratedSpeed());
+			if (unloadedCapacity < 0)
+				unloadedCapacity = 0;
 			sources.put(te, capacity);
 		}
+
 		float stressApplied = te.getStressApplied();
 		unloadedStress -= stressApplied * getStressMultiplierForSpeed(te.getTheoreticalSpeed());
+		if (unloadedStress < 0)
+			unloadedStress = 0;
 		members.put(te, stressApplied);
+
+		unloadedMembers--;
+		if (unloadedMembers < 0)
+			unloadedMembers = 0;
 	}
 
 	public void add(KineticTileEntity te) {
@@ -112,22 +124,46 @@ public class KineticNetwork {
 
 	public float calculateCapacity() {
 		float presentCapacity = 0;
-		for (KineticTileEntity te : sources.keySet())
-			presentCapacity += sources.get(te) * getStressMultiplierForSpeed(te.getGeneratedSpeed());
+		for (Iterator<KineticTileEntity> iterator = sources.keySet().iterator(); iterator.hasNext();) {
+			KineticTileEntity te = iterator.next();
+			if (te.getWorld().getTileEntity(te.getPos()) != te) {
+				iterator.remove();
+				continue;
+			}
+			presentCapacity += getActualCapacityOf(te);
+		}
 		float newMaxStress = presentCapacity + unloadedCapacity;
 		return newMaxStress;
 	}
 
 	public float calculateStress() {
 		float presentStress = 0;
-		for (KineticTileEntity te : members.keySet())
-			presentStress += members.get(te) * getStressMultiplierForSpeed(te.getTheoreticalSpeed());
+		for (Iterator<KineticTileEntity> iterator = members.keySet().iterator(); iterator.hasNext();) {
+			KineticTileEntity te = iterator.next();
+			if (te.getWorld().getTileEntity(te.getPos()) != te) {
+				iterator.remove();
+				continue;
+			}
+			presentStress += getActualStressOf(te);
+		}
 		float newStress = presentStress + unloadedStress;
 		return newStress;
 	}
 
-	private float getStressMultiplierForSpeed(float speed) {
+	public float getActualCapacityOf(KineticTileEntity te) {
+		return sources.get(te) * getStressMultiplierForSpeed(te.getGeneratedSpeed());
+	}
+
+	public float getActualStressOf(KineticTileEntity te) {
+		return members.get(te) * getStressMultiplierForSpeed(te.getTheoreticalSpeed());
+	}
+
+	private static float getStressMultiplierForSpeed(float speed) {
 		return Math.abs(speed);
+	}
+
+	public int getSize() {
+		return unloadedMembers + members.size();
 	}
 
 }

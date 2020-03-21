@@ -3,21 +3,27 @@ package com.simibubi.create.config;
 import com.simibubi.create.AllBlocks;
 
 public class StressConfigDefaults {
+	
+	/**
+	 * Increment this number if all stress entries should be updated in this update.
+	 * Worlds from the previous version will overwrite potentially changed values with the new defaults.
+	 */
+	public static final int forcedUpdateVersion = 1;
 
 	public static double getDefaultStressCapacity(AllBlocks block) {
 	
 		switch (block) {
 		case CREATIVE_MOTOR:
-			return 1024;
+			return 2048;
 		case FURNACE_ENGINE:
-			return 512;
+			return 1024;
 		case MECHANICAL_BEARING:
-			return 256;
+			return 512;
 		case ENCASED_FAN:
 		case HAND_CRANK:
-			return 16;
+			return 32;
 		case WATER_WHEEL:
-			return 4;
+			return 8;
 		default:
 			return -1;
 		}

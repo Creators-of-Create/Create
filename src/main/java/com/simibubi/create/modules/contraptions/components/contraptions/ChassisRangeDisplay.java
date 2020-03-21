@@ -1,58 +1,52 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
-import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.World;
 
 public class ChassisRangeDisplay {
 
-	private static final VoxelShape BLOCK_OUTLINE = Block.makeCuboidShape(-.5f, -.5f, -.5f, 16.5f, 16.5f, 16.5f);
 	private static final int DISPLAY_TIME = 200;
 	private static GroupEntry lastHoveredGroup = null;
 
 	private static class Entry {
-		VoxelShape shape;
+		Set<BlockPos> includedPositions;
 		ChassisTileEntity te;
 		int timer;
 
 		public Entry(ChassisTileEntity te) {
 			this.te = te;
-			this.shape = createSelection(te);
+			includedPositions = createSelection(te);
 			timer = DISPLAY_TIME;
 		}
 
-		protected VoxelShape createSelection(ChassisTileEntity chassis) {
-			List<BlockPos> positions = chassis.getIncludedBlockPositions(null, true);
-			VoxelShape shape = VoxelShapes.empty();
-			if (positions == null)
-				return shape;
-			for (BlockPos blockPos : positions)
-				shape =
-					VoxelShapes.or(shape, BLOCK_OUTLINE.withOffset(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-			return shape;
+		protected Set<BlockPos> createSelection(ChassisTileEntity chassis) {
+			Set<BlockPos> positions = new HashSet<>();
+			List<BlockPos> includedBlockPositions = chassis.getIncludedBlockPositions(null, true);
+			if (includedBlockPositions == null)
+				return Collections.emptySet();
+			positions.addAll(includedBlockPositions);
+			return positions;
 		}
 
 	}
@@ -66,21 +60,14 @@ public class ChassisRangeDisplay {
 		}
 
 		@Override
-		protected VoxelShape createSelection(ChassisTileEntity chassis) {
-			VoxelShape shape = VoxelShapes.empty();
+		protected Set<BlockPos> createSelection(ChassisTileEntity chassis) {
+			Set<BlockPos> list = new HashSet<>();
 			includedTEs = te.collectChassisGroup();
 			if (includedTEs == null)
-				return shape;
-			
-			// outlining algo is not very scalable -> display only single chassis if group gets too large
-			if (LinearChassisBlock.isChassis(chassis.getBlockState()) && includedTEs.size() > 32)
-				includedTEs = Arrays.asList(chassis);
-			if (AllBlocks.ROTATION_CHASSIS.typeOf(chassis.getBlockState()) && includedTEs.size() > 8)
-				includedTEs = Arrays.asList(chassis);
-			
+				return list;
 			for (ChassisTileEntity chassisTileEntity : includedTEs)
-				shape = VoxelShapes.or(shape, super.createSelection(chassisTileEntity));
-			return shape;
+				list.addAll(super.createSelection(chassisTileEntity));
+			return list;
 		}
 
 	}
@@ -106,34 +93,39 @@ public class ChassisRangeDisplay {
 			}
 		}
 
-		if (hasWrench) {
-			RayTraceResult over = Minecraft.getInstance().objectMouseOver;
-			if (!(over instanceof BlockRayTraceResult))
+		if (!hasWrench)
+			return;
+
+		RayTraceResult over = Minecraft.getInstance().objectMouseOver;
+		if (!(over instanceof BlockRayTraceResult))
+			return;
+		BlockRayTraceResult ray = (BlockRayTraceResult) over;
+		BlockPos pos = ray.getPos();
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if (tileEntity == null || tileEntity.isRemoved())
+			return;
+		if (!(tileEntity instanceof ChassisTileEntity))
+			return;
+
+		boolean ctrl = AllKeys.ctrlDown();
+		ChassisTileEntity chassisTileEntity = (ChassisTileEntity) tileEntity;
+		
+		if (ctrl) {
+			GroupEntry existingGroupForPos = getExistingGroupForPos(pos);
+			if (existingGroupForPos != null) {
+				for (ChassisTileEntity included : existingGroupForPos.includedTEs)
+					entries.remove(included.getPos());
+				existingGroupForPos.timer = DISPLAY_TIME;
 				return;
-			BlockRayTraceResult ray = (BlockRayTraceResult) over;
-			BlockPos pos = ray.getPos();
-			TileEntity tileEntity = world.getTileEntity(pos);
-			if (tileEntity == null || tileEntity.isRemoved())
-				return;
-			if (tileEntity instanceof ChassisTileEntity) {
-				ChassisTileEntity chassisTileEntity = (ChassisTileEntity) tileEntity;
-				if (AllKeys.ctrlDown()) {
-					GroupEntry existingGroupForPos = getExistingGroupForPos(pos);
-					if (existingGroupForPos != null) {
-						for (ChassisTileEntity included : existingGroupForPos.includedTEs)
-							entries.remove(included.getPos());
-						existingGroupForPos.timer = DISPLAY_TIME;
-						return;
-					}
-				}
-				if (!entries.containsKey(pos) || AllKeys.ctrlDown())
-					display(chassisTileEntity);
-				else {
-					deselect();
-					if (!AllKeys.ctrlDown())
-						entries.get(pos).timer = DISPLAY_TIME;
-				}
 			}
+		}
+		
+		if (!entries.containsKey(pos) || ctrl)
+			display(chassisTileEntity);
+		else {
+			deselect();
+			if (!ctrl)
+				entries.get(pos).timer = DISPLAY_TIME;
 		}
 	}
 
@@ -184,21 +176,29 @@ public class ChassisRangeDisplay {
 		GlStateManager.lineWidth(2);
 		TessellatorHelper.prepareForDrawing();
 		GlStateManager.disableTexture();
+		GlStateManager.enableAlphaTest();
 
-		for (Entry entry : entries.values()) {
-			float timer = entry.timer - partialTicks;
-			float alpha = timer > 20 ? 1 : timer / 20f;
-			WorldRenderer.drawShape(entry.shape, 0, 0, 0, 1, .7f, 0, alpha);
-		}
-		for (Entry entry : groupEntries) {
-			float timer = entry.timer - partialTicks;
-			float alpha = timer > 20 ? 1 : timer / 20f;
-			WorldRenderer.drawShape(entry.shape, 0, 0, 0, 1, .7f, 0, alpha);
-		}
+		for (Entry entry : entries.values())
+			renderPositions(entry, partialTicks);
+		for (Entry groupEntry : groupEntries)
+			renderPositions(groupEntry, partialTicks);
 
 		GlStateManager.enableTexture();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		TessellatorHelper.cleanUpAfterDrawing();
 		GlStateManager.lineWidth(1);
+	}
+
+	public static void renderPositions(Entry entry, float partialTicks) {
+		TessellatorHelper.begin();
+		BlockPos size = new BlockPos(1, 1, 1);
+		float timer = entry.timer - partialTicks;
+		float alpha = timer > 20 ? .5f : timer / 40f;
+		GlStateManager.color4f(1, .7f, 0, alpha);
+		Set<BlockPos> includedPositions = entry.includedPositions;
+		for (BlockPos pos : includedPositions)
+			TessellatorHelper.cube(Tessellator.getInstance().getBuffer(), pos, size, 1 / 1024f, true, false);
+		TessellatorHelper.draw();
 	}
 
 	private static GroupEntry getExistingGroupForPos(BlockPos pos) {

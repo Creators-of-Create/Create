@@ -58,7 +58,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			};
 		minIngredients = new ScrollValueBehaviour(Lang.translate("mechanical_mixer.min_ingredients"), this, slot);
 		minIngredients.between(1, 9);
-		minIngredients.withCallback(i -> checkBasin = true);
+		minIngredients.withCallback(i -> basinChecker.scheduleUpdate());
 		minIngredients.requiresWrench();
 		behaviours.add(minIngredients);
 	}
@@ -217,7 +217,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	public void startProcessingBasin() {
-		if (running)
+		if (running && runningTicks <= 20)
 			return;
 		super.startProcessingBasin();
 		running = true;
@@ -242,6 +242,11 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	@Override
 	protected Object getRecipeCacheKey() {
 		return shapelessOrMixingRecipesKey;
+	}
+
+	@Override
+	protected boolean isRunning() {
+		return running;
 	}
 
 }

@@ -127,6 +127,8 @@ public class ClientEvents {
 	public static void addToItemTooltip(ItemTooltipEvent event) {
 		if (!AllConfigs.CLIENT.tooltips.get())
 			return;
+		if (Minecraft.getInstance().player == null)
+			return;
 
 		ItemStack stack = event.getItemStack();
 		String translationKey = stack.getItem().getTranslationKey(stack);

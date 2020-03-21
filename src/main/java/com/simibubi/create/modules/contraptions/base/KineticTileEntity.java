@@ -39,7 +39,10 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	protected boolean overStressed;
 
 	private int flickerTally;
+	private int networkSize;
 	private int validationCountdown;
+	private float lastStressApplied;
+	private float lastCapacityProvided;
 
 	public KineticTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -48,14 +51,15 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 
 	@Override
 	public void initialize() {
-		super.initialize();
 		if (!hasNetwork())
 			return;
 
 		KineticNetwork network = getOrCreateNetwork();
 		if (!network.initialized)
-			network.initFromTE(capacity, stress);
-		network.addSilently(this);
+			network.initFromTE(capacity, stress, networkSize);
+		network.addSilently(this, lastCapacityProvided, lastStressApplied);
+
+		super.initialize();
 	}
 
 	@Override
@@ -166,9 +170,18 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 
 		if (hasNetwork()) {
 			CompoundNBT networkTag = new CompoundNBT();
-			networkTag.putLong("Id", network);
+			networkTag.putLong("Id", this.network);
 			networkTag.putFloat("Stress", stress);
 			networkTag.putFloat("Capacity", capacity);
+			networkTag.putInt("Size", getOrCreateNetwork().getSize());
+
+			float stressApplied = getStressApplied();
+			float addedStressCapacity = getAddedStressCapacity();
+			if (stressApplied != 0)
+				networkTag.putFloat("AddedStress", stressApplied);
+			if (addedStressCapacity != 0)
+				networkTag.putFloat("AddedCapacity", addedStressCapacity);
+
 			compound.put("Network", networkTag);
 		}
 
@@ -184,6 +197,8 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		overStressed = false;
 		stress = 0;
 		capacity = 0;
+		lastStressApplied = 0;
+		lastCapacityProvided = 0;
 
 		if (compound.contains("Source"))
 			source = NBTUtil.readBlockPos(compound.getCompound("Source"));
@@ -193,6 +208,9 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 			network = networkTag.getLong("Id");
 			stress = networkTag.getFloat("Stress");
 			capacity = networkTag.getFloat("Capacity");
+			networkSize = networkTag.getInt("Size");
+			lastStressApplied = networkTag.getFloat("AddedStress");
+			lastCapacityProvided = networkTag.getFloat("AddedCapacity");
 			overStressed = capacity < stress && StressImpact.isEnabled();
 		}
 
@@ -275,7 +293,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	}
 
 	public KineticNetwork getOrCreateNetwork() {
-		return Create.torquePropagator.getNetworkFor(this);
+		return Create.torquePropagator.getOrCreateNetworkFor(this);
 	}
 
 	public boolean hasNetwork() {

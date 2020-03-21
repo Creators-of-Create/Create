@@ -49,7 +49,7 @@ public class CStress extends ConfigBase {
 
 	@Override
 	public String getName() {
-		return "stressValues";
+		return "stressValues.v" + StressConfigDefaults.forcedUpdateVersion;
 	}
 
 	private static class Comments {
