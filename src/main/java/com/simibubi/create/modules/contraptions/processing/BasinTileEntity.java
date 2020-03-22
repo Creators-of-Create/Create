@@ -19,7 +19,7 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEntity {
 
-	protected boolean updateProcessing;
+	public boolean contentsChanged;
 
 	protected ItemStackHandler outputInventory = new ItemStackHandler(9) {
 		protected void onContentsChanged(int slot) {
@@ -36,7 +36,7 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 
 	protected ItemStackHandler inputInventory = new ItemStackHandler(9) {
 		protected void onContentsChanged(int slot) {
-			updateProcessing = true;
+			contentsChanged = true;
 			sendData();
 			markDirty();
 		};
@@ -91,7 +91,7 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 
 	public BasinTileEntity() {
 		super(AllTileEntities.BASIN.type);
-		updateProcessing = true;
+		contentsChanged = true;
 		recipeInventory = new BasinInputInventory();
 	}
 
@@ -134,15 +134,15 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 
 	@Override
 	public void tick() {
-		if (!updateProcessing)
+		if (!contentsChanged)
 			return;
-		updateProcessing = false;
+		contentsChanged = false;
 
 		TileEntity te = world.getTileEntity(pos.up(2));
 		if (te == null)
 			return;
 		if (te instanceof BasinOperatingTileEntity)
-			((BasinOperatingTileEntity) te).checkBasin = true;
+			((BasinOperatingTileEntity) te).basinChecker.scheduleUpdate();
 
 	}
 

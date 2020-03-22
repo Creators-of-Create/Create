@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.behaviour.simple.DeferralBehaviour;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.processing.BasinTileEntity.BasinInventory;
@@ -16,6 +18,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -24,7 +27,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
-	public boolean checkBasin;
+	public DeferralBehaviour basinChecker;
 	public boolean basinRemoved;
 	protected IRecipe<?> lastRecipe;
 	protected LazyOptional<IItemHandler> basinInv = LazyOptional.empty();
@@ -32,7 +35,13 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
 	public BasinOperatingTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
-		checkBasin = true;
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		basinChecker = new DeferralBehaviour(this, this::updateBasin);
+		behaviours.add(basinChecker);
 	}
 
 	@Override
@@ -40,7 +49,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		super.onSpeedChanged(prevSpeed);
 		if (getSpeed() == 0)
 			basinRemoved = true;
-		checkBasin = true;
+		basinChecker.scheduleUpdate();
 	}
 
 	public void gatherInputs() {
@@ -57,8 +66,6 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
 	@Override
 	public void tick() {
-		super.tick();
-
 		if (basinRemoved) {
 			basinRemoved = false;
 			basinRemoved();
@@ -66,39 +73,40 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			return;
 		}
 
+		super.tick();
+	}
+
+	protected boolean updateBasin() {
 		if (!isSpeedRequirementFulfilled())
-			return;
+			return true;
 		if (getSpeed() == 0)
-			return;
-		if (!isCheckingBasin())
-			return;
-		if (!checkBasin)
-			return;
-		checkBasin = false;
+			return true;
+		if (isRunning())
+			return false;
+
 		TileEntity basinTE = world.getTileEntity(pos.down(2));
 		if (basinTE == null || !(basinTE instanceof BasinTileEntity))
-			return;
+			return true;
 		if (!basinInv.isPresent())
 			basinInv = basinTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		if (!basinInv.isPresent())
-			return;
+			return true;
 
 		if (world.isRemote)
-			return;
+			return true;
 
 		gatherInputs();
 		List<IRecipe<?>> recipes = getMatchingRecipes();
 		if (recipes.isEmpty())
-			return;
+			return true;
 
 		lastRecipe = recipes.get(0);
 		startProcessingBasin();
 		sendData();
-	}
-
-	protected boolean isCheckingBasin() {
 		return true;
 	}
+
+	protected abstract boolean isRunning();
 
 	public void startProcessingBasin() {
 	}
@@ -122,7 +130,9 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		List<ItemStack> catalysts = new ArrayList<>();
 
 		int buckets = 0;
-		Ingredients: for (Ingredient ingredient : lastRecipe.getIngredients()) {
+		NonNullList<Ingredient> ingredients = lastRecipe.getIngredients();
+		Ingredients: for (int i = 0; i < ingredients.size(); i++) {
+			Ingredient ingredient = ingredients.get(i);
 			for (int slot = 0; slot < inputs.getSlots(); slot++) {
 				if (!ingredient.test(inputs.extractItem(slot, 1, true)))
 					continue;
@@ -131,8 +141,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 					buckets++;
 
 				if ((lastRecipe instanceof ProcessingRecipe)) {
-					ProcessingRecipe<?> pr = (ProcessingRecipe<?>) lastRecipe;
-					if (pr.getRollableIngredients().get(slot).remains())
+					if (((ProcessingRecipe<?>) lastRecipe).getRollableIngredients().get(i).remains())
 						catalysts.add(extracted.copy());
 				}
 				continue Ingredients;
@@ -152,6 +161,10 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			continueWithPreviousRecipe();
 			sendData();
 		}
+
+		TileEntity basinTE = world.getTileEntity(pos.down(2));
+		if (basinTE instanceof BasinTileEntity)
+			((BasinTileEntity) basinTE).contentsChanged = false;
 	}
 
 	protected List<IRecipe<?>> getMatchingRecipes() {

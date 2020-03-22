@@ -190,8 +190,10 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			}
 
 			if (!world.isRemote) {
-				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ITEM_BREAK.get(), SoundCategory.BLOCKS, .5f, 1f);
-				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.get(), SoundCategory.BLOCKS, .125f, 1f);
+				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ITEM_BREAK.get(), SoundCategory.BLOCKS,
+						.5f, 1f);
+				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.get(), SoundCategory.BLOCKS,
+						.125f, 1f);
 			}
 		}
 
@@ -257,8 +259,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	public Optional<PressingRecipe> getRecipe(ItemStack item) {
 		pressingInv.setInventorySlotContents(0, item);
-		Optional<PressingRecipe> recipe = world.getRecipeManager().getRecipe(AllRecipes.PRESSING.getType(), pressingInv,
-				world);
+		Optional<PressingRecipe> recipe =
+			world.getRecipeManager().getRecipe(AllRecipes.PRESSING.getType(), pressingInv, world);
 		return recipe;
 	}
 
@@ -305,7 +307,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	public void startProcessingBasin() {
-		if (running)
+		if (running && runningTicks <= 30)
 			return;
 		super.startProcessingBasin();
 		start(Mode.BASIN);
@@ -318,6 +320,11 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		running = false;
 		runningTicks = 0;
 		sendData();
+	}
+
+	@Override
+	protected boolean isRunning() {
+		return running;
 	}
 
 }

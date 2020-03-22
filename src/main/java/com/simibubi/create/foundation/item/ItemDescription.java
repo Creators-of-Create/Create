@@ -1,26 +1,5 @@
 package com.simibubi.create.foundation.item;
 
-import static com.simibubi.create.foundation.item.TooltipHelper.cutString;
-import static net.minecraft.util.text.TextFormatting.AQUA;
-import static net.minecraft.util.text.TextFormatting.BLUE;
-import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
-import static net.minecraft.util.text.TextFormatting.DARK_GREEN;
-import static net.minecraft.util.text.TextFormatting.DARK_PURPLE;
-import static net.minecraft.util.text.TextFormatting.DARK_RED;
-import static net.minecraft.util.text.TextFormatting.GOLD;
-import static net.minecraft.util.text.TextFormatting.GRAY;
-import static net.minecraft.util.text.TextFormatting.GREEN;
-import static net.minecraft.util.text.TextFormatting.LIGHT_PURPLE;
-import static net.minecraft.util.text.TextFormatting.RED;
-import static net.minecraft.util.text.TextFormatting.STRIKETHROUGH;
-import static net.minecraft.util.text.TextFormatting.WHITE;
-import static net.minecraft.util.text.TextFormatting.YELLOW;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import com.simibubi.create.AllItems;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CKinetics;
@@ -28,8 +7,10 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
+import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
-
+import com.simibubi.create.modules.contraptions.components.flywheel.engine.FurnaceEngineBlock;
+import com.simibubi.create.modules.contraptions.components.waterwheel.WaterWheelBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -39,6 +20,14 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static com.simibubi.create.foundation.item.TooltipHelper.cutString;
+import static net.minecraft.util.text.TextFormatting.*;
 
 public class ItemDescription {
 
@@ -144,6 +133,11 @@ public class ItemDescription {
 
 			add(linesOnShift, GRAY + Lang.translate("tooltip.capacityProvided"));
 			add(linesOnShift, level);
+
+			String genSpeed = generatorSpeed(block, rpmUnit);
+			if (!genSpeed.equals("")) {
+				add(linesOnShift, GREEN + " " + genSpeed);
+			}
 		}
 
 		if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
@@ -267,6 +261,25 @@ public class ItemDescription {
 
 	public List<ITextComponent> getLinesOnShift() {
 		return linesOnShift;
+	}
+
+	private String generatorSpeed(Block block, String unitRPM) {
+		String value = "";
+
+		if (block instanceof WaterWheelBlock) {
+			int baseSpeed = AllConfigs.SERVER.kinetics.waterWheelSpeed.get();
+			value = baseSpeed + "-" + (baseSpeed * 3);
+		}
+
+		else if (block instanceof EncasedFanBlock)
+			value = AllConfigs.SERVER.kinetics.generatingFanSpeed.get().toString();
+
+		else if (block instanceof FurnaceEngineBlock) {
+			int baseSpeed = AllConfigs.SERVER.kinetics.furnaceEngineSpeed.get();
+			value = baseSpeed + "-" + (baseSpeed * 2);
+		}
+
+		return !value.equals("") ? Lang.translate("tooltip.generationSpeed", value, unitRPM) : "";
 	}
 
 }

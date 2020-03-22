@@ -1,8 +1,5 @@
 package com.simibubi.create.foundation.world;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,7 +17,6 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.placement.IPlacementConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase implements IFeature {
 
@@ -32,7 +28,7 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 	protected ConfigInt maxHeight;
 
 	private Block block;
-	private List<Biome> biomeWhitelist;
+	private Biome.Category biomeWhitelist;
 
 	public OreFeature(Block block, int clusterSize) {
 		this.block = block;
@@ -50,16 +46,8 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 		return this;
 	}
 
-	public OreFeature<T> inBiomes(Biome... biomes) {
-		biomeWhitelist = Arrays.asList(biomes);
-		return this;
-	}
-
 	public OreFeature<T> inBiomes(Biome.Category category) {
-		biomeWhitelist = new LinkedList<>();
-		for (Biome biome : ForgeRegistries.BIOMES)
-			if (biome.getCategory() == category)
-				biomeWhitelist.add(biome);
+		biomeWhitelist = category;
 		return this;
 	}
 
@@ -70,9 +58,9 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 
 	@Override
 	public Optional<ConfiguredFeature<?>> createFeature(Biome biome) {
-		if (biomeWhitelist != null && !biomeWhitelist.contains(biome))
+		if (biomeWhitelist != null && biome.getCategory() == biomeWhitelist)
 			return Optional.empty();
-		if (!canGenerate()) 
+		if (!canGenerate())
 			return Optional.empty();
 
 		Pair<Placement<T>, T> placement = getPlacement();

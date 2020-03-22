@@ -28,6 +28,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -88,7 +89,10 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 			((ItemEntity) entityIn).setPickupDelay(10);
 		if (te.isOccupied())
 			return;
-		if ((entityIn instanceof PlayerEntity) && ((PlayerEntity) entityIn).isCreative())
+		boolean isPlayer = entityIn instanceof PlayerEntity;
+		if (isPlayer && ((PlayerEntity) entityIn).isCreative())
+			return;
+		if (isPlayer && entityIn.world.getDifficulty() == Difficulty.PEACEFUL)
 			return;
 
 		te.startCrushing(entityIn);

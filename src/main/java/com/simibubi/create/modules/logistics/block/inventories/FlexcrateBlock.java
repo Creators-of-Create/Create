@@ -84,6 +84,7 @@ public class FlexcrateBlock extends ProperDirectionalBlock {
 				other.inventory.setStackInSlot(slot, ItemStack.EMPTY);
 			}
 			te.allowedAmount = other.allowedAmount;
+			other.invHandler.invalidate();
 		}
 	}
 
