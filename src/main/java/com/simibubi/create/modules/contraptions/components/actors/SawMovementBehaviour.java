@@ -31,7 +31,8 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
-		return super.canBreak(world, breakingPos, state) && state.isIn(BlockTags.LOGS);
+		return super.canBreak(world, breakingPos, state)
+				&& (state.isIn(BlockTags.LOGS) || state.isIn(BlockTags.LEAVES));
 	}
 
 	@Override

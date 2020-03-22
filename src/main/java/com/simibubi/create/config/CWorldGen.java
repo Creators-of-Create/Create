@@ -21,6 +21,12 @@ public class CWorldGen extends ConfigBase {
 	}
 
 	@Override
+	public void onLoad() {
+		AllWorldFeatures.reload();
+		super.onLoad();
+	}
+
+	@Override
 	public String getName() {
 		return "world";
 	}

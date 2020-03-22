@@ -135,9 +135,8 @@ public class ItemDescription {
 			add(linesOnShift, level);
 
 			String genSpeed = generatorSpeed(block, rpmUnit);
-			if (!genSpeed.equals("")){
-				add(linesOnShift, "");
-				add(linesOnShift, GREEN + genSpeed);
+			if (!genSpeed.equals("")) {
+				add(linesOnShift, GREEN + " " + genSpeed);
 			}
 		}
 
@@ -264,7 +263,7 @@ public class ItemDescription {
 		return linesOnShift;
 	}
 
-	private String generatorSpeed(Block block, String unitRPM){
+	private String generatorSpeed(Block block, String unitRPM) {
 		String value = "";
 
 		if (block instanceof WaterWheelBlock) {
