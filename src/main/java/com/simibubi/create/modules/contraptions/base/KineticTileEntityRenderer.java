@@ -65,7 +65,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 			float angle) {
 		int light = te.getBlockState().getLightValue(te.getWorld(), te.getPos());
 		buffer.light((0xF0 << 24) | (light << 4));
-		buffer.rotateCentered(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis), angle);
+		buffer.rotateCentered(axis, angle);
 
 		int white = 0xFFFFFF;
 		if (KineticDebugger.isActive()) {

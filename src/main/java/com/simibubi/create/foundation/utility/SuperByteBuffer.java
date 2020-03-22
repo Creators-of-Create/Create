@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class SuperByteBuffer {
@@ -99,6 +101,7 @@ public class SuperByteBuffer {
 		if (original.limit() == 0)
 			return;
 		if (!(buffer instanceof BufferBuilder)) {
+			// TODO add "slow" path that writes all the data instead of using bulk put
 			throw new IllegalArgumentException("Unsupported buffer type!");
 		}
 		((BufferBuilder)buffer).putBulkData(build(input));
@@ -113,15 +116,25 @@ public class SuperByteBuffer {
 		return this;
 	}
 
-	public SuperByteBuffer rotate(Direction axis, float angle) {
-		if (angle == 0)
-			return this;
-		transforms.multiply(axis.getUnitVector().getDegreesQuaternion(angle));
-		return this;
+	@Deprecated
+	public SuperByteBuffer rotate(Axis axis, float radians) {
+		return rotate(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis), radians);
 	}
 
-	public SuperByteBuffer rotateCentered(Direction axis, float angle) {
-		return translate(-.5f, -.5f, -.5f).rotate(axis, angle).translate(.5f, .5f, .5f);
+	public SuperByteBuffer rotate(Direction axis, float radians) {
+		if (radians == 0)
+			return this;
+		transforms.multiply(axis.getUnitVector().getRadialQuaternion(radians));
+		return this;
+	}
+	
+	@Deprecated
+	public SuperByteBuffer rotateCentered(Axis axis, float radians) {
+		return rotateCentered(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis), radians);
+	}
+	
+	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
+		return translate(-.5f, -.5f, -.5f).rotate(axis, radians).translate(.5f, .5f, .5f);
 	}
 
 	public SuperByteBuffer shiftUV(TextureAtlasSprite from, TextureAtlasSprite to) {

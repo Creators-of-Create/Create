@@ -5,7 +5,13 @@ import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+
 public class MotorTileEntityRenderer extends KineticTileEntityRenderer {
+
+	public MotorTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {

@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.pulley;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
@@ -9,18 +11,25 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IWorld;
 
 public class PulleyRenderer extends KineticTileEntityRenderer {
 
+	public PulleyRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
+
 	@Override
-	public void renderFast(KineticTileEntity te, double x, double y, double z, float partialTicks, int destroyStage,
-			BufferBuilder buffer) {
-		super.renderFast(te, x, y, z, partialTicks, destroyStage, buffer);
+	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+			int light, int overlay) {
+		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		PulleyTileEntity pulley = (PulleyTileEntity) te;
 		BlockState blockState = te.getBlockState();
@@ -37,29 +46,31 @@ public class PulleyRenderer extends KineticTileEntityRenderer {
 		if (pulley.movedContraption != null) {
 			ContraptionEntity e = pulley.movedContraption;
 			PulleyContraption c = (PulleyContraption) pulley.movedContraption.getContraption();
-			double entityPos = MathHelper.lerp(partialTicks, e.lastTickPosY, e.posY);
+			double entityPos = MathHelper.lerp(partialTicks, e.lastTickPosY, e.getY());
 			offset = (float) -(entityPos - c.getAnchor().getY() - c.initialOffset);
 		}
 		
+		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		
 		if (pulley.running || pulley.offset == 0)
-			renderAt(offset > .25f ? magnet : halfMagnet, x, y, z, offset, pos, buffer);
+			renderAt(te.getWorld(), offset > .25f ? magnet : halfMagnet, offset, pos, ms, vb);
 
 		float f = offset % 1;
 		if (offset > .75f && (f < .25f || f > .75f))
-			renderAt(halfRope, x, y, z, f > .75f ? f - 1 : f, pos, buffer);
+			renderAt(te.getWorld(), halfRope, f > .75f ? f - 1 : f, pos, ms, vb);
 
 		if (!pulley.running)
 			return;
 
 		for (int i = 0; i < offset - 1.25f; i++)
-			renderAt(rope, x, y, z, offset - i - 1, pos, buffer);
+			renderAt(te.getWorld(), rope, offset - i - 1, pos, ms, vb);
 	}
 
-	public void renderAt(SuperByteBuffer partial, double x, double y, double z, float offset, BlockPos pulleyPos,
-			BufferBuilder buffer) {
+	public void renderAt(IWorld world, SuperByteBuffer partial, float offset, BlockPos pulleyPos,
+			MatrixStack ms, IVertexBuilder buffer) {
 		BlockPos actualPos = pulleyPos.down((int) offset);
-		int light = getWorld().getBlockState(actualPos).getPackedLightmapCoords(getWorld(), actualPos);
-		partial.translate(x, y - offset, z).light(light).renderInto(buffer);
+		int light = world.getBlockState(actualPos).getPackedLightmapCoords(world, actualPos);
+		partial.translate(0, -offset, 0).light(light).renderInto(ms, buffer);
 	}
 
 	@Override

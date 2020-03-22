@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.components.flywheel;
 
 import static com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -11,6 +12,9 @@ import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelBloc
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -19,10 +23,14 @@ import net.minecraft.util.Rotation;
 
 public class FlywheelRenderer extends KineticTileEntityRenderer {
 
+	public FlywheelRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
+
 	@Override
-	public void renderFast(KineticTileEntity te, double x, double y, double z, float partialTicks, int destroyStage,
-			BufferBuilder buffer) {
-		super.renderFast(te, x, y, z, partialTicks, destroyStage, buffer);
+	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+			int light, int overlay) {
+		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		BlockState blockState = te.getBlockState();
 		FlywheelTileEntity wte = (FlywheelTileEntity) te;
@@ -33,7 +41,7 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 
 		if (FlywheelBlock.isConnected(blockState)) {
 			Direction connection = FlywheelBlock.getConnection(blockState);
-			int light = blockState.getPackedLightmapCoords(getWorld(), te.getPos().offset(connection));
+			int light = blockState.getPackedLightmapCoords(te.getWorld(), te.getPos().offset(connection));
 			float rotation = connection.getAxis() == Axis.X ^ connection.getAxisDirection() == AxisDirection.NEGATIVE
 					? -angle
 					: angle;
@@ -49,9 +57,8 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 					false, rotation, flip), connection).translate(x, y, z).light(light).renderInto(buffer);
 		}
 
-		kineticRotationTransform(wheel, te, blockState.get(HORIZONTAL_FACING).getAxis(), AngleHelper.rad(angle),
-				getWorld());
-		wheel.translate(x, y, z).renderInto(buffer);
+		kineticRotationTransform(wheel, te, blockState.get(HORIZONTAL_FACING).getAxis(), AngleHelper.rad(angle));
+		wheel.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 
 	@Override

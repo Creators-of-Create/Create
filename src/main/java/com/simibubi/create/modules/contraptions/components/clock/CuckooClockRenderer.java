@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.clock;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -9,16 +10,22 @@ import com.simibubi.create.modules.contraptions.components.clock.CuckooClockTile
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
 
 public class CuckooClockRenderer extends KineticTileEntityRenderer {
 
+	public CuckooClockRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
+
 	@Override
-	public void renderFast(KineticTileEntity te, double x, double y, double z, float partialTicks, int destroyStage,
-			BufferBuilder buffer) {
-		super.renderFast(te, x, y, z, partialTicks, destroyStage, buffer);
+	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+			int light, int overlay) {
+		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		if (!(te instanceof CuckooClockTileEntity))
 			return;
 

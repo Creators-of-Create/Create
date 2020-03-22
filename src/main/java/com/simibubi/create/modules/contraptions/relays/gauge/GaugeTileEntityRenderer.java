@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays.gauge;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -10,6 +12,8 @@ import com.simibubi.create.modules.contraptions.relays.gauge.GaugeBlock.Type;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -24,19 +28,19 @@ public class GaugeTileEntityRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public void renderFast(KineticTileEntity te, double x, double y, double z, float partialTicks,
-			int destroyStage, BufferBuilder buffer) {
+	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+			int light, int overlay) {
+		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		BlockState gaugeState = te.getBlockState();
-		super.renderFast(te, x, y, z, partialTicks, destroyStage, buffer);
 		GaugeTileEntity gaugeTE = (GaugeTileEntity) te;
-		int lightCoords = gaugeState.getPackedLightmapCoords(getWorld(), te.getPos());
+		int lightCoords = gaugeState.getPackedLightmapCoords(te.getWorld(), te.getPos());
 
 		SuperByteBuffer headBuffer = (type == Type.SPEED ? AllBlockPartials.GAUGE_HEAD_SPEED
 				: AllBlockPartials.GAUGE_HEAD_STRESS).renderOn(gaugeState);
 		SuperByteBuffer dialBuffer = AllBlockPartials.GAUGE_DIAL.renderOn(gaugeState);
 
 		for (Direction facing : Direction.values()) {
-			if (!((GaugeBlock) gaugeState.getBlock()).shouldRenderHeadOnFace(getWorld(), te.getPos(), gaugeState,
+			if (!((GaugeBlock) gaugeState.getBlock()).shouldRenderHeadOnFace(te.getWorld(), te.getPos(), gaugeState,
 					facing))
 				continue;
 
@@ -45,8 +49,9 @@ public class GaugeTileEntityRenderer extends KineticTileEntityRenderer {
 			dialBuffer.translate(0, dialPivot, dialPivot).rotate(Axis.X, (float) (Math.PI / 2 * -progress)).translate(0,
 					-dialPivot, -dialPivot);
 
-			rotateBufferTowards(dialBuffer, facing).light(lightCoords).translate(x, y, z).renderInto(buffer);
-			rotateBufferTowards(headBuffer, facing).light(lightCoords).translate(x, y, z).renderInto(buffer);
+			IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+			rotateBufferTowards(dialBuffer, facing).light(lightCoords).renderInto(ms, vb);
+			rotateBufferTowards(headBuffer, facing).light(lightCoords).renderInto(ms, vb);
 		}
 
 	}
