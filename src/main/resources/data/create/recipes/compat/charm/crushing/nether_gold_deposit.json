@@ -1,0 +1,32 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "charm"
+		}
+	],
+	"type": "create:crushing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "charm:nether_gold_deposit"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:gold_nugget",
+			"count": 2
+		},
+		{
+			"item": "minecraft:gold_nugget",
+			"count": 4,
+			"chance": 0.5
+		},
+		{
+			"item": "minecraft:netherrack",
+			"count": 1,
+			"chance": 0.125
+		}
+	],
+	"processingTime": 250
+}

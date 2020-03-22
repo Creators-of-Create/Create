@@ -1,29 +1,26 @@
 {
 	"conditions": [
 		{
-			"type": "forge:not",
-			"value":
-			{
-				"type": "forge:mod_loaded",
-				"modid": "quark"
-			}
+			"type": "forge:mod_loaded",
+			"modid": "biomesoplenty"
 		}
 	],
 	"type": "create:crushing",
+    "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"item": "minecraft:cactus"
+    		"item": "biomesoplenty:rose"
     	}
-    ],
+    ], 
 	"results": [
 		{
-			"item": "minecraft:green_dye",
+			"item": "minecraft:red_dye",
 			"count": 2
 		},
 		{
 			"item": "minecraft:green_dye",
 			"count": 1,
-			"chance": 0.1
+			"chance": 0.05
 		}
 	],
 	"processingTime": 50
