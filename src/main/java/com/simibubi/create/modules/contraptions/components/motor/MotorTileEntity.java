@@ -32,6 +32,7 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 		generatedSpeed = new ScrollValueBehaviour(Lang.translate("generic.speed"), this, slot);
 		generatedSpeed.between(-max, max);
 		generatedSpeed.value = DEFAULT_SPEED;
+		generatedSpeed.scrollableValue = DEFAULT_SPEED;
 		generatedSpeed.withUnit(i -> Lang.translate("generic.unit.rpm"));
 		generatedSpeed.withCallback(i -> this.updateGeneratedRotation());
 		generatedSpeed.withStepFunction(MotorTileEntity::step);

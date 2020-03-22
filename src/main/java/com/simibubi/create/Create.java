@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.command.CreateCommand;
 import com.simibubi.create.foundation.command.ServerLagger;
+import com.simibubi.create.foundation.world.AllWorldFeatures;
 import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
@@ -62,6 +63,7 @@ public class Create {
 		modEventBus.addListener(AllConfigs::onLoad);
 		modEventBus.addListener(AllConfigs::onReload);
 		CreateClient.addListeners(modEventBus);
+		AllWorldFeatures.reload();
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {

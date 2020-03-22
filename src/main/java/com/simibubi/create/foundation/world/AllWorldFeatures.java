@@ -44,13 +44,13 @@ public enum AllWorldFeatures {
 		for (AllWorldFeatures entry : AllWorldFeatures.values()) {
 			for (Biome biome : ForgeRegistries.BIOMES) {
 
-				if (entry.featureInstances.containsKey(biome)) 
+				if (entry.featureInstances.containsKey(biome))
 					biome.getFeatures(entry.feature.getGenerationStage()).remove(entry.featureInstances.remove(biome));
 
 				Optional<ConfiguredFeature<?>> createFeature = entry.feature.createFeature(biome);
-				if (!createFeature.isPresent()) 
+				if (!createFeature.isPresent())
 					continue;
-				
+
 				entry.featureInstances.put(biome, createFeature.get());
 				biome.addFeature(entry.feature.getGenerationStage(), createFeature.get());
 			}

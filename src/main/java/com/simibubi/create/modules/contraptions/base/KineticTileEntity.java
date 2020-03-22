@@ -51,13 +51,12 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 
 	@Override
 	public void initialize() {
-		if (!hasNetwork())
-			return;
-
-		KineticNetwork network = getOrCreateNetwork();
-		if (!network.initialized)
-			network.initFromTE(capacity, stress, networkSize);
-		network.addSilently(this, lastCapacityProvided, lastStressApplied);
+		if (hasNetwork()) {
+			KineticNetwork network = getOrCreateNetwork();
+			if (!network.initialized)
+				network.initFromTE(capacity, stress, networkSize);
+			network.addSilently(this, lastCapacityProvided, lastStressApplied);
+		}
 
 		super.initialize();
 	}

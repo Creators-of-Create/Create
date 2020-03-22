@@ -102,7 +102,6 @@ public abstract class KineticBlock extends Block implements IRotate {
 			return;
 		if (worldIn.isRemote())
 			return;
-		tileEntity.removeSource();
 		RotationPropagator.handleAdded(worldIn.getWorld(), pos, tileEntity);
 	}
 

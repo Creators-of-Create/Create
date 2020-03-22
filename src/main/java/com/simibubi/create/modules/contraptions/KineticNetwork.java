@@ -37,22 +37,22 @@ public class KineticNetwork {
 		if (members.containsKey(te))
 			return;
 		if (te.isSource()) {
-			float capacity = te.getAddedStressCapacity();
-			unloadedCapacity -= capacity * getStressMultiplierForSpeed(te.getGeneratedSpeed());
-			if (unloadedCapacity < 0)
-				unloadedCapacity = 0;
-			sources.put(te, capacity);
+			unloadedCapacity -= lastCapacity * getStressMultiplierForSpeed(te.getGeneratedSpeed());
+			float addedStressCapacity = te.getAddedStressCapacity();
+			sources.put(te, addedStressCapacity);
 		}
 
+		unloadedStress -= lastStress * getStressMultiplierForSpeed(te.getTheoreticalSpeed());
 		float stressApplied = te.getStressApplied();
-		unloadedStress -= stressApplied * getStressMultiplierForSpeed(te.getTheoreticalSpeed());
-		if (unloadedStress < 0)
-			unloadedStress = 0;
 		members.put(te, stressApplied);
 
 		unloadedMembers--;
 		if (unloadedMembers < 0)
 			unloadedMembers = 0;
+		if (unloadedCapacity < 0)
+			unloadedCapacity = 0;
+		if (unloadedStress < 0)
+			unloadedStress = 0;
 	}
 
 	public void add(KineticTileEntity te) {
