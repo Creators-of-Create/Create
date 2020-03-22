@@ -111,7 +111,6 @@ public class ContraptionRenderer {
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(0);
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		builder.setTranslation(0, 0, 0);
 
 		for (BlockInfo info : c.blocks.values())
 			renderWorld.setBlockState(info.pos, info.state);
@@ -129,7 +128,7 @@ public class ContraptionRenderer {
 
 		builder.finishDrawing();
 		renderWorld.clear();
-		return new SuperByteBuffer(builder.getByteBuffer());
+		return new SuperByteBuffer(builder);
 	}
 
 	private static void renderActors(World world, Contraption c, Consumer<SuperByteBuffer> transform,
@@ -158,7 +157,7 @@ public class ContraptionRenderer {
 	}
 
 	public static int getLight(World world, float lx, float ly, float lz) {
-		MutableBlockPos pos = new MutableBlockPos();
+		BlockPos.Mutable pos = new BlockPos.Mutable();
 		float sky = 0, block = 0;
 		float offset = 1 / 8f;
 
@@ -166,8 +165,8 @@ public class ContraptionRenderer {
 			for (float yOffset = offset; yOffset >= -offset; yOffset -= 2 * offset)
 				for (float xOffset = offset; xOffset >= -offset; xOffset -= 2 * offset) {
 					pos.setPos(lx + xOffset, ly + yOffset, lz + zOffset);
-					sky += world.getLightFor(LightType.SKY, pos) / 8f;
-					block += world.getLightFor(LightType.BLOCK, pos) / 8f;
+					sky += world.getLightLevel(LightType.SKY, pos) / 8f;
+					block += world.getLightLevel(LightType.BLOCK, pos) / 8f;
 				}
 
 		return ((int) sky) << 20 | ((int) block) << 4;

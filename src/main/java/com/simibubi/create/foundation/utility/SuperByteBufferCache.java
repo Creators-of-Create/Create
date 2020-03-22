@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 
 import net.minecraft.block.BlockState;
@@ -19,6 +20,7 @@ import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -84,14 +86,16 @@ public class SuperByteBufferCache {
 		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
 		BufferBuilder builder = new BufferBuilder(0);
 		Random random = new Random();
+		MatrixStack ms = new MatrixStack();
+		ms.push();
+		ms.translate(0, 1, 0);
 
-		builder.setTranslation(0, 1, 0);
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		blockRenderer.renderModelFlat(Minecraft.getInstance().world, model, referenceState, BlockPos.ZERO.down(),
-				builder, true, random, 42, EmptyModelData.INSTANCE);
+		blockRenderer.renderModelFlat(Minecraft.getInstance().world, model, referenceState, BlockPos.ZERO.down(), ms,
+				builder, true, random, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
 		builder.finishDrawing();
 
-		return new SuperByteBuffer(builder.getByteBuffer());
+		return new SuperByteBuffer(builder);
 	}
 
 	public void invalidate() {

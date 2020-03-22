@@ -1,31 +1,27 @@
 package com.simibubi.create.foundation.block;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.block.Blocks;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 
 public abstract class SafeTileEntityRenderer<T extends TileEntity> extends TileEntityRenderer<T> {
+	
+	public SafeTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
-	public final void render(T te, double x, double y, double z, float partialTicks, int destroyStage) {
+	public void render(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		if (isInvalid(te))
 			return;
-		renderWithGL(te, x, y, z, partialTicks, destroyStage);
+		renderSafe(te, partialTicks, ms, buffer, light, overlay);
 	}
 	
-	protected abstract void renderWithGL(T tileEntityIn, double x, double y, double z, float partialTicks, int destroyStage);
-	
-	@Override
-	public final void renderTileEntityFast(T te, double x, double y, double z, float partialTicks, int destroyStage,
-			BufferBuilder buffer) {
-		if (isInvalid(te))
-			return;
-		renderFast(te, x, y, z, partialTicks, destroyStage, buffer);
-	}
-	
-	protected void renderFast(T tileEntityIn, double x, double y, double z, float partialTicks, int destroyStage, BufferBuilder buffer) {
-	}
+	protected abstract void renderSafe(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay);
 	
 	public boolean isInvalid(T te) {
 		return te.getBlockState().getBlock() == Blocks.AIR;

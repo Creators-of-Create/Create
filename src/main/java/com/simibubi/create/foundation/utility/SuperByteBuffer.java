@@ -2,13 +2,17 @@ package com.simibubi.create.foundation.utility;
 
 import java.nio.ByteBuffer;
 
-import javax.vecmath.Matrix4f;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class SuperByteBuffer {
 
@@ -21,8 +25,7 @@ public class SuperByteBuffer {
 	protected ByteBuffer mutable;
 
 	// Vertex Position
-	private Matrix4f transforms;
-	private Matrix4f t;
+	private MatrixStack transforms;
 
 	// Vertex Texture Coords
 	private boolean shouldShiftUV;
@@ -38,7 +41,8 @@ public class SuperByteBuffer {
 	private boolean shouldColor;
 	private int r, g, b, a;
 
-	public SuperByteBuffer(ByteBuffer original) {
+	public SuperByteBuffer(BufferBuilder buf) {
+		ByteBuffer original = ObfuscationReflectionHelper.getPrivateValue(BufferBuilder.class, buf, "field_179001_a"); // FIXME speedup
 		original.rewind();
 		this.original = original;
 
@@ -48,28 +52,20 @@ public class SuperByteBuffer {
 		mutable.put(this.original);
 		mutable.rewind();
 
-		t = new Matrix4f();
-		transforms = new Matrix4f();
-		transforms.setIdentity();
+		transforms = new MatrixStack();
 	}
 
-	public ByteBuffer build() {
+	public ByteBuffer build(MatrixStack input) {
 		original.rewind();
 		mutable.rewind();
-		float x, y, z = 0;
-		float x2, y2, z2 = 0;
 
-		Matrix4f t = transforms;
+		Matrix4f t = transforms.peek().getModel();
+		t.multiply(input.peek().getModel());
 		for (int vertex = 0; vertex < vertexCount(original); vertex++) {
-			x = getX(original, vertex);
-			y = getY(original, vertex);
-			z = getZ(original, vertex);
-
-			x2 = t.m00 * x + t.m01 * y + t.m02 * z + t.m03;
-			y2 = t.m10 * x + t.m11 * y + t.m12 * z + t.m13;
-			z2 = t.m20 * x + t.m21 * y + t.m22 * z + t.m23;
-
-			putPos(mutable, vertex, x2, y2, z2);
+			Vector4f pos = new Vector4f(getX(original, vertex), getY(original, vertex), getZ(original, vertex), 1F);
+			
+			pos.transform(t);
+			putPos(mutable, vertex, pos.getX(), pos.getY(), pos.getZ());
 
 			if (shouldColor) {
 				byte lumByte = getR(original, vertex);
@@ -86,23 +82,26 @@ public class SuperByteBuffer {
 			if (shouldLight) {
 				if (vertexLighter != null)
 					putLight(mutable, vertex,
-							vertexLighter.getPackedLight(x2 + lightOffsetX, y2 + lightOffsetY, z2 + lightOffsetZ));
+							vertexLighter.getPackedLight(pos.getX() + lightOffsetX, pos.getY() + lightOffsetY, pos.getZ() + lightOffsetZ));
 				else
 					putLight(mutable, vertex, packedLightCoords);
 			}
 		}
 
-		t.setIdentity();
+		transforms = new MatrixStack();
 		shouldShiftUV = false;
 		shouldColor = false;
 		shouldLight = false;
 		return mutable;
 	}
 
-	public void renderInto(BufferBuilder buffer) {
+	public void renderInto(MatrixStack input, IVertexBuilder buffer) {
 		if (original.limit() == 0)
 			return;
-		buffer.putBulkData(build());
+		if (!(buffer instanceof BufferBuilder)) {
+			throw new IllegalArgumentException("Unsupported buffer type!");
+		}
+		((BufferBuilder)buffer).putBulkData(build(input));
 	}
 
 	public SuperByteBuffer translate(double x, double y, double z) {
@@ -110,27 +109,18 @@ public class SuperByteBuffer {
 	}
 
 	public SuperByteBuffer translate(float x, float y, float z) {
-		transforms.m03 += x;
-		transforms.m13 += y;
-		transforms.m23 += z;
+		transforms.translate(x, y, z);
 		return this;
 	}
 
-	public SuperByteBuffer rotate(Axis axis, float angle) {
+	public SuperByteBuffer rotate(Direction axis, float angle) {
 		if (angle == 0)
 			return this;
-		t.setIdentity();
-		if (axis == Axis.X)
-			t.rotX(angle);
-		else if (axis == Axis.Y)
-			t.rotY(angle);
-		else
-			t.rotZ(angle);
-		transforms.mul(t, transforms);
+		transforms.multiply(axis.getUnitVector().getDegreesQuaternion(angle));
 		return this;
 	}
 
-	public SuperByteBuffer rotateCentered(Axis axis, float angle) {
+	public SuperByteBuffer rotateCentered(Direction axis, float angle) {
 		return translate(-.5f, -.5f, -.5f).rotate(axis, angle).translate(.5f, .5f, .5f);
 	}
 
