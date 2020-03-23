@@ -1,10 +1,15 @@
 package com.simibubi.create.modules.contraptions.base;
 
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 
+import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
+
+import java.util.List;
 
 public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 
@@ -40,6 +45,32 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 			updateGeneratedRotation();
 			reActivateSource = false;
 		}
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+
+		float stressBase = getAddedStressCapacity();
+		if (stressBase != 0 && IRotate.StressImpact.isEnabled()) {
+			tooltip.add(spacing + Lang.translate("gui.goggles.generator_stats"));
+			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("tooltip.capacityProvided"));
+
+			float speed = getTheoreticalSpeed();
+			if (speed != getGeneratedSpeed() && speed != 0)
+				stressBase *= getGeneratedSpeed() / speed;
+
+			speed = Math.abs(speed);
+			float stressTotal = stressBase * speed;
+
+			String stressString = spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
+			tooltip.add(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressBase), Lang.translate("gui.goggles.base_value")));
+			tooltip.add(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal), Lang.translate("gui.goggles.at_current_speed")));
+
+			added = true;
+		}
+
+		return added;
 	}
 
 	public void updateGeneratedRotation() {
@@ -122,5 +153,4 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 	public Long createNetworkId() {
 		return pos.toLong();
 	}
-
 }

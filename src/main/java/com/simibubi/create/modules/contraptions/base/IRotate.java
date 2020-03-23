@@ -1,8 +1,11 @@
 package com.simibubi.create.modules.contraptions.base;
 
 import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.IWrenchable;
 
+import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -12,7 +15,7 @@ import net.minecraft.world.IWorldReader;
 
 public interface IRotate extends IWrenchable {
 
-	public enum SpeedLevel {
+	enum SpeedLevel {
 		NONE,
 		MEDIUM,
 		FAST;
@@ -53,19 +56,64 @@ public interface IRotate extends IWrenchable {
 			}
 		}
 
+		public static String getFormattedSpeedText(float speed, boolean overstressed){
+			SpeedLevel speedLevel = of(speed);
+
+			String color;
+			if (overstressed)
+				color = TextFormatting.DARK_GRAY + "" + TextFormatting.STRIKETHROUGH;
+			else
+				color = speedLevel.getTextColor() + "";
+
+			String level = color + ItemDescription.makeProgressBar(3, speedLevel.ordinal());
+
+			if (speedLevel == SpeedLevel.MEDIUM)
+				level += Lang.translate("tooltip.speedRequirements.medium");
+			if (speedLevel == SpeedLevel.FAST)
+				level += Lang.translate("tooltip.speedRequirements.high");
+
+			level += String.format(" (%s%s) ", IHaveGoggleInformation.format(Math.abs(speed)), Lang.translate("generic.unit.rpm"));
+
+			return level;
+		}
+
 	}
 
-	public enum StressImpact {
+	enum StressImpact {
 		LOW,
 		MEDIUM,
-		HIGH;
+		HIGH,
+		OVERSTRESSED;
 
-		public TextFormatting getColor() {
+		public TextFormatting getAbsoluteColor() {
 			return this == LOW ? TextFormatting.YELLOW : this == MEDIUM ? TextFormatting.GOLD : TextFormatting.RED;
+		}
+
+		public TextFormatting getRelativeColor() {
+			return this == LOW ? TextFormatting.GREEN : this == MEDIUM ? TextFormatting.YELLOW : this == HIGH ? TextFormatting.GOLD : TextFormatting.RED;
+		}
+
+		public static StressImpact of(double stressPercent){
+			if (stressPercent > 1) return StressImpact.OVERSTRESSED;
+			else if (stressPercent > .75d) return StressImpact.HIGH;
+			else if (stressPercent > .5d) return StressImpact.MEDIUM;
+			else return StressImpact.LOW;
 		}
 		
 		public static boolean isEnabled() {
 			return !AllConfigs.SERVER.kinetics.disableStress.get();
+		}
+
+		public static String getFormattedStressText(double stressPercent){
+			StressImpact stressLevel = of(stressPercent);
+			TextFormatting color = stressLevel.getRelativeColor();
+
+			String level = color + ItemDescription.makeProgressBar(3, stressLevel.ordinal());
+			level += Lang.translate("tooltip.stressImpact."+Lang.asId(stressLevel.name()));
+
+			level += String.format(" (%s%%) ", (int) (stressPercent * 100));
+
+			return level;
 		}
 	}
 
