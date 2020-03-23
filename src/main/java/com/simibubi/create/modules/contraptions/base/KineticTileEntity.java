@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.base;
 
+import static net.minecraft.util.text.TextFormatting.GRAY;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +18,8 @@ import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
-
 import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.CompoundNBT;
@@ -30,8 +32,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-
-import static net.minecraft.util.text.TextFormatting.GRAY;
 
 public abstract class KineticTileEntity extends SmartTileEntity implements ITickableTileEntity, IHaveGoggleInformation {
 

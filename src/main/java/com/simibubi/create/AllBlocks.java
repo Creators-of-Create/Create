@@ -169,7 +169,7 @@ public enum AllBlocks {
 	FLYWHEEL(new FlywheelBlock()),
 	FURNACE_ENGINE(new FurnaceEngineBlock()),
 	ROTATION_SPEED_CONTROLLER(new SpeedControllerBlock()),
-	
+
 	__LOGISTICS__(),
 	CONTACT(new ContactBlock()),
 	REDSTONE_BRIDGE(new RedstoneLinkBlock()),
@@ -280,8 +280,10 @@ public enum AllBlocks {
 	__MATERIALS__(),
 	COPPER_ORE(new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1)),
 	ZINC_ORE(new Block(Properties.from(Blocks.GOLD_ORE).harvestLevel(2).harvestTool(ToolType.PICKAXE))),
-	COPPER_BLOCK(new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1/32f)),
-	COPPER_SHINGLES(new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1/32f)),
+	COPPER_BLOCK(new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f)),
+	COPPER_SHINGLES(new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f)),
+	ZINC_BLOCK(new Block(Properties.from(Blocks.IRON_BLOCK))),
+	BRASS_BLOCK(new Block(Properties.from(Blocks.IRON_BLOCK))),
 
 	;
 

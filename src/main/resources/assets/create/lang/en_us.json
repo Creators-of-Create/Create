@@ -75,9 +75,11 @@
 	"item.create.rose_quartz_sword": "Gilded Quartz Blade",
 
 	"block.create.copper_ore": "Copper Ore",
-	"block.create.copper_block": "Copper Block",
+	"block.create.copper_block": "Block of Copper",
 	"block.create.copper_shingles": "Copper Shingles",
 	"block.create.zinc_ore": "Zinc Ore",
+	"block.create.zinc_block": "Block of Zinc",
+	"block.create.brass_block": "Block of Brass",
 	
 	"block.create.andesite_casing": "Andesite Casing",
 	"block.create.brass_casing": "Brass Casing",

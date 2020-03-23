@@ -11,9 +11,7 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.processing.BasinTileEntity.BasinInventory;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tileentity.TileEntity;
@@ -128,8 +126,8 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		IItemHandlerModifiable inputs = inv.getInputHandler();
 		IItemHandlerModifiable outputs = inv.getOutputHandler();
 		List<ItemStack> catalysts = new ArrayList<>();
+		List<ItemStack> containers = new ArrayList<>();
 
-		int buckets = 0;
 		NonNullList<Ingredient> ingredients = lastRecipe.getIngredients();
 		Ingredients: for (int i = 0; i < ingredients.size(); i++) {
 			Ingredient ingredient = ingredients.get(i);
@@ -137,12 +135,11 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 				if (!ingredient.test(inputs.extractItem(slot, 1, true)))
 					continue;
 				ItemStack extracted = inputs.extractItem(slot, 1, false);
-				if (extracted.getItem() instanceof BucketItem)
-					buckets++;
-
-				if ((lastRecipe instanceof ProcessingRecipe)) {
-					if (((ProcessingRecipe<?>) lastRecipe).getRollableIngredients().get(i).remains())
-						catalysts.add(extracted.copy());
+				if ((lastRecipe instanceof ProcessingRecipe)
+						&& ((ProcessingRecipe<?>) lastRecipe).getRollableIngredients().get(i).remains()) {
+					catalysts.add(extracted.copy());
+				} else if (extracted.hasContainerItem()) {
+					containers.add(extracted.getContainerItem().copy());
 				}
 				continue Ingredients;
 			}
@@ -151,8 +148,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		}
 
 		ItemHandlerHelper.insertItemStacked(outputs, lastRecipe.getRecipeOutput().copy(), false);
-		if (buckets > 0)
-			ItemHandlerHelper.insertItemStacked(outputs, new ItemStack(Items.BUCKET, buckets), false);
+		containers.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputs, stack, false));
 		catalysts.forEach(c -> ItemHandlerHelper.insertItemStacked(outputs, c, false));
 
 		// Continue mixing

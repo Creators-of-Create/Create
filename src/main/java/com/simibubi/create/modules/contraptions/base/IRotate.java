@@ -4,8 +4,8 @@ import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.IWrenchable;
-
 import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;

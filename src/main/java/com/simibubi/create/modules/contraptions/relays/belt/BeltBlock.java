@@ -55,6 +55,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootParameter;
 import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -101,11 +102,12 @@ public class BeltBlock extends HorizontalKineticBlock
 	@SuppressWarnings("deprecation")
 	@Override
 	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.storage.loot.LootContext.Builder builder) {
-		List<ItemStack> drops = new ArrayList<>();
-		if (state.get(PART) == Part.START || builder.get(LootParameters.THIS_ENTITY) != null)
-			drops.addAll(super.getDrops(state, builder));
+		List<ItemStack> drops = super.getDrops(state, builder);
 		if (state.get(CASING))
 			drops.addAll(AllBlocks.BRASS_CASING.getDefault().getDrops(builder));
+		TileEntity tileEntity = builder.get(LootParameters.BLOCK_ENTITY);
+		if (tileEntity instanceof BeltTileEntity && ((BeltTileEntity) tileEntity).hasPulley())
+			drops.addAll(AllBlocks.SHAFT.getDefault().getDrops(builder));
 		return drops;
 	}
 
@@ -114,8 +116,6 @@ public class BeltBlock extends HorizontalKineticBlock
 		withTileEntityDo(worldIn, pos, te -> {
 			if (worldIn.isRemote)
 				return;
-			if (te.hasPulley())
-				Block.spawnDrops(AllBlocks.SHAFT.get().getDefaultState(), worldIn, pos);
 			if (te.isController()) {
 				BeltInventory inv = te.getInventory();
 				for (TransportedItemStack s : inv.items)

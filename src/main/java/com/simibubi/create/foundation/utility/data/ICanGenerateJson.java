@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.utility.data;
 
-import net.minecraft.data.DirectoryCache;
-
 import java.nio.file.Path;
+
+import net.minecraft.data.DirectoryCache;
 
 public interface ICanGenerateJson {
 

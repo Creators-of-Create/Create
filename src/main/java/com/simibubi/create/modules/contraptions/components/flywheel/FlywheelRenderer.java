@@ -14,8 +14,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.MathHelper;
 
 public class FlywheelRenderer extends KineticTileEntityRenderer {
 

@@ -1,11 +1,12 @@
 package com.simibubi.create.foundation.utility.data;
 
-import com.simibubi.create.AllSoundEvents;
-import net.minecraft.data.DirectoryCache;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import com.simibubi.create.AllSoundEvents;
+
+import net.minecraft.data.DirectoryCache;
 
 public class Generator {
 

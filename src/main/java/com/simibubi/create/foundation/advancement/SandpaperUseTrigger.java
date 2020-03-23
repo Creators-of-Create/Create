@@ -1,15 +1,16 @@
 package com.simibubi.create.foundation.advancement;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Supplier;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class SandpaperUseTrigger extends CriterionTriggerBase<SandpaperUseTrigger.Instance> {
 

@@ -39,9 +39,10 @@ public class WrenchItem extends Item implements IHaveCustomItemModel {
 		if (player.isSneaking()) {
 			if (world instanceof ServerWorld) {
 				if (!player.isCreative())
-					Block.getDrops(state, (ServerWorld) world, pos, world.getTileEntity(pos)).forEach(itemStack -> {
-						player.inventory.placeItemBackInInventory(world, itemStack);
-					});
+					Block.getDrops(state, (ServerWorld) world, pos, world.getTileEntity(pos), player, context.getItem())
+							.forEach(itemStack -> {
+								player.inventory.placeItemBackInInventory(world, itemStack);
+							});
 				state.spawnAdditionalDrops(world, pos, ItemStack.EMPTY);
 				world.destroyBlock(pos, false);
 			}

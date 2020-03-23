@@ -1,14 +1,15 @@
 package com.simibubi.create.modules.contraptions.relays.gauge;
 
+import java.util.List;
+
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
-import net.minecraft.util.text.TextFormatting;
 
-import java.util.List;
+import net.minecraft.util.text.TextFormatting;
 
 public class StressGaugeTileEntity extends GaugeTileEntity {
 
