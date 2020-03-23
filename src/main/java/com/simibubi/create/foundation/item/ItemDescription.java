@@ -107,7 +107,7 @@ public class ItemDescription {
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
 					: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			int index = impactId.ordinal();
-			String level = impactId.getColor() + makeProgressBar(3, index) + stressLevels.get(index);
+			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index) + stressLevels.get(index);
 
 			if (hasGlasses)
 				level += " (" + impacts.get(id).get() + stressUnit + ")";
@@ -122,8 +122,8 @@ public class ItemDescription {
 			double capacity = capacities.get(id).get();
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
 					: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
-			int index = StressImpact.values().length - 1 - impactId.ordinal();
-			String level = impactId.getColor() + makeProgressBar(3, index) + stressCapacityLevels.get(index);
+			int index = StressImpact.values().length - 2 - impactId.ordinal();
+			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index) + stressCapacityLevels.get(index);
 
 			if (hasGlasses)
 				level += " (" + capacity + stressUnit + ")";

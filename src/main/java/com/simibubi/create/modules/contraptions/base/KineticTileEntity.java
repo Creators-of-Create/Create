@@ -10,12 +10,16 @@ import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
 
+import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -23,10 +27,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
-public abstract class KineticTileEntity extends SmartTileEntity implements ITickableTileEntity {
+import static net.minecraft.util.text.TextFormatting.GRAY;
+
+public abstract class KineticTileEntity extends SmartTileEntity implements ITickableTileEntity, IHaveGoggleInformation {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;
@@ -344,6 +351,36 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	@Override
 	public boolean hasFastRenderer() {
 		return true;
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		boolean added = false;
+		float stressAtBase = getStressApplied();
+
+		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
+
+		if (notFastEnough) {
+			tooltip.addAll(TooltipHelper.cutString(spacing + Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock().getTranslationKey())), GRAY, TextFormatting.WHITE));
+			added = true;
+		}
+
+		if (getStressApplied() != 0 && StressImpact.isEnabled()){
+			tooltip.add(spacing + Lang.translate("gui.goggles.kinetic_stats"));
+			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("tooltip.stressImpact"));
+
+			float stressTotal = stressAtBase * Math.abs(getSpeed());
+
+			String stressString = spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
+
+			tooltip.add(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressAtBase), Lang.translate("gui.goggles.base_value")));
+			tooltip.add(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal), Lang.translate("gui.goggles.at_current_speed")));
+
+			added = true;
+		}
+
+		return added;
+
 	}
 
 	public int getFlickerScore() {

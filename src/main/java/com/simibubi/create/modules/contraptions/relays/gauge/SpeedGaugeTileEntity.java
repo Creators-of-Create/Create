@@ -4,12 +4,16 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.GogglesItem;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 
-public class SpeedGaugeTileEntity extends GaugeTileEntity {
+import java.util.List;
+
+public class SpeedGaugeTileEntity extends GaugeTileEntity{
 
 	public SpeedGaugeTileEntity() {
 		super(AllTileEntities.SPEED_GAUGE.type);
@@ -41,4 +45,15 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 		markDirty();
 	}
 
+	@Override
+	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+
+		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.speed_gauge.title"));
+		tooltip.add(spacing + SpeedLevel.getFormattedSpeedText(speed, overStressed));
+		if (overStressed)
+			tooltip.add(spacing + TextFormatting.DARK_RED + Lang.translate("gui.stress_gauge.overstressed"));
+
+		return true;
+	}
 }

@@ -58,21 +58,26 @@ minecraft {
 }
 
 repositories {
-  maven {
-    // location of the maven that hosts JEI files
-    name = "Progwml6 maven"
-    url = "https://dvs1.progwml6.com/files/maven/"
-  }
-  maven {
-    // location of a maven mirror for JEI files, as a fallback
-    name = "ModMaven"
-    url = "https://modmaven.k-4u.nl"
-  }
-  maven {
-    // for mixed mappings
-    name = "tterrag maven"
-    url = "https://maven.tterrag.com/"
-  }
+    maven {
+        // location of the maven that hosts JEI files
+        name "Progwml6 maven"
+        url "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name "ModMaven"
+        url "https://modmaven.k-4u.nl"
+    }
+    maven {
+        //location of the maven for vazkii's mods
+        name "blamejared"
+        url "http://maven.blamejared.com/"
+    }
+    maven {
+        // for mixed mappings
+        name = "tterrag maven"
+        url = "https://maven.tterrag.com/"
+    }
 }
 
 dependencies {
@@ -82,6 +87,10 @@ dependencies {
  	compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2:api")
   	// at runtime, use the full JEI jar
   	runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")
+
+    // i'll leave this here commented for easier testing
+    //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
+    //runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
 }
 
 jar {

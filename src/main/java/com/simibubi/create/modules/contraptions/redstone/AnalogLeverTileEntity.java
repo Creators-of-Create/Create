@@ -7,10 +7,14 @@ import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
 
-public class AnalogLeverTileEntity extends SmartTileEntity {
+public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
 	int state = 0;
 	int lastChange;
@@ -67,6 +71,13 @@ public class AnalogLeverTileEntity extends SmartTileEntity {
 		if (prevState != state)
 			lastChange = 15;
 		sendData();
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		tooltip.add(spacing + Lang.translate("tooltip.analogStrength", this.state));
+
+		return true;
 	}
 
 	public int getState() {

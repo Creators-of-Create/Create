@@ -601,6 +601,7 @@
 	"create.tooltip.stressImpact.low": "Low",
 	"create.tooltip.stressImpact.medium": "Moderate",
 	"create.tooltip.stressImpact.high": "High",
+	"create.tooltip.stressImpact.overstressed": "Overstressed",
 
 	"create.tooltip.capacityProvided": "Stress Capacity: %1$s",
 	"create.tooltip.capacityProvided.low": "Small",
