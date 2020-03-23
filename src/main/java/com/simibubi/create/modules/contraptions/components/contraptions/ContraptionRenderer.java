@@ -7,15 +7,16 @@ import java.util.function.Consumer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.PlacementSimulationWorld;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WrappedWorld;
 
 import net.minecraft.block.BlockRenderType;
@@ -24,14 +25,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.crash.ReportedException;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -44,27 +46,24 @@ public class ContraptionRenderer {
 	protected static PlacementSimulationWorld renderWorld;
 	protected static LightingWorld lightingWorld;
 
-	public static void render(World world, Contraption c, Consumer<SuperByteBuffer> transform, BufferBuilder buffer) {
+	public static void render(World world, Contraption c, Consumer<SuperByteBuffer> transform, MatrixStack ms, BufferBuilder buffer) {
 		SuperByteBuffer contraptionBuffer = CreateClient.bufferCache.get(CONTRAPTION, c, () -> renderContraption(c));
 		transform.accept(contraptionBuffer);
-		contraptionBuffer.light((lx, ly, lz) -> getLight(world, lx, ly, lz)).renderInto(buffer);
-		renderActors(world, c, transform, buffer);
+		contraptionBuffer.light((lx, ly, lz) -> getLight(world, lx, ly, lz)).renderInto(ms, buffer);
+		renderActors(world, c, transform, ms, buffer);
 	}
 
-	public static void renderTEsWithGL(World world, Contraption c, Vec3d position, Vec3d rotation) {
-		TileEntityRendererDispatcher dispatcher = TileEntityRendererDispatcher.instance;
+	public static void renderTEsWithGL(World world, Contraption c, Vec3d position, Vec3d rotation, MatrixStack ms, IRenderTypeBuffer buffer) {
 		float pt = Minecraft.getInstance().getRenderPartialTicks();
-		World prevDispatcherWorld = dispatcher.world;
 
 		if (lightingWorld == null)
 			lightingWorld = new LightingWorld(world);
 		lightingWorld.setWorld(world);
 		lightingWorld.setTransform(position, rotation);
-		dispatcher.setWorld(lightingWorld);
 
 		for (Iterator<TileEntity> iterator = c.customRenderTEs.iterator(); iterator.hasNext();) {
 			TileEntity tileEntity = iterator.next();
-			if (dispatcher.getRenderer(tileEntity) == null) {
+			if (TileEntityRendererDispatcher.instance.getRenderer(tileEntity) == null) {
 				iterator.remove();
 				continue;
 			}
@@ -77,14 +76,14 @@ public class ContraptionRenderer {
 					int i = lightingWorld.getCombinedLight(pos, 0);
 					int j = i % 65536;
 					int k = i / 65536;
-					GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float) j, (float) k);
-					GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+					RenderSystem.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float) j, (float) k);
+					RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 				}
 
 				World prevTileWorld = tileEntity.getWorld();
-				tileEntity.setWorld(lightingWorld);
-				dispatcher.render(tileEntity, pos.getX(), pos.getY(), pos.getZ(), pt, -1, true);
-				tileEntity.setWorld(prevTileWorld);
+				tileEntity.setLocation(lightingWorld, pos);
+				TileEntityRendererDispatcher.instance.render(tileEntity, pt, ms, buffer);
+				tileEntity.setLocation(prevTileWorld, pos);
 
 			} catch (ReportedException e) {
 				if (AllConfigs.CLIENT.explainRenderErrors.get()) {
@@ -98,11 +97,9 @@ public class ContraptionRenderer {
 				continue;
 			}
 		}
-
-		dispatcher.setWorld(prevDispatcherWorld);
 	}
 
-	private static SuperByteBuffer renderContraption(Contraption c) {
+	private static SuperByteBuffer renderContraption(Contraption c, MatrixStack ms) {
 		if (renderWorld == null || renderWorld.getWorld() != Minecraft.getInstance().world)
 			renderWorld = new PlacementSimulationWorld(Minecraft.getInstance().world);
 
@@ -122,8 +119,8 @@ public class ContraptionRenderer {
 				continue;
 
 			IBakedModel originalModel = dispatcher.getModelForState(state);
-			blockRenderer.renderModel(renderWorld, originalModel, state, info.pos, builder, true, random, 42,
-					EmptyModelData.INSTANCE);
+			blockRenderer.renderModel(renderWorld, originalModel, state, info.pos, ms, builder, true, random, 42,
+					OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
 		}
 
 		builder.finishDrawing();
@@ -132,7 +129,7 @@ public class ContraptionRenderer {
 	}
 
 	private static void renderActors(World world, Contraption c, Consumer<SuperByteBuffer> transform,
-			BufferBuilder buffer) {
+			MatrixStack ms, BufferBuilder buffer) {
 		for (Pair<BlockInfo, MovementContext> actor : c.getActors()) {
 			MovementContext context = actor.getRight();
 			if (context == null)
@@ -151,7 +148,7 @@ public class ContraptionRenderer {
 
 				render.translate(posX, posY, posZ);
 				transform.accept(render);
-				render.light((lx, ly, lz) -> getLight(world, lx, ly, lz)).renderInto(buffer);
+				render.light((lx, ly, lz) -> getLight(world, lx, ly, lz)).renderInto(ms, buffer);
 			}
 		}
 	}

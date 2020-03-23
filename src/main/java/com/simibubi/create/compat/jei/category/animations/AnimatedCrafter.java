@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
@@ -30,43 +30,43 @@ public class AnimatedCrafter extends AnimatedKinetics {
 
 	@Override
 	public void draw(int xOffset, int yOffset) {
-		GlStateManager.pushMatrix();
-		GlStateManager.enableDepthTest();
-		GlStateManager.rotatef(-15.5f, 1, 0, 0);
-		GlStateManager.rotatef(-22.5f, 0, 1, 0);
-		GlStateManager.translatef(xOffset, yOffset, 0);
-		GlStateManager.translatef(-45, -5, 0);
-		GlStateManager.scaled(.45f, .45f, .45f);
+		RenderSystem.pushMatrix();
+		RenderSystem.enableDepthTest();
+		RenderSystem.rotatef(-15.5f, 1, 0, 0);
+		RenderSystem.rotatef(-22.5f, 0, 1, 0);
+		RenderSystem.translatef(xOffset, yOffset, 0);
+		RenderSystem.translatef(-45, -5, 0);
+		RenderSystem.scaled(.45f, .45f, .45f);
 
 		ScreenElementRenderer.renderModel(() -> cogwheel(true));
 		ScreenElementRenderer.renderBlock(this::body);
-		GlStateManager.translatef(0, 50, 0);
+		RenderSystem.translatef(0, 50, 0);
 		ScreenElementRenderer.renderModel(() -> cogwheel(false));
 		ScreenElementRenderer.renderBlock(this::body);
 
 		if (four) {
-			GlStateManager.translatef(50, -50, 0);
+			RenderSystem.translatef(50, -50, 0);
 			ScreenElementRenderer.renderModel(() -> cogwheel(false));
 			ScreenElementRenderer.renderBlock(this::body);
-			GlStateManager.translatef(0, 50, 0);
+			RenderSystem.translatef(0, 50, 0);
 			ScreenElementRenderer.renderModel(() -> cogwheel(true));
 			ScreenElementRenderer.renderBlock(this::body);
 
 		} else {
-			GlStateManager.translatef(0, 50, 0);
+			RenderSystem.translatef(0, 50, 0);
 			ScreenElementRenderer.renderModel(() -> cogwheel(true));
 			ScreenElementRenderer.renderBlock(this::body);
 		}
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	private IBakedModel cogwheel(boolean forward) {
 		float t = 25;
-		GlStateManager.translatef(t, -t, -t);
-		GlStateManager.rotated(getCurrentAngle() * 2 * (forward ? 1 : -1), 0, 0, 1);
-		GlStateManager.rotated(90, 1, 0, 0);
-		GlStateManager.translatef(-t, t, t);
+		RenderSystem.translatef(t, -t, -t);
+		RenderSystem.rotated(getCurrentAngle() * 2 * (forward ? 1 : -1), 0, 0, 1);
+		RenderSystem.rotated(90, 1, 0, 0);
+		RenderSystem.translatef(-t, t, t);
 		return AllBlockPartials.SHAFTLESS_COGWHEEL.get();
 	}
 

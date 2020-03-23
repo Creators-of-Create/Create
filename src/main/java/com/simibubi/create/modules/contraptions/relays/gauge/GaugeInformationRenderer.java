@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
@@ -88,7 +88,7 @@ public class GaugeInformationRenderer {
 		if (tooltip.isEmpty())
 			return;
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		Screen tooltipScreen = new Screen(null) {
 
 			@Override
@@ -106,10 +106,10 @@ public class GaugeInformationRenderer {
 		tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
 		ItemStack item = goggles;
 		ScreenElementRenderer.render3DItem(() -> {
-			GlStateManager.translated(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16, 0);
+			RenderSystem.translated(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16, 0);
 			return item;
 		});
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
 	}
 

@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.clock;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -11,6 +12,7 @@ import com.simibubi.create.modules.contraptions.components.clock.CuckooClockTile
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -31,16 +33,18 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 
 		CuckooClockTileEntity clock = (CuckooClockTileEntity) te;
 		BlockState blockState = te.getBlockState();
-		int light = blockState.getPackedLightmapCoords(getWorld(), te.getPos());
+		int packedLightmapCoords = blockState.getPackedLightmapCoords(te.getWorld(), te.getPos());
 		Direction direction = blockState.get(CuckooClockBlock.HORIZONTAL_FACING);
+		
+		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
 		// Render Hands
 		SuperByteBuffer hourHand = AllBlockPartials.CUCKOO_HOUR_HAND.renderOn(blockState);
 		SuperByteBuffer minuteHand = AllBlockPartials.CUCKOO_MINUTE_HAND.renderOn(blockState);
 		float hourAngle = clock.hourHand.get(partialTicks);
 		float minuteAngle = clock.minuteHand.get(partialTicks);
-		rotateHand(hourHand, hourAngle, direction).translate(x, y, z).light(light).renderInto(buffer);
-		rotateHand(minuteHand, minuteAngle, direction).translate(x, y, z).light(light).renderInto(buffer);
+		rotateHand(hourHand, hourAngle, direction).light(packedLightmapCoords).renderInto(ms, vb);
+		rotateHand(minuteHand, minuteAngle, direction).light(packedLightmapCoords).renderInto(ms, vb);
 
 		// Doors
 		SuperByteBuffer leftDoor = AllBlockPartials.CUCKOO_LEFT_DOOR.renderOn(blockState);
@@ -65,8 +69,8 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 			}
 		}
 
-		rotateDoor(leftDoor, angle, true, direction).translate(x, y, z).light(light).renderInto(buffer);
-		rotateDoor(rightDoor, angle, false, direction).translate(x, y, z).light(light).renderInto(buffer);
+		rotateDoor(leftDoor, angle, true, direction).light(packedLightmapCoords).renderInto(ms, vb);
+		rotateDoor(rightDoor, angle, false, direction).light(packedLightmapCoords).renderInto(ms, vb);
 
 		// Figure
 		if (clock.animationType != null) {
@@ -75,7 +79,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 					: AllBlockPartials.CUCKOO_CREEPER).renderOn(blockState);
 			figure.translate(offset, 0, 0);
 			figure.rotateCentered(Axis.Y, AngleHelper.rad(AngleHelper.horizontalAngle(direction.rotateYCCW())));
-			figure.translate(x, y, z).light(light).renderInto(buffer);
+			figure.light(packedLightmapCoords).renderInto(ms, vb);
 		}
 
 	}

@@ -7,7 +7,7 @@ import static com.simibubi.create.ScreenResources.PLAYER_INVENTORY;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
@@ -120,8 +120,8 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 	}
 
 	public BlockState getRenderedBlock() {
-		GlStateManager.translated(guiLeft + FLEXCRATE.width + 145, guiTop + 115, 0);
-		GlStateManager.rotatef(50, -.5f, 1, -.2f);
+		RenderSystem.translated(guiLeft + FLEXCRATE.width + 145, guiTop + 115, 0);
+		RenderSystem.rotatef(50, -.5f, 1, -.2f);
 		return AllBlocks.FLEXCRATE.get().getDefaultState();
 	}
 

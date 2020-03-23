@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
@@ -96,14 +96,14 @@ public class PolishingCategory implements IRecipeCategory<SandPaperPolishingReci
 		if (matchingStacks.length == 0)
 			return;
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		CompoundNBT tag = renderedSandpaper.getOrCreateTag();
 		tag.put("Polishing", matchingStacks[0].serializeNBT());
 		tag.putBoolean("JEI", true);
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		GlStateManager.scaled(2, 2, 2);
+		RenderSystem.scaled(2, 2, 2);
 		itemRenderer.renderItemIntoGUI(renderedSandpaper, getBackground().getWidth() / 4 - 8, 1);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 }

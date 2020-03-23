@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
@@ -116,13 +116,13 @@ public class BlockzapperUpgradeCategory implements IRecipeCategory<BlockzapperUp
 		font.drawStringWithShadow(text,
 				(BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(text)) / 2, 57, 0x8B8B8B);
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(126, 0, 0);
-		GlStateManager.scaled(3.5, 3.5, 3.5);
-		GlStateManager.translated(-10, 0, 0);
-		GlStateManager.color3f(1, 1, 1);
-		GlStateManager.enableDepthTest();
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(126, 0, 0);
+		RenderSystem.scaled(3.5, 3.5, 3.5);
+		RenderSystem.translated(-10, 0, 0);
+		RenderSystem.color3f(1, 1, 1);
+		RenderSystem.enableDepthTest();
 		ScreenElementRenderer.render3DItem(() -> recipe.getRecipeOutput());
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 }

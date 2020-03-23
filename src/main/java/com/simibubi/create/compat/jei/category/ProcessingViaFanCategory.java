@@ -2,7 +2,7 @@ package com.simibubi.create.compat.jei.category;
 
 import java.util.Arrays;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.ScreenResources;
@@ -59,35 +59,35 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements 
 	public void draw(T recipe, double mouseX, double mouseY) {
 		renderWidgets(recipe, mouseX, mouseY);
 
-		GlStateManager.pushMatrix();
-		GlStateManager.color3f(1, 1, 1);
-		GlStateManager.enableDepthTest();
+		RenderSystem.pushMatrix();
+		RenderSystem.color3f(1, 1, 1);
+		RenderSystem.enableDepthTest();
 
-		GlStateManager.translated(28, 18, 0);
-		GlStateManager.rotated(10.5, -1f, 0, 0);
-		GlStateManager.rotated(15.5, 0, 1, 0);
-		GlStateManager.scaled(.6f, .6f, .6f);
+		RenderSystem.translated(28, 18, 0);
+		RenderSystem.rotated(10.5, -1f, 0, 0);
+		RenderSystem.rotated(15.5, 0, 1, 0);
+		RenderSystem.scaled(.6f, .6f, .6f);
 		ScreenElementRenderer.renderBlock(this::renderFanCasing);
 		
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		float angle = AnimatedKinetics.getCurrentAngle() * 12;
 		float t = 25;
-		GlStateManager.translatef(t, -t, t);
-		GlStateManager.rotated(angle, 0, 0, 1);
-		GlStateManager.translatef(-t, t, -t);
+		RenderSystem.translatef(t, -t, t);
+		RenderSystem.rotated(angle, 0, 0, 1);
+		RenderSystem.translatef(-t, t, -t);
 		
-		GlStateManager.translatef(t, 0, 175);
-		GlStateManager.rotated(90, 0, 1, 0);
-		GlStateManager.translatef(-t, 0, -175);
+		RenderSystem.translatef(t, 0, 175);
+		RenderSystem.rotated(90, 0, 1, 0);
+		RenderSystem.translatef(-t, 0, -175);
 		
 		ScreenElementRenderer.renderModel(this::renderFanInner);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.translated(-10, 0, 95);
-		GlStateManager.rotated(7, 0, 1, 0);
+		RenderSystem.translated(-10, 0, 95);
+		RenderSystem.rotated(7, 0, 1, 0);
 		renderAttachedBlock();
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
 	}
 

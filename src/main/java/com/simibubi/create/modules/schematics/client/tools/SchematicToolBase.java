@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.schematics.client.tools;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -81,9 +81,9 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	public void renderTool() {
 
 		if (schematicHandler.deployed) {
-			GlStateManager.lineWidth(2);
-			GlStateManager.color4f(1, 1, 1, 1);
-			GlStateManager.disableTexture();
+			RenderSystem.lineWidth(2);
+			RenderSystem.color4f(1, 1, 1, 1);
+			RenderSystem.disableTexture();
 
 			BlockPos min = schematicHandler.getTransformedAnchor();
 			MutableBoundingBox bb = new MutableBoundingBox(min, min.add(schematicHandler.getTransformedSize()));
@@ -103,13 +103,13 @@ public abstract class SchematicToolBase implements ISchematicTool {
 				Vec3d faceMin = center.add(vec.mul(radii).add(onFaceOffset)).add(vec.scale(1/8f));
 				Vec3d faceMax = center.add(vec.mul(radii).subtract(onFaceOffset)).add(vec.scale(1/8f));
 
-				GlStateManager.lineWidth(6);
+				RenderSystem.lineWidth(6);
 				WorldRenderer.drawBoundingBox(faceMin.getX(), faceMin.getY() + 1 / 16d, faceMin.getZ(), faceMax.getX(),
 						faceMax.getY() + 1 / 8d, faceMax.getZ(), .6f, .7f, 1, 1);
 			}
 
-			GlStateManager.lineWidth(1);
-			GlStateManager.enableTexture();
+			RenderSystem.lineWidth(1);
+			RenderSystem.enableTexture();
 
 		}
 

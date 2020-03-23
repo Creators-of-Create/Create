@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei.category;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
@@ -49,29 +49,29 @@ public class BlastingViaFanCategory extends ProcessingViaFanCategory<AbstractCoo
 	@Override
 	public void renderAttachedBlock() {
 		BlockState state = Blocks.LAVA.getDefaultState().with(FlowingFluidBlock.LEVEL, 8);
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(0, 0, 200);
-		GlStateManager.enableRescaleNormal();
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(0, 0, 200);
+		RenderSystem.enableRescaleNormal();
 		
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(0, 200, 0);
-		GlStateManager.rotated(90, 1, 0, 0);
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(0, 200, 0);
+		RenderSystem.rotated(90, 1, 0, 0);
 		ScreenElementRenderer.renderBlock(() -> state);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(0, 200, 0);
-		GlStateManager.rotated(90, 1, 0, 0);
-		GlStateManager.rotated(270, 0, 0, 1);
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(0, 200, 0);
+		RenderSystem.rotated(90, 1, 0, 0);
+		RenderSystem.rotated(270, 0, 0, 1);
 		ScreenElementRenderer.renderBlock(() -> state);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(-103, -100, 0);
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(-103, -100, 0);
 		ScreenElementRenderer.renderBlock(() -> state);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 }

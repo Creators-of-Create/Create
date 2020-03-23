@@ -62,9 +62,9 @@ public class VecHelper {
 
 	public static ListNBT writeNBT(Vec3d vec) {
 		ListNBT listnbt = new ListNBT();
-		listnbt.add(new DoubleNBT(vec.x));
-		listnbt.add(new DoubleNBT(vec.y));
-		listnbt.add(new DoubleNBT(vec.z));
+		listnbt.add(DoubleNBT.of(vec.x));
+		listnbt.add(DoubleNBT.of(vec.y));
+		listnbt.add(DoubleNBT.of(vec.z));
 		return listnbt;
 	}
 

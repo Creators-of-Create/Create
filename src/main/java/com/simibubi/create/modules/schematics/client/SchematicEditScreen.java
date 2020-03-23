@@ -3,7 +3,7 @@ package com.simibubi.create.modules.schematics.client;
 import java.util.Collections;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.ScreenResources;
@@ -134,11 +134,11 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		font.drawString(rotationLabel, x + 10, y + 52, ScreenResources.FONT_COLOR);
 		font.drawString(mirrorLabel, x + 10, y + 72, ScreenResources.FONT_COLOR);
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(guiLeft + 220, guiTop + 20, 0);
-		GlStateManager.scaled(3, 3, 3);
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(guiLeft + 220, guiTop + 20, 0);
+		RenderSystem.scaled(3, 3, 3);
 		itemRenderer.renderItemIntoGUI(new ItemStack(AllItems.BLUEPRINT.get()), 0, 0);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	@Override

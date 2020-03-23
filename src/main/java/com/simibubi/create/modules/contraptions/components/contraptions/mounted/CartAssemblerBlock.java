@@ -137,12 +137,6 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 			builder.add(BlockStateProperties.HORIZONTAL_AXIS);
 			super.fillStateContainer(builder);
 		}
-		
-		@Override
-		public boolean isSolid(BlockState state) {
-			return false;
-		}
-
 	}
 
 	public static BlockState createAnchor(BlockState state) {

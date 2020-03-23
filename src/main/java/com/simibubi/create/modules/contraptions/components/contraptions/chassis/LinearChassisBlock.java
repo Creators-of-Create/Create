@@ -18,7 +18,7 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 
 public class LinearChassisBlock extends AbstractChassisBlock implements IHaveConnectedTextures {
 
@@ -40,9 +40,9 @@ public class LinearChassisBlock extends AbstractChassisBlock implements IHaveCon
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
 		BlockState blockState = context.getWorld().getBlockState(placedOnPos);
-		if (isChassis(blockState) && !context.isPlacerSneaking())
+		if (isChassis(blockState) && !context.getPlayer().isSneaking())
 			return getDefaultState().with(AXIS, blockState.get(AXIS));
-		if (!context.isPlacerSneaking())
+		if (!context.getPlayer().isSneaking())
 			return getDefaultState().with(AXIS, context.getNearestLookingDirection().getAxis());
 		return super.getStateForPlacement(context);
 	}
@@ -104,7 +104,7 @@ public class LinearChassisBlock extends AbstractChassisBlock implements IHaveCon
 		}
 
 		@Override
-		public boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader, BlockPos pos,
+		public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos,
 				BlockPos otherPos, Direction face) {
 			return sameKind(state, other) && state.get(AXIS) == other.get(AXIS);
 		}

@@ -4,7 +4,9 @@ import java.util.function.Supplier;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.BlockState;
@@ -24,18 +26,18 @@ import net.minecraft.util.math.Vec3d;
 public class ScreenElementRenderer {
 
 	public static void render3DItem(Supplier<ItemStack> transformsAndStack) {
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 
-		GlStateManager.enableBlend();
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.enableAlphaTest();
-		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.enableBlend();
+		RenderSystem.enableRescaleNormal();
+		RenderSystem.enableAlphaTest();
+		RenderHelper.enableGuiDepthLighting(); // TODO 1.15
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		ItemStack stack = transformsAndStack.get();
 
 		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(stack, 0, 0);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	public static void renderBlock(Supplier<BlockState> transformsAndState) {
@@ -52,16 +54,16 @@ public class ScreenElementRenderer {
 
 	private static void render(Supplier<BlockState> transformsAndState, Supplier<IBakedModel> transformsAndModel,
 			int color) {
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 
-		GlStateManager.enableBlend();
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.enableAlphaTest();
-		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.alphaFunc(516, 0.1F);
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GlStateManager.translated(0, 0, 200);
+		RenderSystem.enableBlend();
+		RenderSystem.enableRescaleNormal();
+		RenderSystem.enableAlphaTest();
+		RenderHelper.enableGuiDepthLighting(); // TODO 1.15
+		RenderSystem.alphaFunc(516, 0.1F);
+		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.translated(0, 0, 200);
 
 		Minecraft mc = Minecraft.getInstance();
 		BlockRendererDispatcher blockRenderer = mc.getBlockRendererDispatcher();
@@ -78,15 +80,15 @@ public class ScreenElementRenderer {
 			modelToRender = transformsAndModel.get();
 		}
 
-		GlStateManager.scaled(50, -50, 50);
+		RenderSystem.scaled(50, -50, 50);
 		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
 		
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		if (fire) {
 			blockRenderer.renderBlockBrightness(blockToRender, 1);
 		} else {
-			GlStateManager.rotated(90, 0, 1, 0);
+			RenderSystem.rotated(90, 0, 1, 0);
 			if (color == -1) {
 				blockRenderer.getBlockModelRenderer().renderModelBrightnessColor(modelToRender, 1, 1, 1, 1);
 			} else {
@@ -95,7 +97,7 @@ public class ScreenElementRenderer {
 						(float) rgb.y, (float) rgb.z);
 			}
 		}
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
 		if (stateMode && !blockToRender.getFluidState().isEmpty()) {
 			RenderHelper.disableStandardItemLighting();
@@ -108,10 +110,10 @@ public class ScreenElementRenderer {
 			bufferbuilder.setTranslation(0, 0, 0);
 		}
 
-		GlStateManager.disableAlphaTest();
-		GlStateManager.disableRescaleNormal();
+		RenderSystem.disableAlphaTest();
+		RenderSystem.disableRescaleNormal();
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 }

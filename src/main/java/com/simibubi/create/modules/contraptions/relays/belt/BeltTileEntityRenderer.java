@@ -4,7 +4,7 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 
 import java.util.Random;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
@@ -98,17 +98,17 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 		if (te.beltLength == 0)
 			return;
 		
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 
 		Vec3i directionVec = te.getBeltFacing().getDirectionVec();
 		Vec3d beltStartOffset = new Vec3d(directionVec).scale(-.5).add(.5, 13 / 16f + .125f, .5);
-		GlStateManager.translated(x + beltStartOffset.x, y + beltStartOffset.y, z + beltStartOffset.z);
+		RenderSystem.translated(x + beltStartOffset.x, y + beltStartOffset.y, z + beltStartOffset.z);
 		Slope slope = te.getBlockState().get(BeltBlock.SLOPE);
 		int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
 		boolean slopeAlongX = te.getBeltFacing().getAxis() == Axis.X;
 
 		for (TransportedItemStack transported : te.getInventory().items) {
-			GlStateManager.pushMatrix();
+			RenderSystem.pushMatrix();
 			TessellatorHelper.fightZFighting(transported.angle);
 			float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
 			float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
@@ -129,12 +129,12 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 						.getBeltFacing().getAxis() == Axis.Z);
 			float slopeAngle = onSlope ? tiltForward ? -45 : 45 : 0;
 
-			GlStateManager.translated(offsetVec.x, offsetVec.y, offsetVec.z);
+			RenderSystem.translated(offsetVec.x, offsetVec.y, offsetVec.z);
 
 			boolean alongX = te.getBeltFacing().rotateY().getAxis() == Axis.X;
 			if (!alongX)
 				sideOffset *= -1;
-			GlStateManager.translated(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
+			RenderSystem.translated(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
 
 			ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 			boolean blockItem = itemRenderer.getModelWithOverrides(transported.stack).isGui3d();
@@ -148,40 +148,40 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 			RenderHelper.enableStandardItemLighting();
 
 			int count = (int) (MathHelper.log2((int) (transported.stack.getCount()))) / 2;
-			GlStateManager.rotated(slopeAngle, slopeAlongX ? 0 : 1, 0, slopeAlongX ? 1 : 0);
+			RenderSystem.rotated(slopeAngle, slopeAlongX ? 0 : 1, 0, slopeAlongX ? 1 : 0);
 			if (onSlope)
-				GlStateManager.translated(0, 1 / 8f, 0);
+				RenderSystem.translated(0, 1 / 8f, 0);
 			Random r = new Random(transported.angle);
 
 			for (int i = 0; i <= count; i++) {
-				GlStateManager.pushMatrix();
+				RenderSystem.pushMatrix();
 
-				GlStateManager.rotated(transported.angle, 0, 1, 0);
+				RenderSystem.rotated(transported.angle, 0, 1, 0);
 				if (!blockItem) {
-					GlStateManager.translated(0, -.09375, 0);
-					GlStateManager.rotated(90, 1, 0, 0);
+					RenderSystem.translated(0, -.09375, 0);
+					RenderSystem.rotated(90, 1, 0, 0);
 				}
 
 				if (blockItem) {
-					GlStateManager.translated(r.nextFloat() * .0625f * i, 0, r.nextFloat() * .0625f * i);
+					RenderSystem.translated(r.nextFloat() * .0625f * i, 0, r.nextFloat() * .0625f * i);
 				}
 
-				GlStateManager.scaled(.5, .5, .5);
+				RenderSystem.scaled(.5, .5, .5);
 				itemRenderer.renderItem(transported.stack, TransformType.FIXED);
-				GlStateManager.popMatrix();
+				RenderSystem.popMatrix();
 
 				if (!blockItem)
-					GlStateManager.rotated(10, 0, 1, 0);
-				GlStateManager.translated(0, blockItem ? 1 / 64d : 1 / 16d, 0);
+					RenderSystem.rotated(10, 0, 1, 0);
+				RenderSystem.translated(0, blockItem ? 1 / 64d : 1 / 16d, 0);
 
 			}
 
 			RenderHelper.disableStandardItemLighting();
-			GlStateManager.popMatrix();
+			RenderSystem.popMatrix();
 		}
 
-		GlStateManager.disableBlend();
-		GlStateManager.popMatrix();
+		RenderSystem.disableBlend();
+		RenderSystem.popMatrix();
 	}
 
 	protected BlockState getBeltState(KineticTileEntity te) {

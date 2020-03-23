@@ -3,11 +3,12 @@ package com.simibubi.create.foundation.block.render;
 import java.util.List;
 import java.util.Random;
 
-import javax.vecmath.Matrix4f;
-
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
@@ -57,9 +58,9 @@ public class WrappedBakedModel implements IBakedModel {
 	}
 
 	@Override
-	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
-		Pair<? extends IBakedModel, Matrix4f> pair = template.handlePerspective(cameraTransformType);
-		return Pair.of(this, pair.getRight());
+	public IBakedModel handlePerspective(TransformType cameraTransformType, MatrixStack mat) {
+		template.handlePerspective(cameraTransformType, mat);
+		return this;
 	}
 
 	@Override
@@ -77,4 +78,8 @@ public class WrappedBakedModel implements IBakedModel {
 		return getParticleTexture(EmptyModelData.INSTANCE);
 	}
 
+	@Override
+	public boolean isSideLit() {
+		return template.isSideLit();
+	}
 }

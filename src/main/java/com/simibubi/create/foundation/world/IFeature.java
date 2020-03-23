@@ -13,7 +13,7 @@ public interface IFeature {
 
 	public void addToConfig(ForgeConfigSpec.Builder builder);
 	
-	public Optional<ConfiguredFeature<?>> createFeature(Biome biome);
+	public Optional<ConfiguredFeature<?, ?>> createFeature(Biome biome);
 	
 	public Decoration getGenerationStage();
 

@@ -11,10 +11,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
@@ -49,7 +50,7 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 	}
 
 	@Override
-	public IModelData getModelData(IEnviromentBlockReader world, BlockPos pos, BlockState state, IModelData tileData) {
+	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
 		if (!(state.getBlock() instanceof IHaveConnectedTextures))
 			return EmptyModelData.INSTANCE;
 		CTData data = new CTData();
@@ -90,12 +91,12 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 
 			BakedQuad newQuad =
 				new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length), quad.getTintIndex(),
-						quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(), quad.getFormat());
-			VertexFormat format = quad.getFormat();
+						quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting());
+			VertexFormat format = DefaultVertexFormats.BLOCK;
 			int[] vertexData = newQuad.getVertexData();
 
 			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
-				int uvOffset = format.getUvOffsetById(0) / 4;
+				int uvOffset = 20 / 4; // TODO 1.15 is this the right offset?
 				int uIndex = vertex + uvOffset;
 				int vIndex = vertex + uvOffset + 1;
 				float u = Float.intBitsToFloat(vertexData[uIndex]);

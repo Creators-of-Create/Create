@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 import net.minecraft.world.World;
 
 public abstract class TileEntityBehaviour {
@@ -88,12 +88,12 @@ public abstract class TileEntityBehaviour {
 		return tileEntity.getWorld();
 	}
 
-	public static <T extends TileEntityBehaviour> T get(IEnviromentBlockReader reader, BlockPos pos,
+	public static <T extends TileEntityBehaviour> T get(ILightReader reader, BlockPos pos,
 			IBehaviourType<T> type) {
 		return get(reader.getTileEntity(pos), type);
 	}
 	
-	public static <T extends TileEntityBehaviour> void destroy(IEnviromentBlockReader reader, BlockPos pos,
+	public static <T extends TileEntityBehaviour> void destroy(ILightReader reader, BlockPos pos,
 			IBehaviourType<T> type) {
 		T behaviour = get(reader.getTileEntity(pos), type);
 		if (behaviour != null)

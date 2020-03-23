@@ -2,7 +2,7 @@ package com.simibubi.create.modules.schematics.block;
 
 import java.util.Random;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -82,17 +82,17 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				Vec3d blockLocation = blockLocationXZ.add(0, yOffset + 1, 0).add(cannonOffset);
 
 				// Offset to position
-				GlStateManager.pushMatrix();
-				GlStateManager.translated(blockLocation.x, blockLocation.y, blockLocation.z);
+				RenderSystem.pushMatrix();
+				RenderSystem.translated(blockLocation.x, blockLocation.y, blockLocation.z);
 
 				// Rotation and Scaling effects
 				double scale = .3f;
-				GlStateManager.rotated(360 * t * 2, 1, 1, 0);
-				GlStateManager.scaled(scale, scale, scale);
+				RenderSystem.rotated(360 * t * 2, 1, 1, 0);
+				RenderSystem.scaled(scale, scale, scale);
 
 				// Render the Block
 				Minecraft.getInstance().getBlockRendererDispatcher().renderBlockBrightness(block.state, 1);
-				GlStateManager.popMatrix();
+				RenderSystem.popMatrix();
 
 				// Apply Recoil if block was just launched
 				if ((block.ticksRemaining + 1 - partialTicks) > block.totalTicks - 10) {
@@ -120,7 +120,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 
 		TessellatorHelper.prepareFastRender();
 		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		BlockState state = tileEntityIn.getBlockState();
 		int lightCoords = state.getPackedLightmapCoords(getWorld(), pos);
@@ -140,7 +140,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		pipe.translate(x, y, z).light(lightCoords).renderInto(buffer);
 
 		TessellatorHelper.draw();
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 }

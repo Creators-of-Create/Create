@@ -7,7 +7,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 
 public abstract class ConnectedTextureBehaviour {
 
@@ -32,7 +32,7 @@ public abstract class ConnectedTextureBehaviour {
 		return reverseUVs(state, face);
 	}
 
-	public boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader, BlockPos pos,
+	public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos,
 			BlockPos otherPos, Direction face) {
 
 		BlockPos blockingPos = otherPos.offset(face);
@@ -44,7 +44,7 @@ public abstract class ConnectedTextureBehaviour {
 		return state.getBlock() == other.getBlock();
 	}
 
-	CTContext buildContext(IEnviromentBlockReader reader, BlockPos pos, BlockState state, Direction face) {
+	CTContext buildContext(ILightReader reader, BlockPos pos, BlockState state, Direction face) {
 		Axis axis = face.getAxis();
 		boolean positive = face.getAxisDirection() == AxisDirection.POSITIVE;
 		Direction h = axis == Axis.X ? Direction.SOUTH : Direction.WEST;

@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -20,12 +21,12 @@ public class MechanicalBearingBlock extends BearingBlock implements IWithTileEnt
 	}
 	
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos,
+			PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if (!player.isAllowEdit())
-			return false;
+			return ActionResultType.FAIL;
 		if (player.isSneaking())
-			return false;
+			return ActionResultType.FAIL;
 		if (player.getHeldItem(handIn).isEmpty()) {
 			if (!worldIn.isRemote) {
 				withTileEntityDo(worldIn, pos, te -> {
@@ -36,9 +37,9 @@ public class MechanicalBearingBlock extends BearingBlock implements IWithTileEnt
 					te.assembleNextTick = true;
 				});
 			}
-			return true;
+			return ActionResultType.SUCCESS;
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 	
 	@Override

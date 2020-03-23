@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -90,7 +90,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		drawOnBackground(i, j);
 
 		minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		GlStateManager.enableBlend();
+		RenderSystem.enableBlend();
 
 		renderBlock();
 		renderZapper();
@@ -132,41 +132,41 @@ public class ZapperScreen extends AbstractSimiScreen {
 	}
 
 	protected void renderZapper() {
-		GlStateManager.pushLightingAttributes();
-		GlStateManager.pushMatrix();
+		RenderSystem.pushLightingAttributes();
+		RenderSystem.pushMatrix();
 
 		RenderHelper.enableStandardItemLighting();
-		GlStateManager.enableBlend();
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.enableAlphaTest();
-		GlStateManager.alphaFunc(516, 0.1F);
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.enableBlend();
+		RenderSystem.enableRescaleNormal();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.alphaFunc(516, 0.1F);
+		RenderSystem.blendFunc(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		GlStateManager.translated((this.width - this.sWidth) / 2 + 260, this.height / 2 - this.sHeight / 4, 100);
-		GlStateManager.rotatef(90 + 0.2f * animationProgress, 0, 1, 0);
-		GlStateManager.rotatef(-40, .8f, 0, -.0f);
-		GlStateManager.scaled(100, -100, 100);
+		RenderSystem.translated((this.width - this.sWidth) / 2 + 260, this.height / 2 - this.sHeight / 4, 100);
+		RenderSystem.rotatef(90 + 0.2f * animationProgress, 0, 1, 0);
+		RenderSystem.rotatef(-40, .8f, 0, -.0f);
+		RenderSystem.scaled(100, -100, 100);
 
 		IBakedModel model = itemRenderer.getModelWithOverrides(zapper);
 		model.handlePerspective(TransformType.FIXED);
 		itemRenderer.renderItem(zapper, model);
 
-		GlStateManager.disableAlphaTest();
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.disableLighting();
+		RenderSystem.disableAlphaTest();
+		RenderSystem.disableRescaleNormal();
+		RenderSystem.disableLighting();
 
-		GlStateManager.popMatrix();
-		GlStateManager.popAttributes();
+		RenderSystem.popMatrix();
+		RenderSystem.popAttributes();
 	}
 
 	protected void renderBlock() {
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		GlStateManager.translated(guiLeft + 1.7f, guiTop - 49, 120);
-		GlStateManager.rotatef(-30f, .5f, .9f, -.1f);
-		GlStateManager.scaled(20, -20, 20);
+		RenderSystem.translated(guiLeft + 1.7f, guiTop - 49, 120);
+		RenderSystem.rotatef(-30f, .5f, .9f, -.1f);
+		RenderSystem.scaled(20, -20, 20);
 
 		BlockState state = Blocks.AIR.getDefaultState();
 		if (zapper.hasTag() && zapper.getTag().contains("BlockUsed"))
@@ -176,7 +176,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 				minecraft.world.rand, EmptyModelData.INSTANCE);
 
 		Tessellator.getInstance().draw();
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	protected void writeAdditionalOptions(CompoundNBT nbt) {

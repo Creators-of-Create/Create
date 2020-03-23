@@ -10,7 +10,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -105,17 +104,12 @@ public abstract class KineticBlock extends Block implements IRotate {
 		RotationPropagator.handleAdded(worldIn.getWorld(), pos, tileEntity);
 	}
 
-	@Override
-	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-		return hasStaticPart() && layer == getRenderLayer();
-	}
+//	@Override // TODO register layer
+//	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
+//		return hasStaticPart() && layer == getRenderLayer();
+//	}
 
 	protected abstract boolean hasStaticPart();
-
-	@Override
-	public boolean isSolid(BlockState state) {
-		return false;
-	}
 
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {

@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.curiosities.symmetry.client;
 
 import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
@@ -19,14 +19,14 @@ public class SymmetryWandItemRenderer extends ItemStackTileEntityRenderer {
 		SymmetryWandModel mainModel = (SymmetryWandModel) itemRenderer.getModelWithOverrides(stack);
 		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(0.5F, 0.5F, 0.5F);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(0.5F, 0.5F, 0.5F);
 		itemRenderer.renderItem(stack, mainModel.getBakedModel());
 
 		float lastCoordx = 0;
 		float lastCoordy = 0;
 
-		GlStateManager.disableLighting();
+		RenderSystem.disableLighting();
 		lastCoordx = GLX.lastBrightnessX;
 		lastCoordy = GLX.lastBrightnessY;
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, 240, 240);
@@ -34,15 +34,15 @@ public class SymmetryWandItemRenderer extends ItemStackTileEntityRenderer {
 		itemRenderer.renderItem(stack, mainModel.getPartial("core"));
 
 		float floating = MathHelper.sin(worldTime) * .05f;
-		GlStateManager.translated(0, floating, 0);
+		RenderSystem.translated(0, floating, 0);
 		float angle = worldTime * -10 % 360;
-		GlStateManager.rotated(angle, 0, 1, 0);
+		RenderSystem.rotated(angle, 0, 1, 0);
 		itemRenderer.renderItem(stack, mainModel.getPartial("bits"));
 
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastCoordx, lastCoordy);
-		GlStateManager.enableLighting();
+		RenderSystem.enableLighting();
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
 	}
 

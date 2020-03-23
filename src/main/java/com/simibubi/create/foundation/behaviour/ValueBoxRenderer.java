@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.behaviour;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
@@ -29,45 +29,45 @@ import net.minecraft.util.math.Vec3d;
 public class ValueBoxRenderer {
 
 	public static void renderBox(ValueBox box, boolean highlighted) {
-		GlStateManager.enableBlend();
-		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
-				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
-				GlStateManager.DestFactor.ZERO);
-		GlStateManager.disableTexture();
+		RenderSystem.enableBlend();
+		RenderSystem.blendFuncSeparate(RenderSystem.SourceFactor.SRC_ALPHA,
+				RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA, RenderSystem.SourceFactor.ONE,
+				RenderSystem.DestFactor.ZERO);
+		RenderSystem.disableTexture();
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(3, DefaultVertexFormats.POSITION_COLOR);
 
-		GlStateManager.lineWidth(highlighted ? 3 : 2);
+		RenderSystem.lineWidth(highlighted ? 3 : 2);
 		Vec3d color = highlighted ? ColorHelper.getRGB(box.highlightColor) : ColorHelper.getRGB(box.passiveColor);
 		AxisAlignedBB bb = box.bb;
 		WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ,
 				(float) color.x, (float) color.y, (float) color.z, 1f);
-		GlStateManager.lineWidth(1);
+		RenderSystem.lineWidth(1);
 
 		TessellatorHelper.draw();
-		GlStateManager.enableTexture();
+		RenderSystem.enableTexture();
 
 		float fontScale = -1 / 64f;
 		Vec3d shift = box.labelOffset;
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
-		GlStateManager.scaled(fontScale, fontScale, fontScale);
+		RenderSystem.scaled(fontScale, fontScale, fontScale);
 
 		if (highlighted) {
-			GlStateManager.pushMatrix();
-			GlStateManager.translated(17.5f, -5f, 7f);
-			GlStateManager.translated(shift.x, shift.y, shift.z);
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(17.5f, -5f, 7f);
+			RenderSystem.translated(shift.x, shift.y, shift.z);
 			renderText(box, font, box.label);
 			if (!box.sublabel.isEmpty()) {
-				GlStateManager.translated(0, 10, 0);
+				RenderSystem.translated(0, 10, 0);
 				renderText(box, font, box.sublabel);
 			}
 			if (!box.scrollTooltip.isEmpty()) {
-				GlStateManager.translated(0, 10, 0);
+				RenderSystem.translated(0, 10, 0);
 				renderText(font, box.scrollTooltip, 0x998899, 0x111111);
 			}
-			GlStateManager.popMatrix();
+			RenderSystem.popMatrix();
 		}
 
 		box.render(highlighted);
@@ -79,9 +79,9 @@ public class ValueBoxRenderer {
 
 	public static void renderText(FontRenderer font, String text, int color, int shadowColor) {
 		font.drawString(text, 0, 0, color);
-		GlStateManager.translated(0, 0, -1 / 4f);
+		RenderSystem.translated(0, 0, -1 / 4f);
 		font.drawString(text, 1, 1, shadowColor);
-		GlStateManager.translated(0, 0, 1 / 4f);
+		RenderSystem.translated(0, 0, 1 / 4f);
 	}
 
 	public static void renderItemIntoValueBox(ItemStack filter) {
@@ -90,8 +90,8 @@ public class ValueBoxRenderer {
 		boolean blockItem = modelWithOverrides.isGui3d();
 		float scale = (!blockItem ? .5f : 1f) - 1 / 64f;
 		float zOffset = (!blockItem ? -.225f : 0) + customZOffset(filter.getItem());
-		GlStateManager.scaled(scale, scale, scale);
-		GlStateManager.translated(0, 0, zOffset);
+		RenderSystem.scaled(scale, scale, scale);
+		RenderSystem.translated(0, 0, zOffset);
 		itemRenderer.renderItem(filter, TransformType.FIXED);
 	}
 

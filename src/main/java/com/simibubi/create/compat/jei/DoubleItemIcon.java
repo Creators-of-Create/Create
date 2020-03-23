@@ -2,7 +2,7 @@ package com.simibubi.create.compat.jei;
 
 import java.util.function.Supplier;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.Minecraft;
@@ -39,23 +39,23 @@ public class DoubleItemIcon implements IDrawable {
 		}
 		
 		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.color4f(1, 1, 1, 1);
-		GlStateManager.enableDepthTest();
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(xOffset, yOffset, 0);
+		RenderSystem.color4f(1, 1, 1, 1);
+		RenderSystem.enableDepthTest();
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(xOffset, yOffset, 0);
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(1, 1, 0);
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(1, 1, 0);
 		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(primaryStack, 0, 0);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(10, 10, 100);
-		GlStateManager.scaled(.5, .5, .5);
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(10, 10, 100);
+		RenderSystem.scaled(.5, .5, .5);
 		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(secondaryStack, 0, 0);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 }

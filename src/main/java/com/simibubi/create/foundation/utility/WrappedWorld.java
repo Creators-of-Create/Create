@@ -16,6 +16,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.storage.MapData;
 
 public class WrappedWorld extends World {
@@ -36,11 +37,6 @@ public class WrappedWorld extends World {
 	@Override
 	public int getLight(BlockPos pos) {
 		return 15;
-	}
-
-	@Override
-	public int getLightSubtracted(BlockPos pos, int amount) {
-		return 15 - amount;
 	}
 
 	@Override
@@ -124,6 +120,11 @@ public class WrappedWorld extends World {
 	@Override
 	public int getMaxHeight() {
 		return 256;
+	}
+
+	@Override
+	public Biome getGeneratorStoredBiome(int p_225604_1_, int p_225604_2_, int p_225604_3_) {
+		return world.getGeneratorStoredBiome(p_225604_1_, p_225604_2_, p_225604_3_);
 	}
 
 }

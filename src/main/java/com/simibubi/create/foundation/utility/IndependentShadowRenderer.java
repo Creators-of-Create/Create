@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.utility;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -24,12 +26,12 @@ public class IndependentShadowRenderer {
 	private static final ResourceLocation SHADOW_TEXTURES = new ResourceLocation("textures/misc/shadow.png");
 
 	public static void renderShadow(double x, double y, double z, float shadowAlpha, float size) {
-		GlStateManager.enableBlend();
-		GlStateManager.enableAlphaTest();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.DST_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.enableBlend();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.blendFunc(SourceFactor.DST_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		Minecraft.getInstance().getTextureManager().bindTexture(SHADOW_TEXTURES);
 		IWorldReader iworldreader = Minecraft.getInstance().world;
-		GlStateManager.depthMask(false);
+		RenderSystem.depthMask(false);
 		int i = MathHelper.floor(x - size);
 		int j = MathHelper.floor(x + size);
 		int k = MathHelper.floor(y - size);
@@ -49,9 +51,9 @@ public class IndependentShadowRenderer {
 		}
 
 		tessellator.draw();
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GlStateManager.disableBlend();
-		GlStateManager.depthMask(true);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.disableBlend();
+		RenderSystem.depthMask(true);
 	}
 
 	private static void func_217759_a(BlockState p_217759_1_, IWorldReader p_217759_2_, BlockPos p_217759_3_,
@@ -79,13 +81,13 @@ public class IndependentShadowRenderer {
 				float f1 = (float) ((p_217759_4_ - d2) / 2.0D / (double) p_217759_12_ + 0.5D);
 				float f2 = (float) ((p_217759_8_ - d4) / 2.0D / (double) p_217759_12_ + 0.5D);
 				float f3 = (float) ((p_217759_8_ - d5) / 2.0D / (double) p_217759_12_ + 0.5D);
-				bufferbuilder.pos(d1, d3, d4).tex((double) f, (double) f2).color(1.0F, 1.0F, 1.0F, (float) d0)
+				bufferbuilder.vertex(d1, d3, d4).texture(f, f2).color(1.0F, 1.0F, 1.0F, (float) d0)
 						.endVertex();
-				bufferbuilder.pos(d1, d3, d5).tex((double) f, (double) f3).color(1.0F, 1.0F, 1.0F, (float) d0)
+				bufferbuilder.vertex(d1, d3, d5).texture(f, f3).color(1.0F, 1.0F, 1.0F, (float) d0)
 						.endVertex();
-				bufferbuilder.pos(d2, d3, d5).tex((double) f1, (double) f3).color(1.0F, 1.0F, 1.0F, (float) d0)
+				bufferbuilder.vertex(d2, d3, d5).texture(f1, f3).color(1.0F, 1.0F, 1.0F, (float) d0)
 						.endVertex();
-				bufferbuilder.pos(d2, d3, d4).tex((double) f1, (double) f2).color(1.0F, 1.0F, 1.0F, (float) d0)
+				bufferbuilder.vertex(d2, d3, d4).texture(f1, f2).color(1.0F, 1.0F, 1.0F, (float) d0)
 						.endVertex();
 			}
 		}

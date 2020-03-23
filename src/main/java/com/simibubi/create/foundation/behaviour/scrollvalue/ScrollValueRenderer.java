@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.behaviour.scrollvalue;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.behaviour.ValueBox;
@@ -52,11 +52,11 @@ public class ScrollValueRenderer {
 		if (behaviour instanceof BulkScrollValueBehaviour && AllKeys.ctrlDown()) {
 			BulkScrollValueBehaviour bulkScrolling = (BulkScrollValueBehaviour) behaviour;
 			for (SmartTileEntity smartTileEntity : bulkScrolling.getBulk()) {
-				GlStateManager.pushMatrix();
+				RenderSystem.pushMatrix();
 				ScrollValueBehaviour other = TileEntityBehaviour.get(smartTileEntity, ScrollValueBehaviour.TYPE);
 				if (other != null)
 					render(world, smartTileEntity.getPos(), face, other, highlight);
-				GlStateManager.popMatrix();
+				RenderSystem.popMatrix();
 			}
 		} else
 			render(world, pos, face, behaviour, highlight);
@@ -65,7 +65,7 @@ public class ScrollValueRenderer {
 
 	protected static void render(ClientWorld world, BlockPos pos, Direction face, ScrollValueBehaviour behaviour,
 			boolean highlight) {
-		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
+		RenderSystem.translated(pos.getX(), pos.getY(), pos.getZ());
 		BlockState state = world.getBlockState(pos);
 		if (behaviour.slotPositioning instanceof Sided)
 			((Sided) behaviour.slotPositioning).fromSide(face);

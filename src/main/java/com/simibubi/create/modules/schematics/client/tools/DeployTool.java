@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.schematics.client.tools;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllKeys;
 
 import net.minecraft.client.renderer.WorldRenderer;
@@ -44,15 +44,15 @@ public class DeployTool extends PlacementToolBase {
 			max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
 		}
 		
-		GlStateManager.lineWidth(2);
-		GlStateManager.color4f(.5f, .8f, 1, 1);
-		GlStateManager.disableTexture();
+		RenderSystem.lineWidth(2);
+		RenderSystem.color4f(.5f, .8f, 1, 1);
+		RenderSystem.disableTexture();
 		
 		WorldRenderer.drawBoundingBox(min.getX() - 1 / 8d, min.getY() + 1 / 16d, min.getZ() - 1 / 8d,
 				max.getX() + 1 / 8d, max.getY() + 1 / 8d, max.getZ() + 1 / 8d, .8f, .9f, 1, 1);
 		
-		GlStateManager.lineWidth(1);
-		GlStateManager.enableTexture();
+		RenderSystem.lineWidth(1);
+		RenderSystem.enableTexture();
 		
 	}
 	

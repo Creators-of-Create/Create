@@ -2,8 +2,9 @@ package com.simibubi.create.modules.contraptions.components.actors;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.block.SafeTileEntityRendererFast;
+import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -11,18 +12,25 @@ import com.simibubi.create.modules.contraptions.components.contraptions.Movement
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class HarvesterTileEntityRenderer extends SafeTileEntityRendererFast<HarvesterTileEntity> {
+public class HarvesterTileEntityRenderer extends SafeTileEntityRenderer<HarvesterTileEntity> {
+
+	public HarvesterTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
-	public void renderFast(HarvesterTileEntity te, double x, double y, double z, float partialTicks, int destroyStage,
-			BufferBuilder buffer) {
-		SuperByteBuffer superBuffer = renderHead(getWorld(), te.getPos(), te.getBlockState(), 0);
-		superBuffer.translate(x, y, z).renderInto(buffer);
+	protected void renderSafe(HarvesterTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+			int light, int overlay) {
+		SuperByteBuffer superBuffer = renderHead(te.getWorld(), te.getPos(), te.getBlockState(), 0);
+		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 
 	public static SuperByteBuffer renderInContraption(MovementContext context) {

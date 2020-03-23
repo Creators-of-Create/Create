@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Vector;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
@@ -233,20 +233,20 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 	protected void renderCannon() {
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 
-		GlStateManager.enableBlend();
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.enableAlphaTest();
+		RenderSystem.enableBlend();
+		RenderSystem.enableRescaleNormal();
+		RenderSystem.enableAlphaTest();
 		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		GlStateManager.translated(guiLeft + 240, guiTop + 120, 200);
-		GlStateManager.scaled(5, 5, 5);
+		RenderSystem.translated(guiLeft + 240, guiTop + 120, 200);
+		RenderSystem.scaled(5, 5, 5);
 
 		itemRenderer.renderItemIntoGUI(new ItemStack(AllBlocks.SCHEMATICANNON.block), 0, 0);
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	protected void renderBlueprintHighlight() {

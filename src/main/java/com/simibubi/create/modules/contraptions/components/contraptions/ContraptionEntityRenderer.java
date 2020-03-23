@@ -1,9 +1,11 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -24,24 +26,25 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(ContraptionEntity arg0) {
+	public ResourceLocation getEntityTexture(ContraptionEntity arg0) {
 		return null;
 	}
 
 	@Override
-	public void doRender(ContraptionEntity entity, double x, double y, double z, float yaw, float partialTicks) {
+	public void render(ContraptionEntity entity, float yaw, float partialTicks, MatrixStack ms,
+			IRenderTypeBuffer buffers, int overlay) {
 		if (!entity.isAlive())
 			return;
 		if (entity.getContraption() == null)
 			return;
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		long randomBits = (long) entity.getEntityId() * 493286711L;
 		randomBits = randomBits * randomBits * 4392167121L + randomBits * 98761L;
 		float xNudge = (((float) (randomBits >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 		float yNudge = (((float) (randomBits >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 		float zNudge = (((float) (randomBits >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-		GlStateManager.translatef(xNudge, yNudge, zNudge);
+		RenderSystem.translatef(xNudge, yNudge, zNudge);
 
 		float degYaw = entity.getYaw(partialTicks);
 		float degPitch = entity.getPitch(partialTicks);
@@ -55,9 +58,9 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 		if (ridingEntity != null && ridingEntity instanceof AbstractMinecartEntity) {
 			AbstractMinecartEntity cart = (AbstractMinecartEntity) ridingEntity;
 
-			double cartX = MathHelper.lerp((double) partialTicks, cart.lastTickPosX, cart.posX);
-			double cartY = MathHelper.lerp((double) partialTicks, cart.lastTickPosY, cart.posY);
-			double cartZ = MathHelper.lerp((double) partialTicks, cart.lastTickPosZ, cart.posZ);
+			double cartX = MathHelper.lerp((double) partialTicks, cart.lastTickPosX, cart.getX());
+			double cartY = MathHelper.lerp((double) partialTicks, cart.lastTickPosY, cart.getY());
+			double cartZ = MathHelper.lerp((double) partialTicks, cart.lastTickPosZ, cart.getZ());
 			Vec3d cartPos = cart.getPos(cartX, cartY, cartZ);
 
 			if (cartPos != null) {
@@ -72,13 +75,13 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 				cartY = (cartPosFront.y + cartPosBack.y) / 2.0D - cartY;
 				cartZ = cartPos.z - cartZ;
 
-				GlStateManager.translatef((float) cartX, (float) cartY, (float) cartZ);
+				RenderSystem.translatef((float) cartX, (float) cartY, (float) cartZ);
 			}
 		}
 
 		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
 		TessellatorHelper.prepareFastRender();
-		GlStateManager.enableCull();
+		RenderSystem.enableCull();
 		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
 		ContraptionRenderer.render(entity.world, entity.getContraption(), superByteBuffer -> {
 			superByteBuffer.translate(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
@@ -86,33 +89,30 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 			superByteBuffer.rotate(Axis.Y, angleYaw);
 			superByteBuffer.rotate(Axis.Z, anglePitch);
 			superByteBuffer.translate(rotationOffset.x, rotationOffset.y, rotationOffset.z);
-			superByteBuffer.translate(x, y, z);
-			superByteBuffer.offsetLighting(-x + entity.posX, -y + entity.posY, -z + entity.posZ);
-
-		}, Tessellator.getInstance().getBuffer());
+		}, ms, Tessellator.getInstance().getBuffer());
 		TessellatorHelper.draw();
 
 		if (!entity.getContraption().customRenderTEs.isEmpty()) {
-			GlStateManager.pushMatrix();
-			GlStateManager.translated(x, y, z);
-			GlStateManager.translated(rotationOffset.x, rotationOffset.y, rotationOffset.z);
-			GlStateManager.rotated(degPitch, 0, 0, 1);
-			GlStateManager.rotated(degYaw, 0, 1, 0);
-			GlStateManager.rotated(degRoll, 1, 0, 0);
-			GlStateManager.translated(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(x, y, z);
+			RenderSystem.translated(rotationOffset.x, rotationOffset.y, rotationOffset.z);
+			RenderSystem.rotated(degPitch, 0, 0, 1);
+			RenderSystem.rotated(degYaw, 0, 1, 0);
+			RenderSystem.rotated(degRoll, 1, 0, 0);
+			RenderSystem.translated(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
 			ContraptionRenderer.renderTEsWithGL(entity.world, entity.getContraption(), entity.getPositionVec(),
-					new Vec3d(degRoll, degYaw, degPitch));
-			GlStateManager.popMatrix();
+					new Vec3d(degRoll, degYaw, degPitch), ms, buffers);
+			RenderSystem.popMatrix();
 		}
 
-		GlStateManager.disableCull();
-		GlStateManager.popMatrix();
-		GlStateManager.shadeModel(7424);
-		GlStateManager.alphaFunc(516, 0.1F);
-		GlStateManager.matrixMode(5888);
+		RenderSystem.disableCull();
+		RenderSystem.popMatrix();
+		RenderSystem.shadeModel(7424);
+		RenderSystem.alphaFunc(516, 0.1F);
+		RenderSystem.matrixMode(5888);
 		RenderHelper.enableStandardItemLighting();
 
-		super.doRender(entity, x, y, z, yaw, partialTicks);
+		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 	}
 
 }

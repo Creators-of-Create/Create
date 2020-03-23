@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -173,20 +173,20 @@ public class ChassisRangeDisplay {
 	}
 
 	public static void renderOutlines(float partialTicks) {
-		GlStateManager.lineWidth(2);
+		RenderSystem.lineWidth(2);
 		TessellatorHelper.prepareForDrawing();
-		GlStateManager.disableTexture();
-		GlStateManager.enableAlphaTest();
+		RenderSystem.disableTexture();
+		RenderSystem.enableAlphaTest();
 
 		for (Entry entry : entries.values())
 			renderPositions(entry, partialTicks);
 		for (Entry groupEntry : groupEntries)
 			renderPositions(groupEntry, partialTicks);
 
-		GlStateManager.enableTexture();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.enableTexture();
+		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		TessellatorHelper.cleanUpAfterDrawing();
-		GlStateManager.lineWidth(1);
+		RenderSystem.lineWidth(1);
 	}
 
 	public static void renderPositions(Entry entry, float partialTicks) {
@@ -194,7 +194,7 @@ public class ChassisRangeDisplay {
 		BlockPos size = new BlockPos(1, 1, 1);
 		float timer = entry.timer - partialTicks;
 		float alpha = timer > 20 ? .5f : timer / 40f;
-		GlStateManager.color4f(1, .7f, 0, alpha);
+		RenderSystem.color4f(1, .7f, 0, alpha);
 		Set<BlockPos> includedPositions = entry.includedPositions;
 		for (BlockPos pos : includedPositions)
 			TessellatorHelper.cube(Tessellator.getInstance().getBuffer(), pos, size, 1 / 1024f, true, false);

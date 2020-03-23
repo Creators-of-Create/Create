@@ -32,7 +32,7 @@ public enum AllWorldFeatures {
 	;
 
 	public IFeature feature;
-	private Map<Biome, ConfiguredFeature<?>> featureInstances;
+	private Map<Biome, ConfiguredFeature<?, ?>> featureInstances;
 
 	AllWorldFeatures(IFeature feature) {
 		this.feature = feature;
@@ -47,7 +47,7 @@ public enum AllWorldFeatures {
 				if (entry.featureInstances.containsKey(biome))
 					biome.getFeatures(entry.feature.getGenerationStage()).remove(entry.featureInstances.remove(biome));
 
-				Optional<ConfiguredFeature<?>> createFeature = entry.feature.createFeature(biome);
+				Optional<ConfiguredFeature<?, ?>> createFeature = entry.feature.createFeature(biome);
 				if (!createFeature.isPresent())
 					continue;
 

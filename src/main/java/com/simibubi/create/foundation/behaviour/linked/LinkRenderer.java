@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.behaviour.linked;
 
 import java.util.function.Consumer;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.behaviour.ValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
@@ -42,7 +42,7 @@ public class LinkRenderer {
 			return;
 
 		TessellatorHelper.prepareForDrawing();
-		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
+		RenderSystem.translated(pos.getX(), pos.getY(), pos.getZ());
 
 		String freq1 = Lang.translate("logistics.firstFrequency");
 		String freq2 = Lang.translate("logistics.secondFrequency");
@@ -69,7 +69,7 @@ public class LinkRenderer {
 		BlockState state = tileEntityIn.getBlockState();
 		TessellatorHelper.prepareForDrawing();
 		BlockPos pos = tileEntityIn.getPos();
-		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
+		RenderSystem.translated(pos.getX(), pos.getY(), pos.getZ());
 
 		renderEachSlot(state, behaviour, first -> {
 			ValueBoxRenderer.renderItemIntoValueBox(

@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.curiosities.zapper.terrainzapper;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -78,16 +78,16 @@ public class TerrainZapperRenderHandler {
 		if (renderedPosition == null)
 			return;
 
-		GlStateManager.lineWidth(2);
+		RenderSystem.lineWidth(2);
 		TessellatorHelper.prepareForDrawing();
-		GlStateManager.disableTexture();
+		RenderSystem.disableTexture();
 
-		GlStateManager.translated(renderedPosition.getX(), renderedPosition.getY(), renderedPosition.getZ());
+		RenderSystem.translated(renderedPosition.getX(), renderedPosition.getY(), renderedPosition.getZ());
 		WorldRenderer.drawShape(renderedShape, 0, 0, 0, 0f, 0f, 0f, 0.5f);
 
-		GlStateManager.enableTexture();
+		RenderSystem.enableTexture();
 		TessellatorHelper.cleanUpAfterDrawing();
-		GlStateManager.lineWidth(1);
+		RenderSystem.lineWidth(1);
 
 	}
 

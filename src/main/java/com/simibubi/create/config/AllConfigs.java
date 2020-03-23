@@ -44,7 +44,7 @@ public class AllConfigs {
 				pair.getKey().onLoad();
 	}
 
-	public static void onReload(ModConfig.ConfigReloading event) {
+	public static void onReload(ModConfig.Reloading event) {
 		for (Pair<ConfigBase, Type> pair : configs)
 			if (pair.getKey().specification == event.getConfig().getSpec())
 				pair.getKey().onReload();

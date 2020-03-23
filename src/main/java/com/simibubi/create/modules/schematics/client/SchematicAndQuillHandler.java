@@ -8,7 +8,7 @@ import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.IOUtils;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
@@ -165,9 +165,9 @@ public class SchematicAndQuillHandler {
 			return;
 
 		TessellatorHelper.prepareForDrawing();
-		GlStateManager.lineWidth(2);
-		GlStateManager.color4f(1, 1, 1, 1);
-		GlStateManager.disableTexture();
+		RenderSystem.lineWidth(2);
+		RenderSystem.color4f(1, 1, 1, 1);
+		RenderSystem.disableTexture();
 
 		if (secondPos == null) {
 			// 1st Step
@@ -208,21 +208,21 @@ public class SchematicAndQuillHandler {
 				Vec3d faceMin = center.add(vec.mul(radii).add(onFaceOffset));
 				Vec3d faceMax = center.add(vec.mul(radii).subtract(onFaceOffset));
 
-				GlStateManager.enableTexture();
+				RenderSystem.enableTexture();
 				TessellatorHelper.begin();
 				AllSpecialTextures.SELECTION.bind();
 				TessellatorHelper.doubleFace(Tessellator.getInstance().getBuffer(), new BlockPos(faceMin),
 						new BlockPos(faceMax.subtract(faceMin)), 1 / 16f * selectedFace.getAxisDirection().getOffset(),
 						false, false, false);
 				TessellatorHelper.draw();
-				GlStateManager.disableTexture();
+				RenderSystem.disableTexture();
 
 			}
 
 		}
 
-		GlStateManager.lineWidth(1);
-		GlStateManager.enableTexture();
+		RenderSystem.lineWidth(1);
+		RenderSystem.enableTexture();
 		TessellatorHelper.cleanUpAfterDrawing();
 	}
 

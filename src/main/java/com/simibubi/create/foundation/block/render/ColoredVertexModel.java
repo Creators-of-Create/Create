@@ -10,10 +10,11 @@ import com.simibubi.create.foundation.block.IHaveColoredVertices;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -30,7 +31,7 @@ public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
 	}
 
 	@Override
-	public IModelData getModelData(IEnviromentBlockReader world, BlockPos pos, BlockState state, IModelData tileData) {
+	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
 		return new ModelDataMap.Builder().withInitial(POSITION_PROPERTY, pos).build();
 	}
 
@@ -45,10 +46,9 @@ public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
 			BakedQuad quad = quads.get(i);
 
 			BakedQuad newQuad = new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length),
-					quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(),
-					quad.getFormat());
+					quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting());
 
-			VertexFormat format = quad.getFormat();
+			VertexFormat format = DefaultVertexFormats.BLOCK;
 			int[] vertexData = newQuad.getVertexData();
 			BlockPos data = extraData.getData(POSITION_PROPERTY);
 
@@ -57,7 +57,7 @@ public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
 //				continue;
 
 			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
-				int colorOffset = format.getColorOffset() / 4;
+				int colorOffset = 16 / 4; // TODO 1.15 is this the right offset
 				float x = Float.intBitsToFloat(vertexData[vertex]);
 				float y = Float.intBitsToFloat(vertexData[vertex + 1]);
 				float z = Float.intBitsToFloat(vertexData[vertex + 2]);

@@ -127,7 +127,7 @@ public abstract class AbstractToolItem extends ToolItem {
 
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
-		if (hasType(HOE) && !context.isPlacerSneaking())
+		if (hasType(HOE) && !context.getPlayer().isSneaking())
 			return Items.WOODEN_HOE.onItemUse(context);
 		if (hasType(SHOVEL))
 			return Items.WOODEN_SHOVEL.onItemUse(context);

@@ -12,11 +12,11 @@ import net.minecraft.block.ChestBlock;
 import net.minecraft.state.properties.ChestType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 
 public class SynchronizedExtraction {
 
-	static boolean extractSynchronized(IEnviromentBlockReader reader, BlockPos inventoryPos) {
+	static boolean extractSynchronized(ILightReader reader, BlockPos inventoryPos) {
 		List<SingleTargetAutoExtractingBehaviour> actors = getAllSyncedExtractors(reader, inventoryPos);
 		int startIndex = actors.size() - 1;
 		boolean success = false;
@@ -35,7 +35,7 @@ public class SynchronizedExtraction {
 		return success;
 	}
 
-	private static List<SingleTargetAutoExtractingBehaviour> getAllSyncedExtractors(IEnviromentBlockReader reader,
+	private static List<SingleTargetAutoExtractingBehaviour> getAllSyncedExtractors(ILightReader reader,
 			BlockPos inventoryPos) {
 		List<SingleTargetAutoExtractingBehaviour> list = new ArrayList<>();
 		List<BlockPos> inventoryPositions = new ArrayList<>();

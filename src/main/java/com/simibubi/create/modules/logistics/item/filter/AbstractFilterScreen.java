@@ -6,7 +6,7 @@ import static net.minecraft.util.text.TextFormatting.GRAY;
 import java.util.Collections;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
@@ -62,11 +62,11 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		font.drawString(I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 9, 0x5B5037);
 
 		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(guiLeft + background.width + 0, guiTop + background.height - 60, 0);
-		GlStateManager.scaled(5, 5, 5);
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(guiLeft + background.width + 0, guiTop + background.height - 60, 0);
+		RenderSystem.scaled(5, 5, 5);
 		itemRenderer.renderItemIntoGUI(container.filterItem, 0, 0);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	@Override

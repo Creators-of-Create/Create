@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.relays.advanced.sequencer;
 
 import java.util.Vector;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
@@ -159,8 +159,8 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	public ItemStack getRenderedBlock() {
-		GlStateManager.translated(guiLeft + background.width + 20, guiTop + 50, 0);
-		GlStateManager.scaled(5, 5, 5);
+		RenderSystem.translated(guiLeft + background.width + 20, guiTop + 50, 0);
+		RenderSystem.scaled(5, 5, 5);
 		return renderedItem;
 	}
 

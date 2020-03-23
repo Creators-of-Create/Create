@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 
@@ -22,35 +22,35 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 
 	@Override
 	public void draw(int xOffset, int yOffset) {
-		GlStateManager.enableDepthTest();
-		GlStateManager.translatef(xOffset, yOffset, 0);
-		GlStateManager.translatef(-45, 10, 0);
-		GlStateManager.rotatef(22.5f, 0, 1, 0);
-		GlStateManager.scaled(.45f, .45f, .45f);
+		RenderSystem.enableDepthTest();
+		RenderSystem.translatef(xOffset, yOffset, 0);
+		RenderSystem.translatef(-45, 10, 0);
+		RenderSystem.rotatef(22.5f, 0, 1, 0);
+		RenderSystem.scaled(.45f, .45f, .45f);
 		ScreenElementRenderer.renderBlock(this::leftWheel);
 		ScreenElementRenderer.renderBlock(this::rightWheel);
 	}
 
 	private BlockState leftWheel() {
 		float angle = getCurrentAngle();
-		GlStateManager.translatef(-50, 0, 0);
+		RenderSystem.translatef(-50, 0, 0);
 		
 		float t = 25;
-		GlStateManager.translatef(t, -t, t);
-		GlStateManager.rotated(angle, 0, 0, 1);
-		GlStateManager.translatef(-t, t, -t);
+		RenderSystem.translatef(t, -t, t);
+		RenderSystem.rotated(angle, 0, 0, 1);
+		RenderSystem.translatef(-t, t, -t);
 		
 		return AllBlocks.CRUSHING_WHEEL.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.X);
 	}
 
 	private BlockState rightWheel() {
 		float angle = -getCurrentAngle();
-		GlStateManager.translatef(50, 0, 0);
+		RenderSystem.translatef(50, 0, 0);
 		
 		float t = 25;
-		GlStateManager.translatef(t, -t, t);
-		GlStateManager.rotated(angle, 0, 0, 1);
-		GlStateManager.translatef(-t, t, -t);
+		RenderSystem.translatef(t, -t, t);
+		RenderSystem.rotated(angle, 0, 0, 1);
+		RenderSystem.translatef(-t, t, -t);
 		
 		return AllBlocks.CRUSHING_WHEEL.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.X);
 	}

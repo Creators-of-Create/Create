@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 
@@ -117,8 +117,8 @@ public class ZapperRenderHandler {
 
 		cachedBeams.forEach(beam -> {
 			TessellatorHelper.prepareForDrawing();
-			GlStateManager.disableTexture();
-			GlStateManager.lineWidth(beam.itensity * 40);
+			RenderSystem.disableTexture();
+			RenderSystem.lineWidth(beam.itensity * 40);
 
 			BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 			bufferBuilder.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
@@ -126,8 +126,8 @@ public class ZapperRenderHandler {
 			bufferBuilder.pos(beam.end.x, beam.end.y, beam.end.z).endVertex();
 			Tessellator.getInstance().draw();
 
-			GlStateManager.lineWidth(1);
-			GlStateManager.enableTexture();
+			RenderSystem.lineWidth(1);
+			RenderSystem.enableTexture();
 			TessellatorHelper.cleanUpAfterDrawing();
 		});
 	}
@@ -176,7 +176,7 @@ public class ZapperRenderHandler {
 		Minecraft mc = Minecraft.getInstance();
 		boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ mc.player.getPrimaryHand() == HandSide.LEFT;
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 
 		float recoil = rightHand ? MathHelper.lerp(event.getPartialTicks(), lastRightHandAnimation, rightHandAnimation)
 				: MathHelper.lerp(event.getPartialTicks(), lastLeftHandAnimation, leftHandAnimation);
@@ -194,47 +194,47 @@ public class ZapperRenderHandler {
 		float f2 = -0.3F * MathHelper.sin(f1 * (float) Math.PI);
 		float f3 = 0.4F * MathHelper.sin(f1 * ((float) Math.PI * 2F));
 		float f4 = -0.4F * MathHelper.sin(event.getSwingProgress() * (float) Math.PI);
-		GlStateManager.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
+		RenderSystem.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
 				f4 + -0.71999997F + .3f + recoil);
-		GlStateManager.rotatef(f * 75.0F, 0.0F, 1.0F, 0.0F);
+		RenderSystem.rotatef(f * 75.0F, 0.0F, 1.0F, 0.0F);
 		float f5 = MathHelper.sin(event.getSwingProgress() * event.getSwingProgress() * (float) Math.PI);
 		float f6 = MathHelper.sin(f1 * (float) Math.PI);
-		GlStateManager.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
-		GlStateManager.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
+		RenderSystem.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
+		RenderSystem.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
 		AbstractClientPlayerEntity abstractclientplayerentity = mc.player;
 		mc.getTextureManager().bindTexture(abstractclientplayerentity.getLocationSkin());
-		GlStateManager.translatef(f * -1.0F, 3.6F, 3.5F);
-		GlStateManager.rotatef(f * 120.0F, 0.0F, 0.0F, 1.0F);
-		GlStateManager.rotatef(200.0F, 1.0F, 0.0F, 0.0F);
-		GlStateManager.rotatef(f * -135.0F, 0.0F, 1.0F, 0.0F);
-		GlStateManager.translatef(f * 5.6F, 0.0F, 0.0F);
-		GlStateManager.rotatef(f * 40.0F, 0.0F, 1.0F, 0.0F);
+		RenderSystem.translatef(f * -1.0F, 3.6F, 3.5F);
+		RenderSystem.rotatef(f * 120.0F, 0.0F, 0.0F, 1.0F);
+		RenderSystem.rotatef(200.0F, 1.0F, 0.0F, 0.0F);
+		RenderSystem.rotatef(f * -135.0F, 0.0F, 1.0F, 0.0F);
+		RenderSystem.translatef(f * 5.6F, 0.0F, 0.0F);
+		RenderSystem.rotatef(f * 40.0F, 0.0F, 1.0F, 0.0F);
 		PlayerRenderer playerrenderer = mc.getRenderManager().getRenderer(abstractclientplayerentity);
-		GlStateManager.disableCull();
+		RenderSystem.disableCull();
 		if (rightHand) {
 			playerrenderer.renderRightArm(abstractclientplayerentity);
 		} else {
 			playerrenderer.renderLeftArm(abstractclientplayerentity);
 		}
-		GlStateManager.enableCull();
-		GlStateManager.popMatrix();
+		RenderSystem.enableCull();
+		RenderSystem.popMatrix();
 
 		// Render gun
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
 				f4 + -0.71999997F - 0.1f + recoil);
-		GlStateManager.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
-		GlStateManager.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
+		RenderSystem.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
+		RenderSystem.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
 
-		GlStateManager.translatef(f * -0.1f, 0.1f, -0.4f);
-		GlStateManager.rotatef(f * 5.0F, 0.0F, 1.0F, 0.0F);
+		RenderSystem.translatef(f * -0.1f, 0.1f, -0.4f);
+		RenderSystem.rotatef(f * 5.0F, 0.0F, 1.0F, 0.0F);
 
 		FirstPersonRenderer firstPersonRenderer = mc.getFirstPersonRenderer();
 		firstPersonRenderer.renderItemSide(mc.player, heldItem,
 				rightHand ? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
 						: ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
 				!rightHand);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
 		event.setCanceled(true);
 	}

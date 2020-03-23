@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.schematics.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.ScreenResources;
 
 import net.minecraft.client.MainWindow;
@@ -13,9 +13,9 @@ public class BlueprintHotbarOverlay extends AbstractGui {
 		MainWindow mainWindow = Minecraft.getInstance().mainWindow;
 		int x = mainWindow.getScaledWidth() / 2 - 92;
 		int y = mainWindow.getScaledHeight() - 23;
-		GlStateManager.enableAlphaTest();
+		RenderSystem.enableAlphaTest();
 		ScreenResources.BLUEPRINT_SLOT.draw(this, x + 20 * slot, y);
-		GlStateManager.disableAlphaTest();
+		RenderSystem.disableAlphaTest();
 	}
 
 }

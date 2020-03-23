@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.behaviour.filtering;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.behaviour.ValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBox.ItemValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBoxRenderer;
@@ -45,7 +45,7 @@ public class FilteringRenderer {
 			return;
 
 		TessellatorHelper.prepareForDrawing();
-		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
+		RenderSystem.translated(pos.getX(), pos.getY(), pos.getZ());
 
 		behaviour.slotPositioning.renderTransformed(state, () -> {
 
@@ -81,7 +81,7 @@ public class FilteringRenderer {
 		BlockState state = tileEntityIn.getBlockState();
 		TessellatorHelper.prepareForDrawing();
 		BlockPos pos = tileEntityIn.getPos();
-		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
+		RenderSystem.translated(pos.getX(), pos.getY(), pos.getZ());
 
 		behaviour.slotPositioning.renderTransformed(state, () -> {
 			ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter());

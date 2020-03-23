@@ -57,17 +57,16 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 	}
 
 	@Override
-	public Optional<ConfiguredFeature<?>> createFeature(Biome biome) {
+	public Optional<ConfiguredFeature<?, ?>> createFeature(Biome biome) {
 		if (biomeWhitelist != null && biome.getCategory() == biomeWhitelist)
 			return Optional.empty();
 		if (!canGenerate())
 			return Optional.empty();
 
 		Pair<Placement<T>, T> placement = getPlacement();
-		ConfiguredFeature<?> createdFeature = Biome.createDecoratedFeature(Feature.ORE,
-				new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, block.getDefaultState(),
-						clusterSize.get()),
-				placement.getKey(), placement.getValue());
+		ConfiguredFeature<?, ?> createdFeature = Feature.ORE
+				.configure(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, block.getDefaultState(), clusterSize.get()))
+				.createDecoratedFeature(placement.getKey().configure(placement.getValue()));
 
 		return Optional.of(createdFeature);
 	}

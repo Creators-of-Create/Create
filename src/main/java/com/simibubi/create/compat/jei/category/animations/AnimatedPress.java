@@ -2,7 +2,7 @@ package com.simibubi.create.compat.jei.category.animations;
 
 import static com.simibubi.create.foundation.utility.AnimationTickHolder.ticks;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
@@ -34,40 +34,40 @@ public class AnimatedPress extends AnimatedKinetics {
 
 	@Override
 	public void draw(int xOffset, int yOffset) {
-		GlStateManager.pushMatrix();
-		GlStateManager.enableDepthTest();
-		GlStateManager.translatef(xOffset, yOffset, 0);
-		GlStateManager.rotatef(-15.5f, 1, 0, 0);
-		GlStateManager.rotatef(22.5f, 0, 1, 0);
-		GlStateManager.translatef(-45, -5, 0);
-		GlStateManager.scaled(.45f, .45f, .45f);
+		RenderSystem.pushMatrix();
+		RenderSystem.enableDepthTest();
+		RenderSystem.translatef(xOffset, yOffset, 0);
+		RenderSystem.rotatef(-15.5f, 1, 0, 0);
+		RenderSystem.rotatef(22.5f, 0, 1, 0);
+		RenderSystem.translatef(-45, -5, 0);
+		RenderSystem.scaled(.45f, .45f, .45f);
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		ScreenElementRenderer.renderBlock(this::shaft);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		ScreenElementRenderer.renderBlock(this::body);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		ScreenElementRenderer.renderModel(this::head);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 		
 		if (basin) {
-			GlStateManager.pushMatrix();
+			RenderSystem.pushMatrix();
 			ScreenElementRenderer.renderBlock(this::basin);
-			GlStateManager.popMatrix();
+			RenderSystem.popMatrix();
 		}
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	private BlockState shaft() {
 		float t = 25;
-		GlStateManager.translatef(t, -t, -t);
-		GlStateManager.rotated(getCurrentAngle() * 2, 1, 0, 0);
-		GlStateManager.translatef(-t, t, t);
+		RenderSystem.translatef(t, -t, -t);
+		RenderSystem.rotated(getCurrentAngle() * 2, 1, 0, 0);
+		RenderSystem.translatef(-t, t, t);
 		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.Z);
 	}
 
@@ -89,12 +89,12 @@ public class AnimatedPress extends AnimatedKinetics {
 		} else {
 			verticalOffset = 0;
 		}
-		GlStateManager.translated(0, -verticalOffset * 50, 0);
+		RenderSystem.translated(0, -verticalOffset * 50, 0);
 		return AllBlockPartials.MECHANICAL_PRESS_HEAD.get();
 	}
 	
 	private BlockState basin() {
-		GlStateManager.translatef(0, 85, 0);
+		RenderSystem.translatef(0, 85, 0);
 		return AllBlocks.BASIN.get().getDefaultState();
 	}
 

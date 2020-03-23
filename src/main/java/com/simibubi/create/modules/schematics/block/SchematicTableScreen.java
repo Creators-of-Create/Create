@@ -6,7 +6,7 @@ import static com.simibubi.create.ScreenResources.SCHEMATIC_TABLE_PROGRESS;
 import java.nio.file.Paths;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.ScreenResources;
@@ -114,32 +114,32 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		int width = (int) (SCHEMATIC_TABLE_PROGRESS.width
 				* MathHelper.lerp(partialTicks, lastChasingProgress, chasingProgress));
 		int height = SCHEMATIC_TABLE_PROGRESS.height;
-		GlStateManager.disableLighting();
+		RenderSystem.disableLighting();
 		blit(mainLeft + 94, mainTop + 56, SCHEMATIC_TABLE_PROGRESS.startX, SCHEMATIC_TABLE_PROGRESS.startY, width,
 				height);
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 
-		GlStateManager.enableBlend();
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.enableAlphaTest();
+		RenderSystem.enableBlend();
+		RenderSystem.enableRescaleNormal();
+		RenderSystem.enableAlphaTest();
 		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.alphaFunc(516, 0.1F);
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.alphaFunc(516, 0.1F);
+		RenderSystem.blendFunc(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		GlStateManager.translated(mainLeft + 270, mainTop + 100, 200);
-		GlStateManager.rotatef(50, -.5f, 1, -.2f);
-		GlStateManager.scaled(50, -50, 50);
+		RenderSystem.translated(mainLeft + 270, mainTop + 100, 200);
+		RenderSystem.rotatef(50, -.5f, 1, -.2f);
+		RenderSystem.scaled(50, -50, 50);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		minecraft.getBlockRendererDispatcher().renderBlockBrightness(AllBlocks.SCHEMATIC_TABLE.get().getDefaultState(),
 				1);
 
-		GlStateManager.disableAlphaTest();
-		GlStateManager.disableRescaleNormal();
+		RenderSystem.disableAlphaTest();
+		RenderSystem.disableRescaleNormal();
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class OxidizingBlock extends Block {
 
@@ -35,7 +35,7 @@ public class OxidizingBlock extends Block {
 	}
 
 	@Override
-	public void randomTick(BlockState state, World worldIn, BlockPos pos, Random random) {
+	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
 		if (worldIn.getRandom().nextFloat() <= chance) {
 			int currentState = state.get(OXIDIZATION);
 			boolean canIncrease = false;

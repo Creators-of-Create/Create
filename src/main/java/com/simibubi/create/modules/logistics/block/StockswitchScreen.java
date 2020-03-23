@@ -4,7 +4,7 @@ import static com.simibubi.create.ScreenResources.STOCKSWITCH;
 
 import java.util.Arrays;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
@@ -103,10 +103,10 @@ public class StockswitchScreen extends AbstractSimiScreen {
 
 		ScreenResources cursor = te.powered ? ScreenResources.STOCKSWITCH_CURSOR_ON
 				: ScreenResources.STOCKSWITCH_CURSOR_OFF;
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef((cursorPos * (sprite.width - 20) + 10), 0, 0);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef((cursorPos * (sprite.width - 20) + 10), 0, 0);
 		cursor.draw(this, guiLeft - 4, guiTop + 24);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
 		ScreenElementRenderer.renderBlock(this::getRenderedBlock);
 	}
@@ -137,8 +137,8 @@ public class StockswitchScreen extends AbstractSimiScreen {
 	}
 
 	public BlockState getRenderedBlock() {
-		GlStateManager.translated(guiLeft + STOCKSWITCH.width + 50, guiTop + 100, 0);
-		GlStateManager.rotatef(50, -.5f, 1, -.2f);
+		RenderSystem.translated(guiLeft + STOCKSWITCH.width + 50, guiTop + 100, 0);
+		RenderSystem.rotatef(50, -.5f, 1, -.2f);
 		return AllBlocks.STOCKSWITCH.get().getDefaultState();
 	}
 

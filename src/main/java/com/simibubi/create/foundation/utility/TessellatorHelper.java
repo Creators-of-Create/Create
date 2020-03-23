@@ -2,7 +2,9 @@ package com.simibubi.create.foundation.utility;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -20,30 +22,30 @@ public class TessellatorHelper {
 
 	public static void prepareForDrawing() {
 		Minecraft mc = Minecraft.getInstance();
-		GlStateManager.pushMatrix();
-		GlStateManager.pushLightingAttributes();
-		GlStateManager.enableBlend();
-		GlStateManager.enableAlphaTest();
-		GlStateManager.color4f(1, 1, 1, 1);
+		RenderSystem.pushMatrix();
+		RenderSystem.pushLightingAttributes();
+		RenderSystem.enableBlend();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.color4f(1, 1, 1, 1);
 
 		ActiveRenderInfo renderInfo = mc.gameRenderer.getActiveRenderInfo();
 		Vec3d view = renderInfo.getProjectedView();
-		GlStateManager.translated(-view.x, -view.y, -view.z);
+		RenderSystem.translated(-view.x, -view.y, -view.z);
 	}
 
 	public static void prepareFastRender() {
 		Minecraft.getInstance().textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GlStateManager.enableBlend();
-		GlStateManager.disableCull();
+		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		RenderSystem.enableBlend();
+		RenderSystem.disableCull();
 
 		if (net.minecraft.client.Minecraft.isAmbientOcclusionEnabled())
-			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+			RenderSystem.shadeModel(GL11.GL_SMOOTH);
 		else
-			GlStateManager.shadeModel(GL11.GL_FLAT);
+			RenderSystem.shadeModel(GL11.GL_FLAT);
 
-		GlStateManager.color3f(1, 1, 1);
+		RenderSystem.color3f(1, 1, 1);
 	}
 	
 	public static void fightZFighting(int id) {
@@ -52,7 +54,7 @@ public class TessellatorHelper {
 		float xNudge = (((float) (randomBits >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 		float yNudge = (((float) (randomBits >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 		float zNudge = (((float) (randomBits >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-		GlStateManager.translatef(xNudge, yNudge, zNudge);
+		RenderSystem.translatef(xNudge, yNudge, zNudge);
 	}
 
 	public static void begin() {
@@ -68,66 +70,63 @@ public class TessellatorHelper {
 	}
 
 	public static void cleanUpAfterDrawing() {
-		GlStateManager.disableAlphaTest();
-		GlStateManager.disableBlend();
-		GlStateManager.popAttributes();
-		GlStateManager.popMatrix();
+		RenderSystem.disableAlphaTest();
+		RenderSystem.disableBlend();
+		RenderSystem.popAttributes();
+		RenderSystem.popMatrix();
 	}
 
 	public static void drawString(String str, float x, float y, float z, boolean scalesUp, boolean hasDepth) {
 		Minecraft mc = Minecraft.getInstance();
-		float pitch = mc.getRenderManager().playerViewX;
-		float yaw = mc.getRenderManager().playerViewY;
+		ActiveRenderInfo view = mc.gameRenderer.getActiveRenderInfo();
+		float pitch = view.getPitch();
+		float yaw = view.getYaw();
 		boolean isThirdPersonFrontal = mc.gameSettings.thirdPersonView == 2;
 
-		GlStateManager.pushMatrix();
-		GlStateManager.pushLightingAttributes();
-		GlStateManager.translatef(x, y, z);
-		GlStateManager.normal3f(0.0F, 1.0F, 0.0F);
-		GlStateManager.rotatef(-yaw, 0.0F, 1.0F, 0.0F);
-		GlStateManager.rotatef((float) (isThirdPersonFrontal ? -1 : 1) * pitch, 1.0F, 0.0F, 0.0F);
-		GlStateManager.scalef(-0.025F, -0.025F, 0.025F);
-		GlStateManager.disableLighting();
+		RenderSystem.pushMatrix();
+		RenderSystem.pushLightingAttributes();
+		RenderSystem.translatef(x, y, z);
+		RenderSystem.normal3f(0.0F, 1.0F, 0.0F);
+		RenderSystem.rotatef(-yaw, 0.0F, 1.0F, 0.0F);
+		RenderSystem.rotatef((float) (isThirdPersonFrontal ? -1 : 1) * pitch, 1.0F, 0.0F, 0.0F);
+		RenderSystem.scalef(-0.025F, -0.025F, 0.025F);
+		RenderSystem.disableLighting();
 		if (!hasDepth) {
-			GlStateManager.depthMask(false);
-			GlStateManager.disableDepthTest();
+			RenderSystem.depthMask(false);
+			RenderSystem.disableDepthTest();
 		}
 
-		GlStateManager.enableBlend();
-		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
-				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
-				GlStateManager.DestFactor.ZERO);
+		RenderSystem.enableBlend();
+		RenderSystem.blendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 		int i = mc.fontRenderer.getStringWidth(str) / 2;
-		GlStateManager.disableTexture();
+		RenderSystem.disableTexture();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-		bufferbuilder.pos((double) (-i - 3), (double) (-3), 0.0D).color(1F, 1F, 1F, .5F).endVertex();
-		bufferbuilder.pos((double) (-i - 3), (double) (10), 0.0D).color(1F, 1F, 1F, .5F).endVertex();
-		bufferbuilder.pos((double) (i + 3), (double) (10), 0.0D).color(1F, 1F, 1F, .5F).endVertex();
-		bufferbuilder.pos((double) (i + 3), (double) (-3), 0.0D).color(1F, 1F, 1F, .5F).endVertex();
+		bufferbuilder.vertex((double) (-i - 3), (double) (-3), 0.0D).color(1F, 1F, 1F, .5F).endVertex();
+		bufferbuilder.vertex((double) (-i - 3), (double) (10), 0.0D).color(1F, 1F, 1F, .5F).endVertex();
+		bufferbuilder.vertex((double) (i + 3), (double) (10), 0.0D).color(1F, 1F, 1F, .5F).endVertex();
+		bufferbuilder.vertex((double) (i + 3), (double) (-3), 0.0D).color(1F, 1F, 1F, .5F).endVertex();
 
 		if (scalesUp) {
 			double distance = mc.player.getEyePosition(mc.getRenderPartialTicks()).squareDistanceTo(x, y, z);
 			double scale = distance * fontScale;
-			GlStateManager.scaled(2 + scale, 2 + scale, 2 + scale);
+			RenderSystem.scaled(2 + scale, 2 + scale, 2 + scale);
 		}
 		tessellator.draw();
-		GlStateManager.enableTexture();
+		RenderSystem.enableTexture();
 		if (hasDepth) {
-			GlStateManager.translatef(0, 0, -0.125f);
+			RenderSystem.translatef(0, 0, -0.125f);
 		}
 
 		mc.fontRenderer.drawString(str, -mc.fontRenderer.getStringWidth(str) / 2, 0, 0);
-		GlStateManager.enableDepthTest();
+		RenderSystem.enableDepthTest();
 
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GlStateManager.depthMask(true);
-		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
-				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.SRC_ALPHA,
-				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.popMatrix();
-		GlStateManager.popAttributes();
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.depthMask(true);
+		RenderSystem.blendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.popMatrix();
+		RenderSystem.popAttributes();
 	}
 
 	public static void cube(BufferBuilder bufferBuilder, BlockPos pos, BlockPos size, double scale,
@@ -246,7 +245,7 @@ public class TessellatorHelper {
 	}
 
 	private static void posTexShift(BufferBuilder bufferBuilder, Vec3d shift, BlockPos pos, double u, double v) {
-		bufferBuilder.pos(shift.x + pos.getX(), shift.y + pos.getY(), shift.z + pos.getZ()).tex(u, v).endVertex();
+		bufferBuilder.vertex(shift.x + pos.getX(), shift.y + pos.getY(), shift.z + pos.getZ()).texture((float) u, (float) v).endVertex();
 	}
 
 }

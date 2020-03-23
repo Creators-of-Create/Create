@@ -7,7 +7,7 @@ import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
@@ -55,8 +55,8 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 	protected void renderItem(DeployerTileEntity te, double x, double y, double z, float partialTicks) {
 		BlockState deployerState = te.getBlockState();
 		Vec3d offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(offset.x + x, offset.y + y, offset.z + z);
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(offset.x + x, offset.y + y, offset.z + z);
 
 		Direction facing = deployerState.get(FACING);
 		boolean punching = te.mode == Mode.PUNCH;
@@ -65,14 +65,14 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
 		boolean displayMode = facing == Direction.UP && te.getSpeed() == 0 && !punching;
 
-		GlStateManager.rotatef(yRot, 0, 1, 0);
+		RenderSystem.rotatef(yRot, 0, 1, 0);
 		if (!displayMode) {
-			GlStateManager.rotatef(zRot, 1, 0, 0);
-			GlStateManager.translated(0, 0, -11 / 16f);
+			RenderSystem.rotatef(zRot, 1, 0, 0);
+			RenderSystem.translated(0, 0, -11 / 16f);
 		}
 
 		if (punching)
-			GlStateManager.translatef(0, 1 / 8f, -1 / 16f);
+			RenderSystem.translatef(0, 1 / 8f, -1 / 16f);
 
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
@@ -82,19 +82,19 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 
 		if (displayMode) {
 			float scale = isBlockItem ? 1.25f : 1;
-			GlStateManager.translated(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
-			GlStateManager.scaled(scale, scale, scale);
+			RenderSystem.translated(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
+			RenderSystem.scaled(scale, scale, scale);
 			transform = TransformType.GROUND;
-			GlStateManager.rotatef(AnimationTickHolder.getRenderTick(), 0, 1, 0);
+			RenderSystem.rotatef(AnimationTickHolder.getRenderTick(), 0, 1, 0);
 
 		} else {
 			float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
-			GlStateManager.scaled(scale, scale, scale);
+			RenderSystem.scaled(scale, scale, scale);
 			transform = punching ? TransformType.THIRD_PERSON_RIGHT_HAND : TransformType.FIXED;
 		}
 
 		itemRenderer.renderItem(te.heldItem, transform);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	protected void renderComponents(DeployerTileEntity te, double x, double y, double z, float partialTicks) {

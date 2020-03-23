@@ -2,7 +2,7 @@ package com.simibubi.create.modules.curiosities.symmetry;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -126,48 +126,48 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		font.drawString(orientation, x - 5, y + 20, ScreenResources.FONT_COLOR);
 
 		minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		GlStateManager.enableBlend();
+		RenderSystem.enableBlend();
 
 		renderBlock();
 		renderBlock();
 
-		GlStateManager.pushLightingAttributes();
-		GlStateManager.pushMatrix();
+		RenderSystem.pushLightingAttributes();
+		RenderSystem.pushMatrix();
 
 		RenderHelper.enableStandardItemLighting();
-		GlStateManager.enableBlend();
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.enableAlphaTest();
-		GlStateManager.alphaFunc(516, 0.1F);
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.enableBlend();
+		RenderSystem.enableRescaleNormal();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.alphaFunc(516, 0.1F);
+		RenderSystem.blendFunc(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		GlStateManager.translated((this.width - this.sWidth) / 2 + 250, this.height / 2 + this.sHeight / 2, 100);
-		GlStateManager.rotatef(-30, .4f, 0, -.2f);
-		GlStateManager.rotatef(90 + 0.2f * animationProgress, 0, 1, 0);
-		GlStateManager.scaled(100, -100, 100);
+		RenderSystem.translated((this.width - this.sWidth) / 2 + 250, this.height / 2 + this.sHeight / 2, 100);
+		RenderSystem.rotatef(-30, .4f, 0, -.2f);
+		RenderSystem.rotatef(90 + 0.2f * animationProgress, 0, 1, 0);
+		RenderSystem.scaled(100, -100, 100);
 		itemRenderer.renderItem(wand, itemRenderer.getModelWithOverrides(wand));
 
-		GlStateManager.disableAlphaTest();
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.disableLighting();
+		RenderSystem.disableAlphaTest();
+		RenderSystem.disableRescaleNormal();
+		RenderSystem.disableLighting();
 
-		GlStateManager.popMatrix();
-		GlStateManager.popAttributes();
+		RenderSystem.popMatrix();
+		RenderSystem.popAttributes();
 	}
 
 	protected void renderBlock() {
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		GlStateManager.translated(guiLeft + 15, guiTop - 117, 20);
-		GlStateManager.rotatef(-22.5f, .3f, 1f, 0f);
-		GlStateManager.scaled(32, -32, 32);
+		RenderSystem.translated(guiLeft + 15, guiTop - 117, 20);
+		RenderSystem.rotatef(-22.5f, .3f, 1f, 0f);
+		RenderSystem.scaled(32, -32, 32);
 		minecraft.getBlockRendererDispatcher().renderBlock(currentElement.getModel(), new BlockPos(0, -5, 0),
 				minecraft.world, buffer, minecraft.world.rand, EmptyModelData.INSTANCE);
 
 		Tessellator.getInstance().draw();
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	@Override

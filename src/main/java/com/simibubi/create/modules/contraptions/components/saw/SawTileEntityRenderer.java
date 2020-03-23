@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.components.saw;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
@@ -49,7 +49,7 @@ public class SawTileEntityRenderer extends SafeTileEntityRenderer<SawTileEntity>
 		boolean processingMode = te.getBlockState().get(SawBlock.FACING) == Direction.UP;
 		if (processingMode && !te.inventory.isEmpty()) {
 			boolean alongZ = !te.getBlockState().get(SawBlock.AXIS_ALONG_FIRST_COORDINATE);
-			GlStateManager.pushMatrix();
+			RenderSystem.pushMatrix();
 
 			boolean moving = te.inventory.recipeDuration != 0;
 			float offset = moving ? (float) (te.inventory.remainingTime) / te.inventory.recipeDuration : 0;
@@ -66,15 +66,15 @@ public class SawTileEntityRenderer extends SafeTileEntityRenderer<SawTileEntity>
 			IBakedModel modelWithOverrides = itemRenderer.getModelWithOverrides(stack);
 			boolean blockItem = modelWithOverrides.isGui3d();
 
-			GlStateManager.translated(x + (alongZ ? offset : .5), y + (blockItem ? .925f : 13f / 16f),
+			RenderSystem.translated(x + (alongZ ? offset : .5), y + (blockItem ? .925f : 13f / 16f),
 					z + (alongZ ? .5 : offset));
 
-			GlStateManager.scaled(.5, .5, .5);
+			RenderSystem.scaled(.5, .5, .5);
 			if (alongZ)
-				GlStateManager.rotated(90, 0, 1, 0);
-			GlStateManager.rotated(90, 1, 0, 0);
+				RenderSystem.rotated(90, 0, 1, 0);
+			RenderSystem.rotated(90, 1, 0, 0);
 			itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
-			GlStateManager.popMatrix();
+			RenderSystem.popMatrix();
 		}
 	}
 

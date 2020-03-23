@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Matrix4f;
-
-import org.apache.commons.lang3.tuple.Pair;
-
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -48,9 +45,9 @@ public abstract class CustomRenderedItemModel extends WrappedBakedModel {
 	}
 
 	@Override
-	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
+	public IBakedModel handlePerspective(TransformType cameraTransformType, MatrixStack mat) {
 		currentPerspective = cameraTransformType;
-		return super.handlePerspective(cameraTransformType);
+		return super.handlePerspective(cameraTransformType, mat);
 	}
 
 	protected void addPartials(String... partials) {

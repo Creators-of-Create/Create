@@ -30,7 +30,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 
 	protected Direction getFacingForPlacement(BlockItemUseContext context) {
 		Direction facing = context.getNearestLookingDirection().getOpposite();
-		if (context.isPlacerSneaking())
+		if (context.getPlayer().isSneaking())
 			facing = facing.getOpposite();
 		return facing;
 	}

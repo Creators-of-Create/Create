@@ -24,7 +24,7 @@ public class CancelPlayerFallPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayerEntity sender = context.get().getSender();
-			sender.fall(sender.fallDistance, 1.0F);
+			sender.handleFallDamage(sender.fallDistance, 1.0F);
 			sender.fallDistance = 0;
 			sender.onGround = true;
 		});

@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
@@ -24,30 +24,30 @@ public class AnimatedSaw extends AnimatedKinetics {
 
 	@Override
 	public void draw(int xOffset, int yOffset) {
-		GlStateManager.pushMatrix();
-		GlStateManager.enableDepthTest();
-		GlStateManager.translatef(xOffset, yOffset, 0);
-		GlStateManager.rotatef(-15.5f, 1, 0, 0);
-		GlStateManager.rotatef(22.5f, 0, 1, 0);
-		GlStateManager.translatef(-45, -5, 0);
-		GlStateManager.scaled(.6f, .6f, .6f);
+		RenderSystem.pushMatrix();
+		RenderSystem.enableDepthTest();
+		RenderSystem.translatef(xOffset, yOffset, 0);
+		RenderSystem.rotatef(-15.5f, 1, 0, 0);
+		RenderSystem.rotatef(22.5f, 0, 1, 0);
+		RenderSystem.translatef(-45, -5, 0);
+		RenderSystem.scaled(.6f, .6f, .6f);
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		ScreenElementRenderer.renderBlock(this::shaft);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		ScreenElementRenderer.renderBlock(this::block);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	private BlockState shaft() {
 		float t = 25;
-		GlStateManager.translatef(t, -t, t);
-		GlStateManager.rotated(-getCurrentAngle() * 2, 0, 0, 1);
-		GlStateManager.translatef(-t, t, -t);
+		RenderSystem.translatef(t, -t, t);
+		RenderSystem.rotated(-getCurrentAngle() * 2, 0, 0, 1);
+		RenderSystem.translatef(-t, t, -t);
 		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.X);
 	}
 

@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.curiosities.tools;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -28,21 +28,21 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 		boolean leftHand = perspective == TransformType.FIRST_PERSON_LEFT_HAND;
 		boolean firstPerson = leftHand || perspective == TransformType.FIRST_PERSON_RIGHT_HAND;
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(.5f, .5f, .5f);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(.5f, .5f, .5f);
 
 		CompoundNBT tag = stack.getOrCreateTag();
 		boolean jeiMode = tag.contains("JEI");
 
 		if (tag.contains("Polishing")) {
-			GlStateManager.pushMatrix();
+			RenderSystem.pushMatrix();
 
 			if (perspective == TransformType.GUI) {
-				GlStateManager.translatef(0.0F, .2f, 1.0F);
-				GlStateManager.scalef(.75f, .75f, .75f);
+				RenderSystem.translatef(0.0F, .2f, 1.0F);
+				RenderSystem.scalef(.75f, .75f, .75f);
 			} else {
 				int modifier = leftHand ? -1 : 1;
-				GlStateManager.rotatef(modifier * 40, 0, 1, 0);
+				RenderSystem.rotatef(modifier * 40, 0, 1, 0);
 			}
 
 			// Reverse bobbing
@@ -52,31 +52,31 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 				float bobbing = -MathHelper.abs(MathHelper.cos(time / 4.0F * (float) Math.PI) * 0.1F);
 
 				if (perspective == TransformType.GUI)
-					GlStateManager.translatef(bobbing, bobbing, 0.0F);
+					RenderSystem.translatef(bobbing, bobbing, 0.0F);
 				else
-					GlStateManager.translatef(0.0f, bobbing, 0.0F);
+					RenderSystem.translatef(0.0f, bobbing, 0.0F);
 			}
 
 			ItemStack toPolish = ItemStack.read(tag.getCompound("Polishing"));
 			itemRenderer.renderItem(toPolish, itemRenderer.getModelWithOverrides(toPolish).getBakedModel());
 
-			GlStateManager.popMatrix();
+			RenderSystem.popMatrix();
 		}
 
 		if (firstPerson) {
 			int itemInUseCount = player.getItemInUseCount();
 			if (itemInUseCount > 0) {
 				int modifier = leftHand ? -1 : 1;
-				GlStateManager.translatef(modifier * .5f, 0, -.25f);
-				GlStateManager.rotatef(modifier * 40, 0, 0, 1);
-				GlStateManager.rotatef(modifier * 10, 1, 0, 0);
-				GlStateManager.rotatef(modifier * 90, 0, 1, 0);
+				RenderSystem.translatef(modifier * .5f, 0, -.25f);
+				RenderSystem.rotatef(modifier * 40, 0, 0, 1);
+				RenderSystem.rotatef(modifier * 10, 1, 0, 0);
+				RenderSystem.rotatef(modifier * 90, 0, 1, 0);
 			}
 		}
 
 		itemRenderer.renderItem(stack, mainModel.getBakedModel());
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	public static class SandPaperModel extends CustomRenderedItemModel {

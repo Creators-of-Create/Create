@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -46,12 +46,12 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		
 		super.render(mouseX, mouseY, partialTicks);
 		
-		GlStateManager.enableAlphaTest();
-		GlStateManager.enableBlend();
-		GlStateManager.disableRescaleNormal();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.enableBlend();
+		RenderSystem.disableRescaleNormal();
 		RenderHelper.disableStandardItemLighting();
-		GlStateManager.disableLighting();
-		GlStateManager.disableDepthTest();
+		RenderSystem.disableLighting();
+		RenderSystem.disableDepthTest();
 		
 		for (Widget widget : widgets)
 			widget.render(mouseX, mouseY, partialTicks);
@@ -141,11 +141,11 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 			@Nullable String text, int textColor) {
 		if (!stack.isEmpty()) {
 			if (stack.getItem().showDurabilityBar(stack)) {
-				GlStateManager.disableLighting();
-				GlStateManager.disableDepthTest();
-				GlStateManager.disableTexture();
-				GlStateManager.disableAlphaTest();
-				GlStateManager.disableBlend();
+				RenderSystem.disableLighting();
+				RenderSystem.disableDepthTest();
+				RenderSystem.disableTexture();
+				RenderSystem.disableAlphaTest();
+				RenderSystem.disableBlend();
 				Tessellator tessellator = Tessellator.getInstance();
 				BufferBuilder bufferbuilder = tessellator.getBuffer();
 				double health = stack.getItem().getDurabilityForDisplay(stack);
@@ -154,40 +154,40 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 				this.draw(bufferbuilder, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
 				this.draw(bufferbuilder, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255,
 						255);
-				GlStateManager.enableBlend();
-				GlStateManager.enableAlphaTest();
-				GlStateManager.enableTexture();
-				GlStateManager.enableLighting();
-				GlStateManager.enableDepthTest();
+				RenderSystem.enableBlend();
+				RenderSystem.enableAlphaTest();
+				RenderSystem.enableTexture();
+				RenderSystem.enableLighting();
+				RenderSystem.enableDepthTest();
 			}
 
 			if (stack.getCount() != 1 || text != null) {
 				String s = text == null ? String.valueOf(stack.getCount()) : text;
-				GlStateManager.disableLighting();
-				GlStateManager.disableDepthTest();
-				GlStateManager.disableBlend();
-				GlStateManager.pushMatrix();
+				RenderSystem.disableLighting();
+				RenderSystem.disableDepthTest();
+				RenderSystem.disableBlend();
+				RenderSystem.pushMatrix();
 
-				int guiScaleFactor = (int) minecraft.mainWindow.getGuiScaleFactor();
-				GlStateManager.translated((float) (xPosition + 16.5f), (float) (yPosition + 16.5f), 0);
+				int guiScaleFactor = (int) minecraft.getWindow().getGuiScaleFactor();
+				RenderSystem.translated((float) (xPosition + 16.5f), (float) (yPosition + 16.5f), 0);
 				double scale = getItemCountTextScale();
 
-				GlStateManager.scaled(scale, scale, 0);
-				GlStateManager.translated(-fr.getStringWidth(s) - (guiScaleFactor > 1 ? 0 : -.5f),
+				RenderSystem.scaled(scale, scale, 0);
+				RenderSystem.translated(-fr.getStringWidth(s) - (guiScaleFactor > 1 ? 0 : -.5f),
 						-font.FONT_HEIGHT + (guiScaleFactor > 1 ? 1 : 1.75f), 0);
 				fr.drawStringWithShadow(s, 0, 0, textColor);
 
-				GlStateManager.popMatrix();
-				GlStateManager.enableBlend();
-				GlStateManager.enableLighting();
-				GlStateManager.enableDepthTest();
-				GlStateManager.enableBlend();
+				RenderSystem.popMatrix();
+				RenderSystem.enableBlend();
+				RenderSystem.enableLighting();
+				RenderSystem.enableDepthTest();
+				RenderSystem.enableBlend();
 			}
 		}
 	}
 
 	public double getItemCountTextScale() {
-		int guiScaleFactor = (int) minecraft.mainWindow.getGuiScaleFactor();
+		int guiScaleFactor = (int) minecraft.getWindow().getGuiScaleFactor();
 		double scale = 1;
 		switch (guiScaleFactor) {
 		case 1:
@@ -211,10 +211,10 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue,
 			int alpha) {
 		renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-		renderer.pos((double) (x + 0), (double) (y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
-		renderer.pos((double) (x + 0), (double) (y + height), 0.0D).color(red, green, blue, alpha).endVertex();
-		renderer.pos((double) (x + width), (double) (y + height), 0.0D).color(red, green, blue, alpha).endVertex();
-		renderer.pos((double) (x + width), (double) (y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
+		renderer.vertex((double) (x + 0), (double) (y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
+		renderer.vertex((double) (x + 0), (double) (y + height), 0.0D).color(red, green, blue, alpha).endVertex();
+		renderer.vertex((double) (x + width), (double) (y + height), 0.0D).color(red, green, blue, alpha).endVertex();
+		renderer.vertex((double) (x + width), (double) (y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
 		Tessellator.getInstance().draw();
 	}
 

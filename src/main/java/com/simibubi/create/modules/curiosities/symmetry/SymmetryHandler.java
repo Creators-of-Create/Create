@@ -4,7 +4,7 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.EmptyMirror;
@@ -97,12 +97,12 @@ public class SymmetryHandler {
 
 				BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-				GlStateManager.pushMatrix();
-				GlStateManager.translated(0, yShift + .2f, 0);
+				RenderSystem.pushMatrix();
+				RenderSystem.translated(0, yShift + .2f, 0);
 				mc.getBlockRendererDispatcher().renderBlock(mirror.getModel(), pos, player.world, buffer,
 						player.world.getRandom(), EmptyModelData.INSTANCE);
 				Tessellator.getInstance().draw();
-				GlStateManager.popMatrix();
+				RenderSystem.popMatrix();
 				TessellatorHelper.cleanUpAfterDrawing();
 
 			}

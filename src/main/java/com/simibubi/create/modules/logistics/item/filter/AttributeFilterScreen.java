@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
@@ -136,15 +136,15 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	@Override
 	public void renderWindowForeground(int mouseX, int mouseY, float partialTicks) {
 		ItemStack stack = container.filterInventory.getStackInSlot(1);
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(0.0F, 0.0F, 32.0F);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(0.0F, 0.0F, 32.0F);
 		this.blitOffset = 200;
 		this.itemRenderer.zLevel = 200.0F;
 		this.itemRenderer.renderItemOverlayIntoGUI(font, stack, guiLeft + 59, guiTop + 56,
 				String.valueOf(selectedAttributes.size() - 1));
 		this.blitOffset = 0;
 		this.itemRenderer.zLevel = 0.0F;
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
 		super.renderWindowForeground(mouseX, mouseY, partialTicks);
 	}

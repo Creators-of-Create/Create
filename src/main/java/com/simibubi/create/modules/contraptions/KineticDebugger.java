@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -29,18 +29,18 @@ public class KineticDebugger {
 		VoxelShape shape = world.getBlockState(toOutline).getShape(world, toOutline);
 
 		TessellatorHelper.prepareForDrawing();
-		GlStateManager.disableTexture();
-		GlStateManager.lineWidth(3);
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(toOutline.getX(), toOutline.getY(), toOutline.getZ());
+		RenderSystem.disableTexture();
+		RenderSystem.lineWidth(3);
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(toOutline.getX(), toOutline.getY(), toOutline.getZ());
 		float f = 1 + 1 / 128f;
-		GlStateManager.scaled(f, f, f);
+		RenderSystem.scaled(f, f, f);
 
 		WorldRenderer.drawShape(shape, 0, 0, 0, te.hasSource() ? .5f : 1, .75f, .75f, 1);
 
-		GlStateManager.popMatrix();
-		GlStateManager.lineWidth(1);
-		GlStateManager.enableTexture();
+		RenderSystem.popMatrix();
+		RenderSystem.lineWidth(1);
+		RenderSystem.enableTexture();
 		TessellatorHelper.cleanUpAfterDrawing();
 	}
 

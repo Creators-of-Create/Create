@@ -12,7 +12,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -41,7 +41,7 @@ public class CTGlassPaneBlock extends GlassPaneBlock implements IHaveConnectedTe
 		for (CTSpriteShiftEntry ctSpriteShiftEntry : ctGlass.getBehaviour().getAllCTShifts()) {
 			return new StandardCTBehaviour(ctSpriteShiftEntry) {
 				@Override
-				public boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader,
+				public boolean connectsTo(BlockState state, BlockState other, ILightReader reader,
 						BlockPos pos, BlockPos otherPos, Direction face) {
 					return state.getBlock() == other.getBlock();
 				}

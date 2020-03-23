@@ -82,7 +82,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 		BlockPos placedOnPos = context.getPos().offset(face.getOpposite());
 		BlockState blockState = context.getWorld().getBlockState(placedOnPos);
 
-		if ((blockState.getBlock() != this) || context.isPlacerSneaking()) {
+		if ((blockState.getBlock() != this) || context.getPlayer().isSneaking()) {
 			BlockState stateForPlacement = super.getStateForPlacement(context);
 			Direction direction = stateForPlacement.get(HORIZONTAL_FACING);
 			if (direction != face)
@@ -230,10 +230,10 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 		return false;
 	}
 
-	@Override
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.CUTOUT_MIPPED;
-	}
+//	@Override // TODO 1.15 register layer
+//	public BlockRenderLayer getRenderLayer() {
+//		return BlockRenderLayer.CUTOUT_MIPPED;
+//	}
 
 	@Override
 	public float getParticleTargetRadius() {

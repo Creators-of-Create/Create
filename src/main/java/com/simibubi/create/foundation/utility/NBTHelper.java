@@ -49,12 +49,12 @@ public class NBTHelper {
 	
 	public static ListNBT writeAABB(AxisAlignedBB bb) {
 		ListNBT bbtag = new ListNBT();
-		bbtag.add(new FloatNBT((float) bb.minX));
-		bbtag.add(new FloatNBT((float) bb.minY));
-		bbtag.add(new FloatNBT((float) bb.minZ));
-		bbtag.add(new FloatNBT((float) bb.maxX));
-		bbtag.add(new FloatNBT((float) bb.maxY));
-		bbtag.add(new FloatNBT((float) bb.maxZ));
+		bbtag.add(FloatNBT.of((float) bb.minX));
+		bbtag.add(FloatNBT.of((float) bb.minY));
+		bbtag.add(FloatNBT.of((float) bb.minZ));
+		bbtag.add(FloatNBT.of((float) bb.maxX));
+		bbtag.add(FloatNBT.of((float) bb.maxY));
+		bbtag.add(FloatNBT.of((float) bb.maxZ));
 		return bbtag;
 	}
 

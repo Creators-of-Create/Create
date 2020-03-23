@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.curiosities.zapper.terrainzapper;
 
 import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.modules.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.modules.curiosities.zapper.ZapperItemRenderer;
@@ -24,8 +24,8 @@ public class TerrainzapperItemRenderer extends ZapperItemRenderer {
 		float pt = Minecraft.getInstance().getRenderPartialTicks();
 		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(0.5F, 0.5F, 0.5F);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(0.5F, 0.5F, 0.5F);
 		float lastCoordx = GLX.lastBrightnessX;
 		float lastCoordy = GLX.lastBrightnessY;
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, Math.min(lastCoordx + 60, 240), Math.min(lastCoordy + 120, 240));
@@ -47,7 +47,7 @@ public class TerrainzapperItemRenderer extends ZapperItemRenderer {
 		float animation = MathHelper.clamp(MathHelper.lerp(pt, last, current) * 5, 0, 1);
 
 		// Core glows
-		GlStateManager.disableLighting();
+		RenderSystem.disableLighting();
 		float multiplier = MathHelper.sin(worldTime * 5);
 		if (mainHand || offHand) {
 			multiplier = animation;
@@ -56,7 +56,7 @@ public class TerrainzapperItemRenderer extends ZapperItemRenderer {
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, multiplier * 240, 120);
 		itemRenderer.renderItem(stack, mainModel.getPartial("terrain_core"));
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastCoordx, lastCoordy);
-		GlStateManager.enableLighting();
+		RenderSystem.enableLighting();
 
 		// Accelerator spins
 		float angle = worldTime * -25;
@@ -65,12 +65,12 @@ public class TerrainzapperItemRenderer extends ZapperItemRenderer {
 
 		angle %= 360;
 		float offset = -.155f;
-		GlStateManager.translatef(0, offset, 0);
-		GlStateManager.rotatef(angle, 0, 0, 1);
-		GlStateManager.translatef(0, -offset, 0);
+		RenderSystem.translatef(0, offset, 0);
+		RenderSystem.rotatef(angle, 0, 0, 1);
+		RenderSystem.translatef(0, -offset, 0);
 		itemRenderer.renderItem(stack, mainModel.getPartial("terrain_accelerator"));
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 }

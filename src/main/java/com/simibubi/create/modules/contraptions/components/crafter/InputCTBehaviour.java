@@ -15,7 +15,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 
 public class InputCTBehaviour extends ConnectedTextureBehaviour {
 
@@ -24,7 +24,7 @@ public class InputCTBehaviour extends ConnectedTextureBehaviour {
 	static final CTSpriteShiftEntry otherSide = CTSpriteShifter.get(CTType.HORIZONTAL, "crafter_side");
 
 	@Override
-	public boolean connectsTo(BlockState state, BlockState other, IEnviromentBlockReader reader, BlockPos pos,
+	public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos,
 			BlockPos otherPos, Direction face) {
 		if (state.getBlock() != other.getBlock())
 			return false;

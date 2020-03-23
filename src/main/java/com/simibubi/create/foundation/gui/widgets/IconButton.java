@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui.widgets;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.ScreenResources;
 
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ public class IconButton extends AbstractSimiWidget {
 						(isHovered) ? ScreenResources.BUTTON_HOVER : 
 							ScreenResources.BUTTON;
 			
-			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			Minecraft.getInstance().getTextureManager().bindTexture(buttonTextures);
 			blit(x, y, button.startX, button.startY, button.width, button.height);
 			Minecraft.getInstance().getTextureManager().bindTexture(iconTexture);

@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.foundation.type.Cuboid;
@@ -181,7 +181,7 @@ public class SchematicHologram {
 
 		if (state.getCount() > 0) {
 			state.getVertexFormat().startDrawing(MemoryUtil.memAddress(pair.getSecond()));
-			GlStateManager.drawArrays(state.getMode(), 0, state.getCount());
+			RenderSystem.drawArrays(state.getMode(), 0, state.getCount());
 			state.getVertexFormat().endDrawing();
 		}
 	}

@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.UUID;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.util.math.Vec3d;
 
@@ -49,11 +49,11 @@ public class ColorHelper {
 		int g = (color >> 8) & 0xFF;
 		int b = color & 0xFF;
 
-		GlStateManager.color4f(r / 256f, g / 256f, b / 256f, 1);
+		RenderSystem.color4f(r / 256f, g / 256f, b / 256f, 1);
 	}
 
 	public static void glResetColor() {
-		GlStateManager.color4f(1, 1, 1, 1);
+		RenderSystem.color4f(1, 1, 1, 1);
 	}
 
 	public static Vec3d getRGB(int color) {

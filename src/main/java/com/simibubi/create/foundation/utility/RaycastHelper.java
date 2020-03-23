@@ -43,9 +43,9 @@ public class RaycastHelper {
 	}
 
 	private static Vec3d getTraceOrigin(PlayerEntity playerIn) {
-		double d0 = playerIn.posX;
-		double d1 = playerIn.posY + (double) playerIn.getEyeHeight();
-		double d2 = playerIn.posZ;
+		double d0 = playerIn.getX();
+		double d1 = playerIn.getY() + (double) playerIn.getEyeHeight();
+		double d2 = playerIn.getZ();
 		Vec3d vec3d = new Vec3d(d0, d1, d2);
 		return vec3d;
 	}

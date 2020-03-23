@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.behaviour;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.utility.Lang;
@@ -67,19 +67,19 @@ public class ValueBox {
 			super.render(highlighted);
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
 			String countString = count == 0 ? "*" : count + "";
-			GlStateManager.translated(17.5f, -5f, 7f);
+			RenderSystem.translated(17.5f, -5f, 7f);
 
 			boolean isFilter = stack.getItem() instanceof FilterItem;
 			if (isFilter)
-				GlStateManager.translated(3, 8, 7.25f);
+				RenderSystem.translated(3, 8, 7.25f);
 			else
-				GlStateManager.translated(-7 - font.getStringWidth(countString), 10, 10 + 1 / 4f);
+				RenderSystem.translated(-7 - font.getStringWidth(countString), 10, 10 + 1 / 4f);
 
 			double scale = 1.5;
-			GlStateManager.rotated(0, 1, 0, 0);
-			GlStateManager.scaled(scale, scale, scale);
+			RenderSystem.rotated(0, 1, 0, 0);
+			RenderSystem.scaled(scale, scale, scale);
 			font.drawString(countString, 0, 0, isFilter ? 0xFFFFFF : 0xEDEDED);
-			GlStateManager.translated(0, 0, -1 / 16f);
+			RenderSystem.translated(0, 0, -1 / 16f);
 			font.drawString(countString, 1 - 1 / 8f, 1 - 1 / 8f, 0x4F4F4F);
 		}
 
@@ -98,8 +98,8 @@ public class ValueBox {
 			super.render(highlighted);
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
 			double scale = 4;
-			GlStateManager.scaled(scale, scale, 1);
-			GlStateManager.translated(-4, -4, 5);
+			RenderSystem.scaled(scale, scale, 1);
+			RenderSystem.translated(-4, -4, 5);
 
 			int stringWidth = font.getStringWidth(text);
 			float numberScale = (float) font.FONT_HEIGHT / stringWidth;
@@ -108,8 +108,8 @@ public class ValueBox {
 				numberScale = numberScale / 2;
 			float verticalMargin = (stringWidth - font.FONT_HEIGHT) / 2f;
 
-			GlStateManager.scaled(numberScale, numberScale, numberScale);
-			GlStateManager.translated(singleDigit ? stringWidth / 2 : 0, singleDigit ? -verticalMargin : verticalMargin,
+			RenderSystem.scaled(numberScale, numberScale, numberScale);
+			RenderSystem.translated(singleDigit ? stringWidth / 2 : 0, singleDigit ? -verticalMargin : verticalMargin,
 					0);
 
 			ValueBoxRenderer.renderText(font, text, 0xEDEDED, 0x4f4f4f);
@@ -130,13 +130,13 @@ public class ValueBox {
 		public void render(boolean highlighted) {
 			super.render(highlighted);
 			double scale = 4;
-			GlStateManager.scaled(scale, scale, 1);
-			GlStateManager.translated(-8, -8, 3/2f);
+			RenderSystem.scaled(scale, scale, 1);
+			RenderSystem.translated(-8, -8, 3/2f);
 			icon.draw(0, 0);
-			GlStateManager.color4f(.25f, .25f, .25f, 1);
-			GlStateManager.translated(.5f, .5f, -1);
+			RenderSystem.color4f(.25f, .25f, .25f, 1);
+			RenderSystem.translated(.5f, .5f, -1);
 			icon.draw(0, 0);
-			GlStateManager.color4f(1, 1, 1, 1);
+			RenderSystem.color4f(1, 1, 1, 1);
 		}
 
 	}

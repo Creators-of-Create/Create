@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.components.crafter;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.behaviour.ValueBox;
@@ -25,7 +25,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.DrawHighlightEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -33,7 +33,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class ConnectedInputRenderer {
 
 	@SubscribeEvent
-	public static void renderBlockHighlight(DrawBlockHighlightEvent event) {
+	public static void renderHighlight(DrawHighlightEvent event) {
 		RayTraceResult target = event.getTarget();
 		if (!(target instanceof BlockRayTraceResult))
 			return;
@@ -58,7 +58,7 @@ public class ConnectedInputRenderer {
 			return;
 
 		TessellatorHelper.prepareForDrawing();
-		GlStateManager.translated(pos.getX(), pos.getY(), pos.getZ());
+		RenderSystem.translated(pos.getX(), pos.getY(), pos.getZ());
 		Direction activatedDirection = ConnectedInputHandler.getActivatedDirection(world, pos, face,
 				result.getHitVec());
 

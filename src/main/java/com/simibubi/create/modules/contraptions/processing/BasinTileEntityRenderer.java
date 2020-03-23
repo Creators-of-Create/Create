@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.processing;
 
 import java.util.Random;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -19,9 +19,9 @@ public class BasinTileEntityRenderer extends SafeTileEntityRenderer<BasinTileEnt
 
 	@Override
 	public void renderWithGL(BasinTileEntity basin, double x, double y, double z, float partialTicks, int destroyStage) {
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		BlockPos pos = basin.getPos();
-		GlStateManager.translated(x + .5, y + .2f, z + .5);
+		RenderSystem.translated(x + .5, y + .2f, z + .5);
 		Random r = new Random(pos.hashCode());
 
 		IItemHandlerModifiable inv = basin.inventory.orElse(new ItemStackHandler());
@@ -31,18 +31,18 @@ public class BasinTileEntityRenderer extends SafeTileEntityRenderer<BasinTileEnt
 				continue;
 
 			for (int i = 0; i <= stack.getCount() / 8; i++) {
-				GlStateManager.pushMatrix();
+				RenderSystem.pushMatrix();
 				Vec3d vec = VecHelper.offsetRandomly(Vec3d.ZERO, r, .25f);
 				Vec3d vec2 = VecHelper.offsetRandomly(Vec3d.ZERO, r, .5f);
-				GlStateManager.translated(vec.x, vec.y, vec.z);
-				GlStateManager.rotated(vec2.x * 180, vec2.z, vec2.y, 0);
+				RenderSystem.translated(vec.x, vec.y, vec.z);
+				RenderSystem.rotated(vec2.x * 180, vec2.z, vec2.y, 0);
 
 				Minecraft.getInstance().getItemRenderer().renderItem(stack, TransformType.GROUND);
-				GlStateManager.popMatrix();
+				RenderSystem.popMatrix();
 			}
-			GlStateManager.translated(0, 1 / 64f, 0);
+			RenderSystem.translated(0, 1 / 64f, 0);
 		}
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
 	}
 

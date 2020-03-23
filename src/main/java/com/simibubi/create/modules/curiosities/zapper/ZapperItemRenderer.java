@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.curiosities.zapper;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FourWayBlock;
@@ -16,9 +16,9 @@ public abstract class ZapperItemRenderer extends ItemStackTileEntityRenderer {
 	protected void renderBlockUsed(ItemStack stack, ItemRenderer itemRenderer) {
 		BlockState state = NBTUtil.readBlockState(stack.getTag().getCompound("BlockUsed"));
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(-0.3F, -0.45F, -0.0F);
-		GlStateManager.scalef(0.25F, 0.25F, 0.25F);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(-0.3F, -0.45F, -0.0F);
+		RenderSystem.scalef(0.25F, 0.25F, 0.25F);
 		IBakedModel modelForState = Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state);
 
 		if (state.getBlock() instanceof FourWayBlock)
@@ -26,7 +26,7 @@ public abstract class ZapperItemRenderer extends ItemStackTileEntityRenderer {
 					.getModelWithOverrides(new ItemStack(state.getBlock()));
 
 		itemRenderer.renderItem(new ItemStack(state.getBlock()), modelForState);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 	
 }

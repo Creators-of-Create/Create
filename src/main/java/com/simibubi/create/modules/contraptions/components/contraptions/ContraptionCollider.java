@@ -73,7 +73,7 @@ public class ContraptionCollider {
 			if (allowedMovement.equals(relativeMotion))
 				continue;
 			if (allowedMovement.y != relativeMotion.y) {
-				entity.fall(entity.fallDistance, 1);
+				entity.handleFallDamage(entity.fallDistance, 1);
 				entity.fallDistance = 0;
 				entity.onGround = true;
 				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> checkForClientPlayerCollision(entity));
@@ -142,7 +142,7 @@ public class ContraptionCollider {
 				if (bestSide == Direction.UP)
 					clamped = shapeMotion.y;
 				entity.setMotion(entityMotion.x, clamped, entityMotion.z);
-				entity.fall(entity.fallDistance, 1);
+				entity.handleFallDamage(entity.fallDistance, 1);
 				entity.fallDistance = 0;
 				entity.onGround = true;
 				break;
