@@ -78,7 +78,10 @@ public class BeltBlock extends HorizontalKineticBlock
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		if (face.getAxis() != getRotationAxis(state))
 			return false;
-		BeltTileEntity beltEntity = (BeltTileEntity) world.getTileEntity(pos);
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if (!(tileEntity instanceof BeltTileEntity))
+			return false;
+		BeltTileEntity beltEntity = (BeltTileEntity) tileEntity;
 		return beltEntity != null && beltEntity.hasPulley();
 	}
 
@@ -149,8 +152,12 @@ public class BeltBlock extends HorizontalKineticBlock
 
 	@Override
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (!(tileEntity instanceof BeltTileEntity))
+			return;
+		
 		BeltTileEntity belt = null;
-		belt = (BeltTileEntity) worldIn.getTileEntity(pos);
+		belt = (BeltTileEntity) tileEntity;
 
 		if (state.get(SLOPE) == Slope.VERTICAL)
 			return;
@@ -180,7 +187,10 @@ public class BeltBlock extends HorizontalKineticBlock
 			return;
 		}
 
-		BeltTileEntity controller = (BeltTileEntity) worldIn.getTileEntity(belt.getController());
+		TileEntity controllerTE = worldIn.getTileEntity(belt.getController());
+		if (!(controllerTE instanceof BeltTileEntity))
+			return;
+		BeltTileEntity controller = (BeltTileEntity) controllerTE;
 		if (controller == null || controller.passengers == null)
 			return;
 		if (controller.passengers.containsKey(entityIn)) {
@@ -367,8 +377,12 @@ public class BeltBlock extends HorizontalKineticBlock
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 			ISelectionContext context) {
 		VoxelShape shape = getShape(state, worldIn, pos, context);
-		BeltTileEntity belt = (BeltTileEntity) worldIn.getTileEntity(pos);
-		if (belt == null || context.getEntity() == null)
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (!(tileEntity instanceof BeltTileEntity))
+			return shape;
+
+		BeltTileEntity belt = (BeltTileEntity) tileEntity;
+		if (context.getEntity() == null)
 			return shape;
 		BeltTileEntity controller = (BeltTileEntity) worldIn.getTileEntity(belt.getController());
 		if (controller == null)
