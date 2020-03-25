@@ -68,9 +68,9 @@ public interface IRotate extends IWrenchable {
 			String level = color + ItemDescription.makeProgressBar(3, speedLevel.ordinal());
 
 			if (speedLevel == SpeedLevel.MEDIUM)
-				level += Lang.translate("tooltip.speedRequirements.medium");
+				level += Lang.translate("tooltip.speedRequirement.medium");
 			if (speedLevel == SpeedLevel.FAST)
-				level += Lang.translate("tooltip.speedRequirements.high");
+				level += Lang.translate("tooltip.speedRequirement.high");
 
 			level += String.format(" (%s%s) ", IHaveGoggleInformation.format(Math.abs(speed)), Lang.translate("generic.unit.rpm"));
 

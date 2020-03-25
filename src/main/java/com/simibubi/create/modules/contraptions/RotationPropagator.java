@@ -20,6 +20,7 @@ import com.simibubi.create.modules.contraptions.relays.encased.SplitShaftTileEnt
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxTileEntity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -95,12 +96,6 @@ public class RotationPropagator {
 		if (isLargeToSmallGear(stateTo, stateFrom, diff))
 			return -.5f;
 
-		// Rotation Speed Controller <-> Large Gear
-		if (isLargeGearToSpeedController(stateFrom, stateTo, diff))
-			return SpeedControllerTileEntity.getSpeedModifier(from, to, true);
-		if (isLargeGearToSpeedController(stateTo, stateFrom, diff))
-			return SpeedControllerTileEntity.getSpeedModifier(to, from, false);
-
 		// Gear <-> Gear
 		if (connectedByGears) {
 			if (diff.manhattanDistance(BlockPos.ZERO) != 1)
@@ -112,6 +107,20 @@ public class RotationPropagator {
 		}
 
 		return 0;
+	}
+
+	private static float getConveyedSpeed(KineticTileEntity from, KineticTileEntity to) {
+		final BlockState stateFrom = from.getBlockState();
+		final BlockState stateTo = to.getBlockState();
+		final BlockPos diff = to.getPos().subtract(from.getPos());
+
+		// Rotation Speed Controller <-> Large Gear
+		if (isLargeGearToSpeedController(stateFrom, stateTo, diff))
+			return SpeedControllerTileEntity.getConveyedSpeed(from, to, true);
+		if (isLargeGearToSpeedController(stateTo, stateFrom, diff))
+			return SpeedControllerTileEntity.getConveyedSpeed(to, from, false);
+
+		return from.getTheoreticalSpeed() * getRotationSpeedModifier(from, to);
 	}
 
 	private static boolean isLargeToLargeGear(BlockState from, BlockState to, BlockPos diff) {
@@ -184,31 +193,7 @@ public class RotationPropagator {
 			return;
 		if (!worldIn.isBlockPresent(pos))
 			return;
-		if (addedTE.getTheoreticalSpeed() != 0) {
-			propagateNewSource(addedTE);
-			return;
-		}
-
-		for (KineticTileEntity neighbourTE : getConnectedNeighbours(addedTE)) {
-			final float speedModifier = getRotationSpeedModifier(neighbourTE, addedTE);
-
-			float neighbourSpeed = neighbourTE.getTheoreticalSpeed();
-			if (neighbourSpeed == 0)
-				continue;
-			if (neighbourTE.hasSource() && neighbourTE.source.equals(addedTE.getPos())) {
-				addedTE.setSpeed(neighbourSpeed * speedModifier);
-				addedTE.onSpeedChanged(0);
-				addedTE.sendData();
-				continue;
-			}
-
-			addedTE.setSpeed(neighbourSpeed * speedModifier);
-			addedTE.setSource(neighbourTE.getPos());
-			addedTE.onSpeedChanged(0);
-			addedTE.sendData();
-			propagateNewSource(addedTE);
-			return;
-		}
+		propagateNewSource(addedTE);
 	}
 
 	/**
@@ -221,12 +206,10 @@ public class RotationPropagator {
 		World world = currentTE.getWorld();
 
 		for (KineticTileEntity neighbourTE : getConnectedNeighbours(currentTE)) {
-			float modFromTo = getRotationSpeedModifier(currentTE, neighbourTE);
-			float modToFrom = getRotationSpeedModifier(neighbourTE, currentTE);
 			float speedOfCurrent = currentTE.getTheoreticalSpeed();
 			float speedOfNeighbour = neighbourTE.getTheoreticalSpeed();
-			float newSpeed = speedOfCurrent * modFromTo;
-			float oppositeSpeed = speedOfNeighbour * modToFrom;
+			float newSpeed = getConveyedSpeed(currentTE, neighbourTE);
+			float oppositeSpeed = getConveyedSpeed(neighbourTE, currentTE);
 
 			boolean incompatible =
 				Math.signum(newSpeed) != Math.signum(speedOfNeighbour) && (newSpeed != 0 && speedOfNeighbour != 0);
@@ -249,7 +232,7 @@ public class RotationPropagator {
 				// Neighbour faster, overpower the incoming tree
 				if (Math.abs(oppositeSpeed) > Math.abs(speedOfCurrent)) {
 					float prevSpeed = currentTE.getSpeed();
-					currentTE.setSpeed(speedOfNeighbour * getRotationSpeedModifier(neighbourTE, currentTE));
+					currentTE.setSpeed(oppositeSpeed);
 					currentTE.setSource(neighbourTE.getPos());
 					currentTE.onSpeedChanged(prevSpeed);
 					currentTE.sendData();
@@ -272,7 +255,7 @@ public class RotationPropagator {
 						currentTE.removeSource();
 
 					float prevSpeed = neighbourTE.getSpeed();
-					neighbourTE.setSpeed(speedOfCurrent * getRotationSpeedModifier(currentTE, neighbourTE));
+					neighbourTE.setSpeed(newSpeed);
 					neighbourTE.setSource(currentTE.getPos());
 					neighbourTE.onSpeedChanged(prevSpeed);
 					neighbourTE.sendData();
@@ -370,17 +353,33 @@ public class RotationPropagator {
 		}
 	}
 
-	private static KineticTileEntity findConnectedNeighbour(KineticTileEntity te, BlockPos neighbourPos) {
-		BlockState neighbourState = te.getWorld().getBlockState(neighbourPos);
+	private static KineticTileEntity findConnectedNeighbour(KineticTileEntity currentTE, BlockPos neighbourPos) {
+		BlockState neighbourState = currentTE.getWorld().getBlockState(neighbourPos);
 		if (!(neighbourState.getBlock() instanceof IRotate))
 			return null;
 		if (!neighbourState.hasTileEntity())
 			return null;
-
-		KineticTileEntity neighbour = (KineticTileEntity) te.getWorld().getTileEntity(neighbourPos);
-		if (getRotationSpeedModifier(te, neighbour) == 0)
+		TileEntity neighbourTE = currentTE.getWorld().getTileEntity(neighbourPos);
+		if (!(neighbourTE instanceof KineticTileEntity))
 			return null;
-		return neighbour;
+		KineticTileEntity neighbourKTE = (KineticTileEntity) neighbourTE;
+		if (!(neighbourKTE.getBlockState().getBlock() instanceof IRotate))
+			return null;
+		if (!isConnected(currentTE, neighbourKTE))
+			return null;
+		return neighbourKTE;
+	}
+
+	public static boolean isConnected(KineticTileEntity from, KineticTileEntity to) {
+		final BlockState stateFrom = from.getBlockState();
+		final BlockState stateTo = to.getBlockState();
+		final BlockPos diff = to.getPos().subtract(from.getPos());
+
+		if (isLargeGearToSpeedController(stateFrom, stateTo, diff))
+			return true;
+		if (isLargeGearToSpeedController(stateTo, stateFrom, diff))
+			return true;
+		return getRotationSpeedModifier(from, to) != 0;
 	}
 
 	private static List<KineticTileEntity> getConnectedNeighbours(KineticTileEntity te) {

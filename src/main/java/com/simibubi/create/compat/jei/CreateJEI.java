@@ -133,12 +133,12 @@ public class CreateJEI implements IModPlugin {
 		registration.addRecipes(findRecipes(
 				r -> (r instanceof MechanicalCraftingRecipe) && MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
 				smallMechanicalCraftingCategory.getUid());
-		registration.addRecipes(
-				findRecipes(r -> (r instanceof ShapedRecipe) && !(r instanceof MechanicalCraftingRecipe)
-						&& MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
+		registration.addRecipes(findRecipes(r -> r.getType() == IRecipeType.CRAFTING && (r instanceof ShapedRecipe)
+				&& !(r instanceof MechanicalCraftingRecipe) && MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
 				smallMechanicalCraftingCategory.getUid());
 		registration.addRecipes(
-				findRecipes(r -> (r instanceof ShapedRecipe) && !MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
+				findRecipes(r -> r.getType() == IRecipeType.CRAFTING && (r instanceof ShapedRecipe)
+						&& !MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
 				largeMechanicalCraftingCategory.getUid());
 
 	}

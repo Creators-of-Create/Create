@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
 
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+
 import java.util.List;
 
 import com.simibubi.create.AllTileEntities;
@@ -14,8 +16,8 @@ import com.simibubi.create.modules.contraptions.components.contraptions.Contrapt
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.DirectionalExtenderScrollOptionSlot;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -145,7 +147,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	public void assemble() {
-		Direction direction = getBlockState().get(BlockStateProperties.FACING);
+		Direction direction = getBlockState().get(FACING);
 
 		// Collect Construct
 		BearingContraption contraption = BearingContraption.assembleBearingAt(world, pos, direction);
@@ -237,7 +239,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 	protected void applyRotation() {
 		if (movedContraption != null) {
-			Axis axis = getBlockState().get(BlockStateProperties.FACING).getAxis();
+			Axis axis = getBlockState().get(FACING).getAxis();
 			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
 			Vec3d vec = new Vec3d(1, 1, 1).scale(angle).mul(new Vec3d(direction.getDirectionVec()));
 			movedContraption.rotateTo(vec.x, vec.y, vec.z);
@@ -246,14 +248,18 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 	@Override
 	public void attach(ContraptionEntity contraption) {
-		if (contraption.getContraption() instanceof BearingContraption) {
-			this.movedContraption = contraption;
-			markDirty();
-			BlockPos anchor = pos.offset(getBlockState().get(BlockStateProperties.FACING));
-			movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
-			if (!world.isRemote)
-				sendData();
-		}
+		BlockState blockState = getBlockState();
+		if (!(contraption.getContraption() instanceof BearingContraption))
+			return;
+		if (!blockState.has(FACING))
+			return;
+
+		this.movedContraption = contraption;
+		markDirty();
+		BlockPos anchor = pos.offset(blockState.get(FACING));
+		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
+		if (!world.isRemote)
+			sendData();
 	}
 
 	@Override
@@ -277,6 +283,11 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 	@Override
 	public void collided() {
+	}
+
+	@Override
+	public boolean isAttachedTo(ContraptionEntity contraption) {
+		return movedContraption == contraption;
 	}
 
 }
