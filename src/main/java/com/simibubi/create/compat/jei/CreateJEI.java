@@ -108,6 +108,8 @@ public class CreateJEI implements IModPlugin {
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		registration.addRecipes(findRecipes(AllRecipes.CRUSHING), crushingCategory.getUid());
+		registration.addRecipes(findRecipesByTypeExcluding(AllRecipes.MILLING.getType(), AllRecipes.CRUSHING.getType()),
+				crushingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipes.SPLASHING), splashingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipes.PRESSING), pressingCategory.getUid());
 		registration.addRecipes(findRecipesById(AllRecipes.BLOCKZAPPER_UPGRADE.serializer.getRegistryName()),

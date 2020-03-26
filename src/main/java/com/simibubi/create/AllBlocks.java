@@ -31,6 +31,7 @@ import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelBlock;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.FurnaceEngineBlock;
+import com.simibubi.create.modules.contraptions.components.millstone.MillstoneBlock;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerBlock;
 import com.simibubi.create.modules.contraptions.components.motor.MotorBlock;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressBlock;
@@ -131,6 +132,7 @@ public enum AllBlocks {
 	CUCKOO_CLOCK(new CuckooClockBlock(false)),
 	MYSTERIOUS_CUCKOO_CLOCK(new CuckooClockBlock(true)),
 
+	MILLSTONE(new MillstoneBlock()),
 	CRUSHING_WHEEL(new CrushingWheelBlock()),
 	CRUSHING_WHEEL_CONTROLLER(new CrushingWheelControllerBlock()),
 	MECHANICAL_PRESS(new MechanicalPressBlock()),

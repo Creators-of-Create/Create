@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions;
 
 import static com.simibubi.create.AllBlocks.BELT;
-import static com.simibubi.create.AllBlocks.COGWHEEL;
 import static com.simibubi.create.AllBlocks.LARGE_COGWHEEL;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
@@ -58,8 +57,8 @@ public class RotationPropagator {
 			alignedAxes && definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
 					&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
 
-		boolean connectedByGears = definitionFrom.hasCogsTowards(world, from.getPos(), stateFrom, direction)
-				&& definitionTo.hasCogsTowards(world, to.getPos(), stateTo, direction.getOpposite());
+		boolean connectedByGears = definitionFrom.hasIntegratedCogwheel(world, from.getPos(), stateFrom)
+				&& definitionTo.hasIntegratedCogwheel(world, to.getPos(), stateTo);
 
 		// Belt <-> Belt
 		if (from instanceof BeltTileEntity && to instanceof BeltTileEntity && !connectedByAxis) {
@@ -91,16 +90,20 @@ public class RotationPropagator {
 		}
 
 		// Gear <-> Large Gear
-		if (isLargeToSmallGear(stateFrom, stateTo, diff))
-			return -2f;
-		if (isLargeToSmallGear(stateTo, stateFrom, diff))
-			return -.5f;
+		if (LARGE_COGWHEEL.typeOf(stateFrom) && definitionTo.hasIntegratedCogwheel(world, to.getPos(), stateTo))
+			if (isLargeToSmallGear(stateFrom, stateTo, definitionTo, diff))
+				return -2f;
+		if (LARGE_COGWHEEL.typeOf(stateTo) && definitionFrom.hasIntegratedCogwheel(world, from.getPos(), stateFrom))
+			if (isLargeToSmallGear(stateTo, stateFrom, definitionFrom, diff))
+				return -.5f;
 
 		// Gear <-> Gear
 		if (connectedByGears) {
 			if (diff.manhattanDistance(BlockPos.ZERO) != 1)
 				return 0;
 			if (LARGE_COGWHEEL.typeOf(stateTo))
+				return 0;
+			if (direction.getAxis() == definitionFrom.getRotationAxis(stateFrom))
 				return 0;
 			if (definitionFrom.getRotationAxis(stateFrom) == definitionTo.getRotationAxis(stateTo))
 				return -1;
@@ -157,11 +160,9 @@ public class RotationPropagator {
 		return 1;
 	}
 
-	private static boolean isLargeToSmallGear(BlockState from, BlockState to, BlockPos diff) {
-		if (!LARGE_COGWHEEL.typeOf(from) || !COGWHEEL.typeOf(to))
-			return false;
+	private static boolean isLargeToSmallGear(BlockState from, BlockState to, IRotate defTo, BlockPos diff) {
 		Axis axisFrom = from.get(AXIS);
-		if (axisFrom != to.get(AXIS))
+		if (axisFrom != defTo.getRotationAxis(to))
 			return false;
 		if (axisFrom.getCoordinate(diff.getX(), diff.getY(), diff.getZ()) != 0)
 			return false;
@@ -407,8 +408,13 @@ public class RotationPropagator {
 		BlockState blockState = te.getBlockState();
 		boolean isLargeWheel = LARGE_COGWHEEL.typeOf(blockState);
 
-		if (COGWHEEL.typeOf(blockState) || isLargeWheel || BELT.typeOf(blockState)) {
-			Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
+		if (!(blockState.getBlock() instanceof IRotate))
+			return neighbours;
+		IRotate block = (IRotate) blockState.getBlock();
+
+		if (block.hasIntegratedCogwheel(te.getWorld(), te.getPos(), blockState) || isLargeWheel
+				|| BELT.typeOf(blockState)) {
+			Axis axis = block.getRotationAxis(blockState);
 
 			BlockPos.getAllInBox(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1)).forEach(offset -> {
 				if (!isLargeWheel && axis.getCoordinate(offset.getX(), offset.getY(), offset.getZ()) != 0)

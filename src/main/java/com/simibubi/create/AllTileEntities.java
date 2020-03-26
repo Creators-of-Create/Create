@@ -34,6 +34,8 @@ import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelRend
 import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelTileEntity;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineRenderer;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.FurnaceEngineTileEntity;
+import com.simibubi.create.modules.contraptions.components.millstone.MillstoneRenderer;
+import com.simibubi.create.modules.contraptions.components.millstone.MillstoneTileEntity;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerTileEntity;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.motor.MotorTileEntity;
@@ -129,6 +131,8 @@ public enum AllTileEntities {
 	HARVESTER(HarvesterTileEntity::new, AllBlocks.HARVESTER),
 	FLYWHEEL(FlywheelTileEntity::new, AllBlocks.FLYWHEEL),
 	FURNACE_ENGINE(FurnaceEngineTileEntity::new, AllBlocks.FURNACE_ENGINE),
+	
+	MILLSTONE(MillstoneTileEntity::new, AllBlocks.MILLSTONE),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
@@ -216,6 +220,7 @@ public enum AllTileEntities {
 		bind(PulleyTileEntity.class, new PulleyRenderer());
 		bind(HarvesterTileEntity.class, new HarvesterTileEntityRenderer());
 
+		bind(MillstoneTileEntity.class, new MillstoneRenderer());
 		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());
 		bind(MechanicalPressTileEntity.class, new MechanicalPressTileEntityRenderer());
 		bind(MechanicalMixerTileEntity.class, new MechanicalMixerTileEntityRenderer());

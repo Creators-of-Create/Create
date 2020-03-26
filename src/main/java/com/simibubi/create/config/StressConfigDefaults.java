@@ -40,6 +40,7 @@ public class StressConfigDefaults {
 		case SAW:
 		case DEPLOYER:
 		case MECHANICAL_MIXER:
+		case MILLSTONE:
 			return 4;
 	
 		case MECHANICAL_CRAFTER:

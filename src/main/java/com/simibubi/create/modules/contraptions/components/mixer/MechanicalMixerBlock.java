@@ -66,8 +66,8 @@ public class MechanicalMixerBlock extends KineticBlock
 	}
 
 	@Override
-	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face.getAxis().isHorizontal();
+	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
+		return true;
 	}
 
 	@Override

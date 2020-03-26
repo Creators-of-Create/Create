@@ -1,0 +1,20 @@
+{
+    "type": "create:milling",
+    "ingredients": [
+    	{
+    		"tag": "minecraft:wool"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "minecraft:string",
+			"count": 2
+		},
+		{
+			"item": "minecraft:string",
+			"count": 2,
+			"chance": 0.5
+		}
+	],
+	"processingTime": 100
+}

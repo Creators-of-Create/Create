@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.processing.ProcessingInventory;
+import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -172,8 +173,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	}
 
 	private void applyRecipe() {
-		Optional<CrushingRecipe> recipe =
-			world.getRecipeManager().getRecipe(AllRecipes.CRUSHING.getType(), wrapper, world);
+		Optional<ProcessingRecipe<RecipeWrapper>> recipe = findRecipe();
 
 		List<ItemStack> list = new ArrayList<>();
 		if (recipe.isPresent()) {
@@ -192,6 +192,14 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			inventory.clear();
 		}
 
+	}
+
+	public Optional<ProcessingRecipe<RecipeWrapper>> findRecipe() {
+		Optional<ProcessingRecipe<RecipeWrapper>> crushingRecipe =
+			world.getRecipeManager().getRecipe(AllRecipes.CRUSHING.getType(), wrapper, world);
+		if (!crushingRecipe.isPresent())
+			crushingRecipe = world.getRecipeManager().getRecipe(AllRecipes.MILLING.getType(), wrapper, world);
+		return crushingRecipe;
 	}
 
 	@Override
@@ -222,8 +230,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	}
 
 	private void itemInserted(ItemStack stack) {
-		Optional<CrushingRecipe> recipe =
-			world.getRecipeManager().getRecipe(AllRecipes.CRUSHING.getType(), wrapper, world);
+		Optional<ProcessingRecipe<RecipeWrapper>> recipe = findRecipe();
 		inventory.remainingTime = recipe.isPresent() ? recipe.get().getProcessingDuration() : 100;
 		inventory.appliedRecipe = false;
 	}

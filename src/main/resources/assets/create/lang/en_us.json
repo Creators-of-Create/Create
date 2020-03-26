@@ -16,7 +16,6 @@
 	"item.create.goggles": "Engineer's Goggles",
 	"item.create.filter": "Filter",
 	"item.create.property_filter": "Attribute Filter",
-	"item.create.logistical_filter": "Address Filter",
 	"item.create.rose_quartz": "Rose Quartz",
 	"item.create.polished_rose_quartz": "Polished Rose Quartz",
 	"item.create.refined_radiance": "Refined Radiance",
@@ -53,13 +52,6 @@
 	"item.create.electron_tube": "Electron Tube",
 	"item.create.integrated_circuit": "Integrated Circuit",
 	
-	"item.create.logistical_controller_supply": "Item Supply",
-	"item.create.logistical_controller_request": "Item Request",
-	"item.create.logistical_controller_storage": "Item Storage",
-	"item.create.logistical_controller_calculation": "Ingredient Calculator",
-	"item.create.logistical_controller_transactions": "Task Manager",
-	"item.create.logistical_dial": "Logistical Dial",
-
 	"item.create.blazing_pickaxe": "Blazing Pickaxe",
 	"item.create.blazing_shovel": "Blazing Shovel",
 	"item.create.blazing_axe": "Blazing Axe",
@@ -101,6 +93,7 @@
 	"block.create.cuckoo_clock": "Cuckoo Clock",
 	"block.create.creative_motor": "Motor",
 	"block.create.belt": "Mechanical Belt",
+	"block.create.millstone": "Millstone",
 	"block.create.crushing_wheel": "Crushing Wheel",
 	"block.create.drill": "Mechanical Drill",
 	"block.create.portable_storage_interface": "Portable Storage Interface",
@@ -147,11 +140,6 @@
 	"block.create.toggle_latch": "Powered Toggle Latch",
 	"block.create.flexpeater": "Adjustable Repeater",
 	"block.create.entity_detector": "Belt Observer",
-	"block.create.logistical_casing": "Logistical Casing",
-	"block.create.logistical_controller": "Logistical Controller",
-	"block.create.logistical_index": "Logistical Index",
-	"block.create.logisticians_table": "Logistician's Table",
-	"block.create.package_funnel": "Package Funnel",
 	"block.create.belt_tunnel": "Conveyor Tunnel",
 	"block.create.sequenced_gearshift": "Sequenced Gearshift",
 	
@@ -268,8 +256,6 @@
 	"block.create.creative_crate": "Schematicannon Creatifier",
 
 	"block.create.cocoa_log": "Cocoa Jungle Log",
-
-	"block.create.shop_shelf": "Shelf",
 
 	"_comment": "-------------------------]  UI & MESSAGES  [------------------------------------------------",
 
@@ -544,20 +530,6 @@
 	"create.schematicannon.status.schematicNotPlaced": "Schematic Not Deployed",
 	"create.schematicannon.status.schematicExpired": "Schematic File Expired",
 	
-	"create.gui.index.title": "Logistical Index",
-	"create.gui.index.targetAddressSelect": "Destination Address",
-	"create.gui.index.confirmOrder": "Confirm Order",
-	
-	"create.logistics.priority": "Priority",
-	"create.logistics.priority.lowest": "Lowest",
-	"create.logistics.priority.low": "Low",
-	"create.logistics.priority.high": "High",
-	"create.logistics.priority.highest": "Highest",
-	"create.gui.logistical_controller.active_mode": "Active Mode",
-	"create.gui.logistical_controller.passive_mode": "Passive Mode",	
-	"create.gui.requester.requestedItemCount": "Requested Amount",
-	"create.gui.storage.passiveModeOnly": "Item Storage is Passive Only",
-
 	"create.gui.filter.blacklist": "Blacklist",
 	"create.gui.filter.blacklist.description": "Items pass if they do NOT match any of the above. An empty Blacklist accepts everything.",
 	"create.gui.filter.whitelist": "Whitelist",
@@ -1161,16 +1133,5 @@
 	"tool.create.rose_quartz.tooltip": "ROSE QUARTZ TOOLS",
 	"tool.create.rose_quartz.tooltip.summary": "This tool grants you a _greater_ _reach_ for _breaking_ _blocks_ or _placing_ _blocks_ from the off-hand.",
 	
-	"item.create.logistical_controller_calculation.tooltip": "WIP",
-	"item.create.logistical_controller_request.tooltip": "WIP",
-	"item.create.logistical_controller_storage.tooltip": "WIP",
-	"item.create.logistical_controller_supply.tooltip": "WIP",
-	"item.create.logistical_controller_transactions.tooltip": "WIP",
-	"block.create.logistical_index.tooltip": "WIP",
-	"block.create.package_funnel.tooltip": "WIP",
-	"block.create.logisticians_table.tooltip": "WIP",
-	"item.create.logistical_dial.tooltip": "WIP",
-	"item.create.logistical_filter.tooltip": "WIP",
-
 	"itemGroup.create": "Create"
 }
