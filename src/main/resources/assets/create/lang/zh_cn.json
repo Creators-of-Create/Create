@@ -113,7 +113,7 @@
 	"block.create.flywheel": "飞轮",
 	"block.create.furnace_engine": "熔炉引擎",
 	"block.create.speed_gauge": "转速测量仪",
-	"block.create.stress_gauge": "压力测量仪",
+	"block.create.stress_gauge": "动力测量仪",
 	"block.create.cart_assembler": "矿车组装站",
 	"block.create.analog_lever": "精准拉杆",
 	"block.create.rotation_speed_controller": "转速控制器",	
@@ -292,7 +292,7 @@
 	"create.recipe.packing": "打包中",
 	"create.recipe.sawing": "裂开",
 	"create.recipe.mechanical_crafting": "机械合成",
-	"create.recipe.block_cutting": "Block Cutting",
+	"create.recipe.block_cutting": "方块切割",
 	"create.recipe.blockzapperUpgrade": "手持式方块放置器",
 	"create.recipe.mystery_conversion": "色彩转换",
 	"create.recipe.processing.catalyst": "催化剂",
@@ -406,9 +406,9 @@
 	
 	"create.gui.gauge.info_header": "计量值信息:",
 	"create.gui.speed_gauge.title": "旋转速度",
-	"create.gui.stress_gauge.title": "网络压力",
+	"create.gui.stress_gauge.title": "网络动力",
 	"create.gui.stress_gauge.capacity": "剩余容量",
-	"create.gui.stress_gauge.overstressed": "压力超负荷",
+	"create.gui.stress_gauge.overstressed": "动力超负荷",
 	"create.gui.stress_gauge.no_rotation": "无旋转",
 	
 	"create.gui.contraptions.not_fast_enough": " %1$s 旋转速度不够",
@@ -597,17 +597,17 @@
 	"create.tooltip.speedRequirement.medium": "中等",
 	"create.tooltip.speedRequirement.high": "快速",
 
-	"create.tooltip.stressImpact": "压力影响值: %1$s",
+	"create.tooltip.stressImpact": "动力影响值: %1$s",
 	"create.tooltip.stressImpact.low": "低",
 	"create.tooltip.stressImpact.medium": "中等",
 	"create.tooltip.stressImpact.high": "高",
 
-	"create.tooltip.capacityProvided": "压力产出量: %1$s",
+	"create.tooltip.capacityProvided": "动力产出量: %1$s",
 	"create.tooltip.capacityProvided.low": "小",
 	"create.tooltip.capacityProvided.medium": "中等",
 	"create.tooltip.capacityProvided.high": "大",
 	"create.tooltip.capacityProvided.asGenerator": "(发生器)",
-	"create.tooltip.generationSpeed" : "产出压力 %1$s %2$s",
+	"create.tooltip.generationSpeed" : "产出动力 %1$s %2$s",
 
 	"create.tooltip.analogStrength": "模拟强度: %1$s/15",
 
