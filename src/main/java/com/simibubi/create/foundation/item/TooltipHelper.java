@@ -16,6 +16,7 @@ import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
 
+import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
@@ -176,6 +177,9 @@ public class TooltipHelper {
 				return "tool.create." + Lang.asId(allToolTiers.name()) + ".tooltip";
 			}
 		}
+
+		if (stack.getItem() instanceof SandPaperItem)
+			return "tool.create.sand_paper.tooltip";
 
 		return stack.getItem().getTranslationKey(stack) + ".tooltip";
 	}
