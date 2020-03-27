@@ -51,6 +51,8 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	}
 
 	public void gatherInputs() {
+		if (!basinInv.isPresent())
+			return;
 		BasinInventory inv = (BasinInventory) basinInv.orElse(null);
 		inputs = new ArrayList<>();
 		IItemHandlerModifiable inputHandler = inv.getInputHandler();

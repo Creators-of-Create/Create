@@ -1,5 +1,5 @@
 {
-    "type": "create:milling",
+    "type": "create:crushing",
     "ingredients": [
     	{
     		"item": "minecraft:golden_horse_armor"

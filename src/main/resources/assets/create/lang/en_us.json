@@ -269,6 +269,7 @@
 	"death.attack.create.cuckoo_clock_explosion": "%1$s was blown up by tampered cuckoo clock",
 
 	"create.recipe.crushing": "Crushing",
+	"create.recipe.milling": "Milling",
 	"create.recipe.splashing": "Bulk Washing",
 	"create.recipe.splashing.fan": "Fan behind Flowing Water",
 	"create.recipe.smokingViaFan": "Bulk Smoking",
@@ -400,6 +401,7 @@
 	"create.gui.stress_gauge.no_rotation": "No Rotation",
 	
 	"create.gui.contraptions.not_fast_enough": "It appears that this %1$s is _not_ rotating with _enough_ _speed_.",
+	"create.gui.contraptions.network_overstressed": "It appears that this contraption is _overstressed_. Add more sources or _slow_ _down_ the components with a high _stress_ _impact_.",
 
 	"create.gui.flexcrate.title": "Adjustable Crate",
 	"create.gui.flexcrate.storageSpace": "Storage Space",
@@ -849,6 +851,11 @@
 
 	"block.create.turntable.tooltip": "TURNTABLE",
 	"block.create.turntable.tooltip.summary": "Turns _Rotational_ _Force_ into refined Motion Sickness.",
+	
+	"block.create.millstone.tooltip": "MILLSTONE",
+	"block.create.millstone.tooltip.summary": "A kinetic component suitable for _grinding_ inserted _materials_. Can be powered by an adjacent cogwheel or by connecting to the shaft at the bottom.",
+	"block.create.millstone.tooltip.condition1": "When Rotated",
+	"block.create.millstone.tooltip.behaviour1": "Starts applying _milling_ _recipes_ to any items inserted from the side or the top of the block.",
 
 	"block.create.crushing_wheel.tooltip": "CRUSHING WHEEL",
 	"block.create.crushing_wheel.tooltip.summary": "Large rotatable wheels that _break_ _down_ anything.",

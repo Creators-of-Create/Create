@@ -2,14 +2,14 @@
     "type": "create:milling",
     "ingredients": [
     	{
-    		"item": "minecraft:gravel"
+    		"tag": "forge:ores/gold"
     	}
     ], 
 	"results": [
 		{
-			"item": "minecraft:flint",
+			"item": "create:crushed_gold",
 			"count": 1
 		}
 	],
-	"processingTime": 250
+	"processingTime": 350
 }

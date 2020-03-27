@@ -1,5 +1,5 @@
 {
-    "type": "create:milling",
+    "type": "create:crushing",
     "ingredients": [
     	{
     		"item": "minecraft:diamond_horse_armor"

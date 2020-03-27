@@ -65,7 +65,6 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, world)) {
 			Optional<MillingRecipe> recipe =
 				world.getRecipeManager().getRecipe(AllRecipes.MILLING.getType(), inventoryIn, world);
-			inputInv.getStackInSlot(0).shrink(1);
 			if (!recipe.isPresent()) {
 				timer = 100;
 				sendData();
@@ -83,9 +82,6 @@ public class MillstoneTileEntity extends KineticTileEntity {
 
 	private void process() {
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
-		ItemStack stackInSlot = inputInv.getStackInSlot(0);
-		stackInSlot.shrink(1);
-		inputInv.setStackInSlot(0, stackInSlot);
 
 		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, world)) {
 			Optional<MillingRecipe> recipe =
@@ -95,6 +91,9 @@ public class MillstoneTileEntity extends KineticTileEntity {
 			lastRecipe = recipe.get();
 		}
 
+		ItemStack stackInSlot = inputInv.getStackInSlot(0);
+		stackInSlot.shrink(1);
+		inputInv.setStackInSlot(0, stackInSlot);
 		lastRecipe.rollResults().forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
 		sendData();
 		markDirty();

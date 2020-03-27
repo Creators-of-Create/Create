@@ -2,14 +2,14 @@
     "type": "create:milling",
     "ingredients": [
     	{
-    		"item": "minecraft:gravel"
+    		"tag": "forge:ores/zinc"
     	}
     ], 
 	"results": [
 		{
-			"item": "minecraft:flint",
+			"item": "create:crushed_zinc",
 			"count": 1
 		}
 	],
-	"processingTime": 250
+	"processingTime": 350
 }

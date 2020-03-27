@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
+import com.simibubi.create.modules.contraptions.base.IRotate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -25,7 +26,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class GaugeBlock extends DirectionalAxisKineticBlock {
@@ -66,31 +66,38 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	}
 
 	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		World world = context.getWorld();
+		Direction face = context.getFace();
+		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
+		BlockState placedOnState = world.getBlockState(placedOnPos);
+		Block block = placedOnState.getBlock();
+
+		if (block instanceof IRotate && ((IRotate) block).hasShaftTowards(world, placedOnPos, placedOnState, face)) {
+			BlockState toPlace = getDefaultState();
+			Direction horizontalFacing = context.getPlacementHorizontalFacing();
+			Direction nearestLookingDirection = context.getNearestLookingDirection();
+			boolean lookPositive = nearestLookingDirection.getAxisDirection() == AxisDirection.POSITIVE;
+			if (face.getAxis() == Axis.X) {
+				toPlace = toPlace.with(FACING, lookPositive ? Direction.NORTH : Direction.SOUTH)
+						.with(AXIS_ALONG_FIRST_COORDINATE, true);
+			} else if (face.getAxis() == Axis.Y) {
+				toPlace = toPlace.with(FACING, horizontalFacing.getOpposite()).with(AXIS_ALONG_FIRST_COORDINATE,
+						horizontalFacing.getAxis() == Axis.X);
+			} else {
+				toPlace = toPlace.with(FACING, lookPositive ? Direction.WEST : Direction.EAST)
+						.with(AXIS_ALONG_FIRST_COORDINATE, false);
+			}
+
+			return toPlace;
+		}
+
+		return super.getStateForPlacement(context);
+	}
+
+	@Override
 	protected boolean hasStaticPart() {
 		return true;
-	}
-
-	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		Direction facing = state.get(FACING).getOpposite();
-		BlockPos neighbourPos = pos.offset(facing);
-		BlockState neighbour = worldIn.getBlockState(neighbourPos);
-		return Block.hasSolidSide(neighbour, worldIn, neighbourPos, facing.getOpposite());
-	}
-
-	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
-		if (worldIn.isRemote)
-			return;
-
-		Direction blockFacing = state.get(FACING);
-		if (fromPos.equals(pos.offset(blockFacing.getOpposite()))) {
-			if (!isValidPosition(state, worldIn, pos)) {
-				worldIn.destroyBlock(pos, true);
-				return;
-			}
-		}
 	}
 
 	@Override

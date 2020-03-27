@@ -10,7 +10,7 @@ public class MillstoneRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CreateClient.bufferCache.renderPartial(AllBlockPartials.MILL_STONE_COG, te.getBlockState());
+		return CreateClient.bufferCache.renderPartial(AllBlockPartials.MILLSTONE_COG, te.getBlockState());
 	}
 	
 }

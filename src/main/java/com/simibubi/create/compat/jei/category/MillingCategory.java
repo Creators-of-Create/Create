@@ -10,7 +10,7 @@ import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.CreateJEI;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.EmptyBackground;
-import com.simibubi.create.compat.jei.category.animations.AnimatedCrushingWheels;
+import com.simibubi.create.compat.jei.category.animations.AnimatedMillstone;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
@@ -24,16 +24,16 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class CrushingCategory implements IRecipeCategory<AbstractCrushingRecipe> {
+public class MillingCategory implements IRecipeCategory<AbstractCrushingRecipe> {
 
-	private static ResourceLocation ID = new ResourceLocation(Create.ID, "crushing");
-	private AnimatedCrushingWheels crushingWheels = new AnimatedCrushingWheels();
+	private static ResourceLocation ID = new ResourceLocation(Create.ID, "milling");
+	private AnimatedMillstone millstone = new AnimatedMillstone();
 	private IDrawable icon;
-	private IDrawable background = new EmptyBackground(177, 100);
+	private IDrawable background = new EmptyBackground(177, 53);
 
-	public CrushingCategory() {
-		icon = new DoubleItemIcon(() -> new ItemStack(AllBlocks.CRUSHING_WHEEL.get()),
-				() -> new ItemStack(AllItems.CRUSHED_GOLD.get()));
+	public MillingCategory() {
+		icon = new DoubleItemIcon(() -> new ItemStack(AllBlocks.MILLSTONE.get()),
+				() -> new ItemStack(AllItems.FLOUR.get()));
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class CrushingCategory implements IRecipeCategory<AbstractCrushingRecipe>
 
 	@Override
 	public String getTitle() {
-		return Lang.translate("recipe.crushing");
+		return Lang.translate("recipe.milling");
 	}
 
 	@Override
@@ -70,14 +70,16 @@ public class CrushingCategory implements IRecipeCategory<AbstractCrushingRecipe>
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, AbstractCrushingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 50, 2);
+		itemStacks.init(0, true, 14, 8);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
 		List<ProcessingOutput> results = recipe.getRollableResults();
-		int size = results.size();
-		int offset = -size * 19 / 2;
-		for (int outputIndex = 0; outputIndex < size; outputIndex++) {
-			itemStacks.init(outputIndex + 1, false, getBackground().getWidth() / 2 + offset + 19 * outputIndex, 78);
+		boolean single = results.size() == 1;
+		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
+			int xOffset = outputIndex % 2 == 0 ? 0 : 19;
+			int yOffset = (outputIndex / 2) * -19;
+
+			itemStacks.init(outputIndex + 1, false, single ? 139 : 133 + xOffset, 27 + yOffset);
 			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
 		}
 
@@ -86,16 +88,24 @@ public class CrushingCategory implements IRecipeCategory<AbstractCrushingRecipe>
 
 	@Override
 	public void draw(AbstractCrushingRecipe recipe, double mouseX, double mouseY) {
-		List<ProcessingOutput> results = recipe.getRollableResults();
-		ScreenResources.JEI_SLOT.draw(50, 2);
-		ScreenResources.JEI_DOWN_ARROW.draw(72, 7);
+		int size = recipe.getPossibleOutputs().size();
 
-		int size = results.size();
-		int offset = -size * 19 / 2;
-		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++)
-			ScreenResources.JEI_SLOT.draw(getBackground().getWidth() / 2 + offset + 19 * outputIndex, 78);
+		ScreenResources.JEI_SLOT.draw(14, 8);
+		ScreenResources.JEI_SHADOW.draw(30, 40);
+		ScreenResources.JEI_ARROW.draw(85, 32);
+		ScreenResources.JEI_DOWN_ARROW.draw(43, 4);
 
-		crushingWheels.draw(92, 49);
+		if (size > 1) {
+			for (int i = 0; i < size; i++) {
+				int xOffset = i % 2 == 0 ? 0 : 19;
+				int yOffset = (i / 2) * -19;
+				ScreenResources.JEI_SLOT.draw(133 + xOffset, 27 + yOffset);
+			}
+		} else {
+			ScreenResources.JEI_SLOT.draw(139, 27);
+		}
+
+		millstone.draw(57, 27);
 	}
 
 }

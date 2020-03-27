@@ -14,11 +14,6 @@
 			"item": "minecraft:clay_ball",
 			"count": 1,
 			"chance": 0.5
-		},
-		{
-			"item": "minecraft:flint",
-			"count": 1,
-			"chance": 0.2
 		}
 	],
 	"processingTime": 50

@@ -2,14 +2,14 @@
     "type": "create:milling",
     "ingredients": [
     	{
-    		"item": "minecraft:gravel"
+    		"tag": "forge:ores/copper"
     	}
     ], 
 	"results": [
 		{
-			"item": "minecraft:flint",
+			"item": "create:crushed_copper",
 			"count": 1
 		}
 	],
-	"processingTime": 250
+	"processingTime": 350
 }

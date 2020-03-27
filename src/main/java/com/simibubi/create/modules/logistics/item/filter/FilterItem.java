@@ -58,7 +58,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			ItemDescription.add(tooltip, makeSummary);
 		}
 	}
-
+	
 	private List<String> makeSummary(ItemStack filter) {
 		List<String> list = new ArrayList<>();
 

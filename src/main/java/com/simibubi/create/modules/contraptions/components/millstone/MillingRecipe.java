@@ -27,7 +27,7 @@ public class MillingRecipe extends AbstractCrushingRecipe {
 	
 	@Override
 	protected int getMaxOutputCount() {
-		return 7;
+		return 4;
 	}
 
 }
