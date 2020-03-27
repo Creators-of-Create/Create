@@ -189,6 +189,11 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 	}
 
 	@Override
+	public int getItemEnchantability() {
+		return 5;
+	}
+
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public CustomRenderedItemModel createModel(IBakedModel original) {
 		return new SandPaperModel(original);

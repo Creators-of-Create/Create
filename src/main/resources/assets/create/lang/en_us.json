@@ -309,6 +309,8 @@
 	"create.action.discard": "Discard",
 
 	"create.keyinfo.toolmenu": "Focus Tool Menu",
+	"create.keyinfo.scrollup": "Simulate Mousewheel Up (inworld)",
+	"create.keyinfo.scrolldown": "Simulate Mousewheel Down (inworld)",
 
 	"create.gui.scrollInput.defaultTitle": "Choose an Option:",
 	"create.gui.scrollInput.scrollToModify": "Scroll to Modify",
@@ -625,7 +627,7 @@
 	"advancement.create:sand_paper.desc": "Create some Sand Paper to make things pretty.",
 	"advancement.create:polished_rose_quartz": "Pink Diamonds",
 	"advancement.create:polished_rose_quartz.desc": "Polish Rose Quartz until you can see through it.",
-	"advancement.create:sand_paper_secret": "Polishception",
+	"advancement.create:sand_paper_secret": "9001 Grit Sand Paper",
 	"advancement.create:sand_paper_secret.desc": "Use your Sand Paper to sand some Sand Paper.",
 	"advancement.create:press": "'Bonk!'        ",
 	"advancement.create:press.desc": "Make a Mechanical Press and use it to create some Plates.",
@@ -1115,6 +1117,11 @@
 	"block.create.stress_gauge.tooltip.condition1": "When Rotated",
 	"block.create.stress_gauge.tooltip.behaviour1": "Indicates a color corresponding to the level of stress. _Over-stressed_ _networks_ will cease to move. Stress can be relieved by adding more _rotational_ _sources_ to the network.",
 	
+	"tool.create.sand_paper.tooltip": "SAND PAPER",
+	"tool.create.sand_paper.tooltip.summary": "A rough paper that can be used to _polish_ _materials_ or sharpen your _tools_.",
+	"tool.create.sand_paper.tooltip.condition1": "When Used",
+	"tool.create.sand_paper.tooltip.behaviour1": "Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking_ _at_ _them_",
+
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed_ _light_.",
 	
