@@ -43,7 +43,7 @@ public class TriplePlaneMirror extends SymmetryMirror {
 
 	@Override
 	public BlockState getModel() {
-		return AllBlocks.SYMMETRY_TRIPLEPLANE.block.getDefaultState();
+		return AllBlocks.SYMMETRY_TRIPLEPLANE.get().getDefaultState();
 	}
 
 	@Override

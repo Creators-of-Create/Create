@@ -88,7 +88,7 @@ public class SawTileEntityRenderer extends SafeTileEntityRenderer<SawTileEntity>
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
 		BlockState state = te.getBlockState();
-		return AllBlocks.SHAFT.block.getDefaultState().with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
+		return AllBlocks.SHAFT.get().getDefaultState().with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
 	}
 
 }

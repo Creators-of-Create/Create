@@ -85,7 +85,7 @@ public class CrossPlaneMirror extends SymmetryMirror {
 
 	@Override
 	public BlockState getModel() {
-		return AllBlocks.SYMMETRY_CROSSPLANE.block.getDefaultState().with(CrossPlaneSymmetryBlock.align,
+		return AllBlocks.SYMMETRY_CROSSPLANE.get().getDefaultState().with(CrossPlaneSymmetryBlock.align,
 				(Align) orientation);
 	}
 

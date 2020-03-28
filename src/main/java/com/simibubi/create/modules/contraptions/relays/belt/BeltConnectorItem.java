@@ -27,7 +27,7 @@ import net.minecraft.world.World;
 public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 
 	public BeltConnectorItem(Properties properties) {
-		super(AllBlocks.BELT.block, properties);
+		super(AllBlocks.BELT.get(), properties);
 	}
 
 	@Override

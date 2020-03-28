@@ -183,7 +183,7 @@ public enum AllTileEntities {
 		for (AllTileEntities tileEntity : values()) {
 			Block[] blocks = new Block[tileEntity.blocks.length];
 			for (int i = 0; i < blocks.length; i++)
-				blocks[i] = tileEntity.blocks[i].block;
+				blocks[i] = tileEntity.blocks[i].get();
 
 			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, Lang.asId(tileEntity.name()));
 			tileEntity.type = TileEntityType.Builder.create(tileEntity.supplier, blocks).build(null)

@@ -281,7 +281,7 @@ public class BeltBlock extends HorizontalKineticBlock
 				return ActionResultType.SUCCESS;
 			world.setBlockState(context.getPos(), state.with(CASING, false), 3);
 			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.BRASS_CASING.block));
+				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.BRASS_CASING.get()));
 			return ActionResultType.SUCCESS;
 		}
 
@@ -292,7 +292,7 @@ public class BeltBlock extends HorizontalKineticBlock
 			belt.detachKinetics();
 			belt.attachKinetics();
 			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.SHAFT.block));
+				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.SHAFT.get()));
 			return ActionResultType.SUCCESS;
 		}
 
