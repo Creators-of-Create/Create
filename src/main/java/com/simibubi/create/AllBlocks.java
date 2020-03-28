@@ -155,7 +155,7 @@ public enum AllBlocks {
 	ROPE_PULLEY(new PulleyBlock()),
 	ROPE(new PulleyBlock.RopeBlock()),
 	PULLEY_MAGNET(new PulleyBlock.MagnetBlock()),
-	CART_ASSEMBLER(new TaggedBlock<>(new CartAssemblerBlock()).withVanillaTags(ITaggable.TagType.BLOCK, "rails")),
+	CART_ASSEMBLER(new TaggedBlock(new CartAssemblerBlock()).withVanillaTags(ITaggable.TagType.BLOCK, "rails")),
 	MINECART_ANCHOR(new MinecartAnchorBlock()),
 	TRANSLATION_CHASSIS(new LinearChassisBlock()),
 	TRANSLATION_CHASSIS_SECONDARY(new LinearChassisBlock()),
@@ -205,10 +205,10 @@ public enum AllBlocks {
 	SYMMETRY_CROSSPLANE(new CrossPlaneSymmetryBlock()),
 	SYMMETRY_TRIPLEPLANE(new TriplePlaneSymmetryBlock()),
 	WINDOW_IN_A_BLOCK(new WindowInABlockBlock()),
-	COCOA_LOG(new TaggedBlock<>(new CocoaLogBlock()).withVanillaTags(ITaggable.TagType.BLOCK, "jungle_logs")),
+	COCOA_LOG(new TaggedBlock(new CocoaLogBlock()).withVanillaTags(ITaggable.TagType.BLOCK, "jungle_logs")),
 
 	__PALETTES__(),
-	TILED_GLASS(new TaggedBlock<>(new GlassBlock(Properties.from(Blocks.GLASS))).withVanillaTags(ITaggable.TagType.BLOCK, "impermeable").withForgeTags("glass")),
+	TILED_GLASS(new TaggedBlock(new GlassBlock(Properties.from(Blocks.GLASS))).withVanillaTags(ITaggable.TagType.BLOCK, "impermeable").withForgeTags("glass")),
 	FRAMED_GLASS(new CTGlassBlock(AllCTs.FRAMED_GLASS, false)),
 	HORIZONTAL_FRAMED_GLASS(new HorizontalCTGlassBlock(AllCTs.HORIZONTAL_FRAMED_GLASS, AllCTs.FRAMED_GLASS, false)),
 	VERTICAL_FRAMED_GLASS(new VerticalCTGlassBlock(AllCTs.VERTICAL_FRAMED_GLASS, false)),
@@ -221,7 +221,7 @@ public enum AllBlocks {
 	ACACIA_GLASS(new CTWindowBlock(AllCTs.ACACIA_GLASS, false)),
 	IRON_GLASS(new CTWindowBlock(AllCTs.IRON_GLASS, false)),
 
-	TILED_GLASS_PANE(new TaggedBlock<>(new GlassPaneBlock(Properties.from(Blocks.GLASS))).withForgeTags("glass_panes")),
+	TILED_GLASS_PANE(new TaggedBlock(new GlassPaneBlock(Properties.from(Blocks.GLASS))).withForgeTags("glass_panes")),
 	FRAMED_GLASS_PANE(new CTGlassPaneBlock(FRAMED_GLASS.get())),
 	HORIZONTAL_FRAMED_GLASS_PANE(new CTGlassPaneBlock(HORIZONTAL_FRAMED_GLASS.get())),
 	VERTICAL_FRAMED_GLASS_PANE(new CTGlassPaneBlock(VERTICAL_FRAMED_GLASS.get())),
@@ -241,8 +241,8 @@ public enum AllBlocks {
 	ANDESITE_LAYERS(
 			new LayeredCTBlock(Properties.from(Blocks.ANDESITE), AllCTs.ANDESITE_LAYERS, AllCTs.POLISHED_ANDESITE)),
 
-	GABBRO(new TaggedBlock<>(new Block(Properties.from(Blocks.GRANITE))).withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	POLISHED_GABBRO(new TaggedBlock<>(new Block(Properties.from(GABBRO.get()))).withForgeTags("stone")),
+	GABBRO(new TaggedBlock(new Block(Properties.from(Blocks.GRANITE))).withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	POLISHED_GABBRO(new TaggedBlock(new Block(Properties.from(GABBRO.get()))).withForgeTags("stone")),
 	GABBRO_BRICKS(new Block(Properties.from(GABBRO.get())), ComesWith.STAIRS, ComesWith.WALL),
 	PAVED_GABBRO_BRICKS(new Block(Properties.from(GABBRO.get())), ComesWith.SLAB),
 	INDENTED_GABBRO(new Block(Properties.from(GABBRO.get())), ComesWith.SLAB),
@@ -250,31 +250,31 @@ public enum AllBlocks {
 	MOSSY_GABBRO_BRICKS(new Block(Properties.from(GABBRO.get()))),
 	GABBRO_LAYERS(new LayeredCTBlock(Properties.from(GABBRO.get()), AllCTs.GABBRO_LAYERS, AllCTs.POLISHED_GABBRO)),
 
-	DOLOMITE(new TaggedBlock<>(new Block(Properties.from(Blocks.QUARTZ_BLOCK))).withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	DOLOMITE(new TaggedBlock(new Block(Properties.from(Blocks.QUARTZ_BLOCK))).withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	DOLOMITE_BRICKS(new Block(Properties.from(DOLOMITE.get()))),
-	POLISHED_DOLOMITE(new TaggedBlock<>(new Block(Properties.from(DOLOMITE.get()))).withForgeTags("stone")),
+	POLISHED_DOLOMITE(new TaggedBlock(new Block(Properties.from(DOLOMITE.get()))).withForgeTags("stone")),
 	DOLOMITE_PILLAR(new RotatedPillarBlock(Properties.from(DOLOMITE.get()))),
 	DOLOMITE_LAYERS(
 			new LayeredCTBlock(Properties.from(DOLOMITE.get()), AllCTs.DOLOMITE_LAYERS, AllCTs.POLISHED_DOLOMITE)),
 
 	LIMESAND(new FallingBlock(Properties.from(Blocks.SAND))),
-	LIMESTONE(new TaggedBlock<>(new Block(Properties.from(Blocks.SANDSTONE))).withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	LIMESTONE(new TaggedBlock(new Block(Properties.from(Blocks.SANDSTONE))).withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	LIMESTONE_BRICKS(new Block(Properties.from(LIMESTONE.get())), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	POLISHED_LIMESTONE(new TaggedBlock<>(new Block(Properties.from(LIMESTONE.get()))).withForgeTags("stone"), ComesWith.SLAB),
+	POLISHED_LIMESTONE(new TaggedBlock(new Block(Properties.from(LIMESTONE.get()))).withForgeTags("stone"), ComesWith.SLAB),
 	LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(LIMESTONE.get()))),
 	LIMESTONE_LAYERS(
 			new LayeredCTBlock(Properties.from(LIMESTONE.get()), AllCTs.LIMESTONE_LAYERS, AllCTs.POLISHED_LIMESTONE)),
-	WEATHERED_LIMESTONE(new TaggedBlock<>(new Block(Properties.from(Blocks.ANDESITE))).withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	WEATHERED_LIMESTONE(new TaggedBlock(new Block(Properties.from(Blocks.ANDESITE))).withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	WEATHERED_LIMESTONE_BRICKS(new Block(Properties.from(WEATHERED_LIMESTONE.get())), ComesWith.STAIRS, ComesWith.SLAB,
 			ComesWith.WALL),
-	POLISHED_WEATHERED_LIMESTONE(new TaggedBlock<>(new Block(Properties.from(WEATHERED_LIMESTONE.get()))).withForgeTags("stone"), ComesWith.SLAB),
+	POLISHED_WEATHERED_LIMESTONE(new TaggedBlock(new Block(Properties.from(WEATHERED_LIMESTONE.get()))).withForgeTags("stone"), ComesWith.SLAB),
 	WEATHERED_LIMESTONE_PILLAR(new RotatedPillarBlock(Properties.from(WEATHERED_LIMESTONE.get()))),
 	WEATHERED_LIMESTONE_LAYERS(new LayeredCTBlock(Properties.from(WEATHERED_LIMESTONE.get()),
 			AllCTs.WEATHERED_LIMESTONE_LAYERS, AllCTs.POLISHED_WEATHERED_LIMESTONE)),
 
 	NATURAL_SCORIA(new ScoriaBlock()),
-	SCORIA(new TaggedBlock<>(new Block(Properties.from(Blocks.ANDESITE))).withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	POLISHED_SCORIA(new TaggedBlock<>(new Block(Properties.from(SCORIA.get()))).withForgeTags("stone"), ComesWith.SLAB),
+	SCORIA(new TaggedBlock(new Block(Properties.from(Blocks.ANDESITE))).withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	POLISHED_SCORIA(new TaggedBlock(new Block(Properties.from(SCORIA.get()))).withForgeTags("stone"), ComesWith.SLAB),
 	SCORIA_BRICKS(new Block(Properties.from(SCORIA.get()))),
 	SCORIA_LAYERS(new LayeredCTBlock(Properties.from(SCORIA.get()), AllCTs.SCORIA_LAYERS, AllCTs.POLISHED_SCORIA)),
 	SCORIA_PILLAR(new RotatedPillarBlock(Properties.from(SCORIA.get()))),
@@ -285,37 +285,37 @@ public enum AllBlocks {
 	DARK_SCORIA_BRICKS(new Block(Properties.from(DARK_SCORIA.get())), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 
 	__MATERIALS__(),
-	COPPER_ORE(new TaggedBlock<>(new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1)).withForgeTags("ores/copper")),
-	ZINC_ORE(new TaggedBlock<>(new Block(Properties.from(Blocks.GOLD_ORE).harvestLevel(2).harvestTool(ToolType.PICKAXE))).withForgeTags("ores/zinc")),
-	COPPER_BLOCK(new TaggedBlock<>(new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f)).withForgeTags("storage_blocks/copper")),
+	COPPER_ORE(new TaggedBlock(new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1)).withForgeTags("ores/copper")),
+	ZINC_ORE(new TaggedBlock(new Block(Properties.from(Blocks.GOLD_ORE).harvestLevel(2).harvestTool(ToolType.PICKAXE))).withForgeTags("ores/zinc")),
+	COPPER_BLOCK(new TaggedBlock(new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f)).withForgeTags("storage_blocks/copper")),
 	COPPER_SHINGLES(new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f)),
-	ZINC_BLOCK(new TaggedBlock<>(new Block(Properties.from(Blocks.IRON_BLOCK))).withForgeTags("storage_blocks/zinc")),
-	BRASS_BLOCK(new TaggedBlock<>(new Block(Properties.from(Blocks.IRON_BLOCK))).withForgeTags("storage_blocks/brass")),
+	ZINC_BLOCK(new TaggedBlock(new Block(Properties.from(Blocks.IRON_BLOCK))).withForgeTags("storage_blocks/zinc")),
+	BRASS_BLOCK(new TaggedBlock(new Block(Properties.from(Blocks.IRON_BLOCK))).withForgeTags("storage_blocks/brass")),
 
 	;
 
 	private enum ComesWith {
-		WALL, FENCE, FENCE_GATE, SLAB, STAIRS;
+		WALL, FENCE, FENCE_GATE, SLAB, STAIRS
 	}
 
 	private static class CategoryTracker {
 		static IModule currentModule;
 	}
 
-	private TaggedBlock<? extends Block> taggedBlock;
-	public TaggedBlock<?>[] alsoRegistered;
+	private TaggedBlock taggedBlock;
+	public TaggedBlock[] alsoRegistered;
 	public IModule module;
 
 	AllBlocks() {
 		CategoryTracker.currentModule = () -> Lang.asId(name()).replaceAll("__", "");
-		taggedBlock = new TaggedBlock<>(null);
+		taggedBlock = new TaggedBlock(null);
 	}
 
 	AllBlocks(Block block, ComesWith... comesWith) {
-		this(new TaggedBlock<>(block), comesWith);
+		this(new TaggedBlock(block), comesWith);
 	}
 
-	AllBlocks(TaggedBlock<? extends Block> taggedBlockIn, ComesWith... comesWith){
+	AllBlocks(TaggedBlock taggedBlockIn, ComesWith... comesWith){
 		this.taggedBlock = taggedBlockIn;
 		this.taggedBlock.getBlock().setRegistryName(Create.ID, Lang.asId(name()));
 		this.module = CategoryTracker.currentModule;
@@ -334,7 +334,7 @@ public enum AllBlocks {
 				continue;
 
 			registry.register(block.get());
-			for (TaggedBlock<?> extra : block.alsoRegistered)
+			for (TaggedBlock extra : block.alsoRegistered)
 				registry.register(extra.block);
 		}
 	}
@@ -348,13 +348,13 @@ public enum AllBlocks {
 				continue;
 
 			registerAsItem(registry, def);
-			for (TaggedBlock<?> extra : block.alsoRegistered)
+			for (TaggedBlock extra : block.alsoRegistered)
 				registerAsItem(registry, extra.block);
 		}
 	}
 
 	private static void registerAsItem(IForgeRegistry<Item> registry, Block blockIn) {
-		BlockItem blockItem = null;
+		BlockItem blockItem;
 		Item.Properties standardItemProperties = AllItems.includeInItemGroup();
 
 		if (blockIn instanceof IHaveCustomBlockItem)
@@ -381,25 +381,25 @@ public enum AllBlocks {
 		return state.getBlock() == get();
 	}
 
-	private TaggedBlock<? extends Block> makeRelatedBlock(Block block, ComesWith feature) {
+	private TaggedBlock makeRelatedBlock(Block block, ComesWith feature) {
 		Properties properties = Properties.from(block);
-		TaggedBlock<? extends Block> featured = null;
+		TaggedBlock featured;
 
 		switch (feature) {
 		case FENCE:
-			featured = new TaggedBlock<>(new FenceBlock(properties)).withVanillaTags(ITaggable.TagType.BLOCK, "fences");
+			featured = new TaggedBlock(new FenceBlock(properties)).withVanillaTags(ITaggable.TagType.BLOCK, "fences");
 			break;
 		case SLAB:
-			featured = new TaggedBlock<>(new SlabBlock(properties)).withVanillaTags(ITaggable.TagType.BLOCK, "slabs");
+			featured = new TaggedBlock(new SlabBlock(properties)).withVanillaTags(ITaggable.TagType.BLOCK, "slabs");
 			break;
 		case STAIRS:
-			featured = new TaggedBlock<>(new ProperStairsBlock(block)).withVanillaTags(ITaggable.TagType.BLOCK, "stairs");
+			featured = new TaggedBlock(new ProperStairsBlock(block)).withVanillaTags(ITaggable.TagType.BLOCK, "stairs");
 			break;
 		case WALL:
-			featured = new TaggedBlock<>(new WallBlock(properties)).withVanillaTags(ITaggable.TagType.BLOCK, "walls");
+			featured = new TaggedBlock(new WallBlock(properties)).withVanillaTags(ITaggable.TagType.BLOCK, "walls");
 			break;
 		case FENCE_GATE:
-			featured = new TaggedBlock<>(new FenceGateBlock(properties));
+			featured = new TaggedBlock(new FenceGateBlock(properties));
 			break;
 		default:
 			return null;
@@ -419,18 +419,18 @@ public enum AllBlocks {
 		}
 	}
 
-	public static class TaggedBlock<T extends Block> implements ITaggable<TaggedBlock<T>> {
+	public static class TaggedBlock implements ITaggable<TaggedBlock> {
 		//A wrapper around Block that allows for tags to be included. needed for datagen
 
 		private Set<ResourceLocation> tagSetBlock = new HashSet<>();
 		private Set<ResourceLocation> tagSetBlockItem = new HashSet<>();
-		private T block;
+		private Block block;
 
-		public TaggedBlock(T blockIn){
+		public TaggedBlock(Block blockIn){
 			block = blockIn;
 		}
 
-		public T getBlock() {
+		public Block getBlock() {
 			return block;
 		}
 

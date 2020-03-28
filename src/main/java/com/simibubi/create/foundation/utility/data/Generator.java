@@ -13,6 +13,7 @@ public class Generator {
 		DataGenerator gen = event.getGenerator();
 		//gen.addProvider(AllSoundEvents.CUCKOO_PIG);
 		gen.addProvider(new AllBlocksTagProvider(gen));
+		gen.addProvider(new AllItemsTagProvider(gen));
 	}
 
 }

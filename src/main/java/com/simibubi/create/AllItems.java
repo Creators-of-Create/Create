@@ -5,11 +5,14 @@ import static com.simibubi.create.foundation.item.AllToolTypes.HOE;
 import static com.simibubi.create.foundation.item.AllToolTypes.PICKAXE;
 import static com.simibubi.create.foundation.item.AllToolTypes.SHOVEL;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
 
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.data.ITaggable;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.GogglesItem;
 import com.simibubi.create.modules.contraptions.WrenchItem;
@@ -39,6 +42,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.item.SwordItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -51,14 +55,14 @@ import net.minecraftforge.registries.IForgeRegistry;
 public enum AllItems {
 
 	__MATERIALS__(module()),
-	COPPER_NUGGET,
-	ZINC_NUGGET,
-	BRASS_NUGGET,
-	IRON_SHEET,
-	GOLD_SHEET,
-	COPPER_SHEET,
-	BRASS_SHEET,
-	LAPIS_PLATE,
+	COPPER_NUGGET(new TaggedItem().withForgeTags("nuggets/copper")),
+	ZINC_NUGGET(new TaggedItem().withForgeTags("nuggets/zinc")),
+	BRASS_NUGGET(new TaggedItem().withForgeTags("nuggets/brass")),
+	IRON_SHEET(new TaggedItem().withForgeTags("plates/iron")),
+	GOLD_SHEET(new TaggedItem().withForgeTags("plates/gold")),
+	COPPER_SHEET(new TaggedItem().withForgeTags("plates/copper")),
+	BRASS_SHEET(new TaggedItem().withForgeTags("plates/brass")),
+	LAPIS_PLATE(new TaggedItem().withForgeTags("plates/lapis")),
 
 	CRUSHED_IRON,
 	CRUSHED_GOLD,
@@ -67,9 +71,9 @@ public enum AllItems {
 	CRUSHED_BRASS,
 
 	ANDESITE_ALLOY,
-	COPPER_INGOT,
-	ZINC_INGOT,
-	BRASS_INGOT,
+	COPPER_INGOT(new TaggedItem().withForgeTags("ingots/copper")),
+	ZINC_INGOT(new TaggedItem().withForgeTags("ingots/zinc")),
+	BRASS_INGOT(new TaggedItem().withForgeTags("ingots/brass")),
 
 	SAND_PAPER(SandPaperItem::new),
 	RED_SAND_PAPER(SandPaperItem::new),
@@ -135,28 +139,32 @@ public enum AllItems {
 
 	public IModule module;
 	private Function<Properties, Properties> specialProperties;
-	private Function<Properties, Item> itemSupplier;
+	private TaggedItem taggedItem;
 	private Item item;
 
-	private AllItems(int moduleMarker) {
-		CategoryTracker.currentModule = new IModule() {
-			@Override
-			public String getModuleName() {
-				return Lang.asId(name()).replaceAll("__", "");
-			}
-		};
+	AllItems(int moduleMarker) {
+		CategoryTracker.currentModule = () -> Lang.asId(name()).replaceAll("__", "");
+		taggedItem = new TaggedItem(null);
 	}
 
-	private AllItems() {
-		this(Item::new);
+	AllItems(Function<Properties, Item> itemSupplier) {
+		this(new TaggedItem(itemSupplier), Function.identity());
 	}
 
-	private AllItems(Function<Properties, Item> itemSupplier) {
-		this(itemSupplier, Function.identity());
+	AllItems(Function<Properties, Item> itemSupplier, Function<Properties, Properties> specialProperties) {
+		this(new TaggedItem(itemSupplier), specialProperties);
 	}
 
-	private AllItems(Function<Properties, Item> itemSupplier, Function<Properties, Properties> specialProperties) {
-		this.itemSupplier = itemSupplier;
+	AllItems() {
+		this(new TaggedItem(Item::new));
+	}
+
+	AllItems(TaggedItem taggedItemIn) {
+		this(taggedItemIn, Function.identity());
+	}
+
+	AllItems(TaggedItem taggedItemIn, Function<Properties, Properties> specialProperties) {
+		this.taggedItem = taggedItemIn;
 		this.module = CategoryTracker.currentModule;
 		this.specialProperties = specialProperties;
 	}
@@ -185,11 +193,11 @@ public enum AllItems {
 		IForgeRegistry<Item> registry = event.getRegistry();
 
 		for (AllItems entry : values()) {
-			if (entry.itemSupplier == null)
+			if (entry.taggedItem == null || entry.taggedItem.getItemSupplier() == null)
 				continue;
 
-			entry.item = entry.itemSupplier.apply(new Properties());
-			entry.item = entry.itemSupplier.apply(entry.specialProperties.apply(defaultProperties(entry)));
+			entry.item = entry.taggedItem.getItemSupplier().apply(new Properties());
+			entry.item = entry.taggedItem.getItemSupplier().apply(entry.specialProperties.apply(defaultProperties(entry)));
 			entry.item.setRegistryName(Create.ID, Lang.asId(entry.name()));
 			registry.register(entry.item);
 		}
@@ -201,12 +209,39 @@ public enum AllItems {
 		return item;
 	}
 
+	public TaggedItem getTaggable() {
+		return taggedItem;
+	}
+
 	public boolean typeOf(ItemStack stack) {
 		return stack.getItem() == item;
 	}
 
 	public ItemStack asStack() {
 		return new ItemStack(item);
+	}
+
+	public static class TaggedItem implements ITaggable<TaggedItem> {
+
+		private Set<ResourceLocation> tagSetItem = new HashSet<>();
+		private Function<Properties, Item> itemSupplier;
+
+		public TaggedItem(){
+			this(Item::new);
+		}
+
+		public TaggedItem(Function<Properties, Item> itemSupplierIn){
+			this.itemSupplier = itemSupplierIn;
+		}
+
+		public Function<Properties, Item> getItemSupplier() {
+			return itemSupplier;
+		}
+
+		@Override
+		public Set<ResourceLocation> getTagSet(TagType type) {
+			return tagSetItem;
+		}
 	}
 
 	// Client

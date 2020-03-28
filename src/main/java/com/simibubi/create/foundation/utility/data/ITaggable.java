@@ -4,16 +4,14 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
 
-public interface ITaggable<T> {
+public interface ITaggable<T extends ITaggable<T>> {
 
 	enum TagType {
-		BLOCK, ITEM;
+		BLOCK, ITEM
 	}
 
 	default T withTags(ResourceLocation... tagsIn) {
-		Collections.addAll(getTagSet(TagType.BLOCK), tagsIn);
-		Collections.addAll(getTagSet(TagType.ITEM), tagsIn);
-		return (T) this;
+		return this.withTags(TagType.BLOCK, tagsIn).withTags(TagType.ITEM, tagsIn);
 	}
 
 	default T withTags(TagType type, ResourceLocation... tagsIn) {
