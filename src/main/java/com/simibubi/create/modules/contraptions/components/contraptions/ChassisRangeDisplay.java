@@ -109,7 +109,7 @@ public class ChassisRangeDisplay {
 
 		boolean ctrl = AllKeys.ctrlDown();
 		ChassisTileEntity chassisTileEntity = (ChassisTileEntity) tileEntity;
-		
+
 		if (ctrl) {
 			GroupEntry existingGroupForPos = getExistingGroupForPos(pos);
 			if (existingGroupForPos != null) {
@@ -119,7 +119,7 @@ public class ChassisRangeDisplay {
 				return;
 			}
 		}
-		
+
 		if (!entries.containsKey(pos) || ctrl)
 			display(chassisTileEntity);
 		else {
@@ -196,9 +196,11 @@ public class ChassisRangeDisplay {
 		float alpha = timer > 20 ? .5f : timer / 40f;
 		GlStateManager.color4f(1, .7f, 0, alpha);
 		Set<BlockPos> includedPositions = entry.includedPositions;
+		GlStateManager.depthMask(false);
 		for (BlockPos pos : includedPositions)
-			TessellatorHelper.cube(Tessellator.getInstance().getBuffer(), pos, size, 1 / 1024f, true, false);
+			TessellatorHelper.cube(Tessellator.getInstance().getBuffer(), pos, size, 1 / 16f - 1 / 64f, true, false);
 		TessellatorHelper.draw();
+		GlStateManager.depthMask(true);
 	}
 
 	private static GroupEntry getExistingGroupForPos(BlockPos pos) {

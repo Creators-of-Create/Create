@@ -55,6 +55,24 @@ public enum AllWorldFeatures {
 				biome.addFeature(entry.feature.getGenerationStage(), createFeature.get());
 			}
 		}
+		
+//		// Debug contained ore features
+//		for (Biome biome : ForgeRegistries.BIOMES) {
+//			Debug.markTemporary();
+//			System.out.println(biome.getRegistryName().getPath() + " has the following features:");
+//			for (ConfiguredFeature<?> configuredFeature : biome.getFeatures(Decoration.UNDERGROUND_ORES)) {
+//				IFeatureConfig config = configuredFeature.config;
+//				if (!(config instanceof DecoratedFeatureConfig))
+//					continue;
+//				DecoratedFeatureConfig decoConf = (DecoratedFeatureConfig) config;
+//				if (!(decoConf.feature.config instanceof OreFeatureConfig))
+//					continue;
+//				OreFeatureConfig oreConf = (OreFeatureConfig) decoConf.feature.config;
+//				System.out.println(configuredFeature.feature.getRegistryName().getPath());
+//				System.out.println(oreConf.state.getBlock().getRegistryName().getPath());
+//				System.out.println("--");
+//			}
+//		}
 	}
 
 	public static void fillConfig(ForgeConfigSpec.Builder builder) {

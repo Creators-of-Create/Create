@@ -34,6 +34,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	protected boolean assembleNextTick;
 	protected float clientAngleDiff;
 	protected ScrollOptionBehaviour<RotationMode> movementMode;
+	protected float lastGeneratedSpeed;
 
 	public MechanicalBearingTileEntity() {
 		super(AllTileEntities.MECHANICAL_BEARING.type);
@@ -92,7 +93,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		if (!running || !isWindmill)
 			return 0;
 		if (movedContraption == null)
-			return 0;
+			return lastGeneratedSpeed;
 		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks() / 8;
 		return MathHelper.clamp(sails, 1, 16);
 	}
@@ -102,6 +103,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		tag.putBoolean("Running", running);
 		tag.putBoolean("Windmill", isWindmill);
 		tag.putFloat("Angle", angle);
+		tag.putFloat("LastGenerated", lastGeneratedSpeed);
 		return super.write(tag);
 	}
 
@@ -110,6 +112,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		running = tag.getBoolean("Running");
 		isWindmill = tag.getBoolean("Windmill");
 		angle = tag.getFloat("Angle");
+		lastGeneratedSpeed = tag.getFloat("LastGenerated");
 		super.read(tag);
 	}
 
@@ -168,6 +171,12 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		angle = 0;
 		sendData();
 		updateGeneratedRotation();
+	}
+	
+	@Override
+	public void updateGeneratedRotation() {
+		super.updateGeneratedRotation();
+		lastGeneratedSpeed = getGeneratedSpeed();
 	}
 
 	public void disassemble() {
