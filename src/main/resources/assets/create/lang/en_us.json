@@ -545,6 +545,10 @@
 	
 	"create.item_attributes.placeable": "is placeable",
 	"create.item_attributes.consumable": "can be eaten",
+	"create.item_attributes.smeltable": "can be Smelted",
+	"create.item_attributes.washable": "can be Washed",
+	"create.item_attributes.smokable": "can be Smoked",
+	"create.item_attributes.blastable": "is smeltable in Blast Furnace",
 	"create.item_attributes.enchanted": "is enchanted",
 	"create.item_attributes.damaged": "is damaged",
 	"create.item_attributes.badly_damaged": "is heavily damaged",

@@ -58,7 +58,7 @@ public class InWorldProcessing {
 		public static Type byBlock(IBlockReader reader, BlockPos pos) {
 			BlockState blockState = reader.getBlockState(pos);
 			IFluidState fluidState = reader.getFluidState(pos);
-			if (fluidState.getFluid() == Fluids.WATER)
+			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			if (blockState.getBlock() == Blocks.FIRE
 					|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)))
@@ -103,14 +103,17 @@ public class InWorldProcessing {
 			return recipe.isPresent();
 		}
 
-		if (type == Type.SPLASHING) {
-			splashingInv.setInventorySlotContents(0, stack);
-			Optional<SplashingRecipe> recipe =
-				world.getRecipeManager().getRecipe(AllRecipes.SPLASHING.getType(), splashingInv, world);
-			return recipe.isPresent();
-		}
+		if (type == Type.SPLASHING)
+			return isWashable(stack, world);
 
 		return false;
+	}
+
+	public static boolean isWashable(ItemStack stack, World world) {
+		splashingInv.setInventorySlotContents(0, stack);
+		Optional<SplashingRecipe> recipe =
+			world.getRecipeManager().getRecipe(AllRecipes.SPLASHING.getType(), splashingInv, world);
+		return recipe.isPresent();
 	}
 
 	public static void applyProcessing(ItemEntity entity, Type type) {
@@ -152,6 +155,8 @@ public class InWorldProcessing {
 		List<TransportedItemStack> transportedStacks = new ArrayList<>();
 		for (ItemStack additional : stacks) {
 			TransportedItemStack newTransported = transported.getSimilar();
+			newTransported.beltPosition -= Math.signum(belt.getDirectionAwareBeltMovementSpeed()) * 1/32f;
+			newTransported.prevBeltPosition = newTransported.beltPosition;
 			newTransported.stack = additional.copy();
 			transportedStacks.add(newTransported);
 		}
@@ -279,7 +284,7 @@ public class InWorldProcessing {
 	public static void spawnParticlesForProcessing(World world, Vec3d vec, Type type) {
 		if (!world.isRemote)
 			return;
-		if (world.rand.nextInt(4) != 0)
+		if (world.rand.nextInt(8) != 0)
 			return;
 
 		switch (type) {

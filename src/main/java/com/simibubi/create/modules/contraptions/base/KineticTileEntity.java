@@ -120,10 +120,11 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		}
 	}
 
-	public void updateStressFromNetwork(float maxStress, float currentStress) {
+	public void updateFromNetwork(float maxStress, float currentStress, int networkSize) {
 		networkDirty = false;
 		this.capacity = maxStress;
 		this.stress = currentStress;
+		this.networkSize = networkSize;
 		boolean overStressed = maxStress < currentStress && StressImpact.isEnabled();
 
 		if (overStressed != this.overStressed) {
@@ -182,7 +183,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			networkTag.putLong("Id", this.network);
 			networkTag.putFloat("Stress", stress);
 			networkTag.putFloat("Capacity", capacity);
-			networkTag.putInt("Size", getOrCreateNetwork().getSize());
+			networkTag.putInt("Size", networkSize);
 
 			float stressApplied = getStressApplied();
 			float addedStressCapacity = getAddedStressCapacity();

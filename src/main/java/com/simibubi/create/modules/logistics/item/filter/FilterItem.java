@@ -152,11 +152,11 @@ public class FilterItem extends Item implements INamedContainerProvider {
 		return newInv;
 	}
 
-	public static boolean test(ItemStack stack, ItemStack filter) {
-		return test(stack, filter, false);
+	public static boolean test(World world, ItemStack stack, ItemStack filter) {
+		return test(world, stack, filter, false);
 	}
 
-	private static boolean test(ItemStack stack, ItemStack filter, boolean matchNBT) {
+	private static boolean test(World world, ItemStack stack, ItemStack filter, boolean matchNBT) {
 		if (filter.isEmpty())
 			return true;
 		
@@ -172,7 +172,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 				ItemStack stackInSlot = filterItems.getStackInSlot(slot);
 				if (stackInSlot.isEmpty())
 					continue;
-				boolean matches = test(stack, stackInSlot, respectNBT);
+				boolean matches = test(world, stack, stackInSlot, respectNBT);
 				if (matches)
 					return !blacklist;
 			}
@@ -184,7 +184,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			ListNBT attributes = filter.getOrCreateTag().getList("MatchedAttributes", NBT.TAG_COMPOUND);
 			for (INBT inbt : attributes) {
 				ItemAttribute attribute = ItemAttribute.fromNBT((CompoundNBT) inbt);
-				boolean matches = attribute.appliesTo(stack);
+				boolean matches = attribute.appliesTo(stack, world);
 
 				if (matches) {
 					switch (whitelistMode) {

@@ -126,7 +126,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 	@Override
 	public float getInterpolatedAngle(float partialTicks) {
-		if (movedContraption == null || movedContraption.isStalled())
+		if (movedContraption == null || movedContraption.isStalled() || !running)
 			partialTicks = 0;
 		return MathHelper.lerp(partialTicks, angle, angle + getAngularSpeed());
 	}

@@ -30,7 +30,7 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock implements IW
 	public TransposerBlock() {
 		setDefaultState(getDefaultState().with(POWERED, false));
 	}
-
+	
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;

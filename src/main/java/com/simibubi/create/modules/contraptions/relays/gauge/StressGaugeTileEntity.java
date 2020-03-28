@@ -18,8 +18,8 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 	}
 
 	@Override
-	public void updateStressFromNetwork(float maxStress, float currentStress) {
-		super.updateStressFromNetwork(maxStress, currentStress);
+	public void updateFromNetwork(float maxStress, float currentStress, int networkSize) {
+		super.updateFromNetwork(maxStress, currentStress, networkSize);
 
 		if (!StressImpact.isEnabled())
 			dialTarget = 0;
@@ -51,7 +51,8 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 			markDirty();
 			return;
 		}
-		updateStressFromNetwork(capacity, stress);
+
+		updateFromNetwork(capacity, stress, getOrCreateNetwork().getSize());
 	}
 
 	@Override
@@ -67,7 +68,8 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stress_gauge.title"));
 
 		if (getTheoreticalSpeed() == 0)
-			tooltip.add(TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1) + Lang.translate("gui.stress_gauge.no_rotation"));
+			tooltip.add(TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
+					+ Lang.translate("gui.stress_gauge.no_rotation"));
 		else {
 			tooltip.add(spacing + StressImpact.getFormattedStressText(stressFraction));
 
@@ -76,10 +78,13 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 			double remainingCapacity = capacity - getNetworkStress();
 			double remainingCapacityAtBase = remainingCapacity / Math.abs(getTheoreticalSpeed());
 
-			String capacityString = spacing + StressImpact.of(stressFraction).getRelativeColor() + "%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
+			String capacityString = spacing + StressImpact.of(stressFraction).getRelativeColor() + "%s"
+					+ Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
 
-			tooltip.add(String.format(capacityString, IHaveGoggleInformation.format(remainingCapacityAtBase), Lang.translate("gui.goggles.base_value")));
-			tooltip.add(String.format(capacityString, IHaveGoggleInformation.format(remainingCapacity), Lang.translate("gui.goggles.at_current_speed")));
+			tooltip.add(String.format(capacityString, IHaveGoggleInformation.format(remainingCapacityAtBase),
+					Lang.translate("gui.goggles.base_value")));
+			tooltip.add(String.format(capacityString, IHaveGoggleInformation.format(remainingCapacity),
+					Lang.translate("gui.goggles.at_current_speed")));
 
 		}
 

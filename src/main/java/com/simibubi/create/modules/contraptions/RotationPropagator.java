@@ -123,7 +123,8 @@ public class RotationPropagator {
 		if (isLargeGearToSpeedController(stateTo, stateFrom, diff))
 			return SpeedControllerTileEntity.getConveyedSpeed(to, from, false);
 
-		return from.getTheoreticalSpeed() * getRotationSpeedModifier(from, to);
+		float rotationSpeedModifier = getRotationSpeedModifier(from, to);
+		return from.getTheoreticalSpeed() * rotationSpeedModifier;
 	}
 
 	private static boolean isLargeToLargeGear(BlockState from, BlockState to, BlockPos diff) {
@@ -233,8 +234,8 @@ public class RotationPropagator {
 				// Neighbour faster, overpower the incoming tree
 				if (Math.abs(oppositeSpeed) > Math.abs(speedOfCurrent)) {
 					float prevSpeed = currentTE.getSpeed();
-					currentTE.setSpeed(oppositeSpeed);
 					currentTE.setSource(neighbourTE.getPos());
+					currentTE.setSpeed(getConveyedSpeed(neighbourTE, currentTE));
 					currentTE.onSpeedChanged(prevSpeed);
 					currentTE.sendData();
 
@@ -256,8 +257,8 @@ public class RotationPropagator {
 						currentTE.removeSource();
 
 					float prevSpeed = neighbourTE.getSpeed();
-					neighbourTE.setSpeed(newSpeed);
 					neighbourTE.setSource(currentTE.getPos());
+					neighbourTE.setSpeed(getConveyedSpeed(currentTE, neighbourTE));
 					neighbourTE.onSpeedChanged(prevSpeed);
 					neighbourTE.sendData();
 					propagateNewSource(neighbourTE);

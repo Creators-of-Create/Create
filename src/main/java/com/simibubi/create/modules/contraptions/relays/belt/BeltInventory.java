@@ -37,12 +37,14 @@ public class BeltInventory {
 
 	final BeltTileEntity belt;
 	final List<TransportedItemStack> items;
+	final List<TransportedItemStack> toInsert;
 	boolean beltMovementPositive;
 	final float SEGMENT_WINDOW = .75f;
 
 	public BeltInventory(BeltTileEntity te) {
 		this.belt = te;
 		items = new LinkedList<>();
+		toInsert = new LinkedList<>();
 	}
 
 	public void tick() {
@@ -51,6 +53,14 @@ public class BeltInventory {
 		if (beltMovementPositive != movingPositive()) {
 			beltMovementPositive = movingPositive();
 			Collections.reverse(items);
+			belt.markDirty();
+			belt.sendData();
+		}
+		
+		// Add items from previous cycle
+		if (!toInsert.isEmpty()) {
+			toInsert.forEach(this::insert);
+			toInsert.clear();
 			belt.markDirty();
 			belt.sendData();
 		}
@@ -325,18 +335,29 @@ public class BeltInventory {
 		else if (!beltMovementPositive)
 			segmentPos += 1f;
 
-		for (TransportedItemStack stack : items) {
-			float currentPos = stack.beltPosition;
-
-			if (stack.insertedAt == segment && stack.insertedFrom == side
-					&& (beltMovementPositive ? currentPos <= segmentPos + 1 : currentPos >= segmentPos - 1))
+		for (TransportedItemStack stack : items) 
+			if (isBlocking(segment, side, segmentPos, stack))
 				return false;
-
-		}
+		for (TransportedItemStack stack : toInsert) 
+			if (isBlocking(segment, side, segmentPos, stack))
+				return false;
+		
 		return true;
 	}
 
-	protected void insert(TransportedItemStack newStack) {
+	private boolean isBlocking(int segment, Direction side, float segmentPos, TransportedItemStack stack) {
+		float currentPos = stack.beltPosition;
+		if (stack.insertedAt == segment && stack.insertedFrom == side
+				&& (beltMovementPositive ? currentPos <= segmentPos + 1 : currentPos >= segmentPos - 1))
+			return true;
+		return false;
+	}
+
+	public void addItem(TransportedItemStack newStack) {
+		toInsert.add(newStack);
+	}
+	
+	private void insert(TransportedItemStack newStack) {
 		if (items.isEmpty())
 			items.add(newStack);
 		else {

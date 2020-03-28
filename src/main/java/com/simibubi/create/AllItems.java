@@ -4,7 +4,6 @@ import static com.simibubi.create.foundation.item.AllToolTypes.AXE;
 import static com.simibubi.create.foundation.item.AllToolTypes.HOE;
 import static com.simibubi.create.foundation.item.AllToolTypes.PICKAXE;
 import static com.simibubi.create.foundation.item.AllToolTypes.SHOVEL;
-import static com.simibubi.create.foundation.item.AllToolTypes.SWORD;
 
 import java.util.function.Function;
 
@@ -21,6 +20,7 @@ import com.simibubi.create.modules.curiosities.RefinedRadianceItem;
 import com.simibubi.create.modules.curiosities.ShadowSteelItem;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItem;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
+import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
 import com.simibubi.create.modules.curiosities.tools.BlazingToolItem;
 import com.simibubi.create.modules.curiosities.tools.RoseQuartzToolItem;
 import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
@@ -39,6 +39,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
+import net.minecraft.item.SwordItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
@@ -113,16 +114,16 @@ public enum AllItems {
 	BLAZING_PICKAXE(p -> new BlazingToolItem(1, -2.8F, p, PICKAXE)),
 	BLAZING_SHOVEL(p -> new BlazingToolItem(1.5F, -3.0F, p, SHOVEL)),
 	BLAZING_AXE(p -> new BlazingToolItem(5.0F, -3.0F, p, AXE)),
-	BLAZING_SWORD(p -> new BlazingToolItem(3, -2.4F, p, SWORD)),
+	BLAZING_SWORD(p -> new SwordItem(AllToolTiers.BLAZING, 3, -2.4F, p)),
 
 	ROSE_QUARTZ_PICKAXE(p -> new RoseQuartzToolItem(1, -2.8F, p, PICKAXE)),
 	ROSE_QUARTZ_SHOVEL(p -> new RoseQuartzToolItem(1.5F, -3.0F, p, SHOVEL)),
 	ROSE_QUARTZ_AXE(p -> new RoseQuartzToolItem(5.0F, -3.0F, p, AXE)),
-	ROSE_QUARTZ_SWORD(p -> new RoseQuartzToolItem(3, -2.4F, p, SWORD)),
+	ROSE_QUARTZ_SWORD(p -> new SwordItem(AllToolTiers.ROSE_QUARTZ, 3, -2.4F, p)),
 
 	SHADOW_STEEL_PICKAXE(p -> new ShadowSteelToolItem(2.5F, -2.0F, p, PICKAXE)),
 	SHADOW_STEEL_MATTOCK(p -> new ShadowSteelToolItem(2.5F, -1.5F, p, SHOVEL, AXE, HOE)),
-	SHADOW_STEEL_SWORD(p -> new ShadowSteelToolItem(3, -2.0F, p, SWORD)),
+	SHADOW_STEEL_SWORD(p -> new SwordItem(AllToolTiers.SHADOW_STEEL, 3, -2.0F, p)),
 
 	;
 

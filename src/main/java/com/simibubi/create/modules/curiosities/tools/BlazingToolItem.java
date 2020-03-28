@@ -67,12 +67,16 @@ public class BlazingToolItem extends AbstractToolItem {
 	public void modifyDrops(Collection<ItemStack> drops, IWorld world, BlockPos pos, ItemStack tool, BlockState state) {
 		super.modifyDrops(drops, world, pos, tool, state);
 		World worldIn = world.getWorld();
-		helperFurnace.setWorld(worldIn);
-
-		RecipeManager recipeManager = worldIn.getRecipeManager();
 		int enchantmentLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, tool);
 		if (state == null)
 			enchantmentLevel = 0;
+		List<ItemStack> smeltedStacks = smeltDrops(drops, worldIn, enchantmentLevel);
+		drops.addAll(smeltedStacks);
+	}
+
+	public static List<ItemStack> smeltDrops(Collection<ItemStack> drops, World worldIn, int enchantmentLevel) {
+		helperFurnace.setWorld(worldIn);
+		RecipeManager recipeManager = worldIn.getRecipeManager();
 		List<ItemStack> smeltedStacks = new ArrayList<>();
 		Iterator<ItemStack> dropper = drops.iterator();
 		while (dropper.hasNext()) {
@@ -87,13 +91,12 @@ public class BlazingToolItem extends AbstractToolItem {
 
 			float modifier = 1;
 			if (stack.getItem() instanceof BlockItem && !(out.getItem() instanceof BlockItem))
-				modifier += world.getRandom().nextFloat() * enchantmentLevel;
+				modifier += worldIn.getRandom().nextFloat() * enchantmentLevel;
 
 			out.setCount((int) (out.getCount() * modifier + .4f));
 			smeltedStacks.addAll(ItemHelper.multipliedOutput(stack, out));
 		}
-
-		drops.addAll(smeltedStacks);
+		return smeltedStacks;
 	}
 
 	@Override

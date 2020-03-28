@@ -93,6 +93,10 @@ public class RedstoneLinkNetworkHandler {
 				iterator.remove();
 				continue;
 			}
+			if (actor.getWorld().getTileEntity(other.tileEntity.getPos()) != other.tileEntity) {
+				iterator.remove();
+				continue;
+			}
 			if (!withinRange(actor, other))
 				continue;
 			if (other.isTransmitting()) {
