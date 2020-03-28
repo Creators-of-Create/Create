@@ -298,8 +298,11 @@ public class RotationPropagator {
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
 			if (!(neighbourState.getBlock() instanceof IRotate))
 				continue;
-
-			final KineticTileEntity neighbourTE = (KineticTileEntity) worldIn.getTileEntity(neighbourPos);
+			TileEntity tileEntity = worldIn.getTileEntity(neighbourPos);
+			if (!(tileEntity instanceof KineticTileEntity))
+				continue;
+			
+			final KineticTileEntity neighbourTE = (KineticTileEntity) tileEntity;
 			if (!neighbourTE.hasSource() || !neighbourTE.source.equals(pos))
 				continue;
 
