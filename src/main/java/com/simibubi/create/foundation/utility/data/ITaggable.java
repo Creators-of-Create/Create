@@ -1,8 +1,10 @@
 package com.simibubi.create.foundation.utility.data;
 
-import net.minecraft.util.ResourceLocation;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
 
-import java.util.*;
+import net.minecraft.util.ResourceLocation;
 
 public interface ITaggable<T extends ITaggable<T>> {
 
@@ -14,6 +16,7 @@ public interface ITaggable<T extends ITaggable<T>> {
 		return this.withTags(TagType.BLOCK, tagsIn).withTags(TagType.ITEM, tagsIn);
 	}
 
+	@SuppressWarnings("unchecked")
 	default T withTags(TagType type, ResourceLocation... tagsIn) {
 		Collections.addAll(getTagSet(type), tagsIn);
 		return (T) this;
