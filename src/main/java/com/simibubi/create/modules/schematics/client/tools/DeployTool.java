@@ -1,8 +1,11 @@
 package com.simibubi.create.modules.schematics.client.tools;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllKeys;
 
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -28,8 +31,8 @@ public class DeployTool extends PlacementToolBase {
 	}
 	
 	@Override
-	public void renderTool() {
-		super.renderTool();
+	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		super.renderTool(ms, buffer, light, overlay);
 		
 		if (selectedPos == null) 
 			return;
@@ -44,16 +47,10 @@ public class DeployTool extends PlacementToolBase {
 			max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
 		}
 		
-		RenderSystem.lineWidth(2);
-		RenderSystem.color4f(.5f, .8f, 1, 1);
-		RenderSystem.disableTexture();
+//		RenderSystem.color4f(.5f, .8f, 1, 1); TODO 1.15
 		
-		WorldRenderer.drawBoundingBox(min.getX() - 1 / 8d, min.getY() + 1 / 16d, min.getZ() - 1 / 8d,
+		WorldRenderer.drawBox(ms, buffer.getBuffer(RenderType.getLines()), min.getX() - 1 / 8d, min.getY() + 1 / 16d, min.getZ() - 1 / 8d,
 				max.getX() + 1 / 8d, max.getY() + 1 / 8d, max.getZ() + 1 / 8d, .8f, .9f, 1, 1);
-		
-		RenderSystem.lineWidth(1);
-		RenderSystem.enableTexture();
-		
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.redstone;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -29,7 +30,7 @@ public class AnalogLeverTileEntityRenderer extends SafeTileEntityRenderer<Analog
 		int lightCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), leverState, te.getPos());
 		float state = te.clientState.get(partialTicks);
 		
-		IVertexBuffer vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
 		// Handle
 		SuperByteBuffer handle = AllBlockPartials.ANALOG_LEVER_HANDLE.renderOn(leverState);

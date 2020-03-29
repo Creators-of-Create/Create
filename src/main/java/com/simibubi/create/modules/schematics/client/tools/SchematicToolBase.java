@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.schematics.client.tools;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -9,6 +9,8 @@ import com.simibubi.create.modules.schematics.client.SchematicHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
@@ -78,19 +80,15 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	}
 
 	@Override
-	public void renderTool() {
+	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 
 		if (schematicHandler.deployed) {
-			RenderSystem.lineWidth(2);
-			RenderSystem.color4f(1, 1, 1, 1);
-			RenderSystem.disableTexture();
-
 			BlockPos min = schematicHandler.getTransformedAnchor();
 			MutableBoundingBox bb = new MutableBoundingBox(min, min.add(schematicHandler.getTransformedSize()));
 			min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 			BlockPos max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
 
-			WorldRenderer.drawBoundingBox(min.getX() - 1 / 8d, min.getY() + 1 / 16d, min.getZ() - 1 / 8d,
+			WorldRenderer.drawBox(buffer.getBuffer(RenderType.getLines()), min.getX() - 1 / 8d, min.getY() + 1 / 16d, min.getZ() - 1 / 8d,
 					max.getX() + 1 / 8d, max.getY() + 1 / 8d, max.getZ() + 1 / 8d, 1, 1, 1, 1);
 
 			if (schematicSelected && renderSelectedFace && AllKeys.ACTIVATE_TOOL.isPressed()) {
@@ -103,20 +101,16 @@ public abstract class SchematicToolBase implements ISchematicTool {
 				Vec3d faceMin = center.add(vec.mul(radii).add(onFaceOffset)).add(vec.scale(1/8f));
 				Vec3d faceMax = center.add(vec.mul(radii).subtract(onFaceOffset)).add(vec.scale(1/8f));
 
-				RenderSystem.lineWidth(6);
-				WorldRenderer.drawBoundingBox(faceMin.getX(), faceMin.getY() + 1 / 16d, faceMin.getZ(), faceMax.getX(),
+				// RenderSystem.lineWidth(6); TODO 1.15 custom line size render type
+				WorldRenderer.drawBox(buffer.getBuffer(RenderType.getLines()), faceMin.getX(), faceMin.getY() + 1 / 16d, faceMin.getZ(), faceMax.getX(),
 						faceMax.getY() + 1 / 8d, faceMax.getZ(), .6f, .7f, 1, 1);
 			}
-
-			RenderSystem.lineWidth(1);
-			RenderSystem.enableTexture();
-
 		}
 
 	}
 
 	@Override
-	public void renderOverlay() {
+	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 
 	}
 

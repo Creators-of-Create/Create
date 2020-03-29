@@ -7,8 +7,6 @@ import static com.simibubi.create.modules.curiosities.zapper.blockzapper.Blockza
 import static com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components.Scope;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.modules.curiosities.zapper.ZapperItemRenderer;
 import com.simibubi.create.modules.curiosities.zapper.ZapperRenderHandler;
@@ -19,6 +17,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
@@ -35,22 +35,19 @@ public class BlockzapperItemRenderer extends ZapperItemRenderer {
 		float pt = Minecraft.getInstance().getRenderPartialTicks();
 		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(0.5F, 0.5F, 0.5F);
-		float lastCoordx = GLX.lastBrightnessX;
-		float lastCoordy = GLX.lastBrightnessY;
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, Math.min(lastCoordx + 60, 240), Math.min(lastCoordy + 120, 240));
+		ms.push();
+		ms.translate(0.5F, 0.5F, 0.5F);
 
-		itemRenderer.renderItem(stack, mainModel.getBakedModel());
-		renderComponent(stack, mainModel, Body, itemRenderer);
-		renderComponent(stack, mainModel, Amplifier, itemRenderer);
-		renderComponent(stack, mainModel, Retriever, itemRenderer);
-		renderComponent(stack, mainModel, Scope, itemRenderer);
+		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay, mainModel);
+		renderComponent(stack, mainModel, Body, itemRenderer, ms, buffer, light, overlay);
+		renderComponent(stack, mainModel, Amplifier, itemRenderer, ms, buffer, light, overlay);
+		renderComponent(stack, mainModel, Retriever, itemRenderer, ms, buffer, light, overlay);
+		renderComponent(stack, mainModel, Scope, itemRenderer, ms, buffer, light, overlay);
 
 		// Block indicator
 		if (mainModel.getCurrentPerspective() == TransformType.GUI && stack.hasTag()
 				&& stack.getTag().contains("BlockUsed"))
-			renderBlockUsed(stack, itemRenderer);
+			renderBlockUsed(stack, itemRenderer, ms, buffer, light, overlay);
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		boolean leftHanded = player.getPrimaryHand() == HandSide.LEFT;
@@ -63,17 +60,14 @@ public class BlockzapperItemRenderer extends ZapperItemRenderer {
 		float animation = MathHelper.clamp(MathHelper.lerp(pt, last, current) * 5, 0, 1);
 
 		// Core glows
-		RenderSystem.disableLighting();
 		float multiplier = MathHelper.sin(worldTime * 5);
 		if (mainHand || offHand) {
 			multiplier = animation;
 		}
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, multiplier * 240, 120);
-		itemRenderer.renderItem(stack, mainModel.getPartial("core"));
+		int glowLight = LightTexture.pack((int) (15 * multiplier), 15);
+		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, glowLight, overlay, mainModel.getPartial("core"));
 		if (BlockzapperItem.getTier(Amplifier, stack) != ComponentTier.None)
-			itemRenderer.renderItem(stack, mainModel.getPartial("amplifier_core"));
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastCoordx, lastCoordy);
-		RenderSystem.enableLighting();
+			itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, glowLight, overlay, mainModel.getPartial("amplifier_core"));
 
 		// Accelerator spins
 		float angle = worldTime * -25;
@@ -82,20 +76,20 @@ public class BlockzapperItemRenderer extends ZapperItemRenderer {
 
 		angle %= 360;
 		float offset = -.155f;
-		RenderSystem.translatef(0, offset, 0);
-		RenderSystem.rotatef(angle, 0, 0, 1);
-		RenderSystem.translatef(0, -offset, 0);
-		renderComponent(stack, mainModel, Accelerator, itemRenderer);
+		ms.translate(0, offset, 0);
+		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle));
+		ms.translate(0, -offset, 0);
+		renderComponent(stack, mainModel, Accelerator, itemRenderer, ms, buffer, light, overlay);
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	public void renderComponent(ItemStack stack, BlockzapperModel model, Components component,
-			ItemRenderer itemRenderer) {
+			ItemRenderer itemRenderer, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		ComponentTier tier = BlockzapperItem.getTier(component, stack);
 		IBakedModel partial = model.getComponentPartial(tier, component);
 		if (partial != null)
-			itemRenderer.renderItem(stack, partial);
+			itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay, partial);
 	}
 
 }

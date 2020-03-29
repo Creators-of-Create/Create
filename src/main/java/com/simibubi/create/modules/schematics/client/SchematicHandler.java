@@ -110,25 +110,22 @@ public class SchematicHandler {
 		currentTool.getTool().updateSelection();
 	}
 
-	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
-		// TODO 1.15 buffered render
+	public void render(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		if (!active)
 			return;
 		if (Minecraft.getInstance().player.isSneaking())
 			return;
 
-		TessellatorHelper.prepareForDrawing();
-		currentTool.getTool().renderTool();
-		TessellatorHelper.cleanUpAfterDrawing();
+		currentTool.getTool().renderTool(ms, buffer, light, overlay);
 	}
 
-	public void renderOverlay() {
+	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		if (!active)
 			return;
 		if (item != null)
-			overlay.renderOn(slot);
+			this.overlay.renderOn(slot);
 
-		currentTool.getTool().renderOverlay();
+		currentTool.getTool().renderOverlay(ms, buffer, light, overlay);
 		selectionScreen.renderPassive(Minecraft.getInstance().getRenderPartialTicks());
 	}
 

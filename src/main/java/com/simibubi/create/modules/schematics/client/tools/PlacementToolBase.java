@@ -1,5 +1,9 @@
 package com.simibubi.create.modules.schematics.client.tools;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+
 public abstract class PlacementToolBase extends SchematicToolBase {
 
 	@Override
@@ -13,13 +17,13 @@ public abstract class PlacementToolBase extends SchematicToolBase {
 	}
 	
 	@Override
-	public void renderTool() {
-		super.renderTool();
+	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		super.renderTool(ms, buffer, light, overlay);
 	}
 
 	@Override
-	public void renderOverlay() {
-		super.renderOverlay();
+	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		super.renderOverlay(ms, buffer, light, overlay);
 	}
 	
 	@Override

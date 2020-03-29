@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class ContactBlock extends ProperDirectionalBlock implements IPortableBlock {
 
@@ -72,7 +73,7 @@ public class ContactBlock extends ProperDirectionalBlock implements IPortableBlo
 	}
 
 	@Override
-	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
 		boolean hasValidContact = hasValidContact(worldIn, pos, state.get(FACING));
 		if (state.get(POWERED) != hasValidContact)
 			worldIn.setBlockState(pos, state.with(POWERED, hasValidContact));

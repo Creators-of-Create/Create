@@ -19,6 +19,7 @@ import com.simibubi.create.modules.curiosities.zapper.terrainzapper.TerrainZappe
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -70,7 +71,7 @@ public class ClientEvents {
 	public static void onRenderWorld(RenderWorldLastEvent event) {
 		MatrixStack ms = event.getMatrixStack();
 		IRenderTypeBuffer buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
-		CreateClient.schematicHandler.render(ms, buffer);
+		CreateClient.schematicHandler.render(ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV);
 		CreateClient.schematicAndQuillHandler.render(ms, buffer);
 		CreateClient.schematicHologram.render(ms, buffer);
 		KineticDebugger.renderSourceOutline(ms, buffer);
@@ -83,11 +84,12 @@ public class ClientEvents {
 		if (event.getType() != ElementType.HOTBAR)
 			return;
 
-		onRenderHotbar();
+		onRenderHotbar(new MatrixStack(), Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers(),
+				0xF000F0, OverlayTexture.DEFAULT_UV);
 	}
 
-	public static void onRenderHotbar() {
-		CreateClient.schematicHandler.renderOverlay();
+	public static void onRenderHotbar(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		CreateClient.schematicHandler.renderOverlay(ms, buffer, light, overlay);
 	}
 
 	@SubscribeEvent
