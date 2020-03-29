@@ -10,9 +10,9 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.clock.CuckooClockTileEntity.Animation;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -33,7 +33,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 
 		CuckooClockTileEntity clock = (CuckooClockTileEntity) te;
 		BlockState blockState = te.getBlockState();
-		int packedLightmapCoords =WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, te.getPos());
+		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, te.getPos());
 		Direction direction = blockState.get(CuckooClockBlock.HORIZONTAL_FACING);
 		
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());

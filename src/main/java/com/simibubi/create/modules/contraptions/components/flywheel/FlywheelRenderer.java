@@ -3,6 +3,7 @@ package com.simibubi.create.modules.contraptions.components.flywheel;
 import static com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -38,6 +39,8 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 		SuperByteBuffer wheel = AllBlockPartials.FLYWHEEL.renderOnHorizontal(blockState.rotate(Rotation.CLOCKWISE_90));
 		float speed = wte.visualSpeed.get(partialTicks) * 3 / 10f;
 		float angle = wte.angle + speed * partialTicks;
+		
+		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
 		if (FlywheelBlock.isConnected(blockState)) {
 			Direction connection = FlywheelBlock.getConnection(blockState);
@@ -48,17 +51,17 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 			boolean flip = blockState.get(FlywheelBlock.CONNECTION) == ConnectionState.LEFT;
 
 			rotateToFacing(transformConnector(AllBlockPartials.FLYWHEEL_UPPER_ROTATING.renderOn(blockState), true, true,
-					rotation, flip), connection).translate(x, y, z).light(light).renderInto(buffer);
+					rotation, flip), connection).light(light).renderInto(ms, vb);
 			rotateToFacing(transformConnector(AllBlockPartials.FLYWHEEL_LOWER_ROTATING.renderOn(blockState), false,
-					true, rotation, flip), connection).translate(x, y, z).light(light).renderInto(buffer);
+					true, rotation, flip), connection).light(light).renderInto(ms, vb);
 			rotateToFacing(transformConnector(AllBlockPartials.FLYWHEEL_UPPER_SLIDING.renderOn(blockState), true, false,
-					rotation, flip), connection).translate(x, y, z).light(light).renderInto(buffer);
+					rotation, flip), connection).light(light).renderInto(ms, vb);
 			rotateToFacing(transformConnector(AllBlockPartials.FLYWHEEL_LOWER_SLIDING.renderOn(blockState), false,
-					false, rotation, flip), connection).translate(x, y, z).light(light).renderInto(buffer);
+					false, rotation, flip), connection).light(light).renderInto(ms, vb);
 		}
 
 		kineticRotationTransform(wheel, te, blockState.get(HORIZONTAL_FACING).getAxis(), AngleHelper.rad(angle));
-		wheel.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+		wheel.renderInto(ms, vb);
 	}
 
 	@Override

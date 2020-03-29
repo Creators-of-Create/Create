@@ -177,6 +177,7 @@ public class ZapperRenderHandler {
 		Minecraft mc = Minecraft.getInstance();
 		boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ mc.player.getPrimaryHand() == HandSide.LEFT;
 
+		// TODO 1.15 buffered render
 		RenderSystem.pushMatrix();
 
 		float recoil = rightHand ? MathHelper.lerp(event.getPartialTicks(), lastRightHandAnimation, rightHandAnimation)
@@ -210,7 +211,7 @@ public class ZapperRenderHandler {
 		RenderSystem.rotatef(f * -135.0F, 0.0F, 1.0F, 0.0F);
 		RenderSystem.translatef(f * 5.6F, 0.0F, 0.0F);
 		RenderSystem.rotatef(f * 40.0F, 0.0F, 1.0F, 0.0F);
-		PlayerRenderer playerrenderer = mc.getRenderManager().getRenderer(abstractclientplayerentity);
+		PlayerRenderer playerrenderer = (PlayerRenderer) mc.getRenderManager().getRenderer(abstractclientplayerentity);
 		RenderSystem.disableCull();
 		if (rightHand) {
 			playerrenderer.renderRightArm(abstractclientplayerentity);

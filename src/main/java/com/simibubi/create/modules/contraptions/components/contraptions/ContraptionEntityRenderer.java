@@ -38,6 +38,7 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 		if (entity.getContraption() == null)
 			return;
 
+		// TODO 1.15 buffered render
 		RenderSystem.pushMatrix();
 		long randomBits = (long) entity.getEntityId() * 493286711L;
 		randomBits = randomBits * randomBits * 4392167121L + randomBits * 98761L;

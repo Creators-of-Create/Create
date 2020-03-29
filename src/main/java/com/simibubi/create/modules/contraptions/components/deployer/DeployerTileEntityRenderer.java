@@ -7,7 +7,8 @@ import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
@@ -16,7 +17,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -28,13 +28,13 @@ import com.simibubi.create.modules.contraptions.components.deployer.DeployerTile
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.BlockItem;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -49,20 +49,21 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 	public DeployerTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
-
+	
 	@Override
-	public void renderWithGL(DeployerTileEntity te, double x, double y, double z, float partialTicks,
-			int destroyStage) {
-		renderItem(te, x, y, z, partialTicks);
-		FilteringRenderer.renderOnTileEntity(te, x, y, z, partialTicks, destroyStage);
-		renderComponents(te, x, y, z, partialTicks);
+	protected void renderSafe(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+			int light, int overlay) {
+		renderItem(te, partialTicks, ms, buffer, light, overlay);
+		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
+		renderComponents(te, partialTicks, ms, buffer, light, overlay);
 	}
 
-	protected void renderItem(DeployerTileEntity te, double x, double y, double z, float partialTicks) {
+	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+			int light, int overlay) {
 		BlockState deployerState = te.getBlockState();
 		Vec3d offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(offset.x + x, offset.y + y, offset.z + z);
+		ms.push();
+		ms.translate(offset.x, offset.y, offset.z);
 
 		Direction facing = deployerState.get(FACING);
 		boolean punching = te.mode == Mode.PUNCH;
@@ -71,56 +72,52 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
 		boolean displayMode = facing == Direction.UP && te.getSpeed() == 0 && !punching;
 
-		RenderSystem.rotatef(yRot, 0, 1, 0);
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(yRot));
 		if (!displayMode) {
-			RenderSystem.rotatef(zRot, 1, 0, 0);
-			RenderSystem.translated(0, 0, -11 / 16f);
+			ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(zRot));
+			ms.translate(0, 0, -11 / 16f);
 		}
 
 		if (punching)
-			RenderSystem.translatef(0, 1 / 8f, -1 / 16f);
+			ms.translate(0, 1 / 8f, -1 / 16f);
 
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
 		TransformType transform = TransformType.NONE;
 		boolean isBlockItem =
-			(te.heldItem.getItem() instanceof BlockItem) && itemRenderer.getModelWithOverrides(te.heldItem).isGui3d();
+			(te.heldItem.getItem() instanceof BlockItem) && itemRenderer.getItemModelWithOverrides(te.heldItem, Minecraft.getInstance().world, null).isGui3d();
 
 		if (displayMode) {
 			float scale = isBlockItem ? 1.25f : 1;
-			RenderSystem.translated(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
-			RenderSystem.scaled(scale, scale, scale);
+			ms.translate(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
+			ms.scale(scale, scale, scale);
 			transform = TransformType.GROUND;
-			RenderSystem.rotatef(AnimationTickHolder.getRenderTick(), 0, 1, 0);
+			ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AnimationTickHolder.getRenderTick()));
 
 		} else {
 			float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
-			RenderSystem.scaled(scale, scale, scale);
+			ms.scale(scale, scale, scale);
 			transform = punching ? TransformType.THIRD_PERSON_RIGHT_HAND : TransformType.FIXED;
 		}
 
-		itemRenderer.renderItem(te.heldItem, transform);
-		RenderSystem.popMatrix();
+		itemRenderer.renderItem(te.heldItem, transform, light, overlay, ms, buffer);
+		ms.pop();
 	}
 
-	protected void renderComponents(DeployerTileEntity te, double x, double y, double z, float partialTicks) {
-		TessellatorHelper.prepareFastRender();
-		TessellatorHelper.begin(DefaultVertexFormats.BLOCK);
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getWorld(), getRenderedBlockState(te), x, y, z,
-				buffer);
+	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+			int light, int overlay) {
+		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb);
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
 
-		SuperByteBuffer pole = renderAndTransform(getWorld(), AllBlockPartials.DEPLOYER_POLE, blockState, pos, true);
-		SuperByteBuffer hand = renderAndTransform(getWorld(), te.getHandPose(), blockState, pos, false);
+		SuperByteBuffer pole = renderAndTransform(te.getWorld(), AllBlockPartials.DEPLOYER_POLE, blockState, pos, true);
+		SuperByteBuffer hand = renderAndTransform(te.getWorld(), te.getHandPose(), blockState, pos, false);
 
 		Vec3d offset = getHandOffset(te, partialTicks, blockState);
-		pole.translate(x + offset.x, y + offset.y, z + offset.z).renderInto(buffer);
-		hand.translate(x + offset.x, y + offset.y, z + offset.z).renderInto(buffer);
-
-		TessellatorHelper.draw();
+		pole.translate(offset.x, offset.y, offset.z).renderInto(ms, vb);
+		hand.translate(offset.x, offset.y, offset.z).renderInto(ms, vb);
 	}
 
 	protected Vec3d getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {
