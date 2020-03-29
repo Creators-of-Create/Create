@@ -192,10 +192,10 @@ public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachm
 					if (!ItemStack.areItemStacksEqual(remainder, heldItem))
 						player.setHeldItem(handIn, remainder);
 				});
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	public boolean process(BeltTileEntity belt, TransportedItemStack transported, BeltAttachmentState state) {

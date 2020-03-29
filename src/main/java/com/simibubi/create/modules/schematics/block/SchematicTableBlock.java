@@ -65,12 +65,12 @@ public class SchematicTableBlock extends HorizontalBlock {
 			BlockRayTraceResult hit) {
 
 		if (worldIn.isRemote) {
-			return true;
+			return ActionResultType.SUCCESS;
 		} else {
 			SchematicTableTileEntity te = (SchematicTableTileEntity) worldIn.getTileEntity(pos);
 			if (te != null)
 				NetworkHooks.openGui((ServerPlayerEntity) player, te, te::sendToContainer);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 	}
 

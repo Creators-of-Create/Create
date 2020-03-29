@@ -122,7 +122,7 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock {
 		if (player.isSneaking()) {
 			RedstoneLinkTileEntity te = (RedstoneLinkTileEntity) worldIn.getTileEntity(pos);
 			if (te == null)
-				return false;
+				return ActionResultType.PASS;
 
 			if (!worldIn.isRemote) {
 				Boolean wasReceiver = state.get(RECEIVER);
@@ -133,10 +133,10 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock {
 				} else
 					te.transmit(false);
 			}
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	@Override

@@ -117,7 +117,7 @@ public class FlexcrateBlock extends ProperDirectionalBlock {
 			BlockRayTraceResult hit) {
 
 		if (worldIn.isRemote) {
-			return true;
+			return ActionResultType.SUCCESS;
 		} else {
 			TileEntity te = worldIn.getTileEntity(pos);
 			if (te instanceof FlexcrateTileEntity) {
@@ -125,7 +125,7 @@ public class FlexcrateBlock extends ProperDirectionalBlock {
 				fte = fte.getMainCrate();
 				NetworkHooks.openGui((ServerPlayerEntity) player, fte, fte::sendToContainer);
 			}
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 	}
 

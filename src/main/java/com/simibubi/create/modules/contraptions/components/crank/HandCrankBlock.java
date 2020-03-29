@@ -39,10 +39,10 @@ public class HandCrankBlock extends DirectionalKineticBlock implements IWithTile
 		boolean handEmpty = player.getHeldItem(handIn).isEmpty();
 
 		if (!handEmpty && player.isSneaking())
-			return false;
+			return ActionResultType.PASS;
 
 		withTileEntityDo(worldIn, pos, te -> te.turn(player.isSneaking()));
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

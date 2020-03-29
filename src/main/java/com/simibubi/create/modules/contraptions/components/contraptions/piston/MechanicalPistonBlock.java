@@ -55,34 +55,34 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (!player.isAllowEdit())
-			return false;
+			return ActionResultType.PASS;
 		if (player.isSneaking())
-			return false;
+			return ActionResultType.PASS;
 		if (!player.getHeldItem(handIn).getItem().isIn(Tags.Items.SLIMEBALLS)) {
 			if (player.getHeldItem(handIn).isEmpty()) {
 				withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);
-				return true;
+				return ActionResultType.SUCCESS;
 			}
-			return false;
+			return ActionResultType.PASS;
 		}
 		if (state.get(STATE) != PistonState.RETRACTED)
-			return false;
+			return ActionResultType.PASS;
 		Direction direction = state.get(FACING);
 		if (hit.getFace() != direction)
-			return false;
+			return ActionResultType.PASS;
 		if (((MechanicalPistonBlock) state.getBlock()).isSticky)
-			return false;
+			return ActionResultType.PASS;
 		if (worldIn.isRemote) {
 			Vec3d vec = hit.getHitVec();
 			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 		worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
 		if (!player.isCreative())
 			player.getHeldItem(handIn).shrink(1);
 		worldIn.setBlockState(pos, AllBlocks.STICKY_MECHANICAL_PISTON.get().getDefaultState().with(FACING, direction)
 				.with(AXIS_ALONG_FIRST_COORDINATE, state.get(AXIS_ALONG_FIRST_COORDINATE)));
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

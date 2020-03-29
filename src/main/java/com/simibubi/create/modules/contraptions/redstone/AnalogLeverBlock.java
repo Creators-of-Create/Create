@@ -48,18 +48,18 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements IWithTileEn
 			BlockRayTraceResult hit) {
 		if (worldIn.isRemote) {
 			addParticles(state, worldIn, pos, 1.0F);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
 		boolean sneak = player.isSneaking();
 		AnalogLeverTileEntity te = getTileEntity(worldIn, pos);
 		if (te == null)
-			return true;
+			return ActionResultType.SUCCESS;
 
 		te.changeState(sneak);
 		float f = .25f + ((te.state + 5) / 15f) * .5f;
 		worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.2F, f);
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

@@ -81,17 +81,17 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock
 			BlockRayTraceResult hit) {
 		ItemStack held = player.getHeldItemMainhand();
 		if (AllItems.WRENCH.typeOf(held))
-			return false;
+			return ActionResultType.PASS;
 		if (held.getItem() instanceof BlockItem) {
 			BlockItem blockItem = (BlockItem) held.getItem();
 			if (blockItem.getBlock() instanceof KineticBlock && hasShaftTowards(worldIn, pos, state, hit.getFace()))
-				return false;
+				return ActionResultType.PASS;
 		}
 
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			displayScreen((SequencedGearshiftTileEntity) worldIn.getTileEntity(pos));
 		});
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)

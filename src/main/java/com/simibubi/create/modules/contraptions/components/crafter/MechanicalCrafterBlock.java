@@ -166,7 +166,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (!(te instanceof MechanicalCrafterTileEntity))
-			return false;
+			return ActionResultType.PASS;
 		MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
 		boolean wrenched = AllItems.WRENCH.typeOf(heldItem);
 
@@ -174,59 +174,59 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 
 			if (crafter.phase != Phase.IDLE && !wrenched) {
 				crafter.ejectWholeGrid();
-				return true;
+				return ActionResultType.SUCCESS;
 			}
 
 			if (crafter.phase == Phase.IDLE && !isHand && !wrenched) {
 				if (worldIn.isRemote)
-					return true;
+					return ActionResultType.SUCCESS;
 
 				if (AllItems.SLOT_COVER.typeOf(heldItem)) {
 					if (crafter.covered)
-						return false;
+						return ActionResultType.PASS;
 					crafter.covered = true;
 					crafter.markDirty();
 					crafter.sendData();
 					if (!player.isCreative())
 						heldItem.shrink(1);
-					return true;
+					return ActionResultType.SUCCESS;
 				}
 
 				LazyOptional<IItemHandler> capability =
 					crafter.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 				if (!capability.isPresent())
-					return false;
+					return ActionResultType.PASS;
 				ItemStack remainder =
 					ItemHandlerHelper.insertItem(capability.orElse(new ItemStackHandler()), heldItem.copy(), false);
 				if (remainder.getCount() != heldItem.getCount())
 					player.setHeldItem(handIn, remainder);
-				return true;
+				return ActionResultType.SUCCESS;
 			}
 
 			ItemStack inSlot = crafter.inventory.getStackInSlot(0);
 			if (inSlot.isEmpty()) {
 				if (crafter.covered && !wrenched) {
 					if (worldIn.isRemote)
-						return true;
+						return ActionResultType.SUCCESS;
 					crafter.covered = false;
 					crafter.markDirty();
 					crafter.sendData();
 					if (!player.isCreative())
 						player.inventory.placeItemBackInInventory(worldIn, AllItems.SLOT_COVER.asStack());
-					return true;
+					return ActionResultType.SUCCESS;
 				}
-				return false;
+				return ActionResultType.PASS;
 			}
 			if (!isHand && !ItemHandlerHelper.canItemStacksStack(heldItem, inSlot))
-				return false;
+				return ActionResultType.PASS;
 			if (worldIn.isRemote)
-				return true;
+				return ActionResultType.SUCCESS;
 			player.inventory.placeItemBackInInventory(worldIn, inSlot);
 			crafter.inventory.setStackInSlot(0, ItemStack.EMPTY);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
-		return false;
+		return ActionResultType.PASS;
 	}
 
 //	@Override // TODO 1.15 register layer

@@ -52,9 +52,9 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (!player.getHeldItem(handIn).isEmpty())
-			return false;
+			return ActionResultType.PASS;
 		if (worldIn.getTileEntity(pos) == null)
-			return false;
+			return ActionResultType.PASS;
 
 		BasinTileEntity te = (BasinTileEntity) worldIn.getTileEntity(pos);
 		IItemHandlerModifiable inv = te.inventory.orElse(new ItemStackHandler(1));
@@ -64,7 +64,7 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 		}
 		te.onEmptied();
 
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

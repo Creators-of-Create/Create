@@ -86,12 +86,12 @@ public class DeployerBlock extends DirectionalAxisKineticBlock
 			BlockRayTraceResult hit) {
 		ItemStack heldByPlayer = player.getHeldItem(handIn).copy();
 		if (AllItems.WRENCH.typeOf(heldByPlayer))
-			return false;
+			return ActionResultType.PASS;
 
 		if (hit.getFace() != state.get(FACING))
-			return false;
+			return ActionResultType.PASS;
 		if (worldIn.isRemote)
-			return true;
+			return ActionResultType.SUCCESS;
 
 		withTileEntityDo(worldIn, pos, te -> {
 			ItemStack heldByDeployer = te.player.getHeldItemMainhand().copy();
@@ -103,7 +103,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock
 			te.sendData();
 		});
 
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

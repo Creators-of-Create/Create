@@ -202,7 +202,7 @@ public class BeltBlock extends HorizontalKineticBlock
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (player.isSneaking() || !player.isAllowEdit())
-			return false;
+			return ActionResultType.PASS;
 		ItemStack heldItem = player.getHeldItem(handIn);
 		boolean isShaft = heldItem.getItem() == AllBlocks.SHAFT.get().asItem();
 		boolean isCasing = heldItem.getItem() == AllBlocks.BRASS_CASING.get().asItem();
@@ -211,7 +211,7 @@ public class BeltBlock extends HorizontalKineticBlock
 
 		if (isDye) {
 			if (worldIn.isRemote)
-				return true;
+				return ActionResultType.SUCCESS;
 			withTileEntityDo(worldIn, pos, te -> {
 				DyeColor dyeColor = DyeColor.getColor(heldItem);
 				if (dyeColor == null)
@@ -220,20 +220,20 @@ public class BeltBlock extends HorizontalKineticBlock
 			});
 			if (!player.isCreative())
 				heldItem.shrink(1);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te == null || !(te instanceof BeltTileEntity))
-			return false;
+			return ActionResultType.PASS;
 		BeltTileEntity belt = (BeltTileEntity) te;
 
 		if (isHand) {
 			BeltTileEntity controllerBelt = belt.getControllerTE();
 			if (controllerBelt == null)
-				return false;
+				return ActionResultType.PASS;
 			if (worldIn.isRemote)
-				return true;
+				return ActionResultType.SUCCESS;
 			controllerBelt.getInventory().forEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
 				player.inventory.placeItemBackInInventory(worldIn, transportedItemStack.stack);
 				return Collections.emptyList();
@@ -242,28 +242,28 @@ public class BeltBlock extends HorizontalKineticBlock
 
 		if (isShaft) {
 			if (state.get(PART) != Part.MIDDLE)
-				return false;
+				return ActionResultType.PASS;
 			if (worldIn.isRemote)
-				return true;
+				return ActionResultType.SUCCESS;
 			if (!player.isCreative())
 				heldItem.shrink(1);
 			worldIn.setBlockState(pos, state.with(PART, Part.PULLEY), 2);
 			belt.attachKinetics();
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
 		if (isCasing) {
 			if (state.get(CASING))
-				return false;
+				return ActionResultType.PASS;
 			if (state.get(SLOPE) == Slope.VERTICAL)
-				return false;
+				return ActionResultType.PASS;
 			if (!player.isCreative())
 				heldItem.shrink(1);
 			worldIn.setBlockState(pos, state.with(CASING, true), 2);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	@Override

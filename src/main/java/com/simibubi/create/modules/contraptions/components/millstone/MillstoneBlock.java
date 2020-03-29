@@ -58,15 +58,15 @@ public class MillstoneBlock extends KineticBlock {
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (!player.getHeldItem(handIn).isEmpty())
-			return false;
+			return ActionResultType.PASS;
 		if (worldIn.getTileEntity(pos) == null)
-			return false;
+			return ActionResultType.PASS;
 		if (worldIn.isRemote)
-			return true;
+			return ActionResultType.SUCCESS;
 
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 		if (!(tileEntity instanceof MillstoneTileEntity)) 
-			return false;
+			return ActionResultType.PASS;
 		MillstoneTileEntity millstone = (MillstoneTileEntity) tileEntity;
 		
 		IItemHandlerModifiable inv = millstone.outputInv;
@@ -76,7 +76,7 @@ public class MillstoneBlock extends KineticBlock {
 		}
 		millstone.markDirty();
 		millstone.sendData();
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

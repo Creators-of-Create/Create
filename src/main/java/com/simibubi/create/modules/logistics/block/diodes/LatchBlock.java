@@ -6,6 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -81,12 +83,12 @@ public class LatchBlock extends ToggleLatchBlock {
 	}
 
 	@Override
-	protected boolean activated(World worldIn, BlockPos pos, BlockState state) {
+	protected ActionResultType activated(World worldIn, BlockPos pos, BlockState state) {
 		if (state.get(POWERED) != state.get(POWERED_SIDE))
-			return false;
+			return ActionResultType.PASS;
 		if (!worldIn.isRemote)
 			worldIn.setBlockState(pos, state.cycle(POWERING), 2);
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

@@ -42,14 +42,14 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock {
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (!player.isAllowEdit())
-			return false;
+			return ActionResultType.PASS;
 
 		ItemStack heldItem = player.getHeldItem(handIn);
 		boolean isSlimeBall = heldItem.getItem().isIn(Tags.Items.SLIMEBALLS);
 
 		BooleanProperty affectedSide = getGlueableSide(state, hit.getFace());
 		if (affectedSide == null)
-			return false;
+			return ActionResultType.PASS;
 
 		if (isSlimeBall && state.get(affectedSide)) {
 			for (Direction face : Direction.values()) {
@@ -58,7 +58,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock {
 					if (worldIn.isRemote) {
 						Vec3d vec = hit.getHitVec();
 						worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
-						return true;
+						return ActionResultType.SUCCESS;
 					}
 					worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
 					state = state.with(glueableSide, true);
@@ -66,22 +66,22 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock {
 			}
 			if (!worldIn.isRemote)
 				worldIn.setBlockState(pos, state);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
 		if ((!heldItem.isEmpty() || !player.isSneaking()) && !isSlimeBall)
-			return false;
+			return ActionResultType.PASS;
 		if (state.get(affectedSide) == isSlimeBall)
-			return false;
+			return ActionResultType.PASS;
 		if (worldIn.isRemote) {
 			Vec3d vec = hit.getHitVec();
 			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
 		worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
 		worldIn.setBlockState(pos, state.with(affectedSide, isSlimeBall));
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

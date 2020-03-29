@@ -46,9 +46,9 @@ public class ToggleLatchBlock extends RedstoneDiodeBlock {
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (!player.isAllowEdit())
-			return false;
+			return ActionResultType.PASS;
 		if (player.isSneaking())
-			return false;
+			return ActionResultType.PASS;
 		return activated(worldIn, pos, state);
 	}
 
@@ -66,10 +66,10 @@ public class ToggleLatchBlock extends RedstoneDiodeBlock {
 			worldIn.setBlockState(pos, newState.cycle(POWERING), 2);
 	}
 
-	protected boolean activated(World worldIn, BlockPos pos, BlockState state) {
+	protected ActionResultType activated(World worldIn, BlockPos pos, BlockState state) {
 		if (!worldIn.isRemote)
 			worldIn.setBlockState(pos, state.cycle(POWERING), 2);
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

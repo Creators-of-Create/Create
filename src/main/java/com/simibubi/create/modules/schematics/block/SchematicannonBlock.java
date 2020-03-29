@@ -60,7 +60,7 @@ public class SchematicannonBlock extends Block {
 			BlockRayTraceResult hit) {
 
 		if (worldIn.isRemote) {
-			return true;
+			return ActionResultType.SUCCESS;
 		} else {
 			SchematicannonTileEntity te = (SchematicannonTileEntity) worldIn.getTileEntity(pos);
 			if (te != null)
@@ -70,7 +70,7 @@ public class SchematicannonBlock extends Block {
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
 				}
 			NetworkHooks.openGui((ServerPlayerEntity) player, te, te::sendToContainer);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 	}
 

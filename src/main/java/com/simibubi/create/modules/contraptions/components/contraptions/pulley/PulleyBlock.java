@@ -46,14 +46,14 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements IWithTile
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (!player.isAllowEdit())
-			return false;
+			return ActionResultType.PASS;
 		if (player.isSneaking())
-			return false;
+			return ActionResultType.PASS;
 		if (player.getHeldItem(handIn).isEmpty()) {
 			withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	@Override
