@@ -13,6 +13,7 @@ import com.simibubi.create.modules.contraptions.components.contraptions.Contrapt
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
@@ -69,7 +70,7 @@ public class PulleyRenderer extends KineticTileEntityRenderer {
 	public void renderAt(IWorld world, SuperByteBuffer partial, float offset, BlockPos pulleyPos,
 			MatrixStack ms, IVertexBuilder buffer) {
 		BlockPos actualPos = pulleyPos.down((int) offset);
-		int light = world.getBlockState(actualPos).getPackedLightmapCoords(world, actualPos);
+		int light = WorldRenderer.getLightmapCoordinates(world, world.getBlockState(actualPos), actualPos);
 		partial.translate(0, -offset, 0).light(light).renderInto(ms, buffer);
 	}
 

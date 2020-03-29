@@ -31,7 +31,7 @@ public class ScreenElementRenderer {
 		RenderSystem.enableBlend();
 		RenderSystem.enableRescaleNormal();
 		RenderSystem.enableAlphaTest();
-		RenderHelper.enableGuiDepthLighting(); // TODO 1.15
+		RenderHelper.enableGuiDepthLighting(); // TODO 1.15 buffered render
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		ItemStack stack = transformsAndStack.get();
@@ -59,7 +59,7 @@ public class ScreenElementRenderer {
 		RenderSystem.enableBlend();
 		RenderSystem.enableRescaleNormal();
 		RenderSystem.enableAlphaTest();
-		RenderHelper.enableGuiDepthLighting(); // TODO 1.15
+		RenderHelper.enableGuiDepthLighting(); // TODO 1.15 buffered render
 		RenderSystem.alphaFunc(516, 0.1F);
 		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);

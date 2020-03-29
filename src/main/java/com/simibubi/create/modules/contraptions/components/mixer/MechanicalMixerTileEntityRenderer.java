@@ -34,7 +34,7 @@ public class MechanicalMixerTileEntityRenderer extends KineticTileEntityRenderer
 		SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
 		standardKineticRotationTransform(superBuffer, te).renderInto(ms, vb);
 
-		int packedLightmapCoords = blockState.getPackedLightmapCoords(te.getWorld(), pos);
+		int packedLightmapCoords =WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, pos);
 		float renderedHeadOffset = mixer.getRenderedHeadOffset(partialTicks);
 		float speed = mixer.getRenderedHeadRotationSpeed(partialTicks);
 		float time = AnimationTickHolder.getRenderTick();

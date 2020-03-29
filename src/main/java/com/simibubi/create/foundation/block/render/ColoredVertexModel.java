@@ -57,7 +57,7 @@ public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
 //				continue;
 
 			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
-				int colorOffset = 16 / 4; // TODO 1.15 is this the right offset
+				int colorOffset = 16 / 4; // TODO 1.15 is this the right offset?
 				float x = Float.intBitsToFloat(vertexData[vertex]);
 				float y = Float.intBitsToFloat(vertexData[vertex + 1]);
 				float z = Float.intBitsToFloat(vertexData[vertex + 2]);

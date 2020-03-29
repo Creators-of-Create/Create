@@ -77,7 +77,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		ItemStack held = player.getHeldItemMainhand();
 		if (AllItems.WRENCH.typeOf(held))

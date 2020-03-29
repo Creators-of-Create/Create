@@ -11,7 +11,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -111,7 +110,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 		KineticTileEntity te = (KineticTileEntity) worldIn.getTileEntity(pos);
 		if (te == null)
 			return;
-		if (entityIn.posY < pos.getY() + 1.25f || !entityIn.onGround)
+		if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.onGround)
 			return;
 
 		double x = 0;
@@ -119,11 +118,11 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 
 		if (state.get(AXIS) == Axis.X) {
 			z = te.getSpeed() / 20f;
-			x += (pos.getX() + .5f - entityIn.posX) * .1f;
+			x += (pos.getX() + .5f - entityIn.getX()) * .1f;
 		}
 		if (state.get(AXIS) == Axis.Z) {
 			x = te.getSpeed() / -20f;
-			z += (pos.getZ() + .5f - entityIn.posZ) * .1f;
+			z += (pos.getZ() + .5f - entityIn.getZ()) * .1f;
 		}
 		entityIn.setMotion(entityIn.getMotion().add(x, 0, z));
 	}
@@ -150,10 +149,10 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 		return face.getAxis() == state.get(AXIS);
 	}
 
-	@Override
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
+//	@Override // TODO 1.15 register layer
+//	public BlockRenderLayer getRenderLayer() {
+//		return BlockRenderLayer.CUTOUT;
+//	}
 
 	@Override
 	protected boolean hasStaticPart() {

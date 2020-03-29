@@ -53,7 +53,7 @@ public class TurntableBlock extends KineticBlock {
 
 		if (speed == 0)
 			return;
-		if (e.posY < pos.getY() + .5f)
+		if (e.getY() < pos.getY() + .5f)
 			return;
 
 		if (world.isRemote && (e instanceof PlayerEntity)) {

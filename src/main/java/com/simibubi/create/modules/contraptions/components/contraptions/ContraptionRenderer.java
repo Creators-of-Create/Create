@@ -47,7 +47,7 @@ public class ContraptionRenderer {
 	protected static LightingWorld lightingWorld;
 
 	public static void render(World world, Contraption c, Consumer<SuperByteBuffer> transform, MatrixStack ms, BufferBuilder buffer) {
-		SuperByteBuffer contraptionBuffer = CreateClient.bufferCache.get(CONTRAPTION, c, () -> renderContraption(c));
+		SuperByteBuffer contraptionBuffer = CreateClient.bufferCache.get(CONTRAPTION, c, () -> renderContraption(c, ms));
 		transform.accept(contraptionBuffer);
 		contraptionBuffer.light((lx, ly, lz) -> getLight(world, lx, ly, lz)).renderInto(ms, buffer);
 		renderActors(world, c, transform, ms, buffer);

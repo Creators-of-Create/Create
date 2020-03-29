@@ -30,7 +30,7 @@ public class MechanicalPressTileEntityRenderer extends KineticTileEntityRenderer
 
 		BlockPos pos = te.getPos();
 		BlockState blockState = te.getBlockState();
-		int packedLightmapCoords = blockState.getPackedLightmapCoords(te.getWorld(), pos);
+		int packedLightmapCoords =WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, pos);
 		float renderedHeadOffset = ((MechanicalPressTileEntity) te).getRenderedHeadOffset(partialTicks);
 
 		SuperByteBuffer headRender = AllBlockPartials.MECHANICAL_PRESS_HEAD.renderOnHorizontal(blockState);

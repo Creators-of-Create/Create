@@ -73,7 +73,7 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@Override
 	public Vec3d getPositionVector() {
-		return new Vec3d(posX, posY, posZ);
+		return new Vec3d(getX(), getY(), getZ());
 	}
 
 	@Override

@@ -20,7 +20,6 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -44,10 +43,10 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IWithTileEn
 		setDefaultState(getDefaultState().with(RUNNING, false));
 	}
 
-	@Override
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.CUTOUT_MIPPED;
-	}
+//	@Override // TODO 1.15 register layer
+//	public BlockRenderLayer getRenderLayer() {
+//		return BlockRenderLayer.CUTOUT_MIPPED;
+//	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {

@@ -33,7 +33,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 
 		CuckooClockTileEntity clock = (CuckooClockTileEntity) te;
 		BlockState blockState = te.getBlockState();
-		int packedLightmapCoords = blockState.getPackedLightmapCoords(te.getWorld(), te.getPos());
+		int packedLightmapCoords =WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, te.getPos());
 		Direction direction = blockState.get(CuckooClockBlock.HORIZONTAL_FACING);
 		
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());

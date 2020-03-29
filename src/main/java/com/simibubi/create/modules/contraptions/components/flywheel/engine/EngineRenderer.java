@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -27,7 +28,7 @@ public class EngineRenderer<T extends EngineTileEntity> extends SafeTileEntityRe
 				Direction facing = te.getBlockState().get(EngineBlock.HORIZONTAL_FACING);
 				float angle = AngleHelper.rad(AngleHelper.horizontalAngle(facing));
 				frame.renderOn(te.getBlockState()).translate(0, 0, -1).rotateCentered(Axis.Y, angle).translate(x, y, z)
-						.light(te.getBlockState().getPackedLightmapCoords(getWorld(), te.getPos())).renderInto(buffer);
+						.light(WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getBlockState(), te.getPos())).renderInto(buffer);
 			}
 		}
 	}

@@ -82,7 +82,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		ItemStack heldByPlayer = player.getHeldItem(handIn).copy();
 		if (AllItems.WRENCH.typeOf(heldByPlayer))

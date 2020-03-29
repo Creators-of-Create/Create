@@ -124,8 +124,8 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			return;
 		}
 
-		double xMotion = ((pos.getX() + .5f) - processingEntity.posX) / 2f;
-		double zMotion = ((pos.getZ() + .5f) - processingEntity.posZ) / 2f;
+		double xMotion = ((pos.getX() + .5f) - processingEntity.getX()) / 2f;
+		double zMotion = ((pos.getZ() + .5f) - processingEntity.getZ()) / 2f;
 		if (processingEntity.isSneaking())
 			xMotion = zMotion = 0;
 
@@ -145,7 +145,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 		ItemEntity itemEntity = (ItemEntity) processingEntity;
 		itemEntity.setPickupDelay(20);
-		if (processingEntity.posY < pos.getY() + .25f) {
+		if (processingEntity.getY() < pos.getY() + .25f) {
 			inventory.clear();
 			inventory.setStackInSlot(0, itemEntity.getItem().copy());
 			itemInserted(inventory.getStackInSlot(0));

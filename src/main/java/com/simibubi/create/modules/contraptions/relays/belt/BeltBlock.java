@@ -199,7 +199,7 @@ public class BeltBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (player.isSneaking() || !player.isAllowEdit())
 			return false;

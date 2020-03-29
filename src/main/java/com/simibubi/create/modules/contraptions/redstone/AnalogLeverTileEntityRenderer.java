@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction.Axis;
@@ -22,7 +23,7 @@ public class AnalogLeverTileEntityRenderer extends SafeTileEntityRenderer<Analog
 	public void renderFast(AnalogLeverTileEntity te, double x, double y, double z, float partialTicks,
 			int destroyStage, BufferBuilder buffer) {
 		BlockState leverState = te.getBlockState();
-		int lightCoords = leverState.getPackedLightmapCoords(getWorld(), te.getPos());
+		int lightCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), leverState, te.getPos());
 		float state = te.clientState.get(partialTicks);
 
 		// Handle

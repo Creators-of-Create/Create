@@ -32,7 +32,7 @@ import net.minecraft.util.math.Vec3d;
 @SuppressWarnings("deprecation")
 public class ValueBoxRenderer {
 
-	@Deprecated // TODO 1.15 buffered rendering
+	@Deprecated // TODO 1.15 buffered render
 	public static void renderBox(ValueBox box, boolean highlighted) {
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE,

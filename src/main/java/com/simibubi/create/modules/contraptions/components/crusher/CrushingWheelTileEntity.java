@@ -56,7 +56,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	public static void crushingTeleportsEntities(LivingDeathEvent event) {
 		if (event.getSource() != damageSource)
 			return;
-		event.getEntity().posY = Math.floor(event.getEntity().posY) - .5f;
+		event.getEntity().setPos(event.getEntity().getX(), Math.floor(event.getEntity().getY()) - .5f, event.getEntity().getZ());
 	}
 
 }

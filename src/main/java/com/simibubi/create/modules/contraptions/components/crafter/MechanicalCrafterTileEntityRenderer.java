@@ -4,7 +4,6 @@ import static com.simibubi.create.modules.contraptions.base.HorizontalKineticBlo
 import static com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer.standardKineticRotationTransform;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
@@ -23,6 +22,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
@@ -190,7 +190,7 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 		float yRot = AngleHelper.horizontalAngle(crafterState.get(HORIZONTAL_FACING));
 		buffer.rotateCentered(Axis.X, (float) ((xRot) / 180 * Math.PI));
 		buffer.rotateCentered(Axis.Y, (float) ((yRot + 90) / 180 * Math.PI));
-		buffer.light(crafterState.getPackedLightmapCoords(te.getWorld(), pos));
+		buffer.light(WorldRenderer.getLightmapCoordinates(te.getWorld(), crafterState, pos));
 		return buffer;
 	}
 

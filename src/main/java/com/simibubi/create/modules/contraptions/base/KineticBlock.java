@@ -104,7 +104,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 		RotationPropagator.handleAdded(worldIn.getWorld(), pos, tileEntity);
 	}
 
-//	@Override // TODO register layer
+//	@Override // TODO 1.15 register layer
 //	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
 //		return hasStaticPart() && layer == getRenderLayer();
 //	}

@@ -11,9 +11,9 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelBlock.ConnectionState;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -41,7 +41,7 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 
 		if (FlywheelBlock.isConnected(blockState)) {
 			Direction connection = FlywheelBlock.getConnection(blockState);
-			int light = blockState.getPackedLightmapCoords(te.getWorld(), te.getPos().offset(connection));
+			light = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, te.getPos().offset(connection));
 			float rotation = connection.getAxis() == Axis.X ^ connection.getAxisDirection() == AxisDirection.NEGATIVE
 					? -angle
 					: angle;

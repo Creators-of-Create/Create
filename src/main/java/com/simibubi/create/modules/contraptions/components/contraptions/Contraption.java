@@ -37,13 +37,14 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.SlimeBlock;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.ChestType;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -270,8 +271,7 @@ public abstract class Contraption {
 
 			if (world.isRemote) {
 				Block block = info.state.getBlock();
-				BlockRenderLayer renderLayer = block.getRenderLayer();
-				if (renderLayer == BlockRenderLayer.TRANSLUCENT)
+				if (RenderTypeLookup.canRenderInLayer(info.state, RenderType.getTranslucent()))
 					renderOrder.add(info.pos);
 				else
 					renderOrder.add(0, info.pos);
@@ -284,7 +284,7 @@ public abstract class Contraption {
 				tag.putInt("z", info.pos.getZ());
 
 				TileEntity te = TileEntity.create(tag);
-				te.setWorld(new WrappedWorld(world) {
+				te.setLocation(new WrappedWorld(world) {
 
 					@Override
 					public BlockState getBlockState(BlockPos pos) {
@@ -293,7 +293,7 @@ public abstract class Contraption {
 						return info.state;
 					}
 
-				});
+				}, te.getPos());
 				if (te instanceof KineticTileEntity)
 					((KineticTileEntity) te).setSpeed(0);
 				te.getBlockState();
