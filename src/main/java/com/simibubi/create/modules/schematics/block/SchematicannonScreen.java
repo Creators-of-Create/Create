@@ -238,7 +238,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		RenderSystem.enableBlend();
 		RenderSystem.enableRescaleNormal();
 		RenderSystem.enableAlphaTest();
-		RenderHelper.enableGUIStandardItemLighting();
+		RenderHelper.enableGuiDepthLighting();
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		RenderSystem.translated(guiLeft + 240, guiTop + 120, 200);

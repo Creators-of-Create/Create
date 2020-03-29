@@ -214,7 +214,7 @@ public class DeployerHandler {
 			!(player.isSneaking() && holdingSomething) || (stack.doesSneakBypassUse(world, clickedPos, player));
 
 		// Use on block
-		if (event.getUseBlock() != DENY && flag1 && clickedState.onBlockActivated(world, player, hand, result))
+		if (event.getUseBlock() != DENY && flag1 && clickedState.onUse(world, player, hand, result) == ActionResultType.SUCCESS)
 			return;
 		if (stack.isEmpty())
 			return;

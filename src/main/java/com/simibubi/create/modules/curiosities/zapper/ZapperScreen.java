@@ -138,7 +138,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		RenderSystem.pushLightingAttributes();
 		RenderSystem.pushMatrix();
 
-		RenderHelper.enableStandardItemLighting();
+		RenderHelper.enable();
 		RenderSystem.enableBlend();
 		RenderSystem.enableRescaleNormal();
 		RenderSystem.enableAlphaTest();

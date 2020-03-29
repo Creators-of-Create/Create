@@ -129,7 +129,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		RenderSystem.enableBlend();
 		RenderSystem.enableRescaleNormal();
 		RenderSystem.enableAlphaTest();
-		RenderHelper.enableGUIStandardItemLighting();
+		RenderHelper.enableGuiDepthLighting();
 		RenderSystem.alphaFunc(516, 0.1F);
 		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);

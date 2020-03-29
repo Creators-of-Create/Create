@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -17,6 +18,7 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.FirstPersonRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -176,9 +178,11 @@ public class ZapperRenderHandler {
 
 		Minecraft mc = Minecraft.getInstance();
 		boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ mc.player.getPrimaryHand() == HandSide.LEFT;
+		
+		MatrixStack ms = event.getMatrixStack();
 
 		// TODO 1.15 buffered render
-		RenderSystem.pushMatrix();
+		ms.push();
 
 		float recoil = rightHand ? MathHelper.lerp(event.getPartialTicks(), lastRightHandAnimation, rightHandAnimation)
 				: MathHelper.lerp(event.getPartialTicks(), lastLeftHandAnimation, leftHandAnimation);
@@ -196,47 +200,45 @@ public class ZapperRenderHandler {
 		float f2 = -0.3F * MathHelper.sin(f1 * (float) Math.PI);
 		float f3 = 0.4F * MathHelper.sin(f1 * ((float) Math.PI * 2F));
 		float f4 = -0.4F * MathHelper.sin(event.getSwingProgress() * (float) Math.PI);
-		RenderSystem.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
+		ms.translate(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
 				f4 + -0.71999997F + .3f + recoil);
-		RenderSystem.rotatef(f * 75.0F, 0.0F, 1.0F, 0.0F);
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 75.0F));
 		float f5 = MathHelper.sin(event.getSwingProgress() * event.getSwingProgress() * (float) Math.PI);
 		float f6 = MathHelper.sin(f1 * (float) Math.PI);
-		RenderSystem.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
-		RenderSystem.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * f6 * 70.0F));
+		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(f * f5 * -20.0F));
 		AbstractClientPlayerEntity abstractclientplayerentity = mc.player;
 		mc.getTextureManager().bindTexture(abstractclientplayerentity.getLocationSkin());
-		RenderSystem.translatef(f * -1.0F, 3.6F, 3.5F);
-		RenderSystem.rotatef(f * 120.0F, 0.0F, 0.0F, 1.0F);
-		RenderSystem.rotatef(200.0F, 1.0F, 0.0F, 0.0F);
-		RenderSystem.rotatef(f * -135.0F, 0.0F, 1.0F, 0.0F);
-		RenderSystem.translatef(f * 5.6F, 0.0F, 0.0F);
-		RenderSystem.rotatef(f * 40.0F, 0.0F, 1.0F, 0.0F);
+		ms.translate(f * -1.0F, 3.6F, 3.5F);
+		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(f * 120.0F));
+		ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(200.0F));
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * -135.0F));
+		ms.translate(f * 5.6F, 0.0F, 0.0F);
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 40.0F));
 		PlayerRenderer playerrenderer = (PlayerRenderer) mc.getRenderManager().getRenderer(abstractclientplayerentity);
-		RenderSystem.disableCull();
 		if (rightHand) {
-			playerrenderer.renderRightArm(abstractclientplayerentity);
+			playerrenderer.renderRightArm(event.getMatrixStack(), event.getBuffers(), event.getLight(), abstractclientplayerentity);
 		} else {
-			playerrenderer.renderLeftArm(abstractclientplayerentity);
+			playerrenderer.renderLeftArm(event.getMatrixStack(), event.getBuffers(), event.getLight(), abstractclientplayerentity);
 		}
-		RenderSystem.enableCull();
-		RenderSystem.popMatrix();
+		ms.pop();
 
 		// Render gun
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
+		ms.push();
+		ms.translate(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
 				f4 + -0.71999997F - 0.1f + recoil);
-		RenderSystem.rotatef(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
-		RenderSystem.rotatef(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * f6 * 70.0F));
+		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(f * f5 * -20.0F));
 
-		RenderSystem.translatef(f * -0.1f, 0.1f, -0.4f);
-		RenderSystem.rotatef(f * 5.0F, 0.0F, 1.0F, 0.0F);
+		ms.translate(f * -0.1f, 0.1f, -0.4f);
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 5.0F));
 
 		FirstPersonRenderer firstPersonRenderer = mc.getFirstPersonRenderer();
-		firstPersonRenderer.renderItemSide(mc.player, heldItem,
+		firstPersonRenderer.renderItem(mc.player, heldItem,
 				rightHand ? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
 						: ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
-				!rightHand);
-		RenderSystem.popMatrix();
+				!rightHand, event.getMatrixStack(), event.getBuffers(), event.getLight());
+		ms.pop();
 
 		event.setCanceled(true);
 	}

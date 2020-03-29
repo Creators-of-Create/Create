@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -58,11 +59,14 @@ public class BeltTunnelTileEntityRenderer extends SafeTileEntityRenderer<BeltTun
 
 				if (te.syncedFlaps.containsKey(direction)) {
 					float lightIntensity = abs * abs * abs;
+					int indicatorLight = WorldRenderer.getLightmapCoordinates(world, pos);
+					int indicatorBlockLight = LightTexture.getBlockLightCoordinates(indicatorLight);
+					int indicatorSkyLight = LightTexture.getSkyLightCoordinates(indicatorLight);
+					indicatorBlockLight = Math.max(indicatorBlockLight, (int) (12 * lightIntensity));
+					indicatorLight = LightTexture.pack(indicatorBlockLight, indicatorSkyLight);
 					int color = ColorHelper.mixColors(0x808080, 0xFFFFFF, lightIntensity);
 					indicatorBuffer.rotateCentered(Axis.Y, (float) ((horizontalAngle + 90) / 180f * Math.PI))
-							.color(color)
-							// TODO 1.15 wtf is this doing?
-							.light(world.getCombinedLight(pos, (int) (12 * lightIntensity))).renderInto(ms, vb);
+							.color(color).light(indicatorLight).renderInto(ms, vb);
 				}
 
 				flapBuffer.translate(0, 0, -segment * 3 / 16f);

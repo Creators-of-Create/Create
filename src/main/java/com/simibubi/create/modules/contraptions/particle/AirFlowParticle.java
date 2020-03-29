@@ -11,6 +11,7 @@ import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
@@ -143,7 +144,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 
 	public int getBrightnessForRender(float partialTick) {
 		BlockPos blockpos = new BlockPos(this.posX, this.posY, this.posZ);
-		return this.world.isBlockPresent(blockpos) ? this.world.getCombinedLight(blockpos, 0) : 0;
+		return this.world.isBlockPresent(blockpos) ? WorldRenderer.getLightmapCoordinates(world, blockpos) : 0;
 	}
 
 	private void selectSprite(int index) {

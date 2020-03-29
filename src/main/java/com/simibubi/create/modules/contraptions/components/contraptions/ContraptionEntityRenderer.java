@@ -111,7 +111,7 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 		RenderSystem.shadeModel(7424);
 		RenderSystem.alphaFunc(516, 0.1F);
 		RenderSystem.matrixMode(5888);
-		RenderHelper.enableStandardItemLighting();
+		RenderHelper.enable();
 
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 	}

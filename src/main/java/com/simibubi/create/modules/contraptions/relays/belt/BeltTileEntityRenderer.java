@@ -149,8 +149,6 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 				IndependentShadowRenderer.renderShadow(ms, buffer, shadowPos, .75f, blockItem ? .2f : .2f);
 			}
 
-			RenderHelper.enableStandardItemLighting();
-
 			int count = (int) (MathHelper.log2((int) (transported.stack.getCount()))) / 2;
 			ms.multiply(new Vector3f(slopeAlongX ? 0 : 1, 0, slopeAlongX ? 1 : 0).getDegreesQuaternion(slopeAngle));
 			if (onSlope)

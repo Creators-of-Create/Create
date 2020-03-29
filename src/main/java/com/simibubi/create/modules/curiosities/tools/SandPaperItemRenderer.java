@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
@@ -30,21 +31,21 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 		boolean leftHand = perspective == TransformType.FIRST_PERSON_LEFT_HAND;
 		boolean firstPerson = leftHand || perspective == TransformType.FIRST_PERSON_RIGHT_HAND;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(.5f, .5f, .5f);
+		ms.push();
+		ms.translate(.5f, .5f, .5f);
 
 		CompoundNBT tag = stack.getOrCreateTag();
 		boolean jeiMode = tag.contains("JEI");
 
 		if (tag.contains("Polishing")) {
-			RenderSystem.pushMatrix();
+			ms.push();
 
 			if (perspective == TransformType.GUI) {
-				RenderSystem.translatef(0.0F, .2f, 1.0F);
-				RenderSystem.scalef(.75f, .75f, .75f);
+				ms.translate(0.0F, .2f, 1.0F);
+				ms.scale(.75f, .75f, .75f);
 			} else {
 				int modifier = leftHand ? -1 : 1;
-				RenderSystem.rotatef(modifier * 40, 0, 1, 0);
+				ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(modifier * 40));
 			}
 
 			// Reverse bobbing
@@ -54,15 +55,15 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 				float bobbing = -MathHelper.abs(MathHelper.cos(time / 4.0F * (float) Math.PI) * 0.1F);
 
 				if (perspective == TransformType.GUI)
-					RenderSystem.translatef(bobbing, bobbing, 0.0F);
+					ms.translate(bobbing, bobbing, 0.0F);
 				else
-					RenderSystem.translatef(0.0f, bobbing, 0.0F);
+					ms.translate(0.0f, bobbing, 0.0F);
 			}
 
 			ItemStack toPolish = ItemStack.read(tag.getCompound("Polishing"));
-			itemRenderer.renderItem(toPolish, itemRenderer.getItemModelWithOverrides(toPolish, Minecraft.getInstance().world, null).getBakedModel());
+			itemRenderer.renderItem(toPolish, TransformType.NONE, light, overlay, ms, buffer);
 
-			RenderSystem.popMatrix();
+			ms.pop();
 		}
 
 		if (firstPerson) {
@@ -76,9 +77,9 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 			}
 		}
 
-		itemRenderer.renderItem(stack, mainModel.getBakedModel());
+		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay, mainModel.getBakedModel());
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	public static class SandPaperModel extends CustomRenderedItemModel {

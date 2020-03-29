@@ -6,9 +6,9 @@ import java.util.function.Consumer;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
@@ -26,7 +26,9 @@ import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -72,11 +74,11 @@ public class ContraptionRenderer {
 
 				BlockPos pos = tileEntity.getPos();
 				if (!tileEntity.hasFastRenderer()) {
-					RenderHelper.enableStandardItemLighting();
-					int i = lightingWorld.getCombinedLight(pos, 0);
-					int j = i % 65536;
-					int k = i / 65536;
-					RenderSystem.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float) j, (float) k);
+					RenderHelper.enable();
+					int i = WorldRenderer.getLightmapCoordinates(lightingWorld, pos);
+					int j = LightTexture.getBlockLightCoordinates(i);
+					int k = LightTexture.getSkyLightCoordinates(i);
+					RenderSystem.glMultiTexCoord2f(GL13.GL_TEXTURE1, (float) j, (float) k);
 					RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 				}
 
@@ -188,8 +190,8 @@ public class ContraptionRenderer {
 		}
 
 		@Override
-		public int getCombinedLight(BlockPos pos, int minLight) {
-			return super.getCombinedLight(transformPos(pos), minLight);
+		public int getBaseLightLevel(BlockPos pos, int minLight) {
+			return super.getBaseLightLevel(transformPos(pos), minLight);
 		}
 
 		private BlockPos transformPos(BlockPos pos) {

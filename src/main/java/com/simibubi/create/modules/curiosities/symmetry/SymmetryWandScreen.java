@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.item.ItemStack;
@@ -137,7 +138,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		RenderSystem.pushLightingAttributes();
 		RenderSystem.pushMatrix();
 
-		RenderHelper.enableStandardItemLighting();
+		RenderHelper.enable();
 		RenderSystem.enableBlend();
 		RenderSystem.enableRescaleNormal();
 		RenderSystem.enableAlphaTest();
@@ -149,7 +150,8 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		RenderSystem.rotatef(-30, .4f, 0, -.2f);
 		RenderSystem.rotatef(90 + 0.2f * animationProgress, 0, 1, 0);
 		RenderSystem.scaled(100, -100, 100);
-		itemRenderer.renderItem(wand, itemRenderer.getModelWithOverrides(wand));
+		itemRenderer.renderItem(wand, TransformType.NONE, 0xF000F0, OverlayTexture.DEFAULT_UV, new MatrixStack(),
+				Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers());
 
 		RenderSystem.disableAlphaTest();
 		RenderSystem.disableRescaleNormal();

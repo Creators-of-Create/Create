@@ -68,8 +68,6 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 	}
 
 	public void renderItems(MechanicalCrafterTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		RenderHelper.enableStandardItemLighting();
-
 		if (te.phase == Phase.IDLE) {
 			ItemStack stack = te.inventory.getStackInSlot(0);
 			if (!stack.isEmpty()) {
@@ -137,8 +135,6 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 			}
 
 		}
-
-		RenderHelper.disableStandardItemLighting();
 	}
 
 	public void renderFast(MechanicalCrafterTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer) {
