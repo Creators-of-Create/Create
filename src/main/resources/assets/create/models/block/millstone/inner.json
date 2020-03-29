@@ -1,0 +1,152 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"5": "create:block/millstone",
+		"particle": "create:block/axis",
+		"1_0": "create:block/axis",
+		"1_1": "create:block/axis_top"
+	},
+	"elements": [
+		{
+			"name": "Gear5",
+			"from": [6.5, 6.5, -1],
+			"to": [9.5, 12.5, 17],
+			"faces": {
+				"north": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
+				"east": {"uv": [0, 10, 9, 13], "texture": "#5"},
+				"south": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
+				"west": {"uv": [0, 10, 9, 13], "texture": "#5"},
+				"up": {"uv": [0, 8.5, 9, 10], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [0, 8.5, 9, 10], "rotation": 90, "texture": "#5"}
+			}
+		},
+		{
+			"name": "Gear6",
+			"from": [6.5, 6.5, -1],
+			"to": [9.5, 12.5, 17],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
+				"east": {"uv": [0, 10, 9, 13], "texture": "#5"},
+				"south": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
+				"west": {"uv": [0, 10, 9, 13], "texture": "#5"},
+				"up": {"uv": [0, 8.5, 9, 10], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [0, 8.5, 9, 10], "rotation": 90, "texture": "#5"}
+			}
+		},
+		{
+			"name": "Gear7",
+			"from": [-1, 6.5, 6.5],
+			"to": [17, 12.5, 9.5],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 10, 9, 13], "texture": "#5"},
+				"east": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
+				"south": {"uv": [0, 10, 9, 13], "texture": "#5"},
+				"west": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
+				"up": {"uv": [0, 8.5, 9, 10], "texture": "#5"},
+				"down": {"uv": [0, 8.5, 9, 10], "rotation": 180, "texture": "#5"}
+			}
+		},
+		{
+			"name": "Gear7",
+			"from": [-1, 6.5, 6.5],
+			"to": [17, 12.5, 9.5],
+			"faces": {
+				"north": {"uv": [0, 10, 9, 13], "texture": "#5"},
+				"east": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
+				"south": {"uv": [0, 10, 9, 13], "texture": "#5"},
+				"west": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
+				"up": {"uv": [0, 8.5, 9, 10], "texture": "#5"},
+				"down": {"uv": [0, 8.5, 9, 10], "rotation": 180, "texture": "#5"}
+			}
+		},
+		{
+			"name": "GearCaseInner",
+			"from": [2, 6.6, 2],
+			"to": [14, 11.6, 14],
+			"faces": {
+				"north": {"uv": [0, 6, 6, 8.5], "texture": "#5"},
+				"east": {"uv": [0, 6, 6, 8.5], "texture": "#5"},
+				"south": {"uv": [0, 6, 6, 8.5], "texture": "#5"},
+				"west": {"uv": [0, 6, 6, 8.5], "texture": "#5"},
+				"up": {"uv": [0, 0, 6, 6], "texture": "#5"},
+				"down": {"uv": [0, 0, 6, 6], "texture": "#5"}
+			}
+		},
+		{
+			"name": "GearCaseOuter",
+			"from": [4, 6, 4],
+			"to": [12, 13, 12],
+			"faces": {
+				"north": {"uv": [1, 1.5, 5, 5], "texture": "#5"},
+				"east": {"uv": [1, 1.5, 5, 5], "texture": "#5"},
+				"south": {"uv": [1, 1.5, 5, 5], "texture": "#5"},
+				"west": {"uv": [1, 1.5, 5, 5], "texture": "#5"},
+				"up": {"uv": [1, 1, 5, 5], "texture": "#5"},
+				"down": {"uv": [1, 1, 5, 5], "texture": "#5"}
+			}
+		},
+		{
+			"name": "Axis",
+			"from": [6, 0, 6],
+			"to": [10, 8, 10],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [6, 0, 10, 8], "rotation": 180, "texture": "#1_0"},
+				"east": {"uv": [6, 0, 10, 8], "rotation": 180, "texture": "#1_0"},
+				"south": {"uv": [6, 0, 10, 8], "rotation": 180, "texture": "#1_0"},
+				"west": {"uv": [6, 0, 10, 8], "rotation": 180, "texture": "#1_0"},
+				"up": {"uv": [6, 6, 10, 10], "texture": "#1_1"},
+				"down": {"uv": [6, 6, 10, 10], "texture": "#1_1"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, -149, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, -149, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -55, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -55, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 1, 1.25],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"translation": [2.5, -0.5, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 1.75, -4.5],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"groups": [
+		{
+			"name": "cogwheel",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3, 4, 5]
+		},
+		{
+			"name": "shaft_half",
+			"origin": [8, 8, 8],
+			"children": [6]
+		}
+	]
+}

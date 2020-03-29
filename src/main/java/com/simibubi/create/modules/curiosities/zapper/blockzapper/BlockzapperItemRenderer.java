@@ -9,8 +9,8 @@ import static com.simibubi.create.modules.curiosities.zapper.blockzapper.Blockza
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.modules.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.modules.curiosities.zapper.ZapperItemRenderer;
+import com.simibubi.create.modules.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
 import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components;
 

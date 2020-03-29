@@ -140,7 +140,7 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		BlockState state = te.getBlockState();
 		if (!AllBlocks.DEPLOYER.typeOf(state))
 			return Blocks.AIR.getDefaultState();
-		return AllBlocks.SHAFT.block.getDefaultState().with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
+		return AllBlocks.SHAFT.get().getDefaultState().with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
 	}
 
 	private static SuperByteBuffer renderAndTransform(World world, AllBlockPartials renderBlock,

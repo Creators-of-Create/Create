@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingRecipe;
 import com.simibubi.create.modules.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.modules.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.modules.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.modules.contraptions.components.saw.CuttingRecipe;
@@ -30,6 +31,7 @@ public enum AllRecipes {
 	BLOCKZAPPER_UPGRADE(BlockzapperUpgradeRecipe.Serializer::new, IRecipeType.CRAFTING),
 	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
 	CRUSHING(processingSerializer(CrushingRecipe::new)),
+	MILLING(processingSerializer(MillingRecipe::new)),
 	SPLASHING(processingSerializer(SplashingRecipe::new)),
 	PRESSING(processingSerializer(PressingRecipe::new)),
 	CUTTING(processingSerializer(CuttingRecipe::new)),

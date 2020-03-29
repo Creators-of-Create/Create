@@ -6,12 +6,10 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
-
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
-import net.minecraft.block.BlockState;
+
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggleInformation {

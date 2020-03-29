@@ -35,6 +35,8 @@ import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelRend
 import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelTileEntity;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineRenderer;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.FurnaceEngineTileEntity;
+import com.simibubi.create.modules.contraptions.components.millstone.MillstoneRenderer;
+import com.simibubi.create.modules.contraptions.components.millstone.MillstoneTileEntity;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerTileEntity;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.motor.MotorTileEntity;
@@ -131,6 +133,8 @@ public enum AllTileEntities {
 	HARVESTER(HarvesterTileEntity::new, AllBlocks.HARVESTER),
 	FLYWHEEL(FlywheelTileEntity::new, AllBlocks.FLYWHEEL),
 	FURNACE_ENGINE(FurnaceEngineTileEntity::new, AllBlocks.FURNACE_ENGINE),
+	
+	MILLSTONE(MillstoneTileEntity::new, AllBlocks.MILLSTONE),
 	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
 	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
@@ -181,7 +185,7 @@ public enum AllTileEntities {
 		for (AllTileEntities tileEntity : values()) {
 			Block[] blocks = new Block[tileEntity.blocks.length];
 			for (int i = 0; i < blocks.length; i++)
-				blocks[i] = tileEntity.blocks[i].block;
+				blocks[i] = tileEntity.blocks[i].get();
 
 			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, Lang.asId(tileEntity.name()));
 			tileEntity.type = TileEntityType.Builder.create(tileEntity.supplier, blocks).build(null)
@@ -218,6 +222,7 @@ public enum AllTileEntities {
 		bind(ROPE_PULLEY, PulleyRenderer::new);
 		bind(HARVESTER, HarvesterTileEntityRenderer::new);
 
+		bind(MILLSTONE, MillstoneRenderer::new);
 		bind(CRUSHING_WHEEL, KineticTileEntityRenderer::new);
 		bind(MECHANICAL_PRESS, MechanicalPressTileEntityRenderer::new);
 		bind(MECHANICAL_MIXER, MechanicalMixerTileEntityRenderer::new);

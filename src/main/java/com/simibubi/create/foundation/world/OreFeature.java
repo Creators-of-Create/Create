@@ -28,7 +28,7 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 	protected ConfigInt maxHeight;
 
 	private Block block;
-	private Biome.Category biomeWhitelist;
+	private Biome.Category specificCategory;
 
 	public OreFeature(Block block, int clusterSize) {
 		this.block = block;
@@ -47,7 +47,7 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 	}
 
 	public OreFeature<T> inBiomes(Biome.Category category) {
-		biomeWhitelist = category;
+		specificCategory = category;
 		return this;
 	}
 
@@ -58,7 +58,7 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 
 	@Override
 	public Optional<ConfiguredFeature<?, ?>> createFeature(Biome biome) {
-		if (biomeWhitelist != null && biome.getCategory() == biomeWhitelist)
+		if (specificCategory != null && biome.getCategory() != specificCategory)
 			return Optional.empty();
 		if (!canGenerate())
 			return Optional.empty();

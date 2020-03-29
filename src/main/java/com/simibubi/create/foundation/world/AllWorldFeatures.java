@@ -19,9 +19,9 @@ public enum AllWorldFeatures {
 	COPPER_ORE_OCEAN(
 			new CountedOreFeature(AllBlocks.COPPER_ORE.get(), 15, 4).between(20, 55).inBiomes(Biome.Category.OCEAN)),
 
-	ZINC_ORE(new CountedOreFeature(AllBlocks.ZINC_ORE.get(), 17, 1).between(55, 80)),
+	ZINC_ORE(new CountedOreFeature(AllBlocks.ZINC_ORE.get(), 8, 1).between(55, 80)),
 	ZINC_ORE_DESERT(
-			new CountedOreFeature(AllBlocks.ZINC_ORE.get(), 17, 5).between(50, 85).inBiomes(Biome.Category.DESERT)),
+			new CountedOreFeature(AllBlocks.ZINC_ORE.get(), 10, 5).between(50, 85).inBiomes(Biome.Category.DESERT)),
 
 	LIMESTONE(new ChanceOreFeature(AllBlocks.LIMESTONE.get(), 128, 1 / 32f).between(30, 70)),
 	WEATHERED_LIMESTONE(new ChanceOreFeature(AllBlocks.WEATHERED_LIMESTONE.get(), 128, 1 / 32f).between(10, 30)),
@@ -55,6 +55,24 @@ public enum AllWorldFeatures {
 				biome.addFeature(entry.feature.getGenerationStage(), createFeature.get());
 			}
 		}
+		
+//		// Debug contained ore features
+//		for (Biome biome : ForgeRegistries.BIOMES) {
+//			Debug.markTemporary();
+//			System.out.println(biome.getRegistryName().getPath() + " has the following features:");
+//			for (ConfiguredFeature<?> configuredFeature : biome.getFeatures(Decoration.UNDERGROUND_ORES)) {
+//				IFeatureConfig config = configuredFeature.config;
+//				if (!(config instanceof DecoratedFeatureConfig))
+//					continue;
+//				DecoratedFeatureConfig decoConf = (DecoratedFeatureConfig) config;
+//				if (!(decoConf.feature.config instanceof OreFeatureConfig))
+//					continue;
+//				OreFeatureConfig oreConf = (OreFeatureConfig) decoConf.feature.config;
+//				System.out.println(configuredFeature.feature.getRegistryName().getPath());
+//				System.out.println(oreConf.state.getBlock().getRegistryName().getPath());
+//				System.out.println("--");
+//			}
+//		}
 	}
 
 	public static void fillConfig(ForgeConfigSpec.Builder builder) {

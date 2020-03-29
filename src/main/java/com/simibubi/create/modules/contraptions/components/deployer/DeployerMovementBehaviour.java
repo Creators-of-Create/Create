@@ -104,8 +104,9 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (player == null)
 			return;
 		if (player.getHeldItemMainhand().isEmpty()) {
+			ItemStack filter = getFilter(context);
 			ItemStack held = ItemHelper.extract(context.contraption.inventory,
-					stack -> FilterItem.test(stack, getFilter(context)), 1, false);
+					stack -> FilterItem.test(context.world, stack, filter), 1, false);
 			player.setHeldItem(Hand.MAIN_HAND, held);
 		}
 	}
@@ -123,7 +124,8 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 				if (itemstack.isEmpty())
 					continue;
 
-				if (list == inv.mainInventory && i == inv.currentItem && FilterItem.test(itemstack, filter))
+				if (list == inv.mainInventory && i == inv.currentItem
+						&& FilterItem.test(context.world, itemstack, filter))
 					continue;
 
 				dropItem(context, itemstack);

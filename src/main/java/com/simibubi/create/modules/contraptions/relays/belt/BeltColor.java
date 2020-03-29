@@ -13,6 +13,8 @@ class BeltColor implements IBlockColor {
 
 	@Override
 	public int getColor(BlockState state, ILightReader reader, BlockPos pos, int layer) {
+		if (reader == null)
+			return 0;
 		TileEntity tileEntity = reader.getTileEntity(pos);
 		if (tileEntity instanceof BeltTileEntity) {
 			BeltTileEntity te = (BeltTileEntity) tileEntity;

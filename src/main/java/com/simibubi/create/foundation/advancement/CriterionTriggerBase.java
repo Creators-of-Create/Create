@@ -1,15 +1,20 @@
 package com.simibubi.create.foundation.advancement;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
+
 import com.google.common.collect.Maps;
 import com.simibubi.create.Create;
+
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.criterion.CriterionInstance;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.*;
-import java.util.function.Supplier;
 
 public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instance> implements ICriterionTrigger<T> {
 

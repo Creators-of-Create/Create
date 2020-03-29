@@ -1,12 +1,13 @@
 package com.simibubi.create.foundation.advancement;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
-
 import java.util.List;
 import java.util.function.Supplier;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.ResourceLocation;
 
 public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> {
 

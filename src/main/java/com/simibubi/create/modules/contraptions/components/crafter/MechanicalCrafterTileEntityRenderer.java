@@ -35,8 +35,8 @@ import net.minecraft.util.math.Vec3d;
 @SuppressWarnings("deprecation")
 public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<MechanicalCrafterTileEntity> {
 
-	public static SpriteShiftEntry animatedTexture = SpriteShifter.get("block/crafter_thingies",
-			"block/crafter_thingies");
+	public static SpriteShiftEntry animatedTexture =
+			SpriteShifter.get("block/crafter_thingies", "block/crafter_thingies");
 	
 	public MechanicalCrafterTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -51,8 +51,8 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 
 		if (te.phase == Phase.EXPORTING) {
 			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(te.getBlockState());
-			float progress = MathHelper.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0,
-					1);
+			float progress =
+				MathHelper.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
 			vec = vec.add(new Vec3d(targetDirection.getDirectionVec()).scale(progress * .75f));
 		}
 
@@ -88,27 +88,29 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 			if (te.phase == Phase.CRAFTING) {
 				items = te.groupedItemsBeforeCraft;
 				items.calcStats();
-				float progress = MathHelper.clamp((2000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f,
-						0, 1);
+				float progress =
+					MathHelper.clamp((2000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
 				float earlyProgress = MathHelper.clamp(progress * 2, 0, 1);
 				float lateProgress = MathHelper.clamp(progress * 2 - 1, 0, 1);
 
-//				RenderSystem.rotatef(lateProgress * 360, 0, 0, 1);
 				ms.scale(1 - lateProgress, 1 - lateProgress, 1 - lateProgress);
-
-				Vec3d centering = new Vec3d(-items.minX + (-items.width + 1) / 2f,
-						-items.minY + (-items.height + 1) / 2f, 0).scale(earlyProgress);
+				Vec3d centering =
+					new Vec3d(-items.minX + (-items.width + 1) / 2f, -items.minY + (-items.height + 1) / 2f, 0)
+							.scale(earlyProgress);
 				ms.translate(centering.x * .5f, centering.y * .5f, 0);
-
 				distance += (-4 * (progress - .5f) * (progress - .5f) + 1) * .25f;
 			}
 
+			boolean onlyRenderFirst = te.phase == Phase.INSERTING || te.phase == Phase.CRAFTING && te.countDown < 1000;
 			final float spacing = distance;
 			items.grid.forEach((pair, stack) -> {
+				if (onlyRenderFirst && (pair.getLeft().intValue() != 0 || pair.getRight().intValue() != 0))
+					return;
+
 				ms.push();
 				ms.translate(pair.getKey() * spacing, pair.getValue() * spacing, 0);
-				TessellatorHelper.fightZFighting(pair.hashCode() + te.getPos().hashCode()); // FIXME 1.15
-				Minecraft.getInstance().getItemRenderer().renderItem(stack, TransformType.FIXED, light, overlay, ms, buffer);
+				TessellatorHelper.fightZFighting(pair.hashCode() + te.getPos().hashCode());
+				Minecraft.getInstance().getItemRenderer().renderItem(stack, TransformType.FIXED);
 				ms.pop();
 			});
 
@@ -116,8 +118,8 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 
 			if (te.phase == Phase.CRAFTING) {
 				items = te.groupedItems;
-				float progress = MathHelper.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f,
-						0, 1);
+				float progress =
+					MathHelper.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
 				float earlyProgress = MathHelper.clamp(progress * 2, 0, 1);
 				float lateProgress = MathHelper.clamp(progress * 2 - 1, 0, 1);
 
@@ -128,6 +130,8 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 				ms.scale(downScaling, downScaling, downScaling);
 
 				items.grid.forEach((pair, stack) -> {
+					if (pair.getLeft().intValue() != 0 || pair.getRight().intValue() != 0)
+						return;
 					Minecraft.getInstance().getItemRenderer().renderItem(stack, TransformType.FIXED, light, overlay, ms, buffer);
 				});
 			}
@@ -158,8 +162,8 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 
 		if (MechanicalCrafterBlock.isValidTarget(te.getWorld(), pos.offset(targetDirection), blockState)) {
 			SuperByteBuffer beltBuffer = renderAndTransform(te, AllBlockPartials.MECHANICAL_CRAFTER_BELT, blockState, pos);
-			SuperByteBuffer beltFrameBuffer = renderAndTransform(te, AllBlockPartials.MECHANICAL_CRAFTER_BELT_FRAME, blockState,
-					pos);
+			SuperByteBuffer beltFrameBuffer =
+				renderAndTransform(te, AllBlockPartials.MECHANICAL_CRAFTER_BELT_FRAME, blockState, pos);
 
 			if (te.phase == Phase.EXPORTING) {
 				int textureIndex = (int) ((te.getCountDownSpeed() / 128f * AnimationTickHolder.ticks));
@@ -173,7 +177,8 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 			beltFrameBuffer.renderInto(ms, vb);
 
 		} else {
-			SuperByteBuffer arrowBuffer = renderAndTransform(te, AllBlockPartials.MECHANICAL_CRAFTER_ARROW, blockState, pos);
+			SuperByteBuffer arrowBuffer =
+				renderAndTransform(te, AllBlockPartials.MECHANICAL_CRAFTER_ARROW, blockState, pos);
 			arrowBuffer.renderInto(ms, vb);
 		}
 

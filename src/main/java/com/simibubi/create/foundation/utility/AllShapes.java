@@ -29,10 +29,10 @@ public class AllShapes {
 			SIX_VOXEL_POLE = shape(5, 0, 5, 11, 16, 11).forAxis(),
 			BELT_FUNNEL = shape(3, -4, 11, 13, 8, 17).forHorizontal(SOUTH),
 			FUNNEL = shape(1, 1, 13, 15, 15, 17).forDirectional(SOUTH),
-			EXTRACTOR = shape(4, 2, 11, 12, 10, 17).forDirectional(SOUTH)
-					.withVerticalShapes(cuboid(4, 11, 4, 12, 17, 12)),
-			TRANSPOSER = shape(4, 4, -1, 12, 12, 1).add(5, 5, 0, 11, 11, 16).add(4, 4, 11, 12, 12, 17)
-					.forDirectional(SOUTH),
+			EXTRACTOR =
+				shape(4, 2, 11, 12, 10, 17).forDirectional(SOUTH).withVerticalShapes(cuboid(4, 11, 4, 12, 17, 12)),
+			TRANSPOSER =
+				shape(4, 4, -1, 12, 12, 1).add(5, 5, 0, 11, 11, 16).add(4, 4, 11, 12, 12, 17).forDirectional(SOUTH),
 			FURNACE_ENGINE = shape(1, 1, 0, 15, 15, 16).add(0, 0, 9, 16, 16, 14).forHorizontal(Direction.SOUTH),
 			PORTABLE_STORAGE_INTERFACE = shape(0, 0, 0, 16, 12, 16).add(3, 12, 3, 13, 16, 13).forDirectional(),
 			PULLEY = shape(0, 0, 0, 16, 16, 2).add(1, 1, 2, 15, 15, 14).add(0, 0, 14, 16, 16, 16).forHorizontalAxis(),
@@ -57,6 +57,7 @@ public class AllShapes {
 			BELT_COLLISION_MASK = cuboid(0, 0, 0, 16, 19, 16),
 			SCHEMATICANNON_SHAPE = shape(1, 0, 1, 15, 8, 15).add(0.5, 8, 0.5, 15.5, 11, 15.5).build(),
 			PULLEY_MAGNET = shape(3, 0, 3, 13, 2, 13).add(FOUR_VOXEL_POLE.get(UP)).build(),
+			MILLSTONE = shape(0, 0, 0, 16, 6, 16).add(2, 6, 2, 14, 13, 14).add(3, 13, 3, 13, 16, 13).build(),
 			GAUGE_SHAPE_UP = shape(1, 0, 0, 15, 2, 16).add(2, 2, 1, 14, 14, 15).build()
 
 	;
@@ -64,15 +65,16 @@ public class AllShapes {
 	// Internally Shared Shapes
 	private static final VoxelShape
 
-	PISTON_HEAD = Blocks.PISTON_HEAD.getDefaultState().with(DirectionalBlock.FACING, UP)
-			.with(PistonHeadBlock.SHORT, true).getShape(null, null),
+	PISTON_HEAD =
+		Blocks.PISTON_HEAD.getDefaultState().with(DirectionalBlock.FACING, UP).with(PistonHeadBlock.SHORT, true)
+				.getShape(null, null),
 			PISTON_EXTENDED = shape(CASING_12PX.get(UP)).add(FOUR_VOXEL_POLE.get(Axis.Y)).build(),
 			SMALL_GEAR_SHAPE = cuboid(2, 6, 2, 14, 10, 14), LARGE_GEAR_SHAPE = cuboid(0, 6, 0, 16, 10, 16),
 			VERTICAL_TABLET_SHAPE = cuboid(3, 1, -1, 13, 15, 3), SQUARE_TABLET_SHAPE = cuboid(2, 2, -1, 14, 14, 3),
-			LOGISTICS_TABLE_SLOPE = shape(0, 10, 15, 16, 14, 10.667).add(0, 12, 10.667, 16, 16, 6.333)
-					.add(0, 14, 6.333, 16, 18, 2).build(),
-			SCHEMATICS_TABLE_SLOPE = shape(0, 10, 16, 16, 14, 11).add(0, 12, 11, 16, 16, 6).add(0, 14, 6, 16, 18, 1)
-					.build()
+			LOGISTICS_TABLE_SLOPE =
+				shape(0, 10, 15, 16, 14, 10.667).add(0, 12, 10.667, 16, 16, 6.333).add(0, 14, 6.333, 16, 18, 2).build(),
+			SCHEMATICS_TABLE_SLOPE =
+				shape(0, 10, 16, 16, 14, 11).add(0, 12, 11, 16, 16, 6).add(0, 14, 6, 16, 18, 1).build()
 
 	;
 
@@ -84,8 +86,8 @@ public class AllShapes {
 			SMALL_GEAR = shape(SMALL_GEAR_SHAPE).add(SIX_VOXEL_POLE.get(Axis.Y)).forAxis(),
 			LARGE_GEAR = shape(LARGE_GEAR_SHAPE).add(SIX_VOXEL_POLE.get(Axis.Y)).forAxis(),
 			LOGISTICAL_CONTROLLER = shape(SQUARE_TABLET_SHAPE).forDirectional(SOUTH),
-			REDSTONE_BRIDGE = shape(VERTICAL_TABLET_SHAPE).forDirectional(SOUTH)
-					.withVerticalShapes(LOGISTICAL_CONTROLLER.get(UP)),
+			REDSTONE_BRIDGE =
+				shape(VERTICAL_TABLET_SHAPE).forDirectional(SOUTH).withVerticalShapes(LOGISTICAL_CONTROLLER.get(UP)),
 			LOGISTICS_TABLE = shape(TABLE_POLE_SHAPE).add(LOGISTICS_TABLE_SLOPE).forHorizontal(SOUTH),
 			SCHEMATICS_TABLE = shape(TABLE_POLE_SHAPE).add(SCHEMATICS_TABLE_SLOPE).forDirectional(SOUTH)
 
@@ -120,8 +122,8 @@ public class AllShapes {
 		}
 
 		Builder erase(double x1, double y1, double z1, double x2, double y2, double z2) {
-			this.shape = VoxelShapes.combineAndSimplify(shape, cuboid(x1, y1, z1, x2, y2, z2),
-					IBooleanFunction.ONLY_FIRST);
+			this.shape =
+				VoxelShapes.combineAndSimplify(shape, cuboid(x1, y1, z1, x2, y2, z2), IBooleanFunction.ONLY_FIRST);
 			return this;
 		}
 

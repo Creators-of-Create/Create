@@ -145,7 +145,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	}
 
 	public boolean test(ItemStack stack) {
-		return filter.isEmpty() || FilterItem.test(stack, filter);
+		return filter.isEmpty() || FilterItem.test(tileEntity.getWorld(), stack, filter);
 	}
 
 	@Override

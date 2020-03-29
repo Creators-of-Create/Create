@@ -54,7 +54,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 	}
 
 	@Override
-	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
 		return false;
 	}
 

@@ -15,6 +15,7 @@ import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlo
 import com.simibubi.create.compat.jei.category.BlockzapperUpgradeCategory;
 import com.simibubi.create.compat.jei.category.CrushingCategory;
 import com.simibubi.create.compat.jei.category.MechanicalCraftingCategory;
+import com.simibubi.create.compat.jei.category.MillingCategory;
 import com.simibubi.create.compat.jei.category.MixingCategory;
 import com.simibubi.create.compat.jei.category.MysteriousItemConversionCategory;
 import com.simibubi.create.compat.jei.category.PackingCategory;
@@ -55,6 +56,7 @@ import net.minecraft.util.text.TextFormatting;
 public class CreateJEI implements IModPlugin {
 
 	private static ResourceLocation ID = new ResourceLocation(Create.ID, "jei_plugin");
+	private MillingCategory millingCategory;
 	private CrushingCategory crushingCategory;
 	private SplashingCategory splashingCategory;
 	private SmokingViaFanCategory smokingCategory;
@@ -76,6 +78,7 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	public CreateJEI() {
+		millingCategory = new MillingCategory();
 		crushingCategory = new CrushingCategory();
 		splashingCategory = new SplashingCategory();
 		pressingCategory = new PressingCategory();
@@ -99,15 +102,18 @@ public class CreateJEI implements IModPlugin {
 
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
-		registration.addRecipeCategories(crushingCategory, splashingCategory, pressingCategory, smokingCategory,
-				blastingCategory, blockzapperCategory, mixingCategory, sawingCategory, blockCuttingCategory,
-				packingCategory, polishingCategory, mysteryConversionCategory, smallMechanicalCraftingCategory,
-				largeMechanicalCraftingCategory);
+		registration.addRecipeCategories(millingCategory, crushingCategory, splashingCategory, pressingCategory,
+				smokingCategory, blastingCategory, blockzapperCategory, mixingCategory, sawingCategory,
+				blockCuttingCategory, packingCategory, polishingCategory, mysteryConversionCategory,
+				smallMechanicalCraftingCategory, largeMechanicalCraftingCategory);
 	}
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
+		registration.addRecipes(findRecipes(AllRecipes.MILLING), millingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipes.CRUSHING), crushingCategory.getUid());
+		registration.addRecipes(findRecipesByTypeExcluding(AllRecipes.MILLING.getType(), AllRecipes.CRUSHING.getType()),
+				crushingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipes.SPLASHING), splashingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipes.PRESSING), pressingCategory.getUid());
 		registration.addRecipes(findRecipesById(AllRecipes.BLOCKZAPPER_UPGRADE.serializer.getRegistryName()),
@@ -134,11 +140,14 @@ public class CreateJEI implements IModPlugin {
 				r -> (r instanceof MechanicalCraftingRecipe) && MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
 				smallMechanicalCraftingCategory.getUid());
 		registration.addRecipes(
-				findRecipes(r -> (r instanceof ShapedRecipe) && !(r instanceof MechanicalCraftingRecipe)
-						&& MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
+				findRecipes(
+						r -> (r.getType() == IRecipeType.CRAFTING || r.getType() == AllRecipes.MECHANICAL_CRAFTING.type)
+								&& (r instanceof ShapedRecipe) && !(r instanceof MechanicalCraftingRecipe)
+								&& MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
 				smallMechanicalCraftingCategory.getUid());
-		registration.addRecipes(
-				findRecipes(r -> (r instanceof ShapedRecipe) && !MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
+		registration.addRecipes(findRecipes(
+				r -> (r.getType() == IRecipeType.CRAFTING || r.getType() == AllRecipes.MECHANICAL_CRAFTING.type)
+						&& (r instanceof ShapedRecipe) && !MechanicalCraftingCategory.isSmall((ShapedRecipe) r)),
 				largeMechanicalCraftingCategory.getUid());
 
 	}
@@ -154,6 +163,7 @@ public class CreateJEI implements IModPlugin {
 		ItemStack blastingFan = fan.copy().setDisplayName(
 				new StringTextComponent(TextFormatting.RESET + Lang.translate("recipe.blastingViaFan.fan")));
 
+		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MILLSTONE.get()), millingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.CRUSHING_WHEEL.get()), crushingCategory.getUid());
 		registration.addRecipeCatalyst(splashingFan, splashingCategory.getUid());
 		registration.addRecipeCatalyst(smokingFan, smokingCategory.getUid());

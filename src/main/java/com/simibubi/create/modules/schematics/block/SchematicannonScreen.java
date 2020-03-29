@@ -244,7 +244,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		RenderSystem.translated(guiLeft + 240, guiTop + 120, 200);
 		RenderSystem.scaled(5, 5, 5);
 
-		itemRenderer.renderItemIntoGUI(new ItemStack(AllBlocks.SCHEMATICANNON.block), 0, 0);
+		itemRenderer.renderItemIntoGUI(new ItemStack(AllBlocks.SCHEMATICANNON.get()), 0, 0);
 
 		RenderSystem.popMatrix();
 	}

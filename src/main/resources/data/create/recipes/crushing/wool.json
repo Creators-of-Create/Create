@@ -12,7 +12,7 @@
 		},
 		{
 			"item": "minecraft:string",
-			"count": 2,
+			"count": 1,
 			"chance": 0.5
 		}
 	],

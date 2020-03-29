@@ -67,6 +67,7 @@ public enum AllBlockPartials {
 	ROPE_COIL("pulley/rope_coil"),
 	ROPE_HALF("pulley/rope_half"),
 	ROPE_HALF_MAGNET("pulley/rope_half_magnet"),
+	MILLSTONE_COG("millstone/inner"),
 	
 	;
 

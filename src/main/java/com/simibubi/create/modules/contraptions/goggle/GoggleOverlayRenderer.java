@@ -41,17 +41,34 @@ public class GoggleOverlayRenderer {
 		ItemStack goggles = mc.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
 		TileEntity te = world.getTileEntity(pos);
 
-		if (!AllItems.GOGGLES.typeOf(goggles))
-			return;
+		boolean goggleInformation = te instanceof IHaveGoggleInformation;
+		boolean hoveringInformation = te instanceof IHaveHoveringInformation;
 
-		if (!(te instanceof IHaveGoggleInformation))
+		if (!goggleInformation && !hoveringInformation)
 			return;
-
-		IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
 
 		List<String> tooltip = new ArrayList<>();
 
-		if (!gte.addToGoggleTooltip(tooltip, mc.player.isSneaking()))
+		if (goggleInformation && AllItems.GOGGLES.typeOf(goggles)) {
+			IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
+			if (!gte.addToGoggleTooltip(tooltip, mc.player.isSneaking()))
+				goggleInformation = false;
+		}
+
+		if (hoveringInformation) {
+			boolean goggleAddedInformation = !tooltip.isEmpty();
+			if (goggleAddedInformation)
+				tooltip.add("");
+			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
+			if (!hte.addToTooltip(tooltip, mc.player.isSneaking()))
+				hoveringInformation = false;
+			if (goggleAddedInformation && !hoveringInformation)
+				tooltip.remove(tooltip.size() - 1);
+		}
+
+		if (!goggleInformation && !hoveringInformation)
+			return;
+		if (tooltip.isEmpty())
 			return;
 
 		GlStateManager.pushMatrix();
@@ -70,7 +87,7 @@ public class GoggleOverlayRenderer {
 
 		tooltipScreen.init(mc, mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
 		tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
-		ItemStack item = goggles;
+		ItemStack item = AllItems.GOGGLES.asStack();
 		ScreenElementRenderer.render3DItem(() -> {
 			GlStateManager.translated(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16, 0);
 			return item;

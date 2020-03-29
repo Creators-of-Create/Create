@@ -2,6 +2,7 @@ package com.simibubi.create.modules.logistics.block;
 
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -61,6 +62,12 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock {
 			return;
 
 		boolean shouldPower = worldIn.getWorld().isBlockPowered(pos);
+
+		for (Direction direction : Iterate.directions) {
+			BlockPos blockpos = pos.offset(direction);
+			shouldPower |= worldIn.getRedstonePower(blockpos, Direction.UP) > 0;
+		}
+
 		boolean previouslyPowered = state.get(POWERED);
 
 		if (previouslyPowered != shouldPower) {
@@ -134,7 +141,7 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock {
 
 	@Override
 	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
-		return state.get(FACING) == Direction.UP && side != null;
+		return side != null;
 	}
 
 	@Override

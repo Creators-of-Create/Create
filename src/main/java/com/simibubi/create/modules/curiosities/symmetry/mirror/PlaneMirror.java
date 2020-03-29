@@ -81,7 +81,7 @@ public class PlaneMirror extends SymmetryMirror {
 
 	@Override
 	public BlockState getModel() {
-		return AllBlocks.SYMMETRY_PLANE.block.getDefaultState().with(PlaneSymmetryBlock.align, (Align) orientation);
+		return AllBlocks.SYMMETRY_PLANE.get().getDefaultState().with(PlaneSymmetryBlock.align, (Align) orientation);
 	}
 
 	@Override

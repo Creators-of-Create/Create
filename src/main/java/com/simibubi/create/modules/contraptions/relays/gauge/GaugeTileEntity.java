@@ -1,15 +1,13 @@
 package com.simibubi.create.modules.contraptions.relays.gauge;
 
+import java.util.List;
+
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
-
 import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 
-import java.util.List;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 
 public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInformation {
 

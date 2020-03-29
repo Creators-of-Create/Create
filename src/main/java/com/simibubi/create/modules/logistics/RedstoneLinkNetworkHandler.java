@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
 public class RedstoneLinkNetworkHandler {
 
@@ -90,6 +91,15 @@ public class RedstoneLinkNetworkHandler {
 		for (Iterator<LinkBehaviour> iterator = network.iterator(); iterator.hasNext();) {
 			LinkBehaviour other = iterator.next();
 			if (other.tileEntity.isRemoved()) {
+				iterator.remove();
+				continue;
+			}
+			World world = actor.getWorld();
+			if (world.isBlockPresent(other.tileEntity.getPos())) {
+				iterator.remove();
+				continue;
+			}
+			if (world.getTileEntity(other.tileEntity.getPos()) != other.tileEntity) {
 				iterator.remove();
 				continue;
 			}

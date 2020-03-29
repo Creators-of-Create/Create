@@ -47,7 +47,7 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 			return matchingRecipes.get(0).getCraftingResult(new SandPaperInv(stack)).copy();
 		if (stack.isDamageable() && isPolishingEnabled()) {
 
-			stack.setDamage(stack.getDamage() - (stack.getMaxDamage() - stack.getDamage()) / 2);
+			stack.setDamage(stack.getDamage() / 2);
 
 			int fortuneLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, sandPaperStack);
 			float chanceToPunish = (float) (1 / Math.pow(2, fortuneLevel + 1));

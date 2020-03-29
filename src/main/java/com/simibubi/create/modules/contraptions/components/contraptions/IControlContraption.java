@@ -6,6 +6,8 @@ import com.simibubi.create.foundation.utility.Lang;
 
 public interface IControlContraption {
 
+	public boolean isAttachedTo(ContraptionEntity contraption);
+	
 	public void attach(ContraptionEntity contraption);
 
 	public void onStall();

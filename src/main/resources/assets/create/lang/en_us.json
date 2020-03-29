@@ -16,7 +16,6 @@
 	"item.create.goggles": "Engineer's Goggles",
 	"item.create.filter": "Filter",
 	"item.create.property_filter": "Attribute Filter",
-	"item.create.logistical_filter": "Address Filter",
 	"item.create.rose_quartz": "Rose Quartz",
 	"item.create.polished_rose_quartz": "Polished Rose Quartz",
 	"item.create.refined_radiance": "Refined Radiance",
@@ -53,13 +52,6 @@
 	"item.create.electron_tube": "Electron Tube",
 	"item.create.integrated_circuit": "Integrated Circuit",
 	
-	"item.create.logistical_controller_supply": "Item Supply",
-	"item.create.logistical_controller_request": "Item Request",
-	"item.create.logistical_controller_storage": "Item Storage",
-	"item.create.logistical_controller_calculation": "Ingredient Calculator",
-	"item.create.logistical_controller_transactions": "Task Manager",
-	"item.create.logistical_dial": "Logistical Dial",
-
 	"item.create.blazing_pickaxe": "Blazing Pickaxe",
 	"item.create.blazing_shovel": "Blazing Shovel",
 	"item.create.blazing_axe": "Blazing Axe",
@@ -75,9 +67,11 @@
 	"item.create.rose_quartz_sword": "Gilded Quartz Blade",
 
 	"block.create.copper_ore": "Copper Ore",
-	"block.create.copper_block": "Copper Block",
+	"block.create.copper_block": "Block of Copper",
 	"block.create.copper_shingles": "Copper Shingles",
 	"block.create.zinc_ore": "Zinc Ore",
+	"block.create.zinc_block": "Block of Zinc",
+	"block.create.brass_block": "Block of Brass",
 	
 	"block.create.andesite_casing": "Andesite Casing",
 	"block.create.brass_casing": "Brass Casing",
@@ -99,6 +93,7 @@
 	"block.create.cuckoo_clock": "Cuckoo Clock",
 	"block.create.creative_motor": "Motor",
 	"block.create.belt": "Mechanical Belt",
+	"block.create.millstone": "Millstone",
 	"block.create.crushing_wheel": "Crushing Wheel",
 	"block.create.drill": "Mechanical Drill",
 	"block.create.portable_storage_interface": "Portable Storage Interface",
@@ -145,11 +140,6 @@
 	"block.create.toggle_latch": "Powered Toggle Latch",
 	"block.create.flexpeater": "Adjustable Repeater",
 	"block.create.entity_detector": "Belt Observer",
-	"block.create.logistical_casing": "Logistical Casing",
-	"block.create.logistical_controller": "Logistical Controller",
-	"block.create.logistical_index": "Logistical Index",
-	"block.create.logisticians_table": "Logistician's Table",
-	"block.create.package_funnel": "Package Funnel",
 	"block.create.belt_tunnel": "Conveyor Tunnel",
 	"block.create.sequenced_gearshift": "Sequenced Gearshift",
 	
@@ -267,8 +257,6 @@
 
 	"block.create.cocoa_log": "Cocoa Jungle Log",
 
-	"block.create.shop_shelf": "Shelf",
-
 	"_comment": "-------------------------]  UI & MESSAGES  [------------------------------------------------",
 
 	"death.attack.create.crush": "%1$s was processed by Crushing Wheels",
@@ -281,6 +269,7 @@
 	"death.attack.create.cuckoo_clock_explosion": "%1$s was blown up by tampered cuckoo clock",
 
 	"create.recipe.crushing": "Crushing",
+	"create.recipe.milling": "Milling",
 	"create.recipe.splashing": "Bulk Washing",
 	"create.recipe.splashing.fan": "Fan behind Flowing Water",
 	"create.recipe.smokingViaFan": "Bulk Smoking",
@@ -321,6 +310,8 @@
 	"create.action.discard": "Discard",
 
 	"create.keyinfo.toolmenu": "Focus Tool Menu",
+	"create.keyinfo.scrollup": "Simulate Mousewheel Up (inworld)",
+	"create.keyinfo.scrolldown": "Simulate Mousewheel Down (inworld)",
 
 	"create.gui.scrollInput.defaultTitle": "Choose an Option:",
 	"create.gui.scrollInput.scrollToModify": "Scroll to Modify",
@@ -412,6 +403,7 @@
 	"create.gui.stress_gauge.no_rotation": "No Rotation",
 	
 	"create.gui.contraptions.not_fast_enough": "It appears that this %1$s is _not_ rotating with _enough_ _speed_.",
+	"create.gui.contraptions.network_overstressed": "It appears that this contraption is _overstressed_. Add more sources or _slow_ _down_ the components with a high _stress_ _impact_.",
 
 	"create.gui.flexcrate.title": "Adjustable Crate",
 	"create.gui.flexcrate.storageSpace": "Storage Space",
@@ -542,20 +534,6 @@
 	"create.schematicannon.status.schematicNotPlaced": "Schematic Not Deployed",
 	"create.schematicannon.status.schematicExpired": "Schematic File Expired",
 	
-	"create.gui.index.title": "Logistical Index",
-	"create.gui.index.targetAddressSelect": "Destination Address",
-	"create.gui.index.confirmOrder": "Confirm Order",
-	
-	"create.logistics.priority": "Priority",
-	"create.logistics.priority.lowest": "Lowest",
-	"create.logistics.priority.low": "Low",
-	"create.logistics.priority.high": "High",
-	"create.logistics.priority.highest": "Highest",
-	"create.gui.logistical_controller.active_mode": "Active Mode",
-	"create.gui.logistical_controller.passive_mode": "Passive Mode",	
-	"create.gui.requester.requestedItemCount": "Requested Amount",
-	"create.gui.storage.passiveModeOnly": "Item Storage is Passive Only",
-
 	"create.gui.filter.blacklist": "Blacklist",
 	"create.gui.filter.blacklist.description": "Items pass if they do NOT match any of the above. An empty Blacklist accepts everything.",
 	"create.gui.filter.whitelist": "Whitelist",
@@ -567,6 +545,10 @@
 	
 	"create.item_attributes.placeable": "is placeable",
 	"create.item_attributes.consumable": "can be eaten",
+	"create.item_attributes.smeltable": "can be Smelted",
+	"create.item_attributes.washable": "can be Washed",
+	"create.item_attributes.smokable": "can be Smoked",
+	"create.item_attributes.blastable": "is smeltable in Blast Furnace",
 	"create.item_attributes.enchanted": "is enchanted",
 	"create.item_attributes.damaged": "is damaged",
 	"create.item_attributes.badly_damaged": "is heavily damaged",
@@ -651,7 +633,7 @@
 	"advancement.create:sand_paper.desc": "Create some Sand Paper to make things pretty.",
 	"advancement.create:polished_rose_quartz": "Pink Diamonds",
 	"advancement.create:polished_rose_quartz.desc": "Polish Rose Quartz until you can see through it.",
-	"advancement.create:sand_paper_secret": "Polishception",
+	"advancement.create:sand_paper_secret": "9001 Grit Sand Paper",
 	"advancement.create:sand_paper_secret.desc": "Use your Sand Paper to sand some Sand Paper.",
 	"advancement.create:press": "'Bonk!'        ",
 	"advancement.create:press.desc": "Make a Mechanical Press and use it to create some Plates.",
@@ -875,6 +857,11 @@
 
 	"block.create.turntable.tooltip": "TURNTABLE",
 	"block.create.turntable.tooltip.summary": "Turns _Rotational_ _Force_ into refined Motion Sickness.",
+	
+	"block.create.millstone.tooltip": "MILLSTONE",
+	"block.create.millstone.tooltip.summary": "A kinetic component suitable for _grinding_ inserted _materials_. Can be powered by an adjacent cogwheel or by connecting to the shaft at the bottom.",
+	"block.create.millstone.tooltip.condition1": "When Rotated",
+	"block.create.millstone.tooltip.behaviour1": "Starts applying _milling_ _recipes_ to any items inserted from the side or the top of the block.",
 
 	"block.create.crushing_wheel.tooltip": "CRUSHING WHEEL",
 	"block.create.crushing_wheel.tooltip.summary": "Large rotatable wheels that _break_ _down_ anything.",
@@ -1141,6 +1128,11 @@
 	"block.create.stress_gauge.tooltip.condition1": "When Rotated",
 	"block.create.stress_gauge.tooltip.behaviour1": "Indicates a color corresponding to the level of stress. _Over-stressed_ _networks_ will cease to move. Stress can be relieved by adding more _rotational_ _sources_ to the network.",
 	
+	"tool.create.sand_paper.tooltip": "SAND PAPER",
+	"tool.create.sand_paper.tooltip.summary": "A rough paper that can be used to _polish_ _materials_ or sharpen your _tools_.",
+	"tool.create.sand_paper.tooltip.condition1": "When Used",
+	"tool.create.sand_paper.tooltip.behaviour1": "Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking_ _at_ _them_",
+
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed_ _light_.",
 	
@@ -1159,16 +1151,5 @@
 	"tool.create.rose_quartz.tooltip": "ROSE QUARTZ TOOLS",
 	"tool.create.rose_quartz.tooltip.summary": "This tool grants you a _greater_ _reach_ for _breaking_ _blocks_ or _placing_ _blocks_ from the off-hand.",
 	
-	"item.create.logistical_controller_calculation.tooltip": "WIP",
-	"item.create.logistical_controller_request.tooltip": "WIP",
-	"item.create.logistical_controller_storage.tooltip": "WIP",
-	"item.create.logistical_controller_supply.tooltip": "WIP",
-	"item.create.logistical_controller_transactions.tooltip": "WIP",
-	"block.create.logistical_index.tooltip": "WIP",
-	"block.create.package_funnel.tooltip": "WIP",
-	"block.create.logisticians_table.tooltip": "WIP",
-	"item.create.logistical_dial.tooltip": "WIP",
-	"item.create.logistical_filter.tooltip": "WIP",
-
 	"itemGroup.create": "Create"
 }

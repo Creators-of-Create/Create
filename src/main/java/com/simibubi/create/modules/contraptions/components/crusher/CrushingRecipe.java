@@ -5,13 +5,12 @@ import java.util.List;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.modules.contraptions.processing.ProcessingIngredient;
 import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
-import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class CrushingRecipe extends ProcessingRecipe<RecipeWrapper> {
+public class CrushingRecipe extends AbstractCrushingRecipe {
 
 	public CrushingRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
 			List<ProcessingOutput> results, int processingDuration) {

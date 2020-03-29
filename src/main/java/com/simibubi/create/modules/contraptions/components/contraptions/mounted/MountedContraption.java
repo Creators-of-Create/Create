@@ -44,7 +44,7 @@ public class MountedContraption extends Contraption {
 
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.X : Axis.Z;
 		contraption.add(pos, Pair.of(new BlockInfo(pos,
-				AllBlocks.MINECART_ANCHOR.block.getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis),
+				AllBlocks.MINECART_ANCHOR.get().getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis),
 				null), null));
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		contraption.initActors(world);

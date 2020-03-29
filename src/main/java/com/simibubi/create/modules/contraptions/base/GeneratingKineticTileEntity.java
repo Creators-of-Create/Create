@@ -1,15 +1,15 @@
 package com.simibubi.create.modules.contraptions.base;
 
+import java.util.List;
+
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
-
 import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
+
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
-
-import java.util.List;
 
 public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 

@@ -203,21 +203,22 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 
 	@Override
 	public void attach(ContraptionEntity contraption) {
-		if (contraption.getContraption() instanceof ClockworkContraption) {
-			ClockworkContraption cc = (ClockworkContraption) contraption.getContraption();
-			markDirty();
-			Direction facing = getBlockState().get(BlockStateProperties.FACING);
-			BlockPos anchor = pos.offset(facing, cc.offset + 1);
-			if (cc.handType == HandType.HOUR) {
-				this.hourHand = contraption;
-				hourHand.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
-			} else {
-				this.minuteHand = contraption;
-				minuteHand.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
-			}
-			if (!world.isRemote)
-				sendData();
+		if (!(contraption.getContraption() instanceof ClockworkContraption))
+			return;
+		
+		ClockworkContraption cc = (ClockworkContraption) contraption.getContraption();
+		markDirty();
+		Direction facing = getBlockState().get(BlockStateProperties.FACING);
+		BlockPos anchor = pos.offset(facing, cc.offset + 1);
+		if (cc.handType == HandType.HOUR) {
+			this.hourHand = contraption;
+			hourHand.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
+		} else {
+			this.minuteHand = contraption;
+			minuteHand.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		}
+		if (!world.isRemote)
+			sendData();
 	}
 
 	@Override
@@ -285,6 +286,17 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 
 	@Override
 	public void collided() {
+	}
+
+	@Override
+	public boolean isAttachedTo(ContraptionEntity contraption) {
+		if (!(contraption.getContraption() instanceof ClockworkContraption))
+			return false;
+		ClockworkContraption cc = (ClockworkContraption) contraption.getContraption();
+		if (cc.handType == HandType.HOUR)
+			return this.hourHand == contraption;
+		else
+			return this.minuteHand == contraption;
 	}
 
 }
