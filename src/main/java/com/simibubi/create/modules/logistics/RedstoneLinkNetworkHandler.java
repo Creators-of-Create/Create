@@ -95,7 +95,7 @@ public class RedstoneLinkNetworkHandler {
 				continue;
 			}
 			World world = actor.getWorld();
-			if (world.isBlockPresent(other.tileEntity.getPos())) {
+			if (!world.isBlockPresent(other.tileEntity.getPos())) {
 				iterator.remove();
 				continue;
 			}

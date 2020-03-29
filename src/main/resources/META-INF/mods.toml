@@ -4,7 +4,7 @@ loaderVersion="[28,)"
 
 [[mods]] 
 modId="create"
-version="mc1.14-0.2.2"
+version="mc1.14-0.2.2a"
 displayName="Create" 
 #updateJSONURL=""
 authors="simibubi" 
