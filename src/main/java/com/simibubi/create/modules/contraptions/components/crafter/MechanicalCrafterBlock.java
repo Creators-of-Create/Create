@@ -67,8 +67,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return state.get(HORIZONTAL_FACING).getAxis() != face.getAxis();
+	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
+		return true;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.command;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -10,8 +10,8 @@ import net.minecraft.command.Commands;
 
 public class KillTPSCommand {
 
-	public static void register(CommandDispatcher<CommandSource> dispatcher) {
-		dispatcher.register(Commands.literal(Lang.translate("command.killTPSCommand"))
+	public static ArgumentBuilder<CommandSource ,?> register() {
+		return Commands.literal("killtps")
 				.requires(cs -> cs.hasPermissionLevel(2)).executes(ctx -> {
 					// killtps no arguments
 					ctx.getSource().sendFeedback(
@@ -63,6 +63,6 @@ public class KillTPSCommand {
 							Lang.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.2"), false);
 
 					return 1;
-				})));
+				}));
 	}
 }

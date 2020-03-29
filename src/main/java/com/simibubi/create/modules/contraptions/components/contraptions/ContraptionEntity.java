@@ -54,7 +54,6 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected Contraption contraption;
 	protected float initialAngle;
 	protected BlockPos controllerPos;
-	protected IControlContraption controllerTE;
 	protected Vec3d motionBeforeStall;
 	protected boolean stationary;
 
@@ -103,12 +102,22 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public <T extends TileEntity & IControlContraption> ContraptionEntity controlledBy(T controller) {
 		this.controllerPos = controller.getPos();
-		this.controllerTE = controller;
 		return this;
 	}
 
+	private IControlContraption getController() {
+		if (controllerPos == null)
+			return null;
+		if (!world.isBlockPresent(controllerPos))
+			return null;
+		TileEntity te = world.getTileEntity(controllerPos);
+		if (!(te instanceof IControlContraption))
+			return null;
+		return (IControlContraption) te;
+	}
+
 	public boolean collisionEnabled() {
-		return stationary && controllerTE instanceof LinearActuatorTileEntity;
+		return getController() instanceof LinearActuatorTileEntity;
 	}
 
 	@Override
@@ -118,7 +127,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			return;
 		}
 
-		attachToController();
+		checkController();
 
 		Entity mountedEntity = getRidingEntity();
 		if (mountedEntity != null) {
@@ -131,7 +140,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 		move(getMotion().x, getMotion().y, getMotion().z);
 		if (ContraptionCollider.collideBlocks(this))
-			controllerTE.collided();
+			getController().collided();
 
 		tickActors(new Vec3d(posX - prevPosX, posY - prevPosY, posZ - prevPosZ));
 
@@ -256,8 +265,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		if (!world.isRemote) {
 			if (!stalledPreviously && contraption.stalled) {
 				setMotion(Vec3d.ZERO);
-				if (controllerTE != null)
-					controllerTE.onStall();
+				if (getController() != null)
+					getController().onStall();
 				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 						new ContraptionStallPacket(getEntityId(), posX, posY, posZ, yaw, pitch, roll));
 			}
@@ -368,22 +377,21 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			controllerPos = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 	}
 
-	public void attachToController() {
-		if (controllerPos != null && (controllerTE == null || !controllerTE.isValid())) {
-			if (!world.isBlockPresent(controllerPos))
-				return;
-			TileEntity te = world.getTileEntity(controllerPos);
-			if (te == null || !(te instanceof IControlContraption)) {
-				remove();
-				return;
-			}
-			IControlContraption controllerTE = (IControlContraption) te;
-			this.controllerTE = controllerTE;
-			controllerTE.attach(this);
-
-			if (world.isRemote)
-				setPosition(posX, posY, posZ);
+	public void checkController() {
+		if (controllerPos == null)
+			return;
+		if (!world.isBlockPresent(controllerPos))
+			return;
+		IControlContraption controller = getController();
+		if (controller == null) {
+			remove();
+			return;
 		}
+		if (controller.isAttachedTo(this))
+			return;
+		controller.attach(this);
+		if (world.isRemote)
+			setPosition(posX, posY, posZ);
 	}
 
 	@Override
@@ -423,6 +431,10 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			preventMovedEntitiesFromGettingStuck();
 		}
 		remove();
+	}
+	
+	@Override
+	protected void doWaterSplashEffect() {
 	}
 
 	public void preventMovedEntitiesFromGettingStuck() {

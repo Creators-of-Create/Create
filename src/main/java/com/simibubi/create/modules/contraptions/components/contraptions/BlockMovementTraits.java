@@ -4,6 +4,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
+import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
+import com.simibubi.create.modules.logistics.block.belts.FunnelBlock;
+import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
+import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
@@ -11,6 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoorBlock;
+import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.block.LadderBlock;
@@ -32,6 +37,8 @@ public class BlockMovementTraits {
 		BlockState state = world.getBlockState(pos);
 		if (isBrittle(state))
 			return true;
+		if (state.getBlock() instanceof FenceGateBlock)
+			return true;
 		if (state.getMaterial().isReplaceable())
 			return false;
 		if (state.getCollisionShape(world, pos).isEmpty())
@@ -41,13 +48,18 @@ public class BlockMovementTraits {
 
 	public static boolean movementAllowed(World world, BlockPos pos) {
 		BlockState blockState = world.getBlockState(pos);
-		if (blockState.getBlock() instanceof AbstractChassisBlock)
+		Block block = blockState.getBlock();
+		if (block instanceof AbstractChassisBlock)
 			return true;
 		if (blockState.getBlockHardness(world, pos) == -1)
 			return false;
-		if (blockState.getBlock() == Blocks.OBSIDIAN)
+		if (block == Blocks.OBSIDIAN)
 			return false;
 		if (AllBlocks.BELT.typeOf(blockState))
+			return true;
+		if (block instanceof ExtractorBlock)
+			return true;
+		if (block instanceof FunnelBlock)
 			return true;
 		return blockState.getPushReaction() != PushReaction.BLOCK;
 	}
@@ -61,6 +73,10 @@ public class BlockMovementTraits {
 		if (state.has(BlockStateProperties.HANGING))
 			return true;
 		if (block instanceof LadderBlock)
+			return true;
+		if (block instanceof ExtractorBlock)
+			return true;
+		if (block instanceof FunnelBlock)
 			return true;
 		if (block instanceof TorchBlock)
 			return true;
@@ -94,6 +110,8 @@ public class BlockMovementTraits {
 			return direction == Direction.DOWN;
 		if (block instanceof DoorBlock)
 			return direction == Direction.DOWN;
+		if (block instanceof AttachedLogisticalBlock && !(block instanceof TransposerBlock)) 
+			return direction == AttachedLogisticalBlock.getBlockFacing(state);
 		if (block instanceof FlowerPotBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof RedstoneDiodeBlock)

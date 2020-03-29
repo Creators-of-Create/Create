@@ -11,6 +11,7 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Direction;
@@ -52,7 +53,7 @@ public class ContraptionCollider {
 			return;
 
 		for (Entity entity : world.getEntitiesWithinAABB((EntityType<?>) null, bounds.grow(1),
-				e -> e.getPushReaction() == PushReaction.NORMAL)) {
+				e -> canBeCollidedWith(e))) {
 
 			ReuseableStream<VoxelShape> potentialHits =
 				getPotentiallyCollidedShapes(world, contraption, contraptionPosition, entity);
@@ -86,6 +87,16 @@ public class ContraptionCollider {
 			entity.velocityChanged = true;
 		}
 
+	}
+
+	public static boolean canBeCollidedWith(Entity e) {
+		if (e instanceof PlayerEntity && e.isSpectator())
+			return false;
+		if (e.noClip)
+			return false;
+		if (e instanceof IProjectile)
+			return false;
+		return e.getPushReaction() == PushReaction.NORMAL;
 	}
 
 	@OnlyIn(Dist.CLIENT)

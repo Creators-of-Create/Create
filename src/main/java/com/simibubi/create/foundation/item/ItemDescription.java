@@ -1,5 +1,26 @@
 package com.simibubi.create.foundation.item;
 
+import static com.simibubi.create.foundation.item.TooltipHelper.cutString;
+import static net.minecraft.util.text.TextFormatting.AQUA;
+import static net.minecraft.util.text.TextFormatting.BLUE;
+import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
+import static net.minecraft.util.text.TextFormatting.DARK_GREEN;
+import static net.minecraft.util.text.TextFormatting.DARK_PURPLE;
+import static net.minecraft.util.text.TextFormatting.DARK_RED;
+import static net.minecraft.util.text.TextFormatting.GOLD;
+import static net.minecraft.util.text.TextFormatting.GRAY;
+import static net.minecraft.util.text.TextFormatting.GREEN;
+import static net.minecraft.util.text.TextFormatting.LIGHT_PURPLE;
+import static net.minecraft.util.text.TextFormatting.RED;
+import static net.minecraft.util.text.TextFormatting.STRIKETHROUGH;
+import static net.minecraft.util.text.TextFormatting.WHITE;
+import static net.minecraft.util.text.TextFormatting.YELLOW;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CKinetics;
@@ -11,6 +32,7 @@ import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.modules.contraptions.components.waterwheel.WaterWheelBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -20,14 +42,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import static com.simibubi.create.foundation.item.TooltipHelper.cutString;
-import static net.minecraft.util.text.TextFormatting.*;
 
 public class ItemDescription {
 

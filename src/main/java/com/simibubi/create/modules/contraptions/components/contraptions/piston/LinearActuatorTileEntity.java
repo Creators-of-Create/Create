@@ -297,4 +297,9 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 			sendData();
 	}
 
+	@Override
+	public boolean isAttachedTo(ContraptionEntity contraption) {
+		return movedContraption == contraption;
+	}
+
 }

@@ -19,7 +19,7 @@ public class MechanicalPistonTileEntityRenderer extends KineticTileEntityRendere
 
 	@Override
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return AllBlocks.SHAFT.block.getDefaultState().with(BlockStateProperties.AXIS,
+		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS,
 				((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState()));
 	}
 

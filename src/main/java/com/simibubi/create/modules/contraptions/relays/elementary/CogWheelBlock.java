@@ -14,8 +14,8 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -64,7 +64,7 @@ public class CogWheelBlock extends ShaftBlock implements IHaveCustomBlockItem {
 		}
 
 		if (!(block instanceof IRotate)
-				|| !(((IRotate) block).hasCogsTowards(world, placedOnPos, placedAgainst, context.getFace()))) {
+				|| !(((IRotate) block).hasIntegratedCogwheel(world, placedOnPos, placedAgainst))) {
 			Axis preferredAxis = getPreferredAxis(context);
 			if (preferredAxis != null)
 				return this.getDefaultState().with(AXIS, preferredAxis);
@@ -91,8 +91,8 @@ public class CogWheelBlock extends ShaftBlock implements IHaveCustomBlockItem {
 	// IRotate
 
 	@Override
-	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return !isLarge && face.getAxis() != state.get(AXIS);
+	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
+		return !isLarge;
 	}
 
 	@Override

@@ -32,7 +32,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 public class DeforesterItem extends AxeItem implements IHaveCustomItemModel {
 
 	public DeforesterItem(Properties builder) {
-		super(AllToolTiers.RADIANT, 10.0F, -3.1F, builder);
+		super(AllToolTiers.RADIANT, 5.0F, -3.1F, builder);
 	}
 
 	// Moved away from Item#onBlockDestroyed as it does not get called in Creative

@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = 'mc1.14.4_v0.2.1'
+version = 'mc1.14.4_v0.2.2a'
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
@@ -26,6 +26,7 @@ minecraft {
 		client {
             workingDirectory project.file('run')
             property 'forge.logging.console.level', 'info'
+            property 'fml.earlyprogresswindow', 'false'
             mods {
                 create {
                     source sourceSets.main
@@ -45,8 +46,9 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            property 'fml.earlyprogresswindow', 'false'
             args '--mod', 'create', '--all', '--output', file('src/generated/resources/')
             mods {
                 create {

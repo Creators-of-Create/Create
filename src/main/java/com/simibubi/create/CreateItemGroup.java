@@ -46,8 +46,8 @@ public final class CreateItemGroup extends ItemGroup {
 				continue;
 
 			def.asItem().fillItemGroup(this, items);
-			for (Block alsoRegistered : block.alsoRegistered)
-				alsoRegistered.asItem().fillItemGroup(this, items);
+			for (AllBlocks.TaggedBlock alsoRegistered : block.alsoRegistered)
+				alsoRegistered.getBlock().asItem().fillItemGroup(this, items);
 		}
 	}
 

@@ -147,7 +147,7 @@ public class CreateClient {
 
 	@OnlyIn(Dist.CLIENT)
 	protected static ModelResourceLocation getBlockModelLocation(AllBlocks block, String suffix) {
-		return new ModelResourceLocation(block.block.getRegistryName(), suffix);
+		return new ModelResourceLocation(block.get().getRegistryName(), suffix);
 	}
 
 	@OnlyIn(Dist.CLIENT)

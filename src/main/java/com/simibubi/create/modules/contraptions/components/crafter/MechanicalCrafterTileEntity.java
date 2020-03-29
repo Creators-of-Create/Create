@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.components.crafter;
 
 import static com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -207,7 +208,19 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				}
 				ItemStack result = RecipeGridHandler.tryToApplyRecipe(world, groupedItems);
 				if (result != null) {
+
+					List<ItemStack> containers = new ArrayList<>();
+					groupedItems.grid.values().forEach(stack -> {
+						if (stack.hasContainerItem())
+							containers.add(stack.getContainerItem().copy());
+					});
+
 					groupedItems = new GroupedItems(result);
+					containers.forEach(stack -> {
+						GroupedItems container = new GroupedItems(stack);
+						container.mergeOnto(groupedItems, Pointing.LEFT);
+					});
+
 					phase = Phase.CRAFTING;
 					countDown = 2000;
 					sendData();
@@ -381,8 +394,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			return;
 		if (world.isRemote)
 			return;
-		List<MechanicalCrafterTileEntity> chain = RecipeGridHandler.getAllCraftersOfChainIf(this,
-				MechanicalCrafterTileEntity::craftingItemPresent);
+		List<MechanicalCrafterTileEntity> chain =
+			RecipeGridHandler.getAllCraftersOfChainIf(this, MechanicalCrafterTileEntity::craftingItemPresent);
 		if (chain == null)
 			return;
 		chain.forEach(MechanicalCrafterTileEntity::begin);

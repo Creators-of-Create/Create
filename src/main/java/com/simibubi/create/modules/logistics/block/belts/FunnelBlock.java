@@ -9,6 +9,8 @@ import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
@@ -34,9 +36,10 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachment, IWithTileEntity<FunnelTileEntity> {
+public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachment, IWithTileEntity<FunnelTileEntity>, IPortableBlock {
 
 	public static final BooleanProperty BELT = BooleanProperty.create("belt");
+	public static final MovementBehaviour MOVEMENT = new FunnelMovementBehaviour();
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
@@ -209,6 +212,11 @@ public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachm
 		protected boolean isVertical() {
 			return true;
 		}
+	}
+
+	@Override
+	public MovementBehaviour getMovementBehaviour() {
+		return MOVEMENT;
 	}
 
 }

@@ -61,7 +61,7 @@ public class KineticNetwork {
 		if (te.isSource())
 			sources.put(te, te.getAddedStressCapacity());
 		members.put(te, te.getStressApplied());
-		te.updateStressFromNetwork(currentCapacity, currentStress);
+		te.updateFromNetwork(currentCapacity, currentStress, getSize());
 		te.networkDirty = true;
 	}
 
@@ -81,7 +81,7 @@ public class KineticNetwork {
 		if (te.isSource())
 			sources.remove(te);
 		members.remove(te);
-		te.updateStressFromNetwork(0, 0);
+		te.updateFromNetwork(0, 0, 0);
 
 		if (members.isEmpty()) {
 			TorquePropagator.networks.get(te.getWorld()).remove(this.id);
@@ -93,7 +93,7 @@ public class KineticNetwork {
 
 	public void sync() {
 		for (KineticTileEntity te : members.keySet())
-			te.updateStressFromNetwork(currentCapacity, currentStress);
+			te.updateFromNetwork(currentCapacity, currentStress, getSize());
 	}
 
 	public void updateCapacity() {

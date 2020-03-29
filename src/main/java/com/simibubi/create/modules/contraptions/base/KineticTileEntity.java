@@ -1,5 +1,8 @@
 package com.simibubi.create.modules.contraptions.base;
 
+import static net.minecraft.util.text.TextFormatting.GOLD;
+import static net.minecraft.util.text.TextFormatting.GRAY;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +19,9 @@ import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
-
 import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
+import com.simibubi.create.modules.contraptions.goggle.IHaveHoveringInformation;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.CompoundNBT;
@@ -31,9 +35,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
-import static net.minecraft.util.text.TextFormatting.GRAY;
-
-public abstract class KineticTileEntity extends SmartTileEntity implements ITickableTileEntity, IHaveGoggleInformation {
+public abstract class KineticTileEntity extends SmartTileEntity
+		implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;
@@ -117,10 +120,11 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 		}
 	}
 
-	public void updateStressFromNetwork(float maxStress, float currentStress) {
+	public void updateFromNetwork(float maxStress, float currentStress, int networkSize) {
 		networkDirty = false;
 		this.capacity = maxStress;
 		this.stress = currentStress;
+		this.networkSize = networkSize;
 		boolean overStressed = maxStress < currentStress && StressImpact.isEnabled();
 
 		if (overStressed != this.overStressed) {
@@ -179,7 +183,7 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 			networkTag.putLong("Id", this.network);
 			networkTag.putFloat("Stress", stress);
 			networkTag.putFloat("Capacity", capacity);
-			networkTag.putInt("Size", getOrCreateNetwork().getSize());
+			networkTag.putInt("Size", networkSize);
 
 			float stressApplied = getStressApplied();
 			float addedStressCapacity = getAddedStressCapacity();
@@ -354,27 +358,50 @@ public abstract class KineticTileEntity extends SmartTileEntity implements ITick
 	}
 
 	@Override
+	public boolean addToTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
+
+		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
+			tooltip.add(spacing + GOLD + Lang.translate("gui.stress_gauge.overstressed"));
+			String hint = Lang.translate("gui.contraptions.network_overstressed",
+					I18n.format(getBlockState().getBlock().getTranslationKey()));
+			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
+			for (int i = 0; i < cutString.size(); i++)
+				tooltip.add((i == 0 ? "" : spacing) + cutString.get(i));
+			return true;
+		}
+
+		if (notFastEnough) {
+			tooltip.add(spacing + GOLD + Lang.translate("tooltip.speedRequirement"));
+			String hint = Lang.translate("gui.contraptions.not_fast_enough",
+					I18n.format(getBlockState().getBlock().getTranslationKey()));
+			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
+			for (int i = 0; i < cutString.size(); i++)
+				tooltip.add((i == 0 ? "" : spacing) + cutString.get(i));
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
 	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
 		boolean added = false;
 		float stressAtBase = getStressApplied();
 
-		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
-
-		if (notFastEnough) {
-			tooltip.addAll(TooltipHelper.cutString(spacing + Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock().getTranslationKey())), GRAY, TextFormatting.WHITE));
-			added = true;
-		}
-
-		if (getStressApplied() != 0 && StressImpact.isEnabled()){
+		if (getStressApplied() != 0 && StressImpact.isEnabled()) {
 			tooltip.add(spacing + Lang.translate("gui.goggles.kinetic_stats"));
 			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("tooltip.stressImpact"));
 
 			float stressTotal = stressAtBase * Math.abs(getSpeed());
 
-			String stressString = spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
+			String stressString =
+				spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
 
-			tooltip.add(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressAtBase), Lang.translate("gui.goggles.base_value")));
-			tooltip.add(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal), Lang.translate("gui.goggles.at_current_speed")));
+			tooltip.add(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressAtBase),
+					Lang.translate("gui.goggles.base_value")));
+			tooltip.add(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal),
+					Lang.translate("gui.goggles.at_current_speed")));
 
 			added = true;
 		}

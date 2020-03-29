@@ -16,8 +16,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.TieredItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.math.BlockPos;
@@ -98,8 +100,11 @@ public class ToolEvents {
 		ItemStack heldItemMainhand = player.getHeldItemMainhand();
 		String marker = "create_roseQuartzRange";
 		CompoundNBT persistentData = player.getPersistentData();
+		Item item = heldItemMainhand.getItem();
+		boolean holdingRoseQuartz =
+			item instanceof TieredItem && ((TieredItem) item).getTier() == AllToolTiers.ROSE_QUARTZ;
 
-		if (!(heldItemMainhand.getItem() instanceof RoseQuartzToolItem)) {
+		if (!holdingRoseQuartz) {
 			if (persistentData.contains(marker)) {
 				player.getAttributes().removeAttributeModifiers(RoseQuartzToolItem.rangeModifier);
 				persistentData.remove(marker);
@@ -127,18 +132,20 @@ public class ToolEvents {
 			PlayerEntity player = (PlayerEntity) trueSource;
 			ItemStack heldItemMainhand = player.getHeldItemMainhand();
 			Item item = heldItemMainhand.getItem();
+			IItemTier tier = item instanceof TieredItem ? ((TieredItem) item).getTier() : null;
 
-			if (item instanceof ShadowSteelToolItem)
+			if (tier == AllToolTiers.SHADOW_STEEL)
 				event.setCanceled(true);
 
-			if (item instanceof BlazingToolItem) {
-				BlazingToolItem blazingToolItem = (BlazingToolItem) item;
+			if (tier == AllToolTiers.BLAZING) {
 				List<ItemStack> drops = event.getDrops().stream().map(entity -> {
 					ItemStack stack = entity.getItem();
 					entity.remove();
 					return stack;
 				}).collect(Collectors.toList());
-				blazingToolItem.modifyDrops(drops, world, player.getPosition(), heldItemMainhand, null);
+
+				drops = BlazingToolItem.smeltDrops(drops, world, 0);
+
 				event.getDrops().clear();
 				drops.stream().map(stack -> {
 					ItemEntity entity = new ItemEntity(world, target.posX, target.posY, target.posZ, stack);
@@ -156,7 +163,10 @@ public class ToolEvents {
 		if (attackingPlayer == null)
 			return;
 		ItemStack heldItemMainhand = attackingPlayer.getHeldItemMainhand();
-		if (heldItemMainhand.getItem() instanceof ShadowSteelToolItem) {
+		Item item = heldItemMainhand.getItem();
+		IItemTier tier = item instanceof TieredItem ? ((TieredItem) item).getTier() : null;
+		
+		if (tier == AllToolTiers.SHADOW_STEEL) {
 			int level = EnchantmentHelper.getEnchantmentLevel(Enchantments.LOOTING, heldItemMainhand);
 			float modifier = 1 + event.getEntity().world.getRandom().nextFloat() * level;
 			event.setDroppedExperience((int) (event.getDroppedExperience() * modifier + .4f));

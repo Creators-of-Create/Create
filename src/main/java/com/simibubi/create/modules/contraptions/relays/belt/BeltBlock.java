@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,11 +103,12 @@ public class BeltBlock extends HorizontalKineticBlock
 	@SuppressWarnings("deprecation")
 	@Override
 	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.storage.loot.LootContext.Builder builder) {
-		List<ItemStack> drops = new ArrayList<>();
-		if (state.get(PART) == Part.START || builder.get(LootParameters.THIS_ENTITY) != null)
-			drops.addAll(super.getDrops(state, builder));
+		List<ItemStack> drops = super.getDrops(state, builder);
 		if (state.get(CASING))
 			drops.addAll(AllBlocks.BRASS_CASING.getDefault().getDrops(builder));
+		TileEntity tileEntity = builder.get(LootParameters.BLOCK_ENTITY);
+		if (tileEntity instanceof BeltTileEntity && ((BeltTileEntity) tileEntity).hasPulley())
+			drops.addAll(AllBlocks.SHAFT.getDefault().getDrops(builder));
 		return drops;
 	}
 
@@ -117,8 +117,6 @@ public class BeltBlock extends HorizontalKineticBlock
 		withTileEntityDo(worldIn, pos, te -> {
 			if (worldIn.isRemote)
 				return;
-			if (te.hasPulley())
-				Block.spawnDrops(AllBlocks.SHAFT.get().getDefaultState(), worldIn, pos);
 			if (te.isController()) {
 				BeltInventory inv = te.getInventory();
 				for (TransportedItemStack s : inv.items)
@@ -293,7 +291,7 @@ public class BeltBlock extends HorizontalKineticBlock
 				return ActionResultType.SUCCESS;
 			world.setBlockState(context.getPos(), state.with(CASING, false), 3);
 			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.BRASS_CASING.block));
+				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.BRASS_CASING.get()));
 			return ActionResultType.SUCCESS;
 		}
 
@@ -304,7 +302,7 @@ public class BeltBlock extends HorizontalKineticBlock
 			belt.detachKinetics();
 			belt.attachKinetics();
 			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.SHAFT.block));
+				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.SHAFT.get()));
 			return ActionResultType.SUCCESS;
 		}
 

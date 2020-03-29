@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays.gauge;
 
+import java.util.List;
+
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -10,8 +12,6 @@ import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
-
-import java.util.List;
 
 public class SpeedGaugeTileEntity extends GaugeTileEntity{
 

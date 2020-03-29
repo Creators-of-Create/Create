@@ -4,8 +4,8 @@ import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.IWrenchable;
-
 import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -68,9 +68,9 @@ public interface IRotate extends IWrenchable {
 			String level = color + ItemDescription.makeProgressBar(3, speedLevel.ordinal());
 
 			if (speedLevel == SpeedLevel.MEDIUM)
-				level += Lang.translate("tooltip.speedRequirements.medium");
+				level += Lang.translate("tooltip.speedRequirement.medium");
 			if (speedLevel == SpeedLevel.FAST)
-				level += Lang.translate("tooltip.speedRequirements.high");
+				level += Lang.translate("tooltip.speedRequirement.high");
 
 			level += String.format(" (%s%s) ", IHaveGoggleInformation.format(Math.abs(speed)), Lang.translate("generic.unit.rpm"));
 
@@ -118,8 +118,8 @@ public interface IRotate extends IWrenchable {
 	}
 
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face);
-
-	public boolean hasCogsTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face);
+	
+	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state);
 
 	public Axis getRotationAxis(BlockState state);
 

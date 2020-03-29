@@ -101,7 +101,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 			world.setBlockState(controllerPos, world.getBlockState(controllerPos).with(VALID, controllerShouldBeValid));
 		}
 
-		((CrushingWheelControllerBlock) AllBlocks.CRUSHING_WHEEL_CONTROLLER.block)
+		((CrushingWheelControllerBlock) AllBlocks.CRUSHING_WHEEL_CONTROLLER.get())
 				.updateSpeed(world.getBlockState(controllerPos), world, controllerPos);
 
 	}

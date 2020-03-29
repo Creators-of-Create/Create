@@ -31,8 +31,8 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		super.addBehaviours(behaviours);
 		Integer max = AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
 
-		targetSpeed = new ScrollValueBehaviour(Lang.translate("generic.speed"), this,
-				new ControllerValueBoxTransform());
+		targetSpeed =
+			new ScrollValueBehaviour(Lang.translate("generic.speed"), this, new ControllerValueBoxTransform());
 		targetSpeed.between(-max, max);
 		targetSpeed.value = DEFAULT_SPEED;
 		targetSpeed.moveText(new Vec3d(9, 0, 10));
@@ -43,7 +43,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	}
 
 	private void updateTargetRotation() {
-		if (hasNetwork()) 
+		if (hasNetwork())
 			getOrCreateNetwork().remove(this);
 		RotationPropagator.handleRemoved(world, pos, this);
 		removeSource();
@@ -54,38 +54,38 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	public boolean hasFastRenderer() {
 		return false;
 	}
-	
-	public static float getSpeedModifier(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,
+
+	public static float getConveyedSpeed(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,
 			boolean targetingController) {
 		if (!(speedControllerIn instanceof SpeedControllerTileEntity))
-			return 1;
+			return 0;
 		SpeedControllerTileEntity speedController = (SpeedControllerTileEntity) speedControllerIn;
+
 		float targetSpeed = speedController.targetSpeed.getValue();
 		float speed = speedControllerIn.getSpeed();
+		float wheelSpeed = cogWheel.getTheoreticalSpeed();
 
 		if (targetSpeed == 0)
 			return 0;
-		float wheelSpeed = cogWheel.getTheoreticalSpeed();
 		if (targetingController && wheelSpeed == 0)
-			return 1;
-
+			return 0;
 		if (!speedController.hasSource()) {
 			if (targetingController)
-				return targetSpeed / wheelSpeed;
-			return 1;
+				return targetSpeed;
+			return 0;
 		}
 
 		boolean wheelPowersController = speedController.source.equals(cogWheel.getPos());
-		
+
 		if (wheelPowersController) {
 			if (targetingController)
-				return targetSpeed / wheelSpeed;
-			return wheelSpeed / targetSpeed;
+				return targetSpeed;
+			return wheelSpeed;
 		}
-		
+
 		if (targetingController)
-			return speed / targetSpeed;
-		return targetSpeed / speed;
+			return speed;
+		return targetSpeed;
 	}
 
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {

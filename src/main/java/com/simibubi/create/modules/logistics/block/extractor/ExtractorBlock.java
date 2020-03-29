@@ -4,6 +4,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.block.belts.BeltAttachableLogisticalBlock;
 
@@ -22,9 +24,10 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class ExtractorBlock extends BeltAttachableLogisticalBlock {
+public class ExtractorBlock extends BeltAttachableLogisticalBlock implements IPortableBlock {
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
+	private static final MovementBehaviour MOVEMENT = new ExtractorMovementBehaviour();
 
 	public ExtractorBlock() {
 		super();
@@ -117,6 +120,11 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock {
 		protected boolean isVertical() {
 			return true;
 		}
+	}
+
+	@Override
+	public MovementBehaviour getMovementBehaviour() {
+		return MOVEMENT;
 	}
 
 }

@@ -97,7 +97,12 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IWithTileEn
 		super.onLanded(worldIn, entityIn);
 		if (!(entityIn instanceof ItemEntity))
 			return;
-		withTileEntityDo(entityIn.world, entityIn.getPosition(), te -> {
+		BlockPos pos = entityIn.getPosition();
+		if (!(worldIn.getTileEntity(pos) instanceof SawTileEntity))
+			return;
+		if (entityIn.world.isRemote)
+			return;
+		withTileEntityDo(entityIn.world, pos, te -> {
 			te.insertItem((ItemEntity) entityIn);
 		});
 	}

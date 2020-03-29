@@ -109,7 +109,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		attributeSelector.titled(stack.getDisplayName().getFormattedText() + "...");
 		attributesOfItem.clear();
 		for (ItemAttribute itemAttribute : ItemAttribute.types)
-			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack));
+			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack, this.minecraft.world));
 		List<String> options = attributesOfItem.stream().map(ItemAttribute::format).collect(Collectors.toList());
 		attributeSelector.forOptions(options);
 		attributeSelector.active = true;

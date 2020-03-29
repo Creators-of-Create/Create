@@ -347,7 +347,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		transportedStack.insertedAt = index;
 		transportedStack.insertedFrom = side;
 		transportedStack.prevBeltPosition = transportedStack.beltPosition;
-		nextInventory.insert(transportedStack);
+		nextInventory.addItem(transportedStack);
 		nextBeltController.markDirty();
 		nextBeltController.sendData();
 

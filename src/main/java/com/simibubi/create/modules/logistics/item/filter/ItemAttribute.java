@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -12,20 +13,27 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.logistics.InWorldProcessing;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public interface ItemAttribute {
 
@@ -41,7 +49,15 @@ public interface ItemAttribute {
 		return attributeType;
 	}
 
-	public boolean appliesTo(ItemStack stack);
+	default boolean appliesTo(ItemStack stack, World world) {
+		return appliesTo(stack);
+	}
+
+	boolean appliesTo(ItemStack stack);
+
+	default List<ItemAttribute> listAttributesOf(ItemStack stack, World world) {
+		return listAttributesOf(stack);
+	}
 
 	public List<ItemAttribute> listAttributesOf(ItemStack stack);
 
@@ -73,7 +89,7 @@ public interface ItemAttribute {
 	default boolean canRead(CompoundNBT nbt) {
 		return nbt.contains(getNBTKey());
 	}
-	
+
 	default String getNBTKey() {
 		return getTranslationKey();
 	}
@@ -93,12 +109,34 @@ public interface ItemAttribute {
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamage() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(Predicates.not(ItemStack::isStackable)),
 		EQUIPABLE(s -> s.getEquipmentSlot() != null),
-		FURNACE_FUEL(AbstractFurnaceTileEntity::isFuel);
+		FURNACE_FUEL(AbstractFurnaceTileEntity::isFuel),
+		WASHABLE(InWorldProcessing::isWashable),
+		SMELTABLE((s, w) -> testRecipe(s, w, IRecipeType.SMELTING)),
+		SMOKABLE((s, w) -> testRecipe(s, w, IRecipeType.SMOKING)),
+		BLASTABLE((s, w) -> testRecipe(s, w, IRecipeType.BLASTING));
 
+		private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 		private Predicate<ItemStack> test;
+		private BiPredicate<ItemStack, World> testWithWorld;
 
 		private StandardTraits(Predicate<ItemStack> test) {
 			this.test = test;
+		}
+
+		private static boolean testRecipe(ItemStack s, World w, IRecipeType<? extends IRecipe<IInventory>> smelting) {
+			RECIPE_WRAPPER.setInventorySlotContents(0, s.copy());
+			return w.getRecipeManager().getRecipe(smelting, RECIPE_WRAPPER, w).isPresent();
+		}
+		
+		private StandardTraits(BiPredicate<ItemStack, World> test) {
+			this.testWithWorld = test;
+		}
+
+		@Override
+		public boolean appliesTo(ItemStack stack, World world) {
+			if (testWithWorld != null)
+				return testWithWorld.test(stack, world);
+			return appliesTo(stack);
 		}
 
 		@Override
@@ -107,12 +145,17 @@ public interface ItemAttribute {
 		}
 
 		@Override
-		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
+		public List<ItemAttribute> listAttributesOf(ItemStack stack, World world) {
 			List<ItemAttribute> attributes = new ArrayList<>();
 			for (StandardTraits trait : values())
-				if (trait.test.test(stack))
+				if (trait.appliesTo(stack, world))
 					attributes.add(trait);
 			return attributes;
+		}
+
+		@Override
+		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
+			return null;
 		}
 
 		@Override

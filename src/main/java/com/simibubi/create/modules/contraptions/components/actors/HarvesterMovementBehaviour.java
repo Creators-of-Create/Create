@@ -13,6 +13,7 @@ import com.simibubi.create.modules.contraptions.components.contraptions.Movement
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CropsBlock;
+import net.minecraft.block.KelpBlock;
 import net.minecraft.block.SugarCaneBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IProperty;
@@ -111,6 +112,8 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 				return false;
 			}
 
+			if (state.getBlock() instanceof KelpBlock)
+				return true;
 			if (state.getBlock() instanceof IPlantable)
 				return true;
 		}
@@ -124,7 +127,9 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 			return crop.withAge(0);
 		}
 		if (state.getBlock() == Blocks.SUGAR_CANE) {
-			return Blocks.AIR.getDefaultState();
+			if (state.getFluidState().isEmpty())
+				return Blocks.AIR.getDefaultState();
+			return state.getFluidState().getBlockState();
 		}
 		if (state.getCollisionShape(world, pos).isEmpty()) {
 			for (IProperty<?> property : state.getProperties()) {
@@ -136,7 +141,9 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 			}
 		}
 
-		return Blocks.AIR.getDefaultState();
+		if (state.getFluidState().isEmpty())
+			return Blocks.AIR.getDefaultState();
+		return state.getFluidState().getBlockState();
 	}
 
 }

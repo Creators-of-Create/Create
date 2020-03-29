@@ -1,11 +1,14 @@
 package com.simibubi.create;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.data.ICanGenerateJson;
+
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
 import net.minecraft.util.ResourceLocation;
@@ -14,10 +17,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
-public enum AllSoundEvents implements ICanGenerateJson {
+public enum AllSoundEvents implements IDataProvider {
 
 	CUCKOO_PIG("creeperclock"),
 	CUCKOO_CREEPER("pigclock"),
@@ -58,7 +58,7 @@ public enum AllSoundEvents implements ICanGenerateJson {
 		return event;
 	}
 
-	private String getName() {
+	private String getEventName() {
 		return id;
 	}
 
@@ -67,7 +67,7 @@ public enum AllSoundEvents implements ICanGenerateJson {
 
 		for (AllSoundEvents entry : values()) {
 
-			ResourceLocation rec = new ResourceLocation(Create.ID, entry.getName());
+			ResourceLocation rec = new ResourceLocation(Create.ID, entry.getEventName());
 			SoundEvent sound = new SoundEvent(rec).setRegistryName(rec);
 			registry.register(sound);
 			entry.event = sound;
@@ -91,11 +91,11 @@ public enum AllSoundEvents implements ICanGenerateJson {
 					arr.add(s);
 				} else {
 					// own sound
-					arr.add(Create.ID + ":" + soundEvent.getName());
+					arr.add(Create.ID + ":" + soundEvent.getEventName());
 				}
 				entry.add("sounds", arr);
-				entry.addProperty("subtitle", Create.ID + ".subtitle." + soundEvent.getName());
-				json.add(soundEvent.getName(), entry);
+				entry.addProperty("subtitle", Create.ID + ".subtitle." + soundEvent.getEventName());
+				json.add(soundEvent.getEventName(), entry);
 			}
 			IDataProvider.save(GSON, cache, json, path.resolve("sounds.json"));
 
@@ -103,5 +103,15 @@ public enum AllSoundEvents implements ICanGenerateJson {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public void act(DirectoryCache cache) throws IOException {
+
+	}
+
+	@Override
+	public String getName() {
+		return null;
 	}
 }

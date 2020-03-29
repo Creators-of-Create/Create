@@ -113,7 +113,12 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
 		return enchantment == Enchantments.FORTUNE || super.canApplyAtEnchantingTable(stack, enchantment);
 	}
-
+	
+	@Override
+	public int getItemEnchantability(ItemStack stack) {
+		return 1;
+	}
+	
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
 		if (!(entityLiving instanceof PlayerEntity))
@@ -186,6 +191,11 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 	@Override
 	public int getMaxDamage(ItemStack stack) {
 		return 8;
+	}
+
+	@Override
+	public int getItemEnchantability() {
+		return 5;
 	}
 
 	@Override
