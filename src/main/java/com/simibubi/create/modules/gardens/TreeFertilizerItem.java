@@ -1,8 +1,6 @@
 package com.simibubi.create.modules.gardens;
 
-import java.util.Random;
-
-import com.simibubi.create.foundation.utility.PlacementSimulationWorld;
+import com.simibubi.create.foundation.utility.PlacementSimulationServerWorld;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -13,7 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class TreeFertilizerItem extends Item {
 
@@ -32,7 +30,7 @@ public class TreeFertilizerItem extends Item {
 				return ActionResultType.SUCCESS;
 			}
 
-			TreesDreamWorld world = new TreesDreamWorld(context.getWorld());
+			TreesDreamWorld world = new TreesDreamWorld((ServerWorld) context.getWorld());
 			BlockPos saplingPos = context.getPos();
 
 			for (BlockPos pos : BlockPos.getAllInBoxMutable(-1, 0, -1, 1, 0, 1)) {
@@ -40,7 +38,7 @@ public class TreeFertilizerItem extends Item {
 					world.setBlockState(pos.up(10), state.with(SaplingBlock.STAGE, 1));
 			}
 
-			((SaplingBlock) block).grow(world, BlockPos.ZERO.up(10), state.with(SaplingBlock.STAGE, 1), new Random());
+			((SaplingBlock) block).grow(world, world.getRandom(), BlockPos.ZERO.up(10), state.with(SaplingBlock.STAGE, 1));
 
 			for (BlockPos pos : world.blocksAdded.keySet()) {
 				BlockPos actualPos = pos.add(saplingPos).down(10);
@@ -68,9 +66,9 @@ public class TreeFertilizerItem extends Item {
 		return super.onItemUse(context);
 	}
 
-	private class TreesDreamWorld extends PlacementSimulationWorld {
+	private class TreesDreamWorld extends PlacementSimulationServerWorld {
 
-		protected TreesDreamWorld(World wrapped) {
+		protected TreesDreamWorld(ServerWorld wrapped) {
 			super(wrapped);
 		}
 

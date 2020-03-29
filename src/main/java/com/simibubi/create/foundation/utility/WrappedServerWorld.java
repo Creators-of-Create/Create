@@ -7,25 +7,26 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.tags.NetworkTagManager;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.server.ServerTickList;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.MapData;
 
-public class WrappedWorld extends World {
+public class WrappedServerWorld extends ServerWorld {
 
-	protected World world;
+	protected ServerWorld world;
 
-	public WrappedWorld(World world) {
-		super(world.getWorldInfo(), world.getDimension().getType(), (w, d) -> world.getChunkProvider(),
-				world.getProfiler(), world.isRemote);
+	public WrappedServerWorld(ServerWorld world) {
+		super(world.getServer(), world.getServer().getBackgroundExecutor(), world.getSaveHandler(), world.getWorldInfo(), world.getDimension().getType(), world.getProfiler(), null);
 		this.world = world;
 	}
 
@@ -45,12 +46,12 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public ITickList<Block> getPendingBlockTicks() {
+	public ServerTickList<Block> getPendingBlockTicks() {
 		return world.getPendingBlockTicks();
 	}
 
 	@Override
-	public ITickList<Fluid> getPendingFluidTicks() {
+	public ServerTickList<Fluid> getPendingFluidTicks() {
 		return world.getPendingFluidTicks();
 	}
 
@@ -59,7 +60,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public List<? extends PlayerEntity> getPlayers() {
+	public List<ServerPlayerEntity> getPlayers() {
 		return Collections.emptyList();
 	}
 
@@ -103,7 +104,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public Scoreboard getScoreboard() {
+	public ServerScoreboard getScoreboard() {
 		return world.getScoreboard();
 	}
 
