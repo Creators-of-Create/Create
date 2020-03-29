@@ -859,9 +859,11 @@
 	"block.create.turntable.tooltip.summary": "Turns _Rotational_ _Force_ into refined Motion Sickness.",
 	
 	"block.create.millstone.tooltip": "MILLSTONE",
-	"block.create.millstone.tooltip.summary": "A kinetic component suitable for _grinding_ inserted _materials_. Can be powered by an adjacent cogwheel or by connecting to the shaft at the bottom.",
+	"block.create.millstone.tooltip.summary": "A kinetic component suitable for _grinding_ inserted _materials_. Can be powered by an adjacent cogwheel or by connecting to the shaft at the bottom. Results have to be extracted from the component.",
 	"block.create.millstone.tooltip.condition1": "When Rotated",
 	"block.create.millstone.tooltip.behaviour1": "Starts applying _milling_ _recipes_ to any items inserted from the side or the top of the block.",
+	"block.create.millstone.tooltip.condition2": "When R-Clicked",
+	"block.create.millstone.tooltip.behaviour2": "Collects the outputs manually.",
 
 	"block.create.crushing_wheel.tooltip": "CRUSHING WHEEL",
 	"block.create.crushing_wheel.tooltip.summary": "Large rotatable wheels that _break_ _down_ anything.",
