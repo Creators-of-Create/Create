@@ -116,14 +116,14 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(0, 200, 0);
-		RenderSystem.rotated(90, 1, 0, 0);
+		RenderSystem.rotatef(90, 1, 0, 0);
 		ScreenElementRenderer.renderBlock(() -> state);
 		RenderSystem.popMatrix();
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(0, 200, 0);
-		RenderSystem.rotated(90, 1, 0, 0);
-		RenderSystem.rotated(270, 0, 0, 1);
+		RenderSystem.rotatef(90, 1, 0, 0);
+		RenderSystem.rotatef(270, 0, 0, 1);
 		ScreenElementRenderer.renderBlock(() -> state);
 		RenderSystem.popMatrix();
 

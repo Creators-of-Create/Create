@@ -37,7 +37,7 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 		
 		float t = 25;
 		RenderSystem.translatef(t, -t, t);
-		RenderSystem.rotated(angle, 0, 0, 1);
+		RenderSystem.rotatef(angle, 0, 0, 1);
 		RenderSystem.translatef(-t, t, -t);
 		
 		return AllBlocks.CRUSHING_WHEEL.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.X);
@@ -49,7 +49,7 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 		
 		float t = 25;
 		RenderSystem.translatef(t, -t, t);
-		RenderSystem.rotated(angle, 0, 0, 1);
+		RenderSystem.rotatef(angle, 0, 0, 1);
 		RenderSystem.translatef(-t, t, -t);
 		
 		return AllBlocks.CRUSHING_WHEEL.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.X);

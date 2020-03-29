@@ -88,7 +88,7 @@ public class ScreenElementRenderer {
 		if (fire) {
 			blockRenderer.renderBlockBrightness(blockToRender, 1);
 		} else {
-			RenderSystem.rotated(90, 0, 1, 0);
+			RenderSystem.rotatef(90, 0, 1, 0);
 			if (color == -1) {
 				blockRenderer.getBlockModelRenderer().renderModelBrightnessColor(modelToRender, 1, 1, 1, 1);
 			} else {

@@ -36,7 +36,7 @@ public class SymmetryWandItemRenderer extends ItemStackTileEntityRenderer {
 		float floating = MathHelper.sin(worldTime) * .05f;
 		RenderSystem.translated(0, floating, 0);
 		float angle = worldTime * -10 % 360;
-		RenderSystem.rotated(angle, 0, 1, 0);
+		RenderSystem.rotatef(angle, 0, 1, 0);
 		itemRenderer.renderItem(stack, mainModel.getPartial("bits"));
 
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastCoordx, lastCoordy);

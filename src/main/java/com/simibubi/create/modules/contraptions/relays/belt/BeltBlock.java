@@ -391,10 +391,10 @@ public class BeltBlock extends HorizontalKineticBlock
 				: BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
-	@Override
-	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-		return state.get(CASING) && state.get(SLOPE) != Slope.VERTICAL && layer == getRenderLayer();
-	}
+//	@Override // TODO 1.15 register layer
+//	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
+//		return state.get(CASING) && state.get(SLOPE) != Slope.VERTICAL && layer == getRenderLayer();
+//	}
 
 	public static void initBelt(World world, BlockPos pos) {
 		if (world.isRemote)

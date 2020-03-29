@@ -12,10 +12,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 
 public class MechanicalMixerTileEntityRenderer extends KineticTileEntityRenderer {
+
+	public MechanicalMixerTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,

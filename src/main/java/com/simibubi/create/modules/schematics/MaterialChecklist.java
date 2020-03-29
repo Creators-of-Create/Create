@@ -61,7 +61,7 @@ public class MaterialChecklist {
 			string.append("\n" + TextFormatting.RED + "* Disclaimer *\n\n");
 			string.append("Material List may be inaccurate due to relevant chunks not being loaded.");
 			string.append("\"}");
-			pages.add(new StringNBT(string.toString()));
+			pages.add(StringNBT.of(string.toString()));
 			string = new StringBuilder("{\"text\":\"");
 		}
 
@@ -89,7 +89,7 @@ public class MaterialChecklist {
 			if (itemsWritten == 6) {
 				itemsWritten = 0;
 				string.append("\"}");
-				pages.add(new StringNBT(string.toString()));
+				pages.add(StringNBT.of(string.toString()));
 				string = new StringBuilder("{\"text\":\"");
 			}
 
@@ -101,7 +101,7 @@ public class MaterialChecklist {
 			if (itemsWritten == 6) {
 				itemsWritten = 0;
 				string.append("\"}");
-				pages.add(new StringNBT(string.toString()));
+				pages.add(StringNBT.of(string.toString()));
 				string = new StringBuilder("{\"text\":\"");
 			}
 
@@ -110,7 +110,7 @@ public class MaterialChecklist {
 		}
 
 		string.append("\"}");
-		pages.add(new StringNBT(string.toString()));
+		pages.add(StringNBT.of(string.toString()));
 
 		tag.put("pages", pages);
 		tag.putString("author", "Schematicannon");

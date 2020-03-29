@@ -76,7 +76,7 @@ public class ValueBox {
 				RenderSystem.translated(-7 - font.getStringWidth(countString), 10, 10 + 1 / 4f);
 
 			double scale = 1.5;
-			RenderSystem.rotated(0, 1, 0, 0);
+			RenderSystem.rotatef(0, 1, 0, 0);
 			RenderSystem.scaled(scale, scale, scale);
 			font.drawString(countString, 0, 0, isFilter ? 0xFFFFFF : 0xEDEDED);
 			RenderSystem.translated(0, 0, -1 / 16f);

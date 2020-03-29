@@ -66,7 +66,7 @@ public class AnimatedPress extends AnimatedKinetics {
 	private BlockState shaft() {
 		float t = 25;
 		RenderSystem.translatef(t, -t, -t);
-		RenderSystem.rotated(getCurrentAngle() * 2, 1, 0, 0);
+		RenderSystem.rotatef(getCurrentAngle() * 2, 1, 0, 0);
 		RenderSystem.translatef(-t, t, t);
 		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.Z);
 	}

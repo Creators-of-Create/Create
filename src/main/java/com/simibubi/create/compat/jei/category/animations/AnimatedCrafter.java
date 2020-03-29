@@ -64,8 +64,8 @@ public class AnimatedCrafter extends AnimatedKinetics {
 	private IBakedModel cogwheel(boolean forward) {
 		float t = 25;
 		RenderSystem.translatef(t, -t, -t);
-		RenderSystem.rotated(getCurrentAngle() * 2 * (forward ? 1 : -1), 0, 0, 1);
-		RenderSystem.rotated(90, 1, 0, 0);
+		RenderSystem.rotatef(getCurrentAngle() * 2 * (forward ? 1 : -1), 0, 0, 1);
+		RenderSystem.rotatef(90, 1, 0, 0);
 		RenderSystem.translatef(-t, t, t);
 		return AllBlockPartials.SHAFTLESS_COGWHEEL.get();
 	}

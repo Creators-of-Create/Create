@@ -5,7 +5,13 @@ import com.simibubi.create.foundation.block.render.ColoredOverlayTileEntityRende
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+
 public class FlexpeaterTileEntityRenderer extends ColoredOverlayTileEntityRenderer<FlexpeaterTileEntity> {
+
+	public FlexpeaterTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	protected int getColor(FlexpeaterTileEntity te, float partialTicks) {

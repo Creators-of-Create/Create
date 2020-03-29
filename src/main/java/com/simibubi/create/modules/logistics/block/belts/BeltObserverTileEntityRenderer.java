@@ -4,9 +4,14 @@ import com.mojang.blaze3d.platform.GLX;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.BlockStateProperties;
 
 public class BeltObserverTileEntityRenderer extends SafeTileEntityRenderer<BeltObserverTileEntity> {
+
+	public BeltObserverTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	public void renderWithGL(BeltObserverTileEntity tileEntityIn, double x, double y, double z, float partialTicks,

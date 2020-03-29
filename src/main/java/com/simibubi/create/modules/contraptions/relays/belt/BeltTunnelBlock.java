@@ -21,7 +21,6 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -59,11 +58,6 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 	}
 
 	@Override
-	public boolean isSolid(BlockState state) {
-		return false;
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return BeltTunnelShapes.getShape(state);
 	}
@@ -85,12 +79,12 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 		return true;
 	}
 
-	@Override
-	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-		if (hasWindow(state))
-			return layer == BlockRenderLayer.CUTOUT_MIPPED;
-		return super.canRenderInLayer(state, layer);
-	}
+//	@Override // TODO 1.15 register layer
+//	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
+//		if (hasWindow(state))
+//			return layer == BlockRenderLayer.CUTOUT_MIPPED;
+//		return super.canRenderInLayer(state, layer);
+//	}
 
 	public static boolean hasWindow(BlockState state) {
 		Shape shape = state.get(SHAPE);

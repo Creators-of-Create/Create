@@ -120,7 +120,7 @@ public class SchematicItem extends Item {
 
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
-		if (context.isPlacerSneaking() && context.getHand() == Hand.MAIN_HAND) {
+		if (context.getPlayer().isSneaking() && context.getHand() == Hand.MAIN_HAND) {
 			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 				displayBlueprintScreen();
 			});

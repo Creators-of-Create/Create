@@ -8,7 +8,9 @@ import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.IOUtils;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
@@ -160,7 +162,7 @@ public class SchematicAndQuillHandler {
 		Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.saved", filepath);
 	}
 
-	public void render() {
+	public void render(MatrixStack ms, IVertexBuilder buffer) {
 		if (!isActive())
 			return;
 
@@ -175,28 +177,28 @@ public class SchematicAndQuillHandler {
 				MutableBoundingBox bb = new MutableBoundingBox(firstPos, firstPos.add(1, 1, 1));
 				BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 				BlockPos max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-				drawBox(min, max, true);
+				drawBox(ms, buffer, min, max, true);
 			}
 
 			if (firstPos != null && selectedPos != null) {
 				MutableBoundingBox bb = new MutableBoundingBox(firstPos, selectedPos);
 				BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 				BlockPos max = new BlockPos(bb.maxX + 1, bb.maxY + 1, bb.maxZ + 1);
-				drawBox(min, max, true);
+				drawBox(ms, buffer, min, max, true);
 			}
 
 			if (firstPos == null && selectedPos != null) {
 				MutableBoundingBox bb = new MutableBoundingBox(selectedPos, selectedPos.add(1, 1, 1));
 				BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 				BlockPos max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-				drawBox(min, max, true);
+				drawBox(ms, buffer, min, max, true);
 			}
 		} else {
 			// 2nd Step
 			MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
 			BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 			BlockPos max = new BlockPos(bb.maxX + 1, bb.maxY + 1, bb.maxZ + 1);
-			drawBox(min, max, false);
+			drawBox(ms, buffer, min, max, false);
 
 			if (selectedFace != null) {
 				Vec3d vec = new Vec3d(selectedFace.getDirectionVec());
@@ -226,10 +228,10 @@ public class SchematicAndQuillHandler {
 		TessellatorHelper.cleanUpAfterDrawing();
 	}
 
-	protected static void drawBox(BlockPos min, BlockPos max, boolean blue) {
+	protected static void drawBox(MatrixStack ms, IVertexBuilder buffer, BlockPos min, BlockPos max, boolean blue) {
 		float red = blue ? .8f : 1;
 		float green = blue ? .9f : 1;
-		WorldRenderer.drawBoundingBox(min.getX() - 1 / 16d, min.getY() + 1 / 16d, min.getZ() - 1 / 16d,
+		WorldRenderer.drawBox(ms, buffer, min.getX() - 1 / 16d, min.getY() + 1 / 16d, min.getZ() - 1 / 16d,
 				max.getX() + 1 / 16d, max.getY() + 1 / 16d, max.getZ() + 1 / 16d, red, green, 1, 1);
 	}
 

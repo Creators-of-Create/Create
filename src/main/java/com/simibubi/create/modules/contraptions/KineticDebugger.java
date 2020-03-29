@@ -1,11 +1,13 @@
 package com.simibubi.create.modules.contraptions;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.config.AllConfigs;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +19,7 @@ import net.minecraft.world.World;
 
 public class KineticDebugger {
 
-	public static void renderSourceOutline() {
+	public static void renderSourceOutline(MatrixStack ms, IRenderTypeBuffer buffer) {
 		if (!isActive())
 			return;
 		KineticTileEntity te = getSelectedTE();
@@ -28,20 +30,16 @@ public class KineticDebugger {
 		BlockPos toOutline = te.hasSource() ? te.source : te.getPos();
 		VoxelShape shape = world.getBlockState(toOutline).getShape(world, toOutline);
 
-		TessellatorHelper.prepareForDrawing();
-		RenderSystem.disableTexture();
-		RenderSystem.lineWidth(3);
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(toOutline.getX(), toOutline.getY(), toOutline.getZ());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.getLines());
+
+		ms.push();
+		ms.translate(toOutline.getX(), toOutline.getY(), toOutline.getZ());
 		float f = 1 + 1 / 128f;
-		RenderSystem.scaled(f, f, f);
+		ms.scale(f, f, f);
 
-		WorldRenderer.drawShape(shape, 0, 0, 0, te.hasSource() ? .5f : 1, .75f, .75f, 1);
+		WorldRenderer.func_228431_a_(ms, vb, shape, 0, 0, 0, te.hasSource() ? .5f : 1, .75f, .75f, 1);
 
-		RenderSystem.popMatrix();
-		RenderSystem.lineWidth(1);
-		RenderSystem.enableTexture();
-		TessellatorHelper.cleanUpAfterDrawing();
+		ms.pop();
 	}
 
 	public static boolean isActive() {

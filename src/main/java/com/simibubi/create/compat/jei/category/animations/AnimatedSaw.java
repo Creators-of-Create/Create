@@ -46,7 +46,7 @@ public class AnimatedSaw extends AnimatedKinetics {
 	private BlockState shaft() {
 		float t = 25;
 		RenderSystem.translatef(t, -t, t);
-		RenderSystem.rotated(-getCurrentAngle() * 2, 0, 0, 1);
+		RenderSystem.rotatef(-getCurrentAngle() * 2, 0, 0, 1);
 		RenderSystem.translatef(-t, t, -t);
 		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.X);
 	}

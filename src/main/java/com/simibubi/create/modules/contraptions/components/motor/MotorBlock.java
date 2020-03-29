@@ -34,7 +34,7 @@ public class MotorBlock extends HorizontalKineticBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction preferred = getPreferredHorizontalFacing(context);
-		if (context.isPlacerSneaking() || preferred == null)
+		if (context.getPlayer().isSneaking() || preferred == null)
 			return super.getStateForPlacement(context);
 		return getDefaultState().with(HORIZONTAL_FACING, preferred);
 	}

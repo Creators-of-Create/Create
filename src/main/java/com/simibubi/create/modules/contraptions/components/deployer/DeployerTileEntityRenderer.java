@@ -32,6 +32,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.BlockItem;
 import net.minecraft.util.Direction;
@@ -43,6 +44,10 @@ import net.minecraft.world.World;
 
 @SuppressWarnings("deprecation")
 public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
+
+	public DeployerTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	public void renderWithGL(DeployerTileEntity te, double x, double y, double z, float partialTicks,

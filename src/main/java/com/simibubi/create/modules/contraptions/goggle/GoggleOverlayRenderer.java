@@ -68,7 +68,7 @@ public class GoggleOverlayRenderer {
 
 		};
 
-		tooltipScreen.init(mc, mc.mainWindow.getScaledWidth(), mc.mainWindow.getScaledHeight());
+		tooltipScreen.init(mc, mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
 		tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
 		ItemStack item = goggles;
 		ScreenElementRenderer.render3DItem(() -> {

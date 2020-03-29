@@ -93,7 +93,7 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 				float earlyProgress = MathHelper.clamp(progress * 2, 0, 1);
 				float lateProgress = MathHelper.clamp(progress * 2 - 1, 0, 1);
 
-//				RenderSystem.rotated(lateProgress * 360, 0, 0, 1);
+//				RenderSystem.rotatef(lateProgress * 360, 0, 0, 1);
 				ms.scale(1 - lateProgress, 1 - lateProgress, 1 - lateProgress);
 
 				Vec3d centering = new Vec3d(-items.minX + (-items.width + 1) / 2f,

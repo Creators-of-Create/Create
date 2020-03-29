@@ -56,7 +56,7 @@ public class FlexcrateBlock extends ProperDirectionalBlock {
 		BlockPos pos = context.getPos();
 		World world = context.getWorld();
 
-		if (!context.isPlacerSneaking()) {
+		if (!context.getPlayer().isSneaking()) {
 			for (Direction d : Direction.values()) {
 				BlockState state = world.getBlockState(pos.offset(d));
 				if (AllBlocks.FLEXCRATE.typeOf(state) && !state.get(DOUBLE))

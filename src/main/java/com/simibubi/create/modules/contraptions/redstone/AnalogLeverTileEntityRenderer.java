@@ -1,17 +1,22 @@
 package com.simibubi.create.modules.contraptions.redstone;
 
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.block.SafeTileEntityRendererFast;
+import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction.Axis;
 
-public class AnalogLeverTileEntityRenderer extends SafeTileEntityRendererFast<AnalogLeverTileEntity> {
+public class AnalogLeverTileEntityRenderer extends SafeTileEntityRenderer<AnalogLeverTileEntity> {
+
+	public AnalogLeverTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	public void renderFast(AnalogLeverTileEntity te, double x, double y, double z, float partialTicks,

@@ -1,15 +1,20 @@
 package com.simibubi.create.modules.contraptions.components.flywheel.engine;
 
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.block.SafeTileEntityRendererFast;
+import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 
-public class EngineRenderer<T extends EngineTileEntity> extends SafeTileEntityRendererFast<T> {
+public class EngineRenderer<T extends EngineTileEntity> extends SafeTileEntityRenderer<T> {
+
+	public EngineRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	protected void renderFast(T te, double x, double y, double z, float partialTicks, int destroyStage,

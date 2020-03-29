@@ -60,10 +60,11 @@ public enum AllEntities {
 
 	}
 
+	@SuppressWarnings("unchecked") // TODO 1.15 this generic stuff is incompatible with the enum system - need strong types
 	@OnlyIn(value = Dist.CLIENT)
 	public static void registerRenderers() {
 //		RenderingRegistry.registerEntityRenderingHandler(CardboardBoxEntity.class, CardboardBoxEntityRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(ContraptionEntity.class, ContraptionEntityRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler((EntityType<ContraptionEntity>) CONTRAPTION.type, ContraptionEntityRenderer::new);
 	}
 
 }

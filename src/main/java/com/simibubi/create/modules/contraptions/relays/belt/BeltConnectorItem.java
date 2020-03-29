@@ -37,7 +37,7 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
-		if (context.isPlacerSneaking()) {
+		if (context.getPlayer().isSneaking()) {
 			context.getItem().setTag(null);
 			return ActionResultType.SUCCESS;
 		}

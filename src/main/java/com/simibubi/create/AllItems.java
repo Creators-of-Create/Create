@@ -169,7 +169,7 @@ public enum AllItems {
 	}
 
 	private static Properties defaultProperties(AllItems item) {
-		return includeInItemGroup().setTEISR(() -> item::getRenderer);
+		return includeInItemGroup().setISTER(() -> item::getRenderer);
 	}
 
 	private static int module() {

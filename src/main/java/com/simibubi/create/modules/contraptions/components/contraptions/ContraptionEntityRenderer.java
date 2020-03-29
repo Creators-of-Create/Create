@@ -96,9 +96,9 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 			RenderSystem.pushMatrix();
 			RenderSystem.translated(x, y, z);
 			RenderSystem.translated(rotationOffset.x, rotationOffset.y, rotationOffset.z);
-			RenderSystem.rotated(degPitch, 0, 0, 1);
-			RenderSystem.rotated(degYaw, 0, 1, 0);
-			RenderSystem.rotated(degRoll, 1, 0, 0);
+			RenderSystem.rotatef(degPitch, 0, 0, 1);
+			RenderSystem.rotatef(degYaw, 0, 1, 0);
+			RenderSystem.rotatef(degRoll, 1, 0, 0);
 			RenderSystem.translated(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
 			ContraptionRenderer.renderTEsWithGL(entity.world, entity.getContraption(), entity.getPositionVec(),
 					new Vec3d(degRoll, degYaw, degPitch), ms, buffers);

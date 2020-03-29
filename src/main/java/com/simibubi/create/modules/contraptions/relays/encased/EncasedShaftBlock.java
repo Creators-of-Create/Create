@@ -41,7 +41,7 @@ public class EncasedShaftBlock extends RotatedPillarKineticBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		if (context.isPlacerSneaking())
+		if (context.getPlayer().isSneaking())
 			return super.getStateForPlacement(context);
 		Axis preferredAxis = getPreferredAxis(context);
 		return this.getDefaultState().with(AXIS,

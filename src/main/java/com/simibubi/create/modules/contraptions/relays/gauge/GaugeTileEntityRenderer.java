@@ -14,6 +14,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -23,7 +24,8 @@ public class GaugeTileEntityRenderer extends KineticTileEntityRenderer {
 
 	protected GaugeBlock.Type type;
 
-	public GaugeTileEntityRenderer(GaugeBlock.Type type) {
+	public GaugeTileEntityRenderer(TileEntityRendererDispatcher dispatcher, GaugeBlock.Type type) {
+		super(dispatcher);
 		this.type = type;
 	}
 

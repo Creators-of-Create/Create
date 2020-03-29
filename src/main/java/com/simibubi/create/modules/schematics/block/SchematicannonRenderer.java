@@ -2,6 +2,7 @@ package com.simibubi.create.modules.schematics.block;
 
 import java.util.Random;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
@@ -11,8 +12,10 @@ import com.simibubi.create.foundation.utility.TessellatorHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction.Axis;
@@ -22,9 +25,13 @@ import net.minecraft.util.math.Vec3d;
 
 public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
 
+	public SchematicannonRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
+
 	@Override
-	public void renderWithGL(SchematicannonTileEntity tileEntityIn, double x, double y, double z, float partialTicks,
-			int destroyStage) {
+	protected void renderSafe(SchematicannonTileEntity tileEntityIn, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+			int light, int overlay) {
 
 		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
@@ -81,13 +88,14 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				double yOffset = 2 * (1 - t) * t * throwHeight + t * t * targetY;
 				Vec3d blockLocation = blockLocationXZ.add(0, yOffset + 1, 0).add(cannonOffset);
 
+				// TODO 1.15 remove RenderSystem use
 				// Offset to position
 				RenderSystem.pushMatrix();
 				RenderSystem.translated(blockLocation.x, blockLocation.y, blockLocation.z);
 
 				// Rotation and Scaling effects
 				double scale = .3f;
-				RenderSystem.rotated(360 * t * 2, 1, 1, 0);
+				RenderSystem.rotatef(360 * t * 2, 1, 1, 0);
 				RenderSystem.scaled(scale, scale, scale);
 
 				// Render the Block

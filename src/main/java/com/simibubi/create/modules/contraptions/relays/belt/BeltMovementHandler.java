@@ -84,7 +84,7 @@ public class BeltMovementHandler {
 			return;
 
 		// Not on top
-		if (entityIn.posY - .25f < pos.getY())
+		if (entityIn.getY() - .25f < pos.getY())
 			return;
 
 		// Lock entities in place
@@ -113,15 +113,15 @@ public class BeltMovementHandler {
 			Direction.getFacingFromAxis(POSITIVE, beltFacing.rotateY().getAxis()).getDirectionVec();
 		Vec3d movement = new Vec3d(movementDirection.getDirectionVec()).scale(movementSpeed);
 
-		double diffCenter = axis == Axis.Z ? (pos.getX() + .5f - entityIn.posX) : (pos.getZ() + .5f - entityIn.posZ);
+		double diffCenter = axis == Axis.Z ? (pos.getX() + .5f - entityIn.getZ()) : (pos.getZ() + .5f - entityIn.getZ());
 		if (Math.abs(diffCenter) > 48 / 64f)
 			return;
 
 		Part part = blockState.get(BeltBlock.PART);
 		float top = 13 / 16f;
 		boolean onSlope = notHorizontal && (part == Part.MIDDLE || part == Part.PULLEY
-				|| part == (slope == Slope.UPWARD ? Part.END : Part.START) && entityIn.posY - pos.getY() < top
-				|| part == (slope == Slope.UPWARD ? Part.START : Part.END) && entityIn.posY - pos.getY() > top);
+				|| part == (slope == Slope.UPWARD ? Part.END : Part.START) && entityIn.getY() - pos.getY() < top
+				|| part == (slope == Slope.UPWARD ? Part.START : Part.END) && entityIn.getY() - pos.getY() > top);
 
 		boolean movingDown = onSlope && slope == (movementFacing == beltFacing ? Slope.DOWNWARD : Slope.UPWARD);
 		boolean movingUp = onSlope && slope == (movementFacing == beltFacing ? Slope.UPWARD : Slope.DOWNWARD);
@@ -181,7 +181,7 @@ public class BeltMovementHandler {
 				|| AllBlocks.BELT.typeOf(world.getBlockState(entityIn.getPosition().down())));
 
 		if (movedPastEndingSlope && !movingDown && Math.abs(movementSpeed) > 0)
-			entityIn.setPosition(entityIn.posX, entityIn.posY + movement.y, entityIn.posZ);
+			entityIn.setPosition(entityIn.getY(), entityIn.getY() + movement.y, entityIn.getZ());
 		if (movedPastEndingSlope) {
 			entityIn.setMotion(movement);
 			entityIn.velocityChanged = true;

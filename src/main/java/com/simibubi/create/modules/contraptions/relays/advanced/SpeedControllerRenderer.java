@@ -10,9 +10,14 @@ import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedControllerTileEntity> {
+
+	public SpeedControllerRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	public void renderWithGL(SpeedControllerTileEntity tileEntityIn, double x, double y, double z, float partialTicks,

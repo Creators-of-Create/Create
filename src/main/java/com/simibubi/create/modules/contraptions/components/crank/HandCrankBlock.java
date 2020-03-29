@@ -47,7 +47,7 @@ public class HandCrankBlock extends DirectionalKineticBlock implements IWithTile
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction preferred = getPreferredFacing(context);
-		if (preferred == null || context.isPlacerSneaking())
+		if (preferred == null || context.getPlayer().isSneaking())
 			return getDefaultState().with(FACING, context.getFace());
 		return getDefaultState().with(FACING, preferred.getOpposite());
 	}

@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -29,6 +30,10 @@ import net.minecraft.util.math.MathHelper;
 
 @SuppressWarnings("deprecation")
 public class SawTileEntityRenderer extends SafeTileEntityRenderer<SawTileEntity> {
+
+	public SawTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	public void renderWithGL(SawTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
@@ -71,8 +76,8 @@ public class SawTileEntityRenderer extends SafeTileEntityRenderer<SawTileEntity>
 
 			RenderSystem.scaled(.5, .5, .5);
 			if (alongZ)
-				RenderSystem.rotated(90, 0, 1, 0);
-			RenderSystem.rotated(90, 1, 0, 0);
+				RenderSystem.rotatef(90, 0, 1, 0);
+			RenderSystem.rotatef(90, 1, 0, 0);
 			itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
 			RenderSystem.popMatrix();
 		}

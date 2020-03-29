@@ -38,7 +38,7 @@ public class DoubleItemIcon implements IDrawable {
 			secondaryStack = secondarySupplier.get();
 		}
 		
-		RenderHelper.enableGUIStandardItemLighting();
+		RenderHelper.enable();
 		RenderSystem.color4f(1, 1, 1, 1);
 		RenderSystem.enableDepthTest();
 		RenderSystem.pushMatrix();

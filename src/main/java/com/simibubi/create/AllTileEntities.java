@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntityRenderer;
@@ -88,6 +89,7 @@ import com.simibubi.create.modules.schematics.block.SchematicannonTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -190,61 +192,62 @@ public enum AllTileEntities {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRenderers() {
-		bind(SchematicannonTileEntity.class, new SchematicannonRenderer());
+		bind(SCHEMATICANNON, SchematicannonRenderer::new);
 
-		bind(ShaftTileEntity.class, new KineticTileEntityRenderer());
-		bind(TurntableTileEntity.class, new KineticTileEntityRenderer());
-		bind(MotorTileEntity.class, new MotorTileEntityRenderer());
-		bind(EncasedShaftTileEntity.class, new EncasedShaftTileEntityRenderer());
-		bind(AdjustablePulleyTileEntity.class, new EncasedShaftTileEntityRenderer());
-		bind(DrillTileEntity.class, new DrillTileEntityRenderer());
-		bind(SawTileEntity.class, new SawTileEntityRenderer());
-		bind(EncasedFanTileEntity.class, new EncasedFanTileEntityRenderer());
-		bind(GearboxTileEntity.class, new GearboxTileEntityRenderer());
-		bind(GearshiftTileEntity.class, new SplitShaftTileEntityRenderer());
-		bind(ClutchTileEntity.class, new SplitShaftTileEntityRenderer());
-		bind(SequencedGearshiftTileEntity.class, new SplitShaftTileEntityRenderer());
-		bind(BeltTileEntity.class, new BeltTileEntityRenderer());
-		bind(WaterWheelTileEntity.class, new KineticTileEntityRenderer());
-		bind(HandCrankTileEntity.class, new HandCrankTileEntityRenderer());
-		bind(CuckooClockTileEntity.class, new CuckooClockRenderer());
-		bind(AnalogLeverTileEntity.class, new AnalogLeverTileEntityRenderer());
+		bind(SHAFT, KineticTileEntityRenderer::new);
+		bind(TURNTABLE, KineticTileEntityRenderer::new);
+		bind(MOTOR, MotorTileEntityRenderer::new);
+		bind(ENCASED_SHAFT, EncasedShaftTileEntityRenderer::new);
+		bind(ADJUSTABLE_PULLEY, EncasedShaftTileEntityRenderer::new);
+		bind(DRILL, DrillTileEntityRenderer::new);
+		bind(SAW, SawTileEntityRenderer::new);
+		bind(ENCASED_FAN, EncasedFanTileEntityRenderer::new);
+		bind(GEARBOX, GearboxTileEntityRenderer::new);
+		bind(GEARSHIFT, SplitShaftTileEntityRenderer::new);
+		bind(CLUTCH, SplitShaftTileEntityRenderer::new);
+		bind(SEQUENCED_GEARSHIFT, SplitShaftTileEntityRenderer::new);
+		bind(BELT, BeltTileEntityRenderer::new);
+		bind(WATER_WHEEL, KineticTileEntityRenderer::new);
+		bind(HAND_CRANK, HandCrankTileEntityRenderer::new);
+		bind(CUCKOO_CLOCK, CuckooClockRenderer::new);
+		bind(ANALOG_LEVER, AnalogLeverTileEntityRenderer::new);
 
-		bind(MechanicalPistonTileEntity.class, new MechanicalPistonTileEntityRenderer());
-		bind(MechanicalBearingTileEntity.class, new BearingTileEntityRenderer());
-		bind(ClockworkBearingTileEntity.class, new BearingTileEntityRenderer());
-		bind(PulleyTileEntity.class, new PulleyRenderer());
-		bind(HarvesterTileEntity.class, new HarvesterTileEntityRenderer());
+		bind(MECHANICAL_PISTON, MechanicalPistonTileEntityRenderer::new);
+		bind(MECHANICAL_BEARING, BearingTileEntityRenderer::new);
+		bind(CLOCKWORK_BEARING, BearingTileEntityRenderer::new);
+		bind(ROPE_PULLEY, PulleyRenderer::new);
+		bind(HARVESTER, HarvesterTileEntityRenderer::new);
 
-		bind(CrushingWheelTileEntity.class, new KineticTileEntityRenderer());
-		bind(MechanicalPressTileEntity.class, new MechanicalPressTileEntityRenderer());
-		bind(MechanicalMixerTileEntity.class, new MechanicalMixerTileEntityRenderer());
-		bind(MechanicalCrafterTileEntity.class, new MechanicalCrafterTileEntityRenderer());
-		bind(SpeedGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.SPEED));
-		bind(StressGaugeTileEntity.class, new GaugeTileEntityRenderer(GaugeBlock.Type.STRESS));
-		bind(BasinTileEntity.class, new BasinTileEntityRenderer());
-		bind(DeployerTileEntity.class, new DeployerTileEntityRenderer());
-		bind(FlywheelTileEntity.class, new FlywheelRenderer());
-		bind(FurnaceEngineTileEntity.class, new EngineRenderer<>());
-		bind(SpeedControllerTileEntity.class, new SpeedControllerRenderer());
+		bind(CRUSHING_WHEEL, KineticTileEntityRenderer::new);
+		bind(MECHANICAL_PRESS, MechanicalPressTileEntityRenderer::new);
+		bind(MECHANICAL_MIXER, MechanicalMixerTileEntityRenderer::new);
+		bind(MECHANICAL_CRAFTER, MechanicalCrafterTileEntityRenderer::new);
+		bind(SPEED_GAUGE, disp -> new GaugeTileEntityRenderer(disp, GaugeBlock.Type.SPEED));
+		bind(STRESS_GAUGE, disp -> new GaugeTileEntityRenderer(disp, GaugeBlock.Type.STRESS));
+		bind(BASIN, BasinTileEntityRenderer::new);
+		bind(DEPLOYER, DeployerTileEntityRenderer::new);
+		bind(FLYWHEEL, FlywheelRenderer::new);
+		bind(FURNACE_ENGINE, EngineRenderer::new);
+		bind(ROTATION_SPEED_CONTROLLER, SpeedControllerRenderer::new);
 
-		bind(RedstoneLinkTileEntity.class, new SmartTileEntityRenderer<>());
-		bind(ExtractorTileEntity.class, new SmartTileEntityRenderer<>());
-		bind(LinkedExtractorTileEntity.class, new SmartTileEntityRenderer<>());
-		bind(TransposerTileEntity.class, new SmartTileEntityRenderer<>());
-		bind(LinkedTransposerTileEntity.class, new SmartTileEntityRenderer<>());
-		bind(FunnelTileEntity.class, new SmartTileEntityRenderer<>());
-		bind(BeltTunnelTileEntity.class, new BeltTunnelTileEntityRenderer());
-		bind(BeltObserverTileEntity.class, new BeltObserverTileEntityRenderer());
-		bind(FlexpeaterTileEntity.class, new FlexpeaterTileEntityRenderer());
+		bind(REDSTONE_BRIDGE, SmartTileEntityRenderer::new);
+		bind(EXTRACTOR, SmartTileEntityRenderer::new);
+		bind(LINKED_EXTRACTOR, SmartTileEntityRenderer::new);
+		bind(TRANSPOSER, SmartTileEntityRenderer::new);
+		bind(LINKED_TRANSPOSER, SmartTileEntityRenderer::new);
+		bind(BELT_FUNNEL, SmartTileEntityRenderer::new);
+		bind(BELT_TUNNEL, BeltTunnelTileEntityRenderer::new);
+		bind(ENTITY_DETECTOR, BeltObserverTileEntityRenderer::new);
+		bind(FLEXPEATER, FlexpeaterTileEntityRenderer::new);
 
-//		bind(LogisticalControllerTileEntity.class, new LogisticalControllerTileEntityRenderer());
-//		bind(LogisticiansTableTileEntity.class, new LogisticiansTableTileEntityRenderer());
+//		bind(LogisticalController, LogisticalControllerTileEntityRenderer::new);
+//		bind(LogisticiansTable, LogisticiansTableTileEntityRenderer::new);
 	}
 
+	@SuppressWarnings("unchecked") // TODO 1.15 this generic stuff is incompatible with the enum system - need strong types
 	@OnlyIn(Dist.CLIENT)
-	private static <T extends TileEntity> void bind(Class<T> clazz, TileEntityRenderer<? super T> renderer) {
-		ClientRegistry.bindTileEntitySpecialRenderer(clazz, renderer);
+	private static <T extends TileEntity> void bind(AllTileEntities type, Function<? super TileEntityRendererDispatcher, ? extends TileEntityRenderer<?>> renderer) {
+		ClientRegistry.bindTileEntityRenderer((TileEntityType<T>) type.type, (Function<TileEntityRendererDispatcher, TileEntityRenderer<T>>) renderer);
 	}
 
 }

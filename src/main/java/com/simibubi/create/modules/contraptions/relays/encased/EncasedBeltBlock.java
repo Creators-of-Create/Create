@@ -54,7 +54,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Axis placedAxis = context.getNearestLookingDirection().getAxis();
-		Axis axis = context.isPlacerSneaking() ? placedAxis : getPreferredAxis(context);
+		Axis axis = context.getPlayer().isSneaking() ? placedAxis : getPreferredAxis(context);
 		if (axis == null)
 			axis = placedAxis;
 

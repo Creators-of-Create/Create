@@ -35,7 +35,7 @@ public class DeforesterItemRenderer extends ItemStackTileEntityRenderer {
 		float xOffset = 0;
 		float zOffset = 0;
 		RenderSystem.translatef(-xOffset, 0, -zOffset);
-		RenderSystem.rotated(angle, 0, 1, 0);
+		RenderSystem.rotatef(angle, 0, 1, 0);
 		RenderSystem.translatef(xOffset, 0, zOffset);
 		
 		itemRenderer.renderItem(stack, mainModel.getPartial("gear"));

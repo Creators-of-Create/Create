@@ -54,7 +54,7 @@ public enum AllKeys {
 	}
 
 	public static boolean isKeyDown(int key) {
-		return GLFW.glfwGetKey(Minecraft.getInstance().mainWindow.getHandle(), key) != 0;
+		return GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getHandle(), key) != 0;
 	}
 
 	public static boolean ctrlDown() {

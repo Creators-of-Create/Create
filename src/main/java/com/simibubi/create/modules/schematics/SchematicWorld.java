@@ -78,7 +78,7 @@ public class SchematicWorld extends WrappedWorld {
 	}
 
 	@Override
-	public int getLightFor(LightType type, BlockPos pos) {
+	public int getLightLevel(LightType p_226658_1_, BlockPos p_226658_2_) {
 		return 10;
 	}
 
@@ -96,11 +96,6 @@ public class SchematicWorld extends WrappedWorld {
 	@Override
 	public List<? extends PlayerEntity> getPlayers() {
 		return Collections.emptyList();
-	}
-
-	@Override
-	public int getLightSubtracted(BlockPos pos, int amount) {
-		return 0;
 	}
 
 	@Override

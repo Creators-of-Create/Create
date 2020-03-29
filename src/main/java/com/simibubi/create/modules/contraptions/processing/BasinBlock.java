@@ -112,11 +112,6 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 	}
 
 	@Override
-	public boolean isSolid(BlockState state) {
-		return false;
-	}
-
-	@Override
 	public boolean hasComparatorInputOverride(BlockState state) {
 		return true;
 	}

@@ -6,6 +6,8 @@ import static com.simibubi.create.ScreenResources.SCHEMATIC_TABLE_PROGRESS;
 import java.nio.file.Paths;
 import java.util.List;
 
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
@@ -125,7 +127,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		RenderSystem.enableAlphaTest();
 		RenderHelper.enableGUIStandardItemLighting();
 		RenderSystem.alphaFunc(516, 0.1F);
-		RenderSystem.blendFunc(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		RenderSystem.translated(mainLeft + 270, mainTop + 100, 200);

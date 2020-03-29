@@ -10,7 +10,7 @@ import net.minecraft.client.gui.AbstractGui;
 public class BlueprintHotbarOverlay extends AbstractGui {
 	
 	public void renderOn(int slot) {
-		MainWindow mainWindow = Minecraft.getInstance().mainWindow;
+		MainWindow mainWindow = Minecraft.getInstance().getWindow();
 		int x = mainWindow.getScaledWidth() / 2 - 92;
 		int y = mainWindow.getScaledHeight() - 23;
 		RenderSystem.enableAlphaTest();

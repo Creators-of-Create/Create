@@ -45,7 +45,7 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements IWithTil
 		if (preferredFacing == null)
 			preferredFacing = context.getNearestLookingDirection();
 		return getDefaultState().with(FACING,
-				context.isPlacerSneaking() ? preferredFacing : preferredFacing.getOpposite());
+				context.getPlayer().isSneaking() ? preferredFacing : preferredFacing.getOpposite());
 	}
 
 	protected void blockUpdate(BlockState state, World worldIn, BlockPos pos) {

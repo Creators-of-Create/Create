@@ -23,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -87,7 +88,7 @@ public class CreateClient {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {
-		if (!event.getMap().getBasePath().equals("textures"))
+		if (!event.getMap().getId().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE))
 			return;
 
 		event.addSprite(new ResourceLocation(Create.ID, "block/belt_animated"));

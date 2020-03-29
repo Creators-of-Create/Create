@@ -60,7 +60,7 @@ public final class CreateItemGroup extends ItemGroup {
 				continue;
 			if (!item.module.isEnabled())
 				continue;
-			IBakedModel model = itemRenderer.getModelWithOverrides(item.asStack());
+			IBakedModel model = itemRenderer.getItemModelWithOverrides(item.asStack(), Minecraft.getInstance().world, Minecraft.getInstance().player);
 			if (model.isGui3d() != specialItems)
 				continue;
 			if (item.get() instanceof IAddedByOther)

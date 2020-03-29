@@ -56,7 +56,7 @@ public class AnimatedMixer extends AnimatedKinetics {
 	private IBakedModel cogwheel() {
 		float t = 25;
 		RenderSystem.translatef(t, -t, -t);
-		RenderSystem.rotated(getCurrentAngle() * 2, 0, 1, 0);
+		RenderSystem.rotatef(getCurrentAngle() * 2, 0, 1, 0);
 		RenderSystem.translatef(-t, t, t);
 		return AllBlockPartials.SHAFTLESS_COGWHEEL.get();
 	}
@@ -74,7 +74,7 @@ public class AnimatedMixer extends AnimatedKinetics {
 		float t = 25;
 		RenderSystem.translatef(0, 51, 0);
 		RenderSystem.translatef(t, -t, -t);
-		RenderSystem.rotated(getCurrentAngle() * 4, 0, 1, 0);
+		RenderSystem.rotatef(getCurrentAngle() * 4, 0, 1, 0);
 		RenderSystem.translatef(-t, t, t);
 		return AllBlockPartials.MECHANICAL_MIXER_HEAD.get();
 	}

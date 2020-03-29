@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -37,6 +38,10 @@ import net.minecraft.util.math.Vec3i;
 public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 	private static SpriteShiftEntry animatedTexture;
+
+	public BeltTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	public void renderWithGL(BeltTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
@@ -148,7 +153,7 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 			RenderHelper.enableStandardItemLighting();
 
 			int count = (int) (MathHelper.log2((int) (transported.stack.getCount()))) / 2;
-			RenderSystem.rotated(slopeAngle, slopeAlongX ? 0 : 1, 0, slopeAlongX ? 1 : 0);
+			RenderSystem.rotatef(slopeAngle, slopeAlongX ? 0 : 1, 0, slopeAlongX ? 1 : 0);
 			if (onSlope)
 				RenderSystem.translated(0, 1 / 8f, 0);
 			Random r = new Random(transported.angle);
@@ -156,10 +161,10 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 			for (int i = 0; i <= count; i++) {
 				RenderSystem.pushMatrix();
 
-				RenderSystem.rotated(transported.angle, 0, 1, 0);
+				RenderSystem.rotatef(transported.angle, 0, 1, 0);
 				if (!blockItem) {
 					RenderSystem.translated(0, -.09375, 0);
-					RenderSystem.rotated(90, 1, 0, 0);
+					RenderSystem.rotatef(90, 1, 0, 0);
 				}
 
 				if (blockItem) {
@@ -171,7 +176,7 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 				RenderSystem.popMatrix();
 
 				if (!blockItem)
-					RenderSystem.rotated(10, 0, 1, 0);
+					RenderSystem.rotatef(10, 0, 1, 0);
 				RenderSystem.translated(0, blockItem ? 1 / 64d : 1 / 16d, 0);
 
 			}

@@ -41,7 +41,7 @@ public class ContactBlock extends ProperDirectionalBlock implements IPortableBlo
 		BlockState state = getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
 		Direction placeDirection = context.getFace().getOpposite();
 
-		if (context.isPlacerSneaking() || hasValidContact(context.getWorld(), context.getPos(), placeDirection))
+		if (context.getPlayer().isSneaking() || hasValidContact(context.getWorld(), context.getPos(), placeDirection))
 			state = state.with(FACING, placeDirection);
 		if (hasValidContact(context.getWorld(), context.getPos(), state.get(FACING)))
 			state = state.with(POWERED, true);

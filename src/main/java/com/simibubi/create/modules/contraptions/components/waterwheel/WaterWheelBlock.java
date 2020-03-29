@@ -129,7 +129,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 			return getDefaultState().with(HORIZONTAL_FACING, placedOn.get(HORIZONTAL_FACING));
 		if (facing.getAxis().isHorizontal())
 			return getDefaultState().with(HORIZONTAL_FACING,
-					context.isPlacerSneaking() ? facing.getOpposite() : facing);
+					context.getPlayer().isSneaking() ? facing.getOpposite() : facing);
 
 		return super.getStateForPlacement(context);
 	}

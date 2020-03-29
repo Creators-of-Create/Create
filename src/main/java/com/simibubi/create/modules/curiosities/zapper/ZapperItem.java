@@ -78,7 +78,7 @@ public abstract class ZapperItem extends Item {
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		// Shift -> open GUI
-		if (context.isPlacerSneaking()) {
+		if (context.getPlayer().isSneaking()) {
 			if (context.getWorld().isRemote) {
 				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 					openHandgunGUI(context.getItem(), context.getHand() == Hand.OFF_HAND);

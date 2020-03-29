@@ -64,8 +64,8 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements 
 		RenderSystem.enableDepthTest();
 
 		RenderSystem.translated(28, 18, 0);
-		RenderSystem.rotated(10.5, -1f, 0, 0);
-		RenderSystem.rotated(15.5, 0, 1, 0);
+		RenderSystem.rotatef(10.5f, -1f, 0, 0);
+		RenderSystem.rotatef(15.5f, 0, 1, 0);
 		RenderSystem.scaled(.6f, .6f, .6f);
 		ScreenElementRenderer.renderBlock(this::renderFanCasing);
 		
@@ -73,18 +73,18 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements 
 		float angle = AnimatedKinetics.getCurrentAngle() * 12;
 		float t = 25;
 		RenderSystem.translatef(t, -t, t);
-		RenderSystem.rotated(angle, 0, 0, 1);
+		RenderSystem.rotatef(angle, 0, 0, 1);
 		RenderSystem.translatef(-t, t, -t);
 		
 		RenderSystem.translatef(t, 0, 175);
-		RenderSystem.rotated(90, 0, 1, 0);
+		RenderSystem.rotatef(90, 0, 1, 0);
 		RenderSystem.translatef(-t, 0, -175);
 		
 		ScreenElementRenderer.renderModel(this::renderFanInner);
 		RenderSystem.popMatrix();
 
 		RenderSystem.translated(-10, 0, 95);
-		RenderSystem.rotated(7, 0, 1, 0);
+		RenderSystem.rotatef(7, 0, 1, 0);
 		renderAttachedBlock();
 
 		RenderSystem.popMatrix();
