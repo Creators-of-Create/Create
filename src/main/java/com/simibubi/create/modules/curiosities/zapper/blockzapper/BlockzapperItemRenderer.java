@@ -6,6 +6,7 @@ import static com.simibubi.create.modules.curiosities.zapper.blockzapper.Blockza
 import static com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components.Retriever;
 import static com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components.Scope;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -16,6 +17,7 @@ import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperIte
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
@@ -25,11 +27,11 @@ import net.minecraft.util.math.MathHelper;
 
 @SuppressWarnings("deprecation")
 public class BlockzapperItemRenderer extends ZapperItemRenderer {
-
+	
 	@Override
-	public void renderByItem(ItemStack stack) {
+	public void render(ItemStack stack, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		BlockzapperModel mainModel = (BlockzapperModel) itemRenderer.getModelWithOverrides(stack);
+		BlockzapperModel mainModel = (BlockzapperModel) itemRenderer.getItemModelWithOverrides(stack, Minecraft.getInstance().world, null);
 		float pt = Minecraft.getInstance().getRenderPartialTicks();
 		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 

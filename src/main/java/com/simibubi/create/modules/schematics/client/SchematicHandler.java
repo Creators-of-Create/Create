@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllPackets;
@@ -21,6 +22,7 @@ import com.simibubi.create.modules.schematics.packet.SchematicPlacePacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -108,7 +110,8 @@ public class SchematicHandler {
 		currentTool.getTool().updateSelection();
 	}
 
-	public void render() {
+	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
+		// TODO 1.15 buffered render
 		if (!active)
 			return;
 		if (Minecraft.getInstance().player.isSneaking())

@@ -45,6 +45,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class BeltObserverBlock extends HorizontalBlock
 		implements IWithTileEntity<BeltObserverTileEntity>, IBeltAttachment, IWrenchable {
@@ -278,7 +279,7 @@ public class BeltObserverBlock extends HorizontalBlock
 	}
 
 	@Override
-	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
 		worldIn.setBlockState(pos, state.with(POWERED, false), 2);
 		worldIn.notifyNeighborsOfStateChange(pos, this);
 	}

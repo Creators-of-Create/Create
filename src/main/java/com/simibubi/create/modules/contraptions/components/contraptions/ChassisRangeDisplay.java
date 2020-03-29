@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
@@ -16,6 +20,7 @@ import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -172,7 +177,8 @@ public class ChassisRangeDisplay {
 		}
 	}
 
-	public static void renderOutlines(float partialTicks) {
+	public static void renderOutlines(float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer) {
+		// TODO 1.15 buffered render
 		RenderSystem.lineWidth(2);
 		TessellatorHelper.prepareForDrawing();
 		RenderSystem.disableTexture();

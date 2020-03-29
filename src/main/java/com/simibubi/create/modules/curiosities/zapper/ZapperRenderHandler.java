@@ -30,7 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderSpecificHandEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -116,14 +116,15 @@ public class ZapperRenderHandler {
 			return;
 
 		cachedBeams.forEach(beam -> {
+			// TODO 1.15 buffered render
 			TessellatorHelper.prepareForDrawing();
 			RenderSystem.disableTexture();
 			RenderSystem.lineWidth(beam.itensity * 40);
 
 			BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 			bufferBuilder.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-			bufferBuilder.pos(beam.getStart().x, beam.getStart().y, beam.getStart().z).endVertex();
-			bufferBuilder.pos(beam.end.x, beam.end.y, beam.end.z).endVertex();
+			bufferBuilder.vertex(beam.getStart().x, beam.getStart().y, beam.getStart().z).endVertex();
+			bufferBuilder.vertex(beam.end.x, beam.end.y, beam.end.z).endVertex();
 			Tessellator.getInstance().draw();
 
 			RenderSystem.lineWidth(1);
@@ -168,7 +169,7 @@ public class ZapperRenderHandler {
 	}
 
 	@SubscribeEvent
-	public static void onRenderPlayerHand(RenderSpecificHandEvent event) {
+	public static void onRenderPlayerHand(RenderHandEvent event) {
 		ItemStack heldItem = event.getItemStack();
 		if (!(heldItem.getItem() instanceof ZapperItem))
 			return;

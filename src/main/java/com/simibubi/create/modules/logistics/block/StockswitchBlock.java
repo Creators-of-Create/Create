@@ -12,6 +12,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -30,11 +31,6 @@ public class StockswitchBlock extends HorizontalBlock {
 
 	public StockswitchBlock() {
 		super(Properties.from(Blocks.ANDESITE));
-	}
-
-	@Override
-	public boolean isSolid(BlockState state) {
-		return false;
 	}
 
 	@Override
@@ -85,12 +81,12 @@ public class StockswitchBlock extends HorizontalBlock {
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			displayScreen((StockswitchTileEntity) worldIn.getTileEntity(pos));
 		});
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)

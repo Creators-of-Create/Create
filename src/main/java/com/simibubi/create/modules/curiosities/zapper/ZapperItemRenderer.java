@@ -23,7 +23,7 @@ public abstract class ZapperItemRenderer extends ItemStackTileEntityRenderer {
 
 		if (state.getBlock() instanceof FourWayBlock)
 			modelForState = Minecraft.getInstance().getItemRenderer()
-					.getModelWithOverrides(new ItemStack(state.getBlock()));
+					.getItemModelWithOverrides(new ItemStack(state.getBlock()), Minecraft.getInstance().world, null);
 
 		itemRenderer.renderItem(new ItemStack(state.getBlock()), modelForState);
 		RenderSystem.popMatrix();

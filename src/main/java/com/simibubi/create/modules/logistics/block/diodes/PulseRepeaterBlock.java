@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class PulseRepeaterBlock extends RedstoneDiodeBlock {
 
@@ -36,7 +37,7 @@ public class PulseRepeaterBlock extends RedstoneDiodeBlock {
 	}
 	
 	@Override
-	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
 		boolean powered = state.get(POWERED);
 		boolean pulsing = state.get(PULSING);
 		boolean shouldPower = shouldBePowered(worldIn, pos, state);

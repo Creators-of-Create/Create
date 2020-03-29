@@ -138,11 +138,11 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		ItemStack stack = container.filterInventory.getStackInSlot(1);
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(0.0F, 0.0F, 32.0F);
-		this.blitOffset = 200;
+		this.setBlitOffset(200);
 		this.itemRenderer.zLevel = 200.0F;
 		this.itemRenderer.renderItemOverlayIntoGUI(font, stack, guiLeft + 59, guiTop + 56,
 				String.valueOf(selectedAttributes.size() - 1));
-		this.blitOffset = 0;
+		this.setBlitOffset(0);
 		this.itemRenderer.zLevel = 0.0F;
 		RenderSystem.popMatrix();
 

@@ -1,96 +1,99 @@
 package com.simibubi.create.foundation.utility;
 
-import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
-import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IWorldReader;
 
 /**
- * Stolen from EntityRenderer
+ * Stolen from EntityRendererManager
  */
 public class IndependentShadowRenderer {
 
-	private static final ResourceLocation SHADOW_TEXTURES = new ResourceLocation("textures/misc/shadow.png");
+	private static final RenderType SHADOW_LAYER = RenderType.getEntityNoOutline(new ResourceLocation("textures/misc/shadow.png"));
 
-	public static void renderShadow(double x, double y, double z, float shadowAlpha, float size) {
-		RenderSystem.enableBlend();
-		RenderSystem.enableAlphaTest();
-		RenderSystem.blendFunc(SourceFactor.DST_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		Minecraft.getInstance().getTextureManager().bindTexture(SHADOW_TEXTURES);
-		IWorldReader iworldreader = Minecraft.getInstance().world;
-		RenderSystem.depthMask(false);
-		int i = MathHelper.floor(x - size);
-		int j = MathHelper.floor(x + size);
-		int k = MathHelper.floor(y - size);
-		int l = MathHelper.floor(y);
-		int i1 = MathHelper.floor(z - size);
-		int j1 = MathHelper.floor(z + size);
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuffer();
-		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+	public static void renderShadow(MatrixStack p_229096_0_, IRenderTypeBuffer p_229096_1_, Vec3d pos,
+			float p_229096_3_, float p_229096_6_) {
+		float f = p_229096_6_;
+
+		double d2 = pos.getX();
+		double d0 = pos.getY();
+		double d1 = pos.getZ();
+		int i = MathHelper.floor(d2 - (double) f);
+		int j = MathHelper.floor(d2 + (double) f);
+		int k = MathHelper.floor(d0 - (double) f);
+		int l = MathHelper.floor(d0);
+		int i1 = MathHelper.floor(d1 - (double) f);
+		int j1 = MathHelper.floor(d1 + (double) f);
+		MatrixStack.Entry matrixstack$entry = p_229096_0_.peek();
+		IVertexBuilder ivertexbuilder = p_229096_1_.getBuffer(SHADOW_LAYER);
 
 		for (BlockPos blockpos : BlockPos.getAllInBoxMutable(new BlockPos(i, k, i1), new BlockPos(j, l, j1))) {
-			BlockPos blockpos1 = blockpos.down();
-			BlockState blockstate = iworldreader.getBlockState(blockpos1);
-			if (blockstate.getRenderType() != BlockRenderType.INVISIBLE && iworldreader.getLight(blockpos) > 3) {
-				func_217759_a(blockstate, iworldreader, blockpos1, 0, 0, 0, blockpos, shadowAlpha, size, -x, -y, -z);
-			}
+			renderShadowPart(matrixstack$entry, ivertexbuilder, Minecraft.getInstance().world, blockpos, d2, d0, d1, f, p_229096_3_);
 		}
 
-		tessellator.draw();
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.disableBlend();
-		RenderSystem.depthMask(true);
 	}
 
-	private static void func_217759_a(BlockState p_217759_1_, IWorldReader p_217759_2_, BlockPos p_217759_3_,
-			double p_217759_4_, double p_217759_6_, double p_217759_8_, BlockPos p_217759_10_, float p_217759_11_,
-			float p_217759_12_, double p_217759_13_, double p_217759_15_, double p_217759_17_) {
-		ClientWorld world = Minecraft.getInstance().world;
-		VoxelShape voxelshape = p_217759_1_.getShape(world, p_217759_10_.down());
-		if (!voxelshape.isEmpty()) {
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder bufferbuilder = tessellator.getBuffer();
-			double d0 = ((double) p_217759_11_ - (p_217759_6_ - ((double) p_217759_10_.getY() + p_217759_15_)) / 2.0D)
-					* 0.5D * (double) world.getBrightness(p_217759_10_);
-			if (!(d0 < 0.0D)) {
-				if (d0 > 1.0D) {
-					d0 = 1.0D;
+	private static void renderShadowPart(MatrixStack.Entry p_229092_0_, IVertexBuilder p_229092_1_,
+			IWorldReader p_229092_2_, BlockPos p_229092_3_, double p_229092_4_, double p_229092_6_, double p_229092_8_,
+			float p_229092_10_, float p_229092_11_) {
+		BlockPos blockpos = p_229092_3_.down();
+		BlockState blockstate = p_229092_2_.getBlockState(blockpos);
+		if (blockstate.getRenderType() != BlockRenderType.INVISIBLE && p_229092_2_.getLight(p_229092_3_) > 3) {
+			if (blockstate.isFullCube(p_229092_2_, blockpos)) {
+				VoxelShape voxelshape = blockstate.getShape(p_229092_2_, p_229092_3_.down());
+				if (!voxelshape.isEmpty()) {
+					float f = (float) (((double) p_229092_11_ - (p_229092_6_ - (double) p_229092_3_.getY()) / 2.0D)
+							* 0.5D * (double) p_229092_2_.getBrightness(p_229092_3_));
+					if (f >= 0.0F) {
+						if (f > 1.0F) {
+							f = 1.0F;
+						}
+
+						AxisAlignedBB axisalignedbb = voxelshape.getBoundingBox();
+						double d0 = (double) p_229092_3_.getX() + axisalignedbb.minX;
+						double d1 = (double) p_229092_3_.getX() + axisalignedbb.maxX;
+						double d2 = (double) p_229092_3_.getY() + axisalignedbb.minY;
+						double d3 = (double) p_229092_3_.getZ() + axisalignedbb.minZ;
+						double d4 = (double) p_229092_3_.getZ() + axisalignedbb.maxZ;
+						float f1 = (float) (d0 - p_229092_4_);
+						float f2 = (float) (d1 - p_229092_4_);
+						float f3 = (float) (d2 - p_229092_6_ + 0.015625D);
+						float f4 = (float) (d3 - p_229092_8_);
+						float f5 = (float) (d4 - p_229092_8_);
+						float f6 = -f1 / 2.0F / p_229092_10_ + 0.5F;
+						float f7 = -f2 / 2.0F / p_229092_10_ + 0.5F;
+						float f8 = -f4 / 2.0F / p_229092_10_ + 0.5F;
+						float f9 = -f5 / 2.0F / p_229092_10_ + 0.5F;
+						shadowVertex(p_229092_0_, p_229092_1_, f, f1, f3, f4, f6, f8);
+						shadowVertex(p_229092_0_, p_229092_1_, f, f1, f3, f5, f6, f9);
+						shadowVertex(p_229092_0_, p_229092_1_, f, f2, f3, f5, f7, f9);
+						shadowVertex(p_229092_0_, p_229092_1_, f, f2, f3, f4, f7, f8);
+					}
+
 				}
-
-				AxisAlignedBB axisalignedbb = voxelshape.getBoundingBox();
-				double d1 = (double) p_217759_10_.getX() + axisalignedbb.minX + p_217759_13_;
-				double d2 = (double) p_217759_10_.getX() + axisalignedbb.maxX + p_217759_13_;
-				double d3 = (double) p_217759_10_.getY() + axisalignedbb.minY + p_217759_15_ + 0.015625D;
-				double d4 = (double) p_217759_10_.getZ() + axisalignedbb.minZ + p_217759_17_;
-				double d5 = (double) p_217759_10_.getZ() + axisalignedbb.maxZ + p_217759_17_;
-				float f = (float) ((p_217759_4_ - d1) / 2.0D / (double) p_217759_12_ + 0.5D);
-				float f1 = (float) ((p_217759_4_ - d2) / 2.0D / (double) p_217759_12_ + 0.5D);
-				float f2 = (float) ((p_217759_8_ - d4) / 2.0D / (double) p_217759_12_ + 0.5D);
-				float f3 = (float) ((p_217759_8_ - d5) / 2.0D / (double) p_217759_12_ + 0.5D);
-				bufferbuilder.vertex(d1, d3, d4).texture(f, f2).color(1.0F, 1.0F, 1.0F, (float) d0)
-						.endVertex();
-				bufferbuilder.vertex(d1, d3, d5).texture(f, f3).color(1.0F, 1.0F, 1.0F, (float) d0)
-						.endVertex();
-				bufferbuilder.vertex(d2, d3, d5).texture(f1, f3).color(1.0F, 1.0F, 1.0F, (float) d0)
-						.endVertex();
-				bufferbuilder.vertex(d2, d3, d4).texture(f1, f2).color(1.0F, 1.0F, 1.0F, (float) d0)
-						.endVertex();
 			}
 		}
 	}
 
+	private static void shadowVertex(MatrixStack.Entry p_229091_0_, IVertexBuilder p_229091_1_, float p_229091_2_,
+			float p_229091_3_, float p_229091_4_, float p_229091_5_, float p_229091_6_, float p_229091_7_) {
+		p_229091_1_.vertex(p_229091_0_.getModel(), p_229091_3_, p_229091_4_, p_229091_5_)
+				.color(1.0F, 1.0F, 1.0F, p_229091_2_).texture(p_229091_6_, p_229091_7_)
+				.overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(p_229091_0_.getNormal(), 0.0F, 1.0F, 0.0F)
+				.endVertex();
+	}
 }

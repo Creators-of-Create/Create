@@ -11,9 +11,9 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -50,7 +50,7 @@ public class HarvesterTileEntityRenderer extends SafeTileEntityRenderer<Harveste
 
 	public static SuperByteBuffer renderHead(World world, BlockPos pos, BlockState state, float angle) {
 		SuperByteBuffer buffer = AllBlockPartials.HARVESTER_BLADE.renderOnHorizontal(state);
-		int lightMapCoords = state.getPackedLightmapCoords(world, pos);
+		int lightMapCoords = WorldRenderer.getLightmapCoordinates(world, state, pos);
 		Direction facing = state.get(HORIZONTAL_FACING);
 		Axis axis = facing.rotateYCCW().getAxis();
 		int axisDirection = -facing.getAxisDirection().getOffset();

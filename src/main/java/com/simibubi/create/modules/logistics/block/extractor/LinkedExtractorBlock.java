@@ -9,17 +9,16 @@ import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock
 
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
 
 public class LinkedExtractorBlock extends ExtractorBlock {
 
-	@Override
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.CUTOUT_MIPPED;
-	}
+//	@Override // TODO 1.15 register layer
+//	public BlockRenderLayer getRenderLayer() {
+//		return BlockRenderLayer.CUTOUT_MIPPED;
+//	}
 
 	@Override
 	protected BlockState getVerticalDefaultState() {

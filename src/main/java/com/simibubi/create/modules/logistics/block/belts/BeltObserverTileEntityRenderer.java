@@ -1,9 +1,11 @@
 package com.simibubi.create.modules.logistics.block.belts;
 
-import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.BlockStateProperties;
 
@@ -14,15 +16,12 @@ public class BeltObserverTileEntityRenderer extends SafeTileEntityRenderer<BeltO
 	}
 
 	@Override
-	public void renderWithGL(BeltObserverTileEntity tileEntityIn, double x, double y, double z, float partialTicks,
-			int destroyStage) {
-		int i = tileEntityIn.getWorld().getCombinedLight(tileEntityIn.getPos().up()
-				.offset(tileEntityIn.getBlockState().get(BlockStateProperties.HORIZONTAL_FACING)), 0);
-		int j = i % 65536;
-		int k = i / 65536;
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float) j, (float) k);
+	protected void renderSafe(BeltObserverTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+			int light, int overlay) {
+		light = WorldRenderer.getLightmapCoordinates(te.getWorld(),
+				te.getPos().up().offset(te.getBlockState().get(BlockStateProperties.HORIZONTAL_FACING)));
 
-		FilteringRenderer.renderOnTileEntity(tileEntityIn, x, y, z, partialTicks, destroyStage);
+		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 	}
 
 }

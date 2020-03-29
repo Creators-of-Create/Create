@@ -30,6 +30,7 @@ import net.minecraft.world.dimension.DimensionType;
 
 public class BlazingToolItem extends AbstractToolItem {
 
+	// FIXME this does not need to be a TE
 	static FurnaceTileEntity helperFurnace = new FurnaceTileEntity();
 
 	public BlazingToolItem(float attackDamageIn, float attackSpeedIn, Properties builder, AllToolTypes... types) {
@@ -75,7 +76,7 @@ public class BlazingToolItem extends AbstractToolItem {
 	}
 
 	public static List<ItemStack> smeltDrops(Collection<ItemStack> drops, World worldIn, int enchantmentLevel) {
-		helperFurnace.setWorld(worldIn);
+		helperFurnace.setLocation(worldIn, BlockPos.ZERO);
 		RecipeManager recipeManager = worldIn.getRecipeManager();
 		List<ItemStack> smeltedStacks = new ArrayList<>();
 		Iterator<ItemStack> dropper = drops.iterator();

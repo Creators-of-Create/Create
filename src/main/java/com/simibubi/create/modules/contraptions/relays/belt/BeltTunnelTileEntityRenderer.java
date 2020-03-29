@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -60,14 +61,15 @@ public class BeltTunnelTileEntityRenderer extends SafeTileEntityRenderer<BeltTun
 					int color = ColorHelper.mixColors(0x808080, 0xFFFFFF, lightIntensity);
 					indicatorBuffer.rotateCentered(Axis.Y, (float) ((horizontalAngle + 90) / 180f * Math.PI))
 							.color(color)
+							// TODO 1.15 wtf is this doing?
 							.light(world.getCombinedLight(pos, (int) (12 * lightIntensity))).renderInto(ms, vb);
 				}
 
 				flapBuffer.translate(0, 0, -segment * 3 / 16f);
 				flapBuffer.translate(flapPivotX, flapPivotY, flapPivotZ).rotate(Axis.Z, flapAngle)
 						.translate(-flapPivotX, -flapPivotY, -flapPivotZ);
-				flapBuffer.rotateCentered(Axis.Y, (float) (horizontalAngle / 180f * Math.PI));
-				flapBuffer.light(te.getBlockState().getPackedLightmapCoords(world, pos)).renderInto(ms, vb);
+				flapBuffer.rotateCentered(Direction.UP, (float) (horizontalAngle / 180f * Math.PI));
+				flapBuffer.light(WorldRenderer.getLightmapCoordinates(world, te.getBlockState(), pos)).renderInto(ms, vb);
 			}
 		}
 

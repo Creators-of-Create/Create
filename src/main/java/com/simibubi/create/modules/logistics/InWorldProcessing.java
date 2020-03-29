@@ -96,8 +96,9 @@ public class InWorldProcessing {
 		}
 
 		if (type == Type.SMOKING) {
+			// FIXME this does not need to be a TE
 			SmokerTileEntity smoker = new SmokerTileEntity();
-			smoker.setWorld(world);
+			smoker.setLocation(world, BlockPos.ZERO);
 			smoker.setInventorySlotContents(0, stack);
 			Optional<SmokingRecipe> recipe = world.getRecipeManager().getRecipe(IRecipeType.SMOKING, smoker, world);
 			return recipe.isPresent();
@@ -128,7 +129,7 @@ public class InWorldProcessing {
 		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks) {
-			ItemEntity entityIn = new ItemEntity(entity.world, entity.posX, entity.posY, entity.posZ, additional);
+			ItemEntity entityIn = new ItemEntity(entity.world, entity.getX(), entity.getY(), entity.getZ(), additional);
 			entityIn.setMotion(entity.getMotion());
 			entity.world.addEntity(entityIn);
 		}
@@ -173,14 +174,16 @@ public class InWorldProcessing {
 			return null;
 		}
 
+		// FIXME this does not need to be a TE
 		SmokerTileEntity smoker = new SmokerTileEntity();
-		smoker.setWorld(world);
+		smoker.setLocation(world, BlockPos.ZERO);
 		smoker.setInventorySlotContents(0, stack);
 		Optional<SmokingRecipe> smokingRecipe = world.getRecipeManager().getRecipe(IRecipeType.SMOKING, smoker, world);
 
 		if (type == Type.BLASTING) {
+			// FIXME this does not need to be a TE
 			FurnaceTileEntity furnace = new FurnaceTileEntity();
-			furnace.setWorld(world);
+			furnace.setLocation(world, BlockPos.ZERO);
 			furnace.setInventorySlotContents(0, stack);
 			Optional<FurnaceRecipe> smeltingRecipe =
 				world.getRecipeManager().getRecipe(IRecipeType.SMELTING, furnace, world);
@@ -189,8 +192,9 @@ public class InWorldProcessing {
 				if (smeltingRecipe.isPresent())
 					return applyRecipeOn(stack, smeltingRecipe.get());
 
+				// FIXME this does not need to be a TE
 				BlastFurnaceTileEntity blastFurnace = new BlastFurnaceTileEntity();
-				blastFurnace.setWorld(world);
+				blastFurnace.setLocation(world, BlockPos.ZERO);
 				blastFurnace.setInventorySlotContents(0, stack);
 				Optional<BlastingRecipe> blastingRecipe =
 					world.getRecipeManager().getRecipe(IRecipeType.BLASTING, blastFurnace, world);
@@ -242,7 +246,7 @@ public class InWorldProcessing {
 		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks) {
-			ItemEntity entityIn = new ItemEntity(entity.world, entity.posX, entity.posY, entity.posZ, additional);
+			ItemEntity entityIn = new ItemEntity(entity.world, entity.getX(), entity.getY(), entity.getZ(), additional);
 			entityIn.setMotion(entity.getMotion());
 			entity.world.addEntity(entityIn);
 		}

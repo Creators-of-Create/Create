@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.curiosities.zapper.terrainzapper;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -8,6 +9,7 @@ import com.simibubi.create.modules.curiosities.zapper.ZapperRenderHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
@@ -18,9 +20,9 @@ import net.minecraft.util.math.MathHelper;
 public class TerrainzapperItemRenderer extends ZapperItemRenderer {
 
 	@Override
-	public void renderByItem(ItemStack stack) {
+	public void render(ItemStack stack, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		TerrainzapperModel mainModel = (TerrainzapperModel) itemRenderer.getModelWithOverrides(stack);
+		TerrainzapperModel mainModel = (TerrainzapperModel) itemRenderer.getItemModelWithOverrides(stack, Minecraft.getInstance().world, null);
 		float pt = Minecraft.getInstance().getRenderPartialTicks();
 		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 

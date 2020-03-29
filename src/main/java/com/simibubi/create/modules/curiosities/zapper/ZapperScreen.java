@@ -4,6 +4,9 @@ import java.util.Vector;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
@@ -18,9 +21,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -140,7 +143,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		RenderSystem.enableRescaleNormal();
 		RenderSystem.enableAlphaTest();
 		RenderSystem.alphaFunc(516, 0.1F);
-		RenderSystem.blendFunc(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		RenderSystem.translated((this.width - this.sWidth) / 2 + 260, this.height / 2 - this.sHeight / 4, 100);
@@ -148,9 +151,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		RenderSystem.rotatef(-40, .8f, 0, -.0f);
 		RenderSystem.scaled(100, -100, 100);
 
-		IBakedModel model = itemRenderer.getModelWithOverrides(zapper);
-		model.handlePerspective(TransformType.FIXED);
-		itemRenderer.renderItem(zapper, model);
+		itemRenderer.renderItem(zapper, TransformType.FIXED, 0xF000F0, OverlayTexture.DEFAULT_UV, new MatrixStack(), getMinecraft().getBufferBuilders().getEntityVertexConsumers());
 
 		RenderSystem.disableAlphaTest();
 		RenderSystem.disableRescaleNormal();

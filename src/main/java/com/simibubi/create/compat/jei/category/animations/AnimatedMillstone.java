@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
@@ -22,30 +22,30 @@ public class AnimatedMillstone extends AnimatedKinetics {
 
 	@Override
 	public void draw(int xOffset, int yOffset) {
-		GlStateManager.pushMatrix();
-		GlStateManager.enableDepthTest();
-		GlStateManager.translatef(xOffset, yOffset, 0);
-		GlStateManager.rotatef(-15.5f, 1, 0, 0);
-		GlStateManager.rotatef(22.5f, 0, 1, 0);
-		GlStateManager.translatef(-45, -5, 0);
-		GlStateManager.scaled(.45f, .45f, .45f);
+		RenderSystem.pushMatrix();
+		RenderSystem.enableDepthTest();
+		RenderSystem.translatef(xOffset, yOffset, 0);
+		RenderSystem.rotatef(-15.5f, 1, 0, 0);
+		RenderSystem.rotatef(22.5f, 0, 1, 0);
+		RenderSystem.translatef(-45, -5, 0);
+		RenderSystem.scaled(.45f, .45f, .45f);
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		ScreenElementRenderer.renderModel(this::cogwheel);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		ScreenElementRenderer.renderBlock(this::body);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	private IBakedModel cogwheel() {
 		float t = 25;
-		GlStateManager.translatef(t, -t, -t);
-		GlStateManager.rotated(getCurrentAngle() * 2, 0, 1, 0);
-		GlStateManager.translatef(-t, t, t);
+		RenderSystem.translatef(t, -t, -t);
+		RenderSystem.rotatef(getCurrentAngle() * 2, 0, 1, 0);
+		RenderSystem.translatef(-t, t, t);
 		return AllBlockPartials.MILLSTONE_COG.get();
 	}
 

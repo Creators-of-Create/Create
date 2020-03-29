@@ -1,12 +1,13 @@
 package com.simibubi.create.modules.curiosities.zapper.terrainzapper;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -74,21 +75,24 @@ public class TerrainZapperRenderHandler {
 		renderedPosition = pos.add(brush.getOffset(player.getLookVec(), raytrace.getFace(), placement));
 	}
 
-	public static void render() {
+	public static void render(MatrixStack ms, IRenderTypeBuffer buffer) {
 		if (renderedPosition == null)
 			return;
 
-		RenderSystem.lineWidth(2);
-		TessellatorHelper.prepareForDrawing();
-		RenderSystem.disableTexture();
+		// TODO 1.15 buffered render
+//		RenderSystem.lineWidth(2);
+//		TessellatorHelper.prepareForDrawing();
+//		RenderSystem.disableTexture();
 
-		RenderSystem.translated(renderedPosition.getX(), renderedPosition.getY(), renderedPosition.getZ());
-		WorldRenderer.drawShape(renderedShape, 0, 0, 0, 0f, 0f, 0f, 0.5f);
+		ms.push();
+		ms.translate(renderedPosition.getX(), renderedPosition.getY(), renderedPosition.getZ());
+		WorldRenderer.func_228431_a_(ms, buffer.getBuffer(RenderType.getLines()), renderedShape, 0, 0, 0, 0f, 0f, 0f, 0.5f);
 
-		RenderSystem.enableTexture();
-		TessellatorHelper.cleanUpAfterDrawing();
-		RenderSystem.lineWidth(1);
-
+//		RenderSystem.enableTexture();
+//		TessellatorHelper.cleanUpAfterDrawing();
+//		RenderSystem.lineWidth(1);
+		
+		ms.pop();
 	}
 
 }

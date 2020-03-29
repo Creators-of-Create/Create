@@ -15,7 +15,7 @@ public abstract class SafeTileEntityRenderer<T extends TileEntity> extends TileE
 	}
 
 	@Override
-	public void render(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public final void render(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		if (isInvalid(te))
 			return;
 		renderSafe(te, partialTicks, ms, buffer, light, overlay);

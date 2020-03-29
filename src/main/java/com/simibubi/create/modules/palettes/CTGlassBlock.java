@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.GlassBlock;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -36,10 +35,10 @@ public class CTGlassBlock extends GlassBlock implements IHaveConnectedTextures {
 		return new StandardCTBehaviour(spriteShift);
 	}
 
-	@Override
-	public BlockRenderLayer getRenderLayer() {
-		return hasAlpha ? BlockRenderLayer.TRANSLUCENT : super.getRenderLayer();
-	}
+//	@Override // TODO 1.15 register layer
+//	public BlockRenderLayer getRenderLayer() {
+//		return hasAlpha ? BlockRenderLayer.TRANSLUCENT : super.getRenderLayer();
+//	}
 
 	@Override
 	public ConnectedTextureBehaviour getBehaviour() {

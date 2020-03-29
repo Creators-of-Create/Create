@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
@@ -57,10 +56,10 @@ public class CTGlassPaneBlock extends GlassPaneBlock implements IHaveConnectedTe
 		return null;
 	}
 
-	@Override
-	public BlockRenderLayer getRenderLayer() {
-		return ctGlass.getRenderLayer();
-	}
+//	@Override // TODO 1.15 register layer
+//	public BlockRenderLayer getRenderLayer() {
+//		return ctGlass.getRenderLayer();
+//	}
 
 	@Override
 	public ConnectedTextureBehaviour getBehaviour() {

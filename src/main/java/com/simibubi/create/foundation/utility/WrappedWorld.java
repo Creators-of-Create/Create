@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.storage.MapData;
 
+//TODO 1.15 this needs to extend ServerWorld
 public class WrappedWorld extends World {
 
 	protected World world;

@@ -3,6 +3,7 @@ package com.simibubi.create;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueHandler;
@@ -17,6 +18,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItemHan
 import com.simibubi.create.modules.curiosities.zapper.terrainzapper.TerrainZapperRenderHandler;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -66,12 +68,14 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
-		CreateClient.schematicHandler.render();
-		CreateClient.schematicAndQuillHandler.render();
-		CreateClient.schematicHologram.render();
-		KineticDebugger.renderSourceOutline();
-		ChassisRangeDisplay.renderOutlines(event.getPartialTicks());
-		TerrainZapperRenderHandler.render();
+		MatrixStack ms = event.getMatrixStack();
+		IRenderTypeBuffer buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		CreateClient.schematicHandler.render(ms, buffer);
+		CreateClient.schematicAndQuillHandler.render(ms, buffer);
+		CreateClient.schematicHologram.render(ms, buffer);
+		KineticDebugger.renderSourceOutline(ms, buffer);
+		ChassisRangeDisplay.renderOutlines(event.getPartialTicks(), ms, buffer);
+		TerrainZapperRenderHandler.render(ms, buffer);
 	}
 
 	@SubscribeEvent

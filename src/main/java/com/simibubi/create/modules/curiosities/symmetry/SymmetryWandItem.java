@@ -188,7 +188,7 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 			if (position.equals(pos))
 				continue;
 
-			if (world.func_217350_a(block, position, ISelectionContext.forEntity(player))) {
+			if (world.canPlace(block, position, ISelectionContext.forEntity(player))) {
 				BlockState blockState = blockSet.get(position);
 				for (Direction face : Direction.values())
 					blockState = blockState.updatePostPlacement(face, world.getBlockState(position.offset(face)), world,

@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -16,6 +17,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+@Deprecated
 public class TessellatorHelper {
 
 	public static final float fontScale = 1 / 512f;
@@ -48,6 +50,7 @@ public class TessellatorHelper {
 		RenderSystem.color3f(1, 1, 1);
 	}
 	
+	@Deprecated
 	public static void fightZFighting(int id) {
 		long randomBits = (long) id * 493286711L;
 		randomBits = randomBits * randomBits * 4392167121L + randomBits * 98761L;
@@ -55,6 +58,16 @@ public class TessellatorHelper {
 		float yNudge = (((float) (randomBits >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 		float zNudge = (((float) (randomBits >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 		RenderSystem.translatef(xNudge, yNudge, zNudge);
+	}
+	
+	// TODO 1.15 move this one somewhere else or rename class
+	public static void fightZFighting(int id, MatrixStack ms) {
+		long randomBits = (long) id * 493286711L;
+		randomBits = randomBits * randomBits * 4392167121L + randomBits * 98761L;
+		float xNudge = (((float) (randomBits >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		float yNudge = (((float) (randomBits >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		float zNudge = (((float) (randomBits >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		ms.translate(xNudge, yNudge, zNudge);
 	}
 
 	public static void begin() {

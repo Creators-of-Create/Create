@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.DrawHighlightEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class ScrollValueRenderer {
 
 	@SubscribeEvent
-	public static void renderBlockHighlight(DrawBlockHighlightEvent event) {
+	public static void renderBlockHighlight(DrawHighlightEvent event) {
 		RayTraceResult target = event.getTarget();
 		if (target == null || !(target instanceof BlockRayTraceResult))
 			return;

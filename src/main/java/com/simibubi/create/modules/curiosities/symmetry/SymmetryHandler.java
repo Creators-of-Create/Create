@@ -4,17 +4,14 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.SymmetryMirror;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -88,23 +85,21 @@ public class SymmetryHandler {
 				if (mirror instanceof EmptyMirror)
 					continue;
 
-				TessellatorHelper.prepareForDrawing();
 				BlockPos pos = new BlockPos(mirror.getPosition());
 
 				float yShift = 0;
 				double speed = 1 / 16d;
 				yShift = MathHelper.sin((float) ((tickCounter + event.getPartialTicks()) * speed)) / 5f;
 
-				BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-				RenderSystem.pushMatrix();
-				RenderSystem.translated(0, yShift + .2f, 0);
-				mc.getBlockRendererDispatcher().renderBlock(mirror.getModel(), pos, player.world, buffer,
-						player.world.getRandom(), EmptyModelData.INSTANCE);
-				Tessellator.getInstance().draw();
-				RenderSystem.popMatrix();
-				TessellatorHelper.cleanUpAfterDrawing();
-
+				IRenderTypeBuffer buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
+				
+				MatrixStack ms = event.getMatrixStack();
+				ms.push();
+				ms.translate(0, yShift + .2f, 0);
+				mc.getBlockRendererDispatcher().renderBlock(mirror.getModel(), pos, player.world, ms, buffer,
+						false, player.world.getRandom(), EmptyModelData.INSTANCE);
+				
+				ms.pop();
 			}
 		}
 

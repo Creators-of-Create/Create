@@ -14,7 +14,6 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -144,10 +143,10 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock {
 		return side != null;
 	}
 
-	@Override
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
+//	@Override // TODO 1.15 register layer
+//	public BlockRenderLayer getRenderLayer() {
+//		return BlockRenderLayer.CUTOUT;
+//	}
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {

@@ -16,12 +16,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -46,11 +48,11 @@ public class WindowInABlockModel extends WrappedBakedModel {
 		if (partialState == null || windowState == null)
 			return dispatcher.getModelForState(Blocks.DIRT.getDefaultState()).getQuads(state, side, rand, data);
 
-		BlockRenderLayer renderLayer = MinecraftForgeClient.getRenderLayer();
-		if (partialState.canRenderInLayer(renderLayer) && partialState != null) {
+		RenderType renderLayer = MinecraftForgeClient.getRenderLayer();
+		if (RenderTypeLookup.canRenderInLayer(partialState, renderLayer) && partialState != null) {
 			quads.addAll(dispatcher.getModelForState(partialState).getQuads(partialState, side, rand, data));
 		}
-		if (windowState.canRenderInLayer(renderLayer) && windowState != null) {
+		if (RenderTypeLookup.canRenderInLayer(windowState, renderLayer) && windowState != null) {
 			quads.addAll(dispatcher.getModelForState(windowState).getQuads(windowState, side, rand, data).stream()
 					.filter(q -> {
 						Direction face = q.getFace();
@@ -68,7 +70,7 @@ public class WindowInABlockModel extends WrappedBakedModel {
 	}
 
 	protected void fightZfighting(BakedQuad q) {
-		VertexFormat format = q.getFormat();
+		VertexFormat format = DefaultVertexFormats.BLOCK;
 		int[] data = q.getVertexData();
 		Vec3i vec = q.getFace().getDirectionVec();
 		int dirX = vec.getX();
@@ -102,8 +104,7 @@ public class WindowInABlockModel extends WrappedBakedModel {
 
 	@Override
 	public boolean isAmbientOcclusion() {
-		BlockRenderLayer renderLayer = MinecraftForgeClient.getRenderLayer();
-		return renderLayer == BlockRenderLayer.SOLID;
+		return MinecraftForgeClient.getRenderLayer() == RenderType.getSolid();
 	}
 
 }

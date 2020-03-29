@@ -6,6 +6,7 @@ import static com.simibubi.create.ScreenResources.SCHEMATIC_TABLE_PROGRESS;
 import java.nio.file.Paths;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -23,11 +24,14 @@ import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableContainer>
 		implements IHasContainer<SchematicTableContainer> {
@@ -135,8 +139,9 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		RenderSystem.scaled(50, -50, 50);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		minecraft.getBlockRendererDispatcher().renderBlockBrightness(AllBlocks.SCHEMATIC_TABLE.get().getDefaultState(),
-				1);
+		minecraft.getBlockRendererDispatcher().renderBlock(AllBlocks.SCHEMATIC_TABLE.get().getDefaultState(),
+				new MatrixStack(), getMinecraft().getBufferBuilders().getEntityVertexConsumers(), 0xF000F0,
+				OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
 
 		RenderSystem.disableAlphaTest();
 		RenderSystem.disableRescaleNormal();

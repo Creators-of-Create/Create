@@ -20,11 +20,6 @@ public class CreativeCrateBlock extends Block {
 	}
 
 	@Override
-	public boolean isSolid(BlockState state) {
-		return false;
-	}
-
-	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
 	}
 

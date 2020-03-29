@@ -148,7 +148,7 @@ public class ToolEvents {
 
 				event.getDrops().clear();
 				drops.stream().map(stack -> {
-					ItemEntity entity = new ItemEntity(world, target.posX, target.posY, target.posZ, stack);
+					ItemEntity entity = new ItemEntity(world, target.getX(), target.getY(), target.getZ(), stack);
 					world.addEntity(entity);
 					return entity;
 				}).forEach(event.getDrops()::add);

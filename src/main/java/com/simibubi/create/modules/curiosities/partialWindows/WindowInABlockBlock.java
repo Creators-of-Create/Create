@@ -22,7 +22,6 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -100,10 +99,10 @@ public class WindowInABlockBlock extends PaneBlock
 		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
 	}
 
-	@Override
-	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-		return true;
-	}
+//	@Override // TODO 1.15 register layer
+//	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
+//		return true;
+//	}
 
 	@Override
 	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {

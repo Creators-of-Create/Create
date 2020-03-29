@@ -4,15 +4,14 @@ import com.simibubi.create.AllBlocks;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.IBlockReader;
 
 public class LinkedTransposerBlock extends TransposerBlock {
 
-	@Override
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
+//	@Override // TODO 1.15 register layer
+//	public BlockRenderLayer getRenderLayer() {
+//		return BlockRenderLayer.CUTOUT;
+//	}
 
 	@Override
 	protected BlockState getVerticalDefaultState() {

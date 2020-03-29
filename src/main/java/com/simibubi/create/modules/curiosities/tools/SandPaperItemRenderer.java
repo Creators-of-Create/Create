@@ -1,11 +1,13 @@
 package com.simibubi.create.modules.curiosities.tools;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
@@ -18,10 +20,10 @@ import net.minecraft.util.math.MathHelper;
 public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 
 	@Override
-	public void renderByItem(ItemStack stack) {
+	public void render(ItemStack stack, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		SandPaperModel mainModel = (SandPaperModel) itemRenderer.getModelWithOverrides(stack);
+		SandPaperModel mainModel = (SandPaperModel) itemRenderer.getItemModelWithOverrides(stack, Minecraft.getInstance().world, null);
 		TransformType perspective = mainModel.getCurrentPerspective();
 		float partialTicks = Minecraft.getInstance().getRenderPartialTicks();
 
@@ -58,7 +60,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 			}
 
 			ItemStack toPolish = ItemStack.read(tag.getCompound("Polishing"));
-			itemRenderer.renderItem(toPolish, itemRenderer.getModelWithOverrides(toPolish).getBakedModel());
+			itemRenderer.renderItem(toPolish, itemRenderer.getItemModelWithOverrides(toPolish, Minecraft.getInstance().world, null).getBakedModel());
 
 			RenderSystem.popMatrix();
 		}

@@ -122,9 +122,9 @@ public class FilterItem extends Item implements INamedContainerProvider {
 				NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {
 					buf.writeItemStack(heldItem);
 				});
-			return ActionResult.newResult(ActionResultType.SUCCESS, heldItem);
+			return ActionResult.success(heldItem);
 		}
-		return ActionResult.newResult(ActionResultType.PASS, heldItem);
+		return ActionResult.pass(heldItem);
 	}
 
 	@Override

@@ -27,7 +27,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
@@ -92,7 +91,7 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-		double y = entity.posY;
+		double y = entity.getY();
 		double yMotion = entity.getMotion().y;
 		World world = entity.world;
 		CompoundNBT data = entity.getPersistentData();
@@ -124,7 +123,7 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 		// Convert to Refined Radiance if eaten enough light sources
 		if (itemData.getInt("CollectingLight") >= config.lightSourceCountForRefinedRadiance.get()) {
 			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
-			ItemEntity newEntity = new ItemEntity(world, entity.posX, entity.posY, entity.posZ, newStack);
+			ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
 			newEntity.setMotion(entity.getMotion());
 			newEntity.getPersistentData().putBoolean("FromLight", true);
 			itemData.remove("CollectingLight");
@@ -139,7 +138,7 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 
 		// Is inside beacon beam?
 		boolean isOverBeacon = false;
-		MutableBlockPos testPos = new MutableBlockPos(entity.getPosition());
+		BlockPos.Mutable testPos = new BlockPos.Mutable(entity.getPosition());
 		while (testPos.getY() > 0) {
 			testPos.move(Direction.DOWN);
 			BlockState state = world.getBlockState(testPos);
@@ -193,7 +192,7 @@ public class ChromaticCompoundCubeItem extends Item implements IItemWithColorHan
 
 		ItemStack newStack = stack.split(1);
 		newStack.getOrCreateTag().putInt("CollectingLight", itemData.getInt("CollectingLight") + 1);
-		ItemEntity newEntity = new ItemEntity(world, entity.posX, entity.posY, entity.posZ, newStack);
+		ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
 		newEntity.setMotion(entity.getMotion());
 		newEntity.setDefaultPickupDelay();
 		world.addEntity(newEntity);

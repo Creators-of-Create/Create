@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.behaviour.linked;
 
 import java.util.function.Consumer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.behaviour.ValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBoxRenderer;
@@ -12,6 +13,7 @@ import com.simibubi.create.foundation.utility.TessellatorHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +21,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.DrawHighlightEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -27,7 +29,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class LinkRenderer {
 
 	@SubscribeEvent
-	public static void renderBlockHighlight(DrawBlockHighlightEvent event) {
+	public static void renderBlockHighlight(DrawHighlightEvent event) {
 		RayTraceResult target = event.getTarget();
 		if (target == null || !(target instanceof BlockRayTraceResult))
 			return;
@@ -57,8 +59,8 @@ public class LinkRenderer {
 		TessellatorHelper.cleanUpAfterDrawing();
 	}
 
-	public static void renderOnTileEntity(SmartTileEntity tileEntityIn, double x, double y, double z,
-			float partialTicks, int destroyStage) {
+	public static void renderOnTileEntity(SmartTileEntity tileEntityIn, float partialTicks, MatrixStack ms,
+			IRenderTypeBuffer buffer, int light, int overlay) {
 
 		if (tileEntityIn == null || tileEntityIn.isRemoved())
 			return;
@@ -73,7 +75,8 @@ public class LinkRenderer {
 
 		renderEachSlot(state, behaviour, first -> {
 			ValueBoxRenderer.renderItemIntoValueBox(
-					first ? behaviour.frequencyFirst.getStack() : behaviour.frequencyLast.getStack());
+					first ? behaviour.frequencyFirst.getStack() : behaviour.frequencyLast.getStack(),
+					ms, buffer, light, overlay);
 		});
 
 		TessellatorHelper.cleanUpAfterDrawing();

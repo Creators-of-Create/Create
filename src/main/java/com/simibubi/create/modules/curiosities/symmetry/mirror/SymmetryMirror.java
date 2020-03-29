@@ -89,9 +89,9 @@ public abstract class SymmetryMirror {
 		nbt.putInt($ORIENTATION, orientationIndex);
 
 		ListNBT floatList = new ListNBT();
-		floatList.add(new FloatNBT((float) position.x));
-		floatList.add(new FloatNBT((float) position.y));
-		floatList.add(new FloatNBT((float) position.z));
+		floatList.add(FloatNBT.of((float) position.x));
+		floatList.add(FloatNBT.of((float) position.y));
+		floatList.add(FloatNBT.of((float) position.z));
 		nbt.put($POSITION, floatList);
 		nbt.putString($TYPE, typeName());
 		nbt.putBoolean($ENABLE, enable);

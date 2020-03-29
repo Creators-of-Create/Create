@@ -31,6 +31,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -157,7 +158,7 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		buffer.rotateCentered(Axis.Z, (float) ((zRotFirst) / 180 * Math.PI));
 		buffer.rotateCentered(Axis.Y, (float) ((yRot) / 180 * Math.PI));
 		buffer.rotateCentered(Axis.Z, (float) ((zRot) / 180 * Math.PI));
-		buffer.light(deployerState.getPackedLightmapCoords(world, pos));
+		buffer.light(WorldRenderer.getLightmapCoordinates(world, deployerState, pos));
 		return buffer;
 	}
 

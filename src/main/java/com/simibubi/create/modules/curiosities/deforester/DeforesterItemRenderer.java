@@ -1,10 +1,14 @@
 package com.simibubi.create.modules.curiosities.deforester;
 
+import org.lwjgl.opengl.GL13;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
@@ -12,10 +16,10 @@ import net.minecraft.item.ItemStack;
 public class DeforesterItemRenderer extends ItemStackTileEntityRenderer {
 
 	@Override
-	public void renderByItem(ItemStack stack) {
+	public void render(ItemStack stack, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		DeforesterModel mainModel = (DeforesterModel) itemRenderer.getModelWithOverrides(stack);
+		DeforesterModel mainModel = (DeforesterModel) itemRenderer.getItemModelWithOverrides(stack, Minecraft.getInstance().world, Minecraft.getInstance().player);
 		float worldTime = AnimationTickHolder.getRenderTick();
 		float lastCoordx = GLX.lastBrightnessX;
 		float lastCoordy = GLX.lastBrightnessY;
@@ -25,10 +29,10 @@ public class DeforesterItemRenderer extends ItemStackTileEntityRenderer {
 		itemRenderer.renderItem(stack, mainModel.getBakedModel());
 
 		RenderSystem.disableLighting();
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, 240, 120);
+		GLX.glMultiTexCoord2f(GL13.GL_TEXTURE1, 240, 120);
 		itemRenderer.renderItem(stack, mainModel.getPartial("light"));
 		itemRenderer.renderItem(stack, mainModel.getPartial("blade"));
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastCoordx, lastCoordy);
+		GLX.glMultiTexCoord2f(GL13.GL_TEXTURE1, lastCoordx, lastCoordy);
 		RenderSystem.enableLighting();
 		
 		float angle = worldTime * -.5f % 360;

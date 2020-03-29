@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class ToggleLatchBlock extends RedstoneDiodeBlock {
 
@@ -56,9 +57,9 @@ public class ToggleLatchBlock extends RedstoneDiodeBlock {
 	}
 
 	@Override
-	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
 		boolean poweredPreviously = state.get(POWERED);
-		super.tick(state, worldIn, pos, random);
+		super.scheduledTick(state, worldIn, pos, random);
 		BlockState newState = worldIn.getBlockState(pos);
 		if (newState.get(POWERED) && !poweredPreviously)
 			worldIn.setBlockState(pos, newState.cycle(POWERING), 2);

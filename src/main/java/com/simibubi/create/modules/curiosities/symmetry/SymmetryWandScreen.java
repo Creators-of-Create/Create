@@ -1,7 +1,8 @@
 package com.simibubi.create.modules.curiosities.symmetry;
 
-import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
@@ -17,11 +18,13 @@ import com.simibubi.create.modules.curiosities.symmetry.mirror.PlaneMirror;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.SymmetryMirror;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.TriplePlaneMirror;
 
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
@@ -139,7 +142,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		RenderSystem.enableRescaleNormal();
 		RenderSystem.enableAlphaTest();
 		RenderSystem.alphaFunc(516, 0.1F);
-		RenderSystem.blendFunc(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		RenderSystem.translated((this.width - this.sWidth) / 2 + 250, this.height / 2 + this.sHeight / 2, 100);
@@ -157,14 +160,15 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	}
 
 	protected void renderBlock() {
-		RenderSystem.pushMatrix();
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		RenderSystem.translated(guiLeft + 15, guiTop - 117, 20);
-		RenderSystem.rotatef(-22.5f, .3f, 1f, 0f);
-		RenderSystem.scaled(32, -32, 32);
-		minecraft.getBlockRendererDispatcher().renderBlock(currentElement.getModel(), new BlockPos(0, -5, 0),
-				minecraft.world, buffer, minecraft.world.rand, EmptyModelData.INSTANCE);
+		MatrixStack ms = new MatrixStack();
+		IRenderTypeBuffer buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
+
+		ms.translate(guiLeft + 15, guiTop - 117, 20);
+		ms.multiply(new Vector3f(.3f, 1f, 0f).getDegreesQuaternion(-22.5f));
+		ms.scale(32, -32, 32);
+		ms.translate(0, -5, 0);
+		minecraft.getBlockRendererDispatcher().renderBlock(currentElement.getModel(), ms, buffer, 0xF000F0,
+				OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
 
 		Tessellator.getInstance().draw();
 		RenderSystem.popMatrix();

@@ -1,10 +1,12 @@
 package com.simibubi.create.modules.curiosities.symmetry.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
@@ -13,7 +15,7 @@ import net.minecraft.util.math.MathHelper;
 public class SymmetryWandItemRenderer extends ItemStackTileEntityRenderer {
 
 	@Override
-	public void renderByItem(ItemStack stack) {
+	public void render(ItemStack stack, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		SymmetryWandModel mainModel = (SymmetryWandModel) itemRenderer.getModelWithOverrides(stack);

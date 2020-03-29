@@ -25,6 +25,8 @@ import com.simibubi.create.foundation.utility.TessellatorHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.item.BlockItemUseContext;
@@ -162,9 +164,11 @@ public class SchematicAndQuillHandler {
 		Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.saved", filepath);
 	}
 
-	public void render(MatrixStack ms, IVertexBuilder buffer) {
+	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
 		if (!isActive())
 			return;
+		
+		IVertexBuilder vb = buffer.getBuffer(RenderType.getLines());
 
 		TessellatorHelper.prepareForDrawing();
 		RenderSystem.lineWidth(2);
@@ -177,28 +181,28 @@ public class SchematicAndQuillHandler {
 				MutableBoundingBox bb = new MutableBoundingBox(firstPos, firstPos.add(1, 1, 1));
 				BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 				BlockPos max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-				drawBox(ms, buffer, min, max, true);
+				drawBox(ms, vb, min, max, true);
 			}
 
 			if (firstPos != null && selectedPos != null) {
 				MutableBoundingBox bb = new MutableBoundingBox(firstPos, selectedPos);
 				BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 				BlockPos max = new BlockPos(bb.maxX + 1, bb.maxY + 1, bb.maxZ + 1);
-				drawBox(ms, buffer, min, max, true);
+				drawBox(ms, vb, min, max, true);
 			}
 
 			if (firstPos == null && selectedPos != null) {
 				MutableBoundingBox bb = new MutableBoundingBox(selectedPos, selectedPos.add(1, 1, 1));
 				BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 				BlockPos max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-				drawBox(ms, buffer, min, max, true);
+				drawBox(ms, vb, min, max, true);
 			}
 		} else {
 			// 2nd Step
 			MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
 			BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
 			BlockPos max = new BlockPos(bb.maxX + 1, bb.maxY + 1, bb.maxZ + 1);
-			drawBox(ms, buffer, min, max, false);
+			drawBox(ms, vb, min, max, false);
 
 			if (selectedFace != null) {
 				Vec3d vec = new Vec3d(selectedFace.getDirectionVec());
@@ -210,6 +214,7 @@ public class SchematicAndQuillHandler {
 				Vec3d faceMin = center.add(vec.mul(radii).add(onFaceOffset));
 				Vec3d faceMax = center.add(vec.mul(radii).subtract(onFaceOffset));
 
+				// TODO 1.15 buffered render
 				RenderSystem.enableTexture();
 				TessellatorHelper.begin();
 				AllSpecialTextures.SELECTION.bind();

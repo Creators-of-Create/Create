@@ -33,11 +33,6 @@ public class SchematicTableBlock extends HorizontalBlock {
 		builder.add(HORIZONTAL_FACING);
 		super.fillStateContainer(builder);
 	}
-
-	@Override
-	public boolean isSolid(BlockState state) {
-		return false;
-	}
 	
 	@Override
 	public PushReaction getPushReaction(BlockState state) {

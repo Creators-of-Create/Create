@@ -37,11 +37,6 @@ public class SchematicannonBlock extends Block {
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new SchematicannonTileEntity();
 	}
-
-	@Override
-	public boolean isSolid(BlockState state) {
-		return false;
-	}
 	
 	@Override
 	public PushReaction getPushReaction(BlockState state) {

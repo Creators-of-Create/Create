@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.behaviour;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -12,6 +15,7 @@ import net.minecraft.block.FenceBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -28,11 +32,11 @@ import net.minecraft.util.math.Vec3d;
 @SuppressWarnings("deprecation")
 public class ValueBoxRenderer {
 
+	@Deprecated // TODO 1.15 buffered rendering
 	public static void renderBox(ValueBox box, boolean highlighted) {
 		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(RenderSystem.SourceFactor.SRC_ALPHA,
-				RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA, RenderSystem.SourceFactor.ONE,
-				RenderSystem.DestFactor.ZERO);
+		RenderSystem.blendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE,
+				DestFactor.ZERO);
 		RenderSystem.disableTexture();
 
 		Tessellator tessellator = Tessellator.getInstance();
@@ -42,7 +46,7 @@ public class ValueBoxRenderer {
 		RenderSystem.lineWidth(highlighted ? 3 : 2);
 		Vec3d color = highlighted ? ColorHelper.getRGB(box.highlightColor) : ColorHelper.getRGB(box.passiveColor);
 		AxisAlignedBB bb = box.bb;
-		WorldRenderer.drawBoundingBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ,
+		WorldRenderer.drawBox(bufferbuilder, bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ,
 				(float) color.x, (float) color.y, (float) color.z, 1f);
 		RenderSystem.lineWidth(1);
 
@@ -84,15 +88,15 @@ public class ValueBoxRenderer {
 		RenderSystem.translated(0, 0, 1 / 4f);
 	}
 
-	public static void renderItemIntoValueBox(ItemStack filter) {
+	public static void renderItemIntoValueBox(ItemStack filter, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		IBakedModel modelWithOverrides = itemRenderer.getModelWithOverrides(filter);
+		IBakedModel modelWithOverrides = itemRenderer.getItemModelWithOverrides(filter, Minecraft.getInstance().world, null);
 		boolean blockItem = modelWithOverrides.isGui3d();
 		float scale = (!blockItem ? .5f : 1f) - 1 / 64f;
 		float zOffset = (!blockItem ? -.225f : 0) + customZOffset(filter.getItem());
 		RenderSystem.scaled(scale, scale, scale);
 		RenderSystem.translated(0, 0, zOffset);
-		itemRenderer.renderItem(filter, TransformType.FIXED);
+		itemRenderer.renderItem(filter, TransformType.FIXED, light, overlay, ms, buffer);
 	}
 
 	private static float customZOffset(Item item) {
