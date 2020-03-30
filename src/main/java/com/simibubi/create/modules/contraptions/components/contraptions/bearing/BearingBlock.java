@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
 
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Direction;
@@ -22,11 +21,6 @@ public abstract class BearingBlock extends DirectionalKineticBlock {
 	
 	@Override
 	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
-	protected boolean turnBackOnWrenched() {
 		return true;
 	}
 

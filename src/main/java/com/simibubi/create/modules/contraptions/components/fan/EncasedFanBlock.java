@@ -2,11 +2,11 @@ package com.simibubi.create.modules.contraptions.components.fan;
 
 import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
@@ -50,13 +50,19 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements IWithTil
 
 	protected void blockUpdate(BlockState state, World worldIn, BlockPos pos) {
 		notifyFanTile(worldIn, pos);
-		if (worldIn.isRemote || state.get(FACING) != Direction.DOWN)
+		if (worldIn.isRemote)
 			return;
-		withTileEntityDo(worldIn, pos, EncasedFanTileEntity::updateGenerator);
+		withTileEntityDo(worldIn, pos, te -> te.updateGenerator(state.get(FACING)));
 	}
 
 	protected void notifyFanTile(IWorld world, BlockPos pos) {
 		withTileEntityDo(world, pos, EncasedFanTileEntity::blockInFrontChanged);
+	}
+
+	@Override
+	public BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
+		blockUpdate(newState, context.getWorld(), context.getPos());
+		return newState;
 	}
 
 	@Override

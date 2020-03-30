@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -18,11 +17,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -100,11 +95,6 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
 		if (state.get(STATE) != PistonState.RETRACTED)
 			return ActionResultType.PASS;
 		return super.onWrenched(state, context);
-	}
-
-	@Override
-	protected boolean turnBackOnWrenched() {
-		return true;
 	}
 
 	public enum PistonState implements IStringSerializable {

@@ -5,9 +5,7 @@ import com.simibubi.create.foundation.block.IWithTileEntity;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.modules.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -109,12 +107,13 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		Direction facing = context.getFace();
-		if (facing.getAxis().isVertical() && !state.get(VERTICAL)) {
-			KineticTileEntity.switchToBlockState(context.getWorld(), context.getPos(), state.cycle(VERTICAL));
-			return ActionResultType.SUCCESS;
-		}
-		return super.onWrenched(state, context);
+		BlockState newState = state;
+
+		if (context.getFace().getAxis() != Axis.Y)
+			if (newState.get(HORIZONTAL_AXIS) != context.getFace().getAxis())
+				newState = newState.cycle(VERTICAL);
+
+		return super.onWrenched(newState, context);
 	}
 
 	private BlockState withAxis(Axis axis, BlockItemUseContext context) {

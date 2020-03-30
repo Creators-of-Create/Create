@@ -5,7 +5,6 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CKinetics;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -59,8 +58,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 		return isGenerator ? AllConfigs.SERVER.kinetics.generatingFanSpeed.get() : 0;
 	}
 
-	public void updateGenerator() {
-		boolean shouldGenerate = world.isBlockPowered(pos) && world.isBlockPresent(pos.down()) && blockBelowIsHot();
+	public void updateGenerator(Direction facing) {
+		boolean shouldGenerate = world.isBlockPowered(pos) && facing == Direction.DOWN && world.isBlockPresent(pos.down()) && blockBelowIsHot();
 		if (shouldGenerate == isGenerator)
 			return;
 

@@ -3,10 +3,8 @@ package com.simibubi.create.modules.contraptions.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Rotation;
@@ -84,17 +82,6 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 		}
 
 		return this.getDefaultState().with(FACING, facing).with(AXIS_ALONG_FIRST_COORDINATE, alongFirst);
-	}
-
-	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		World world = context.getWorld();
-		Direction face = context.getFace();
-		if ((turnBackOnWrenched() ? face.getOpposite() : face) == state.get(FACING)) {
-			KineticTileEntity.switchToBlockState(world, context.getPos(), state.cycle(AXIS_ALONG_FIRST_COORDINATE));
-			return ActionResultType.SUCCESS;
-		}
-		return super.onWrenched(state, context);
 	}
 
 	@Override
