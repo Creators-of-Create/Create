@@ -40,7 +40,7 @@ public class DeforesterItemRenderer extends ItemStackTileEntityRenderer {
 		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, brightLight, overlay, mainModel.getPartial("gear"));
 		
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.particle;
 
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -58,13 +59,12 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 		super.tick();
 		radius += (radius2 - radius) * .1f;
 	}
-
+	
 	@Override
-	public void renderParticle(BufferBuilder buffer, ActiveRenderInfo entityIn, float partialTicks, float rotationX,
-			float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+	public void buildGeometry(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
 		if (!isVisible)
 			return;
-		super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
+		super.buildGeometry(buffer, renderInfo, partialTicks);
 	}
 
 	public void move(double x, double y, double z) {

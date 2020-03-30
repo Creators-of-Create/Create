@@ -163,8 +163,6 @@ public class ZapperScreen extends AbstractSimiScreen {
 
 	protected void renderBlock() {
 		RenderSystem.pushMatrix();
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		RenderSystem.translated(guiLeft + 1.7f, guiTop - 49, 120);
 		RenderSystem.rotatef(-30f, .5f, .9f, -.1f);
 		RenderSystem.scaled(20, -20, 20);
@@ -172,11 +170,13 @@ public class ZapperScreen extends AbstractSimiScreen {
 		BlockState state = Blocks.AIR.getDefaultState();
 		if (zapper.hasTag() && zapper.getTag().contains("BlockUsed"))
 			state = NBTUtil.readBlockState(zapper.getTag().getCompound("BlockUsed"));
+		
+		RenderSystem.translated(0, -5, 0);
 
-		minecraft.getBlockRendererDispatcher().renderBlock(state, new BlockPos(0, -5, 0), minecraft.world, buffer,
-				minecraft.world.rand, EmptyModelData.INSTANCE);
+		minecraft.getBlockRendererDispatcher().renderBlock(state, new MatrixStack(),
+				getMinecraft().getBufferBuilders().getEffectVertexConsumers(), 0xF000F0, OverlayTexture.DEFAULT_UV,
+				EmptyModelData.INSTANCE);
 
-		Tessellator.getInstance().draw();
 		RenderSystem.popMatrix();
 	}
 

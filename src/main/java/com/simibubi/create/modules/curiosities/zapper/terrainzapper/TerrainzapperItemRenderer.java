@@ -72,7 +72,7 @@ public class TerrainzapperItemRenderer extends ZapperItemRenderer {
 		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay,
 				mainModel.getPartial("terrain_accelerator"));
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 }

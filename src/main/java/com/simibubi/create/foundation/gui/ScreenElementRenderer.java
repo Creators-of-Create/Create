@@ -4,9 +4,11 @@ import java.util.function.Supplier;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.BlockState;
@@ -14,14 +16,18 @@ import net.minecraft.block.FireBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class ScreenElementRenderer {
 
@@ -59,7 +65,7 @@ public class ScreenElementRenderer {
 		RenderSystem.enableBlend();
 		RenderSystem.enableRescaleNormal();
 		RenderSystem.enableAlphaTest();
-		RenderHelper.enableGuiDepthLighting(); // TODO 1.15 buffered render
+		RenderHelper.enableGuiDepthLighting();
 		RenderSystem.alphaFunc(516, 0.1F);
 		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -81,34 +87,36 @@ public class ScreenElementRenderer {
 		}
 
 		RenderSystem.scaled(50, -50, 50);
-		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-
+		IRenderTypeBuffer.Impl buffer = mc.getBufferBuilders().getEntityVertexConsumers(); 
+		RenderType renderType = RenderTypeLookup.getEntityBlockLayer(blockToRender);
+		IVertexBuilder vb = buffer.getBuffer(renderType);
+		MatrixStack ms = new MatrixStack();
 		
 		RenderSystem.pushMatrix();
 		if (fire) {
-			blockRenderer.renderBlockBrightness(blockToRender, 1);
+			blockRenderer.renderBlock(blockToRender, ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV,
+					EmptyModelData.INSTANCE);
 		} else {
 			RenderSystem.rotatef(90, 0, 1, 0);
 			if (color == -1) {
-				blockRenderer.getBlockModelRenderer().renderModelBrightnessColor(modelToRender, 1, 1, 1, 1);
+				blockRenderer.getBlockModelRenderer().renderModel(ms.peek(), vb, blockToRender, modelToRender, 1, 1, 1,
+						0xF000F0, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
 			} else {
 				Vec3d rgb = ColorHelper.getRGB(color);
-				blockRenderer.getBlockModelRenderer().renderModelBrightnessColor(modelToRender, 1, (float) rgb.x,
-						(float) rgb.y, (float) rgb.z);
+				blockRenderer.getBlockModelRenderer().renderModel(ms.peek(), vb, blockToRender, modelToRender,
+						(float) rgb.x, (float) rgb.y, (float) rgb.z, 0xF000F0, OverlayTexture.DEFAULT_UV,
+						EmptyModelData.INSTANCE);
 			}
 		}
 		RenderSystem.popMatrix();
 
 		if (stateMode && !blockToRender.getFluidState().isEmpty()) {
 			RenderHelper.disableStandardItemLighting();
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder bufferbuilder = tessellator.getBuffer();
-			bufferbuilder.setTranslation(0, -300, 0);
-			bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-			blockRenderer.renderFluid(new BlockPos(0, 300, 0), mc.world, bufferbuilder, blockToRender.getFluidState());
-			Tessellator.getInstance().draw();
-			bufferbuilder.setTranslation(0, 0, 0);
+			RenderSystem.translatef(0, -300, 0);
+			blockRenderer.renderFluid(new BlockPos(0, 300, 0), mc.world, vb, blockToRender.getFluidState());
 		}
+		
+		buffer.draw(renderType);
 
 		RenderSystem.disableAlphaTest();
 		RenderSystem.disableRescaleNormal();

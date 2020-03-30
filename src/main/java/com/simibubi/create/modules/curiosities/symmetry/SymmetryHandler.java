@@ -5,13 +5,18 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.SymmetryMirror;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -75,8 +80,6 @@ public class SymmetryHandler {
 		Minecraft mc = Minecraft.getInstance();
 		ClientPlayerEntity player = mc.player;
 
-		GL11.glEnable(GL11.GL_BLEND);
-
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			ItemStack stackInSlot = player.inventory.getStackInSlot(i);
 			if (stackInSlot != null && AllItems.SYMMETRY_WAND.typeOf(stackInSlot)
@@ -89,15 +92,21 @@ public class SymmetryHandler {
 
 				float yShift = 0;
 				double speed = 1 / 16d;
-				yShift = MathHelper.sin((float) ((tickCounter + event.getPartialTicks()) * speed)) / 5f;
+				yShift = MathHelper.sin((float) ((tickCounter) * speed)) / 5f;
 
 				IRenderTypeBuffer buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
+				ActiveRenderInfo info = mc.gameRenderer.getActiveRenderInfo();
+				Vec3d view = info.getProjectedView();
 				
 				MatrixStack ms = event.getMatrixStack();
 				ms.push();
-				ms.translate(0, yShift + .2f, 0);
-				mc.getBlockRendererDispatcher().renderBlock(mirror.getModel(), pos, player.world, ms, buffer,
+				ms.translate(-view.getX(), -view.getY(), -view.getZ());
+				ms.translate(pos.getX(), pos.getY(), pos.getZ());
+//				ms.translate(0, yShift + .2f, 0);
+				mc.getBlockRendererDispatcher().renderModel(mirror.getModel(), pos, player.world, ms, buffer.getBuffer(Atlases.getEntityTranslucent()),
 						false, player.world.getRandom(), EmptyModelData.INSTANCE);
+				
+				Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers().draw(Atlases.getEntityTranslucent());
 				
 				ms.pop();
 			}

@@ -4,6 +4,7 @@ import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.DirectionHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
@@ -171,7 +172,7 @@ public class StructureTransform {
 
 	protected Direction transformFacing(Direction facing) {
 		for (int i = 0; i < rotation.ordinal(); i++)
-			facing = facing.rotateAround(rotationAxis);
+			facing = DirectionHelper.rotateAround(facing, rotationAxis);
 		return facing;
 	}
 

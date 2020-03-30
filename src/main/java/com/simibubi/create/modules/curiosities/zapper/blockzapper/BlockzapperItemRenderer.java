@@ -38,7 +38,7 @@ public class BlockzapperItemRenderer extends ZapperItemRenderer {
 		ms.push();
 		ms.translate(0.5F, 0.5F, 0.5F);
 
-		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay, mainModel);
+		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay, mainModel.getBakedModel());
 		renderComponent(stack, mainModel, Body, itemRenderer, ms, buffer, light, overlay);
 		renderComponent(stack, mainModel, Amplifier, itemRenderer, ms, buffer, light, overlay);
 		renderComponent(stack, mainModel, Retriever, itemRenderer, ms, buffer, light, overlay);

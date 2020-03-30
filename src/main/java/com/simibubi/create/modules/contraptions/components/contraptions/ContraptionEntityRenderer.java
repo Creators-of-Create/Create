@@ -95,7 +95,6 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 
 		if (!entity.getContraption().customRenderTEs.isEmpty()) {
 			RenderSystem.pushMatrix();
-			RenderSystem.translated(x, y, z);
 			RenderSystem.translated(rotationOffset.x, rotationOffset.y, rotationOffset.z);
 			RenderSystem.rotatef(degPitch, 0, 0, 1);
 			RenderSystem.rotatef(degYaw, 0, 1, 0);

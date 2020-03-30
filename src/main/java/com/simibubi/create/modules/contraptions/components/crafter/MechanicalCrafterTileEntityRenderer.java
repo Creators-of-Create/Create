@@ -108,7 +108,7 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 				ms.push();
 				ms.translate(pair.getKey() * spacing, pair.getValue() * spacing, 0);
 				TessellatorHelper.fightZFighting(pair.hashCode() + te.getPos().hashCode());
-				Minecraft.getInstance().getItemRenderer().renderItem(stack, TransformType.FIXED);
+				Minecraft.getInstance().getItemRenderer().renderItem(stack, TransformType.FIXED, light, overlay, ms, buffer);
 				ms.pop();
 			});
 

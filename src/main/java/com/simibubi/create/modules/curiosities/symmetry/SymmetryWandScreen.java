@@ -171,9 +171,6 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		ms.translate(0, -5, 0);
 		minecraft.getBlockRendererDispatcher().renderBlock(currentElement.getModel(), ms, buffer, 0xF000F0,
 				OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
-
-		Tessellator.getInstance().draw();
-		RenderSystem.popMatrix();
 	}
 
 	@Override
