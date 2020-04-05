@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FireBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -74,7 +75,7 @@ public class ScreenElementRenderer {
 		Minecraft mc = Minecraft.getInstance();
 		BlockRendererDispatcher blockRenderer = mc.getBlockRendererDispatcher();
 		IBakedModel modelToRender = null;
-		BlockState blockToRender = null;
+		BlockState blockToRender = Blocks.AIR.getDefaultState();
 		boolean stateMode = transformsAndModel == null;
 		boolean fire = false;
 
