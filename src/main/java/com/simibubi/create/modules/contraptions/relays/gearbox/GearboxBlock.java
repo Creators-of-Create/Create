@@ -78,4 +78,8 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 		return true;
 	}
 
+	@Override
+	public Axis getRotationAxis(BlockState state) {
+		return state.get(AXIS);
+	}
 }

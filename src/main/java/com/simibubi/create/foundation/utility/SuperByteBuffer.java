@@ -1,11 +1,14 @@
 package com.simibubi.create.foundation.utility;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.BufferBuilder.DrawState;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Vector4f;
@@ -14,7 +17,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class SuperByteBuffer {
 
@@ -44,11 +46,12 @@ public class SuperByteBuffer {
 	private int r, g, b, a;
 
 	public SuperByteBuffer(BufferBuilder buf) {
-		ByteBuffer original = ObfuscationReflectionHelper.getPrivateValue(BufferBuilder.class, buf, "field_179001_a"); // FIXME speedup
-		original.rewind();
+		Pair<DrawState, ByteBuffer> state = buf.popData();
+		ByteBuffer original = state.getSecond();
+		original.order(ByteOrder.nativeOrder()); // Vanilla bug, endianness does not carry over into sliced buffers
 		this.original = original;
-
-		this.mutable = GLAllocation.createDirectByteBuffer(original.capacity());
+		
+		this.mutable = GLAllocation.createDirectByteBuffer(state.getFirst().getCount() * buf.getVertexFormat().getSize());
 		this.mutable.order(original.order());
 		this.mutable.limit(original.limit());
 		mutable.put(this.original);
@@ -61,8 +64,8 @@ public class SuperByteBuffer {
 		original.rewind();
 		mutable.rewind();
 
-		Matrix4f t = transforms.peek().getModel();
-		t.multiply(input.peek().getModel());
+		Matrix4f t = input.peek().getModel().copy();
+		t.multiply(transforms.peek().getModel());
 		for (int vertex = 0; vertex < vertexCount(original); vertex++) {
 			Vector4f pos = new Vector4f(getX(original, vertex), getY(original, vertex), getZ(original, vertex), 1F);
 			
@@ -94,6 +97,7 @@ public class SuperByteBuffer {
 		shouldShiftUV = false;
 		shouldColor = false;
 		shouldLight = false;
+		mutable.rewind();
 		return mutable;
 	}
 
@@ -134,7 +138,7 @@ public class SuperByteBuffer {
 	}
 	
 	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
-		return translate(-.5f, -.5f, -.5f).rotate(axis, radians).translate(.5f, .5f, .5f);
+		return translate(.5f, .5f, .5f).rotate(axis, radians).translate(-.5f, -.5f, -.5f);
 	}
 
 	public SuperByteBuffer shiftUV(TextureAtlasSprite from, TextureAtlasSprite to) {
@@ -245,7 +249,8 @@ public class SuperByteBuffer {
 	}
 
 	protected void putLight(ByteBuffer buffer, int index, int packedLight) {
-		buffer.putInt(getBufferPosition(index) + 24, packedLight);
+		buffer.putShort(getBufferPosition(index) + 24, (short) (packedLight & 0xFF));
+		buffer.putShort(getBufferPosition(index) + 26, (short) ((packedLight >> 16) & 0xFF));
 	}
 
 	protected void putColor(ByteBuffer buffer, int index, byte r, byte g, byte b, byte a) {

@@ -18,9 +18,11 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItemHan
 import com.simibubi.create.modules.curiosities.zapper.terrainzapper.TerrainZapperRenderHandler;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
@@ -70,13 +72,23 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
 		MatrixStack ms = event.getMatrixStack();
-		IRenderTypeBuffer buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
+		Vec3d view = info.getProjectedView();
+	
+		ms.push();
+		ms.translate(-view.getX(), -view.getY(), -view.getZ());
+
+		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
 		CreateClient.schematicHandler.render(ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV);
 		CreateClient.schematicAndQuillHandler.render(ms, buffer);
 		CreateClient.schematicHologram.render(ms, buffer);
 		KineticDebugger.renderSourceOutline(ms, buffer);
 		ChassisRangeDisplay.renderOutlines(event.getPartialTicks(), ms, buffer);
 		TerrainZapperRenderHandler.render(ms, buffer);
+		
+		ms.pop();
+		
+		buffer.draw();
 	}
 
 	@SubscribeEvent

@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.cache.Cache;
@@ -22,6 +23,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
@@ -32,6 +34,7 @@ public class SuperByteBufferCache {
 
 	public static final Compartment<BlockState> GENERIC_TILE = new Compartment<>();
 	public static final Compartment<AllBlockPartials> PARTIAL = new Compartment<>();
+	public static final Compartment<Pair<Direction, AllBlockPartials>> DIRECTIONAL_PARTIAL = new Compartment<>();
 
 	Map<Compartment<?>, Cache<Object, SuperByteBuffer>> cache;
 
@@ -39,6 +42,7 @@ public class SuperByteBufferCache {
 		cache = new HashMap<>();
 		registerCompartment(GENERIC_TILE);
 		registerCompartment(PARTIAL);
+		registerCompartment(DIRECTIONAL_PARTIAL);
 	}
 
 	public SuperByteBuffer renderBlock(BlockState toRender) {
@@ -47,6 +51,18 @@ public class SuperByteBufferCache {
 
 	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState) {
 		return get(PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState));
+	}
+	
+	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState, MatrixStack modelTransform) {
+		return get(PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState, modelTransform));
+	}
+	
+	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState, Direction dir) {
+		return get(DIRECTIONAL_PARTIAL, Pair.of(dir, partial), () -> standardModelRender(partial.get(), referenceState));
+	}
+	
+	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState, Direction dir, MatrixStack modelTransform) {
+		return get(DIRECTIONAL_PARTIAL, Pair.of(dir, partial), () -> standardModelRender(partial.get(), referenceState, modelTransform));
 	}
 
 	public SuperByteBuffer renderBlockIn(Compartment<BlockState> compartment, BlockState toRender) {
@@ -82,16 +98,16 @@ public class SuperByteBufferCache {
 	}
 
 	private SuperByteBuffer standardModelRender(IBakedModel model, BlockState referenceState) {
+		return standardModelRender(model, referenceState, new MatrixStack());
+	}
+
+	private SuperByteBuffer standardModelRender(IBakedModel model, BlockState referenceState, MatrixStack ms) {
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
-		BufferBuilder builder = new BufferBuilder(0);
+		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
 		Random random = new Random();
-		MatrixStack ms = new MatrixStack();
-		ms.push();
-		ms.translate(0, 1, 0);
-
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		blockRenderer.renderModelFlat(Minecraft.getInstance().world, model, referenceState, BlockPos.ZERO.down(), ms,
+		blockRenderer.renderModelFlat(Minecraft.getInstance().world, model, referenceState, BlockPos.ZERO.up(255), ms,
 				builder, true, random, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
 		builder.finishDrawing();
 

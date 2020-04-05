@@ -109,7 +109,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 		if (pistonAxis == Axis.Z)
 			return alongFirst ? Axis.X : Axis.Y;
 
-		return super.getRotationAxis(state);
+		throw new IllegalStateException("Unknown axis??");
 	}
 
 	@Override

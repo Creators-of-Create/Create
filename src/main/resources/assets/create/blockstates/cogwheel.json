@@ -1,13 +1,7 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "create:block/cogwheel"
-	},
     "variants": {
-		"axis" : {
-			"x": { "x": 90, "y": 90 },
-			"y": {},
-			"z": { "x": 90 }
-		}
+		"axis=x" : { "model": "create:block/cogwheel", "x": 90, "y": 90 },
+		"axis=y" : { "model": "create:block/cogwheel" },
+		"axis=z" : { "model": "create:block/cogwheel", "x": 90 }
 	}
 }

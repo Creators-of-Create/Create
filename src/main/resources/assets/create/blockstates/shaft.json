@@ -1,13 +1,7 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "create:block/shaft"
-	},
     "variants": {
-		"axis" : {
-			"x": { "x": 90, "y": 90 },
-			"y": {},
-			"z": { "x": 90 }
-		}
+		"axis=x" : { "model": "create:block/shaft", "x": 90, "y": 90 },
+		"axis=y" : { "model": "create:block/shaft" },
+		"axis=z" : { "model": "create:block/shaft", "x": 90 }
 	}
 }

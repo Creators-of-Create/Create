@@ -5,7 +5,6 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -25,12 +24,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.MathHelper;
@@ -85,10 +84,14 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 		beltBuffer.light(packedLightmapCoords).renderInto(ms, vb);
 
 		if (te.hasPulley()) {
-			SuperByteBuffer superBuffer = AllBlockPartials.BELT_PULLEY.renderOn(blockState);
-			Axis axis = blockState.get(BeltBlock.HORIZONTAL_FACING).getAxis();
-			superBuffer.rotateCentered(Axis.X, (float) (Math.PI / 2));
-			superBuffer.rotateCentered(Axis.Y, (float) (axis == Axis.X ? 0 : Math.PI / 2));
+			// TODO 1.15 find a way to cache this model matrix computation
+			MatrixStack modelTransform = new MatrixStack();
+			Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING);
+			modelTransform.translate(0.5, 0.5, 0.5);
+			modelTransform.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion((float) (dir.getAxis() == Axis.X ? 0 : Math.PI / 2)));
+			modelTransform.multiply(Vector3f.POSITIVE_X.getRadialQuaternion((float) (Math.PI / 2)));
+			modelTransform.translate(-0.5, -0.5, -0.5);
+			SuperByteBuffer superBuffer = CreateClient.bufferCache.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, modelTransform);
 			KineticTileEntityRenderer.standardKineticRotationTransform(superBuffer, te)
 					.renderInto(ms, vb);
 		}

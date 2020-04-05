@@ -5,14 +5,15 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 
 import java.util.Map;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -120,9 +121,13 @@ public enum AllBlockPartials {
 	}
 	
 	public SuperByteBuffer renderOnDirectional(BlockState referenceState, Direction facing) {
-		SuperByteBuffer renderPartial = CreateClient.bufferCache.renderPartial(this, referenceState);
-		renderPartial.rotateCentered(Axis.X, AngleHelper.rad(AngleHelper.verticalAngle(facing)));
-		renderPartial.rotateCentered(Axis.Y, AngleHelper.rad(AngleHelper.horizontalAngle(facing)));
+		MatrixStack ms = new MatrixStack();
+		// TODO 1.15 find a way to cache this model matrix computation
+		ms.translate(0.5, 0.5, 0.5);
+		ms.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion(AngleHelper.rad(AngleHelper.horizontalAngle(facing))));
+		ms.multiply(Vector3f.POSITIVE_X.getRadialQuaternion(AngleHelper.rad(AngleHelper.verticalAngle(facing))));
+		ms.translate(-0.5, -0.5, -0.5);
+		SuperByteBuffer renderPartial = CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
 		return renderPartial;
 	}
 

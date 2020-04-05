@@ -12,13 +12,10 @@ import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
 import com.simibubi.create.modules.contraptions.KineticDebugger;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -64,7 +61,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	public static SuperByteBuffer kineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te, Axis axis,
 			float angle) {
 		int light = te.getBlockState().getLightValue(te.getWorld(), te.getPos());
-		buffer.light((0xF0 << 24) | (light << 4));
+		buffer.light((0xF0 << 16) | (light << 4));
 		buffer.rotateCentered(axis, angle);
 
 		int white = 0xFFFFFF;
