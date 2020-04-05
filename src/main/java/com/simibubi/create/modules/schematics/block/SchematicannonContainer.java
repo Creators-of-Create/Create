@@ -10,6 +10,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SchematicannonContainer extends Container {
@@ -21,9 +22,12 @@ public class SchematicannonContainer extends Container {
 		super(AllContainers.SCHEMATICANNON.type, id);
 		player = inv.player;
 		ClientWorld world = Minecraft.getInstance().world;
-		this.te = (SchematicannonTileEntity) world.getTileEntity(buffer.readBlockPos());
-		this.te.handleUpdateTag(buffer.readCompoundTag());
-		init();
+		TileEntity tileEntity = world.getTileEntity(buffer.readBlockPos());
+		if (tileEntity instanceof SchematicannonTileEntity) {
+			this.te = (SchematicannonTileEntity) tileEntity;
+			this.te.handleUpdateTag(buffer.readCompoundTag());
+			init();
+		}
 	}
 
 	public SchematicannonContainer(int id, PlayerInventory inv, SchematicannonTileEntity te) {
@@ -34,7 +38,6 @@ public class SchematicannonContainer extends Container {
 	}
 
 	protected void init() {
-
 		int x = 20;
 		int y = 0;
 

@@ -15,8 +15,8 @@ import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
-
 import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;

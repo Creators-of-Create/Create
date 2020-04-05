@@ -12,14 +12,22 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.config.AllConfigs;
 
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ItemHelper {
+
+	public static void dropContents(World world, BlockPos pos, IItemHandler inv) {
+		for (int slot = 0; slot < inv.getSlots(); slot++)
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inv.getStackInSlot(slot));
+	}
 
 	public static List<ItemStack> multipliedOutput(ItemStack in, ItemStack out) {
 		List<ItemStack> stacks = new ArrayList<>();
@@ -64,7 +72,7 @@ public class ItemHelper {
 		int i = 0;
 		float f = 0.0F;
 		int totalSlots = inv.getSlots();
-		
+
 		for (int j = 0; j < inv.getSlots(); ++j) {
 			int slotLimit = inv.getSlotLimit(j);
 			if (slotLimit == 0) {
@@ -80,7 +88,7 @@ public class ItemHelper {
 
 		if (totalSlots == 0)
 			return 0;
-		
+
 		f = f / totalSlots;
 		return MathHelper.floor(f * 14.0F) + (i > 0 ? 1 : 0);
 	}

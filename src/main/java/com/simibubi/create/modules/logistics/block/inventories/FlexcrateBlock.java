@@ -75,10 +75,15 @@ public class FlexcrateBlock extends ProperDirectionalBlock {
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (oldState.getBlock() != state.getBlock() && state.hasTileEntity() && state.get(DOUBLE)
 				&& state.get(FACING).getAxisDirection() == AxisDirection.POSITIVE) {
-			FlexcrateTileEntity te = (FlexcrateTileEntity) worldIn.getTileEntity(pos);
+			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			if (!(tileEntity instanceof FlexcrateTileEntity))
+				return;
+
+			FlexcrateTileEntity te = (FlexcrateTileEntity) tileEntity;
 			FlexcrateTileEntity other = te.getOtherCrate();
 			if (other == null)
 				return;
+			
 			for (int slot = 0; slot < other.inventory.getSlots(); slot++) {
 				te.inventory.setStackInSlot(slot, other.inventory.getStackInSlot(slot));
 				other.inventory.setStackInSlot(slot, ItemStack.EMPTY);

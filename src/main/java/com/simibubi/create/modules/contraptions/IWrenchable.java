@@ -1,7 +1,14 @@
 package com.simibubi.create.modules.contraptions;
 
 import com.simibubi.create.foundation.utility.VoxelShaper;
-import com.simibubi.create.modules.contraptions.base.*;
+import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
+import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
+import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.modules.contraptions.base.HorizontalAxisKineticBlock;
+import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;

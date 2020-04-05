@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -97,7 +98,7 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 			return;
 		if (te.beltLength == 0)
 			return;
-		
+
 		GlStateManager.pushMatrix();
 
 		Vec3i directionVec = te.getBeltFacing().getDirectionVec();
@@ -107,7 +108,7 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 		int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
 		boolean slopeAlongX = te.getBeltFacing().getAxis() == Axis.X;
 
-		for (TransportedItemStack transported : te.getInventory().items) {
+		for (TransportedItemStack transported : te.getInventory().getItems()) {
 			GlStateManager.pushMatrix();
 			TessellatorHelper.fightZFighting(transported.angle);
 			float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);

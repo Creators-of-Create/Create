@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.relays.belt;
+package com.simibubi.create.modules.logistics.block.belts.tunnel;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.block.SafeTileEntityRendererFast;

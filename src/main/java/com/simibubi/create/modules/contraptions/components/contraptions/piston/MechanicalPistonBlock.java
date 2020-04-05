@@ -3,10 +3,11 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.config.AllConfigs;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -17,7 +18,11 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -29,7 +34,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
 public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
-		implements IWithTileEntity<MechanicalPistonTileEntity> {
+		implements ITE<MechanicalPistonTileEntity> {
 
 	public static final EnumProperty<PistonState> STATE = EnumProperty.create("state", PistonState.class);
 	protected boolean isSticky;
@@ -164,6 +169,11 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
 			return AllShapes.MECHANICAL_PISTON.get(state.get(FACING));
 
 		return VoxelShapes.fullCube();
+	}
+
+	@Override
+	public Class<MechanicalPistonTileEntity> getTileEntityClass() {
+		return MechanicalPistonTileEntity.class;
 	}
 
 }

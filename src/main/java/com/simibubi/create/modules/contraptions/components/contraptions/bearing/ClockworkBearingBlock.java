@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
 
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class ClockworkBearingBlock extends BearingBlock implements IWithTileEntity<ClockworkBearingTileEntity> {
+public class ClockworkBearingBlock extends BearingBlock implements ITE<ClockworkBearingTileEntity> {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
@@ -38,6 +38,11 @@ public class ClockworkBearingBlock extends BearingBlock implements IWithTileEnti
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public Class<ClockworkBearingTileEntity> getTileEntityClass() {
+		return ClockworkBearingTileEntity.class;
 	}
 
 }

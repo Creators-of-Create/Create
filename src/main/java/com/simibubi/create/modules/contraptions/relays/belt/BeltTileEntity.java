@@ -20,7 +20,10 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.Tracker;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltMovementHandler.TransportedEntityInfo;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.BeltInventory;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.BeltMovementHandler;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -99,7 +102,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		passengers.forEach((entity, info) -> {
 			boolean canBeTransported = BeltMovementHandler.canBeTransported(entity);
 			boolean leftTheBelt =
-				info.ticksSinceLastCollision > ((getBlockState().get(BeltBlock.SLOPE) != HORIZONTAL) ? 3 : 1);
+				info.getTicksSinceLastCollision() > ((getBlockState().get(BeltBlock.SLOPE) != HORIZONTAL) ? 3 : 1);
 			if (!canBeTransported || leftTheBelt) {
 				toRemove.add(entity);
 				return;
@@ -193,7 +196,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	public void applyColor(DyeColor colorIn) {
 		int colorValue = colorIn.getMapColor().colorValue;
 		for (BlockPos blockPos : BeltBlock.getBeltChain(world, getController())) {
-			BeltTileEntity belt = (BeltTileEntity) world.getTileEntity(blockPos);
+			BeltTileEntity belt = BeltHelper.getSegmentTE(world, blockPos);
 			if (belt == null)
 				continue;
 			belt.color = belt.color == -1 ? colorValue : ColorHelper.mixColors(belt.color, colorValue, .5f);

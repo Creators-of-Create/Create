@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.processing;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
 
@@ -12,7 +12,6 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
@@ -26,7 +25,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity> {
+public class BasinBlock extends Block implements ITE<BasinTileEntity> {
 
 	public BasinBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -52,16 +51,16 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 			BlockRayTraceResult hit) {
 		if (!player.getHeldItem(handIn).isEmpty())
 			return false;
-		if (worldIn.getTileEntity(pos) == null)
-			return false;
 
-		BasinTileEntity te = (BasinTileEntity) worldIn.getTileEntity(pos);
-		IItemHandlerModifiable inv = te.inventory.orElse(new ItemStackHandler(1));
-		for (int slot = 0; slot < inv.getSlots(); slot++) {
-			player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
-			inv.setStackInSlot(slot, ItemStack.EMPTY);
-		}
-		te.onEmptied();
+		try {
+			BasinTileEntity te = getTileEntity(worldIn, pos);
+			IItemHandlerModifiable inv = te.inventory.orElse(new ItemStackHandler(1));
+			for (int slot = 0; slot < inv.getSlots(); slot++) {
+				player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
+				inv.setStackInSlot(slot, ItemStack.EMPTY);
+			}
+			te.onEmptied();
+		} catch (TileEntityException e) {}
 
 		return true;
 	}
@@ -75,18 +74,17 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 			return;
 		if (!entityIn.isAlive())
 			return;
-
-		BasinTileEntity te = (BasinTileEntity) worldIn.getTileEntity(entityIn.getPosition());
 		ItemEntity itemEntity = (ItemEntity) entityIn;
-		ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputInventory, itemEntity.getItem().copy(), false);
+		withTileEntityDo(worldIn, entityIn.getPosition(), te -> {
+			ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputInventory, itemEntity.getItem().copy(), false);
 
-		if (insertItem.isEmpty()) {
-			itemEntity.remove();
-			return;
-		}
+			if (insertItem.isEmpty()) {
+				itemEntity.remove();
+				return;
+			}
 
-		itemEntity.setItem(insertItem);
-
+			itemEntity.setItem(insertItem);
+		});
 	}
 
 	@Override
@@ -96,19 +94,15 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (worldIn.getTileEntity(pos) == null)
+		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock()) {
 			return;
-
-		BasinTileEntity te = (BasinTileEntity) worldIn.getTileEntity(pos);
-		IItemHandlerModifiable inv = te.inventory.orElse(new ItemStackHandler(1));
-		for (int slot = 0; slot < inv.getSlots(); slot++) {
-			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), inv.getStackInSlot(slot));
 		}
 
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-			worldIn.removeTileEntity(pos);
-		}
-
+		withTileEntityDo(worldIn, pos, te -> {
+			ItemHelper.dropContents(worldIn, pos, te.inputInventory);
+			ItemHelper.dropContents(worldIn, pos, te.outputInventory);
+		});
+		worldIn.removeTileEntity(pos);
 	}
 
 	@Override
@@ -123,12 +117,15 @@ public class BasinBlock extends Block implements IWithTileEntity<BasinTileEntity
 
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-		TileEntity te = worldIn.getTileEntity(pos);
-		if (te instanceof BasinTileEntity) {
-			BasinTileEntity basinTileEntity = (BasinTileEntity) te;
-			return ItemHelper.calcRedstoneFromInventory(basinTileEntity.inputInventory);
-		}
+		try {
+			return ItemHelper.calcRedstoneFromInventory(getTileEntity(worldIn, pos).inputInventory);
+		} catch (TileEntityException e) {}
 		return 0;
+	}
+
+	@Override
+	public Class<BasinTileEntity> getTileEntityClass() {
+		return BasinTileEntity.class;
 	}
 
 }

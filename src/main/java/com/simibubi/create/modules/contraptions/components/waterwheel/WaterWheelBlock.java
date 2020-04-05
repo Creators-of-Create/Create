@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.components.waterwheel;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -20,7 +21,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class WaterWheelBlock extends HorizontalKineticBlock {
+public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<WaterWheelTileEntity> {
 
 	public WaterWheelBlock() {
 		super(Properties.from(Blocks.STRIPPED_SPRUCE_WOOD));
@@ -79,46 +80,42 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 	}
 
 	private void updateFlowAt(BlockState state, World world, BlockPos pos, Direction f) {
-		WaterWheelTileEntity te = (WaterWheelTileEntity) world.getTileEntity(pos);
-		if (te == null)
-			return;
 		if (f.getAxis() == state.get(HORIZONTAL_FACING).getAxis())
 			return;
-		IFluidState fluid = world.getFluidState(pos.offset(f));
-		Vec3d flowVec = fluid.getFlow(world, pos.offset(f));
-		Direction wf = state.get(HORIZONTAL_FACING);
-		double flow = 0;
 
-		flowVec = flowVec.scale(f.getAxisDirection().getOffset());
+		IFluidState fluid = world.getFluidState(pos.offset(f));
+		Direction wf = state.get(HORIZONTAL_FACING);
 		boolean clockwise = wf.getAxisDirection() == AxisDirection.POSITIVE;
 		int clockwiseMultiplier = 2;
-		flowVec = new Vec3d(Math.signum(flowVec.x), Math.signum(flowVec.y), Math.signum(flowVec.z));
 
-		if (wf.getAxis() == Axis.Z) {
-			if (f.getAxis() == Axis.Y)
-				flow = flowVec.x > 0 ^ !clockwise ? -flowVec.x * clockwiseMultiplier : -flowVec.x;
-			if (f.getAxis() == Axis.X)
-				flow = flowVec.y < 0 ^ !clockwise ? flowVec.y * clockwiseMultiplier : flowVec.y;
-		}
+		Vec3d vec = fluid.getFlow(world, pos.offset(f));
+		vec = vec.scale(f.getAxisDirection().getOffset());
+		vec = new Vec3d(Math.signum(vec.x), Math.signum(vec.y), Math.signum(vec.z));
+		Vec3d flow = vec;
 
-		if (wf.getAxis() == Axis.X) {
-			if (f.getAxis() == Axis.Y)
-				flow = flowVec.z < 0 ^ !clockwise ? flowVec.z * clockwiseMultiplier : flowVec.z;
-			if (f.getAxis() == Axis.Z)
-				flow = flowVec.y > 0 ^ !clockwise ? -flowVec.y * clockwiseMultiplier : -flowVec.y;
-		}
+		withTileEntityDo(world, pos, te -> {
+			double flowStrength = 0;
 
-		te.setFlow(f, (float) (flow * AllConfigs.SERVER.kinetics.waterWheelSpeed.get() / 2f));
+			if (wf.getAxis() == Axis.Z) {
+				if (f.getAxis() == Axis.Y)
+					flowStrength = flow.x > 0 ^ !clockwise ? -flow.x * clockwiseMultiplier : -flow.x;
+				if (f.getAxis() == Axis.X)
+					flowStrength = flow.y < 0 ^ !clockwise ? flow.y * clockwiseMultiplier : flow.y;
+			}
+
+			if (wf.getAxis() == Axis.X) {
+				if (f.getAxis() == Axis.Y)
+					flowStrength = flow.z < 0 ^ !clockwise ? flow.z * clockwiseMultiplier : flow.z;
+				if (f.getAxis() == Axis.Z)
+					flowStrength = flow.y > 0 ^ !clockwise ? -flow.y * clockwiseMultiplier : -flow.y;
+			}
+
+			te.setFlow(f, (float) (flowStrength * AllConfigs.SERVER.kinetics.waterWheelSpeed.get() / 2f));
+		});
 	}
 
 	private void updateWheelSpeed(IWorld world, BlockPos pos) {
-		if (world.isRemote())
-			return;
-		TileEntity tileEntity = world.getTileEntity(pos);
-		if (!(tileEntity instanceof WaterWheelTileEntity))
-			return;
-		WaterWheelTileEntity te = (WaterWheelTileEntity) tileEntity;
-		te.updateGeneratedRotation();
+		withTileEntityDo(world, pos, WaterWheelTileEntity::updateGeneratedRotation);
 	}
 
 	@Override
@@ -157,6 +154,11 @@ public class WaterWheelBlock extends HorizontalKineticBlock {
 	@Override
 	public boolean hideStressImpact() {
 		return true;
+	}
+
+	@Override
+	public Class<WaterWheelTileEntity> getTileEntityClass() {
+		return WaterWheelTileEntity.class;
 	}
 
 }

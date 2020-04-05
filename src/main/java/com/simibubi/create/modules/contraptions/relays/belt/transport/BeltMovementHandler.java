@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.relays.belt;
+package com.simibubi.create.modules.contraptions.relays.belt.transport;
 
 import static net.minecraft.entity.MoverType.SELF;
 import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
@@ -9,8 +9,10 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -49,6 +51,10 @@ public class BeltMovementHandler {
 		public TransportedEntityInfo tick() {
 			ticksSinceLastCollision++;
 			return this;
+		}
+		
+		public int getTicksSinceLastCollision() {
+			return ticksSinceLastCollision;
 		}
 	}
 

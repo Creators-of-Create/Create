@@ -5,6 +5,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CKinetics;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
+
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;

@@ -10,6 +10,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class FlexcrateContainer extends Container {
@@ -21,10 +22,13 @@ public class FlexcrateContainer extends Container {
 	public FlexcrateContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
 		super(AllContainers.FLEXCRATE.type, id);
 		ClientWorld world = Minecraft.getInstance().world;
-		this.te = (FlexcrateTileEntity) world.getTileEntity(extraData.readBlockPos());
-		this.te.handleUpdateTag(extraData.readCompoundTag());
+		TileEntity tileEntity = world.getTileEntity(extraData.readBlockPos());
 		this.playerInventory = inv;
-		init();
+		if (tileEntity instanceof FlexcrateTileEntity) {
+			this.te = (FlexcrateTileEntity) tileEntity;
+			this.te.handleUpdateTag(extraData.readCompoundTag());
+			init();
+		}
 	}
 
 	public FlexcrateContainer(int id, PlayerInventory inv, FlexcrateTileEntity te) {

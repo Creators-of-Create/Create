@@ -1,16 +1,17 @@
 package com.simibubi.create.foundation.utility.data;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.simibubi.create.AllBlocks;
+
 import net.minecraft.block.Block;
 import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AllBlocksTagProvider extends BlockTagsProvider {
 

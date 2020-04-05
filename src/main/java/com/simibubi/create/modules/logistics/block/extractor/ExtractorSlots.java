@@ -5,7 +5,7 @@ import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
+import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 
 import net.minecraft.block.BlockState;

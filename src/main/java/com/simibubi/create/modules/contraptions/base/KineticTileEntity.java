@@ -104,7 +104,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			if (!world.isBlockPresent(source))
 				return;
 
-			KineticTileEntity sourceTe = (KineticTileEntity) world.getTileEntity(source);
+			TileEntity tileEntity = world.getTileEntity(source);
+			KineticTileEntity sourceTe =
+				tileEntity instanceof KineticTileEntity ? (KineticTileEntity) tileEntity : null;
 			if (sourceTe == null || sourceTe.speed == 0) {
 				removeSource();
 				detachKinetics();
@@ -266,12 +268,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		if (world == null || world.isRemote)
 			return;
 
-		KineticTileEntity sourceTe = (KineticTileEntity) world.getTileEntity(source);
-		if (sourceTe == null) {
+		TileEntity tileEntity = world.getTileEntity(source);
+		if (!(tileEntity instanceof KineticTileEntity)) {
 			removeSource();
 			return;
 		}
 
+		KineticTileEntity sourceTe = (KineticTileEntity) tileEntity;
 		setNetwork(sourceTe.network);
 	}
 
@@ -336,9 +339,11 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public static void switchToBlockState(World world, BlockPos pos, BlockState state) {
 		if (world.isRemote)
 			return;
+
 		TileEntity tileEntityIn = world.getTileEntity(pos);
 		if (!(tileEntityIn instanceof KineticTileEntity))
 			return;
+
 		KineticTileEntity tileEntity = (KineticTileEntity) tileEntityIn;
 		if (tileEntity.hasNetwork())
 			tileEntity.getOrCreateNetwork().remove(tileEntity);

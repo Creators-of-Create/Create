@@ -10,7 +10,8 @@ import com.simibubi.create.foundation.behaviour.inventory.SingleTargetAutoExtrac
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;

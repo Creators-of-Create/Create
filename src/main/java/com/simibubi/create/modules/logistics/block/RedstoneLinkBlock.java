@@ -1,19 +1,22 @@
 package com.simibubi.create.modules.logistics.block;
 
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -25,7 +28,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class RedstoneLinkBlock extends ProperDirectionalBlock {
+public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<RedstoneLinkTileEntity>, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty RECEIVER = BooleanProperty.create("receiver");
@@ -72,11 +75,7 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock {
 
 		if (previouslyPowered != shouldPower) {
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
-
-			RedstoneLinkTileEntity te = (RedstoneLinkTileEntity) worldIn.getTileEntity(pos);
-			if (te == null)
-				return;
-			te.transmit(!previouslyPowered);
+			withTileEntityDo(worldIn, pos, te -> te.transmit(!previouslyPowered));
 		}
 	}
 
@@ -118,25 +117,33 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock {
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-
-		if (player.isSneaking()) {
-			RedstoneLinkTileEntity te = (RedstoneLinkTileEntity) worldIn.getTileEntity(pos);
-			if (te == null)
-				return false;
-
-			if (!worldIn.isRemote) {
-				Boolean wasReceiver = state.get(RECEIVER);
-				boolean blockPowered = worldIn.isBlockPowered(pos);
-				worldIn.setBlockState(pos, state.cycle(RECEIVER).with(POWERED, blockPowered), 3);
-				if (wasReceiver) {
-					te.transmit(worldIn.isBlockPowered(pos));
-				} else
-					te.transmit(false);
-			}
-			return true;
-		}
-
+		if (player.isSneaking())
+			return toggleMode(state, worldIn, pos);
 		return false;
+	}
+
+	public boolean toggleMode(BlockState state, World worldIn, BlockPos pos) {
+		if (worldIn.isRemote)
+			return true;
+		try {
+			RedstoneLinkTileEntity te = getTileEntity(worldIn, pos);
+			Boolean wasReceiver = state.get(RECEIVER);
+			boolean blockPowered = worldIn.isBlockPowered(pos);
+			worldIn.setBlockState(pos, state.cycle(RECEIVER).with(POWERED, blockPowered), 3);
+			if (wasReceiver) {
+				te.transmit(worldIn.isBlockPowered(pos));
+			} else
+				te.transmit(false);
+			return true;
+		} catch (TileEntityException e) {}
+		return false;
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		if (toggleMode(state, context.getWorld(), context.getPos()))
+			return ActionResultType.SUCCESS;
+		return IWrenchable.super.onWrenched(state, context);
 	}
 
 	@Override
@@ -169,8 +176,8 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock {
 	}
 
 	@Override
-	public PushReaction getPushReaction(BlockState state) {
-		return PushReaction.BLOCK;
+	public Class<RedstoneLinkTileEntity> getTileEntityClass() {
+		return RedstoneLinkTileEntity.class;
 	}
 
 }

@@ -60,7 +60,7 @@ public class KineticDebugger {
 
 		BlockRayTraceResult ray = (BlockRayTraceResult) obj;
 		TileEntity te = world.getTileEntity(ray.getPos());
-		if (te == null || !(te instanceof KineticTileEntity))
+		if (!(te instanceof KineticTileEntity))
 			return null;
 
 		return (KineticTileEntity) te;

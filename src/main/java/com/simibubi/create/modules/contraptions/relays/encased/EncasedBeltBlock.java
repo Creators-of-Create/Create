@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

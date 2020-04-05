@@ -55,8 +55,6 @@ public enum AllContainers {
 		bind(SCHEMATIC_TABLE, SchematicTableScreen::new);
 		bind(SCHEMATICANNON, SchematicannonScreen::new);
 		bind(FLEXCRATE, FlexcrateScreen::new);
-//		bind(LOGISTICAL_INDEX, LogisticalIndexScreen::new);
-//		bind(LOGISTICAL_CONTROLLER, LogisticalInventoryControllerScreen::new);
 		bind(FILTER, FilterScreen::new);
 		bind(ATTRIBUTE_FILTER, AttributeFilterScreen::new);
 	}

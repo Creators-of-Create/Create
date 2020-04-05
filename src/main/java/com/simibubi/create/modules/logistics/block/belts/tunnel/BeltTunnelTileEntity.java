@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.relays.belt;
+package com.simibubi.create.modules.logistics.block.belts.tunnel;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,7 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelBlock.Shape;
+import com.simibubi.create.modules.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;

@@ -6,8 +6,7 @@ import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
-import com.simibubi.create.foundation.block.IWithTileEntity;
-import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
@@ -18,7 +17,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.I
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -39,7 +38,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class MechanicalPressBlock extends HorizontalKineticBlock
-		implements IWithTileEntity<MechanicalPressTileEntity>, IBeltAttachment, IHaveCustomBlockItem {
+		implements ITE<MechanicalPressTileEntity>, IBeltAttachment, IHaveCustomBlockItem {
 
 	public MechanicalPressBlock() {
 		super(Properties.from(Blocks.PISTON));
@@ -63,17 +62,15 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 			boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
-		MechanicalPressTileEntity te = (MechanicalPressTileEntity) worldIn.getTileEntity(pos);
-		if (te == null)
-			return;
 
-		if (worldIn.isBlockPowered(pos)) {
+		withTileEntityDo(worldIn, pos, te -> {
+			if (!worldIn.isBlockPowered(pos)) {
+				te.finished = false;
+				return;
+			}
 			if (!te.finished && !te.running && te.getSpeed() != 0)
 				te.start(Mode.WORLD);
-		} else {
-			te.finished = false;
-		}
-
+		});
 	}
 
 	@Override
@@ -134,54 +131,61 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
-		MechanicalPressTileEntity pressTe = (MechanicalPressTileEntity) te.getWorld()
-				.getTileEntity(state.attachmentPos);
+	public boolean startProcessingItem(BeltTileEntity belt, TransportedItemStack transported,
+			BeltAttachmentState state) {
+		try {
+			MechanicalPressTileEntity pressTe = getTileEntity(belt.getWorld(), state.attachmentPos);
+			if (pressTe.getSpeed() == 0)
+				return false;
+			if (pressTe.running)
+				return false;
+			if (!pressTe.getRecipe(transported.stack).isPresent())
+				return false;
 
-		if (pressTe == null || pressTe.getSpeed() == 0)
-			return false;
-		if (pressTe.running)
-			return false;
-		if (!pressTe.getRecipe(transported.stack).isPresent())
-			return false;
+			state.processingDuration = 1;
+			pressTe.start(Mode.BELT);
+			return true;
 
-		state.processingDuration = 1;
-		pressTe.start(Mode.BELT);
-		return true;
+		} catch (TileEntityException e) {}
+		return false;
 	}
 
 	@Override
-	public boolean processItem(BeltTileEntity te, TransportedItemStack transportedStack, BeltAttachmentState state) {
-		MechanicalPressTileEntity pressTe = (MechanicalPressTileEntity) te.getWorld()
-				.getTileEntity(state.attachmentPos);
+	public boolean processItem(BeltTileEntity belt, TransportedItemStack transportedStack, BeltAttachmentState state) {
+		try {
+			MechanicalPressTileEntity pressTe = getTileEntity(belt.getWorld(), state.attachmentPos);
 
-		// Not powered
-		if (pressTe == null || pressTe.getSpeed() == 0)
-			return false;
+			// Not powered
+			if (pressTe.getSpeed() == 0)
+				return false;
 
-		// Running
-		if (pressTe.running) {
-			if (pressTe.runningTicks == 30) {
-				Optional<PressingRecipe> recipe = pressTe.getRecipe(transportedStack.stack);
+			// Running
+			if (!pressTe.running)
+				return false;
+			if (pressTe.runningTicks != 30)
+				return true;
 
-				pressTe.pressedItems.clear();
-				pressTe.pressedItems.add(transportedStack.stack);
+			Optional<PressingRecipe> recipe = pressTe.getRecipe(transportedStack.stack);
 
-				if (!recipe.isPresent())
-					return false;
-				ItemStack out = recipe.get().getRecipeOutput().copy();
-				List<ItemStack> multipliedOutput = ItemHelper.multipliedOutput(transportedStack.stack, out);
-				if (multipliedOutput.isEmpty())
-					transportedStack.stack = ItemStack.EMPTY;
-				transportedStack.stack = multipliedOutput.get(0);
+			pressTe.pressedItems.clear();
+			pressTe.pressedItems.add(transportedStack.stack);
 
-				TileEntity controllerTE = te.getWorld().getTileEntity(te.getController());
-				if (controllerTE != null && controllerTE instanceof BeltTileEntity)
-					((SyncedTileEntity) controllerTE).sendData();
-				pressTe.sendData();
-			}
+			if (!recipe.isPresent())
+				return false;
+
+			ItemStack out = recipe.get().getRecipeOutput().copy();
+			List<ItemStack> multipliedOutput = ItemHelper.multipliedOutput(transportedStack.stack, out);
+			if (multipliedOutput.isEmpty())
+				transportedStack.stack = ItemStack.EMPTY;
+			transportedStack.stack = multipliedOutput.get(0);
+
+			BeltTileEntity controllerTE = belt.getControllerTE();
+			if (controllerTE != null)
+				controllerTE.sendData();
+			pressTe.sendData();
 			return true;
-		}
+
+		} catch (TileEntityException e) {}
 
 		return false;
 	}
@@ -189,6 +193,11 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 	@Override
 	public BlockItem getCustomItem(net.minecraft.item.Item.Properties properties) {
 		return new BasinOperatorBlockItem(AllBlocks.MECHANICAL_PRESS, properties);
+	}
+
+	@Override
+	public Class<MechanicalPressTileEntity> getTileEntityClass() {
+		return MechanicalPressTileEntity.class;
 	}
 
 }

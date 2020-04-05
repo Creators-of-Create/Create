@@ -10,11 +10,12 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltMovementHandler.TransportedEntityInfo;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
+import com.simibubi.create.modules.logistics.block.belts.tunnel.BeltTunnelBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -62,7 +63,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class BeltBlock extends HorizontalKineticBlock
-		implements IHaveNoBlockItem, IWithTileEntity<BeltTileEntity>, IHaveColorHandler {
+		implements IHaveNoBlockItem, ITE<BeltTileEntity>, IHaveColorHandler {
 
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
@@ -77,8 +78,11 @@ public class BeltBlock extends HorizontalKineticBlock
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		if (face.getAxis() != getRotationAxis(state))
 			return false;
-		BeltTileEntity beltEntity = (BeltTileEntity) world.getTileEntity(pos);
-		return beltEntity != null && beltEntity.hasPulley();
+
+		try {
+			return getTileEntity(world, pos).hasPulley();
+		} catch (TileEntityException e) {}
+		return false;
 	}
 
 	@Override
@@ -111,15 +115,9 @@ public class BeltBlock extends HorizontalKineticBlock
 
 	@Override
 	public void spawnAdditionalDrops(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
-		withTileEntityDo(worldIn, pos, te -> {
-			if (worldIn.isRemote)
-				return;
-			if (te.isController()) {
-				BeltInventory inv = te.getInventory();
-				for (TransportedItemStack s : inv.items)
-					inv.eject(s);
-			}
-		});
+		BeltTileEntity controllerTE = BeltHelper.getControllerTE(worldIn, pos);
+		if (controllerTE != null)
+			controllerTE.getInventory().ejectAll();
 	}
 
 	@Override
@@ -147,9 +145,6 @@ public class BeltBlock extends HorizontalKineticBlock
 
 	@Override
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		BeltTileEntity belt = null;
-		belt = (BeltTileEntity) worldIn.getTileEntity(pos);
-
 		if (state.get(SLOPE) == Slope.VERTICAL)
 			return;
 		if (entityIn instanceof PlayerEntity) {
@@ -159,6 +154,8 @@ public class BeltBlock extends HorizontalKineticBlock
 			if (player.abilities.isFlying)
 				return;
 		}
+
+		BeltTileEntity belt = BeltHelper.getSegmentTE(worldIn, pos);
 		if (belt == null || belt.getSpeed() == 0)
 			return;
 		if (entityIn instanceof ItemEntity && entityIn.isAlive()) {
@@ -178,12 +175,12 @@ public class BeltBlock extends HorizontalKineticBlock
 			return;
 		}
 
-		BeltTileEntity controller = (BeltTileEntity) worldIn.getTileEntity(belt.getController());
+		BeltTileEntity controller = BeltHelper.getControllerTE(worldIn, pos);
 		if (controller == null || controller.passengers == null)
 			return;
 		if (controller.passengers.containsKey(entityIn)) {
 			TransportedEntityInfo info = controller.passengers.get(entityIn);
-			if (info.ticksSinceLastCollision != 0 || pos.equals(entityIn.getPosition()))
+			if (info.getTicksSinceLastCollision() != 0 || pos.equals(entityIn.getPosition()))
 				info.refresh(pos, state);
 		} else {
 			controller.passengers.put(entityIn, new TransportedEntityInfo(pos, state));
@@ -224,10 +221,9 @@ public class BeltBlock extends HorizontalKineticBlock
 			return true;
 		}
 
-		TileEntity te = worldIn.getTileEntity(pos);
-		if (te == null || !(te instanceof BeltTileEntity))
+		BeltTileEntity belt = BeltHelper.getSegmentTE(worldIn, pos);
+		if (belt == null)
 			return false;
-		BeltTileEntity belt = (BeltTileEntity) te;
 
 		if (isHand) {
 			BeltTileEntity controllerBelt = belt.getControllerTE();
@@ -270,10 +266,6 @@ public class BeltBlock extends HorizontalKineticBlock
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		World world = context.getWorld();
-		TileEntity te = world.getTileEntity(context.getPos());
-		if (te == null || !(te instanceof BeltTileEntity))
-			return ActionResultType.PASS;
-		BeltTileEntity belt = (BeltTileEntity) te;
 		PlayerEntity player = context.getPlayer();
 
 		if (state.get(CASING)) {
@@ -289,8 +281,11 @@ public class BeltBlock extends HorizontalKineticBlock
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
 			world.setBlockState(context.getPos(), state.with(PART, Part.MIDDLE), 2);
-			belt.detachKinetics();
-			belt.attachKinetics();
+			BeltTileEntity belt = BeltHelper.getSegmentTE(world, context.getPos());
+			if (belt != null) {
+				belt.detachKinetics();
+				belt.attachKinetics();
+			}
 			if (!player.isCreative())
 				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.SHAFT.get()));
 			return ActionResultType.SUCCESS;
@@ -365,15 +360,21 @@ public class BeltBlock extends HorizontalKineticBlock
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 			ISelectionContext context) {
 		VoxelShape shape = getShape(state, worldIn, pos, context);
-		BeltTileEntity belt = (BeltTileEntity) worldIn.getTileEntity(pos);
-		if (belt == null || context.getEntity() == null)
-			return shape;
-		BeltTileEntity controller = (BeltTileEntity) worldIn.getTileEntity(belt.getController());
-		if (controller == null)
-			return shape;
-		if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity())) {
-			return BeltShapes.getCollisionShape(state);
-		}
+
+		try {
+			if (context.getEntity() == null)
+				return shape;
+
+			BeltTileEntity belt = getTileEntity(worldIn, pos);
+			BeltTileEntity controller = belt.getControllerTE();
+
+			if (controller == null)
+				return shape;
+			if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity())) {
+				return BeltShapes.getCollisionShape(state);
+			}
+
+		} catch (TileEntityException e) {}
 
 		return shape;
 	}
@@ -445,12 +446,8 @@ public class BeltBlock extends HorizontalKineticBlock
 					world.setBlockState(beltPos, currentState.with(CASING, false), 2);
 				}
 
-				if (te.isController() && isVertical) {
-					BeltInventory inventory = te.getInventory();
-					for (TransportedItemStack s : inventory.items)
-						inventory.eject(s);
-					inventory.items.clear();
-				}
+				if (te.isController() && isVertical)
+					te.getInventory().ejectAll();
 			} else {
 				world.destroyBlock(pos, true);
 				return;
@@ -490,11 +487,8 @@ public class BeltBlock extends HorizontalKineticBlock
 			TileEntity tileEntity = world.getTileEntity(currentPos);
 			if (tileEntity instanceof BeltTileEntity) {
 				BeltTileEntity te = (BeltTileEntity) tileEntity;
-				if (te.isController()) {
-					BeltInventory inv = te.getInventory();
-					for (TransportedItemStack stack : inv.items)
-						inv.eject(stack);
-				}
+				if (te.isController())
+					te.getInventory().ejectAll();
 
 				te.remove();
 				hasPulley = te.hasPulley();
@@ -606,6 +600,11 @@ public class BeltBlock extends HorizontalKineticBlock
 	@OnlyIn(Dist.CLIENT)
 	public IBlockColor getColorHandler() {
 		return new BeltColor();
+	}
+
+	@Override
+	public Class<BeltTileEntity> getTileEntityClass() {
+		return BeltTileEntity.class;
 	}
 
 }

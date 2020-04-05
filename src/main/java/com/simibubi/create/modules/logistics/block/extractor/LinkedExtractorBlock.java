@@ -5,7 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
+import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;

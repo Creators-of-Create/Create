@@ -1,7 +1,8 @@
 package com.simibubi.create.modules.contraptions.components.fan;
 
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -17,7 +18,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class EncasedFanBlock extends DirectionalKineticBlock implements IWithTileEntity<EncasedFanTileEntity> {
+public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<EncasedFanTileEntity> {
 
 	public EncasedFanBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -88,6 +89,11 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements IWithTil
 	@Override
 	public boolean showCapacityWithAnnotation() {
 		return true;
+	}
+
+	@Override
+	public Class<EncasedFanTileEntity> getTileEntityClass() {
+		return EncasedFanTileEntity.class;
 	}
 
 }

@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.modules.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

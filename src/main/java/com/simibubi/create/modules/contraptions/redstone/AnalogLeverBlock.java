@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.redstone;
 
 import java.util.Random;
 
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AnalogLeverBlock extends HorizontalFaceBlock implements IWithTileEntity<AnalogLeverTileEntity> {
+public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogLeverTileEntity> {
 
 	public AnalogLeverBlock() {
 		super(Properties.from(Blocks.LEVER));
@@ -50,23 +50,24 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements IWithTileEn
 			return true;
 		}
 
-		boolean sneak = player.isSneaking();
-		AnalogLeverTileEntity te = getTileEntity(worldIn, pos);
-		if (te == null)
-			return true;
+		try {
+			boolean sneak = player.isSneaking();
+			AnalogLeverTileEntity te = getTileEntity(worldIn, pos);
+			te.changeState(sneak);
+			float f = .25f + ((te.state + 5) / 15f) * .5f;
+			worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.2F, f);
+		} catch (TileEntityException e) {}
 
-		te.changeState(sneak);
-		float f = .25f + ((te.state + 5) / 15f) * .5f;
-		worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.2F, f);
 		return true;
 	}
 
 	@Override
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		AnalogLeverTileEntity tileEntity = getTileEntity(blockAccess, pos);
-		if (tileEntity == null)
+		try {
+			return getTileEntity(blockAccess, pos).state;
+		} catch (TileEntityException e) {
 			return 0;
-		return tileEntity.state;
+		}
 	}
 
 	@Override
@@ -82,21 +83,23 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements IWithTileEn
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-		AnalogLeverTileEntity tileEntity = getTileEntity(worldIn, pos);
-		if (tileEntity == null)
-			return;
-		if (tileEntity.state != 0 && rand.nextFloat() < 0.25F)
-			addParticles(stateIn, worldIn, pos, 0.5F);
+		try {
+			AnalogLeverTileEntity tileEntity = getTileEntity(worldIn, pos);
+			if (tileEntity.state != 0 && rand.nextFloat() < 0.25F)
+				addParticles(stateIn, worldIn, pos, 0.5F);
+		} catch (TileEntityException e) {}
 	}
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		AnalogLeverTileEntity tileEntity = getTileEntity(worldIn, pos);
-		if (tileEntity != null && !isMoving && state.getBlock() != newState.getBlock()) {
-			if (tileEntity.state != 0)
-				updateNeighbors(state, worldIn, pos);
-			worldIn.removeTileEntity(pos);
-		}
+		try {
+			AnalogLeverTileEntity tileEntity = getTileEntity(worldIn, pos);
+			if (!isMoving && state.getBlock() != newState.getBlock()) {
+				if (tileEntity.state != 0)
+					updateNeighbors(state, worldIn, pos);
+				worldIn.removeTileEntity(pos);
+			}
+		} catch (TileEntityException e) {}
 	}
 
 	private static void addParticles(BlockState state, IWorld worldIn, BlockPos pos, float alpha) {
@@ -125,6 +128,11 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements IWithTileEn
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder.add(HORIZONTAL_FACING, FACE));
+	}
+
+	@Override
+	public Class<AnalogLeverTileEntity> getTileEntityClass() {
+		return AnalogLeverTileEntity.class;
 	}
 
 }

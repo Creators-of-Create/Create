@@ -148,8 +148,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 						if (stack.isEmpty())
 							continue;
 
-//						if (itemMovementFacing.getAxis() == Axis.Z)
-//							itemMovementFacing = itemMovementFacing.getOpposite();
 						if (((BeltTileEntity) te).tryInsertingFromSide(itemMovementFacing, stack, false))
 							inventory.setStackInSlot(slot, ItemStack.EMPTY);
 						else {

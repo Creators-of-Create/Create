@@ -1,11 +1,12 @@
 package com.simibubi.create.modules.contraptions.relays.advanced.sequencer;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.modules.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,8 +32,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock
-		implements IWithTileEntity<SequencedGearshiftTileEntity> {
+public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implements ITE<SequencedGearshiftTileEntity> {
 
 	public static final BooleanProperty VERTICAL = BooleanProperty.create("vertical");
 	public static final IntegerProperty STATE = IntegerProperty.create("state", 0, 5);
@@ -86,9 +86,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock
 				return false;
 		}
 
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			displayScreen((SequencedGearshiftTileEntity) worldIn.getTileEntity(pos));
-		});
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> withTileEntityDo(worldIn, pos, this::displayScreen));
 		return true;
 	}
 
@@ -133,6 +131,11 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock
 	@Override
 	protected boolean hasStaticPart() {
 		return true;
+	}
+
+	@Override
+	public Class<SequencedGearshiftTileEntity> getTileEntityClass() {
+		return SequencedGearshiftTileEntity.class;
 	}
 
 }

@@ -327,7 +327,10 @@ public class RotationPropagator {
 
 		while (!frontier.isEmpty()) {
 			final BlockPos pos = frontier.remove(0);
-			final KineticTileEntity currentTE = (KineticTileEntity) world.getTileEntity(pos);
+			TileEntity tileEntity = world.getTileEntity(pos);
+			if (!(tileEntity instanceof KineticTileEntity))
+				continue;
+			final KineticTileEntity currentTE = (KineticTileEntity) tileEntity;
 
 			currentTE.removeSource();
 			currentTE.sendData();

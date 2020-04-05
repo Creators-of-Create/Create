@@ -2,9 +2,9 @@ package com.simibubi.create.modules.contraptions.components.turntable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -22,8 +22,12 @@ public class TurntableHandler {
 		if (mc.isGamePaused())
 			return;
 
-		KineticTileEntity te = (KineticTileEntity) mc.world.getTileEntity(pos);
-		float speed = te.getSpeed() * 3/10;
+		TileEntity tileEntity = mc.world.getTileEntity(pos);
+		if (!(tileEntity instanceof TurntableTileEntity))
+			return;
+		
+		TurntableTileEntity turnTable = (TurntableTileEntity) tileEntity;
+		float speed = turnTable.getSpeed() * 3/10;
 
 		if (speed == 0)
 			return;

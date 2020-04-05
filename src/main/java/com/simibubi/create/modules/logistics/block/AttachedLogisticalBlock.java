@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics.block.belts;
+package com.simibubi.create.modules.logistics.block;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;

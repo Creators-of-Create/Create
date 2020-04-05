@@ -4,9 +4,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
-import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
-import com.simibubi.create.modules.logistics.block.belts.FunnelBlock;
+import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
+import com.simibubi.create.modules.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 
 import net.minecraft.block.AbstractPressurePlateBlock;

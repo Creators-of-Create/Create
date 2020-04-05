@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics.block.belts;
+package com.simibubi.create.modules.logistics.block.belts.observer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.Random;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.IWrenchable;
@@ -17,7 +17,7 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -47,7 +47,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class BeltObserverBlock extends HorizontalBlock
-		implements IWithTileEntity<BeltObserverTileEntity>, IBeltAttachment, IWrenchable {
+		implements ITE<BeltObserverTileEntity>, IBeltAttachment, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty BELT = BooleanProperty.create("belt");
@@ -300,6 +300,11 @@ public class BeltObserverBlock extends HorizontalBlock
 		public String getName() {
 			return Lang.asId(name());
 		}
+	}
+
+	@Override
+	public Class<BeltObserverTileEntity> getTileEntityClass() {
+		return BeltObserverTileEntity.class;
 	}
 
 }

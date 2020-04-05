@@ -2,7 +2,8 @@ package com.simibubi.create.modules.contraptions.components.saw;
 
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.components.actors.SawMovementBehaviour;
@@ -15,7 +16,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
@@ -33,7 +33,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class SawBlock extends DirectionalAxisKineticBlock implements IWithTileEntity<SawTileEntity>, IPortableBlock {
+public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity>, IPortableBlock {
 
 	public static final BooleanProperty RUNNING = BooleanProperty.create("running");
 	public static DamageSource damageSourceSaw = new DamageSource("create.saw").setDamageBypassesArmor();
@@ -97,12 +97,13 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IWithTileEn
 		super.onLanded(worldIn, entityIn);
 		if (!(entityIn instanceof ItemEntity))
 			return;
-		BlockPos pos = entityIn.getPosition();
-		if (!(worldIn.getTileEntity(pos) instanceof SawTileEntity))
-			return;
 		if (entityIn.world.isRemote)
 			return;
+
+		BlockPos pos = entityIn.getPosition();
 		withTileEntityDo(entityIn.world, pos, te -> {
+			if (te.getSpeed() == 0)
+				return;
 			te.insertItem((ItemEntity) entityIn);
 		});
 	}
@@ -129,24 +130,22 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IWithTileEn
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (worldIn.getTileEntity(pos) == null)
+		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-			withTileEntityDo(worldIn, pos, te -> {
-				for (int slot = 0; slot < te.inventory.getSlots(); slot++) {
-					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
-							te.inventory.getStackInSlot(slot));
-				}
-			});
-			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
-			worldIn.removeTileEntity(pos);
-		}
+		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
+		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
+		worldIn.removeTileEntity(pos);
 	}
 
 	@Override
 	public MovementBehaviour getMovementBehaviour() {
 		return MOVEMENT;
+	}
+
+	@Override
+	public Class<SawTileEntity> getTileEntityClass() {
+		return SawTileEntity.class;
 	}
 
 }
