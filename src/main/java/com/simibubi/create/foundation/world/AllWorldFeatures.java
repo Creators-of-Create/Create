@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.world;
 
+import static net.minecraft.world.biome.Biome.Category.DESERT;
+import static net.minecraft.world.biome.Biome.Category.OCEAN;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,13 +18,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public enum AllWorldFeatures {
 
-	COPPER_ORE(new CountedOreFeature(AllBlocks.COPPER_ORE.get(), 21, 1).between(40, 96)),
-	COPPER_ORE_OCEAN(
-			new CountedOreFeature(AllBlocks.COPPER_ORE.get(), 15, 4).between(20, 55).inBiomes(Biome.Category.OCEAN)),
+	COPPER_ORE(new CountedOreFeature(AllBlocks.COPPER_ORE.get(), 18, 2).between(40, 86)),
+	COPPER_ORE_OCEAN(new CountedOreFeature(AllBlocks.COPPER_ORE.get(), 15, 4).between(20, 55).inBiomes(OCEAN)),
 
-	ZINC_ORE(new CountedOreFeature(AllBlocks.ZINC_ORE.get(), 8, 1).between(55, 80)),
-	ZINC_ORE_DESERT(
-			new CountedOreFeature(AllBlocks.ZINC_ORE.get(), 10, 5).between(50, 85).inBiomes(Biome.Category.DESERT)),
+	ZINC_ORE(new CountedOreFeature(AllBlocks.ZINC_ORE.get(), 14, 4).between(15, 70)),
+	ZINC_ORE_DESERT(new CountedOreFeature(AllBlocks.ZINC_ORE.get(), 17, 5).between(10, 85).inBiomes(DESERT)),
 
 	LIMESTONE(new ChanceOreFeature(AllBlocks.LIMESTONE.get(), 128, 1 / 32f).between(30, 70)),
 	WEATHERED_LIMESTONE(new ChanceOreFeature(AllBlocks.WEATHERED_LIMESTONE.get(), 128, 1 / 32f).between(10, 30)),
@@ -31,6 +32,12 @@ public enum AllWorldFeatures {
 
 	;
 
+	/**
+	 * Increment this number if all worldgen entries should be overwritten in this update.
+	 * Worlds from the previous version will overwrite potentially changed values with the new defaults.
+	 */
+	public static final int forcedUpdateVersion = 1;
+	
 	public IFeature feature;
 	private Map<Biome, ConfiguredFeature<?>> featureInstances;
 
