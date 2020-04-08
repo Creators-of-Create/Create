@@ -5,6 +5,7 @@ import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
+import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.modules.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
@@ -94,6 +95,8 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof RedstoneWireBlock)
 			return true;
+		if (block instanceof RedstoneLinkBlock)
+			return true;
 		return false;
 	}
 
@@ -112,6 +115,8 @@ public class BlockMovementTraits {
 			return direction == Direction.DOWN;
 		if (block instanceof AttachedLogisticalBlock && !(block instanceof TransposerBlock)) 
 			return direction == AttachedLogisticalBlock.getBlockFacing(state);
+		if (block instanceof RedstoneLinkBlock)
+			return direction.getOpposite() == state.get(RedstoneLinkBlock.FACING);
 		if (block instanceof FlowerPotBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof RedstoneDiodeBlock)

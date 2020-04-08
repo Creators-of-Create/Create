@@ -193,8 +193,11 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return getMainCrate().invHandler.cast();
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			FlexcrateTileEntity mainCrate = getMainCrate();
+			if (mainCrate != null && mainCrate.invHandler.isPresent())
+				return mainCrate.invHandler.cast();
+		}
 		return super.getCapability(capability, facing);
 	}
 

@@ -22,7 +22,9 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.TieredItem;
 import net.minecraft.util.text.TextFormatting;
 
 public class TooltipHelper {
@@ -169,11 +171,11 @@ public class TooltipHelper {
 	}
 
 	public static String getTooltipTranslationKey(ItemStack stack) {
-
-		if (stack.getItem() instanceof AbstractToolItem) {
-			AbstractToolItem abstractToolItem = (AbstractToolItem) stack.getItem();
-			if (abstractToolItem.getTier() instanceof AllToolTiers) {
-				AllToolTiers allToolTiers = (AllToolTiers) abstractToolItem.getTier();
+		Item item = stack.getItem();
+		if (item instanceof TieredItem) {
+			TieredItem tieredItem = (TieredItem) stack.getItem();
+			if (tieredItem.getTier() instanceof AllToolTiers) {
+				AllToolTiers allToolTiers = (AllToolTiers) tieredItem.getTier();
 				return "tool.create." + Lang.asId(allToolTiers.name()) + ".tooltip";
 			}
 		}

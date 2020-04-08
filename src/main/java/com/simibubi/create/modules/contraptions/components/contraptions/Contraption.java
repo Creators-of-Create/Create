@@ -31,11 +31,13 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 
+import net.minecraft.block.AbstractButtonBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.DoorBlock;
+import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.SlimeBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -216,6 +218,14 @@ public abstract class Contraption {
 			blockstate = blockstate.with(FlexcrateBlock.DOUBLE, false);
 		if (AllBlocks.CONTACT.typeOf(blockstate))
 			blockstate = blockstate.with(ContactBlock.POWERED, true);
+		if (blockstate.getBlock() instanceof AbstractButtonBlock) {
+			blockstate = blockstate.with(AbstractButtonBlock.POWERED, false);
+			world.getPendingBlockTicks().scheduleTick(pos, blockstate.getBlock(), -1);
+		}
+		if (blockstate.getBlock() instanceof PressurePlateBlock) {
+			blockstate = blockstate.with(PressurePlateBlock.POWERED, false);
+			world.getPendingBlockTicks().scheduleTick(pos, blockstate.getBlock(), -1);
+		}
 		CompoundNBT compoundnbt = getTileEntityNBT(world, pos);
 		TileEntity tileentity = world.getTileEntity(pos);
 		return Pair.of(new BlockInfo(pos, blockstate, compoundnbt), tileentity);

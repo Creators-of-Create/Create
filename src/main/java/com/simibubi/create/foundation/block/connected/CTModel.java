@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.PaneBlock;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -55,7 +56,7 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 		CTData data = new CTData();
 
 		for (Direction face : Direction.values()) {
-			if (!Block.shouldSideBeRendered(state, world, pos, face))
+			if (!Block.shouldSideBeRendered(state, world, pos, face) && !(state.getBlock() instanceof PaneBlock))
 				continue;
 			CTSpriteShiftEntry spriteShift = behaviour.get(state, face);
 			if (spriteShift == null)
@@ -85,9 +86,6 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 			if (index == -1)
 				continue;
 
-			float uShift = spriteShift.getUShift(index);
-			float vShift = spriteShift.getVShift(index);
-
 			BakedQuad newQuad =
 				new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length), quad.getTintIndex(),
 						quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(), quad.getFormat());
@@ -100,10 +98,8 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 				int vIndex = vertex + uvOffset + 1;
 				float u = Float.intBitsToFloat(vertexData[uIndex]);
 				float v = Float.intBitsToFloat(vertexData[vIndex]);
-				u += uShift;
-				v += vShift;
-				vertexData[uIndex] = Float.floatToIntBits(u);
-				vertexData[vIndex] = Float.floatToIntBits(v);
+				vertexData[uIndex] = Float.floatToRawIntBits(spriteShift.getTargetU(u, index));
+				vertexData[vIndex] = Float.floatToRawIntBits(spriteShift.getTargetV(v, index));
 			}
 			quads.set(i, newQuad);
 		}

@@ -11,14 +11,16 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 		this.textureSheetSize = sheetSize;
 	}
 
-	public float getUShift(int index) {
-		return getTarget().getInterpolatedU((index % textureSheetSize) * (16 / textureSheetSize))
-				- getOriginal().getMinU();
+	public float getTargetU(float localU, int index) {
+		float uOffset = (index % textureSheetSize);
+		return getTarget().getInterpolatedU(
+				(getOriginal().getUnInterpolatedU(localU) + (uOffset * 16)) / ((float) textureSheetSize));
 	}
 
-	public float getVShift(int index) {
-		return getTarget().getInterpolatedV((index / textureSheetSize) * (16 / textureSheetSize))
-				- getOriginal().getMinV();
+	public float getTargetV(float localV, int index) {
+		float vOffset = (index / textureSheetSize);
+		return getTarget().getInterpolatedV(
+				(getOriginal().getUnInterpolatedV(localV) + (vOffset * 16)) / ((float) textureSheetSize));
 	}
 
 	public abstract int getTextureIndex(CTContext context);

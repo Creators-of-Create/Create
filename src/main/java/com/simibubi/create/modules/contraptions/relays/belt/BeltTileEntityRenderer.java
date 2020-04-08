@@ -74,10 +74,9 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 			if (textureIndex < 0)
 				textureIndex += 16;
 
-			beltBuffer.shiftUVtoSheet(animatedTexture.getOriginal(), animatedTexture.getTarget(),
-					(textureIndex % 4) * 16, (textureIndex / 4) * 16);
+			beltBuffer.shiftUVtoSheet(animatedTexture, (textureIndex % 4) / 4f, (textureIndex / 4) / 4f, 4);
 		} else {
-			beltBuffer.shiftUVtoSheet(animatedTexture.getOriginal(), animatedTexture.getTarget(), 0, 0);
+			beltBuffer.dontShiftUV();
 		}
 
 		int packedLightmapCoords = blockState.getPackedLightmapCoords(getWorld(), te.getPos());
