@@ -298,5 +298,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public boolean isAttachedTo(ContraptionEntity contraption) {
 		return movedContraption == contraption;
 	}
+	
+	public boolean isRunning() {
+		return running;
+	}
 
 }

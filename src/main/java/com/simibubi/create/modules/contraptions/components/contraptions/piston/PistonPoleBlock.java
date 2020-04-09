@@ -7,6 +7,7 @@ import com.simibubi.create.modules.contraptions.components.contraptions.piston.M
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -24,6 +25,11 @@ public class PistonPoleBlock extends ProperDirectionalBlock {
 	public PistonPoleBlock() {
 		super(Properties.from(Blocks.PISTON_HEAD));
 		setDefaultState(getDefaultState().with(FACING, Direction.UP));
+	}
+	
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.NORMAL;
 	}
 
 	@Override

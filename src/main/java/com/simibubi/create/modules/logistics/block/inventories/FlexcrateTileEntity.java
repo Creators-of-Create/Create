@@ -86,9 +86,13 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 	}
 
 	public FlexcrateTileEntity getMainCrate() {
-		if (isDoubleCrate() && getFacing().getAxisDirection() == AxisDirection.NEGATIVE)
+		if (isSecondaryCrate())
 			return getOtherCrate();
 		return this;
+	}
+
+	public boolean isSecondaryCrate() {
+		return isDoubleCrate() && getFacing().getAxisDirection() == AxisDirection.NEGATIVE;
 	}
 
 	public FlexcrateTileEntity getOtherCrate() {
@@ -158,7 +162,7 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		if (getMainCrate() == this) {
+		if (!isSecondaryCrate()) {
 			compound.putBoolean("Main", true);
 			compound.putInt("AllowedAmount", allowedAmount);
 			compound.put("Inventory", inventory.serializeNBT());

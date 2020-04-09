@@ -54,6 +54,11 @@ public class CrushingWheelControllerBlock extends Block
 	}
 
 	@Override
+	public boolean addRunningEffects(BlockState state, World world, BlockPos pos, Entity entity) {
+		return true;
+	}
+
+	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new CrushingWheelControllerTileEntity();
 	}

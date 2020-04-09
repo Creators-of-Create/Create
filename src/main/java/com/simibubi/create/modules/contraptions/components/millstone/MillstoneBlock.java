@@ -64,11 +64,24 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 			return true;
 
 		withTileEntityDo(worldIn, pos, millstone -> {
+			boolean emptyOutput = true;
 			IItemHandlerModifiable inv = millstone.outputInv;
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
-				player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
+				ItemStack stackInSlot = inv.getStackInSlot(slot);
+				if (!stackInSlot.isEmpty())
+					emptyOutput = false;
+				player.inventory.placeItemBackInInventory(worldIn, stackInSlot);
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
 			}
+
+			if (emptyOutput) {
+				inv = millstone.inputInv;
+				for (int slot = 0; slot < inv.getSlots(); slot++) {
+					player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
+					inv.setStackInSlot(slot, ItemStack.EMPTY);
+				}
+			}
+
 			millstone.markDirty();
 			millstone.sendData();
 		});

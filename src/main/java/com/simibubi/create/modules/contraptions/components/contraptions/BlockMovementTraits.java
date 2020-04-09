@@ -3,7 +3,15 @@ package com.simibubi.create.modules.contraptions.components.contraptions;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.ClockworkBearingBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.ClockworkBearingTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
 import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
@@ -28,6 +36,7 @@ import net.minecraft.block.WallTorchBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -56,6 +65,26 @@ public class BlockMovementTraits {
 			return false;
 		if (block == Blocks.OBSIDIAN)
 			return false;
+
+		// Move controllers only when they aren't moving
+		if (block instanceof MechanicalPistonBlock && blockState.get(MechanicalPistonBlock.STATE) != PistonState.MOVING)
+			return true;
+		if (block instanceof MechanicalBearingBlock) {
+			TileEntity te = world.getTileEntity(pos);
+			if (te instanceof MechanicalBearingTileEntity)
+				return !((MechanicalBearingTileEntity) te).isRunning();
+		}
+		if (block instanceof ClockworkBearingBlock) {
+			TileEntity te = world.getTileEntity(pos);
+			if (te instanceof ClockworkBearingTileEntity)
+				return !((ClockworkBearingTileEntity) te).isRunning();
+		}
+		if (block instanceof PulleyBlock) {
+			TileEntity te = world.getTileEntity(pos);
+			if (te instanceof PulleyTileEntity)
+				return !((PulleyTileEntity) te).running && ((PulleyTileEntity) te).offset == 0;
+		}
+
 		if (AllBlocks.BELT.typeOf(blockState))
 			return true;
 		if (block instanceof ExtractorBlock)
@@ -113,7 +142,7 @@ public class BlockMovementTraits {
 			return direction == Direction.DOWN;
 		if (block instanceof DoorBlock)
 			return direction == Direction.DOWN;
-		if (block instanceof AttachedLogisticalBlock && !(block instanceof TransposerBlock)) 
+		if (block instanceof AttachedLogisticalBlock && !(block instanceof TransposerBlock))
 			return direction == AttachedLogisticalBlock.getBlockFacing(state);
 		if (block instanceof RedstoneLinkBlock)
 			return direction.getOpposite() == state.get(RedstoneLinkBlock.FACING);
@@ -159,16 +188,6 @@ public class BlockMovementTraits {
 		if (AllBlocks.HARVESTER.typeOf(state))
 			return state.get(BlockStateProperties.HORIZONTAL_FACING) == facing;
 		return isBrittle(state);
-	}
-
-	public static boolean movementIgnored(BlockState state) {
-		if (AllBlocks.MECHANICAL_PISTON.typeOf(state))
-			return true;
-		if (AllBlocks.STICKY_MECHANICAL_PISTON.typeOf(state))
-			return true;
-		if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state))
-			return true;
-		return false;
 	}
 
 }

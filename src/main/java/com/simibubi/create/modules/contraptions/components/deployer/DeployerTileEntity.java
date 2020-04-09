@@ -41,8 +41,12 @@ import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class DeployerTileEntity extends KineticTileEntity {
@@ -61,6 +65,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected boolean boop = false;
 	protected List<ItemStack> overflowItems = new ArrayList<>();
 	private ListNBT deferredInventoryList;
+	private LazyOptional<IItemHandlerModifiable> invHandler;
 
 	enum State {
 		WAITING, EXPANDING, RETRACTING, DUMPING;
@@ -98,7 +103,10 @@ public class DeployerTileEntity extends KineticTileEntity {
 				heldItem = player.getHeldItemMainhand();
 				sendData();
 			}
+			Vec3d initialPos = VecHelper.getCenterOf(pos.offset(getBlockState().get(FACING)));
+			player.setPosition(initialPos.x, initialPos.y, initialPos.z);
 		}
+		invHandler = LazyOptional.of(this::createHandler);
 	}
 
 	protected void onExtract(ItemStack stack) {
@@ -372,6 +380,10 @@ public class DeployerTileEntity extends KineticTileEntity {
 		super.readClientUpdate(tag);
 	}
 
+	private IItemHandlerModifiable createHandler() {
+		return new DeployerItemHandler(this);
+	}
+
 	@Override
 	public boolean hasFastRenderer() {
 		return false;
@@ -387,15 +399,24 @@ public class DeployerTileEntity extends KineticTileEntity {
 		return super.getRenderBoundingBox().grow(3);
 	}
 
+	@Override
+	public void remove() {
+		super.remove();
+		invHandler.invalidate();
+	}
+
 	public void changeMode() {
-		eject();
 		mode = mode == Mode.PUNCH ? Mode.USE : Mode.PUNCH;
 		markDirty();
 		sendData();
 	}
 
-	protected void eject() {
-
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && invHandler != null) {
+			return invHandler.cast();
+		}
+		return super.getCapability(cap, side);
 	}
 
 }

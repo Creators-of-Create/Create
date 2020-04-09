@@ -129,6 +129,11 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
 	}
+	
+	@Override
+	public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return false;
+	}
 
 	public static class MinecartAnchorBlock extends RenderUtilityBlock {
 

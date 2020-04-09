@@ -299,4 +299,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 			return this.minuteHand == contraption;
 	}
 
+	public boolean isRunning() {
+		return running;
+	}
+	
 }
