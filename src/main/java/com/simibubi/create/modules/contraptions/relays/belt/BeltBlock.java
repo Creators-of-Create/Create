@@ -78,7 +78,6 @@ public class BeltBlock extends HorizontalKineticBlock
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		if (face.getAxis() != getRotationAxis(state))
 			return false;
-
 		try {
 			return getTileEntity(world, pos).hasPulley();
 		} catch (TileEntityException e) {}
@@ -360,7 +359,6 @@ public class BeltBlock extends HorizontalKineticBlock
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 			ISelectionContext context) {
 		VoxelShape shape = getShape(state, worldIn, pos, context);
-
 		try {
 			if (context.getEntity() == null)
 				return shape;
@@ -375,7 +373,6 @@ public class BeltBlock extends HorizontalKineticBlock
 			}
 
 		} catch (TileEntityException e) {}
-
 		return shape;
 	}
 
