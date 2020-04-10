@@ -56,7 +56,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	protected BeltInventory inventory;
 	protected LazyOptional<IItemHandler> itemHandler;
 
-	private CompoundNBT trackerUpdateTag;
+	public CompoundNBT trackerUpdateTag;
 
 	public BeltTileEntity() {
 		super(AllTileEntities.BELT.type);
@@ -115,10 +115,10 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public float getStressApplied() {
+	public float calculateStressApplied() {
 		if (!isController())
 			return 0;
-		return super.getStressApplied();
+		return super.calculateStressApplied();
 	}
 
 	@Override

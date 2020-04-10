@@ -10,6 +10,7 @@ import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
@@ -86,7 +87,8 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 				return false;
 		}
 
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> withTileEntityDo(worldIn, pos, this::displayScreen));
+		if (player instanceof ClientPlayerEntity)
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> withTileEntityDo(worldIn, pos, this::displayScreen));
 		return true;
 	}
 

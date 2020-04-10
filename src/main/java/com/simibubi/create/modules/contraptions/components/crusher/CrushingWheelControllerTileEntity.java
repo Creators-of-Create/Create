@@ -204,7 +204,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		if (hasEntity() && !isFrozen())
+		if (hasEntity())
 			compound.put("Entity", NBTUtil.writeUniqueId(entityUUID));
 		compound.put("Inventory", inventory.serializeNBT());
 		compound.putFloat("Speed", crushingspeed);

@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.IntegerProperty;
@@ -87,7 +88,8 @@ public class StockswitchBlock extends HorizontalBlock implements ITE<Stockswitch
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> withTileEntityDo(worldIn, pos, this::displayScreen));
+		if (player instanceof ClientPlayerEntity)
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> withTileEntityDo(worldIn, pos, this::displayScreen));
 		return true;
 	}
 

@@ -55,7 +55,7 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
 		boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
-		float stressBase = getAddedStressCapacity();
+		float stressBase = calculateAddedStressCapacity();
 		if (stressBase != 0 && IRotate.StressImpact.isEnabled()) {
 			tooltip.add(spacing + Lang.translate("gui.goggles.generator_stats"));
 			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("tooltip.capacityProvided"));
@@ -97,8 +97,8 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 
 		if (hasNetwork() && speed != 0) {
 			KineticNetwork network = getOrCreateNetwork();
-			notifyStressCapacityChange(getAddedStressCapacity());
-			getOrCreateNetwork().updateStressFor(this, getStressApplied());
+			notifyStressCapacityChange(calculateAddedStressCapacity());
+			getOrCreateNetwork().updateStressFor(this, calculateStressApplied());
 			network.updateStress();
 		}
 
@@ -112,7 +112,7 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 		if (speed == 0) {
 			if (hasSource()) {
 				notifyStressCapacityChange(0);
-				getOrCreateNetwork().updateStressFor(this, getStressApplied());
+				getOrCreateNetwork().updateStressFor(this, calculateStressApplied());
 				return;
 			}
 			detachKinetics();

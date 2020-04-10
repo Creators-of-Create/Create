@@ -125,7 +125,11 @@ public class BeltInventory {
 				if (segmentBefore != -1 && current.locked) {
 					BeltTileEntity beltSegment = BeltHelper.getBeltAtSegment(belt, segmentBefore);
 					if (beltSegment != null) {
-
+						
+						// wait in case belt isnt initialized yet
+						if (current.locked && beltSegment.trackerUpdateTag != null)
+							continue;
+						
 						current.locked = false;
 						List<BeltAttachmentState> attachments = beltSegment.attachmentTracker.attachments;
 						for (BeltAttachmentState attachmentState : attachments) {

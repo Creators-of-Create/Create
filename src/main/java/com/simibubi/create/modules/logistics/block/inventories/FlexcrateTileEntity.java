@@ -162,20 +162,16 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		if (!isSecondaryCrate()) {
-			compound.putBoolean("Main", true);
-			compound.putInt("AllowedAmount", allowedAmount);
-			compound.put("Inventory", inventory.serializeNBT());
-		}
+		compound.putBoolean("Main", true);
+		compound.putInt("AllowedAmount", allowedAmount);
+		compound.put("Inventory", inventory.serializeNBT());
 		return super.write(compound);
 	}
 
 	@Override
 	public void read(CompoundNBT compound) {
-		if (compound.contains("Main")) {
-			allowedAmount = compound.getInt("AllowedAmount");
-			inventory.deserializeNBT(compound.getCompound("Inventory"));
-		}
+		allowedAmount = compound.getInt("AllowedAmount");
+		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		super.read(compound);
 	}
 

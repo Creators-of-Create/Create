@@ -52,13 +52,13 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	@Override
-	public float getAddedStressCapacity() {
-		return isWindmill ? super.getAddedStressCapacity() : 0;
+	public float calculateAddedStressCapacity() {
+		return isWindmill ? super.calculateAddedStressCapacity() : 0;
 	}
 
 	@Override
-	public float getStressApplied() {
-		return isWindmill ? 0 : super.getStressApplied();
+	public float calculateStressApplied() {
+		return isWindmill ? 0 : super.calculateStressApplied();
 	}
 
 	public void neighbourChanged() {
