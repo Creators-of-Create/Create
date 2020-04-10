@@ -55,6 +55,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	private int recipeIndex;
 	private LazyOptional<IItemHandler> invProvider = LazyOptional.empty();
 	private FilteringBehaviour filtering;
+	private boolean destroyed;
 
 	public SawTileEntity() {
 		super(AllTileEntities.SAW.type);
@@ -81,7 +82,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		super.onSpeedChanged(prevSpeed);
 		boolean shouldRun = Math.abs(getSpeed()) > 1 / 64f;
 		boolean running = getBlockState().get(RUNNING);
-		if (shouldRun != running)
+		if (shouldRun != running && !destroyed)
 			world.setBlockState(pos, getBlockState().with(RUNNING, shouldRun), 2 | 16);
 	}
 
@@ -212,8 +213,9 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	public void remove() {
-		super.remove();
 		invProvider.invalidate();
+		destroyed = true;
+		super.remove();
 	}
 
 	@Override

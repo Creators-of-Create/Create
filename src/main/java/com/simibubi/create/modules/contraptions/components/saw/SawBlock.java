@@ -135,7 +135,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 
 		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
 		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
-		worldIn.removeTileEntity(pos);
+      		worldIn.removeTileEntity(pos);
 	}
 
 	@Override

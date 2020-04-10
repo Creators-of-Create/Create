@@ -18,6 +18,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -94,6 +95,9 @@ public class AirCurrent {
 
 			entity.setMotion(previousMotion.add(new Vec3d(xIn, yIn, zIn).scale(1 / 8f)));
 			entity.fallDistance = 0;
+
+			if (entity instanceof ServerPlayerEntity)
+				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
 
 			if (InWorldProcessing.isFrozen())
 				return;

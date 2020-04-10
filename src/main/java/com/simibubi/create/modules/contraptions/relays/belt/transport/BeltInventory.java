@@ -245,7 +245,7 @@ public class BeltInventory {
 				}
 
 				// next block is not a belt
-				if (!AllBlocks.BELT.typeOf(state)) {
+				if (!AllBlocks.BELT.typeOf(state) || state.get(BeltBlock.SLOPE) == Slope.VERTICAL) {
 					if (!Block.hasSolidSide(state, world, nextPosition, movementFacing.getOpposite())) {
 						eject(current);
 						iterator.remove();
