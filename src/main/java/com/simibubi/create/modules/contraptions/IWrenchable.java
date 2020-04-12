@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions;
 
+import com.simibubi.create.foundation.utility.DirectionHelper;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
@@ -43,13 +44,13 @@ public interface IWrenchable {
 
 		if (targetedFace.getAxis() == Direction.Axis.Y) {
 			if (originalState.has(HorizontalAxisKineticBlock.HORIZONTAL_AXIS))
-				return originalState.with(HorizontalAxisKineticBlock.HORIZONTAL_AXIS, VoxelShaper.axisAsFace(originalState.get(HorizontalAxisKineticBlock.HORIZONTAL_AXIS)).rotateAround(targetedFace.getAxis()).getAxis());
+				return originalState.with(HorizontalAxisKineticBlock.HORIZONTAL_AXIS, DirectionHelper.rotateAround(VoxelShaper.axisAsFace(originalState.get(HorizontalAxisKineticBlock.HORIZONTAL_AXIS)), targetedFace.getAxis()).getAxis());
 			if (originalState.has(HorizontalKineticBlock.HORIZONTAL_FACING))
-				return originalState.with(HorizontalKineticBlock.HORIZONTAL_FACING, originalState.get(HorizontalKineticBlock.HORIZONTAL_FACING).rotateAround(targetedFace.getAxis()));
+				return originalState.with(HorizontalKineticBlock.HORIZONTAL_FACING, DirectionHelper.rotateAround(originalState.get(HorizontalKineticBlock.HORIZONTAL_FACING), targetedFace.getAxis()));
 		}
 
 		if (originalState.has(RotatedPillarKineticBlock.AXIS))
-			return originalState.with(RotatedPillarKineticBlock.AXIS, VoxelShaper.axisAsFace(originalState.get(RotatedPillarKineticBlock.AXIS)).rotateAround(targetedFace.getAxis()).getAxis());
+			return originalState.with(RotatedPillarKineticBlock.AXIS, DirectionHelper.rotateAround(VoxelShaper.axisAsFace(originalState.get(RotatedPillarKineticBlock.AXIS)), targetedFace.getAxis()).getAxis());
 
 		if (!originalState.has(DirectionalKineticBlock.FACING)) return originalState;
 
@@ -60,7 +61,7 @@ public interface IWrenchable {
 			else return originalState;
 		} else {
 			do {
-				newState = newState.with(DirectionalKineticBlock.FACING, newState.get(DirectionalKineticBlock.FACING).rotateAround(targetedFace.getAxis()));
+				newState = newState.with(DirectionalKineticBlock.FACING, DirectionHelper.rotateAround(newState.get(DirectionalKineticBlock.FACING), targetedFace.getAxis()));
 				if (targetedFace.getAxis() == Direction.Axis.Y && newState.has(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE)) newState = newState.cycle(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE);
 			} while (newState.get(DirectionalKineticBlock.FACING).getAxis().equals(targetedFace.getAxis()));
 		}

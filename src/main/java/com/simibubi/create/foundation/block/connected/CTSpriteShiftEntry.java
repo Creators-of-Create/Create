@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.block.connected;
 
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 
@@ -14,13 +15,13 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 	public float getTargetU(float localU, int index) {
 		float uOffset = (index % textureSheetSize);
 		return getTarget().getInterpolatedU(
-				(getOriginal().getUnInterpolatedU(localU) + (uOffset * 16)) / ((float) textureSheetSize));
+				(SuperByteBuffer.getUnInterpolatedU(getOriginal(), localU) + (uOffset * 16)) / ((float) textureSheetSize));
 	}
 
 	public float getTargetV(float localV, int index) {
 		float vOffset = (index / textureSheetSize);
 		return getTarget().getInterpolatedV(
-				(getOriginal().getUnInterpolatedV(localV) + (vOffset * 16)) / ((float) textureSheetSize));
+				(SuperByteBuffer.getUnInterpolatedV(getOriginal(), localV) + (vOffset * 16)) / ((float) textureSheetSize));
 	}
 
 	public abstract int getTextureIndex(CTContext context);

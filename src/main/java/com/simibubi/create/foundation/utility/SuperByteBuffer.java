@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.BufferBuilder.DrawState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Vector4f;
@@ -88,9 +89,9 @@ public class SuperByteBuffer {
 				float u = getU(original, vertex);
 				float v = getV(original, vertex);
 				float targetU = spriteShift.getTarget()
-						.getInterpolatedU((spriteShift.getOriginal().getUnInterpolatedU(u) / sheetSize) + uTarget * 16);
+						.getInterpolatedU((getUnInterpolatedU(spriteShift.getOriginal(), u) / sheetSize) + uTarget * 16);
 				float targetV = spriteShift.getTarget()
-						.getInterpolatedV((spriteShift.getOriginal().getUnInterpolatedV(v) / sheetSize) + vTarget * 16);
+						.getInterpolatedV((getUnInterpolatedV(spriteShift.getOriginal(), v) / sheetSize) + vTarget * 16);
 				putUV(mutable, vertex, targetU, targetV);
 			}
 
@@ -112,6 +113,16 @@ public class SuperByteBuffer {
 		shouldLight = false;
 		mutable.rewind();
 		return mutable;
+	}
+	
+	public static float getUnInterpolatedU(TextureAtlasSprite sprite, float u) {
+		float f = sprite.getMaxU() - sprite.getMinU();
+		return (u - sprite.getMinU()) / f * 16.0F;
+	}
+	
+	public static float getUnInterpolatedV(TextureAtlasSprite sprite, float v) {
+		float f = sprite.getMaxV() - sprite.getMinV();
+		return (v - sprite.getMinV()) / f * 16.0F;
 	}
 
 	public void renderInto(MatrixStack input, IVertexBuilder buffer) {
