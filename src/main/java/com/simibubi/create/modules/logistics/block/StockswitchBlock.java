@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.logistics.block;
 
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
 import net.minecraft.block.Block;
@@ -7,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.IntegerProperty;
@@ -25,7 +27,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class StockswitchBlock extends HorizontalBlock {
+public class StockswitchBlock extends HorizontalBlock implements ITE<StockswitchTileEntity> {
 
 	public static final IntegerProperty INDICATOR = IntegerProperty.create("indicator", 0, 6);
 
@@ -37,7 +39,7 @@ public class StockswitchBlock extends HorizontalBlock {
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		updateObservedInventory(state, worldIn, pos);
 	}
-	
+
 	@Override
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		if (world.isRemote())
@@ -48,10 +50,7 @@ public class StockswitchBlock extends HorizontalBlock {
 	}
 
 	private void updateObservedInventory(BlockState state, IWorldReader world, BlockPos pos) {
-		StockswitchTileEntity te = (StockswitchTileEntity) world.getTileEntity(pos);
-		if (te == null)
-			return;
-		te.updateCurrentLevel();
+		withTileEntityDo(world, pos, StockswitchTileEntity::updateCurrentLevel);
 	}
 
 	private boolean isObserving(BlockState state, BlockPos pos, BlockPos observing) {
@@ -70,8 +69,10 @@ public class StockswitchBlock extends HorizontalBlock {
 
 	@Override
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		StockswitchTileEntity te = (StockswitchTileEntity) blockAccess.getTileEntity(pos);
-		return te == null || !te.powered ? 0 : 15;
+		try {
+			return getTileEntity(blockAccess, pos).powered ? 15 : 0;
+		} catch (TileEntityException e) {}
+		return 0;
 	}
 
 	@Override
@@ -83,9 +84,8 @@ public class StockswitchBlock extends HorizontalBlock {
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			displayScreen((StockswitchTileEntity) worldIn.getTileEntity(pos));
-		});
+		if (player instanceof ClientPlayerEntity)
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> withTileEntityDo(worldIn, pos, this::displayScreen));
 		return ActionResultType.SUCCESS;
 	}
 
@@ -133,10 +133,15 @@ public class StockswitchBlock extends HorizontalBlock {
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new StockswitchTileEntity();
 	}
-	
+
 	@Override
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
+	}
+
+	@Override
+	public Class<StockswitchTileEntity> getTileEntityClass() {
+		return StockswitchTileEntity.class;
 	}
 
 }

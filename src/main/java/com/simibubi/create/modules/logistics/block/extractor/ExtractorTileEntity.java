@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.behaviour.inventory.SingleTargetAutoExtrac
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
+import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;

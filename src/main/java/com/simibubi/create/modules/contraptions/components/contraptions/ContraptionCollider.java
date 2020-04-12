@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -73,6 +74,7 @@ public class ContraptionCollider {
 
 			if (allowedMovement.equals(relativeMotion))
 				continue;
+			
 			if (allowedMovement.y != relativeMotion.y) {
 				entity.handleFallDamage(entity.fallDistance, 1);
 				entity.fallDistance = 0;
@@ -80,6 +82,8 @@ public class ContraptionCollider {
 				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> checkForClientPlayerCollision(entity));
 			}
 
+			if (entity instanceof ServerPlayerEntity)
+				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
 			if (entity instanceof PlayerEntity && !world.isRemote)
 				return;
 

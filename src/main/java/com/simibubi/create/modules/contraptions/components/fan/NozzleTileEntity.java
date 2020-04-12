@@ -158,8 +158,21 @@ public class NozzleTileEntity extends SmartTileEntity {
 				pushingEntities.add(entity);
 		}
 
-		if (!pushing && pushingEntities.size() > 512 && !world.isRemote)
-			world.createExplosion(null, center.x, center.y, center.z, 6, Mode.BREAK);
+		for (Iterator<Entity> iterator = pushingEntities.iterator(); iterator.hasNext();) {
+			Entity entity = iterator.next();
+			if (entity.isAlive())
+				continue;
+			iterator.remove();
+		}
+		
+		if (!pushing && pushingEntities.size() > 256 && !world.isRemote) {
+			world.createExplosion(null, center.x, center.y, center.z, 2, Mode.NONE);
+			for (Iterator<Entity> iterator = pushingEntities.iterator(); iterator.hasNext();) {
+				Entity entity = iterator.next();
+				entity.remove();
+				iterator.remove();
+			}
+		}
 
 	}
 

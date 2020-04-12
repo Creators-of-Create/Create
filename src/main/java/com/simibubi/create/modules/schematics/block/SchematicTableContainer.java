@@ -11,6 +11,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SchematicTableContainer extends Container {
@@ -24,9 +25,12 @@ public class SchematicTableContainer extends Container {
 		super(AllContainers.SCHEMATIC_TABLE.type, id);
 		player = inv.player;
 		ClientWorld world = Minecraft.getInstance().world;
-		this.te = (SchematicTableTileEntity) world.getTileEntity(extraData.readBlockPos());
-		this.te.handleUpdateTag(extraData.readCompoundTag());
-		init();
+		TileEntity tileEntity = world.getTileEntity(extraData.readBlockPos());
+		if (tileEntity instanceof SchematicTableTileEntity) {
+			this.te = (SchematicTableTileEntity) tileEntity;
+			this.te.handleUpdateTag(extraData.readCompoundTag());
+			init();
+		}
 	}
 
 	public SchematicTableContainer(int id, PlayerInventory inv, SchematicTableTileEntity te) {

@@ -3,15 +3,12 @@ package com.simibubi.create.modules.contraptions.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Rotation;
-import net.minecraft.world.World;
 
 public abstract class RotatedPillarKineticBlock extends KineticBlock {
 
@@ -70,16 +67,6 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 			return this.getDefaultState().with(AXIS, preferredAxis);
 		return this.getDefaultState().with(AXIS, context.getPlayer().isSneaking() ? context.getFace().getAxis()
 				: context.getNearestLookingDirection().getAxis());
-	}
-
-	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		Axis axis = context.getFace().getAxis();
-		World world = context.getWorld();
-		if (axis == state.get(AXIS))
-			return ActionResultType.PASS;
-		KineticTileEntity.switchToBlockState(world, context.getPos(), state.with(AXIS, axis));
-		return ActionResultType.SUCCESS;
 	}
 
 }

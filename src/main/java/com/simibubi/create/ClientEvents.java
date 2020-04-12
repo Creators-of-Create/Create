@@ -14,7 +14,7 @@ import com.simibubi.create.modules.contraptions.KineticDebugger;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.contraptions.ChassisRangeDisplay;
 import com.simibubi.create.modules.contraptions.components.turntable.TurntableHandler;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltConnectorItemHandler;
+import com.simibubi.create.modules.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.modules.curiosities.zapper.terrainzapper.TerrainZapperRenderHandler;
 
 import net.minecraft.client.Minecraft;
@@ -65,7 +65,7 @@ public class ClientEvents {
 
 	public static void onGameTick() {
 		CreateClient.gameTick();
-		BeltConnectorItemHandler.gameTick();
+		BeltConnectorHandler.gameTick();
 		TerrainZapperRenderHandler.tick();
 	}
 

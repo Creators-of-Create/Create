@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.config.AllConfigs;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
@@ -34,7 +34,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
 public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
-		implements IWithTileEntity<MechanicalPistonTileEntity> {
+		implements ITE<MechanicalPistonTileEntity> {
 
 	public static final EnumProperty<PistonState> STATE = EnumProperty.create("state", PistonState.class);
 	protected boolean isSticky;
@@ -100,11 +100,6 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
 		if (state.get(STATE) != PistonState.RETRACTED)
 			return ActionResultType.PASS;
 		return super.onWrenched(state, context);
-	}
-
-	@Override
-	protected boolean turnBackOnWrenched() {
-		return true;
 	}
 
 	public enum PistonState implements IStringSerializable {
@@ -174,6 +169,11 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
 			return AllShapes.MECHANICAL_PISTON.get(state.get(FACING));
 
 		return VoxelShapes.fullCube();
+	}
+
+	@Override
+	public Class<MechanicalPistonTileEntity> getTileEntityClass() {
+		return MechanicalPistonTileEntity.class;
 	}
 
 }

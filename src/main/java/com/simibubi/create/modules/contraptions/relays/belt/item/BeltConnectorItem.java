@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.relays.belt;
+package com.simibubi.create.modules.contraptions.relays.belt.item;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
@@ -17,6 +18,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -184,8 +186,16 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 		if (axis != world.getBlockState(second).get(BlockStateProperties.AXIS))
 			return false;
 
-		float speed1 = ((KineticTileEntity) world.getTileEntity(first)).getTheoreticalSpeed();
-		float speed2 = ((KineticTileEntity) world.getTileEntity(second)).getTheoreticalSpeed();
+		TileEntity tileEntity = world.getTileEntity(first);
+		TileEntity tileEntity2 = world.getTileEntity(second);
+
+		if (!(tileEntity instanceof KineticTileEntity))
+			return false;
+		if (!(tileEntity2 instanceof KineticTileEntity))
+			return false;
+
+		float speed1 = ((KineticTileEntity) tileEntity).getTheoreticalSpeed();
+		float speed2 = ((KineticTileEntity) tileEntity2).getTheoreticalSpeed();
 		if (Math.signum(speed1) != Math.signum(speed2) && speed1 != 0 && speed2 != 0)
 			return false;
 

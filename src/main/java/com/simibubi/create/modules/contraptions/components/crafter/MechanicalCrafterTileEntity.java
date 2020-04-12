@@ -309,7 +309,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		if (!AllBlocks.BELT.typeOf(world.getBlockState(targetPos)))
 			return false;
 		TileEntity te = world.getTileEntity(targetPos);
-		if (te == null || !(te instanceof BeltTileEntity))
+		if (!(te instanceof BeltTileEntity))
 			return false;
 		return ((KineticTileEntity) te).getSpeed() != 0;
 	}

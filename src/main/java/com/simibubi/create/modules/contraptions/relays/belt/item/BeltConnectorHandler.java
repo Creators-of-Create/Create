@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.relays.belt;
+package com.simibubi.create.modules.contraptions.relays.belt.item;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +23,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class BeltConnectorItemHandler {
+public class BeltConnectorHandler {
 
 	private static Random r = new Random();
 

@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.relays.belt;
+package com.simibubi.create.modules.contraptions.relays.belt.transport;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;

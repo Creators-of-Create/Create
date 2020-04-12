@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics.block.belts;
+package com.simibubi.create.modules.logistics.block.funnel;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,14 +7,16 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.modules.contraptions.relays.belt.TransportedItemStack;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -37,7 +39,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachment, IWithTileEntity<FunnelTileEntity>, IPortableBlock {
+public class FunnelBlock extends AttachedLogisticalBlock
+		implements IBeltAttachment, ITE<FunnelTileEntity>, IPortableBlock {
 
 	public static final BooleanProperty BELT = BooleanProperty.create("belt");
 	public static final MovementBehaviour MOVEMENT = new FunnelMovementBehaviour();
@@ -124,17 +127,18 @@ public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachm
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		onAttachmentPlaced(worldIn, pos, state);
+		if (worldIn.isRemote)
+			return;
 
 		if (isOnBelt(worldIn, pos)) {
-			TileEntity te = worldIn.getTileEntity(pos.down());
-			if (!(te instanceof BeltTileEntity))
+			BeltTileEntity belt = BeltHelper.getSegmentTE(worldIn, pos.down());
+			if (belt == null)
 				return;
-			BeltTileEntity belt = (BeltTileEntity) te;
+
 			BeltTileEntity controllerBelt = belt.getControllerTE();
 			if (controllerBelt == null)
 				return;
-			if (worldIn.isRemote)
-				return;
+
 			controllerBelt.getInventory().forEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
 				controllerBelt.getInventory().eject(transportedItemStack);
 				return Collections.emptyList();
@@ -200,7 +204,7 @@ public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachm
 
 	public boolean process(BeltTileEntity belt, TransportedItemStack transported, BeltAttachmentState state) {
 		TileEntity te = belt.getWorld().getTileEntity(state.attachmentPos);
-		if (te == null || !(te instanceof FunnelTileEntity))
+		if (!(te instanceof FunnelTileEntity))
 			return false;
 		FunnelTileEntity funnel = (FunnelTileEntity) te;
 		ItemStack stack = funnel.tryToInsert(transported.stack);
@@ -218,6 +222,11 @@ public class FunnelBlock extends AttachedLogisticalBlock implements IBeltAttachm
 	@Override
 	public MovementBehaviour getMovementBehaviour() {
 		return MOVEMENT;
+	}
+
+	@Override
+	public Class<FunnelTileEntity> getTileEntityClass() {
+		return FunnelTileEntity.class;
 	}
 
 }

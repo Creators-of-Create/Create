@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.relays.belt;
+package com.simibubi.create.modules.contraptions.relays.belt.transport;
 
 import java.util.Random;
 

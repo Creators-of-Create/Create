@@ -635,7 +635,7 @@
 	"advancement.create:polished_rose_quartz.desc": "Polish Rose Quartz until you can see through it.",
 	"advancement.create:sand_paper_secret": "9001 Grit Sand Paper",
 	"advancement.create:sand_paper_secret.desc": "Use your Sand Paper to sand some Sand Paper.",
-	"advancement.create:press": "'Bonk!'        ",
+	"advancement.create:press": "'Bonk!'",
 	"advancement.create:press.desc": "Make a Mechanical Press and use it to create some Plates.",
 	"advancement.create:mixer": "Mixin' it Up",
 	"advancement.create:mixer.desc": "Create a Mechanical Mixer.",
@@ -943,7 +943,7 @@
 	"block.create.clockwork_bearing.tooltip": "CLOCKWORK BEARING",
 	"block.create.clockwork_bearing.tooltip.summary": "An advanced version of the _Mechanical_ _Bearing_ for rotating up to two _clock_ _hands_ according to current _in-game_ _time_.",
 	"block.create.clockwork_bearing.tooltip.condition1": "When Rotated",
-	"block.create.clockwork_bearing.tooltip.behaviour1": "Starts rotating the attached Structure towards the _current_ _hour_. If a second structure is present, it will serve as the _minute_ _hand_.",
+	"block.create.clockwork_bearing.tooltip.behaviour1": "Starts rotating the attached Structure towards the _current_ _hour_. If an independent second structure exists in front of the first one, it will serve as the _minute_ _hand_.",
 	
 	"block.create.sequenced_gearshift.tooltip": "SEQUENCED GEARSHIFT",
 	"block.create.sequenced_gearshift.tooltip.summary": "A _programmable_ _utility_ _component,_ which can change its _rotational_ _through-put_ according to up to _5_ _consecutive_ _instructions._ Use this to power Mechanical Bearings, Pistons or Pulleys with more control over timing and speed. May become less precise at higher speeds.",
@@ -1131,7 +1131,7 @@
 	"block.create.stress_gauge.tooltip.behaviour1": "Indicates a color corresponding to the level of stress. _Over-stressed_ _networks_ will cease to move. Stress can be relieved by adding more _rotational_ _sources_ to the network.",
 	
 	"tool.create.sand_paper.tooltip": "SAND PAPER",
-	"tool.create.sand_paper.tooltip.summary": "A rough paper that can be used to _polish_ _materials_ or sharpen your _tools_.",
+	"tool.create.sand_paper.tooltip.summary": "A rough paper that can be used to _polish_ _materials_. Can be automatically applied using the Deployer.",
 	"tool.create.sand_paper.tooltip.condition1": "When Used",
 	"tool.create.sand_paper.tooltip.behaviour1": "Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking_ _at_ _them_",
 

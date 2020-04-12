@@ -1,6 +1,9 @@
 package com.simibubi.create.modules.contraptions.components.millstone;
 
+import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -8,7 +11,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -28,7 +30,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class MillstoneBlock extends KineticBlock {
+public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEntity> {
 
 	public MillstoneBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -53,29 +55,38 @@ public class MillstoneBlock extends KineticBlock {
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == Direction.DOWN;
 	}
-	
+
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (!player.getHeldItem(handIn).isEmpty())
 			return ActionResultType.PASS;
-		if (worldIn.getTileEntity(pos) == null)
-			return ActionResultType.PASS;
 		if (worldIn.isRemote)
 			return ActionResultType.SUCCESS;
 
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
-		if (!(tileEntity instanceof MillstoneTileEntity)) 
-			return ActionResultType.PASS;
-		MillstoneTileEntity millstone = (MillstoneTileEntity) tileEntity;
-		
-		IItemHandlerModifiable inv = millstone.outputInv;
-		for (int slot = 0; slot < inv.getSlots(); slot++) {
-			player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
-			inv.setStackInSlot(slot, ItemStack.EMPTY);
-		}
-		millstone.markDirty();
-		millstone.sendData();
+		withTileEntityDo(worldIn, pos, millstone -> {
+			boolean emptyOutput = true;
+			IItemHandlerModifiable inv = millstone.outputInv;
+			for (int slot = 0; slot < inv.getSlots(); slot++) {
+				ItemStack stackInSlot = inv.getStackInSlot(slot);
+				if (!stackInSlot.isEmpty())
+					emptyOutput = false;
+				player.inventory.placeItemBackInInventory(worldIn, stackInSlot);
+				inv.setStackInSlot(slot, ItemStack.EMPTY);
+			}
+
+			if (emptyOutput) {
+				inv = millstone.inputInv;
+				for (int slot = 0; slot < inv.getSlots(); slot++) {
+					player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
+					inv.setStackInSlot(slot, ItemStack.EMPTY);
+				}
+			}
+
+			millstone.markDirty();
+			millstone.sendData();
+		});
+
 		return ActionResultType.SUCCESS;
 	}
 
@@ -88,15 +99,17 @@ public class MillstoneBlock extends KineticBlock {
 		if (!(entityIn instanceof ItemEntity))
 			return;
 
-		BlockPos pos = entityIn.getPosition();
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
-		if (!(tileEntity instanceof MillstoneTileEntity)) {
-			tileEntity = worldIn.getTileEntity(pos.down());
-			if (!(tileEntity instanceof MillstoneTileEntity))
-				return;
+		MillstoneTileEntity millstone = null;
+		for (BlockPos pos : Iterate.hereAndBelow(entityIn.getPosition())) {
+			try {
+				millstone = getTileEntity(worldIn, pos);
+			} catch (TileEntityException e) {
+				continue;
+			}
 		}
+		if (millstone == null)
+			return;
 
-		MillstoneTileEntity millstone = (MillstoneTileEntity) tileEntity;
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 		LazyOptional<IItemHandler> capability = millstone.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		if (!capability.isPresent())
@@ -112,18 +125,10 @@ public class MillstoneBlock extends KineticBlock {
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-			TileEntity tileEntity = worldIn.getTileEntity(pos);
-			if (!(tileEntity instanceof MillstoneTileEntity))
-				return;
-			MillstoneTileEntity te = (MillstoneTileEntity) tileEntity;
-			for (int slot = 0; slot < te.inputInv.getSlots(); slot++) {
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
-						te.inputInv.getStackInSlot(slot));
-			}
-			for (int slot = 0; slot < te.outputInv.getSlots(); slot++) {
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
-						te.outputInv.getStackInSlot(slot));
-			}
+			withTileEntityDo(worldIn, pos, te -> {
+				ItemHelper.dropContents(worldIn, pos, te.inputInv);
+				ItemHelper.dropContents(worldIn, pos, te.outputInv);
+			});
 
 			worldIn.removeTileEntity(pos);
 		}
@@ -137,6 +142,11 @@ public class MillstoneBlock extends KineticBlock {
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return Axis.Y;
+	}
+
+	@Override
+	public Class<MillstoneTileEntity> getTileEntityClass() {
+		return MillstoneTileEntity.class;
 	}
 
 }

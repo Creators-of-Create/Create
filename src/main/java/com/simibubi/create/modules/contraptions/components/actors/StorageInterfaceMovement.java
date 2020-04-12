@@ -102,8 +102,8 @@ public class StorageInterfaceMovement extends MovementBehaviour {
 
 				extracting.withAmountThreshold(stack -> {
 					ItemStack tester = stack.copy();
-					tester.setCount(64);
-					return 64 - ItemHandlerHelper.insertItemStacked(inv, stack, true).getCount();
+					tester.setCount(tester.getMaxStackSize());
+					return stack.getCount() - ItemHandlerHelper.insertItemStacked(inv, stack, true).getCount();
 				});
 
 				extracting.setCallback(stack -> {

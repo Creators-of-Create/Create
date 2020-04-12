@@ -16,7 +16,6 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -121,6 +120,22 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
+	public BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
+		Blocks.AIR.getDefaultState().updateNeighbors(context.getWorld(), context.getPos(), 1);
+		Axis axis = newState.get(AXIS);
+		newState = getDefaultState().with(AXIS, axis);
+		for (Direction facing : Direction.values()) {
+			if (facing.getAxis() == axis)
+				continue;
+			BlockPos pos = context.getPos();
+			BlockPos offset = pos.offset(facing);
+			newState = updatePostPlacement(newState, facing, context.getWorld().getBlockState(offset), context.getWorld(),
+					pos, offset);		}
+		newState.updateNeighbors(context.getWorld(), context.getPos(), 1 | 2);
+		return newState;
+	}
+
+	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == state.get(AXIS);
 	}
@@ -167,19 +182,6 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new EncasedShaftTileEntity();
-	}
-
-	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		Axis axis = state.get(AXIS);
-		boolean connectionAlongFirst = state.get(CONNECTED_ALONG_FIRST_COORDINATE);
-		Axis connectionAxis = connectionAlongFirst ? (axis == Axis.X ? Axis.Y : Axis.X)
-				: (axis == Axis.Z ? Axis.Y : Axis.Z);
-
-		if (context.getFace().getAxis() == connectionAxis)
-			return ActionResultType.PASS;
-
-		return super.onWrenched(state, context);
 	}
 
 	@Override

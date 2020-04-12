@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics.block.belts;
+package com.simibubi.create.modules.logistics.block.belts.observer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;

@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.actors;
 
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
@@ -25,7 +25,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class DrillBlock extends DirectionalKineticBlock implements IPortableBlock, IWithTileEntity<DrillTileEntity> {
+public class DrillBlock extends DirectionalKineticBlock implements IPortableBlock, ITE<DrillTileEntity> {
 
 	public static MovementBehaviour MOVEMENT = new DrillMovementBehaviour();
 	public static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
@@ -91,6 +91,11 @@ public class DrillBlock extends DirectionalKineticBlock implements IPortableBloc
 	@Override
 	public MovementBehaviour getMovementBehaviour() {
 		return MOVEMENT;
+	}
+
+	@Override
+	public Class<DrillTileEntity> getTileEntityClass() {
+		return DrillTileEntity.class;
 	}
 
 }

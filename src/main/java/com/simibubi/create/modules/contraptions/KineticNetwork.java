@@ -38,12 +38,12 @@ public class KineticNetwork {
 			return;
 		if (te.isSource()) {
 			unloadedCapacity -= lastCapacity * getStressMultiplierForSpeed(te.getGeneratedSpeed());
-			float addedStressCapacity = te.getAddedStressCapacity();
+			float addedStressCapacity = te.calculateAddedStressCapacity();
 			sources.put(te, addedStressCapacity);
 		}
 
 		unloadedStress -= lastStress * getStressMultiplierForSpeed(te.getTheoreticalSpeed());
-		float stressApplied = te.getStressApplied();
+		float stressApplied = te.calculateStressApplied();
 		members.put(te, stressApplied);
 
 		unloadedMembers--;
@@ -59,8 +59,8 @@ public class KineticNetwork {
 		if (members.containsKey(te))
 			return;
 		if (te.isSource())
-			sources.put(te, te.getAddedStressCapacity());
-		members.put(te, te.getStressApplied());
+			sources.put(te, te.calculateAddedStressCapacity());
+		members.put(te, te.calculateStressApplied());
 		te.updateFromNetwork(currentCapacity, currentStress, getSize());
 		te.networkDirty = true;
 	}

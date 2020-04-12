@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.behaviour.inventory.InsertingBehaviour;
 import com.simibubi.create.foundation.behaviour.inventory.InventoryManagementBehaviour.Attachments;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
+import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorTileEntity;
 
 import net.minecraft.item.ItemStack;

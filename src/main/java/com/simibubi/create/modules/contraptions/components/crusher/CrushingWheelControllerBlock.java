@@ -4,6 +4,8 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
+import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
 import net.minecraft.block.Block;
@@ -12,7 +14,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -33,7 +34,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockItem {
+public class CrushingWheelControllerBlock extends Block
+		implements IHaveNoBlockItem, ITE<CrushingWheelControllerTileEntity> {
 
 	public static final BooleanProperty VALID = BooleanProperty.create("valid");
 
@@ -52,6 +54,11 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 	}
 
 	@Override
+	public boolean addRunningEffects(BlockState state, World world, BlockPos pos, Entity entity) {
+		return true;
+	}
+
+	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new CrushingWheelControllerTileEntity();
 	}
@@ -65,11 +72,10 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
 		if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen())
 			return;
-		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn.getTileEntity(pos);
-		if (te == null)
-			return;
-		if (te.processingEntity == entityIn)
-			entityIn.setMotionMultiplier(state, new Vec3d(0.25D, (double) 0.05F, 0.25D));
+		withTileEntityDo(worldIn, pos, te -> {
+			if (te.processingEntity == entityIn)
+				entityIn.setMotionMultiplier(state, new Vec3d(0.25D, (double) 0.05F, 0.25D));
+		});
 	}
 
 	@Override
@@ -77,25 +83,23 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 		super.onLanded(worldIn, entityIn);
 		if (CrushingWheelControllerTileEntity.isFrozen())
 			return;
-		TileEntity tileEntity = worldIn.getTileEntity(entityIn.getPosition().down());
-		if (tileEntity == null)
-			return;
-		if (!(tileEntity instanceof CrushingWheelControllerTileEntity))
-			return;
-		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) tileEntity;
-		if (te.crushingspeed == 0)
-			return;
-		if (entityIn instanceof ItemEntity)
-			((ItemEntity) entityIn).setPickupDelay(10);
-		if (te.isOccupied())
-			return;
-		boolean isPlayer = entityIn instanceof PlayerEntity;
-		if (isPlayer && ((PlayerEntity) entityIn).isCreative())
-			return;
-		if (isPlayer && entityIn.world.getDifficulty() == Difficulty.PEACEFUL)
-			return;
 
-		te.startCrushing(entityIn);
+		try {
+			CrushingWheelControllerTileEntity te = getTileEntity(worldIn, entityIn.getPosition().down());
+			if (te.crushingspeed == 0)
+				return;
+			if (entityIn instanceof ItemEntity)
+				((ItemEntity) entityIn).setPickupDelay(10);
+			if (te.isOccupied())
+				return;
+			boolean isPlayer = entityIn instanceof PlayerEntity;
+			if (isPlayer && ((PlayerEntity) entityIn).isCreative())
+				return;
+			if (isPlayer && entityIn.world.getDifficulty() == Difficulty.PEACEFUL)
+				return;
+
+			te.startCrushing(entityIn);
+		} catch (TileEntityException e) {}
 	}
 
 	@Override
@@ -118,32 +122,29 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 	}
 
 	public void updateSpeed(BlockState state, World world, BlockPos pos) {
-		TileEntity tileEntity = world.getTileEntity(pos);
-		if (tileEntity == null || !(tileEntity instanceof CrushingWheelControllerTileEntity))
-			return;
-
-		CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) tileEntity;
-		if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen()) {
-			if (te.crushingspeed != 0) {
-				te.crushingspeed = 0;
-				te.sendData();
+		withTileEntityDo(world, pos, te -> {
+			if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen()) {
+				if (te.crushingspeed != 0) {
+					te.crushingspeed = 0;
+					te.sendData();
+				}
+				return;
 			}
-			return;
-		}
 
-		for (Direction d : Direction.values()) {
-			if (d.getAxis().isVertical())
-				continue;
-			BlockState neighbour = world.getBlockState(pos.offset(d));
-			if (!AllBlocks.CRUSHING_WHEEL.typeOf(neighbour))
-				continue;
-			if (neighbour.get(BlockStateProperties.AXIS) == d.getAxis())
-				continue;
-			KineticTileEntity wheelTe = (KineticTileEntity) world.getTileEntity(pos.offset(d));
-			te.crushingspeed = Math.abs(wheelTe.getSpeed() / 50f);
-			te.sendData();
-			break;
-		}
+			for (Direction d : Direction.values()) {
+				if (d.getAxis().isVertical())
+					continue;
+				BlockState neighbour = world.getBlockState(pos.offset(d));
+				if (!AllBlocks.CRUSHING_WHEEL.typeOf(neighbour))
+					continue;
+				if (neighbour.get(BlockStateProperties.AXIS) == d.getAxis())
+					continue;
+				KineticTileEntity wheelTe = (KineticTileEntity) world.getTileEntity(pos.offset(d));
+				te.crushingspeed = Math.abs(wheelTe.getSpeed() / 50f);
+				te.sendData();
+				break;
+			}
+		});
 	}
 
 	@Override
@@ -165,29 +166,27 @@ public class CrushingWheelControllerBlock extends Block implements IHaveNoBlockI
 			if (new AxisAlignedBB(pos).contains(entity.getPositionVec()))
 				return VoxelShapes.empty();
 
-			CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn.getTileEntity(pos);
-			if (te == null)
-				return VoxelShapes.fullCube();
-			if (te.processingEntity == entity)
-				return VoxelShapes.empty();
+			try {
+				CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
+				if (te.processingEntity == entity)
+					return VoxelShapes.empty();
+			} catch (TileEntityException e) {}
 		}
 		return VoxelShapes.fullCube();
 	}
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-			if (worldIn.getTileEntity(pos) == null)
-				return;
-			CrushingWheelControllerTileEntity te = (CrushingWheelControllerTileEntity) worldIn.getTileEntity(pos);
-			for (int slot = 0; slot < te.inventory.getSlots(); slot++) {
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
-						te.inventory.getStackInSlot(slot));
-			}
+		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
+			return;
 
-			worldIn.removeTileEntity(pos);
-		}
+		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
+		worldIn.removeTileEntity(pos);
+	}
 
+	@Override
+	public Class<CrushingWheelControllerTileEntity> getTileEntityClass() {
+		return CrushingWheelControllerTileEntity.class;
 	}
 
 }

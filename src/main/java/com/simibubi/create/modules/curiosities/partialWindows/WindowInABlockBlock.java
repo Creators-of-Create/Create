@@ -6,10 +6,11 @@ import java.util.List;
 
 import com.simibubi.create.foundation.block.IHaveCustomBlockModel;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FourWayBlock;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.material.Material;
@@ -45,7 +46,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class WindowInABlockBlock extends PaneBlock
-		implements IWithTileEntity<WindowInABlockTileEntity>, IHaveNoBlockItem, IHaveCustomBlockModel {
+		implements ITE<WindowInABlockTileEntity>, IHaveNoBlockItem, IHaveCustomBlockModel {
 
 	public WindowInABlockBlock() {
 		super(Properties.create(Material.ROCK));
@@ -69,32 +70,32 @@ public class WindowInABlockBlock extends PaneBlock
 
 		Vec3d start = player.getEyePosition(1);
 		Vec3d end = start.add(player.getLookVec().scale(player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue()));
-		BlockRayTraceResult target = world
-				.rayTraceBlocks(new RayTraceContext(start, end, BlockMode.OUTLINE, FluidMode.NONE, player));
+		BlockRayTraceResult target =
+			world.rayTraceBlocks(new RayTraceContext(start, end, BlockMode.OUTLINE, FluidMode.NONE, player));
 		if (target == null || target.getHitVec() == null)
 			return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
 
-		WindowInABlockTileEntity tileEntity = getTileEntity(world, pos);
-		if (tileEntity == null)
-			return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
-		BlockState windowBlock = tileEntity.getWindowBlock();
-		for (AxisAlignedBB bb : windowBlock.getShape(world, pos).toBoundingBoxList()) {
-			if (bb.grow(.1d).contains(target.getHitVec().subtract(new Vec3d(pos)))) {
-				windowBlock.getBlock().onBlockHarvested(world, pos, windowBlock, player);
-				Block.spawnDrops(windowBlock, world, pos, null, player, player.getHeldItemMainhand());
-				BlockState partialBlock = tileEntity.getPartialBlock();
-				world.setBlockState(pos, partialBlock);
-				for (Direction d : Direction.values()) {
-					BlockPos offset = pos.offset(d);
-					BlockState otherState = world.getBlockState(offset);
-					partialBlock = partialBlock.updatePostPlacement(d, otherState, world, pos, offset);
-					world.notifyBlockUpdate(offset, otherState, otherState, 2);
-				}
-				if (partialBlock != world.getBlockState(pos))
+		try {
+			WindowInABlockTileEntity tileEntity = getTileEntity(world, pos);
+			BlockState windowBlock = tileEntity.getWindowBlock();
+			for (AxisAlignedBB bb : windowBlock.getShape(world, pos).toBoundingBoxList()) {
+				if (bb.grow(.1d).contains(target.getHitVec().subtract(new Vec3d(pos)))) {
+					windowBlock.getBlock().onBlockHarvested(world, pos, windowBlock, player);
+					Block.spawnDrops(windowBlock, world, pos, null, player, player.getHeldItemMainhand());
+					BlockState partialBlock = tileEntity.getPartialBlock();
 					world.setBlockState(pos, partialBlock);
-				return false;
+					for (Direction d : Direction.values()) {
+						BlockPos offset = pos.offset(d);
+						BlockState otherState = world.getBlockState(offset);
+						partialBlock = partialBlock.updatePostPlacement(d, otherState, world, pos, offset);
+						world.notifyBlockUpdate(offset, otherState, otherState, 2);
+					}
+					if (partialBlock != world.getBlockState(pos))
+						world.setBlockState(pos, partialBlock);
+					return false;
+				}
 			}
-		}
+		} catch (TileEntityException e) {}
 
 		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
 	}
@@ -111,49 +112,36 @@ public class WindowInABlockBlock extends PaneBlock
 
 	@Override
 	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-		WindowInABlockTileEntity tileEntity = getTileEntity(reader, pos);
-		if (tileEntity == null)
-			return super.propagatesSkylightDown(state, reader, pos);
-		return tileEntity.getPartialBlock().propagatesSkylightDown(reader, pos);
+		return getSurroundingBlockState(reader, pos).propagatesSkylightDown(reader, pos);
 	}
 
 	@Override
 	public boolean collisionExtendsVertically(BlockState state, IBlockReader world, BlockPos pos,
 			Entity collidingEntity) {
-		WindowInABlockTileEntity tileEntity = getTileEntity(world, pos);
-		if (tileEntity == null)
-			return false;
-		return tileEntity.getPartialBlock().collisionExtendsVertically(world, pos, collidingEntity);
+		return getSurroundingBlockState(world, pos).collisionExtendsVertically(world, pos, collidingEntity);
 	}
 
 	@Override
 	public float getBlockHardness(BlockState blockState, IBlockReader worldIn, BlockPos pos) {
-		WindowInABlockTileEntity tileEntity = getTileEntity(worldIn, pos);
-		if (tileEntity == null)
-			return 0;
-		return tileEntity.getPartialBlock().getBlockHardness(worldIn, pos);
+		return getSurroundingBlockState(worldIn, pos).getBlockHardness(worldIn, pos);
 	}
 
 	@Override
 	public float getExplosionResistance(BlockState state, IWorldReader world, BlockPos pos, Entity exploder,
 			Explosion explosion) {
-		WindowInABlockTileEntity tileEntity = getTileEntity(world, pos);
-		if (tileEntity == null)
-			return 0;
-		return tileEntity.getPartialBlock().getExplosionResistance(world, pos, exploder, explosion);
+		return getSurroundingBlockState(world, pos).getExplosionResistance(world, pos, exploder, explosion);
 	}
 
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
 			PlayerEntity player) {
-		WindowInABlockTileEntity tileEntity = getTileEntity(world, pos);
-		if (tileEntity == null)
-			return ItemStack.EMPTY;
-		for (AxisAlignedBB bb : tileEntity.getWindowBlock().getShape(world, pos).toBoundingBoxList()) {
+		BlockState window = getWindowBlockState(world, pos);
+		for (AxisAlignedBB bb : window.getShape(world, pos).toBoundingBoxList()) {
 			if (bb.grow(.1d).contains(target.getHitVec().subtract(new Vec3d(pos))))
-				return tileEntity.getWindowBlock().getPickBlock(target, world, pos, player);
+				return window.getPickBlock(target, world, pos, player);
 		}
-		return tileEntity.getPartialBlock().getPickBlock(target, world, pos, player);
+		BlockState surrounding = getSurroundingBlockState(world, pos);
+		return surrounding.getPickBlock(target, world, pos, player);
 	}
 
 	@Override
@@ -170,11 +158,8 @@ public class WindowInABlockBlock extends PaneBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		WindowInABlockTileEntity tileEntity = getTileEntity(worldIn, pos);
-		if (tileEntity == null)
-			return makeCuboidShape(7, 0, 7, 9, 16, 9);
-		VoxelShape shape1 = tileEntity.getPartialBlock().getShape(worldIn, pos, context);
-		VoxelShape shape2 = tileEntity.getWindowBlock().getShape(worldIn, pos, context);
+		VoxelShape shape1 = getSurroundingBlockState(worldIn, pos).getShape(worldIn, pos, context);
+		VoxelShape shape2 = getWindowBlockState(worldIn, pos).getShape(worldIn, pos, context);
 		return VoxelShapes.or(shape1, shape2);
 	}
 
@@ -187,10 +172,7 @@ public class WindowInABlockBlock extends PaneBlock
 	@SuppressWarnings("deprecation")
 	@Override
 	public MaterialColor getMaterialColor(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		WindowInABlockTileEntity tileEntity = getTileEntity(worldIn, pos);
-		if (tileEntity == null)
-			return MaterialColor.AIR;
-		return tileEntity.getPartialBlock().getMaterialColor(worldIn, pos);
+		return getSurroundingBlockState(worldIn, pos).getMaterialColor(worldIn, pos);
 	}
 
 	@Override
@@ -199,8 +181,8 @@ public class WindowInABlockBlock extends PaneBlock
 		withTileEntityDo(worldIn, currentPos, te -> {
 			te.setWindowBlock(
 					te.getWindowBlock().updatePostPlacement(facing, facingState, worldIn, currentPos, facingPos));
-			BlockState blockState = te.getPartialBlock().updatePostPlacement(facing, facingState, worldIn, currentPos,
-					facingPos);
+			BlockState blockState =
+				te.getPartialBlock().updatePostPlacement(facing, facingState, worldIn, currentPos, facingPos);
 			if (blockState.getBlock() instanceof FourWayBlock) {
 				for (BooleanProperty side : Arrays.asList(FourWayBlock.EAST, FourWayBlock.NORTH, FourWayBlock.SOUTH,
 						FourWayBlock.WEST))
@@ -213,6 +195,20 @@ public class WindowInABlockBlock extends PaneBlock
 		return stateIn;
 	}
 
+	private BlockState getSurroundingBlockState(IBlockReader reader, BlockPos pos) {
+		try {
+			return getTileEntity(reader, pos).getPartialBlock();
+		} catch (TileEntityException e) {}
+		return Blocks.AIR.getDefaultState();
+	}
+
+	private BlockState getWindowBlockState(IBlockReader reader, BlockPos pos) {
+		try {
+			return getTileEntity(reader, pos).getWindowBlock();
+		} catch (TileEntityException e) {}
+		return Blocks.AIR.getDefaultState();
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return false;
@@ -222,6 +218,11 @@ public class WindowInABlockBlock extends PaneBlock
 	@OnlyIn(Dist.CLIENT)
 	public IBakedModel createModel(IBakedModel original) {
 		return new WindowInABlockModel(original);
+	}
+
+	@Override
+	public Class<WindowInABlockTileEntity> getTileEntityClass() {
+		return WindowInABlockTileEntity.class;
 	}
 
 }

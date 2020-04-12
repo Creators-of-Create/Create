@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
 
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class MechanicalBearingBlock extends BearingBlock implements IWithTileEntity<MechanicalBearingTileEntity> {
+public class MechanicalBearingBlock extends BearingBlock implements ITE<MechanicalBearingTileEntity> {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
@@ -54,6 +54,11 @@ public class MechanicalBearingBlock extends BearingBlock implements IWithTileEnt
 			return;
 
 		withTileEntityDo(worldIn, pos, MechanicalBearingTileEntity::neighbourChanged);
+	}
+
+	@Override
+	public Class<MechanicalBearingTileEntity> getTileEntityClass() {
+		return MechanicalBearingTileEntity.class;
 	}
 
 }

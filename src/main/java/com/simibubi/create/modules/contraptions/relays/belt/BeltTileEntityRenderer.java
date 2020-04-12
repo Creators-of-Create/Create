@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -72,10 +73,9 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 			if (textureIndex < 0)
 				textureIndex += 16;
 
-			beltBuffer.shiftUVtoSheet(animatedTexture.getOriginal(), animatedTexture.getTarget(),
-					(textureIndex % 4) * 16, (textureIndex / 4) * 16);
+			beltBuffer.shiftUVtoSheet(animatedTexture, (textureIndex % 4) / 4f, (textureIndex / 4) / 4f, 4);
 		} else {
-			beltBuffer.shiftUVtoSheet(animatedTexture.getOriginal(), animatedTexture.getTarget(), 0, 0);
+			beltBuffer.dontShiftUV();
 		}
 		
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
@@ -105,7 +105,7 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 			return;
 		if (te.beltLength == 0)
 			return;
-		
+
 		ms.push();
 
 		Vec3i directionVec = te.getBeltFacing().getDirectionVec();
@@ -115,7 +115,7 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 		int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
 		boolean slopeAlongX = te.getBeltFacing().getAxis() == Axis.X;
 
-		for (TransportedItemStack transported : te.getInventory().items) {
+		for (TransportedItemStack transported : te.getInventory().getItems()) {
 			ms.push();
 			TessellatorHelper.fightZFighting(transported.angle, ms);
 			float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);

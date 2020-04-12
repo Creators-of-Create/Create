@@ -6,14 +6,15 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.linked.LinkBehaviour;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -97,9 +98,13 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 			return;
 		if (world.isRemote)
 			return;
-		if (receivedSignal != getBlockState().get(POWERED)) {
-			world.setBlockState(pos, getBlockState().cycle(POWERED));
-			Direction attachedFace = getBlockState().get(BlockStateProperties.FACING).getOpposite();
+		BlockState blockState = getBlockState();
+		if (!AllBlocks.REDSTONE_BRIDGE.typeOf(blockState))
+			return;
+
+		if (receivedSignal != blockState.get(POWERED)) {
+			world.setBlockState(pos, blockState.cycle(POWERED));
+			Direction attachedFace = blockState.get(RedstoneLinkBlock.FACING).getOpposite();
 			BlockPos attachedPos = pos.offset(attachedFace);
 			world.notifyNeighbors(attachedPos, world.getBlockState(attachedPos).getBlock());
 			return;

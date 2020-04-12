@@ -4,7 +4,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
-import com.simibubi.create.modules.logistics.block.belts.AttachedLogisticalBlock;
+import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 
 import net.minecraft.entity.Entity;

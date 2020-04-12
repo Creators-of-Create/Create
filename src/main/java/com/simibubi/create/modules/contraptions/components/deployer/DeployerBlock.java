@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.components.deployer;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
@@ -26,7 +26,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class DeployerBlock extends DirectionalAxisKineticBlock
-		implements IWithTileEntity<DeployerTileEntity>, IPortableBlock {
+		implements ITE<DeployerTileEntity>, IPortableBlock {
 
 	public static MovementBehaviour MOVEMENT = new DeployerMovementBehaviour();
 
@@ -109,6 +109,11 @@ public class DeployerBlock extends DirectionalAxisKineticBlock
 	@Override
 	public MovementBehaviour getMovementBehaviour() {
 		return MOVEMENT;
+	}
+
+	@Override
+	public Class<DeployerTileEntity> getTileEntityClass() {
+		return DeployerTileEntity.class;
 	}
 
 }

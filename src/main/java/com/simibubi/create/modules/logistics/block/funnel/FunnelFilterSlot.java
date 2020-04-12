@@ -1,8 +1,9 @@
-package com.simibubi.create.modules.logistics.block.belts;
+package com.simibubi.create.modules.logistics.block.funnel;
 
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
 
 import net.minecraft.block.BlockState;

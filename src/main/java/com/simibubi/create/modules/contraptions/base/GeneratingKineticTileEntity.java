@@ -7,6 +7,7 @@ import com.simibubi.create.modules.contraptions.KineticNetwork;
 import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.modules.contraptions.goggle.IHaveGoggleInformation;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -33,7 +34,10 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 	@Override
 	public void setSource(BlockPos source) {
 		super.setSource(source);
-		KineticTileEntity sourceTe = (KineticTileEntity) world.getTileEntity(source);
+		TileEntity tileEntity = world.getTileEntity(source);
+		if (!(tileEntity instanceof KineticTileEntity))
+			return;
+		KineticTileEntity sourceTe = (KineticTileEntity) tileEntity;
 		if (reActivateSource && sourceTe != null && Math.abs(sourceTe.getSpeed()) >= Math.abs(getGeneratedSpeed()))
 			reActivateSource = false;
 	}
@@ -51,7 +55,7 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
 		boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
-		float stressBase = getAddedStressCapacity();
+		float stressBase = calculateAddedStressCapacity();
 		if (stressBase != 0 && IRotate.StressImpact.isEnabled()) {
 			tooltip.add(spacing + Lang.translate("gui.goggles.generator_stats"));
 			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("tooltip.capacityProvided"));
@@ -93,8 +97,8 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 
 		if (hasNetwork() && speed != 0) {
 			KineticNetwork network = getOrCreateNetwork();
-			notifyStressCapacityChange(getAddedStressCapacity());
-			getOrCreateNetwork().updateStressFor(this, getStressApplied());
+			notifyStressCapacityChange(calculateAddedStressCapacity());
+			getOrCreateNetwork().updateStressFor(this, calculateStressApplied());
 			network.updateStress();
 		}
 
@@ -108,7 +112,7 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 		if (speed == 0) {
 			if (hasSource()) {
 				notifyStressCapacityChange(0);
-				getOrCreateNetwork().updateStressFor(this, getStressApplied());
+				getOrCreateNetwork().updateStressFor(this, calculateStressApplied());
 				return;
 			}
 			detachKinetics();

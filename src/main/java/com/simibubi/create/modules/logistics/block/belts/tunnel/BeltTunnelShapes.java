@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.contraptions.relays.belt;
+package com.simibubi.create.modules.logistics.block.belts.tunnel;
 
 import static net.minecraft.block.Block.makeCuboidShape;
 

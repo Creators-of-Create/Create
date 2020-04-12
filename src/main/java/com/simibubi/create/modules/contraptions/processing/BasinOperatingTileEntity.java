@@ -2,6 +2,7 @@ package com.simibubi.create.modules.contraptions.processing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
@@ -84,11 +85,11 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		if (isRunning())
 			return false;
 
-		TileEntity basinTE = world.getTileEntity(pos.down(2));
-		if (basinTE == null || !(basinTE instanceof BasinTileEntity))
+		Optional<BasinTileEntity> basinTe = getBasin();
+		if (!basinTe.isPresent())
 			return true;
 		if (!basinInv.isPresent())
-			basinInv = basinTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+			basinInv = basinTe.get().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		if (!basinInv.isPresent())
 			return true;
 
@@ -160,9 +161,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			sendData();
 		}
 
-		TileEntity basinTE = world.getTileEntity(pos.down(2));
-		if (basinTE instanceof BasinTileEntity)
-			((BasinTileEntity) basinTE).contentsChanged = false;
+		getBasin().ifPresent(te -> te.contentsChanged = true);
 	}
 
 	protected List<IRecipe<?>> getMatchingRecipes() {
@@ -174,6 +173,13 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
 	protected void basinRemoved() {
 
+	}
+
+	protected Optional<BasinTileEntity> getBasin() {
+		TileEntity basinTE = world.getTileEntity(pos.down(2));
+		if (!(basinTE instanceof BasinTileEntity))
+			return Optional.empty();
+		return Optional.of((BasinTileEntity) basinTE);
 	}
 
 	protected abstract <C extends IInventory> boolean matchStaticFilters(IRecipe<C> recipe);

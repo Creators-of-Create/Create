@@ -1,16 +1,16 @@
 package com.simibubi.create.modules.contraptions.relays.advanced.sequencer;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.modules.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
@@ -33,8 +33,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock
-		implements IWithTileEntity<SequencedGearshiftTileEntity> {
+public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implements ITE<SequencedGearshiftTileEntity> {
 
 	public static final BooleanProperty VERTICAL = BooleanProperty.create("vertical");
 	public static final IntegerProperty STATE = IntegerProperty.create("state", 0, 5);
@@ -88,9 +87,8 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock
 				return ActionResultType.PASS;
 		}
 
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			displayScreen((SequencedGearshiftTileEntity) worldIn.getTileEntity(pos));
-		});
+		if (player instanceof ClientPlayerEntity)
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> withTileEntityDo(worldIn, pos, this::displayScreen));
 		return ActionResultType.SUCCESS;
 	}
 
@@ -109,12 +107,13 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		Direction facing = context.getFace();
-		if (facing.getAxis().isVertical() && !state.get(VERTICAL)) {
-			KineticTileEntity.switchToBlockState(context.getWorld(), context.getPos(), state.cycle(VERTICAL));
-			return ActionResultType.SUCCESS;
-		}
-		return super.onWrenched(state, context);
+		BlockState newState = state;
+
+		if (context.getFace().getAxis() != Axis.Y)
+			if (newState.get(HORIZONTAL_AXIS) != context.getFace().getAxis())
+				newState = newState.cycle(VERTICAL);
+
+		return super.onWrenched(newState, context);
 	}
 
 	private BlockState withAxis(Axis axis, BlockItemUseContext context) {
@@ -134,6 +133,11 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock
 	@Override
 	protected boolean hasStaticPart() {
 		return true;
+	}
+
+	@Override
+	public Class<SequencedGearshiftTileEntity> getTileEntityClass() {
+		return SequencedGearshiftTileEntity.class;
 	}
 
 }

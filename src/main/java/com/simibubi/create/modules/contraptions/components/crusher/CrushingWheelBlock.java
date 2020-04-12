@@ -3,8 +3,8 @@ package com.simibubi.create.modules.contraptions.components.crusher;
 import static com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelControllerBlock.VALID;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -20,7 +20,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class CrushingWheelBlock extends RotatedPillarKineticBlock {
+public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE<CrushingWheelTileEntity> {
 
 	public CrushingWheelBlock() {
 		super(Properties.from(Blocks.DIORITE));
@@ -74,15 +74,22 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 		BlockState otherState = world.getBlockState(otherWheelPos);
 		if (AllBlocks.CRUSHING_WHEEL.typeOf(otherState)) {
 			controllerShouldExist = true;
-			KineticTileEntity te = (KineticTileEntity) world.getTileEntity(pos);
-			KineticTileEntity otherTe = (KineticTileEntity) world.getTileEntity(otherWheelPos);
-			if (te != null && otherTe != null && (te.getSpeed() > 0) != (otherTe.getSpeed() > 0)
-					&& te.getSpeed() != 0) {
-				float signum = Math.signum(te.getSpeed()) * (state.get(AXIS) == Axis.X ? -1 : 1);
-				controllerShouldBeValid = facing.getAxisDirection().getOffset() != signum;
-			}
-			if (otherState.get(AXIS) != state.get(AXIS))
+
+			try {
+				CrushingWheelTileEntity te = getTileEntity(world, pos);
+				CrushingWheelTileEntity otherTe = getTileEntity(world, otherWheelPos);
+
+				if (te != null && otherTe != null && (te.getSpeed() > 0) != (otherTe.getSpeed() > 0)
+						&& te.getSpeed() != 0) {
+					float signum = Math.signum(te.getSpeed()) * (state.get(AXIS) == Axis.X ? -1 : 1);
+					controllerShouldBeValid = facing.getAxisDirection().getOffset() != signum;
+				}
+				if (otherState.get(AXIS) != state.get(AXIS))
+					controllerShouldExist = false;
+
+			} catch (TileEntityException e) {
 				controllerShouldExist = false;
+			}
 		}
 
 		if (!controllerShouldExist) {
@@ -107,24 +114,25 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 
 	@Override
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		KineticTileEntity te = (KineticTileEntity) worldIn.getTileEntity(pos);
-		if (te == null)
-			return;
-		if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.onGround)
-			return;
+		try {
+			CrushingWheelTileEntity te = getTileEntity(worldIn, pos);
+			if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.onGround)
+				return;
 
-		double x = 0;
-		double z = 0;
+			double x = 0;
+			double z = 0;
 
-		if (state.get(AXIS) == Axis.X) {
-			z = te.getSpeed() / 20f;
-			x += (pos.getX() + .5f - entityIn.getX()) * .1f;
-		}
-		if (state.get(AXIS) == Axis.Z) {
-			x = te.getSpeed() / -20f;
-			z += (pos.getZ() + .5f - entityIn.getZ()) * .1f;
-		}
-		entityIn.setMotion(entityIn.getMotion().add(x, 0, z));
+			if (state.get(AXIS) == Axis.X) {
+				z = te.getSpeed() / 20f;
+				x += (pos.getX() + .5f - entityIn.getX()) * .1f;
+			}
+			if (state.get(AXIS) == Axis.Z) {
+				x = te.getSpeed() / -20f;
+				z += (pos.getZ() + .5f - entityIn.getZ()) * .1f;
+			}
+			entityIn.setMotion(entityIn.getMotion().add(x, 0, z));
+
+		} catch (TileEntityException e) {}
 	}
 
 	@Override
@@ -167,6 +175,11 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock {
 	@Override
 	public float getParticleInitialRadius() {
 		return 1f;
+	}
+
+	@Override
+	public Class<CrushingWheelTileEntity> getTileEntityClass() {
+		return CrushingWheelTileEntity.class;
 	}
 
 }

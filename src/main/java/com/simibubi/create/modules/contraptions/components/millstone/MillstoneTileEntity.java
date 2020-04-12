@@ -142,6 +142,16 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		return super.getCapability(cap, side);
 	}
 
+	private boolean canProcess(ItemStack stack) {
+		ItemStackHandler tester = new ItemStackHandler(1);
+		tester.setStackInSlot(0, stack);
+		RecipeWrapper inventoryIn = new RecipeWrapper(tester);
+
+		if (lastRecipe != null && lastRecipe.matches(inventoryIn, world))
+			return true;
+		return world.getRecipeManager().getRecipe(AllRecipes.MILLING.getType(), inventoryIn, world).isPresent();
+	}
+
 	private class MillstoneInventoryHandler extends CombinedInvWrapper {
 
 		public MillstoneInventoryHandler() {
@@ -152,12 +162,14 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		public boolean isItemValid(int slot, ItemStack stack) {
 			if (outputInv == getHandlerFromIndex(getIndexForSlot(slot)))
 				return false;
-			return super.isItemValid(slot, stack);
+			return canProcess(stack) && super.isItemValid(slot, stack);
 		}
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 			if (outputInv == getHandlerFromIndex(getIndexForSlot(slot)))
+				return stack;
+			if (!isItemValid(slot, stack))
 				return stack;
 			return super.insertItem(slot, stack, simulate);
 		}

@@ -3,11 +3,9 @@ package com.simibubi.create.modules.contraptions.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -15,7 +13,6 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
 
 public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 
@@ -67,18 +64,6 @@ public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == state.get(HORIZONTAL_AXIS);
-	}
-
-	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		Direction facing = context.getFace();
-		if (facing.getAxis().isVertical())
-			return ActionResultType.PASS;
-		World world = context.getWorld();
-		if (facing.getAxis() == state.get(HORIZONTAL_AXIS))
-			return ActionResultType.PASS;
-		KineticTileEntity.switchToBlockState(world, context.getPos(), state.cycle(HORIZONTAL_AXIS));
-		return ActionResultType.SUCCESS;
 	}
 
 	@Override

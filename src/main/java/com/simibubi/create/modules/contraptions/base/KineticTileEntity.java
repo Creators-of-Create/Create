@@ -104,7 +104,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			if (!world.isBlockPresent(source))
 				return;
 
-			KineticTileEntity sourceTe = (KineticTileEntity) world.getTileEntity(source);
+			TileEntity tileEntity = world.getTileEntity(source);
+			KineticTileEntity sourceTe =
+				tileEntity instanceof KineticTileEntity ? (KineticTileEntity) tileEntity : null;
 			if (sourceTe == null || sourceTe.speed == 0) {
 				removeSource();
 				detachKinetics();
@@ -137,20 +139,22 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		}
 	}
 
-	public float getAddedStressCapacity() {
+	public float calculateAddedStressCapacity() {
 		Map<ResourceLocation, ConfigValue<Double>> capacityMap = AllConfigs.SERVER.kinetics.stressValues.capacities;
 		ResourceLocation path = getBlockState().getBlock().getRegistryName();
-		if (!capacityMap.containsKey(path))
-			return 0;
-		return capacityMap.get(path).get().floatValue();
+
+		float capacity = capacityMap.containsKey(path) ? capacityMap.get(path).get().floatValue() : 0;
+		this.lastCapacityProvided = capacity;
+		return capacity;
 	}
 
-	public float getStressApplied() {
+	public float calculateStressApplied() {
 		Map<ResourceLocation, ConfigValue<Double>> stressEntries = AllConfigs.SERVER.kinetics.stressValues.impacts;
 		ResourceLocation path = getBlockState().getBlock().getRegistryName();
-		if (!stressEntries.containsKey(path))
-			return 1;
-		return stressEntries.get(path).get().floatValue();
+
+		float impact = stressEntries.containsKey(path) ? stressEntries.get(path).get().floatValue() : 1;
+		this.lastStressApplied = impact;
+		return impact;
 	}
 
 	public void onSpeedChanged(float previousSpeed) {
@@ -184,13 +188,11 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			networkTag.putFloat("Stress", stress);
 			networkTag.putFloat("Capacity", capacity);
 			networkTag.putInt("Size", networkSize);
-
-			float stressApplied = getStressApplied();
-			float addedStressCapacity = getAddedStressCapacity();
-			if (stressApplied != 0)
-				networkTag.putFloat("AddedStress", stressApplied);
-			if (addedStressCapacity != 0)
-				networkTag.putFloat("AddedCapacity", addedStressCapacity);
+			
+			if (lastStressApplied != 0)
+				networkTag.putFloat("AddedStress", lastStressApplied);
+			if (lastCapacityProvided != 0)
+				networkTag.putFloat("AddedCapacity", lastCapacityProvided);
 
 			compound.put("Network", networkTag);
 		}
@@ -201,7 +203,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	@Override
 	public void read(CompoundNBT compound) {
 		speed = compound.getFloat("Speed");
-
 		source = null;
 		network = null;
 		overStressed = false;
@@ -266,12 +267,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		if (world == null || world.isRemote)
 			return;
 
-		KineticTileEntity sourceTe = (KineticTileEntity) world.getTileEntity(source);
-		if (sourceTe == null) {
+		TileEntity tileEntity = world.getTileEntity(source);
+		if (!(tileEntity instanceof KineticTileEntity)) {
 			removeSource();
 			return;
 		}
 
+		KineticTileEntity sourceTe = (KineticTileEntity) tileEntity;
 		setNetwork(sourceTe.network);
 	}
 
@@ -336,9 +338,11 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public static void switchToBlockState(World world, BlockPos pos, BlockState state) {
 		if (world.isRemote)
 			return;
+
 		TileEntity tileEntityIn = world.getTileEntity(pos);
 		if (!(tileEntityIn instanceof KineticTileEntity))
 			return;
+
 		KineticTileEntity tileEntity = (KineticTileEntity) tileEntityIn;
 		if (tileEntity.hasNetwork())
 			tileEntity.getOrCreateNetwork().remove(tileEntity);
@@ -387,9 +391,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	@Override
 	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
 		boolean added = false;
-		float stressAtBase = getStressApplied();
+		float stressAtBase = calculateStressApplied();
 
-		if (getStressApplied() != 0 && StressImpact.isEnabled()) {
+		if (calculateStressApplied() != 0 && StressImpact.isEnabled()) {
 			tooltip.add(spacing + Lang.translate("gui.goggles.kinetic_stats"));
 			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("tooltip.stressImpact"));
 

@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.schematics.block;
 
+import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
 
 import net.minecraft.block.Block;
@@ -9,7 +11,6 @@ import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
@@ -23,7 +24,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class SchematicTableBlock extends HorizontalBlock {
+public class SchematicTableBlock extends HorizontalBlock implements ITE<SchematicTableTileEntity> {
 
 	public SchematicTableBlock() {
 		super(Properties.from(Blocks.OAK_PLANKS));
@@ -34,7 +35,7 @@ public class SchematicTableBlock extends HorizontalBlock {
 		builder.add(HORIZONTAL_FACING);
 		super.fillStateContainer(builder);
 	}
-	
+
 	@Override
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
@@ -46,7 +47,8 @@ public class SchematicTableBlock extends HorizontalBlock {
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
+			ISelectionContext context) {
 		return AllShapes.TABLE_POLE_SHAPE;
 	}
 
@@ -63,15 +65,12 @@ public class SchematicTableBlock extends HorizontalBlock {
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
+		if (worldIn.isRemote)
+			return ActionResultType.SUCCESS;
 
-		if (worldIn.isRemote) {
-			return ActionResultType.SUCCESS;
-		} else {
-			SchematicTableTileEntity te = (SchematicTableTileEntity) worldIn.getTileEntity(pos);
-			if (te != null)
-				NetworkHooks.openGui((ServerPlayerEntity) player, te, te::sendToContainer);
-			return ActionResultType.SUCCESS;
-		}
+		withTileEntityDo(worldIn, pos,
+				te -> NetworkHooks.openGui((ServerPlayerEntity) player, te, te::sendToContainer));
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override
@@ -81,19 +80,16 @@ public class SchematicTableBlock extends HorizontalBlock {
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (worldIn.getTileEntity(pos) == null)
+		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 
-		SchematicTableTileEntity te = (SchematicTableTileEntity) worldIn.getTileEntity(pos);
-		for (int slot = 0; slot < te.inventory.getSlots(); slot++) {
-			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(),
-					te.inventory.getStackInSlot(slot));
-		}
+		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
+		worldIn.removeTileEntity(pos);
+	}
 
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-			worldIn.removeTileEntity(pos);
-		}
-
+	@Override
+	public Class<SchematicTableTileEntity> getTileEntityClass() {
+		return SchematicTableTileEntity.class;
 	}
 
 }

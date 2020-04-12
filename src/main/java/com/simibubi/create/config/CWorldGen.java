@@ -28,7 +28,7 @@ public class CWorldGen extends ConfigBase {
 
 	@Override
 	public String getName() {
-		return "world";
+		return "worldgen.v" + AllWorldFeatures.forcedUpdateVersion;
 	}
 
 	private static class Comments {

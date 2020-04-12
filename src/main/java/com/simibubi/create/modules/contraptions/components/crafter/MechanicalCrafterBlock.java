@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.components.crafter;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -41,7 +41,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class MechanicalCrafterBlock extends HorizontalKineticBlock
-		implements IWithTileEntity<MechanicalCrafterTileEntity>, IHaveConnectedTextures {
+		implements ITE<MechanicalCrafterTileEntity>, IHaveConnectedTextures {
 
 	public static final EnumProperty<Pointing> POINTING = EnumProperty.create("pointing", Pointing.class);
 
@@ -288,6 +288,11 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 	@Override
 	public ConnectedTextureBehaviour getBehaviour() {
 		return new InputCTBehaviour();
+	}
+
+	@Override
+	public Class<MechanicalCrafterTileEntity> getTileEntityClass() {
+		return MechanicalCrafterTileEntity.class;
 	}
 
 }

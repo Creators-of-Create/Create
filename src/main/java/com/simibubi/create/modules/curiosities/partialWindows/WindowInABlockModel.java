@@ -28,6 +28,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 
 public class WindowInABlockModel extends WrappedBakedModel {
@@ -50,13 +51,20 @@ public class WindowInABlockModel extends WrappedBakedModel {
 
 		RenderType renderLayer = MinecraftForgeClient.getRenderLayer();
 		if (RenderTypeLookup.canRenderInLayer(partialState, renderLayer) && partialState != null) {
-			quads.addAll(dispatcher.getModelForState(partialState).getQuads(partialState, side, rand, data));
+			IBakedModel partialModel = dispatcher.getModelForState(partialState);
+			IModelData modelData = partialModel.getModelData(Minecraft.getInstance().world, position, partialState,
+					EmptyModelData.INSTANCE);
+			quads.addAll(partialModel.getQuads(partialState, side, rand, modelData));
 		}
 		if (RenderTypeLookup.canRenderInLayer(windowState, renderLayer) && windowState != null) {
-			quads.addAll(dispatcher.getModelForState(windowState).getQuads(windowState, side, rand, data).stream()
+			IBakedModel windowModel = dispatcher.getModelForState(windowState);
+			IModelData modelData =
+				windowModel.getModelData(Minecraft.getInstance().world, position, windowState, EmptyModelData.INSTANCE);
+			quads.addAll(dispatcher.getModelForState(windowState).getQuads(windowState, side, rand, modelData).stream()
 					.filter(q -> {
 						Direction face = q.getFace();
-						if (face != null && windowState.isSideInvisible(world.getBlockState(position), face))
+						if (face != null
+								&& world.getBlockState(position.offset(face)).isSideInvisible(windowState, face))
 							return false;
 						if (face != null && Block.hasSolidSide(partialState, world, position, face))
 							return false;

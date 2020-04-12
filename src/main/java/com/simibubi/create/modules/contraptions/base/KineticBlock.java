@@ -72,30 +72,19 @@ public abstract class KineticBlock extends Block implements IRotate {
 	@Override
 	public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
-	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (isMoving) {
-			KineticTileEntity tileEntity = (KineticTileEntity) worldIn.getTileEntity(pos);
-			if (tileEntity == null)
-				return;
-			if (worldIn.isRemote())
-				return;
-			tileEntity.network = null;
-			tileEntity.source = null;
-			tileEntity.speed = 0;
-		}
-	}
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
 		super.updateNeighbors(stateIn, worldIn, pos, flags);
-		KineticTileEntity tileEntity = (KineticTileEntity) worldIn.getTileEntity(pos);
-		if (tileEntity == null)
-			return;
 		if (worldIn.isRemote())
 			return;
-		RotationPropagator.handleAdded(worldIn.getWorld(), pos, tileEntity);
+
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (!(tileEntity instanceof KineticTileEntity))
+			return;
+
+		KineticTileEntity kte = (KineticTileEntity) tileEntity;
+		RotationPropagator.handleAdded(worldIn.getWorld(), pos, kte);
 	}
 
 //	@Override // TODO 1.15 register layer
@@ -107,10 +96,11 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
-		if (tileEntity == null || !(tileEntity instanceof KineticTileEntity))
-			return;
 		if (worldIn.isRemote)
+			return;
+
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (!(tileEntity instanceof KineticTileEntity))
 			return;
 
 		KineticTileEntity kte = (KineticTileEntity) tileEntity;

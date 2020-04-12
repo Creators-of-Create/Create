@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.particle.AirFlowParticleData;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.InWorldProcessing;
 import com.simibubi.create.modules.logistics.InWorldProcessing.Type;
@@ -17,6 +18,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -93,6 +95,9 @@ public class AirCurrent {
 
 			entity.setMotion(previousMotion.add(new Vec3d(xIn, yIn, zIn).scale(1 / 8f)));
 			entity.fallDistance = 0;
+
+			if (entity instanceof ServerPlayerEntity)
+				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
 
 			if (InWorldProcessing.isFrozen())
 				return;
@@ -267,15 +272,16 @@ public class AirCurrent {
 	public void tickBelts() {
 		for (Pair<BeltTileEntity, Type> pair : affectedBelts) {
 			BeltTileEntity belt = pair.getKey();
+			World world = belt.getWorld();
 			InWorldProcessing.Type processingType = pair.getRight();
+
 			BeltTileEntity controller = belt.getControllerTE();
 			if (controller == null)
 				continue;
-			World world = belt.getWorld();
 
 			controller.getInventory().forEachWithin(belt.index + .5f, .51f, (transported) -> {
 				InWorldProcessing.spawnParticlesForProcessing(world,
-						controller.getInventory().getVectorForOffset(transported.beltPosition), processingType);
+						BeltHelper.getVectorForOffset(controller, transported.beltPosition), processingType);
 				if (world.isRemote)
 					return null;
 				return InWorldProcessing.applyProcessing(transported, belt, processingType);

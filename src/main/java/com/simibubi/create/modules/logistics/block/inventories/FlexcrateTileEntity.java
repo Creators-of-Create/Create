@@ -86,9 +86,13 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 	}
 
 	public FlexcrateTileEntity getMainCrate() {
-		if (isDoubleCrate() && getFacing().getAxisDirection() == AxisDirection.NEGATIVE)
+		if (isSecondaryCrate())
 			return getOtherCrate();
 		return this;
+	}
+
+	public boolean isSecondaryCrate() {
+		return isDoubleCrate() && getFacing().getAxisDirection() == AxisDirection.NEGATIVE;
 	}
 
 	public FlexcrateTileEntity getOtherCrate() {
@@ -158,20 +162,16 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		if (getMainCrate() == this) {
-			compound.putBoolean("Main", true);
-			compound.putInt("AllowedAmount", allowedAmount);
-			compound.put("Inventory", inventory.serializeNBT());
-		}
+		compound.putBoolean("Main", true);
+		compound.putInt("AllowedAmount", allowedAmount);
+		compound.put("Inventory", inventory.serializeNBT());
 		return super.write(compound);
 	}
 
 	@Override
 	public void read(CompoundNBT compound) {
-		if (compound.contains("Main")) {
-			allowedAmount = compound.getInt("AllowedAmount");
-			inventory.deserializeNBT(compound.getCompound("Inventory"));
-		}
+		allowedAmount = compound.getInt("AllowedAmount");
+		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		super.read(compound);
 	}
 
@@ -193,8 +193,11 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return getMainCrate().invHandler.cast();
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			FlexcrateTileEntity mainCrate = getMainCrate();
+			if (mainCrate != null && mainCrate.invHandler.isPresent())
+				return mainCrate.invHandler.cast();
+		}
 		return super.getCapability(capability, facing);
 	}
 

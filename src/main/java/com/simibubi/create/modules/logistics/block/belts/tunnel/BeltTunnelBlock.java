@@ -1,13 +1,14 @@
-package com.simibubi.create.modules.contraptions.relays.belt;
+package com.simibubi.create.modules.logistics.block.belts.tunnel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.IWrenchable;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 
 import net.minecraft.block.Block;
@@ -33,7 +34,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnelTileEntity>, IWrenchable {
+public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>, IWrenchable {
 
 	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 	public static final IProperty<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
@@ -237,6 +238,11 @@ public class BeltTunnelBlock extends Block implements IWithTileEntity<BeltTunnel
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(HORIZONTAL_AXIS, SHAPE);
 		super.fillStateContainer(builder);
+	}
+
+	@Override
+	public Class<BeltTunnelTileEntity> getTileEntityClass() {
+		return BeltTunnelTileEntity.class;
 	}
 
 }

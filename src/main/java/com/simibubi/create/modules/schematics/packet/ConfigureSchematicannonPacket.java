@@ -50,48 +50,45 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 		context.get().enqueueWork(() -> {
 			ServerPlayerEntity player = context.get().getSender();
 			World world = player.world;
-
-			if (world == null || world.getTileEntity(pos) == null)
+			if (world == null)
 				return;
+
 			TileEntity tileEntity = world.getTileEntity(pos);
-			if (tileEntity instanceof SchematicannonTileEntity) {
+			if (!(tileEntity instanceof SchematicannonTileEntity))
+				return;
 
-				SchematicannonTileEntity te = (SchematicannonTileEntity) tileEntity;
-				switch (option) {
-				case DONT_REPLACE:
-				case REPLACE_ANY:
-				case REPLACE_EMPTY:
-				case REPLACE_SOLID:
-					te.replaceMode = option.ordinal();
-					break;
-				case SKIP_MISSING:
-					te.skipMissing = set;
-					break;
-				case SKIP_TILES:
-					te.replaceTileEntities = set;
-					break;
-					
-				case PLAY:
-					te.state = State.RUNNING;
-					te.statusMsg = "running";
-					break;
-				case PAUSE:
-					te.state = State.PAUSED;
-					te.statusMsg = "paused";
-					break;
-				case STOP:
-					te.state = State.STOPPED;
-					te.statusMsg = "stopped";
-					break;
-				default:
-					break;
-				}
-				
-				te.sendUpdate = true;
+			SchematicannonTileEntity te = (SchematicannonTileEntity) tileEntity;
+			switch (option) {
+			case DONT_REPLACE:
+			case REPLACE_ANY:
+			case REPLACE_EMPTY:
+			case REPLACE_SOLID:
+				te.replaceMode = option.ordinal();
+				break;
+			case SKIP_MISSING:
+				te.skipMissing = set;
+				break;
+			case SKIP_TILES:
+				te.replaceTileEntities = set;
+				break;
 
+			case PLAY:
+				te.state = State.RUNNING;
+				te.statusMsg = "running";
+				break;
+			case PAUSE:
+				te.state = State.PAUSED;
+				te.statusMsg = "paused";
+				break;
+			case STOP:
+				te.state = State.STOPPED;
+				te.statusMsg = "stopped";
+				break;
+			default:
+				break;
 			}
 
-			return;
+			te.sendUpdate = true;
 		});
 		context.get().setPacketHandled(true);
 	}

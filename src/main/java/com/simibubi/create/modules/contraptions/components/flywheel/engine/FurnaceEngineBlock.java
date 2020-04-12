@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.components.flywheel.engine;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 
 import net.minecraft.block.AbstractFurnaceBlock;
@@ -23,7 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
-public class FurnaceEngineBlock extends EngineBlock implements IWithTileEntity<FurnaceEngineTileEntity> {
+public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngineTileEntity> {
 
 	public FurnaceEngineBlock() {
 		super(Properties.from(Blocks.GOLD_BLOCK));
@@ -74,6 +74,11 @@ public class FurnaceEngineBlock extends EngineBlock implements IWithTileEntity<F
 			return;
 		if (state.getBlock() instanceof AbstractFurnaceBlock)
 			event.setUseBlock(Result.DENY);
+	}
+
+	@Override
+	public Class<FurnaceEngineTileEntity> getTileEntityClass() {
+		return FurnaceEngineTileEntity.class;
 	}
 
 }

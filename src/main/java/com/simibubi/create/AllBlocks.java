@@ -1,5 +1,8 @@
 package com.simibubi.create;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
@@ -45,7 +48,6 @@ import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.modules.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltTunnelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.AdjustablePulleyBlock;
@@ -62,14 +64,15 @@ import com.simibubi.create.modules.curiosities.symmetry.block.TriplePlaneSymmetr
 import com.simibubi.create.modules.gardens.CocoaLogBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
 import com.simibubi.create.modules.logistics.block.StockswitchBlock;
-import com.simibubi.create.modules.logistics.block.belts.BeltObserverBlock;
-import com.simibubi.create.modules.logistics.block.belts.FunnelBlock;
+import com.simibubi.create.modules.logistics.block.belts.observer.BeltObserverBlock;
+import com.simibubi.create.modules.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterBlock;
 import com.simibubi.create.modules.logistics.block.diodes.LatchBlock;
 import com.simibubi.create.modules.logistics.block.diodes.PulseRepeaterBlock;
 import com.simibubi.create.modules.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorBlock;
+import com.simibubi.create.modules.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
@@ -106,9 +109,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public enum AllBlocks {
 

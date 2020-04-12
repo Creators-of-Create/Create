@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics.block.belts;
+package com.simibubi.create.modules.logistics.block.belts.observer;
 
 import java.util.List;
 
@@ -6,11 +6,12 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.modules.logistics.block.belts.BeltObserverBlock.Mode;
+import com.simibubi.create.modules.logistics.block.belts.observer.BeltObserverBlock.Mode;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class BeltObserverTileEntity extends SmartTileEntity {
@@ -43,16 +44,16 @@ public class BeltObserverTileEntity extends SmartTileEntity {
 		if (getBlockState().get(BeltObserverBlock.MODE) != Mode.DETECT)
 			return;
 
-		TileEntity tileEntity =
-			world.getTileEntity(pos.offset(getBlockState().get(BeltObserverBlock.HORIZONTAL_FACING)));
-		if (!(tileEntity instanceof BeltTileEntity))
+		BlockPos targetPos = pos.offset(getBlockState().get(BeltObserverBlock.HORIZONTAL_FACING));
+
+		BeltTileEntity beltTE = BeltHelper.getSegmentTE(world, targetPos);
+		if (beltTE == null)
 			return;
-		BeltTileEntity belt = (BeltTileEntity) tileEntity;
-		BeltTileEntity controllerTE = belt.getControllerTE();
+		BeltTileEntity controllerTE = beltTE.getControllerTE();
 		if (controllerTE == null)
 			return;
 
-		controllerTE.getInventory().forEachWithin(belt.index + .5f, .45f, stack -> {
+		controllerTE.getInventory().forEachWithin(beltTE.index + .5f, .45f, stack -> {
 			if (filtering.test(stack.stack) && turnOffTicks != 6) {
 				world.setBlockState(pos, getBlockState().with(BeltObserverBlock.POWERED, true));
 				world.notifyNeighborsOfStateChange(pos, getBlockState().getBlock());

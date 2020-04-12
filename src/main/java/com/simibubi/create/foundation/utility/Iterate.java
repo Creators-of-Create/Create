@@ -1,7 +1,11 @@
 package com.simibubi.create.foundation.utility;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.BlockPos;
 
 public class Iterate {
 
@@ -17,5 +21,10 @@ public class Iterate {
 			directions[i] = Direction.byHorizontalIndex(i);
 		return directions;
 	}
+	
+	public static List<BlockPos> hereAndBelow(BlockPos pos) {
+		return Arrays.asList(pos, pos.down());
+	}
+	                                                    
 	
 }

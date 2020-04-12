@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.pulley;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.HorizontalAxisKineticBlock;
 
@@ -24,7 +24,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class PulleyBlock extends HorizontalAxisKineticBlock implements IWithTileEntity<PulleyTileEntity> {
+public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<PulleyTileEntity> {
 
 	public static EnumProperty<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
@@ -129,6 +129,11 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements IWithTile
 			return AllShapes.FOUR_VOXEL_POLE.get(Direction.UP);
 		}
 
+	}
+
+	@Override
+	public Class<PulleyTileEntity> getTileEntityClass() {
+		return PulleyTileEntity.class;
 	}
 
 }

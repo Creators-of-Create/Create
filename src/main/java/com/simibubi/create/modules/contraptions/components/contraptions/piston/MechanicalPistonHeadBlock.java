@@ -9,6 +9,7 @@ import com.simibubi.create.modules.contraptions.components.contraptions.piston.M
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
@@ -35,6 +36,11 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(TYPE);
 		super.fillStateContainer(builder);
+	}
+
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.NORMAL;
 	}
 
 	@Override

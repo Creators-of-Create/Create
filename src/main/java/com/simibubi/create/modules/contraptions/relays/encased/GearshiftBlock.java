@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays.encased;
 
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearshiftTileEntity;
 
 import net.minecraft.block.Block;
@@ -17,7 +17,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class GearshiftBlock extends EncasedShaftBlock {
+public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTileEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -51,13 +51,18 @@ public class GearshiftBlock extends EncasedShaftBlock {
 
 		boolean previouslyPowered = state.get(POWERED);
 		if (previouslyPowered != worldIn.isBlockPowered(pos)) {
-			RotationPropagator.handleRemoved(worldIn, pos, (KineticTileEntity) worldIn.getTileEntity(pos));
+			withTileEntityDo(worldIn, pos, te -> RotationPropagator.handleRemoved(worldIn, pos, te));
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
 		}
 	}
 
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return super.hasShaftTowards(world, pos, state, face);
+	}
+
+	@Override
+	public Class<GearshiftTileEntity> getTileEntityClass() {
+		return GearshiftTileEntity.class;
 	}
 
 }

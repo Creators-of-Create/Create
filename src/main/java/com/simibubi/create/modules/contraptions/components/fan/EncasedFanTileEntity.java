@@ -45,13 +45,13 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public float getAddedStressCapacity() {
-		return isGenerator ? super.getAddedStressCapacity() : 0;
+	public float calculateAddedStressCapacity() {
+		return isGenerator ? super.calculateAddedStressCapacity() : 0;
 	}
 
 	@Override
-	public float getStressApplied() {
-		return isGenerator ? 0 : super.getStressApplied();
+	public float calculateStressApplied() {
+		return isGenerator ? 0 : super.calculateStressApplied();
 	}
 
 	@Override
@@ -59,8 +59,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 		return isGenerator ? AllConfigs.SERVER.kinetics.generatingFanSpeed.get() : 0;
 	}
 
-	public void updateGenerator() {
-		boolean shouldGenerate = world.isBlockPowered(pos) && world.isBlockPresent(pos.down()) && blockBelowIsHot();
+	public void updateGenerator(Direction facing) {
+		boolean shouldGenerate = world.isBlockPowered(pos) && facing == Direction.DOWN && world.isBlockPresent(pos.down()) && blockBelowIsHot();
 		if (shouldGenerate == isGenerator)
 			return;
 

@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = 'mc1.15.2_v0.2.2'
+version = 'mc1.15.2_v0.2.3'
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
@@ -21,6 +21,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 
 minecraft {
     mappings channel: 'snapshot', version: '20200301-mixed-1.15.2'
+	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
     runs {		
 		client {

@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -13,7 +14,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -59,12 +59,13 @@ public enum AllBeltAttachments {
 
 		default void onAttachmentPlaced(IWorld world, BlockPos pos, BlockState state) {
 			BlockPos beltPos = getBeltPositionForAttachment(world, pos, state);
-			TileEntity te = world.getTileEntity(beltPos);
-			if (te == null || !(te instanceof BeltTileEntity))
+			BeltTileEntity belt = BeltHelper.getSegmentTE(world, beltPos);
+
+			if (belt == null)
 				return;
-			BeltTileEntity belt = (BeltTileEntity) te;
-			if (!isAttachedCorrectly(world, pos, belt.getPos(), state, belt.getBlockState()))
+			if (!isAttachedCorrectly(world, pos, beltPos, state, world.getBlockState(beltPos)))
 				return;
+
 			belt.attachmentTracker.addAttachment(world, pos);
 			belt.markDirty();
 			belt.sendData();
@@ -72,16 +73,18 @@ public enum AllBeltAttachments {
 
 		default void onAttachmentRemoved(IWorld world, BlockPos pos, BlockState state) {
 			BlockPos beltPos = getBeltPositionForAttachment(world, pos, state);
-			TileEntity te = world.getTileEntity(beltPos);
-			if (te == null || !(te instanceof BeltTileEntity))
+			BeltTileEntity belt = BeltHelper.getSegmentTE(world, beltPos);
+
+			if (belt == null)
 				return;
-			BeltTileEntity belt = (BeltTileEntity) te;
-			if (!isAttachedCorrectly(world, pos, belt.getPos(), state, belt.getBlockState()))
+			if (!isAttachedCorrectly(world, pos, beltPos, state, world.getBlockState(beltPos)))
 				return;
+
 			belt.attachmentTracker.removeAttachment(pos);
 			belt.markDirty();
 			belt.sendData();
 		}
+
 	}
 
 	public static class BeltAttachmentState {
@@ -112,8 +115,8 @@ public enum AllBeltAttachments {
 				World world = belt.getWorld();
 				BlockPos beltPos = belt.getPos();
 				BlockState beltState = belt.getBlockState();
-				List<BlockPos> attachmentPositions = ba.attachment.getPotentialAttachmentPositions(world, beltPos,
-						beltState);
+				List<BlockPos> attachmentPositions =
+					ba.attachment.getPotentialAttachmentPositions(world, beltPos, beltState);
 
 				for (BlockPos potentialPos : attachmentPositions) {
 					if (!world.isBlockPresent(potentialPos))

@@ -9,7 +9,6 @@ import com.simibubi.create.modules.curiosities.tools.SandPaperItemRenderer.SandP
 
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -111,7 +110,7 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return enchantment == Enchantments.FORTUNE || super.canApplyAtEnchantingTable(stack, enchantment);
+		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 	
 	@Override

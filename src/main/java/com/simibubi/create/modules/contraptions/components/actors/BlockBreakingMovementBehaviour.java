@@ -1,12 +1,14 @@
 package com.simibubi.create.modules.contraptions.components.actors;
 
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.DamageSource;
@@ -37,8 +39,17 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 			if (damageSource == null)
 				return;
 			for (Entity entity : world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos))) {
+
 				if (entity instanceof ItemEntity)
 					return;
+				if (entity instanceof ContraptionEntity)
+					return;
+				if (entity instanceof AbstractMinecartEntity)
+					for (Entity passenger : entity.getRecursivePassengers())
+						if (passenger instanceof ContraptionEntity
+								&& ((ContraptionEntity) passenger).getContraption() == context.contraption)
+							return;
+
 				float damage = (float) MathHelper.clamp(Math.abs(context.relativeMotion.length() * 10) + 1, 5, 20);
 				entity.attackEntityFrom(damageSource, damage);
 				entity.setMotion(entity.getMotion().add(context.relativeMotion.scale(3)));

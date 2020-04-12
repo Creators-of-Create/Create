@@ -6,13 +6,13 @@ import java.nio.ByteOrder;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.mojang.datafixers.util.Pair;
+import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.BufferBuilder.DrawState;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Vector4f;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -33,7 +33,9 @@ public class SuperByteBuffer {
 
 	// Vertex Texture Coords
 	private boolean shouldShiftUV;
-	private float uShift, vShift;
+	private boolean resetUV;
+	private SpriteShiftEntry spriteShift;
+	private float uTarget, vTarget;
 
 	// Vertex Lighting
 	private boolean shouldLight;
@@ -44,6 +46,7 @@ public class SuperByteBuffer {
 	// Vertex Coloring
 	private boolean shouldColor;
 	private int r, g, b, a;
+	private float sheetSize;
 
 	public SuperByteBuffer(BufferBuilder buf) {
 		Pair<DrawState, ByteBuffer> state = buf.popData();
@@ -81,8 +84,18 @@ public class SuperByteBuffer {
 				putColor(mutable, vertex, (byte) r2, (byte) g2, (byte) b2, (byte) a);
 			}
 
-			if (shouldShiftUV)
-				putUV(mutable, vertex, getU(original, vertex) + uShift, getV(original, vertex) + vShift);
+			if (shouldShiftUV) {
+				float u = getU(original, vertex);
+				float v = getV(original, vertex);
+				float targetU = spriteShift.getTarget()
+						.getInterpolatedU((spriteShift.getOriginal().getUnInterpolatedU(u) / sheetSize) + uTarget * 16);
+				float targetV = spriteShift.getTarget()
+						.getInterpolatedV((spriteShift.getOriginal().getUnInterpolatedV(v) / sheetSize) + vTarget * 16);
+				putUV(mutable, vertex, targetU, targetV);
+			}
+
+			if (resetUV)
+				putUV(mutable, vertex, getU(original, vertex), getV(original, vertex));
 
 			if (shouldLight) {
 				if (vertexLighter != null)
@@ -141,24 +154,29 @@ public class SuperByteBuffer {
 		return translate(.5f, .5f, .5f).rotate(axis, radians).translate(-.5f, -.5f, -.5f);
 	}
 
-	public SuperByteBuffer shiftUV(TextureAtlasSprite from, TextureAtlasSprite to) {
+	public SuperByteBuffer shiftUV(SpriteShiftEntry entry) {
 		shouldShiftUV = true;
-		uShift = to.getMinU() - from.getMinU();
-		vShift = to.getMinV() - from.getMinV();
+		resetUV = false;
+		spriteShift = entry;
+		uTarget = 0;
+		vTarget = 0;
+		sheetSize = 1;
 		return this;
 	}
 
-	public SuperByteBuffer shiftUVtoSheet(TextureAtlasSprite from, TextureAtlasSprite to, int sheetX, int sheetY) {
+	public SuperByteBuffer shiftUVtoSheet(SpriteShiftEntry entry, float uTarget, float vTarget, int sheetSize) {
 		shouldShiftUV = true;
-		uShift = to.getInterpolatedU(sheetX * 16f / to.getWidth()) - from.getMinU();
-		vShift = to.getInterpolatedV(sheetY * 16f / to.getHeight()) - from.getMinV();
+		resetUV = false;
+		spriteShift = entry;
+		this.uTarget = uTarget;
+		this.vTarget = vTarget;
+		this.sheetSize = sheetSize;
 		return this;
 	}
 
 	public SuperByteBuffer dontShiftUV() {
 		shouldShiftUV = false;
-		uShift = 0;
-		vShift = 0;
+		resetUV = true;
 		return this;
 	}
 

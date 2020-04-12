@@ -25,17 +25,23 @@ import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonPoleBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonHeadBlock;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 
+import net.minecraft.block.AbstractButtonBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.DoorBlock;
+import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.SlimeBlock;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -159,6 +165,49 @@ public abstract class Contraption {
 			if (prevPos != null && !visited.contains(prevPos))
 				frontier.add(prevPos);
 		}
+		
+		if (state.getBlock() instanceof MechanicalPistonBlock) {
+			int limit = AllConfigs.SERVER.kinetics.maxPistonPoles.get();
+			Direction direction = state.get(MechanicalPistonBlock.FACING);
+			if (state.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED) {
+				BlockPos searchPos = pos;
+				while (limit-- >= 0) {
+					searchPos = searchPos.offset(direction);
+					BlockState blockState = world.getBlockState(searchPos);
+					if (AllBlocks.PISTON_POLE.typeOf(blockState)) {
+						if (blockState.get(PistonPoleBlock.FACING).getAxis() != direction.getAxis())
+							break;
+						if (!visited.contains(searchPos))
+							frontier.add(searchPos);
+						continue;
+					}
+					if (blockState.getBlock() instanceof MechanicalPistonHeadBlock)
+						if (!visited.contains(searchPos))
+							frontier.add(searchPos);
+					break;
+				}
+				if (limit <= -1)
+					return false;
+			}
+			
+			BlockPos searchPos = pos;
+			while (limit-- >= 0) {
+				searchPos = searchPos.offset(direction.getOpposite());
+				BlockState blockState = world.getBlockState(searchPos);
+				if (AllBlocks.PISTON_POLE.typeOf(blockState)) {
+					if (blockState.get(PistonPoleBlock.FACING).getAxis() != direction.getAxis())
+						break;
+					if (!visited.contains(searchPos))
+						frontier.add(searchPos);
+					continue;
+				}
+				break;
+			}
+			
+			if (limit <= -1)
+				return false;
+		}
+		
 		if (state.getBlock() instanceof DoorBlock) {
 			BlockPos otherPartPos = pos.up(state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? 1 : -1);
 			if (!visited.contains(otherPartPos))
@@ -169,7 +218,7 @@ public abstract class Contraption {
 		for (Direction offset : Direction.values()) {
 			BlockPos offsetPos = pos.offset(offset);
 			BlockState blockState = world.getBlockState(offsetPos);
-			if (BlockMovementTraits.movementIgnored(blockState))
+			if (isAnchoringBlockAt(offsetPos))
 				continue;
 			if (!BlockMovementTraits.movementAllowed(world, offsetPos)) {
 				if (offset == forcedDirection && isSlimeBlock)
@@ -185,6 +234,10 @@ public abstract class Contraption {
 		if (blocks.size() > AllConfigs.SERVER.kinetics.maxBlocksMoved.get())
 			return false;
 		return true;
+	}
+
+	protected boolean isAnchoringBlockAt(BlockPos pos) {
+		return pos.equals(anchor);
 	}
 
 	protected static boolean isChassis(BlockState state) {
@@ -217,6 +270,14 @@ public abstract class Contraption {
 			blockstate = blockstate.with(FlexcrateBlock.DOUBLE, false);
 		if (AllBlocks.CONTACT.typeOf(blockstate))
 			blockstate = blockstate.with(ContactBlock.POWERED, true);
+		if (blockstate.getBlock() instanceof AbstractButtonBlock) {
+			blockstate = blockstate.with(AbstractButtonBlock.POWERED, false);
+			world.getPendingBlockTicks().scheduleTick(pos, blockstate.getBlock(), -1);
+		}
+		if (blockstate.getBlock() instanceof PressurePlateBlock) {
+			blockstate = blockstate.with(PressurePlateBlock.POWERED, false);
+			world.getPendingBlockTicks().scheduleTick(pos, blockstate.getBlock(), -1);
+		}
 		CompoundNBT compoundnbt = getTileEntityNBT(world, pos);
 		TileEntity tileentity = world.getTileEntity(pos);
 		return Pair.of(new BlockInfo(pos, blockstate, compoundnbt), tileentity);

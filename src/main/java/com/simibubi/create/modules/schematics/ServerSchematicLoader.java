@@ -26,6 +26,7 @@ import com.simibubi.create.modules.schematics.item.SchematicItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -105,8 +106,8 @@ public class ServerSchematicLoader {
 
 		try {
 			// Validate Referenced Block
-			BlockState blockState = dimPos.world.getBlockState(dimPos.pos);
-			if (!AllBlocks.SCHEMATIC_TABLE.typeOf(blockState))
+			SchematicTableTileEntity table = getTable(dimPos);
+			if (table == null)
 				return;
 
 			// Delete schematic with same name
@@ -131,8 +132,7 @@ public class ServerSchematicLoader {
 			activeUploads.put(playerSchematicId, new SchematicUploadEntry(writer, size, dimPos));
 
 			// Notify Tile Entity
-			SchematicTableTileEntity tileEntity = (SchematicTableTileEntity) dimPos.world.getTileEntity(dimPos.pos);
-			tileEntity.startUpload(schematic);
+			table.startUpload(schematic);
 
 		} catch (IOException e) {
 			Create.logger.error("Exception Thrown when starting Upload: " + playerSchematicId);
@@ -167,14 +167,12 @@ public class ServerSchematicLoader {
 			try {
 				entry.stream.write(data);
 				entry.idleTime = 0;
-				BlockState blockState = entry.tablePos.world.getBlockState(entry.tablePos.pos);
-				if (!AllBlocks.SCHEMATIC_TABLE.typeOf(blockState))
-					return;
 
-				SchematicTableTileEntity tileEntity =
-					(SchematicTableTileEntity) entry.tablePos.world.getTileEntity(entry.tablePos.pos);
-				tileEntity.uploadingProgress = (float) ((double) entry.bytesUploaded / entry.totalBytes);
-				tileEntity.sendUpdate = true;
+				SchematicTableTileEntity table = getTable(entry.tablePos);
+				if (table == null)
+					return;
+				table.uploadingProgress = (float) ((double) entry.bytesUploaded / entry.totalBytes);
+				table.sendUpdate = true;
 
 			} catch (IOException e) {
 				Create.logger.error("Exception Thrown when uploading Schematic: " + playerSchematicId);
@@ -203,12 +201,17 @@ public class ServerSchematicLoader {
 		if (dimpos == null)
 			return;
 
-		BlockState blockState = dimpos.world.getBlockState(dimpos.pos);
-		if (!AllBlocks.SCHEMATIC_TABLE.typeOf(blockState))
-			return;
+		SchematicTableTileEntity table = getTable(dimpos);
+		if (table != null)
+			table.finishUpload();
+	}
 
-		SchematicTableTileEntity tileEntity = (SchematicTableTileEntity) dimpos.world.getTileEntity(dimpos.pos);
-		tileEntity.finishUpload();
+	public SchematicTableTileEntity getTable(DimensionPos dimpos) {
+		TileEntity te = dimpos.world.getTileEntity(dimpos.pos);
+		if (!(te instanceof SchematicTableTileEntity))
+			return null;
+		SchematicTableTileEntity table = (SchematicTableTileEntity) te;
+		return table;
 	}
 
 	public void handleFinishedUpload(ServerPlayerEntity player, String schematic) {
@@ -227,11 +230,12 @@ public class ServerSchematicLoader {
 				if (!AllBlocks.SCHEMATIC_TABLE.typeOf(blockState))
 					return;
 
-				SchematicTableTileEntity tileEntity = (SchematicTableTileEntity) dimpos.world.getTileEntity(dimpos.pos);
-				tileEntity.finishUpload();
-				tileEntity.inventory.setStackInSlot(0, ItemStack.EMPTY);
-				tileEntity.inventory.setStackInSlot(1,
-						SchematicItem.create(schematic, player.getName().getFormattedText()));
+				SchematicTableTileEntity table = getTable(dimpos);
+				if (table == null)
+					return;
+				table.finishUpload();
+				table.inventory.setStackInSlot(0, ItemStack.EMPTY);
+				table.inventory.setStackInSlot(1, SchematicItem.create(schematic, player.getName().getFormattedText()));
 
 			} catch (IOException e) {
 				Create.logger.error("Exception Thrown when finishing Upload: " + playerSchematicId);

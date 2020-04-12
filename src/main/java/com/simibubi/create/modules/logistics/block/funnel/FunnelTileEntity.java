@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics.block.belts;
+package com.simibubi.create.modules.logistics.block.funnel;
 
 import java.util.List;
 
@@ -11,14 +11,15 @@ import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.behaviour.inventory.InsertingBehaviour;
 import com.simibubi.create.foundation.behaviour.inventory.InventoryManagementBehaviour.Attachments;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -103,10 +104,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 		BlockPos targetPos = pos.offset(AttachedLogisticalBlock.getBlockFacing(getBlockState()));
 		if (!AllBlocks.BELT.typeOf(world.getBlockState(targetPos)))
 			return null;
-		TileEntity te = world.getTileEntity(targetPos);
-		if (te == null || !(te instanceof BeltTileEntity))
-			return null;
-		return (BeltTileEntity) te;
+		return BeltHelper.getSegmentTE(world, targetPos);
 	}
 
 	public void spawnParticles(ItemStack stack) {

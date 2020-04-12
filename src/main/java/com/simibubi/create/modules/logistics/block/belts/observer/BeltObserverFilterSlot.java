@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.logistics.block.belts;
+package com.simibubi.create.modules.logistics.block.belts.observer;
 
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;

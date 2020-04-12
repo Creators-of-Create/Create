@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.crank;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 
@@ -22,7 +22,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class HandCrankBlock extends DirectionalKineticBlock implements IWithTileEntity<HandCrankTileEntity> {
+public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandCrankTileEntity> {
 
 	public HandCrankBlock() {
 		super(Properties.from(AllBlocks.COGWHEEL.get()));
@@ -94,6 +94,11 @@ public class HandCrankBlock extends DirectionalKineticBlock implements IWithTile
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(FACING).getAxis();
+	}
+
+	@Override
+	public Class<HandCrankTileEntity> getTileEntityClass() {
+		return HandCrankTileEntity.class;
 	}
 
 }

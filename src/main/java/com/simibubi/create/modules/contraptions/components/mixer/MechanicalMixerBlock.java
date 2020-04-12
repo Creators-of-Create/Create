@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.components.mixer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
-import com.simibubi.create.foundation.block.IWithTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 
@@ -20,7 +20,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
 public class MechanicalMixerBlock extends KineticBlock
-		implements IWithTileEntity<MechanicalMixerTileEntity>, IHaveCustomBlockItem {
+		implements ITE<MechanicalMixerTileEntity>, IHaveCustomBlockItem {
 
 	public MechanicalMixerBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -87,6 +87,11 @@ public class MechanicalMixerBlock extends KineticBlock
 	@Override
 	public BlockItem getCustomItem(net.minecraft.item.Item.Properties properties) {
 		return new BasinOperatorBlockItem(AllBlocks.MECHANICAL_MIXER, properties);
+	}
+
+	@Override
+	public Class<MechanicalMixerTileEntity> getTileEntityClass() {
+		return MechanicalMixerTileEntity.class;
 	}
 
 }

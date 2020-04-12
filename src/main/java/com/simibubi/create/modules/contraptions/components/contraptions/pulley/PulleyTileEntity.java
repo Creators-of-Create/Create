@@ -31,6 +31,11 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
+	public double getMaxRenderDistanceSquared() {
+		return super.getMaxRenderDistanceSquared() + offset * offset;
+	}
+
+	@Override
 	protected void assemble() {
 		if (speed == 0)
 			return;
@@ -151,7 +156,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	protected int getExtensionRange() {
-		return Math.min(AllConfigs.SERVER.kinetics.maxRopeLength.get(), pos.getY() - 1);
+		return Math.max(0, Math.min(AllConfigs.SERVER.kinetics.maxRopeLength.get(), pos.getY() - 1));
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.contraptions.processing;
 
+import java.util.Optional;
+
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 
@@ -111,11 +113,7 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 	}
 
 	public void onEmptied() {
-		TileEntity te = world.getTileEntity(pos.up(2));
-		if (te == null)
-			return;
-		if (te instanceof BasinOperatingTileEntity)
-			((BasinOperatingTileEntity) te).basinRemoved = true;
+		getOperator().ifPresent(te -> te.basinRemoved = true);
 	}
 
 	@Override
@@ -137,13 +135,14 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 		if (!contentsChanged)
 			return;
 		contentsChanged = false;
+		getOperator().ifPresent(te -> te.basinChecker.scheduleUpdate());
+	}
 
+	private Optional<BasinOperatingTileEntity> getOperator() {
 		TileEntity te = world.getTileEntity(pos.up(2));
-		if (te == null)
-			return;
 		if (te instanceof BasinOperatingTileEntity)
-			((BasinOperatingTileEntity) te).basinChecker.scheduleUpdate();
-
+			return Optional.of((BasinOperatingTileEntity) te);
+		return Optional.empty();
 	}
 
 }
