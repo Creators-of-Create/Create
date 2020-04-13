@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.world;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+
 import net.minecraft.block.Block;
 import net.minecraft.world.gen.placement.ChanceRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
@@ -10,7 +12,7 @@ public class ChanceOreFeature extends OreFeature<ChanceRangeConfig> {
 
 	private ConfigFloat clusterChance;
 
-	public ChanceOreFeature(Block block, int clusterSize, float clusterChance) {
+	public ChanceOreFeature(NonNullSupplier<Block> block, int clusterSize, float clusterChance) {
 		super(block, clusterSize);
 		this.clusterChance = f(clusterChance, 0, 1, "clusterChance");
 	}

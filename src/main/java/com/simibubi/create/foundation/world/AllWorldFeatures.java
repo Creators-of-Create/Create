@@ -19,17 +19,17 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public enum AllWorldFeatures {
 
-	COPPER_ORE(new CountedOreFeature(AllBlocks.COPPER_ORE.get(), 18, 2).between(40, 86)),
-	COPPER_ORE_OCEAN(new CountedOreFeature(AllBlocks.COPPER_ORE.get(), 15, 4).between(20, 55).inBiomes(OCEAN)),
+	COPPER_ORE(new CountedOreFeature(AllBlocks.COPPER_ORE, 18, 2).between(40, 86)),
+	COPPER_ORE_OCEAN(new CountedOreFeature(AllBlocks.COPPER_ORE, 15, 4).between(20, 55).inBiomes(OCEAN)),
 
-	ZINC_ORE(new CountedOreFeature(AllBlocks.ZINC_ORE.get(), 14, 4).between(15, 70)),
-	ZINC_ORE_DESERT(new CountedOreFeature(AllBlocks.ZINC_ORE.get(), 17, 5).between(10, 85).inBiomes(DESERT)),
+	ZINC_ORE(new CountedOreFeature(AllBlocks.ZINC_ORE, 14, 4).between(15, 70)),
+	ZINC_ORE_DESERT(new CountedOreFeature(AllBlocks.ZINC_ORE, 17, 5).between(10, 85).inBiomes(DESERT)),
 
-	LIMESTONE(new ChanceOreFeature(AllBlocks.LIMESTONE.get(), 128, 1 / 32f).between(30, 70)),
-	WEATHERED_LIMESTONE(new ChanceOreFeature(AllBlocks.WEATHERED_LIMESTONE.get(), 128, 1 / 32f).between(10, 30)),
-	DOLOMITE(new ChanceOreFeature(AllBlocks.DOLOMITE.get(), 128, 1 / 64f).between(20, 70)),
-	GABBRO(new ChanceOreFeature(AllBlocks.GABBRO.get(), 128, 1 / 64f).between(20, 70)),
-	SCORIA(new ChanceOreFeature(AllBlocks.NATURAL_SCORIA.get(), 128, 1 / 32f).between(0, 10)),
+	LIMESTONE(new ChanceOreFeature(AllBlocks.LIMESTONE, 128, 1 / 32f).between(30, 70)),
+	WEATHERED_LIMESTONE(new ChanceOreFeature(AllBlocks.WEATHERED_LIMESTONE, 128, 1 / 32f).between(10, 30)),
+	DOLOMITE(new ChanceOreFeature(AllBlocks.DOLOMITE, 128, 1 / 64f).between(20, 70)),
+	GABBRO(new ChanceOreFeature(AllBlocks.GABBRO, 128, 1 / 64f).between(20, 70)),
+	SCORIA(new ChanceOreFeature(AllBlocks.NATURAL_SCORIA, 128, 1 / 32f).between(0, 10)),
 
 	;
 

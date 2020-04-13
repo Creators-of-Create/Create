@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerBlock;
@@ -9,7 +8,6 @@ import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerB
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -23,7 +21,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class CogWheelBlock extends ShaftBlock implements IHaveCustomBlockItem {
+public class CogWheelBlock extends ShaftBlock {
 
 	private boolean isLarge;
 
@@ -94,10 +92,4 @@ public class CogWheelBlock extends ShaftBlock implements IHaveCustomBlockItem {
 	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
 		return !isLarge;
 	}
-
-	@Override
-	public BlockItem getCustomItem(net.minecraft.item.Item.Properties properties) {
-		return new CogwheelBlockItem(this, properties, isLarge);
-	}
-
 }

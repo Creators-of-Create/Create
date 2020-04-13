@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
@@ -24,7 +23,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements IHaveNoBlockItem {
+public class MechanicalPistonHeadBlock extends ProperDirectionalBlock {
 
 	public static final EnumProperty<PistonType> TYPE = BlockStateProperties.PISTON_TYPE;
 

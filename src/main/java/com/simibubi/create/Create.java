@@ -12,6 +12,8 @@ import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
+import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.util.LazyValue;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -43,6 +45,7 @@ public class Create {
 	public static RedstoneLinkNetworkHandler redstoneLinkNetworkHandler;
 	public static TorquePropagator torquePropagator;
 	public static ServerLagger lagger;
+	private static final LazyValue<Registrate> registrate = new LazyValue<>(() -> Registrate.create(ID));
 
 	public Create() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -50,7 +53,8 @@ public class Create {
 
 		MinecraftForge.EVENT_BUS.addListener(Create::serverStarting);
 
-		modEventBus.addGenericListener(Block.class, AllBlocks::register);
+		AllBlocks.register();
+//		modEventBus.addGenericListener(Block.class, AllBlocks::register);
 		modEventBus.addGenericListener(Item.class, AllItems::register);
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipes::register);
 		modEventBus.addGenericListener(TileEntityType.class, AllTileEntities::register);
@@ -59,14 +63,14 @@ public class Create {
 		modEventBus.addGenericListener(ParticleType.class, AllParticles::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
 
-		AllConfigs.registerAll();
 		modEventBus.addListener(AllConfigs::onLoad);
 		modEventBus.addListener(AllConfigs::onReload);
 		CreateClient.addListeners(modEventBus);
-		AllWorldFeatures.reload();
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
+	    AllConfigs.registerAll();
+
 		schematicReceiver = new ServerSchematicLoader();
 		redstoneLinkNetworkHandler = new RedstoneLinkNetworkHandler();
 		torquePropagator = new TorquePropagator();
@@ -75,6 +79,8 @@ public class Create {
 		CraftingHelper.register(new ModuleLoadedCondition.Serializer());
 		AllPackets.registerPackets();
 		AllTriggers.register();
+		
+		AllWorldFeatures.reload();
 	}
 
 	public static void serverStarting(FMLServerStartingEvent event) {
@@ -93,4 +99,7 @@ public class Create {
 		schematicReceiver.shutdown();
 	}
 
+	public static Registrate registrate() {
+	    return registrate.get();
+	}
 }

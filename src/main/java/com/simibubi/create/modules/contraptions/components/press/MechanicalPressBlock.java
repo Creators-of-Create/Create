@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.modules.contraptions.components.mixer.BasinOperatorBlockItem;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity.Mode;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
@@ -23,7 +21,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -38,7 +35,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class MechanicalPressBlock extends HorizontalKineticBlock
-		implements ITE<MechanicalPressTileEntity>, IBeltAttachment, IHaveCustomBlockItem {
+		implements ITE<MechanicalPressTileEntity>, IBeltAttachment {
 
 	public MechanicalPressBlock() {
 		super(Properties.from(Blocks.PISTON));
@@ -188,11 +185,6 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 		} catch (TileEntityException e) {}
 
 		return false;
-	}
-
-	@Override
-	public BlockItem getCustomItem(net.minecraft.item.Item.Properties properties) {
-		return new BasinOperatorBlockItem(AllBlocks.MECHANICAL_PRESS, properties);
 	}
 
 	@Override

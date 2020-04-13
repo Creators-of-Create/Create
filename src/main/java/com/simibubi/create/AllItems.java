@@ -201,8 +201,6 @@ public enum AllItems {
 			entry.item.setRegistryName(Create.ID, Lang.asId(entry.name()));
 			registry.register(entry.item);
 		}
-
-		AllBlocks.registerItemBlocks(registry);
 	}
 
 	public Item get() {

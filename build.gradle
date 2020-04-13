@@ -8,6 +8,9 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
@@ -77,14 +80,22 @@ repositories {
         url "http://maven.blamejared.com/"
     }
     maven {
-        // for mixed mappings
+        //location of the maven for mixed mappings and registrate
         name = "tterrag maven"
         url = "https://maven.tterrag.com/"
     }
 }
 
+configurations {
+    shade
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.1.36'
+    
+    def registrate = "com.tterrag.registrate:Registrate:MC1.14.4-0.0.3.35"
+    implementation fg.deobf(registrate)
+    shade registrate
     
     // compile against the JEI API but do not include it at runtime
  	compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2:api")
@@ -108,6 +119,15 @@ jar {
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+}
+
+shadowJar {
+    configurations = [project.configurations.shade]
+    relocate 'com.tterrag.registrate', 'com.simibubi.create.repack.registrate'
+}
+
+reobf {
+    shadowJar {}
 }
 
 // Example configuration to allow publishing using the maven-publish task

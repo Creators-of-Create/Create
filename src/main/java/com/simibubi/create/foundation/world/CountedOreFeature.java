@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.world;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+
 import net.minecraft.block.Block;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
@@ -10,7 +12,7 @@ public class CountedOreFeature extends OreFeature<CountRangeConfig> {
 
 	private ConfigInt clusterCount;
 
-	public CountedOreFeature(Block block, int clusterSize, int clusterCount) {
+	public CountedOreFeature(NonNullSupplier<Block> block, int clusterSize, int clusterCount) {
 		super(block, clusterSize);
 		this.clusterCount = i(clusterCount, 0, "clusterCount");
 	}

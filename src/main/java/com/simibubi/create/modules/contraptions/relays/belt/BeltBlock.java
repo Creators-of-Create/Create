@@ -9,7 +9,6 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IHaveColorHandler;
-import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -62,7 +61,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class BeltBlock extends HorizontalKineticBlock
-		implements IHaveNoBlockItem, ITE<BeltTileEntity>, IHaveColorHandler {
+		implements ITE<BeltTileEntity>, IHaveColorHandler {
 
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);

@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.logistics.block;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 
@@ -23,7 +22,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public abstract class AttachedLogisticalBlock extends HorizontalBlock implements IHaveNoBlockItem {
+public abstract class AttachedLogisticalBlock extends HorizontalBlock {
 
 	public static final BooleanProperty UPWARD = BooleanProperty.create("upward");
 
@@ -31,11 +30,6 @@ public abstract class AttachedLogisticalBlock extends HorizontalBlock implements
 		super(Properties.from(Blocks.ANDESITE));
 	}
 
-	@Override
-	public boolean hasBlockItem() {
-		return !isVertical();
-	}
-	
 	protected abstract boolean isVertical();
 
 	protected abstract BlockState getVerticalDefaultState();

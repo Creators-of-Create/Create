@@ -1,11 +1,15 @@
 package com.simibubi.create.foundation.world;
 
 import java.util.Optional;
+import java.util.function.Supplier;
+
+import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.ConfigBase;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.Biome;
@@ -27,10 +31,10 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 	protected ConfigInt minHeight;
 	protected ConfigInt maxHeight;
 
-	private Block block;
+	private NonNullSupplier<Block> block;
 	private Biome.Category specificCategory;
 
-	public OreFeature(Block block, int clusterSize) {
+	public OreFeature(NonNullSupplier<Block> block, int clusterSize) {
 		this.block = block;
 		this.enable = b(true, "enable", "Whether to spawn this in your World");
 		this.clusterSize = i(clusterSize, 0, "clusterSize");
@@ -65,7 +69,7 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 
 		Pair<Placement<T>, T> placement = getPlacement();
 		ConfiguredFeature<?, ?> createdFeature = Feature.ORE
-				.configure(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, block.getDefaultState(), clusterSize.get()))
+				.configure(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, block.get().getDefaultState(), clusterSize.get()))
 				.createDecoratedFeature(placement.getKey().configure(placement.getValue()));
 
 		return Optional.of(createdFeature);

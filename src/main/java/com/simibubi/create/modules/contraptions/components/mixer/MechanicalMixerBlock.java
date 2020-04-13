@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.mixer;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.IHaveCustomBlockItem;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
@@ -9,7 +8,6 @@ import com.simibubi.create.modules.contraptions.base.KineticBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -20,7 +18,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
 public class MechanicalMixerBlock extends KineticBlock
-		implements ITE<MechanicalMixerTileEntity>, IHaveCustomBlockItem {
+		implements ITE<MechanicalMixerTileEntity> {
 
 	public MechanicalMixerBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -82,11 +80,6 @@ public class MechanicalMixerBlock extends KineticBlock
 	@Override
 	public SpeedLevel getMinimumRequiredSpeedLevel() {
 		return SpeedLevel.MEDIUM;
-	}
-
-	@Override
-	public BlockItem getCustomItem(net.minecraft.item.Item.Properties properties) {
-		return new BasinOperatorBlockItem(AllBlocks.MECHANICAL_MIXER, properties);
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.simibubi.create.foundation.block.IHaveCustomBlockModel;
-import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.Block;
@@ -46,7 +45,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class WindowInABlockBlock extends PaneBlock
-		implements ITE<WindowInABlockTileEntity>, IHaveNoBlockItem, IHaveCustomBlockModel {
+		implements ITE<WindowInABlockTileEntity>, IHaveCustomBlockModel {
 
 	public WindowInABlockBlock() {
 		super(Properties.create(Material.ROCK));
