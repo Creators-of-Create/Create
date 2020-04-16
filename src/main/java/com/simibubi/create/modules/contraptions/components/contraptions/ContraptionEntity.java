@@ -432,7 +432,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		}
 		remove();
 	}
-	
+
 	@Override
 	protected void doWaterSplashEffect() {
 	}

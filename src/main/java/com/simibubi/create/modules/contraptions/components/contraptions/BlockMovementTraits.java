@@ -12,6 +12,8 @@ import com.simibubi.create.modules.contraptions.components.contraptions.piston.M
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.MagnetBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
@@ -82,7 +84,7 @@ public class BlockMovementTraits {
 		if (block instanceof PulleyBlock) {
 			TileEntity te = world.getTileEntity(pos);
 			if (te instanceof PulleyTileEntity)
-				return !((PulleyTileEntity) te).running && ((PulleyTileEntity) te).offset == 0;
+				return !((PulleyTileEntity) te).running;
 		}
 
 		if (AllBlocks.BELT.typeOf(blockState))
@@ -125,6 +127,10 @@ public class BlockMovementTraits {
 		if (block instanceof RedstoneWireBlock)
 			return true;
 		if (block instanceof RedstoneLinkBlock)
+			return true;
+		if (block instanceof RopeBlock)
+			return true;
+		if (block instanceof MagnetBlock)
 			return true;
 		return false;
 	}
@@ -187,6 +193,8 @@ public class BlockMovementTraits {
 			return state.get(PortableStorageInterfaceBlock.FACING) == facing;
 		if (AllBlocks.HARVESTER.typeOf(state))
 			return state.get(BlockStateProperties.HORIZONTAL_FACING) == facing;
+		if (AllBlocks.ROPE_PULLEY.typeOf(state))
+			return facing == Direction.DOWN;
 		return isBrittle(state);
 	}
 

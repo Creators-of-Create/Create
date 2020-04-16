@@ -23,7 +23,6 @@ public class TessellatorHelper {
 		GlStateManager.pushMatrix();
 		GlStateManager.pushLightingAttributes();
 		GlStateManager.enableBlend();
-		GlStateManager.enableAlphaTest();
 		GlStateManager.color4f(1, 1, 1, 1);
 
 		ActiveRenderInfo renderInfo = mc.gameRenderer.getActiveRenderInfo();
@@ -45,7 +44,7 @@ public class TessellatorHelper {
 
 		GlStateManager.color3f(1, 1, 1);
 	}
-	
+
 	public static void fightZFighting(int id) {
 		long randomBits = (long) id * 493286711L;
 		randomBits = randomBits * randomBits * 4392167121L + randomBits * 98761L;
@@ -68,10 +67,10 @@ public class TessellatorHelper {
 	}
 
 	public static void cleanUpAfterDrawing() {
-		GlStateManager.disableAlphaTest();
-		GlStateManager.disableBlend();
 		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
+		GlStateManager.disableAlphaTest();
+		GlStateManager.disableBlend();
 	}
 
 	public static void drawString(String str, float x, float y, float z, boolean scalesUp, boolean hasDepth) {

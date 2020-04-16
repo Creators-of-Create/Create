@@ -26,13 +26,16 @@ import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonPoleBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonHeadBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonPoleBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.MagnetBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 
 import net.minecraft.block.AbstractButtonBlock;
@@ -53,6 +56,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -117,7 +121,8 @@ public abstract class Contraption {
 		if (bounds == null)
 			bounds = new AxisAlignedBB(BlockPos.ZERO);
 
-		frontier.add(pos);
+		if (!BlockMovementTraits.isBrittle(world.getBlockState(pos)))
+			frontier.add(pos);
 		if (!addToInitialFrontier(world, pos, forcedDirection, frontier))
 			return false;
 		for (int limit = 100000; limit > 0; limit--) {
@@ -147,6 +152,8 @@ public abstract class Contraption {
 
 		if (!world.isBlockPresent(pos))
 			return false;
+		if (isAnchoringBlockAt(pos))
+			return true;
 		if (!BlockMovementTraits.movementNecessary(world, pos))
 			return true;
 		if (!BlockMovementTraits.movementAllowed(world, pos))
@@ -154,6 +161,7 @@ public abstract class Contraption {
 		BlockState state = world.getBlockState(pos);
 		if (isChassis(state) && !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
+
 		if (AllBlocks.FLEXCRATE.typeOf(state))
 			FlexcrateBlock.splitCrate(world, pos);
 		if (AllBlocks.BELT.typeOf(state)) {
@@ -164,7 +172,27 @@ public abstract class Contraption {
 			if (prevPos != null && !visited.contains(prevPos))
 				frontier.add(prevPos);
 		}
-		
+
+		// Pulleys drag their rope and their attached structure
+		if (state.getBlock() instanceof PulleyBlock) {
+			int limit = AllConfigs.SERVER.kinetics.maxRopeLength.get();
+			BlockPos ropePos = pos;
+			while (limit-- >= 0) {
+				ropePos = ropePos.down();
+				if (!world.isBlockPresent(ropePos))
+					break;
+				BlockState ropeState = world.getBlockState(ropePos);
+				Block block = ropeState.getBlock();
+				if (!(block instanceof RopeBlock) && !(block instanceof MagnetBlock)) {
+					if (!visited.contains(ropePos))
+						frontier.add(ropePos);
+					break;
+				}
+				add(ropePos, capture(world, ropePos));
+			}
+		}
+
+		// Pistons drag their attaches poles and extension
 		if (state.getBlock() instanceof MechanicalPistonBlock) {
 			int limit = AllConfigs.SERVER.kinetics.maxPistonPoles.get();
 			Direction direction = state.get(MechanicalPistonBlock.FACING);
@@ -188,7 +216,7 @@ public abstract class Contraption {
 				if (limit <= -1)
 					return false;
 			}
-			
+
 			BlockPos searchPos = pos;
 			while (limit-- >= 0) {
 				searchPos = searchPos.offset(direction.getOpposite());
@@ -202,17 +230,19 @@ public abstract class Contraption {
 				}
 				break;
 			}
-			
+
 			if (limit <= -1)
 				return false;
 		}
-		
+
+		// Doors try to stay whole
 		if (state.getBlock() instanceof DoorBlock) {
 			BlockPos otherPartPos = pos.up(state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? 1 : -1);
 			if (!visited.contains(otherPartPos))
 				frontier.add(otherPartPos);
 		}
 
+		// Slime blocks drag adjacent blocks if possible
 		boolean isSlimeBlock = state.getBlock() instanceof SlimeBlock;
 		for (Direction offset : Direction.values()) {
 			BlockPos offsetPos = pos.offset(offset);
@@ -224,14 +254,15 @@ public abstract class Contraption {
 					return false;
 				continue;
 			}
-			if (!visited.contains(offsetPos)
-					&& (isSlimeBlock || BlockMovementTraits.isBlockAttachedTowards(blockState, offset.getOpposite())))
+			if (!visited.contains(offsetPos) && ((isSlimeBlock && !BlockMovementTraits.isBrittle(blockState))
+					|| BlockMovementTraits.isBlockAttachedTowards(blockState, offset.getOpposite())))
 				frontier.add(offsetPos);
 		}
 
 		add(pos, capture(world, pos));
 		if (blocks.size() > AllConfigs.SERVER.kinetics.maxBlocksMoved.get())
 			return false;
+
 		return true;
 	}
 
@@ -497,8 +528,16 @@ public abstract class Contraption {
 						&& !blockState.getCollisionShape(world, targetPos).isEmpty())
 					continue;
 
-				world.destroyBlock(targetPos, blockState.getCollisionShape(world, targetPos).isEmpty());
+				world.destroyBlock(targetPos, true);
 				world.setBlockState(targetPos, state, 3 | BlockFlags.IS_MOVING);
+
+				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();
+				verticalRotation = verticalRotation && transform.rotation != Rotation.NONE;
+				if (verticalRotation) {
+					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock)
+						world.destroyBlock(targetPos, true);
+				}
+
 				TileEntity tileEntity = world.getTileEntity(targetPos);
 				CompoundNBT tag = block.nbt;
 				if (tileEntity != null && tag != null) {
@@ -506,21 +545,12 @@ public abstract class Contraption {
 					tag.putInt("y", targetPos.getY());
 					tag.putInt("z", targetPos.getZ());
 
-					if (tileEntity instanceof BeltTileEntity) {
-						tag.remove("Length");
-						tag.remove("Index");
-						tag.putBoolean("DontClearAttachments", true);
+					if (verticalRotation && tileEntity instanceof PulleyTileEntity) {
+						tag.remove("Offset");
+						tag.remove("InitialOffset");
 					}
 
 					tileEntity.read(tag);
-
-					if (tileEntity instanceof KineticTileEntity) {
-						KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
-						kineticTileEntity.source = null;
-						kineticTileEntity.setSpeed(0);
-						kineticTileEntity.network = null;
-						kineticTileEntity.attachKinetics();
-					}
 
 					if (storage.containsKey(block.pos)) {
 						MountedStorage mountedStorage = storage.get(block.pos);

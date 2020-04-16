@@ -75,8 +75,8 @@ public enum AllItems {
 	ZINC_INGOT(new TaggedItem().withForgeTags("ingots/zinc")),
 	BRASS_INGOT(new TaggedItem().withForgeTags("ingots/brass")),
 
-	SAND_PAPER(SandPaperItem::new),
-	RED_SAND_PAPER(SandPaperItem::new),
+	FLOUR,
+	DOUGH,	
 	OBSIDIAN_DUST,
 	ROSE_QUARTZ,
 	POLISHED_ROSE_QUARTZ,
@@ -86,21 +86,17 @@ public enum AllItems {
 	ELECTRON_TUBE,
 	INTEGRATED_CIRCUIT,
 
-	__SCHEMATICS__(module()),
-	EMPTY_BLUEPRINT(Item::new, stackSize(1)),
-	BLUEPRINT_AND_QUILL(SchematicAndQuillItem::new, stackSize(1)),
-	BLUEPRINT(SchematicItem::new),
-
 	__CONTRAPTIONS__(module()),
 	BELT_CONNECTOR(BeltConnectorItem::new),
 	VERTICAL_GEARBOX(VerticalGearboxItem::new),
-	FLOUR,
-	DOUGH,
 	PROPELLER,
 	WHISK,
 	BRASS_HAND,
 	SLOT_COVER,
-	ZINC_HANDLE,
+	SUPER_GLUE,
+	ANTIOXIDANT,
+	SAND_PAPER(SandPaperItem::new),
+	RED_SAND_PAPER(SandPaperItem::new),
 	WRENCH(WrenchItem::new),
 	GOGGLES(GogglesItem::new),
 
@@ -114,6 +110,7 @@ public enum AllItems {
 	TERRAIN_ZAPPER(TerrainzapperItem::new),
 	DEFORESTER(DeforesterItem::new),
 	SYMMETRY_WAND(SymmetryWandItem::new),
+	ZINC_HANDLE,
 
 	BLAZING_PICKAXE(p -> new BlazingToolItem(1, -2.8F, p, PICKAXE)),
 	BLAZING_SHOVEL(p -> new BlazingToolItem(1.5F, -3.0F, p, SHOVEL)),
@@ -128,6 +125,11 @@ public enum AllItems {
 	SHADOW_STEEL_PICKAXE(p -> new ShadowSteelToolItem(2.5F, -2.0F, p, PICKAXE)),
 	SHADOW_STEEL_MATTOCK(p -> new ShadowSteelToolItem(2.5F, -1.5F, p, SHOVEL, AXE, HOE)),
 	SHADOW_STEEL_SWORD(p -> new SwordItem(AllToolTiers.SHADOW_STEEL, 3, -2.0F, p)),
+
+	__SCHEMATICS__(module()),
+	EMPTY_BLUEPRINT(Item::new, stackSize(1)),
+	BLUEPRINT_AND_QUILL(SchematicAndQuillItem::new, stackSize(1)),
+	BLUEPRINT(SchematicItem::new),
 
 	;
 
@@ -197,7 +199,8 @@ public enum AllItems {
 				continue;
 
 			entry.item = entry.taggedItem.getItemSupplier().apply(new Properties());
-			entry.item = entry.taggedItem.getItemSupplier().apply(entry.specialProperties.apply(defaultProperties(entry)));
+			entry.item =
+				entry.taggedItem.getItemSupplier().apply(entry.specialProperties.apply(defaultProperties(entry)));
 			entry.item.setRegistryName(Create.ID, Lang.asId(entry.name()));
 			registry.register(entry.item);
 		}
@@ -226,11 +229,11 @@ public enum AllItems {
 		private Set<ResourceLocation> tagSetItem = new HashSet<>();
 		private Function<Properties, Item> itemSupplier;
 
-		public TaggedItem(){
+		public TaggedItem() {
 			this(Item::new);
 		}
 
-		public TaggedItem(Function<Properties, Item> itemSupplierIn){
+		public TaggedItem(Function<Properties, Item> itemSupplierIn) {
 			this.itemSupplier = itemSupplierIn;
 		}
 

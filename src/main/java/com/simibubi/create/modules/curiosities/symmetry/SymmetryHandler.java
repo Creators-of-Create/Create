@@ -78,8 +78,6 @@ public class SymmetryHandler {
 		Minecraft mc = Minecraft.getInstance();
 		ClientPlayerEntity player = mc.player;
 
-		GL11.glEnable(GL11.GL_BLEND);
-
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			ItemStack stackInSlot = player.inventory.getStackInSlot(i);
 			if (stackInSlot != null && AllItems.SYMMETRY_WAND.typeOf(stackInSlot)
@@ -97,6 +95,7 @@ public class SymmetryHandler {
 
 				BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+				GlStateManager.enableBlend();
 				GlStateManager.pushMatrix();
 				GlStateManager.translated(0, yShift + .2f, 0);
 				mc.getBlockRendererDispatcher().renderBlock(mirror.getModel(), pos, player.world, buffer,
@@ -107,8 +106,6 @@ public class SymmetryHandler {
 
 			}
 		}
-
-		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.base;
 
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
-import com.simibubi.create.modules.contraptions.RotationPropagator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -47,7 +46,10 @@ public abstract class KineticBlock extends Block implements IRotate {
 		return tool == ToolType.AXE || tool == ToolType.PICKAXE;
 	}
 
-	// IRotate
+	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		// onBlockAdded is useless for init, as sometimes the TE gets re-instantiated
+	}
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
@@ -64,8 +66,6 @@ public abstract class KineticBlock extends Block implements IRotate {
 		return null;
 	}
 
-	// Block
-
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
@@ -79,8 +79,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 	@Override
 	public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
-	@SuppressWarnings("deprecation")
 	@Override
+	@SuppressWarnings("deprecation")
 	public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
 		super.updateNeighbors(stateIn, worldIn, pos, flags);
 		if (worldIn.isRemote())
@@ -90,8 +90,11 @@ public abstract class KineticBlock extends Block implements IRotate {
 		if (!(tileEntity instanceof KineticTileEntity))
 			return;
 
+		// Remove previous information when block is added
 		KineticTileEntity kte = (KineticTileEntity) tileEntity;
-		RotationPropagator.handleAdded(worldIn.getWorld(), pos, kte);
+		kte.warnOfMovement();
+		kte.clearKineticInformation();
+		kte.updateSpeed = true;
 	}
 
 	@Override

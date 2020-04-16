@@ -13,10 +13,11 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
+import com.simibubi.create.foundation.utility.outliner.BlockClusterOutline;
+import com.simibubi.create.foundation.utility.outliner.OutlineParticle;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -30,13 +31,15 @@ public class ChassisRangeDisplay {
 	private static GroupEntry lastHoveredGroup = null;
 
 	private static class Entry {
-		Set<BlockPos> includedPositions;
+		BlockClusterOutline outline;
+		OutlineParticle particle;
 		ChassisTileEntity te;
 		int timer;
 
 		public Entry(ChassisTileEntity te) {
 			this.te = te;
-			includedPositions = createSelection(te);
+			outline = new BlockClusterOutline(createSelection(te));
+			particle = OutlineParticle.create(outline);
 			timer = DISPLAY_TIME;
 		}
 
@@ -80,14 +83,19 @@ public class ChassisRangeDisplay {
 		World world = Minecraft.getInstance().world;
 		boolean hasWrench = AllItems.WRENCH.typeOf(player.getHeldItemMainhand());
 
-		for (Iterator<BlockPos> iterator = entries.keySet().iterator(); iterator.hasNext();)
-			if (tickEntry(entries.get(iterator.next()), hasWrench))
+		for (Iterator<BlockPos> iterator = entries.keySet().iterator(); iterator.hasNext();) {
+			Entry entry = entries.get(iterator.next());
+			if (tickEntry(entry, hasWrench)) {
+				entry.particle.remove();
 				iterator.remove();
+			}
+		}
 
 		for (Iterator<GroupEntry> iterator = groupEntries.iterator(); iterator.hasNext();) {
 			GroupEntry group = iterator.next();
 			if (tickEntry(group, hasWrench)) {
 				iterator.remove();
+				group.particle.remove();
 				if (group == lastHoveredGroup)
 					lastHoveredGroup = null;
 			}
@@ -113,8 +121,11 @@ public class ChassisRangeDisplay {
 		if (ctrl) {
 			GroupEntry existingGroupForPos = getExistingGroupForPos(pos);
 			if (existingGroupForPos != null) {
-				for (ChassisTileEntity included : existingGroupForPos.includedTEs)
-					entries.remove(included.getPos());
+				for (ChassisTileEntity included : existingGroupForPos.includedTEs) {
+					Entry removed = entries.remove(included.getPos());
+					if (removed != null)
+						removed.particle.remove();
+				}
 				existingGroupForPos.timer = DISPLAY_TIME;
 				return;
 			}
@@ -162,13 +173,19 @@ public class ChassisRangeDisplay {
 	public static void display(ChassisTileEntity chassis) {
 		deselect();
 		if (AllKeys.ctrlDown()) {
+			groupEntries.forEach(e -> e.particle.remove());
 			groupEntries.clear();
 			GroupEntry hoveredGroup = new GroupEntry(chassis);
-			for (ChassisTileEntity included : hoveredGroup.includedTEs)
-				entries.remove(included.getPos());
+			for (ChassisTileEntity included : hoveredGroup.includedTEs) {
+				Entry remove = entries.remove(included.getPos());
+				if (remove != null)
+					remove.particle.remove();
+			}
 			groupEntries.add(hoveredGroup);
 		} else {
-			entries.put(chassis.getPos(), new Entry(chassis));
+			Entry old = entries.put(chassis.getPos(), new Entry(chassis));
+			if (old != null)
+				old.particle.remove();
 		}
 	}
 
@@ -190,17 +207,23 @@ public class ChassisRangeDisplay {
 	}
 
 	public static void renderPositions(Entry entry, float partialTicks) {
-		TessellatorHelper.begin();
-		BlockPos size = new BlockPos(1, 1, 1);
+//		GlStateManager.pushMatrix();
+//		RenderHelper.disableStandardItemLighting();
+//		GlStateManager.normal3f(0.0F, 1.0F, 0.0F);
+//		GlStateManager.color4f(1, 1, 1, 1);
+//		GlStateManager.enableTexture();
+//		GlStateManager.depthMask(false);
+//		GlStateManager.enableBlend();
+//		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+//
 		float timer = entry.timer - partialTicks;
-		float alpha = timer > 20 ? .5f : timer / 40f;
-		GlStateManager.color4f(1, .7f, 0, alpha);
-		Set<BlockPos> includedPositions = entry.includedPositions;
-		GlStateManager.depthMask(false);
-		for (BlockPos pos : includedPositions)
-			TessellatorHelper.cube(Tessellator.getInstance().getBuffer(), pos, size, 1 / 16f - 1 / 64f, true, false);
-		TessellatorHelper.draw();
-		GlStateManager.depthMask(true);
+		float alpha = timer > 20 ? 1 : timer / 20f;
+		entry.outline.setAlpha(alpha);
+//		entry.outline.render(Tessellator.getInstance().getBuffer());
+//
+//		GlStateManager.disableBlend();
+//		GlStateManager.depthMask(true);
+//		GlStateManager.popMatrix();
 	}
 
 	private static GroupEntry getExistingGroupForPos(BlockPos pos) {

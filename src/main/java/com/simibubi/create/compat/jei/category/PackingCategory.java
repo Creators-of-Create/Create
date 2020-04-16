@@ -3,62 +3,30 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
-import com.simibubi.create.compat.jei.DoubleItemIcon;
-import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
-import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 
-public class PackingCategory implements IRecipeCategory<IRecipe<?>> {
+public class PackingCategory extends CreateRecipeCategory<IRecipe<?>> {
 
-	private AnimatedPress press;
-	private static ResourceLocation ID = new ResourceLocation(Create.ID, "packing");
-	private IDrawable icon;
-	private IDrawable background = new EmptyBackground(177, 70);
+	private AnimatedPress press = new AnimatedPress(true);
 
 	public PackingCategory() {
-		icon = new DoubleItemIcon(() -> new ItemStack(AllBlocks.MECHANICAL_PRESS.get()),
-				() -> new ItemStack(AllBlocks.BASIN.get()));
-		press = new AnimatedPress(true);
-	}
-
-	@Override
-	public IDrawable getIcon() {
-		return icon;
-	}
-
-	@Override
-	public ResourceLocation getUid() {
-		return ID;
+		super("packing", doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllBlocks.BASIN.get()),
+				emptyBackground(177, 70));
 	}
 
 	@Override
 	public Class<? extends IRecipe<?>> getRecipeClass() {
 		return ICraftingRecipe.class;
-	}
-
-	@Override
-	public String getTitle() {
-		return Lang.translate("recipe.packing");
-	}
-
-	@Override
-	public IDrawable getBackground() {
-		return background;
 	}
 
 	@Override

@@ -37,6 +37,11 @@ public class BearingContraption extends Contraption {
 	}
 
 	@Override
+	protected boolean isAnchoringBlockAt(BlockPos pos) {
+		return pos.equals(anchor.offset(facing.getOpposite()));
+	}
+
+	@Override
 	public void add(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
 		BlockPos localPos = pos.subtract(anchor);
 		if (!blocks.containsKey(localPos) && AllBlockTags.WINDMILL_SAILS.matches(capture.getKey().state))
@@ -62,7 +67,7 @@ public class BearingContraption extends Contraption {
 	public int getSailBlocks() {
 		return sailBlocks;
 	}
-	
+
 	public Direction getFacing() {
 		return facing;
 	}

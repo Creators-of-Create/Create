@@ -67,11 +67,6 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void initialize() {
-		super.initialize();
-	}
-
-	@Override
 	public void tick() {
 		super.tick();
 
@@ -164,7 +159,9 @@ public class BeltTileEntity extends KineticTileEntity {
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		attachmentTracker.write(compound);
-		compound.put("Controller", NBTUtil.writeBlockPos(controller));
+
+		if (controller != null)
+			compound.put("Controller", NBTUtil.writeBlockPos(controller));
 		compound.putBoolean("IsController", isController());
 		compound.putInt("Color", color);
 		compound.putInt("Length", beltLength);
@@ -178,19 +175,30 @@ public class BeltTileEntity extends KineticTileEntity {
 	@Override
 	public void read(CompoundNBT compound) {
 		super.read(compound);
+
 		if (compound.getBoolean("IsController"))
 			controller = pos;
-		else
-			controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 
-		if (!compound.contains("DontClearAttachments"))
+		if (!wasMoved) {
+			if (!isController())
+				controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 			trackerUpdateTag = compound;
-		color = compound.getInt("Color");
-		beltLength = compound.getInt("Length");
-		index = compound.getInt("Index");
+			color = compound.getInt("Color");
+			beltLength = compound.getInt("Length");
+			index = compound.getInt("Index");
+		}
 
 		if (isController())
 			getInventory().read(compound.getCompound("Inventory"));
+	}
+
+	@Override
+	public void clearKineticInformation() {
+		super.clearKineticInformation();
+		beltLength = 0;
+		index = 0;
+		controller = null;
+		trackerUpdateTag = new CompoundNBT();
 	}
 
 	public void applyColor(DyeColor colorIn) {
@@ -206,6 +214,8 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public BeltTileEntity getControllerTE() {
+		if (controller == null)
+			return null;
 		if (!world.isBlockPresent(controller))
 			return null;
 		TileEntity te = world.getTileEntity(controller);
@@ -219,11 +229,11 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public BlockPos getController() {
-		return controller;
+		return controller == null ? pos : controller;
 	}
 
 	public boolean isController() {
-		return controller.equals(pos);
+		return pos.equals(controller);
 	}
 
 	public float getBeltMovementSpeed() {

@@ -41,12 +41,14 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public @Nullable Long network;
 	public @Nullable BlockPos source;
 	public boolean networkDirty;
+	public boolean updateSpeed;
 
 	protected KineticEffectHandler effects;
 	protected float speed;
 	protected float capacity;
 	protected float stress;
 	protected boolean overStressed;
+	protected boolean wasMoved;
 
 	private int flickerTally;
 	private int networkSize;
@@ -57,6 +59,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public KineticTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
 		effects = new KineticEffectHandler(this);
+		updateSpeed = true;
 	}
 
 	@Override
@@ -73,6 +76,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	@Override
 	public void tick() {
+		if (!world.isRemote && needsSpeedUpdate())
+			attachKinetics();
+
 		super.tick();
 		effects.tick();
 
@@ -179,6 +185,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.putFloat("Speed", speed);
 
+		if (needsSpeedUpdate())
+			compound.putBoolean("NeedsSpeedUpdate", true);
+
 		if (hasSource())
 			compound.put("Source", NBTUtil.writeBlockPos(source));
 
@@ -188,7 +197,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			networkTag.putFloat("Stress", stress);
 			networkTag.putFloat("Capacity", capacity);
 			networkTag.putInt("Size", networkSize);
-			
+
 			if (lastStressApplied != 0)
 				networkTag.putFloat("AddedStress", lastStressApplied);
 			if (lastCapacityProvided != 0)
@@ -200,16 +209,21 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		return super.write(compound);
 	}
 
+	public boolean needsSpeedUpdate() {
+		return updateSpeed;
+	}
+
 	@Override
 	public void read(CompoundNBT compound) {
+		clearKineticInformation();
+
+		// DO NOT READ kinetic information when placed after movement
+		if (wasMoved) {
+			super.read(compound);
+			return;
+		}
+
 		speed = compound.getFloat("Speed");
-		source = null;
-		network = null;
-		overStressed = false;
-		stress = 0;
-		capacity = 0;
-		lastStressApplied = 0;
-		lastCapacityProvided = 0;
 
 		if (compound.contains("Source"))
 			source = NBTUtil.readBlockPos(compound.getCompound("Source"));
@@ -313,6 +327,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public void attachKinetics() {
+		updateSpeed = false;
 		RotationPropagator.handleAdded(world, pos, this);
 	}
 
@@ -412,6 +427,21 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		return added;
 
+	}
+
+	public void clearKineticInformation() {
+		speed = 0;
+		source = null;
+		network = null;
+		overStressed = false;
+		stress = 0;
+		capacity = 0;
+		lastStressApplied = 0;
+		lastCapacityProvided = 0;
+	}
+
+	public void warnOfMovement() {
+		wasMoved = true;
 	}
 
 	public int getFlickerScore() {

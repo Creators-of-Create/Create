@@ -1,8 +1,5 @@
 package com.simibubi.create.modules.contraptions.relays.encased;
 
-import com.simibubi.create.modules.contraptions.RotationPropagator;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -26,13 +23,7 @@ public class ClutchBlock extends GearshiftBlock {
 		boolean previouslyPowered = state.get(POWERED);
 		if (previouslyPowered != worldIn.isBlockPowered(pos)) {
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2 | 16);
-			TileEntity te = worldIn.getTileEntity(pos);
-			if (te == null || !(te instanceof KineticTileEntity))
-				return;
-			if (previouslyPowered)
-				RotationPropagator.handleAdded(worldIn, pos, (KineticTileEntity) te);
-			else
-				RotationPropagator.handleRemoved(worldIn, pos, (KineticTileEntity) te);
+			detachKinetics(worldIn, pos, previouslyPowered);
 		}
 	}
 

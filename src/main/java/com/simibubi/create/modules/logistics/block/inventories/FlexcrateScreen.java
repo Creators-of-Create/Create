@@ -107,6 +107,10 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 	@Override
 	public void tick() {
 		super.tick();
+
+		if (!AllBlocks.FLEXCRATE.typeOf(minecraft.world.getBlockState(te.getPos())))
+			minecraft.displayGuiScreen(null);
+
 		if (lastModification >= 0)
 			lastModification++;
 
@@ -114,7 +118,7 @@ public class FlexcrateScreen extends AbstractSimiContainerScreen<FlexcrateContai
 			lastModification = -1;
 			AllPackets.channel.sendToServer(new ConfigureFlexcratePacket(te.getPos(), allowedItems.getState()));
 		}
-		
+
 		if (container.doubleCrate != te.isDoubleCrate())
 			container.playerInventory.player.closeScreen();
 	}

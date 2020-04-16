@@ -150,6 +150,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	public void assemble() {
+		if (!(world.getBlockState(pos).getBlock() instanceof MechanicalBearingBlock))
+			return;
+
 		Direction direction = getBlockState().get(FACING);
 
 		// Collect Construct
@@ -161,6 +164,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		if (contraption.blocks.isEmpty())
 			return;
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
+
 		movedContraption = ContraptionEntity.createStationary(world, contraption).controlledBy(this);
 		BlockPos anchor = pos.offset(direction);
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
@@ -172,7 +176,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		sendData();
 		updateGeneratedRotation();
 	}
-	
+
 	@Override
 	public void updateGeneratedRotation() {
 		super.updateGeneratedRotation();
@@ -180,7 +184,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	public void disassemble() {
-		if (!running)
+		if (!running && movedContraption == null)
 			return;
 		if (movedContraption != null)
 			movedContraption.disassemble();
@@ -267,8 +271,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		markDirty();
 		BlockPos anchor = pos.offset(blockState.get(FACING));
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
-		if (!world.isRemote)
+		if (!world.isRemote) {
+			this.running = true;
 			sendData();
+		}
 	}
 
 	@Override
@@ -298,7 +304,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public boolean isAttachedTo(ContraptionEntity contraption) {
 		return movedContraption == contraption;
 	}
-	
+
 	public boolean isRunning() {
 		return running;
 	}

@@ -3,39 +3,28 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
-import com.simibubi.create.compat.jei.DoubleItemIcon;
-import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
 import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 
-public class MechanicalCraftingCategory implements IRecipeCategory<ShapedRecipe> {
+public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecipe> {
 
 	private AnimatedCrafter crafter;
-	private ResourceLocation id;
-	private IDrawable icon;
-	private IDrawable background;
 	private boolean large;
 
 	public MechanicalCraftingCategory(boolean large) {
+		super("mechanical_crafting" + (large ? "_large" : ""), itemIcon(AllBlocks.MECHANICAL_CRAFTER.get()),
+				emptyBackground(large ? 177 : 177, large ? 235 : 81));
 		this.large = large;
-		icon = new DoubleItemIcon(() -> new ItemStack(AllBlocks.MECHANICAL_CRAFTER.get()), () -> ItemStack.EMPTY);
 		crafter = new AnimatedCrafter(large);
-		id = new ResourceLocation(Create.ID, "mechanical_crafting" + (large ? "_large" : ""));
-		background = new EmptyBackground(large ? 177 : 177, large ? 235 : 81);
 	}
 
 	public static boolean isSmall(ShapedRecipe recipe) {
@@ -43,23 +32,8 @@ public class MechanicalCraftingCategory implements IRecipeCategory<ShapedRecipe>
 	}
 
 	@Override
-	public IDrawable getIcon() {
-		return icon;
-	}
-
-	@Override
-	public ResourceLocation getUid() {
-		return id;
-	}
-
-	@Override
 	public String getTitle() {
 		return Lang.translate("recipe.mechanical_crafting");
-	}
-
-	@Override
-	public IDrawable getBackground() {
-		return background;
 	}
 
 	@Override

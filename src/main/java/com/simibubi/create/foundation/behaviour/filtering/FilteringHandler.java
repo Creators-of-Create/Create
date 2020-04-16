@@ -87,12 +87,14 @@ public class FilteringHandler {
 			return false;
 		if (!filtering.testHit(objectMouseOver.getHitVec()))
 			return false;
-		if (filtering.getFilter().isEmpty())
+		ItemStack filterItem = filtering.getFilter();
+		if (filterItem.isEmpty())
 			return false;
 
 		filtering.ticksUntilScrollPacket = 10;
-		filtering.scrollableValue = (int) MathHelper
-				.clamp(filtering.scrollableValue + delta * (AllKeys.ctrlDown() ? 16 : 1), 0, 64);
+		int maxAmount = (filterItem.getItem() instanceof FilterItem) ? 64 : filterItem.getMaxStackSize();
+		filtering.scrollableValue =
+			(int) MathHelper.clamp(filtering.scrollableValue + delta * (AllKeys.ctrlDown() ? 16 : 1), 0, maxAmount);
 
 		return true;
 	}

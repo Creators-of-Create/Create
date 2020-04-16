@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
+import com.simibubi.create.modules.contraptions.components.contraptions.BlockMovementTraits;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 
 import net.minecraft.block.BlockState;
@@ -61,8 +62,14 @@ public class MountedContraption extends Contraption {
 		if (!AllBlocks.CART_ASSEMBLER.typeOf(state))
 			return false;
 		Axis axis = state.get(CartAssemblerBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.Z : Axis.X;
-		for (AxisDirection axisDirection : AxisDirection.values())
-			frontier.add(pos.offset(Direction.getFacingFromAxis(axisDirection, axis)));
+		for (AxisDirection axisDirection : AxisDirection.values()) {
+			Direction facingFromAxis = Direction.getFacingFromAxis(axisDirection, axis);
+			BlockPos offset = pos.offset(facingFromAxis);
+			BlockState blockState = world.getBlockState(offset);
+			if (!BlockMovementTraits.isBrittle(blockState)
+					|| BlockMovementTraits.isBlockAttachedTowards(blockState, facingFromAxis.getOpposite()))
+				frontier.add(offset);
+		}
 		return true;
 	}
 

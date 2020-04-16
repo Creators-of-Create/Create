@@ -5,62 +5,29 @@ import java.util.List;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
-import com.simibubi.create.compat.jei.CreateJEI;
-import com.simibubi.create.compat.jei.DoubleItemIcon;
-import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
 
 public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe> {
 
-	private static ResourceLocation ID = new ResourceLocation(Create.ID, "splashing");
-	private IDrawable icon;
-	private IDrawable background = new EmptyBackground(177, 70);
-
 	public SplashingCategory() {
-		icon = new DoubleItemIcon(() -> new ItemStack(AllItems.PROPELLER.get()),
-				() -> new ItemStack(Items.WATER_BUCKET));
-	}
-
-	@Override
-	public IDrawable getBackground() {
-		return background;
-	}
-
-	@Override
-	public IDrawable getIcon() {
-		return icon;
-	}
-
-	@Override
-	public ResourceLocation getUid() {
-		return ID;
+		super("splashing", doubleItemIcon(AllItems.PROPELLER.get(), Items.WATER_BUCKET));
 	}
 
 	@Override
 	public Class<? extends SplashingRecipe> getRecipeClass() {
 		return SplashingRecipe.class;
-	}
-
-	@Override
-	public String getTitle() {
-		return Lang.translate("recipe.splashing");
 	}
 
 	@Override
@@ -85,7 +52,7 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
 		}
 
-		CreateJEI.addStochasticTooltip(itemStacks, results);
+		addStochasticTooltip(itemStacks, results);
 	}
 
 	@Override
@@ -97,14 +64,15 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 		ScreenResources.JEI_SHADOW.draw(66, 39);
 		ScreenResources.JEI_LONG_ARROW.draw(53, 51);
 
-		if (size > 1) {
-			for (int i = 0; i < size; i++) {
-				int xOffset = i % 2 == 0 ? 0 : 19;
-				int yOffset = (i / 2) * -19;
-				ScreenResources.JEI_SLOT.draw(133 + xOffset, 47 + yOffset);
-			}
-		} else {
-			ScreenResources.JEI_SLOT.draw(139, 47);
+		if (size == 1) {
+			getRenderedSlot(recipe, 0).draw(139, 47);
+			return;
+		}
+
+		for (int i = 0; i < size; i++) {
+			int xOffset = i % 2 == 0 ? 0 : 19;
+			int yOffset = (i / 2) * -19;
+			getRenderedSlot(recipe, i).draw(133 + xOffset, 47 + yOffset);
 		}
 	}
 

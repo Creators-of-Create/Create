@@ -88,14 +88,15 @@ public class StockswitchBlock extends HorizontalBlock implements ITE<Stockswitch
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-		if (player instanceof ClientPlayerEntity)
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> withTileEntityDo(worldIn, pos, this::displayScreen));
+		DistExecutor.runWhenOn(Dist.CLIENT,
+				() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
 		return true;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	protected void displayScreen(StockswitchTileEntity te) {
-		ScreenOpener.open(new StockswitchScreen(te));
+	protected void displayScreen(StockswitchTileEntity te, PlayerEntity player) {
+		if (player instanceof ClientPlayerEntity)
+			ScreenOpener.open(new StockswitchScreen(te));
 	}
 
 	@Override
