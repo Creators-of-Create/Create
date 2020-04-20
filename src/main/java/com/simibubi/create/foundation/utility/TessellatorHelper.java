@@ -69,7 +69,6 @@ public class TessellatorHelper {
 	public static void cleanUpAfterDrawing() {
 		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
-		GlStateManager.disableAlphaTest();
 		GlStateManager.disableBlend();
 	}
 

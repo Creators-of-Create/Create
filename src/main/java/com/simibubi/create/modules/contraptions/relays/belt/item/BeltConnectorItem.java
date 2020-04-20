@@ -71,7 +71,7 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 			if (!canConnect(world, firstPulley, pos))
 				return ActionResultType.FAIL;
 
-			if (!firstPulley.equals(pos)) {
+			if (firstPulley != null && !firstPulley.equals(pos)) {
 				createBelts(world, firstPulley, pos);
 
 				if (!context.getPlayer().isCreative())

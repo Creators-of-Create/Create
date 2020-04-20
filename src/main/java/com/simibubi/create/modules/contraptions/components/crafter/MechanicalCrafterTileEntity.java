@@ -20,6 +20,7 @@ import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCra
 import com.simibubi.create.modules.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -357,8 +358,10 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	public void eject() {
-		Vec3d ejectPos = VecHelper.getCenterOf(pos)
-				.add(new Vec3d(getBlockState().get(HORIZONTAL_FACING).getDirectionVec()).scale(.75f));
+		BlockState blockState = getBlockState();
+		boolean present = AllBlocks.MECHANICAL_CRAFTER.typeOf(blockState);
+		Vec3d vec = present ? new Vec3d(blockState.get(HORIZONTAL_FACING).getDirectionVec()).scale(.75f) : Vec3d.ZERO;
+		Vec3d ejectPos = VecHelper.getCenterOf(pos).add(vec);
 		groupedItems.grid.forEach((pair, stack) -> dropItem(ejectPos, stack));
 		if (!inventory.getStackInSlot(0).isEmpty())
 			dropItem(ejectPos, inventory.getStackInSlot(0));

@@ -170,8 +170,8 @@ public class PistonContraption extends Contraption {
 	}
 
 	@Override
-	public void disassemble(World world, BlockPos offset, Vec3d rotation) {
-		super.disassemble(world, offset, rotation, (pos, state) -> {
+	public void addBlocksToWorld(World world, BlockPos offset, Vec3d rotation) {
+		super.addBlocksToWorld(world, offset, rotation, (pos, state) -> {
 			BlockPos pistonPos = anchor.offset(orientation, -1);
 			BlockState pistonState = world.getBlockState(pistonPos);
 			TileEntity te = world.getTileEntity(pistonPos);

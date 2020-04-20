@@ -37,7 +37,6 @@
 	"item.create.sand_paper": "Sand Paper",
 	"item.create.red_sand_paper": "Red Sand Paper",
 	"item.create.super_glue": "Super Glue",
-	"item.create.antioxidant": "Antioxidant Spray",
 	
 	"item.create.brass_ingot": "Brass Ingot",
 	"item.create.brass_sheet": "Brass Sheets",
@@ -258,6 +257,10 @@
 	"block.create.creative_crate": "Schematicannon Creatifier",
 
 	"block.create.cocoa_log": "Cocoa Jungle Log",
+	
+	"entity.create.contraption": "Moving Contraption",
+	"entity.create.stationary_contraption": "Stationary Contraption",
+	"entity.create.super_glue": "Superglue",
 
 	"_comment": "-------------------------]  UI & MESSAGES  [------------------------------------------------",
 
@@ -1136,6 +1139,13 @@
 	"tool.create.sand_paper.tooltip.summary": "A rough paper that can be used to _polish_ _materials_. Can be automatically applied using the Deployer.",
 	"tool.create.sand_paper.tooltip.condition1": "When Used",
 	"tool.create.sand_paper.tooltip.behaviour1": "Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking_ _at_ _them_",
+	
+	"item.create.super_glue.tooltip": "SUPER GLUE",
+	"item.create.super_glue.tooltip.summary": "Glue a block to another, and they will forever be inseparable.",
+	"item.create.super_glue.tooltip.condition1": "When Used",
+	"item.create.super_glue.tooltip.behaviour1": "Makes the _clicked_ _face_ of a block _sticky_. Blocks attached to sticky faces will be _dragged_ _along_ when moved by _mechanical_ _pistons_, _bearings_ and other controllers.",
+	"item.create.super_glue.tooltip.condition2": "When Held in Offhand",
+	"item.create.super_glue.tooltip.behaviour2": "_Automatically_ _attaches_ blocks placed from the main hand to the _side_ they were _placed_ _against._",
 
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed_ _light_.",

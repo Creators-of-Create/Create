@@ -89,8 +89,8 @@ public class MountedContraption extends Contraption {
 	}
 
 	@Override
-	public void disassemble(World world, BlockPos offset, Vec3d rotation) {
-		super.disassemble(world, offset, rotation, (pos, state) -> AllBlocks.MINECART_ANCHOR.typeOf(state));
+	public void addBlocksToWorld(World world, BlockPos offset, Vec3d rotation) {
+		super.addBlocksToWorld(world, offset, rotation, (pos, state) -> AllBlocks.MINECART_ANCHOR.typeOf(state));
 	}
 
 }

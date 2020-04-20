@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.utility.data.ITaggable;
 import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.GogglesItem;
 import com.simibubi.create.modules.contraptions.WrenchItem;
+import com.simibubi.create.modules.contraptions.components.contraptions.glue.SuperGlueItem;
 import com.simibubi.create.modules.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.modules.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
@@ -76,7 +77,7 @@ public enum AllItems {
 	BRASS_INGOT(new TaggedItem().withForgeTags("ingots/brass")),
 
 	FLOUR,
-	DOUGH,	
+	DOUGH,
 	OBSIDIAN_DUST,
 	ROSE_QUARTZ,
 	POLISHED_ROSE_QUARTZ,
@@ -93,8 +94,7 @@ public enum AllItems {
 	WHISK,
 	BRASS_HAND,
 	SLOT_COVER,
-	SUPER_GLUE,
-	ANTIOXIDANT,
+	SUPER_GLUE(SuperGlueItem::new),
 	SAND_PAPER(SandPaperItem::new),
 	RED_SAND_PAPER(SandPaperItem::new),
 	WRENCH(WrenchItem::new),

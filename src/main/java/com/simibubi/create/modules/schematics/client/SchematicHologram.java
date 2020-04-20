@@ -166,7 +166,6 @@ public class SchematicHologram {
 				drawBuffer(bufferBuilder);
 				GlStateManager.popMatrix();
 			}
-			GlStateManager.disableAlphaTest();
 			GlStateManager.disableBlend();
 		}
 	}

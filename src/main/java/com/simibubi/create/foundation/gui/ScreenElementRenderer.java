@@ -67,10 +67,9 @@ public class ScreenElementRenderer {
 		BlockRendererDispatcher blockRenderer = mc.getBlockRendererDispatcher();
 		IBakedModel modelToRender = null;
 		BlockState blockToRender = null;
-		boolean stateMode = transformsAndModel == null;
 		boolean fire = false;
 
-		if (stateMode) {
+		if (transformsAndModel == null) {
 			blockToRender = transformsAndState.get();
 			fire = (blockToRender.getBlock() instanceof FireBlock);
 			modelToRender = blockRenderer.getModelForState(blockToRender);
@@ -81,7 +80,6 @@ public class ScreenElementRenderer {
 		GlStateManager.scaled(50, -50, 50);
 		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
-		
 		GlStateManager.pushMatrix();
 		if (fire) {
 			blockRenderer.renderBlockBrightness(blockToRender, 1);
@@ -97,7 +95,7 @@ public class ScreenElementRenderer {
 		}
 		GlStateManager.popMatrix();
 
-		if (stateMode && !blockToRender.getFluidState().isEmpty()) {
+		if (blockToRender != null && !blockToRender.getFluidState().isEmpty()) {
 			RenderHelper.disableStandardItemLighting();
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder bufferbuilder = tessellator.getBuffer();

@@ -427,7 +427,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		if (getContraption() != null) {
 			BlockPos offset = new BlockPos(getPositionVec().add(.5, .5, .5));
 			Vec3d rotation = new Vec3d(getRoll(1), getYaw(1), getPitch(1));
-			getContraption().disassemble(world, offset, rotation);
+			getContraption().addBlocksToWorld(world, offset, rotation);
 			preventMovedEntitiesFromGettingStuck();
 		}
 		remove();
