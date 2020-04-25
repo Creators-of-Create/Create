@@ -63,7 +63,7 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
 		super.fillItemGroup(group, items);
-		AllItems.BELT_CONNECTOR.get().fillItemGroup(group, items);
+		items.add(new ItemStack(AllItems.BELT_CONNECTOR.get()));
 	}
 
 	// IRotate:

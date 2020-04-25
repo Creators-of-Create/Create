@@ -1,23 +1,28 @@
 package com.simibubi.create.modules.contraptions.relays.gearbox;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.modules.contraptions.base.IRotate;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class VerticalGearboxItem extends BlockItem implements IAddedByOther {
+public class VerticalGearboxItem extends BlockItem {
 
 	public VerticalGearboxItem(Properties builder) {
 		super(AllBlocks.GEARBOX.get(), builder);
+	}
+
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		// Exclude from creative and jei menus
 	}
 
 	@Override

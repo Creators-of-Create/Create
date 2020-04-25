@@ -1,8 +1,6 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
-import com.simibubi.create.foundation.item.IAddedByOther;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -42,8 +40,6 @@ public final class CreateItemGroup extends ItemGroup {
 				continue;
 			if (def instanceof IHaveNoBlockItem && !((IHaveNoBlockItem) def).hasBlockItem())
 				continue;
-			if (def instanceof IAddedByOther)
-				continue;
 
 			def.asItem().fillItemGroup(this, items);
 			for (AllBlocks.TaggedBlock alsoRegistered : block.alsoRegistered)
@@ -62,8 +58,6 @@ public final class CreateItemGroup extends ItemGroup {
 				continue;
 			IBakedModel model = itemRenderer.getModelWithOverrides(item.asStack());
 			if (model.isGui3d() != specialItems)
-				continue;
-			if (item.get() instanceof IAddedByOther)
 				continue;
 
 			item.get().fillItemGroup(this, items);

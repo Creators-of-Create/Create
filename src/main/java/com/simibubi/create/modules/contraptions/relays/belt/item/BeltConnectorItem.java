@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
-import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
@@ -14,6 +13,8 @@ import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -23,10 +24,11 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BeltConnectorItem extends BlockItem implements IAddedByOther {
+public class BeltConnectorItem extends BlockItem {
 
 	public BeltConnectorItem(Properties properties) {
 		super(AllBlocks.BELT.get(), properties);
@@ -35,6 +37,11 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 	@Override
 	public String getTranslationKey() {
 		return getDefaultTranslationKey();
+	}
+
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		// Exclude from creative and jei menus
 	}
 
 	@Override

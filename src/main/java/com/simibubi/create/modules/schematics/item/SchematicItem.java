@@ -1,22 +1,19 @@
 package com.simibubi.create.modules.schematics.item;
 
+import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.schematics.client.SchematicEditScreen;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-
-import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.schematics.client.SchematicEditScreen;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -26,6 +23,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -38,6 +36,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
+import org.apache.commons.io.IOUtils;
 
 public class SchematicItem extends Item {
 
@@ -62,6 +61,10 @@ public class SchematicItem extends Item {
 	}
 
 	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		// Exclude from creative and jei menus
+	}
+
 	@OnlyIn(value = Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		if (stack.hasTag()) {
@@ -130,7 +133,7 @@ public class SchematicItem extends Item {
 		return super.onItemUse(context);
 	}
 
-	@OnlyIn(value = Dist.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	protected void displayBlueprintScreen() {
 		ScreenOpener.open(new SchematicEditScreen());
 	}
