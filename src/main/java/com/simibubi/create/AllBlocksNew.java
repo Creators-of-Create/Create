@@ -21,7 +21,7 @@ public class AllBlocksNew {
 			.register();
 	
 	public static final RegistryEntry<CreativeCrateBlock> CREATIVE_CRATE = REGISTRATE.block("creative_crate", CreativeCrateBlock::new)
-			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), new UncheckedModelFile(ctx.getId())))
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(ctx.getId())))
 			.simpleItem()
 			.register();
 	

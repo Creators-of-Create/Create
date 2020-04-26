@@ -91,6 +91,7 @@ import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
@@ -336,6 +337,7 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 		this.block = Create.registrate().block(Lang.asId(name()), $ -> block.get()) // TODO take properties as input
 				.blockstate(NonNullBiConsumer.noop()) // TODO 
 				.loot(NonNullBiConsumer.noop()) // TODO
+				.setData(ProviderType.LANG, NonNullBiConsumer.noop()) // TODO
 		        .transform(applyTags(tags))
 		        .transform(b -> registerItemBlock(b, customItemCreator, comesWith))
 		        .register();
@@ -412,7 +414,9 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 		return Create.registrate().block(block.getId().getPath() + "_" + Lang.asId(feature.name()), creator)
 				.blockstate(NonNullBiConsumer.noop()) // TODO 
 				.loot(NonNullBiConsumer.noop()) // TODO
-		        .simpleItem()
+		        .item()
+		        	.model(NonNullBiConsumer.noop()) // TODO
+		        	.build()
 		        .transform(b -> tag != null ? b.tag(tag) : b)
 		        .register();
 	}
