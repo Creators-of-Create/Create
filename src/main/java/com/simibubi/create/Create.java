@@ -12,10 +12,8 @@ import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.LazyValue;
+import com.tterrag.registrate.util.NonNullLazyValue;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
@@ -45,7 +43,7 @@ public class Create {
 	public static RedstoneLinkNetworkHandler redstoneLinkNetworkHandler;
 	public static TorquePropagator torquePropagator;
 	public static ServerLagger lagger;
-	private static final LazyValue<Registrate> registrate = new LazyValue<>(() -> Registrate.create(ID));
+	private static final NonNullLazyValue<CreateRegistrate> registrate = CreateRegistrate.lazy(ID);
 
 	public Create() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -53,6 +51,7 @@ public class Create {
 
 		MinecraftForge.EVENT_BUS.addListener(Create::serverStarting);
 
+		AllBlocksNew.register();
 		AllBlocks.register();
 //		modEventBus.addGenericListener(Block.class, AllBlocks::register);
 		modEventBus.addGenericListener(Item.class, AllItems::register);
@@ -99,7 +98,7 @@ public class Create {
 		schematicReceiver.shutdown();
 	}
 
-	public static Registrate registrate() {
+	public static CreateRegistrate registrate() {
 	    return registrate.get();
 	}
 }

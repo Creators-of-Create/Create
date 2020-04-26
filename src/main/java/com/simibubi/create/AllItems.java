@@ -55,14 +55,14 @@ import net.minecraftforge.registries.IForgeRegistry;
 public enum AllItems {
 
 	__MATERIALS__(module()),
-	COPPER_NUGGET(new TaggedItem().withForgeTags("nuggets/copper")),
-	ZINC_NUGGET(new TaggedItem().withForgeTags("nuggets/zinc")),
-	BRASS_NUGGET(new TaggedItem().withForgeTags("nuggets/brass")),
-	IRON_SHEET(new TaggedItem().withForgeTags("plates/iron")),
-	GOLD_SHEET(new TaggedItem().withForgeTags("plates/gold")),
-	COPPER_SHEET(new TaggedItem().withForgeTags("plates/copper")),
-	BRASS_SHEET(new TaggedItem().withForgeTags("plates/brass")),
-	LAPIS_PLATE(new TaggedItem().withForgeTags("plates/lapis")),
+	COPPER_NUGGET((TaggedItem) new TaggedItem().withForgeTags("nuggets/copper")),
+	ZINC_NUGGET((TaggedItem) new TaggedItem().withForgeTags("nuggets/zinc")),
+	BRASS_NUGGET((TaggedItem) new TaggedItem().withForgeTags("nuggets/brass")),
+	IRON_SHEET((TaggedItem) new TaggedItem().withForgeTags("plates/iron")),
+	GOLD_SHEET((TaggedItem) new TaggedItem().withForgeTags("plates/gold")),
+	COPPER_SHEET((TaggedItem) new TaggedItem().withForgeTags("plates/copper")),
+	BRASS_SHEET((TaggedItem) new TaggedItem().withForgeTags("plates/brass")),
+	LAPIS_PLATE((TaggedItem) new TaggedItem().withForgeTags("plates/lapis")),
 
 	CRUSHED_IRON,
 	CRUSHED_GOLD,
@@ -71,9 +71,9 @@ public enum AllItems {
 	CRUSHED_BRASS,
 
 	ANDESITE_ALLOY,
-	COPPER_INGOT(new TaggedItem().withForgeTags("ingots/copper")),
-	ZINC_INGOT(new TaggedItem().withForgeTags("ingots/zinc")),
-	BRASS_INGOT(new TaggedItem().withForgeTags("ingots/brass")),
+	COPPER_INGOT((TaggedItem) new TaggedItem().withForgeTags("ingots/copper")),
+	ZINC_INGOT((TaggedItem) new TaggedItem().withForgeTags("ingots/zinc")),
+	BRASS_INGOT((TaggedItem) new TaggedItem().withForgeTags("ingots/brass")),
 
 	SAND_PAPER(SandPaperItem::new),
 	RED_SAND_PAPER(SandPaperItem::new),
@@ -219,7 +219,7 @@ public enum AllItems {
 		return new ItemStack(item);
 	}
 
-	public static class TaggedItem implements ITaggable<TaggedItem> {
+	public static class TaggedItem extends ITaggable.Impl {
 
 		private Set<ResourceLocation> tagSetItem = new HashSet<>();
 		private Function<Properties, Item> itemSupplier;
@@ -237,7 +237,7 @@ public enum AllItems {
 		}
 
 		@Override
-		public Set<ResourceLocation> getTagSet(TagType type) {
+		public Set<ResourceLocation> getTagSet(TagType<?> type) {
 			return tagSetItem;
 		}
 	}

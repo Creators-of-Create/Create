@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
@@ -24,12 +27,20 @@ public interface ITaggable<T extends ITaggable<T>> {
     }
 
     class Impl implements ITaggable<Impl> {
-
+    	
+    	private static final Table<TagType<?>, ResourceLocation, Tag<?>> TAG_CACHE = HashBasedTable.create();
+    	
         private Map<TagType<?>, Set<ResourceLocation>> tags = new HashMap<>();
 
         @Override
         public Set<ResourceLocation> getTagSet(TagType<?> type) {
             return tags.computeIfAbsent(type, $ -> new HashSet<>());
+        }
+        
+        @SuppressWarnings("unchecked")
+		@Override
+        public <C> Set<Tag<C>> getDataTags(TagType<C> type) {
+    	    return getTagSet(type).stream().map(rl -> (Tag<C>) TAG_CACHE.row(type).computeIfAbsent(rl, type.getCollection()::getOrCreate)).collect(Collectors.toSet());
         }
     }
     
@@ -77,7 +88,5 @@ public interface ITaggable<T extends ITaggable<T>> {
 	//take a look at AllBlocks.TaggedBlock for more info
 	Set<ResourceLocation> getTagSet(TagType<?> type);
 	
-	default <C> Set<Tag<C>> getDataTags(TagType<C> type) {
-	    return getTagSet(type).stream().map(type.getCollection()::getOrCreate).collect(Collectors.toSet());
-	}
+	<C> Set<Tag<C>> getDataTags(TagType<C> type);
 }

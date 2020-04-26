@@ -92,6 +92,7 @@ import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.RegistryEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -120,10 +121,10 @@ import net.minecraftforge.common.ToolType;
 
 public enum AllBlocks implements NonNullSupplier<Block> {
 
-	__SCHEMATICS__(),
-	SCHEMATICANNON(SchematicannonBlock::new),
-	CREATIVE_CRATE(CreativeCrateBlock::new),
-	SCHEMATIC_TABLE(SchematicTableBlock::new),
+//	__SCHEMATICS__(),
+//	SCHEMATICANNON(SchematicannonBlock::new),
+//	CREATIVE_CRATE(CreativeCrateBlock::new),
+//	SCHEMATIC_TABLE(SchematicTableBlock::new),
 
 	__CONTRAPTIONS__(),
 	SHAFT(() -> new ShaftBlock(Properties.from(Blocks.ANDESITE))),
@@ -306,19 +307,15 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 		NO_BLOCKITEM, WALL, FENCE, FENCE_GATE, SLAB, STAIRS
 	}
 
-	private static class CategoryTracker {
-		static IModule currentModule;
-	}
-
 	public final RegistryEntry<? extends Block> block;
 	public final ImmutableList<RegistryEntry<? extends Block>> alsoRegistered;
 	public final IModule module;
 
 	AllBlocks() {
-		CategoryTracker.currentModule = () -> Lang.asId(name()).replaceAll("__", "");
+		Create.registrate().setModule(Lang.asId(name()).replaceAll("__", ""));
 		this.block = null;
 		this.alsoRegistered = ImmutableList.of();
-		this.module = CategoryTracker.currentModule;
+		this.module = Create.registrate().getModule();
 	}
 
 	AllBlocks(NonNullSupplier<? extends Block> block, ComesWith... comesWith) {
@@ -334,9 +331,11 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	}
 
 	AllBlocks(NonNullSupplier<? extends Block> block, NonNullBiFunction<? super Block, Item.Properties, ? extends BlockItem> customItemCreator, ITaggable<?> tags, ComesWith... comesWith){
-		this.module = CategoryTracker.currentModule;
+		this.module = Create.registrate().getModule();
 		
 		this.block = Create.registrate().block(Lang.asId(name()), $ -> block.get()) // TODO take properties as input
+				.blockstate(NonNullBiConsumer.noop()) // TODO 
+				.loot(NonNullBiConsumer.noop()) // TODO
 		        .transform(applyTags(tags))
 		        .transform(b -> registerItemBlock(b, customItemCreator, comesWith))
 		        .register();
@@ -362,7 +361,10 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 
 	private <B extends Block, P> BlockBuilder<B, P> registerAsItem(BlockBuilder<B, P> builder, NonNullBiFunction<? super B, Item.Properties, ? extends BlockItem> customItemCreator) {
 		ItemBuilder<? extends BlockItem, BlockBuilder<B, P>> itemBuilder = customItemCreator == null ? builder.item() : builder.item(customItemCreator);
-		return itemBuilder.properties($ -> AllItems.includeInItemGroup()).build();
+		return itemBuilder
+				.model(NonNullBiConsumer.noop()) // TODO
+				.properties($ -> AllItems.includeInItemGroup())
+				.build();
 	}
 
 	@Override
@@ -408,6 +410,8 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 		}
 
 		return Create.registrate().block(block.getId().getPath() + "_" + Lang.asId(feature.name()), creator)
+				.blockstate(NonNullBiConsumer.noop()) // TODO 
+				.loot(NonNullBiConsumer.noop()) // TODO
 		        .simpleItem()
 		        .transform(b -> tag != null ? b.tag(tag) : b)
 		        .register();

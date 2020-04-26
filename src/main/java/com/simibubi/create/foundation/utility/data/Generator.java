@@ -12,7 +12,6 @@ public class Generator {
 	public static void gatherData(GatherDataEvent event){
 		DataGenerator gen = event.getGenerator();
 		//gen.addProvider(AllSoundEvents.CUCKOO_PIG);
-		gen.addProvider(new AllBlocksTagProvider(gen));
 		gen.addProvider(new AllItemsTagProvider(gen));
 	}
 

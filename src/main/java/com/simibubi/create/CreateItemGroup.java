@@ -36,11 +36,11 @@ public final class CreateItemGroup extends ItemGroup {
 
 	@OnlyIn(Dist.CLIENT)
 	public void addBlocks(NonNullList<ItemStack> items) {
-		for (AllBlocks block : AllBlocks.values()) {
-			Block def = block.get();
+		for (RegistryEntry<? extends Block> entry : Create.registrate().getAll(Block.class)) {
+			Block def = entry.get();
 			if (def == null)
 				continue;
-			if (!block.module.isEnabled())
+			if (!Create.registrate().getModule(entry).isEnabled())
 				continue;
 			if (def instanceof IAddedByOther)
 				continue;
@@ -48,8 +48,6 @@ public final class CreateItemGroup extends ItemGroup {
 			Item item = def.asItem();
 			if (item != Items.AIR) {
     			item.fillItemGroup(this, items);
-    			for (RegistryEntry<? extends Block> alsoRegistered : block.alsoRegistered)
-    				alsoRegistered.get().asItem().fillItemGroup(this, items);
 			}
 		}
 	}

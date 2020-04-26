@@ -2,6 +2,7 @@ package com.simibubi.create.modules;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CServer;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
@@ -56,6 +57,10 @@ public interface IModule {
 		}
 	}
 	
+	public static IModule of(String name) {
+		return () -> name;
+	}
+	
 	public static IModule of(ItemStack stack) {
 		Item item = stack.getItem();
 		if (item instanceof BlockItem)
@@ -76,7 +81,7 @@ public interface IModule {
 			if (allBlocks.get() == block)
 				return allBlocks.module;
 		}
-		return null;
+		return Create.registrate().getModule(block);
 	}
 
 	public default boolean isEnabled() {

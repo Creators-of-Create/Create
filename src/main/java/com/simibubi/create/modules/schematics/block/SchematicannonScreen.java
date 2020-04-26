@@ -10,6 +10,7 @@ import java.util.Vector;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
@@ -244,7 +245,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		RenderSystem.translated(guiLeft + 240, guiTop + 120, 200);
 		RenderSystem.scaled(5, 5, 5);
 
-		itemRenderer.renderItemIntoGUI(new ItemStack(AllBlocks.SCHEMATICANNON.get()), 0, 0);
+		itemRenderer.renderItemIntoGUI(new ItemStack(AllBlocksNew.SCHEMATICANNON.get()), 0, 0);
 
 		RenderSystem.popMatrix();
 	}

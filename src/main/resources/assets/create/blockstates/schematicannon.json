@@ -1,6 +1,0 @@
-{
-	"forgemarker": 1,
-    "variants": {
-		"": { "model": "create:block/schematicannon/base" }
-	}
-}

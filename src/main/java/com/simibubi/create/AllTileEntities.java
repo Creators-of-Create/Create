@@ -103,8 +103,8 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 public enum AllTileEntities {
 
 	// Schematics
-	SCHEMATICANNON(SchematicannonTileEntity::new, AllBlocks.SCHEMATICANNON),
-	SCHEMATICTABLE(SchematicTableTileEntity::new, AllBlocks.SCHEMATIC_TABLE),
+	SCHEMATICANNON(SchematicannonTileEntity::new, AllBlocksNew.SCHEMATICANNON),
+	SCHEMATICTABLE(SchematicTableTileEntity::new, AllBlocksNew.SCHEMATIC_TABLE),
 
 	// Kinetics
 	SHAFT(ShaftTileEntity::new, AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL, AllBlocks.ENCASED_SHAFT),
@@ -170,9 +170,10 @@ public enum AllTileEntities {
 
 	private Supplier<? extends TileEntity> supplier;
 	public TileEntityType<?> type;
-	private AllBlocks[] blocks;
+	private Supplier<? extends Block>[] blocks;
 
-	private AllTileEntities(Supplier<? extends TileEntity> supplier, AllBlocks... blocks) {
+	@SafeVarargs
+	private AllTileEntities(Supplier<? extends TileEntity> supplier, Supplier<? extends Block>... blocks) {
 		this.supplier = supplier;
 		this.blocks = blocks;
 	}
