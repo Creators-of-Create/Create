@@ -2,11 +2,17 @@ package com.simibubi.create.modules.schematics.client.tools;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.modules.schematics.client.SchematicTransformation;
 
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.math.Vec3d;
 
 public class DeployTool extends PlacementToolBase {
 
@@ -15,68 +21,78 @@ public class DeployTool extends PlacementToolBase {
 		super.init();
 		selectionRange = -1;
 	}
-	
+
 	@Override
 	public void updateSelection() {
-		if (schematicHandler.active && selectionRange == -1) {
-			selectionRange = (int) schematicHandler.size.manhattanDistance(BlockPos.ZERO) / 2;
+		if (schematicHandler.isActive() && selectionRange == -1) {
+			selectionRange = (int) (schematicHandler.getBounds().getCenter().length() / 2);
 			selectionRange = MathHelper.clamp(selectionRange, 1, 100);
 		}
 		selectIgnoreBlocks = AllKeys.ACTIVATE_TOOL.isPressed();
-		
 		super.updateSelection();
 	}
-	
+
 	@Override
 	public void renderTool() {
 		super.renderTool();
-		
-		if (selectedPos == null) 
+
+		if (selectedPos == null)
 			return;
-		
-		BlockPos size = schematicHandler.getTransformedSize();
-		BlockPos min = selectedPos.add(Math.round(size.getX() * -.5f), 0, Math.round(size.getZ() * -.5f));
-		BlockPos max = min.add(size.getX(), size.getY(), size.getZ());
-		
-		if (schematicHandler.deployed) {
-			MutableBoundingBox bb = new MutableBoundingBox(min, min.add(schematicHandler.getTransformedSize()));
-			min = new BlockPos(bb.minX, bb.minY, bb.minZ);
-			max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-		}
-		
-		GlStateManager.lineWidth(2);
-		GlStateManager.color4f(.5f, .8f, 1, 1);
-		GlStateManager.disableTexture();
-		
-		WorldRenderer.drawBoundingBox(min.getX() - 1 / 8d, min.getY() + 1 / 16d, min.getZ() - 1 / 8d,
-				max.getX() + 1 / 8d, max.getY() + 1 / 8d, max.getZ() + 1 / 8d, .8f, .9f, 1, 1);
-		
-		GlStateManager.lineWidth(1);
-		GlStateManager.enableTexture();
-		
+
+		GlStateManager.pushMatrix();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.enableBlend();
+		float pt = Minecraft.getInstance().getRenderPartialTicks();
+		double x = MathHelper.lerp(pt, lastChasingSelectedPos.x, chasingSelectedPos.x);
+		double y = MathHelper.lerp(pt, lastChasingSelectedPos.y, chasingSelectedPos.y);
+		double z = MathHelper.lerp(pt, lastChasingSelectedPos.z, chasingSelectedPos.z);
+
+		SchematicTransformation transformation = schematicHandler.getTransformation();
+		Vec3d center = schematicHandler.getBounds().getCenter();
+		Vec3d offset = transformation.getRotationOffset(true);
+
+		if (schematicHandler.getBounds().getXSize() % 2 == 1 || schematicHandler.getBounds().getZSize() % 2 == 1)
+			GlStateManager.translated(.5f, 0, .5f);
+		GlStateManager.translated(x, y, z);
+		GlStateManager.rotated(transformation.getCurrentRotation(), 0, 1, 0);
+		GlStateManager.translated(-offset.x, 0, -offset.z);
+		GlStateManager.translated(-(center.x), 0, -(center.z));
+
+		schematicHandler.getOutline().setTextures(AllSpecialTextures.CHECKERED, null);
+		schematicHandler.getOutline().render(Tessellator.getInstance().getBuffer());
+		schematicHandler.getOutline().setTextures(null, null);
+		GlStateManager.popMatrix();
 	}
-	
+
 	@Override
 	public boolean handleMouseWheel(double delta) {
-		
+
 		if (selectIgnoreBlocks) {
 			selectionRange += delta;
 			selectionRange = MathHelper.clamp(selectionRange, 1, 100);
 			return true;
 		}
-		
+
 		return super.handleMouseWheel(delta);
 	}
-	
+
 	@Override
 	public boolean handleRightClick() {
 		if (selectedPos == null)
 			return super.handleRightClick();
-		
-		BlockPos size = schematicHandler.getTransformedSize();
-		schematicHandler.moveTo(selectedPos.add(Math.round(size.getX() * -.5f), 0, Math.round(size.getZ() * -.5f)));
-		
+		Vec3d center = schematicHandler.getBounds().getCenter();
+		BlockPos target = selectedPos.add(-((int) center.x), 0, -((int) center.z));
+
+		ItemStack item = schematicHandler.getActiveSchematicItem();
+		if (item != null) {
+			item.getTag().putBoolean("Deployed", true);
+			item.getTag().put("Anchor", NBTUtil.writeBlockPos(target));
+		}
+
+		schematicHandler.getTransformation().moveTo(target);
+		schematicHandler.markDirty();
+		schematicHandler.deploy();
 		return true;
 	}
-	
+
 }

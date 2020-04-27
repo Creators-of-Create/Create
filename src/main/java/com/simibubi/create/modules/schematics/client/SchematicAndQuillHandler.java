@@ -8,7 +8,6 @@ import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.IOUtils;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
@@ -18,13 +17,13 @@ import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.outliner.ChasingAABBOutline;
+import com.simibubi.create.foundation.utility.outliner.OutlineParticle;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,6 +31,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
@@ -49,14 +49,7 @@ public class SchematicAndQuillHandler {
 	private Direction selectedFace;
 	private int range = 10;
 
-	private boolean isActive() {
-		return isPresent() && AllItems.BLUEPRINT_AND_QUILL.typeOf(Minecraft.getInstance().player.getHeldItemMainhand());
-	}
-
-	private boolean isPresent() {
-		return Minecraft.getInstance() != null && Minecraft.getInstance().world != null
-				&& Minecraft.getInstance().currentScreen == null;
-	}
+	private OutlineParticle<ChasingAABBOutline> particle;
 
 	public boolean mouseScrolled(double delta) {
 		if (!isActive())
@@ -65,27 +58,32 @@ public class SchematicAndQuillHandler {
 			return false;
 		if (secondPos == null)
 			range = (int) MathHelper.clamp(range + delta, 1, 100);
-		if (selectedFace != null) {
-			MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
-			Vec3i vec = selectedFace.getDirectionVec();
+		if (selectedFace == null)
+			return true;
 
-			int x = (int) (vec.getX() * delta);
-			int y = (int) (vec.getY() * delta);
-			int z = (int) (vec.getZ() * delta);
+		AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos);
+		Vec3i vec = selectedFace.getDirectionVec();
+		Vec3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+		if (bb.contains(projectedView))
+			delta *= -1;
 
-			AxisDirection axisDirection = selectedFace.getAxisDirection();
-			if (axisDirection == AxisDirection.NEGATIVE)
-				bb.offset(-x, -y, -z);
+		int x = (int) (vec.getX() * delta);
+		int y = (int) (vec.getY() * delta);
+		int z = (int) (vec.getZ() * delta);
 
-			bb.maxX = Math.max(bb.maxX - x * axisDirection.getOffset(), bb.minX);
-			bb.maxY = Math.max(bb.maxY - y * axisDirection.getOffset(), bb.minY);
-			bb.maxZ = Math.max(bb.maxZ - z * axisDirection.getOffset(), bb.minZ);
+		AxisDirection axisDirection = selectedFace.getAxisDirection();
+		if (axisDirection == AxisDirection.NEGATIVE)
+			bb = bb.offset(-x, -y, -z);
 
-			firstPos = new BlockPos(bb.minX, bb.minY, bb.minZ);
-			secondPos = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-			Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.dimensions", bb.getXSize(),
-					bb.getYSize(), bb.getZSize());
-		}
+		double maxX = Math.max(bb.maxX - x * axisDirection.getOffset(), bb.minX);
+		double maxY = Math.max(bb.maxY - y * axisDirection.getOffset(), bb.minY);
+		double maxZ = Math.max(bb.maxZ - z * axisDirection.getOffset(), bb.minZ);
+		bb = new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, maxX, maxY, maxZ);
+
+		firstPos = new BlockPos(bb.minX, bb.minY, bb.minZ);
+		secondPos = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
+		Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.dimensions", (int) bb.getXSize() + 1,
+				(int) bb.getYSize() + 1, (int) bb.getZSize() + 1);
 
 		return true;
 	}
@@ -106,8 +104,7 @@ public class SchematicAndQuillHandler {
 		}
 
 		if (secondPos != null) {
-			TextInputPromptScreen guiScreenIn = new TextInputPromptScreen(this::saveSchematic, s -> {
-			});
+			TextInputPromptScreen guiScreenIn = new TextInputPromptScreen(this::saveSchematic, s -> {});
 			guiScreenIn.setTitle(Lang.translate("schematicAndQuill.prompt"));
 			guiScreenIn.setButtonTextConfirm(Lang.translate("action.saveToFile"));
 			guiScreenIn.setButtonTextAbort(Lang.translate("action.discard"));
@@ -128,6 +125,100 @@ public class SchematicAndQuillHandler {
 
 		firstPos = selectedPos;
 		Lang.sendStatus(player, "schematicAndQuill.firstPos");
+	}
+
+	public void tick() {
+		if (!isActive()) {
+			if (particle != null) {
+				particle.setExpired();
+				particle = null;
+			}
+			return;
+		}
+
+		ClientPlayerEntity player = Minecraft.getInstance().player;
+
+		if (AllKeys.ACTIVATE_TOOL.isPressed()) {
+			float pt = Minecraft.getInstance().getRenderPartialTicks();
+			Vec3d targetVec = player.getEyePosition(pt).add(player.getLookVec().scale(range));
+			setCursor(new BlockPos(targetVec));
+
+		} else {
+			BlockRayTraceResult trace = RaycastHelper.rayTraceRange(player.world, player, 75);
+			if (trace != null && trace.getType() == Type.BLOCK) {
+
+				BlockPos hit = trace.getPos();
+				boolean replaceable = player.world.getBlockState(hit)
+						.isReplaceable(new BlockItemUseContext(new ItemUseContext(player, Hand.MAIN_HAND, trace)));
+				if (trace.getFace().getAxis().isVertical() && !replaceable)
+					hit = hit.offset(trace.getFace());
+				setCursor(hit);
+			} else
+				setCursor(null);
+		}
+
+		if (particle == null)
+			return;
+
+		ChasingAABBOutline outline = particle.getOutline();
+		if (particle.isAlive())
+			outline.tick();
+
+		if (secondPos == null) {
+			selectedFace = null;
+			outline.highlightFace(null);
+			return;
+		}
+
+		AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos).expand(1, 1, 1).grow(.45f);
+		Vec3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+		boolean inside = bb.contains(projectedView);
+
+		PredicateTraceResult result =
+			RaycastHelper.rayTraceUntil(player, 70, pos -> inside ^ bb.contains(VecHelper.getCenterOf(pos)));
+		selectedFace = result.missed() ? null : inside ? result.getFacing().getOpposite() : result.getFacing();
+		outline.highlightFace(AllKeys.ACTIVATE_TOOL.isPressed() ? selectedFace : null);
+	}
+
+	private void setCursor(BlockPos pos) {
+		selectedPos = pos;
+		AxisAlignedBB bb = getCurrentSelectionBox();
+
+		if (particle != null && !particle.isAlive())
+			particle = null;
+		if (bb == null) {
+			if (particle != null)
+				particle.setExpired();
+			return;
+		}
+
+		if (particle == null) {
+			ChasingAABBOutline outline = new ChasingAABBOutline(bb);
+			outline.setTextures(AllSpecialTextures.CHECKERED, AllSpecialTextures.HIGHLIGHT_CHECKERED);
+			particle = OutlineParticle.create(outline);
+		}
+
+		ChasingAABBOutline outline = particle.getOutline();
+		outline.target(bb);
+	}
+
+	private AxisAlignedBB getCurrentSelectionBox() {
+		if (secondPos == null) {
+			if (firstPos == null)
+				return selectedPos == null ? null : new AxisAlignedBB(selectedPos);
+			return selectedPos == null ? new AxisAlignedBB(firstPos)
+					: new AxisAlignedBB(firstPos, selectedPos).expand(1, 1, 1);
+		}
+		return new AxisAlignedBB(firstPos, secondPos).expand(1, 1, 1);
+	}
+
+	private boolean isActive() {
+		return isPresent() && AllItems.BLUEPRINT_AND_QUILL.typeOf(Minecraft.getInstance().player.getHeldItemMainhand());
+	}
+
+	private boolean isPresent() {
+		return Minecraft.getInstance() != null && Minecraft.getInstance().world != null
+				&& Minecraft.getInstance().currentScreen == null;
 	}
 
 	public void saveSchematic(String string) {
@@ -160,115 +251,4 @@ public class SchematicAndQuillHandler {
 		Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.saved", filepath);
 	}
 
-	public void render() {
-		if (!isActive())
-			return;
-
-		TessellatorHelper.prepareForDrawing();
-		GlStateManager.lineWidth(2);
-		GlStateManager.color4f(1, 1, 1, 1);
-		GlStateManager.disableTexture();
-
-		if (secondPos == null) {
-			// 1st Step
-			if (firstPos != null && selectedPos == null) {
-				MutableBoundingBox bb = new MutableBoundingBox(firstPos, firstPos.add(1, 1, 1));
-				BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
-				BlockPos max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-				drawBox(min, max, true);
-			}
-
-			if (firstPos != null && selectedPos != null) {
-				MutableBoundingBox bb = new MutableBoundingBox(firstPos, selectedPos);
-				BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
-				BlockPos max = new BlockPos(bb.maxX + 1, bb.maxY + 1, bb.maxZ + 1);
-				drawBox(min, max, true);
-			}
-
-			if (firstPos == null && selectedPos != null) {
-				MutableBoundingBox bb = new MutableBoundingBox(selectedPos, selectedPos.add(1, 1, 1));
-				BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
-				BlockPos max = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-				drawBox(min, max, true);
-			}
-		} else {
-			// 2nd Step
-			MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
-			BlockPos min = new BlockPos(bb.minX, bb.minY, bb.minZ);
-			BlockPos max = new BlockPos(bb.maxX + 1, bb.maxY + 1, bb.maxZ + 1);
-			drawBox(min, max, false);
-
-			if (selectedFace != null) {
-				Vec3d vec = new Vec3d(selectedFace.getDirectionVec());
-				Vec3d center = new Vec3d(min.add(max)).scale(1 / 2f);
-				Vec3d radii = new Vec3d(max.subtract(min)).scale(1 / 2f);
-
-				Vec3d onFaceOffset = new Vec3d(1 - Math.abs(vec.x), 1 - Math.abs(vec.y), 1 - Math.abs(vec.z))
-						.mul(radii);
-				Vec3d faceMin = center.add(vec.mul(radii).add(onFaceOffset));
-				Vec3d faceMax = center.add(vec.mul(radii).subtract(onFaceOffset));
-
-				GlStateManager.enableTexture();
-				TessellatorHelper.begin();
-				AllSpecialTextures.SELECTION.bind();
-				TessellatorHelper.doubleFace(Tessellator.getInstance().getBuffer(), new BlockPos(faceMin),
-						new BlockPos(faceMax.subtract(faceMin)), 1 / 16f * selectedFace.getAxisDirection().getOffset(),
-						false, false, false);
-				TessellatorHelper.draw();
-				GlStateManager.disableTexture();
-
-			}
-
-		}
-
-		GlStateManager.lineWidth(1);
-		GlStateManager.enableTexture();
-		TessellatorHelper.cleanUpAfterDrawing();
-	}
-
-	protected static void drawBox(BlockPos min, BlockPos max, boolean blue) {
-		float red = blue ? .8f : 1;
-		float green = blue ? .9f : 1;
-		WorldRenderer.drawBoundingBox(min.getX() - 1 / 16d, min.getY() + 1 / 16d, min.getZ() - 1 / 16d,
-				max.getX() + 1 / 16d, max.getY() + 1 / 16d, max.getZ() + 1 / 16d, red, green, 1, 1);
-	}
-
-	public void tick() {
-		if (!isActive())
-			return;
-		ClientPlayerEntity player = Minecraft.getInstance().player;
-
-		selectedPos = null;
-		if (AllKeys.ACTIVATE_TOOL.isPressed()) {
-			selectedPos = new BlockPos(player.getEyePosition(Minecraft.getInstance().getRenderPartialTicks())
-					.add(player.getLookVec().scale(range)));
-		} else {
-			BlockRayTraceResult trace = RaycastHelper.rayTraceRange(player.world, player, 75);
-			if (trace != null && trace.getType() == Type.BLOCK) {
-
-				BlockPos hit = new BlockPos(trace.getHitVec());
-				boolean replaceable = player.world.getBlockState(hit)
-						.isReplaceable(new BlockItemUseContext(new ItemUseContext(player, Hand.MAIN_HAND, trace)));
-				if (trace.getFace().getAxis().isVertical() && !replaceable)
-					hit = hit.offset(trace.getFace());
-
-				selectedPos = hit;
-			} else {
-				selectedPos = null;
-			}
-		}
-
-		if (secondPos == null) {
-			selectedFace = null;
-			return;
-		}
-
-		MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
-		bb.maxX++;
-		bb.maxY++;
-		bb.maxZ++;
-
-		PredicateTraceResult result = RaycastHelper.rayTraceUntil(player, 70, pos -> bb.isVecInside(pos));
-		selectedFace = result.missed() ? null : result.getFacing();
-	}
 }

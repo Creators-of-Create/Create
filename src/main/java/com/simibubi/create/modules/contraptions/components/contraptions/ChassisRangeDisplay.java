@@ -14,6 +14,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.foundation.utility.outliner.BlockClusterOutline;
+import com.simibubi.create.foundation.utility.outliner.Outline;
 import com.simibubi.create.foundation.utility.outliner.OutlineParticle;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 
@@ -32,7 +33,7 @@ public class ChassisRangeDisplay {
 
 	private static class Entry {
 		BlockClusterOutline outline;
-		OutlineParticle particle;
+		OutlineParticle<Outline> particle;
 		ChassisTileEntity te;
 		int timer;
 

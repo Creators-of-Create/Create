@@ -4,8 +4,9 @@ public class MoveVerticalTool extends PlacementToolBase {
 
 	@Override
 	public boolean handleMouseWheel(double delta) {
-		if (schematicHandler.deployed) {
-			schematicHandler.moveTo(schematicHandler.anchor.add(0, delta, 0));
+		if (schematicHandler.isDeployed()) {
+			schematicHandler.getTransformation().move(0, (float) Math.signum(delta), 0);
+			schematicHandler.markDirty();
 		}
 		return true;
 	}

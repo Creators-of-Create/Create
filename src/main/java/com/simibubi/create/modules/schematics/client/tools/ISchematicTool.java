@@ -10,6 +10,7 @@ public interface ISchematicTool {
 	
 	public void renderTool();
 	public void renderOverlay();
+	public void renderToolLocal();
 	
 	
 }

@@ -7,7 +7,7 @@ import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 
-public class BlueprintHotbarOverlay extends AbstractGui {
+public class SchematicHotbarSlotOverlay extends AbstractGui {
 	
 	public void renderOn(int slot) {
 		MainWindow mainWindow = Minecraft.getInstance().mainWindow;

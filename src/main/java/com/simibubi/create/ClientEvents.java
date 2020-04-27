@@ -67,8 +67,6 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
 		CreateClient.schematicHandler.render();
-		CreateClient.schematicAndQuillHandler.render();
-		CreateClient.schematicHologram.render();
 		KineticDebugger.renderSourceOutline();
 		ChassisRangeDisplay.renderOutlines(event.getPartialTicks());
 		TerrainZapperRenderHandler.render();

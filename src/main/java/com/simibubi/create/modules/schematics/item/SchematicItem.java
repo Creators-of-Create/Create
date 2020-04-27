@@ -75,22 +75,20 @@ public class SchematicItem extends Item {
 
 	public static void writeSize(ItemStack blueprint) {
 		CompoundNBT tag = blueprint.getTag();
-		Template t = getSchematic(blueprint);
+		Template t = loadSchematic(blueprint);
 		tag.put("Bounds", NBTUtil.writeBlockPos(t.getSize()));
 		blueprint.setTag(tag);
 	}
 
 	public static PlacementSettings getSettings(ItemStack blueprint) {
 		CompoundNBT tag = blueprint.getTag();
-
 		PlacementSettings settings = new PlacementSettings();
 		settings.setRotation(Rotation.valueOf(tag.getString("Rotation")));
 		settings.setMirror(Mirror.valueOf(tag.getString("Mirror")));
-
 		return settings;
 	}
 
-	public static Template getSchematic(ItemStack blueprint) {
+	public static Template loadSchematic(ItemStack blueprint) {
 		Template t = new Template();
 		String owner = blueprint.getTag().getString("Owner");
 		String schematic = blueprint.getTag().getString("File");
@@ -120,32 +118,30 @@ public class SchematicItem extends Item {
 
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
-		if (context.isPlacerSneaking() && context.getHand() == Hand.MAIN_HAND) {
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-				displayBlueprintScreen();
-			});
-			return ActionResultType.SUCCESS;
-		}
+		if (!onItemUse(context.getPlayer(), context.getHand()))
+			return super.onItemUse(context);
+		return ActionResultType.SUCCESS;
+	}
 
-		return super.onItemUse(context);
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+		if (!onItemUse(playerIn, handIn))
+			return super.onItemRightClick(worldIn, playerIn, handIn);
+		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+	}
+
+	private boolean onItemUse(PlayerEntity player, Hand hand) {
+		if (!player.isSneaking() || hand != Hand.MAIN_HAND)
+			return false;
+		if (!player.getHeldItem(hand).hasTag())
+			return false;
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> this::displayBlueprintScreen);
+		return true;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
 	protected void displayBlueprintScreen() {
 		ScreenOpener.open(new SchematicEditScreen());
-	}
-
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		if (playerIn.isSneaking() && handIn == Hand.MAIN_HAND) {
-			if (playerIn.getHeldItem(handIn).hasTag())
-				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-					displayBlueprintScreen();
-				});
-			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
-		}
-
-		return super.onItemRightClick(worldIn, playerIn, handIn);
 	}
 
 }

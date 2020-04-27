@@ -32,7 +32,7 @@ public abstract class Outline {
 		begin();
 	}
 
-	protected void renderAACuboidLine(Vec3d start, Vec3d end, Vec3d rgb, float alpha, BufferBuilder buffer) {
+	public void renderAACuboidLine(Vec3d start, Vec3d end, Vec3d rgb, float alpha, BufferBuilder buffer) {
 		Vec3d diff = end.subtract(start);
 		if (diff.x + diff.y + diff.z < 0) {
 			Vec3d temp = start;
@@ -91,11 +91,16 @@ public abstract class Outline {
 		putQuad(a1, a2, a3, a4, rgb, alpha, buffer);
 	}
 
-	protected void putQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, Vec3d rgb, float alpha, BufferBuilder buffer) {
-		putVertex(v1, rgb, 0, 0, alpha, buffer);
-		putVertex(v2, rgb, 1, 0, alpha, buffer);
-		putVertex(v3, rgb, 1, 1, alpha, buffer);
-		putVertex(v4, rgb, 0, 1, alpha, buffer);
+	public void putQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, Vec3d rgb, float alpha, BufferBuilder buffer) {
+		putQuadUV(v1, v2, v3, v4, 0, 0, 1, 1, rgb, alpha, buffer);
+	}
+
+	public void putQuadUV(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, float minU, float minV, float maxU,
+			float maxV, Vec3d rgb, float alpha, BufferBuilder buffer) {
+		putVertex(v1, rgb, minU, minV, alpha, buffer);
+		putVertex(v2, rgb, maxU, minV, alpha, buffer);
+		putVertex(v3, rgb, maxU, maxV, alpha, buffer);
+		putVertex(v4, rgb, minU, maxV, alpha, buffer);
 	}
 
 	protected void putVertex(Vec3d pos, Vec3d rgb, float u, float v, float alpha, BufferBuilder buffer) {

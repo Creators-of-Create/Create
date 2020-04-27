@@ -11,20 +11,20 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class OutlineParticle extends Particle {
+public class OutlineParticle<O extends Outline> extends Particle {
 
-	private Outline outline;
+	protected O outline;
 
-	private OutlineParticle(Outline outline, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn) {
+	protected OutlineParticle(O outline, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn) {
 		super(worldIn, xCoordIn, yCoordIn, zCoordIn);
 		this.outline = outline;
 		this.maxAge = 1024;
 	}
 
-	public static OutlineParticle create(Outline outline) {
+	public static <O extends Outline> OutlineParticle<O> create(O outline) {
 		Minecraft mc = Minecraft.getInstance();
 		ClientPlayerEntity player = mc.player;
-		OutlineParticle effect = new OutlineParticle(outline, mc.world, player.posX, player.posY, player.posZ);
+		OutlineParticle<O> effect = new OutlineParticle<>(outline, mc.world, player.posX, player.posY, player.posZ);
 		mc.particles.addEffect(effect);
 		return effect;
 	}
@@ -39,20 +39,22 @@ public class OutlineParticle extends Particle {
 		GlStateManager.pushMatrix();
 		Vec3d view = entityIn.getProjectedView();
 		GlStateManager.translated(-view.x, -view.y, -view.z);
-		GlStateManager.depthMask(false);
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
 		GlStateManager.enableBlend();
-		outline.render(buffer);
+		getOutline().render(buffer);
 		GlStateManager.disableBlend();
 
-		GlStateManager.depthMask(true);
 		GlStateManager.popMatrix();
 	}
 
 	@Override
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.CUSTOM;
+	}
+
+	public O getOutline() {
+		return outline;
 	}
 
 }
