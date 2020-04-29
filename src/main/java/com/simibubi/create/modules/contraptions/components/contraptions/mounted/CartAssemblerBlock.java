@@ -1,10 +1,11 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.mounted;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
-import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerTileEntity.CartMovementMode;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
@@ -19,6 +20,7 @@ import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +30,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class CartAssemblerBlock extends AbstractRailBlock {
+public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAssemblerTileEntity> {
 
 	public static IProperty<RailShape> RAIL_SHAPE =
 		EnumProperty.create("shape", RailShape.class, RailShape.EAST_WEST, RailShape.NORTH_SOUTH);
@@ -43,6 +45,16 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(RAIL_SHAPE, POWERED);
 		super.fillStateContainer(builder);
+	}
+
+	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return new CartAssemblerTileEntity();
 	}
 
 	@Override
@@ -72,12 +84,15 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 		if (!cart.getPassengers().isEmpty())
 			return;
 
-		Contraption contraption = MountedContraption.assembleMinecart(world, pos);
+		MountedContraption contraption = MountedContraption.assembleMinecart(world, pos);
 		if (contraption == null)
 			return;
 		if (contraption.blocks.size() == 1)
 			return;
+
 		float initialAngle = ContraptionEntity.yawFromVector(cart.getMotion());
+		
+		withTileEntityDo(world, pos, te -> contraption.rotationMode = CartMovementMode.values()[te.movementMode.value]);
 		ContraptionEntity entity = ContraptionEntity.createMounted(world, contraption, initialAngle);
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		world.addEntity(entity);
@@ -129,7 +144,7 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
 	}
-	
+
 	@Override
 	public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return false;
@@ -142,7 +157,7 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 			builder.add(BlockStateProperties.HORIZONTAL_AXIS);
 			super.fillStateContainer(builder);
 		}
-		
+
 		@Override
 		public boolean isSolid(BlockState state) {
 			return false;
@@ -153,6 +168,11 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 	public static BlockState createAnchor(BlockState state) {
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Axis.Z : Axis.X;
 		return AllBlocks.MINECART_ANCHOR.get().getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis);
+	}
+
+	@Override
+	public Class<CartAssemblerTileEntity> getTileEntityClass() {
+		return CartAssemblerTileEntity.class;
 	}
 
 }

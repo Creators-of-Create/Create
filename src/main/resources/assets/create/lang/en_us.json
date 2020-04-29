@@ -391,6 +391,10 @@
 	"create.contraptions.movement_mode.rotate_place": "Always Place when Stopped",
 	"create.contraptions.movement_mode.rotate_place_returned": "Only Place near Initial Angle",
 	"create.contraptions.movement_mode.rotate_never_place": "Only Place when Anchor Destroyed",
+	"create.contraptions.cart_movement_mode": "Cart Movement Mode",
+	"create.contraptions.cart_movement_mode.rotate": "Always face toward motion",
+	"create.contraptions.cart_movement_mode.rotate_paused": "Pause actors while rotating",
+	"create.contraptions.cart_movement_mode.rotation_locked": "Lock rotation",
 	
 	"create.logistics.filter": "Filter",
 	"create.logistics.firstFrequency": "Freq. #1",

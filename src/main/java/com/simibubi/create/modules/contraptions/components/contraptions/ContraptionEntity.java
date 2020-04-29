@@ -12,8 +12,11 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.AllEntities;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.BearingContraption;
+import com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerTileEntity.CartMovementMode;
+import com.simibubi.create.modules.contraptions.components.contraptions.mounted.MountedContraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.LinearActuatorTileEntity;
 
 import net.minecraft.block.material.PushReaction;
@@ -156,6 +159,14 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public void tickAsPassenger(Entity e) {
+		boolean rotationLock = false;
+		boolean pauseWhileRotating = false;
+
+		if (contraption instanceof MountedContraption) {
+			rotationLock = ((MountedContraption) contraption).rotationMode == CartMovementMode.ROTATION_LOCKED;
+			pauseWhileRotating = ((MountedContraption) contraption).rotationMode == CartMovementMode.ROTATE_PAUSED;
+		}
+
 		Entity riding = e;
 		while (riding.getRidingEntity() != null)
 			riding = riding.getRidingEntity();
@@ -163,20 +174,28 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		if (riding instanceof BoatEntity)
 			movementVector = new Vec3d(posX - prevPosX, posY - prevPosY, posZ - prevPosZ);
 		Vec3d motion = movementVector.normalize();
+		boolean rotating = false;
 
-		if (motion.length() > 0) {
-			targetYaw = yawFromVector(motion);
-			if (targetYaw < 0)
-				targetYaw += 360;
-			if (yaw < 0)
-				yaw += 360;
+		if (!rotationLock) {
+			if (motion.length() > 0) {
+				targetYaw = yawFromVector(motion);
+				if (targetYaw < 0)
+					targetYaw += 360;
+				if (yaw < 0)
+					yaw += 360;
+			}
+
+			prevYaw = yaw;
+			yaw = angleLerp(0.4f, yaw, targetYaw);
+			if (Math.abs(AngleHelper.getShortestAngleDiff(yaw, targetYaw)) < 1f)
+				yaw = targetYaw;
+			else
+				rotating = true;
 		}
 
-		prevYaw = yaw;
-		yaw = angleLerp(0.4f, yaw, targetYaw);
-
 		boolean wasStalled = isStalled();
-		tickActors(movementVector);
+		if (!rotating || !pauseWhileRotating)
+			tickActors(movementVector);
 		if (isStalled()) {
 			if (!wasStalled)
 				motionBeforeStall = riding.getMotion();
@@ -434,8 +453,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	@Override
-	protected void doWaterSplashEffect() {
-	}
+	protected void doWaterSplashEffect() {}
 
 	public void preventMovedEntitiesFromGettingStuck() {
 		Vec3d stuckTest = new Vec3d(0, -2, 0);
@@ -524,8 +542,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	@Override
 	// Make sure nothing can move contraptions out of the way
-	public void setMotion(Vec3d motionIn) {
-	}
+	public void setMotion(Vec3d motionIn) {}
 
 	@Override
 	public PushReaction getPushReaction() {

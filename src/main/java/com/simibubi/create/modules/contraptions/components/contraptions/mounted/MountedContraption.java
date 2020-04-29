@@ -7,11 +7,14 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
 import com.simibubi.create.modules.contraptions.components.contraptions.BlockMovementTraits;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
+import com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerTileEntity.CartMovementMode;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.tileentity.TileEntity;
@@ -26,12 +29,14 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class MountedContraption extends Contraption {
 
+	public CartMovementMode rotationMode;
+
 	@Override
 	protected AllContraptionTypes getType() {
 		return AllContraptionTypes.MOUNTED;
 	}
 
-	public static Contraption assembleMinecart(World world, BlockPos pos) {
+	public static MountedContraption assembleMinecart(World world, BlockPos pos) {
 		if (isFrozen())
 			return null;
 
@@ -39,7 +44,7 @@ public class MountedContraption extends Contraption {
 		if (!state.has(RAIL_SHAPE))
 			return null;
 
-		Contraption contraption = new MountedContraption();
+		MountedContraption contraption = new MountedContraption();
 		if (!contraption.searchMovedStructure(world, pos, null))
 			return null;
 
@@ -81,6 +86,19 @@ public class MountedContraption extends Contraption {
 			return Pair.of(new BlockInfo(capture.pos, CartAssemblerBlock.createAnchor(capture.state), null),
 					pair.getValue());
 		return pair;
+	}
+
+	@Override
+	public CompoundNBT writeNBT() {
+		CompoundNBT writeNBT = super.writeNBT();
+		writeNBT.putString("RotationMode", NBTHelper.writeEnum(rotationMode));
+		return writeNBT;
+	}
+
+	@Override
+	public void readNBT(World world, CompoundNBT nbt) {
+		rotationMode = NBTHelper.readEnum(nbt.getString("RotationMode"), CartMovementMode.class);
+		super.readNBT(world, nbt);
 	}
 
 	@Override
