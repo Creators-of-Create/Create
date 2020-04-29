@@ -99,6 +99,7 @@
 	"block.create.drill": "Mechanical Drill",
 	"block.create.portable_storage_interface": "Portable Storage Interface",
 	"block.create.harvester": "Mechanical Harvester",
+	"block.create.plough": "Mechanical Plough",
 	"block.create.saw": "Mechanical Saw",
 	"block.create.water_wheel": "Water Wheel",
 	"block.create.mechanical_press": "Mechanical Press",
@@ -986,16 +987,21 @@
 	"block.create.rotation_chassis.tooltip.action1": "Makes the clicked face _Sticky_. When Chassis move, all designated blocks attached to the sticky side are moved with it.",
 
 	"block.create.drill.tooltip": "MECHANICAL DRILL",
-	"block.create.drill.tooltip.summary": "A mechanical device suitable for _breaking_ _blocks_. It is movable with _Mechanical_ _Pistons_ or _Bearings_.",
+	"block.create.drill.tooltip.summary": "A mechanical device suitable for _breaking_ _blocks_. It is movable with _Mechanical_ _Pistons_, _Bearings_ or other controllers.",
 	"block.create.drill.tooltip.condition1": "When Rotated",
 	"block.create.drill.tooltip.behaviour1": "Acts as a _stationary_ Block Breaker. Also _hurts_ _entities_ in its effective area.",
 	"block.create.drill.tooltip.condition2": "While Moving",
 	"block.create.drill.tooltip.behaviour2": "Breaks Blocks with which the drill collides.",
 
 	"block.create.harvester.tooltip": "MECHANICAL HARVESTER",
-	"block.create.harvester.tooltip.summary": "A mechanical plant cutter suitable for medium scale crop automation. It is movable with _Mechanical_ _Pistons_ or _Bearings_.",
+	"block.create.harvester.tooltip.summary": "A mechanical plant cutter suitable for medium scale crop automation. It is movable with _Mechanical_ _Pistons_, _Bearings_ or other controllers.",
 	"block.create.harvester.tooltip.condition1": "While Moving",
 	"block.create.harvester.tooltip.behaviour1": "_Harvests_ all _mature_ _crops_ which which the blade collides and reset them to their initial growth state.",
+	
+	"block.create.plough.tooltip": "MECHANICAL PLOUGH",
+	"block.create.plough.tooltip.summary": "A mechanical plough has a variety of uses. It is movable with _Mechanical_ _Pistons_, _Bearings_ or other controllers.",
+	"block.create.plough.tooltip.condition1": "While Moving",
+	"block.create.plough.tooltip.behaviour1": "_Breaks_ _blocks_ which _cannot_ _be_ _collided_ with, such as torches, tracks or snow layers. _Applies_ its _motion_ to _entities_ without hurting them. _Tills_ _soil_ _blocks_ as though a Hoe would be used on them.",
 
 	"block.create.saw.tooltip": "MECHANICAL SAW",
 	"block.create.saw.tooltip.summary": "Suitable for _cutting_ _trees_ effectively and for _cutting_ _blocks_ into their carpentered counterparts. It is movable using _Mechanical_ _Pistons_ or _Bearings_.",
@@ -1025,7 +1031,7 @@
 	"block.create.redstone_bridge.tooltip.action2": "Toggles between _Receiver_ and _Transmitter_ Mode.",
 
 	"block.create.contact.tooltip": "REDSTONE CONTACT",
-	"block.create.contact.tooltip.summary": "Only emits redstone power in pairs. It is movable with _Mechanical_ _Pistons_ or _Bearings_.",
+	"block.create.contact.tooltip.summary": "Only emits redstone power in pairs. It is movable with _Mechanical_ _Pistons_, _Bearings_ or other controllers.",
 	"block.create.contact.tooltip.condition1": "When facing other Contact",
 	"block.create.contact.tooltip.behaviour1": "Provides a _Redstone_ _Signal_.",
 	"block.create.contact.tooltip.condition2": "While Moving",

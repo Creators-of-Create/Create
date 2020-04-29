@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,8 +9,16 @@ import java.util.Set;
 
 import com.google.common.base.Predicates;
 
+import net.minecraft.block.BambooBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CactusBlock;
+import net.minecraft.block.ChorusFlowerBlock;
+import net.minecraft.block.ChorusPlantBlock;
+import net.minecraft.block.KelpBlock;
+import net.minecraft.block.KelpTopBlock;
 import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.SugarCaneBlock;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -40,6 +49,41 @@ public class TreeCutter {
 		Set<BlockPos> visited = new HashSet<>();
 		List<BlockPos> frontier = new LinkedList<>();
 
+		// Bamboo, Sugar Cane, Cactus
+		BlockState stateAbove = reader.getBlockState(pos.up());
+		if (isVerticalPlant(stateAbove)) {
+			logs.add(pos.up());
+			for (int i = 1; i < 256; i++) {
+				BlockPos current = pos.up(i);
+				if (!isVerticalPlant(reader.getBlockState(current)))
+					break;
+				logs.add(current);
+			}
+			Collections.reverse(logs);
+			return new Tree(logs, leaves);
+		}
+
+		// Chorus
+		if (isChorus(stateAbove)) {
+			frontier.add(pos.up());
+			while (!frontier.isEmpty()) {
+				BlockPos current = frontier.remove(0);
+				visited.add(current);
+				logs.add(current);
+				for (Direction direction : Iterate.directions) {
+					BlockPos offset = current.offset(direction);
+					if (visited.contains(offset))
+						continue;
+					if (!isChorus(reader.getBlockState(offset)))
+						continue;
+					frontier.add(offset);
+				}
+			}
+			Collections.reverse(logs);
+			return new Tree(logs, leaves);
+		}
+
+		// Regular Tree
 		if (!validateCut(reader, pos))
 			return null;
 
@@ -92,6 +136,25 @@ public class TreeCutter {
 		}
 
 		return new Tree(logs, leaves);
+	}
+
+	public static boolean isChorus(BlockState stateAbove) {
+		return stateAbove.getBlock() instanceof ChorusPlantBlock || stateAbove.getBlock() instanceof ChorusFlowerBlock;
+	}
+
+	public static boolean isVerticalPlant(BlockState stateAbove) {
+		Block block = stateAbove.getBlock();
+		if (block instanceof BambooBlock)
+			return true;
+		if (block instanceof CactusBlock)
+			return true;
+		if (block instanceof SugarCaneBlock)
+			return true;
+		if (block instanceof KelpBlock)
+			return true;
+		if (block instanceof KelpTopBlock)
+			return true;
+		return false;
 	}
 
 	/**
