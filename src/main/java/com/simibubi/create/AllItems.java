@@ -17,6 +17,7 @@ import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.GogglesItem;
 import com.simibubi.create.modules.contraptions.WrenchItem;
 import com.simibubi.create.modules.contraptions.components.contraptions.glue.SuperGlueItem;
+import com.simibubi.create.modules.contraptions.components.contraptions.mounted.MinecartContraptionItem;
 import com.simibubi.create.modules.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.modules.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
@@ -39,6 +40,7 @@ import com.simibubi.create.modules.schematics.item.SchematicItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity.Type;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;
 import net.minecraft.item.ItemStack;
@@ -99,6 +101,8 @@ public enum AllItems {
 	RED_SAND_PAPER(SandPaperItem::new),
 	WRENCH(WrenchItem::new),
 	GOGGLES(GogglesItem::new),
+	MINECART_CONTRAPTION(p -> new MinecartContraptionItem(Type.RIDEABLE, p)),
+	FURNACE_MINECART_CONTRAPTION(p -> new MinecartContraptionItem(Type.FURNACE, p)),
 
 	__LOGISTICS__(module()),
 	FILTER(FilterItem::new),

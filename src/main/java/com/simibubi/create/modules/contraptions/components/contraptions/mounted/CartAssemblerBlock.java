@@ -13,7 +13,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
@@ -72,7 +74,7 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 
 	@Override
 	public void onMinecartPass(BlockState state, World world, BlockPos pos, AbstractMinecartEntity cart) {
-		if (!cart.canBeRidden())
+		if (!cart.canBeRidden() && !(cart instanceof FurnaceMinecartEntity))
 			return;
 		if (state.get(POWERED))
 			disassemble(world, pos, cart);
@@ -90,13 +92,22 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 		if (contraption.blocks.size() == 1)
 			return;
 
-		float initialAngle = ContraptionEntity.yawFromVector(cart.getMotion());
-		
+		int yawFromVector = (int) (ContraptionEntity.yawFromVector(cart.getMotion()) + .5d);
+		yawFromVector = ((yawFromVector + 45) / 90) * 90;
+		float initialAngle = yawFromVector;
+
 		withTileEntityDo(world, pos, te -> contraption.rotationMode = CartMovementMode.values()[te.movementMode.value]);
 		ContraptionEntity entity = ContraptionEntity.createMounted(world, contraption, initialAngle);
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		world.addEntity(entity);
 		entity.startRiding(cart);
+		
+		if (cart instanceof FurnaceMinecartEntity) {
+			CompoundNBT nbt = cart.serializeNBT();
+			nbt.putDouble("PushZ", 0);
+			nbt.putDouble("PushX", 0);
+			cart.deserializeNBT(nbt);
+		}
 	}
 
 	protected void disassemble(World world, BlockPos pos, AbstractMinecartEntity cart) {
@@ -105,6 +116,13 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 		if (!(cart.getPassengers().get(0) instanceof ContraptionEntity))
 			return;
 		cart.removePassengers();
+		
+		if (cart instanceof FurnaceMinecartEntity) {
+			CompoundNBT nbt = cart.serializeNBT();
+			nbt.putDouble("PushZ", cart.getMotion().x);
+			nbt.putDouble("PushX", cart.getMotion().z);
+			cart.deserializeNBT(nbt);
+		}
 	}
 
 	@Override

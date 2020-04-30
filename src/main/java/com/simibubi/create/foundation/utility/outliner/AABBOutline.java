@@ -1,10 +1,9 @@
 package com.simibubi.create.foundation.utility.outliner;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.GlHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -99,9 +98,6 @@ public class AABBOutline extends Outline {
 	}
 
 	protected void renderFace(Direction direction, Vec3d p1, Vec3d p2, Vec3d p3, Vec3d p4, BufferBuilder buffer) {
-		GlStateManager.texParameter(GL11.GL_TEXTURE_2D, 10242, GL11.GL_REPEAT);
-		GlStateManager.texParameter(GL11.GL_TEXTURE_2D, 10243, GL11.GL_REPEAT);
-
 		if (direction == highlightedFace && highlightedTexture != null)
 			highlightedTexture.bind();
 		else if (faceTexture != null)
@@ -109,16 +105,18 @@ public class AABBOutline extends Outline {
 		else
 			return;
 
-		GlStateManager.depthMask(false);
 		Vec3d uDiff = p2.subtract(p1);
 		Vec3d vDiff = p4.subtract(p1);
 		Axis axis = direction.getAxis();
 		float maxU = (float) Math.abs(axis == Axis.X ? uDiff.z : uDiff.x);
 		float maxV = (float) Math.abs(axis == Axis.Y ? vDiff.z : vDiff.y);
 
+		GlHelper.enableTextureRepeat();
+		GlStateManager.depthMask(false);
 		putQuadUV(p1, p2, p3, p4, 0, 0, maxU, maxV, new Vec3d(1, 1, 1), 1, buffer);
 		flush();
 		GlStateManager.depthMask(true);
+		GlHelper.disableTextureRepeat();
 	}
 
 }

@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.AllEntities;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.BearingContraption;
@@ -19,12 +20,17 @@ import com.simibubi.create.modules.contraptions.components.contraptions.mounted.
 import com.simibubi.create.modules.contraptions.components.contraptions.mounted.MountedContraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.LinearActuatorTileEntity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -33,11 +39,14 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ReuseableStream;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -56,12 +65,14 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	protected Contraption contraption;
 	protected float initialAngle;
+	protected float forcedAngle;
 	protected BlockPos controllerPos;
 	protected Vec3d motionBeforeStall;
 	protected boolean stationary;
 
 	final List<Entity> collidingEntities = new ArrayList<>();
 
+	private static final Ingredient FUEL_ITEMS = Ingredient.fromItems(Items.COAL, Items.CHARCOAL);
 	private static final DataParameter<Boolean> STALLED =
 		EntityDataManager.createKey(ContraptionEntity.class, DataSerializers.BOOLEAN);
 
@@ -81,17 +92,23 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		super(entityTypeIn, worldIn);
 		motionBeforeStall = Vec3d.ZERO;
 		stationary = entityTypeIn == AllEntities.STATIONARY_CONTRAPTION.type;
+		forcedAngle = -1;
 	}
 
 	public static ContraptionEntity createMounted(World world, Contraption contraption, float initialAngle) {
 		ContraptionEntity entity = new ContraptionEntity(AllEntities.CONTRAPTION.type, world);
 		entity.contraption = contraption;
 		entity.initialAngle = initialAngle;
-		entity.prevYaw = initialAngle;
-		entity.yaw = initialAngle;
-		entity.targetYaw = initialAngle;
+		entity.forceYaw(initialAngle);
 		if (contraption != null)
 			contraption.gatherStoredItems();
+		return entity;
+	}
+	
+	public static ContraptionEntity createMounted(World world, Contraption contraption, float initialAngle, Direction facing) {
+		ContraptionEntity entity = createMounted(world, contraption, initialAngle);
+		entity.forcedAngle = facing.getHorizontalAngle();
+		entity.forceYaw(entity.forcedAngle);
 		return entity;
 	}
 
@@ -205,6 +222,39 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		if (wasStalled && !isStalled()) {
 			riding.setMotion(motionBeforeStall);
 			motionBeforeStall = Vec3d.ZERO;
+		}
+
+		if (!isStalled() && (riding instanceof FurnaceMinecartEntity)) {
+			FurnaceMinecartEntity furnaceCart = (FurnaceMinecartEntity) riding;
+			CompoundNBT nbt = furnaceCart.serializeNBT();
+			int fuel = nbt.getInt("Fuel");
+			int fuelBefore = fuel;
+			double pushX = nbt.getDouble("PushX");
+			double pushZ = nbt.getDouble("PushZ");
+
+			int i = MathHelper.floor(furnaceCart.posX);
+			int j = MathHelper.floor(furnaceCart.posY);
+			int k = MathHelper.floor(furnaceCart.posZ);
+			if (furnaceCart.world.getBlockState(new BlockPos(i, j - 1, k)).isIn(BlockTags.RAILS))
+				--j;
+
+			BlockPos blockpos = new BlockPos(i, j, k);
+			BlockState blockstate = this.world.getBlockState(blockpos);
+			if (furnaceCart.canUseRail() && blockstate.isIn(BlockTags.RAILS))
+				if (fuel > 1)
+					riding.setMotion(riding.getMotion().normalize().scale(1));
+			if (fuel < 5 && contraption != null) {
+				ItemStack coal = ItemHelper.extract(contraption.inventory, FUEL_ITEMS, 1, false);
+				if (!coal.isEmpty())
+					fuel += 3600;
+			}
+
+			if (fuel != fuelBefore || pushX != 0 || pushZ != 0) {
+				nbt.putInt("Fuel", fuel);
+				nbt.putDouble("PushX", 0);
+				nbt.putDouble("PushZ", 0);
+				furnaceCart.deserializeNBT(nbt);
+			}
 		}
 
 		super.tick();
@@ -383,7 +433,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected void readAdditional(CompoundNBT compound) {
 		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"));
 		initialAngle = compound.getFloat("InitialAngle");
-		targetYaw = yaw = prevYaw = initialAngle;
+		forceYaw(compound.contains("ForcedYaw") ? compound.getFloat("ForcedYaw") : initialAngle);
 		dataManager.set(STALLED, compound.getBoolean("Stalled"));
 		ListNBT vecNBT = compound.getList("CachedMotion", 6);
 		if (!vecNBT.isEmpty()) {
@@ -394,6 +444,10 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		}
 		if (compound.contains("Controller"))
 			controllerPos = NBTUtil.readBlockPos(compound.getCompound("Controller"));
+	}
+
+	public void forceYaw(float forcedYaw) {
+		targetYaw = yaw = prevYaw = forcedYaw;
 	}
 
 	public void checkController() {
@@ -415,14 +469,18 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	@Override
 	protected void writeAdditional(CompoundNBT compound) {
-		compound.put("Contraption", getContraption().writeNBT());
-		compound.putFloat("InitialAngle", initialAngle);
-		if (!stationary)
+		if (contraption != null)
+			compound.put("Contraption", contraption.writeNBT());
+		if (!stationary && motionBeforeStall != null)
 			compound.put("CachedMotion",
 					newDoubleNBTList(motionBeforeStall.x, motionBeforeStall.y, motionBeforeStall.z));
-		compound.putBoolean("Stalled", isStalled());
 		if (controllerPos != null)
 			compound.put("Controller", NBTUtil.writeBlockPos(controllerPos));
+		if (forcedAngle != -1)
+			compound.putFloat("ForcedYaw", forcedAngle);
+		
+		compound.putFloat("InitialAngle", initialAngle);
+		compound.putBoolean("Stalled", isStalled());
 	}
 
 	@Override
@@ -551,6 +609,20 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public void setContraptionMotion(Vec3d vec) {
 		super.setMotion(vec);
+	}
+
+	@Override
+	public boolean canBeCollidedWith() {
+		return false;
+	}
+
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		return false;
+	}
+
+	public float getInitialAngle() {
+		return initialAngle;
 	}
 
 }

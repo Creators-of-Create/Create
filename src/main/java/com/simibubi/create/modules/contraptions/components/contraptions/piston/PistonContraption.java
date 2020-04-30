@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
 import com.simibubi.create.modules.contraptions.components.contraptions.BlockMovementTraits;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
+import com.simibubi.create.modules.contraptions.components.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
@@ -167,6 +168,15 @@ public class PistonContraption extends Contraption {
 	@Override
 	public void add(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
 		super.add(pos.offset(orientation, -initialExtensionProgress), capture);
+	}
+
+	@Override
+	public void addGlue(SuperGlueEntity entity) {
+		BlockPos pos = entity.getHangingPosition();
+		Direction direction = entity.getFacingDirection();
+		BlockPos localPos = pos.subtract(anchor).offset(orientation, -initialExtensionProgress);
+		this.superglue.add(Pair.of(localPos, direction));
+		glueToRemove.add(entity);
 	}
 
 	@Override

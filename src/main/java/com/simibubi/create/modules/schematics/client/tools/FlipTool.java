@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.GlHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
@@ -89,8 +90,7 @@ public class FlipTool extends PlacementToolBase {
 		Tessellator.getInstance().draw();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 
-		GlStateManager.texParameter(GL11.GL_TEXTURE_2D, 10242, GL11.GL_REPEAT);
-		GlStateManager.texParameter(GL11.GL_TEXTURE_2D, 10243, GL11.GL_REPEAT);
+		GlHelper.enableTextureRepeat();
 		GlStateManager.depthMask(false);
 		Vec3d uDiff = v2.subtract(v1);
 		Vec3d vDiff = v4.subtract(v1);
@@ -103,6 +103,7 @@ public class FlipTool extends PlacementToolBase {
 		outline.putQuadUV(v2, v1, v4, v3, 0, 0, maxU, maxV, color, 1, buffer);
 		Tessellator.getInstance().draw();
 		GlStateManager.popMatrix();
+		GlHelper.disableTextureRepeat();
 	}
 
 }

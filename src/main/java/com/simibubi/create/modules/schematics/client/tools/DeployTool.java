@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -48,15 +49,19 @@ public class DeployTool extends PlacementToolBase {
 		double z = MathHelper.lerp(pt, lastChasingSelectedPos.z, chasingSelectedPos.z);
 
 		SchematicTransformation transformation = schematicHandler.getTransformation();
-		Vec3d center = schematicHandler.getBounds().getCenter();
-		Vec3d offset = transformation.getRotationOffset(true);
+		AxisAlignedBB bounds = schematicHandler.getBounds();
+		Vec3d center = bounds.getCenter();
+		Vec3d rotationOffset = transformation.getRotationOffset(true);
+		int centerX = (int) center.x;
+		int centerZ = (int) center.z;
+		double xOrigin = bounds.getXSize() / 2f;
+		double zOrigin = bounds.getZSize() / 2f;
 
-		if (schematicHandler.getBounds().getXSize() % 2 == 1 || schematicHandler.getBounds().getZSize() % 2 == 1)
-			GlStateManager.translated(.5f, 0, .5f);
-		GlStateManager.translated(x, y, z);
+		GlStateManager.translated(x - centerX, y, z - centerZ);
+		GlStateManager.translated(xOrigin + rotationOffset.x, 0, zOrigin + rotationOffset.z);
 		GlStateManager.rotated(transformation.getCurrentRotation(), 0, 1, 0);
-		GlStateManager.translated(-offset.x, 0, -offset.z);
-		GlStateManager.translated(-(center.x), 0, -(center.z));
+		GlStateManager.translated(-rotationOffset.x, 0, -rotationOffset.z);
+		GlStateManager.translated(-xOrigin, 0, -zOrigin);
 
 		schematicHandler.getOutline().setTextures(AllSpecialTextures.CHECKERED, null);
 		schematicHandler.getOutline().render(Tessellator.getInstance().getBuffer());
@@ -66,14 +71,11 @@ public class DeployTool extends PlacementToolBase {
 
 	@Override
 	public boolean handleMouseWheel(double delta) {
-
-		if (selectIgnoreBlocks) {
-			selectionRange += delta;
-			selectionRange = MathHelper.clamp(selectionRange, 1, 100);
-			return true;
-		}
-
-		return super.handleMouseWheel(delta);
+		if (!selectIgnoreBlocks)
+			return super.handleMouseWheel(delta);
+		selectionRange += delta;
+		selectionRange = MathHelper.clamp(selectionRange, 1, 100);
+		return true;
 	}
 
 	@Override

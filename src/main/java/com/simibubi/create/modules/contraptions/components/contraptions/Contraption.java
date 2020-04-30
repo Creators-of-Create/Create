@@ -86,7 +86,7 @@ public abstract class Contraption {
 	protected BlockPos anchor;
 
 	List<BlockPos> renderOrder;
-	List<SuperGlueEntity> glueToRemove;
+	protected List<SuperGlueEntity> glueToRemove;
 
 	public Contraption() {
 		blocks = new HashMap<>();

@@ -15,6 +15,7 @@ import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.ItemEntity;
@@ -113,10 +114,10 @@ public class DeployerHandler {
 
 		// Check for entities
 		final ServerWorld world = player.getServerWorld();
-		List<LivingEntity> entities = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(clickedPos));
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(clickedPos));
 		Hand hand = Hand.MAIN_HAND;
 		if (!entities.isEmpty()) {
-			LivingEntity entity = entities.get(world.rand.nextInt(entities.size()));
+			Entity entity = entities.get(world.rand.nextInt(entities.size()));
 			List<ItemEntity> capturedDrops = new ArrayList<>();
 			boolean success = false;
 			entity.captureDrops(capturedDrops);
@@ -131,7 +132,8 @@ public class DeployerHandler {
 				if (cancelResult == null) {
 					if (entity.processInitialInteract(player, hand))
 						success = true;
-					else if (stack.interactWithEntity(player, entity, hand))
+					else if (entity instanceof LivingEntity
+							&& stack.interactWithEntity(player, (LivingEntity) entity, hand))
 						success = true;
 				}
 			}
