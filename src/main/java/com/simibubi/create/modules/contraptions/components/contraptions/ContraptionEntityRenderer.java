@@ -34,6 +34,8 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 			return;
 		if (entity.getContraption() == null)
 			return;
+		if (entity.getContraption().getType() == AllContraptionTypes.MOUNTED && entity.getRidingEntity() == null)
+			return;
 
 		GlStateManager.pushMatrix();
 		long randomBits = (long) entity.getEntityId() * 493286711L;
@@ -74,6 +76,7 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 
 				GlStateManager.translatef((float) cartX, (float) cartY, (float) cartZ);
 			}
+			GlStateManager.translatef(-.5f, 0, -.5f);
 		}
 
 		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);

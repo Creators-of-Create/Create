@@ -32,7 +32,6 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		super.visitNewPosition(context, pos);
-
 		World world = context.world;
 		if (world.isRemote)
 			return;
@@ -72,6 +71,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public void stopMoving(MovementContext context) {
+		super.stopMoving(context);
 		if (context.temporaryData instanceof PloughFakePlayer)
 			((PloughFakePlayer) context.temporaryData).remove();
 	}

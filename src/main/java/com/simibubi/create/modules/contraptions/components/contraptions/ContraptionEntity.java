@@ -26,7 +26,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.BoatEntity;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -54,7 +53,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -104,8 +102,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			contraption.gatherStoredItems();
 		return entity;
 	}
-	
-	public static ContraptionEntity createMounted(World world, Contraption contraption, float initialAngle, Direction facing) {
+
+	public static ContraptionEntity createMounted(World world, Contraption contraption, float initialAngle,
+			Direction facing) {
 		ContraptionEntity entity = createMounted(world, contraption, initialAngle);
 		entity.forcedAngle = facing.getHorizontalAngle();
 		entity.forceYaw(entity.forcedAngle);
@@ -279,12 +278,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			Vec3d actorPosition = new Vec3d(blockInfo.pos);
 			actorPosition = actorPosition.add(actor.getActiveAreaOffset(context));
 			actorPosition = VecHelper.rotate(actorPosition, angleRoll, angleYaw, anglePitch);
-			actorPosition = actorPosition.add(rotationOffset).add(posX, posY, posZ);
+			actorPosition = actorPosition.add(rotationOffset).add(getAnchorVec());
 
 			boolean newPosVisited = false;
 			BlockPos gridPosition = new BlockPos(actorPosition);
 
-			if (!stalledPreviously) {
+			if (!context.stall) {
 				Vec3d previousPosition = context.position;
 				if (previousPosition != null) {
 					context.motion = actorPosition.subtract(previousPosition);
@@ -314,13 +313,11 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 							}
 						}
 					}
-
 				}
 			}
 
 			context.rotation = rotationVec;
 			context.position = actorPosition;
-
 			if (actor.isActive(context)) {
 				if (newPosVisited && !context.stall) {
 					actor.visitNewPosition(context, gridPosition);
@@ -349,6 +346,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		setPosition(posX + x, posY + y, posZ + z);
 	}
 
+	private Vec3d getAnchorVec() {
+		if (contraption != null && contraption.getType() == AllContraptionTypes.MOUNTED)
+			return new Vec3d(posX - .5, posY, posZ - .5);
+		return getPositionVec();
+	}
+
 	public void rotateTo(double roll, double yaw, double pitch) {
 		rotate(getShortestAngleDiff(this.roll, roll), getShortestAngleDiff(this.yaw, yaw),
 				getShortestAngleDiff(this.pitch, pitch));
@@ -367,25 +370,13 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	@Override
 	public void setPosition(double x, double y, double z) {
-		Entity e = getRidingEntity();
-		if (e != null && e instanceof AbstractMinecartEntity) {
-			Entity riding = e;
-			while (riding.getRidingEntity() != null)
-				riding = riding.getRidingEntity();
-			x = riding.posX - .5;
-			z = riding.posZ - .5;
-		}
-
-		this.posX = x;
-		this.posY = y;
-		this.posZ = z;
-
-		if (this.isAddedToWorld() && !this.world.isRemote && world instanceof ServerWorld)
-			((ServerWorld) this.world).chunkCheck(this); // Forge - Process chunk registration after moving.
+		super.setPosition(x, y, z);
 		if (contraption != null) {
 			AxisAlignedBB cbox = contraption.getBoundingBox();
-			if (cbox != null)
-				this.setBoundingBox(cbox.offset(x, y, z));
+			if (cbox != null) {
+				Vec3d actualVec = getAnchorVec();
+				this.setBoundingBox(cbox.offset(actualVec));
+			}
 		}
 	}
 
@@ -478,7 +469,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			compound.put("Controller", NBTUtil.writeBlockPos(controllerPos));
 		if (forcedAngle != -1)
 			compound.putFloat("ForcedYaw", forcedAngle);
-		
+
 		compound.putFloat("InitialAngle", initialAngle);
 		compound.putBoolean("Stalled", isStalled());
 	}
@@ -502,7 +493,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public void disassemble() {
 		if (getContraption() != null) {
-			BlockPos offset = new BlockPos(getPositionVec().add(.5, .5, .5));
+			BlockPos offset = new BlockPos(getAnchorVec().add(.5, .5, .5));
 			Vec3d rotation = new Vec3d(getRoll(1), getYaw(1), getPitch(1));
 			getContraption().addBlocksToWorld(world, offset, rotation);
 			preventMovedEntitiesFromGettingStuck();

@@ -1,12 +1,14 @@
 package com.simibubi.create.modules.contraptions.components.actors;
 
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
@@ -64,7 +66,12 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 			if (damageSource != null && !world.isRemote)
 				entity.attackEntityFrom(damageSource, damage);
 			if (throwsEntities() && (world.isRemote == (entity instanceof PlayerEntity))) {
-				entity.setMotion(entity.getMotion().add(context.motion.add(0, context.motion.length() / 4f, 0)));
+				Vec3d motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
+				int maxBoost = 4;
+				if (motionBoost.length() > maxBoost) {
+					motionBoost = motionBoost.subtract(motionBoost.normalize().scale(motionBoost.length() - maxBoost));
+				}
+				entity.setMotion(entity.getMotion().add(motionBoost));
 				entity.velocityChanged = true;
 			}
 		}
@@ -160,11 +167,21 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 		destroyProgress += MathHelper.clamp((int) (breakSpeed / blockHardness), 1, 10 - destroyProgress);
 
 		if (destroyProgress >= 10) {
-			BlockHelper.destroyBlock(context.world, breakingPos, 1f, stack -> this.dropItem(context, stack));
-			context.stall = false;
-			onBlockBroken(context, breakingPos, stateToBreak);
-			ticksUntilNextProgress = -1;
 			world.sendBlockBreakProgress(id, breakingPos, -1);
+			
+			// break falling blocks from top to bottom
+			BlockPos ogPos = breakingPos;
+			BlockState stateAbove = world.getBlockState(breakingPos.up());
+			while (stateAbove.getBlock() instanceof FallingBlock) {
+				breakingPos = breakingPos.up();
+				stateAbove = world.getBlockState(breakingPos.up());
+			}
+			stateToBreak = world.getBlockState(breakingPos);
+			
+			context.stall = false;
+			BlockHelper.destroyBlock(context.world, breakingPos, 1f, stack -> this.dropItem(context, stack));
+			onBlockBroken(context, ogPos, stateToBreak);
+			ticksUntilNextProgress = -1;
 			data.remove("Progress");
 			data.remove("TicksUntilNextProgress");
 			data.remove("BreakingPos");
@@ -183,8 +200,8 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 	}
 
 	protected void onBlockBroken(MovementContext context, BlockPos pos, BlockState brokenState) {
-		BlockState above = context.world.getBlockState(pos.up());
-		if (!(above.getBlock() instanceof FallingBlock))
+		// Check for falling blocks
+		if (!(brokenState.getBlock() instanceof FallingBlock))
 			return;
 
 		CompoundNBT data = context.data;
