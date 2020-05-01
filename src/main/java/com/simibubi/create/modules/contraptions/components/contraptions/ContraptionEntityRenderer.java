@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -36,6 +37,8 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 		if (!entity.isAlive())
 			return;
 		if (entity.getContraption() == null)
+			return;
+		if (entity.getContraption().getType() == AllContraptionTypes.MOUNTED && entity.getRidingEntity() == null)
 			return;
 
 		// TODO 1.15 buffered render
@@ -78,6 +81,7 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 
 				RenderSystem.translatef((float) cartX, (float) cartY, (float) cartZ);
 			}
+			GlStateManager.translatef(-.5f, 0, -.5f);
 		}
 
 		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);

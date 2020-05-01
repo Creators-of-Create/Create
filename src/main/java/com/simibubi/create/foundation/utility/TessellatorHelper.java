@@ -27,9 +27,7 @@ public class TessellatorHelper {
 		RenderSystem.pushMatrix();
 		RenderSystem.pushLightingAttributes();
 		RenderSystem.enableBlend();
-		RenderSystem.enableAlphaTest();
 		RenderSystem.color4f(1, 1, 1, 1);
-
 		ActiveRenderInfo renderInfo = mc.gameRenderer.getActiveRenderInfo();
 		Vec3d view = renderInfo.getProjectedView();
 		RenderSystem.translated(-view.x, -view.y, -view.z);
@@ -83,10 +81,9 @@ public class TessellatorHelper {
 	}
 
 	public static void cleanUpAfterDrawing() {
-		RenderSystem.disableAlphaTest();
-		RenderSystem.disableBlend();
 		RenderSystem.popAttributes();
 		RenderSystem.popMatrix();
+		RenderSystem.disableBlend();
 	}
 
 	public static void drawString(String str, float x, float y, float z, boolean scalesUp, boolean hasDepth) {

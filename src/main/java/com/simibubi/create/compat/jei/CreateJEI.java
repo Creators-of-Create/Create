@@ -1,7 +1,6 @@
 package com.simibubi.create.compat.jei;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
@@ -28,13 +27,11 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateScreen;
 import com.simibubi.create.modules.schematics.block.SchematicannonScreen;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -224,30 +221,6 @@ public class CreateJEI implements IModPlugin {
 			return false;
 		});
 		return byType;
-	}
-
-	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results) {
-		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
-			if (input)
-				return;
-			ProcessingOutput output = results.get(slotIndex - 1);
-			if (output.getChance() != 1)
-				tooltip.add(1, TextFormatting.GOLD
-						+ Lang.translate("recipe.processing.chance", (int) (output.getChance() * 100)));
-		});
-	}
-
-	public static void addCatalystTooltip(IGuiItemStackGroup itemStacks, Map<Integer, Float> catalystIndices) {
-		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
-			if (!input)
-				return;
-			if (!catalystIndices.containsKey(slotIndex))
-				return;
-			Float chance = catalystIndices.get(slotIndex);
-			tooltip.add(1, TextFormatting.YELLOW + Lang.translate("recipe.processing.catalyst"));
-			tooltip.add(2, TextFormatting.GOLD
-					+ Lang.translate("recipe.processing.chanceToReturn", (int) (chance.floatValue() * 100)));
-		});
 	}
 
 }

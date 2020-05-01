@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.utility.TreeCutter.Tree;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
+import com.simibubi.create.modules.contraptions.components.saw.SawTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
@@ -31,12 +32,13 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
-		return super.canBreak(world, breakingPos, state)
-				&& (state.isIn(BlockTags.LOGS) || state.isIn(BlockTags.LEAVES));
+		return super.canBreak(world, breakingPos, state) && SawTileEntity.isSawable(state);
 	}
 
 	@Override
-	protected void onBlockBroken(MovementContext context, BlockPos pos) {
+	protected void onBlockBroken(MovementContext context, BlockPos pos, BlockState brokenState) {
+		if (brokenState.isIn(BlockTags.LEAVES))
+			return;
 		Tree tree = TreeCutter.cutTree(context.world, pos);
 		if (tree != null) {
 			for (BlockPos log : tree.logs)

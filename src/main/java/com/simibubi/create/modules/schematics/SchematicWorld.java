@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.schematics;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,13 +30,16 @@ import net.minecraft.world.biome.Biomes;
 public class SchematicWorld extends WrappedWorld {
 
 	private Map<BlockPos, BlockState> blocks;
+	private Map<BlockPos, TileEntity> tileEntities;
 	private Cuboid bounds;
 	public BlockPos anchor;
+	public boolean renderMode;
 
-	public SchematicWorld(Map<BlockPos, BlockState> blocks, Cuboid bounds, BlockPos anchor, World original) {
+	public SchematicWorld(BlockPos anchor, World original) {
 		super(original);
-		this.blocks = blocks;
-		this.setBounds(bounds);
+		this.blocks = new HashMap<>();
+		this.tileEntities = new HashMap<>();
+		this.bounds = new Cuboid();
 		this.anchor = anchor;
 	}
 
@@ -45,6 +49,19 @@ public class SchematicWorld extends WrappedWorld {
 
 	@Override
 	public TileEntity getTileEntity(BlockPos pos) {
+		if (isOutsideBuildHeight(pos))
+			return null;
+		if (tileEntities.containsKey(pos))
+			return tileEntities.get(pos);
+		if (!blocks.containsKey(pos.subtract(anchor)))
+			return null;
+
+		BlockState blockState = getBlockState(pos);
+		if (blockState.hasTileEntity()) {
+			TileEntity tileEntity = blockState.createTileEntity(this);
+			tileEntities.put(pos, tileEntity);
+			return tileEntity;
+		}
 		return null;
 	}
 
@@ -52,7 +69,7 @@ public class SchematicWorld extends WrappedWorld {
 	public BlockState getBlockState(BlockPos globalPos) {
 		BlockPos pos = globalPos.subtract(anchor);
 
-		if (pos.getY() - bounds.y == -1) {
+		if (pos.getY() - bounds.y == -1 && !renderMode) {
 			return Blocks.GRASS_BLOCK.getDefaultState();
 		}
 
@@ -164,6 +181,10 @@ public class SchematicWorld extends WrappedWorld {
 
 	public void setBounds(Cuboid bounds) {
 		this.bounds = bounds;
+	}
+
+	public Iterable<TileEntity> getTileEntities() {
+		return tileEntities.values();
 	}
 
 }

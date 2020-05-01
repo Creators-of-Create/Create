@@ -5,6 +5,8 @@ import java.util.function.Function;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.contraptions.glue.SuperGlueEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.glue.SuperGlueRenderer;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
@@ -23,6 +25,8 @@ public enum AllEntities {
 			ContraptionEntity::build), 
 	STATIONARY_CONTRAPTION(ContraptionEntity::new, EntityClassification.MISC, 30, 40,
 					false, ContraptionEntity::build),
+	SUPER_GLUE(SuperGlueEntity::new, EntityClassification.MISC, 30, Integer.MAX_VALUE, false, SuperGlueEntity::build),
+	
 	;
 
 	private IFactory<?> factory;
@@ -63,8 +67,8 @@ public enum AllEntities {
 	@SuppressWarnings("unchecked") // TODO 1.15 this generic stuff is incompatible with the enum system - need strong types
 	@OnlyIn(value = Dist.CLIENT)
 	public static void registerRenderers() {
-//		RenderingRegistry.registerEntityRenderingHandler(CardboardBoxEntity.class, CardboardBoxEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler((EntityType<ContraptionEntity>) CONTRAPTION.type, ContraptionEntityRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler((EntityType<SuperGlueEntity>) SUPER_GLUE.type, SuperGlueRenderer::new);
 	}
 
 }

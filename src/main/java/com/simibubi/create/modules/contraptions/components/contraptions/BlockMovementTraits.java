@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.modules.contraptions.components.actors.AttachedActorBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.ClockworkBearingBlock;
@@ -11,6 +12,8 @@ import com.simibubi.create.modules.contraptions.components.contraptions.chassis.
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.MagnetBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
 import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
@@ -82,7 +85,7 @@ public class BlockMovementTraits {
 		if (block instanceof PulleyBlock) {
 			TileEntity te = world.getTileEntity(pos);
 			if (te instanceof PulleyTileEntity)
-				return !((PulleyTileEntity) te).running && ((PulleyTileEntity) te).offset == 0;
+				return !((PulleyTileEntity) te).running;
 		}
 
 		if (AllBlocks.BELT.typeOf(blockState))
@@ -125,6 +128,10 @@ public class BlockMovementTraits {
 		if (block instanceof RedstoneWireBlock)
 			return true;
 		if (block instanceof RedstoneLinkBlock)
+			return true;
+		if (block instanceof RopeBlock)
+			return true;
+		if (block instanceof MagnetBlock)
 			return true;
 		return false;
 	}
@@ -169,7 +176,7 @@ public class BlockMovementTraits {
 			return direction == (state.get(BlockStateProperties.HANGING) ? Direction.UP : Direction.DOWN);
 		if (block instanceof AbstractRailBlock)
 			return direction == Direction.DOWN;
-		if (block instanceof HarvesterBlock)
+		if (block instanceof AttachedActorBlock)
 			return direction == state.get(HarvesterBlock.HORIZONTAL_FACING).getOpposite();
 		return false;
 	}
@@ -185,8 +192,10 @@ public class BlockMovementTraits {
 			return state.get(BlockStateProperties.FACING) == facing;
 		if (AllBlocks.PORTABLE_STORAGE_INTERFACE.typeOf(state))
 			return state.get(PortableStorageInterfaceBlock.FACING) == facing;
-		if (AllBlocks.HARVESTER.typeOf(state))
+		if (state.getBlock() instanceof AttachedActorBlock)
 			return state.get(BlockStateProperties.HORIZONTAL_FACING) == facing;
+		if (AllBlocks.ROPE_PULLEY.typeOf(state))
+			return facing == Direction.DOWN;
 		return isBrittle(state);
 	}
 

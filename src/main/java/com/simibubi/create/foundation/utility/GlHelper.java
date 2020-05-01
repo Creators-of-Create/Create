@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.util.math.Vec3d;
@@ -20,4 +22,14 @@ public class GlHelper {
 		RenderSystem.popMatrix();
 	}
 
+	public static void enableTextureRepeat() {
+		RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10242, GL11.GL_REPEAT);
+		RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10243, GL11.GL_REPEAT);
+	}
+	
+	public static void disableTextureRepeat() {
+		RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10242, GL11.GL_CLAMP);
+		RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10243, GL11.GL_CLAMP);
+	}
+	
 }

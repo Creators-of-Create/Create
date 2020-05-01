@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.packet.SimplePacketBase;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.components.contraptions.CancelPlayerFallPacket;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionStallPacket;
+import com.simibubi.create.modules.contraptions.components.contraptions.glue.GlueEffectPacket;
 import com.simibubi.create.modules.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.modules.curiosities.zapper.ZapperBeamPacket;
@@ -51,6 +52,7 @@ public enum AllPackets {
 	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
 	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new),
 	TOOL_HARVEST(AbstractToolItem.HarvestPacket.class, AbstractToolItem.HarvestPacket::new),
+	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket::new),
 	
 	;
 

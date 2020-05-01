@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.Create;
-import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.ScreenResourceWrapper;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 import com.simibubi.create.foundation.utility.Lang;
@@ -18,53 +16,26 @@ import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperUpg
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class BlockzapperUpgradeCategory implements IRecipeCategory<BlockzapperUpgradeRecipe> {
-
-	private static ResourceLocation ID = new ResourceLocation(Create.ID, "blockzapper_upgrade");
-	private IDrawable icon;
+public class BlockzapperUpgradeCategory extends CreateRecipeCategory<BlockzapperUpgradeRecipe> {
 
 	public BlockzapperUpgradeCategory() {
-		icon = new DoubleItemIcon(() -> new ItemStack(AllItems.PLACEMENT_HANDGUN.get()),
-				() -> ItemStack.EMPTY); // replace with uparrow when available
-	}
-	
-	@Override
-	public IDrawable getIcon() {
-		return icon;
-	}
-	
-	@Override
-	public ResourceLocation getUid() {
-		return ID;
+		super("blockzapper_upgrade", itemIcon(AllItems.PLACEMENT_HANDGUN.get()),
+				new ScreenResourceWrapper(BLOCKZAPPER_UPGRADE_RECIPE));
 	}
 
 	@Override
 	public Class<? extends BlockzapperUpgradeRecipe> getRecipeClass() {
 		return BlockzapperUpgradeRecipe.class;
-	}
-
-	@Override
-	public String getTitle() {
-		return Lang.translate("recipe.blockzapperUpgrade");
-	}
-
-	@Override
-	public IDrawable getBackground() {
-		return new ScreenResourceWrapper(BLOCKZAPPER_UPGRADE_RECIPE);
 	}
 
 	@Override
@@ -90,8 +61,6 @@ public class BlockzapperUpgradeCategory implements IRecipeCategory<BlockzapperUp
 				i++;
 			}
 		}
-//		itemStacks.init(9, false, BLOCKZAPPER_UPGRADE_RECIPE.width / 2 - 9, BLOCKZAPPER_UPGRADE_RECIPE.height - 18 - 10);
-//		itemStacks.set(9, recipe.getRecipeOutput());
 	}
 
 	@Override
@@ -110,11 +79,11 @@ public class BlockzapperUpgradeCategory implements IRecipeCategory<BlockzapperUp
 	@Override
 	public void draw(BlockzapperUpgradeRecipe recipe, double mouseX, double mouseY) {
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
-		String componentName = Lang
-				.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent().name()));
+		String componentName =
+			Lang.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent().name()));
 		String text = "+ " + recipe.getTier().color + componentName;
-		font.drawStringWithShadow(text,
-				(BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(text)) / 2, 57, 0x8B8B8B);
+		font.drawStringWithShadow(text, (BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(text)) / 2, 57,
+				0x8B8B8B);
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(126, 0, 0);

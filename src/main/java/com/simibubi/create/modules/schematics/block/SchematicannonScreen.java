@@ -9,7 +9,6 @@ import java.util.Vector;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;

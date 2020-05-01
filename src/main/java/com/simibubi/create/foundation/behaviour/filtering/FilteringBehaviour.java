@@ -39,8 +39,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		filter = ItemStack.EMPTY;
 		slotPositioning = slot;
 		showCount = false;
-		callback = stack -> {
-		};
+		callback = stack -> {};
 		textShift = Vec3d.ZERO;
 		count = 0;
 		ticksUntilScrollPacket = -1;
@@ -114,11 +113,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	public void setFilter(ItemStack stack) {
 		filter = stack.copy();
 		callback.accept(filter);
-
-		if (filter.getItem() instanceof FilterItem)
-			count = 0;
-		else
-			count = stack.getCount();
+		count = (filter.getItem() instanceof FilterItem) ? 0 : Math.min(stack.getCount(), stack.getMaxStackSize());
 		forceClientState = true;
 
 		tileEntity.markDirty();

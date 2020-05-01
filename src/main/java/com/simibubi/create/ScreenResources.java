@@ -41,7 +41,7 @@ public enum ScreenResources {
 
 	FILTER("filter.png", 200, 100),
 	ATTRIBUTE_FILTER("filter.png", 0, 100, 200, 86),
-	
+
 	SEQUENCER("sequencer.png", 156, 128),
 	SEQUENCER_INSTRUCTION("sequencer.png", 14, 47, 131, 18),
 	SEQUENCER_WAIT("sequencer.png", 14, 65, 131, 18),
@@ -79,6 +79,7 @@ public enum ScreenResources {
 
 	// JEI
 	JEI_SLOT("jei/widgets.png", 18, 18),
+	JEI_CHANCE_SLOT("jei/widgets.png", 20, 156, 18, 18),
 	JEI_CATALYST_SLOT("jei/widgets.png", 0, 156, 18, 18),
 	JEI_ARROW("jei/widgets.png", 19, 10, 42, 10),
 	JEI_LONG_ARROW("jei/widgets.png", 19, 0, 71, 10),
@@ -132,6 +133,9 @@ public enum ScreenResources {
 	I_MOVE_PLACE(9, 1),
 	I_MOVE_PLACE_RETURNED(10, 1),
 	I_MOVE_NEVER_PLACE(11, 1),
+	I_CART_ROTATE(12, 1),
+	I_CART_ROTATE_PAUSED(13, 1),
+	I_CART_ROTATE_LOCKED(14, 1),
 
 	I_DONT_REPLACE(0, 2),
 	I_REPLACE_SOLID(1, 2),

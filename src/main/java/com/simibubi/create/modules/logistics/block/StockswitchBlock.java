@@ -71,7 +71,8 @@ public class StockswitchBlock extends HorizontalBlock implements ITE<Stockswitch
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		try {
 			return getTileEntity(blockAccess, pos).powered ? 15 : 0;
-		} catch (TileEntityException e) {}
+		} catch (TileEntityException e) {
+		}
 		return 0;
 	}
 
@@ -84,14 +85,15 @@ public class StockswitchBlock extends HorizontalBlock implements ITE<Stockswitch
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-		if (player instanceof ClientPlayerEntity)
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> withTileEntityDo(worldIn, pos, this::displayScreen));
+		DistExecutor.runWhenOn(Dist.CLIENT,
+				() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
 		return ActionResultType.SUCCESS;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	protected void displayScreen(StockswitchTileEntity te) {
-		ScreenOpener.open(new StockswitchScreen(te));
+	protected void displayScreen(StockswitchTileEntity te, PlayerEntity player) {
+		if (player instanceof ClientPlayerEntity)
+			ScreenOpener.open(new StockswitchScreen(te));
 	}
 
 	@Override

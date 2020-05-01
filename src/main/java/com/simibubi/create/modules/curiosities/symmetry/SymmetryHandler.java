@@ -2,10 +2,7 @@ package com.simibubi.create.modules.curiosities.symmetry;
 
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.SymmetryMirror;
@@ -15,8 +12,6 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -102,7 +97,7 @@ public class SymmetryHandler {
 				ms.push();
 				ms.translate(-view.getX(), -view.getY(), -view.getZ());
 				ms.translate(pos.getX(), pos.getY(), pos.getZ());
-//				ms.translate(0, yShift + .2f, 0);
+				ms.translate(0, yShift + .2f, 0);
 				mc.getBlockRendererDispatcher().renderModel(mirror.getModel(), pos, player.world, ms, buffer.getBuffer(Atlases.getEntityTranslucent()),
 						false, player.world.getRandom(), EmptyModelData.INSTANCE);
 				
@@ -111,8 +106,6 @@ public class SymmetryHandler {
 				ms.pop();
 			}
 		}
-
-		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	@OnlyIn(Dist.CLIENT)

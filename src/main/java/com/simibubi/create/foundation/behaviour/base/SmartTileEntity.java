@@ -86,8 +86,9 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 			list.forEach(b -> behaviours.put(b.getType(), b));
 		}
 
-		forEachBehaviour(tb -> tb.readNBT(compound));
 		super.read(compound);
+		forEachBehaviour(tb -> tb.readNBT(compound));
+		
 		if (world != null && world.isRemote)
 			updateClient(compound);
 	}
@@ -106,7 +107,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	public void lazyTick() {
 
 	}
-
+	
 	protected void forEachBehaviour(Consumer<TileEntityBehaviour> action) {
 		behaviours.values().forEach(tb -> {
 			if (!tb.isPaused())

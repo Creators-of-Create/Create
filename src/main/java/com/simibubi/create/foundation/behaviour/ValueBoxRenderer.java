@@ -75,6 +75,8 @@ public class ValueBoxRenderer {
 		}
 
 		box.render(highlighted);
+		RenderSystem.disableBlend();
+		RenderSystem.disableAlphaTest();
 	}
 
 	public static void renderText(ValueBox box, FontRenderer font, String text) {

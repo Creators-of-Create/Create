@@ -1,9 +1,6 @@
 package com.simibubi.create.foundation.world;
 
 import java.util.Optional;
-import java.util.function.Supplier;
-
-import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.tuple.Pair;
 

@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.schematics.client;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.lwjgl.system.MemoryUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.foundation.type.Cuboid;
 import com.simibubi.create.modules.schematics.SchematicWorld;
 
 import net.minecraft.block.BedBlock;
@@ -32,12 +30,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-public class SchematicHologram {
+public class SchematicRenderer {
 
 	private final RegionRenderCacheBuilder bufferCache = new RegionRenderCacheBuilder();
 	private final Set<RenderType> usedBlockRenderLayers = new HashSet<>(RenderType.getBlockLayers().size());
@@ -47,15 +43,8 @@ public class SchematicHologram {
 	private SchematicWorld schematic;
 	private BlockPos anchor;
 
-	public SchematicHologram() {
+	public SchematicRenderer() {
 		changed = false;
-	}
-
-	public void startHologram(Template schematic, BlockPos anchor) {
-		SchematicWorld world = new SchematicWorld(new HashMap<>(), new Cuboid(BlockPos.ZERO, BlockPos.ZERO), anchor,
-				Minecraft.getInstance().world);
-		schematic.addBlocksToWorld(world, anchor, new PlacementSettings());
-		startHologram(world);
 	}
 
 	public void startHologram(SchematicWorld world) {
@@ -76,15 +65,47 @@ public class SchematicHologram {
 	public void tick() {
 		if (!active)
 			return;
-		Minecraft minecraft = Minecraft.getInstance();
-		if (minecraft.world == null)
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.world == null || mc.player == null || !changed)
 			return;
-		if (minecraft.player == null)
+
+		redraw(mc);
+		changed = false;
+	}
+
+	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
+		// TODO 1.15 buffered render
+		if (!active)
 			return;
-		if (changed) {
-			redraw(minecraft);
-			changed = false;
+
+		final Entity entity = Minecraft.getInstance().getRenderViewEntity();
+
+		if (entity == null) {
+			return;
 		}
+
+		ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
+		Vec3d view = renderInfo.getProjectedView();
+		double renderPosX = view.x;
+		double renderPosY = view.y;
+		double renderPosZ = view.z;
+
+		RenderSystem.enableAlphaTest();
+		RenderSystem.enableBlend();
+		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+
+		for (RenderType layer : RenderType.getBlockLayers()) {
+			if (!usedBlockRenderLayers.contains(layer)) {
+				continue;
+			}
+			final BufferBuilder bufferBuilder = bufferCache.get(layer);
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(-renderPosX, -renderPosY, -renderPosZ);
+			drawBuffer(bufferBuilder);
+			RenderSystem.popMatrix();
+		}
+		RenderSystem.disableAlphaTest();
+		RenderSystem.disableBlend();
 	}
 
 	private void redraw(Minecraft minecraft) {
@@ -112,21 +133,17 @@ public class SchematicHologram {
 						bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 					}
 				}
-				// OptiFine Shaders compatibility
-				// if (Config.isShaders()) SVertexBuilder.pushEntity(state, pos,
-				// blockAccess, bufferBuilder);
 
 				// Block transformations
 				if (state.getBlock() instanceof BedBlock) {
 					state = Blocks.QUARTZ_SLAB.getDefaultState();
 				}
 
-				if (blockRendererDispatcher.renderModel(state, pos, blockAccess, new MatrixStack(), bufferBuilder, true, minecraft.world.rand, EmptyModelData.INSTANCE)) {
+				if (blockRendererDispatcher.renderModel(state, pos, blockAccess, new MatrixStack(), bufferBuilder, true,
+						minecraft.world.rand, EmptyModelData.INSTANCE)) {
 					usedBlockRenderLayers.add(blockRenderLayer);
 				}
 				blockstates.add(state);
-				// if (Config.isShaders())
-				// SVertexBuilder.popEntity(bufferBuilder);
 			}
 			ForgeHooksClient.setRenderLayer(null);
 		}
@@ -140,42 +157,6 @@ public class SchematicHologram {
 		}
 	}
 
-	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
-		// TODO 1.15 buffered render
-		if (active) {
-			final Entity entity = Minecraft.getInstance().getRenderViewEntity();
-
-			if (entity == null) {
-				return;
-			}
-
-			ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-			Vec3d view = renderInfo.getProjectedView();
-			double renderPosX = view.x;
-			double renderPosY = view.y;
-			double renderPosZ = view.z;
-
-			RenderSystem.enableAlphaTest();
-			RenderSystem.enableBlend();
-			Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-
-			for (RenderType layer : RenderType.getBlockLayers()) {
-				if (!usedBlockRenderLayers.contains(layer)) {
-					continue;
-				}
-				final BufferBuilder bufferBuilder = bufferCache.get(layer);
-				RenderSystem.pushMatrix();
-				RenderSystem.translated(-renderPosX, -renderPosY, -renderPosZ);
-				drawBuffer(bufferBuilder);
-				RenderSystem.popMatrix();
-			}
-			RenderSystem.disableAlphaTest();
-			RenderSystem.disableBlend();
-		}
-	}
-
-	// Coppied from WorldVertexBufferUploader - Draw everything but don't
-	// reset the buffer
 	private static void drawBuffer(final BufferBuilder bufferBuilder) {
 		Pair<BufferBuilder.DrawState, ByteBuffer> pair = bufferBuilder.popData();
 		BufferBuilder.DrawState state = pair.getFirst();
@@ -186,4 +167,5 @@ public class SchematicHologram {
 			state.getVertexFormat().endDrawing();
 		}
 	}
+
 }

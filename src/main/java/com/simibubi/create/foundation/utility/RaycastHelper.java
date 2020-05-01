@@ -22,13 +22,14 @@ public class RaycastHelper {
 		return worldIn.rayTraceBlocks(context);
 	}
 
-	public static PredicateTraceResult rayTraceUntil(PlayerEntity playerIn, double range, Predicate<BlockPos> predicate) {
+	public static PredicateTraceResult rayTraceUntil(PlayerEntity playerIn, double range,
+			Predicate<BlockPos> predicate) {
 		Vec3d origin = getTraceOrigin(playerIn);
 		Vec3d target = getTraceTarget(playerIn, range, origin);
 		return rayTraceUntil(origin, target, predicate);
 	}
 
-	private static Vec3d getTraceTarget(PlayerEntity playerIn, double range, Vec3d origin) {
+	public static Vec3d getTraceTarget(PlayerEntity playerIn, double range, Vec3d origin) {
 		float f = playerIn.rotationPitch;
 		float f1 = playerIn.rotationYaw;
 		float f2 = MathHelper.cos(-f1 * 0.017453292F - (float) Math.PI);
@@ -42,7 +43,7 @@ public class RaycastHelper {
 		return vec3d1;
 	}
 
-	private static Vec3d getTraceOrigin(PlayerEntity playerIn) {
+	public static Vec3d getTraceOrigin(PlayerEntity playerIn) {
 		double d0 = playerIn.getX();
 		double d1 = playerIn.getY() + (double) playerIn.getEyeHeight();
 		double d2 = playerIn.getZ();
@@ -50,7 +51,7 @@ public class RaycastHelper {
 		return vec3d;
 	}
 
-	private static PredicateTraceResult rayTraceUntil(Vec3d start, Vec3d end, Predicate<BlockPos> predicate) {
+	public static PredicateTraceResult rayTraceUntil(Vec3d start, Vec3d end, Predicate<BlockPos> predicate) {
 		if (Double.isNaN(start.x) || Double.isNaN(start.y) || Double.isNaN(start.z))
 			return null;
 		if (Double.isNaN(end.x) || Double.isNaN(end.y) || Double.isNaN(end.z))
@@ -174,7 +175,7 @@ public class RaycastHelper {
 			this.pos = pos;
 			this.facing = facing;
 		}
-		
+
 		public PredicateTraceResult() {
 			// missed, no result
 		}
@@ -186,7 +187,7 @@ public class RaycastHelper {
 		public BlockPos getPos() {
 			return pos;
 		}
-		
+
 		public boolean missed() {
 			return this.pos == null;
 		}

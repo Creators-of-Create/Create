@@ -14,6 +14,7 @@ import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.CasingBlock;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
+import com.simibubi.create.modules.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.modules.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.ClockworkBearingBlock;
@@ -86,9 +87,6 @@ import com.simibubi.create.modules.palettes.HorizontalCTGlassBlock;
 import com.simibubi.create.modules.palettes.LayeredCTBlock;
 import com.simibubi.create.modules.palettes.ScoriaBlock;
 import com.simibubi.create.modules.palettes.VerticalCTGlassBlock;
-import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
-import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
-import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.ProviderType;
@@ -172,9 +170,10 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	ROTATION_CHASSIS(RadialChassisBlock::new),
 	DRILL(DrillBlock::new),
 	SAW(SawBlock::new),
-	HARVESTER(HarvesterBlock::new),
 	DEPLOYER(DeployerBlock::new),
 	PORTABLE_STORAGE_INTERFACE(PortableStorageInterfaceBlock::new),
+	HARVESTER(HarvesterBlock::new),
+	PLOUGH(PloughBlock::new),
 	ANALOG_LEVER(AnalogLeverBlock::new),
 
 	ANDESITE_CASING(() -> new CasingBlock("andesite_casing")),

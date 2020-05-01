@@ -12,6 +12,8 @@ public class CClient extends ConfigBase {
 	public ConfigFloat fanParticleDensity = f(.5f, 0, 1, "fanParticleDensity");
 	public ConfigBool rainbowDebug =
 		b(true, "enableRainbowDebug", "Show colourful debug information while the F3-Menu is open.");
+	public ConfigBool showHiddenSuperGlue =
+		b(false, "showHiddenSuperGlue", "Show indications for hidden glue between blocks while holding the item.");
 
 	@Override
 	public String getName() {

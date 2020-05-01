@@ -24,7 +24,15 @@ import com.simibubi.create.modules.contraptions.components.actors.BlockBreakingK
 import com.simibubi.create.modules.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 
+import net.minecraft.block.BambooBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CactusBlock;
+import net.minecraft.block.ChorusPlantBlock;
+import net.minecraft.block.KelpBlock;
+import net.minecraft.block.KelpTopBlock;
+import net.minecraft.block.StemGrownBlock;
+import net.minecraft.block.SugarCaneBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -379,7 +387,29 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	public boolean canBreak(BlockState stateToBreak, float blockHardness) {
-		return super.canBreak(stateToBreak, blockHardness) && stateToBreak.isIn(BlockTags.LOGS);
+		boolean sawable = isSawable(stateToBreak);
+		return super.canBreak(stateToBreak, blockHardness) && sawable;
+	}
+
+	public static boolean isSawable(BlockState stateToBreak) {
+		if (stateToBreak.isIn(BlockTags.LOGS) || stateToBreak.isIn(BlockTags.LEAVES))
+			return true;
+		Block block = stateToBreak.getBlock();
+		if (block instanceof BambooBlock)
+			return true;
+		if (block instanceof StemGrownBlock)
+			return true;
+		if (block instanceof CactusBlock)
+			return true;
+		if (block instanceof SugarCaneBlock)
+			return true;
+		if (block instanceof KelpBlock)
+			return true;
+		if (block instanceof KelpTopBlock)
+			return true;
+		if (block instanceof ChorusPlantBlock)
+			return true;
+		return false;
 	}
 
 }

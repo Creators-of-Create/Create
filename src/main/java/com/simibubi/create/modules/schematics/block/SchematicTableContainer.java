@@ -44,7 +44,8 @@ public class SchematicTableContainer extends Container {
 		inputSlot = new SlotItemHandler(te.inventory, 0, -9, 40) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				return AllItems.EMPTY_BLUEPRINT.typeOf(stack) || AllItems.BLUEPRINT_AND_QUILL.typeOf(stack);
+				return AllItems.EMPTY_BLUEPRINT.typeOf(stack) || AllItems.BLUEPRINT_AND_QUILL.typeOf(stack)
+						|| AllItems.BLUEPRINT.typeOf(stack);
 			}
 		};
 

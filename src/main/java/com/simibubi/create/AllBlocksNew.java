@@ -5,8 +5,6 @@ import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
 import com.tterrag.registrate.util.RegistryEntry;
 
-import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile;
-
 public class AllBlocksNew {
 	
 	private static final CreateRegistrate REGISTRATE = Create.registrate();

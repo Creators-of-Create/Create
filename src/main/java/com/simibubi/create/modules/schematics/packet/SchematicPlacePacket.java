@@ -31,7 +31,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayerEntity player = context.get().getSender();
-			Template t = SchematicItem.getSchematic(stack);
+			Template t = SchematicItem.loadSchematic(stack);
 			t.addBlocksToWorld(player.getServerWorld(), NBTUtil.readBlockPos(stack.getTag().getCompound("Anchor")),
 					SchematicItem.getSettings(stack));
 		});

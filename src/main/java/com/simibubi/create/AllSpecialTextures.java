@@ -8,6 +8,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(value = Dist.CLIENT)
 public enum AllSpecialTextures {
 
+	BLANK("blank.png"),
+	CHECKERED("checkerboard.png"),
+	HIGHLIGHT_CHECKERED("highlighted_checkerboard.png"),
 	SELECTION("selection.png"),
 	
 	;

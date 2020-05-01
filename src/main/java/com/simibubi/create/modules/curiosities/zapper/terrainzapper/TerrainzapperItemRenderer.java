@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.curiosities.zapper.terrainzapper;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.modules.curiosities.zapper.ZapperItemRenderer;
 import com.simibubi.create.modules.curiosities.zapper.ZapperRenderHandler;

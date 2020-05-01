@@ -37,6 +37,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	protected void assemble() {
+		if (!(world.getBlockState(pos).getBlock() instanceof PulleyBlock))
+			return;
 		if (speed == 0)
 			return;
 		if (offset >= getExtensionRange() && getSpeed() > 0)
@@ -81,7 +83,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	public void disassemble() {
-		if (!running)
+		if (!running && movedContraption == null)
 			return;
 		offset = getGridOffset(offset);
 		if (movedContraption != null)
@@ -136,6 +138,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 		BlockPos posBelow = pos.down((int) (offset + getMovementSpeed()) + 1);
 		if (!BlockMovementTraits.movementNecessary(world, posBelow))
+			return;
+		if (BlockMovementTraits.isBrittle(world.getBlockState(posBelow)))
 			return;
 
 		disassemble();

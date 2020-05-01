@@ -16,6 +16,7 @@ import com.simibubi.create.modules.contraptions.components.contraptions.bearing.
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.ClockworkBearingTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyRenderer;
@@ -148,6 +149,7 @@ public enum AllTileEntities {
 	SPEED_GAUGE(SpeedGaugeTileEntity::new, AllBlocks.SPEED_GAUGE),
 	STRESS_GAUGE(StressGaugeTileEntity::new, AllBlocks.STRESS_GAUGE),
 	ANALOG_LEVER(AnalogLeverTileEntity::new, AllBlocks.ANALOG_LEVER),
+	CART_ASSEMBLER(CartAssemblerTileEntity::new, AllBlocks.CART_ASSEMBLER),
 
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneLinkTileEntity::new, AllBlocks.REDSTONE_BRIDGE),

@@ -12,7 +12,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.TickPriority;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 public class PulseRepeaterBlock extends RedstoneDiodeBlock {

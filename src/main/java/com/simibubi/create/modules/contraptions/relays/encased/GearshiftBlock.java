@@ -1,7 +1,10 @@
 package com.simibubi.create.modules.contraptions.relays.encased;
 
+import java.util.Random;
+
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.modules.contraptions.RotationPropagator;
+import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearshiftTileEntity;
 
 import net.minecraft.block.Block;
@@ -15,7 +18,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTileEntity> {
 
@@ -51,7 +56,7 @@ public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTi
 
 		boolean previouslyPowered = state.get(POWERED);
 		if (previouslyPowered != worldIn.isBlockPowered(pos)) {
-			withTileEntityDo(worldIn, pos, te -> RotationPropagator.handleRemoved(worldIn, pos, te));
+			detachKinetics(worldIn, pos, true);
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
 		}
 	}
@@ -63,6 +68,26 @@ public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTi
 	@Override
 	public Class<GearshiftTileEntity> getTileEntityClass() {
 		return GearshiftTileEntity.class;
+	}
+
+	public void detachKinetics(World worldIn, BlockPos pos, boolean reAttachNextTick) {
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te == null || !(te instanceof KineticTileEntity))
+			return;
+		RotationPropagator.handleRemoved(worldIn, pos, (KineticTileEntity) te);
+
+		// Re-attach next tick
+		if (reAttachNextTick)
+			worldIn.getPendingBlockTicks().scheduleTick(pos, this, 0, TickPriority.EXTREMELY_HIGH);
+	}
+
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te == null || !(te instanceof KineticTileEntity))
+			return;
+		KineticTileEntity kte = (KineticTileEntity) te;
+		RotationPropagator.handleAdded(worldIn, pos, kte);
 	}
 
 }
