@@ -42,7 +42,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(HORIZONTAL_FACING).getDirectionVec()).scale(.5);
+		return new Vec3d(context.state.get(HORIZONTAL_FACING).getDirectionVec()).scale(.45);
 	}
 
 	@Override

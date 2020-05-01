@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,6 +12,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.tags.NetworkTagManager;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -35,6 +37,26 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
+	public BlockState getBlockState(BlockPos pos) {
+		return world.getBlockState(pos);
+	}
+
+	@Override
+	public boolean hasBlockState(BlockPos p_217375_1_, Predicate<BlockState> p_217375_2_) {
+		return world.hasBlockState(p_217375_1_, p_217375_2_);
+	}
+
+	@Override
+	public TileEntity getTileEntity(BlockPos pos) {
+		return world.getTileEntity(pos);
+	}
+
+	@Override
+	public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
+		return world.setBlockState(pos, newState, flags);
+	}
+
+	@Override
 	public int getLight(BlockPos pos) {
 		return 15;
 	}
@@ -55,8 +77,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public void playEvent(PlayerEntity player, int type, BlockPos pos, int data) {
-	}
+	public void playEvent(PlayerEntity player, int type, BlockPos pos, int data) {}
 
 	@Override
 	public List<? extends PlayerEntity> getPlayers() {
@@ -65,13 +86,11 @@ public class WrappedWorld extends World {
 
 	@Override
 	public void playSound(PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category,
-			float volume, float pitch) {
-	}
+			float volume, float pitch) {}
 
 	@Override
 	public void playMovingSound(PlayerEntity p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
-			SoundCategory p_217384_4_, float p_217384_5_, float p_217384_6_) {
-	}
+			SoundCategory p_217384_4_, float p_217384_5_, float p_217384_6_) {}
 
 	@Override
 	public Entity getEntityByID(int id) {
@@ -90,8 +109,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public void registerMapData(MapData mapDataIn) {
-	}
+	public void registerMapData(MapData mapDataIn) {}
 
 	@Override
 	public int getNextMapId() {
@@ -99,8 +117,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {
-	}
+	public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {}
 
 	@Override
 	public Scoreboard getScoreboard() {

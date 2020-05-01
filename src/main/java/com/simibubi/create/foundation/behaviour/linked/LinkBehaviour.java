@@ -34,6 +34,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	ValueBoxTransform secondSlot;
 	Vec3d textShift;
 
+	public boolean newPosition;
 	private Mode mode;
 	private Supplier<Boolean> transmission;
 	private Consumer<Boolean> signalCallback;
@@ -45,6 +46,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		firstSlot = slots.getLeft();
 		secondSlot = slots.getRight();
 		textShift = Vec3d.ZERO;
+		newPosition = true;
 	}
 
 	public static LinkBehaviour receiver(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots,
@@ -84,6 +86,8 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	public void updateReceiver(boolean networkPowered) {
+		if (!newPosition)
+			return;
 		signalCallback.accept(networkPowered);
 	}
 
@@ -97,6 +101,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		if (tileEntity.getWorld().isRemote)
 			return;
 		getHandler().addToNetwork(this);
+		newPosition = true;
 	}
 
 	public Pair<Frequency, Frequency> getNetworkKey() {
@@ -116,10 +121,15 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		super.writeNBT(compound);
 		compound.put("FrequencyFirst", frequencyFirst.getStack().write(new CompoundNBT()));
 		compound.put("FrequencyLast", frequencyLast.getStack().write(new CompoundNBT()));
+		compound.putLong("LastKnownPosition", tileEntity.getPos().toLong());
 	}
 
 	@Override
 	public void readNBT(CompoundNBT compound) {
+		long positionInTag = tileEntity.getPos().toLong();
+		long positionKey = compound.getLong("LastKnownPosition");
+		newPosition = positionInTag != positionKey;
+
 		super.readNBT(compound);
 		frequencyFirst = new Frequency(ItemStack.read(compound.getCompound("FrequencyFirst")));
 		frequencyLast = new Frequency(ItemStack.read(compound.getCompound("FrequencyLast")));

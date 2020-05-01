@@ -148,6 +148,9 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	}
 
 	public void assemble() {
+		if (!(world.getBlockState(pos).getBlock() instanceof ClockworkBearingBlock))
+			return;
+
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		// Collect Construct
@@ -182,7 +185,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	}
 
 	public void disassemble() {
-		if (!running)
+		if (!running && hourHand == null && minuteHand == null)
 			return;
 
 		hourAngle = 0;
@@ -205,7 +208,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	public void attach(ContraptionEntity contraption) {
 		if (!(contraption.getContraption() instanceof ClockworkContraption))
 			return;
-		
+
 		ClockworkContraption cc = (ClockworkContraption) contraption.getContraption();
 		markDirty();
 		Direction facing = getBlockState().get(BlockStateProperties.FACING);
@@ -217,8 +220,10 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 			this.minuteHand = contraption;
 			minuteHand.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		}
-		if (!world.isRemote)
+		if (!world.isRemote) {
+			this.running = true;
 			sendData();
+		}
 	}
 
 	@Override
@@ -302,5 +307,5 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	public boolean isRunning() {
 		return running;
 	}
-	
+
 }

@@ -6,7 +6,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.ScreenResources;
-import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 
@@ -15,22 +14,18 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 
-public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> implements IRecipeCategory<T> {
+public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends CreateRecipeCategory<T> {
 
-	private IDrawable background = new EmptyBackground(177, 70);
-
-	@Override
-	public IDrawable getBackground() {
-		return background;
+	public ProcessingViaFanCategory(String name, IDrawable icon) {
+		super(name, icon, emptyBackground(177, 70));
 	}
-
+	
 	@Override
 	public void setIngredients(T recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());

@@ -16,7 +16,6 @@ import com.simibubi.create.modules.contraptions.components.contraptions.Contrapt
 import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 import com.simibubi.create.modules.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHandler;
-import com.simibubi.create.modules.schematics.client.SchematicHologram;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -41,10 +40,8 @@ public class CreateClient {
 
 	public static ClientSchematicLoader schematicSender;
 	public static SchematicHandler schematicHandler;
-	public static SchematicHologram schematicHologram;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
-	public static int renderTicks;
 
 	public static void addListeners(IEventBus modEventBus) {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
@@ -59,7 +56,6 @@ public class CreateClient {
 	public static void clientInit(FMLClientSetupEvent event) {
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
-		schematicHologram = new SchematicHologram();
 		schematicAndQuillHandler = new SchematicAndQuillHandler();
 
 		bufferCache = new SuperByteBufferCache();
@@ -82,7 +78,6 @@ public class CreateClient {
 		schematicSender.tick();
 		schematicAndQuillHandler.tick();
 		schematicHandler.tick();
-		schematicHologram.tick();
 		ChassisRangeDisplay.clientTick();
 	}
 

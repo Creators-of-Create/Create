@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.schematics.block;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CSchematics;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
-import com.simibubi.create.foundation.type.Cuboid;
 import com.simibubi.create.modules.schematics.MaterialChecklist;
 import com.simibubi.create.modules.schematics.SchematicWorld;
 import com.simibubi.create.modules.schematics.item.SchematicItem;
@@ -466,7 +464,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		}
 
 		// Load blocks into reader
-		Template activeTemplate = SchematicItem.getSchematic(blueprint);
+		Template activeTemplate = SchematicItem.loadSchematic(blueprint);
 		BlockPos anchor = NBTUtil.readBlockPos(blueprint.getTag().getCompound("Anchor"));
 
 		if (activeTemplate.getSize().equals(BlockPos.ZERO)) {
@@ -484,7 +482,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		}
 
 		schematicAnchor = anchor;
-		blockReader = new SchematicWorld(new HashMap<>(), new Cuboid(), schematicAnchor, world);
+		blockReader = new SchematicWorld(schematicAnchor, world);
 		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, SchematicItem.getSettings(blueprint));
 		schematicLoaded = true;
 		state = State.PAUSED;

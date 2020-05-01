@@ -417,9 +417,9 @@ public class BeltBlock extends HorizontalKineticBlock
 
 		// Init belts
 		int index = 0;
-		List<BlockPos> beltChain = getBeltChain(world, pos);
+		List<BlockPos> beltChain = getBeltChain(world, currentPos);
 		if (beltChain.size() < 2) {
-			world.destroyBlock(pos, true);
+			world.destroyBlock(currentPos, true);
 			return;
 		}
 
@@ -427,7 +427,7 @@ public class BeltBlock extends HorizontalKineticBlock
 			TileEntity tileEntity = world.getTileEntity(beltPos);
 			if (tileEntity instanceof BeltTileEntity) {
 				BeltTileEntity te = (BeltTileEntity) tileEntity;
-				te.setController(pos);
+				te.setController(currentPos);
 				te.beltLength = beltChain.size();
 				te.index = index;
 				te.attachKinetics();
@@ -445,7 +445,7 @@ public class BeltBlock extends HorizontalKineticBlock
 				if (te.isController() && isVertical)
 					te.getInventory().ejectAll();
 			} else {
-				world.destroyBlock(pos, true);
+				world.destroyBlock(currentPos, true);
 				return;
 			}
 			index++;

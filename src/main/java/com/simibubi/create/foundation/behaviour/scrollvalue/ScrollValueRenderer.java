@@ -60,7 +60,10 @@ public class ScrollValueRenderer {
 			}
 		} else
 			render(world, pos, face, behaviour, highlight);
+		
 		TessellatorHelper.cleanUpAfterDrawing();
+		GlStateManager.enableAlphaTest();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 	}
 
 	protected static void render(ClientWorld world, BlockPos pos, Direction face, ScrollValueBehaviour behaviour,

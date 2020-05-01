@@ -6,6 +6,7 @@ import static com.simibubi.create.modules.contraptions.base.HorizontalKineticBlo
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -137,8 +138,8 @@ public class ConnectedInputHandler {
 		if (controllerPos1.equals(controllerPos2)) {
 			MechanicalCrafterTileEntity controller = CrafterHelper.getCrafter(world, controllerPos1);
 
-			Set<BlockPos> positions = controller.input.data.stream().map(l -> controllerPos1.add(l))
-					.collect(Collectors.toSet());
+			Set<BlockPos> positions =
+				controller.input.data.stream().map(l -> controllerPos1.add(l)).collect(Collectors.toSet());
 			List<BlockPos> frontier = new LinkedList<>();
 			List<BlockPos> splitGroup = new ArrayList<>();
 
@@ -198,8 +199,7 @@ public class ConnectedInputHandler {
 
 		crafter1.input.data.forEach(offset -> {
 			BlockPos connectedPos = crafter1.getPos().add(offset);
-			modifyAndUpdate(world, connectedPos, input -> {
-			});
+			modifyAndUpdate(world, connectedPos, input -> {});
 		});
 
 		crafter2.input.data.forEach(offset -> {
@@ -229,7 +229,7 @@ public class ConnectedInputHandler {
 
 	public static class ConnectedInput {
 		boolean isController;
-		List<BlockPos> data = new ArrayList<>();
+		List<BlockPos> data = Collections.synchronizedList(new ArrayList<>());
 
 		public ConnectedInput() {
 			isController = true;

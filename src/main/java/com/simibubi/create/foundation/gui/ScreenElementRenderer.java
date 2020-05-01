@@ -2,8 +2,6 @@ package com.simibubi.create.foundation.gui;
 
 import java.util.function.Supplier;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
@@ -16,15 +14,13 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.FireBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -79,7 +75,7 @@ public class ScreenElementRenderer {
 		boolean stateMode = transformsAndModel == null;
 		boolean fire = false;
 
-		if (stateMode) {
+		if (transformsAndModel == null) {
 			blockToRender = transformsAndState.get();
 			fire = (blockToRender.getBlock() instanceof FireBlock);
 			modelToRender = blockRenderer.getModelForState(blockToRender);
@@ -92,7 +88,8 @@ public class ScreenElementRenderer {
 		RenderType renderType = RenderTypeLookup.getEntityBlockLayer(blockToRender);
 		IVertexBuilder vb = buffer.getBuffer(renderType);
 		MatrixStack ms = new MatrixStack();
-		
+		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+
 		RenderSystem.pushMatrix();
 		if (fire) {
 			blockRenderer.renderBlock(blockToRender, ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV,
@@ -111,7 +108,7 @@ public class ScreenElementRenderer {
 		}
 		RenderSystem.popMatrix();
 
-		if (stateMode && !blockToRender.getFluidState().isEmpty()) {
+		if (blockToRender != null && !blockToRender.getFluidState().isEmpty()) {
 			RenderHelper.disableStandardItemLighting();
 			RenderSystem.translatef(0, -300, 0);
 			blockRenderer.renderFluid(new BlockPos(0, 300, 0), mc.world, vb, blockToRender.getFluidState());

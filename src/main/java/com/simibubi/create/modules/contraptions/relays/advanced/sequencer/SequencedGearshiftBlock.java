@@ -87,14 +87,15 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 				return ActionResultType.PASS;
 		}
 
-		if (player instanceof ClientPlayerEntity)
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> withTileEntityDo(worldIn, pos, this::displayScreen));
+		DistExecutor.runWhenOn(Dist.CLIENT,
+				() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
 		return ActionResultType.SUCCESS;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	protected void displayScreen(SequencedGearshiftTileEntity te) {
-		ScreenOpener.open(new SequencedGearshiftScreen(te));
+	protected void displayScreen(SequencedGearshiftTileEntity te, PlayerEntity player) {
+		if (player instanceof ClientPlayerEntity)
+			ScreenOpener.open(new SequencedGearshiftScreen(te));
 	}
 
 	@Override

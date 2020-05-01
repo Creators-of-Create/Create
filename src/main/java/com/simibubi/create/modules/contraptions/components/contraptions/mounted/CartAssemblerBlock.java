@@ -1,10 +1,11 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.mounted;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
-import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerTileEntity.CartMovementMode;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
@@ -12,13 +13,16 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +32,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class CartAssemblerBlock extends AbstractRailBlock {
+public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAssemblerTileEntity> {
 
 	public static IProperty<RailShape> RAIL_SHAPE =
 		EnumProperty.create("shape", RailShape.class, RailShape.EAST_WEST, RailShape.NORTH_SOUTH);
@@ -46,6 +50,16 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 	}
 
 	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return new CartAssemblerTileEntity();
+	}
+
+	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		boolean alongX = context.getPlacementHorizontalFacing().getAxis() == Axis.X;
 		boolean powered = context.getWorld().isBlockPowered(context.getPos());
@@ -60,7 +74,7 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 
 	@Override
 	public void onMinecartPass(BlockState state, World world, BlockPos pos, AbstractMinecartEntity cart) {
-		if (!cart.canBeRidden())
+		if (!cart.canBeRidden() && !(cart instanceof FurnaceMinecartEntity))
 			return;
 		if (state.get(POWERED))
 			disassemble(world, pos, cart);
@@ -72,16 +86,28 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 		if (!cart.getPassengers().isEmpty())
 			return;
 
-		Contraption contraption = MountedContraption.assembleMinecart(world, pos);
+		MountedContraption contraption = MountedContraption.assembleMinecart(world, pos);
 		if (contraption == null)
 			return;
 		if (contraption.blocks.size() == 1)
 			return;
-		float initialAngle = ContraptionEntity.yawFromVector(cart.getMotion());
+
+		int yawFromVector = (int) (ContraptionEntity.yawFromVector(cart.getMotion()) + .5d);
+		yawFromVector = ((yawFromVector + 45) / 90) * 90;
+		float initialAngle = yawFromVector;
+
+		withTileEntityDo(world, pos, te -> contraption.rotationMode = CartMovementMode.values()[te.movementMode.value]);
 		ContraptionEntity entity = ContraptionEntity.createMounted(world, contraption, initialAngle);
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		world.addEntity(entity);
 		entity.startRiding(cart);
+		
+		if (cart instanceof FurnaceMinecartEntity) {
+			CompoundNBT nbt = cart.serializeNBT();
+			nbt.putDouble("PushZ", 0);
+			nbt.putDouble("PushX", 0);
+			cart.deserializeNBT(nbt);
+		}
 	}
 
 	protected void disassemble(World world, BlockPos pos, AbstractMinecartEntity cart) {
@@ -90,6 +116,13 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 		if (!(cart.getPassengers().get(0) instanceof ContraptionEntity))
 			return;
 		cart.removePassengers();
+		
+		if (cart instanceof FurnaceMinecartEntity) {
+			CompoundNBT nbt = cart.serializeNBT();
+			nbt.putDouble("PushZ", cart.getMotion().x);
+			nbt.putDouble("PushX", cart.getMotion().z);
+			cart.deserializeNBT(nbt);
+		}
 	}
 
 	@Override
@@ -129,7 +162,7 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
 	}
-	
+
 	@Override
 	public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return false;
@@ -142,11 +175,23 @@ public class CartAssemblerBlock extends AbstractRailBlock {
 			builder.add(BlockStateProperties.HORIZONTAL_AXIS);
 			super.fillStateContainer(builder);
 		}
+		
+		@Override
+		public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
+				ISelectionContext p_220053_4_) {
+			return VoxelShapes.empty();
+		}
+
 	}
 
 	public static BlockState createAnchor(BlockState state) {
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Axis.Z : Axis.X;
 		return AllBlocks.MINECART_ANCHOR.get().getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis);
+	}
+
+	@Override
+	public Class<CartAssemblerTileEntity> getTileEntityClass() {
+		return CartAssemblerTileEntity.class;
 	}
 
 }

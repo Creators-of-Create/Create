@@ -28,6 +28,16 @@ public class PulleyContraption extends Contraption {
 	}
 
 	@Override
+	protected boolean isAnchoringBlockAt(BlockPos pos) {
+		if (pos.getX() != anchor.getX() || pos.getZ() != anchor.getZ())
+			return false;
+		int y = pos.getY();
+		if (y <= anchor.getY() || y > anchor.getY() + initialOffset + 1)
+			return false;
+		return true;
+	}
+
+	@Override
 	public CompoundNBT writeNBT() {
 		CompoundNBT writeNBT = super.writeNBT();
 		writeNBT.putInt("InitialOffset", initialOffset);

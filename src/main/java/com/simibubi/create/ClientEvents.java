@@ -80,8 +80,6 @@ public class ClientEvents {
 
 		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
 		CreateClient.schematicHandler.render(ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV);
-		CreateClient.schematicAndQuillHandler.render(ms, buffer);
-		CreateClient.schematicHologram.render(ms, buffer);
 		KineticDebugger.renderSourceOutline(ms, buffer);
 		ChassisRangeDisplay.renderOutlines(event.getPartialTicks(), ms, buffer);
 		TerrainZapperRenderHandler.render(ms, buffer);

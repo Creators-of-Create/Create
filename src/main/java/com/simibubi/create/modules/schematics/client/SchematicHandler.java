@@ -1,20 +1,17 @@
 package com.simibubi.create.modules.schematics.client;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllPackets;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.ToolSelectionScreen;
 import com.simibubi.create.foundation.packet.NbtPacket;
-import com.simibubi.create.foundation.type.Cuboid;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
+import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 import com.simibubi.create.modules.schematics.SchematicWorld;
 import com.simibubi.create.modules.schematics.client.tools.Tools;
 import com.simibubi.create.modules.schematics.item.SchematicItem;
@@ -28,79 +25,62 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 
 public class SchematicHandler {
 
-	public Template cachedSchematic;
-	public String cachedSchematicName;
-	public PlacementSettings cachedSettings;
+	private String displayedSchematic;
+	private SchematicTransformation transformation;
+	private AxisAlignedBB bounds; // local space
+	private AABBOutline outline;
+	private boolean deployed;
+	private boolean active;
+	private Tools currentTool;
 
-	public BlockPos anchor;
-	public BlockPos size;
-	public boolean active;
-	public boolean deployed;
-	public int slot;
-	public ItemStack item;
+	private static final int SYNC_DELAY = 10;
+	private int syncCooldown;
+	private int activeHotbarSlot;
+	private ItemStack activeSchematicItem;
 
-	private final List<String> mirrors = Arrays.asList("none", "leftRight", "frontBack");
-	private final List<String> rotations = Arrays.asList("none", "cw90", "cw180", "cw270");
-
-	public Tools currentTool;
-	public ToolSelectionScreen selectionScreen;
-
-	public static final int SYNC_DELAY = 20;
-	public int syncCooldown;
-
-	private BlueprintHotbarOverlay overlay;
+	private SchematicRenderer renderer;
+	private SchematicHotbarSlotOverlay overlay;
+	private ToolSelectionScreen selectionScreen;
 
 	public SchematicHandler() {
+		overlay = new SchematicHotbarSlotOverlay();
+		renderer = new SchematicRenderer();
 		currentTool = Tools.Deploy;
-		overlay = new BlueprintHotbarOverlay();
 		selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
+		transformation = new SchematicTransformation();
 	}
 
 	public void tick() {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
+		if (activeSchematicItem != null && transformation != null)
+			transformation.tick();
+
 		ItemStack stack = findBlueprintInHand(player);
 		if (stack == null) {
 			active = false;
 			syncCooldown = 0;
-			if (item != null && itemLost(player)) {
-				slot = 0;
-				item = null;
-				CreateClient.schematicHologram.setActive(false);
+			if (activeSchematicItem != null && itemLost(player)) {
+				activeHotbarSlot = 0;
+				activeSchematicItem = null;
+				renderer.setActive(false);
 			}
 			return;
 		}
 
-		// Newly equipped
-		if (!active || !stack.getTag().getString("File").equals(cachedSchematicName)) {
-			loadSettings(stack);
-			cachedSchematicName = stack.getTag().getString("File");
-			active = true;
-			if (deployed) {
-				Tools toolBefore = currentTool;
-				selectionScreen = new ToolSelectionScreen(Tools.getTools(player.isCreative()), this::equip);
-				if (toolBefore != null) {
-					selectionScreen.setSelectedElement(toolBefore);
-					equip(toolBefore);
-				}
-			} else
-				selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
-			sync();
-		}
-
+		if (!active || !stack.getTag().getString("File").equals(displayedSchematic))
+			init(player, stack);
 		if (!active)
 			return;
 
+		renderer.tick();
 		if (syncCooldown > 0)
 			syncCooldown--;
 		if (syncCooldown == 1)
@@ -110,20 +90,62 @@ public class SchematicHandler {
 		currentTool.getTool().updateSelection();
 	}
 
-	public void render(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		if (!active)
-			return;
-		if (Minecraft.getInstance().player.isSneaking())
+	private void init(ClientPlayerEntity player, ItemStack stack) {
+		loadSettings(stack);
+		displayedSchematic = stack.getTag().getString("File");
+		active = true;
+		if (deployed) {
+			setupRenderer();
+			Tools toolBefore = currentTool;
+			selectionScreen = new ToolSelectionScreen(Tools.getTools(player.isCreative()), this::equip);
+			if (toolBefore != null) {
+				selectionScreen.setSelectedElement(toolBefore);
+				equip(toolBefore);
+			}
+		} else
+			selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
+	}
+
+	private void setupRenderer() {
+		Template schematic = SchematicItem.loadSchematic(activeSchematicItem);
+		if (schematic.getSize().equals(BlockPos.ZERO))
 			return;
 
-		currentTool.getTool().renderTool(ms, buffer, light, overlay);
+		SchematicWorld w = new SchematicWorld(BlockPos.ZERO, Minecraft.getInstance().world);
+		schematic.addBlocksToWorld(w, BlockPos.ZERO, new PlacementSettings());
+		renderer.startHologram(w);
+	}
+
+	public void render(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		boolean present = activeSchematicItem != null;
+		if (!active && !present)
+			return;
+		if (active) {
+			TessellatorHelper.prepareForDrawing();
+			currentTool.getTool().renderTool(ms, buffer, light, overlay);
+			TessellatorHelper.cleanUpAfterDrawing();
+		}
+
+		GlStateManager.pushMatrix();
+		TessellatorHelper.prepareForDrawing();
+		transformation.applyGLTransformations();
+		renderer.render(ms, buffer);
+		GlStateManager.disableCull();
+
+		if (active)
+			currentTool.getTool().renderToolLocal(ms, buffer, light, overlay);
+
+		GlStateManager.enableCull();
+		GlStateManager.depthMask(true);
+		TessellatorHelper.cleanUpAfterDrawing();
+		GlStateManager.popMatrix();
 	}
 
 	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		if (!active)
 			return;
-		if (item != null)
-			this.overlay.renderOn(slot);
+		if (activeSchematicItem != null)
+			this.overlay.renderOn(activeHotbarSlot);
 
 		currentTool.getTool().renderOverlay(ms, buffer, light, overlay);
 		selectionScreen.renderPassive(Minecraft.getInstance().getRenderPartialTicks());
@@ -148,7 +170,6 @@ public class SchematicHandler {
 
 		if (pressed && !selectionScreen.focused)
 			selectionScreen.focused = true;
-
 		if (!pressed && selectionScreen.focused) {
 			selectionScreen.focused = false;
 			selectionScreen.onClose();
@@ -156,18 +177,15 @@ public class SchematicHandler {
 	}
 
 	public boolean mouseScrolled(double delta) {
-		if (!active)
+		if (!active || Minecraft.getInstance().player.isSneaking())
 			return false;
-		if (Minecraft.getInstance().player.isSneaking())
-			return false;
+
 		if (selectionScreen.focused) {
 			selectionScreen.cycle((int) delta);
 			return true;
 		}
-		if (AllKeys.ACTIVATE_TOOL.isPressed()) {
+		if (AllKeys.ACTIVATE_TOOL.isPressed())
 			return currentTool.getTool().handleMouseWheel(delta);
-		}
-
 		return false;
 	}
 
@@ -178,16 +196,16 @@ public class SchematicHandler {
 		if (!stack.hasTag())
 			return null;
 
-		item = stack;
-		slot = player.inventory.currentItem;
+		activeSchematicItem = stack;
+		activeHotbarSlot = player.inventory.currentItem;
 		return stack;
 	}
 
 	private boolean itemLost(PlayerEntity player) {
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
-			if (!player.inventory.getStackInSlot(i).isItemEqual(item))
+			if (!player.inventory.getStackInSlot(i).isItemEqual(activeSchematicItem))
 				continue;
-			if (!ItemStack.areItemStackTagsEqual(player.inventory.getStackInSlot(i), item))
+			if (!ItemStack.areItemStackTagsEqual(player.inventory.getStackInSlot(i), activeSchematicItem))
 				continue;
 			return false;
 		}
@@ -196,25 +214,20 @@ public class SchematicHandler {
 
 	public void markDirty() {
 		syncCooldown = SYNC_DELAY;
-		CreateClient.schematicHologram.setActive(false);
 	}
 
 	public void sync() {
-		message(Lang.translate("schematics.synchronizing"));
-		AllPackets.channel.sendToServer(new NbtPacket(item, slot));
+		if (activeSchematicItem == null)
+			return;
 
-		if (deployed) {
-			Template schematic = SchematicItem.getSchematic(item);
+		PlacementSettings settings = transformation.toSettings();
+		CompoundNBT tag = activeSchematicItem.getTag();
+		tag.putBoolean("Deployed", deployed);
+		tag.put("Anchor", NBTUtil.writeBlockPos(transformation.getAnchor()));
+		tag.putString("Rotation", settings.getRotation().name());
+		tag.putString("Mirror", settings.getMirror().name());
 
-			if (schematic.getSize().equals(BlockPos.ZERO))
-				return;
-
-			SchematicWorld w = new SchematicWorld(new HashMap<>(), new Cuboid(), anchor, Minecraft.getInstance().world);
-			PlacementSettings settings = cachedSettings.copy();
-			settings.setBoundingBox(null);
-			schematic.addBlocksToWorld(w, anchor, settings);
-			CreateClient.schematicHologram.startHologram(w);
-		}
+		AllPackets.channel.sendToServer(new NbtPacket(activeSchematicItem, activeHotbarSlot));
 	}
 
 	public void equip(Tools tool) {
@@ -224,149 +237,66 @@ public class SchematicHandler {
 
 	public void loadSettings(ItemStack blueprint) {
 		CompoundNBT tag = blueprint.getTag();
-		cachedSettings = new PlacementSettings();
-		cachedSettings.setRotation(Rotation.valueOf(tag.getString("Rotation")));
-		cachedSettings.setMirror(Mirror.valueOf(tag.getString("Mirror")));
+		BlockPos anchor = BlockPos.ZERO;
+		PlacementSettings settings = SchematicItem.getSettings(blueprint);
+		transformation = new SchematicTransformation();
 
 		deployed = tag.getBoolean("Deployed");
 		if (deployed)
 			anchor = NBTUtil.readBlockPos(tag.getCompound("Anchor"));
+		BlockPos size = NBTUtil.readBlockPos(tag.getCompound("Bounds"));
 
-		size = NBTUtil.readBlockPos(tag.getCompound("Bounds"));
+		bounds = new AxisAlignedBB(BlockPos.ZERO, size);
+		outline = new AABBOutline(bounds);
+		outline.disableCull = true;
+		transformation.init(anchor, settings, bounds);
 	}
 
-	public void flip(Axis axis) {
-
-		Rotation r = cachedSettings.getRotation();
-		boolean rotationAt90s = r == Rotation.CLOCKWISE_90 || r == Rotation.COUNTERCLOCKWISE_90;
-		Mirror mirror = axis == Axis.Z ^ rotationAt90s ? Mirror.FRONT_BACK : Mirror.LEFT_RIGHT;
-
-		BlockPos coordModifier = new BlockPos((r == Rotation.NONE || r == Rotation.COUNTERCLOCKWISE_90) ? 1 : -1, 0,
-				(r == Rotation.NONE || r == Rotation.CLOCKWISE_90) ? 1 : -1);
-		BlockPos anchorOffset = axis == Axis.Z
-				? new BlockPos(((rotationAt90s ? size.getZ() : size.getX()) - 1) * coordModifier.getX(), 0, 0)
-				: new BlockPos(0, 0, ((!rotationAt90s ? size.getZ() : size.getX()) - 1) * coordModifier.getZ());
-
-		Mirror m = cachedSettings.getMirror();
-
-		if (m == Mirror.NONE) {
-			cachedSettings.setMirror(mirror);
-			anchor = anchor.add(anchorOffset);
-			message(Lang.translate("schematic.mirror") + ": "
-					+ Lang.translate("schematic.mirror." + mirrors.get(cachedSettings.getMirror().ordinal())));
-
-		} else if (m == mirror) {
-			cachedSettings.setMirror(Mirror.NONE);
-			anchor = anchor.subtract(anchorOffset);
-			message(Lang.translate("schematic.mirror") + ": "
-					+ Lang.translate("schematic.mirror." + mirrors.get(cachedSettings.getMirror().ordinal())));
-
-		} else if (m != mirror) {
-			cachedSettings.setMirror(Mirror.NONE);
-			anchor = anchor.add(anchorOffset);
-			cachedSettings.setRotation(r.add(Rotation.CLOCKWISE_180));
-			message(Lang.translate("schematic.mirror") + ": "
-					+ Lang.translate("schematic.mirror." + mirrors.get(cachedSettings.getMirror().ordinal())) + ", "
-					+ Lang.translate("schematic.rotation") + ": "
-					+ Lang.translate("schematic.rotation." + rotations.get(cachedSettings.getRotation().ordinal())));
+	public void deploy() {
+		if (!deployed) {
+			List<Tools> tools = Tools.getTools(Minecraft.getInstance().player.isCreative());
+			selectionScreen = new ToolSelectionScreen(tools, this::equip);
 		}
-
-		item.getTag().put("Anchor", NBTUtil.writeBlockPos(anchor));
-		item.getTag().putString("Mirror", cachedSettings.getMirror().name());
-		item.getTag().putString("Rotation", r.name());
-
-		markDirty();
-	}
-
-	public void message(String msg) {
-		Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent(msg), true);
-	}
-
-	public void rotate(Rotation rotation) {
-		Rotation r = cachedSettings.getRotation();
-		BlockPos center = centerOfSchematic();
-		cachedSettings.setRotation(r.add(rotation));
-		BlockPos diff = center.subtract(anchor);
-		BlockPos move = diff.subtract(diff.rotate(rotation));
-		anchor = anchor.add(move);
-
-		item.getTag().put("Anchor", NBTUtil.writeBlockPos(anchor));
-		item.getTag().putString("Rotation", cachedSettings.getRotation().name());
-
-		message(Lang.translate("schematic.rotation") + ": "
-				+ Lang.translate("schematic.rotation." + rotations.get(cachedSettings.getRotation().ordinal())));
-
-		markDirty();
-	}
-
-	public void setMirror(Mirror mirror) {
-		cachedSettings.setMirror(mirror);
-		item.getTag().putString("Mirror", cachedSettings.getMirror().name());
-		markDirty();
-	}
-
-	public void setRotation(Rotation rotation) {
-		cachedSettings.setRotation(rotation);
-		item.getTag().putString("Rotation", cachedSettings.getRotation().name());
-		markDirty();
-	}
-
-	public void moveTo(BlockPos anchor) {
-		if (!deployed)
-			selectionScreen = new ToolSelectionScreen(Tools.getTools(Minecraft.getInstance().player.isCreative()),
-					this::equip);
-
 		deployed = true;
-		this.anchor = anchor;
-		item.getTag().putBoolean("Deployed", true);
-		item.getTag().put("Anchor", NBTUtil.writeBlockPos(anchor));
-		markDirty();
+		setupRenderer();
+	}
+
+	public String getCurrentSchematicName() {
+		return displayedSchematic != null ? displayedSchematic : "-";
 	}
 
 	public void printInstantly() {
-		AllPackets.channel.sendToServer(new SchematicPlacePacket(item.copy()));
-		CompoundNBT nbt = item.getTag();
+		AllPackets.channel.sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
+		CompoundNBT nbt = activeSchematicItem.getTag();
 		nbt.putBoolean("Deployed", false);
-		item.setTag(nbt);
-		CreateClient.schematicHologram.setActive(false);
+		activeSchematicItem.setTag(nbt);
+		renderer.setActive(false);
 		active = false;
+		markDirty();
 	}
 
-	public BlockPos getTransformedSize() {
-		BlockPos flipped = size;
-		if (cachedSettings.getMirror() == Mirror.FRONT_BACK)
-			flipped = new BlockPos(-flipped.getX(), flipped.getY(), flipped.getZ());
-		if (cachedSettings.getMirror() == Mirror.LEFT_RIGHT)
-			flipped = new BlockPos(flipped.getX(), flipped.getY(), -flipped.getZ());
-
-		BlockPos rotate = flipped.rotate(cachedSettings.getRotation());
-		return rotate;
+	public AABBOutline getOutline() {
+		return outline;
 	}
 
-	public BlockPos getTransformedAnchor() {
-		BlockPos anchor = this.anchor;
-		Rotation r = cachedSettings.getRotation();
-
-		BlockPos flipOffset = BlockPos.ZERO;
-		if (cachedSettings.getMirror() == Mirror.FRONT_BACK)
-			flipOffset = new BlockPos(1, 0, 0);
-		if (cachedSettings.getMirror() == Mirror.LEFT_RIGHT)
-			flipOffset = new BlockPos(0, 0, 1);
-
-		flipOffset = flipOffset.rotate(r);
-		anchor = anchor.add(flipOffset);
-
-		if (r == Rotation.CLOCKWISE_90 || r == Rotation.CLOCKWISE_180)
-			anchor = anchor.add(1, 0, 0);
-		if (r == Rotation.COUNTERCLOCKWISE_90 || r == Rotation.CLOCKWISE_180)
-			anchor = anchor.add(0, 0, 1);
-		return anchor;
+	public boolean isActive() {
+		return active;
 	}
 
-	public BlockPos centerOfSchematic() {
-		BlockPos size = getTransformedSize();
-		BlockPos center = new BlockPos(size.getX() / 2, 0, size.getZ() / 2);
-		return anchor.add(center);
+	public AxisAlignedBB getBounds() {
+		return bounds;
+	}
+
+	public SchematicTransformation getTransformation() {
+		return transformation;
+	}
+
+	public boolean isDeployed() {
+		return deployed;
+	}
+
+	public ItemStack getActiveSchematicItem() {
+		return activeSchematicItem;
 	}
 
 }

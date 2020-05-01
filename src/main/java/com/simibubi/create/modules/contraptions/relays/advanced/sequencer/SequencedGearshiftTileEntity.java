@@ -50,6 +50,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		Instruction instruction = getInstruction(currentInstruction);
 		if (instruction == null)
 			return;
+		if (getSpeed() == 0)
+			run(-1);
 
 		// Update instruction time with regards to new speed
 		float initialProgress = timer / (float) currentInstructionDuration;
@@ -68,6 +70,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 			world.setBlockState(pos, getBlockState().with(SequencedGearshiftBlock.STATE, 0), 3);
 			return;
 		}
+		if (getSpeed() == 0)
+			return;
 		run(0);
 	}
 
@@ -122,6 +126,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	}
 
 	public int getModifier() {
+		if (currentInstruction >= instructions.size())
+			return 0;
 		return isIdle() ? 0 : instructions.get(currentInstruction).getSpeedModifier();
 	}
 

@@ -42,6 +42,9 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	public void assemble() {
+		if (!(world.getBlockState(pos).getBlock() instanceof MechanicalPistonBlock))
+			return;
+
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		// Collect Construct
@@ -83,10 +86,11 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	public void disassemble() {
-		if (!running)
+		if (!running && movedContraption == null)
 			return;
 		if (!removed)
-			getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.EXTENDED), 3);
+			getWorld().setBlockState(pos, getBlockState().with(MechanicalPistonBlock.STATE, PistonState.EXTENDED),
+					3 | 16);
 		if (movedContraption != null) {
 			applyContraptionPosition();
 			movedContraption.disassemble();

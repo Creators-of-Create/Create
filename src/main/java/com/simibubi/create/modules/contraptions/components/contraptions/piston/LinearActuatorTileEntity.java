@@ -293,8 +293,10 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	@Override
 	public void attach(ContraptionEntity contraption) {
 		this.movedContraption = contraption;
-		if (!world.isRemote)
+		if (!world.isRemote) {
+			this.running = true;
 			sendData();
+		}
 	}
 
 	@Override

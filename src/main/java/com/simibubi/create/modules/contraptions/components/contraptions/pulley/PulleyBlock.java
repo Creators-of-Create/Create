@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.pulley;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
@@ -9,6 +8,7 @@ import com.simibubi.create.modules.contraptions.base.HorizontalAxisKineticBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -43,6 +43,17 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 	}
 
 	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+			if (!worldIn.isRemote) {
+				BlockState below = worldIn.getBlockState(pos.down());
+				if (below.getBlock() instanceof RopeBlockBase)
+					worldIn.destroyBlock(pos.down(), true);
+			}
+			worldIn.removeTileEntity(pos);
+		}
+	}
+
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (!player.isAllowEdit())
@@ -77,27 +88,23 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 		}
 
 		@Override
-		public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-				boolean isMoving) {
-			if (isMoving)
-				return;
-
-			if (fromPos.equals(pos.down()) && this != AllBlocks.PULLEY_MAGNET.get())
-				if (!AllBlocks.ROPE.typeOf(worldIn.getBlockState(fromPos))
-						&& !AllBlocks.PULLEY_MAGNET.typeOf(worldIn.getBlockState(fromPos))) {
-					worldIn.destroyBlock(pos, true);
-				}
-			if (fromPos.equals(pos.up()))
-				if (!AllBlocks.ROPE.typeOf(worldIn.getBlockState(fromPos))
-						&& !AllBlocks.ROPE_PULLEY.typeOf(worldIn.getBlockState(fromPos))) {
-					worldIn.destroyBlock(pos, true);
-				}
+		public PushReaction getPushReaction(BlockState state) {
+			return PushReaction.BLOCK;
 		}
 
 		@Override
 		public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-			if (!isMoving)
+			if (!isMoving) {
 				onRopeBroken(worldIn, pos.up());
+				if (!worldIn.isRemote) {
+					BlockState above = worldIn.getBlockState(pos.up());
+					BlockState below = worldIn.getBlockState(pos.down());
+					if (above.getBlock() instanceof RopeBlockBase)
+						worldIn.destroyBlock(pos.up(), true);
+					if (below.getBlock() instanceof RopeBlockBase)
+						worldIn.destroyBlock(pos.down(), true);
+				}
+			}
 			if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 				worldIn.removeTileEntity(pos);
 			}

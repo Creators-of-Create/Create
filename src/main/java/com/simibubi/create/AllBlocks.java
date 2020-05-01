@@ -14,6 +14,7 @@ import com.simibubi.create.modules.IModule;
 import com.simibubi.create.modules.contraptions.CasingBlock;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
+import com.simibubi.create.modules.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.modules.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.ClockworkBearingBlock;
@@ -162,9 +163,10 @@ public enum AllBlocks {
 	ROTATION_CHASSIS(new RadialChassisBlock()),
 	DRILL(new DrillBlock()),
 	SAW(new SawBlock()),
-	HARVESTER(new HarvesterBlock()),
 	DEPLOYER(new DeployerBlock()),
 	PORTABLE_STORAGE_INTERFACE(new PortableStorageInterfaceBlock()),
+	PLOUGH(new PloughBlock()),
+	HARVESTER(new HarvesterBlock()),
 	ANALOG_LEVER(new AnalogLeverBlock()),
 
 	ANDESITE_CASING(new CasingBlock("andesite_casing")),

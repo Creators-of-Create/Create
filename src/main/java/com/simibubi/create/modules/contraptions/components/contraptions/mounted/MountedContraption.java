@@ -7,10 +7,14 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
+import com.simibubi.create.modules.contraptions.components.contraptions.BlockMovementTraits;
 import com.simibubi.create.modules.contraptions.components.contraptions.Contraption;
+import com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerTileEntity.CartMovementMode;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.tileentity.TileEntity;
@@ -25,12 +29,14 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
 public class MountedContraption extends Contraption {
 
+	public CartMovementMode rotationMode;
+
 	@Override
 	protected AllContraptionTypes getType() {
 		return AllContraptionTypes.MOUNTED;
 	}
 
-	public static Contraption assembleMinecart(World world, BlockPos pos) {
+	public static MountedContraption assembleMinecart(World world, BlockPos pos) {
 		if (isFrozen())
 			return null;
 
@@ -38,7 +44,7 @@ public class MountedContraption extends Contraption {
 		if (!state.has(RAIL_SHAPE))
 			return null;
 
-		Contraption contraption = new MountedContraption();
+		MountedContraption contraption = new MountedContraption();
 		if (!contraption.searchMovedStructure(world, pos, null))
 			return null;
 
@@ -61,8 +67,14 @@ public class MountedContraption extends Contraption {
 		if (!AllBlocks.CART_ASSEMBLER.typeOf(state))
 			return false;
 		Axis axis = state.get(CartAssemblerBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.Z : Axis.X;
-		for (AxisDirection axisDirection : AxisDirection.values())
-			frontier.add(pos.offset(Direction.getFacingFromAxis(axisDirection, axis)));
+		for (AxisDirection axisDirection : AxisDirection.values()) {
+			Direction facingFromAxis = Direction.getFacingFromAxis(axisDirection, axis);
+			BlockPos offset = pos.offset(facingFromAxis);
+			BlockState blockState = world.getBlockState(offset);
+			if (!BlockMovementTraits.isBrittle(blockState)
+					|| BlockMovementTraits.isBlockAttachedTowards(blockState, facingFromAxis.getOpposite()))
+				frontier.add(offset);
+		}
 		return true;
 	}
 
@@ -77,13 +89,26 @@ public class MountedContraption extends Contraption {
 	}
 
 	@Override
+	public CompoundNBT writeNBT() {
+		CompoundNBT writeNBT = super.writeNBT();
+		writeNBT.putString("RotationMode", NBTHelper.writeEnum(rotationMode));
+		return writeNBT;
+	}
+
+	@Override
+	public void readNBT(World world, CompoundNBT nbt) {
+		rotationMode = NBTHelper.readEnum(nbt.getString("RotationMode"), CartMovementMode.class);
+		super.readNBT(world, nbt);
+	}
+
+	@Override
 	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
 		super.removeBlocksFromWorld(world, offset, (pos, state) -> pos.equals(anchor));
 	}
 
 	@Override
-	public void disassemble(World world, BlockPos offset, Vec3d rotation) {
-		super.disassemble(world, offset, rotation, (pos, state) -> AllBlocks.MINECART_ANCHOR.typeOf(state));
+	public void addBlocksToWorld(World world, BlockPos offset, Vec3d rotation) {
+		super.addBlocksToWorld(world, offset, rotation, (pos, state) -> AllBlocks.MINECART_ANCHOR.typeOf(state));
 	}
 
 }

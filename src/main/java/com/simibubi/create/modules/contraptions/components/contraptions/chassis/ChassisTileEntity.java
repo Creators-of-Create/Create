@@ -167,11 +167,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 				// Ignore replaceable Blocks and Air-like
 				if (!BlockMovementTraits.movementNecessary(world, current))
 					break;
-				if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(currentState))
-					break;
-				if (AllBlocks.MECHANICAL_PISTON.typeOf(currentState))
-					break;
-				if (AllBlocks.STICKY_MECHANICAL_PISTON.typeOf(currentState))
+				if (BlockMovementTraits.isBrittle(currentState))
 					break;
 
 				positions.add(current);
@@ -211,6 +207,8 @@ public class ChassisTileEntity extends SmartTileEntity {
 				if (!searchPos.withinDistance(pos, chassisRange + .5f))
 					continue;
 				if (!BlockMovementTraits.movementNecessary(world, searchPos))
+					continue;
+				if (BlockMovementTraits.isBrittle(searchedState))
 					continue;
 
 				localVisited.add(searchPos);

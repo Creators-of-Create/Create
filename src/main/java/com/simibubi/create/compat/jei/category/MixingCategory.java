@@ -10,59 +10,32 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
-import com.simibubi.create.compat.jei.CreateJEI;
-import com.simibubi.create.compat.jei.DoubleItemIcon;
-import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingIngredient;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 
-public class MixingCategory implements IRecipeCategory<MixingRecipe> {
+public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 
-	private AnimatedMixer mixer;
-	private static ResourceLocation ID = new ResourceLocation(Create.ID, "mixing");
-	private IDrawable icon;
-	private IDrawable background = new EmptyBackground(177, 70);
+	private AnimatedMixer mixer = new AnimatedMixer();
 
 	public MixingCategory() {
-		icon = new DoubleItemIcon(() -> new ItemStack(AllBlocks.MECHANICAL_MIXER.get()),
-				() -> new ItemStack(AllBlocks.BASIN.get()));
-		mixer = new AnimatedMixer();
+		super("mixing", doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get()),
+				emptyBackground(177, 70));
 	}
 
 	@Override
-	public IDrawable getIcon() {
-		return icon;
-	}
-
-	@Override
-	public ResourceLocation getUid() {
-		return ID;
-	}
-
-	@Override
-	public String getTitle() {
-		return Lang.translate("recipe.mixing");
-	}
-
-	@Override
-	public IDrawable getBackground() {
-		return background;
+	public Class<? extends MixingRecipe> getRecipeClass() {
+		return MixingRecipe.class;
 	}
 
 	@Override
@@ -77,7 +50,7 @@ public class MixingCategory implements IRecipeCategory<MixingRecipe> {
 
 		NonNullList<Ingredient> recipeIngredients = recipe.getIngredients();
 		List<Pair<Ingredient, MutableInt>> actualIngredients = ItemHelper.condenseIngredients(recipeIngredients);
-		
+
 		Map<Integer, Float> catalystIndices = new HashMap<>(9);
 		for (int i = 0; i < actualIngredients.size(); i++) {
 			for (ProcessingIngredient processingIngredient : recipe.getRollableIngredients()) {
@@ -107,13 +80,11 @@ public class MixingCategory implements IRecipeCategory<MixingRecipe> {
 		itemStacks.init(i, false, 141, 50);
 		itemStacks.set(i, recipe.getRecipeOutput().getStack());
 
-		CreateJEI.addCatalystTooltip(itemStacks, catalystIndices);
+		addCatalystTooltip(itemStacks, catalystIndices);
 	}
 
 	@Override
 	public void draw(MixingRecipe recipe, double mouseX, double mouseY) {
-		// this might actually be pretty bad with big ingredients. ^ its a draw method 
-		
 		List<Pair<Ingredient, MutableInt>> actualIngredients = ItemHelper.condenseIngredients(recipe.getIngredients());
 
 		int size = actualIngredients.size();
@@ -133,11 +104,6 @@ public class MixingCategory implements IRecipeCategory<MixingRecipe> {
 		ScreenResources.JEI_DOWN_ARROW.draw(136, 32);
 		ScreenResources.JEI_SHADOW.draw(81, 57);
 		mixer.draw(getBackground().getWidth() / 2 + 20, 8);
-	}
-
-	@Override
-	public Class<? extends MixingRecipe> getRecipeClass() {
-		return MixingRecipe.class;
 	}
 
 }

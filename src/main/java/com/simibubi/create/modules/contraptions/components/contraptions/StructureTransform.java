@@ -163,14 +163,14 @@ public class StructureTransform {
 		return state;
 	}
 
-	protected Axis transformAxis(Axis axisIn) {
+	public Axis transformAxis(Axis axisIn) {
 		Direction facing = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axisIn);
 		facing = transformFacing(facing);
 		Axis axis = facing.getAxis();
 		return axis;
 	}
 
-	protected Direction transformFacing(Direction facing) {
+	public Direction transformFacing(Direction facing) {
 		for (int i = 0; i < rotation.ordinal(); i++)
 			facing = DirectionHelper.rotateAround(facing, rotationAxis);
 		return facing;

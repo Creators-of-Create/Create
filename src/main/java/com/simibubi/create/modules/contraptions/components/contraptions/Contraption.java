@@ -25,14 +25,19 @@ import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.AbstractChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.glue.SuperGlueEntity;
+import com.simibubi.create.modules.contraptions.components.contraptions.glue.SuperGlueHandler;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonPoleBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonHeadBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonPoleBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.MagnetBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.RopeBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 
 import net.minecraft.block.AbstractButtonBlock;
@@ -54,6 +59,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -71,6 +77,7 @@ public abstract class Contraption {
 	public List<MutablePair<BlockInfo, MovementContext>> actors;
 	public CombinedInvWrapper inventory;
 	public List<TileEntity> customRenderTEs;
+	public Set<Pair<BlockPos, Direction>> superglue;
 
 	public AxisAlignedBB bounds;
 	public boolean stalled;
@@ -80,13 +87,16 @@ public abstract class Contraption {
 	protected BlockPos anchor;
 
 	List<BlockPos> renderOrder;
+	protected List<SuperGlueEntity> glueToRemove;
 
 	public Contraption() {
 		blocks = new HashMap<>();
 		storage = new HashMap<>();
 		actors = new ArrayList<>();
+		superglue = new HashSet<>();
 		renderOrder = new ArrayList<>();
 		customRenderTEs = new ArrayList<>();
+		glueToRemove = new ArrayList<>();
 	}
 
 	public Set<BlockPos> getColliders(World world, Direction movementDirection) {
@@ -118,7 +128,8 @@ public abstract class Contraption {
 		if (bounds == null)
 			bounds = new AxisAlignedBB(BlockPos.ZERO);
 
-		frontier.add(pos);
+		if (!BlockMovementTraits.isBrittle(world.getBlockState(pos)))
+			frontier.add(pos);
 		if (!addToInitialFrontier(world, pos, forcedDirection, frontier))
 			return false;
 		for (int limit = 100000; limit > 0; limit--) {
@@ -148,6 +159,8 @@ public abstract class Contraption {
 
 		if (!world.isBlockPresent(pos))
 			return false;
+		if (isAnchoringBlockAt(pos))
+			return true;
 		if (!BlockMovementTraits.movementNecessary(world, pos))
 			return true;
 		if (!BlockMovementTraits.movementAllowed(world, pos))
@@ -155,6 +168,7 @@ public abstract class Contraption {
 		BlockState state = world.getBlockState(pos);
 		if (isChassis(state) && !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
+
 		if (AllBlocks.FLEXCRATE.typeOf(state))
 			FlexcrateBlock.splitCrate(world, pos);
 		if (AllBlocks.BELT.typeOf(state)) {
@@ -165,7 +179,27 @@ public abstract class Contraption {
 			if (prevPos != null && !visited.contains(prevPos))
 				frontier.add(prevPos);
 		}
-		
+
+		// Pulleys drag their rope and their attached structure
+		if (state.getBlock() instanceof PulleyBlock) {
+			int limit = AllConfigs.SERVER.kinetics.maxRopeLength.get();
+			BlockPos ropePos = pos;
+			while (limit-- >= 0) {
+				ropePos = ropePos.down();
+				if (!world.isBlockPresent(ropePos))
+					break;
+				BlockState ropeState = world.getBlockState(ropePos);
+				Block block = ropeState.getBlock();
+				if (!(block instanceof RopeBlock) && !(block instanceof MagnetBlock)) {
+					if (!visited.contains(ropePos))
+						frontier.add(ropePos);
+					break;
+				}
+				add(ropePos, capture(world, ropePos));
+			}
+		}
+
+		// Pistons drag their attaches poles and extension
 		if (state.getBlock() instanceof MechanicalPistonBlock) {
 			int limit = AllConfigs.SERVER.kinetics.maxPistonPoles.get();
 			Direction direction = state.get(MechanicalPistonBlock.FACING);
@@ -189,7 +223,7 @@ public abstract class Contraption {
 				if (limit <= -1)
 					return false;
 			}
-			
+
 			BlockPos searchPos = pos;
 			while (limit-- >= 0) {
 				searchPos = searchPos.offset(direction.getOpposite());
@@ -203,17 +237,21 @@ public abstract class Contraption {
 				}
 				break;
 			}
-			
+
 			if (limit <= -1)
 				return false;
 		}
-		
+
+		// Doors try to stay whole
 		if (state.getBlock() instanceof DoorBlock) {
 			BlockPos otherPartPos = pos.up(state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? 1 : -1);
 			if (!visited.contains(otherPartPos))
 				frontier.add(otherPartPos);
 		}
 
+		Map<Direction, SuperGlueEntity> superglue = SuperGlueHandler.gatherGlue(world, pos);
+
+		// Slime blocks drag adjacent blocks if possible
 		boolean isSlimeBlock = state.getBlock() instanceof SlimeBlock;
 		for (Direction offset : Direction.values()) {
 			BlockPos offsetPos = pos.offset(offset);
@@ -225,14 +263,24 @@ public abstract class Contraption {
 					return false;
 				continue;
 			}
-			if (!visited.contains(offsetPos)
-					&& (isSlimeBlock || BlockMovementTraits.isBlockAttachedTowards(blockState, offset.getOpposite())))
+
+			boolean wasVisited = visited.contains(offsetPos);
+			boolean faceHasGlue = superglue.containsKey(offset);
+			boolean blockAttachedTowardsFace =
+				BlockMovementTraits.isBlockAttachedTowards(blockState, offset.getOpposite());
+			boolean brittle = BlockMovementTraits.isBrittle(blockState);
+
+			if (!wasVisited && ((isSlimeBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue))
 				frontier.add(offsetPos);
+
+			if (faceHasGlue)
+				addGlue(superglue.get(offset));
 		}
 
 		add(pos, capture(world, pos));
 		if (blocks.size() > AllConfigs.SERVER.kinetics.maxBlocksMoved.get())
 			return false;
+
 		return true;
 	}
 
@@ -293,6 +341,14 @@ public abstract class Contraption {
 			compoundnbt.remove("z");
 		}
 		return compoundnbt;
+	}
+
+	public void addGlue(SuperGlueEntity entity) {
+		BlockPos pos = entity.getHangingPosition();
+		Direction direction = entity.getFacingDirection();
+		BlockPos localPos = pos.subtract(anchor);
+		this.superglue.add(Pair.of(localPos, direction));
+		glueToRemove.add(entity);
 	}
 
 	public void add(BlockPos pos, Pair<BlockInfo, TileEntity> pair) {
@@ -371,6 +427,13 @@ public abstract class Contraption {
 			getActors().add(MutablePair.of(info, context));
 		});
 
+		superglue.clear();
+		nbt.getList("Superglue", 10).forEach(c -> {
+			CompoundNBT comp = (CompoundNBT) c;
+			superglue.add(Pair.of(NBTUtil.readBlockPos(comp.getCompound("Pos")),
+					Direction.byIndex(comp.getByte("Direction"))));
+		});
+
 		storage.clear();
 		nbt.getList("Storage", 10).forEach(c -> {
 			CompoundNBT comp = (CompoundNBT) c;
@@ -409,6 +472,14 @@ public abstract class Contraption {
 			actorsNBT.add(compound);
 		}
 
+		ListNBT superglueNBT = new ListNBT();
+		for (Pair<BlockPos, Direction> glueEntry : superglue) {
+			CompoundNBT c = new CompoundNBT();
+			c.put("Pos", NBTUtil.writeBlockPos(glueEntry.getKey()));
+			c.putByte("Direction", (byte) glueEntry.getValue().getIndex());
+			superglueNBT.add(c);
+		}
+
 		ListNBT storageNBT = new ListNBT();
 		for (BlockPos pos : storage.keySet()) {
 			CompoundNBT c = new CompoundNBT();
@@ -422,6 +493,7 @@ public abstract class Contraption {
 
 		nbt.put("Blocks", blocksNBT);
 		nbt.put("Actors", actorsNBT);
+		nbt.put("Superglue", superglueNBT);
 		nbt.put("Storage", storageNBT);
 		nbt.put("Anchor", NBTUtil.writeBlockPos(anchor));
 		nbt.putBoolean("Stalled", stalled);
@@ -435,11 +507,7 @@ public abstract class Contraption {
 	}
 
 	public static boolean isFrozen() {
-		return AllConfigs.SERVER.control.freezePistonConstructs.get();
-	}
-
-	public void disassemble(World world, BlockPos offset, Vec3d rotation) {
-		disassemble(world, offset, rotation, (pos, state) -> false);
+		return AllConfigs.SERVER.control.freezeContraptions.get();
 	}
 
 	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
@@ -448,6 +516,8 @@ public abstract class Contraption {
 
 	public void removeBlocksFromWorld(IWorld world, BlockPos offset, BiPredicate<BlockPos, BlockState> customRemoval) {
 		storage.values().forEach(MountedStorage::empty);
+		glueToRemove.forEach(SuperGlueEntity::remove);
+
 		for (boolean brittles : Iterate.trueAndFalse) {
 			for (BlockInfo block : blocks.values()) {
 				if (brittles != BlockMovementTraits.isBrittle(block.state))
@@ -465,7 +535,11 @@ public abstract class Contraption {
 		}
 	}
 
-	public void disassemble(World world, BlockPos offset, Vec3d rotation,
+	public void addBlocksToWorld(World world, BlockPos offset, Vec3d rotation) {
+		addBlocksToWorld(world, offset, rotation, (pos, state) -> false);
+	}
+
+	public void addBlocksToWorld(World world, BlockPos offset, Vec3d rotation,
 			BiPredicate<BlockPos, BlockState> customPlacement) {
 		stop(world);
 
@@ -497,8 +571,16 @@ public abstract class Contraption {
 						&& !blockState.getCollisionShape(world, targetPos).isEmpty())
 					continue;
 
-				world.destroyBlock(targetPos, blockState.getCollisionShape(world, targetPos).isEmpty());
+				world.destroyBlock(targetPos, true);
 				world.setBlockState(targetPos, state, 3 | BlockFlags.IS_MOVING);
+
+				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();
+				verticalRotation = verticalRotation && transform.rotation != Rotation.NONE;
+				if (verticalRotation) {
+					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock)
+						world.destroyBlock(targetPos, true);
+				}
+
 				TileEntity tileEntity = world.getTileEntity(targetPos);
 				CompoundNBT tag = block.nbt;
 				if (tileEntity != null && tag != null) {
@@ -506,21 +588,12 @@ public abstract class Contraption {
 					tag.putInt("y", targetPos.getY());
 					tag.putInt("z", targetPos.getZ());
 
-					if (tileEntity instanceof BeltTileEntity) {
-						tag.remove("Length");
-						tag.remove("Index");
-						tag.putBoolean("DontClearAttachments", true);
+					if (verticalRotation && tileEntity instanceof PulleyTileEntity) {
+						tag.remove("Offset");
+						tag.remove("InitialOffset");
 					}
 
 					tileEntity.read(tag);
-
-					if (tileEntity instanceof KineticTileEntity) {
-						KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
-						kineticTileEntity.source = null;
-						kineticTileEntity.setSpeed(0);
-						kineticTileEntity.network = null;
-						kineticTileEntity.attachKinetics();
-					}
 
 					if (storage.containsKey(block.pos)) {
 						MountedStorage mountedStorage = storage.get(block.pos);
@@ -528,10 +601,21 @@ public abstract class Contraption {
 							mountedStorage.fill(tileEntity);
 					}
 				}
+			}
+		}
 
+		for (Pair<BlockPos, Direction> pair : superglue) {
+			BlockPos targetPos = transform.apply(pair.getKey());
+			Direction targetFacing = transform.transformFacing(pair.getValue());
+
+			SuperGlueEntity entity = new SuperGlueEntity(world, targetPos, targetFacing);
+			if (entity.onValidSurface()) {
+				if (!world.isRemote)
+					world.addEntity(entity);
 			}
 
 		}
+
 	}
 
 	public void initActors(World world) {

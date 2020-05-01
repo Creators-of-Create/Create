@@ -32,6 +32,11 @@ public class ClockworkContraption extends Contraption {
 			ignoreBlocks.add(anchor.add(blockPos));
 	}
 
+	@Override
+	protected boolean isAnchoringBlockAt(BlockPos pos) {
+		return pos.equals(anchor.offset(facing.getOpposite(), offset + 1));
+	}
+
 	public static Pair<ClockworkContraption, ClockworkContraption> assembleClockworkAt(World world, BlockPos pos,
 			Direction direction) {
 		if (isFrozen())

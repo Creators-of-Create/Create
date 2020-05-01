@@ -4,61 +4,28 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
-import com.simibubi.create.compat.jei.CreateJEI;
-import com.simibubi.create.compat.jei.DoubleItemIcon;
-import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
 
-public class SawingCategory implements IRecipeCategory<CuttingRecipe> {
+public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 
-	private AnimatedSaw saw;
-	private static ResourceLocation ID = new ResourceLocation(Create.ID, "sawing");
-	private IDrawable icon;
-	private IDrawable background = new EmptyBackground(177, 70);
+	private AnimatedSaw saw = new AnimatedSaw();
 
 	public SawingCategory() {
-		icon = new DoubleItemIcon(() -> new ItemStack(AllBlocks.SAW.get()), () -> new ItemStack(Items.OAK_LOG));
-		saw = new AnimatedSaw();
-	}
-
-	@Override
-	public IDrawable getIcon() {
-		return icon;
-	}
-
-	@Override
-	public ResourceLocation getUid() {
-		return ID;
+		super("sawing", doubleItemIcon(AllBlocks.SAW.get(), Items.OAK_LOG), emptyBackground(177, 70));
 	}
 
 	@Override
 	public Class<? extends CuttingRecipe> getRecipeClass() {
 		return CuttingRecipe.class;
-	}
-
-	@Override
-	public String getTitle() {
-		return Lang.translate("recipe.sawing");
-	}
-
-	@Override
-	public IDrawable getBackground() {
-		return background;
 	}
 
 	@Override
@@ -81,8 +48,8 @@ public class SawingCategory implements IRecipeCategory<CuttingRecipe> {
 			itemStacks.init(outputIndex + 1, false, 117 + xOffset, 47 + yOffset);
 			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
 		}
-		
-		CreateJEI.addStochasticTooltip(itemStacks, results);
+
+		addStochasticTooltip(itemStacks, results);
 	}
 
 	@Override
@@ -92,7 +59,7 @@ public class SawingCategory implements IRecipeCategory<CuttingRecipe> {
 		for (int i = 0; i < size; i++) {
 			int xOffset = i % 2 == 0 ? 0 : 19;
 			int yOffset = (i / 2) * -19;
-			ScreenResources.JEI_SLOT.draw(117 + xOffset, 47 + yOffset);
+			getRenderedSlot(recipe, i).draw(117 + xOffset, 47 + yOffset);
 		}
 		ScreenResources.JEI_DOWN_ARROW.draw(70, 6);
 		ScreenResources.JEI_SHADOW.draw(58, 55);

@@ -15,9 +15,11 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.feature.template.PlacementSettings;
 
 public class SchematicEditScreen extends AbstractSimiScreen {
 
@@ -25,10 +27,10 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	private TextFieldWidget yInput;
 	private TextFieldWidget zInput;
 
-	private final List<String> rotationOptions = Lang.translatedOptions("schematic.rotation", "none", "cw90", "cw180",
-			"cw270");
-	private final List<String> mirrorOptions = Lang.translatedOptions("schematic.mirror", "none", "leftRight",
-			"frontBack");
+	private final List<String> rotationOptions =
+		Lang.translatedOptions("schematic.rotation", "none", "cw90", "cw180", "cw270");
+	private final List<String> mirrorOptions =
+		Lang.translatedOptions("schematic.mirror", "none", "leftRight", "frontBack");
 	private final String positionLabel = Lang.translate("schematic.position");
 	private final String rotationLabel = Lang.translate("schematic.rotation");
 	private final String mirrorLabel = Lang.translate("schematic.mirror");
@@ -48,10 +50,11 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		yInput = new TextFieldWidget(font, x + 115, y + 32, 32, 10, "");
 		zInput = new TextFieldWidget(font, x + 155, y + 32, 32, 10, "");
 
-		if (handler.deployed) {
-			xInput.setText("" + handler.anchor.getX());
-			yInput.setText("" + handler.anchor.getY());
-			zInput.setText("" + handler.anchor.getZ());
+		BlockPos anchor = handler.getTransformation().getAnchor();
+		if (handler.isDeployed()) {
+			xInput.setText("" + anchor.getX());
+			yInput.setText("" + anchor.getY());
+			zInput.setText("" + anchor.getZ());
 		} else {
 			BlockPos alt = minecraft.player.getPosition();
 			xInput.setText("" + alt.getX());
@@ -77,13 +80,14 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			});
 		}
 
+		PlacementSettings settings = handler.getTransformation().toSettings();
 		Label labelR = new Label(x + 99, y + 52, "").withShadow();
 		rotationArea = new SelectionScrollInput(x + 96, y + 49, 94, 14).forOptions(rotationOptions).titled("Rotation")
-				.setState(handler.cachedSettings.getRotation().ordinal()).writingTo(labelR);
+				.setState(settings.getRotation().ordinal()).writingTo(labelR);
 
 		Label labelM = new Label(x + 99, y + 72, "").withShadow();
 		mirrorArea = new SelectionScrollInput(x + 96, y + 69, 94, 14).forOptions(mirrorOptions).titled("Mirror")
-				.setState(handler.cachedSettings.getMirror().ordinal()).writingTo(labelM);
+				.setState(settings.getMirror().ordinal()).writingTo(labelM);
 
 		Collections.addAll(widgets, xInput, yInput, zInput);
 		Collections.addAll(widgets, labelR, labelM, rotationArea, mirrorArea);
@@ -127,8 +131,8 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		int y = guiTop;
 		ScreenResources.SCHEMATIC.draw(this, x, y);
 
-		font.drawStringWithShadow(handler.cachedSchematicName,
-				x + 103 - font.getStringWidth(handler.cachedSchematicName) / 2, y + 10, 0xDDEEFF);
+		font.drawStringWithShadow(handler.getCurrentSchematicName(),
+				x + 103 - font.getStringWidth(handler.getCurrentSchematicName()) / 2, y + 10, 0xDDEEFF);
 
 		font.drawString(positionLabel, x + 10, y + 32, ScreenResources.FONT_COLOR);
 		font.drawString(rotationLabel, x + 10, y + 52, ScreenResources.FONT_COLOR);
@@ -152,10 +156,22 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			validCoords = false;
 		}
 
-		if (validCoords)
-			handler.moveTo(newLocation);
-		handler.setRotation(Rotation.values()[rotationArea.getState()]);
-		handler.setMirror(Mirror.values()[mirrorArea.getState()]);
+		PlacementSettings settings = new PlacementSettings();
+		settings.setRotation(Rotation.values()[rotationArea.getState()]);
+		settings.setMirror(Mirror.values()[mirrorArea.getState()]);
+		
+		if (validCoords && newLocation != null) {
+			ItemStack item = handler.getActiveSchematicItem();
+			if (item != null) {
+				item.getTag().putBoolean("Deployed", true);
+				item.getTag().put("Anchor", NBTUtil.writeBlockPos(newLocation));
+			}
+
+			handler.getTransformation().init(newLocation, settings, handler.getBounds());
+			handler.markDirty();
+			handler.deploy();
+		}
+
 	}
 
 }

@@ -5,21 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
 import com.simibubi.create.ScreenResources;
-import com.simibubi.create.compat.jei.DoubleItemIcon;
-import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
@@ -27,42 +21,17 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.StonecuttingRecipe;
 import net.minecraft.util.ResourceLocation;
 
-public class BlockCuttingCategory implements IRecipeCategory<CondensedBlockCuttingRecipe> {
+public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCuttingRecipe> {
 
-	private AnimatedSaw saw;
-	private static ResourceLocation ID = new ResourceLocation(Create.ID, "block_cutting");
-	private IDrawable icon;
-	private IDrawable background = new EmptyBackground(177, 70);
+	private AnimatedSaw saw = new AnimatedSaw();
 
 	public BlockCuttingCategory() {
-		icon = new DoubleItemIcon(() -> new ItemStack(AllBlocks.SAW.get()),
-				() -> new ItemStack(Items.STONE_BRICK_STAIRS));
-		saw = new AnimatedSaw();
-	}
-
-	@Override
-	public IDrawable getIcon() {
-		return icon;
-	}
-
-	@Override
-	public ResourceLocation getUid() {
-		return ID;
+		super("block_cutting", doubleItemIcon(AllBlocks.SAW.get(), Items.STONE_BRICK_STAIRS), emptyBackground(177, 70));
 	}
 
 	@Override
 	public Class<? extends CondensedBlockCuttingRecipe> getRecipeClass() {
 		return CondensedBlockCuttingRecipe.class;
-	}
-
-	@Override
-	public String getTitle() {
-		return Lang.translate("recipe.block_cutting");
-	}
-
-	@Override
-	public IDrawable getBackground() {
-		return background;
 	}
 
 	@Override
