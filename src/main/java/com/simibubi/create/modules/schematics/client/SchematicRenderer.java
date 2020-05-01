@@ -1,30 +1,33 @@
 package com.simibubi.create.modules.schematics.client;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryUtil;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.foundation.utility.outliner.AABBOutline;
-import com.simibubi.create.foundation.utility.render.StructureRenderer;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.modules.schematics.SchematicWorld;
 
+import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RegionRenderCacheBuilder;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.client.renderer.vertex.VertexFormatElement.Usage;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -33,12 +36,11 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 public class SchematicRenderer {
 
 	private final RegionRenderCacheBuilder bufferCache = new RegionRenderCacheBuilder();
-	private final boolean[] usedBlockRenderLayers = new boolean[BlockRenderLayer.values().length];
-	private final boolean[] startedBufferBuilders = new boolean[BlockRenderLayer.values().length];
+	private final Set<RenderType> usedBlockRenderLayers = new HashSet<>(RenderType.getBlockLayers().size());
+	private final Set<RenderType> startedBufferBuilders = new HashSet<>(RenderType.getBlockLayers().size());
 	private boolean active;
 	private boolean changed;
 	private SchematicWorld schematic;
-	private AABBOutline outline;
 	private BlockPos anchor;
 
 	public SchematicRenderer() {
@@ -71,95 +73,98 @@ public class SchematicRenderer {
 		changed = false;
 	}
 
-	public void render() {
+	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
+		// TODO 1.15 buffered render
 		if (!active)
 			return;
 
-		GlStateManager.disableCull();
-		GlStateManager.enableAlphaTest();
-		GlStateManager.depthMask(true);
+		final Entity entity = Minecraft.getInstance().getRenderViewEntity();
+
+		if (entity == null) {
+			return;
+		}
+
+		ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
+		Vec3d view = renderInfo.getProjectedView();
+		double renderPosX = view.x;
+		double renderPosY = view.y;
+		double renderPosZ = view.z;
+
+		RenderSystem.enableAlphaTest();
+		RenderSystem.enableBlend();
 		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
-		for (int blockRenderLayerId = 0; blockRenderLayerId < usedBlockRenderLayers.length; blockRenderLayerId++)
-			if (usedBlockRenderLayers[blockRenderLayerId])
-				drawBuffer(bufferCache.getBuilder(blockRenderLayerId));
-
-		GlStateManager.pushMatrix();
-		Vec3d position = new Vec3d(anchor);
-		Vec3d rotation = Vec3d.ZERO;
-		StructureRenderer.renderTileEntities(schematic, position, rotation, schematic.getTileEntities());
-		GlStateManager.popMatrix();
+		for (RenderType layer : RenderType.getBlockLayers()) {
+			if (!usedBlockRenderLayers.contains(layer)) {
+				continue;
+			}
+			final BufferBuilder bufferBuilder = bufferCache.get(layer);
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(-renderPosX, -renderPosY, -renderPosZ);
+			drawBuffer(bufferBuilder);
+			RenderSystem.popMatrix();
+		}
+		RenderSystem.disableAlphaTest();
+		RenderSystem.disableBlend();
 	}
 
 	private void redraw(Minecraft minecraft) {
-		Arrays.fill(usedBlockRenderLayers, false);
-		Arrays.fill(startedBufferBuilders, false);
+		usedBlockRenderLayers.clear();
+		startedBufferBuilders.clear();
 
-		SchematicWorld blockAccess = schematic;
-		blockAccess.renderMode = true;
-		BlockRendererDispatcher blockRendererDispatcher = minecraft.getBlockRendererDispatcher();
+		final SchematicWorld blockAccess = schematic;
+		final BlockRendererDispatcher blockRendererDispatcher = minecraft.getBlockRendererDispatcher();
+
 		List<BlockState> blockstates = new LinkedList<>();
-		BlockPos min = blockAccess.getBounds().getOrigin();
-		BlockPos max = min.add(blockAccess.getBounds().getSize());
-		outline = new AABBOutline(new AxisAlignedBB(min, max));
-		outline.setTextures(AllSpecialTextures.CHECKERED, AllSpecialTextures.HIGHLIGHT_CHECKERED);
 
-		for (BlockPos localPos : BlockPos.getAllInBoxMutable(min, max)) {
+		for (BlockPos localPos : BlockPos.getAllInBoxMutable(blockAccess.getBounds().getOrigin(),
+				blockAccess.getBounds().getOrigin().add(blockAccess.getBounds().getSize()))) {
 			BlockPos pos = localPos.add(anchor);
 			BlockState state = blockAccess.getBlockState(pos);
-
-			for (BlockRenderLayer blockRenderLayer : BlockRenderLayer.values()) {
-				if (!state.getBlock().canRenderInLayer(state, blockRenderLayer))
+			for (RenderType blockRenderLayer : RenderType.getBlockLayers()) {
+				if (!RenderTypeLookup.canRenderInLayer(state, blockRenderLayer)) {
 					continue;
+				}
 				ForgeHooksClient.setRenderLayer(blockRenderLayer);
-
-				final int blockRenderLayerId = blockRenderLayer.ordinal();
-				final BufferBuilder bufferBuilder = bufferCache.getBuilder(blockRenderLayerId);
-				if (!startedBufferBuilders[blockRenderLayerId]) {
-					startedBufferBuilders[blockRenderLayerId] = true;
-					bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+				final BufferBuilder bufferBuilder = bufferCache.get(blockRenderLayer);
+				if (startedBufferBuilders.add(blockRenderLayer)) {
+					// Copied from RenderChunk
+					{
+						bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+					}
 				}
 
-				usedBlockRenderLayers[blockRenderLayerId] |= blockRendererDispatcher.renderBlock(state, pos,
-						blockAccess, bufferBuilder, minecraft.world.rand, EmptyModelData.INSTANCE);
+				// Block transformations
+				if (state.getBlock() instanceof BedBlock) {
+					state = Blocks.QUARTZ_SLAB.getDefaultState();
+				}
+
+				if (blockRendererDispatcher.renderModel(state, pos, blockAccess, new MatrixStack(), bufferBuilder, true,
+						minecraft.world.rand, EmptyModelData.INSTANCE)) {
+					usedBlockRenderLayers.add(blockRenderLayer);
+				}
 				blockstates.add(state);
 			}
 			ForgeHooksClient.setRenderLayer(null);
 		}
-		
+
 		// finishDrawing
-		blockAccess.renderMode = false;
-		for (int blockRenderLayerId = 0; blockRenderLayerId < usedBlockRenderLayers.length; blockRenderLayerId++) {
-			if (!startedBufferBuilders[blockRenderLayerId])
+		for (RenderType layer : RenderType.getBlockLayers()) {
+			if (!startedBufferBuilders.contains(layer)) {
 				continue;
-			bufferCache.getBuilder(blockRenderLayerId).finishDrawing();
+			}
+			bufferCache.get(layer).finishDrawing();
 		}
 	}
 
-	// Coppied from the Tesselator's vboUploader - Draw everything but don't
-	// reset the buffer
 	private static void drawBuffer(final BufferBuilder bufferBuilder) {
-		if (bufferBuilder.getVertexCount() <= 0)
-			return;
+		Pair<BufferBuilder.DrawState, ByteBuffer> pair = bufferBuilder.popData();
+		BufferBuilder.DrawState state = pair.getFirst();
 
-		VertexFormat vertexformat = bufferBuilder.getVertexFormat();
-		int size = vertexformat.getSize();
-		ByteBuffer bytebuffer = bufferBuilder.getByteBuffer();
-		List<VertexFormatElement> list = vertexformat.getElements();
-
-		for (int index = 0; index < list.size(); ++index) {
-			VertexFormatElement vertexformatelement = list.get(index);
-			Usage usage = vertexformatelement.getUsage();
-			bytebuffer.position(vertexformat.getOffset(index));
-			usage.preDraw(vertexformat, index, size, bytebuffer);
-		}
-
-		GlStateManager.drawArrays(bufferBuilder.getDrawMode(), 0, bufferBuilder.getVertexCount());
-
-		for (int index = 0; index < list.size(); ++index) {
-			VertexFormatElement vertexformatelement = list.get(index);
-			Usage usage = vertexformatelement.getUsage();
-			usage.postDraw(vertexformat, index, size, bytebuffer);
+		if (state.getCount() > 0) {
+			state.getVertexFormat().startDrawing(MemoryUtil.memAddress(pair.getSecond()));
+			RenderSystem.drawArrays(state.getMode(), 0, state.getCount());
+			state.getVertexFormat().endDrawing();
 		}
 	}
 

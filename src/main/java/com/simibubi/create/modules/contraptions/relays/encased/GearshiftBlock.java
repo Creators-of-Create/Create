@@ -20,6 +20,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTileEntity> {
 
@@ -81,7 +82,7 @@ public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTi
 	}
 
 	@Override
-	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te == null || !(te instanceof KineticTileEntity))
 			return;

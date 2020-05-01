@@ -2,15 +2,20 @@ package com.simibubi.create.foundation.utility.render;
 
 import java.util.Iterator;
 
-import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.platform.GlStateManager;
+import org.lwjgl.opengl.GL13;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.Create;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WrappedWorld;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.crash.ReportedException;
 import net.minecraft.tileentity.TileEntity;
@@ -23,20 +28,17 @@ public class StructureRenderer {
 	protected static LightingWorld lightingWorld;
 
 	public static void renderTileEntities(World world, Vec3d position, Vec3d rotation,
-			Iterable<TileEntity> customRenderTEs) {
-		TileEntityRendererDispatcher dispatcher = TileEntityRendererDispatcher.instance;
+			Iterable<TileEntity> customRenderTEs, MatrixStack ms, IRenderTypeBuffer buffer) {
 		float pt = Minecraft.getInstance().getRenderPartialTicks();
-		World prevDispatcherWorld = dispatcher.world;
 
 		if (lightingWorld == null)
 			lightingWorld = new LightingWorld(world);
 		lightingWorld.setWorld(world);
 		lightingWorld.setTransform(position, rotation);
-		dispatcher.setWorld(lightingWorld);
 
 		for (Iterator<TileEntity> iterator = customRenderTEs.iterator(); iterator.hasNext();) {
 			TileEntity tileEntity = iterator.next();
-			if (dispatcher.getRenderer(tileEntity) == null) {
+			if (TileEntityRendererDispatcher.instance.getRenderer(tileEntity) == null) {
 				iterator.remove();
 				continue;
 			}
@@ -45,20 +47,20 @@ public class StructureRenderer {
 
 				BlockPos pos = tileEntity.getPos();
 				if (!tileEntity.hasFastRenderer()) {
-					RenderHelper.enableStandardItemLighting();
-					int i = lightingWorld.getCombinedLight(pos, 0);
-					int j = i % 65536;
-					int k = i / 65536;
-					GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float) j, (float) k);
-					GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+					RenderHelper.enable();
+					int i = WorldRenderer.getLightmapCoordinates(lightingWorld, pos);
+					int j = LightTexture.getBlockLightCoordinates(i);
+					int k = LightTexture.getSkyLightCoordinates(i);
+					RenderSystem.glMultiTexCoord2f(GL13.GL_TEXTURE1, (float) j, (float) k);
+					RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 				}
 
+				RenderSystem.disableCull();
 				World prevTileWorld = tileEntity.getWorld();
-				tileEntity.setWorld(lightingWorld);
-				GlStateManager.disableCull();
-				dispatcher.render(tileEntity, pos.getX(), pos.getY(), pos.getZ(), pt, -1, true);
-				GlStateManager.enableCull();
-				tileEntity.setWorld(prevTileWorld);
+				tileEntity.setLocation(lightingWorld, pos);
+				TileEntityRendererDispatcher.instance.render(tileEntity, pt, ms, buffer);
+				tileEntity.setLocation(prevTileWorld, pos);
+				RenderSystem.enableCull();
 
 			} catch (ReportedException e) {
 				if (AllConfigs.CLIENT.explainRenderErrors.get()) {
@@ -72,8 +74,6 @@ public class StructureRenderer {
 				continue;
 			}
 		}
-
-		dispatcher.setWorld(prevDispatcherWorld);
 	}
 
 	private static class LightingWorld extends WrappedWorld {
@@ -95,8 +95,8 @@ public class StructureRenderer {
 		}
 
 		@Override
-		public int getCombinedLight(BlockPos pos, int minLight) {
-			return super.getCombinedLight(transformPos(pos), minLight);
+		public int getBaseLightLevel(BlockPos pos, int minLight) {
+			return super.getBaseLightLevel(transformPos(pos), minLight);
 		}
 
 		private BlockPos transformPos(BlockPos pos) {

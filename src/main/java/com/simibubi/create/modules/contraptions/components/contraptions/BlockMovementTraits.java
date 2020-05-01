@@ -12,9 +12,9 @@ import com.simibubi.create.modules.contraptions.components.contraptions.chassis.
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.RopeBlock;
+import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
 import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;

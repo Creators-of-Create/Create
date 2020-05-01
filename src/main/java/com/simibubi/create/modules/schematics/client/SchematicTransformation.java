@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.schematics.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -51,16 +51,17 @@ public class SchematicTransformation {
 		float pt = Minecraft.getInstance().getRenderPartialTicks();
 
 		// Translation
-		GlStateManager.translated(x.get(pt), y.get(pt), z.get(pt));
+		RenderSystem.translated(x.get(pt), y.get(pt), z.get(pt));
 
 		Vec3d rotationOffset = getRotationOffset(true);
 
 		// Rotation & Mirror
-		GlStateManager.translated(xOrigin + rotationOffset.x, 0, zOrigin + rotationOffset.z);
-		GlStateManager.rotated(rotation.get(pt), 0, 1, 0);
-		GlStateManager.translated(-rotationOffset.x, 0, -rotationOffset.z);
-		GlStateManager.scaled(scaleFrontBack.get(pt), 1, scaleLeftRight.get(pt));
-		GlStateManager.translated(-xOrigin, 0, -zOrigin);
+		
+		RenderSystem.translated(xOrigin + rotationOffset.x, 0, zOrigin + rotationOffset.z);
+		RenderSystem.rotatef(rotation.get(pt), 0, 1, 0);
+		RenderSystem.translated(-rotationOffset.x, 0, -rotationOffset.z);
+		RenderSystem.scaled(scaleFrontBack.get(pt), 1, scaleLeftRight.get(pt));
+		RenderSystem.translated(-xOrigin, 0, -zOrigin);
 
 	}
 

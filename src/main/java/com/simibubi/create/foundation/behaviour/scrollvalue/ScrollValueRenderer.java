@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.behaviour.scrollvalue;
 
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
@@ -62,8 +64,8 @@ public class ScrollValueRenderer {
 			render(world, pos, face, behaviour, highlight);
 		
 		TessellatorHelper.cleanUpAfterDrawing();
-		GlStateManager.enableAlphaTest();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.enableAlphaTest();
+		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 	}
 
 	protected static void render(ClientWorld world, BlockPos pos, Direction face, ScrollValueBehaviour behaviour,

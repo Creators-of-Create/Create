@@ -64,7 +64,8 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	protected void registerData() {}
+	protected void registerData() {
+	}
 
 	public int getWidthPixels() {
 		return 12;
@@ -104,12 +105,10 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	protected void updateBoundingBox() {
 		if (this.getFacingDirection() != null) {
-			this.posX =
-				(double) this.hangingPosition.getX() + 0.5 - (double) this.getFacingDirection().getXOffset() * 0.5;
-			this.posY =
-				(double) this.hangingPosition.getY() + 0.5 - (double) this.getFacingDirection().getYOffset() * 0.5;
-			this.posZ =
-				(double) this.hangingPosition.getZ() + 0.5 - (double) this.getFacingDirection().getZOffset() * 0.5;
+			double x = hangingPosition.getX() + 0.5 - facingDirection.getXOffset() * 0.5;
+			double y = hangingPosition.getY() + 0.5 - facingDirection.getYOffset() * 0.5;
+			double z = hangingPosition.getZ() + 0.5 - facingDirection.getZOffset() * 0.5;
+			this.setPos(x, y, z);
 			double d1 = (double) this.getWidthPixels();
 			double d2 = (double) this.getHeightPixels();
 			double d3 = (double) this.getWidthPixels();
@@ -130,16 +129,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 			d1 = d1 / 32.0D;
 			d2 = d2 / 32.0D;
 			d3 = d3 / 32.0D;
-			this.setBoundingBox(new AxisAlignedBB(this.posX - d1, this.posY - d2, this.posZ - d3, this.posX + d1,
-					this.posY + d2, this.posZ + d3));
+			this.setBoundingBox(new AxisAlignedBB(x - d1, y - d2, z - d3, x + d1, y + d2, z + d3));
 		}
 	}
 
 	@Override
 	public void tick() {
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
 		if (this.validationTimer++ == 10 && !this.world.isRemote) {
 			this.validationTimer = 0;
 			if (isAlive() && !this.onValidSurface()) {
@@ -217,24 +212,6 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public int getBrightnessForRender() {
-		BlockPos blockpos = hangingPosition;
-		BlockPos blockpos2 = blockpos.offset(this.getFacingDirection().getOpposite());
-
-		PlayerEntity player = Minecraft.getInstance().player;
-		boolean holdingGlue = AllItems.SUPER_GLUE.typeOf(player.getHeldItemMainhand())
-				|| AllItems.SUPER_GLUE.typeOf(player.getHeldItemOffhand());
-		boolean visible = world.isAirBlock(blockpos) || world.isAirBlock(blockpos2);
-
-		int minLight = holdingGlue && !visible ? 8 : 0;
-		int light = this.world.isBlockPresent(blockpos) ? this.world.getCombinedLight(blockpos, minLight) : 15;
-		int light2 = this.world.isBlockPresent(blockpos2) ? this.world.getCombinedLight(blockpos2, minLight) : 15;
-
-		return Math.max(light, light2);
-	}
-
-	@Override
 	public void applyEntityCollision(Entity entityIn) {
 		super.applyEntityCollision(entityIn);
 	}
@@ -290,11 +267,11 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public ItemEntity entityDropItem(ItemStack stack, float offsetY) {
+	public ItemEntity entityDropItem(ItemStack stack, float yOffset) {
+		float xOffset = (float) this.getFacingDirection().getXOffset() * 0.15F;
+		float zOffset = (float) this.getFacingDirection().getZOffset() * 0.15F;
 		ItemEntity itementity =
-			new ItemEntity(this.world, this.posX + (double) ((float) this.getFacingDirection().getXOffset() * 0.15F),
-					this.posY + (double) offsetY,
-					this.posZ + (double) ((float) this.getFacingDirection().getZOffset() * 0.15F), stack);
+			new ItemEntity(this.world, this.getX() + xOffset, this.getY() + yOffset, this.getZ() + zOffset, stack);
 		itementity.setDefaultPickupDelay();
 		this.world.addEntity(itementity);
 		return itementity;
@@ -356,10 +333,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void onStruckByLightning(LightningBoltEntity lightningBolt) {}
+	public void onStruckByLightning(LightningBoltEntity lightningBolt) {
+	}
 
 	@Override
-	public void recalculateSize() {}
+	public void recalculateSize() {
+	}
 
 	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
 		@SuppressWarnings("unchecked")

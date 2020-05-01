@@ -30,14 +30,10 @@ public class ChasingAABBOutline extends AABBOutline {
 
 	@Override
 	public void render(BufferBuilder buffer) {
-		begin();
-
 		Vec3d color = ColorHelper.getRGB(0xFFFFFF);
 		float alpha = 1f;
 		renderBB(interpolateBBs(prevBB, bb, Minecraft.getInstance().getRenderPartialTicks()), buffer, color, alpha,
 				true);
-
-		draw();
 	}
 
 	private static AxisAlignedBB interpolateBBs(AxisAlignedBB current, AxisAlignedBB target, float pt) {

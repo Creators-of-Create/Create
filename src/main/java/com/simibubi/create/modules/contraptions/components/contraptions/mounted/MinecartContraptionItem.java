@@ -138,8 +138,8 @@ public class MinecartContraptionItem extends Item {
 		}
 	}
 
-	public static void addContraptionToMinecart(World world, ItemStack itemstack,
-			AbstractMinecartEntity abstractminecartentity, @Nullable Direction newFacing) {
+	public static void addContraptionToMinecart(World world, ItemStack itemstack, AbstractMinecartEntity cart,
+			@Nullable Direction newFacing) {
 		CompoundNBT tag = itemstack.getOrCreateTag();
 		if (tag.contains("Contraption")) {
 			CompoundNBT contraptionTag = tag.getCompound("Contraption");
@@ -152,9 +152,8 @@ public class MinecartContraptionItem extends Item {
 			else
 				contraption = ContraptionEntity.createMounted(world, mountedContraption, initialAngle);
 
-			contraption.startRiding(abstractminecartentity);
-			contraption.setPosition(abstractminecartentity.posX, abstractminecartentity.posY,
-					abstractminecartentity.posZ);
+			contraption.startRiding(cart);
+			contraption.setPosition(cart.getX(), cart.getY(), cart.getZ());
 			world.addEntity(contraption);
 		}
 	}
@@ -165,7 +164,8 @@ public class MinecartContraptionItem extends Item {
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {}
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+	}
 
 	@SubscribeEvent
 	public static void wrenchCanBeUsedToPickUpMinecartContraptions(PlayerInteractEvent.EntityInteract event) {

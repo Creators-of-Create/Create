@@ -28,7 +28,6 @@ public class BlockClusterOutline extends Outline {
 
 	@Override
 	public void render(BufferBuilder buffer) {
-		begin();
 		Vec3d color = ColorHelper.getRGB(0xDDDDDD);
 		AllSpecialTextures.SELECTION.bind();
 
@@ -41,7 +40,6 @@ public class BlockClusterOutline extends Outline {
 			renderFace(pos, direction, color, alpha * .25f, 1 / 64d, buffer);
 		}
 
-		flush();
 		AllSpecialTextures.BLANK.bind();
 
 		for (MergeEntry edge : cluster.visibleEdges) {
@@ -51,7 +49,6 @@ public class BlockClusterOutline extends Outline {
 			renderAACuboidLine(start, new Vec3d(edge.pos.offset(direction)), color, 1, buffer);
 		}
 
-		draw();
 	}
 
 	public void setAlpha(float alpha) {
