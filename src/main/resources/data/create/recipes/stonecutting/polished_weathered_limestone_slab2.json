@@ -4,11 +4,5 @@
     "item": "create:polished_weathered_limestone"
   },
   "result": "create:polished_weathered_limestone_slab",
-  "count": 2,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 2
 }

@@ -21,11 +21,5 @@
 	"result": {
 		"item": "create:entity_detector",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "logistics"
-		}
-	]
+	}
 }

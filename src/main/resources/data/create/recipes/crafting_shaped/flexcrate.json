@@ -13,11 +13,5 @@
 	"result": {
 		"item": "create:flexcrate",
 		"count": 4
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "logistics"
-		}
-	]
+	}
 }

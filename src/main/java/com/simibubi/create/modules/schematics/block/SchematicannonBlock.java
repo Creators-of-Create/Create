@@ -6,7 +6,6 @@ import com.simibubi.create.foundation.utility.AllShapes;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -24,8 +23,8 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class SchematicannonBlock extends Block implements ITE<SchematicannonTileEntity> {
 
-	public SchematicannonBlock() {
-		super(Properties.from(Blocks.DISPENSER));
+	public SchematicannonBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

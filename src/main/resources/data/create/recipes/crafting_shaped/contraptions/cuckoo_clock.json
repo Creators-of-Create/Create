@@ -22,11 +22,5 @@
 	"result": {
 		"item": "create:cuckoo_clock",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

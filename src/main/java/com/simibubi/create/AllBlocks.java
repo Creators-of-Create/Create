@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.data.ITaggable;
 import com.simibubi.create.foundation.world.OxidizingBlock;
-import com.simibubi.create.modules.IModule;
+import com.simibubi.create.modules.Sections;
 import com.simibubi.create.modules.contraptions.CasingBlock;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
@@ -60,11 +60,11 @@ import com.simibubi.create.modules.contraptions.relays.encased.EncasedShaftBlock
 import com.simibubi.create.modules.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxBlock;
+import com.simibubi.create.modules.curiosities.CocoaLogBlock;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.CrossPlaneSymmetryBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.PlaneSymmetryBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.TriplePlaneSymmetryBlock;
-import com.simibubi.create.modules.gardens.CocoaLogBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
 import com.simibubi.create.modules.logistics.block.StockswitchBlock;
 import com.simibubi.create.modules.logistics.block.belts.observer.BeltObserverBlock;
@@ -120,12 +120,8 @@ import net.minecraftforge.common.ToolType;
 
 public enum AllBlocks implements NonNullSupplier<Block> {
 
-//	__SCHEMATICS__(),
-//	SCHEMATICANNON(SchematicannonBlock::new),
-//	CREATIVE_CRATE(CreativeCrateBlock::new),
-//	SCHEMATIC_TABLE(SchematicTableBlock::new),
+	_1_(Sections.KINETICS),
 
-	__CONTRAPTIONS__(),
 	SHAFT(() -> new ShaftBlock(Properties.from(Blocks.ANDESITE))),
 	COGWHEEL(() -> new CogWheelBlock(false), (b, p) -> new CogwheelBlockItem(b, p, false)),
 	LARGE_COGWHEEL(() -> new CogWheelBlock(true), (b, p) -> new CogwheelBlockItem(b, p, true)),
@@ -186,7 +182,8 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	FURNACE_ENGINE(FurnaceEngineBlock::new),
 	ROTATION_SPEED_CONTROLLER(SpeedControllerBlock::new),
 
-	__LOGISTICS__(),
+	_2_(Sections.LOGISTICS),
+	
 	CONTACT(ContactBlock::new),
 	REDSTONE_BRIDGE(RedstoneLinkBlock::new),
 	STOCKSWITCH(StockswitchBlock::new),
@@ -208,18 +205,42 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	FLEXPULSEPEATER(FlexpeaterBlock::new),
 	REDSTONE_LATCH(LatchBlock::new),
 	TOGGLE_LATCH(ToggleLatchBlock::new),
+	
+	_3_(Sections.MATERIALS),
+	
+	COPPER_ORE(() -> new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1),
+			ITaggable.create().withForgeTags("ores/copper")),
+	ZINC_ORE(() -> new Block(Properties.from(Blocks.GOLD_ORE).harvestLevel(2).harvestTool(ToolType.PICKAXE)),
+			ITaggable.create().withForgeTags("ores/zinc")),
+	COPPER_BLOCK(() -> new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f),
+			ITaggable.create().withForgeTags("storage_blocks/copper")),
+	COPPER_SHINGLES(() -> new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f)),
+	ZINC_BLOCK(() -> new Block(Properties.from(Blocks.IRON_BLOCK)),
+			ITaggable.create().withForgeTags("storage_blocks/zinc")),
+	BRASS_BLOCK(() -> new Block(Properties.from(Blocks.IRON_BLOCK)),
+			ITaggable.create().withForgeTags("storage_blocks/brass")),
 
-	__CURIOSITIES__(),
+	_4_(Sections.CURIOSITIES),
+
 	SYMMETRY_PLANE(PlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
 	SYMMETRY_CROSSPLANE(CrossPlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
 	SYMMETRY_TRIPLEPLANE(TriplePlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
 	WINDOW_IN_A_BLOCK(WindowInABlockBlock::new, ComesWith.NO_BLOCKITEM),
 	COCOA_LOG(CocoaLogBlock::new, ITaggable.create().withVanillaTags(ITaggable.BLOCK, "jungle_logs")),
 
-	__PALETTES__(),
-	TILED_GLASS(() -> new GlassBlock(Properties.from(Blocks.GLASS)), ITaggable.create().withVanillaTags(ITaggable.BLOCK, "impermeable").withForgeTags("glass")),
+	_5_(Sections.SCHEMATICS),
+	
+//	SCHEMATICANNON(SchematicannonBlock::new),
+//	CREATIVE_CRATE(CreativeCrateBlock::new),
+//	SCHEMATIC_TABLE(SchematicTableBlock::new),
+	
+	_6_(Sections.PALETTES),
+	
+	TILED_GLASS(() -> new GlassBlock(Properties.from(Blocks.GLASS)),
+			ITaggable.create().withVanillaTags(ITaggable.BLOCK, "impermeable").withForgeTags("glass")),
 	FRAMED_GLASS(() -> new CTGlassBlock(AllCTs.FRAMED_GLASS, false)),
-	HORIZONTAL_FRAMED_GLASS(() -> new HorizontalCTGlassBlock(AllCTs.HORIZONTAL_FRAMED_GLASS, AllCTs.FRAMED_GLASS, false)),
+	HORIZONTAL_FRAMED_GLASS(
+			() -> new HorizontalCTGlassBlock(AllCTs.HORIZONTAL_FRAMED_GLASS, AllCTs.FRAMED_GLASS, false)),
 	VERTICAL_FRAMED_GLASS(() -> new VerticalCTGlassBlock(AllCTs.VERTICAL_FRAMED_GLASS, false)),
 
 	OAK_GLASS(() -> new CTWindowBlock(AllCTs.OAK_GLASS, false)),
@@ -230,7 +251,8 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	ACACIA_GLASS(() -> new CTWindowBlock(AllCTs.ACACIA_GLASS, false)),
 	IRON_GLASS(() -> new CTWindowBlock(AllCTs.IRON_GLASS, false)),
 
-	TILED_GLASS_PANE(() -> new GlassPaneBlock(Properties.from(Blocks.GLASS)), ITaggable.create().withForgeTags("glass_panes")),
+	TILED_GLASS_PANE(() -> new GlassPaneBlock(Properties.from(Blocks.GLASS)),
+			ITaggable.create().withForgeTags("glass_panes")),
 	FRAMED_GLASS_PANE(() -> new CTGlassPaneBlock(FRAMED_GLASS.get())),
 	HORIZONTAL_FRAMED_GLASS_PANE(() -> new CTGlassPaneBlock(HORIZONTAL_FRAMED_GLASS.get())),
 	VERTICAL_FRAMED_GLASS_PANE(() -> new CTGlassPaneBlock(VERTICAL_FRAMED_GLASS.get())),
@@ -243,109 +265,118 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	IRON_GLASS_PANE(() -> new CTGlassPaneBlock(IRON_GLASS.get())),
 
 	GRANITE_BRICKS(() -> new Block(Properties.from(Blocks.GRANITE))),
-	GRANITE_LAYERS(() -> new LayeredCTBlock(Properties.from(Blocks.GRANITE), AllCTs.GRANITE_LAYERS, AllCTs.POLISHED_GRANITE)),
+	GRANITE_LAYERS(
+			() -> new LayeredCTBlock(Properties.from(Blocks.GRANITE), AllCTs.GRANITE_LAYERS, AllCTs.POLISHED_GRANITE)),
 	DIORITE_BRICKS(() -> new Block(Properties.from(Blocks.DIORITE))),
-	DIORITE_LAYERS(() -> new LayeredCTBlock(Properties.from(Blocks.DIORITE), AllCTs.DIORITE_LAYERS, AllCTs.POLISHED_DIORITE)),
+	DIORITE_LAYERS(
+			() -> new LayeredCTBlock(Properties.from(Blocks.DIORITE), AllCTs.DIORITE_LAYERS, AllCTs.POLISHED_DIORITE)),
 	ANDESITE_BRICKS(() -> new Block(Properties.from(Blocks.ANDESITE))),
-	ANDESITE_LAYERS(() -> 
-			new LayeredCTBlock(Properties.from(Blocks.ANDESITE), AllCTs.ANDESITE_LAYERS, AllCTs.POLISHED_ANDESITE)),
+	ANDESITE_LAYERS(() -> new LayeredCTBlock(Properties.from(Blocks.ANDESITE), AllCTs.ANDESITE_LAYERS,
+			AllCTs.POLISHED_ANDESITE)),
 
-	GABBRO(() -> new Block(Properties.from(Blocks.GRANITE)), ITaggable.create().withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	GABBRO(() -> new Block(Properties.from(Blocks.GRANITE)), ITaggable.create().withForgeTags("stone"),
+			ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	POLISHED_GABBRO(() -> new Block(Properties.from(GABBRO.get())), ITaggable.create().withForgeTags("stone")),
 	GABBRO_BRICKS(() -> new Block(Properties.from(GABBRO.get())), ComesWith.STAIRS, ComesWith.WALL),
 	PAVED_GABBRO_BRICKS(() -> new Block(Properties.from(GABBRO.get())), ComesWith.SLAB),
 	INDENTED_GABBRO(() -> new Block(Properties.from(GABBRO.get())), ComesWith.SLAB),
 	SLIGHTLY_MOSSY_GABBRO_BRICKS(() -> new Block(Properties.from(GABBRO.get()))),
 	MOSSY_GABBRO_BRICKS(() -> new Block(Properties.from(GABBRO.get()))),
-	GABBRO_LAYERS(() -> new LayeredCTBlock(Properties.from(GABBRO.get()), AllCTs.GABBRO_LAYERS, AllCTs.POLISHED_GABBRO)),
+	GABBRO_LAYERS(
+			() -> new LayeredCTBlock(Properties.from(GABBRO.get()), AllCTs.GABBRO_LAYERS, AllCTs.POLISHED_GABBRO)),
 
-	DOLOMITE(() -> new Block(Properties.from(Blocks.QUARTZ_BLOCK)), ITaggable.create().withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	DOLOMITE(() -> new Block(Properties.from(Blocks.QUARTZ_BLOCK)), ITaggable.create().withForgeTags("stone"),
+			ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
 	DOLOMITE_BRICKS(() -> new Block(Properties.from(DOLOMITE.get()))),
 	POLISHED_DOLOMITE(() -> new Block(Properties.from(DOLOMITE.get())), ITaggable.create().withForgeTags("stone")),
 	DOLOMITE_PILLAR(() -> new RotatedPillarBlock(Properties.from(DOLOMITE.get()))),
-	DOLOMITE_LAYERS(() -> 
-			new LayeredCTBlock(Properties.from(DOLOMITE.get()), AllCTs.DOLOMITE_LAYERS, AllCTs.POLISHED_DOLOMITE)),
+	DOLOMITE_LAYERS(() -> new LayeredCTBlock(Properties.from(DOLOMITE.get()), AllCTs.DOLOMITE_LAYERS,
+			AllCTs.POLISHED_DOLOMITE)),
 
 	LIMESAND(() -> new FallingBlock(Properties.from(Blocks.SAND))),
-	LIMESTONE(() -> new Block(Properties.from(Blocks.SANDSTONE)), ITaggable.create().withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	LIMESTONE_BRICKS(() -> new Block(Properties.from(LIMESTONE.get())), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	POLISHED_LIMESTONE(() -> new Block(Properties.from(LIMESTONE.get())), ITaggable.create().withForgeTags("stone"), ComesWith.SLAB),
-	LIMESTONE_PILLAR(() -> new RotatedPillarBlock(Properties.from(LIMESTONE.get()))),
-	LIMESTONE_LAYERS(() -> 
-			new LayeredCTBlock(Properties.from(LIMESTONE.get()), AllCTs.LIMESTONE_LAYERS, AllCTs.POLISHED_LIMESTONE)),
-	WEATHERED_LIMESTONE(() -> new Block(Properties.from(Blocks.ANDESITE)), ITaggable.create().withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	WEATHERED_LIMESTONE_BRICKS(() -> new Block(Properties.from(WEATHERED_LIMESTONE.get())), ComesWith.STAIRS, ComesWith.SLAB,
+	LIMESTONE(() -> new Block(Properties.from(Blocks.SANDSTONE)), ITaggable.create().withForgeTags("stone"),
+			ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	LIMESTONE_BRICKS(() -> new Block(Properties.from(LIMESTONE.get())), ComesWith.STAIRS, ComesWith.SLAB,
 			ComesWith.WALL),
-	POLISHED_WEATHERED_LIMESTONE(() -> new Block(Properties.from(WEATHERED_LIMESTONE.get())), ITaggable.create().withForgeTags("stone"), ComesWith.SLAB),
+	POLISHED_LIMESTONE(() -> new Block(Properties.from(LIMESTONE.get())), ITaggable.create().withForgeTags("stone"),
+			ComesWith.SLAB),
+	LIMESTONE_PILLAR(() -> new RotatedPillarBlock(Properties.from(LIMESTONE.get()))),
+	LIMESTONE_LAYERS(() -> new LayeredCTBlock(Properties.from(LIMESTONE.get()), AllCTs.LIMESTONE_LAYERS,
+			AllCTs.POLISHED_LIMESTONE)),
+	WEATHERED_LIMESTONE(() -> new Block(Properties.from(Blocks.ANDESITE)), ITaggable.create().withForgeTags("stone"),
+			ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	WEATHERED_LIMESTONE_BRICKS(() -> new Block(Properties.from(WEATHERED_LIMESTONE.get())), ComesWith.STAIRS,
+			ComesWith.SLAB, ComesWith.WALL),
+	POLISHED_WEATHERED_LIMESTONE(() -> new Block(Properties.from(WEATHERED_LIMESTONE.get())),
+			ITaggable.create().withForgeTags("stone"), ComesWith.SLAB),
 	WEATHERED_LIMESTONE_PILLAR(() -> new RotatedPillarBlock(Properties.from(WEATHERED_LIMESTONE.get()))),
 	WEATHERED_LIMESTONE_LAYERS(() -> new LayeredCTBlock(Properties.from(WEATHERED_LIMESTONE.get()),
 			AllCTs.WEATHERED_LIMESTONE_LAYERS, AllCTs.POLISHED_WEATHERED_LIMESTONE)),
 
 	NATURAL_SCORIA(ScoriaBlock::new),
-	SCORIA(() -> new Block(Properties.from(Blocks.ANDESITE)), ITaggable.create().withForgeTags("stone"), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-	POLISHED_SCORIA(() -> new Block(Properties.from(SCORIA.get())), ITaggable.create().withForgeTags("stone"), ComesWith.SLAB),
+	SCORIA(() -> new Block(Properties.from(Blocks.ANDESITE)), ITaggable.create().withForgeTags("stone"),
+			ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
+	POLISHED_SCORIA(() -> new Block(Properties.from(SCORIA.get())), ITaggable.create().withForgeTags("stone"),
+			ComesWith.SLAB),
 	SCORIA_BRICKS(() -> new Block(Properties.from(SCORIA.get()))),
-	SCORIA_LAYERS(() -> new LayeredCTBlock(Properties.from(SCORIA.get()), AllCTs.SCORIA_LAYERS, AllCTs.POLISHED_SCORIA)),
+	SCORIA_LAYERS(
+			() -> new LayeredCTBlock(Properties.from(SCORIA.get()), AllCTs.SCORIA_LAYERS, AllCTs.POLISHED_SCORIA)),
 	SCORIA_PILLAR(() -> new RotatedPillarBlock(Properties.from(SCORIA.get()))),
 
 	DARK_SCORIA(() -> new Block(Properties.from(Blocks.ANDESITE))),
 	POLISHED_DARK_SCORIA(() -> new Block(Properties.from(DARK_SCORIA.get()))),
 	DARK_SCORIA_TILES(() -> new Block(Properties.from(DARK_SCORIA.get())), ComesWith.STAIRS, ComesWith.SLAB),
-	DARK_SCORIA_BRICKS(() -> new Block(Properties.from(DARK_SCORIA.get())), ComesWith.STAIRS, ComesWith.SLAB, ComesWith.WALL),
-
-	__MATERIALS__(),
-	COPPER_ORE(() -> new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1), ITaggable.create().withForgeTags("ores/copper")),
-	ZINC_ORE(() -> new Block(Properties.from(Blocks.GOLD_ORE).harvestLevel(2).harvestTool(ToolType.PICKAXE)), ITaggable.create().withForgeTags("ores/zinc")),
-	COPPER_BLOCK(() -> new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f), ITaggable.create().withForgeTags("storage_blocks/copper")),
-	COPPER_SHINGLES(() -> new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f)),
-	ZINC_BLOCK(() -> new Block(Properties.from(Blocks.IRON_BLOCK)), ITaggable.create().withForgeTags("storage_blocks/zinc")),
-	BRASS_BLOCK(() -> new Block(Properties.from(Blocks.IRON_BLOCK)), ITaggable.create().withForgeTags("storage_blocks/brass")),
+	DARK_SCORIA_BRICKS(() -> new Block(Properties.from(DARK_SCORIA.get())), ComesWith.STAIRS, ComesWith.SLAB,
+			ComesWith.WALL),
 
 	;
-    
+
 	private enum ComesWith {
 		NO_BLOCKITEM, WALL, FENCE, FENCE_GATE, SLAB, STAIRS
 	}
 
 	public final RegistryEntry<? extends Block> block;
 	public final ImmutableList<RegistryEntry<? extends Block>> alsoRegistered;
-	public final IModule module;
+	public final Sections section;
 
-	AllBlocks() {
-		Create.registrate().setModule(Lang.asId(name()).replaceAll("__", ""));
+	AllBlocks(Sections section) {
+		Create.registrate().startSection(section);
 		this.block = null;
 		this.alsoRegistered = ImmutableList.of();
-		this.module = Create.registrate().getModule();
+		this.section = Create.registrate().currentSection();
 	}
 
 	AllBlocks(NonNullSupplier<? extends Block> block, ComesWith... comesWith) {
 		this(block, ITaggable.create(), comesWith);
 	}
-	
-	AllBlocks(NonNullSupplier<? extends Block> block, NonNullBiFunction<? super Block, Item.Properties, ? extends BlockItem> customItemCreator, ComesWith... comesWith) {
-        this(block, customItemCreator, ITaggable.create(), comesWith);
-    }
 
-	AllBlocks(NonNullSupplier<? extends Block> block, ITaggable<?> tags, ComesWith... comesWith) {
-	    this(block, null, tags, comesWith);
+	AllBlocks(NonNullSupplier<? extends Block> block,
+			NonNullBiFunction<? super Block, Item.Properties, ? extends BlockItem> customItemCreator,
+			ComesWith... comesWith) {
+		this(block, customItemCreator, ITaggable.create(), comesWith);
 	}
 
-	AllBlocks(NonNullSupplier<? extends Block> block, NonNullBiFunction<? super Block, Item.Properties, ? extends BlockItem> customItemCreator, ITaggable<?> tags, ComesWith... comesWith){
-		this.module = Create.registrate().getModule();
-		
+	AllBlocks(NonNullSupplier<? extends Block> block, ITaggable<?> tags, ComesWith... comesWith) {
+		this(block, null, tags, comesWith);
+	}
+
+	AllBlocks(NonNullSupplier<? extends Block> block,
+			NonNullBiFunction<? super Block, Item.Properties, ? extends BlockItem> customItemCreator, ITaggable<?> tags,
+			ComesWith... comesWith) {
+		this.section = Create.registrate().currentSection();
+
 		this.block = Create.registrate().block(Lang.asId(name()), $ -> block.get()) // TODO take properties as input
-				.blockstate(NonNullBiConsumer.noop()) // TODO 
+				.blockstate(NonNullBiConsumer.noop()) // TODO
 				.loot(NonNullBiConsumer.noop()) // TODO
 				.setData(ProviderType.LANG, NonNullBiConsumer.noop()) // TODO
-		        .transform(applyTags(tags))
-		        .transform(b -> registerItemBlock(b, customItemCreator, comesWith))
-		        .register();
+				.transform(applyTags(tags)).transform(b -> registerItemBlock(b, customItemCreator, comesWith))
+				.register();
 
 		ImmutableList.Builder<RegistryEntry<? extends Block>> alsoRegistered = ImmutableList.builder();
 		for (ComesWith with : comesWith) {
-		    if (with != ComesWith.NO_BLOCKITEM) {
-		        alsoRegistered.add(makeRelatedBlock(this.block, with));
-		    }
+			if (with != ComesWith.NO_BLOCKITEM) {
+				alsoRegistered.add(makeRelatedBlock(this.block, with));
+			}
 		}
 		this.alsoRegistered = alsoRegistered.build();
 	}
@@ -353,19 +384,21 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	public static void register() {
 	}
 
-	public <B extends Block, P> BlockBuilder<B, P> registerItemBlock(BlockBuilder<B, P> builder, NonNullBiFunction<? super B, Item.Properties, ? extends BlockItem> customItemCreator, ComesWith... comesWith) {
-	    if (ArrayUtils.contains(comesWith, ComesWith.NO_BLOCKITEM)) {
-	        return builder;
-	    }
+	public <B extends Block, P> BlockBuilder<B, P> registerItemBlock(BlockBuilder<B, P> builder,
+			NonNullBiFunction<? super B, Item.Properties, ? extends BlockItem> customItemCreator,
+			ComesWith... comesWith) {
+		if (ArrayUtils.contains(comesWith, ComesWith.NO_BLOCKITEM)) {
+			return builder;
+		}
 		return registerAsItem(builder, customItemCreator);
 	}
 
-	private <B extends Block, P> BlockBuilder<B, P> registerAsItem(BlockBuilder<B, P> builder, NonNullBiFunction<? super B, Item.Properties, ? extends BlockItem> customItemCreator) {
-		ItemBuilder<? extends BlockItem, BlockBuilder<B, P>> itemBuilder = customItemCreator == null ? builder.item() : builder.item(customItemCreator);
-		return itemBuilder
-				.model(NonNullBiConsumer.noop()) // TODO
-				.properties($ -> AllItems.includeInItemGroup())
-				.build();
+	private <B extends Block, P> BlockBuilder<B, P> registerAsItem(BlockBuilder<B, P> builder,
+			NonNullBiFunction<? super B, Item.Properties, ? extends BlockItem> customItemCreator) {
+		ItemBuilder<? extends BlockItem, BlockBuilder<B, P>> itemBuilder =
+			customItemCreator == null ? builder.item() : builder.item(customItemCreator);
+		return itemBuilder.model(NonNullBiConsumer.noop()) // TODO
+				.properties($ -> AllItems.includeInItemGroup()).build();
 	}
 
 	@Override
@@ -387,44 +420,41 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 
 		switch (feature) {
 		case FENCE:
-		    creator = FenceBlock::new;
-		    tag = BlockTags.FENCES;
+			creator = FenceBlock::new;
+			tag = BlockTags.FENCES;
 			break;
 		case SLAB:
-		    creator = SlabBlock::new;
-            tag = BlockTags.SLABS;
+			creator = SlabBlock::new;
+			tag = BlockTags.SLABS;
 			break;
 		case STAIRS:
-		    creator = p -> new ProperStairsBlock(block.get());
-		    tag = BlockTags.STAIRS;
+			creator = p -> new ProperStairsBlock(block.get());
+			tag = BlockTags.STAIRS;
 			break;
 		case WALL:
-		    creator = WallBlock::new;
-		    tag = BlockTags.WALLS;
+			creator = WallBlock::new;
+			tag = BlockTags.WALLS;
 			break;
 		case FENCE_GATE:
-		    creator = FenceGateBlock::new;
-		    tag = null;
+			creator = FenceGateBlock::new;
+			tag = null;
 			break;
 		default:
-		    throw new IllegalArgumentException("Unknown ComesWith type?");
+			throw new IllegalArgumentException("Unknown ComesWith type?");
 		}
 
 		return Create.registrate().block(block.getId().getPath() + "_" + Lang.asId(feature.name()), creator)
-				.blockstate(NonNullBiConsumer.noop()) // TODO 
+				.blockstate(NonNullBiConsumer.noop()) // TODO
 				.loot(NonNullBiConsumer.noop()) // TODO
-		        .item()
-		        	.model(NonNullBiConsumer.noop()) // TODO
-		        	.build()
-		        .transform(b -> tag != null ? b.tag(tag) : b)
-		        .register();
+				.item().model(NonNullBiConsumer.noop()) // TODO
+				.build().transform(b -> tag != null ? b.tag(tag) : b).register();
 	}
-	
+
 	private <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> applyTags(ITaggable<?> tags) {
-	    return b -> {
-	        tags.getDataTags(ITaggable.BLOCK).forEach(b::tag);
-	        return b;
-	    };
+		return b -> {
+			tags.getDataTags(ITaggable.BLOCK).forEach(b::tag);
+			return b;
+		};
 	}
 
 	@OnlyIn(Dist.CLIENT)

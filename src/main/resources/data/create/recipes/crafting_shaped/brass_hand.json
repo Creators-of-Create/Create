@@ -16,11 +16,5 @@
 	"result": {
 		"item": "create:brass_hand",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

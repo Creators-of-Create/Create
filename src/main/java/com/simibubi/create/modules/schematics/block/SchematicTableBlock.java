@@ -6,7 +6,6 @@ import com.simibubi.create.foundation.utility.AllShapes;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,8 +25,8 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class SchematicTableBlock extends HorizontalBlock implements ITE<SchematicTableTileEntity> {
 
-	public SchematicTableBlock() {
-		super(Properties.from(Blocks.OAK_PLANKS));
+	public SchematicTableBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

@@ -16,11 +16,5 @@
 	"result": {
 		"item": "create:shadow_steel_sword",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "curiosities"
-		}
-	]
+	}
 }

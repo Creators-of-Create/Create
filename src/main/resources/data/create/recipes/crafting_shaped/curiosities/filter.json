@@ -14,11 +14,5 @@
 	"result": {
 		"item": "create:filter",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "curiosities"
-		}
-	]
+	}
 }

@@ -4,11 +4,5 @@
     "item": "create:gabbro_bricks"
   },
   "result": "create:gabbro_bricks_wall",
-  "count": 2,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 2
 }

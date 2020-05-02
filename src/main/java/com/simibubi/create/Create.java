@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.command.CreateCommand;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.world.AllWorldFeatures;
-import com.simibubi.create.modules.ModuleLoadedCondition;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
@@ -23,7 +22,6 @@ import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -75,7 +73,6 @@ public class Create {
 		torquePropagator = new TorquePropagator();
 		lagger = new ServerLagger();
 
-		CraftingHelper.register(new ModuleLoadedCondition.Serializer());
 		AllPackets.registerPackets();
 		AllTriggers.register();
 		

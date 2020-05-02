@@ -11,11 +11,5 @@
   "result": {
     "item": "create:sand_paper",
     "count": 1
-  },
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+  }
 }

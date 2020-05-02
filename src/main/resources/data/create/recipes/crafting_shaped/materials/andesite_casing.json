@@ -19,11 +19,5 @@
 	"result": {
 		"item": "create:andesite_casing",
 		"count": 4
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

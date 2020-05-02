@@ -18,11 +18,5 @@
 	"result": {
 		"item": "create:goggles",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "curiosities"
-		}
-	]
+	}
 }

@@ -23,11 +23,5 @@
 	"result": {
 		"item": "create:rose_quartz_shovel",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

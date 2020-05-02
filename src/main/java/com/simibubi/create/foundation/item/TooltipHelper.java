@@ -11,7 +11,7 @@ import com.mojang.bridge.game.Language;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.IModule;
+import com.simibubi.create.modules.Sections;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
@@ -130,11 +130,11 @@ public class TooltipHelper {
 	}
 
 	private static ItemDescription buildToolTip(String translationKey, ItemStack stack) {
-		IModule module = IModule.of(stack);
+		Sections module = Sections.of(stack);
 		if (I18n.format(translationKey).equals("WIP"))
-			return new WipScription(module.getToolTipColor());
+			return new WipScription(module.getTooltipPalette());
 
-		ItemDescription tooltip = new ItemDescription(module.getToolTipColor());
+		ItemDescription tooltip = new ItemDescription(module.getTooltipPalette());
 		String summaryKey = translationKey + ".summary";
 
 		// Summary

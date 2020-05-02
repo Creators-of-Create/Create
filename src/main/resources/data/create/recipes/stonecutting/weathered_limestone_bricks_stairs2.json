@@ -4,11 +4,5 @@
     "item": "create:weathered_limestone_bricks"
   },
   "result": "create:weathered_limestone_bricks_stairs",
-  "count": 1,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 1
 }

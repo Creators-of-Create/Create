@@ -4,11 +4,5 @@
     "item": "create:gabbro"
   },
   "result": "create:gabbro_slab",
-  "count": 2,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 2
 }

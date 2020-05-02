@@ -12,11 +12,5 @@
 	"result": {
 		"item": "create:scoria_wall",
 		"count": 6
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }

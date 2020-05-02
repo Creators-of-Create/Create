@@ -12,11 +12,5 @@
 	"result": {
 		"item": "create:limestone_bricks",
 		"count": 4
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }

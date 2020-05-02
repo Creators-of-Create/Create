@@ -16,11 +16,5 @@
 	"result": {
 		"item": "create:iron_glass",
 		"count": 8
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }

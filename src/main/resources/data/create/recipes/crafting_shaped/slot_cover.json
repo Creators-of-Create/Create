@@ -11,11 +11,5 @@
 	"result": {
 		"item": "create:slot_cover",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

@@ -15,11 +15,5 @@
 	"result": {
 		"item": "create:sticky_mechanical_piston",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

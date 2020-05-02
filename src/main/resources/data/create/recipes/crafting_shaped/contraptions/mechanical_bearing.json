@@ -22,11 +22,5 @@
 	"result": {
 		"item": "create:mechanical_bearing",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

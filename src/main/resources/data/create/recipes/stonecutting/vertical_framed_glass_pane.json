@@ -4,11 +4,5 @@
     "item": "minecraft:glass_pane"
   },
   "result": "create:vertical_framed_glass_pane",
-  "count": 1,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 1
 }

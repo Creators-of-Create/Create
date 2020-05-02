@@ -4,11 +4,5 @@
     "item": "minecraft:andesite"
   },
   "result": "create:andesite_layers",
-  "count": 1,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 1
 }

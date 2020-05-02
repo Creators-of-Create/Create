@@ -4,11 +4,5 @@
     "item": "create:scoria"
   },
   "result": "create:scoria_pillar",
-  "count": 1,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 1
 }

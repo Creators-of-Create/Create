@@ -4,11 +4,5 @@
     "item": "minecraft:diorite"
   },
   "result": "create:diorite_bricks",
-  "count": 1,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 1
 }

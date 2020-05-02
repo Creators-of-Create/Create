@@ -12,11 +12,5 @@
 	"result": {
 		"item": "create:basin",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

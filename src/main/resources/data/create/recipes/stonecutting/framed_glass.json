@@ -4,11 +4,5 @@
     "item": "minecraft:glass"
   },
   "result": "create:framed_glass",
-  "count": 1,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 1
 }

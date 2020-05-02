@@ -22,11 +22,5 @@
 	"result": {
 		"item": "create:millstone",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

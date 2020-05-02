@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.gardens;
+package com.simibubi.create.modules.curiosities;
 
 import java.util.Arrays;
 import java.util.Collections;

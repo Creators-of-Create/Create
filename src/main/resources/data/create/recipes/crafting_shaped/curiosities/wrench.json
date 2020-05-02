@@ -19,11 +19,5 @@
 	"result": {
 		"item": "create:wrench",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "curiosities"
-		}
-	]
+	}
 }

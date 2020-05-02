@@ -1,11 +1,10 @@
 package com.simibubi.create;
 
 import java.util.IdentityHashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.simibubi.create.modules.IModule;
+import com.simibubi.create.modules.Sections;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.Builder;
@@ -41,18 +40,17 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
         super(modid);
     }
     
-    private Map<RegistryEntry<?>, IModule> moduleLookup = new IdentityHashMap<>();
+    private Map<RegistryEntry<?>, Sections> sectionLookup = new IdentityHashMap<>();
     
-    private IModule module;
+    private Sections section;
 
-	public CreateRegistrate setModule(String module) {
-		final String moduleName = module.toLowerCase(Locale.ROOT);
-		this.module = () -> moduleName;
+	public CreateRegistrate startSection(Sections section) {
+		this.section = section;
 		return self();
 	}
 	
-	public IModule getModule() {
-		return module;
+	public Sections currentSection() {
+		return section;
 	}
 	
 	@Deprecated
@@ -64,19 +62,19 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name,
 			Class<? super R> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator) {
 		RegistryEntry<T> ret = super.accept(name, type, builder, creator);
-		moduleLookup.put(ret, getModule());
+		sectionLookup.put(ret, currentSection());
 		return ret;
 	}
 	
-	public IModule getModule(RegistryEntry<?> entry) {
-		return moduleLookup.getOrDefault(entry, IModule.of("unknown"));
+	public Sections getSection(RegistryEntry<?> entry) {
+		return sectionLookup.getOrDefault(entry, Sections.UNASSIGNED);
 	}
 
-	public IModule getModule(IForgeRegistryEntry<?> entry) {
-		return moduleLookup.entrySet().stream()
+	public Sections getSection(IForgeRegistryEntry<?> entry) {
+		return sectionLookup.entrySet().stream()
 				.filter(e -> e.getKey().get() == entry)
 				.map(Entry::getValue)
 				.findFirst()
-				.orElse(IModule.of("unknown"));
+				.orElse(Sections.UNASSIGNED);
 	}
 }

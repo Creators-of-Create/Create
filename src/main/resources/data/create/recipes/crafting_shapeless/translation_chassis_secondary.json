@@ -8,11 +8,5 @@
 	"result": {
 		"item": "create:translation_chassis_secondary",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

@@ -25,11 +25,5 @@
 	"result": {
 		"item": "create:encased_fan",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

@@ -11,11 +11,5 @@
 	"result": {
 		"item": "create:weathered_limestone_bricks_slab",
 		"count": 6
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }

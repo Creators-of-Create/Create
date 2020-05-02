@@ -12,11 +12,5 @@
   },
   "result": {
     "item": "create:zinc_ingot"
-  },
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+  }
 }

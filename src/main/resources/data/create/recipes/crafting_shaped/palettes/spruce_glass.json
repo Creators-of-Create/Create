@@ -16,11 +16,5 @@
 	"result": {
 		"item": "create:spruce_glass",
 		"count": 8
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }

@@ -11,11 +11,5 @@
 	"result": {
 		"item": "create:dark_scoria_tiles",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }

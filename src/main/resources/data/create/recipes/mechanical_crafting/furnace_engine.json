@@ -25,11 +25,5 @@
 	"result": {
 		"item": "create:furnace_engine",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

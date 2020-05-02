@@ -18,11 +18,5 @@
 	"result": {
 		"item": "create:belt_tunnel",
 		"count": 4
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "logistics"
-		}
-	]
+	}
 }

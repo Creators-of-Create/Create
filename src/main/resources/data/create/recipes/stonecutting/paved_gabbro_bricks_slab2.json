@@ -4,11 +4,5 @@
     "item": "create:paved_gabbro_bricks"
   },
   "result": "create:paved_gabbro_bricks_slab",
-  "count": 2,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 2
 }

@@ -22,11 +22,5 @@
 	"result": {
 		"item": "create:rope_pulley",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

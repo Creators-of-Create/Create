@@ -16,11 +16,5 @@
 	"result": {
 		"item": "create:encased_belt",
 		"count": 4
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

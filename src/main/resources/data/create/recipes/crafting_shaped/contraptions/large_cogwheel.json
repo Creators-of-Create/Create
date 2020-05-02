@@ -19,11 +19,5 @@
 	"result": {
 		"item": "create:large_cogwheel",
 		"count": 2
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

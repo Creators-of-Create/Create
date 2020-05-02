@@ -16,11 +16,5 @@
 	"result": {
 		"item": "create:piston_pole",
 		"count": 8
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

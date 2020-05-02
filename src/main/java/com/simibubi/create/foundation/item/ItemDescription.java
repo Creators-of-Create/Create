@@ -56,6 +56,7 @@ public class ItemDescription {
 		Yellow(GOLD, YELLOW),
 		Red(DARK_RED, RED),
 		Purple(DARK_PURPLE, LIGHT_PURPLE),
+		Gray(DARK_GRAY, GRAY),
 
 		;
 

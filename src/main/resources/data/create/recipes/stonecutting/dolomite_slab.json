@@ -4,11 +4,5 @@
     "item": "create:dolomite"
   },
   "result": "create:dolomite_slab",
-  "count": 2,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 2
 }

@@ -31,11 +31,5 @@
 	"result": {
 		"item": "create:tree_fertilizer",
 		"count": 2
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "curiosities"
-		}
-	]
+	}
 }

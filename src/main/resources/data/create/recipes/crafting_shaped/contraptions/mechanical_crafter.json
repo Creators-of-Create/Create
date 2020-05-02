@@ -26,11 +26,5 @@
 	"result": {
 		"item": "create:mechanical_crafter",
 		"count": 3
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

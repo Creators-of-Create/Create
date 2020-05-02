@@ -22,11 +22,5 @@
 	"result": {
 		"item": "create:belt_funnel",
 		"count": 4
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "logistics"
-		}
-	]
+	}
 }

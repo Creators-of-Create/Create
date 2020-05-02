@@ -22,11 +22,5 @@
 	"result": {
 		"item": "create:redstone_latch",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "logistics"
-		}
-	]
+	}
 }

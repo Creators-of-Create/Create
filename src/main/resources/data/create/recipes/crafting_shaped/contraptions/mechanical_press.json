@@ -23,11 +23,5 @@
 	"result": {
 		"item": "create:mechanical_press",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

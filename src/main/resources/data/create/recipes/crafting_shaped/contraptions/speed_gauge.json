@@ -18,11 +18,5 @@
 	"result": {
 		"item": "create:speed_gauge",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

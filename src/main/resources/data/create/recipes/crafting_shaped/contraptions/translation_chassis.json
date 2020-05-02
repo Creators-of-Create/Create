@@ -16,11 +16,5 @@
 	"result": {
 		"item": "create:translation_chassis",
 		"count": 3
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

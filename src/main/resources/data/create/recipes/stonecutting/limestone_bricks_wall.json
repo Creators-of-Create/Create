@@ -4,11 +4,5 @@
     "item": "create:limestone"
   },
   "result": "create:limestone_bricks_wall",
-  "count": 2,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 2
 }

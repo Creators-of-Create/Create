@@ -18,11 +18,5 @@
 	"result": {
 		"item": "create:redstone_bridge",
 		"count": 2
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "logistics"
-		}
-	]
+	}
 }

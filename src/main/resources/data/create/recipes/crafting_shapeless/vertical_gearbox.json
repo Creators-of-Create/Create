@@ -8,11 +8,5 @@
 	"result": {
 		"item": "create:vertical_gearbox",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

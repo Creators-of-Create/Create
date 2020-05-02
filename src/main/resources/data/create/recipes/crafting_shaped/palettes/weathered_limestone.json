@@ -16,11 +16,5 @@
 	"result": {
 		"item": "create:weathered_limestone",
 		"count": 8
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }

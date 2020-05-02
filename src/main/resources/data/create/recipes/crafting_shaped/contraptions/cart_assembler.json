@@ -22,11 +22,5 @@
 	"result": {
 		"item": "create:cart_assembler",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

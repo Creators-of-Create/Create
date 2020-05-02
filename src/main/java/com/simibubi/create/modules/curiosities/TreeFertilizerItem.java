@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.gardens;
+package com.simibubi.create.modules.curiosities;
 
 import com.simibubi.create.foundation.utility.PlacementSimulationServerWorld;
 

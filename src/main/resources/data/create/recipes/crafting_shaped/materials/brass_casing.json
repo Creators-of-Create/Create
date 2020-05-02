@@ -19,11 +19,5 @@
 	"result": {
 		"item": "create:brass_casing",
 		"count": 4
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "contraptions"
-		}
-	]
+	}
 }

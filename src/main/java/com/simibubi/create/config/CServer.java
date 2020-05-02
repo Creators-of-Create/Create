@@ -2,12 +2,6 @@ package com.simibubi.create.config;
 
 public class CServer extends ConfigBase {
 
-	public ConfigGroup modules = group(0, "modules", Comments.modules);
-	public ConfigBool enableSchematics = b(true, "enableSchematics");
-	public ConfigBool enableCuriosities = b(true, "enableCuriosities");
-	public ConfigBool enablePalettes = b(true, "enablePalettes");
-	public ConfigBool enableLogistics = b(true, "enableLogistics");
-
 	public ConfigGroup infrastructure = group(0, "infrastructure", Comments.infrastructure);
 	public ConfigInt tickrateSyncTimer =
 		i(20, 5, "tickrateSyncTimer", "[in Ticks]", Comments.tickrateSyncTimer, Comments.tickrateSyncTimer2);
@@ -24,11 +18,10 @@ public class CServer extends ConfigBase {
 	}
 
 	private static class Comments {
-		static String schematics = "The Schematics Module";
-		static String kinetics = "The Contraptions Module";
-		static String logistics = "The Logistics Module";
-		static String curiosities = "Everything that spins";
-		static String modules = "Configure which Modules should be accessible in recipes and creative menus.";
+		static String schematics = "Everything related to Schematic tools";
+		static String kinetics = "Parameters and abilities of Create's kinetic mechanisms";
+		static String logistics = "Tweaks for logistical components";
+		static String curiosities = "Gadgets and other Shenanigans added by Create";
 		static String control = "You can try inhibiting related game mechanics for troubleshooting repeated crashes.";
 		static String infrastructure = "The Backbone of Create";
 		static String tickrateSyncTimer =

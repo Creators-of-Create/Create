@@ -4,11 +4,5 @@
     "item": "create:limestone"
   },
   "result": "create:limestone_bricks",
-  "count": 1,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 1
 }

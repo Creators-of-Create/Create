@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.data.ITaggable;
-import com.simibubi.create.modules.IModule;
+import com.simibubi.create.modules.Sections;
 import com.simibubi.create.modules.contraptions.GogglesItem;
 import com.simibubi.create.modules.contraptions.WrenchItem;
 import com.simibubi.create.modules.contraptions.components.contraptions.glue.SuperGlueItem;
@@ -23,6 +23,7 @@ import com.simibubi.create.modules.contraptions.relays.gearbox.VerticalGearboxIt
 import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
 import com.simibubi.create.modules.curiosities.RefinedRadianceItem;
 import com.simibubi.create.modules.curiosities.ShadowSteelItem;
+import com.simibubi.create.modules.curiosities.TreeFertilizerItem;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItem;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
@@ -32,7 +33,6 @@ import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
 import com.simibubi.create.modules.curiosities.tools.ShadowSteelToolItem;
 import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem;
 import com.simibubi.create.modules.curiosities.zapper.terrainzapper.TerrainzapperItem;
-import com.simibubi.create.modules.gardens.TreeFertilizerItem;
 import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 import com.simibubi.create.modules.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.modules.schematics.item.SchematicItem;
@@ -57,7 +57,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD)
 public enum AllItems {
 
-	__MATERIALS__(module()),
+	_1_(Sections.MATERIALS),
+	
 	COPPER_NUGGET((TaggedItem) new TaggedItem().withForgeTags("nuggets/copper")),
 	ZINC_NUGGET((TaggedItem) new TaggedItem().withForgeTags("nuggets/zinc")),
 	BRASS_NUGGET((TaggedItem) new TaggedItem().withForgeTags("nuggets/brass")),
@@ -88,8 +89,9 @@ public enum AllItems {
 	REFINED_RADIANCE(RefinedRadianceItem::new, rarity(Rarity.UNCOMMON)),
 	ELECTRON_TUBE,
 	INTEGRATED_CIRCUIT,
+	
+	_2_(Sections.KINETICS),
 
-	__CONTRAPTIONS__(module()),
 	BELT_CONNECTOR(BeltConnectorItem::new),
 	VERTICAL_GEARBOX(VerticalGearboxItem::new),
 	PROPELLER,
@@ -104,11 +106,13 @@ public enum AllItems {
 	MINECART_CONTRAPTION(p -> new MinecartContraptionItem(Type.RIDEABLE, p)),
 	FURNACE_MINECART_CONTRAPTION(p -> new MinecartContraptionItem(Type.FURNACE, p)),
 
-	__LOGISTICS__(module()),
+	_3_(Sections.LOGISTICS),
+	
 	FILTER(FilterItem::new),
 	PROPERTY_FILTER(FilterItem::new),
 
-	__CURIOSITIES__(module()),
+	_4_(Sections.CURIOSITIES),
+	
 	TREE_FERTILIZER(TreeFertilizerItem::new),
 	PLACEMENT_HANDGUN(BlockzapperItem::new),
 	TERRAIN_ZAPPER(TerrainzapperItem::new),
@@ -129,27 +133,28 @@ public enum AllItems {
 	SHADOW_STEEL_PICKAXE(p -> new ShadowSteelToolItem(2.5F, -2.0F, p, PICKAXE)),
 	SHADOW_STEEL_MATTOCK(p -> new ShadowSteelToolItem(2.5F, -1.5F, p, SHOVEL, AXE, HOE)),
 	SHADOW_STEEL_SWORD(p -> new SwordItem(AllToolTiers.SHADOW_STEEL, 3, -2.0F, p)),
-
-	__SCHEMATICS__(module()),
+	
+	_5_(Sections.SCHEMATICS),
+	
 	EMPTY_BLUEPRINT(Item::new, stackSize(1)),
 	BLUEPRINT_AND_QUILL(SchematicAndQuillItem::new, stackSize(1)),
 	BLUEPRINT(SchematicItem::new),
 
 	;
 
-	private static class CategoryTracker {
-		static IModule currentModule;
+	private static class SectionTracker {
+		static Sections currentSection;
 	}
 
 	// Common
 
-	public IModule module;
+	public Sections section;
 	private Function<Properties, Properties> specialProperties;
 	private TaggedItem taggedItem;
 	private Item item;
 
-	AllItems(int moduleMarker) {
-		CategoryTracker.currentModule = () -> Lang.asId(name()).replaceAll("__", "");
+	AllItems(Sections section) {
+		SectionTracker.currentSection = section;
 		taggedItem = new TaggedItem(null);
 	}
 
@@ -171,7 +176,7 @@ public enum AllItems {
 
 	AllItems(TaggedItem taggedItemIn, Function<Properties, Properties> specialProperties) {
 		this.taggedItem = taggedItemIn;
-		this.module = CategoryTracker.currentModule;
+		this.section = SectionTracker.currentSection;
 		this.specialProperties = specialProperties;
 	}
 
@@ -185,10 +190,6 @@ public enum AllItems {
 
 	private static Properties defaultProperties(AllItems item) {
 		return includeInItemGroup().setISTER(() -> item::getRenderer);
-	}
-
-	private static int module() {
-		return 0;
 	}
 
 	public static Properties includeInItemGroup() {

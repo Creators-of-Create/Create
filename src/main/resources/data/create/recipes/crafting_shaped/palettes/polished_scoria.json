@@ -12,11 +12,5 @@
 	"result": {
 		"item": "create:polished_scoria",
 		"count": 4
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }

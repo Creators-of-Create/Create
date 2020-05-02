@@ -4,11 +4,5 @@
     "item": "create:gabbro"
   },
   "result": "create:slightly_mossy_gabbro_bricks",
-  "count": 1,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 1
 }

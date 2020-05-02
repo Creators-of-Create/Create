@@ -19,11 +19,5 @@
 	"result": {
 		"item": "create:toggle_latch",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "logistics"
-		}
-	]
+	}
 }

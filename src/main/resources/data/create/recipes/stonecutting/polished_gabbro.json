@@ -4,11 +4,5 @@
     "item": "create:gabbro"
   },
   "result": "create:polished_gabbro",
-  "count": 1,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 1
 }

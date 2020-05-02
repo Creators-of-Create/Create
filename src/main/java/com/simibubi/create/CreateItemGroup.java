@@ -40,15 +40,12 @@ public final class CreateItemGroup extends ItemGroup {
 			Block def = entry.get();
 			if (def == null)
 				continue;
-			if (!Create.registrate().getModule(entry).isEnabled())
-				continue;
 			if (def instanceof IAddedByOther)
 				continue;
 
 			Item item = def.asItem();
-			if (item != Items.AIR) {
+			if (item != Items.AIR) 
     			item.fillItemGroup(this, items);
-			}
 		}
 	}
 
@@ -58,8 +55,6 @@ public final class CreateItemGroup extends ItemGroup {
 
 		for (AllItems item : AllItems.values()) {
 			if (item.get() == null)
-				continue;
-			if (!item.module.isEnabled())
 				continue;
 			IBakedModel model = itemRenderer.getItemModelWithOverrides(item.asStack(), Minecraft.getInstance().world, null);
 			if (model.isGui3d() != specialItems)

@@ -19,11 +19,5 @@
 	"result": {
 		"item": "create:placement_handgun",
 		"count": 1
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "curiosities"
-		}
-	]
+	}
 }

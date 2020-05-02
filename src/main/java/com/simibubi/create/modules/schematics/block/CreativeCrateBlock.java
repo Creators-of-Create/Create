@@ -4,7 +4,6 @@ import com.simibubi.create.foundation.utility.AllShapes;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -15,8 +14,8 @@ import net.minecraft.world.IBlockReader;
 
 public class CreativeCrateBlock extends Block {
 
-	public CreativeCrateBlock() {
-		super(Properties.create(Material.WOOD));
+	public CreativeCrateBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

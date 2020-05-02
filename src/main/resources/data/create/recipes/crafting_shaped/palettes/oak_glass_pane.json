@@ -12,11 +12,5 @@
 	"result": {
 		"item": "create:oak_glass_pane",
 		"count": 16
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }

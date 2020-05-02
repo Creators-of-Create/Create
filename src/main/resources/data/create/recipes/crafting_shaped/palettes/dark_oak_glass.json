@@ -16,11 +16,5 @@
 	"result": {
 		"item": "create:dark_oak_glass",
 		"count": 8
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }

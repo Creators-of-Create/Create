@@ -11,11 +11,5 @@
   "result": {
     "item": "create:cocoa_log",
     "count": 1
-  },
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "curiosities"
-		}
-	]
+  }
 }

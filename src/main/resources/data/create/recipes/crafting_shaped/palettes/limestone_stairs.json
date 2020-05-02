@@ -13,11 +13,5 @@
 	"result": {
 		"item": "create:limestone_stairs",
 		"count": 4
-	},
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+	}
 }
