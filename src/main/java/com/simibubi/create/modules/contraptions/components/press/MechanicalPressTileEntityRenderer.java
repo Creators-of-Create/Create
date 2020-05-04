@@ -4,7 +4,7 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
@@ -39,7 +39,7 @@ public class MechanicalPressTileEntityRenderer extends KineticTileEntityRenderer
 
 	@Override
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS,
+		return AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(BlockStateProperties.AXIS,
 				te.getBlockState().get(HORIZONTAL_FACING).getAxis());
 	}
 

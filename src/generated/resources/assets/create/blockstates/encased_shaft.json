@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:block/encased_shaft/block",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create:block/encased_shaft/block"
+    },
+    "axis=z": {
+      "model": "create:block/encased_shaft/block",
+      "x": 90
+    }
+  }
+}

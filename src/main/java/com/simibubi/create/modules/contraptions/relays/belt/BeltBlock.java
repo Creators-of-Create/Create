@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.ITE;
@@ -60,8 +61,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltBlock extends HorizontalKineticBlock
-		implements ITE<BeltTileEntity>, IHaveColorHandler {
+public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, IHaveColorHandler {
 
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
@@ -78,7 +78,8 @@ public class BeltBlock extends HorizontalKineticBlock
 			return false;
 		try {
 			return getTileEntity(world, pos).hasPulley();
-		} catch (TileEntityException e) {}
+		} catch (TileEntityException e) {
+		}
 		return false;
 	}
 
@@ -106,7 +107,7 @@ public class BeltBlock extends HorizontalKineticBlock
 			drops.addAll(AllBlocks.BRASS_CASING.getDefault().getDrops(builder));
 		TileEntity tileEntity = builder.get(LootParameters.BLOCK_ENTITY);
 		if (tileEntity instanceof BeltTileEntity && ((BeltTileEntity) tileEntity).hasPulley())
-			drops.addAll(AllBlocks.SHAFT.getDefault().getDrops(builder));
+			drops.addAll(AllBlocksNew.getDefault(AllBlocksNew.SHAFT).getDrops(builder));
 		return drops;
 	}
 
@@ -199,7 +200,7 @@ public class BeltBlock extends HorizontalKineticBlock
 		if (player.isSneaking() || !player.isAllowEdit())
 			return ActionResultType.PASS;
 		ItemStack heldItem = player.getHeldItem(handIn);
-		boolean isShaft = heldItem.getItem() == AllBlocks.SHAFT.get().asItem();
+		boolean isShaft = heldItem.getItem() == AllBlocksNew.SHAFT.get().asItem();
 		boolean isCasing = heldItem.getItem() == AllBlocks.BRASS_CASING.get().asItem();
 		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
 		boolean isHand = heldItem.isEmpty() && handIn == Hand.MAIN_HAND;
@@ -284,7 +285,7 @@ public class BeltBlock extends HorizontalKineticBlock
 				belt.attachKinetics();
 			}
 			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, new ItemStack(AllBlocks.SHAFT.get()));
+				player.inventory.placeItemBackInInventory(world, AllBlocksNew.asStack(AllBlocksNew.SHAFT));
 			return ActionResultType.SUCCESS;
 		}
 
@@ -370,7 +371,8 @@ public class BeltBlock extends HorizontalKineticBlock
 				return BeltShapes.getCollisionShape(state);
 			}
 
-		} catch (TileEntityException e) {}
+		} catch (TileEntityException e) {
+		}
 		return shape;
 	}
 
@@ -490,7 +492,7 @@ public class BeltBlock extends HorizontalKineticBlock
 			}
 
 			BlockState shaftState =
-				AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS, getRotationAxis(currentState));
+				AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(BlockStateProperties.AXIS, getRotationAxis(currentState));
 			world.setBlockState(currentPos, hasPulley ? shaftState : Blocks.AIR.getDefaultState(), 3);
 			world.playEvent(2001, currentPos, Block.getStateId(currentState));
 		}

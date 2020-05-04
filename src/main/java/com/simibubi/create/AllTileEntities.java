@@ -108,11 +108,11 @@ public enum AllTileEntities {
 	SCHEMATICTABLE(SchematicTableTileEntity::new, AllBlocksNew.SCHEMATIC_TABLE),
 
 	// Kinetics
-	SHAFT(ShaftTileEntity::new, AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL, AllBlocks.ENCASED_SHAFT),
+	SHAFT(ShaftTileEntity::new, AllBlocksNew.SHAFT, AllBlocksNew.COGWHEEL, AllBlocksNew.LARGE_COGWHEEL, AllBlocksNew.ENCASED_SHAFT),
 	MOTOR(MotorTileEntity::new, AllBlocks.CREATIVE_MOTOR),
 	GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
 	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
-	ENCASED_SHAFT(EncasedShaftTileEntity::new, AllBlocks.ENCASED_SHAFT, AllBlocks.ENCASED_BELT),
+	ENCASED_SHAFT(EncasedShaftTileEntity::new, AllBlocksNew.ENCASED_SHAFT, AllBlocks.ENCASED_BELT),
 	ADJUSTABLE_PULLEY(AdjustablePulleyTileEntity::new, AllBlocks.ADJUSTABLE_PULLEY),
 	ENCASED_FAN(EncasedFanTileEntity::new, AllBlocks.ENCASED_FAN),
 	NOZZLE(NozzleTileEntity::new, AllBlocks.NOZZLE),

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:block/large_cogwheel",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create:block/large_cogwheel"
+    },
+    "axis=z": {
+      "model": "create:block/large_cogwheel",
+      "x": 90
+    }
+  }
+}

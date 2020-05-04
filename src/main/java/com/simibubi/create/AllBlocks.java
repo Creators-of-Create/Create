@@ -50,13 +50,9 @@ import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.modules.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
-import com.simibubi.create.modules.contraptions.relays.elementary.CogwheelBlockItem;
-import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.AdjustablePulleyBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
-import com.simibubi.create.modules.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxBlock;
@@ -122,13 +118,14 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 
 	_1_(Sections.KINETICS),
 
-	SHAFT(() -> new ShaftBlock(Properties.from(Blocks.ANDESITE))),
-	COGWHEEL(() -> new CogWheelBlock(false), (b, p) -> new CogwheelBlockItem(b, p, false)),
-	LARGE_COGWHEEL(() -> new CogWheelBlock(true), (b, p) -> new CogwheelBlockItem(b, p, true)),
-	ENCASED_SHAFT(EncasedShaftBlock::new),
+//	SHAFT(() -> new ShaftBlock(Properties.from(Blocks.ANDESITE))),
+//	COGWHEEL(() -> new CogWheelBlock(false), (b, p) -> new CogwheelBlockItem(b, p, false)),
+//	LARGE_COGWHEEL(() -> new CogWheelBlock(true), (b, p) -> new CogwheelBlockItem(b, p, true)),
+//	ENCASED_SHAFT(EncasedShaftBlock::new),
 	GEARBOX(GearboxBlock::new),
 	CLUTCH(ClutchBlock::new),
 	GEARSHIFT(GearshiftBlock::new),
+	
 	ENCASED_BELT(EncasedBeltBlock::new),
 	ADJUSTABLE_PULLEY(AdjustablePulleyBlock::new),
 	BELT(BeltBlock::new, ComesWith.NO_BLOCKITEM),

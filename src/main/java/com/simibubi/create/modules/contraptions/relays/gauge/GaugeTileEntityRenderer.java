@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.relays.gauge;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -60,7 +60,7 @@ public class GaugeTileEntityRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS,
+		return AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(BlockStateProperties.AXIS,
 				((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState()));
 	}
 

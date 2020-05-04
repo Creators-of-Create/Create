@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
@@ -17,7 +17,7 @@ public class MechanicalPistonTileEntityRenderer extends KineticTileEntityRendere
 
 	@Override
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS,
+		return AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(BlockStateProperties.AXIS,
 				((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState()));
 	}
 

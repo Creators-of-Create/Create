@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions.base;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -10,6 +9,7 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
 import com.simibubi.create.modules.contraptions.KineticDebugger;
+import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -83,7 +83,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	protected static float getRotationOffsetForPosition(KineticTileEntity te, final BlockPos pos, final Axis axis) {
-		float offset = AllBlocks.LARGE_COGWHEEL.typeOf(te.getBlockState()) ? 11.25f : 0;
+		float offset = CogWheelBlock.isLargeCog(te.getBlockState()) ? 11.25f : 0;
 		double d = (((axis == Axis.X) ? 0 : pos.getX()) + ((axis == Axis.Y) ? 0 : pos.getY())
 				+ ((axis == Axis.Z) ? 0 : pos.getZ())) % 2;
 		if (d == 0) {

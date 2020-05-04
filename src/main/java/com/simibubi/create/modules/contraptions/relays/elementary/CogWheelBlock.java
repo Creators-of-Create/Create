@@ -1,13 +1,13 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -23,10 +23,18 @@ import net.minecraft.world.World;
 
 public class CogWheelBlock extends ShaftBlock {
 
-	private boolean isLarge;
+	boolean isLarge;
 
-	public CogWheelBlock(boolean large) {
-		super(Properties.from(Blocks.GRANITE));
+	public static CogWheelBlock small(Properties properties) {
+		return new CogWheelBlock(false, properties);
+	}
+	
+	public static CogWheelBlock large(Properties properties) {
+		return new CogWheelBlock(true, properties);
+	}
+	
+	private CogWheelBlock(boolean large, Properties properties) {
+		super(properties);
 		isLarge = large;
 	}
 
@@ -42,7 +50,7 @@ public class CogWheelBlock extends ShaftBlock {
 				continue;
 
 			BlockState blockState = worldIn.getBlockState(pos.offset(facing));
-			if (AllBlocks.LARGE_COGWHEEL.typeOf(blockState) || isLarge && AllBlocks.COGWHEEL.typeOf(blockState))
+			if (isLargeCog(blockState) || isLarge && isSmallCog(blockState))
 				return false;
 		}
 		return true;
@@ -80,6 +88,14 @@ public class CogWheelBlock extends ShaftBlock {
 	@Override
 	public float getParticleInitialRadius() {
 		return isLarge ? 1f : .75f;
+	}
+	
+	public static boolean isSmallCog(BlockState state) {
+		return AllBlocksNew.equals(AllBlocksNew.COGWHEEL, state);
+	}
+	
+	public static boolean isLargeCog(BlockState state) {
+		return AllBlocksNew.equals(AllBlocksNew.LARGE_COGWHEEL, state);
 	}
 
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {

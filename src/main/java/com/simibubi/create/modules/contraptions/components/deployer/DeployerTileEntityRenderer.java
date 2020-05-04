@@ -11,6 +11,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -138,7 +139,7 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		BlockState state = te.getBlockState();
 		if (!AllBlocks.DEPLOYER.typeOf(state))
 			return Blocks.AIR.getDefaultState();
-		return AllBlocks.SHAFT.get().getDefaultState().with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
+		return AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
 	}
 
 	private static SuperByteBuffer renderAndTransform(World world, AllBlockPartials renderBlock,

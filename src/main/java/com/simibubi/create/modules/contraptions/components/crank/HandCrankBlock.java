@@ -1,12 +1,12 @@
 package com.simibubi.create.modules.contraptions.components.crank;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
@@ -25,7 +25,7 @@ import net.minecraft.world.World;
 public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandCrankTileEntity> {
 
 	public HandCrankBlock() {
-		super(Properties.from(AllBlocks.COGWHEEL.get()));
+		super(Properties.from(Blocks.OAK_PLANKS));
 	}
 
 	@Override

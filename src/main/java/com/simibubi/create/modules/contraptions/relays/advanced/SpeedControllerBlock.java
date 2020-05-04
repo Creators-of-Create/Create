@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.contraptions.relays.advanced;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
@@ -34,7 +33,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState above = context.getWorld().getBlockState(context.getPos().up());
-		if (AllBlocks.LARGE_COGWHEEL.typeOf(above) && above.get(CogWheelBlock.AXIS).isHorizontal())
+		if (CogWheelBlock.isLargeCog(above) && above.get(CogWheelBlock.AXIS).isHorizontal())
 			return getDefaultState().with(HORIZONTAL_AXIS, above.get(CogWheelBlock.AXIS) == Axis.X ? Axis.Z : Axis.X);
 		return super.getStateForPlacement(context);
 	}

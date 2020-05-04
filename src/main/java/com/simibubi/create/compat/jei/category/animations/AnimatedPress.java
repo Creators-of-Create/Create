@@ -5,6 +5,7 @@ import static com.simibubi.create.foundation.utility.AnimationTickHolder.ticks;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.gui.ScreenElementRenderer;
 
 import net.minecraft.block.BlockState;
@@ -17,11 +18,11 @@ import net.minecraft.util.Direction.Axis;
 public class AnimatedPress extends AnimatedKinetics {
 
 	private boolean basin;
-	
+
 	public AnimatedPress(boolean basin) {
 		this.basin = basin;
 	}
-	
+
 	@Override
 	public int getWidth() {
 		return 50;
@@ -53,7 +54,7 @@ public class AnimatedPress extends AnimatedKinetics {
 		RenderSystem.pushMatrix();
 		ScreenElementRenderer.renderModel(this::head);
 		RenderSystem.popMatrix();
-		
+
 		if (basin) {
 			RenderSystem.pushMatrix();
 			ScreenElementRenderer.renderBlock(this::basin);
@@ -68,7 +69,7 @@ public class AnimatedPress extends AnimatedKinetics {
 		RenderSystem.translatef(t, -t, -t);
 		RenderSystem.rotatef(getCurrentAngle() * 2, 1, 0, 0);
 		RenderSystem.translatef(-t, t, t);
-		return AllBlocks.SHAFT.get().getDefaultState().with(BlockStateProperties.AXIS, Axis.Z);
+		return AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(BlockStateProperties.AXIS, Axis.Z);
 	}
 
 	private BlockState body() {
@@ -92,7 +93,7 @@ public class AnimatedPress extends AnimatedKinetics {
 		RenderSystem.translated(0, -verticalOffset * 50, 0);
 		return AllBlockPartials.MECHANICAL_PRESS_HEAD.get();
 	}
-	
+
 	private BlockState basin() {
 		RenderSystem.translatef(0, 85, 0);
 		return AllBlocks.BASIN.get().getDefaultState();

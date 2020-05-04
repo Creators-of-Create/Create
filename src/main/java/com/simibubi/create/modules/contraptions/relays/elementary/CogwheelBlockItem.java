@@ -1,9 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
@@ -18,9 +16,9 @@ public class CogwheelBlockItem extends BlockItem {
 
 	boolean large;
 
-	public CogwheelBlockItem(Block block, Properties builder, boolean isLarge) {
+	public CogwheelBlockItem(CogWheelBlock block, Properties builder) {
 		super(block, builder);
-		large = isLarge;
+		large = block.isLarge;
 	}
 
 	@Override
@@ -34,7 +32,7 @@ public class CogwheelBlockItem extends BlockItem {
 		if (face.getAxis() == placedOnState.get(CogWheelBlock.AXIS))
 			return super.tryPlace(context);
 
-		boolean placedOnLarge = AllBlocks.LARGE_COGWHEEL.typeOf(placedOnState);
+		boolean placedOnLarge = CogWheelBlock.isLargeCog(placedOnState);
 		if (placedOnLarge || large) {
 
 			boolean largeOnLarge = placedOnLarge && large;

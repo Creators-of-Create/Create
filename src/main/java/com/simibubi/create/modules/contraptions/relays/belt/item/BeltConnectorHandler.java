@@ -4,9 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -68,7 +68,7 @@ public class BeltConnectorHandler {
 
 			if (world.getBlockState(selected).getMaterial().isReplaceable())
 				return;
-			if (!AllBlocks.SHAFT.typeOf(world.getBlockState(selected)))
+			if (!ShaftBlock.isShaft(world.getBlockState(selected)))
 				selected = selected.offset(((BlockRayTraceResult) rayTrace).getFace());
 			if (!selected.withinDistance(first, AllConfigs.SERVER.kinetics.maxBeltLength.get()))
 				return;

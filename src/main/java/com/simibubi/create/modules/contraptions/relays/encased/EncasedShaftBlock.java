@@ -3,7 +3,6 @@ package com.simibubi.create.modules.contraptions.relays.encased;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
@@ -15,8 +14,8 @@ import net.minecraft.world.IWorldReader;
 
 public class EncasedShaftBlock extends RotatedPillarKineticBlock {
 
-	public EncasedShaftBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public EncasedShaftBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

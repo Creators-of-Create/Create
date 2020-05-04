@@ -106,7 +106,7 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 
 		for (BlockPos pos : beltsToCreate) {
 			BeltBlock.Part part = pos.equals(start) ? Part.START : pos.equals(end) ? Part.END : Part.MIDDLE;
-			boolean pulley = AllBlocks.SHAFT.typeOf(world.getBlockState(pos));
+			boolean pulley = ShaftBlock.isShaft(world.getBlockState(pos));
 			if (part == Part.MIDDLE && pulley)
 				part = Part.PULLEY;
 			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope).with(BeltBlock.PART, part)
@@ -204,7 +204,7 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 		for (BlockPos currentPos = first.add(step); !currentPos.equals(second) && limit-- > 0; currentPos =
 			currentPos.add(step)) {
 			BlockState blockState = world.getBlockState(currentPos);
-			if (AllBlocks.SHAFT.typeOf(blockState) && blockState.get(ShaftBlock.AXIS) == axis)
+			if (ShaftBlock.isShaft(blockState) && blockState.get(ShaftBlock.AXIS) == axis)
 				continue;
 			if (!blockState.getMaterial().isReplaceable())
 				return false;
@@ -217,7 +217,7 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 	public static boolean validateAxis(World world, BlockPos pos) {
 		if (!world.isAreaLoaded(pos, 1))
 			return false;
-		if (!AllBlocks.SHAFT.typeOf(world.getBlockState(pos)))
+		if (!ShaftBlock.isShaft(world.getBlockState(pos)))
 			return false;
 		if (world.getBlockState(pos).get(BlockStateProperties.AXIS) == Axis.Y)
 			return false;

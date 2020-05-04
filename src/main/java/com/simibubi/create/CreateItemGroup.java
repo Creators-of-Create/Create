@@ -23,7 +23,7 @@ public final class CreateItemGroup extends ItemGroup {
 
 	@Override
 	public ItemStack createIcon() {
-		return new ItemStack(AllBlocks.COGWHEEL.get());
+		return AllBlocksNew.asStack(AllBlocksNew.COGWHEEL);
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.relays.advanced;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -30,7 +30,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 	private SuperByteBuffer getRotatedModel(SpeedControllerTileEntity te) {
 		BlockState state = te.getBlockState();
 		return CreateClient.bufferCache.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
-				AllBlocks.SHAFT.getDefault().with(ShaftBlock.AXIS, state.get(SpeedControllerBlock.HORIZONTAL_AXIS)));
+				AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(ShaftBlock.AXIS, state.get(SpeedControllerBlock.HORIZONTAL_AXIS)));
 	}
 
 }

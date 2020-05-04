@@ -5,7 +5,7 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
@@ -91,7 +91,7 @@ public class SawTileEntityRenderer extends SafeTileEntityRenderer<SawTileEntity>
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
 		BlockState state = te.getBlockState();
-		return AllBlocks.SHAFT.get().getDefaultState().with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
+		return AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
 	}
 
 }

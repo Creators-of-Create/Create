@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions;
 
 import static com.simibubi.create.AllBlocks.BELT;
-import static com.simibubi.create.AllBlocks.LARGE_COGWHEEL;
+import static com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock.isLargeCog;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
 import java.util.LinkedList;
@@ -90,18 +90,18 @@ public class RotationPropagator {
 		}
 
 		// Gear <-> Large Gear
-		if (LARGE_COGWHEEL.typeOf(stateFrom) && definitionTo.hasIntegratedCogwheel(world, to.getPos(), stateTo))
-			if (isLargeToSmallGear(stateFrom, stateTo, definitionTo, diff))
+		if (isLargeCog(stateFrom) && definitionTo.hasIntegratedCogwheel(world, to.getPos(), stateTo))
+			if (isLargeToSmallCog(stateFrom, stateTo, definitionTo, diff))
 				return -2f;
-		if (LARGE_COGWHEEL.typeOf(stateTo) && definitionFrom.hasIntegratedCogwheel(world, from.getPos(), stateFrom))
-			if (isLargeToSmallGear(stateTo, stateFrom, definitionFrom, diff))
+		if (isLargeCog(stateTo) && definitionFrom.hasIntegratedCogwheel(world, from.getPos(), stateFrom))
+			if (isLargeToSmallCog(stateTo, stateFrom, definitionFrom, diff))
 				return -.5f;
 
 		// Gear <-> Gear
 		if (connectedByGears) {
 			if (diff.manhattanDistance(BlockPos.ZERO) != 1)
 				return 0;
-			if (LARGE_COGWHEEL.typeOf(stateTo))
+			if (isLargeCog(stateTo))
 				return 0;
 			if (direction.getAxis() == definitionFrom.getRotationAxis(stateFrom))
 				return 0;
@@ -118,9 +118,9 @@ public class RotationPropagator {
 		final BlockPos diff = to.getPos().subtract(from.getPos());
 
 		// Rotation Speed Controller <-> Large Gear
-		if (isLargeGearToSpeedController(stateFrom, stateTo, diff))
+		if (isLargeCogToSpeedController(stateFrom, stateTo, diff))
 			return SpeedControllerTileEntity.getConveyedSpeed(from, to, true);
-		if (isLargeGearToSpeedController(stateTo, stateFrom, diff))
+		if (isLargeCogToSpeedController(stateTo, stateFrom, diff))
 			return SpeedControllerTileEntity.getConveyedSpeed(to, from, false);
 
 		float rotationSpeedModifier = getRotationSpeedModifier(from, to);
@@ -128,7 +128,7 @@ public class RotationPropagator {
 	}
 
 	private static boolean isLargeToLargeGear(BlockState from, BlockState to, BlockPos diff) {
-		if (!LARGE_COGWHEEL.typeOf(from) || !LARGE_COGWHEEL.typeOf(to))
+		if (!isLargeCog(from) || !isLargeCog(to))
 			return false;
 		Axis fromAxis = from.get(AXIS);
 		Axis toAxis = to.get(AXIS);
@@ -161,7 +161,7 @@ public class RotationPropagator {
 		return 1;
 	}
 
-	private static boolean isLargeToSmallGear(BlockState from, BlockState to, IRotate defTo, BlockPos diff) {
+	private static boolean isLargeToSmallCog(BlockState from, BlockState to, IRotate defTo, BlockPos diff) {
 		Axis axisFrom = from.get(AXIS);
 		if (axisFrom != defTo.getRotationAxis(to))
 			return false;
@@ -176,8 +176,8 @@ public class RotationPropagator {
 		return true;
 	}
 
-	private static boolean isLargeGearToSpeedController(BlockState from, BlockState to, BlockPos diff) {
-		if (!LARGE_COGWHEEL.typeOf(from) || !AllBlocks.ROTATION_SPEED_CONTROLLER.typeOf(to))
+	private static boolean isLargeCogToSpeedController(BlockState from, BlockState to, BlockPos diff) {
+		if (!isLargeCog(from) || !AllBlocks.ROTATION_SPEED_CONTROLLER.typeOf(to))
 			return false;
 		if (!diff.equals(BlockPos.ZERO.up()) && !diff.equals(BlockPos.ZERO.down()))
 			return false;
@@ -301,7 +301,7 @@ public class RotationPropagator {
 			TileEntity tileEntity = worldIn.getTileEntity(neighbourPos);
 			if (!(tileEntity instanceof KineticTileEntity))
 				continue;
-			
+
 			final KineticTileEntity neighbourTE = (KineticTileEntity) tileEntity;
 			if (!neighbourTE.hasSource() || !neighbourTE.source.equals(pos))
 				continue;
@@ -383,9 +383,9 @@ public class RotationPropagator {
 		final BlockState stateTo = to.getBlockState();
 		final BlockPos diff = to.getPos().subtract(from.getPos());
 
-		if (isLargeGearToSpeedController(stateFrom, stateTo, diff))
+		if (isLargeCogToSpeedController(stateFrom, stateTo, diff))
 			return true;
-		if (isLargeGearToSpeedController(stateTo, stateFrom, diff))
+		if (isLargeCogToSpeedController(stateTo, stateFrom, diff))
 			return true;
 		return getRotationSpeedModifier(from, to) != 0;
 	}
@@ -413,7 +413,7 @@ public class RotationPropagator {
 
 		// Some Blocks can interface diagonally
 		BlockState blockState = te.getBlockState();
-		boolean isLargeWheel = LARGE_COGWHEEL.typeOf(blockState);
+		boolean isLargeWheel = isLargeCog(blockState);
 
 		if (!(blockState.getBlock() instanceof IRotate))
 			return neighbours;
