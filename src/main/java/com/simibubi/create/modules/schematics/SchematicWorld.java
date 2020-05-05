@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.schematics;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ArmorStandEntity;
+import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
@@ -31,6 +34,7 @@ public class SchematicWorld extends WrappedWorld {
 
 	private Map<BlockPos, BlockState> blocks;
 	private Map<BlockPos, TileEntity> tileEntities;
+	private List<Entity> entities;
 	private Cuboid bounds;
 	public BlockPos anchor;
 	public boolean renderMode;
@@ -41,10 +45,27 @@ public class SchematicWorld extends WrappedWorld {
 		this.tileEntities = new HashMap<>();
 		this.bounds = new Cuboid();
 		this.anchor = anchor;
+		this.entities = new ArrayList<>();
 	}
 
 	public Set<BlockPos> getAllPositions() {
 		return blocks.keySet();
+	}
+	
+	@Override
+	public boolean addEntity(Entity entityIn) {
+		if (entityIn instanceof ItemFrameEntity) 
+			((ItemFrameEntity) entityIn).getDisplayedItem().setTag(null);
+		if (entityIn instanceof ArmorStandEntity) {
+			ArmorStandEntity armorStandEntity = (ArmorStandEntity) entityIn;
+			armorStandEntity.getEquipmentAndArmor().forEach(stack -> stack.setTag(null));
+		}
+		
+		return entities.add(entityIn);
+	}
+	
+	public List<Entity> getEntities() {
+		return entities;
 	}
 
 	@Override

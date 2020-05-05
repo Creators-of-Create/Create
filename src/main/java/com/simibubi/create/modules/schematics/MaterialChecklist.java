@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.google.common.collect.Sets;
+import com.simibubi.create.modules.schematics.ItemRequirement.ItemUseType;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -21,10 +24,12 @@ public class MaterialChecklist {
 
 	public Map<Item, Integer> gathered;
 	public Map<Item, Integer> required;
+	public Map<Item, Integer> damageRequired;
 	public boolean blocksNotLoaded;
 
 	public MaterialChecklist() {
 		required = new HashMap<>();
+		damageRequired = new HashMap<>();
 		gathered = new HashMap<>();
 	}
 
@@ -32,16 +37,33 @@ public class MaterialChecklist {
 		blocksNotLoaded = true;
 	}
 
-	public void require(Item item) {
-		if (required.containsKey(item))
-			required.put(item, required.get(item) + 1);
+	public void require(ItemRequirement requirement) {
+		if (requirement.isEmpty())
+			return;
+		if (requirement.isInvalid())
+			return;
+
+		for (ItemStack stack : requirement.requiredItems) {
+			if (requirement.getUsage() == ItemUseType.DAMAGE)
+				putOrIncrement(damageRequired, stack);
+			if (requirement.getUsage() == ItemUseType.CONSUME)
+				putOrIncrement(required, stack);
+		}
+	}
+
+	private void putOrIncrement(Map<Item, Integer> map, ItemStack stack) {
+		Item item = stack.getItem();
+		if (item == Items.AIR)
+			return;
+		if (map.containsKey(item))
+			map.put(item, map.get(item) + stack.getCount());
 		else
-			required.put(item, 1);
+			map.put(item, stack.getCount());
 	}
 
 	public void collect(ItemStack stack) {
 		Item item = stack.getItem();
-		if (required.containsKey(item))
+		if (required.containsKey(item) || damageRequired.containsKey(item))
 			if (gathered.containsKey(item))
 				gathered.put(item, gathered.get(item) + stack.getCount());
 			else
@@ -65,19 +87,19 @@ public class MaterialChecklist {
 			string = new StringBuilder("{\"text\":\"");
 		}
 
-		List<Item> keys = new ArrayList<>(required.keySet());
+		List<Item> keys = new ArrayList<>(Sets.union(required.keySet(), damageRequired.keySet()));
 		Collections.sort(keys, (item1, item2) -> {
 			Locale locale = Locale.ENGLISH;
-			String name1 = new TranslationTextComponent(((Item) item1).getTranslationKey()).getFormattedText()
-					.toLowerCase(locale);
-			String name2 = new TranslationTextComponent(((Item) item2).getTranslationKey()).getFormattedText()
-					.toLowerCase(locale);
+			String name1 =
+				new TranslationTextComponent(((Item) item1).getTranslationKey()).getFormattedText().toLowerCase(locale);
+			String name2 =
+				new TranslationTextComponent(((Item) item2).getTranslationKey()).getFormattedText().toLowerCase(locale);
 			return name1.compareTo(name2);
 		});
 
 		List<Item> completed = new ArrayList<>();
 		for (Item item : keys) {
-			int amount = required.get(item);
+			int amount = getRequiredAmount(item);
 			if (gathered.containsKey(item))
 				amount -= gathered.get(item);
 
@@ -106,7 +128,7 @@ public class MaterialChecklist {
 			}
 
 			itemsWritten++;
-			string.append(gatheredEntry(new ItemStack(item), required.get(item)));
+			string.append(gatheredEntry(new ItemStack(item), getRequiredAmount(item)));
 		}
 
 		string.append("\"}");
@@ -118,6 +140,13 @@ public class MaterialChecklist {
 		book.setTag(tag);
 
 		return book;
+	}
+
+	public Integer getRequiredAmount(Item item) {
+		int amount = required.getOrDefault(item, 0);
+		if (damageRequired.containsKey(item))
+			amount += Math.ceil(damageRequired.get(item) / (float) new ItemStack(item).getMaxDamage());
+		return amount;
 	}
 
 	private String gatheredEntry(ItemStack item, int amount) {

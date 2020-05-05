@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,9 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
 import com.simibubi.create.modules.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.modules.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.modules.schematics.ItemRequirement;
+import com.simibubi.create.modules.schematics.ItemRequirement.ItemUseType;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -63,7 +67,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class BeltBlock extends HorizontalKineticBlock
-		implements IHaveNoBlockItem, ITE<BeltTileEntity>, IHaveColorHandler {
+		implements IHaveNoBlockItem, ITE<BeltTileEntity>, IHaveColorHandler, ISpecialBlockItemRequirement {
 
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
@@ -602,6 +606,20 @@ public class BeltBlock extends HorizontalKineticBlock
 	@Override
 	public Class<BeltTileEntity> getTileEntityClass() {
 		return BeltTileEntity.class;
+	}
+	
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state) {
+		List<ItemStack> required = new ArrayList<>();
+		if (state.get(PART) != Part.MIDDLE)
+			required.add(new ItemStack(AllBlocks.SHAFT.get()));
+		if (state.get(CASING))
+			required.add(new ItemStack(AllBlocks.BRASS_CASING.get()));
+		if (state.get(PART) == Part.START)
+			required.add(AllItems.BELT_CONNECTOR.asStack());
+		if (required.isEmpty())
+			return ItemRequirement.NONE;
+		return new ItemRequirement(ItemUseType.CONSUME, required);
 	}
 
 }

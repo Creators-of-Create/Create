@@ -7,11 +7,14 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
+import com.simibubi.create.modules.schematics.block.LaunchedItem.ForBlockState;
+import com.simibubi.create.modules.schematics.block.LaunchedItem.ForEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.particles.ParticleTypes;
@@ -20,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
+@SuppressWarnings("deprecation")
 public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
 
 	@Override
@@ -56,14 +60,14 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		}
 
 		if (!tileEntityIn.flyingBlocks.isEmpty()) {
-			for (LaunchedBlock block : tileEntityIn.flyingBlocks) {
+			for (LaunchedItem launched : tileEntityIn.flyingBlocks) {
 
-				if (block.ticksRemaining == 0)
+				if (launched.ticksRemaining == 0)
 					continue;
 
 				// Calculate position of flying block
 				Vec3d start = new Vec3d(tileEntityIn.getPos().add(.5f, 1, .5f));
-				Vec3d target = new Vec3d(block.target).add(-.5, 0, 1);
+				Vec3d target = new Vec3d(launched.target).add(-.5, 0, 1);
 				Vec3d distance = target.subtract(start);
 
 				double targetY = target.y - start.y;
@@ -71,10 +75,10 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				Vec3d cannonOffset = distance.add(0, throwHeight, 0).normalize().scale(2);
 				start = start.add(cannonOffset);
 
-				double progress = ((double) block.totalTicks - (block.ticksRemaining + 1 - partialTicks))
-						/ block.totalTicks;
-				Vec3d blockLocationXZ = new Vec3d(x + .5, y + .5, z + .5)
-						.add(target.subtract(start).scale(progress).mul(1, 0, 1));
+				double progress =
+					((double) launched.totalTicks - (launched.ticksRemaining + 1 - partialTicks)) / launched.totalTicks;
+				Vec3d blockLocationXZ =
+					new Vec3d(x + .5, y + .5, z + .5).add(target.subtract(start).scale(progress).mul(1, 0, 1));
 
 				// Height is determined through a bezier curve
 				double t = progress;
@@ -86,21 +90,32 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				GlStateManager.translated(blockLocation.x, blockLocation.y, blockLocation.z);
 
 				// Rotation and Scaling effects
-				double scale = .3f;
 				GlStateManager.rotated(360 * t * 2, 1, 1, 0);
-				GlStateManager.scaled(scale, scale, scale);
 
 				// Render the Block
-				Minecraft.getInstance().getBlockRendererDispatcher().renderBlockBrightness(block.state, 1);
+				if (launched instanceof ForBlockState) {
+					double scale = .3f;
+					GlStateManager.scaled(scale, scale, scale);
+					Minecraft.getInstance().getBlockRendererDispatcher()
+							.renderBlockBrightness(((ForBlockState) launched).state, 1);
+				}
+
+				// Render the item
+				if (launched instanceof ForEntity) {
+					double scale = 1.2f;
+					GlStateManager.scaled(scale, scale, scale);
+					Minecraft.getInstance().getItemRenderer().renderItem(launched.stack, TransformType.GROUND);
+				}
+
 				GlStateManager.popMatrix();
 
 				// Apply Recoil if block was just launched
-				if ((block.ticksRemaining + 1 - partialTicks) > block.totalTicks - 10) {
-					recoil = Math.max(recoil, (block.ticksRemaining + 1 - partialTicks) - block.totalTicks + 10);
+				if ((launched.ticksRemaining + 1 - partialTicks) > launched.totalTicks - 10) {
+					recoil = Math.max(recoil, (launched.ticksRemaining + 1 - partialTicks) - launched.totalTicks + 10);
 				}
 
 				// Render particles for launch
-				if (block.ticksRemaining == block.totalTicks && tileEntityIn.firstRenderTick) {
+				if (launched.ticksRemaining == launched.totalTicks && tileEntityIn.firstRenderTick) {
 					tileEntityIn.firstRenderTick = false;
 					for (int i = 0; i < 10; i++) {
 						Random r = tileEntityIn.getWorld().getRandom();

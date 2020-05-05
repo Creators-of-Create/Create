@@ -8,6 +8,9 @@ import com.simibubi.create.AllEntities;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.modules.schematics.ISpecialEntityItemRequirement;
+import com.simibubi.create.modules.schematics.ItemRequirement;
+import com.simibubi.create.modules.schematics.ItemRequirement.ItemUseType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -46,7 +49,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData {
+public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement {
 
 	private int validationTimer;
 	protected BlockPos hangingPosition;
@@ -64,7 +67,8 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	protected void registerData() {}
+	protected void registerData() {
+	}
 
 	public int getWidthPixels() {
 		return 12;
@@ -104,34 +108,32 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	protected void updateBoundingBox() {
 		if (this.getFacingDirection() != null) {
-			this.posX =
-				(double) this.hangingPosition.getX() + 0.5 - (double) this.getFacingDirection().getXOffset() * 0.5;
-			this.posY =
-				(double) this.hangingPosition.getY() + 0.5 - (double) this.getFacingDirection().getYOffset() * 0.5;
-			this.posZ =
-				(double) this.hangingPosition.getZ() + 0.5 - (double) this.getFacingDirection().getZOffset() * 0.5;
-			double d1 = (double) this.getWidthPixels();
-			double d2 = (double) this.getHeightPixels();
-			double d3 = (double) this.getWidthPixels();
+			double offset = 0.5 - 1 / 256d;
+			this.posX = hangingPosition.getX() + 0.5 - facingDirection.getXOffset() * offset;
+			this.posY = hangingPosition.getY() + 0.5 - facingDirection.getYOffset() * offset;
+			this.posZ = hangingPosition.getZ() + 0.5 - facingDirection.getZOffset() * offset;
+			double w = getWidthPixels();
+			double h = getHeightPixels();
+			double l = getWidthPixels();
 			Axis axis = this.getFacingDirection().getAxis();
 			double depth = 2 - 1 / 128f;
 
 			switch (axis) {
 			case X:
-				d1 = depth;
+				w = depth;
 				break;
 			case Y:
-				d2 = depth;
+				h = depth;
 				break;
 			case Z:
-				d3 = depth;
+				l = depth;
 			}
 
-			d1 = d1 / 32.0D;
-			d2 = d2 / 32.0D;
-			d3 = d3 / 32.0D;
-			this.setBoundingBox(new AxisAlignedBB(this.posX - d1, this.posY - d2, this.posZ - d3, this.posX + d1,
-					this.posY + d2, this.posZ + d3));
+			w = w / 32.0D;
+			h = h / 32.0D;
+			l = l / 32.0D;
+			this.setBoundingBox(new AxisAlignedBB(this.posX - w, this.posY - h, this.posZ - l, this.posX + w,
+					this.posY + h, this.posZ + l));
 		}
 	}
 
@@ -317,13 +319,13 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		if (this.getFacingDirection().getAxis() != Direction.Axis.Y) {
 			switch (transformRotation) {
 			case CLOCKWISE_180:
-				this.facingDirection = this.getFacingDirection().getOpposite();
+				facingDirection = facingDirection.getOpposite();
 				break;
 			case COUNTERCLOCKWISE_90:
-				this.facingDirection = this.getFacingDirection().rotateYCCW();
+				facingDirection = facingDirection.rotateYCCW();
 				break;
 			case CLOCKWISE_90:
-				this.facingDirection = this.getFacingDirection().rotateY();
+				facingDirection = facingDirection.rotateY();
 			default:
 				break;
 			}
@@ -356,10 +358,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void onStruckByLightning(LightningBoltEntity lightningBolt) {}
+	public void onStruckByLightning(LightningBoltEntity lightningBolt) {
+	}
 
 	@Override
-	public void recalculateSize() {}
+	public void recalculateSize() {
+	}
 
 	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
 		@SuppressWarnings("unchecked")
@@ -387,4 +391,10 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public Direction getFacingDirection() {
 		return facingDirection;
 	}
+
+	@Override
+	public ItemRequirement getRequiredItems() {
+		return new ItemRequirement(ItemUseType.DAMAGE, AllItems.SUPER_GLUE.get());
+	}
+
 }

@@ -1,14 +1,12 @@
 package com.simibubi.create.modules.contraptions.components.actors;
 
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;

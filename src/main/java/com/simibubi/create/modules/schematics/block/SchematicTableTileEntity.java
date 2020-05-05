@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -102,6 +103,7 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements ITicka
 		uploadingProgress = 0;
 		uploadingSchematic = schematic;
 		sendUpdate = true;
+		inventory.setStackInSlot(0, ItemStack.EMPTY);
 	}
 	
 	public void finishUpload() {

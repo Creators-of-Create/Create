@@ -25,7 +25,6 @@ import com.simibubi.create.modules.schematics.item.SchematicItem;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -234,7 +233,6 @@ public class ServerSchematicLoader {
 				if (table == null)
 					return;
 				table.finishUpload();
-				table.inventory.setStackInSlot(0, ItemStack.EMPTY);
 				table.inventory.setStackInSlot(1, SchematicItem.create(schematic, player.getName().getFormattedText()));
 
 			} catch (IOException e) {
