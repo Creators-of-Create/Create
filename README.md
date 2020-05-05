@@ -1,6 +1,12 @@
- [![](https://img.shields.io/badge/Supporters-30-ff5733)](https://www.patreon.com/simibubi)  [![](https://img.shields.io/badge/Available%20for-MC%201.14-c70039)](https://www.curseforge.com/minecraft/mc-mods/create/files) [![](https://img.shields.io/github/license/Creators-of-Create/Create?style=flat&color=900c3f)](https://github.com/Creators-of-Create/Create/blob/master/LICENSE)    [![](https://img.shields.io/discord/620934202875183104?color=844685&label=Feedback%20%26%20Help&style=flat)](https://discord.gg/hmaD7Se) [![](https://cf.way2muchnoise.eu/short_create.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/create)
+<p align="center"><img src="https://i.imgur.com/35JmqWB.gif" alt="Logo" width="100"></p>
+<h1 align="center">Create<br>
+	<a href="https://www.patreon.com/simibubi"><img src="https://img.shields.io/badge/Supporters-30-ff5733" alt="Patreon"></a>
+	<a href="https://www.curseforge.com/minecraft/mc-mods/create/files"><img src="https://img.shields.io/badge/Available%20for-MC%201.14-c70039" alt="Supported Versions"></a>
+	<a href="https://github.com/Creators-of-Create/Create/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Creators-of-Create/Create?style=flat&color=900c3f" alt="License"></a>
+	<a href="https://discord.gg/hmaD7Se"><img src="https://img.shields.io/discord/620934202875183104?color=844685&label=Feedback%20%26%20Help&style=flat" alt="Discord"></a>
+	<a href="https://www.curseforge.com/minecraft/mc-mods/create"><img src="http://cf.way2muchnoise.eu/short_create.svg" alt="Curseforge Downloads"></a><br><br>
+</h1>
 
-# Create
 Welcome to Create, a mod offering a variety of tools and blocks for Building, Decoration and Aesthetic Automation.
 
 The added elements of tech are designed to leave as many design choices to the player as possible, where item processing doesn't happen inside a single block with funny textures, it requires a set of actors working together in many possible arrangements.
