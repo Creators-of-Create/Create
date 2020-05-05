@@ -28,7 +28,13 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 
 		List<ProcessingIngredient> ingredients = new ArrayList<>();
 		for (JsonElement e : JSONUtils.getJsonArray(json, "ingredients")) {
-			ingredients.add(ProcessingIngredient.parse(e.getAsJsonObject()));
+			int count = 1;
+			if (JSONUtils.hasField((JsonObject) e, "count")) {
+				count = JSONUtils.getInt(e.getAsJsonObject().get("count"), "count");
+			}
+			for(int i = 0; i < count; i++) {
+				ingredients.add(ProcessingIngredient.parse(e.getAsJsonObject()));
+			}
 		}
 
 		List<ProcessingOutput> results = new ArrayList<>();

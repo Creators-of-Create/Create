@@ -2,25 +2,15 @@
     "type": "create:mixing",
     "ingredients": [
 		{
-    		"tag": "forge:dusts/glowstone"
-    	},
-		{
-    		"tag": "forge:dusts/glowstone"
-    	},
-		{
-    		"tag": "forge:dusts/glowstone"
+    		"tag": "forge:dusts/glowstone",
+			"count": 3
     	},
 		{
     		"item": "create:polished_rose_quartz"
     	},
 		{
-			"item": "create:obsidian_dust"
-		},
-		{
-			"item": "create:obsidian_dust"
-		},
-		{
-			"item": "create:obsidian_dust"
+			"item": "create:obsidian_dust",
+			"count": 3
 		},
 		{
 			"item": "minecraft:dragon_breath",

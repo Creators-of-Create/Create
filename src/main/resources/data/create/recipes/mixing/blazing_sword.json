@@ -8,16 +8,8 @@
     		"item": "create:obsidian_dust"
     	},
 		{
-			"item": "minecraft:blaze_powder"
-		},
-		{
-			"item": "minecraft:blaze_powder"
-		},
-		{
-			"item": "minecraft:blaze_powder"
-		},
-		{
-			"item": "minecraft:blaze_powder"
+			"item": "minecraft:blaze_powder",
+			"count": 4
 		}
     ], 
 	"results": [
