@@ -13,14 +13,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FireBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -86,6 +83,8 @@ public class ScreenElementRenderer {
 		RenderSystem.scaled(50, -50, 50);
 		IRenderTypeBuffer.Impl buffer = mc.getBufferBuilders().getEntityVertexConsumers(); 
 		RenderType renderType = RenderTypeLookup.getEntityBlockLayer(blockToRender);
+		if (!blockToRender.getFluidState().isEmpty())
+			renderType = RenderTypeLookup.getFluidLayer(blockToRender.getFluidState());
 		IVertexBuilder vb = buffer.getBuffer(renderType);
 		MatrixStack ms = new MatrixStack();
 		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
@@ -110,8 +109,7 @@ public class ScreenElementRenderer {
 
 		if (blockToRender != null && !blockToRender.getFluidState().isEmpty()) {
 			RenderHelper.disableStandardItemLighting();
-			RenderSystem.translatef(0, -300, 0);
-			blockRenderer.renderFluid(new BlockPos(0, 300, 0), mc.world, vb, blockToRender.getFluidState());
+			blockRenderer.renderFluid(new BlockPos(0, 80, 0), mc.world, vb, blockToRender.getFluidState());
 		}
 		
 		buffer.draw(renderType);
