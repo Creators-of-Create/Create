@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.processing;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
@@ -80,6 +81,11 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity> {
 
 			if (insertItem.isEmpty()) {
 				itemEntity.remove();
+
+				if (!itemEntity.world.isRemote)
+					AllTriggers
+							.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.world,
+									itemEntity.getPosition(), 3);
 				return;
 			}
 

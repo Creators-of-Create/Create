@@ -1,0 +1,40 @@
+{
+  "parent": "create:andesite_casing",
+  "display": {
+    "icon": {
+      "item": "create:drill"
+    },
+    "title": {
+      "translate": "advancement.create.drill"
+    },
+    "description": {
+      "translate": "advancement.create.drill.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "create:drill"
+      }
+    },
+    "1": {
+      "trigger": "create:kinetic_block",
+      "conditions": {
+        "block": "create:drill"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ],
+    [
+      "1"
+    ]
+  ]
+}

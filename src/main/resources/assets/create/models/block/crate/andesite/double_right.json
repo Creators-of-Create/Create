@@ -1,0 +1,8 @@
+{
+	"parent": "create:block/crate/double_right",
+	"textures": {
+		"side": "create:block/crate_andesite_side",
+		"crate": "create:block/crate_andesite",
+		"casing": "create:block/andesite_casing"
+	}
+}

@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
-public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> {
+public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> implements ITriggerable {
 
 	public SimpleTrigger(String id) {
 		super(id);
@@ -22,6 +22,10 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 
 	public void trigger(ServerPlayerEntity player){
 		super.trigger(player, null);
+	}
+	
+	public Instance instance() {
+		return new Instance(getId());
 	}
 
 	public static class Instance extends CriterionTriggerBase.Instance {

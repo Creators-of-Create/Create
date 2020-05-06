@@ -15,17 +15,27 @@ public class AllTriggers {
 
 	private static List<CriterionTriggerBase<?>> triggers = new LinkedList<>();
 
-	public static SandpaperUseTrigger SANDPAPER_USE = add(new SandpaperUseTrigger("sandpaper_use"));
-	public static SimpleTrigger DEPLOYER_BOOP = simple("deployer");
-	public static SimpleTrigger ABSORBED_LIGHT = simple("light_absorbed");
-	public static SimpleTrigger SPEED_READ = simple("speed_read");
-	public static SimpleTrigger OVERSTRESSED = simple("overstressed");
-	public static SimpleTrigger ROTATION = simple("rotation");
+	public static KineticBlockTrigger KINETIC_BLOCK = add(new KineticBlockTrigger("kinetic_block"));
+
+	public static SimpleTrigger 
+			ROTATION = simple("rotation"), 
+			OVERSTRESSED = simple("overstressed"),
+			SHIFTING_GEARS = simple("shifting_gears"), 
+			CONNECT_BELT = simple("connect_belt"), 
+			BONK = simple("bonk"),
+			WATER_WHEEL = simple("water_wheel"), 
+			LAVA_WHEEL = simple("lava_wheel"), 
+			DEPLOYER_BOOP = simple("deployer"),
+			ABSORBED_LIGHT = simple("light_absorbed"), 
+			SPEED_READ = simple("speed_read"), 
+			BASIN_THROW = simple("basin"),
+			PRESS_COMPACT = simple("compact"),
+			MIXER_MIX = simple("mixer");
 
 	private static SimpleTrigger simple(String id) {
 		return add(new SimpleTrigger(id));
 	}
-	
+
 	private static <T extends CriterionTriggerBase<?>> T add(T instance) {
 		triggers.add(instance);
 		return instance;
@@ -35,19 +45,29 @@ public class AllTriggers {
 		triggers.forEach(CriteriaTriggers::register);
 	}
 
-	public static void triggerForNearbyPlayers(SimpleTrigger trigger, World world, BlockPos pos, int range) {
+	public static void triggerFor(ITriggerable trigger, PlayerEntity player) {
+		if (player instanceof ServerPlayerEntity)
+			trigger.trigger((ServerPlayerEntity) player);
+	}
+
+	public static void triggerForNearbyPlayers(ITriggerable trigger, World world, BlockPos pos, int range) {
 		triggerForNearbyPlayers(trigger, world, pos, range, player -> true);
 	}
 
-	public static void triggerForNearbyPlayers(SimpleTrigger trigger, World world, BlockPos pos, int range,
+	public static void triggerForNearbyPlayers(ITriggerable trigger, World world, BlockPos pos, int range,
 			Predicate<PlayerEntity> playerFilter) {
 		if (world == null)
 			return;
 		if (world.isRemote)
 			return;
+		List<ServerPlayerEntity> players = getPlayersInRange(world, pos, range);
+		players.stream().filter(playerFilter).forEach(trigger::trigger);
+	}
+
+	public static List<ServerPlayerEntity> getPlayersInRange(World world, BlockPos pos, int range) {
 		List<ServerPlayerEntity> players =
 			world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(pos).grow(range));
-		players.stream().filter(playerFilter).forEach(trigger::trigger);
+		return players;
 	}
 
 }

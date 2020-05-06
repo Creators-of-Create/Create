@@ -1,0 +1,28 @@
+{
+  "parent": "create:deployer",
+  "display": {
+    "icon": {
+      "item": "create:large_cogwheel"
+    },
+    "title": {
+      "translate": "advancement.create.fist_bump"
+    },
+    "description": {
+      "translate": "advancement.create.fist_bump.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:deployer"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
@@ -71,9 +72,9 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 			if (!canConnect(world, firstPulley, pos))
 				return ActionResultType.FAIL;
 
-			if (firstPulley != null && !firstPulley.equals(pos)) {
+			if (firstPulley != null && !firstPulley.equals(pos) && !world.isRemote) {
 				createBelts(world, firstPulley, pos);
-
+				AllTriggers.triggerFor(AllTriggers.CONNECT_BELT, context.getPlayer());
 				if (!context.getPlayer().isCreative())
 					context.getItem().shrink(1);
 			}

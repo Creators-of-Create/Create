@@ -1,0 +1,46 @@
+{
+  "parent": "create:basin",
+  "display": {
+    "icon": {
+      "item": "create:mechanical_mixer"
+    },
+    "title": {
+      "translate": "advancement.create.mixer"
+    },
+    "description": {
+      "translate": "advancement.create.mixer.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "create:mechanical_mixer"
+      }
+    },
+    "1": {
+      "trigger": "create:kinetic_block",
+      "conditions": {
+        "block": "create:mechanical_mixer"
+      }
+    },
+    "2": {
+      "trigger": "create:mixer"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ],
+    [
+      "1"
+    ],
+    [
+      "2"
+    ]
+  ]
+}

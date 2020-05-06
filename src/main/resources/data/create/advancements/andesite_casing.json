@@ -1,30 +1,35 @@
 {
-    "display": {
-        "title": {
-            "translate": "advancement.create:andesite_casing"
-        },
-        "description": {
-            "translate": "advancement.create:andesite_casing.desc"
-        },
-        "icon": {
+  "parent": "create:andesite_alloy",
+  "display": {
+    "icon": {
+      "item": "create:andesite_casing"
+    },
+    "title": {
+      "translate": "advancement.create.andesite_casing"
+    },
+    "description": {
+      "translate": "advancement.create.andesite_casing.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
             "item": "create:andesite_casing"
-        },
-        "frame": "task",
-        "show_toast": true,
-        "announce_to_chat": false,
-        "hidden": false
-    },
-    "criteria": {
-        "casing": {
-            "trigger": "minecraft:inventory_changed",
-            "conditions": {
-                "items": [
-                    {
-                        "item": "create:andesite_casing"
-                    }
-                ]
-            }
-        }
-    },
-    "parent": "create:andesite_alloy"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
 }

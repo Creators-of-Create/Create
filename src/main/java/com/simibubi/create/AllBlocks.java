@@ -74,6 +74,7 @@ import com.simibubi.create.modules.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorBlock;
 import com.simibubi.create.modules.logistics.block.funnel.FunnelBlock;
+import com.simibubi.create.modules.logistics.block.inventories.CrateBlock;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
@@ -85,7 +86,6 @@ import com.simibubi.create.modules.palettes.HorizontalCTGlassBlock;
 import com.simibubi.create.modules.palettes.LayeredCTBlock;
 import com.simibubi.create.modules.palettes.ScoriaBlock;
 import com.simibubi.create.modules.palettes.VerticalCTGlassBlock;
-import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
 
@@ -115,7 +115,6 @@ public enum AllBlocks {
 
 	__SCHEMATICS__(),
 	SCHEMATICANNON(new SchematicannonBlock()),
-	CREATIVE_CRATE(new CreativeCrateBlock()),
 	SCHEMATIC_TABLE(new SchematicTableBlock()),
 
 	__CONTRAPTIONS__(),
@@ -183,7 +182,10 @@ public enum AllBlocks {
 	CONTACT(new ContactBlock()),
 	REDSTONE_BRIDGE(new RedstoneLinkBlock()),
 	STOCKSWITCH(new StockswitchBlock()),
+	WAREHOUSE_CRATE(new CrateBlock(Properties.from(Blocks.ANDESITE))), 
 	FLEXCRATE(new FlexcrateBlock()),
+	FILTERED_CRATE(new CrateBlock(Properties.from(Blocks.ANDESITE))), 
+	CREATIVE_CRATE(new CrateBlock(Properties.from(Blocks.ANDESITE))),
 	EXTRACTOR(new ExtractorBlock()),
 	VERTICAL_EXTRACTOR(new ExtractorBlock.Vertical()),
 	LINKED_EXTRACTOR(new LinkedExtractorBlock()),

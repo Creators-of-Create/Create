@@ -1,0 +1,28 @@
+{
+  "parent": "create:its_alive",
+  "display": {
+    "icon": {
+      "item": "create:large_cogwheel"
+    },
+    "title": {
+      "translate": "advancement.create.shifting_gears"
+    },
+    "description": {
+      "translate": "advancement.create.shifting_gears.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:shifting_gears"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

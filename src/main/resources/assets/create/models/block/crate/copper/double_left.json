@@ -1,0 +1,8 @@
+{
+	"parent": "create:block/crate/double_left",
+	"textures": {
+		"side": "create:block/crate_copper_side",
+		"crate": "create:block/crate_copper",
+		"casing": "create:block/copper_casing"
+	}
+}

@@ -1,0 +1,40 @@
+{
+  "parent": "create:press",
+  "display": {
+    "icon": {
+      "item": "create:saw"
+    },
+    "title": {
+      "translate": "advancement.create.saw"
+    },
+    "description": {
+      "translate": "advancement.create.saw.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "create:saw"
+      }
+    },
+    "1": {
+      "trigger": "create:kinetic_block",
+      "conditions": {
+        "block": "create:saw"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ],
+    [
+      "1"
+    ]
+  ]
+}
