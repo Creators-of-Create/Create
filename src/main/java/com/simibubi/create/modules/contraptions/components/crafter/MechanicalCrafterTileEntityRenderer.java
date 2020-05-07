@@ -63,7 +63,7 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 		ms.pop();
 
 		renderFast(te, partialTicks, ms, buffer);
-		TessellatorHelper.draw();
+		//TessellatorHelper.draw();
 	}
 
 	public void renderItems(MechanicalCrafterTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
