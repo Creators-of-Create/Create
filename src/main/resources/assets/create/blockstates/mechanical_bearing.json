@@ -1,16 +1,10 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "create:block/bearing/regular"
-	},
-    "variants": {
-		"facing" : {
-			"up" : { },
-			"down" : { "x": 180 },
-			"north" : { "x": 90 },
-			"east" : { "x": 90, "y": 90 },
-			"south" : { "x": 90, "y": 180 },
-			"west" : { "x": 90, "y": 270 }
-		}
+  "variants": {
+		"facing=up" : { "model": "create:block/bearing/regular" },
+		"facing=down" : { "model": "create:block/bearing/regular", "x": 180 },
+		"facing=north" : { "model": "create:block/bearing/regular", "x": 90 },
+		"facing=east" : { "model": "create:block/bearing/regular", "x": 90, "y": 90 },
+		"facing=south" : { "model": "create:block/bearing/regular", "x": 90, "y": 180 },
+		"facing=west" : { "model": "create:block/bearing/regular", "x": 90, "y": 270 }
 	}
 }

@@ -1,14 +1,8 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "create:block/logistical_index"
-	},
-    "variants": {
-		"facing": {
-			"north": { "y": 180 },
-			"south": { },
-			"east": { "y": 270 },
-			"west": { "y": 90 }
-		}
+  "variants": {
+		"facing=north": { "model": "create:block/logistical_index", "y": 180 },
+		"facing=south": { "model": "create:block/logistical_index" },
+		"facing=east": { "model": "create:block/logistical_index", "y": 270 },
+		"facing=west": { "model": "create:block/logistical_index", "y": 90 }
 	}
 }

@@ -1,5 +1,4 @@
 {
-	"forge_marker": 1,
 	"variants": {
 		"powered=false,powering=false,facing=north": { "model": "create:block/repeaters/toggle_latch", "y": 180 },
 		"powered=false,powering=false,facing=east": { "model": "create:block/repeaters/toggle_latch", "y": 270 },

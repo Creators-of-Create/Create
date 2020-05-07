@@ -1,14 +1,8 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-	"model": "create:block/furnace_engine/body"
-  },
   "variants": {
-    "facing": {
-      "north": { "y": 180 },
-      "south": { "y": 0 },
-      "west": { "y": 90 },
-      "east": { "y": 270 }
-    }
+    "facing=north": { "model": "create:block/furnace_engine/body", "y": 180 },
+    "facing=south": { "model": "create:block/furnace_engine/body", "y": 0 },
+    "facing=west": { "model": "create:block/furnace_engine/body", "y": 90 },
+    "facing=east": { "model": "create:block/furnace_engine/body", "y": 270 }
   }
 }

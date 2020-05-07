@@ -1,13 +1,7 @@
 {
-    "forge_marker": 1,
-    "defaults": {
-        "uvlock": true
-    },
-    "variants": { 
-        "type": {
-			"top": { "model":"create:block/palettes/limestone_bricks_slab_top" },
-			"bottom": { "model":"create:block/palettes/limestone_bricks_slab" },
-			"double": { "model":"create:block/palettes/limestone_bricks" }
-		}
-    }
+  "variants": {
+		"type=top": { "model":"create:block/palettes/limestone_bricks_slab_top" },
+		"type=bottom": { "model":"create:block/palettes/limestone_bricks_slab" },
+		"type=double": { "model":"create:block/palettes/limestone_bricks" }
+	}
 }

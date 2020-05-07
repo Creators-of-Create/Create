@@ -1,8 +1,4 @@
 {
-	"forgemarker": 1,
-	"defaults": {
-		"model": "create:block/turntable"
-	},
 	"variants": {
 		"": { "model": "create:block/turntable" }
 	}

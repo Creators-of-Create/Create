@@ -1,15 +1,12 @@
 {
-  "forge_marker": 1,
   "variants": {
-    "belt": {
-      "true": { "model": "create:block/funnel/horizontal_belt" },
-      "false": { "model": "create:block/funnel/horizontal" }
-    },
-    "facing": {
-      "south": { "y": 180 },
-      "east": { "y": 90 },
-      "north": { "y": 0 },
-      "west": { "y": 270 }
-    }
+    "belt=true,facing=south": { "model": "create:block/funnel/horizontal_belt", "y": 180 },
+    "belt=true,facing=east": { "model": "create:block/funnel/horizontal_belt", "y": 90 },
+    "belt=true,facing=north": { "model": "create:block/funnel/horizontal_belt" },
+    "belt=true,facing=west": { "model": "create:block/funnel/horizontal_belt", "y": 270 },
+    "belt=false,facing=south": { "model": "create:block/funnel/horizontal_belt", "y": 180 },
+    "belt=false,facing=east": { "model": "create:block/funnel/horizontal_belt", "y": 90 },
+    "belt=false,facing=north": { "model": "create:block/funnel/horizontal_belt" },
+    "belt=false,facing=west": { "model": "create:block/funnel/horizontal_belt", "y": 270 }
   }
 }
