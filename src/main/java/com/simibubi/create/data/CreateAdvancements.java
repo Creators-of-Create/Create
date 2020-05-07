@@ -16,11 +16,13 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.KineticBlockTrigger;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
+import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem.Components;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.Advancement.Builder;
 import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.IRequirementsStrategy;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.advancements.criterion.PlacedBlockTrigger;
 import net.minecraft.block.Block;
@@ -28,6 +30,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
@@ -55,7 +58,6 @@ public class CreateAdvancements implements IDataProvider {
 				.withCriterion("0", itemGathered(AllItems.ANDESITE_ALLOY.get()))
 				.register(t, id + ":andesite_alloy");
 
-		
 		kineticsBranch(t, andesite_alloy);
 
 		Advancement water_wheel = advancement("water_wheel", AllBlocks.WATER_WHEEL.get(), TaskType.NORMAL)
@@ -77,7 +79,7 @@ public class CreateAdvancements implements IDataProvider {
 				.withParent(andesite_alloy)
 				.withCriterion("0", itemGathered(AllBlocks.ANDESITE_CASING.get()))
 				.register(t, id + ":andesite_casing");
-		
+
 		andesiteExpertLane(t, andesite_casing);
 
 		Advancement drill = kinecticAdvancement("drill", AllBlocks.DRILL, TaskType.NORMAL)
@@ -89,9 +91,10 @@ public class CreateAdvancements implements IDataProvider {
 				.withCriterion("0", AllTriggers.BONK.instance())
 				.register(t, id + ":press");
 
-		Advancement rose_quartz = itemAdvancement("polished_rose_quartz", AllItems.POLISHED_ROSE_QUARTZ, TaskType.NORMAL)
-				.withParent(andesite_casing)
-				.register(t, id + ":polished_rose_quartz");
+		Advancement rose_quartz =
+			itemAdvancement("polished_rose_quartz", AllItems.POLISHED_ROSE_QUARTZ, TaskType.NORMAL)
+					.withParent(andesite_casing)
+					.register(t, id + ":polished_rose_quartz");
 
 		Advancement electron_tube = itemAdvancement("electron_tube", AllItems.ELECTRON_TUBE, TaskType.NORMAL)
 				.withParent(rose_quartz)
@@ -123,6 +126,7 @@ public class CreateAdvancements implements IDataProvider {
 				.register(t, id + ":brass");
 
 		brassAge(t, brass);
+		copperAge(t, press);
 	}
 
 	void kineticsBranch(Consumer<Advancement> t, Advancement root) {
@@ -166,6 +170,20 @@ public class CreateAdvancements implements IDataProvider {
 
 	}
 
+	void copperAge(Consumer<Advancement> t, Advancement root) {
+		String id = Create.ID;
+
+		Advancement copper_casing = advancement("copper_casing", AllBlocks.COPPER_CASING.get(), TaskType.GOAL)
+				.withParent(root)
+				.withCriterion("0", itemGathered(AllBlocks.COPPER_CASING.get()))
+				.register(t, id + ":copper_casing");
+
+		Advancement copper_end = deadEnd()
+				.withParent(copper_casing)
+				.withCriterion("0", itemGathered(AllBlocks.COPPER_CASING.get()))
+				.register(t, id + ":copper_end");
+	}
+
 	void brassAge(Consumer<Advancement> t, Advancement root) {
 		String id = Create.ID;
 
@@ -182,7 +200,7 @@ public class CreateAdvancements implements IDataProvider {
 				.withParent(brass_casing)
 				.register(t, id + ":deployer");
 
-		Advancement fist_bump = advancement("fist_bump", AllBlocks.LARGE_COGWHEEL.get(), TaskType.SECRET)
+		Advancement fist_bump = advancement("fist_bump", AllBlocks.DEPLOYER.get(), TaskType.SECRET)
 				.withParent(deployer)
 				.withCriterion("0", AllTriggers.DEPLOYER_BOOP.instance())
 				.register(t, id + ":fist_bump");
@@ -196,21 +214,44 @@ public class CreateAdvancements implements IDataProvider {
 			itemAdvancement("chromatic_compound", AllItems.CHROMATIC_COMPOUND, TaskType.NORMAL)
 					.withParent(crushing_wheel)
 					.register(t, id + ":chromatic_compound");
-		
-		Advancement shadow_steel =
-				itemAdvancement("shadow_steel", AllItems.SHADOW_STEEL, TaskType.GOAL)
+
+		Advancement shadow_steel = itemAdvancement("shadow_steel", AllItems.SHADOW_STEEL, TaskType.GOAL)
 				.withParent(chromatic_compound)
 				.register(t, id + ":shadow_steel");
-		
-		Advancement refined_radiance =
-				itemAdvancement("refined_radiance", AllItems.REFINED_RADIANCE, TaskType.GOAL)
+
+		Advancement refined_radiance = itemAdvancement("refined_radiance", AllItems.REFINED_RADIANCE, TaskType.GOAL)
 				.withParent(chromatic_compound)
 				.register(t, id + ":refined_radiance");
+
+		Advancement deforester = itemAdvancement("deforester", AllItems.DEFORESTER, TaskType.NORMAL)
+				.withParent(refined_radiance)
+				.register(t, id + ":deforester");
+
+		Advancement zapper = itemAdvancement("zapper", AllItems.PLACEMENT_HANDGUN, TaskType.NORMAL)
+				.withParent(refined_radiance)
+				.register(t, id + ":zapper");
+
+		ItemStack gunWithPurpurStuff = AllItems.PLACEMENT_HANDGUN.asStack();
+		for (Components c : Components.values())
+			BlockzapperItem.setTier(c, ComponentTier.Chromatic, gunWithPurpurStuff);
+		Advancement upgraded_zapper = advancement("upgraded_zapper", gunWithPurpurStuff, TaskType.CHALLENGE)
+				.withCriterion("0", AllTriggers.UPGRADED_ZAPPER.instance())
+				.withParent(zapper)
+				.register(t, id + ":upgraded_zapper");
+
+		Advancement symmetry_wand = itemAdvancement("symmetry_wand", AllItems.SYMMETRY_WAND, TaskType.NORMAL)
+				.withParent(refined_radiance)
+				.register(t, id + ":symmetry_wand");
+		
+		Advancement shadow_end = deadEnd()
+				.withParent(shadow_steel)
+				.withCriterion("0", itemGathered(AllItems.SHADOW_STEEL.get()))
+				.register(t, id + ":shadow_end");
 	}
-	
+
 	private void andesiteExpertLane(Consumer<Advancement> t, Advancement root) {
 		String id = Create.ID;
-		
+
 		Advancement expert_lane_1 = advancement("expert_lane_1", Blocks.ANDESITE, TaskType.SILENT_GATE)
 				.withParent(root)
 				.withCriterion("0", itemGathered(AllBlocks.ANDESITE_CASING.get()))
@@ -277,6 +318,7 @@ public class CreateAdvancements implements IDataProvider {
 		GOAL(FrameType.GOAL, true, true, false),
 		SECRET(FrameType.GOAL, true, true, true),
 		SILENT_GATE(FrameType.CHALLENGE, false, false, false),
+		CHALLENGE(FrameType.CHALLENGE, true, true, false),
 
 		;
 
@@ -300,6 +342,14 @@ public class CreateAdvancements implements IDataProvider {
 	}
 
 	public Builder advancement(String name, IItemProvider icon, TaskType type) {
+		return advancement(name, new ItemStack(icon), type);
+	}
+
+	public Builder deadEnd() {
+		return advancement("eob", Items.OAK_SAPLING, TaskType.SILENT_GATE);
+	}
+
+	public Builder advancement(String name, ItemStack icon, TaskType type) {
 		return Advancement.Builder
 				.builder()
 				.withDisplay(icon, new TranslationTextComponent(LANG + name),

@@ -74,7 +74,7 @@ import com.simibubi.create.modules.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorBlock;
 import com.simibubi.create.modules.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.modules.logistics.block.inventories.CrateBlock;
+import com.simibubi.create.modules.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
@@ -182,10 +182,8 @@ public enum AllBlocks {
 	CONTACT(new ContactBlock()),
 	REDSTONE_BRIDGE(new RedstoneLinkBlock()),
 	STOCKSWITCH(new StockswitchBlock()),
-	WAREHOUSE_CRATE(new CrateBlock(Properties.from(Blocks.ANDESITE))), 
 	FLEXCRATE(new FlexcrateBlock()),
-	FILTERED_CRATE(new CrateBlock(Properties.from(Blocks.ANDESITE))), 
-	CREATIVE_CRATE(new CrateBlock(Properties.from(Blocks.ANDESITE))),
+	CREATIVE_CRATE(new CreativeCrateBlock(Properties.from(Blocks.ANDESITE))),
 	EXTRACTOR(new ExtractorBlock()),
 	VERTICAL_EXTRACTOR(new ExtractorBlock.Vertical()),
 	LINKED_EXTRACTOR(new LinkedExtractorBlock()),

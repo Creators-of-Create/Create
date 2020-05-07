@@ -131,9 +131,7 @@
 	"block.create.contact": "Redstone Contact",
 	"block.create.redstone_bridge": "Redstone Link",
 	"block.create.stockswitch": "Stockpile Switch",
-	"block.create.warehouse_crate": "Warehouse Crate",
 	"block.create.flexcrate": "Adjustable Crate",
-	"block.create.filtered_crate": "Filtered Crate",
 	"block.create.creative_crate": "The Endless Crate",
 	"block.create.extractor": "Extractor",
 	"block.create.belt_funnel": "Funnel",
@@ -683,6 +681,8 @@
 	"advancement.create.brass.desc": "Use Crushed Copper and Crushed Zinc to create some Brass.",
 	"advancement.create.brass_casing": "The Brass Age",
 	"advancement.create.brass_casing.desc": "Use newly obtained Brass and some Wood to create a more advanced Casing.",
+	"advancement.create.copper_casing": "The Copper Age",
+	"advancement.create.copper_casing.desc": "Use some copper sheets to create Copper Casing.",
 	
 	"advancement.create.crafter": "Automated Assembly",
 	"advancement.create.crafter.desc": "Place and power some Mechanical Crafters",
@@ -699,6 +699,18 @@
 	"advancement.create.shadow_steel.desc": "Create Shadow Steel, a metal bar of nothingness.",
 	"advancement.create.refined_radiance": "Bright and Inspiring",
 	"advancement.create.refined_radiance.desc": "Create Refined Radiance, a powerful chromatic substance.",
+	
+	"advancement.create.zapper": "Building with style",
+	"advancement.create.zapper.desc": "Craft a Blockzapper. A radiant laser gun that helps you build.",
+	"advancement.create.upgraded_zapper": "Radiant Overdrive",
+	"advancement.create.upgraded_zapper.desc": "Create and activate a fully upgraded Blockzapper.",
+	"advancement.create.symmetry_wand": "Radiant Mirrors",
+	"advancement.create.symmetry_wand.desc": "Craft a Staff of Symmetry.",
+	"advancement.create.deforester": "Radiant Chopping",
+	"advancement.create.deforester.desc": "Craft a Deforester, and say goodbye to the local forest.",
+	
+	"advancement.create.eob": "End of Beta",
+	"advancement.create.eob.desc": "Expect more content here in the future. <3",
 	
 	"create.subtitle.schematicannon_launch_block": "Schematicannon shoots",
 	"create.subtitle.schematicannon_finish": "Schematicannon finishes",
@@ -1074,6 +1086,11 @@
 	"block.create.flexcrate.tooltip.summary": "This _Storage_ _Container_ allows Manual control over its capacity. It can hold up to _16_ _Stacks_ of any Item. Supports _Redstone_ _Comparators_.",
 	"block.create.flexcrate.tooltip.control1": "When R-Clicked",
 	"block.create.flexcrate.tooltip.action1": "Opens the _Interface_.",
+	
+	"block.create.creative_crate.tooltip": "THE ENDLESS CRATE",
+	"block.create.creative_crate.tooltip.summary": "This _Storage_ _Container_ allows infinite replication of any item. Place next to a _Schematicannon_ to remove any material requirements.",
+	"block.create.creative_crate.tooltip.condition1": "When Item in Filter Slot",
+	"block.create.creative_crate.tooltip.behaviour1": "Anything _extracting_ from this container will provide an _endless_ _supply_ of the item specified. Items _inserted_ into this crate will be _voided._",
 
 	"block.create.extractor.tooltip": "EXTRACTOR",
 	"block.create.extractor.tooltip.summary": "_Takes_ _Items_ from an attached _Inventory_ and drops them onto the ground. Will not drop Items unless the space is clear. Can be assigned an item-stack as a _filter_.",
@@ -1203,10 +1220,6 @@
 	
 	"tool.create.rose_quartz.tooltip": "ROSE QUARTZ TOOLS",
 	"tool.create.rose_quartz.tooltip.summary": "This tool grants you a _greater_ _reach_ for _breaking_ _blocks_ or _placing_ _blocks_ from the off-hand.",
-	
-	"block.create.warehouse_crate.tooltip": "WIP",
-	"block.create.filtered_crate.tooltip": "WIP",
-	"block.create.creative_crate.tooltip": "WIP",
 	
 	"itemGroup.create": "Create"
 }

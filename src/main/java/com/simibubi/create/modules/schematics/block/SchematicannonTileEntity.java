@@ -359,7 +359,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		}
 
 		// Check Fuel
-		if (fuelLevel <= 0) {
+		if (fuelLevel <= 0 && !hasCreativeCrate) {
 			fuelLevel = 0;
 			state = State.PAUSED;
 			statusMsg = "noGunpowder";
@@ -466,7 +466,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	public double getFuelUsageRate() {
-		return config().schematicannonFuelUsage.get() / 100f;
+		return hasCreativeCrate ? 0 : config().schematicannonFuelUsage.get() / 100f;
 	}
 
 	protected void initializePrinter(ItemStack blueprint) {
@@ -556,8 +556,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			int amountFound = 0;
 			for (IItemHandler iItemHandler : attachedInventories) {
 
-				amountFound += ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required, s),
-						ExtractionCountMode.UPTO, required.getCount(), true).getCount();
+				amountFound += ItemHelper
+						.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
+								required.getCount(), true)
+						.getCount();
 
 				if (amountFound < required.getCount())
 					continue;
@@ -570,14 +572,16 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (!simulate && success) {
 			int amountFound = 0;
 			for (IItemHandler iItemHandler : attachedInventories) {
-				amountFound += ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required, s),
-						ExtractionCountMode.UPTO, required.getCount(), false).getCount();
+				amountFound += ItemHelper
+						.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
+								required.getCount(), false)
+						.getCount();
 				if (amountFound < required.getCount())
 					continue;
 				break;
 			}
 		}
-		
+
 		return success;
 	}
 
@@ -618,14 +622,16 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	public void finishedPrinting() {
 		inventory.setStackInSlot(0, ItemStack.EMPTY);
-		inventory.setStackInSlot(1,
-				new ItemStack(AllItems.EMPTY_BLUEPRINT.get(), inventory.getStackInSlot(1).getCount() + 1));
+		inventory
+				.setStackInSlot(1,
+						new ItemStack(AllItems.EMPTY_BLUEPRINT.get(), inventory.getStackInSlot(1).getCount() + 1));
 		state = State.STOPPED;
 		statusMsg = "finished";
 		resetPrinter();
 		target = getPos().add(1, 0, 0);
-		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), AllSoundEvents.SCHEMATICANNON_FINISH.get(),
-				SoundCategory.BLOCKS, 1, .7f);
+		world
+				.playSound(null, pos.getX(), pos.getY(), pos.getZ(), AllSoundEvents.SCHEMATICANNON_FINISH.get(),
+						SoundCategory.BLOCKS, 1, .7f);
 		sendUpdate = true;
 	}
 
@@ -703,6 +709,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	protected void refillFuelIfPossible() {
+		if (hasCreativeCrate)
+			return;
 		if (1 - fuelLevel + 1 / 128f < getFuelAddedByGunPowder())
 			return;
 		if (inventory.getStackInSlot(4).isEmpty())
@@ -772,8 +780,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	public void playFiringSound() {
-		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), AllSoundEvents.SCHEMATICANNON_LAUNCH_BLOCK.get(),
-				SoundCategory.BLOCKS, .1f, 1.1f);
+		world
+				.playSound(null, pos.getX(), pos.getY(), pos.getZ(), AllSoundEvents.SCHEMATICANNON_LAUNCH_BLOCK.get(),
+						SoundCategory.BLOCKS, .1f, 1.1f);
 	}
 
 	public void sendToContainer(PacketBuffer buffer) {
@@ -837,8 +846,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-	}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
 	@Override
 	public void lazyTick() {

@@ -82,18 +82,20 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		resetButton = new IconButton(x + 106, y + 55, ScreenResources.I_STOP);
 		resetIndicator = new Indicator(x + 106, y + 50, "");
 		resetIndicator.state = State.RED;
-		Collections.addAll(widgets, playButton, playIndicator, pauseButton, pauseIndicator, resetButton,
-				resetIndicator);
+		Collections
+				.addAll(widgets, playButton, playIndicator, pauseButton, pauseIndicator, resetButton, resetIndicator);
 
 		// Replace settings
 		replaceLevelButtons = new Vector<>(4);
 		replaceLevelIndicators = new Vector<>(4);
-		List<ScreenResources> icons = ImmutableList.of(ScreenResources.I_DONT_REPLACE, ScreenResources.I_REPLACE_SOLID,
-				ScreenResources.I_REPLACE_ANY, ScreenResources.I_REPLACE_EMPTY);
-		List<String> toolTips = ImmutableList.of(Lang.translate("gui.schematicannon.option.dontReplaceSolid"),
-				Lang.translate("gui.schematicannon.option.replaceWithSolid"),
-				Lang.translate("gui.schematicannon.option.replaceWithAny"),
-				Lang.translate("gui.schematicannon.option.replaceWithEmpty"));
+		List<ScreenResources> icons = ImmutableList
+				.of(ScreenResources.I_DONT_REPLACE, ScreenResources.I_REPLACE_SOLID, ScreenResources.I_REPLACE_ANY,
+						ScreenResources.I_REPLACE_EMPTY);
+		List<String> toolTips = ImmutableList
+				.of(Lang.translate("gui.schematicannon.option.dontReplaceSolid"),
+						Lang.translate("gui.schematicannon.option.replaceWithSolid"),
+						Lang.translate("gui.schematicannon.option.replaceWithAny"),
+						Lang.translate("gui.schematicannon.option.replaceWithEmpty"));
 
 		for (int i = 0; i < 4; i++) {
 			replaceLevelIndicators.add(new Indicator(x + 16 + i * 18, y + 96, ""));
@@ -189,8 +191,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		boolean enabled = indicator.state == State.ON;
 		List<String> tip = button.getToolTip();
 		tip.add(TextFormatting.BLUE + (enabled ? optionEnabled : optionDisabled));
-		tip.addAll(TooltipHelper.cutString(Lang.translate("gui.schematicannon.option." + tooltipKey + ".description"),
-				GRAY, GRAY));
+		tip
+				.addAll(TooltipHelper
+						.cutString(Lang.translate("gui.schematicannon.option." + tooltipKey + ".description"), GRAY,
+								GRAY));
 	}
 
 	@Override
@@ -221,8 +225,9 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		font.drawStringWithShadow(msg, guiLeft + 20 + 96 - stringWidth / 2, guiTop + 30, 0xCCDDFF);
 
 		font.drawString(settingsTitle, guiLeft + 20 + 13, guiTop + 84, ScreenResources.FONT_COLOR);
-		font.drawString(playerInventory.getDisplayName().getFormattedText(), guiLeft - 10 + 7, guiTop + 145 + 6,
-				0x666666);
+		font
+				.drawString(playerInventory.getDisplayName().getFormattedText(), guiLeft - 10 + 7, guiTop + 145 + 6,
+						0x666666);
 
 		// to see or debug the bounds of the extra area uncomment the following lines
 		// Rectangle2d r = extraAreas.get(0);
@@ -268,6 +273,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	protected void renderFuelBar(float amount) {
 		ScreenResources sprite = ScreenResources.SCHEMATICANNON_FUEL;
+		if (container.getTileEntity().hasCreativeCrate) {
+			ScreenResources.SCHEMATICANNON_FUEL_CREATIVE.draw(this, guiLeft + 20 + 73, guiTop + 135);
+			return;
+		}
 		minecraft.getTextureManager().bindTexture(sprite.location);
 		blit(guiLeft + 20 + 73, guiTop + 135, sprite.startX, sprite.startY, (int) (sprite.width * amount),
 				sprite.height);
@@ -287,11 +296,14 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 					+ te.inventory.getStackInSlot(4).getCount() * (te.getFuelAddedByGunPowder() / fuelUsageRate));
 
 			List<String> tooltip = new ArrayList<>();
-			tooltip.add(Lang.translate(_gunpowderLevel, "" + (int) (te.fuelLevel * 100)));
-			tooltip.add(GRAY + Lang.translate(_shotsRemaining, "" + TextFormatting.BLUE + shotsLeft));
+			float f = te.hasCreativeCrate ? 100 : te.fuelLevel * 100;
+			tooltip.add(Lang.translate(_gunpowderLevel, "" + (int) f));
+			if (!te.hasCreativeCrate)
+				tooltip.add(GRAY + Lang.translate(_shotsRemaining, "" + TextFormatting.BLUE + shotsLeft));
 			if (shotsLeftWithItems != shotsLeft)
-				tooltip.add(GRAY
-						+ Lang.translate(_shotsRemainingWithBackup, "" + TextFormatting.BLUE + shotsLeftWithItems));
+				tooltip
+						.add(GRAY + Lang
+								.translate(_shotsRemainingWithBackup, "" + TextFormatting.BLUE + shotsLeftWithItems));
 
 			renderTooltip(tooltip, mouseX, mouseY);
 		}

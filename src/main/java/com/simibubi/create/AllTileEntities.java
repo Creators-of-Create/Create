@@ -82,6 +82,7 @@ import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterTileEntityRe
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorTileEntity;
 import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorTileEntity;
 import com.simibubi.create.modules.logistics.block.funnel.FunnelTileEntity;
+import com.simibubi.create.modules.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateTileEntity;
 import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerTileEntity;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerTileEntity;
@@ -153,6 +154,7 @@ public enum AllTileEntities {
 	REDSTONE_BRIDGE(RedstoneLinkTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
 	STOCKSWITCH(StockswitchTileEntity::new, AllBlocks.STOCKSWITCH),
 	FLEXCRATE(FlexcrateTileEntity::new, AllBlocks.FLEXCRATE),
+	CREATIVE_CRATE(CreativeCrateTileEntity::new, AllBlocks.CREATIVE_CRATE),
 	EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR, AllBlocks.VERTICAL_EXTRACTOR),
 	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR, AllBlocks.VERTICAL_LINKED_EXTRACTOR),
 	TRANSPOSER(TransposerTileEntity::new, AllBlocks.TRANSPOSER, AllBlocks.VERTICAL_TRANSPOSER),
@@ -235,6 +237,7 @@ public enum AllTileEntities {
 		bind(FurnaceEngineTileEntity.class, new EngineRenderer<>());
 		bind(SpeedControllerTileEntity.class, new SpeedControllerRenderer());
 
+		bind(CreativeCrateTileEntity.class, new SmartTileEntityRenderer<>());
 		bind(RedstoneLinkTileEntity.class, new SmartTileEntityRenderer<>());
 		bind(ExtractorTileEntity.class, new SmartTileEntityRenderer<>());
 		bind(LinkedExtractorTileEntity.class, new SmartTileEntityRenderer<>());

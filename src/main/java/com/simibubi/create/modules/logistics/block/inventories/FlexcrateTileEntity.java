@@ -2,7 +2,6 @@ package com.simibubi.create.modules.logistics.block.inventories;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.SyncedTileEntity;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,7 +14,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -24,7 +22,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class FlexcrateTileEntity extends SyncedTileEntity implements INamedContainerProvider {
+public class FlexcrateTileEntity extends CrateTileEntity implements INamedContainerProvider {
 
 	public class Inv extends ItemStackHandler {
 		public Inv() {
@@ -81,20 +79,6 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 		return new FlexcrateContainer(id, inventory, this);
 	}
 
-	public boolean isDoubleCrate() {
-		return getBlockState().get(FlexcrateBlock.DOUBLE);
-	}
-
-	public FlexcrateTileEntity getMainCrate() {
-		if (isSecondaryCrate())
-			return getOtherCrate();
-		return this;
-	}
-
-	public boolean isSecondaryCrate() {
-		return isDoubleCrate() && getFacing().getAxisDirection() == AxisDirection.NEGATIVE;
-	}
-
 	public FlexcrateTileEntity getOtherCrate() {
 		if (!AllBlocks.FLEXCRATE.typeOf(getBlockState()))
 			return null;
@@ -104,10 +88,12 @@ public class FlexcrateTileEntity extends SyncedTileEntity implements INamedConta
 		return null;
 	}
 
-	public Direction getFacing() {
-		return getBlockState().get(FlexcrateBlock.FACING);
+	public FlexcrateTileEntity getMainCrate() {
+		if (isSecondaryCrate())
+			return getOtherCrate();
+		return this;
 	}
-
+	
 	public void onSplit() {
 		FlexcrateTileEntity other = getOtherCrate();
 		if (other == null)

@@ -1,0 +1,35 @@
+{
+  "parent": "create:refined_radiance",
+  "display": {
+    "icon": {
+      "item": "create:placement_handgun"
+    },
+    "title": {
+      "translate": "advancement.create.zapper"
+    },
+    "description": {
+      "translate": "advancement.create.zapper.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:placement_handgun"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

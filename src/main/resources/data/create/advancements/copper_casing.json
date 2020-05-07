@@ -1,0 +1,35 @@
+{
+  "parent": "create:press",
+  "display": {
+    "icon": {
+      "item": "create:copper_casing"
+    },
+    "title": {
+      "translate": "advancement.create.copper_casing"
+    },
+    "description": {
+      "translate": "advancement.create.copper_casing.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:copper_casing"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "parent": "create:refined_radiance",
+  "display": {
+    "icon": {
+      "item": "create:symmetry_wand"
+    },
+    "title": {
+      "translate": "advancement.create.symmetry_wand"
+    },
+    "description": {
+      "translate": "advancement.create.symmetry_wand.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:symmetry_wand"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

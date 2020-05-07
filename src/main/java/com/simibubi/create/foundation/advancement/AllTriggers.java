@@ -30,6 +30,7 @@ public class AllTriggers {
 			SPEED_READ = simple("speed_read"), 
 			BASIN_THROW = simple("basin"),
 			PRESS_COMPACT = simple("compact"),
+			UPGRADED_ZAPPER = simple("upgraded_zapper"),
 			MIXER_MIX = simple("mixer");
 
 	private static SimpleTrigger simple(String id) {

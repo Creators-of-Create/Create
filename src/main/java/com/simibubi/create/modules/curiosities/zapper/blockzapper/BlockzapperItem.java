@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
@@ -110,8 +111,10 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 				continue;
 			if (!player.isCreative() && BlockHelper.findAndRemoveInInventory(selectedState, player, 1) == 0) {
 				player.getCooldownTracker().setCooldown(stack.getItem(), 20);
-				player.sendStatusMessage(
-						new StringTextComponent(TextFormatting.RED + Lang.translate("blockzapper.empty")), true);
+				player
+						.sendStatusMessage(
+								new StringTextComponent(TextFormatting.RED + Lang.translate("blockzapper.empty")),
+								true);
 				return false;
 			}
 
@@ -119,9 +122,9 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 				dropBlocks(world, player, stack, face, placed);
 
 			for (Direction updateDirection : Direction.values())
-				selectedState = selectedState.updatePostPlacement(updateDirection,
-						world.getBlockState(placed.offset(updateDirection)), world, placed,
-						placed.offset(updateDirection));
+				selectedState = selectedState
+						.updatePostPlacement(updateDirection, world.getBlockState(placed.offset(updateDirection)),
+								world, placed, placed.offset(updateDirection));
 
 			BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, placed);
 			IFluidState ifluidstate = world.getFluidState(placed);
@@ -132,9 +135,20 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 				return false;
 			}
 
-			if (player instanceof ServerPlayerEntity)
-				CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, placed,
-						new ItemStack(selectedState.getBlock()));
+			if (player instanceof ServerPlayerEntity && world instanceof ServerWorld) {
+				ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
+				CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, placed, new ItemStack(selectedState.getBlock()));
+
+				boolean fullyUpgraded = true;
+				for (Components c : Components.values()) {
+					if (getTier(c, stack) != ComponentTier.Chromatic) {
+						fullyUpgraded = false;
+						break;
+					}
+				}
+				if (fullyUpgraded)
+					AllTriggers.UPGRADED_ZAPPER.trigger(serverPlayer);
+			}
 		}
 
 		return true;
@@ -179,8 +193,9 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 
 		Vec3d start = player.getPositionVec().add(0, player.getEyeHeight(), 0);
 		Vec3d range = player.getLookVec().scale(getRange(stack));
-		BlockRayTraceResult raytrace = player.world.rayTraceBlocks(
-				new RayTraceContext(start, start.add(range), BlockMode.COLLIDER, FluidMode.NONE, player));
+		BlockRayTraceResult raytrace = player.world
+				.rayTraceBlocks(
+						new RayTraceContext(start, start.add(range), BlockMode.COLLIDER, FluidMode.NONE, player));
 		BlockPos pos = raytrace.getPos().toImmutable();
 
 		if (pos == null)
@@ -318,8 +333,8 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 			Block.spawnDrops(worldIn.getBlockState(placed), worldIn, playerIn.getPosition(), tileentity);
 
 		if (getTier(Components.Retriever, item) == ComponentTier.Chromatic)
-			for (ItemStack stack : Block.getDrops(worldIn.getBlockState(placed), (ServerWorld) worldIn, placed,
-					tileentity))
+			for (ItemStack stack : Block
+					.getDrops(worldIn.getBlockState(placed), (ServerWorld) worldIn, placed, tileentity))
 				if (!playerIn.inventory.addItemStackToInventory(stack))
 					Block.spawnAsEntity(worldIn, placed, stack);
 	}

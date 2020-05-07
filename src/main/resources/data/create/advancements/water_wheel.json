@@ -17,12 +17,21 @@
   },
   "criteria": {
     "0": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "create:water_wheel"
+      }
+    },
+    "1": {
       "trigger": "create:water_wheel"
     }
   },
   "requirements": [
     [
       "0"
+    ],
+    [
+      "1"
     ]
   ]
 }

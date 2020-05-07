@@ -2,7 +2,7 @@
   "parent": "create:deployer",
   "display": {
     "icon": {
-      "item": "create:large_cogwheel"
+      "item": "create:deployer"
     },
     "title": {
       "translate": "advancement.create.fist_bump"

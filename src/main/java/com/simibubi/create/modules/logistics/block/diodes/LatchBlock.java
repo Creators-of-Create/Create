@@ -34,7 +34,7 @@ public class LatchBlock extends ToggleLatchBlock {
 		Direction direction = state.get(HORIZONTAL_FACING);
 		Direction left = direction.rotateY();
 		Direction right = direction.rotateYCCW();
-		boolean shouldSide = worldIn.isBlockPowered(pos.offset(left)) || worldIn.isBlockPowered(pos.offset(right));
+		boolean shouldSide = worldIn.isSidePowered(pos, left) || worldIn.isSidePowered(pos, right);
 
 		TickPriority tickpriority = TickPriority.HIGH;
 		if (this.isFacingTowardsRepeater(worldIn, pos, state))
