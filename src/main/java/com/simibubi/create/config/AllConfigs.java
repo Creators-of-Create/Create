@@ -1,7 +1,8 @@
 package com.simibubi.create.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -13,11 +14,11 @@ import net.minecraftforge.fml.config.ModConfig.Type;
 
 public class AllConfigs {
 
-	static List<Pair<ConfigBase, ModConfig.Type>> configs = new ArrayList<>();
+	static Map<ConfigBase, ModConfig.Type> configs = new HashMap<>();
 
-	public static CClient CLIENT = register(CClient::new, ModConfig.Type.CLIENT);
-	public static CCommon COMMON = register(CCommon::new, ModConfig.Type.COMMON);
-	public static CServer SERVER = register(CServer::new, ModConfig.Type.SERVER);
+	public static CClient CLIENT;
+	public static CCommon COMMON;
+	public static CServer SERVER;
 
 	private static <T extends ConfigBase> T register(Supplier<T> factory, ModConfig.Type side) {
 		Pair<T, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(builder -> {
@@ -28,24 +29,31 @@ public class AllConfigs {
 
 		T config = specPair.getLeft();
 		config.specification = specPair.getRight();
-		configs.add(Pair.of(config, side));
+		configs.put(config, side);
 		return config;
 	}
 
-	public static void registerAll() {
-		ModLoadingContext ctx = ModLoadingContext.get();
-		for (Pair<ConfigBase, Type> pair : configs)
-			ctx.registerConfig(pair.getValue(), pair.getKey().specification);
+	public static void registerClientCommon() {
+		CLIENT = register(CClient::new, ModConfig.Type.CLIENT);
+		COMMON = register(CCommon::new, ModConfig.Type.COMMON);
+		for (Entry<ConfigBase, Type> pair : configs.entrySet())
+			if (pair.getValue() != Type.SERVER)
+				ModLoadingContext.get().registerConfig(pair.getValue(), pair.getKey().specification);
+	}
+
+	public static void registerServer() {
+		SERVER = register(CServer::new, ModConfig.Type.SERVER);
+		ModLoadingContext.get().registerConfig(configs.get(SERVER), SERVER.specification);
 	}
 
 	public static void onLoad(ModConfig.Loading event) {
-		for (Pair<ConfigBase, Type> pair : configs)
+		for (Entry<ConfigBase, Type> pair : configs.entrySet())
 			if (pair.getKey().specification == event.getConfig().getSpec())
 				pair.getKey().onLoad();
 	}
 
 	public static void onReload(ModConfig.Reloading event) {
-		for (Pair<ConfigBase, Type> pair : configs)
+		for (Entry<ConfigBase, Type> pair : configs.entrySet())
 			if (pair.getKey().specification == event.getConfig().getSpec())
 				pair.getKey().onReload();
 	}

@@ -63,11 +63,10 @@ public class Create {
 		modEventBus.addListener(AllConfigs::onLoad);
 		modEventBus.addListener(AllConfigs::onReload);
 		CreateClient.addListeners(modEventBus);
+		AllConfigs.registerClientCommon();
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
-	    AllConfigs.registerAll();
-
 		schematicReceiver = new ServerSchematicLoader();
 		redstoneLinkNetworkHandler = new RedstoneLinkNetworkHandler();
 		torquePropagator = new TorquePropagator();
@@ -77,6 +76,7 @@ public class Create {
 		AllTriggers.register();
 		
 		AllWorldFeatures.reload();
+		AllConfigs.registerServer();
 	}
 
 	public static void serverStarting(FMLServerStartingEvent event) {
