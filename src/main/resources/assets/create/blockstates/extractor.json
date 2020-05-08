@@ -1,15 +1,12 @@
 {
-  "forge_marker": 1,
-  "variants": {
-    "powered": {
-      "true": { "model": "create:block/extractor/horizontal_powered" },
-      "false": { "model": "create:block/extractor/horizontal" }
-    },
-    "facing": {
-      "south": { "y": 180 },
-      "east": { "y": 90 },
-      "north": { "y": 0 },
-      "west": { "y": 270 }
-    }
-  }
+	"variants": {
+		"powered=true,facing=north": { "model": "create:block/extractor/horizontal_powered", "y": 180 },
+		"powered=true,facing=east": { "model": "create:block/extractor/horizontal_powered", "y": 90 },
+		"powered=true,facing=south": { "model": "create:block/extractor/horizontal_powered", "y": 0 },
+		"powered=true,facing=west": { "model": "create:block/extractor/horizontal_powered", "y": 270 },
+		"powered=false,facing=north": { "model": "create:block/extractor/horizontal", "y": 180 },
+		"powered=false,facing=east": { "model": "create:block/extractor/horizontal", "y": 90 },
+		"powered=false,facing=south": { "model": "create:block/extractor/horizontal", "y": 0 },
+		"powered=false,facing=west": { "model": "create:block/extractor/horizontal", "y": 270 }
+	}
 }

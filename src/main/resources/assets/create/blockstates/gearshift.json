@@ -1,14 +1,10 @@
 {
-	"forge_marker": 1,
-    "variants": {
-		"powered" : {
-			"true": { "model": "create:block/gearshift_on" },
-			"false": { "model": "create:block/gearshift_off" }
-		},
-		"axis": {
-			"x": { "y": 90 },
-			"y": { "x": 90 },
-			"z": {}
-		}
+  "variants": {
+		"powered=true,axis=x": { "model": "create:block/gearshift_on", "y": 90 },
+		"powered=true,axis=y": { "model": "create:block/gearshift_on", "x": 90 },
+		"powered=true,axis=z": { "model": "create:block/gearshift_on" },
+		"powered=false,axis=x": { "model": "create:block/gearshift_off", "y": 90 },
+		"powered=false,axis=y": { "model": "create:block/gearshift_off", "x": 90 },
+		"powered=false,axis=z": { "model": "create:block/gearshift_off" }
 	}
 }

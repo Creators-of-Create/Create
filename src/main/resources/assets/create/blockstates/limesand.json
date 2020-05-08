@@ -1,7 +1,10 @@
 {
-	"forge_marker": 1,
-	"defaults": { "model": "create:block/palettes/limesand" },
-    "variants": {
-      "": [{ "y": 0 }, { "y": 90 }, { "y": 180 }, { "y": 270 }]
-    }
+  "variants": {
+    "": [
+      { "model": "create:block/palettes/limesand", "y": 0 },
+      { "model": "create:block/palettes/limesand", "y": 90 },
+      { "model": "create:block/palettes/limesand", "y": 180 },
+      { "model": "create:block/palettes/limesand", "y": 270 }
+    ]
+  }
 }
