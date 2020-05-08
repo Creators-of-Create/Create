@@ -54,7 +54,7 @@ public class BlockStateGen {
 	 */
 	public static ItemModelBuilder customItemModel(@NonnullType DataGenContext<Item, ? extends BlockItem> ctx,
 			@NonnullType RegistrateItemModelProvider prov) {
-		return prov.blockItem(ctx.getEntry()::getBlock, "/item");
+		return prov.blockItem(() -> ctx.getEntry().getBlock(), "/item");
 	}
 
 }
