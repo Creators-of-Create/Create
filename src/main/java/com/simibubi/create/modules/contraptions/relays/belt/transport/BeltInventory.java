@@ -118,18 +118,18 @@ public class BeltInventory {
 			float diffToEnd = beltMovementPositive ? belt.beltLength - currentPos : -currentPos;
 			float limitedMovement =
 				beltMovementPositive ? Math.min(movement, diffToEnd) : Math.max(movement, diffToEnd);
-
 			float nextOffset = current.beltPosition + limitedMovement;
-			if (!onClient) {
+
+			if (!onClient && segmentBefore != -1) {
 				// Don't move if belt attachments want to continue processing
-				if (segmentBefore != -1 && current.locked) {
+				if (current.locked) {
 					BeltTileEntity beltSegment = BeltHelper.getBeltAtSegment(belt, segmentBefore);
 					if (beltSegment != null) {
-						
+
 						// wait in case belt isnt initialized yet
 						if (current.locked && beltSegment.trackerUpdateTag != null)
 							continue;
-						
+
 						current.locked = false;
 						List<BeltAttachmentState> attachments = beltSegment.attachmentTracker.attachments;
 						for (BeltAttachmentState attachmentState : attachments) {
@@ -146,22 +146,24 @@ public class BeltInventory {
 				}
 
 				// See if any new belt processing catches the item
-				int upcomingSegment = (int) (current.beltPosition + (beltMovementPositive ? .5f : -.5f));
-				for (int segment = upcomingSegment; beltMovementPositive ? segment + .5f <= nextOffset
-						: segment + .5f >= nextOffset; segment += beltMovementPositive ? 1 : -1) {
-					BeltTileEntity beltSegment = BeltHelper.getBeltAtSegment(belt, segmentBefore);
-					if (beltSegment == null)
-						break;
-					for (BeltAttachmentState attachmentState : beltSegment.attachmentTracker.attachments) {
-						ItemStack stackBefore = current.stack.copy();
-						if (attachmentState.attachment.startProcessingItem(beltSegment, current, attachmentState)) {
-							current.beltPosition = segment + .5f + (beltMovementPositive ? 1 / 64f : -1 / 64f);
-							current.locked = true;
-							belt.sendData();
-							continue Items;
+				if (current.beltPosition > .5f || beltMovementPositive) {
+					int firstUpcomingSegment = (int) (current.beltPosition + (beltMovementPositive ? .5f : -.5f));
+					for (int segment = firstUpcomingSegment; beltMovementPositive ? segment + .5f <= nextOffset
+							: segment + .5f >= nextOffset; segment += beltMovementPositive ? 1 : -1) {
+						BeltTileEntity beltSegment = BeltHelper.getBeltAtSegment(belt, segment);
+						if (beltSegment == null)
+							break;
+						for (BeltAttachmentState attachmentState : beltSegment.attachmentTracker.attachments) {
+							ItemStack stackBefore = current.stack.copy();
+							if (attachmentState.attachment.startProcessingItem(beltSegment, current, attachmentState)) {
+								current.beltPosition = segment + .5f + (beltMovementPositive ? 1 / 64f : -1 / 64f);
+								current.locked = true;
+								belt.sendData();
+								continue Items;
+							}
+							if (!stackBefore.equals(current.stack, true))
+								belt.sendData();
 						}
-						if (!stackBefore.equals(current.stack, true))
-							belt.sendData();
 					}
 				}
 			}
@@ -202,8 +204,9 @@ public class BeltInventory {
 					if (segment == -1)
 						continue;
 					if (!world.isRemote)
-						world.updateComparatorOutputLevel(BeltHelper.getPositionForOffset(belt, segment),
-								belt.getBlockState().getBlock());
+						world
+								.updateComparatorOutputLevel(BeltHelper.getPositionForOffset(belt, segment),
+										belt.getBlockState().getBlock());
 				}
 			}
 
@@ -392,7 +395,8 @@ public class BeltInventory {
 
 	public void read(CompoundNBT nbt) {
 		getItems().clear();
-		nbt.getList("Items", NBT.TAG_COMPOUND)
+		nbt
+				.getList("Items", NBT.TAG_COMPOUND)
 				.forEach(inbt -> getItems().add(TransportedItemStack.read((CompoundNBT) inbt)));
 		beltMovementPositive = nbt.getBoolean("PositiveOrder");
 	}

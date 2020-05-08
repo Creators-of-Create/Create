@@ -4,6 +4,8 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
@@ -28,13 +30,9 @@ public class LatchBlock extends ToggleLatchBlock {
 	@Override
 	protected void updateState(World worldIn, BlockPos pos, BlockState state) {
 		boolean back = state.get(POWERED);
-		boolean shouldBack = this.shouldBePowered(worldIn, pos, state);
+		boolean shouldBack = shouldBePowered(worldIn, pos, state);
 		boolean side = state.get(POWERED_SIDE);
-
-		Direction direction = state.get(HORIZONTAL_FACING);
-		Direction left = direction.rotateY();
-		Direction right = direction.rotateYCCW();
-		boolean shouldSide = worldIn.isSidePowered(pos, left) || worldIn.isSidePowered(pos, right);
+		boolean shouldSide = isPoweredOnSides(worldIn, pos, state);
 
 		TickPriority tickpriority = TickPriority.HIGH;
 		if (this.isFacingTowardsRepeater(worldIn, pos, state))
@@ -48,16 +46,28 @@ public class LatchBlock extends ToggleLatchBlock {
 			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.getDelay(state), tickpriority);
 	}
 
+	protected boolean isPoweredOnSides(World worldIn, BlockPos pos, BlockState state) {
+		Direction direction = state.get(HORIZONTAL_FACING);
+		Direction left = direction.rotateY();
+		Direction right = direction.rotateYCCW();
+
+		for (Direction d : new Direction[] { left, right }) {
+			BlockPos blockpos = pos.offset(d);
+			int i = worldIn.getRedstonePower(blockpos, d);
+			if (i > 0)
+				return true;
+			BlockState blockstate = worldIn.getBlockState(blockpos);
+			return blockstate.getBlock() == Blocks.REDSTONE_WIRE ? blockstate.get(RedstoneWireBlock.POWER) > 0 : false;
+		}
+		return false;
+	}
+
 	@Override
 	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
 		boolean back = state.get(POWERED);
 		boolean shouldBack = this.shouldBePowered(worldIn, pos, state);
 		boolean side = state.get(POWERED_SIDE);
-
-		Direction direction = state.get(HORIZONTAL_FACING);
-		Direction left = direction.rotateY();
-		Direction right = direction.rotateYCCW();
-		boolean shouldSide = worldIn.isBlockPowered(pos.offset(left)) || worldIn.isBlockPowered(pos.offset(right));
+		boolean shouldSide = isPoweredOnSides(worldIn, pos, state);
 		BlockState stateIn = state;
 
 		if (back != shouldBack) {

@@ -92,15 +92,16 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 		return ActionResultType.SUCCESS;
 	}
 
-	private void createBelts(World world, BlockPos start, BlockPos end) {
+	public static void createBelts(World world, BlockPos start, BlockPos end) {
 
 		BeltBlock.Slope slope = getSlopeBetween(start, end);
 		Direction facing = getFacingFromTo(start, end);
 
 		BlockPos diff = end.subtract(start);
 		if (diff.getX() == diff.getZ())
-			facing = Direction.getFacingFromAxis(facing.getAxisDirection(),
-					world.getBlockState(start).get(BlockStateProperties.AXIS) == Axis.X ? Axis.Z : Axis.X);
+			facing = Direction
+					.getFacingFromAxis(facing.getAxisDirection(),
+							world.getBlockState(start).get(BlockStateProperties.AXIS) == Axis.X ? Axis.Z : Axis.X);
 
 		List<BlockPos> beltsToCreate = getBeltChainBetween(start, end, slope, facing);
 		BlockState beltBlock = AllBlocks.BELT.get().getDefaultState();
@@ -110,12 +111,17 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 			boolean pulley = AllBlocks.SHAFT.typeOf(world.getBlockState(pos));
 			if (part == Part.MIDDLE && pulley)
 				part = Part.PULLEY;
-			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope).with(BeltBlock.PART, part)
-					.with(BeltBlock.HORIZONTAL_FACING, facing), 3);
+			world
+					.setBlockState(pos,
+							beltBlock
+									.with(BeltBlock.SLOPE, slope)
+									.with(BeltBlock.PART, part)
+									.with(BeltBlock.HORIZONTAL_FACING, facing),
+							3);
 		}
 	}
 
-	private Direction getFacingFromTo(BlockPos start, BlockPos end) {
+	private static Direction getFacingFromTo(BlockPos start, BlockPos end) {
 		Axis beltAxis = start.getX() == end.getX() ? Axis.Z : Axis.X;
 		BlockPos diff = end.subtract(start);
 		AxisDirection axisDirection = AxisDirection.POSITIVE;
@@ -129,7 +135,7 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 		return Direction.getFacingFromAxis(axisDirection, beltAxis);
 	}
 
-	private Slope getSlopeBetween(BlockPos start, BlockPos end) {
+	private static Slope getSlopeBetween(BlockPos start, BlockPos end) {
 		BlockPos diff = end.subtract(start);
 
 		if (diff.getY() != 0) {
@@ -140,7 +146,7 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 		return Slope.HORIZONTAL;
 	}
 
-	private List<BlockPos> getBeltChainBetween(BlockPos start, BlockPos end, Slope slope, Direction direction) {
+	private static List<BlockPos> getBeltChainBetween(BlockPos start, BlockPos end, Slope slope, Direction direction) {
 		List<BlockPos> positions = new LinkedList<>();
 		int limit = 1000;
 		BlockPos current = start;

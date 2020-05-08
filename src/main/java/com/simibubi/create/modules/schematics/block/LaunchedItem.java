@@ -2,6 +2,12 @@ package com.simibubi.create.modules.schematics.block;
 
 import java.util.Optional;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
+import com.simibubi.create.modules.contraptions.relays.belt.item.BeltConnectorItem;
+import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -9,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -28,8 +35,7 @@ public abstract class LaunchedItem {
 		return (int) (Math.max(10, MathHelper.sqrt(MathHelper.sqrt(target.distanceSq(start))) * 4f));
 	}
 
-	LaunchedItem() {
-	}
+	LaunchedItem() {}
 
 	private LaunchedItem(BlockPos target, ItemStack stack, int ticksLeft, int total) {
 		this.target = target;
@@ -60,8 +66,8 @@ public abstract class LaunchedItem {
 	}
 
 	public static LaunchedItem fromNBT(CompoundNBT c) {
-		LaunchedItem launched =
-			c.contains("BlockState") ? new LaunchedItem.ForBlockState() : new LaunchedItem.ForEntity();
+		LaunchedItem launched = c.contains("Length") ? new LaunchedItem.ForBelt()
+				: c.contains("BlockState") ? new LaunchedItem.ForBlockState() : new LaunchedItem.ForEntity();
 		launched.readNBT(c);
 		return launched;
 	}
@@ -78,8 +84,7 @@ public abstract class LaunchedItem {
 	public static class ForBlockState extends LaunchedItem {
 		public BlockState state;
 
-		ForBlockState() {
-		}
+		ForBlockState() {}
 
 		public ForBlockState(BlockPos start, BlockPos target, ItemStack stack, BlockState state) {
 			super(start, target, stack);
@@ -105,8 +110,50 @@ public abstract class LaunchedItem {
 			if (state.has(BlockStateProperties.EXTENDED))
 				state = state.with(BlockStateProperties.EXTENDED, false);
 
+			if (AllBlocks.BELT.typeOf(state)) {
+				world.setBlockState(target, state, 2);
+				return;
+			}
+
 			world.setBlockState(target, state, 18);
 			state.getBlock().onBlockPlacedBy(world, target, state, null, stack);
+		}
+
+	}
+
+	public static class ForBelt extends ForBlockState {
+		public int length;
+
+		public ForBelt() {}
+
+		@Override
+		public CompoundNBT serializeNBT() {
+			CompoundNBT serializeNBT = super.serializeNBT();
+			serializeNBT.putInt("Length", length);
+			return serializeNBT;
+		}
+
+		@Override
+		void readNBT(CompoundNBT nbt) {
+			length = nbt.getInt("Length");
+			super.readNBT(nbt);
+		}
+
+		public ForBelt(BlockPos start, BlockPos target, ItemStack stack, BlockState state, int length) {
+			super(start, target, stack, state);
+			this.length = length;
+		}
+
+		@Override
+		void place(World world) {
+			// todo place belt
+			boolean isStart = state.get(BeltBlock.PART) == Part.START;
+			BlockPos offset = BeltBlock.nextSegmentPosition(state, BlockPos.ZERO, isStart);
+			int i = length - 1;
+			Axis axis = state.get(BeltBlock.HORIZONTAL_FACING).rotateY().getAxis();
+			world.setBlockState(target, AllBlocks.SHAFT.getDefault().with(ShaftBlock.AXIS, axis));
+			BeltConnectorItem
+					.createBelts(world, target, target.add(offset.getX() * i, offset.getY() * i, offset.getZ() * i));
 		}
 
 	}
@@ -115,8 +162,7 @@ public abstract class LaunchedItem {
 		public Entity entity;
 		private CompoundNBT deferredTag;
 
-		ForEntity() {
-		}
+		ForEntity() {}
 
 		public ForEntity(BlockPos start, BlockPos target, ItemStack stack, Entity entity) {
 			super(start, target, stack);

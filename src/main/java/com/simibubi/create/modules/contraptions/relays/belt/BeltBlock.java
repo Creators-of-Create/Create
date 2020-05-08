@@ -50,6 +50,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
@@ -59,6 +60,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -342,10 +344,11 @@ public class BeltBlock extends HorizontalKineticBlock
 						double d7 = d4 * d1 + x1;
 						double d8 = d5 * d2 + y1;
 						double d9 = d6 * d3 + z1;
-						manager.addEffect(
-								(new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
-										(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state))
-												.setBlockPos(pos));
+						manager
+								.addEffect(
+										(new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
+												(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state))
+														.setBlockPos(pos));
 					}
 				}
 			}
@@ -397,7 +400,7 @@ public class BeltBlock extends HorizontalKineticBlock
 	}
 
 	public static void initBelt(World world, BlockPos pos) {
-		if (world.isRemote)
+		if (world.isRemote || world.getWorldType() == WorldType.DEBUG_ALL_BLOCK_STATES)
 			return;
 
 		BlockState state = world.getBlockState(pos);
@@ -430,7 +433,9 @@ public class BeltBlock extends HorizontalKineticBlock
 
 		for (BlockPos beltPos : beltChain) {
 			TileEntity tileEntity = world.getTileEntity(beltPos);
-			if (tileEntity instanceof BeltTileEntity) {
+			BlockState currentState = world.getBlockState(beltPos);
+
+			if (tileEntity instanceof BeltTileEntity && AllBlocks.BELT.typeOf(currentState)) {
 				BeltTileEntity te = (BeltTileEntity) tileEntity;
 				te.setController(currentPos);
 				te.beltLength = beltChain.size();
@@ -439,7 +444,6 @@ public class BeltBlock extends HorizontalKineticBlock
 				te.markDirty();
 				te.sendData();
 
-				BlockState currentState = world.getBlockState(beltPos);
 				boolean isVertical = currentState.get(BeltBlock.SLOPE) == Slope.VERTICAL;
 
 				if (currentState.get(CASING) && isVertical) {
@@ -540,10 +544,10 @@ public class BeltBlock extends HorizontalKineticBlock
 		int limit = 1000;
 		BlockPos current = controllerPos;
 		while (limit-- > 0 && current != null) {
-			positions.add(current);
 			BlockState state = world.getBlockState(current);
 			if (!AllBlocks.BELT.typeOf(state))
 				break;
+			positions.add(current);
 			current = nextSegmentPosition(state, current, true);
 		}
 
@@ -607,7 +611,7 @@ public class BeltBlock extends HorizontalKineticBlock
 	public Class<BeltTileEntity> getTileEntityClass() {
 		return BeltTileEntity.class;
 	}
-	
+
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state) {
 		List<ItemStack> required = new ArrayList<>();
@@ -622,4 +626,20 @@ public class BeltBlock extends HorizontalKineticBlock
 		return new ItemRequirement(ItemUseType.CONSUME, required);
 	}
 
+	@Override
+	public BlockState rotate(BlockState state, Rotation rot) {
+		BlockState rotate = super.rotate(state, rot);
+		
+		if (state.get(SLOPE) != Slope.VERTICAL)
+			return rotate;
+		if (state.get(HORIZONTAL_FACING).getAxisDirection() != rotate.get(HORIZONTAL_FACING).getAxisDirection()) {
+			if (state.get(PART) == Part.START)
+				return rotate.with(PART, Part.END);
+			if (state.get(PART) == Part.END)
+				return rotate.with(PART, Part.START);
+		}
+		
+		return rotate;
+	}
+	
 }

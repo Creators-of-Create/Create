@@ -12,12 +12,6 @@ import net.minecraft.util.Direction;
 
 public class AnimatedCrafter extends AnimatedKinetics {
 
-	boolean four;
-
-	public AnimatedCrafter(boolean four) {
-		this.four = four;
-	}
-
 	@Override
 	public int getWidth() {
 		return 50;
@@ -40,23 +34,7 @@ public class AnimatedCrafter extends AnimatedKinetics {
 
 		ScreenElementRenderer.renderModel(() -> cogwheel(true));
 		ScreenElementRenderer.renderBlock(this::body);
-		GlStateManager.translatef(0, 50, 0);
-		ScreenElementRenderer.renderModel(() -> cogwheel(false));
-		ScreenElementRenderer.renderBlock(this::body);
-
-		if (four) {
-			GlStateManager.translatef(50, -50, 0);
-			ScreenElementRenderer.renderModel(() -> cogwheel(false));
-			ScreenElementRenderer.renderBlock(this::body);
-			GlStateManager.translatef(0, 50, 0);
-			ScreenElementRenderer.renderModel(() -> cogwheel(true));
-			ScreenElementRenderer.renderBlock(this::body);
-
-		} else {
-			GlStateManager.translatef(0, 50, 0);
-			ScreenElementRenderer.renderModel(() -> cogwheel(true));
-			ScreenElementRenderer.renderBlock(this::body);
-		}
+		GlStateManager.translatef(50, 0, 0);
 
 		GlStateManager.popMatrix();
 	}
@@ -71,8 +49,10 @@ public class AnimatedCrafter extends AnimatedKinetics {
 	}
 
 	private BlockState body() {
-		return AllBlocks.MECHANICAL_CRAFTER.get().getDefaultState().with(MechanicalCrafterBlock.HORIZONTAL_FACING,
-				Direction.WEST);
+		return AllBlocks.MECHANICAL_CRAFTER
+				.get()
+				.getDefaultState()
+				.with(MechanicalCrafterBlock.HORIZONTAL_FACING, Direction.WEST);
 	}
 
 }

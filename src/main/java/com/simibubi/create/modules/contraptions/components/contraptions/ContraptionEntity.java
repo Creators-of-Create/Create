@@ -298,11 +298,14 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 					BearingContraption bc = (BearingContraption) getContraption();
 					Direction facing = bc.getFacing();
 					Vec3d activeAreaOffset = actor.getActiveAreaOffset(context);
-					if (activeAreaOffset.mul(VecHelper.planeByNormal(new Vec3d(facing.getDirectionVec())))
+					if (activeAreaOffset
+							.mul(VecHelper.planeByNormal(new Vec3d(facing.getDirectionVec())))
 							.equals(Vec3d.ZERO)) {
 						if (VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis())) {
-							context.motion = new Vec3d(facing.getDirectionVec()).scale(
-									facing.getAxis().getCoordinate(roll - prevRoll, yaw - prevYaw, pitch - prevPitch));
+							context.motion = new Vec3d(facing.getDirectionVec())
+									.scale(facing
+											.getAxis()
+											.getCoordinate(roll - prevRoll, yaw - prevYaw, pitch - prevPitch));
 							context.relativeMotion = context.motion;
 							int timer = context.data.getInt("StationaryTimer");
 							if (timer > 0) {
@@ -333,8 +336,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 				setMotion(Vec3d.ZERO);
 				if (getController() != null)
 					getController().onStall();
-				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-						new ContraptionStallPacket(getEntityId(), posX, posY, posZ, yaw, pitch, roll));
+				AllPackets.channel
+						.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+								new ContraptionStallPacket(getEntityId(), posX, posY, posZ, yaw, pitch, roll));
 			}
 			dataManager.set(STALLED, contraption.stalled);
 		} else {
@@ -463,8 +467,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		if (contraption != null)
 			compound.put("Contraption", contraption.writeNBT());
 		if (!stationary && motionBeforeStall != null)
-			compound.put("CachedMotion",
-					newDoubleNBTList(motionBeforeStall.x, motionBeforeStall.y, motionBeforeStall.z));
+			compound
+					.put("CachedMotion",
+							newDoubleNBTList(motionBeforeStall.x, motionBeforeStall.y, motionBeforeStall.z));
 		if (controllerPos != null)
 			compound.put("Controller", NBTUtil.writeBlockPos(controllerPos));
 		if (forcedAngle != -1)
@@ -542,8 +547,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 				}
 
 				if (horizontalMag(vec3d1) > horizontalMag(vec3d)) {
-					vec3d = vec3d1.add(collideBoundingBoxHeuristically(e, new Vec3d(0.0D, -vec3d1.y + vec.y, 0.0D),
-							axisalignedbb.offset(vec3d1), e.world, iselectioncontext, reuseablestream));
+					vec3d = vec3d1
+							.add(collideBoundingBoxHeuristically(e, new Vec3d(0.0D, -vec3d1.y + vec.y, 0.0D),
+									axisalignedbb.offset(vec3d1), e.world, iselectioncontext, reuseablestream));
 				}
 			}
 
@@ -592,6 +598,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	@Override
 	// Make sure nothing can move contraptions out of the way
 	public void setMotion(Vec3d motionIn) {}
+
+	@Override
+	public void setPositionAndUpdate(double x, double y, double z) {
+		if (!stationary)
+			super.setPositionAndUpdate(x, y, z);
+	}
 
 	@Override
 	public PushReaction getPushReaction() {

@@ -117,7 +117,9 @@ public class StockswitchTileEntity extends SyncedTileEntity {
 		if (!invState.hasTileEntity())
 			return false;
 		TileEntity invTE = world.getTileEntity(invPos);
-
+		if (invTE == null)
+			return false;
+		
 		observedInventory = invTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		if (observedInventory.isPresent()) {
 			updateCurrentLevel();

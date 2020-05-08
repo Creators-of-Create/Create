@@ -251,11 +251,6 @@ public class CreateAdvancements implements IDataProvider {
 
 	private void andesiteExpertLane(Consumer<Advancement> t, Advancement root) {
 		String id = Create.ID;
-
-		Advancement expert_lane_1 = advancement("expert_lane_1", Blocks.ANDESITE, TaskType.SILENT_GATE)
-				.withParent(root)
-				.withCriterion("0", itemGathered(AllBlocks.ANDESITE_CASING.get()))
-				.register(t, id + ":expert_lane_1");
 	}
 
 	// Datagen

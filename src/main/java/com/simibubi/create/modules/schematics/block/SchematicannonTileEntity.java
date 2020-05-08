@@ -13,6 +13,11 @@ import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.modules.schematics.ItemRequirement;
 import com.simibubi.create.modules.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.modules.schematics.MaterialChecklist;
@@ -41,11 +46,13 @@ import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -456,13 +463,47 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		ItemStack icon = requirement.isEmpty() || requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0);
 		if (entityMode)
 			launchEntity(target, icon, blockReader.getEntities().get(printingEntityIndex));
-		else
+		else if (AllBlocks.BELT.typeOf(blockState)) {
+			TileEntity te = blockReader.getTileEntity(currentPos.add(schematicAnchor));
+			blockState = stripBeltIfNotLast(blockState);
+			if (te instanceof BeltTileEntity && AllBlocks.BELT.typeOf(blockState))
+				launchBelt(target, blockState, ((BeltTileEntity) te).beltLength);
+			else
+				launchBlock(target, icon, blockState);
+		} else
 			launchBlock(target, icon, blockState);
 
 		printerCooldown = config().schematicannonDelay.get();
 		fuelLevel -= getFuelUsageRate();
 		sendUpdate = true;
 		missingItem = null;
+	}
+
+	public BlockState stripBeltIfNotLast(BlockState blockState) {
+		// is highest belt?
+		boolean isLastSegment = false;
+		Direction facing = blockState.get(BeltBlock.HORIZONTAL_FACING);
+		Slope slope = blockState.get(BeltBlock.SLOPE);
+		boolean positive = facing.getAxisDirection() == AxisDirection.POSITIVE;
+		boolean start = blockState.get(BeltBlock.PART) == Part.START;
+		boolean end = blockState.get(BeltBlock.PART) == Part.END;
+
+		switch (slope) {
+		case DOWNWARD:
+			isLastSegment = start;
+			break;
+		case UPWARD:
+			isLastSegment = end;
+			break;
+		case HORIZONTAL:
+		case VERTICAL:
+		default:
+			isLastSegment = positive && end || !positive && start;
+		}
+		if (!isLastSegment)
+			blockState = (blockState.get(BeltBlock.PART) == Part.MIDDLE) ? Blocks.AIR.getDefaultState()
+					: AllBlocks.SHAFT.getDefault().with(ShaftBlock.AXIS, facing.rotateY().getAxis());
+		return blockState;
 	}
 
 	public double getFuelUsageRate() {
@@ -504,7 +545,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 		schematicAnchor = anchor;
 		blockReader = new SchematicWorld(schematicAnchor, world);
-		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, SchematicItem.getSettings(blueprint));
+		PlacementSettings settings = SchematicItem.getSettings(blueprint);
+		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, settings);
 		schematicLoaded = true;
 		state = State.PAUSED;
 		statusMsg = "ready";
@@ -764,6 +806,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 		bookPrintingProgress += 0.05f;
 		sendUpdate = true;
+	}
+
+	protected void launchBelt(BlockPos target, BlockState state, int length) {
+		blocksPlaced++;
+		ItemStack connector = AllItems.BELT_CONNECTOR.asStack();
+		flyingBlocks.add(new LaunchedItem.ForBelt(this.getPos(), target, connector, state, length));
+		playFiringSound();
 	}
 
 	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state) {

@@ -93,7 +93,7 @@ public class FlexcrateTileEntity extends CrateTileEntity implements INamedContai
 			return getOtherCrate();
 		return this;
 	}
-	
+
 	public void onSplit() {
 		FlexcrateTileEntity other = getOtherCrate();
 		if (other == null)
@@ -181,7 +181,7 @@ public class FlexcrateTileEntity extends CrateTileEntity implements INamedContai
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			FlexcrateTileEntity mainCrate = getMainCrate();
-			if (mainCrate != null && mainCrate.invHandler.isPresent())
+			if (mainCrate != null && mainCrate.invHandler != null && mainCrate.invHandler.isPresent())
 				return mainCrate.invHandler.cast();
 		}
 		return super.getCapability(capability, facing);
