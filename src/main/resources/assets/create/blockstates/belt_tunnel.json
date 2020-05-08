@@ -1,18 +1,20 @@
 {
-  "forge_marker": 1,
   "variants": {
-    "shape": {
-      "straight": { "model": "create:block/belt_tunnel/straight" },
-      "window": { "model": "create:block/belt_tunnel/straight_windowed" },
-      "halfshade": { "model": "create:block/belt_tunnel/straight_halfshade" },
-      "fullshade": { "model": "create:block/belt_tunnel/straight_fullshade" },
-      "t_left": { "model": "create:block/belt_tunnel/t_left" },
-      "t_right": { "model": "create:block/belt_tunnel/t_right" },
-      "cross": { "model": "create:block/belt_tunnel/cross" }
-    },
-    "axis": {
-      "x": { },
-      "z": { "y": 90 }
+    "shape=straight,axis=x": { "model": "create:block/belt_tunnel/straight" },
+    "shape=window,axis=x": { "model": "create:block/belt_tunnel/straight_windowed" },
+    "shape=halfshade,axis=x": { "model": "create:block/belt_tunnel/straight_halfshade" },
+    "shape=fullshade,axis=x": { "model": "create:block/belt_tunnel/straight_fullshade" },
+    "shape=t_left,axis=x": { "model": "create:block/belt_tunnel/t_left" },
+    "shape=t_right,axis=x": { "model": "create:block/belt_tunnel/t_right" },
+    "shape=cross,axis=x": { "model": "create:block/belt_tunnel/cross" },
+
+    "shape=straight,axis=z": { "model": "create:block/belt_tunnel/straight", "y": 90 },
+    "shape=window,axis=z": { "model": "create:block/belt_tunnel/straight_windowed", "y": 90 },
+    "shape=halfshade,axis=z": { "model": "create:block/belt_tunnel/straight_halfshade", "y": 90 },
+    "shape=fullshade,axis=z": { "model": "create:block/belt_tunnel/straight_fullshade", "y": 90 },
+    "shape=t_left,axis=z": { "model": "create:block/belt_tunnel/t_left", "y": 90 },
+    "shape=t_right,axis=z": { "model": "create:block/belt_tunnel/t_right", "y": 90 },
+    "shape=cross,axis=z": { "model": "create:block/belt_tunnel/cross", "y": 90 }
     }
   }
 }

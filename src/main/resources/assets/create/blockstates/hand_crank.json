@@ -1,16 +1,10 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-	"model": "create:block/hand_crank/block"
-  },
   "variants": {
-    "facing": {
-      "north": { "y": 0 },
-      "south": { "y": 180 },
-      "west": { "y": 270 },
-      "up": { "x": 270 },
-      "down": { "x": 90 },
-      "east": { "y": 90 }
-    }
+    "facing=north":{ "model": "create:block/hand_crank/block" },
+    "facing=south":{ "model": "create:block/hand_crank/block", "y": 180 },
+    "facing=west": { "model": "create:block/hand_crank/block", "y": 270 },
+    "facing=up":   { "model": "create:block/hand_crank/block", "x": 270 },
+    "facing=down": { "model": "create:block/hand_crank/block", "x": 90 },
+    "facing=east": { "model": "create:block/hand_crank/block", "y": 90 }
   }
 }

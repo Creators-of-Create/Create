@@ -1,8 +1,4 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "create:block/transposer/default"
-  },
   "variants": {
 
     "powered=true,upward=true,facing=south": { "model": "create:block/transposer/default_powered", "y": 180, "x": 270 },
@@ -13,15 +9,15 @@
     "powered=true,upward=false,facing=east": { "model": "create:block/transposer/default_powered", "y": 270, "x": 90 },
     "powered=true,upward=false,facing=north": { "model": "create:block/transposer/default_powered", "y": 180, "x": 90 },
     "powered=true,upward=false,facing=west": { "model": "create:block/transposer/default_powered", "y": 90, "x": 90 },
-    
-    "powered=false,upward=true,facing=south": { "y": 180, "x": 270 },
-    "powered=false,upward=true,facing=east": { "y": 90, "x": 270 },
-    "powered=false,upward=true,facing=north": { "y": 0, "x": 270 },
-    "powered=false,upward=true,facing=west": { "y": 270, "x": 270 },
-    "powered=false,upward=false,facing=south": { "y": 0, "x": 90 },
-    "powered=false,upward=false,facing=east": { "y": 270, "x": 90 },
-    "powered=false,upward=false,facing=north": { "y": 180, "x": 90 },
-    "powered=false,upward=false,facing=west": { "y": 90, "x": 90 }
+
+    "powered=false,upward=true,facing=south": { "model": "create:block/transposer/default", "y": 180, "x": 270 },
+    "powered=false,upward=true,facing=east": { "model": "create:block/transposer/default", "y": 90, "x": 270 },
+    "powered=false,upward=true,facing=north": { "model": "create:block/transposer/default", "y": 0, "x": 270 },
+    "powered=false,upward=true,facing=west": { "model": "create:block/transposer/default", "y": 270, "x": 270 },
+    "powered=false,upward=false,facing=south": { "model": "create:block/transposer/default", "y": 0, "x": 90 },
+    "powered=false,upward=false,facing=east": { "model": "create:block/transposer/default", "y": 270, "x": 90 },
+    "powered=false,upward=false,facing=north": { "model": "create:block/transposer/default", "y": 180, "x": 90 },
+    "powered=false,upward=false,facing=west": { "model": "create:block/transposer/default", "y": 90, "x": 90 }
 
   }
 }

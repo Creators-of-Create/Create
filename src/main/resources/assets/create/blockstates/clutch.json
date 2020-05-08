@@ -1,14 +1,10 @@
 {
-  "forge_marker": 1,  
-  "variants": {
-    "powered" : {
-      "true": { "model": "create:block/clutch_on" },
-      "false": { "model": "create:block/clutch_off" }
-    },
-    "axis": {
-      "y": { "x": 90 },
-      "x": { "y": 90 },
-      "z": {}
-    }
-  }
+	"variants": {
+		"powered=true,axis=x": { "model": "create:block/clutch_on", "y": 90 },
+		"powered=true,axis=y": { "model": "create:block/clutch_on", "x": 90 },
+		"powered=true,axis=z": { "model": "create:block/clutch_on" },
+		"powered=false,axis=x": { "model": "create:block/clutch_off", "y": 90 },
+		"powered=false,axis=y": { "model": "create:block/clutch_off", "x": 90 },
+		"powered=false,axis=z": { "model": "create:block/clutch_off" }
+	}
 }

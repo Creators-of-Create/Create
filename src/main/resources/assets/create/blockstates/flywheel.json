@@ -1,18 +1,16 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-  },
   "variants": {
-	"facing": {
-		"north": { "y": 270 },
-		"south": { "y": 90 },
-		"east": { "y": 0 },
-		"west": { "y": 180 }
-	},
-	"connection": {
-		"none": { "model": "create:block/flywheel/casing_no_connection" },
-		"left": { "model": "create:block/flywheel/casing_left" },
-		"right": { "model": "create:block/flywheel/casing_right" }
+		"connection=none,facing=north": { "model": "create:block/flywheel/casing_no_connection", "y": 270 },
+    "connection=none,facing=south": { "model": "create:block/flywheel/casing_no_connection", "y": 90 },
+    "connection=none,facing=east": { "model": "create:block/flywheel/casing_no_connection", "y": 0 },
+    "connection=none,facing=west": { "model": "create:block/flywheel/casing_no_connection", "y": 180 },
+		"connection=left,facing=north": { "model": "create:block/flywheel/casing_left", "y": 270 },
+		"connection=left,facing=south": { "model": "create:block/flywheel/casing_left", "y": 90 },
+		"connection=left,facing=east": { "model": "create:block/flywheel/casing_left", "y": 0 },
+		"connection=left,facing=west": { "model": "create:block/flywheel/casing_left", "y": 180 },
+		"connection=right,facing=north": { "model": "create:block/flywheel/casing_right", "y": 270 },
+		"connection=right,facing=south": { "model": "create:block/flywheel/casing_right", "y": 90 },
+		"connection=right,facing=east": { "model": "create:block/flywheel/casing_right", "y": 0 },
+		"connection=right,facing=west": { "model": "create:block/flywheel/casing_right", "y": 180 }
 	}
-  }
 }

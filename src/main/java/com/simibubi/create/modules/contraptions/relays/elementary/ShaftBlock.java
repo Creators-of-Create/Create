@@ -1,7 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
 import com.simibubi.create.AllBlocksNew;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
@@ -64,7 +63,6 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
 		super.fillItemGroup(group, items);
-		AllItems.BELT_CONNECTOR.get().fillItemGroup(group, items);
 	}
 	
 	public static boolean isShaft(BlockState state) {

@@ -1,15 +1,13 @@
 {
-  "forge_marker": 1,
   "variants": {
-    "age": {
-      "0": { "model": "create:block/cocoa_log_0" },
-      "1": { "model": "create:block/cocoa_log_1" },
-      "2": { "model": "create:block/cocoa_log_2" }
-    },
-    "axis": {
-      "y": {},
-      "x": { "x": 90, "y": 90 },
-      "z": { "x": 90 }
-    }
+    "age=0,axis=y": { "model": "create:block/cocoa_log_0" },
+    "age=1,axis=y": { "model": "create:block/cocoa_log_1" },
+    "age=2,axis=y": { "model": "create:block/cocoa_log_2" },
+    "age=0,axis=x": { "model": "create:block/cocoa_log_0", "x": 90, "y": 90 },
+    "age=1,axis=x": { "model": "create:block/cocoa_log_1", "x": 90, "y": 90 },
+    "age=2,axis=x": { "model": "create:block/cocoa_log_2", "x": 90, "y": 90 },
+    "age=0,axis=z": { "model": "create:block/cocoa_log_0", "x": 90 },
+    "age=1,axis=z": { "model": "create:block/cocoa_log_1", "x": 90 },
+    "age=2,axis=z": { "model": "create:block/cocoa_log_2", "x": 90 }
   }
 }

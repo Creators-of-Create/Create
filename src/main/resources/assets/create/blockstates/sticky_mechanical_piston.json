@@ -1,8 +1,4 @@
 {
-	"forgemarker": 1,
-	"defaults": {
-		"model": "create:block/mechanical_piston_sticky"
-	},
     "variants": {
         "axis_along_first=false,state=retracted,facing=south": { "model": "create:block/mechanical_piston_sticky", "x": 90, "y": 180 },
 		"axis_along_first=false,state=retracted,facing=north": { "model": "create:block/mechanical_piston_sticky", "x": 90 },
@@ -10,36 +6,36 @@
 		"axis_along_first=false,state=retracted,facing=up": { "model": "create:block/mechanical_piston_sticky" },
         "axis_along_first=false,state=retracted,facing=down": { "model": "create:block/mechanical_piston_sticky", "x": 180 },
         "axis_along_first=false,state=retracted,facing=east": { "model": "create:block/mechanical_piston/rotated_sticky", "x": 90, "y": 90 },
-		
+
 		"axis_along_first=false,state=moving,facing=south": { "model": "create:block/mechanical_piston/base", "x": 90, "y": 180 },
 		"axis_along_first=false,state=moving,facing=north": { "model": "create:block/mechanical_piston/base", "x": 90 },
         "axis_along_first=false,state=moving,facing=west": { "model": "create:block/mechanical_piston/base_rotated", "x": 90, "y": 270 },
 		"axis_along_first=false,state=moving,facing=up": { "model": "create:block/mechanical_piston/base" },
         "axis_along_first=false,state=moving,facing=down": { "model": "create:block/mechanical_piston/base", "x": 180 },
         "axis_along_first=false,state=moving,facing=east": { "model": "create:block/mechanical_piston/base_rotated", "x": 90, "y": 90 },
-		
+
 		"axis_along_first=false,state=extended,facing=south": { "model": "create:block/mechanical_piston/base_with_extension", "x": 90, "y": 180 },
 		"axis_along_first=false,state=extended,facing=north": { "model": "create:block/mechanical_piston/base_with_extension", "x": 90 },
         "axis_along_first=false,state=extended,facing=west": { "model": "create:block/mechanical_piston/base_with_extension_rotated", "x": 90, "y": 270 },
 		"axis_along_first=false,state=extended,facing=up": { "model": "create:block/mechanical_piston/base_with_extension" },
         "axis_along_first=false,state=extended,facing=down": { "model": "create:block/mechanical_piston/base_with_extension", "x": 180 },
         "axis_along_first=false,state=extended,facing=east": { "model": "create:block/mechanical_piston/base_with_extension_rotated", "x": 90, "y": 90 },
-		
-		
+
+
 		"axis_along_first=true,state=retracted,facing=south": { "model": "create:block/mechanical_piston/rotated_sticky", "x": 90, "y": 180 },
 		"axis_along_first=true,state=retracted,facing=north": { "model": "create:block/mechanical_piston/rotated_sticky", "x": 90 },
         "axis_along_first=true,state=retracted,facing=west": { "model": "create:block/mechanical_piston_sticky", "x": 90, "y": 270 },
 		"axis_along_first=true,state=retracted,facing=up": { "model": "create:block/mechanical_piston/rotated_sticky" },
         "axis_along_first=true,state=retracted,facing=down": { "model": "create:block/mechanical_piston/rotated_sticky", "x": 180 },
         "axis_along_first=true,state=retracted,facing=east": { "model": "create:block/mechanical_piston_sticky", "x": 90, "y": 90 },
-		
+
 		"axis_along_first=true,state=moving,facing=south": { "model": "create:block/mechanical_piston/base_rotated", "x": 90, "y": 180 },
 		"axis_along_first=true,state=moving,facing=north": { "model": "create:block/mechanical_piston/base_rotated", "x": 90 },
         "axis_along_first=true,state=moving,facing=west": { "model": "create:block/mechanical_piston/base", "x": 90, "y": 270 },
 		"axis_along_first=true,state=moving,facing=up": { "model": "create:block/mechanical_piston/base_rotated" },
         "axis_along_first=true,state=moving,facing=down": { "model": "create:block/mechanical_piston/base_rotated", "x": 180 },
         "axis_along_first=true,state=moving,facing=east": { "model": "create:block/mechanical_piston/base", "x": 90, "y": 90 },
-		
+
 		"axis_along_first=true,state=extended,facing=south": { "model": "create:block/mechanical_piston/base_with_extension_rotated", "x": 90, "y": 180 },
 		"axis_along_first=true,state=extended,facing=north": { "model": "create:block/mechanical_piston/base_with_extension_rotated", "x": 90 },
         "axis_along_first=true,state=extended,facing=west": { "model": "create:block/mechanical_piston/base_with_extension", "x": 90, "y": 270 },

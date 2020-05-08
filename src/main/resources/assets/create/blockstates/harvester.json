@@ -1,14 +1,8 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "create:block/harvester"
-	},
     "variants": {
-		"facing": {
-			"north": { "y": 180 },
-			"south": {},
-			"east": { "y": 270 },
-			"west": { "y": 90 }
-		}
+		"facing=north": { "model": "create:block/harvester", "y": 180 },
+		"facing=south": { "model": "create:block/harvester" },
+		"facing=east":  { "model": "create:block/harvester", "y": 270 },
+		"facing=west":  { "model": "create:block/harvester", "y": 90 }
 	}
 }

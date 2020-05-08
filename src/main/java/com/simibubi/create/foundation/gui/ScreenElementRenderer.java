@@ -19,8 +19,8 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -84,11 +84,11 @@ public class ScreenElementRenderer {
 		}
 
 		RenderSystem.scaled(50, -50, 50);
-		IRenderTypeBuffer.Impl buffer = mc.getBufferBuilders().getEntityVertexConsumers(); 
+		IRenderTypeBuffer.Impl buffer = mc.getBufferBuilders().getEntityVertexConsumers();
 		RenderType renderType = RenderTypeLookup.getEntityBlockLayer(blockToRender);
 		IVertexBuilder vb = buffer.getBuffer(renderType);
 		MatrixStack ms = new MatrixStack();
-		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		mc.getTextureManager().bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
 
 		RenderSystem.pushMatrix();
 		if (fire) {
@@ -107,14 +107,16 @@ public class ScreenElementRenderer {
 			}
 		}
 		RenderSystem.popMatrix();
+		buffer.draw(renderType);
 
 		if (blockToRender != null && !blockToRender.getFluidState().isEmpty()) {
+			renderType = RenderTypeLookup.getFluidLayer(blockToRender.getFluidState());
+			vb = buffer.getBuffer(renderType);
 			RenderHelper.disableStandardItemLighting();
 			RenderSystem.translatef(0, -300, 0);
 			blockRenderer.renderFluid(new BlockPos(0, 300, 0), mc.world, vb, blockToRender.getFluidState());
+			buffer.draw(renderType);
 		}
-		
-		buffer.draw(renderType);
 
 		RenderSystem.disableAlphaTest();
 		RenderSystem.disableRescaleNormal();

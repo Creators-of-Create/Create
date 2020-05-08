@@ -1,5 +1,5 @@
 {
-    "variants": {
+	"variants": {
 		"": { "model": "create:block/palettes/diorite_layers" }
 	}
 }

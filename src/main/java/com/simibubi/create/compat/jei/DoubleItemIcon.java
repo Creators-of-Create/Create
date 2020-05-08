@@ -56,6 +56,7 @@ public class DoubleItemIcon implements IDrawable {
 		RenderSystem.popMatrix();
 
 		RenderSystem.popMatrix();
+		RenderSystem.enableBlend();
 	}
 
 }

@@ -1,23 +1,10 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-	"model": "create:block/logistical_controller"
-  },
   "variants": {
-    "type": {
-      "storage": { },
-      "calculation": { },
-      "supply": { },
-      "transactions": { },
-      "request": { }
-    },
-    "facing": {
-      "north": { "y": 180 },
-      "south": { },
-      "west": { "y": 90 },
-      "up": { "x": 90 },
-      "down": { "x": 270 },
-      "east": { "y": 270 }
-    }
+    "facing=north": { "model": "create:block/logistical_controller", "y": 180 },
+    "facing=south": { "model": "create:block/logistical_controller" },
+    "facing=west": { "model": "create:block/logistical_controller", "y": 90 },
+    "facing=up": { "model": "create:block/logistical_controller", "x": 90 },
+    "facing=down": { "model": "create:block/logistical_controller", "x": 270 },
+    "facing=east": { "model": "create:block/logistical_controller", "y": 270 }
   }
 }
