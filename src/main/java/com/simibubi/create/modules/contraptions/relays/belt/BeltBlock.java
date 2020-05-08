@@ -54,6 +54,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -393,7 +394,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 //	}
 
 	public static void initBelt(World world, BlockPos pos) {
-		if (world.isRemote)
+		if (world.isRemote || world.getWorldType() == WorldType.DEBUG_ALL_BLOCK_STATES)
 			return;
 
 		BlockState state = world.getBlockState(pos);
