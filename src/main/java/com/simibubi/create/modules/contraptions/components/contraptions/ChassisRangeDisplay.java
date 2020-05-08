@@ -15,7 +15,6 @@ import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.foundation.utility.outliner.BlockClusterOutline;
 import com.simibubi.create.foundation.utility.outliner.Outline;
 import com.simibubi.create.foundation.utility.outliner.OutlineParticle;
@@ -196,8 +195,11 @@ public class ChassisRangeDisplay {
 
 	public static void renderOutlines(float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer) {
 		// TODO 1.15 buffered render
+		if (entries.isEmpty() && groupEntries.isEmpty()) {
+			return;
+		}
 		RenderSystem.lineWidth(2);
-		TessellatorHelper.prepareForDrawing();
+		//TessellatorHelper.prepareForDrawing();
 		RenderSystem.disableTexture();
 		RenderSystem.enableAlphaTest();
 
@@ -208,7 +210,7 @@ public class ChassisRangeDisplay {
 
 		RenderSystem.enableTexture();
 		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		TessellatorHelper.cleanUpAfterDrawing();
+		//TessellatorHelper.cleanUpAfterDrawing();
 		RenderSystem.lineWidth(1);
 	}
 
