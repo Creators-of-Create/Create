@@ -170,7 +170,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	public void read(CompoundNBT compound) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 
-		if (compound.contains("Running"))
+		if (compound.contains("CurrentPos"))
 			currentPos = NBTUtil.readBlockPos(compound.getCompound("CurrentPos"));
 
 		readClientUpdate(compound);
@@ -249,7 +249,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 		if (state == State.RUNNING) {
 			compound.putBoolean("Running", true);
-			compound.put("CurrentPos", NBTUtil.writeBlockPos(currentPos));
+			if (currentPos != null)
+				compound.put("CurrentPos", NBTUtil.writeBlockPos(currentPos));
 		}
 
 		writeToClient(compound);

@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.fan;
 
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 
 import net.minecraft.block.Block;
@@ -50,6 +51,8 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	}
 
 	protected void blockUpdate(BlockState state, World worldIn, BlockPos pos) {
+		if (worldIn instanceof WrappedWorld)
+			return;
 		notifyFanTile(worldIn, pos);
 		if (worldIn.isRemote)
 			return;

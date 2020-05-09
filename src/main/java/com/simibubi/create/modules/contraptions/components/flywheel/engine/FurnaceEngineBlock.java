@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.foundation.utility.WrappedWorld;
 
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
@@ -53,6 +54,8 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
+		if (worldIn instanceof WrappedWorld)
+			return;
 		if (worldIn.isRemote)
 			return;
 
