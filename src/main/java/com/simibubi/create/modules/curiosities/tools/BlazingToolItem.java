@@ -54,7 +54,7 @@ public class BlazingToolItem extends AbstractToolItem {
 		return shouldTakeDamage(attacker.world, stack) ? super.hitEntity(stack, target, attacker) : true;
 	}
 
-	protected boolean shouldTakeDamage(World world, ItemStack stack) {
+	static boolean shouldTakeDamage(World world, ItemStack stack) {
 		return world.getDimension().getType() != DimensionType.THE_NETHER;
 	}
 

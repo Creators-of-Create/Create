@@ -57,6 +57,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -365,6 +366,9 @@ public class BeltBlock extends HorizontalKineticBlock
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 			ISelectionContext context) {
+		if (state.getBlock() != this)
+			return VoxelShapes.empty();
+
 		VoxelShape shape = getShape(state, worldIn, pos, context);
 		try {
 			if (context.getEntity() == null)
@@ -629,7 +633,7 @@ public class BeltBlock extends HorizontalKineticBlock
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
 		BlockState rotate = super.rotate(state, rot);
-		
+
 		if (state.get(SLOPE) != Slope.VERTICAL)
 			return rotate;
 		if (state.get(HORIZONTAL_FACING).getAxisDirection() != rotate.get(HORIZONTAL_FACING).getAxisDirection()) {
@@ -638,8 +642,8 @@ public class BeltBlock extends HorizontalKineticBlock
 			if (state.get(PART) == Part.END)
 				return rotate.with(PART, Part.START);
 		}
-		
+
 		return rotate;
 	}
-	
+
 }

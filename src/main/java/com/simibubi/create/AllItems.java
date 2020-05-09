@@ -26,6 +26,7 @@ import com.simibubi.create.modules.curiosities.ShadowSteelItem;
 import com.simibubi.create.modules.curiosities.deforester.DeforesterItem;
 import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
+import com.simibubi.create.modules.curiosities.tools.BlazingSwordItem;
 import com.simibubi.create.modules.curiosities.tools.BlazingToolItem;
 import com.simibubi.create.modules.curiosities.tools.RoseQuartzToolItem;
 import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
@@ -119,7 +120,7 @@ public enum AllItems {
 	BLAZING_PICKAXE(p -> new BlazingToolItem(1, -2.8F, p, PICKAXE)),
 	BLAZING_SHOVEL(p -> new BlazingToolItem(1.5F, -3.0F, p, SHOVEL)),
 	BLAZING_AXE(p -> new BlazingToolItem(5.0F, -3.0F, p, AXE)),
-	BLAZING_SWORD(p -> new SwordItem(AllToolTiers.BLAZING, 3, -2.4F, p)),
+	BLAZING_SWORD(p -> new BlazingSwordItem(AllToolTiers.BLAZING, 3, -2.4F, p)),
 
 	ROSE_QUARTZ_PICKAXE(p -> new RoseQuartzToolItem(1, -2.8F, p, PICKAXE)),
 	ROSE_QUARTZ_SHOVEL(p -> new RoseQuartzToolItem(1.5F, -3.0F, p, SHOVEL)),

@@ -85,12 +85,15 @@ public class ScreenElementRenderer {
 			blockRenderer.renderBlockBrightness(blockToRender, 1);
 		} else {
 			GlStateManager.rotated(90, 0, 1, 0);
-			if (color == -1) {
-				blockRenderer.getBlockModelRenderer().renderModelBrightnessColor(modelToRender, 1, 1, 1, 1);
-			} else {
-				Vec3d rgb = ColorHelper.getRGB(color);
-				blockRenderer.getBlockModelRenderer().renderModelBrightnessColor(modelToRender, 1, (float) rgb.x,
-						(float) rgb.y, (float) rgb.z);
+			if (modelToRender != null) {
+				if (color == -1) {
+					blockRenderer.getBlockModelRenderer().renderModelBrightnessColor(modelToRender, 1, 1, 1, 1);
+				} else {
+					Vec3d rgb = ColorHelper.getRGB(color);
+					blockRenderer
+							.getBlockModelRenderer()
+							.renderModelBrightnessColor(modelToRender, 1, (float) rgb.x, (float) rgb.y, (float) rgb.z);
+				}
 			}
 		}
 		GlStateManager.popMatrix();

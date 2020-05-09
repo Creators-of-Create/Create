@@ -133,7 +133,10 @@ public class BeltTileEntity extends KineticTileEntity {
 		TileEntity te = world.getTileEntity(controller);
 		if (te == null || !(te instanceof BeltTileEntity))
 			return;
-		IItemHandler handler = ((BeltTileEntity) te).getInventory().createHandlerForSegment(index);
+		BeltInventory inventory = ((BeltTileEntity) te).getInventory();
+		if (inventory == null)
+			return;
+		IItemHandler handler = inventory.createHandlerForSegment(index);
 		itemHandler = LazyOptional.of(() -> handler);
 	}
 

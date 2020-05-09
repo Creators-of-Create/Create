@@ -29,6 +29,7 @@ import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CarpetBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.FlowerPotBlock;
@@ -142,6 +143,8 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof EngineBlock)
 			return true;
+		if (block instanceof CarpetBlock)
+			return true;
 		return false;
 	}
 
@@ -167,6 +170,8 @@ public class BlockMovementTraits {
 		if (block instanceof RedstoneDiodeBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof RedstoneWireBlock)
+			return direction == Direction.DOWN;
+		if (block instanceof CarpetBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof RedstoneWallTorchBlock)
 			return state.get(RedstoneWallTorchBlock.FACING) == direction.getOpposite();
