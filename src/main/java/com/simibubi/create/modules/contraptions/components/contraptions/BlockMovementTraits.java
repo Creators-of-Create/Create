@@ -216,6 +216,8 @@ public class BlockMovementTraits {
 			return state.get(BlockStateProperties.HORIZONTAL_FACING) == facing;
 		if (AllBlocks.ROPE_PULLEY.typeOf(state))
 			return facing == Direction.DOWN;
+		if (state.getBlock() instanceof CarpetBlock)
+			return facing == Direction.UP;
 		return isBrittle(state);
 	}
 

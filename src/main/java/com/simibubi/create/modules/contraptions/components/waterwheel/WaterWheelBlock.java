@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -63,7 +64,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
 		World world = worldIn.getWorld();
-		if (world == null)
+		if (world == null || worldIn instanceof WrappedWorld)
 			return stateIn;
 		updateFlowAt(stateIn, world, currentPos, facing);
 		updateWheelSpeed(worldIn, currentPos);

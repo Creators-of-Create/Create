@@ -21,6 +21,7 @@ import com.simibubi.create.modules.contraptions.components.contraptions.glue.Sup
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CarpetBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -152,7 +153,7 @@ public class PistonContraption extends Contraption {
 			if (!BlockMovementTraits.movementNecessary(world, currentPos))
 				return true;
 			BlockState state = world.getBlockState(currentPos);
-			if (BlockMovementTraits.isBrittle(state))
+			if (BlockMovementTraits.isBrittle(state) && !(state.getBlock() instanceof CarpetBlock))
 				return true;
 			if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state) && state.get(FACING) == direction.getOpposite())
 				return true;
