@@ -359,8 +359,12 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			return;
 
 		TileEntity tileEntityIn = world.getTileEntity(pos);
-		if (!(tileEntityIn instanceof KineticTileEntity))
+		boolean isKinetic = tileEntityIn instanceof KineticTileEntity;
+
+		if (!isKinetic) {
+			world.setBlockState(pos, state, 3);
 			return;
+		}
 
 		KineticTileEntity tileEntity = (KineticTileEntity) tileEntityIn;
 		if (tileEntity.hasNetwork())

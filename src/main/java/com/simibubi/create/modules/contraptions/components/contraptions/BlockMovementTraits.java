@@ -13,6 +13,9 @@ import com.simibubi.create.modules.contraptions.components.contraptions.piston.M
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
+import com.simibubi.create.modules.contraptions.components.crank.HandCrankBlock;
+import com.simibubi.create.modules.contraptions.components.fan.NozzleBlock;
+import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
@@ -105,6 +108,8 @@ public class BlockMovementTraits {
 		Block block = state.getBlock();
 		if (state.has(BlockStateProperties.HANGING))
 			return true;
+		if (block instanceof HandCrankBlock)
+			return true;
 		if (block instanceof LadderBlock)
 			return true;
 		if (block instanceof ExtractorBlock)
@@ -131,7 +136,11 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof RopeBlock)
 			return true;
+		if (block instanceof NozzleBlock)
+			return true;
 		if (block instanceof MagnetBlock)
+			return true;
+		if (block instanceof EngineBlock)
 			return true;
 		return false;
 	}
@@ -178,6 +187,12 @@ public class BlockMovementTraits {
 			return direction == Direction.DOWN;
 		if (block instanceof AttachedActorBlock)
 			return direction == state.get(HarvesterBlock.HORIZONTAL_FACING).getOpposite();
+		if (block instanceof HandCrankBlock)
+			return direction == state.get(HandCrankBlock.FACING).getOpposite();
+		if (block instanceof NozzleBlock)
+			return direction == state.get(NozzleBlock.FACING).getOpposite();
+		if (block instanceof EngineBlock)
+			return direction == state.get(EngineBlock.HORIZONTAL_FACING).getOpposite();
 		return false;
 	}
 

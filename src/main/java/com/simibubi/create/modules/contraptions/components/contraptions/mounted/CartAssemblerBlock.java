@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerTileEntity.CartMovementMode;
 
@@ -32,7 +33,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAssemblerTileEntity> {
+public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAssemblerTileEntity>, IWrenchable {
 
 	public static IProperty<RailShape> RAIL_SHAPE =
 		EnumProperty.create("shape", RailShape.class, RailShape.EAST_WEST, RailShape.NORTH_SOUTH);

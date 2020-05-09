@@ -2,6 +2,7 @@ package com.simibubi.create.modules.logistics.block.inventories;
 
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,7 +17,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class CrateBlock extends ProperDirectionalBlock {
+public class CrateBlock extends ProperDirectionalBlock implements IWrenchable {
 
 	public static final BooleanProperty DOUBLE = BooleanProperty.create("double");
 

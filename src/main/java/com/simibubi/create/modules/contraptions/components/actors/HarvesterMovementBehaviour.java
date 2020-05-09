@@ -12,6 +12,7 @@ import com.simibubi.create.modules.contraptions.components.contraptions.Movement
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CocoaBlock;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.block.KelpBlock;
 import net.minecraft.block.SugarCaneBlock;
@@ -81,7 +82,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 				return false;
 			return true;
 		}
-		if (state.getCollisionShape(world, pos).isEmpty()) {
+		if (state.getCollisionShape(world, pos).isEmpty() || state.getBlock() instanceof CocoaBlock) {
 			for (IProperty<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
@@ -96,14 +97,14 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 		return false;
 	}
-
+	
 	private boolean isValidOther(World world, BlockPos pos, BlockState state) {
 		if (state.getBlock() instanceof CropsBlock)
 			return false;
 		if (state.getBlock() instanceof SugarCaneBlock)
 			return true;
 
-		if (state.getCollisionShape(world, pos).isEmpty()) {
+		if (state.getCollisionShape(world, pos).isEmpty() || state.getBlock() instanceof CocoaBlock) {
 			for (IProperty<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
@@ -131,7 +132,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 				return Blocks.AIR.getDefaultState();
 			return state.getFluidState().getBlockState();
 		}
-		if (state.getCollisionShape(world, pos).isEmpty()) {
+		if (state.getCollisionShape(world, pos).isEmpty() || state.getBlock() instanceof CocoaBlock) {
 			for (IProperty<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;

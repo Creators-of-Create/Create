@@ -3,11 +3,14 @@ package com.simibubi.create.modules.contraptions.components.fan;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -17,7 +20,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class NozzleBlock extends ProperDirectionalBlock {
+public class NozzleBlock extends ProperDirectionalBlock implements IWrenchable {
 
 	public NozzleBlock() {
 		super(Properties.from(AllBlocks.ENCASED_FAN.get()));
@@ -26,6 +29,11 @@ public class NozzleBlock extends ProperDirectionalBlock {
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
+	}
+	
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		return ActionResultType.FAIL;
 	}
 	
 	@Override

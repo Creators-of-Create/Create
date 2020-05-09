@@ -57,7 +57,8 @@ public class LatchBlock extends ToggleLatchBlock {
 			if (i > 0)
 				return true;
 			BlockState blockstate = worldIn.getBlockState(blockpos);
-			return blockstate.getBlock() == Blocks.REDSTONE_WIRE ? blockstate.get(RedstoneWireBlock.POWER) > 0 : false;
+			if (blockstate.getBlock() == Blocks.REDSTONE_WIRE && blockstate.get(RedstoneWireBlock.POWER) > 0)
+				return true;
 		}
 		return false;
 	}

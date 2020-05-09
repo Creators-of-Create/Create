@@ -5,7 +5,6 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.RedstoneDiodeBlock;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
@@ -14,7 +13,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 
-public class PulseRepeaterBlock extends RedstoneDiodeBlock {
+public class PulseRepeaterBlock extends AbstractDiodeBlock {
 
 	public static BooleanProperty PULSING = BooleanProperty.create("pulsing");
 

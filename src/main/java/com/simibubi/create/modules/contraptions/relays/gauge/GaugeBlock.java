@@ -5,6 +5,7 @@ import java.util.Random;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 
@@ -79,13 +80,16 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			Direction nearestLookingDirection = context.getNearestLookingDirection();
 			boolean lookPositive = nearestLookingDirection.getAxisDirection() == AxisDirection.POSITIVE;
 			if (face.getAxis() == Axis.X) {
-				toPlace = toPlace.with(FACING, lookPositive ? Direction.NORTH : Direction.SOUTH)
+				toPlace = toPlace
+						.with(FACING, lookPositive ? Direction.NORTH : Direction.SOUTH)
 						.with(AXIS_ALONG_FIRST_COORDINATE, true);
 			} else if (face.getAxis() == Axis.Y) {
-				toPlace = toPlace.with(FACING, horizontalFacing.getOpposite()).with(AXIS_ALONG_FIRST_COORDINATE,
-						horizontalFacing.getAxis() == Axis.X);
+				toPlace = toPlace
+						.with(FACING, horizontalFacing.getOpposite())
+						.with(AXIS_ALONG_FIRST_COORDINATE, horizontalFacing.getAxis() == Axis.X);
 			} else {
-				toPlace = toPlace.with(FACING, lookPositive ? Direction.WEST : Direction.EAST)
+				toPlace = toPlace
+						.with(FACING, lookPositive ? Direction.WEST : Direction.EAST)
 						.with(AXIS_ALONG_FIRST_COORDINATE, false);
 			}
 
@@ -119,8 +123,8 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		if (getRotationAxis(state) == Axis.Y && face != state.get(FACING))
 			return false;
 		BlockState blockState = world.getBlockState(pos.offset(face));
-		if (Block.hasSolidSide(blockState, world, pos, face.getOpposite())
-				&& blockState.getMaterial() != Material.GLASS)
+		if (Block.hasSolidSide(blockState, world, pos, face.getOpposite()) && blockState.getMaterial() != Material.GLASS
+				&& !(world instanceof WrappedWorld))
 			return false;
 		return true;
 	}
@@ -149,11 +153,15 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 				continue;
 
 			for (int i = 0; i < particleCount; i++) {
-				Vec3d mul = VecHelper.offsetRandomly(Vec3d.ZERO, rand, .25f)
-						.mul(new Vec3d(1, 1, 1).subtract(positiveFaceVec)).normalize().scale(.3f);
+				Vec3d mul = VecHelper
+						.offsetRandomly(Vec3d.ZERO, rand, .25f)
+						.mul(new Vec3d(1, 1, 1).subtract(positiveFaceVec))
+						.normalize()
+						.scale(.3f);
 				Vec3d offset = VecHelper.getCenterOf(pos).add(faceVec.scale(.55)).add(mul);
-				worldIn.addParticle(new RedstoneParticleData((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), offset.x,
-						offset.y, offset.z, mul.x, mul.y, mul.z);
+				worldIn
+						.addParticle(new RedstoneParticleData((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), offset.x,
+								offset.y, offset.z, mul.x, mul.y, mul.z);
 			}
 
 		}

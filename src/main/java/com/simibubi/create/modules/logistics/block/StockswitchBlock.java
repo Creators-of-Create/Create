@@ -1,13 +1,14 @@
 package com.simibubi.create.modules.logistics.block;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
-import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -26,7 +27,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class StockswitchBlock extends HorizontalBlock implements ITE<StockswitchTileEntity> {
+public class StockswitchBlock extends HorizontalBlock implements ITE<StockswitchTileEntity>, IWrenchable {
 
 	public static final IntegerProperty INDICATOR = IntegerProperty.create("indicator", 0, 6);
 
@@ -88,6 +89,8 @@ public class StockswitchBlock extends HorizontalBlock implements ITE<Stockswitch
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
+		if (player != null && AllItems.WRENCH.typeOf(player.getHeldItem(handIn)))
+			return false;
 		DistExecutor.runWhenOn(Dist.CLIENT,
 				() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
 		return true;
@@ -137,11 +140,6 @@ public class StockswitchBlock extends HorizontalBlock implements ITE<Stockswitch
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new StockswitchTileEntity();
-	}
-
-	@Override
-	public PushReaction getPushReaction(BlockState state) {
-		return PushReaction.BLOCK;
 	}
 
 	@Override

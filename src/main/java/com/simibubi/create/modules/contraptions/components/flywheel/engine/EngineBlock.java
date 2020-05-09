@@ -3,14 +3,16 @@ package com.simibubi.create.modules.contraptions.components.flywheel.engine;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
-import net.minecraft.block.material.PushReaction;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -19,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class EngineBlock extends HorizontalBlock {
+public abstract class EngineBlock extends HorizontalBlock implements IWrenchable {
 
 	protected EngineBlock(Properties builder) {
 		super(builder);
@@ -36,10 +38,10 @@ public abstract class EngineBlock extends HorizontalBlock {
 	}
 	
 	@Override
-	public PushReaction getPushReaction(BlockState state) {
-		return PushReaction.BLOCK;
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		return ActionResultType.FAIL;
 	}
-
+	
 	@Override
 	public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 

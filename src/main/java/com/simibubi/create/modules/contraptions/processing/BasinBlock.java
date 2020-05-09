@@ -5,16 +5,18 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -26,7 +28,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BasinBlock extends Block implements ITE<BasinTileEntity> {
+public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchable {
 
 	public BasinBlock() {
 		super(Properties.from(Blocks.ANDESITE));
@@ -41,10 +43,10 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity> {
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new BasinTileEntity();
 	}
-
+	
 	@Override
-	public PushReaction getPushReaction(BlockState state) {
-		return PushReaction.BLOCK;
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		return ActionResultType.FAIL;
 	}
 
 	@Override

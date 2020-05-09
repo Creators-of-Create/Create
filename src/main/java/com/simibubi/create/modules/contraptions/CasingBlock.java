@@ -10,17 +10,24 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 
-public class CasingBlock extends Block implements IHaveConnectedTextures {
+public class CasingBlock extends Block implements IHaveConnectedTextures, IWrenchable {
 
 	String textureFrom;
 	
 	public CasingBlock(String textureFrom) {
 		super(Properties.from(Blocks.ANDESITE));
 		this.textureFrom = textureFrom;
+	}
+	
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		return ActionResultType.FAIL;
 	}
 
 	@Override
