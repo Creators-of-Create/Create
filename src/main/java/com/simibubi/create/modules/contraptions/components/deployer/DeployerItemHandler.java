@@ -58,7 +58,8 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 			return stack;
 
 		int space = held.getMaxStackSize() - held.getCount();
-		ItemStack split = stack.copy().split(space);
+		ItemStack remainder = stack.copy();
+		ItemStack split = remainder.split(space);
 
 		if (space == 0)
 			return stack;
@@ -68,7 +69,7 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 			set(held);
 		}
 
-		return split;
+		return remainder;
 	}
 
 	@Override

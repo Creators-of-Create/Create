@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.logistics.block;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 
@@ -12,8 +13,10 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +25,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public abstract class AttachedLogisticalBlock extends HorizontalBlock {
+public abstract class AttachedLogisticalBlock extends HorizontalBlock implements IWrenchable {
 
 	public static final BooleanProperty UPWARD = BooleanProperty.create("upward");
 
@@ -30,6 +33,11 @@ public abstract class AttachedLogisticalBlock extends HorizontalBlock {
 		super(Properties.from(Blocks.ANDESITE));
 	}
 
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		return ActionResultType.FAIL;
+	}
+	
 	protected abstract boolean isVertical();
 
 	protected abstract BlockState getVerticalDefaultState();

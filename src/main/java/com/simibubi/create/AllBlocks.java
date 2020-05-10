@@ -72,6 +72,7 @@ import com.simibubi.create.modules.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorBlock;
 import com.simibubi.create.modules.logistics.block.funnel.FunnelBlock;
+import com.simibubi.create.modules.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
@@ -125,7 +126,7 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	GEARBOX(GearboxBlock::new),
 	CLUTCH(ClutchBlock::new),
 	GEARSHIFT(GearshiftBlock::new),
-	
+
 	ENCASED_BELT(EncasedBeltBlock::new),
 	ADJUSTABLE_PULLEY(AdjustablePulleyBlock::new),
 	BELT(BeltBlock::new, ComesWith.NO_BLOCKITEM),
@@ -180,11 +181,12 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	ROTATION_SPEED_CONTROLLER(SpeedControllerBlock::new),
 
 	_2_(Sections.LOGISTICS),
-	
+
 	CONTACT(ContactBlock::new),
 	REDSTONE_BRIDGE(RedstoneLinkBlock::new),
 	STOCKSWITCH(StockswitchBlock::new),
 	FLEXCRATE(FlexcrateBlock::new),
+	CREATIVE_CRATE(() -> new CreativeCrateBlock(Properties.from(Blocks.CHEST))),
 	EXTRACTOR(ExtractorBlock::new),
 	VERTICAL_EXTRACTOR(ExtractorBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
 	LINKED_EXTRACTOR(LinkedExtractorBlock::new),
@@ -202,9 +204,9 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	FLEXPULSEPEATER(FlexpeaterBlock::new),
 	REDSTONE_LATCH(LatchBlock::new),
 	TOGGLE_LATCH(ToggleLatchBlock::new),
-	
+
 	_3_(Sections.MATERIALS),
-	
+
 	COPPER_ORE(() -> new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1),
 			ITaggable.create().withForgeTags("ores/copper")),
 	ZINC_ORE(() -> new Block(Properties.from(Blocks.GOLD_ORE).harvestLevel(2).harvestTool(ToolType.PICKAXE)),
@@ -226,13 +228,13 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	COCOA_LOG(CocoaLogBlock::new, ITaggable.create().withVanillaTags(ITaggable.BLOCK, "jungle_logs")),
 
 	_5_(Sections.SCHEMATICS),
-	
+
 //	SCHEMATICANNON(SchematicannonBlock::new),
 //	CREATIVE_CRATE(CreativeCrateBlock::new),
 //	SCHEMATIC_TABLE(SchematicTableBlock::new),
-	
+
 	_6_(Sections.PALETTES),
-	
+
 	TILED_GLASS(() -> new GlassBlock(Properties.from(Blocks.GLASS)),
 			ITaggable.create().withVanillaTags(ITaggable.BLOCK, "impermeable").withForgeTags("glass")),
 	FRAMED_GLASS(() -> new CTGlassBlock(AllCTs.FRAMED_GLASS, false)),

@@ -2,10 +2,11 @@ package com.simibubi.create.modules.logistics.block.diodes;
 
 import java.util.Random;
 
+import com.simibubi.create.AllItems;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.RedstoneDiodeBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
@@ -18,10 +19,10 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class ToggleLatchBlock extends RedstoneDiodeBlock {
+public class ToggleLatchBlock extends AbstractDiodeBlock {
 
 	public static BooleanProperty POWERING = BooleanProperty.create("powering");
-	
+
 	public ToggleLatchBlock() {
 		super(Properties.from(Blocks.REPEATER));
 		setDefaultState(getDefaultState().with(POWERING, false).with(POWERED, false));
@@ -31,23 +32,25 @@ public class ToggleLatchBlock extends RedstoneDiodeBlock {
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(POWERED, POWERING, HORIZONTAL_FACING);
 	}
-	
+
 	@Override
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		return blockState.get(HORIZONTAL_FACING) == side ? this.getActiveSignal(blockAccess, pos, blockState) : 0;
 	}
-	
+
 	@Override
 	protected int getDelay(BlockState state) {
 		return 1;
 	}
-	
+
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (!player.isAllowEdit())
 			return ActionResultType.PASS;
 		if (player.isSneaking())
+			return ActionResultType.PASS;
+		if (AllItems.WRENCH.typeOf(player.getHeldItem(handIn)))
 			return ActionResultType.PASS;
 		return activated(worldIn, pos, state);
 	}

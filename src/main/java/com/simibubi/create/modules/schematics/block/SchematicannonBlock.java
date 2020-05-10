@@ -17,7 +17,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -48,16 +47,10 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	}
 
 	@Override
-	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-		withTileEntityDo(world, pos, SchematicannonTileEntity::findInventories);
-	}
-
-	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (worldIn.isRemote)
 			return ActionResultType.SUCCESS;
-
 		withTileEntityDo(worldIn, pos,
 				te -> NetworkHooks.openGui((ServerPlayerEntity) player, te, te::sendToContainer));
 		return ActionResultType.SUCCESS;

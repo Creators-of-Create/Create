@@ -26,6 +26,7 @@ public enum ScreenResources {
 	SCHEMATICANNON_PROGRESS_2("schematicannon.png", 122, 161, 16, 15),
 	SCHEMATICANNON_HIGHLIGHT("schematicannon.png", 0, 182, 28, 28),
 	SCHEMATICANNON_FUEL("schematicannon.png", 0, 215, 82, 4),
+	SCHEMATICANNON_FUEL_CREATIVE("schematicannon.png", 0, 219, 82, 4),
 
 	FLEXCRATE("flex_crate_and_stockpile_switch.png", 125, 129),
 	FLEXCRATE_DOUBLE("double_flexcrate.png", 197, 129),

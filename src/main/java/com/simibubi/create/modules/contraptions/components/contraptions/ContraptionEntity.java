@@ -594,6 +594,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	@Override
+	public void setPositionAndUpdate(double x, double y, double z) {
+		if (!stationary)
+			super.setPositionAndUpdate(x, y, z);
+	}
+
+	@Override
 	public PushReaction getPushReaction() {
 		return PushReaction.IGNORE;
 	}

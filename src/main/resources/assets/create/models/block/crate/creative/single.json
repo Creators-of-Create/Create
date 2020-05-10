@@ -1,0 +1,8 @@
+{
+	"parent": "create:block/crate/single",
+	"textures": {
+		"side": "create:block/crate_creative_side",
+		"crate": "create:block/crate_creative",
+		"casing": "create:block/chorus_chrome_mesh"
+	}
+}

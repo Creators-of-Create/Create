@@ -41,6 +41,8 @@ public class FilteringHandler {
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
 		if (behaviour == null)
 			return;
+		if (!behaviour.isActive())
+			return;
 
 		BlockRayTraceResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)

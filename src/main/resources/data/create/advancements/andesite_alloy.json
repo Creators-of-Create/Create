@@ -1,30 +1,35 @@
 {
-    "display": {
-        "title": {
-            "translate": "advancement.create:andesite_alloy"
-        },
-        "description": {
-            "translate": "advancement.create:andesite_alloy.desc"
-        },
-        "icon": {
+  "parent": "create:root",
+  "display": {
+    "icon": {
+      "item": "create:andesite_alloy"
+    },
+    "title": {
+      "translate": "advancement.create.andesite_alloy"
+    },
+    "description": {
+      "translate": "advancement.create.andesite_alloy.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
             "item": "create:andesite_alloy"
-        },
-        "frame": "task",
-        "show_toast": true,
-        "announce_to_chat": false,
-        "hidden": true
-    },
-    "criteria": {
-        "alloy": {
-            "trigger": "minecraft:inventory_changed",
-            "conditions": {
-                "items": [
-                    {
-                        "item": "create:andesite_alloy"
-                    }
-                ]
-            }
-        }
-    },
-    "parent": "create:root"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
 }

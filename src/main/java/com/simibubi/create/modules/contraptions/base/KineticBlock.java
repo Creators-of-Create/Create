@@ -4,7 +4,6 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -62,11 +61,6 @@ public abstract class KineticBlock extends Block implements IRotate {
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
-	}
-
-	@Override
-	public PushReaction getPushReaction(BlockState state) {
-		return PushReaction.BLOCK;
 	}
 
 	@Override

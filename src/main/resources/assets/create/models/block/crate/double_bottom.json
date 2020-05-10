@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "#side",
+		"4": "#crate",
+		"particle": "#casing"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 16, 15],
+			"faces": {
+				"north": {"uv": [8.5, 8, 15.5, 16], "texture": "#0"},
+				"east": {"uv": [8.5, 8, 15.5, 16], "texture": "#0"},
+				"south": {"uv": [8.5, 8, 15.5, 16], "texture": "#0"},
+				"west": {"uv": [8.5, 8, 15.5, 16], "texture": "#0"},
+				"down": {"uv": [8.5, 8.5, 15.5, 15.5], "rotation": 270, "texture": "#4"}
+			}
+		}
+	]
+}

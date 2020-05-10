@@ -7,6 +7,7 @@ import com.simibubi.create.modules.contraptions.components.actors.PloughBlock.Pl
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
@@ -25,8 +26,8 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion,
-				context.state.get(HORIZONTAL_FACING).getOpposite());
+		return !VecHelper
+				.isVecPointingTowards(context.relativeMotion, context.state.get(HORIZONTAL_FACING).getOpposite());
 	}
 
 	@Override
@@ -66,7 +67,8 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
-		return state.getCollisionShape(world, breakingPos).isEmpty();
+		return state.getCollisionShape(world, breakingPos).isEmpty()
+				&& !(state.getBlock() instanceof FlowingFluidBlock);
 	}
 
 	@Override

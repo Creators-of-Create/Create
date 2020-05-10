@@ -153,6 +153,9 @@ public class InWorldProcessing {
 			return null;
 
 		List<ItemStack> stacks = process(transported.stack, type, belt.getWorld());
+		if (stacks == null)
+			return null;
+		
 		List<TransportedItemStack> transportedStacks = new ArrayList<>();
 		for (ItemStack additional : stacks) {
 			TransportedItemStack newTransported = transported.getSimilar();

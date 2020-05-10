@@ -1,7 +1,10 @@
 package com.simibubi.create.modules.logistics.block;
 
+import java.util.List;
+
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.SyncedTileEntity;
+import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
+import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -15,7 +18,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class StockswitchTileEntity extends SyncedTileEntity {
+public class StockswitchTileEntity extends SmartTileEntity {
 
 	public float onWhenAbove;
 	public float offWhenBelow;
@@ -34,6 +37,7 @@ public class StockswitchTileEntity extends SyncedTileEntity {
 		currentLevel = -1;
 		powered = false;
 		observedInventory = LazyOptional.empty();
+		setLazyTickRate(10);
 	}
 
 	@Override
@@ -107,7 +111,17 @@ public class StockswitchTileEntity extends SyncedTileEntity {
 			world.notifyNeighbors(pos, getBlockState().getBlock());
 	}
 
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		if (world.isRemote)
+			return;
+		findNewInventory();
+		updateCurrentLevel();
+	}
+
 	private boolean findNewInventory() {
+		observedInventory = LazyOptional.empty();
 		BlockPos invPos = getPos().offset(getBlockState().get(BlockStateProperties.HORIZONTAL_FACING));
 
 		if (!world.isBlockPresent(invPos))
@@ -117,14 +131,21 @@ public class StockswitchTileEntity extends SyncedTileEntity {
 		if (!invState.hasTileEntity())
 			return false;
 		TileEntity invTE = world.getTileEntity(invPos);
+		if (invTE == null)
+			return false;
 
 		observedInventory = invTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		if (observedInventory.isPresent()) {
 			updateCurrentLevel();
 			return true;
 		}
-		
+
 		return false;
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+
 	}
 
 }

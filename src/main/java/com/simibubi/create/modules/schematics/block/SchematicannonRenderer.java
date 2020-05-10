@@ -3,10 +3,13 @@ package com.simibubi.create.modules.schematics.block;
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.modules.schematics.block.LaunchedItem.ForBlockState;
+import com.simibubi.create.modules.schematics.block.LaunchedItem.ForEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -14,6 +17,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.particles.ParticleTypes;
@@ -23,6 +27,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
+@SuppressWarnings("deprecation")
 public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
 
 	public SchematicannonRenderer(TileEntityRendererDispatcher dispatcher) {
@@ -30,8 +35,8 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 	}
 
 	@Override
-	protected void renderSafe(SchematicannonTileEntity tileEntityIn, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-			int light, int overlay) {
+	protected void renderSafe(SchematicannonTileEntity tileEntityIn, float partialTicks, MatrixStack ms,
+			IRenderTypeBuffer buffer, int light, int overlay) {
 
 		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
@@ -63,14 +68,14 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		}
 
 		if (!tileEntityIn.flyingBlocks.isEmpty()) {
-			for (LaunchedBlock block : tileEntityIn.flyingBlocks) {
+			for (LaunchedItem launched : tileEntityIn.flyingBlocks) {
 
-				if (block.ticksRemaining == 0)
+				if (launched.ticksRemaining == 0)
 					continue;
 
 				// Calculate position of flying block
 				Vec3d start = new Vec3d(tileEntityIn.getPos().add(.5f, 1, .5f));
-				Vec3d target = new Vec3d(block.target).add(-.5, 0, 1);
+				Vec3d target = new Vec3d(launched.target).add(-.5, 0, 1);
 				Vec3d distance = target.subtract(start);
 
 				double targetY = target.y - start.y;
@@ -78,10 +83,9 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				Vec3d cannonOffset = distance.add(0, throwHeight, 0).normalize().scale(2);
 				start = start.add(cannonOffset);
 
-				float progress = ((float) block.totalTicks - (block.ticksRemaining + 1 - partialTicks))
-						/ block.totalTicks;
-				Vec3d blockLocationXZ = new Vec3d(.5, .5, .5)
-						.add(target.subtract(start).scale(progress).mul(1, 0, 1));
+				float progress =
+					((float) launched.totalTicks - (launched.ticksRemaining + 1 - partialTicks)) / launched.totalTicks;
+				Vec3d blockLocationXZ = new Vec3d(.5, .5, .5).add(target.subtract(start).scale(progress).mul(1, 0, 1));
 
 				// Height is determined through a bezier curve
 				float t = progress;
@@ -93,21 +97,33 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				ms.translate(blockLocation.x, blockLocation.y, blockLocation.z);
 
 				// Rotation and Scaling effects
-				float scale = .3f;
 				ms.multiply(new Vector3f(1, 1, 0).getDegreesQuaternion(360 * t * 2));
-				ms.scale(scale, scale, scale);
 
 				// Render the Block
-				Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(block.state, ms, buffer, light, overlay, EmptyModelData.INSTANCE);
+				if (launched instanceof ForBlockState) {
+					float scale = .3f;
+					ms.scale(scale, scale, scale);
+					Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(((ForBlockState) launched).state,
+							ms, buffer, light, overlay, EmptyModelData.INSTANCE);
+				}
+
+				// Render the item
+				if (launched instanceof ForEntity) {
+					double scale = 1.2f;
+					GlStateManager.scaled(scale, scale, scale);
+					Minecraft.getInstance().getItemRenderer().renderItem(launched.stack, TransformType.GROUND, light,
+							overlay, ms, buffer);
+				}
+
 				ms.pop();
 
 				// Apply Recoil if block was just launched
-				if ((block.ticksRemaining + 1 - partialTicks) > block.totalTicks - 10) {
-					recoil = Math.max(recoil, (block.ticksRemaining + 1 - partialTicks) - block.totalTicks + 10);
+				if ((launched.ticksRemaining + 1 - partialTicks) > launched.totalTicks - 10) {
+					recoil = Math.max(recoil, (launched.ticksRemaining + 1 - partialTicks) - launched.totalTicks + 10);
 				}
 
 				// Render particles for launch
-				if (block.ticksRemaining == block.totalTicks && tileEntityIn.firstRenderTick) {
+				if (launched.ticksRemaining == launched.totalTicks && tileEntityIn.firstRenderTick) {
 					tileEntityIn.firstRenderTick = false;
 					for (int i = 0; i < 10; i++) {
 						Random r = tileEntityIn.getWorld().getRandom();
@@ -128,7 +144,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		ms.push();
 		BlockState state = tileEntityIn.getBlockState();
 		int lightCoords = WorldRenderer.getLightmapCoordinates(tileEntityIn.getWorld(), pos);
-		
+
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
 		SuperByteBuffer connector = AllBlockPartials.SCHEMATICANNON_CONNECTOR.renderOn(state);

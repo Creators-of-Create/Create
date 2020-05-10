@@ -33,6 +33,8 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	}
 
 	public void neighborChanged() {
+		if (!hasWorld())
+			return;
 		int power = world.getRedstonePowerFromNeighbors(pos);
 		if (power != signal) 
 			signalChanged = true;

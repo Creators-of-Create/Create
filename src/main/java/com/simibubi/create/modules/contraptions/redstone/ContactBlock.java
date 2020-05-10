@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 
@@ -21,7 +22,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class ContactBlock extends ProperDirectionalBlock implements IPortableBlock {
+public class ContactBlock extends ProperDirectionalBlock implements IPortableBlock, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static MovementBehaviour MOVEMENT = new ContactMovementBehaviour();

@@ -1,31 +1,35 @@
 {
-    "display": {
-        "title": {
-            "translate": "advancement.create:brass",
-            "color": "gold"
-        },
-        "description": {
-            "translate": "advancement.create:brass.desc"
-        },
-        "icon": {
-            "item": "create:crushed_brass"
-        },
-        "frame": "task",
-        "show_toast": true,
-        "announce_to_chat": false,
-        "hidden": false
+  "parent": "create:mixer",
+  "display": {
+    "icon": {
+      "item": "create:brass_ingot"
     },
-    "criteria": {
-        "brass": {
-            "trigger": "minecraft:inventory_changed",
-            "conditions": {
-                "items": [
-                    {
-                        "item": "create:crushed_brass"
-                    }
-                ]
-            }
-        }
+    "title": {
+      "translate": "advancement.create.brass"
     },
-    "parent": "create:mechanical_mixer"
+    "description": {
+      "translate": "advancement.create.brass.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:brass_ingot"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
 }

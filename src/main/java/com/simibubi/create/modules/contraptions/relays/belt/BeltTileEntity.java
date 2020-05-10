@@ -73,6 +73,8 @@ public class BeltTileEntity extends KineticTileEntity {
 		// Init belt
 		if (beltLength == 0)
 			BeltBlock.initBelt(world, pos);
+		if (!AllBlocks.BELT.typeOf(world.getBlockState(pos)))
+			return;
 
 		// Initialize Belt Attachments
 		if (world != null && trackerUpdateTag != null) {
@@ -131,7 +133,10 @@ public class BeltTileEntity extends KineticTileEntity {
 		TileEntity te = world.getTileEntity(controller);
 		if (te == null || !(te instanceof BeltTileEntity))
 			return;
-		IItemHandler handler = ((BeltTileEntity) te).getInventory().createHandlerForSegment(index);
+		BeltInventory inventory = ((BeltTileEntity) te).getInventory();
+		if (inventory == null)
+			return;
+		IItemHandler handler = inventory.createHandlerForSegment(index);
 		itemHandler = LazyOptional.of(() -> handler);
 	}
 
@@ -306,8 +311,8 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	public Direction getMovementFacing() {
 		Axis axis = getBeltFacing().getAxis();
-		return Direction.getFacingFromAxisDirection(axis,
-				getBeltMovementSpeed() < 0 ^ axis == Axis.X ? NEGATIVE : POSITIVE);
+		return Direction
+				.getFacingFromAxisDirection(axis, getBeltMovementSpeed() < 0 ^ axis == Axis.X ? NEGATIVE : POSITIVE);
 	}
 
 	protected Direction getBeltFacing() {
@@ -344,7 +349,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (simulate)
 			return true;
 
-		transportedStack.beltPosition = index + .5f - Math.signum(getSpeed()) / 16f;
+		transportedStack.beltPosition = index + .5f - Math.signum(getDirectionAwareBeltMovementSpeed()) / 16f;
 
 		Direction movementFacing = getMovementFacing();
 		if (!side.getAxis().isVertical()) {

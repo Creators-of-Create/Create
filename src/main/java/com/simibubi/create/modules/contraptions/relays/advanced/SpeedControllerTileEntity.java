@@ -59,10 +59,25 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 			boolean targetingController) {
 		if (!(speedControllerIn instanceof SpeedControllerTileEntity))
 			return 0;
-		SpeedControllerTileEntity speedController = (SpeedControllerTileEntity) speedControllerIn;
 
+		float speed = speedControllerIn.getTheoreticalSpeed();
+		float wheelSpeed = cogWheel.getTheoreticalSpeed();
+		float desiredOutputSpeed = getDesiredOutputSpeed(cogWheel, speedControllerIn, targetingController);
+
+		float compareSpeed = targetingController ? speed : wheelSpeed;
+		if (desiredOutputSpeed >= 0 && compareSpeed >= 0)
+			return Math.max(desiredOutputSpeed, compareSpeed);
+		if (desiredOutputSpeed < 0 && compareSpeed < 0)
+			return Math.min(desiredOutputSpeed, compareSpeed);
+
+		return desiredOutputSpeed;
+	}
+
+	public static float getDesiredOutputSpeed(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,
+			boolean targetingController) {
+		SpeedControllerTileEntity speedController = (SpeedControllerTileEntity) speedControllerIn;
 		float targetSpeed = speedController.targetSpeed.getValue();
-		float speed = speedControllerIn.getSpeed();
+		float speed = speedControllerIn.getTheoreticalSpeed();
 		float wheelSpeed = cogWheel.getTheoreticalSpeed();
 
 		if (targetSpeed == 0)

@@ -1,0 +1,40 @@
+{
+  "parent": "create:andesite_alloy",
+  "display": {
+    "icon": {
+      "item": "create:millstone"
+    },
+    "title": {
+      "translate": "advancement.create.millstone"
+    },
+    "description": {
+      "translate": "advancement.create.millstone.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "create:millstone"
+      }
+    },
+    "1": {
+      "trigger": "create:kinetic_block",
+      "conditions": {
+        "block": "create:millstone"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ],
+    [
+      "1"
+    ]
+  ]
+}

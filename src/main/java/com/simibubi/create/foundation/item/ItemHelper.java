@@ -127,17 +127,27 @@ public class ItemHelper {
 		return false;
 	}
 
+	public static enum ExtractionCountMode {
+		EXACTLY, UPTO
+	}
+
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, boolean simulate) {
-		return extract(inv, test, -1, simulate);
+		return extract(inv, test, ExtractionCountMode.UPTO, AllConfigs.SERVER.logistics.extractorAmount.get(),
+				simulate);
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, int exactAmount, boolean simulate) {
+		return extract(inv, test, ExtractionCountMode.EXACTLY, exactAmount, simulate);
+	}
+
+	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, ExtractionCountMode mode, int amount,
+			boolean simulate) {
 		ItemStack extracting = ItemStack.EMPTY;
-		boolean amountRequired = exactAmount != -1;
+		boolean amountRequired = mode == ExtractionCountMode.EXACTLY;
 		boolean checkHasEnoughItems = amountRequired;
 		boolean hasEnoughItems = !checkHasEnoughItems;
-		int maxExtractionCount = hasEnoughItems ? AllConfigs.SERVER.logistics.extractorAmount.get() : exactAmount;
 		boolean potentialOtherMatch = false;
+		int maxExtractionCount = amount;
 
 		Extraction: do {
 			extracting = ItemStack.EMPTY;
@@ -186,7 +196,7 @@ public class ItemHelper {
 
 		} while (true);
 
-		if (amountRequired && extracting.getCount() < exactAmount)
+		if (amountRequired && extracting.getCount() < amount)
 			return ItemStack.EMPTY;
 
 		return extracting;

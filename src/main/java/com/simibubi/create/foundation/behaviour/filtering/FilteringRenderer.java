@@ -43,6 +43,8 @@ public class FilteringRenderer {
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
 		if (behaviour == null)
 			return;
+		if (!behaviour.isActive())
+			return;
 		if (Minecraft.getInstance().player.isSneaking())
 			return;
 
@@ -76,6 +78,8 @@ public class FilteringRenderer {
 			return;
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(tileEntityIn, FilteringBehaviour.TYPE);
 		if (behaviour == null)
+			return;
+		if (!behaviour.isActive())
 			return;
 		if (behaviour.getFilter().isEmpty())
 			return;

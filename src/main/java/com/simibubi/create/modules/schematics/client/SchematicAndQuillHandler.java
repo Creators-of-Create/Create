@@ -225,7 +225,7 @@ public class SchematicAndQuillHandler {
 		Template t = new Template();
 		MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
 		t.takeBlocksFromWorld(Minecraft.getInstance().world, new BlockPos(bb.minX, bb.minY, bb.minZ),
-				new BlockPos(bb.getXSize(), bb.getYSize(), bb.getZSize()), false, Blocks.AIR);
+				new BlockPos(bb.getXSize(), bb.getYSize(), bb.getZSize()), true, Blocks.AIR);
 
 		if (string.isEmpty())
 			string = Lang.translate("schematicAndQuill.fallbackName");

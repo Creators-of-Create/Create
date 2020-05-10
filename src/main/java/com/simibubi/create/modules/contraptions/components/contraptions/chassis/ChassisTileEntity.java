@@ -46,8 +46,9 @@ public class ChassisTileEntity extends SmartTileEntity {
 				te -> ((ChassisTileEntity) te).collectChassisGroup());
 		range.requiresWrench();
 		range.between(1, max);
-		range.withClientCallback(
-				i -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ChassisRangeDisplay.display(this)));
+		range
+				.withClientCallback(
+						i -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ChassisRangeDisplay.display(this)));
 		range.value = max / 2;
 		behaviours.add(range);
 	}
@@ -161,7 +162,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 				BlockPos current = pos.offset(facing, i);
 				BlockState currentState = world.getBlockState(current);
 
-				if (forcedMovement != facing && !visualize && !sticky)
+				if (forcedMovement != facing && !sticky)
 					break;
 
 				// Ignore replaceable Blocks and Air-like

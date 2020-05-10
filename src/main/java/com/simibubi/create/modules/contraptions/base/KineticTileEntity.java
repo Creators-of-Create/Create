@@ -166,9 +166,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public void onSpeedChanged(float previousSpeed) {
 		boolean fromOrToZero = (previousSpeed == 0) != (getSpeed() == 0);
 		boolean directionSwap = !fromOrToZero && Math.signum(previousSpeed) != Math.signum(getSpeed());
-		if (fromOrToZero || directionSwap) {
+		if (fromOrToZero || directionSwap)
 			flickerTally = getFlickerScore() + 5;
-		}
+
+		if (fromOrToZero && previousSpeed == 0 && !world.isRemote)
+			AllTriggers
+					.getPlayersInRange(world, pos, 4)
+					.forEach(p -> AllTriggers.KINETIC_BLOCK.trigger(p, getBlockState()));
 	}
 
 	@Override
@@ -355,8 +359,12 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			return;
 
 		TileEntity tileEntityIn = world.getTileEntity(pos);
-		if (!(tileEntityIn instanceof KineticTileEntity))
+		boolean isKinetic = tileEntityIn instanceof KineticTileEntity;
+
+		if (!isKinetic) {
+			world.setBlockState(pos, state, 3);
 			return;
+		}
 
 		KineticTileEntity tileEntity = (KineticTileEntity) tileEntityIn;
 		if (tileEntity.hasNetwork())
@@ -368,8 +376,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-	}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
 	@Override
 	public boolean hasFastRenderer() {
@@ -382,8 +389,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
 			tooltip.add(spacing + GOLD + Lang.translate("gui.stress_gauge.overstressed"));
-			String hint = Lang.translate("gui.contraptions.network_overstressed",
-					I18n.format(getBlockState().getBlock().getTranslationKey()));
+			String hint = Lang
+					.translate("gui.contraptions.network_overstressed",
+							I18n.format(getBlockState().getBlock().getTranslationKey()));
 			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add((i == 0 ? "" : spacing) + cutString.get(i));
@@ -392,8 +400,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (notFastEnough) {
 			tooltip.add(spacing + GOLD + Lang.translate("tooltip.speedRequirement"));
-			String hint = Lang.translate("gui.contraptions.not_fast_enough",
-					I18n.format(getBlockState().getBlock().getTranslationKey()));
+			String hint = Lang
+					.translate("gui.contraptions.not_fast_enough",
+							I18n.format(getBlockState().getBlock().getTranslationKey()));
 			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add((i == 0 ? "" : spacing) + cutString.get(i));
@@ -417,10 +426,14 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			String stressString =
 				spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
 
-			tooltip.add(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressAtBase),
-					Lang.translate("gui.goggles.base_value")));
-			tooltip.add(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal),
-					Lang.translate("gui.goggles.at_current_speed")));
+			tooltip
+					.add(String
+							.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressAtBase),
+									Lang.translate("gui.goggles.base_value")));
+			tooltip
+					.add(String
+							.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal),
+									Lang.translate("gui.goggles.at_current_speed")));
 
 			added = true;
 		}

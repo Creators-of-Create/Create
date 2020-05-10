@@ -15,6 +15,9 @@ import com.simibubi.create.modules.contraptions.components.contraptions.pulley.P
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
+import com.simibubi.create.modules.contraptions.components.crank.HandCrankBlock;
+import com.simibubi.create.modules.contraptions.components.fan.NozzleBlock;
+import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.modules.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
 import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
@@ -26,6 +29,7 @@ import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CarpetBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.FlowerPotBlock;
@@ -105,6 +109,8 @@ public class BlockMovementTraits {
 		Block block = state.getBlock();
 		if (state.has(BlockStateProperties.HANGING))
 			return true;
+		if (block instanceof HandCrankBlock)
+			return true;
 		if (block instanceof LadderBlock)
 			return true;
 		if (block instanceof ExtractorBlock)
@@ -131,7 +137,13 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof RopeBlock)
 			return true;
+		if (block instanceof NozzleBlock)
+			return true;
 		if (block instanceof MagnetBlock)
+			return true;
+		if (block instanceof EngineBlock)
+			return true;
+		if (block instanceof CarpetBlock)
 			return true;
 		return false;
 	}
@@ -159,6 +171,8 @@ public class BlockMovementTraits {
 			return direction == Direction.DOWN;
 		if (block instanceof RedstoneWireBlock)
 			return direction == Direction.DOWN;
+		if (block instanceof CarpetBlock)
+			return direction == Direction.DOWN;
 		if (block instanceof RedstoneWallTorchBlock)
 			return state.get(RedstoneWallTorchBlock.FACING) == direction.getOpposite();
 		if (block instanceof TorchBlock)
@@ -178,6 +192,12 @@ public class BlockMovementTraits {
 			return direction == Direction.DOWN;
 		if (block instanceof AttachedActorBlock)
 			return direction == state.get(HarvesterBlock.HORIZONTAL_FACING).getOpposite();
+		if (block instanceof HandCrankBlock)
+			return direction == state.get(HandCrankBlock.FACING).getOpposite();
+		if (block instanceof NozzleBlock)
+			return direction == state.get(NozzleBlock.FACING).getOpposite();
+		if (block instanceof EngineBlock)
+			return direction == state.get(EngineBlock.HORIZONTAL_FACING).getOpposite();
 		return false;
 	}
 
@@ -196,6 +216,8 @@ public class BlockMovementTraits {
 			return state.get(BlockStateProperties.HORIZONTAL_FACING) == facing;
 		if (AllBlocks.ROPE_PULLEY.typeOf(state))
 			return facing == Direction.DOWN;
+		if (state.getBlock() instanceof CarpetBlock)
+			return facing == Direction.UP;
 		return isBrittle(state);
 	}
 

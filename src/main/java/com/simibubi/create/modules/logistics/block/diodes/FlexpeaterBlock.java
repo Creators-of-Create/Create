@@ -5,7 +5,6 @@ import com.simibubi.create.AllBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.RedstoneDiodeBlock;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
@@ -13,7 +12,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 
-public class FlexpeaterBlock extends RedstoneDiodeBlock {
+public class FlexpeaterBlock extends AbstractDiodeBlock {
 
 	public static BooleanProperty POWERING = BooleanProperty.create("powering");
 

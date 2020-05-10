@@ -8,6 +8,9 @@ import com.simibubi.create.AllEntities;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.modules.schematics.ISpecialEntityItemRequirement;
+import com.simibubi.create.modules.schematics.ItemRequirement;
+import com.simibubi.create.modules.schematics.ItemRequirement.ItemUseType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -46,7 +49,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData {
+public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement {
 
 	private int validationTimer;
 	protected BlockPos hangingPosition;
@@ -105,31 +108,32 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	protected void updateBoundingBox() {
 		if (this.getFacingDirection() != null) {
-			double x = hangingPosition.getX() + 0.5 - facingDirection.getXOffset() * 0.5;
-			double y = hangingPosition.getY() + 0.5 - facingDirection.getYOffset() * 0.5;
-			double z = hangingPosition.getZ() + 0.5 - facingDirection.getZOffset() * 0.5;
+			double offset = 0.5 - 1 / 256d;
+			double x = hangingPosition.getX() + 0.5 - facingDirection.getXOffset() * offset;
+			double y = hangingPosition.getY() + 0.5 - facingDirection.getYOffset() * offset;
+			double z = hangingPosition.getZ() + 0.5 - facingDirection.getZOffset() * offset;
 			this.setPos(x, y, z);
-			double d1 = (double) this.getWidthPixels();
-			double d2 = (double) this.getHeightPixels();
-			double d3 = (double) this.getWidthPixels();
+			double w = getWidthPixels();
+			double h = getHeightPixels();
+			double l = getWidthPixels();
 			Axis axis = this.getFacingDirection().getAxis();
 			double depth = 2 - 1 / 128f;
 
 			switch (axis) {
 			case X:
-				d1 = depth;
+				w = depth;
 				break;
 			case Y:
-				d2 = depth;
+				h = depth;
 				break;
 			case Z:
-				d3 = depth;
+				l = depth;
 			}
 
-			d1 = d1 / 32.0D;
-			d2 = d2 / 32.0D;
-			d3 = d3 / 32.0D;
-			this.setBoundingBox(new AxisAlignedBB(x - d1, y - d2, z - d3, x + d1, y + d2, z + d3));
+			w = w / 32.0D;
+			h = h / 32.0D;
+			l = l / 32.0D;
+			this.setBoundingBox(new AxisAlignedBB(x - w, y - h, z - l, x + w, y + h, z + l));
 		}
 	}
 
@@ -294,13 +298,13 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		if (this.getFacingDirection().getAxis() != Direction.Axis.Y) {
 			switch (transformRotation) {
 			case CLOCKWISE_180:
-				this.facingDirection = this.getFacingDirection().getOpposite();
+				facingDirection = facingDirection.getOpposite();
 				break;
 			case COUNTERCLOCKWISE_90:
-				this.facingDirection = this.getFacingDirection().rotateYCCW();
+				facingDirection = facingDirection.rotateYCCW();
 				break;
 			case CLOCKWISE_90:
-				this.facingDirection = this.getFacingDirection().rotateY();
+				facingDirection = facingDirection.rotateY();
 			default:
 				break;
 			}
@@ -366,4 +370,10 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public Direction getFacingDirection() {
 		return facingDirection;
 	}
+
+	@Override
+	public ItemRequirement getRequiredItems() {
+		return new ItemRequirement(ItemUseType.DAMAGE, AllItems.SUPER_GLUE.get());
+	}
+
 }

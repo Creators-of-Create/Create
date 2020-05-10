@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.components.actors.BlockBreakingMovementBehaviour;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CocoaBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -272,7 +273,8 @@ public class ContraptionCollider {
 			if (AllBlocks.PULLEY_MAGNET.typeOf(collidedState) && pos.equals(BlockPos.ZERO)
 					&& movementDirection == Direction.UP)
 				continue;
-
+			if (collidedState.getBlock() instanceof CocoaBlock)
+				continue;
 			if (!collidedState.getMaterial().isReplaceable()
 					&& !collidedState.getCollisionShape(world, colliderPos).isEmpty()) {
 				return true;

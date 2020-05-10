@@ -51,8 +51,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class DeployerTileEntity extends KineticTileEntity {
 
-	private static final List<Pair<BlockPos, Direction>> EXTRACTING_LOCATIONS = Arrays.asList(Direction.values())
-			.stream().map(d -> Pair.of(BlockPos.ZERO.offset(d), d.getOpposite())).collect(Collectors.toList());
+	private static final List<Pair<BlockPos, Direction>> EXTRACTING_LOCATIONS = Arrays
+			.asList(Direction.values())
+			.stream()
+			.map(d -> Pair.of(BlockPos.ZERO.offset(d), d.getOpposite()))
+			.collect(Collectors.toList());
 	private FilteringBehaviour filtering;
 	private ExtractingBehaviour extracting;
 
@@ -373,8 +376,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 		reach = tag.getFloat("Reach");
 		if (tag.contains("Particle")) {
 			ItemStack particleStack = ItemStack.read(tag.getCompound("Particle"));
-			SandPaperItem.spawnParticles(VecHelper.getCenterOf(pos).add(getMovementVector().scale(2f)), particleStack,
-					this.world);
+			SandPaperItem
+					.spawnParticles(VecHelper.getCenterOf(pos).add(getMovementVector().scale(2f)), particleStack,
+							this.world);
 		}
 
 		super.readClientUpdate(tag);
@@ -402,7 +406,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public void remove() {
 		super.remove();
-		invHandler.invalidate();
+		if (invHandler != null)
+			invHandler.invalidate();
 	}
 
 	public void changeMode() {

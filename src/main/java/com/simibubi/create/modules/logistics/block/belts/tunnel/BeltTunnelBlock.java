@@ -7,6 +7,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.IWrenchable;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
@@ -104,7 +105,8 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
-		withTileEntityDo(worldIn, currentPos, BeltTunnelTileEntity::initFlaps);
+		if (!(worldIn instanceof WrappedWorld))
+			withTileEntityDo(worldIn, currentPos, BeltTunnelTileEntity::initFlaps);
 		BlockState tunnelState = getTunnelState(worldIn, currentPos);
 
 		if (tunnelState.get(HORIZONTAL_AXIS) == state.get(HORIZONTAL_AXIS)) {
@@ -160,11 +162,11 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		// T and Cross
 		Direction left = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis).rotateY();
 		BlockState leftState = reader.getBlockState(pos.offset(left).down());
-		boolean onLeft = AllBlocks.BELT.typeOf(leftState)
-				&& leftState.get(BeltBlock.HORIZONTAL_FACING).getAxis() != axis;
+		boolean onLeft =
+			AllBlocks.BELT.typeOf(leftState) && leftState.get(BeltBlock.HORIZONTAL_FACING).getAxis() != axis;
 		BlockState rightState = reader.getBlockState(pos.offset(left.getOpposite()).down());
-		boolean onRight = AllBlocks.BELT.typeOf(rightState)
-				&& rightState.get(BeltBlock.HORIZONTAL_FACING).getAxis() != axis;
+		boolean onRight =
+			AllBlocks.BELT.typeOf(rightState) && rightState.get(BeltBlock.HORIZONTAL_FACING).getAxis() != axis;
 
 		if (onLeft && onRight)
 			state = state.with(SHAPE, Shape.CROSS);

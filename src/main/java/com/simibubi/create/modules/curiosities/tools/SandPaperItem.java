@@ -1,10 +1,8 @@
 package com.simibubi.create.modules.curiosities.tools;
 
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.components.deployer.DeployerFakePlayer;
 import com.simibubi.create.modules.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
 
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -12,7 +10,6 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -31,6 +28,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class SandPaperItem extends Item implements IHaveCustomItemModel {
 
@@ -136,11 +134,9 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 			}
 
 			if (!polished.isEmpty()) {
-				if (player instanceof DeployerFakePlayer) {
+				if (player instanceof FakePlayer) {
 					player.dropItem(polished, false, false);
 				} else {
-					AllTriggers.SANDPAPER_USE.trigger((ServerPlayerEntity) player, toPolish, polished);
-
 					player.inventory.placeItemBackInInventory(worldIn, polished);
 				}
 			}

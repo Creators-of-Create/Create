@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.belt;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,9 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
 import com.simibubi.create.modules.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.modules.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.modules.schematics.ItemRequirement;
+import com.simibubi.create.modules.schematics.ItemRequirement.ItemUseType;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -45,12 +49,14 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -62,7 +68,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, IHaveColorHandler {
+public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, IHaveColorHandler, ISpecialBlockItemRequirement {
 
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
@@ -338,10 +344,11 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 						double d7 = d4 * d1 + x1;
 						double d8 = d5 * d2 + y1;
 						double d9 = d6 * d3 + z1;
-						manager.addEffect(
-								(new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
-										(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state))
-												.setBlockPos(pos));
+						manager
+								.addEffect(
+										(new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
+												(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state))
+														.setBlockPos(pos));
 					}
 				}
 			}
@@ -358,6 +365,9 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 			ISelectionContext context) {
+		if (state.getBlock() != this)
+			return VoxelShapes.empty();
+
 		VoxelShape shape = getShape(state, worldIn, pos, context);
 		try {
 			if (context.getEntity() == null)
@@ -427,7 +437,9 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 		for (BlockPos beltPos : beltChain) {
 			TileEntity tileEntity = world.getTileEntity(beltPos);
-			if (tileEntity instanceof BeltTileEntity) {
+			BlockState currentState = world.getBlockState(beltPos);
+
+			if (tileEntity instanceof BeltTileEntity && AllBlocks.BELT.typeOf(currentState)) {
 				BeltTileEntity te = (BeltTileEntity) tileEntity;
 				te.setController(currentPos);
 				te.beltLength = beltChain.size();
@@ -436,7 +448,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				te.markDirty();
 				te.sendData();
 
-				BlockState currentState = world.getBlockState(beltPos);
 				boolean isVertical = currentState.get(BeltBlock.SLOPE) == Slope.VERTICAL;
 
 				if (currentState.get(CASING) && isVertical) {
@@ -537,10 +548,10 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		int limit = 1000;
 		BlockPos current = controllerPos;
 		while (limit-- > 0 && current != null) {
-			positions.add(current);
 			BlockState state = world.getBlockState(current);
 			if (!AllBlocks.BELT.typeOf(state))
 				break;
+			positions.add(current);
 			current = nextSegmentPosition(state, current, true);
 		}
 
@@ -603,6 +614,36 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	public Class<BeltTileEntity> getTileEntityClass() {
 		return BeltTileEntity.class;
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state) {
+		List<ItemStack> required = new ArrayList<>();
+		if (state.get(PART) != Part.MIDDLE)
+			required.add(new ItemStack(AllBlocksNew.SHAFT.get()));
+		if (state.get(CASING))
+			required.add(new ItemStack(AllBlocks.BRASS_CASING.get()));
+		if (state.get(PART) == Part.START)
+			required.add(AllItems.BELT_CONNECTOR.asStack());
+		if (required.isEmpty())
+			return ItemRequirement.NONE;
+		return new ItemRequirement(ItemUseType.CONSUME, required);
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, Rotation rot) {
+		BlockState rotate = super.rotate(state, rot);
+
+		if (state.get(SLOPE) != Slope.VERTICAL)
+			return rotate;
+		if (state.get(HORIZONTAL_FACING).getAxisDirection() != rotate.get(HORIZONTAL_FACING).getAxisDirection()) {
+			if (state.get(PART) == Part.START)
+				return rotate.with(PART, Part.END);
+			if (state.get(PART) == Part.END)
+				return rotate.with(PART, Part.START);
+		}
+
+		return rotate;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.bearing;
 
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.WrappedWorld;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,7 +20,7 @@ public class MechanicalBearingBlock extends BearingBlock implements ITE<Mechanic
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new MechanicalBearingTileEntity();
 	}
-	
+
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos,
 			PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
@@ -41,18 +42,21 @@ public class MechanicalBearingBlock extends BearingBlock implements ITE<Mechanic
 		}
 		return ActionResultType.PASS;
 	}
-	
+
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (worldIn instanceof WrappedWorld)
+			return;
 		withTileEntityDo(worldIn, pos, MechanicalBearingTileEntity::neighbourChanged);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
+		if (worldIn instanceof WrappedWorld)
+			return;
 		if (worldIn.isRemote)
 			return;
-
 		withTileEntityDo(worldIn, pos, MechanicalBearingTileEntity::neighbourChanged);
 	}
 

@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.SimpleTrigger;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.simple.DeferralBehaviour;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
@@ -148,6 +151,13 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			}
 			// something wasn't found
 			return;
+		}
+		
+		if (!world.isRemote) {
+			SimpleTrigger trigger = AllTriggers.MIXER_MIX;
+			if (getType() == AllTileEntities.MECHANICAL_PRESS.type)
+				trigger = AllTriggers.PRESS_COMPACT;
+			AllTriggers.triggerForNearbyPlayers(trigger, world, pos, 4);
 		}
 
 		ItemHandlerHelper.insertItemStacked(outputs, lastRecipe.getRecipeOutput().copy(), false);

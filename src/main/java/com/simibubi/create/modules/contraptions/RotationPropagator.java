@@ -248,7 +248,8 @@ public class RotationPropagator {
 
 					// Do not overpower you own network -> cycle
 					if (!currentTE.hasNetwork() || currentTE.network.equals(neighbourTE.network)) {
-						if (Math.abs(newSpeed) > Math.abs(speedOfNeighbour))
+						float epsilon = Math.abs(speedOfNeighbour) / 256f / 256f;
+						if (Math.abs(newSpeed) > Math.abs(speedOfNeighbour) + epsilon)
 							world.destroyBlock(pos, true);
 						continue;
 					}

@@ -217,10 +217,12 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 					});
 
 					groupedItems = new GroupedItems(result);
-					containers.forEach(stack -> {
-						GroupedItems container = new GroupedItems(stack);
+					for (int i = 0; i < containers.size(); i++) {
+						ItemStack stack = containers.get(i);
+						GroupedItems container = new GroupedItems();
+						container.grid.put(Pair.of(i, 0), stack);
 						container.mergeOnto(groupedItems, Pointing.LEFT);
-					});
+					}
 
 					phase = Phase.CRAFTING;
 					countDown = 2000;

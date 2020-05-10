@@ -28,6 +28,8 @@ public interface IWrenchable {
 		KineticTileEntity.switchToBlockState(world, context.getPos(), updateAfterWrenched(rotated, context));
 
 		TileEntity te = context.getWorld().getTileEntity(context.getPos());
+		if (te != null)
+			te.updateContainingBlockInfo();
 		if (te instanceof GeneratingKineticTileEntity) {
 			((GeneratingKineticTileEntity) te).updateGeneratedRotation();
 		}

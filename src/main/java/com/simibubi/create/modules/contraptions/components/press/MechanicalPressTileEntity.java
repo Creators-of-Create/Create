@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.processing.BasinOperatingTileEntity;
@@ -163,8 +164,10 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 						pressedItems.add(itemEntity.getItem());
 						sendData();
 						Optional<PressingRecipe> recipe = getRecipe(itemEntity.getItem());
-						if (recipe.isPresent())
+						if (recipe.isPresent()) {
 							InWorldProcessing.applyRecipeOn(itemEntity, recipe.get());
+							AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, world, pos, 4);
+						}
 					}
 				}
 			}

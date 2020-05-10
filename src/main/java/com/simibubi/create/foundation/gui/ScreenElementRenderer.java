@@ -95,17 +95,20 @@ public class ScreenElementRenderer {
 			blockRenderer.renderBlock(blockToRender, ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV,
 					EmptyModelData.INSTANCE);
 		} else {
-			RenderSystem.rotatef(90, 0, 1, 0);
-			if (color == -1) {
-				blockRenderer.getBlockModelRenderer().renderModel(ms.peek(), vb, blockToRender, modelToRender, 1, 1, 1,
-						0xF000F0, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
-			} else {
-				Vec3d rgb = ColorHelper.getRGB(color);
-				blockRenderer.getBlockModelRenderer().renderModel(ms.peek(), vb, blockToRender, modelToRender,
-						(float) rgb.x, (float) rgb.y, (float) rgb.z, 0xF000F0, OverlayTexture.DEFAULT_UV,
-						EmptyModelData.INSTANCE);
+			if (modelToRender != null) {
+				RenderSystem.rotatef(90, 0, 1, 0);
+				if (color == -1) {
+					blockRenderer.getBlockModelRenderer().renderModel(ms.peek(), vb, blockToRender, modelToRender, 1, 1,
+							1, 0xF000F0, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+				} else {
+					Vec3d rgb = ColorHelper.getRGB(color);
+					blockRenderer.getBlockModelRenderer().renderModel(ms.peek(), vb, blockToRender, modelToRender,
+							(float) rgb.x, (float) rgb.y, (float) rgb.z, 0xF000F0, OverlayTexture.DEFAULT_UV,
+							EmptyModelData.INSTANCE);
+				}
 			}
 		}
+
 		RenderSystem.popMatrix();
 		buffer.draw(renderType);
 

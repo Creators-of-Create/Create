@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.behaviour.filtering;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
@@ -29,6 +30,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	private ItemStack filter;
 	public int count;
 	private Consumer<ItemStack> callback;
+	private Supplier<Boolean> isActive;
 
 	int scrollableValue;
 	int ticksUntilScrollPacket;
@@ -40,6 +42,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		slotPositioning = slot;
 		showCount = false;
 		callback = stack -> {};
+		isActive = () -> true;
 		textShift = Vec3d.ZERO;
 		count = 0;
 		ticksUntilScrollPacket = -1;
@@ -91,6 +94,11 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 
 	public FilteringBehaviour withCallback(Consumer<ItemStack> filterCallback) {
 		callback = filterCallback;
+		return this;
+	}
+	
+	public FilteringBehaviour onlyActiveWhen(Supplier<Boolean> condition) {
+		isActive = condition;
 		return this;
 	}
 
@@ -160,6 +168,10 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 
 	public boolean anyAmount() {
 		return count == 0;
+	}
+	
+	public boolean isActive() {
+		return isActive.get();
 	}
 
 }

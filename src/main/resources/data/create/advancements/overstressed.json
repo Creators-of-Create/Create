@@ -1,24 +1,28 @@
 {
-    "display": {
-        "title": {
-            "translate": "advancement.create:overstressed",
-            "color": "red"
-        },
-        "description": {
-            "translate": "advancement.create:overstressed.desc"
-        },
-        "icon": {
-            "item": "minecraft:barrier"
-        },
-        "frame": "task",
-        "show_toast": true,
-        "announce_to_chat": false,
-        "hidden": true
+  "parent": "create:its_alive",
+  "display": {
+    "icon": {
+      "item": "minecraft:barrier"
     },
-    "criteria": {
-        "alloy": {
-            "trigger": "create:overstressed"
-        }
+    "title": {
+      "translate": "advancement.create.overstressed"
     },
-    "parent": "create:rotation"
+    "description": {
+      "translate": "advancement.create.overstressed.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:overstressed"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
 }

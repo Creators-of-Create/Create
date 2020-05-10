@@ -21,12 +21,10 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public enum AllEntities {
 
-	CONTRAPTION(ContraptionEntity::new, EntityClassification.MISC, 30, 3, true,
-			ContraptionEntity::build), 
-	STATIONARY_CONTRAPTION(ContraptionEntity::new, EntityClassification.MISC, 30, 40,
-					false, ContraptionEntity::build),
-	SUPER_GLUE(SuperGlueEntity::new, EntityClassification.MISC, 30, Integer.MAX_VALUE, false, SuperGlueEntity::build),
-	
+	CONTRAPTION(ContraptionEntity::new, EntityClassification.MISC, 5, 3, true, ContraptionEntity::build),
+	STATIONARY_CONTRAPTION(ContraptionEntity::new, EntityClassification.MISC, 20, 40, false, ContraptionEntity::build),
+	SUPER_GLUE(SuperGlueEntity::new, EntityClassification.MISC, 10, Integer.MAX_VALUE, false, SuperGlueEntity::build),
+
 	;
 
 	private IFactory<?> factory;
@@ -53,8 +51,10 @@ public enum AllEntities {
 		for (AllEntities entity : values()) {
 			String id = Lang.asId(entity.name());
 			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, id);
-			Builder<? extends Entity> builder = EntityType.Builder.create(entity.factory, entity.group)
-					.setTrackingRange(entity.range).setUpdateInterval(entity.updateFrequency)
+			Builder<? extends Entity> builder = EntityType.Builder
+					.create(entity.factory, entity.group)
+					.setTrackingRange(entity.range)
+					.setUpdateInterval(entity.updateFrequency)
 					.setShouldReceiveVelocityUpdates(entity.sendVelocity);
 			if (entity.propertyBuilder != null)
 				builder = entity.propertyBuilder.apply(builder);

@@ -1,6 +1,8 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.chassis;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RotatedPillarBlock;
@@ -22,7 +24,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
-public abstract class AbstractChassisBlock extends RotatedPillarBlock {
+public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable {
 
 	public AbstractChassisBlock(Properties properties) {
 		super(properties);
@@ -45,7 +47,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock {
 			return ActionResultType.PASS;
 
 		ItemStack heldItem = player.getHeldItem(handIn);
-		boolean isSlimeBall = heldItem.getItem().isIn(Tags.Items.SLIMEBALLS);
+		boolean isSlimeBall = heldItem.getItem().isIn(Tags.Items.SLIMEBALLS) || AllItems.SUPER_GLUE.typeOf(heldItem);
 
 		BooleanProperty affectedSide = getGlueableSide(state, hit.getFace());
 		if (affectedSide == null)

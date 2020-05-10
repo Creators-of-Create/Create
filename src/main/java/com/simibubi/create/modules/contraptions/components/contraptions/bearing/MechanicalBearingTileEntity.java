@@ -62,6 +62,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	public void neighbourChanged() {
+		if (!hasWorld())
+			return;
+		
 		boolean shouldWindmill = world.isBlockPowered(pos);
 		if (shouldWindmill == isWindmill)
 			return;

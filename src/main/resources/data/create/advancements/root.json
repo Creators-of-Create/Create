@@ -1,21 +1,29 @@
 {
   "display": {
     "icon": {
-      "item": "create:brass_ingot"
+      "item": "create:brass_hand"
     },
     "title": {
-      "translate": "advancement.create:root"
+      "translate": "advancement.create.root"
     },
     "description": {
-      "translate": "advancement.create:root.desc"
+      "translate": "advancement.create.root.desc"
     },
-    "background": "create:textures/block/scoria_bricks.png",
+    "frame": "task",
     "show_toast": false,
-    "announce_to_chat": false
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "create:textures/block/scoria_bricks.png"
   },
   "criteria": {
-    "flower": {
-      "trigger": "minecraft:inventory_changed"
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {}
     }
-  }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
 }

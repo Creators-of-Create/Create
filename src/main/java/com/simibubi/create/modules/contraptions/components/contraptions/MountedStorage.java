@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.ChestType;
 import net.minecraft.tileentity.BarrelTileEntity;
 import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -106,6 +107,8 @@ public class MountedStorage {
 			return false;
 		TileEntityType<?> type = te.getType();
 		if (type == AllTileEntities.FLEXCRATE.type)
+			return true;
+		if (te instanceof ShulkerBoxTileEntity)
 			return true;
 		if (te instanceof ChestTileEntity)
 			return true;

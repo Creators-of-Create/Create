@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility.data;
 
+import com.simibubi.create.data.CreateAdvancements;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -11,8 +13,8 @@ public class Generator {
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent event){
 		DataGenerator gen = event.getGenerator();
-		//gen.addProvider(AllSoundEvents.CUCKOO_PIG);
 		gen.addProvider(new AllItemsTagProvider(gen));
+		gen.addProvider(new CreateAdvancements(gen));
 	}
 
 }

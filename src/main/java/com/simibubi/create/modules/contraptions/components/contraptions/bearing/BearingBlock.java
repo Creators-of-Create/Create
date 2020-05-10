@@ -24,7 +24,7 @@ public abstract class BearingBlock extends DirectionalKineticBlock {
 	protected boolean hasStaticPart() {
 		return true;
 	}
-
+	
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(FACING).getAxis();
