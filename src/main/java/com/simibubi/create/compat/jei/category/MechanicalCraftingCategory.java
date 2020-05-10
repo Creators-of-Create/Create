@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
@@ -41,23 +41,24 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 
 		@Override
 		public void render(int xPosition, int yPosition, ItemStack ingredient) {
-			GlStateManager.pushMatrix();
-			GlStateManager.translated(xPosition, yPosition, 0);
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(xPosition, yPosition, 0);
 			float scale = getScale(recipe);
-			GlStateManager.scaled(scale, scale, scale);
+			RenderSystem.scaled(scale, scale, scale);
 
 			if (ingredient != null) {
-				GlStateManager.enableDepthTest();
-				RenderHelper.enableGUIStandardItemLighting();
+				RenderSystem.enableDepthTest();
+				RenderHelper.enable();
 				Minecraft minecraft = Minecraft.getInstance();
 				FontRenderer font = getFontRenderer(minecraft, ingredient);
 				ItemRenderer itemRenderer = minecraft.getItemRenderer();
 				itemRenderer.renderItemAndEffectIntoGUI(null, ingredient, 0, 0);
 				itemRenderer.renderItemOverlayIntoGUI(font, ingredient, 0, 0, null);
-				GlStateManager.disableBlend();
+				RenderSystem.disableBlend();
 				RenderHelper.disableStandardItemLighting();
 			}
-			GlStateManager.popMatrix();
+			
+			RenderSystem.popMatrix();
 		}
 
 		@Override
@@ -149,29 +150,29 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 
 	@Override
 	public void draw(ShapedRecipe recipe, double mouseX, double mouseY) {
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		float scale = getScale(recipe);
-		GlStateManager.translated(getXPadding(recipe), getYPadding(recipe), 0);
+		RenderSystem.translated(getXPadding(recipe), getYPadding(recipe), 0);
 
 		for (int row = 0; row < recipe.getHeight(); row++)
 			for (int col = 0; col < recipe.getWidth(); col++)
 				if (!recipe.getIngredients().get(row * recipe.getWidth() + col).hasNoMatchingItems()) {
-					GlStateManager.pushMatrix();
-					GlStateManager.translated((int) col * 19 * scale, (int) row * 19 * scale, 0);
-					GlStateManager.scaled(scale, scale, scale);
+					RenderSystem.pushMatrix();
+					RenderSystem.translated((int) col * 19 * scale, (int) row * 19 * scale, 0);
+					RenderSystem.scaled(scale, scale, scale);
 					ScreenResources.JEI_SLOT.draw(0, 0);
-					GlStateManager.popMatrix();
+					RenderSystem.popMatrix();
 				}
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
 		ScreenResources.JEI_SLOT.draw(133, 80);
 		ScreenResources.JEI_DOWN_ARROW.draw(128, 59);
 		ScreenResources.JEI_SHADOW.draw(116, 36);
 		crafter.draw(219, 8);
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(0, 0, 200);
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(0, 0, 200);
 		
 		RenderHelper.disableStandardItemLighting();
 		int amount = 0;
@@ -180,10 +181,10 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 				continue;
 			amount++;
 		}
+		
 		Minecraft.getInstance().fontRenderer
 				.drawStringWithShadow(amount + "", 142, 39, 0xFFFFFF);
-		RenderHelper.enableStandardItemLighting();
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	@Override

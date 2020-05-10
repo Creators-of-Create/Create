@@ -59,7 +59,7 @@ public class CrateBlock extends ProperDirectionalBlock implements IWrenchable {
 		BlockPos pos = context.getPos();
 		World world = context.getWorld();
 
-		if (!context.isPlacerSneaking()) {
+		if (!context.getPlayer().isSneaking()) {
 			for (Direction d : Direction.values()) {
 				BlockState state = world.getBlockState(pos.offset(d));
 				if (state.getBlock() == this && !state.get(DOUBLE))

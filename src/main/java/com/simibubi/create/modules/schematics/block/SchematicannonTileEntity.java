@@ -3,6 +3,7 @@ package com.simibubi.create.modules.schematics.block;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
@@ -151,7 +152,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			if (!world.isBlockPresent(pos.offset(facing)))
 				continue;
 
-			if (AllBlocksNew.CREATIVE_CRATE.get() == world.getBlockState(pos.offset(facing)).getBlock()) {
+			if (AllBlocks.CREATIVE_CRATE.get() == world.getBlockState(pos.offset(facing)).getBlock()) {
 				hasCreativeCrate = true;
 			}
 
@@ -503,7 +504,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		}
 		if (!isLastSegment)
 			blockState = (blockState.get(BeltBlock.PART) == Part.MIDDLE) ? Blocks.AIR.getDefaultState()
-					: AllBlocks.SHAFT.getDefault().with(ShaftBlock.AXIS, facing.rotateY().getAxis());
+					: AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(ShaftBlock.AXIS, facing.rotateY().getAxis());
 		return blockState;
 	}
 
@@ -599,10 +600,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			int amountFound = 0;
 			for (IItemHandler iItemHandler : attachedInventories) {
 
-				amountFound += ItemHelper
-						.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
-								required.getCount(), true)
-						.getCount();
+				amountFound += ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required, s),
+						ExtractionCountMode.UPTO, required.getCount(), true).getCount();
 
 				if (amountFound < required.getCount())
 					continue;
@@ -615,10 +614,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (!simulate && success) {
 			int amountFound = 0;
 			for (IItemHandler iItemHandler : attachedInventories) {
-				amountFound += ItemHelper
-						.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
-								required.getCount(), false)
-						.getCount();
+				amountFound += ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required, s),
+						ExtractionCountMode.UPTO, required.getCount(), false).getCount();
 				if (amountFound < required.getCount())
 					continue;
 				break;
@@ -665,16 +662,14 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	public void finishedPrinting() {
 		inventory.setStackInSlot(0, ItemStack.EMPTY);
-		inventory
-				.setStackInSlot(1,
-						new ItemStack(AllItems.EMPTY_BLUEPRINT.get(), inventory.getStackInSlot(1).getCount() + 1));
+		inventory.setStackInSlot(1,
+				new ItemStack(AllItems.EMPTY_BLUEPRINT.get(), inventory.getStackInSlot(1).getCount() + 1));
 		state = State.STOPPED;
 		statusMsg = "finished";
 		resetPrinter();
 		target = getPos().add(1, 0, 0);
-		world
-				.playSound(null, pos.getX(), pos.getY(), pos.getZ(), AllSoundEvents.SCHEMATICANNON_FINISH.get(),
-						SoundCategory.BLOCKS, 1, .7f);
+		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), AllSoundEvents.SCHEMATICANNON_FINISH.get(),
+				SoundCategory.BLOCKS, 1, .7f);
 		sendUpdate = true;
 	}
 
@@ -830,9 +825,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	public void playFiringSound() {
-		world
-				.playSound(null, pos.getX(), pos.getY(), pos.getZ(), AllSoundEvents.SCHEMATICANNON_LAUNCH_BLOCK.get(),
-						SoundCategory.BLOCKS, .1f, 1.1f);
+		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), AllSoundEvents.SCHEMATICANNON_LAUNCH_BLOCK.get(),
+				SoundCategory.BLOCKS, .1f, 1.1f);
 	}
 
 	public void sendToContainer(PacketBuffer buffer) {
@@ -896,7 +890,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+	}
 
 	@Override
 	public void lazyTick() {

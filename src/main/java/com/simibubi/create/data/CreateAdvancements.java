@@ -12,6 +12,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -132,7 +133,7 @@ public class CreateAdvancements implements IDataProvider {
 	void kineticsBranch(Consumer<Advancement> t, Advancement root) {
 		String id = Create.ID;
 
-		Advancement its_alive = advancement("its_alive", AllBlocks.COGWHEEL.get(), TaskType.NORMAL)
+		Advancement its_alive = advancement("its_alive", AllBlocksNew.COGWHEEL.get(), TaskType.NORMAL)
 				.withParent(root)
 				.withCriterion("0", AllTriggers.ROTATION.instance())
 				.register(t, id + ":its_alive");
@@ -158,7 +159,7 @@ public class CreateAdvancements implements IDataProvider {
 				.withParent(goggles)
 				.register(t, id + ":stress_gauge");
 
-		Advancement shifting_gears = advancement("shifting_gears", AllBlocks.LARGE_COGWHEEL.get(), TaskType.NORMAL)
+		Advancement shifting_gears = advancement("shifting_gears", AllBlocksNew.LARGE_COGWHEEL.get(), TaskType.NORMAL)
 				.withParent(its_alive)
 				.withCriterion("0", AllTriggers.SHIFTING_GEARS.instance())
 				.register(t, id + ":shifting_gears");

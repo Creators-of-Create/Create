@@ -8,7 +8,6 @@ import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogwheelBlockItem;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedShaftBlock;
-import com.simibubi.create.modules.schematics.block.CreativeCrateBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
 import com.tterrag.registrate.util.RegistryEntry;
@@ -34,13 +33,6 @@ public class AllBlocksNew {
 				.build()
 			.register();
 
-
-	public static final RegistryEntry<CreativeCrateBlock> CREATIVE_CRATE = REGISTRATE.block("creative_crate", CreativeCrateBlock::new)
-			.initialProperties(() -> Blocks.CHEST)
-			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(ctx.getId())))
-			.simpleItem()
-			.register();
-	
 	public static final RegistryEntry<SchematicTableBlock> SCHEMATIC_TABLE = REGISTRATE.block("schematic_table", SchematicTableBlock::new)
 			.initialProperties(() -> Blocks.LECTERN)
 			.blockstate((ctx, prov) -> prov.horizontalBlock(ctx.getEntry(), prov.models().getExistingFile(ctx.getId()), 0))

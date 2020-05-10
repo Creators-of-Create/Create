@@ -87,7 +87,7 @@ public class StockswitchBlock extends HorizontalBlock implements ITE<Stockswitch
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 		if (player != null && AllItems.WRENCH.typeOf(player.getHeldItem(handIn)))
-			return false;
+			return ActionResultType.PASS;
 		DistExecutor.runWhenOn(Dist.CLIENT,
 				() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
 		return ActionResultType.SUCCESS;
