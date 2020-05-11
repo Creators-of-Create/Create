@@ -16,7 +16,7 @@ public class EncasedShaftTileEntityRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(BlockStateProperties.AXIS,
+		return AllBlocksNew.SHAFT.getDefault().with(BlockStateProperties.AXIS,
 				te.getBlockState().get(BlockStateProperties.AXIS));
 	}
 

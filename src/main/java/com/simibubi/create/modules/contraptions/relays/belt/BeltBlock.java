@@ -114,7 +114,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			drops.addAll(AllBlocks.BRASS_CASING.getDefault().getDrops(builder));
 		TileEntity tileEntity = builder.get(LootParameters.BLOCK_ENTITY);
 		if (tileEntity instanceof BeltTileEntity && ((BeltTileEntity) tileEntity).hasPulley())
-			drops.addAll(AllBlocksNew.getDefault(AllBlocksNew.SHAFT).getDrops(builder));
+			drops.addAll(AllBlocksNew.SHAFT.getDefault().getDrops(builder));
 		return drops;
 	}
 
@@ -292,7 +292,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				belt.attachKinetics();
 			}
 			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, AllBlocksNew.asStack(AllBlocksNew.SHAFT));
+				player.inventory.placeItemBackInInventory(world, AllBlocksNew.SHAFT.asStack());
 			return ActionResultType.SUCCESS;
 		}
 
@@ -504,7 +504,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			}
 
 			BlockState shaftState =
-				AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(BlockStateProperties.AXIS, getRotationAxis(currentState));
+					AllBlocksNew.SHAFT.getDefault().with(BlockStateProperties.AXIS, getRotationAxis(currentState));
 			world.setBlockState(currentPos, hasPulley ? shaftState : Blocks.AIR.getDefaultState(), 3);
 			world.playEvent(2001, currentPos, Block.getStateId(currentState));
 		}

@@ -96,7 +96,7 @@ public class CogwheelBlockItem extends BlockItem {
 								continue;
 							if (blockState.get(CogWheelBlock.AXIS) != axis)
 								continue;
-							if (AllBlocksNew.equals(AllBlocksNew.LARGE_COGWHEEL, blockState) == large)
+							if (AllBlocksNew.LARGE_COGWHEEL.typeOf(blockState) == large)
 								continue;
 							AllTriggers.triggerFor(AllTriggers.SHIFTING_GEARS, player);
 						}

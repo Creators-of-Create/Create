@@ -66,7 +66,7 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 	}
 	
 	public static boolean isShaft(BlockState state) {
-		return AllBlocksNew.equals(AllBlocksNew.SHAFT, state);
+		return AllBlocksNew.SHAFT.typeOf(state);
 	}
 
 	// IRotate:

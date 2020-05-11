@@ -91,11 +91,11 @@ public class CogWheelBlock extends ShaftBlock {
 	}
 	
 	public static boolean isSmallCog(BlockState state) {
-		return AllBlocksNew.equals(AllBlocksNew.COGWHEEL, state);
+		return AllBlocksNew.COGWHEEL.typeOf(state);
 	}
 	
 	public static boolean isLargeCog(BlockState state) {
-		return AllBlocksNew.equals(AllBlocksNew.LARGE_COGWHEEL, state);
+		return AllBlocksNew.LARGE_COGWHEEL.typeOf(state);
 	}
 
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
