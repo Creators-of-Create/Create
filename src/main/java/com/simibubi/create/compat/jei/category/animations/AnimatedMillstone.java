@@ -3,53 +3,30 @@ package com.simibubi.create.compat.jei.category.animations;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.gui.ScreenElementRenderer;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
+import com.simibubi.create.ScreenResources;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 
 public class AnimatedMillstone extends AnimatedKinetics {
 
 	@Override
-	public int getWidth() {
-		return 50;
-	}
-
-	@Override
-	public int getHeight() {
-		return 50;
-	}
-
-	@Override
 	public void draw(int xOffset, int yOffset) {
 		RenderSystem.pushMatrix();
-		RenderSystem.enableDepthTest();
 		RenderSystem.translatef(xOffset, yOffset, 0);
-		RenderSystem.rotatef(-15.5f, 1, 0, 0);
-		RenderSystem.rotatef(22.5f, 0, 1, 0);
-		RenderSystem.translatef(-45, -5, 0);
-		RenderSystem.scaled(.45f, .45f, .45f);
+		ScreenResources.JEI_SHADOW.draw(-16, 13);
+		RenderSystem.translatef(-2, 18, 0);
+		int scale = 22;
 
-		RenderSystem.pushMatrix();
-		ScreenElementRenderer.renderModel(this::cogwheel);
-		RenderSystem.popMatrix();
-
-		RenderSystem.pushMatrix();
-		ScreenElementRenderer.renderBlock(this::body);
-		RenderSystem.popMatrix();
+		GuiGameElement.of(AllBlockPartials.MILLSTONE_COG)
+			.rotateBlock(22.5, getCurrentAngle() * 2, 0)
+			.scale(scale)
+			.render();
+		
+		GuiGameElement.of(AllBlocks.MILLSTONE.getDefault())
+			.rotateBlock(22.5, 22.5, 0)
+			.scale(scale)
+			.render();
 
 		RenderSystem.popMatrix();
 	}
 
-	private IBakedModel cogwheel() {
-		float t = 25;
-		RenderSystem.translatef(t, -t, -t);
-		RenderSystem.rotatef(getCurrentAngle() * 2, 0, 1, 0);
-		RenderSystem.translatef(-t, t, t);
-		return AllBlockPartials.MILLSTONE_COG.get();
-	}
-
-	private BlockState body() {
-		return AllBlocks.MILLSTONE.get().getDefaultState();
-	}
 }

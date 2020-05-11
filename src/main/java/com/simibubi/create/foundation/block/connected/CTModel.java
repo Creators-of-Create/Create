@@ -94,7 +94,7 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 			int[] vertexData = newQuad.getVertexData();
 
 			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
-				int uvOffset = 20 / 4; // TODO 1.15 is this the right offset?
+				int uvOffset = 16 / 4;
 				int uIndex = vertex + uvOffset;
 				int vIndex = vertex + uvOffset + 1;
 				float u = Float.intBitsToFloat(vertexData[uIndex]);

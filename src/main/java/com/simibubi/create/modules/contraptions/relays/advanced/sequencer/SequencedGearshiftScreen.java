@@ -7,7 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
-import com.simibubi.create.foundation.gui.ScreenElementRenderer;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
@@ -18,8 +18,8 @@ import net.minecraft.util.math.BlockPos;
 
 public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
-	private static final ItemStack renderedItem = new ItemStack(AllBlocks.SEQUENCED_GEARSHIFT.get());
-	private static final ScreenResources background = ScreenResources.SEQUENCER;
+	private final ItemStack renderedItem = new ItemStack(AllBlocks.SEQUENCED_GEARSHIFT.get());
+	private final ScreenResources background = ScreenResources.SEQUENCER;
 
 	private final String title = Lang.translate("gui.sequenced_gearshift.title");
 	private ListNBT compareTag;
@@ -61,7 +61,8 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 		ScrollInput type =
 			new SelectionScrollInput(x, y + rowHeight * row, 50, 14).forOptions(SequencerInstructions.getOptions())
-					.calling(state -> instructionUpdated(index, state)).setState(instruction.instruction.ordinal())
+					.calling(state -> instructionUpdated(index, state))
+					.setState(instruction.instruction.ordinal())
 					.titled(Lang.translate("gui.sequenced_gearshift.instruction"));
 		ScrollInput value =
 			new ScrollInput(x + 54, y + rowHeight * row, 30, 14).calling(state -> instruction.value = state);
@@ -88,8 +89,11 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		ScrollInput value = rowInputs.get(1);
 		value.active = value.visible = hasValue;
 		if (hasValue)
-			value.withRange(1, def.maxValue + 1).titled(Lang.translate(def.parameterKey)).withShiftStep(def.shiftStep)
-					.setState(instruction.value).onChanged();
+			value.withRange(1, def.maxValue + 1)
+					.titled(Lang.translate(def.parameterKey))
+					.withShiftStep(def.shiftStep)
+					.setState(instruction.value)
+					.onChanged();
 		if (def == SequencerInstructions.WAIT) {
 			value.withStepFunction(context -> {
 				int v = context.currentValue;
@@ -139,7 +143,13 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 		font.drawStringWithShadow(title, guiLeft - 3 + (background.width - font.getStringWidth(title)) / 2, guiTop + 10,
 				hFontColor);
-		ScreenElementRenderer.render3DItem(this::getRenderedBlock);
+
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(guiLeft + background.width + 20, guiTop + 50, 0);
+		GuiGameElement.of(renderedItem)
+				.scale(5)
+				.render();
+		RenderSystem.popMatrix();
 	}
 
 	private void label(int x, int y, String text) {
@@ -156,12 +166,6 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	@Override
 	public void removed() {
 		sendPacket();
-	}
-
-	public ItemStack getRenderedBlock() {
-		RenderSystem.translated(guiLeft + background.width + 20, guiTop + 50, 0);
-		RenderSystem.scaled(5, 5, 5);
-		return renderedItem;
 	}
 
 	private void instructionUpdated(int index, int state) {

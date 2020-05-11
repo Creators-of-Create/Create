@@ -62,8 +62,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 			getRenderedSlot(recipe, i).draw(117 + xOffset, 47 + yOffset);
 		}
 		ScreenResources.JEI_DOWN_ARROW.draw(70, 6);
-		ScreenResources.JEI_SHADOW.draw(58, 55);
-		saw.draw(72, 35);
+		saw.draw(72, 42);
 	}
 
 }

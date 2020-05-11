@@ -66,8 +66,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 			ScreenResources.JEI_SLOT.draw(77 + xOffset, 47 + yOffset);
 		}
 		ScreenResources.JEI_DOWN_ARROW.draw(31, 6);
-		ScreenResources.JEI_SHADOW.draw(19, 55);
-		saw.draw(33, 35);
+		saw.draw(33, 37);
 	}
 
 	public static class CondensedBlockCuttingRecipe extends StonecuttingRecipe {

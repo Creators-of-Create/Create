@@ -6,7 +6,7 @@ import java.util.List;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.ScreenResources;
-import com.simibubi.create.foundation.gui.ScreenElementRenderer;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.modules.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 
@@ -14,9 +14,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;
 
 public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe> {
@@ -40,7 +38,9 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 	public void setRecipe(IRecipeLayout recipeLayout, SplashingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		itemStacks.init(0, true, 20, 47);
-		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
+		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
+				.get(0)
+				.getMatchingStacks()));
 
 		List<ProcessingOutput> results = recipe.getRollableResults();
 		boolean single = results.size() == 1;
@@ -49,7 +49,8 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 			int yOffset = (outputIndex / 2) * -19;
 
 			itemStacks.init(outputIndex + 1, false, single ? 139 : 133 + xOffset, 47 + yOffset);
-			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
+			itemStacks.set(outputIndex + 1, results.get(outputIndex)
+					.getStack());
 		}
 
 		addStochasticTooltip(itemStacks, results);
@@ -57,7 +58,8 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 
 	@Override
 	protected void renderWidgets(SplashingRecipe recipe, double mouseX, double mouseY) {
-		int size = recipe.getPossibleOutputs().size();
+		int size = recipe.getPossibleOutputs()
+				.size();
 
 		ScreenResources.JEI_SLOT.draw(20, 47);
 		ScreenResources.JEI_SHADOW.draw(47, 29);
@@ -78,27 +80,12 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 
 	@Override
 	public void renderAttachedBlock() {
-		BlockState state = Blocks.WATER.getDefaultState().with(FlowingFluidBlock.LEVEL, 8);
 		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 0, 200);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 200, 0);
-		RenderSystem.rotatef(90, 1, 0, 0);
-		ScreenElementRenderer.renderBlock(() -> state);
-		RenderSystem.popMatrix();
-
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 200, 0);
-		RenderSystem.rotatef(90, 1, 0, 0);
-		RenderSystem.rotatef(270, 0, 0, 1);
-		ScreenElementRenderer.renderBlock(() -> state);
-		RenderSystem.popMatrix();
-
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(-103, -100, 0);
-		ScreenElementRenderer.renderBlock(() -> state);
-		RenderSystem.popMatrix();
+		GuiGameElement.of(Fluids.WATER)
+				.scale(24)
+				.atLocal(0, 0, 2)
+				.render();
 
 		RenderSystem.popMatrix();
 	}

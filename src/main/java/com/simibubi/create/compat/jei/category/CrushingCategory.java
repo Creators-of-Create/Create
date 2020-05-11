@@ -63,7 +63,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++)
 			getRenderedSlot(recipe, outputIndex).draw(getBackground().getWidth() / 2 + offset + 19 * outputIndex, 78);
 
-		crushingWheels.draw(92, 49);
+		crushingWheels.draw(62, 59);
 	}
 
 }

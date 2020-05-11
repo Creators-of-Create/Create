@@ -9,13 +9,13 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
-import com.simibubi.create.foundation.gui.ScreenElementRenderer;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.logistics.packet.ConfigureStockswitchPacket;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
 
 public class StockswitchScreen extends AbstractSimiScreen {
 
@@ -31,6 +31,7 @@ public class StockswitchScreen extends AbstractSimiScreen {
 	private final String stopAt = Lang.translate("gui.stockswitch.stopAt");
 	private final String lowerLimit = Lang.translate("gui.stockswitch.lowerLimit");
 	private final String upperLimit = Lang.translate("gui.stockswitch.upperLimit");
+	private final ItemStack renderedItem = new ItemStack(AllBlocks.STOCKSWITCH.get());
 
 	private int lastModification;
 	private StockswitchTileEntity te;
@@ -48,8 +49,10 @@ public class StockswitchScreen extends AbstractSimiScreen {
 		widgets.clear();
 		cursorPos = te.currentLevel == -1 ? 0 : te.currentLevel;
 
-		offBelowLabel = new Label(guiLeft + 116, guiTop + 72, "").colored(0xD3CBBE).withShadow();
-		offBelow = new ScrollInput(guiLeft + 113, guiTop + 69, 33, 14).withRange(0, 96).titled(lowerLimit)
+		offBelowLabel = new Label(guiLeft + 116, guiTop + 72, "").colored(0xD3CBBE)
+				.withShadow();
+		offBelow = new ScrollInput(guiLeft + 113, guiTop + 69, 33, 14).withRange(0, 96)
+				.titled(lowerLimit)
 				.calling(state -> {
 					offBelowLabel.text = state + "%";
 					lastModification = 0;
@@ -57,10 +60,13 @@ public class StockswitchScreen extends AbstractSimiScreen {
 						onAbove.setState(state + 5);
 						onAbove.onChanged();
 					}
-				}).setState((int) (te.offWhenBelow * 100));
+				})
+				.setState((int) (te.offWhenBelow * 100));
 
-		onAboveLabel = new Label(guiLeft + 116, guiTop + 55, "").colored(0xD3CBBE).withShadow();
-		onAbove = new ScrollInput(guiLeft + 113, guiTop + 52, 33, 14).withRange(5, 101).titled(upperLimit)
+		onAboveLabel = new Label(guiLeft + 116, guiTop + 55, "").colored(0xD3CBBE)
+				.withShadow();
+		onAbove = new ScrollInput(guiLeft + 113, guiTop + 52, 33, 14).withRange(5, 101)
+				.titled(upperLimit)
 				.calling(state -> {
 					onAboveLabel.text = state + "%";
 					lastModification = 0;
@@ -68,7 +74,8 @@ public class StockswitchScreen extends AbstractSimiScreen {
 						offBelow.setState(state - 5);
 						offBelow.onChanged();
 					}
-				}).setState((int) (te.onWhenAbove * 100));
+				})
+				.setState((int) (te.onWhenAbove * 100));
 
 		onAbove.onChanged();
 		offBelow.onChanged();
@@ -101,14 +108,19 @@ public class StockswitchScreen extends AbstractSimiScreen {
 		ScreenResources.STOCKSWITCH_BOUND_LEFT.draw(this, (int) (guiLeft + lowerBound) - 1, guiTop + 24);
 		ScreenResources.STOCKSWITCH_BOUND_RIGHT.draw(this, (int) (guiLeft + upperBound) - 5, guiTop + 24);
 
-		ScreenResources cursor = te.powered ? ScreenResources.STOCKSWITCH_CURSOR_ON
-				: ScreenResources.STOCKSWITCH_CURSOR_OFF;
+		ScreenResources cursor =
+			te.powered ? ScreenResources.STOCKSWITCH_CURSOR_ON : ScreenResources.STOCKSWITCH_CURSOR_OFF;
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef((cursorPos * (sprite.width - 20) + 10), 0, 0);
 		cursor.draw(this, guiLeft - 4, guiTop + 24);
 		RenderSystem.popMatrix();
 
-		ScreenElementRenderer.renderBlock(this::getRenderedBlock);
+		RenderSystem.pushMatrix();
+		GuiGameElement.of(renderedItem)
+				.at(guiLeft + STOCKSWITCH.width + 15, guiTop + 20)
+				.scale(5)
+				.render();
+		RenderSystem.popMatrix();
 	}
 
 	@Override
@@ -134,12 +146,6 @@ public class StockswitchScreen extends AbstractSimiScreen {
 	public void removed() {
 		AllPackets.channel.sendToServer(
 				new ConfigureStockswitchPacket(te.getPos(), offBelow.getState() / 100f, onAbove.getState() / 100f));
-	}
-
-	public BlockState getRenderedBlock() {
-		RenderSystem.translated(guiLeft + STOCKSWITCH.width + 50, guiTop + 100, 0);
-		RenderSystem.rotatef(50, -.5f, 1, -.2f);
-		return AllBlocks.STOCKSWITCH.get().getDefaultState();
 	}
 
 }

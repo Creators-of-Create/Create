@@ -103,7 +103,7 @@ public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 		ScreenResources.JEI_SLOT.draw(141, 50);
 		ScreenResources.JEI_DOWN_ARROW.draw(136, 32);
 		ScreenResources.JEI_SHADOW.draw(81, 57);
-		mixer.draw(getBackground().getWidth() / 2 + 20, 8);
+		mixer.draw(getBackground().getWidth() / 2 + 3, 25);
 	}
 
 }

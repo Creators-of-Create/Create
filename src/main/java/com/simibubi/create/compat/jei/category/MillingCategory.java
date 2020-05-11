@@ -58,11 +58,9 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 		int size = recipe.getPossibleOutputs().size();
 
 		ScreenResources.JEI_SLOT.draw(14, 8);
-		ScreenResources.JEI_SHADOW.draw(30, 40);
 		ScreenResources.JEI_ARROW.draw(85, 32);
 		ScreenResources.JEI_DOWN_ARROW.draw(43, 4);
-
-		millstone.draw(57, 27);
+		millstone.draw(48, 27);
 
 		if (size == 1) {
 			getRenderedSlot(recipe, 0).draw(139, 27);

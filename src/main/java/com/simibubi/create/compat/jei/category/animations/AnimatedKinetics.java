@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category.animations;
 
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -17,6 +18,20 @@ public abstract class AnimatedKinetics implements IDrawable {
 	
 	protected BlockState shaft(Axis axis) {
 		return AllBlocksNew.getDefault(AllBlocksNew.SHAFT).with(BlockStateProperties.AXIS, axis);
+	}
+	
+	protected AllBlockPartials cogwheel() {
+		return AllBlockPartials.SHAFTLESS_COGWHEEL;
+	}
+	
+	@Override
+	public int getWidth() {
+		return 50;
+	}
+
+	@Override
+	public int getHeight() {
+		return 50;
 	}
 
 }

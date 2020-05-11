@@ -1,57 +1,34 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.gui.ScreenElementRenderer;
-import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterBlock;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.util.Direction;
+import com.simibubi.create.ScreenResources;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 
 public class AnimatedCrafter extends AnimatedKinetics {
 
 	@Override
-	public int getWidth() {
-		return 50;
-	}
-
-	@Override
-	public int getHeight() {
-		return 50;
-	}
-
-	@Override
 	public void draw(int xOffset, int yOffset) {
 		RenderSystem.pushMatrix();
-		RenderSystem.enableDepthTest();
-		RenderSystem.rotatef(-15.5f, 1, 0, 0);
-		RenderSystem.rotatef(-22.5f, 0, 1, 0);
 		RenderSystem.translatef(xOffset, yOffset, 0);
-		RenderSystem.translatef(-45, -5, 0);
-		RenderSystem.scaled(.45f, .45f, .45f);
+		ScreenResources.JEI_SHADOW.draw(-16, 13);
+		
+		RenderSystem.translatef(3, 16, 0);
+		RenderSystem.rotatef(-12.5f, 1, 0, 0);
+		RenderSystem.rotatef(-22.5f, 0, 1, 0);
+		int scale = 22;
 
-		ScreenElementRenderer.renderModel(() -> cogwheel(true));
-		ScreenElementRenderer.renderBlock(this::body);
+		GuiGameElement.of(cogwheel())
+				.rotateBlock(90, 0, getCurrentAngle())
+				.scale(scale)
+				.render();
+
+		GuiGameElement.of(AllBlocks.MECHANICAL_CRAFTER.getDefault())
+				.rotateBlock(0, 180, 0)
+				.scale(scale)
+				.render();
 
 		RenderSystem.popMatrix();
-	}
-
-	private IBakedModel cogwheel(boolean forward) {
-		float t = 25;
-		RenderSystem.translatef(t, -t, -t);
-		RenderSystem.rotatef(getCurrentAngle() * 2 * (forward ? 1 : -1), 0, 0, 1);
-		RenderSystem.rotatef(90, 1, 0, 0);
-		RenderSystem.translatef(-t, t, t);
-		return AllBlockPartials.SHAFTLESS_COGWHEEL.get();
-	}
-
-	private BlockState body() {
-		return AllBlocks.MECHANICAL_CRAFTER
-				.get()
-				.getDefaultState()
-				.with(MechanicalCrafterBlock.HORIZONTAL_FACING, Direction.WEST);
 	}
 
 }

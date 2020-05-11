@@ -1,7 +1,7 @@
 package com.simibubi.create.compat.jei.category;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.gui.ScreenElementRenderer;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
@@ -20,6 +20,11 @@ public class SmokingViaFanCategory extends ProcessingViaFanCategory<SmokingRecip
 
 	@Override
 	public void renderAttachedBlock() {
-		ScreenElementRenderer.renderBlock(() -> Blocks.FIRE.getDefaultState());
+
+		GuiGameElement.of(Blocks.FIRE.getDefaultState())
+				.scale(24)
+				.atLocal(0, 0, 2)
+				.render();
+
 	}
 }

@@ -168,11 +168,10 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 
 		ScreenResources.JEI_SLOT.draw(133, 80);
 		ScreenResources.JEI_DOWN_ARROW.draw(128, 59);
-		ScreenResources.JEI_SHADOW.draw(116, 36);
-		crafter.draw(219, 8);
+		crafter.draw(129, 25);
 
 		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 0, 200);
+		RenderSystem.translated(0, 0, 300);
 		
 		RenderHelper.disableStandardItemLighting();
 		int amount = 0;

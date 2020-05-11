@@ -27,26 +27,30 @@ import net.minecraft.util.math.MathHelper;
 
 @SuppressWarnings("deprecation")
 public class BlockzapperItemRenderer extends ZapperItemRenderer {
-	
+
 	@Override
 	public void render(ItemStack stack, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		BlockzapperModel mainModel = (BlockzapperModel) itemRenderer.getItemModelWithOverrides(stack, Minecraft.getInstance().world, null);
-		float pt = Minecraft.getInstance().getRenderPartialTicks();
+		ItemRenderer itemRenderer = Minecraft.getInstance()
+				.getItemRenderer();
+		BlockzapperModel mainModel =
+			(BlockzapperModel) itemRenderer.getItemModelWithOverrides(stack, Minecraft.getInstance().world, null);
+		float pt = Minecraft.getInstance()
+				.getRenderPartialTicks();
 		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 
 		ms.push();
 		ms.translate(0.5F, 0.5F, 0.5F);
 
-		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay, mainModel.getBakedModel());
+		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay,
+				mainModel.getBakedModel());
 		renderComponent(stack, mainModel, Body, itemRenderer, ms, buffer, light, overlay);
 		renderComponent(stack, mainModel, Amplifier, itemRenderer, ms, buffer, light, overlay);
 		renderComponent(stack, mainModel, Retriever, itemRenderer, ms, buffer, light, overlay);
 		renderComponent(stack, mainModel, Scope, itemRenderer, ms, buffer, light, overlay);
 
 		// Block indicator
-		if (mainModel.getCurrentPerspective() == TransformType.GUI && stack.hasTag()
-				&& stack.getTag().contains("BlockUsed"))
+		if (mainModel.getCurrentPerspective() == TransformType.GUI && stack.hasTag() && stack.getTag()
+				.contains("BlockUsed"))
 			renderBlockUsed(stack, itemRenderer, ms, buffer, light, overlay);
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
@@ -55,8 +59,8 @@ public class BlockzapperItemRenderer extends ZapperItemRenderer {
 		boolean offHand = player.getHeldItemOffhand() == stack;
 		float last = mainHand ^ leftHanded ? ZapperRenderHandler.lastRightHandAnimation
 				: ZapperRenderHandler.lastLeftHandAnimation;
-		float current = mainHand ^ leftHanded ? ZapperRenderHandler.rightHandAnimation
-				: ZapperRenderHandler.leftHandAnimation;
+		float current =
+			mainHand ^ leftHanded ? ZapperRenderHandler.rightHandAnimation : ZapperRenderHandler.leftHandAnimation;
 		float animation = MathHelper.clamp(MathHelper.lerp(pt, last, current) * 5, 0, 1);
 
 		// Core glows
@@ -64,10 +68,12 @@ public class BlockzapperItemRenderer extends ZapperItemRenderer {
 		if (mainHand || offHand) {
 			multiplier = animation;
 		}
-		int glowLight = LightTexture.pack((int) (15 * multiplier), 15);
-		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, glowLight, overlay, mainModel.getPartial("core"));
+		int glowLight = LightTexture.pack(0, (int) (15 * multiplier));
+		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, glowLight, overlay,
+				mainModel.getPartial("core"));
 		if (BlockzapperItem.getTier(Amplifier, stack) != ComponentTier.None)
-			itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, glowLight, overlay, mainModel.getPartial("amplifier_core"));
+			itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, glowLight, overlay,
+					mainModel.getPartial("amplifier_core"));
 
 		// Accelerator spins
 		float angle = worldTime * -25;

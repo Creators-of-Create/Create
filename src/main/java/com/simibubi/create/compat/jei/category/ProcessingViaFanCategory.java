@@ -7,18 +7,14 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.foundation.gui.ScreenElementRenderer;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
 
 public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends CreateRecipeCategory<T> {
 
@@ -53,45 +49,27 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 	@Override
 	public void draw(T recipe, double mouseX, double mouseY) {
 		renderWidgets(recipe, mouseX, mouseY);
-
 		RenderSystem.pushMatrix();
-		RenderSystem.color3f(1, 1, 1);
-		RenderSystem.enableDepthTest();
+		
+		RenderSystem.translatef(56, 33, 0);
+		RenderSystem.rotatef(-12.5f, 1, 0, 0);
+		RenderSystem.rotatef(22.5f, 0, 1, 0);
+		int scale = 24;
 
-		RenderSystem.translated(28, 18, 0);
-		RenderSystem.rotatef(10.5f, -1f, 0, 0);
-		RenderSystem.rotatef(15.5f, 0, 1, 0);
-		RenderSystem.scaled(.6f, .6f, .6f);
-		ScreenElementRenderer.renderBlock(this::renderFanCasing);
-		
-		RenderSystem.pushMatrix();
-		float angle = AnimatedKinetics.getCurrentAngle() * 12;
-		float t = 25;
-		RenderSystem.translatef(t, -t, t);
-		RenderSystem.rotatef(angle, 0, 0, 1);
-		RenderSystem.translatef(-t, t, -t);
-		
-		RenderSystem.translatef(t, 0, 175);
-		RenderSystem.rotatef(90, 0, 1, 0);
-		RenderSystem.translatef(-t, 0, -175);
-		
-		ScreenElementRenderer.renderModel(this::renderFanInner);
-		RenderSystem.popMatrix();
+		GuiGameElement.of(AllBlockPartials.ENCASED_FAN_INNER)
+				.rotateBlock(180, 0, AnimatedKinetics.getCurrentAngle() * 16)
+				.scale(scale)
+				.render();
 
-		RenderSystem.translated(-10, 0, 95);
-		RenderSystem.rotatef(7, 0, 1, 0);
+		GuiGameElement.of(AllBlocks.ENCASED_FAN.getDefault())
+				.rotateBlock(0, 180, 0)
+				.atLocal(0, 0, 0)
+				.scale(scale)
+				.render();
+		
 		renderAttachedBlock();
-
 		RenderSystem.popMatrix();
 
-	}
-
-	protected BlockState renderFanCasing() {
-		return AllBlocks.ENCASED_FAN.get().getDefaultState().with(BlockStateProperties.FACING, Direction.WEST);
-	}
-
-	protected IBakedModel renderFanInner() {
-		return AllBlockPartials.ENCASED_FAN_INNER.get();
 	}
 
 	public abstract void renderAttachedBlock();

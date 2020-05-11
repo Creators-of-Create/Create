@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.ScreenResourceWrapper;
-import com.simibubi.create.foundation.gui.ScreenElementRenderer;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperUpgradeRecipe;
 
@@ -80,18 +80,17 @@ public class BlockzapperUpgradeCategory extends CreateRecipeCategory<Blockzapper
 	public void draw(BlockzapperUpgradeRecipe recipe, double mouseX, double mouseY) {
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
 		String componentName =
-			Lang.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent().name()));
+				Lang.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent().name()));
 		String text = "+ " + recipe.getTier().color + componentName;
 		font.drawStringWithShadow(text, (BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(text)) / 2, 57,
 				0x8B8B8B);
-
+		
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(126, 0, 0);
 		RenderSystem.scaled(3.5, 3.5, 3.5);
 		RenderSystem.translated(-10, 0, 0);
 		RenderSystem.color3f(1, 1, 1);
-		RenderSystem.enableDepthTest();
-		ScreenElementRenderer.render3DItem(() -> recipe.getRecipeOutput());
+		GuiGameElement.of(recipe.getRecipeOutput()).render();
 		RenderSystem.popMatrix();
 	}
 }

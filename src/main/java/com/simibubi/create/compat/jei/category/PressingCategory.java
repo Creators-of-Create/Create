@@ -58,7 +58,7 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 			getRenderedSlot(recipe, 1).draw(131 + 19, 50);
 		ScreenResources.JEI_SHADOW.draw(61, 41);
 		ScreenResources.JEI_LONG_ARROW.draw(52, 54);
-		press.draw(getBackground().getWidth() / 2, 8);
+		press.draw(getBackground().getWidth() / 2 - 17, 22);
 	}
 
 }

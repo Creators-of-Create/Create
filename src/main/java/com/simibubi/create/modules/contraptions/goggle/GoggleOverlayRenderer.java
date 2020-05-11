@@ -3,9 +3,9 @@ package com.simibubi.create.modules.contraptions.goggle;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.gui.ScreenElementRenderer;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -24,6 +25,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class GoggleOverlayRenderer {
+
 
 	@SubscribeEvent
 	public static void lookingAtBlocksThroughGogglesShowsTooltip(RenderGameOverlayEvent.Post event) {
@@ -71,29 +73,30 @@ public class GoggleOverlayRenderer {
 		if (tooltip.isEmpty())
 			return;
 
-		GlStateManager.pushMatrix();
-		Screen tooltipScreen = new Screen(null) {
-
-			@Override
-			public void init(Minecraft mc, int width, int height) {
-				this.minecraft = mc;
-				this.itemRenderer = mc.getItemRenderer();
-				this.font = mc.fontRenderer;
-				this.width = width;
-				this.height = height;
-			}
-
-		};
-
+		RenderSystem.pushMatrix();
+		Screen tooltipScreen = new TooltipScreen(null);
 		tooltipScreen.init(mc, mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
 		tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
+		
 		ItemStack item = AllItems.GOGGLES.asStack();
-		ScreenElementRenderer.render3DItem(() -> {
-			GlStateManager.translated(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16, 0);
-			return item;
-		});
-		GlStateManager.popMatrix();
+		GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16).render();
+		RenderSystem.popMatrix();
+	}
+	
 
+	private static final class TooltipScreen extends Screen {
+		private TooltipScreen(ITextComponent p_i51108_1_) {
+			super(p_i51108_1_);
+		}
+
+		@Override
+		public void init(Minecraft mc, int width, int height) {
+			this.minecraft = mc;
+			this.itemRenderer = mc.getItemRenderer();
+			this.font = mc.fontRenderer;
+			this.width = width;
+			this.height = height;
+		}
 	}
 
 }
