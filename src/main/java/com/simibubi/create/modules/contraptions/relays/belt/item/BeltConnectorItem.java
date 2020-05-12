@@ -4,9 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.item.IAddedByOther;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
@@ -15,6 +15,8 @@ import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -24,10 +26,11 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BeltConnectorItem extends BlockItem implements IAddedByOther {
+public class BeltConnectorItem extends BlockItem {
 
 	public BeltConnectorItem(Properties properties) {
 		super(AllBlocks.BELT.get(), properties);
@@ -39,9 +42,18 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 	}
 
 	@Override
+	public void fillItemGroup(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+		if (p_150895_1_ == Create.baseCreativeTab)
+			return;
+		super.fillItemGroup(p_150895_1_, p_150895_2_);
+	}
+
+	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
-		if (context.getPlayer().isSneaking()) {
-			context.getItem().setTag(null);
+		if (context.getPlayer()
+				.isSneaking()) {
+			context.getItem()
+					.setTag(null);
 			return ActionResultType.SUCCESS;
 		}
 
@@ -52,7 +64,8 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 		if (world.isRemote)
 			return validAxis ? ActionResultType.SUCCESS : ActionResultType.FAIL;
 
-		CompoundNBT tag = context.getItem().getOrCreateTag();
+		CompoundNBT tag = context.getItem()
+				.getOrCreateTag();
 		BlockPos firstPulley = null;
 
 		// Remove first if no longer existant or valid
@@ -60,7 +73,8 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 			firstPulley = NBTUtil.readBlockPos(tag.getCompound("FirstPulley"));
 			if (!validateAxis(world, firstPulley)) {
 				tag.remove("FirstPulley");
-				context.getItem().setTag(tag);
+				context.getItem()
+						.setTag(tag);
 			}
 		}
 
@@ -75,20 +89,29 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 			if (firstPulley != null && !firstPulley.equals(pos) && !world.isRemote) {
 				createBelts(world, firstPulley, pos);
 				AllTriggers.triggerFor(AllTriggers.CONNECT_BELT, context.getPlayer());
-				if (!context.getPlayer().isCreative())
-					context.getItem().shrink(1);
+				if (!context.getPlayer()
+						.isCreative())
+					context.getItem()
+							.shrink(1);
 			}
 
-			if (!context.getItem().isEmpty()) {
-				context.getItem().setTag(null);
-				context.getPlayer().getCooldownTracker().setCooldown(this, 5);
+			if (!context.getItem()
+					.isEmpty()) {
+				context.getItem()
+						.setTag(null);
+				context.getPlayer()
+						.getCooldownTracker()
+						.setCooldown(this, 5);
 			}
 			return ActionResultType.SUCCESS;
 		}
 
 		tag.put("FirstPulley", NBTUtil.writeBlockPos(pos));
-		context.getItem().setTag(tag);
-		context.getPlayer().getCooldownTracker().setCooldown(this, 5);
+		context.getItem()
+				.setTag(tag);
+		context.getPlayer()
+				.getCooldownTracker()
+				.setCooldown(this, 5);
 		return ActionResultType.SUCCESS;
 	}
 
@@ -99,25 +122,21 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 
 		BlockPos diff = end.subtract(start);
 		if (diff.getX() == diff.getZ())
-			facing = Direction
-					.getFacingFromAxis(facing.getAxisDirection(),
-							world.getBlockState(start).get(BlockStateProperties.AXIS) == Axis.X ? Axis.Z : Axis.X);
+			facing = Direction.getFacingFromAxis(facing.getAxisDirection(), world.getBlockState(start)
+					.get(BlockStateProperties.AXIS) == Axis.X ? Axis.Z : Axis.X);
 
 		List<BlockPos> beltsToCreate = getBeltChainBetween(start, end, slope, facing);
-		BlockState beltBlock = AllBlocks.BELT.get().getDefaultState();
+		BlockState beltBlock = AllBlocks.BELT.get()
+				.getDefaultState();
 
 		for (BlockPos pos : beltsToCreate) {
 			BeltBlock.Part part = pos.equals(start) ? Part.START : pos.equals(end) ? Part.END : Part.MIDDLE;
 			boolean pulley = ShaftBlock.isShaft(world.getBlockState(pos));
 			if (part == Part.MIDDLE && pulley)
 				part = Part.PULLEY;
-			world
-					.setBlockState(pos,
-							beltBlock
-									.with(BeltBlock.SLOPE, slope)
-									.with(BeltBlock.PART, part)
-									.with(BeltBlock.HORIZONTAL_FACING, facing),
-							3);
+			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope)
+					.with(BeltBlock.PART, part)
+					.with(BeltBlock.HORIZONTAL_FACING, facing), 3);
 		}
 	}
 
@@ -178,7 +197,8 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 			return false;
 
 		BlockPos diff = second.subtract(first);
-		Axis axis = world.getBlockState(first).get(BlockStateProperties.AXIS);
+		Axis axis = world.getBlockState(first)
+				.get(BlockStateProperties.AXIS);
 
 		int x = diff.getX();
 		int y = diff.getY();
@@ -190,7 +210,8 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 			return false;
 		if (sames != 1)
 			return false;
-		if (axis != world.getBlockState(second).get(BlockStateProperties.AXIS))
+		if (axis != world.getBlockState(second)
+				.get(BlockStateProperties.AXIS))
 			return false;
 
 		TileEntity tileEntity = world.getTileEntity(first);
@@ -213,7 +234,8 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 			BlockState blockState = world.getBlockState(currentPos);
 			if (ShaftBlock.isShaft(blockState) && blockState.get(ShaftBlock.AXIS) == axis)
 				continue;
-			if (!blockState.getMaterial().isReplaceable())
+			if (!blockState.getMaterial()
+					.isReplaceable())
 				return false;
 		}
 
@@ -226,7 +248,8 @@ public class BeltConnectorItem extends BlockItem implements IAddedByOther {
 			return false;
 		if (!ShaftBlock.isShaft(world.getBlockState(pos)))
 			return false;
-		if (world.getBlockState(pos).get(BlockStateProperties.AXIS) == Axis.Y)
+		if (world.getBlockState(pos)
+				.get(BlockStateProperties.AXIS) == Axis.Y)
 			return false;
 		return true;
 	}

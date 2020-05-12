@@ -4,11 +4,5 @@
     "item": "create:dark_scoria"
   },
   "result": "create:polished_dark_scoria",
-  "count": 1,
-	"conditions": [
-		{
-			"type": "create:module",
-			"module": "palettes"
-		}
-	]
+  "count": 1
 }

@@ -9,7 +9,6 @@ import com.simibubi.create.modules.contraptions.relays.gearbox.GearshiftTileEnti
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
@@ -27,8 +26,8 @@ public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTi
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-	public GearshiftBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public GearshiftBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(POWERED, false));
 	}
 

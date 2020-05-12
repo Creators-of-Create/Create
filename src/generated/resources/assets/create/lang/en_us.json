@@ -1,6 +1,6 @@
 {
+  "block.create.clutch": "Clutch",
   "block.create.cogwheel": "Cogwheel",
-  "block.create.creative_crate": "Creative Crate",
   "block.create.dark_scoria_bricks_slab": "Dark Scoria Bricks Slab",
   "block.create.dark_scoria_bricks_stairs": "Dark Scoria Bricks Stairs",
   "block.create.dark_scoria_bricks_wall": "Dark Scoria Bricks Wall",
@@ -15,6 +15,8 @@
   "block.create.gabbro_slab": "Gabbro Slab",
   "block.create.gabbro_stairs": "Gabbro Stairs",
   "block.create.gabbro_wall": "Gabbro Wall",
+  "block.create.gearbox": "Gearbox",
+  "block.create.gearshift": "Gearshift",
   "block.create.indented_gabbro_slab": "Indented Gabbro Slab",
   "block.create.large_cogwheel": "Large Cogwheel",
   "block.create.limestone_bricks_slab": "Limestone Bricks Slab",

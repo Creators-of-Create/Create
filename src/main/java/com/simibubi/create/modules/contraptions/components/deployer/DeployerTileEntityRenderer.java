@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions.components.deployer;
 
 import static com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock.FACING;
-import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,8 +9,6 @@ import java.util.List;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -19,7 +16,6 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
@@ -27,7 +23,6 @@ import com.simibubi.create.modules.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.modules.contraptions.components.deployer.DeployerTileEntity.State;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -136,10 +131,7 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 	}
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		BlockState state = te.getBlockState();
-		if (!AllBlocks.DEPLOYER.typeOf(state))
-			return Blocks.AIR.getDefaultState();
-		return AllBlocksNew.SHAFT.getDefaultState().with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
+		return KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te));
 	}
 
 	private static SuperByteBuffer renderAndTransform(World world, AllBlockPartials renderBlock,

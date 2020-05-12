@@ -28,7 +28,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	public static CreateRegistrate create(String modid) {
 		return new CreateRegistrate(modid).registerEventListeners(FMLJavaModLoadingContext.get()
 				.getModEventBus())
-				.itemGroup(() -> Create.creativeTab);
+				.itemGroup(() -> Create.baseCreativeTab);
 	}
 
 	public static NonNullLazyValue<CreateRegistrate> lazy(String modid) {

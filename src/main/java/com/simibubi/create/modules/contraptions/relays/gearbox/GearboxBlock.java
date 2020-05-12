@@ -7,7 +7,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -25,8 +24,8 @@ import net.minecraft.world.storage.loot.LootContext.Builder;
 
 public class GearboxBlock extends RotatedPillarKineticBlock {
 
-	public GearboxBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public GearboxBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
 		super.fillItemGroup(group, items);
-		items.add(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));
+		items.add(AllItems.VERTICAL_GEARBOX.asStack());
 	}
 
 	@SuppressWarnings("deprecation")

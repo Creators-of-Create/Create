@@ -51,11 +51,8 @@ import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerB
 import com.simibubi.create.modules.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.AdjustablePulleyBlock;
-import com.simibubi.create.modules.contraptions.relays.encased.ClutchBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
-import com.simibubi.create.modules.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.gauge.GaugeBlock;
-import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.modules.curiosities.CocoaLogBlock;
 import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.CrossPlaneSymmetryBlock;
@@ -124,9 +121,9 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 //	COGWHEEL(() -> new CogWheelBlock(false), (b, p) -> new CogwheelBlockItem(b, p, false)),
 //	LARGE_COGWHEEL(() -> new CogWheelBlock(true), (b, p) -> new CogwheelBlockItem(b, p, true)),
 //	ENCASED_SHAFT(EncasedShaftBlock::new),
-	GEARBOX(GearboxBlock::new),
-	CLUTCH(ClutchBlock::new),
-	GEARSHIFT(GearshiftBlock::new),
+//	GEARBOX(GearboxBlock::new),
+//	CLUTCH(ClutchBlock::new),
+//	GEARSHIFT(GearshiftBlock::new),
 
 	ENCASED_BELT(EncasedBeltBlock::new),
 	ADJUSTABLE_PULLEY(AdjustablePulleyBlock::new),

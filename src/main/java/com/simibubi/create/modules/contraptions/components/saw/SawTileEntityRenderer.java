@@ -1,16 +1,13 @@
 package com.simibubi.create.modules.contraptions.components.saw;
 
-import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 
@@ -90,8 +87,7 @@ public class SawTileEntityRenderer extends SafeTileEntityRenderer<SawTileEntity>
 	}
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		BlockState state = te.getBlockState();
-		return AllBlocksNew.SHAFT.getDefaultState().with(AXIS, ((IRotate) state.getBlock()).getRotationAxis(state));
+		return KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te));
 	}
 
 }

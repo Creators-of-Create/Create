@@ -111,14 +111,14 @@ public enum AllTileEntities {
 	// Kinetics
 	SHAFT(ShaftTileEntity::new, AllBlocksNew.SHAFT, AllBlocksNew.COGWHEEL, AllBlocksNew.LARGE_COGWHEEL, AllBlocksNew.ENCASED_SHAFT),
 	MOTOR(MotorTileEntity::new, AllBlocks.CREATIVE_MOTOR),
-	GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
+	GEARBOX(GearboxTileEntity::new, AllBlocksNew.GEARBOX),
 	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
 	ENCASED_SHAFT(EncasedShaftTileEntity::new, AllBlocksNew.ENCASED_SHAFT, AllBlocks.ENCASED_BELT),
 	ADJUSTABLE_PULLEY(AdjustablePulleyTileEntity::new, AllBlocks.ADJUSTABLE_PULLEY),
 	ENCASED_FAN(EncasedFanTileEntity::new, AllBlocks.ENCASED_FAN),
 	NOZZLE(NozzleTileEntity::new, AllBlocks.NOZZLE),
-	CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH),
-	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT),
+	CLUTCH(ClutchTileEntity::new, AllBlocksNew.CLUTCH),
+	GEARSHIFT(GearshiftTileEntity::new, AllBlocksNew.GEARSHIFT),
 	HAND_CRANK(HandCrankTileEntity::new, AllBlocks.HAND_CRANK),
 	CUCKOO_CLOCK(CuckooClockTileEntity::new, AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK),
 

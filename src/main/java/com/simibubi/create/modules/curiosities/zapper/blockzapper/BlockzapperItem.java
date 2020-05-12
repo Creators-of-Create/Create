@@ -77,7 +77,7 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if (group == Create.creativeTab) {
+		if (group == Create.baseCreativeTab) {
 			ItemStack gunWithoutStuff = new ItemStack(this);
 			items.add(gunWithoutStuff);
 

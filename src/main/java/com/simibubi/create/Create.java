@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.world.AllWorldFeatures;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
+import com.simibubi.create.modules.palettes.PalettesItemGroup;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 import com.tterrag.registrate.util.NonNullLazyValue;
 
@@ -36,11 +37,14 @@ public class Create {
 	public static final String VERSION = "0.1.1b";
 
 	public static Logger logger = LogManager.getLogger();
-	public static ItemGroup creativeTab = new CreateItemGroup();
+	public static ItemGroup baseCreativeTab = new CreateItemGroup();
+	public static ItemGroup palettesCreativeTab = new PalettesItemGroup();
+	
 	public static ServerSchematicLoader schematicReceiver;
 	public static RedstoneLinkNetworkHandler redstoneLinkNetworkHandler;
 	public static TorquePropagator torquePropagator;
 	public static ServerLagger lagger;
+	
 	private static final NonNullLazyValue<CreateRegistrate> registrate = CreateRegistrate.lazy(ID);
 
 	public Create() {

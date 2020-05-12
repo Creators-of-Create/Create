@@ -1221,5 +1221,6 @@
 	"tool.create.rose_quartz.tooltip": "ROSE QUARTZ TOOLS",
 	"tool.create.rose_quartz.tooltip.summary": "This tool grants you a _greater_ _reach_ for _breaking_ _blocks_ or _placing_ _blocks_ from the off-hand.",
 	
-	"itemGroup.create": "Create"
+	"itemGroup.create.base": "Create",
+	"itemGroup.create.palettes": "Create Palettes"
 }

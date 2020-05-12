@@ -1,6 +1,6 @@
 {
+  "block.create.clutch": "\u0265\u0254\u0287n\u05DF\u0186",
   "block.create.cogwheel": "\u05DF\u01DD\u01DD\u0265\u028Dbo\u0186",
-  "block.create.creative_crate": "\u01DD\u0287\u0250\u0279\u0186 \u01DD\u028C\u0131\u0287\u0250\u01DD\u0279\u0186",
   "block.create.dark_scoria_bricks_slab": "q\u0250\u05DFS s\u029E\u0254\u0131\u0279\u15FA \u0250\u0131\u0279o\u0254S \u029E\u0279\u0250\u15E1",
   "block.create.dark_scoria_bricks_stairs": "s\u0279\u0131\u0250\u0287S s\u029E\u0254\u0131\u0279\u15FA \u0250\u0131\u0279o\u0254S \u029E\u0279\u0250\u15E1",
   "block.create.dark_scoria_bricks_wall": "\u05DF\u05DF\u0250M s\u029E\u0254\u0131\u0279\u15FA \u0250\u0131\u0279o\u0254S \u029E\u0279\u0250\u15E1",
@@ -15,6 +15,8 @@
   "block.create.gabbro_slab": "q\u0250\u05DFS o\u0279qq\u0250\u2141",
   "block.create.gabbro_stairs": "s\u0279\u0131\u0250\u0287S o\u0279qq\u0250\u2141",
   "block.create.gabbro_wall": "\u05DF\u05DF\u0250M o\u0279qq\u0250\u2141",
+  "block.create.gearbox": "xoq\u0279\u0250\u01DD\u2141",
+  "block.create.gearshift": "\u0287\u025F\u0131\u0265s\u0279\u0250\u01DD\u2141",
   "block.create.indented_gabbro_slab": "q\u0250\u05DFS o\u0279qq\u0250\u2141 p\u01DD\u0287u\u01DDpuI",
   "block.create.large_cogwheel": "\u05DF\u01DD\u01DD\u0265\u028Dbo\u0186 \u01DDb\u0279\u0250\uA780",
   "block.create.limestone_bricks_slab": "q\u0250\u05DFS s\u029E\u0254\u0131\u0279\u15FA \u01DDuo\u0287s\u01DD\u026F\u0131\uA780",

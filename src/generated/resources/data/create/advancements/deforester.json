@@ -2,7 +2,8 @@
   "parent": "create:refined_radiance",
   "display": {
     "icon": {
-      "item": "create:deforester"
+      "item": "create:deforester",
+      "nbt": "{Damage:0}"
     },
     "title": {
       "translate": "advancement.create.deforester"

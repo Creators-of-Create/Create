@@ -194,7 +194,7 @@ public enum AllItems {
 	}
 
 	public static Properties includeInItemGroup() {
-		return new Properties().group(Create.creativeTab);
+		return new Properties().group(Create.baseCreativeTab);
 	}
 
 	public static void register(RegistryEvent.Register<Item> event) {

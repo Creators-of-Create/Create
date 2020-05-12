@@ -9,6 +9,10 @@ import net.minecraft.world.World;
 
 public class ClutchBlock extends GearshiftBlock {
 
+	public ClutchBlock(Properties properties) {
+		super(properties);
+	}
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new ClutchTileEntity();
