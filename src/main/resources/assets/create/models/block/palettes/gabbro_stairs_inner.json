@@ -1,8 +1,0 @@
-{
-    "parent": "block/inner_stairs",
-    "textures": {
-        "bottom": "create:block/gabbro",
-        "top": "create:block/gabbro",
-        "side": "create:block/gabbro"
-    }
-}

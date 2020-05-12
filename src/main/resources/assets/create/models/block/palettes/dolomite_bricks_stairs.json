@@ -1,8 +1,0 @@
-{
-    "parent": "block/stairs",
-    "textures": {
-        "bottom": "create:block/dolomite_bricks",
-        "top": "create:block/dolomite_bricks",
-        "side": "create:block/dolomite_bricks"
-    }
-}

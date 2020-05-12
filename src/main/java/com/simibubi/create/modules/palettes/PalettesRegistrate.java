@@ -1,0 +1,63 @@
+package com.simibubi.create.modules.palettes;
+
+import com.simibubi.create.Create;
+import com.simibubi.create.modules.Sections;
+import com.tterrag.registrate.AbstractRegistrate;
+import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.builders.Builder;
+import com.tterrag.registrate.util.NonNullLazyValue;
+import com.tterrag.registrate.util.entry.RegistryEntry;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.Block.Properties;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+
+public class PalettesRegistrate extends AbstractRegistrate<PalettesRegistrate> {
+
+	/**
+	 * Create a new {@link PalettesRegistrate} and register event listeners for
+	 * registration and data generation. Used in lieu of adding side-effects to
+	 * constructor, so that alternate initialization strategies can be done in
+	 * subclasses.
+	 * 
+	 * @param modid The mod ID for which objects will be registered
+	 * @return The {@link PalettesRegistrate} instance
+	 */
+	public static PalettesRegistrate create(String modid) {
+		return new PalettesRegistrate(modid).registerEventListeners(FMLJavaModLoadingContext.get()
+				.getModEventBus())
+				.itemGroup(() -> Create.palettesCreativeTab);
+	}
+
+	public static NonNullLazyValue<PalettesRegistrate> lazy(String modid) {
+		return new NonNullLazyValue<>(() -> create(modid));
+	}
+
+	public <T extends Block> BlockBuilder<T, PalettesRegistrate> baseBlock(String name,
+			NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom) {
+		return super.block(name, factory).initialProperties(propertiesFrom)
+				.blockstate((c, p) -> {
+					final String location = "block/palettes/" + c.getName() + "/plain";
+					p.simpleBlock(c.get(), p.models()
+							.cubeAll(c.getName(), p.modLoc(location)));
+				})
+				.simpleItem();
+	}
+
+	protected PalettesRegistrate(String modid) {
+		super(modid);
+	}
+
+	@Override
+	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name,
+			Class<? super R> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator) {
+		RegistryEntry<T> ret = super.accept(name, type, builder, creator);
+		Create.registrate()
+				.addToSection(ret, Sections.PALETTES);
+		return ret;
+	}
+
+}

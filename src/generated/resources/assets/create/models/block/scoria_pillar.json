@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "side": "create:block/palettes/scoria/pillar",
+    "end": "create:block/palettes/scoria/pillar_end"
+  }
+}

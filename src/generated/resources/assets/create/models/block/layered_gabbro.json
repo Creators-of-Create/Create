@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "side": "create:block/palettes/gabbro/layered",
+    "end": "create:block/palettes/gabbro/polished"
+  }
+}

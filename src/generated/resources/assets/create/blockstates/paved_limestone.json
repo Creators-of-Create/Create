@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "covered=false": {
+      "model": "create:block/paved_limestone"
+    },
+    "covered=true": {
+      "model": "create:block/paved_limestone_covered"
+    }
+  }
+}

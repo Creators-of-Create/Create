@@ -22,7 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -69,7 +69,8 @@ public class CreateClient {
 		AllBlocks.registerColorHandlers();
 		AllEntities.registerRenderers();
 
-		IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+		IResourceManager resourceManager = Minecraft.getInstance()
+				.getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 	}
@@ -83,7 +84,7 @@ public class CreateClient {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {
-		if (!event.getMap().getId().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE))
+		if (!event.getMap().getId().equals(PlayerContainer.BLOCK_ATLAS_TEXTURE))
 			return;
 
 		event.addSprite(new ResourceLocation(Create.ID, "block/belt_animated"));
@@ -111,7 +112,8 @@ public class CreateClient {
 		for (AllItems item : AllItems.values()) {
 			if (item.get() instanceof IHaveCustomItemModel)
 				swapModels(modelRegistry, getItemModelLocation(item),
-						m -> ((IHaveCustomItemModel) item.get()).createModel(m).loadPartials(event));
+						m -> ((IHaveCustomItemModel) item.get()).createModel(m)
+								.loadPartials(event));
 		}
 	}
 
@@ -122,28 +124,34 @@ public class CreateClient {
 		// Register submodels for custom rendered item models
 		for (AllItems item : AllItems.values()) {
 			if (item.get() instanceof IHaveCustomItemModel)
-				((IHaveCustomItemModel) item.get()).createModel(null).getModelLocations()
+				((IHaveCustomItemModel) item.get()).createModel(null)
+						.getModelLocations()
 						.forEach(ModelLoader::addSpecialModel);
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	protected static ModelResourceLocation getItemModelLocation(AllItems item) {
-		return new ModelResourceLocation(item.get().getRegistryName(), "inventory");
+		return new ModelResourceLocation(item.get()
+				.getRegistryName(), "inventory");
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	protected static List<ModelResourceLocation> getAllBlockStateModelLocations(AllBlocks block) {
 		List<ModelResourceLocation> models = new ArrayList<>();
-		block.get().getStateContainer().getValidStates().forEach(state -> {
-			models.add(getBlockModelLocation(block, BlockModelShapes.getPropertyMapString(state.getValues())));
-		});
+		block.get()
+				.getStateContainer()
+				.getValidStates()
+				.forEach(state -> {
+					models.add(getBlockModelLocation(block, BlockModelShapes.getPropertyMapString(state.getValues())));
+				});
 		return models;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	protected static ModelResourceLocation getBlockModelLocation(AllBlocks block, String suffix) {
-		return new ModelResourceLocation(block.get().getRegistryName(), suffix);
+		return new ModelResourceLocation(block.get()
+				.getRegistryName(), suffix);
 	}
 
 	@OnlyIn(Dist.CLIENT)

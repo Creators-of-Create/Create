@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.modules.palettes.AllPaletteBlocks;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
@@ -25,11 +26,11 @@ public enum AllWorldFeatures {
 	ZINC_ORE(new CountedOreFeature(AllBlocks.ZINC_ORE, 14, 4).between(15, 70)),
 	ZINC_ORE_DESERT(new CountedOreFeature(AllBlocks.ZINC_ORE, 17, 5).between(10, 85).inBiomes(DESERT)),
 
-	LIMESTONE(new ChanceOreFeature(AllBlocks.LIMESTONE, 128, 1 / 32f).between(30, 70)),
-	WEATHERED_LIMESTONE(new ChanceOreFeature(AllBlocks.WEATHERED_LIMESTONE, 128, 1 / 32f).between(10, 30)),
-	DOLOMITE(new ChanceOreFeature(AllBlocks.DOLOMITE, 128, 1 / 64f).between(20, 70)),
-	GABBRO(new ChanceOreFeature(AllBlocks.GABBRO, 128, 1 / 64f).between(20, 70)),
-	SCORIA(new ChanceOreFeature(AllBlocks.NATURAL_SCORIA, 128, 1 / 32f).between(0, 10)),
+	LIMESTONE(new ChanceOreFeature(AllPaletteBlocks.LIMESTONE, 128, 1 / 32f).between(30, 70)),
+	WEATHERED_LIMESTONE(new ChanceOreFeature(AllPaletteBlocks.WEATHERED_LIMESTONE, 128, 1 / 32f).between(10, 30)),
+	DOLOMITE(new ChanceOreFeature(AllPaletteBlocks.DOLOMITE, 128, 1 / 64f).between(20, 70)),
+	GABBRO(new ChanceOreFeature(AllPaletteBlocks.GABBRO, 128, 1 / 64f).between(20, 70)),
+	SCORIA(new ChanceOreFeature(AllPaletteBlocks.NATURAL_SCORIA, 128, 1 / 32f).between(0, 10)), 
 
 	;
 

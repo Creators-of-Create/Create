@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "side": "create:block/palettes/gabbro/pillar",
+    "end": "create:block/palettes/gabbro/pillar_end"
+  }
+}

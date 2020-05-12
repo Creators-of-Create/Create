@@ -1,0 +1,10 @@
+{
+  "parent": "create:block/overgrown",
+  "textures": {
+    "particle": "create:block/palettes/dark_scoria/bricks",
+    "side": "create:block/palettes/dark_scoria/bricks",
+    "top": "create:block/palettes/dark_scoria/bricks",
+    "bottom": "create:block/palettes/dark_scoria/bricks",
+    "overlay": "create:block/palettes/overgrown"
+  }
+}

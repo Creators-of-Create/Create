@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "side": "create:block/palettes/dark_scoria/chiseled",
+    "end": "create:block/palettes/dark_scoria/chiseled_top"
+  }
+}

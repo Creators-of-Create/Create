@@ -1,7 +1,0 @@
-{
-  "variants": {
-		"type=top": { "model":"create:block/palettes/weathered_limestone_slab_top" },
-		"type=bottom": { "model":"create:block/palettes/weathered_limestone_slab" },
-		"type=double": { "model":"create:block/palettes/weathered_limestone" }
-	}
-}

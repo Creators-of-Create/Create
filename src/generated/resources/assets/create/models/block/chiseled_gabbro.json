@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "side": "create:block/palettes/gabbro/chiseled",
+    "end": "create:block/palettes/gabbro/chiseled_top"
+  }
+}

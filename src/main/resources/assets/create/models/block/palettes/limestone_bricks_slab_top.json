@@ -1,8 +1,0 @@
-{
-    "parent": "block/slab_top",
-    "textures": {
-        "bottom": "create:block/limestone_bricks",
-        "top": "create:block/limestone_bricks",
-        "side": "create:block/limestone_bricks"
-    }
-}

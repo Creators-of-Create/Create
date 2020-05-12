@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
-import com.simibubi.create.modules.Sections;
+import java.util.Collection;
+
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.block.Block;
@@ -13,15 +14,8 @@ public class CreateItemGroup extends CreateItemGroupBase {
 	}
 
 	@Override
-	protected boolean shouldAdd(RegistryEntry<? extends Block> block) {
-		Sections section = Create.registrate()
-				.getSection(block);
-		return section != Sections.PALETTES;
-	}
-
-	@Override
-	protected boolean shouldAdd(AllItems item) {
-		return item.section != Sections.PALETTES;
+	protected Collection<RegistryEntry<Block>> getBlocks() {
+		return Create.registrate().getAll(Block.class);
 	}
 
 	@Override

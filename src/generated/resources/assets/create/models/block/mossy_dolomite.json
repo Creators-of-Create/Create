@@ -1,0 +1,10 @@
+{
+  "parent": "create:block/overgrown",
+  "textures": {
+    "particle": "create:block/palettes/dolomite/bricks",
+    "side": "create:block/palettes/dolomite/bricks",
+    "top": "create:block/palettes/dolomite/bricks",
+    "bottom": "create:block/palettes/dolomite/bricks",
+    "overlay": "create:block/palettes/mossy"
+  }
+}

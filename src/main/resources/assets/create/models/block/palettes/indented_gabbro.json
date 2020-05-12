@@ -1,7 +1,0 @@
-{
-    "parent": "block/cube_column",
-    "textures": {
-        "end": "create:block/polished_gabbro",
-        "side": "create:block/indented_gabbro"
-    }
-}

@@ -1,8 +1,0 @@
-{
-    "parent": "create:block/paved_slab",
-    "textures": {
-        "bottom": "create:block/polished_dolomite",
-        "top": "create:block/polished_dolomite",
-        "side": "create:block/dolomite_bricks"
-    }
-}

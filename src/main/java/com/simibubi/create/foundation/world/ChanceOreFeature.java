@@ -12,7 +12,7 @@ public class ChanceOreFeature extends OreFeature<ChanceRangeConfig> {
 
 	private ConfigFloat clusterChance;
 
-	public ChanceOreFeature(NonNullSupplier<Block> block, int clusterSize, float clusterChance) {
+	public ChanceOreFeature(NonNullSupplier<? extends Block> block, int clusterSize, float clusterChance) {
 		super(block, clusterSize);
 		this.clusterChance = f(clusterChance, 0, 1, "clusterChance");
 	}

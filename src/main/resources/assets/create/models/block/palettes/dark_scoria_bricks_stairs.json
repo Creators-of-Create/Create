@@ -1,8 +1,0 @@
-{
-    "parent": "block/stairs",
-    "textures": {
-        "bottom": "create:block/dark_scoria_bricks",
-        "top": "create:block/dark_scoria_bricks",
-        "side": "create:block/dark_scoria_bricks"
-    }
-}

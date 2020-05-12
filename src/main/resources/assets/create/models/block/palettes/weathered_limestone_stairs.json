@@ -1,8 +1,0 @@
-{
-    "parent": "block/stairs",
-    "textures": {
-        "bottom": "create:block/weathered_limestone",
-        "top": "create:block/weathered_limestone",
-        "side": "create:block/weathered_limestone"
-    }
-}

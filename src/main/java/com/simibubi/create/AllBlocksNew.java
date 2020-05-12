@@ -104,6 +104,6 @@ public class AllBlocksNew {
 			.build()
 			.register();
 
-	public static void register() {
-	}
+	public static void register() {}
+	
 }

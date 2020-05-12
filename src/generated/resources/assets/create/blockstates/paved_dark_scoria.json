@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "covered=false": {
+      "model": "create:block/paved_dark_scoria"
+    },
+    "covered=true": {
+      "model": "create:block/paved_dark_scoria_covered"
+    }
+  }
+}

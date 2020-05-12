@@ -59,6 +59,10 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		sectionLookup.put(ret, currentSection());
 		return ret;
 	}
+	
+	public void addToSection(RegistryEntry<?> entry, Sections section) {
+		sectionLookup.put(entry, section);
+	}
 
 	public Sections getSection(RegistryEntry<?> entry) {
 		return sectionLookup.getOrDefault(entry, Sections.UNASSIGNED);

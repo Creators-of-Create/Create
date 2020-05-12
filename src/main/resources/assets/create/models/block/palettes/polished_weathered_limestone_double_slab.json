@@ -1,7 +1,0 @@
-{
-    "parent": "block/cube_column",
-    "textures": {
-        "end": "create:block/polished_weathered_limestone",
-        "side": "create:block/polished_weathered_limestone_slab"
-    }
-}

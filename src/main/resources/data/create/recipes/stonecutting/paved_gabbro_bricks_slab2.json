@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:paved_gabbro_bricks"
-  },
-  "result": "create:paved_gabbro_bricks_slab",
-  "count": 2
-}

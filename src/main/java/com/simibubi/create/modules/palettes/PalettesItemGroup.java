@@ -1,14 +1,15 @@
 package com.simibubi.create.modules.palettes;
 
+import java.util.Collection;
+
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateItemGroupBase;
-import com.simibubi.create.modules.Sections;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 public class PalettesItemGroup extends CreateItemGroupBase {
 
@@ -17,15 +18,12 @@ public class PalettesItemGroup extends CreateItemGroupBase {
 	}
 
 	@Override
-	protected boolean shouldAdd(RegistryEntry<? extends Block> block) {
-		Sections section = Create.registrate()
-				.getSection(block);
-		return section == Sections.PALETTES;
+	protected Collection<RegistryEntry<Block>> getBlocks() {
+		return Create.palettesRegistrate().getAll(Block.class);
 	}
-
+	
 	@Override
-	protected boolean shouldAdd(AllItems item) {
-		return item.section == Sections.PALETTES;
+	public void addItems(NonNullList<ItemStack> items, boolean specialItems) {
 	}
 
 	@Override
@@ -33,5 +31,4 @@ public class PalettesItemGroup extends CreateItemGroupBase {
 		return new ItemStack(AllBlocks.IRON_GLASS.get());
 	}
 
-	
 }

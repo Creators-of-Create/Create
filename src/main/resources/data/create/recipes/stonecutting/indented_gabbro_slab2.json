@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:polished_gabbro"
-  },
-  "result": "create:indented_gabbro_slab",
-  "count": 2
-}

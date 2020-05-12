@@ -1,7 +1,0 @@
-{
-    "variants": {
-		"axis=y": { "model": "create:block/palettes/limestone_pillar" },
-        "axis=z": { "model": "create:block/palettes/limestone_pillar", "x": 90 },
-        "axis=x": { "model": "create:block/palettes/limestone_pillar", "x": 90, "y": 90 }
-	}
-}

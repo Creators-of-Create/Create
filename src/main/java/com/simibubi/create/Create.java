@@ -10,7 +10,9 @@ import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.world.AllWorldFeatures;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
+import com.simibubi.create.modules.palettes.AllPaletteBlocks;
 import com.simibubi.create.modules.palettes.PalettesItemGroup;
+import com.simibubi.create.modules.palettes.PalettesRegistrate;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 import com.tterrag.registrate.util.NonNullLazyValue;
 
@@ -21,6 +23,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -46,6 +49,7 @@ public class Create {
 	public static ServerLagger lagger;
 	
 	private static final NonNullLazyValue<CreateRegistrate> registrate = CreateRegistrate.lazy(ID);
+	private static final NonNullLazyValue<PalettesRegistrate> palettesRegistrate = PalettesRegistrate.lazy(ID);
 
 	public Create() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -54,6 +58,7 @@ public class Create {
 		MinecraftForge.EVENT_BUS.addListener(Create::serverStarting);
 
 		AllBlocksNew.register();
+		AllPaletteBlocks.register();
 		AllBlocks.register();
 //		modEventBus.addGenericListener(Block.class, AllBlocks::register);
 		modEventBus.addGenericListener(Item.class, AllItems::register);
@@ -102,4 +107,13 @@ public class Create {
 	public static CreateRegistrate registrate() {
 	    return registrate.get();
 	}
+	
+	public static PalettesRegistrate palettesRegistrate() {
+		return palettesRegistrate.get();
+	}
+	
+	public static ResourceLocation asResource(String path) {
+		return new ResourceLocation(ID, path);
+	}
+	
 }

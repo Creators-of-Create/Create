@@ -1,8 +1,0 @@
-{
-    "parent": "block/slab_top",
-    "textures": {
-        "bottom": "create:block/polished_limestone",
-        "top": "create:block/polished_limestone",
-        "side": "create:block/polished_limestone_slab"
-    }
-}

@@ -1,8 +1,0 @@
-{
-    "parent": "block/slab",
-    "textures": {
-        "bottom": "create:block/polished_gabbro",
-        "top": "create:block/polished_gabbro",
-        "side": "create:block/indented_gabbro"
-    }
-}

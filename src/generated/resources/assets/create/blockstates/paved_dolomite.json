@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "covered=false": {
+      "model": "create:block/paved_dolomite"
+    },
+    "covered=true": {
+      "model": "create:block/paved_dolomite_covered"
+    }
+  }
+}

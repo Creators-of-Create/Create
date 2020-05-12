@@ -1,8 +1,0 @@
-{
-    "parent": "block/slab_top",
-    "textures": {
-        "bottom": "create:block/dark_scoria_tiles",
-        "top": "create:block/dark_scoria_tiles",
-        "side": "create:block/dark_scoria_tiles"
-    }
-}

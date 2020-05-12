@@ -1,5 +1,7 @@
 package com.simibubi.create;
 
+import java.util.Collection;
+
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.block.Block;
@@ -30,10 +32,7 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 
 	@OnlyIn(Dist.CLIENT)
 	public void addBlocks(NonNullList<ItemStack> items) {
-		for (RegistryEntry<? extends Block> entry : Create.registrate()
-				.getAll(Block.class)) {
-			if (!shouldAdd(entry))
-				continue;
+		for (RegistryEntry<? extends Block> entry : getBlocks()) {
 			Block def = entry.get();
 			if (def == null)
 				continue;
@@ -42,10 +41,8 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 				def.fillItemGroup(this, items);
 		}
 	}
-	
-	protected abstract boolean shouldAdd(RegistryEntry<? extends Block> block); 
-	
-	protected abstract boolean shouldAdd(AllItems item); 
+
+	protected abstract Collection<RegistryEntry<Block>> getBlocks();
 
 	@OnlyIn(Dist.CLIENT)
 	public void addItems(NonNullList<ItemStack> items, boolean specialItems) {
@@ -53,8 +50,6 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 				.getItemRenderer();
 
 		for (AllItems item : AllItems.values()) {
-			if (!shouldAdd(item))
-				continue;
 			if (item.get() == null)
 				continue;
 			IBakedModel model =

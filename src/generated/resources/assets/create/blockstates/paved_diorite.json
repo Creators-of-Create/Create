@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "covered=false": {
+      "model": "create:block/paved_diorite"
+    },
+    "covered=true": {
+      "model": "create:block/paved_diorite_covered"
+    }
+  }
+}

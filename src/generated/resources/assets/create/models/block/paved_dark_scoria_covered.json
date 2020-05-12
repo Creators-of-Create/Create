@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "create:block/palettes/dark_scoria/paved_borderless"
+  }
+}

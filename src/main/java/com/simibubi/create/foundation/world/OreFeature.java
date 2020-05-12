@@ -28,10 +28,10 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 	protected ConfigInt minHeight;
 	protected ConfigInt maxHeight;
 
-	private NonNullSupplier<Block> block;
+	private NonNullSupplier<? extends Block> block;
 	private Biome.Category specificCategory;
 
-	public OreFeature(NonNullSupplier<Block> block, int clusterSize) {
+	public OreFeature(NonNullSupplier<? extends Block> block, int clusterSize) {
 		this.block = block;
 		this.enable = b(true, "enable", "Whether to spawn this in your World");
 		this.clusterSize = i(clusterSize, 0, "clusterSize");
@@ -66,8 +66,10 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 
 		Pair<Placement<T>, T> placement = getPlacement();
 		ConfiguredFeature<?, ?> createdFeature = Feature.ORE
-				.configure(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, block.get().getDefaultState(), clusterSize.get()))
-				.createDecoratedFeature(placement.getKey().configure(placement.getValue()));
+			.configure(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, block.get()
+				.getDefaultState(), clusterSize.get()))
+			.createDecoratedFeature(placement.getKey()
+				.configure(placement.getValue()));
 
 		return Optional.of(createdFeature);
 	}
@@ -79,7 +81,7 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 
 	protected boolean canGenerate() {
 		return minHeight.get() < maxHeight.get() && clusterSize.get() > 0 && enable.get()
-				&& !AllConfigs.COMMON.worldGen.disable.get();
+			&& !AllConfigs.COMMON.worldGen.disable.get();
 	}
 
 	protected abstract Pair<Placement<T>, T> getPlacement();

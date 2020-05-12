@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "covered=false": {
+      "model": "create:block/paved_andesite"
+    },
+    "covered=true": {
+      "model": "create:block/paved_andesite_covered"
+    }
+  }
+}

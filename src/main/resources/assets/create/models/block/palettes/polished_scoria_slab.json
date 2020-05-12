@@ -1,8 +1,0 @@
-{
-    "parent": "block/slab",
-    "textures": {
-        "bottom": "create:block/polished_scoria",
-        "top": "create:block/polished_scoria",
-        "side": "create:block/polished_scoria_slab"
-    }
-}

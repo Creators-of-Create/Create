@@ -1,7 +1,0 @@
-{
-    "parent": "block/cube_column",
-    "textures": {
-        "end": "create:block/weathered_limestone_pillar_top",
-        "side": "create:block/weathered_limestone_pillar"
-    }
-}
