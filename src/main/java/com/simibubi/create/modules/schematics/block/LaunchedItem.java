@@ -152,7 +152,7 @@ public abstract class LaunchedItem {
 			BlockPos offset = BeltBlock.nextSegmentPosition(state, BlockPos.ZERO, isStart);
 			int i = length - 1;
 			Axis axis = state.get(BeltBlock.HORIZONTAL_FACING).rotateY().getAxis();
-			world.setBlockState(target, AllBlocksNew.SHAFT.getDefault().with(ShaftBlock.AXIS, axis));
+			world.setBlockState(target, AllBlocksNew.SHAFT.getDefaultState().with(ShaftBlock.AXIS, axis));
 			BeltConnectorItem
 					.createBelts(world, target, target.add(offset.getX() * i, offset.getY() * i, offset.getZ() * i));
 		}

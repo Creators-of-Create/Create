@@ -504,7 +504,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		}
 		if (!isLastSegment)
 			blockState = (blockState.get(BeltBlock.PART) == Part.MIDDLE) ? Blocks.AIR.getDefaultState()
-					: AllBlocksNew.SHAFT.getDefault().with(ShaftBlock.AXIS, facing.rotateY().getAxis());
+					: AllBlocksNew.SHAFT.getDefaultState().with(ShaftBlock.AXIS, facing.rotateY().getAxis());
 		return blockState;
 	}
 

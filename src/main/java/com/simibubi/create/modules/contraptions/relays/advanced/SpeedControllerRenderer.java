@@ -30,7 +30,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 	private SuperByteBuffer getRotatedModel(SpeedControllerTileEntity te) {
 		BlockState state = te.getBlockState();
 		return CreateClient.bufferCache.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
-				AllBlocksNew.SHAFT.getDefault().with(ShaftBlock.AXIS, state.get(SpeedControllerBlock.HORIZONTAL_AXIS)));
+				AllBlocksNew.SHAFT.getDefaultState().with(ShaftBlock.AXIS, state.get(SpeedControllerBlock.HORIZONTAL_AXIS)));
 	}
 
 }

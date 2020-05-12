@@ -87,7 +87,8 @@ import com.simibubi.create.modules.palettes.VerticalCTGlassBlock;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.ProviderType;
-import com.tterrag.registrate.util.RegistryEntry;
+import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
@@ -334,8 +335,8 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 		NO_BLOCKITEM, WALL, FENCE, FENCE_GATE, SLAB, STAIRS
 	}
 
-	public final RegistryEntry<? extends Block> block;
-	public final ImmutableList<RegistryEntry<? extends Block>> alsoRegistered;
+	public final BlockEntry<? extends Block> block;
+	public final ImmutableList<BlockEntry<? extends Block>> alsoRegistered;
 	public final Sections section;
 
 	AllBlocks(Sections section) {
@@ -371,7 +372,7 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 				.transform(applyTags(tags)).transform(b -> registerItemBlock(b, customItemCreator, comesWith))
 				.register();
 
-		ImmutableList.Builder<RegistryEntry<? extends Block>> alsoRegistered = ImmutableList.builder();
+		ImmutableList.Builder<BlockEntry<? extends Block>> alsoRegistered = ImmutableList.builder();
 		for (ComesWith with : comesWith) {
 			if (with != ComesWith.NO_BLOCKITEM) {
 				alsoRegistered.add(makeRelatedBlock(this.block, with));
@@ -413,7 +414,7 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 		return state.getBlock() == get();
 	}
 
-	private RegistryEntry<? extends Block> makeRelatedBlock(RegistryEntry<? extends Block> block, ComesWith feature) {
+	private BlockEntry<? extends Block> makeRelatedBlock(RegistryEntry<? extends Block> block, ComesWith feature) {
 		NonNullFunction<Block.Properties, ? extends Block> creator;
 		final Tag<Block> tag;
 

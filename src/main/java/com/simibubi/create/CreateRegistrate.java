@@ -6,15 +6,11 @@ import java.util.Map.Entry;
 
 import com.simibubi.create.modules.Sections;
 import com.tterrag.registrate.AbstractRegistrate;
-import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.util.NonNullLazyValue;
-import com.tterrag.registrate.util.RegistryEntry;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Block.Properties;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -62,12 +58,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		RegistryEntry<T> ret = super.accept(name, type, builder, creator);
 		sectionLookup.put(ret, currentSection());
 		return ret;
-	}
-
-	// TODO: find a better way to wrap the registry entries
-	public <T extends Block> AllBlocksNew.BlockEntry<T> block(String name, NonNullFunction<Properties, T> factory,
-			NonNullFunction<BlockBuilder<T, CreateRegistrate>, RegistryEntry<T>> registerFunc) {
-		return new AllBlocksNew.BlockEntry<T>(registerFunc.apply(super.block(name, factory)));
 	}
 
 	public Sections getSection(RegistryEntry<?> entry) {

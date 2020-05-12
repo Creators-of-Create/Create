@@ -1,7 +1,7 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.item.IAddedByOther;
-import com.tterrag.registrate.util.RegistryEntry;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

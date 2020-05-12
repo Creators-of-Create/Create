@@ -60,7 +60,7 @@ public class GaugeTileEntityRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return AllBlocksNew.SHAFT.getDefault().with(BlockStateProperties.AXIS,
+		return AllBlocksNew.SHAFT.getDefaultState().with(BlockStateProperties.AXIS,
 				((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState()));
 	}
 
