@@ -3,7 +3,6 @@ package com.simibubi.create.modules.contraptions.processing;
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 

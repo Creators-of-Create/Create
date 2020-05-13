@@ -18,7 +18,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -45,17 +44,14 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 		}
 	}
 
-	public CTModel(IBakedModel originalModel, IHaveConnectedTextures block) {
+	public CTModel(IBakedModel originalModel, ConnectedTextureBehaviour behaviour) {
 		super(originalModel);
-		behaviour = block.getBehaviour();
+		this.behaviour = behaviour;
 	}
 
 	@Override
 	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
-		if (!(state.getBlock() instanceof IHaveConnectedTextures))
-			return EmptyModelData.INSTANCE;
 		CTData data = new CTData();
-
 		for (Direction face : Direction.values()) {
 			if (!Block.shouldSideBeRendered(state, world, pos, face) && !(state.getBlock() instanceof PaneBlock))
 				continue;

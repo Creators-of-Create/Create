@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
-import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,7 +19,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILightReader;
 
-public class LinearChassisBlock extends AbstractChassisBlock implements IHaveConnectedTextures {
+public class LinearChassisBlock extends AbstractChassisBlock {
 
 	public static final BooleanProperty STICKY_TOP = BooleanProperty.create("sticky_top");
 	public static final BooleanProperty STICKY_BOTTOM = BooleanProperty.create("sticky_bottom");
@@ -70,12 +69,7 @@ public class LinearChassisBlock extends AbstractChassisBlock implements IHaveCon
 		return state1.getBlock() == state2.getBlock();
 	}
 
-	@Override
-	public ConnectedTextureBehaviour getBehaviour() {
-		return new ChassisCTBehaviour();
-	}
-	
-	private static class ChassisCTBehaviour extends ConnectedTextureBehaviour {
+	public static class ChassisCTBehaviour extends ConnectedTextureBehaviour {
 
 		static final CTSpriteShiftEntry regular = CTSpriteShifter.get(CTType.OMNIDIRECTIONAL,
 				"translation_chassis_top");

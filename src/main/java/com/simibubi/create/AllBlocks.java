@@ -73,12 +73,6 @@ import com.simibubi.create.modules.logistics.block.inventories.CreativeCrateBloc
 import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
 import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
-import com.simibubi.create.modules.palettes.CTGlassBlock;
-import com.simibubi.create.modules.palettes.CTGlassPaneBlock;
-import com.simibubi.create.modules.palettes.CTWindowBlock;
-import com.simibubi.create.modules.palettes.GlassPaneBlock;
-import com.simibubi.create.modules.palettes.HorizontalCTGlassBlock;
-import com.simibubi.create.modules.palettes.VerticalCTGlassBlock;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.ProviderType;
@@ -96,7 +90,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FenceGateBlock;
-import net.minecraft.block.GlassBlock;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.WallBlock;
 import net.minecraft.client.Minecraft;
@@ -165,9 +158,9 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	PLOUGH(PloughBlock::new),
 	ANALOG_LEVER(AnalogLeverBlock::new),
 
-	ANDESITE_CASING(() -> new CasingBlock("andesite_casing")),
-	COPPER_CASING(() -> new CasingBlock("copper_casing")),
-	BRASS_CASING(() -> new CasingBlock("crafter_top")),
+	ANDESITE_CASING(() -> new CasingBlock(Properties.from(Blocks.ANDESITE))),
+	COPPER_CASING(() -> new CasingBlock(Properties.from(Blocks.ANDESITE))),
+	BRASS_CASING(() -> new CasingBlock(Properties.from(Blocks.ANDESITE))),
 
 	MECHANICAL_CRAFTER(MechanicalCrafterBlock::new),
 	SEQUENCED_GEARSHIFT(SequencedGearshiftBlock::new),
@@ -233,34 +226,34 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 
 	_6_(Sections.PALETTES),
 
-	TILED_GLASS(() -> new GlassBlock(Properties.from(Blocks.GLASS)), ITaggable.create()
-			.withVanillaTags(ITaggable.BLOCK, "impermeable")
-			.withForgeTags("glass")),
-	FRAMED_GLASS(() -> new CTGlassBlock(AllCTs.FRAMED_GLASS, false)),
-	HORIZONTAL_FRAMED_GLASS(
-			() -> new HorizontalCTGlassBlock(AllCTs.HORIZONTAL_FRAMED_GLASS, AllCTs.FRAMED_GLASS, false)),
-	VERTICAL_FRAMED_GLASS(() -> new VerticalCTGlassBlock(AllCTs.VERTICAL_FRAMED_GLASS, false)),
-
-	OAK_GLASS(() -> new CTWindowBlock(AllCTs.OAK_GLASS, false)),
-	SPRUCE_GLASS(() -> new CTWindowBlock(AllCTs.SPRUCE_GLASS, false)),
-	BIRCH_GLASS(() -> new CTWindowBlock(AllCTs.BIRCH_GLASS, true)),
-	JUNGLE_GLASS(() -> new CTWindowBlock(AllCTs.JUNGLE_GLASS, false)),
-	DARK_OAK_GLASS(() -> new CTWindowBlock(AllCTs.DARK_OAK_GLASS, false)),
-	ACACIA_GLASS(() -> new CTWindowBlock(AllCTs.ACACIA_GLASS, false)),
-	IRON_GLASS(() -> new CTWindowBlock(AllCTs.IRON_GLASS, false)),
-
-	TILED_GLASS_PANE(() -> new GlassPaneBlock(Properties.from(Blocks.GLASS)), ITaggable.create()
-			.withForgeTags("glass_panes")),
-	FRAMED_GLASS_PANE(() -> new CTGlassPaneBlock(FRAMED_GLASS.get())),
-	HORIZONTAL_FRAMED_GLASS_PANE(() -> new CTGlassPaneBlock(HORIZONTAL_FRAMED_GLASS.get())),
-	VERTICAL_FRAMED_GLASS_PANE(() -> new CTGlassPaneBlock(VERTICAL_FRAMED_GLASS.get())),
-	OAK_GLASS_PANE(() -> new CTGlassPaneBlock(OAK_GLASS.get())),
-	SPRUCE_GLASS_PANE(() -> new CTGlassPaneBlock(SPRUCE_GLASS.get())),
-	BIRCH_GLASS_PANE(() -> new CTGlassPaneBlock(BIRCH_GLASS.get())),
-	JUNGLE_GLASS_PANE(() -> new CTGlassPaneBlock(JUNGLE_GLASS.get())),
-	DARK_OAK_GLASS_PANE(() -> new CTGlassPaneBlock(DARK_OAK_GLASS.get())),
-	ACACIA_GLASS_PANE(() -> new CTGlassPaneBlock(ACACIA_GLASS.get())),
-	IRON_GLASS_PANE(() -> new CTGlassPaneBlock(IRON_GLASS.get())),
+//	TILED_GLASS(() -> new GlassBlock(Properties.from(Blocks.GLASS)), ITaggable.create()
+//			.withVanillaTags(ITaggable.BLOCK, "impermeable")
+//			.withForgeTags("glass")),
+//	FRAMED_GLASS(() -> new CTGlassBlock(AllCTs.FRAMED_GLASS, false)),
+//	HORIZONTAL_FRAMED_GLASS(
+//			() -> new HorizontalCTGlassBlock(AllCTs.HORIZONTAL_FRAMED_GLASS, AllCTs.FRAMED_GLASS, false)),
+//	VERTICAL_FRAMED_GLASS(() -> new VerticalCTGlassBlock(AllCTs.VERTICAL_FRAMED_GLASS, false)),
+//
+//	OAK_GLASS(() -> new CTWindowBlock(AllCTs.OAK_GLASS, false)),
+//	SPRUCE_GLASS(() -> new CTWindowBlock(AllCTs.SPRUCE_GLASS, false)),
+//	BIRCH_GLASS(() -> new CTWindowBlock(AllCTs.BIRCH_GLASS, true)),
+//	JUNGLE_GLASS(() -> new CTWindowBlock(AllCTs.JUNGLE_GLASS, false)),
+//	DARK_OAK_GLASS(() -> new CTWindowBlock(AllCTs.DARK_OAK_GLASS, false)),
+//	ACACIA_GLASS(() -> new CTWindowBlock(AllCTs.ACACIA_GLASS, false)),
+//	IRON_GLASS(() -> new CTWindowBlock(AllCTs.IRON_GLASS, false)),
+//
+//	TILED_GLASS_PANE(() -> new GlassPaneBlock(Properties.from(Blocks.GLASS)), ITaggable.create()
+//			.withForgeTags("glass_panes")),
+//	FRAMED_GLASS_PANE(() -> new CTGlassPaneBlock(FRAMED_GLASS.get())),
+//	HORIZONTAL_FRAMED_GLASS_PANE(() -> new CTGlassPaneBlock(HORIZONTAL_FRAMED_GLASS.get())),
+//	VERTICAL_FRAMED_GLASS_PANE(() -> new CTGlassPaneBlock(VERTICAL_FRAMED_GLASS.get())),
+//	OAK_GLASS_PANE(() -> new CTGlassPaneBlock(OAK_GLASS.get())),
+//	SPRUCE_GLASS_PANE(() -> new CTGlassPaneBlock(SPRUCE_GLASS.get())),
+//	BIRCH_GLASS_PANE(() -> new CTGlassPaneBlock(BIRCH_GLASS.get())),
+//	JUNGLE_GLASS_PANE(() -> new CTGlassPaneBlock(JUNGLE_GLASS.get())),
+//	DARK_OAK_GLASS_PANE(() -> new CTGlassPaneBlock(DARK_OAK_GLASS.get())),
+//	ACACIA_GLASS_PANE(() -> new CTGlassPaneBlock(ACACIA_GLASS.get())),
+//	IRON_GLASS_PANE(() -> new CTGlassPaneBlock(IRON_GLASS.get())),
 
 //	GRANITE_BRICKS(() -> new Block(Properties.from(Blocks.GRANITE))),
 //	GRANITE_LAYERS(

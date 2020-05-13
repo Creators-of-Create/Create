@@ -28,7 +28,8 @@ public class PalettesItemGroup extends CreateItemGroupBase {
 
 	@Override
 	public ItemStack createIcon() {
-		return new ItemStack(AllBlocks.IRON_GLASS.get());
+		return new ItemStack(AllBlocks.COPPER_BLOCK.get());
+//		return new ItemStack(AllBlocks.IRON_GLASS.get());
 	}
 
 }

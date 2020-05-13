@@ -3,8 +3,8 @@ package com.simibubi.create.foundation.block.render;
 import java.util.function.Function;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 
 public class SpriteShiftEntry {
@@ -19,7 +19,8 @@ public class SpriteShiftEntry {
 	}
 
 	protected void loadTextures() {
-		Function<ResourceLocation, TextureAtlasSprite> textureMap = Minecraft.getInstance().getSpriteAtlas(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		Function<ResourceLocation, TextureAtlasSprite> textureMap = Minecraft.getInstance()
+			.getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE);
 		original = textureMap.apply(originalTextureLocation);
 		target = textureMap.apply(targetTextureLocation);
 	}

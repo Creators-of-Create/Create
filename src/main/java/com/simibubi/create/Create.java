@@ -7,6 +7,7 @@ import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.command.CreateCommand;
 import com.simibubi.create.foundation.command.ServerLagger;
+import com.simibubi.create.foundation.registrate.CreateRegistrate;
 import com.simibubi.create.foundation.world.AllWorldFeatures;
 import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
@@ -37,7 +38,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.1.1b";
+	public static final String VERSION = "0.2.3";
 
 	public static Logger logger = LogManager.getLogger();
 	public static ItemGroup baseCreativeTab = new CreateItemGroup();

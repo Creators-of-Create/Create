@@ -17,7 +17,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILightReader;
 
-public class InputCTBehaviour extends ConnectedTextureBehaviour {
+public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 
 	static final CTSpriteShiftEntry front = CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, "crafter_top", "brass_casing");
 	static final CTSpriteShiftEntry side = CTSpriteShifter.get(CTType.VERTICAL, "crafter_side");

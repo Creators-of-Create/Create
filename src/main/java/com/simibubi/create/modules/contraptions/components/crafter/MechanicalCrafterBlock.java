@@ -3,8 +3,6 @@ package com.simibubi.create.modules.contraptions.components.crafter;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
-import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -40,8 +38,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class MechanicalCrafterBlock extends HorizontalKineticBlock
-		implements ITE<MechanicalCrafterTileEntity>, IHaveConnectedTextures {
+public class MechanicalCrafterBlock extends HorizontalKineticBlock implements ITE<MechanicalCrafterTileEntity> {
 
 	public static final EnumProperty<Pointing> POINTING = EnumProperty.create("pointing", Pointing.class);
 
@@ -72,16 +69,20 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(HORIZONTAL_FACING).getAxis();
+		return state.get(HORIZONTAL_FACING)
+			.getAxis();
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction face = context.getFace();
-		BlockPos placedOnPos = context.getPos().offset(face.getOpposite());
-		BlockState blockState = context.getWorld().getBlockState(placedOnPos);
+		BlockPos placedOnPos = context.getPos()
+			.offset(face.getOpposite());
+		BlockState blockState = context.getWorld()
+			.getBlockState(placedOnPos);
 
-		if ((blockState.getBlock() != this) || context.getPlayer().isSneaking()) {
+		if ((blockState.getBlock() != this) || context.getPlayer()
+			.isSneaking()) {
 			BlockState stateForPlacement = super.getStateForPlacement(context);
 			Direction direction = stateForPlacement.get(HORIZONTAL_FACING);
 			if (direction != face)
@@ -91,7 +92,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 
 		Direction otherFacing = blockState.get(HORIZONTAL_FACING);
 		Pointing pointing = pointingFromFacing(face, otherFacing);
-		return getDefaultState().with(HORIZONTAL_FACING, otherFacing).with(POINTING, pointing);
+		return getDefaultState().with(HORIZONTAL_FACING, otherFacing)
+			.with(POINTING, pointing);
 	}
 
 	@Override
@@ -113,7 +115,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 			}
 
 			for (Direction direction : Direction.values()) {
-				if (direction.getAxis() == state.get(HORIZONTAL_FACING).getAxis())
+				if (direction.getAxis() == state.get(HORIZONTAL_FACING)
+					.getAxis())
 					continue;
 
 				BlockPos otherPos = pos.offset(direction);
@@ -122,7 +125,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 
 				if (thisInput == null || otherInput == null)
 					continue;
-				if (!pos.add(thisInput.data.get(0)).equals(otherPos.add(otherInput.data.get(0))))
+				if (!pos.add(thisInput.data.get(0))
+					.equals(otherPos.add(otherInput.data.get(0))))
 					continue;
 
 				ConnectedInputHandler.toggleConnection(worldIn, pos, otherPos);
@@ -150,7 +154,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		if (context.getFace() == state.get(HORIZONTAL_FACING)) {
-			context.getWorld().setBlockState(context.getPos(), state.cycle(POINTING));
+			context.getWorld()
+				.setBlockState(context.getPos(), state.cycle(POINTING));
 			withTileEntityDo(context.getWorld(), context.getPos(), TileEntity::markDirty);
 			return ActionResultType.SUCCESS;
 		}
@@ -160,7 +165,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+		BlockRayTraceResult hit) {
 		ItemStack heldItem = player.getHeldItem(handIn);
 		boolean isHand = heldItem.isEmpty() && handIn == Hand.MAIN_HAND;
 
@@ -283,11 +288,6 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 		public int getXRotation() {
 			return xRotation;
 		}
-	}
-
-	@Override
-	public ConnectedTextureBehaviour getBehaviour() {
-		return new InputCTBehaviour();
 	}
 
 	@Override

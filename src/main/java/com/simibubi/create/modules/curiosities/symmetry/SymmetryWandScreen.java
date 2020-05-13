@@ -23,8 +23,8 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
@@ -64,13 +64,17 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		super.init();
 		this.setWindowSize(ScreenResources.WAND_SYMMETRY.width + 50, ScreenResources.WAND_SYMMETRY.height + 50);
 
-		labelType = new Label(guiLeft + 122, guiTop + 15, "").colored(0xFFFFFFFF).withShadow();
-		labelAlign = new Label(guiLeft + 122, guiTop + 35, "").colored(0xFFFFFFFF).withShadow();
+		labelType = new Label(guiLeft + 122, guiTop + 15, "").colored(0xFFFFFFFF)
+			.withShadow();
+		labelAlign = new Label(guiLeft + 122, guiTop + 35, "").colored(0xFFFFFFFF)
+			.withShadow();
 
-		int state = currentElement instanceof TriplePlaneMirror ? 2
-				: currentElement instanceof CrossPlaneMirror ? 1 : 0;
-		areaType = new SelectionScrollInput(guiLeft + 119, guiTop + 12, 70, 14)
-				.forOptions(SymmetryMirror.getMirrors()).titled(mirrorType).writingTo(labelType).setState(state);
+		int state =
+			currentElement instanceof TriplePlaneMirror ? 2 : currentElement instanceof CrossPlaneMirror ? 1 : 0;
+		areaType = new SelectionScrollInput(guiLeft + 119, guiTop + 12, 70, 14).forOptions(SymmetryMirror.getMirrors())
+			.titled(mirrorType)
+			.writingTo(labelType)
+			.setState(state);
 
 		areaType.calling(position -> {
 			switch (position) {
@@ -105,8 +109,10 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		}
 
 		areaAlign = new SelectionScrollInput(guiLeft + 119, guiTop + 32, 70, 14).forOptions(element.getAlignToolTips())
-				.titled(orientation).writingTo(labelAlign).setState(element.getOrientationIndex())
-				.calling(element::setOrientation);
+			.titled(orientation)
+			.writingTo(labelAlign)
+			.setState(element.getOrientationIndex())
+			.calling(element::setOrientation);
 
 		widgets.add(areaAlign);
 	}
@@ -127,7 +133,8 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		font.drawString(mirrorType, x - 5, y, ScreenResources.FONT_COLOR);
 		font.drawString(orientation, x - 5, y + 20, ScreenResources.FONT_COLOR);
 
-		minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		minecraft.getTextureManager()
+			.bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
 		RenderSystem.enableBlend();
 
 		renderBlock();
@@ -135,7 +142,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 		RenderSystem.pushLightingAttributes();
 		RenderSystem.pushMatrix();
-
+		
 		RenderHelper.enable();
 		RenderSystem.enableBlend();
 		RenderSystem.enableRescaleNormal();
@@ -149,7 +156,9 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		RenderSystem.rotatef(90 + 0.2f * animationProgress, 0, 1, 0);
 		RenderSystem.scaled(100, -100, 100);
 		itemRenderer.renderItem(wand, TransformType.NONE, 0xF000F0, OverlayTexture.DEFAULT_UV, new MatrixStack(),
-				Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers());
+			Minecraft.getInstance()
+				.getBufferBuilders()
+				.getEntityVertexConsumers());
 
 		RenderSystem.disableAlphaTest();
 		RenderSystem.disableRescaleNormal();
@@ -161,14 +170,17 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 	protected void renderBlock() {
 		MatrixStack ms = new MatrixStack();
-		IRenderTypeBuffer buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		IRenderTypeBuffer buffer = Minecraft.getInstance()
+			.getBufferBuilders()
+			.getEntityVertexConsumers();
 
 		ms.translate(guiLeft + 15, guiTop - 117, 20);
 		ms.multiply(new Vector3f(.3f, 1f, 0f).getDegreesQuaternion(-22.5f));
 		ms.scale(32, -32, 32);
 		ms.translate(0, -5, 0);
-		minecraft.getBlockRendererDispatcher().renderBlock(currentElement.getModel(), ms, buffer, 0xF000F0,
-				OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+		minecraft.getBlockRendererDispatcher()
+			.renderBlock(currentElement.getModel(), ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV,
+				EmptyModelData.INSTANCE);
 	}
 
 	@Override

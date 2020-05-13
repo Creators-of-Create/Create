@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.simibubi.create.foundation.block.IHaveCustomBlockModel;
-import com.simibubi.create.foundation.block.connected.IHaveConnectedTextures;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
@@ -42,6 +40,7 @@ public class CreateClient {
 	public static SchematicHandler schematicHandler;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
+	private static CustomBlockModels customBlockModels;
 
 	public static void addListeners(IEventBus modEventBus) {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
@@ -70,7 +69,7 @@ public class CreateClient {
 		AllEntities.registerRenderers();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
-				.getResourceManager();
+			.getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 	}
@@ -84,17 +83,16 @@ public class CreateClient {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {
-		if (!event.getMap().getId().equals(PlayerContainer.BLOCK_ATLAS_TEXTURE))
+		if (!event.getMap()
+			.getId()
+			.equals(PlayerContainer.BLOCK_ATLAS_TEXTURE))
 			return;
 
 		event.addSprite(new ResourceLocation(Create.ID, "block/belt_animated"));
-		for (AllBlocks allBlocks : AllBlocks.values()) {
-			Block block = allBlocks.get();
-			if (block instanceof IHaveConnectedTextures)
-				for (SpriteShiftEntry spriteShiftEntry : ((IHaveConnectedTextures) block).getBehaviour()
-						.getAllCTShifts())
-					event.addSprite(spriteShiftEntry.getTargetResourceLocation());
-		}
+
+		for (AllCTs ct : AllCTs.values())
+			event.addSprite(ct.get()
+				.getTargetResourceLocation());
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -102,18 +100,15 @@ public class CreateClient {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
 		AllBlockPartials.onModelBake(event);
 
-		for (AllBlocks allBlocks : AllBlocks.values()) {
-			Block block = allBlocks.get();
-			if (block instanceof IHaveCustomBlockModel)
-				swapModels(modelRegistry, getAllBlockStateModelLocations(allBlocks),
-						((IHaveCustomBlockModel) block)::createModel);
-		}
+		getCustomBlockModels()
+			.foreach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
 
+		// todo modelswap for item registrate
 		for (AllItems item : AllItems.values()) {
 			if (item.get() instanceof IHaveCustomItemModel)
 				swapModels(modelRegistry, getItemModelLocation(item),
-						m -> ((IHaveCustomItemModel) item.get()).createModel(m)
-								.loadPartials(event));
+					m -> ((IHaveCustomItemModel) item.get()).createModel(m)
+						.loadPartials(event));
 		}
 	}
 
@@ -125,47 +120,51 @@ public class CreateClient {
 		for (AllItems item : AllItems.values()) {
 			if (item.get() instanceof IHaveCustomItemModel)
 				((IHaveCustomItemModel) item.get()).createModel(null)
-						.getModelLocations()
-						.forEach(ModelLoader::addSpecialModel);
+					.getModelLocations()
+					.forEach(ModelLoader::addSpecialModel);
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	protected static ModelResourceLocation getItemModelLocation(AllItems item) {
 		return new ModelResourceLocation(item.get()
-				.getRegistryName(), "inventory");
+			.getRegistryName(), "inventory");
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	protected static List<ModelResourceLocation> getAllBlockStateModelLocations(AllBlocks block) {
+	protected static List<ModelResourceLocation> getAllBlockStateModelLocations(Block block) {
 		List<ModelResourceLocation> models = new ArrayList<>();
-		block.get()
-				.getStateContainer()
-				.getValidStates()
-				.forEach(state -> {
-					models.add(getBlockModelLocation(block, BlockModelShapes.getPropertyMapString(state.getValues())));
-				});
+		block.getStateContainer()
+			.getValidStates()
+			.forEach(state -> {
+				models.add(getBlockModelLocation(block, BlockModelShapes.getPropertyMapString(state.getValues())));
+			});
 		return models;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	protected static ModelResourceLocation getBlockModelLocation(AllBlocks block, String suffix) {
-		return new ModelResourceLocation(block.get()
-				.getRegistryName(), suffix);
+	protected static ModelResourceLocation getBlockModelLocation(Block block, String suffix) {
+		return new ModelResourceLocation(block.getRegistryName(), suffix);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
-			ModelResourceLocation location, Function<IBakedModel, T> factory) {
+		ModelResourceLocation location, Function<IBakedModel, T> factory) {
 		modelRegistry.put(location, factory.apply(modelRegistry.get(location)));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
-			List<ModelResourceLocation> locations, Function<IBakedModel, T> factory) {
+		List<ModelResourceLocation> locations, Function<IBakedModel, T> factory) {
 		locations.forEach(location -> {
 			swapModels(modelRegistry, location, factory);
 		});
+	}
+
+	public static CustomBlockModels getCustomBlockModels() {
+		if (customBlockModels == null)
+			customBlockModels = new CustomBlockModels();
+		return customBlockModels;
 	}
 
 }

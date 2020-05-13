@@ -7,6 +7,10 @@ import com.simibubi.create.foundation.utility.SuperByteBuffer;
 public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 
 	int textureSheetSize;
+	
+	public enum Type {
+		HORIZONTAL, VERTICAL, OMNIDIRECTIONAL;
+	}
 
 	public CTSpriteShiftEntry(int sheetSize) {
 		this.textureSheetSize = sheetSize;
@@ -25,6 +29,7 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 	}
 
 	public abstract int getTextureIndex(CTContext context);
+	public abstract Type getType();
 
 	public static class Horizontal extends CTSpriteShiftEntry {
 
@@ -35,6 +40,11 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 		@Override
 		public int getTextureIndex(CTContext context) {
 			return (context.right ? 1 : 0) + (context.left ? 2 : 0);
+		}
+
+		@Override
+		public Type getType() {
+			return Type.HORIZONTAL;
 		}
 
 	}
@@ -48,6 +58,11 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 		@Override
 		public int getTextureIndex(CTContext context) {
 			return (context.up ? 1 : 0) + (context.down ? 2 : 0);
+		}
+
+		@Override
+		public Type getType() {
+			return Type.VERTICAL;
 		}
 
 	}
@@ -118,6 +133,11 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 			}
 
 			return tileX + 8 * tileY;
+		}
+
+		@Override
+		public Type getType() {
+			return Type.OMNIDIRECTIONAL;
 		}
 
 	}

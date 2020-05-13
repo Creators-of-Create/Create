@@ -24,16 +24,16 @@ import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableContainer>
-		implements IHasContainer<SchematicTableContainer> {
+	implements IHasContainer<SchematicTableContainer> {
 
 	private ScrollInput schematicsArea;
 	private IconButton confirmButton;
@@ -52,7 +52,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	private float lastChasingProgress;
 
 	public SchematicTableScreen(SchematicTableContainer container, PlayerInventory playerInventory,
-			ITextComponent title) {
+		ITextComponent title) {
 		super(container, playerInventory, title);
 	}
 
@@ -71,8 +71,10 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		schematicsLabel = new Label(mainLeft + 36, mainTop + 26, "").withShadow();
 		schematicsLabel.text = "";
 		if (!availableSchematics.isEmpty()) {
-			schematicsArea = new SelectionScrollInput(mainLeft + 33, mainTop + 23, 134, 14)
-					.forOptions(availableSchematics).titled(availableSchematicsTitle).writingTo(schematicsLabel);
+			schematicsArea =
+				new SelectionScrollInput(mainLeft + 33, mainTop + 23, 134, 14).forOptions(availableSchematics)
+					.titled(availableSchematicsTitle)
+					.writingTo(schematicsLabel);
 			widgets.add(schematicsArea);
 			widgets.add(schematicsLabel);
 		}
@@ -101,12 +103,14 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		int mainTop = guiTop - 16;
 
 		ScreenResources.PLAYER_INVENTORY.draw(this, x - 16, y + 70 + 14);
-		font.drawString(playerInventory.getDisplayName().getFormattedText(), x - 15 + 7, y + 64 + 26, 0x666666);
+		font.drawString(playerInventory.getDisplayName()
+			.getFormattedText(), x - 15 + 7, y + 64 + 26, 0x666666);
 
 		SCHEMATIC_TABLE.draw(this, mainLeft, mainTop);
 		if (container.getTileEntity().isUploading)
 			font.drawString(uploading, mainLeft + 76, mainTop + 10, ScreenResources.FONT_COLOR);
-		else if (container.getSlot(1).getHasStack())
+		else if (container.getSlot(1)
+			.getHasStack())
 			font.drawString(finished, mainLeft + 60, mainTop + 10, ScreenResources.FONT_COLOR);
 		else
 			font.drawString(title, mainLeft + 60, mainTop + 10, ScreenResources.FONT_COLOR);
@@ -115,13 +119,14 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			font.drawStringWithShadow(noSchematics, mainLeft + 39, mainTop + 26, 0xFFDD44);
 		}
 
-		minecraft.getTextureManager().bindTexture(SCHEMATIC_TABLE_PROGRESS.location);
+		minecraft.getTextureManager()
+			.bindTexture(SCHEMATIC_TABLE_PROGRESS.location);
 		int width = (int) (SCHEMATIC_TABLE_PROGRESS.width
-				* MathHelper.lerp(partialTicks, lastChasingProgress, chasingProgress));
+			* MathHelper.lerp(partialTicks, lastChasingProgress, chasingProgress));
 		int height = SCHEMATIC_TABLE_PROGRESS.height;
 		RenderSystem.disableLighting();
 		blit(mainLeft + 94, mainTop + 56, SCHEMATIC_TABLE_PROGRESS.startX, SCHEMATIC_TABLE_PROGRESS.startY, width,
-				height);
+			height);
 
 		RenderSystem.pushMatrix();
 
@@ -137,10 +142,15 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		RenderSystem.rotatef(50, -.5f, 1, -.2f);
 		RenderSystem.scaled(50, -50, 50);
 
-		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		minecraft.getBlockRendererDispatcher().renderBlock(AllBlocksNew.SCHEMATIC_TABLE.get().getDefaultState(),
-				new MatrixStack(), getMinecraft().getBufferBuilders().getEntityVertexConsumers(), 0xF000F0,
-				OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+		Minecraft.getInstance()
+			.getTextureManager()
+			.bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
+		minecraft.getBlockRendererDispatcher()
+			.renderBlock(AllBlocksNew.SCHEMATIC_TABLE.get()
+				.getDefaultState(), new MatrixStack(),
+				getMinecraft().getBufferBuilders()
+					.getEntityVertexConsumers(),
+				0xF000F0, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
 
 		RenderSystem.disableAlphaTest();
 		RenderSystem.disableRescaleNormal();
@@ -151,7 +161,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	@Override
 	public void tick() {
 		super.tick();
-		boolean finished = container.getSlot(1).getHasStack();
+		boolean finished = container.getSlot(1)
+			.getHasStack();
 
 		if (container.getTileEntity().isUploading || finished) {
 			if (finished) {
@@ -189,7 +200,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		ClientSchematicLoader schematicSender = CreateClient.schematicSender;
 
 		if (confirmButton.active && confirmButton.isHovered() && ((SchematicTableContainer) container).canWrite()
-				&& schematicsArea != null) {
+			&& schematicsArea != null) {
 
 			lastChasingProgress = chasingProgress = progress = 0;
 			List<String> availableSchematics = schematicSender.getAvailableSchematics();
@@ -198,7 +209,9 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		}
 
 		if (folderButton.isHovered()) {
-			Util.getOSType().openFile(Paths.get("schematics/").toFile());
+			Util.getOSType()
+				.openFile(Paths.get("schematics/")
+					.toFile());
 		}
 
 		if (refreshButton.isHovered()) {
@@ -208,7 +221,9 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 			if (!availableSchematics.isEmpty()) {
 				schematicsArea = new SelectionScrollInput(guiLeft - 56 + 33, guiTop - 16 + 23, 134, 14)
-						.forOptions(availableSchematics).titled(availableSchematicsTitle).writingTo(schematicsLabel);
+					.forOptions(availableSchematics)
+					.titled(availableSchematicsTitle)
+					.writingTo(schematicsLabel);
 				widgets.add(schematicsArea);
 			} else {
 				schematicsArea = null;

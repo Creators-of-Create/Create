@@ -25,9 +25,9 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RegionRenderCacheBuilder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -92,7 +92,9 @@ public class SchematicRenderer {
 
 		RenderSystem.enableAlphaTest();
 		RenderSystem.enableBlend();
-		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		Minecraft.getInstance()
+			.getTextureManager()
+			.bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
 
 		for (RenderType layer : RenderType.getBlockLayers()) {
 			if (!usedBlockRenderLayers.contains(layer)) {

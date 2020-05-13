@@ -1,8 +1,14 @@
 package com.simibubi.create.modules.palettes;
 
+import com.simibubi.create.AllCTs;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
+import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
 import com.simibubi.create.foundation.utility.data.BlockStateGen;
+import com.tterrag.registrate.providers.DataGenContext;
+import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -11,6 +17,20 @@ import net.minecraft.block.SandBlock;
 public class AllPaletteBlocks {
 
 	private static final PalettesRegistrate REGISTRATE = Create.palettesRegistrate();
+
+	// Windows and Glass
+
+	public static final BlockEntry<ConnectedGlassBlock> FRAMED_GLASS =
+		REGISTRATE.framedGlass("framed_glass", new StandardCTBehaviour(AllCTs.FRAMED_GLASS.get()));
+
+	public static final BlockEntry<ConnectedGlassBlock> HORIZONTAL_FRAMED_GLASS =
+		REGISTRATE.framedGlass("horizontal_framed_glass",
+			new HorizontalCTBehaviour(AllCTs.HORIZONTAL_FRAMED_GLASS.get(), AllCTs.FRAMED_GLASS.get()));
+
+	public static final BlockEntry<ConnectedGlassBlock> VERTICAL_FRAMED_GLASS =
+		REGISTRATE.framedGlass("vertical_framed_glass", new HorizontalCTBehaviour(AllCTs.VERTICAL_FRAMED_GLASS.get()));
+
+	// Vanilla stone variant patterns
 
 	public static final PalettesVariantEntry GRANITE_VARIANTS = new PalettesVariantEntry("granite",
 		PaletteBlockPatterns.vanillaRange, b -> b.initialProperties(() -> Blocks.GRANITE)
@@ -27,10 +47,13 @@ public class AllPaletteBlocks {
 			.simpleItem()
 			.register());
 
-	public static final BlockEntry<SandBlock> LIMESAND = REGISTRATE.block("limesand", p -> new SandBlock(0xD7D7C7, p))
-		.initialProperties(() -> Blocks.SAND)
-		.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "block/palettes/" + c.getName()))
-		.register();
+	// Create stone variants
+
+	public static final BlockEntry<SandBlock> LIMESAND =
+		REGISTRATE.createBlock("limesand", p -> new SandBlock(0xD7D7C7, p))
+			.initialProperties(() -> Blocks.SAND)
+			.blockstate(palettesCubeAll())
+			.register();
 
 	public static final BlockEntry<Block> LIMESTONE =
 		REGISTRATE.baseBlock("limestone", Block::new, () -> Blocks.SANDSTONE)
@@ -68,10 +91,11 @@ public class AllPaletteBlocks {
 			.simpleItem()
 			.register());
 
-	public static final BlockEntry<ScoriaBlock> NATURAL_SCORIA = REGISTRATE.block("natural_scoria", ScoriaBlock::new)
-		.initialProperties(() -> Blocks.ANDESITE)
-		.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "block/palettes/" + c.getName()))
-		.register();
+	public static final BlockEntry<ScoriaBlock> NATURAL_SCORIA =
+		REGISTRATE.createBlock("natural_scoria", ScoriaBlock::new)
+			.initialProperties(() -> Blocks.ANDESITE)
+			.blockstate(palettesCubeAll())
+			.register();
 
 	public static final BlockEntry<Block> SCORIA = REGISTRATE.baseBlock("scoria", Block::new, () -> Blocks.ANDESITE)
 		.register();
@@ -92,4 +116,7 @@ public class AllPaletteBlocks {
 
 	public static void register() {}
 
+	private static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> palettesCubeAll() {
+		return (c, p) -> BlockStateGen.cubeAll(c, p, "palettes/");
+	}
 }
