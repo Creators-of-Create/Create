@@ -53,8 +53,6 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.AdjustablePulleyBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.gauge.GaugeBlock;
-import com.simibubi.create.modules.curiosities.CocoaLogBlock;
-import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.CrossPlaneSymmetryBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.PlaneSymmetryBlock;
 import com.simibubi.create.modules.curiosities.symmetry.block.TriplePlaneSymmetryBlock;
@@ -214,9 +212,6 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 	SYMMETRY_PLANE(PlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
 	SYMMETRY_CROSSPLANE(CrossPlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
 	SYMMETRY_TRIPLEPLANE(TriplePlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
-	WINDOW_IN_A_BLOCK(WindowInABlockBlock::new, ComesWith.NO_BLOCKITEM),
-	COCOA_LOG(CocoaLogBlock::new, ITaggable.create()
-			.withVanillaTags(ITaggable.BLOCK, "jungle_logs")),
 
 	_5_(Sections.SCHEMATICS),
 

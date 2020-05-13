@@ -4,21 +4,15 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
-import com.simibubi.create.foundation.utility.data.BlockStateGen;
 import com.simibubi.create.modules.Sections;
-import com.simibubi.create.modules.palettes.ConnectedGlassBlock;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.Builder;
-import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -79,17 +73,6 @@ public class CreateRegistrateBase<C extends AbstractRegistrate<C>> extends Abstr
 			.map(Entry::getValue)
 			.findFirst()
 			.orElse(Sections.UNASSIGNED);
-	}
-
-	// Specific patterns
-
-	public BlockEntry<ConnectedGlassBlock> framedGlass(String name, ConnectedTextureBehaviour behaviour) {
-		return createBlock(name, ConnectedGlassBlock::new).connectedTextures(behaviour)
-			.addLayer(() -> RenderType::getTranslucent)
-			.initialProperties(() -> Blocks.GLASS)
-			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
-			.simpleItem()
-			.register();
 	}
 
 }

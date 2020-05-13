@@ -1,7 +1,0 @@
-{
-    "parent": "block/cube_column",
-    "textures": {
-        "end": "block/spruce_log_top",
-        "side": "create:block/spruce_window"
-    }
-}

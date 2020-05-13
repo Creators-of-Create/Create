@@ -53,13 +53,13 @@ public class PaletteBlockPatterns {
 			.blockStateFactory(p -> p::cubeAllButMossy)
 			.block(MossyBlock::new)
 			.textures("bricks", "mossy")
-			.useCutoutLayer(),
+			.useTranslucentLayer(),
 
 		OVERGROWN = create("overgrown", Prefix)
 			.blockStateFactory(p -> p::cubeAllButMossy)
 			.block(MossyBlock::new)
 			.textures("bricks", "overgrown")
-			.useCutoutLayer()
+			.useTranslucentLayer()
 
 	;
 
@@ -75,7 +75,7 @@ public class PaletteBlockPatterns {
 	private PatternNameType nameType;
 	private String[] textures;
 	private String id;
-	private boolean isCutout;
+	private boolean isTranslucent;
 
 	private IPatternBlockStateGenerator blockStateGenerator;
 	private NonNullFunction<Properties, ? extends Block> blockFactory;
@@ -87,7 +87,7 @@ public class PaletteBlockPatterns {
 		PaletteBlockPatterns pattern = new PaletteBlockPatterns();
 		pattern.id = name;
 		pattern.nameType = nameType;
-		pattern.isCutout = false;
+		pattern.isTranslucent = false;
 		pattern.blockFactory = Block::new;
 		pattern.textures = new String[] { name };
 		pattern.blockStateGenerator = p -> p::cubeAll;
@@ -98,8 +98,8 @@ public class PaletteBlockPatterns {
 		return blockStateGenerator;
 	}
 
-	public boolean isCutout() {
-		return isCutout;
+	public boolean isTranslucent() {
+		return isTranslucent;
 	}
 
 	public NonNullFunction<Properties, ? extends Block> getBlockFactory() {
@@ -123,8 +123,8 @@ public class PaletteBlockPatterns {
 		return this;
 	}
 
-	private PaletteBlockPatterns useCutoutLayer() {
-		isCutout = true;
+	private PaletteBlockPatterns useTranslucentLayer() {
+		isTranslucent = true;
 		return this;
 	}
 

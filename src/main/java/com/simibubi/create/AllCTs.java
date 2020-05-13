@@ -12,18 +12,17 @@ import net.minecraft.util.ResourceLocation;
 
 public enum AllCTs {
 
-	FRAMED_GLASS(custom(OMNIDIRECTIONAL, "palettes/framed_glass", "framed_glass")),
-	HORIZONTAL_FRAMED_GLASS(custom(HORIZONTAL, "palettes/framed_glass", "horizontal_framed_glass")),
-	VERTICAL_FRAMED_GLASS(custom(VERTICAL, "palettes/framed_glass", "vertical_framed_glass")),
+	FRAMED_GLASS(custom(OMNIDIRECTIONAL, "palettes/framed_glass", "palettes/framed_glass")),
+	HORIZONTAL_FRAMED_GLASS(custom(HORIZONTAL, "palettes/framed_glass", "palettes/horizontal_framed_glass")),
+	VERTICAL_FRAMED_GLASS(custom(VERTICAL, "palettes/framed_glass", "palettes/vertical_framed_glass")),
 
-	OAK_GLASS(vertical("oak_window")),
-	SPRUCE_GLASS(vertical("spruce_window")),
-	BIRCH_GLASS(vertical("birch_window")),
-	JUNGLE_GLASS(vertical("jungle_window")),
-	DARK_OAK_GLASS(vertical("dark_oak_window")),
-	ACACIA_GLASS(vertical("acacia_window")),
-	ACACIA_GLASS_DENSE(vertical("acacia_window_dense")),
-	IRON_GLASS(vertical("iron_window")),
+	OAK_WINDOW(vertical("palettes/oak_window")),
+	SPRUCE_WINDOW(vertical("palettes/spruce_window")),
+	BIRCH_WINDOW(vertical("palettes/birch_window")),
+	JUNGLE_WINDOW(vertical("palettes/jungle_window")),
+	ACACIA_WINDOW(vertical("palettes/acacia_window")),
+	DARK_OAK_WINDOW(vertical("palettes/dark_oak_window")),
+	ORNATE_IRON_WINDOW(vertical("palettes/ornate_iron_window")),
 
 	GRANITE_LAYERS(layers("granite")),
 	DIORITE_LAYERS(layers("diorite")),

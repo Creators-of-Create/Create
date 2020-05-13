@@ -25,8 +25,8 @@ public class PalettesVariantEntry {
 							.apply(pattern)
 							.apply(name)::accept);
 
-			if (pattern.isCutout())
-				builder.addLayer(() -> RenderType::getCutoutMipped);
+			if (pattern.isTranslucent())
+				builder.addLayer(() -> RenderType::getTranslucent);
 
 			registeredBlocks.add(registerFunc.apply(builder));
 		}

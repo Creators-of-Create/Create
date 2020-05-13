@@ -13,6 +13,7 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SandBlock;
+import net.minecraft.client.renderer.RenderType;
 
 public class AllPaletteBlocks {
 
@@ -29,6 +30,16 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<ConnectedGlassBlock> VERTICAL_FRAMED_GLASS =
 		REGISTRATE.framedGlass("vertical_framed_glass", new HorizontalCTBehaviour(AllCTs.VERTICAL_FRAMED_GLASS.get()));
+
+	public static final BlockEntry<WindowBlock> OAK_WINDOW = REGISTRATE.woodenWindowBlock("oak", AllCTs.OAK_WINDOW),
+		SPRUCE_WINDOW = REGISTRATE.woodenWindowBlock("spruce", AllCTs.SPRUCE_WINDOW),
+		BIRCH_WINDOW = REGISTRATE.woodenWindowBlock("birch", AllCTs.BIRCH_WINDOW, () -> RenderType::getTranslucent),
+		JUNGLE_WINDOW = REGISTRATE.woodenWindowBlock("jungle", AllCTs.JUNGLE_WINDOW),
+		ACACIA_WINDOW = REGISTRATE.woodenWindowBlock("acacia", AllCTs.ACACIA_WINDOW),
+		DARK_OAK_WINDOW = REGISTRATE.woodenWindowBlock("dark_oak", AllCTs.DARK_OAK_WINDOW);
+
+	public static final BlockEntry<WindowBlock> ORNATE_IRON_WINDOW =
+		REGISTRATE.customWindowBlock("ornate_iron_window", AllCTs.ORNATE_IRON_WINDOW, () -> RenderType::getCutoutMipped);
 
 	// Vanilla stone variant patterns
 
@@ -95,6 +106,7 @@ public class AllPaletteBlocks {
 		REGISTRATE.createBlock("natural_scoria", ScoriaBlock::new)
 			.initialProperties(() -> Blocks.ANDESITE)
 			.blockstate(palettesCubeAll())
+			.simpleItem()
 			.register();
 
 	public static final BlockEntry<Block> SCORIA = REGISTRATE.baseBlock("scoria", Block::new, () -> Blocks.ANDESITE)

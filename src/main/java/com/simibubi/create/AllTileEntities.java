@@ -70,7 +70,6 @@ import com.simibubi.create.modules.contraptions.relays.gauge.StressGaugeTileEnti
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxTileEntity;
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearshiftTileEntity;
-import com.simibubi.create.modules.curiosities.partialWindows.WindowInABlockTileEntity;
 import com.simibubi.create.modules.logistics.block.RedstoneLinkTileEntity;
 import com.simibubi.create.modules.logistics.block.StockswitchTileEntity;
 import com.simibubi.create.modules.logistics.block.belts.observer.BeltObserverTileEntity;
@@ -166,9 +165,6 @@ public enum AllTileEntities {
 	ENTITY_DETECTOR(BeltObserverTileEntity::new, AllBlocks.ENTITY_DETECTOR),
 	FLEXPEATER(FlexpeaterTileEntity::new, AllBlocks.FLEXPEATER),
 	FLEXPULSEPEATER(FlexPulsepeaterTileEntity::new, AllBlocks.FLEXPULSEPEATER),
-
-	// Curiosities
-	WINDOW_IN_A_BLOCK(WindowInABlockTileEntity::new, AllBlocks.WINDOW_IN_A_BLOCK),
 
 	;
 

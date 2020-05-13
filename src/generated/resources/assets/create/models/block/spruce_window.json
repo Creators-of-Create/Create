@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "side": "create:block/palettes/spruce_window",
+    "end": "block/spruce_planks"
+  }
+}
