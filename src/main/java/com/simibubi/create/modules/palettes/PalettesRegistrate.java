@@ -24,6 +24,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 public class PalettesRegistrate extends CreateRegistrateBase<PalettesRegistrate> {
@@ -102,8 +103,11 @@ public class PalettesRegistrate extends CreateRegistrateBase<PalettesRegistrate>
 
 	private <T extends Block> NonNullUnaryOperator<BlockBuilder<T, PalettesRegistrate>> connectedTextures(
 			ConnectedTextureBehaviour behavior) {
-		return b -> b.onRegister(entry -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
-				CreateClient.getCustomBlockModels()
-						.register(entry.delegate, model -> new CTModel(model, behavior))));
+		return b -> b.onRegister(entry -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> registerModel(entry, behavior)));
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	private void registerModel(Block entry, ConnectedTextureBehaviour behavior) {
+		CreateClient.getCustomBlockModels().register(entry.delegate, model -> new CTModel(model, behavior));
 	}
 }
