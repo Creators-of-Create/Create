@@ -4,6 +4,8 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.AllCTs;
 import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.registrate.CreateRegistrateBase;
@@ -14,12 +16,15 @@ import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 public class PalettesRegistrate extends CreateRegistrateBase<PalettesRegistrate> {
 
@@ -72,7 +77,8 @@ public class PalettesRegistrate extends CreateRegistrateBase<PalettesRegistrate>
 
 	public BlockEntry<WindowBlock> windowBlock(String name, AllCTs ct, Supplier<Supplier<RenderType>> renderType,
 		NonNullFunction<String, ResourceLocation> endTexture, NonNullFunction<String, ResourceLocation> sideTexture) {
-		return createBlock(name, WindowBlock::new).connectedTextures(new HorizontalCTBehaviour(ct.get()))
+		return block(name, WindowBlock::new)
+			.transform(connectedTextures(new HorizontalCTBehaviour(ct.get())))
 			.addLayer(renderType)
 			.initialProperties(() -> Blocks.GLASS)
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
@@ -82,7 +88,8 @@ public class PalettesRegistrate extends CreateRegistrateBase<PalettesRegistrate>
 	}
 
 	public BlockEntry<ConnectedGlassBlock> framedGlass(String name, ConnectedTextureBehaviour behaviour) {
-		return createBlock(name, ConnectedGlassBlock::new).connectedTextures(behaviour)
+		return block(name, ConnectedGlassBlock::new)
+			.transform(connectedTextures(behaviour))
 			.addLayer(() -> RenderType::getTranslucent)
 			.initialProperties(() -> Blocks.GLASS)
 			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
@@ -90,7 +97,13 @@ public class PalettesRegistrate extends CreateRegistrateBase<PalettesRegistrate>
 			.model((c, p) -> p.cubeColumn(c.getName(), p.modLoc("block/palettes/" + c.getName()),
 				p.modLoc("block/palettes/framed_glass")))
 			.build()
-			.register();
+				.register();
 	}
 
+	private <T extends Block> NonNullUnaryOperator<BlockBuilder<T, PalettesRegistrate>> connectedTextures(
+			ConnectedTextureBehaviour behavior) {
+		return b -> b.onRegister(entry -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+				CreateClient.getCustomBlockModels()
+						.register(entry.delegate, model -> new CTModel(model, behavior))));
+	}
 }

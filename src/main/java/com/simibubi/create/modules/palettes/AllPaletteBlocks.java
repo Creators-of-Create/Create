@@ -61,7 +61,7 @@ public class AllPaletteBlocks {
 	// Create stone variants
 
 	public static final BlockEntry<SandBlock> LIMESAND =
-		REGISTRATE.createBlock("limesand", p -> new SandBlock(0xD7D7C7, p))
+		REGISTRATE.block("limesand", p -> new SandBlock(0xD7D7C7, p))
 			.initialProperties(() -> Blocks.SAND)
 			.blockstate(palettesCubeAll())
 			.register();
@@ -103,7 +103,7 @@ public class AllPaletteBlocks {
 			.register());
 
 	public static final BlockEntry<ScoriaBlock> NATURAL_SCORIA =
-		REGISTRATE.createBlock("natural_scoria", ScoriaBlock::new)
+		REGISTRATE.block("natural_scoria", ScoriaBlock::new)
 			.initialProperties(() -> Blocks.ANDESITE)
 			.blockstate(palettesCubeAll())
 			.simpleItem()
