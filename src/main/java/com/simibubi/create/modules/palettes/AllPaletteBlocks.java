@@ -1,10 +1,18 @@
 package com.simibubi.create.modules.palettes;
 
+import static com.simibubi.create.foundation.utility.data.WindowGen.customWindowBlock;
+import static com.simibubi.create.foundation.utility.data.WindowGen.customWindowPane;
+import static com.simibubi.create.foundation.utility.data.WindowGen.framedGlass;
+import static com.simibubi.create.foundation.utility.data.WindowGen.framedGlassPane;
+import static com.simibubi.create.foundation.utility.data.WindowGen.woodenWindowBlock;
+import static com.simibubi.create.foundation.utility.data.WindowGen.woodenWindowPane;
+
 import com.simibubi.create.AllCTs;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
 import com.simibubi.create.foundation.utility.data.BlockStateGen;
+import com.simibubi.create.foundation.utility.data.WindowGen;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -12,8 +20,10 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.GlassBlock;
 import net.minecraft.block.SandBlock;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.ResourceLocation;
 
 public class AllPaletteBlocks {
 
@@ -21,25 +31,44 @@ public class AllPaletteBlocks {
 
 	// Windows and Glass
 
+	public static final BlockEntry<GlassBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", GlassBlock::new)
+		.initialProperties(() -> Blocks.GLASS)
+		.blockstate(palettesCubeAll())
+		.simpleItem()
+		.register();
+
 	public static final BlockEntry<ConnectedGlassBlock> FRAMED_GLASS =
-		REGISTRATE.framedGlass("framed_glass", new StandardCTBehaviour(AllCTs.FRAMED_GLASS.get()));
+		framedGlass("framed_glass", new StandardCTBehaviour(AllCTs.FRAMED_GLASS.get())),
+		HORIZONTAL_FRAMED_GLASS = framedGlass("horizontal_framed_glass",
+			new HorizontalCTBehaviour(AllCTs.HORIZONTAL_FRAMED_GLASS.get(), AllCTs.FRAMED_GLASS.get())),
+		VERTICAL_FRAMED_GLASS =
+			framedGlass("vertical_framed_glass", new HorizontalCTBehaviour(AllCTs.VERTICAL_FRAMED_GLASS.get()));
 
-	public static final BlockEntry<ConnectedGlassBlock> HORIZONTAL_FRAMED_GLASS =
-		REGISTRATE.framedGlass("horizontal_framed_glass",
-			new HorizontalCTBehaviour(AllCTs.HORIZONTAL_FRAMED_GLASS.get(), AllCTs.FRAMED_GLASS.get()));
+	public static final BlockEntry<GlassPaneBlock> TILED_GLASS_PANE =
+		WindowGen.standardGlassPane("tiled_glass", Create.asResource("block/palettes/tiled_glass"),
+			new ResourceLocation("block/glass_pane_top"), () -> RenderType::getCutoutMipped);
 
-	public static final BlockEntry<ConnectedGlassBlock> VERTICAL_FRAMED_GLASS =
-		REGISTRATE.framedGlass("vertical_framed_glass", new HorizontalCTBehaviour(AllCTs.VERTICAL_FRAMED_GLASS.get()));
+	public static final BlockEntry<ConnectedGlassPaneBlock> FRAMED_GLASS_PANE =
+		framedGlassPane("framed_glass", AllCTs.FRAMED_GLASS),
+		HORIZONTAL_FRAMED_GLASS_PANE = framedGlassPane("horizontal_framed_glass", AllCTs.HORIZONTAL_FRAMED_GLASS),
+		VERTICAL_FRAMED_GLASS_PANE = framedGlassPane("vertical_framed_glass", AllCTs.VERTICAL_FRAMED_GLASS);
 
-	public static final BlockEntry<WindowBlock> OAK_WINDOW = REGISTRATE.woodenWindowBlock("oak", AllCTs.OAK_WINDOW),
-		SPRUCE_WINDOW = REGISTRATE.woodenWindowBlock("spruce", AllCTs.SPRUCE_WINDOW),
-		BIRCH_WINDOW = REGISTRATE.woodenWindowBlock("birch", AllCTs.BIRCH_WINDOW, () -> RenderType::getTranslucent),
-		JUNGLE_WINDOW = REGISTRATE.woodenWindowBlock("jungle", AllCTs.JUNGLE_WINDOW),
-		ACACIA_WINDOW = REGISTRATE.woodenWindowBlock("acacia", AllCTs.ACACIA_WINDOW),
-		DARK_OAK_WINDOW = REGISTRATE.woodenWindowBlock("dark_oak", AllCTs.DARK_OAK_WINDOW);
+	public static final BlockEntry<WindowBlock> OAK_WINDOW = woodenWindowBlock("oak", AllCTs.OAK_WINDOW),
+		SPRUCE_WINDOW = woodenWindowBlock("spruce", AllCTs.SPRUCE_WINDOW),
+		BIRCH_WINDOW = woodenWindowBlock("birch", AllCTs.BIRCH_WINDOW, () -> RenderType::getTranslucent),
+		JUNGLE_WINDOW = woodenWindowBlock("jungle", AllCTs.JUNGLE_WINDOW),
+		ACACIA_WINDOW = woodenWindowBlock("acacia", AllCTs.ACACIA_WINDOW),
+		DARK_OAK_WINDOW = woodenWindowBlock("dark_oak", AllCTs.DARK_OAK_WINDOW), ORNATE_IRON_WINDOW =
+			customWindowBlock("ornate_iron_window", AllCTs.ORNATE_IRON_WINDOW, () -> RenderType::getCutoutMipped);
 
-	public static final BlockEntry<WindowBlock> ORNATE_IRON_WINDOW =
-		REGISTRATE.customWindowBlock("ornate_iron_window", AllCTs.ORNATE_IRON_WINDOW, () -> RenderType::getCutoutMipped);
+	public static final BlockEntry<ConnectedGlassPaneBlock> OAK_WINDOW_PANE =
+		woodenWindowPane("oak", AllCTs.OAK_WINDOW),
+		SPRUCE_WINDOW_PANE = woodenWindowPane("spruce", AllCTs.SPRUCE_WINDOW),
+		BIRCH_WINDOW_PANE = woodenWindowPane("birch", AllCTs.BIRCH_WINDOW, () -> RenderType::getTranslucent),
+		JUNGLE_WINDOW_PANE = woodenWindowPane("jungle", AllCTs.JUNGLE_WINDOW),
+		ACACIA_WINDOW_PANE = woodenWindowPane("acacia", AllCTs.ACACIA_WINDOW),
+		DARK_OAK_WINDOW_PANE = woodenWindowPane("dark_oak", AllCTs.DARK_OAK_WINDOW), ORNATE_IRON_WINDOW_PANE =
+			customWindowPane("ornate_iron_window", AllCTs.ORNATE_IRON_WINDOW, () -> RenderType::getCutoutMipped);
 
 	// Vanilla stone variant patterns
 
@@ -60,11 +89,10 @@ public class AllPaletteBlocks {
 
 	// Create stone variants
 
-	public static final BlockEntry<SandBlock> LIMESAND =
-		REGISTRATE.block("limesand", p -> new SandBlock(0xD7D7C7, p))
-			.initialProperties(() -> Blocks.SAND)
-			.blockstate(palettesCubeAll())
-			.register();
+	public static final BlockEntry<SandBlock> LIMESAND = REGISTRATE.block("limesand", p -> new SandBlock(0xD7D7C7, p))
+		.initialProperties(() -> Blocks.SAND)
+		.blockstate(palettesCubeAll())
+		.register();
 
 	public static final BlockEntry<Block> LIMESTONE =
 		REGISTRATE.baseBlock("limestone", Block::new, () -> Blocks.SANDSTONE)
@@ -102,12 +130,11 @@ public class AllPaletteBlocks {
 			.simpleItem()
 			.register());
 
-	public static final BlockEntry<ScoriaBlock> NATURAL_SCORIA =
-		REGISTRATE.block("natural_scoria", ScoriaBlock::new)
-			.initialProperties(() -> Blocks.ANDESITE)
-			.blockstate(palettesCubeAll())
-			.simpleItem()
-			.register();
+	public static final BlockEntry<ScoriaBlock> NATURAL_SCORIA = REGISTRATE.block("natural_scoria", ScoriaBlock::new)
+		.initialProperties(() -> Blocks.ANDESITE)
+		.blockstate(palettesCubeAll())
+		.simpleItem()
+		.register();
 
 	public static final BlockEntry<Block> SCORIA = REGISTRATE.baseBlock("scoria", Block::new, () -> Blocks.ANDESITE)
 		.register();

@@ -1,7 +1,0 @@
-{
-    "parent": "create:block/template_glass_pane_side_alt",
-    "textures": {
-        "edge": "block/$EDGE",
-        "pane": "create:block/$PANE"
-    }
-}

@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/connected_glass_pane/noside_alt",
+  "textures": {
+    "pane": "create:block/palettes/jungle_window",
+    "edge": "block/jungle_planks"
+  }
+}

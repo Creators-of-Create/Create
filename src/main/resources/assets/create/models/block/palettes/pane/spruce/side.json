@@ -1,7 +1,0 @@
-{
-    "parent": "create:block/template_glass_pane_side",
-    "textures": {
-        "edge": "block/spruce_log",
-        "pane": "create:block/spruce_window"
-    }
-}

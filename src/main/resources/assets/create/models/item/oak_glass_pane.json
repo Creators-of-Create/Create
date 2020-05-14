@@ -1,7 +1,0 @@
-{
-    "parent": "create:item/pane",
-	"textures": {
-		"pane": "create:block/oak_window",
-		"edge": "block/oak_planks"
-	}
-}

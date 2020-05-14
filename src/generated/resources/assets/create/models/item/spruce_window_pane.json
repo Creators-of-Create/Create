@@ -1,0 +1,7 @@
+{
+  "parent": "create:item/pane",
+  "textures": {
+    "pane": "create:block/palettes/spruce_window",
+    "edge": "block/spruce_planks"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "block/template_glass_pane_post",
+  "textures": {
+    "pane": "create:block/palettes/tiled_glass",
+    "edge": "block/glass_pane_top"
+  }
+}

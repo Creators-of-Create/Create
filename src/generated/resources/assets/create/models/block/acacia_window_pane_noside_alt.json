@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/connected_glass_pane/noside_alt",
+  "textures": {
+    "pane": "create:block/palettes/acacia_window",
+    "edge": "block/acacia_planks"
+  }
+}

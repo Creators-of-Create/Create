@@ -1,7 +1,0 @@
-{
-    "parent": "create:block/template_glass_pane_post",
-    "textures": {
-        "edge": "create:block/framed_glass_pane_top",
-        "pane": "create:block/framed_glass"
-    }
-}

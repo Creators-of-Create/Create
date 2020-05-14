@@ -1,6 +1,0 @@
-{
-    "parent": "block/template_glass_pane_noside",
-    "textures": {
-        "pane": "create:block/tiled_glass"
-    }
-}
