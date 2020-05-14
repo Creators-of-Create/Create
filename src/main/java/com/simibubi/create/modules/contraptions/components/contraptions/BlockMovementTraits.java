@@ -26,6 +26,7 @@ import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
+import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -33,6 +34,7 @@ import net.minecraft.block.CarpetBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.FlowerPotBlock;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.block.LadderBlock;
 import net.minecraft.block.RedstoneDiodeBlock;
@@ -42,6 +44,7 @@ import net.minecraft.block.TorchBlock;
 import net.minecraft.block.WallTorchBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.state.properties.AttachFace;
+import net.minecraft.state.properties.BellAttachment;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -145,6 +148,8 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof CarpetBlock)
 			return true;
+		if (block instanceof BellBlock)
+			return true;
 		return false;
 	}
 
@@ -198,6 +203,16 @@ public class BlockMovementTraits {
 			return direction == state.get(NozzleBlock.FACING).getOpposite();
 		if (block instanceof EngineBlock)
 			return direction == state.get(EngineBlock.HORIZONTAL_FACING).getOpposite();
+		if (block instanceof BellBlock) {
+			BellAttachment attachment = state.get(BlockStateProperties.BELL_ATTACHMENT);
+			if (attachment == BellAttachment.FLOOR) {
+				return direction == Direction.DOWN;
+			}
+			if (attachment == BellAttachment.CEILING) {
+				return direction == Direction.UP;
+			}
+			return direction == state.get(HorizontalBlock.HORIZONTAL_FACING);
+		}
 		return false;
 	}
 
