@@ -83,7 +83,7 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 			return false;
 		BlockPos pos = entity.hangingPosition;
 		BlockPos pos2 = pos.offset(entity.getFacingDirection().getOpposite());
-		return entity.world.isAirBlock(pos) != entity.world.isAirBlock(pos2);
+		return !SuperGlueEntity.isValidFace(entity.world, pos2, entity.getFacingDirection()) || !SuperGlueEntity.isValidFace(entity.world, pos, entity.getFacingDirection().getOpposite());
 	}
 
 	private void initQuads() {
