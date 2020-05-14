@@ -66,6 +66,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		return new StringTextComponent(Lang.translate("block.deployer.damage_source_name"));
 	}
 
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public float getEyeHeight(Pose poseIn) {
 		return 0;

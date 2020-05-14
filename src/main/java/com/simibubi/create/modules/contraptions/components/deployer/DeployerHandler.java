@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.deployer;
 
 import static net.minecraftforge.eventbus.api.Event.Result.DENY;
+import static net.minecraftforge.eventbus.api.Event.Result.DEFAULT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
-import net.minecraftforge.eventbus.api.Event.Result;
+import net.minecraftforge.eventbus.api.Event;
 
 public class DeployerHandler {
 
@@ -164,18 +165,18 @@ public class DeployerHandler {
 
 		// Left click
 		if (mode == Mode.PUNCH) {
-			LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, clickedPos, face);
-			if (event.isCanceled())
-				return;
 			if (!world.isBlockModifiable(player, clickedPos))
 				return;
-			if (world.extinguishFire(player, clickedPos, face))
-				return;
-			if (clickedState.isAir(world, clickedPos)) {
+			if (clickedState.getRenderShape(world, clickedPos).isEmpty()) {
 				player.blockBreakingProgress = null;
 				return;
 			}
-			if (event.getUseBlock() != Result.DENY)
+			LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, clickedPos, face);
+			if (event.isCanceled())
+				return;
+			if (world.extinguishFire(player, clickedPos, face))
+				return;
+			if (event.getUseBlock() != DENY)
 				clickedState.onBlockClicked(world, clickedPos, player);
 			if (stack.isEmpty())
 				return;
@@ -193,6 +194,10 @@ public class DeployerHandler {
 				player.blockBreakingProgress = null;
 				return;
 			}
+			if (progress <= 0) {
+				player.blockBreakingProgress = null;
+				return;
+			}
 
 			if ((int) (before * 10) != (int) (progress * 10))
 				world.sendBlockBreakProgress(player.getEntityId(), clickedPos, (int) (progress * 10));
@@ -202,10 +207,16 @@ public class DeployerHandler {
 
 		// Right click
 		ItemUseContext itemusecontext = new ItemUseContext(player, hand, result);
-		RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, face);
+		Event.Result useBlock = DENY;
+		Event.Result useItem = DEFAULT;
+		if (!clickedState.getRenderShape(world, clickedPos).isEmpty()) {
+			RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, face);
+			useBlock = event.getUseBlock();
+			useItem = event.getUseItem();
+		}
 
 		// Item has custom active use
-		if (event.getUseItem() != DENY) {
+		if (useItem != DENY) {
 			ActionResultType actionresult = stack.onItemUseFirst(itemusecontext);
 			if (actionresult != ActionResultType.PASS)
 				return;
@@ -216,11 +227,11 @@ public class DeployerHandler {
 			!(player.isSneaking() && holdingSomething) || (stack.doesSneakBypassUse(world, clickedPos, player));
 
 		// Use on block
-		if (event.getUseBlock() != DENY && flag1 && clickedState.onBlockActivated(world, player, hand, result))
+		if (useBlock != DENY && flag1 && clickedState.onBlockActivated(world, player, hand, result))
 			return;
 		if (stack.isEmpty())
 			return;
-		if (event.getUseItem() == DENY)
+		if (useItem == DENY)
 			return;
 		if (item instanceof BlockItem && !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
 			return;
