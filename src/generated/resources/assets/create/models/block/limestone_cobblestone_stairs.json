@@ -1,0 +1,8 @@
+{
+  "parent": "block/stairs",
+  "textures": {
+    "side": "create:block/palettes/limestone/cobblestone",
+    "bottom": "create:block/palettes/limestone/cobblestone",
+    "top": "create:block/palettes/limestone/cobblestone"
+  }
+}

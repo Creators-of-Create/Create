@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=top": {
+      "model": "create:block/dolomite_cobblestone_slab_top"
+    },
+    "type=bottom": {
+      "model": "create:block/dolomite_cobblestone_slab"
+    },
+    "type=double": {
+      "model": "create:block/dolomite_cobblestone"
+    }
+  }
+}

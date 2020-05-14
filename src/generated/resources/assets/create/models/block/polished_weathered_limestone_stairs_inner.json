@@ -1,0 +1,8 @@
+{
+  "parent": "block/inner_stairs",
+  "textures": {
+    "side": "create:block/palettes/weathered_limestone/polished",
+    "bottom": "create:block/palettes/weathered_limestone/polished",
+    "top": "create:block/palettes/weathered_limestone/polished"
+  }
+}

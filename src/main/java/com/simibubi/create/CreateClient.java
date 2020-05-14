@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
+import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
@@ -87,12 +88,8 @@ public class CreateClient {
 			.getId()
 			.equals(PlayerContainer.BLOCK_ATLAS_TEXTURE))
 			return;
-
-		event.addSprite(new ResourceLocation(Create.ID, "block/belt_animated"));
-
-		for (AllCTs ct : AllCTs.values())
-			event.addSprite(ct.get()
-				.getTargetResourceLocation());
+		SpriteShifter.getAllTargetSprites()
+			.forEach(event::addSprite);
 	}
 
 	@OnlyIn(Dist.CLIENT)

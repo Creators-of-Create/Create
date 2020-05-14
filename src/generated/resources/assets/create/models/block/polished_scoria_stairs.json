@@ -1,0 +1,8 @@
+{
+  "parent": "block/stairs",
+  "textures": {
+    "side": "create:block/palettes/scoria/polished",
+    "bottom": "create:block/palettes/scoria/polished",
+    "top": "create:block/palettes/scoria/polished"
+  }
+}

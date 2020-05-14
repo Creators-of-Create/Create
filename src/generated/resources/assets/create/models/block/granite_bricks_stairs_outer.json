@@ -1,0 +1,8 @@
+{
+  "parent": "block/outer_stairs",
+  "textures": {
+    "side": "create:block/palettes/granite/bricks",
+    "bottom": "create:block/palettes/granite/bricks",
+    "top": "create:block/palettes/granite/bricks"
+  }
+}

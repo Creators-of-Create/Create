@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=top": {
+      "model": "create:block/polished_dolomite_slab_top"
+    },
+    "type=bottom": {
+      "model": "create:block/polished_dolomite_slab"
+    },
+    "type=double": {
+      "model": "create:block/polished_dolomite_slab_double"
+    }
+  }
+}

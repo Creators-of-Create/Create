@@ -1,0 +1,8 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "side": "create:block/palettes/dolomite/polished_slab",
+    "bottom": "create:block/palettes/dolomite/polished",
+    "top": "create:block/palettes/dolomite/polished"
+  }
+}

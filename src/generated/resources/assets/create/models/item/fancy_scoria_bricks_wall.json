@@ -1,0 +1,6 @@
+{
+  "parent": "block/wall_inventory",
+  "textures": {
+    "wall": "create:block/palettes/scoria/fancy_bricks"
+  }
+}

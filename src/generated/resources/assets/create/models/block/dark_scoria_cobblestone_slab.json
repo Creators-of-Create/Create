@@ -1,0 +1,8 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "side": "create:block/palettes/dark_scoria/cobblestone",
+    "bottom": "create:block/palettes/dark_scoria/cobblestone",
+    "top": "create:block/palettes/dark_scoria/cobblestone"
+  }
+}

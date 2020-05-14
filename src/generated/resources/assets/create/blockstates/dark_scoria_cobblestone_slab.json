@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=top": {
+      "model": "create:block/dark_scoria_cobblestone_slab_top"
+    },
+    "type=bottom": {
+      "model": "create:block/dark_scoria_cobblestone_slab"
+    },
+    "type=double": {
+      "model": "create:block/dark_scoria_cobblestone"
+    }
+  }
+}

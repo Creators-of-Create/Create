@@ -1,0 +1,8 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "side": "create:block/palettes/weathered_limestone/paved",
+    "bottom": "create:block/palettes/weathered_limestone/paved",
+    "top": "create:block/palettes/weathered_limestone/paved"
+  }
+}

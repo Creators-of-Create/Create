@@ -2,11 +2,8 @@ package com.simibubi.create.modules.contraptions.components.crafter;
 
 import static com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
-import java.util.Arrays;
-
+import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.modules.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
 
@@ -19,13 +16,9 @@ import net.minecraft.world.ILightReader;
 
 public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 
-	static final CTSpriteShiftEntry front = CTSpriteShifter.get(CTType.OMNIDIRECTIONAL, "crafter_top", "brass_casing");
-	static final CTSpriteShiftEntry side = CTSpriteShifter.get(CTType.VERTICAL, "crafter_side");
-	static final CTSpriteShiftEntry otherSide = CTSpriteShifter.get(CTType.HORIZONTAL, "crafter_side");
-
 	@Override
-	public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos,
-			BlockPos otherPos, Direction face) {
+	public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos, BlockPos otherPos,
+		Direction face) {
 		if (state.getBlock() != other.getBlock())
 			return false;
 		if (state.get(HORIZONTAL_FACING) != other.get(HORIZONTAL_FACING))
@@ -36,7 +29,8 @@ public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 
 		if (input1 == null || input2 == null)
 			return false;
-		if (pos.add(input1.data.get(0)).equals(otherPos.add(input2.data.get(0))))
+		if (pos.add(input1.data.get(0))
+			.equals(otherPos.add(input2.data.get(0))))
 			return true;
 
 		return false;
@@ -44,7 +38,8 @@ public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 
 	@Override
 	protected boolean reverseUVs(BlockState state, Direction direction) {
-		if (!direction.getAxis().isVertical())
+		if (!direction.getAxis()
+			.isVertical())
 			return false;
 		Direction facing = state.get(HORIZONTAL_FACING);
 		if (facing.getAxis() == direction.getAxis())
@@ -60,14 +55,11 @@ public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 	public CTSpriteShiftEntry get(BlockState state, Direction direction) {
 		Direction facing = state.get(HORIZONTAL_FACING);
 		boolean isFront = facing.getAxis() == direction.getAxis();
-		boolean isVertical = direction.getAxis().isVertical();
+		boolean isVertical = direction.getAxis()
+			.isVertical();
 		boolean facingX = facing.getAxis() == Axis.X;
-		return isFront ? front : isVertical && !facingX ? otherSide : side;
-	}
-
-	@Override
-	public Iterable<CTSpriteShiftEntry> getAllCTShifts() {
-		return Arrays.asList(front, side);
+		return isFront ? AllSpriteShifts.CRAFTER_FRONT
+			: isVertical && !facingX ? AllSpriteShifts.CRAFTER_OTHERSIDE : AllSpriteShifts.CRAFTER_SIDE;
 	}
 
 }

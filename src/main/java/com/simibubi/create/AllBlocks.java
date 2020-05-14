@@ -357,7 +357,8 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 		this.block = Create.registrate()
 				.block(Lang.asId(name()), $ -> block.get()) // TODO take properties as input
 				.blockstate(NonNullBiConsumer.noop()) // TODO
-				.loot(NonNullBiConsumer.noop()) // TODO
+				.defaultLoot()
+//				.loot(NonNullBiConsumer.noop()) // TODO
 				.setData(ProviderType.LANG, NonNullBiConsumer.noop()) // TODO
 				.transform(applyTags(tags))
 				.transform(b -> registerItemBlock(b, customItemCreator, comesWith))
@@ -438,7 +439,8 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 				.block(block.getId()
 						.getPath() + "_" + Lang.asId(feature.name()), creator)
 				.blockstate(NonNullBiConsumer.noop()) // TODO
-				.loot(NonNullBiConsumer.noop()) // TODO
+				.defaultLoot()
+//				.loot(NonNullBiConsumer.noop()) // TODO
 				.item()
 				.model(NonNullBiConsumer.noop()) // TODO
 				.build()

@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.block.connected;
 
-import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry.Type;
+import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -17,8 +17,6 @@ public abstract class ConnectedTextureBehaviour {
 	}
 
 	public abstract CTSpriteShiftEntry get(BlockState state, Direction direction);
-
-	public abstract Iterable<CTSpriteShiftEntry> getAllCTShifts();
 
 	protected boolean reverseUVs(BlockState state, Direction face) {
 		return false;
@@ -70,19 +68,19 @@ public abstract class ConnectedTextureBehaviour {
 		int sh = flipH ? -1 : 1;
 		int sv = flipV ? -1 : 1;
 
-		Type type = textureEntry.getType();
+		CTType type = textureEntry.getType();
 
-		if (type != Type.HORIZONTAL) {
+		if (type != CTType.HORIZONTAL) {
 			context.up = testConnection(reader, pos, state, face, horizontal, vertical, 0, sv);
 			context.down = testConnection(reader, pos, state, face, horizontal, vertical, 0, -sv);
 		}
 
-		if (type != Type.VERTICAL) {
+		if (type != CTType.VERTICAL) {
 			context.left = testConnection(reader, pos, state, face, horizontal, vertical, -sh, 0);
 			context.right = testConnection(reader, pos, state, face, horizontal, vertical, sh, 0);
 		}
 
-		if (type == Type.OMNIDIRECTIONAL) {
+		if (type == CTType.OMNIDIRECTIONAL) {
 			context.topLeft = testConnection(reader, pos, state, face, horizontal, vertical, -sh, sv);
 			context.topRight = testConnection(reader, pos, state, face, horizontal, vertical, sh, sv);
 			context.bottomLeft = testConnection(reader, pos, state, face, horizontal, vertical, -sh, -sv);

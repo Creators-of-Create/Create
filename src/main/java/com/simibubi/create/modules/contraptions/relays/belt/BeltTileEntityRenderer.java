@@ -9,9 +9,8 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.IndependentShadowRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -40,8 +39,6 @@ import net.minecraft.util.math.Vec3i;
 @SuppressWarnings("deprecation")
 public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
-	private static SpriteShiftEntry animatedTexture;
-
 	public BeltTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
@@ -62,8 +59,6 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 
 		// UV shift
 		float speed = te.getSpeed();
-		if (animatedTexture == null)
-			animatedTexture = SpriteShifter.get("block/belt", "block/belt_animated");
 		if (speed != 0) {
 			float time =
 				AnimationTickHolder.getRenderTick() * blockState.get(HORIZONTAL_FACING).getAxisDirection().getOffset();
@@ -73,7 +68,7 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 			if (textureIndex < 0)
 				textureIndex += 16;
 
-			beltBuffer.shiftUVtoSheet(animatedTexture, (textureIndex % 4) / 4f, (textureIndex / 4) / 4f, 4);
+			beltBuffer.shiftUVtoSheet(AllSpriteShifts.BELT, (textureIndex % 4) / 4f, (textureIndex / 4) / 4f, 4);
 		} else {
 			beltBuffer.dontShiftUV();
 		}

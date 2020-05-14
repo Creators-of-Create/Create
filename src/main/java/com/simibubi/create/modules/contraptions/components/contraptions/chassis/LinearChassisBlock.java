@@ -1,11 +1,8 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.chassis;
 
-import java.util.Arrays;
-
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 
 import net.minecraft.block.Block;
@@ -71,23 +68,13 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 
 	public static class ChassisCTBehaviour extends ConnectedTextureBehaviour {
 
-		static final CTSpriteShiftEntry regular = CTSpriteShifter.get(CTType.OMNIDIRECTIONAL,
-				"translation_chassis_top");
-		static final CTSpriteShiftEntry sticky = CTSpriteShifter.get(CTType.OMNIDIRECTIONAL,
-				"translation_chassis_top_sticky");
-
 		@Override
 		public CTSpriteShiftEntry get(BlockState state, Direction direction) {
 			Block block = state.getBlock();
 			BooleanProperty glueableSide = ((LinearChassisBlock) block).getGlueableSide(state, direction);
 			if (glueableSide == null)
 				return null;
-			return state.get(glueableSide) ? sticky : regular;
-		}
-		
-		@Override
-		public Iterable<CTSpriteShiftEntry> getAllCTShifts() {
-			return Arrays.asList(regular, sticky);
+			return state.get(glueableSide) ? AllSpriteShifts.CHASSIS_STICKY : AllSpriteShifts.CHASSIS;
 		}
 
 		@Override

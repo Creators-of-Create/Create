@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.block.connected;
 
-import java.util.Arrays;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 
@@ -23,13 +21,6 @@ public class HorizontalCTBehaviour extends ConnectedTextureBehaviour {
 	public CTSpriteShiftEntry get(BlockState state, Direction direction) {
 		return direction.getAxis()
 			.isHorizontal() ? layerShift : topShift;
-	}
-
-	@Override
-	public Iterable<CTSpriteShiftEntry> getAllCTShifts() {
-		if (topShift == null)
-			return Arrays.asList(layerShift);
-		return Arrays.asList(layerShift, topShift);
 	}
 
 }

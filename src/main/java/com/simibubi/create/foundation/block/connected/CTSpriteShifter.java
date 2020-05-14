@@ -11,15 +11,15 @@ public class CTSpriteShifter extends SpriteShifter {
 		OMNIDIRECTIONAL, HORIZONTAL, VERTICAL;
 	}
 
-	public static CTSpriteShiftEntry get(CTType type, String blockTextureName) {
-		return get(type, blockTextureName, blockTextureName);
+	public static CTSpriteShiftEntry getCT(CTType type, String blockTextureName) {
+		return getCT(type, blockTextureName, blockTextureName);
 	}
 
-	public static CTSpriteShiftEntry get(CTType type, String blockTextureName, String connectedTextureName) {
-		return get(type, new ResourceLocation(Create.ID, "block/" + blockTextureName), connectedTextureName);
+	public static CTSpriteShiftEntry getCT(CTType type, String blockTextureName, String connectedTextureName) {
+		return getCT(type, new ResourceLocation(Create.ID, "block/" + blockTextureName), connectedTextureName);
 	}
 
-	public static CTSpriteShiftEntry get(CTType type, ResourceLocation blockTexture, String connectedTextureName) {
+	public static CTSpriteShiftEntry getCT(CTType type, ResourceLocation blockTexture, String connectedTextureName) {
 		String targetLocation = "block/" + connectedTextureName + "_connected";
 		String key =
 			type.name() + ":" + blockTexture.getNamespace() + ":" + blockTexture.getPath() + "->" + targetLocation;

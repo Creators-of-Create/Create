@@ -6,9 +6,8 @@ import static com.simibubi.create.modules.contraptions.base.KineticTileEntityRen
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -34,9 +33,6 @@ import net.minecraft.util.math.Vec3d;
 @SuppressWarnings("deprecation")
 public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<MechanicalCrafterTileEntity> {
 
-	public static SpriteShiftEntry animatedTexture =
-			SpriteShifter.get("block/crafter_thingies", "block/crafter_thingies");
-	
 	public MechanicalCrafterTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
@@ -162,7 +158,7 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 
 			if (te.phase == Phase.EXPORTING) {
 				int textureIndex = (int) ((te.getCountDownSpeed() / 128f * AnimationTickHolder.ticks));
-				beltBuffer.shiftUVtoSheet(animatedTexture, (textureIndex % 4) / 4f, 0, 1);
+				beltBuffer.shiftUVtoSheet(AllSpriteShifts.CRAFTER_THINGIES, (textureIndex % 4) / 4f, 0, 1);
 			} else {
 				beltBuffer.dontShiftUV();
 			}

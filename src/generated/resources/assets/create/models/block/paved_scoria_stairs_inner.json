@@ -1,0 +1,8 @@
+{
+  "parent": "block/inner_stairs",
+  "textures": {
+    "side": "create:block/palettes/scoria/paved",
+    "bottom": "create:block/palettes/scoria/paved",
+    "top": "create:block/palettes/scoria/paved"
+  }
+}

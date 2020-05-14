@@ -53,7 +53,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             property 'fml.earlyprogresswindow', 'false'
-            args '--mod', 'create', '--client', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
+            args '--mod', 'create', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
             mods {
                 create {
                     source sourceSets.main
