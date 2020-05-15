@@ -13,7 +13,6 @@ import com.simibubi.create.modules.contraptions.TorquePropagator;
 import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.modules.palettes.AllPaletteBlocks;
 import com.simibubi.create.modules.palettes.PalettesItemGroup;
-import com.simibubi.create.modules.palettes.PalettesRegistrate;
 import com.simibubi.create.modules.schematics.ServerSchematicLoader;
 import com.tterrag.registrate.util.NonNullLazyValue;
 
@@ -50,7 +49,6 @@ public class Create {
 	public static ServerLagger lagger;
 	
 	private static final NonNullLazyValue<CreateRegistrate> registrate = CreateRegistrate.lazy(ID);
-	private static final NonNullLazyValue<PalettesRegistrate> palettesRegistrate = PalettesRegistrate.lazy(ID);
 
 	public Create() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -107,10 +105,6 @@ public class Create {
 
 	public static CreateRegistrate registrate() {
 	    return registrate.get();
-	}
-	
-	public static PalettesRegistrate palettesRegistrate() {
-		return palettesRegistrate.get();
 	}
 	
 	public static ResourceLocation asResource(String path) {

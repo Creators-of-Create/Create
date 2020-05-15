@@ -1,12 +1,10 @@
 package com.simibubi.create.modules.palettes;
 
-import java.util.Collection;
+import java.util.EnumSet;
 
-import com.simibubi.create.Create;
 import com.simibubi.create.CreateItemGroupBase;
-import com.tterrag.registrate.util.entry.RegistryEntry;
+import com.simibubi.create.modules.Sections;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
@@ -17,9 +15,8 @@ public class PalettesItemGroup extends CreateItemGroupBase {
 	}
 
 	@Override
-	protected Collection<RegistryEntry<Block>> getBlocks() {
-		return Create.palettesRegistrate()
-			.getAll(Block.class);
+	protected EnumSet<Sections> getSections() {
+		return EnumSet.of(Sections.PALETTES);
 	}
 
 	@Override

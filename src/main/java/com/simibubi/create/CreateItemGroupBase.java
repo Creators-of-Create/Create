@@ -1,7 +1,10 @@
 package com.simibubi.create;
 
 import java.util.Collection;
+import java.util.EnumSet;
+import java.util.stream.Collectors;
 
+import com.simibubi.create.modules.Sections;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.block.Block;
@@ -42,7 +45,15 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 		}
 	}
 
-	protected abstract Collection<RegistryEntry<Block>> getBlocks();
+	protected Collection<RegistryEntry<Block>> getBlocks() {
+		return getSections().stream()
+				.flatMap(s -> Create.registrate().getAll(s, Block.class).stream())
+				.collect(Collectors.toList());
+	}
+	
+	protected EnumSet<Sections> getSections() {
+		return EnumSet.allOf(Sections.class);
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void addItems(NonNullList<ItemStack> items, boolean specialItems) {

@@ -3,16 +3,16 @@ package com.simibubi.create.foundation.utility.data;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.simibubi.create.Create;
 import com.simibubi.create.AllSpriteShifts;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.GlassPaneCTBehaviour;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
+import com.simibubi.create.foundation.registrate.CreateRegistrate;
 import com.simibubi.create.modules.palettes.ConnectedGlassBlock;
 import com.simibubi.create.modules.palettes.ConnectedGlassPaneBlock;
 import com.simibubi.create.modules.palettes.GlassPaneBlock;
-import com.simibubi.create.modules.palettes.PalettesRegistrate;
 import com.simibubi.create.modules.palettes.WindowBlock;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -32,7 +32,7 @@ import net.minecraftforge.client.model.generators.ModelFile;
 
 public class WindowGen {
 
-	private static final PalettesRegistrate REGISTRATE = Create.palettesRegistrate();
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	public static BlockEntry<WindowBlock> woodenWindowBlock(WoodType woodType) {
 		return woodenWindowBlock(woodType, () -> RenderType::getCutoutMipped);
@@ -114,7 +114,7 @@ public class WindowGen {
 		ResourceLocation topTexture, Supplier<Supplier<RenderType>> renderType) {
 		NonNullBiConsumer<DataGenContext<Block, GlassPaneBlock>, RegistrateBlockstateProvider> stateProvider =
 			(c, p) -> p.paneBlock(c.get(), sideTexture, topTexture);
-		NonNullUnaryOperator<BlockBuilder<GlassPaneBlock, PalettesRegistrate>> connectedTextures = b -> b;
+		NonNullUnaryOperator<BlockBuilder<GlassPaneBlock, CreateRegistrate>> connectedTextures = b -> b;
 		return glassPane(name, sideTexture, topTexture, GlassPaneBlock::new, renderType, connectedTextures,
 			stateProvider);
 	}
@@ -122,7 +122,7 @@ public class WindowGen {
 	private static BlockEntry<ConnectedGlassPaneBlock> connectedGlassPane(String name, CTSpriteShiftEntry ctshift,
 		ResourceLocation sideTexture, ResourceLocation itemSideTexture, ResourceLocation topTexture,
 		Supplier<Supplier<RenderType>> renderType) {
-		NonNullUnaryOperator<BlockBuilder<ConnectedGlassPaneBlock, PalettesRegistrate>> connectedTextures =
+		NonNullUnaryOperator<BlockBuilder<ConnectedGlassPaneBlock, CreateRegistrate>> connectedTextures =
 			REGISTRATE.connectedTextures(new GlassPaneCTBehaviour(ctshift));
 		String CGPparents = "block/connected_glass_pane/";
 		String prefix = name + "_pane_";
@@ -152,7 +152,7 @@ public class WindowGen {
 
 	private static <G extends GlassPaneBlock> BlockEntry<G> glassPane(String name, ResourceLocation sideTexture,
 		ResourceLocation topTexture, NonNullFunction<Properties, G> factory, Supplier<Supplier<RenderType>> renderType,
-		NonNullUnaryOperator<BlockBuilder<G, PalettesRegistrate>> connectedTextures,
+		NonNullUnaryOperator<BlockBuilder<G, CreateRegistrate>> connectedTextures,
 		NonNullBiConsumer<DataGenContext<Block, G>, RegistrateBlockstateProvider> stateProvider) {
 		name += "_pane";
 

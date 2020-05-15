@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.data.ITaggable;
-import com.simibubi.create.foundation.world.OxidizingBlock;
 import com.simibubi.create.modules.Sections;
 import com.simibubi.create.modules.contraptions.CasingBlock;
 import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
@@ -98,7 +97,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
 
 public enum AllBlocks implements NonNullSupplier<Block> {
 
@@ -464,7 +462,7 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 		for (AllBlocks block : values())
 			if (block.get() instanceof IHaveColorHandler)
 				blockColors.register(((IHaveColorHandler) block.get()).getColorHandler(), block.get());
-		for (RegistryEntry<Block> registryEntry : Create.palettesRegistrate()
+		for (RegistryEntry<Block> registryEntry : Create.registrate()
 				.getAll(Block.class)) {
 			Block blockEntry = registryEntry.get();
 			if (blockEntry instanceof IHaveColorHandler) {

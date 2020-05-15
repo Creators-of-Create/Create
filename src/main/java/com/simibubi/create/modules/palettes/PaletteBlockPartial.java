@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.registrate.CreateRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -39,11 +40,11 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		this.name = name;
 	}
 
-	public @NonnullType BlockBuilder<B, PalettesRegistrate> create(String variantName, PaletteBlockPatterns pattern,
+	public @NonnullType BlockBuilder<B, CreateRegistrate> create(String variantName, PaletteBlockPatterns pattern,
 		Supplier<? extends Block> block) {
 		String patternName = pattern.createName(variantName);
 		String blockName = patternName + "_" + this.name;
-		return Create.palettesRegistrate()
+		return Create.registrate()
 			.block(blockName, p -> createBlock(block))
 			.blockstate((c, p) -> generateData(c, p, variantName, pattern, block))
 			.transform(b -> transformBlock(b, variantName, pattern))
@@ -56,14 +57,14 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		return pattern.toLocation(variantName, pattern.getTextureForPartials());
 	}
 
-	protected BlockBuilder<B, PalettesRegistrate> transformBlock(BlockBuilder<B, PalettesRegistrate> builder,
+	protected BlockBuilder<B, CreateRegistrate> transformBlock(BlockBuilder<B, CreateRegistrate> builder,
 		String variantName, PaletteBlockPatterns pattern) {
 		getBlockTags().forEach(builder::tag);
 		return builder;
 	}
 
-	protected ItemBuilder<BlockItem, BlockBuilder<B, PalettesRegistrate>> transformItem(
-		ItemBuilder<BlockItem, BlockBuilder<B, PalettesRegistrate>> builder, String variantName,
+	protected ItemBuilder<BlockItem, BlockBuilder<B, CreateRegistrate>> transformItem(
+		ItemBuilder<BlockItem, BlockBuilder<B, CreateRegistrate>> builder, String variantName,
 		PaletteBlockPatterns pattern) {
 		getItemTags().forEach(builder::tag);
 		return builder;
@@ -172,8 +173,8 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		}
 
 		@Override
-		protected ItemBuilder<BlockItem, BlockBuilder<WallBlock, PalettesRegistrate>> transformItem(
-			ItemBuilder<BlockItem, BlockBuilder<WallBlock, PalettesRegistrate>> builder, String variantName,
+		protected ItemBuilder<BlockItem, BlockBuilder<WallBlock, CreateRegistrate>> transformItem(
+			ItemBuilder<BlockItem, BlockBuilder<WallBlock, CreateRegistrate>> builder, String variantName,
 			PaletteBlockPatterns pattern) {
 			builder.model((c, p) -> p.wallInventory(c.getName(), getMainTexture(variantName, pattern)));
 			return super.transformItem(builder, variantName, pattern);

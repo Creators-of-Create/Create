@@ -12,7 +12,7 @@ public class CountedOreFeature extends OreFeature<CountRangeConfig> {
 
 	private ConfigInt clusterCount;
 
-	public CountedOreFeature(NonNullSupplier<Block> block, int clusterSize, int clusterCount) {
+	public CountedOreFeature(NonNullSupplier<? extends Block> block, int clusterSize, int clusterCount) {
 		super(block, clusterSize);
 		this.clusterCount = i(clusterCount, 0, "clusterCount");
 	}

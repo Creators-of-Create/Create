@@ -34,7 +34,8 @@ import net.minecraftforge.common.ToolType;
 
 public class AllBlocksNew {
 
-	private static final CreateRegistrate REGISTRATE = Create.registrate();
+	private static final CreateRegistrate REGISTRATE = Create.registrate()
+			.itemGroup(() -> Create.baseCreativeTab);
 
 	static {
 		REGISTRATE.startSection(SCHEMATICS);
@@ -138,6 +139,7 @@ public class AllBlocksNew {
 	
 	public static final BlockEntry<OxidizingBlock> COPPER_SHINGLES = REGISTRATE.block("copper_shingles", p -> new OxidizingBlock(p, 1 / 32f))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
+		.simpleItem()
 		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("plates/copper")), ctx, true))
 		.register();
 	

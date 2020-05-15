@@ -1,10 +1,9 @@
 package com.simibubi.create;
 
-import java.util.Collection;
+import java.util.EnumSet;
 
-import com.tterrag.registrate.util.entry.RegistryEntry;
+import com.simibubi.create.modules.Sections;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public class CreateItemGroup extends CreateItemGroupBase {
@@ -14,8 +13,8 @@ public class CreateItemGroup extends CreateItemGroupBase {
 	}
 
 	@Override
-	protected Collection<RegistryEntry<Block>> getBlocks() {
-		return Create.registrate().getAll(Block.class);
+	protected EnumSet<Sections> getSections() {
+		return EnumSet.complementOf(EnumSet.of(Sections.PALETTES));
 	}
 
 	@Override

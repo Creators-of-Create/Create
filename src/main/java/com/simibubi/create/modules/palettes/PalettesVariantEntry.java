@@ -2,6 +2,7 @@ package com.simibubi.create.modules.palettes;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.registrate.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -23,8 +24,8 @@ public class PalettesVariantEntry {
 		ImmutableList.Builder<BlockEntry<? extends Block>> registeredPartials = ImmutableList.builder();
 		for (PaletteBlockPatterns pattern : patterns) {
 
-			PalettesRegistrate registrate = Create.palettesRegistrate();
-			BlockBuilder<? extends Block, PalettesRegistrate> builder =
+			CreateRegistrate registrate = Create.registrate();
+			BlockBuilder<? extends Block, CreateRegistrate> builder =
 				registrate.block(pattern.createName(name), pattern.getBlockFactory())
 					.blockstate(pattern.getBlockStateGenerator()
 						.apply(pattern)

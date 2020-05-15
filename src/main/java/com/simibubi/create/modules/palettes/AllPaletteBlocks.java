@@ -7,12 +7,14 @@ import static com.simibubi.create.foundation.utility.data.WindowGen.framedGlassP
 import static com.simibubi.create.foundation.utility.data.WindowGen.woodenWindowBlock;
 import static com.simibubi.create.foundation.utility.data.WindowGen.woodenWindowPane;
 
-import com.simibubi.create.Create;
 import com.simibubi.create.AllSpriteShifts;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
+import com.simibubi.create.foundation.registrate.CreateRegistrate;
 import com.simibubi.create.foundation.utility.data.BlockStateGen;
 import com.simibubi.create.foundation.utility.data.WindowGen;
+import com.simibubi.create.modules.Sections;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -28,7 +30,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class AllPaletteBlocks {
 
-	private static final PalettesRegistrate REGISTRATE = Create.palettesRegistrate();
+	private static final CreateRegistrate REGISTRATE = Create.registrate()
+			.itemGroup(() -> Create.palettesCreativeTab)
+			.startSection(Sections.PALETTES);
 
 	// Windows and Glass
 
