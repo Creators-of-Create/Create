@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -519,16 +520,20 @@ public abstract class Contraption {
 		glueToRemove.forEach(SuperGlueEntity::remove);
 
 		for (boolean brittles : Iterate.trueAndFalse) {
-			for (BlockInfo block : blocks.values()) {
+			for (Iterator<BlockInfo> iterator = blocks.values().iterator(); iterator.hasNext();) {
+				BlockInfo block = iterator.next();
 				if (brittles != BlockMovementTraits.isBrittle(block.state))
 					continue;
 
 				BlockPos add = block.pos.add(anchor).add(offset);
 				if (customRemoval.test(add, block.state))
 					continue;
+				Block blockIn = world.getBlockState(add).getBlock();
+				if (block.state.getBlock() != blockIn)
+					iterator.remove();
 				world.getWorld().removeTileEntity(add);
 				int flags = 67;
-				if (world.getBlockState(add).getBlock() instanceof DoorBlock)
+				if (blockIn instanceof DoorBlock)
 					flags = flags | 32 | 16;
 				world.setBlockState(add, Blocks.AIR.getDefaultState(), flags);
 			}
