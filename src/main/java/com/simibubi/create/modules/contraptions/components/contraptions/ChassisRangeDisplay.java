@@ -9,19 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
-import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.foundation.utility.outliner.BlockClusterOutline;
-import com.simibubi.create.foundation.utility.outliner.Outline;
-import com.simibubi.create.foundation.utility.outliner.OutlineParticle;
+import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.utility.outliner.Outliner.ExpireType;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -35,16 +30,20 @@ public class ChassisRangeDisplay {
 	private static GroupEntry lastHoveredGroup = null;
 
 	private static class Entry {
-		BlockClusterOutline outline;
-		OutlineParticle<Outline> particle;
 		ChassisTileEntity te;
 		int timer;
 
 		public Entry(ChassisTileEntity te) {
 			this.te = te;
-			outline = new BlockClusterOutline(createSelection(te));
-			particle = OutlineParticle.create(outline);
 			timer = DISPLAY_TIME;
+			CreateClient.outliner.showCluster(getOutlineKey(), createSelection(te), ExpireType.FADE)
+				.colored(0xFFFFBB)
+				.lineWidth(1 / 16f)
+				.withFaceTexture(AllSpecialTextures.CHECKERED);
+		}
+
+		protected Object getOutlineKey() {
+			return te.getPos();
 		}
 
 		protected Set<BlockPos> createSelection(ChassisTileEntity chassis) {
@@ -64,6 +63,11 @@ public class ChassisRangeDisplay {
 
 		public GroupEntry(ChassisTileEntity te) {
 			super(te);
+		}
+
+		@Override
+		protected Object getOutlineKey() {
+			return this;
 		}
 
 		@Override
@@ -87,22 +91,23 @@ public class ChassisRangeDisplay {
 		World world = Minecraft.getInstance().world;
 		boolean hasWrench = AllItems.WRENCH.typeOf(player.getHeldItemMainhand());
 
-		for (Iterator<BlockPos> iterator = entries.keySet().iterator(); iterator.hasNext();) {
-			Entry entry = entries.get(iterator.next());
-			if (tickEntry(entry, hasWrench)) {
-				entry.particle.remove();
+		for (Iterator<BlockPos> iterator = entries.keySet()
+			.iterator(); iterator.hasNext();) {
+			BlockPos pos = iterator.next();
+			Entry entry = entries.get(pos);
+			if (tickEntry(entry, hasWrench))
 				iterator.remove();
-			}
+			CreateClient.outliner.keepCluster(entry.getOutlineKey());
 		}
 
 		for (Iterator<GroupEntry> iterator = groupEntries.iterator(); iterator.hasNext();) {
 			GroupEntry group = iterator.next();
 			if (tickEntry(group, hasWrench)) {
 				iterator.remove();
-				group.particle.remove();
 				if (group == lastHoveredGroup)
 					lastHoveredGroup = null;
 			}
+			CreateClient.outliner.keepCluster(group.getOutlineKey());
 		}
 
 		if (!hasWrench)
@@ -125,11 +130,8 @@ public class ChassisRangeDisplay {
 		if (ctrl) {
 			GroupEntry existingGroupForPos = getExistingGroupForPos(pos);
 			if (existingGroupForPos != null) {
-				for (ChassisTileEntity included : existingGroupForPos.includedTEs) {
-					Entry removed = entries.remove(included.getPos());
-					if (removed != null)
-						removed.particle.remove();
-				}
+				for (ChassisTileEntity included : existingGroupForPos.includedTEs)
+					entries.remove(included.getPos());
 				existingGroupForPos.timer = DISPLAY_TIME;
 				return;
 			}
@@ -138,19 +140,9 @@ public class ChassisRangeDisplay {
 		if (!entries.containsKey(pos) || ctrl)
 			display(chassisTileEntity);
 		else {
-			deselect();
 			if (!ctrl)
 				entries.get(pos).timer = DISPLAY_TIME;
 		}
-	}
-
-	private static void deselect() {
-		for (Entry entry : entries.values())
-			if (entry.timer > 10)
-				entry.timer = 10;
-		for (Entry entry : groupEntries)
-			if (entry.timer > 10)
-				entry.timer = 10;
 	}
 
 	private static boolean tickEntry(Entry entry, boolean hasWrench) {
@@ -159,7 +151,7 @@ public class ChassisRangeDisplay {
 		World world = Minecraft.getInstance().world;
 
 		if (chassisTileEntity.isRemoved() || teWorld == null || teWorld != world
-				|| !world.isBlockPresent(chassisTileEntity.getPos())) {
+			|| !world.isBlockPresent(chassisTileEntity.getPos())) {
 			return true;
 		}
 
@@ -175,63 +167,31 @@ public class ChassisRangeDisplay {
 	}
 
 	public static void display(ChassisTileEntity chassis) {
-		deselect();
-		if (AllKeys.ctrlDown()) {
-			groupEntries.forEach(e -> e.particle.remove());
-			groupEntries.clear();
-			GroupEntry hoveredGroup = new GroupEntry(chassis);
-			for (ChassisTileEntity included : hoveredGroup.includedTEs) {
-				Entry remove = entries.remove(included.getPos());
-				if (remove != null)
-					remove.particle.remove();
-			}
-			groupEntries.add(hoveredGroup);
-		} else {
-			Entry old = entries.put(chassis.getPos(), new Entry(chassis));
-			if (old != null)
-				old.particle.remove();
-		}
-	}
 
-	public static void renderOutlines(float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer) {
-		// TODO 1.15 buffered render
-		if (entries.isEmpty() && groupEntries.isEmpty()) {
+		// Display a group and kill any selections of its contained chassis blocks
+		if (AllKeys.ctrlDown()) {
+			GroupEntry hoveredGroup = new GroupEntry(chassis);
+
+			for (ChassisTileEntity included : hoveredGroup.includedTEs)
+				CreateClient.outliner.remove(included.getPos());
+
+			groupEntries.forEach(entry -> CreateClient.outliner.remove(entry.getOutlineKey()));
+			groupEntries.clear();
+			entries.clear();
+			groupEntries.add(hoveredGroup);
 			return;
 		}
-		RenderSystem.lineWidth(2);
-		//TessellatorHelper.prepareForDrawing();
-		RenderSystem.disableTexture();
-		RenderSystem.enableAlphaTest();
 
-		for (Entry entry : entries.values())
-			renderPositions(entry, partialTicks);
-		for (Entry groupEntry : groupEntries)
-			renderPositions(groupEntry, partialTicks);
+		// Display an individual chassis and kill any group selections that contained it
+		BlockPos pos = chassis.getPos();
+		GroupEntry entry = getExistingGroupForPos(pos);
+		if (entry != null)
+			CreateClient.outliner.remove(entry.getOutlineKey());
 
-		RenderSystem.enableTexture();
-		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		//TessellatorHelper.cleanUpAfterDrawing();
-		RenderSystem.lineWidth(1);
-	}
+		groupEntries.clear();
+		entries.clear();
+		entries.put(pos, new Entry(chassis));
 
-	public static void renderPositions(Entry entry, float partialTicks) {
-//		GlStateManager.pushMatrix();
-//		RenderHelper.disableStandardItemLighting();
-//		GlStateManager.normal3f(0.0F, 1.0F, 0.0F);
-//		GlStateManager.color4f(1, 1, 1, 1);
-//		GlStateManager.enableTexture();
-//		GlStateManager.depthMask(false);
-//		GlStateManager.enableBlend();
-//		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-//
-		float timer = entry.timer - partialTicks;
-		float alpha = timer > 20 ? 1 : timer / 20f;
-		entry.outline.setAlpha(alpha);
-//		entry.outline.render(Tessellator.getInstance().getBuffer());
-//
-//		GlStateManager.disableBlend();
-//		GlStateManager.depthMask(true);
-//		GlStateManager.popMatrix();
 	}
 
 	private static GroupEntry getExistingGroupForPos(BlockPos pos) {

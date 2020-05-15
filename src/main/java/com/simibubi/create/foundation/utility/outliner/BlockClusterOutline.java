@@ -3,12 +3,16 @@ package com.simibubi.create.foundation.utility.outliner;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -18,41 +22,59 @@ import net.minecraft.util.math.Vec3d;
 public class BlockClusterOutline extends Outline {
 
 	private Cluster cluster;
-	private float alpha;
 
 	public BlockClusterOutline(Iterable<BlockPos> selection) {
 		cluster = new Cluster();
 		selection.forEach(cluster::include);
-		alpha = .5f;
 	}
 
 	@Override
-	public void render(BufferBuilder buffer) {
-		Vec3d color = ColorHelper.getRGB(0xDDDDDD);
-		AllSpecialTextures.SELECTION.bind();
-
+	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
+		for (MergeEntry edge : cluster.visibleEdges) {
+			Vec3d start = new Vec3d(edge.pos);
+			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, edge.axis);
+			renderAACuboidLine(ms, buffer, start, new Vec3d(edge.pos.offset(direction)));
+		}
+		
 		for (MergeEntry face : cluster.visibleFaces.keySet()) {
 			AxisDirection axisDirection = cluster.visibleFaces.get(face);
 			Direction direction = Direction.getFacingFromAxis(axisDirection, face.axis);
 			BlockPos pos = face.pos;
 			if (axisDirection == AxisDirection.POSITIVE)
 				pos = pos.offset(direction.getOpposite());
-			renderFace(pos, direction, color, alpha * .25f, 1 / 64d, buffer);
+			renderBlockFace(ms, buffer, pos, direction);
 		}
-
-		AllSpecialTextures.BLANK.bind();
-
-		for (MergeEntry edge : cluster.visibleEdges) {
-			lineWidth = 1 / 16f * alpha;
-			Vec3d start = new Vec3d(edge.pos);
-			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, edge.axis);
-			renderAACuboidLine(start, new Vec3d(edge.pos.offset(direction)), color, 1, buffer);
-		}
-
 	}
 
-	public void setAlpha(float alpha) {
-		this.alpha = alpha;
+	protected void renderBlockFace(MatrixStack ms, IRenderTypeBuffer buffer, BlockPos pos, Direction face) {
+		Optional<AllSpecialTextures> faceTexture = params.faceTexture;
+		if (!faceTexture.isPresent())
+			return;
+
+		RenderType translucentType = RenderType.getEntityTranslucent(faceTexture.get()
+			.getLocation());
+		IVertexBuilder builder = buffer.getBuffer(translucentType);
+
+		Vec3d center = VecHelper.getCenterOf(pos);
+		Vec3d offset = new Vec3d(face.getDirectionVec());
+		Vec3d plane = VecHelper.planeByNormal(offset);
+		Axis axis = face.getAxis();
+
+		offset = offset.scale(1 / 2f + 1 / 64d);
+		plane = plane.scale(1 / 2f)
+			.add(offset);
+
+		int deg = face.getAxisDirection()
+			.getOffset() * 90;
+		Vec3d a1 = plane.add(center);
+		plane = VecHelper.rotate(plane, deg, axis);
+		Vec3d a2 = plane.add(center);
+		plane = VecHelper.rotate(plane, deg, axis);
+		Vec3d a3 = plane.add(center);
+		plane = VecHelper.rotate(plane, deg, axis);
+		Vec3d a4 = plane.add(center);
+
+		putQuad(ms, builder, a1, a2, a3, a4);
 	}
 
 	private static class Cluster {

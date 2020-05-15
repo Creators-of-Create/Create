@@ -3,10 +3,13 @@ package com.simibubi.create.foundation.utility.data;
 
 import java.util.function.Function;
 
+import com.simibubi.create.foundation.world.OxidizingBlock;
 import com.simibubi.create.modules.palettes.PavedBlock;
+import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -54,6 +57,16 @@ public class BlockStateGen {
 			.forAllStates(state -> ConfiguredModel.builder()
 				.modelFile(state.get(PavedBlock.COVERED) ? covered : top)
 				.build());
+	}
+
+	public static <P> NonNullUnaryOperator<BlockBuilder<OxidizingBlock, P>> oxidizedBlockstate() {
+		return b -> b.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
+				.forAllStates(state -> {
+					String name = ModelGen.getOxidizedModel(ctx.getName(), state.get(OxidizingBlock.OXIDIZATION));
+					return ConfiguredModel.builder()
+							.modelFile(prov.models().cubeAll(name, prov.modLoc(name)))
+							.build();
+				}));
 	}
 
 }

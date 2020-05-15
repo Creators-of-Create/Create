@@ -129,7 +129,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 		RenderHelper.disableStandardItemLighting();
 		RenderSystem.pushMatrix();
 		RenderSystem.enableBlend();
-		outline.render(Tessellator.getInstance().getBuffer());
+//		outline.render(Tessellator.getInstance().getBuffer());TODO
 		RenderSystem.popMatrix();
 		outline.setTextures(null, null);
 

@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
+import com.simibubi.create.foundation.utility.outliner.Outliner;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.contraptions.ChassisRangeDisplay;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionRenderer;
@@ -41,6 +42,7 @@ public class CreateClient {
 	public static SchematicHandler schematicHandler;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
+	public static Outliner outliner;
 	private static CustomBlockModels customBlockModels;
 
 	public static void addListeners(IEventBus modEventBus) {
@@ -57,6 +59,7 @@ public class CreateClient {
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
 		schematicAndQuillHandler = new SchematicAndQuillHandler();
+		outliner = new Outliner();
 
 		bufferCache = new SuperByteBufferCache();
 		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
@@ -74,11 +77,12 @@ public class CreateClient {
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 	}
-
+	
 	public static void gameTick() {
 		schematicSender.tick();
 		schematicAndQuillHandler.tick();
 		schematicHandler.tick();
+		outliner.tickOutlines();
 		ChassisRangeDisplay.clientTick();
 	}
 

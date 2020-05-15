@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.modules.contraptions.KineticDebugger;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.components.contraptions.ChassisRangeDisplay;
 import com.simibubi.create.modules.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.modules.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.modules.curiosities.zapper.terrainzapper.TerrainZapperRenderHandler;
@@ -74,18 +73,21 @@ public class ClientEvents {
 		MatrixStack ms = event.getMatrixStack();
 		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
 		Vec3d view = info.getProjectedView();
-	
+
 		ms.push();
 		ms.translate(-view.getX(), -view.getY(), -view.getZ());
 
-		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance()
+			.getBufferBuilders()
+			.getEntityVertexConsumers();
+		
 		CreateClient.schematicHandler.render(ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV);
+		CreateClient.outliner.renderOutlines(ms, buffer);
 		KineticDebugger.renderSourceOutline(ms, buffer);
-		ChassisRangeDisplay.renderOutlines(event.getPartialTicks(), ms, buffer);
 		TerrainZapperRenderHandler.render(ms, buffer);
-		
+
 		ms.pop();
-		
+
 		buffer.draw();
 	}
 
@@ -94,8 +96,9 @@ public class ClientEvents {
 		if (event.getType() != ElementType.HOTBAR)
 			return;
 
-		onRenderHotbar(new MatrixStack(), Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers(),
-				0xF000F0, OverlayTexture.DEFAULT_UV);
+		onRenderHotbar(new MatrixStack(), Minecraft.getInstance()
+			.getBufferBuilders()
+			.getEntityVertexConsumers(), 0xF000F0, OverlayTexture.DEFAULT_UV);
 	}
 
 	public static void onRenderHotbar(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
@@ -121,9 +124,8 @@ public class ClientEvents {
 		double delta = event.getScrollDelta();
 
 		boolean cancelled = CreateClient.schematicHandler.mouseScrolled(delta)
-				|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta) 
-				|| FilteringHandler.onScroll(delta) 
-				|| ScrollValueHandler.onScroll(delta);
+			|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
+			|| ScrollValueHandler.onScroll(delta);
 		event.setCanceled(cancelled);
 	}
 
@@ -147,7 +149,8 @@ public class ClientEvents {
 			return;
 
 		ItemStack stack = event.getItemStack();
-		String translationKey = stack.getItem().getTranslationKey(stack);
+		String translationKey = stack.getItem()
+			.getTranslationKey(stack);
 		if (!translationKey.startsWith(itemPrefix) && !translationKey.startsWith(blockPrefix))
 			return;
 
@@ -155,7 +158,8 @@ public class ClientEvents {
 			List<ITextComponent> itemTooltip = event.getToolTip();
 			List<ITextComponent> toolTip = new ArrayList<>();
 			toolTip.add(itemTooltip.remove(0));
-			TooltipHelper.getTooltip(stack).addInformation(toolTip);
+			TooltipHelper.getTooltip(stack)
+				.addInformation(toolTip);
 			itemTooltip.addAll(0, toolTip);
 		}
 

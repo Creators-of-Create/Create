@@ -65,9 +65,9 @@ public class DeployTool extends PlacementToolBase {
 		RenderSystem.translated(-rotationOffset.x, 0, -rotationOffset.z);
 		RenderSystem.translated(-xOrigin, 0, -zOrigin);
 
-		schematicHandler.getOutline().setTextures(AllSpecialTextures.CHECKERED, null);
-		schematicHandler.getOutline().render(Tessellator.getInstance().getBuffer());
-		schematicHandler.getOutline().setTextures(null, null);
+//		schematicHandler.getOutline().setTextures(AllSpecialTextures.CHECKERED, null);
+//		schematicHandler.getOutline().render(Tessellator.getInstance().getBuffer());TODO
+//		schematicHandler.getOutline().setTextures(null, null);
 		RenderSystem.popMatrix();
 	}
 

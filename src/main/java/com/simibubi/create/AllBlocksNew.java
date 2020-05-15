@@ -1,5 +1,7 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.foundation.utility.data.BlockStateGen.oxidizedBlockstate;
+import static com.simibubi.create.foundation.utility.data.ModelGen.oxidizedItemModel;
 import static com.simibubi.create.modules.Sections.SCHEMATICS;
 
 import com.simibubi.create.foundation.registrate.CreateRegistrate;
@@ -21,8 +23,6 @@ import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -33,15 +33,13 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagCollection;
-import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.common.ToolType;
 
 public class AllBlocksNew {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-			.itemGroup(() -> Create.baseCreativeTab);
+		.itemGroup(() -> Create.baseCreativeTab);
 
 	static {
 		REGISTRATE.startSection(SCHEMATICS);
@@ -123,76 +121,68 @@ public class AllBlocksNew {
 		.model(AssetLookup::customItemModel)
 		.build()
 		.register();
-	
-	static { REGISTRATE.startSection(Sections.MATERIALS); }
-	
-	public static final BlockEntry<OxidizingBlock> COPPER_ORE = REGISTRATE.block("copper_ore", p -> new OxidizingBlock(p, 1))
-		.initialProperties(() -> Blocks.IRON_ORE)
-		.transform(oxidizedBlockstate())
-		.transform(tagBlockAndItem("ores/copper"))
+
+	static {
+		REGISTRATE.startSection(Sections.MATERIALS);
+	}
+
+	public static final BlockEntry<OxidizingBlock> COPPER_ORE =
+		REGISTRATE.block("copper_ore", p -> new OxidizingBlock(p, 1))
+			.initialProperties(() -> Blocks.IRON_ORE)
+			.transform(oxidizedBlockstate())
+			.transform(tagBlockAndItem("ores/copper"))
 			.transform(oxidizedItemModel())
-		.register();
-	
+			.register();
+
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.GOLD_BLOCK)
-		.properties(p -> p.harvestLevel(2).harvestTool(ToolType.PICKAXE))
+		.properties(p -> p.harvestLevel(2)
+			.harvestTool(ToolType.PICKAXE))
 		.transform(tagBlockAndItem("ores/zinc"))
-			.build()
+		.build()
 		.register();
-	
-	public static final BlockEntry<OxidizingBlock> COPPER_BLOCK = REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f))
-		.initialProperties(() -> Blocks.IRON_BLOCK)
-		.transform(tagBlockAndItem("storage_blocks/copper"))
+
+	public static final BlockEntry<OxidizingBlock> COPPER_BLOCK =
+		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f))
+			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.transform(tagBlockAndItem("storage_blocks/copper"))
 			.transform(oxidizedItemModel())
-		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/copper")), ctx, false))
-		.transform(oxidizedBlockstate())
-		.register();
-	
-	public static final BlockEntry<OxidizingBlock> COPPER_SHINGLES = REGISTRATE.block("copper_shingles", p -> new OxidizingBlock(p, 1 / 32f))
-		.initialProperties(() -> Blocks.IRON_BLOCK)
-		.item().transform(oxidizedItemModel())
-		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("plates/copper")), ctx, true))
-		.transform(oxidizedBlockstate())
-		.register();
-	
+			.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/copper")), ctx, false))
+			.transform(oxidizedBlockstate())
+			.register();
+
+	public static final BlockEntry<OxidizingBlock> COPPER_SHINGLES =
+		REGISTRATE.block("copper_shingles", p -> new OxidizingBlock(p, 1 / 32f))
+			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.item()
+			.transform(oxidizedItemModel())
+			.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("plates/copper")), ctx, true))
+			.transform(oxidizedBlockstate())
+			.register();
+
 	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", Block::new)
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.transform(tagBlockAndItem("storage_blocks/zinc"))
-			.build()
+		.build()
 		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/zinc")), ctx, false))
 		.register();
-	
+
 	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", Block::new)
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.transform(tagBlockAndItem("storage_blocks/brass"))
-			.build()
+		.build()
 		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/brass")), ctx, false))
 		.register();
+
+	// Utility
 	
-	private static String getOxidizedModel(String name, int level) {
-		return "block/oxidized/" + name + "_" + level;
-	}
-	
-	private static <P> NonNullUnaryOperator<BlockBuilder<OxidizingBlock, P>> oxidizedBlockstate() {
-		return b -> b.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
-				.forAllStates(state -> {
-					String name = getOxidizedModel(ctx.getName(), state.get(OxidizingBlock.OXIDIZATION));
-					return ConfiguredModel.builder()
-							.modelFile(prov.models().cubeAll(name, prov.modLoc(name)))
-							.build();
-				}));
-	}
-	
-	private static <P> NonNullFunction<ItemBuilder<BlockItem, P>, P> oxidizedItemModel() {
-		return b -> b.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc(getOxidizedModel(ctx.getName(), 0)))).build();
+	private static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
+		String tagName) {
+		return b -> b.tag(forgeBlockTag(tagName))
+			.item()
+			.tag(forgeItemTag(tagName));
 	}
 
-	private static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(String tagName) {
-		return b -> b.tag(forgeBlockTag(tagName))
-				.item()
-					.tag(forgeItemTag(tagName));
-	}
-	
 	private static Tag<Block> forgeBlockTag(String name) {
 		return forgeTag(BlockTags.getCollection(), name);
 	}
@@ -200,15 +190,15 @@ public class AllBlocksNew {
 	private static Tag<Item> forgeItemTag(String name) {
 		return forgeTag(ItemTags.getCollection(), name);
 	}
-	
+
 	private static <T> Tag<T> forgeTag(TagCollection<T> collection, String name) {
 		return tag(collection, "forge", name);
 	}
-	
+
 	private static <T> Tag<T> tag(TagCollection<T> collection, String domain, String name) {
 		return collection.getOrCreate(new ResourceLocation(domain, name));
 	}
-	
+
 	public static void register() {}
 
 }

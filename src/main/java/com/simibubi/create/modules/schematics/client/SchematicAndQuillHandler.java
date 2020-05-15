@@ -10,16 +10,11 @@ import org.apache.commons.io.IOUtils;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.TextInputPromptScreen;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
-import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.outliner.ChasingAABBOutline;
-import com.simibubi.create.foundation.utility.outliner.OutlineParticle;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -49,7 +44,7 @@ public class SchematicAndQuillHandler {
 	private Direction selectedFace;
 	private int range = 10;
 
-	private OutlineParticle<ChasingAABBOutline> particle;
+//	private OutlineParticle<ChasingAABBOutline> particle;
 
 	public boolean mouseScrolled(double delta) {
 		if (!isActive())
@@ -129,10 +124,10 @@ public class SchematicAndQuillHandler {
 
 	public void tick() {
 		if (!isActive()) {
-			if (particle != null) {
-				particle.setExpired();
-				particle = null;
-			}
+//			if (particle != null) {
+//				particle.setExpired();
+//				particle = null;
+//			}
 			return;
 		}
 
@@ -157,49 +152,49 @@ public class SchematicAndQuillHandler {
 				setCursor(null);
 		}
 
-		if (particle == null)
-			return;
+//		if (particle == null)
+//			return;
+//
+//		ChasingAABBOutline outline = particle.getOutline();
+//		if (particle.isAlive())
+//			outline.tick();
 
-		ChasingAABBOutline outline = particle.getOutline();
-		if (particle.isAlive())
-			outline.tick();
-
-		if (secondPos == null) {
-			selectedFace = null;
-			outline.highlightFace(null);
-			return;
-		}
-
-		AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos).expand(1, 1, 1).grow(.45f);
-		Vec3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
-		boolean inside = bb.contains(projectedView);
-
-		PredicateTraceResult result =
-			RaycastHelper.rayTraceUntil(player, 70, pos -> inside ^ bb.contains(VecHelper.getCenterOf(pos)));
-		selectedFace = result.missed() ? null : inside ? result.getFacing().getOpposite() : result.getFacing();
-		outline.highlightFace(AllKeys.ACTIVATE_TOOL.isPressed() ? selectedFace : null);
+//		if (secondPos == null) {
+//			selectedFace = null;
+//			outline.highlightFace(null);
+//			return;
+//		}
+//
+//		AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos).expand(1, 1, 1).grow(.45f);
+//		Vec3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+//		boolean inside = bb.contains(projectedView);
+//
+//		PredicateTraceResult result =
+//			RaycastHelper.rayTraceUntil(player, 70, pos -> inside ^ bb.contains(VecHelper.getCenterOf(pos)));
+//		selectedFace = result.missed() ? null : inside ? result.getFacing().getOpposite() : result.getFacing();
+//		outline.highlightFace(AllKeys.ACTIVATE_TOOL.isPressed() ? selectedFace : null);
 	}
 
 	private void setCursor(BlockPos pos) {
 		selectedPos = pos;
 		AxisAlignedBB bb = getCurrentSelectionBox();
 
-		if (particle != null && !particle.isAlive())
-			particle = null;
-		if (bb == null) {
-			if (particle != null)
-				particle.setExpired();
-			return;
-		}
-
-		if (particle == null) {
-			ChasingAABBOutline outline = new ChasingAABBOutline(bb);
-			outline.setTextures(AllSpecialTextures.CHECKERED, AllSpecialTextures.HIGHLIGHT_CHECKERED);
-			particle = OutlineParticle.create(outline);
-		}
-
-		ChasingAABBOutline outline = particle.getOutline();
-		outline.target(bb);
+//		if (particle != null && !particle.isAlive())
+//			particle = null;
+//		if (bb == null) {
+//			if (particle != null)
+//				particle.setExpired();
+//			return;
+//		}
+//
+//		if (particle == null) {
+//			ChasingAABBOutline outline = new ChasingAABBOutline(bb);
+//			outline.setTextures(AllSpecialTextures.CHECKERED, AllSpecialTextures.HIGHLIGHT_CHECKERED);
+//			particle = OutlineParticle.create(outline);
+//		}
+//
+//		ChasingAABBOutline outline = particle.getOutline();
+//		outline.target(bb);
 	}
 
 	private AxisAlignedBB getCurrentSelectionBox() {
