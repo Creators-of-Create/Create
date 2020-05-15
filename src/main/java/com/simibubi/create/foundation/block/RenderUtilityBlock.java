@@ -6,7 +6,7 @@ import net.minecraft.block.material.Material;
 public class RenderUtilityBlock extends Block implements IRenderUtilityBlock {
 
 	public RenderUtilityBlock() {
-		super(Properties.create(Material.AIR));
+		super(Properties.create(Material.AIR).noDrops());
 	}
 
 }

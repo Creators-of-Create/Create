@@ -28,7 +28,7 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock {
 	public static final EnumProperty<PistonType> TYPE = BlockStateProperties.PISTON_TYPE;
 
 	public MechanicalPistonHeadBlock() {
-		super(Properties.from(Blocks.PISTON_HEAD));
+		super(Properties.from(Blocks.PISTON_HEAD).noDrops());
 	}
 
 	@Override

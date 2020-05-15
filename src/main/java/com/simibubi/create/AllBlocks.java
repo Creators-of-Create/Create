@@ -95,6 +95,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -355,8 +356,7 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 		this.block = Create.registrate()
 				.block(Lang.asId(name()), $ -> block.get()) // TODO take properties as input
 				.blockstate(NonNullBiConsumer.noop()) // TODO
-				.defaultLoot()
-//				.loot(NonNullBiConsumer.noop()) // TODO
+				.transform(b -> ArrayUtils.contains(comesWith, ComesWith.NO_BLOCKITEM) ? b.loot(NonNullBiConsumer.noop()) : b) // TODO
 				.setData(ProviderType.LANG, NonNullBiConsumer.noop()) // TODO
 				.transform(applyTags(tags))
 				.transform(b -> registerItemBlock(b, customItemCreator, comesWith))

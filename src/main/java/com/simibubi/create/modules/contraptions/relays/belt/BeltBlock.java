@@ -77,7 +77,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	public static final BooleanProperty CASING = BooleanProperty.create("casing");
 
 	public BeltBlock() {
-		super(Properties.from(Blocks.BROWN_WOOL));
+		super(Properties.from(Blocks.BROWN_WOOL).noDrops());
 		setDefaultState(getDefaultState().with(SLOPE, Slope.HORIZONTAL).with(PART, Part.START).with(CASING, false));
 	}
 

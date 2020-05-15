@@ -114,7 +114,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 	public static class MagnetBlock extends RopeBlockBase {
 
 		public MagnetBlock() {
-			super(Properties.from(Blocks.ANDESITE));
+			super(Properties.from(Blocks.ANDESITE).noDrops());
 		}
 
 		@Override
@@ -127,7 +127,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 	public static class RopeBlock extends RopeBlockBase {
 
 		public RopeBlock() {
-			super(Properties.from(Blocks.WHITE_WOOL));
+			super(Properties.from(Blocks.WHITE_WOOL).noDrops());
 		}
 
 		@Override

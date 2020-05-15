@@ -39,7 +39,7 @@ public class CrushingWheelControllerBlock extends Block
 	public static final BooleanProperty VALID = BooleanProperty.create("valid");
 
 	public CrushingWheelControllerBlock() {
-		super(Properties.from(Blocks.AIR));
+		super(Properties.from(Blocks.AIR).noDrops());
 	}
 
 	@Override
