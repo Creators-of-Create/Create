@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create:linked_transposer"
+          "name": "minecraft:air"
         }
       ],
       "conditions": [

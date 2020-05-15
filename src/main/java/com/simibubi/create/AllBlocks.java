@@ -193,19 +193,19 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 
 	_3_(Sections.MATERIALS),
 
-	COPPER_ORE(() -> new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1), ITaggable.create()
-			.withForgeTags("ores/copper")),
-	ZINC_ORE(() -> new Block(Properties.from(Blocks.GOLD_ORE)
-			.harvestLevel(2)
-			.harvestTool(ToolType.PICKAXE)), ITaggable.create()
-					.withForgeTags("ores/zinc")),
-	COPPER_BLOCK(() -> new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f), ITaggable.create()
-			.withForgeTags("storage_blocks/copper")),
-	COPPER_SHINGLES(() -> new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f)),
-	ZINC_BLOCK(() -> new Block(Properties.from(Blocks.IRON_BLOCK)), ITaggable.create()
-			.withForgeTags("storage_blocks/zinc")),
-	BRASS_BLOCK(() -> new Block(Properties.from(Blocks.IRON_BLOCK)), ITaggable.create()
-			.withForgeTags("storage_blocks/brass")),
+//	COPPER_ORE(() -> new OxidizingBlock(Properties.from(Blocks.IRON_ORE), 1), ITaggable.create()
+//			.withForgeTags("ores/copper")),
+//	ZINC_ORE(() -> new Block(Properties.from(Blocks.GOLD_ORE)
+//			.harvestLevel(2)
+//			.harvestTool(ToolType.PICKAXE)), ITaggable.create()
+//					.withForgeTags("ores/zinc")),
+//	COPPER_BLOCK(() -> new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f), ITaggable.create()
+//			.withForgeTags("storage_blocks/copper")),
+//	COPPER_SHINGLES(() -> new OxidizingBlock(Properties.from(Blocks.IRON_BLOCK), 1 / 32f)),
+//	ZINC_BLOCK(() -> new Block(Properties.from(Blocks.IRON_BLOCK)), ITaggable.create()
+//			.withForgeTags("storage_blocks/zinc")),
+//	BRASS_BLOCK(() -> new Block(Properties.from(Blocks.IRON_BLOCK)), ITaggable.create()
+//			.withForgeTags("storage_blocks/brass")),
 
 	_4_(Sections.CURIOSITIES),
 

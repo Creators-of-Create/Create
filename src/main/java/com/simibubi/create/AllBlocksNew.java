@@ -5,6 +5,7 @@ import static com.simibubi.create.modules.Sections.SCHEMATICS;
 import com.simibubi.create.foundation.registrate.CreateRegistrate;
 import com.simibubi.create.foundation.utility.data.AssetLookup;
 import com.simibubi.create.foundation.utility.data.BlockStateGen;
+import com.simibubi.create.foundation.world.OxidizingBlock;
 import com.simibubi.create.modules.Sections;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogwheelBlockItem;
@@ -15,10 +16,21 @@ import com.simibubi.create.modules.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
 import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
+import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
+import net.minecraft.item.Item;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagCollection;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ToolType;
 
 public class AllBlocksNew {
 
@@ -104,7 +116,66 @@ public class AllBlocksNew {
 		.model(AssetLookup::customItemModel)
 		.build()
 		.register();
+	
+	static { REGISTRATE.startSection(Sections.MATERIALS); }
+	
+	public static final BlockEntry<OxidizingBlock> COPPER_ORE = REGISTRATE.block("copper_ore", p -> new OxidizingBlock(p, 1))
+		.initialProperties(() -> Blocks.IRON_ORE)
+		.transform(tagBlockAndItem("ores/copper"))
+		.register();
+	
+	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
+		.initialProperties(() -> Blocks.GOLD_BLOCK)
+		.properties(p -> p.harvestLevel(2).harvestTool(ToolType.PICKAXE))
+		.transform(tagBlockAndItem("ores/zinc"))
+		.register();
+	
+	public static final BlockEntry<OxidizingBlock> COPPER_BLOCK = REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f))
+		.initialProperties(() -> Blocks.IRON_BLOCK)
+		.transform(tagBlockAndItem("storage_blocks/copper"))
+		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/copper")), ctx, false))
+		.register();
+	
+	public static final BlockEntry<OxidizingBlock> COPPER_SHINGLES = REGISTRATE.block("copper_shingles", p -> new OxidizingBlock(p, 1 / 32f))
+		.initialProperties(() -> Blocks.IRON_BLOCK)
+		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("plates/copper")), ctx, true))
+		.register();
+	
+	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", Block::new)
+		.initialProperties(() -> Blocks.IRON_BLOCK)
+		.transform(tagBlockAndItem("storage_blocks/zinc"))
+		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/zinc")), ctx, false))
+		.register();
+	
+	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", Block::new)
+		.initialProperties(() -> Blocks.IRON_BLOCK)
+		.transform(tagBlockAndItem("storage_blocks/brass"))
+		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/brass")), ctx, false))
+		.register();
 
+	private static <T extends Block, P> NonNullUnaryOperator<BlockBuilder<T, P>> tagBlockAndItem(String tagName) {
+		return b -> b.tag(forgeBlockTag(tagName))
+				.item()
+					.tag(forgeItemTag(tagName))
+					.build();
+	}
+	
+	private static Tag<Block> forgeBlockTag(String name) {
+		return forgeTag(BlockTags.getCollection(), name);
+	}
+
+	private static Tag<Item> forgeItemTag(String name) {
+		return forgeTag(ItemTags.getCollection(), name);
+	}
+	
+	private static <T> Tag<T> forgeTag(TagCollection<T> collection, String name) {
+		return tag(collection, "forge", name);
+	}
+	
+	private static <T> Tag<T> tag(TagCollection<T> collection, String domain, String name) {
+		return collection.getOrCreate(new ResourceLocation(domain, name));
+	}
+	
 	public static void register() {}
 
 }
