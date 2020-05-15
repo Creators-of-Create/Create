@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# Disable autocrlf on generated files, they always generate with LF
+src/generated/**/*.json text eol=lf
