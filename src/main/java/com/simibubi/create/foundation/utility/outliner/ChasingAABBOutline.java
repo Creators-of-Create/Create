@@ -1,13 +1,11 @@
 package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 
 public class ChasingAABBOutline extends AABBOutline {
 
@@ -32,10 +30,8 @@ public class ChasingAABBOutline extends AABBOutline {
 
 	@Override
 	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
-		Vec3d color = ColorHelper.getRGB(0xFFFFFF);
-		float alpha = 1f;
 		renderBB(ms, buffer, interpolateBBs(prevBB, bb, Minecraft.getInstance()
-			.getRenderPartialTicks()), color, alpha, true);
+			.getRenderPartialTicks()));
 	}
 
 	private static AxisAlignedBB interpolateBBs(AxisAlignedBB current, AxisAlignedBB target, float pt) {

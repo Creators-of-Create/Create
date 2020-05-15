@@ -119,11 +119,11 @@ public abstract class SchematicToolBase implements ISchematicTool {
 		if (!schematicHandler.isDeployed())
 			return;
 
-		AABBOutline outline = schematicHandler.getOutline();
+//		AABBOutline outline = schematicHandler.getOutline();
 		if (renderSelectedFace) {
-			schematicHandler.getOutline().setTextures(null,
-					AllKeys.ctrlDown() ? AllSpecialTextures.HIGHLIGHT_CHECKERED : AllSpecialTextures.CHECKERED);
-			outline.highlightFace(selectedFace);
+//			schematicHandler.getOutline().setTextures(null,
+//					AllKeys.ctrlDown() ? AllSpecialTextures.HIGHLIGHT_CHECKERED : AllSpecialTextures.CHECKERED);
+//			outline.highlightFace(selectedFace);
 		}
 
 		RenderHelper.disableStandardItemLighting();
@@ -131,7 +131,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 		RenderSystem.enableBlend();
 //		outline.render(Tessellator.getInstance().getBuffer());TODO
 		RenderSystem.popMatrix();
-		outline.setTextures(null, null);
+//		outline.setTextures(null, null);
 
 	}
 

@@ -2,8 +2,6 @@ package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -17,10 +15,6 @@ import net.minecraft.util.math.Vec3d;
 public class AABBOutline extends Outline {
 
 	protected AxisAlignedBB bb;
-	protected AllSpecialTextures faceTexture;
-	protected AllSpecialTextures highlightedTexture;
-	protected Direction highlightedFace;
-	public boolean disableCull = false;
 
 	public AABBOutline(AxisAlignedBB bb) {
 		this.bb = bb;
@@ -28,22 +22,10 @@ public class AABBOutline extends Outline {
 
 	@Override
 	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
-		Vec3d color = ColorHelper.getRGB(0xFFFFFF);
-		float alpha = 1f;
-		renderBB(ms, buffer, bb, color, alpha, !disableCull);
+		renderBB(ms, buffer, bb);
 	}
 
-	public void setTextures(AllSpecialTextures faceTexture, AllSpecialTextures highlightTexture) {
-		this.faceTexture = faceTexture;
-		this.highlightedTexture = highlightTexture;
-	}
-
-	public void highlightFace(Direction face) {
-		this.highlightedFace = face;
-	}
-
-	public void renderBB(MatrixStack ms, IRenderTypeBuffer buffer, AxisAlignedBB bb, Vec3d color, float alpha,
-		boolean doCulling) {
+	public void renderBB(MatrixStack ms, IRenderTypeBuffer buffer, AxisAlignedBB bb) {
 		Vec3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
 			.getProjectedView();
 		boolean inside = bb.contains(projectedView);
@@ -89,12 +71,12 @@ public class AABBOutline extends Outline {
 
 	protected void renderFace(MatrixStack ms, IRenderTypeBuffer buffer, Direction direction, Vec3d p1, Vec3d p2,
 		Vec3d p3, Vec3d p4, boolean noCull) {
-
-		ResourceLocation faceTexture = this.faceTexture.getLocation();
-		if (direction == highlightedFace && highlightedTexture != null)
-			faceTexture = highlightedTexture.getLocation();
-		else if (faceTexture == null)
+		if (!params.faceTexture.isPresent())
 			return;
+		
+		ResourceLocation faceTexture = params.faceTexture.get().getLocation();
+		if (direction == params.highlightedFace && params.hightlightedFaceTexture.isPresent())
+			faceTexture = params.hightlightedFaceTexture.get().getLocation();
 
 		RenderType translucentType =
 			noCull ? RenderType.getEntityTranslucent(faceTexture) : RenderType.getEntityTranslucentCull(faceTexture);

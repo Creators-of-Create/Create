@@ -38,6 +38,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<GlassBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", GlassBlock::new)
 		.initialProperties(() -> Blocks.GLASS)
+		.addLayer(() -> RenderType::getCutoutMipped)
 		.blockstate(palettesCubeAll())
 		.simpleItem()
 		.register();

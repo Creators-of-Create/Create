@@ -13,7 +13,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.utility.outliner.Outliner.ExpireType;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.ChassisTileEntity;
 
 import net.minecraft.client.Minecraft;
@@ -36,7 +35,7 @@ public class ChassisRangeDisplay {
 		public Entry(ChassisTileEntity te) {
 			this.te = te;
 			timer = DISPLAY_TIME;
-			CreateClient.outliner.showCluster(getOutlineKey(), createSelection(te), ExpireType.FADE)
+			CreateClient.outliner.showCluster(getOutlineKey(), createSelection(te))
 				.colored(0xFFFFBB)
 				.lineWidth(1 / 16f)
 				.withFaceTexture(AllSpecialTextures.CHECKERED);
@@ -97,7 +96,7 @@ public class ChassisRangeDisplay {
 			Entry entry = entries.get(pos);
 			if (tickEntry(entry, hasWrench))
 				iterator.remove();
-			CreateClient.outliner.keepCluster(entry.getOutlineKey());
+			CreateClient.outliner.keep(entry.getOutlineKey());
 		}
 
 		for (Iterator<GroupEntry> iterator = groupEntries.iterator(); iterator.hasNext();) {
@@ -107,7 +106,7 @@ public class ChassisRangeDisplay {
 				if (group == lastHoveredGroup)
 					lastHoveredGroup = null;
 			}
-			CreateClient.outliner.keepCluster(group.getOutlineKey());
+			CreateClient.outliner.keep(group.getOutlineKey());
 		}
 
 		if (!hasWrench)

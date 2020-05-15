@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.utility.outliner;
 
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -19,7 +21,7 @@ import net.minecraft.util.math.Vec3d;
 public abstract class Outline {
 
 	protected OutlineParams params;
-	
+
 	public Outline() {
 		params = new OutlineParams();
 	}
@@ -97,7 +99,7 @@ public abstract class Outline {
 	}
 
 	public void tick() {}
-	
+
 	public OutlineParams getParams() {
 		return params;
 	}
@@ -105,7 +107,9 @@ public abstract class Outline {
 	public static class OutlineParams {
 		Optional<AllSpecialTextures> faceTexture;
 		Optional<AllSpecialTextures> hightlightedFaceTexture;
+		Direction highlightedFace;
 		boolean fadeLineWidth;
+		boolean disableCull;
 		float alpha;
 		private float lineWidth;
 		int lightMapU, lightMapV;
@@ -122,30 +126,41 @@ public abstract class Outline {
 			lightMapU = i >> 16 & '\uffff';
 			lightMapV = i & '\uffff';
 		}
-		
+
 		// builder
-		
+
 		public OutlineParams colored(int color) {
 			rgb = ColorHelper.getRGB(color);
 			return this;
 		}
-		
+
 		public OutlineParams lineWidth(float width) {
 			this.lineWidth = width;
 			return this;
 		}
-		
+
 		public OutlineParams withFaceTexture(AllSpecialTextures texture) {
 			this.faceTexture = Optional.of(texture);
 			return this;
 		}
-		
+
+		public OutlineParams withFaceTextures(AllSpecialTextures texture, AllSpecialTextures highlightTexture) {
+			this.faceTexture = Optional.of(texture);
+			this.hightlightedFaceTexture = Optional.of(highlightTexture);
+			return this;
+		}
+
+		public OutlineParams highlightFace(@Nullable Direction face) {
+			highlightedFace = face;
+			return this;
+		}
+
 		// util
-		
+
 		float getLineWidth() {
 			return fadeLineWidth ? alpha * lineWidth : lineWidth;
 		}
-		
+
 	}
 
 }
