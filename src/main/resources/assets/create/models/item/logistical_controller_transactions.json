@@ -1,6 +1,0 @@
-{
-    "parent": "create:item/logistical_controller_storage",
-	"textures": {
-		"logistical_icons_1": "create:block/logistical_icons_2"
-	}
-}

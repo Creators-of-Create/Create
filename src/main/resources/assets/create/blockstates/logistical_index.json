@@ -1,8 +1,0 @@
-{
-  "variants": {
-		"facing=north": { "model": "create:block/logistical_index", "y": 180 },
-		"facing=south": { "model": "create:block/logistical_index" },
-		"facing=east": { "model": "create:block/logistical_index", "y": 270 },
-		"facing=west": { "model": "create:block/logistical_index", "y": 90 }
-	}
-}

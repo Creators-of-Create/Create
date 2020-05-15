@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.curiosities.deforester;
+package com.simibubi.create.modules.curiosities.tools;
 
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 

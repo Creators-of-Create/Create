@@ -90,6 +90,7 @@ public class AllPaletteBlocks {
 	public static final BlockEntry<SandBlock> LIMESAND = REGISTRATE.block("limesand", p -> new SandBlock(0xD7D7C7, p))
 		.initialProperties(() -> Blocks.SAND)
 		.blockstate(palettesCubeAll())
+		.simpleItem()
 		.register();
 
 	public static final BlockEntry<Block> LIMESTONE =

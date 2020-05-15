@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.curiosities.deforester;
+package com.simibubi.create.modules.curiosities.tools;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.TreeCutter.Tree;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;

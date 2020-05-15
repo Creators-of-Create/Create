@@ -49,35 +49,6 @@ public enum ScreenResources {
 	SEQUENCER_END("sequencer.png", 14, 83, 131, 18),
 	SEQUENCER_EMPTY("sequencer.png", 14, 101, 131, 18),
 
-	// Logistical Index
-	INDEX_TOP("index.png", 41, 0, 174, 22),
-	INDEX_TOP_TRIM("index.png", 41, 22, 174, 6),
-	INDEX_MIDDLE("index.png", 41, 28, 183, 178),
-	INDEX_BOTTOM_TRIM("index.png", 41, 206, 174, 6),
-	INDEX_BOTTOM("index.png", 41, 212, 181, 44),
-	INDEX_SCROLLER_TOP("index.png", 224, 31, 10, 6),
-	INDEX_SCROLLER_MIDDLE("index.png", 224, 37, 10, 6),
-	INDEX_SCROLLER_BOTTOM("index.png", 224, 43, 10, 6),
-	INDEX_TAB("index.png", 0, 55, 22, 22),
-	INDEX_TAB_ACTIVE("index.png", 0, 77, 22, 22),
-	INDEX_SEARCH("index.png", 0, 99, 28, 19),
-	INDEX_SEARCH_OVERLAY("widgets.png", 0, 81, 176, 20),
-
-	LOGISTICAL_CONTROLLER_TRIM("controller.png", 178, 6),
-	LOGISTICAL_CONTROLLER("controller.png", 0, 6, 185, 71),
-
-	ITEM_COUNT_SCROLLAREA("controller.png", 62, 83, 22, 10),
-	BIG_SLOT("controller.png", 0, 83, 26, 26),
-	SHIPPING_SLOT("controller.png", 26, 83, 18, 21),
-	RECEIVING_SLOT("controller.png", 44, 83, 18, 21),
-	SLOT_FRAME("index.png", 0, 118, 18, 18),
-	SLOT_INNER("index.png", 18, 118, 18, 18),
-	DISABLED_SLOT_FRAME("index.png", 0, 136, 18, 18),
-	DISABLED_SLOT_INNER("index.png", 18, 136, 18, 18),
-	CRAFTY_SLOT_FRAME("index.png", 0, 154, 18, 18),
-	CRAFTY_SLOT_INNER("index.png", 18, 154, 18, 18),
-	SELECTED_SLOT_INNER("index.png", 18, 172, 18, 18),
-
 	// JEI
 	JEI_SLOT("jei/widgets.png", 18, 18),
 	JEI_CHANCE_SLOT("jei/widgets.png", 20, 156, 18, 18),

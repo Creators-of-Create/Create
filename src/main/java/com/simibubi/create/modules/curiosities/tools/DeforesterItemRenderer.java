@@ -1,4 +1,4 @@
-package com.simibubi.create.modules.curiosities.deforester;
+package com.simibubi.create.modules.curiosities.tools;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;

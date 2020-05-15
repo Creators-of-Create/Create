@@ -1,8 +1,0 @@
-{
-  "variants": {
-		"facing=north": { "model": "create:block/logisticians_table", "y": 180 },
-		"facing=south": { "model": "create:block/logisticians_table" },
-		"facing=east": { "model": "create:block/logisticians_table", "y": 270 },
-		"facing=west": { "model": "create:block/logisticians_table", "y": 90 }
-	}
-}

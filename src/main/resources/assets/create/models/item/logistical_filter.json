@@ -1,7 +1,0 @@
-{
-	"parent": "create:item/filter",
-	"textures": {
-		"0": "create:item/logistical_filter",
-		"particle": "create:item/logistical_filter"
-	}
-}

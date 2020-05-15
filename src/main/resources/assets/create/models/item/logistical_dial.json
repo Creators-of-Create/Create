@@ -1,7 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "create:item/logistical_dial",
-    "layer1": "create:item/logistical_dial_overlay"
-  }
-}
