@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.deployer;
 
 import static net.minecraftforge.eventbus.api.Event.Result.DENY;
+import static net.minecraftforge.eventbus.api.Event.Result.DEFAULT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
-import net.minecraftforge.eventbus.api.Event.Result;
+import net.minecraftforge.eventbus.api.Event;
 
 public class DeployerHandler {
 
@@ -72,8 +73,10 @@ public class DeployerHandler {
 
 		@Override
 		public BlockState getBlockState(BlockPos position) {
-			if (rayMode && (pos.offset(face.getOpposite(), 3).equals(position)
-					|| pos.offset(face.getOpposite(), 1).equals(position)))
+			if (rayMode && (pos.offset(face.getOpposite(), 3)
+				.equals(position)
+				|| pos.offset(face.getOpposite(), 1)
+					.equals(position)))
 				return Blocks.BEDROCK.getDefaultState();
 			return world.getBlockState(position);
 		}
@@ -81,13 +84,16 @@ public class DeployerHandler {
 
 	static boolean shouldActivate(ItemStack held, World world, BlockPos targetPos) {
 		if (held.getItem() instanceof BlockItem)
-			if (!world.getBlockState(targetPos).getMaterial().isReplaceable())
+			if (!world.getBlockState(targetPos)
+				.getMaterial()
+				.isReplaceable())
 				return false;
 
 		if (held.getItem() instanceof BucketItem) {
 			BucketItem bucketItem = (BucketItem) held.getItem();
 			Fluid fluid = bucketItem.getFluid();
-			if (fluid != Fluids.EMPTY && world.getFluidState(targetPos).getFluid() == fluid)
+			if (fluid != Fluids.EMPTY && world.getFluidState(targetPos)
+				.getFluid() == fluid)
 				return false;
 		}
 
@@ -95,15 +101,17 @@ public class DeployerHandler {
 	}
 
 	static void activate(DeployerFakePlayer player, Vec3d vec, BlockPos clickedPos, Vec3d extensionVector, Mode mode) {
-		Multimap<String, AttributeModifier> attributeModifiers =
-			player.getHeldItemMainhand().getAttributeModifiers(EquipmentSlotType.MAINHAND);
-		player.getAttributes().applyAttributeModifiers(attributeModifiers);
+		Multimap<String, AttributeModifier> attributeModifiers = player.getHeldItemMainhand()
+			.getAttributeModifiers(EquipmentSlotType.MAINHAND);
+		player.getAttributes()
+			.applyAttributeModifiers(attributeModifiers);
 		activateInner(player, vec, clickedPos, extensionVector, mode);
-		player.getAttributes().removeAttributeModifiers(attributeModifiers);
+		player.getAttributes()
+			.removeAttributeModifiers(attributeModifiers);
 	}
 
 	private static void activateInner(DeployerFakePlayer player, Vec3d vec, BlockPos clickedPos, Vec3d extensionVector,
-			Mode mode) {
+		Mode mode) {
 
 		Vec3d rayOrigin = vec.add(extensionVector.scale(3 / 2f + 1 / 64f));
 		Vec3d rayTarget = vec.add(extensionVector.scale(5 / 2f - 1 / 64f));
@@ -133,7 +141,7 @@ public class DeployerHandler {
 					if (entity.processInitialInteract(player, hand))
 						success = true;
 					else if (entity instanceof LivingEntity
-							&& stack.interactWithEntity(player, (LivingEntity) entity, hand))
+						&& stack.interactWithEntity(player, (LivingEntity) entity, hand))
 						success = true;
 				}
 			}
@@ -160,22 +168,24 @@ public class DeployerHandler {
 		BlockState clickedState = world.getBlockState(clickedPos);
 		Direction face = result.getFace();
 		if (face == null)
-			face = Direction.getFacingFromVector(extensionVector.x, extensionVector.y, extensionVector.z).getOpposite();
+			face = Direction.getFacingFromVector(extensionVector.x, extensionVector.y, extensionVector.z)
+				.getOpposite();
 
 		// Left click
 		if (mode == Mode.PUNCH) {
-			LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, clickedPos, face);
-			if (event.isCanceled())
-				return;
 			if (!world.isBlockModifiable(player, clickedPos))
 				return;
-			if (world.extinguishFire(player, clickedPos, face))
-				return;
-			if (clickedState.isAir(world, clickedPos)) {
+			if (clickedState.getRenderShape(world, clickedPos)
+				.isEmpty()) {
 				player.blockBreakingProgress = null;
 				return;
 			}
-			if (event.getUseBlock() != Result.DENY)
+			LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, clickedPos, face);
+			if (event.isCanceled())
+				return;
+			if (world.extinguishFire(player, clickedPos, face))
+				return;
+			if (event.getUseBlock() != DENY)
 				clickedState.onBlockClicked(world, clickedPos, player);
 			if (stack.isEmpty())
 				return;
@@ -193,6 +203,10 @@ public class DeployerHandler {
 				player.blockBreakingProgress = null;
 				return;
 			}
+			if (progress <= 0) {
+				player.blockBreakingProgress = null;
+				return;
+			}
 
 			if ((int) (before * 10) != (int) (progress * 10))
 				world.sendBlockBreakProgress(player.getEntityId(), clickedPos, (int) (progress * 10));
@@ -202,25 +216,33 @@ public class DeployerHandler {
 
 		// Right click
 		ItemUseContext itemusecontext = new ItemUseContext(player, hand, result);
-		RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, face);
+		Event.Result useBlock = DENY;
+		Event.Result useItem = DEFAULT;
+		if (!clickedState.getRenderShape(world, clickedPos)
+			.isEmpty()) {
+			RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, face);
+			useBlock = event.getUseBlock();
+			useItem = event.getUseItem();
+		}
 
 		// Item has custom active use
-		if (event.getUseItem() != DENY) {
+		if (useItem != DENY) {
 			ActionResultType actionresult = stack.onItemUseFirst(itemusecontext);
 			if (actionresult != ActionResultType.PASS)
 				return;
 		}
 
-		boolean holdingSomething = !player.getHeldItemMainhand().isEmpty();
+		boolean holdingSomething = !player.getHeldItemMainhand()
+			.isEmpty();
 		boolean flag1 =
 			!(player.isSneaking() && holdingSomething) || (stack.doesSneakBypassUse(world, clickedPos, player));
 
 		// Use on block
-		if (event.getUseBlock() != DENY && flag1 && clickedState.onUse(world, player, hand, result) == ActionResultType.SUCCESS)
+		if (useBlock != DENY && flag1 && clickedState.onUse(world, player, hand, result) == ActionResultType.SUCCESS)
 			return;
 		if (stack.isEmpty())
 			return;
-		if (event.getUseItem() == DENY)
+		if (useItem == DENY)
 			return;
 		if (item instanceof BlockItem && !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
 			return;
@@ -258,7 +280,8 @@ public class DeployerHandler {
 		if (stack.isFood())
 			player.spawnedItemEffects = stack.copy();
 
-		if (!player.getActiveItemStack().isEmpty())
+		if (!player.getActiveItemStack()
+			.isEmpty())
 			player.setHeldItem(hand, stack.onItemUseFinish(world, player));
 
 		player.resetActiveHand();
