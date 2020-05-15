@@ -565,11 +565,15 @@ public abstract class Contraption {
 					state = state.with(SawBlock.RUNNING, false);
 
 				BlockState blockState = world.getBlockState(targetPos);
-				if (blockState.getBlockHardness(world, targetPos) == -1)
+				if (blockState.getBlockHardness(world, targetPos) == -1
+						|| (state.getCollisionShape(world, targetPos).isEmpty()
+						&& !blockState.getCollisionShape(world, targetPos).isEmpty())) {
+					if (targetPos.getY() == 0)
+						targetPos = targetPos.up();
+					world.playEvent(2001, targetPos, Block.getStateId(state));
+					Block.spawnDrops(state, world, targetPos, null);
 					continue;
-				if (state.getCollisionShape(world, targetPos).isEmpty()
-						&& !blockState.getCollisionShape(world, targetPos).isEmpty())
-					continue;
+				}
 
 				world.destroyBlock(targetPos, true);
 				world.setBlockState(targetPos, state, 3 | BlockFlags.IS_MOVING);
