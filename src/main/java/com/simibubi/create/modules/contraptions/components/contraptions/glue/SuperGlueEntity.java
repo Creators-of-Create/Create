@@ -13,6 +13,7 @@ import com.simibubi.create.modules.schematics.ISpecialEntityItemRequirement;
 import com.simibubi.create.modules.schematics.ItemRequirement;
 import com.simibubi.create.modules.schematics.ItemRequirement.ItemUseType;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -161,11 +162,13 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	public static boolean isValidFace(World world, BlockPos pos, Direction direction) {
+		BlockState state = world.getBlockState(pos);
+		if (BlockMovementTraits.isBlockAttachedTowards(state, direction))
+			return true;
 		if (!BlockMovementTraits.movementNecessary(world, pos))
 			return false;
-		if (BlockMovementTraits.notSupportive(world.getBlockState(pos), direction)) {
+		if (BlockMovementTraits.notSupportive(state, direction))
 			return false;
-		}
 		return true;
 	}
 

@@ -57,11 +57,11 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 
 		if (!visible && !holdingGlue)
 			return;
-		
+
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getEntityCutout(getEntityTexture(entity)));
 		light = getBrightnessForRender(entity);
 		Direction face = entity.getFacingDirection();
-		
+
 		ms.push();
 		AngleHelper.applyRotation(face, ms);
 		Entry peek = ms.peek();
@@ -89,8 +89,8 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		BlockPos pos = entity.hangingPosition;
 		BlockPos pos2 = pos.offset(entity.getFacingDirection()
 			.getOpposite());
-		return !SuperGlueEntity.isValidFace(entity.world, pos2, entity.getFacingDirection())
-			|| !SuperGlueEntity.isValidFace(entity.world, pos, entity.getFacingDirection()
+		return SuperGlueEntity.isValidFace(entity.world, pos2, entity.getFacingDirection()) != SuperGlueEntity
+			.isValidFace(entity.world, pos, entity.getFacingDirection()
 				.getOpposite());
 	}
 
