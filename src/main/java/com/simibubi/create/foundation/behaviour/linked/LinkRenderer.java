@@ -1,66 +1,64 @@
 package com.simibubi.create.foundation.behaviour.linked;
 
-import java.util.function.Consumer;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
+import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.behaviour.ValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBoxRenderer;
+import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.DrawHighlightEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
 public class LinkRenderer {
 
-	@SubscribeEvent
-	public static void renderBlockHighlight(DrawHighlightEvent event) {
-		RayTraceResult target = event.getTarget();
+	public static void tick() {
+		Minecraft mc = Minecraft.getInstance();
+		RayTraceResult target = mc.objectMouseOver;
 		if (target == null || !(target instanceof BlockRayTraceResult))
 			return;
 
 		BlockRayTraceResult result = (BlockRayTraceResult) target;
-		ClientWorld world = Minecraft.getInstance().world;
+		ClientWorld world = mc.world;
 		BlockPos pos = result.getPos();
-		BlockState state = world.getBlockState(pos);
 
 		LinkBehaviour behaviour = TileEntityBehaviour.get(world, pos, LinkBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 
-		TessellatorHelper.prepareForDrawing();
-		RenderSystem.translated(pos.getX(), pos.getY(), pos.getZ());
-
 		String freq1 = Lang.translate("logistics.firstFrequency");
 		String freq2 = Lang.translate("logistics.secondFrequency");
 
-		renderEachSlot(state, behaviour, first -> {
+		for (boolean first : Iterate.trueAndFalse) {
 			AxisAlignedBB bb = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(.25f);
 			String label = first ? freq2 : freq1;
-			ValueBox box = new ValueBox(label, bb).withColors(0x992266, 0xFF55AA).offsetLabel(behaviour.textShift);
-			ValueBoxRenderer.renderBox(box, behaviour.testHit(first, target.getHitVec()));
-		});
+			boolean hit = behaviour.testHit(first, target.getHitVec());
+			ValueBoxTransform transform = first ? behaviour.firstSlot : behaviour.secondSlot;
 
-		TessellatorHelper.cleanUpAfterDrawing();
+			ValueBox box = new ValueBox(label, bb, pos).withColors(0x601F18, 0xB73C2D)
+				.offsetLabel(behaviour.textShift)
+				.passive(!hit);
+			CreateClient.outliner.showValueBox(Pair.of(Boolean.valueOf(first), pos), box.transform(transform))
+				.lineWidth(1 / 64f)
+				.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
+				.highlightFace(result.getFace());
+		}
 	}
 
 	public static void renderOnTileEntity(SmartTileEntity tileEntityIn, float partialTicks, MatrixStack ms,
-			IRenderTypeBuffer buffer, int light, int overlay) {
+		IRenderTypeBuffer buffer, int light, int overlay) {
 
 		if (tileEntityIn == null || tileEntityIn.isRemoved())
 			return;
@@ -68,23 +66,16 @@ public class LinkRenderer {
 		if (behaviour == null)
 			return;
 
-		BlockState state = tileEntityIn.getBlockState();
-		TessellatorHelper.prepareForDrawing();
-		BlockPos pos = tileEntityIn.getPos();
-		RenderSystem.translated(pos.getX(), pos.getY(), pos.getZ());
+		for (boolean first : Iterate.trueAndFalse) {
+			ValueBoxTransform transform = first ? behaviour.firstSlot : behaviour.secondSlot;
+			ItemStack stack = first ? behaviour.frequencyFirst.getStack() : behaviour.frequencyLast.getStack();
 
-		renderEachSlot(state, behaviour, first -> {
-			ValueBoxRenderer.renderItemIntoValueBox(
-					first ? behaviour.frequencyFirst.getStack() : behaviour.frequencyLast.getStack(),
-					ms, buffer, light, overlay);
-		});
+			ms.push();
+			transform.transform(tileEntityIn.getBlockState(), ms);
+			ValueBoxRenderer.renderItemIntoValueBox(stack, ms, buffer, light, overlay);
+			ms.pop();
+		}
 
-		TessellatorHelper.cleanUpAfterDrawing();
-	}
-
-	private static void renderEachSlot(BlockState state, LinkBehaviour behaviour, Consumer<Boolean> render) {
-		behaviour.firstSlot.renderTransformed(state, () -> render.accept(true));
-		behaviour.secondSlot.renderTransformed(state, () -> render.accept(false));
 	}
 
 }

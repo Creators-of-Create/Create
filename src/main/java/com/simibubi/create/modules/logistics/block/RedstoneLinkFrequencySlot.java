@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.logistics.block;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -37,11 +38,12 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 	}
 
 	@Override
-	protected Vec3d getOrientation(BlockState state) {
+	protected void rotate(BlockState state, MatrixStack ms) {
 		Direction facing = state.get(RedstoneLinkBlock.FACING);
-		float yRot = facing.getAxis().isVertical() ? 180 : AngleHelper.horizontalAngle(facing);
+		float yRot = facing.getAxis().isVertical() ? 0 : AngleHelper.horizontalAngle(facing) + 180;
 		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
-		return new Vec3d(0, yRot + 180, zRot);
+		ms.multiply(VecHelper.rotateY(yRot));
+		ms.multiply(VecHelper.rotateX(zRot));
 	}
 	
 	@Override

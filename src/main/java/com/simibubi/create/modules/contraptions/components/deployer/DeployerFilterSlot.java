@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.deployer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -25,11 +26,12 @@ public class DeployerFilterSlot extends ValueBoxTransform {
 	}
 
 	@Override
-	protected Vec3d getOrientation(BlockState state) {
+	protected void rotate(BlockState state, MatrixStack ms) {
 		Direction facing = state.get(DeployerBlock.FACING);
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
 		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
-		return new Vec3d(0, yRot, zRot);
+		ms.multiply(VecHelper.rotateY(yRot));
+		ms.multiply(VecHelper.rotateX(zRot));
 	}
 
 }

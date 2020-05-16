@@ -1,14 +1,14 @@
 package com.simibubi.create.foundation.behaviour.filtering;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.behaviour.ValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBox.ItemValueBox;
 import com.simibubi.create.foundation.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
 import com.simibubi.create.modules.logistics.item.filter.FilterItem;
 
 import net.minecraft.block.BlockState;
@@ -21,22 +21,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.DrawHighlightEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
 public class FilteringRenderer {
 
-	@SubscribeEvent
-	public static void renderBlockHighlight(DrawHighlightEvent event) {
-		RayTraceResult target = event.getTarget();
+	public static void tick() {
+		Minecraft mc = Minecraft.getInstance();
+		RayTraceResult target = mc.objectMouseOver;
 		if (target == null || !(target instanceof BlockRayTraceResult))
 			return;
 
 		BlockRayTraceResult result = (BlockRayTraceResult) target;
-		ClientWorld world = Minecraft.getInstance().world;
+		ClientWorld world = mc.world;
 		BlockPos pos = result.getPos();
 		BlockState state = world.getBlockState(pos);
 
@@ -45,34 +40,37 @@ public class FilteringRenderer {
 			return;
 		if (!behaviour.isActive())
 			return;
-		if (Minecraft.getInstance().player.isSneaking())
+		if (mc.player.isSneaking())
+			return;
+		if (!behaviour.slotPositioning.shouldRender(state))
 			return;
 
-		TessellatorHelper.prepareForDrawing();
-		RenderSystem.translated(pos.getX(), pos.getY(), pos.getZ());
+		ItemStack filter = behaviour.getFilter();
+		boolean isFilterSlotted = filter.getItem() instanceof FilterItem;
+		boolean showCount = behaviour.isCountVisible();
+		String label = isFilterSlotted ? "" : Lang.translate("logistics.filter");
+		boolean hit = behaviour.slotPositioning.testHit(state, target.getHitVec()
+			.subtract(new Vec3d(pos)));
 
-		behaviour.slotPositioning.renderTransformed(state, () -> {
+		AxisAlignedBB emptyBB = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO);
+		AxisAlignedBB bb = isFilterSlotted ? emptyBB.grow(.45f, .31f, .2f) : emptyBB.grow(.25f);
 
-			AxisAlignedBB bb = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(.25f);
-			String label = Lang.translate("logistics.filter");
-			ItemStack filter = behaviour.getFilter();
-			if (filter.getItem() instanceof FilterItem)
-				label = "";
-			boolean showCount = behaviour.isCountVisible();
-			ValueBox box =
-				showCount ? new ItemValueBox(label, bb, filter, behaviour.scrollableValue) : new ValueBox(label, bb);
-			if (showCount)
-				box.scrollTooltip("[" + Lang.translate("action.scroll") + "]");
-			box.offsetLabel(behaviour.textShift).withColors(0x7777BB, 0xCCBBFF);
-			ValueBoxRenderer.renderBox(box, behaviour.testHit(target.getHitVec()));
+		ValueBox box = showCount ? new ItemValueBox(label, bb, pos, filter, behaviour.scrollableValue)
+			: new ValueBox(label, bb, pos);
 
-		});
+		box.offsetLabel(behaviour.textShift)
+			.withColors(0x7A6A2C, 0xB79D64)
+			.scrollTooltip(showCount ? "[" + Lang.translate("action.scroll") + "]" : "")
+			.passive(!hit);
 
-		TessellatorHelper.cleanUpAfterDrawing();
+		CreateClient.outliner.showValueBox(pos, box.transform(behaviour.slotPositioning))
+			.lineWidth(1 / 64f)
+			.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
+			.highlightFace(result.getFace());
 	}
 
 	public static void renderOnTileEntity(SmartTileEntity tileEntityIn, float partialTicks, MatrixStack ms,
-			IRenderTypeBuffer buffer, int light, int overlay) {
+		IRenderTypeBuffer buffer, int light, int overlay) {
 
 		if (tileEntityIn == null || tileEntityIn.isRemoved())
 			return;
@@ -81,19 +79,14 @@ public class FilteringRenderer {
 			return;
 		if (!behaviour.isActive())
 			return;
-		if (behaviour.getFilter().isEmpty())
+		if (behaviour.getFilter()
+			.isEmpty())
 			return;
 
-		BlockState state = tileEntityIn.getBlockState();
-		TessellatorHelper.prepareForDrawing();
-		BlockPos pos = tileEntityIn.getPos();
-		RenderSystem.translated(pos.getX(), pos.getY(), pos.getZ());
-
-		behaviour.slotPositioning.renderTransformed(state, () -> {
-			ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter(), ms, buffer, light, overlay);
-		});
-
-		TessellatorHelper.cleanUpAfterDrawing();
+		ms.push();
+		behaviour.slotPositioning.transform(tileEntityIn.getBlockState(), ms);
+		ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter(), ms, buffer, light, overlay);
+		ms.pop();
 	}
 
 }

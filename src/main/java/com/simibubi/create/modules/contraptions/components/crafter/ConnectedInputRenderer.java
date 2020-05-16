@@ -5,10 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.behaviour.ValueBox;
-import com.simibubi.create.foundation.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.GlHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
 
 import net.minecraft.block.BlockState;
@@ -18,7 +15,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -67,16 +63,16 @@ public class ConnectedInputRenderer {
 			int zRot = face == Direction.UP ? 90 : face == Direction.DOWN ? 270 : 0;
 			float yRot = AngleHelper.horizontalAngle(face.getOpposite());
 			Vec3d rotation = new Vec3d(0, yRot, zRot);
+//
+//			GlHelper.renderTransformed(pair.getValue(), rotation, .5f, () -> {
+//
+//				String label = "Connect / Disconnect";// Lang.translate("crafter.connect");
+//				AxisAlignedBB bb = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(1/3f);
+//				ValueBox box = new ValueBox(label, bb, pos);
+//				box.withColors(0x018383, 0x42e6a4).offsetLabel(new Vec3d(10, 0, 0));
+//				ValueBoxRenderer.renderBox(box, activatedDirection == pair.getKey());
 
-			GlHelper.renderTransformed(pair.getValue(), rotation, .5f, () -> {
-
-				String label = "Connect / Disconnect";// Lang.translate("crafter.connect");
-				AxisAlignedBB bb = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(1/3f);
-				ValueBox box = new ValueBox(label, bb);
-				box.withColors(0x018383, 0x42e6a4).offsetLabel(new Vec3d(10, 0, 0));
-				ValueBoxRenderer.renderBox(box, activatedDirection == pair.getKey());
-
-			});
+//			});
 		}
 
 		TessellatorHelper.cleanUpAfterDrawing();

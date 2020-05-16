@@ -2,6 +2,7 @@ package com.simibubi.create.modules.logistics.block.extractor;
 
 import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -24,17 +25,18 @@ public class ExtractorSlots {
 		protected Vec3d getLocation(BlockState state) {
 			Vec3d location = offsetForHorizontal;
 			if (state.getBlock() instanceof TransposerBlock)
-				location = location.add(0, 2/16f, 0);
+				location = location.add(0, 2 / 16f, 0);
 			if (AttachedLogisticalBlock.isVertical(state))
 				location = state.get(AttachedLogisticalBlock.UPWARD) ? offsetForUpward : offsetForDownward;
 			return rotateHorizontally(state, location);
 		}
 
 		@Override
-		protected Vec3d getOrientation(BlockState state) {
+		protected void rotate(BlockState state, MatrixStack ms) {
 			float yRot = AngleHelper.horizontalAngle(state.get(HORIZONTAL_FACING));
-			float zRot = (AttachedLogisticalBlock.isVertical(state)) ? 0 : 90;
-			return new Vec3d(0, yRot, zRot);
+			float xRot = (AttachedLogisticalBlock.isVertical(state)) ? 0 : 90;
+			ms.multiply(VecHelper.rotateY(yRot));
+			ms.multiply(VecHelper.rotateX(xRot));
 		}
 
 	}
@@ -53,14 +55,14 @@ public class ExtractorSlots {
 		protected Vec3d getLocation(BlockState state) {
 			Vec3d location = offsetForHorizontal;
 			if (state.getBlock() instanceof TransposerBlock)
-				location = location.add(0, 2/16f, 0);
+				location = location.add(0, 2 / 16f, 0);
 			if (!isFirst())
-				location = location.add(0, 4/16f, 0);
+				location = location.add(0, 4 / 16f, 0);
 
 			if (AttachedLogisticalBlock.isVertical(state)) {
 				location = state.get(AttachedLogisticalBlock.UPWARD) ? offsetForUpward : offsetForDownward;
 				if (!isFirst())
-					location = location.add(-4/16f, 0, 0);
+					location = location.add(-4 / 16f, 0, 0);
 			}
 
 			float yRot = AngleHelper.horizontalAngle(state.get(HORIZONTAL_FACING));
@@ -69,12 +71,13 @@ public class ExtractorSlots {
 		}
 
 		@Override
-		protected Vec3d getOrientation(BlockState state) {
+		protected void rotate(BlockState state, MatrixStack ms) {
 			float horizontalAngle = AngleHelper.horizontalAngle(state.get(HORIZONTAL_FACING));
 			boolean vertical = AttachedLogisticalBlock.isVertical(state);
 			float xRot = vertical ? (state.get(AttachedLogisticalBlock.UPWARD) ? 90 : 270) : 0;
 			float yRot = vertical ? horizontalAngle + 180 : horizontalAngle + 270;
-			return new Vec3d(xRot, yRot, 0);
+			ms.multiply(VecHelper.rotateY(yRot));
+			ms.multiply(VecHelper.rotateZ(xRot));
 		}
 
 	}

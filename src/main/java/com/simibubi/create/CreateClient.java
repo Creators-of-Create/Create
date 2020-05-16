@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
+import com.simibubi.create.foundation.behaviour.linked.LinkRenderer;
+import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
@@ -82,8 +85,11 @@ public class CreateClient {
 		schematicSender.tick();
 		schematicAndQuillHandler.tick();
 		schematicHandler.tick();
+		FilteringRenderer.tick();
+		LinkRenderer.tick();
+		ScrollValueRenderer.tick();
+		ChassisRangeDisplay.tick();
 		outliner.tickOutlines();
-		ChassisRangeDisplay.clientTick();
 	}
 
 	@OnlyIn(Dist.CLIENT)

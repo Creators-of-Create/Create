@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Matrix3f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Direction;
@@ -21,6 +22,7 @@ import net.minecraft.util.math.Vec3d;
 public abstract class Outline {
 
 	protected OutlineParams params;
+	protected Matrix3f transformNormals;
 
 	public Outline() {
 		params = new OutlineParams();
@@ -62,40 +64,74 @@ public abstract class Outline {
 		Vec3d a4 = plane.add(start);
 		Vec3d b4 = plane.add(end);
 
-		putQuad(ms, builder, b4, b3, b2, b1);
-		putQuad(ms, builder, a1, a2, a3, a4);
-		putQuad(ms, builder, a1, b1, b2, a2);
-		putQuad(ms, builder, a2, b2, b3, a3);
-		putQuad(ms, builder, a3, b3, b4, a4);
-		putQuad(ms, builder, a4, b4, b1, a1);
+		if (params.disableNormals) {
+			face = Direction.UP;
+			putQuad(ms, builder, b4, b3, b2, b1, face);
+			putQuad(ms, builder, a1, a2, a3, a4, face);
+			putQuad(ms, builder, a1, b1, b2, a2, face);
+			putQuad(ms, builder, a2, b2, b3, a3, face);
+			putQuad(ms, builder, a3, b3, b4, a4, face);
+			putQuad(ms, builder, a4, b4, b1, a1, face);
+			return;
+		}
+
+		putQuad(ms, builder, b4, b3, b2, b1, face);
+		putQuad(ms, builder, a1, a2, a3, a4, face.getOpposite());
+		Vec3d vec = a1.subtract(a4);
+		face = Direction.getFacingFromVector(vec.x, vec.y, vec.z);
+		putQuad(ms, builder, a1, b1, b2, a2, face);
+		vec = VecHelper.rotate(vec, -90, axis);
+		face = Direction.getFacingFromVector(vec.x, vec.y, vec.z);
+		putQuad(ms, builder, a2, b2, b3, a3, face);
+		vec = VecHelper.rotate(vec, -90, axis);
+		face = Direction.getFacingFromVector(vec.x, vec.y, vec.z);
+		putQuad(ms, builder, a3, b3, b4, a4, face);
+		vec = VecHelper.rotate(vec, -90, axis);
+		face = Direction.getFacingFromVector(vec.x, vec.y, vec.z);
+		putQuad(ms, builder, a4, b4, b1, a1, face);
 	}
 
-	public void putQuad(MatrixStack ms, IVertexBuilder builder, Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4) {
-		putQuadUV(ms, builder, v1, v2, v3, v4, 0, 0, 1, 1);
+	public void putQuad(MatrixStack ms, IVertexBuilder builder, Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4,
+		Direction normal) {
+		putQuadUV(ms, builder, v1, v2, v3, v4, 0, 0, 1, 1, normal);
 	}
 
 	public void putQuadUV(MatrixStack ms, IVertexBuilder builder, Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, float minU,
-		float minV, float maxU, float maxV) {
-		putVertex(ms, builder, v1, minU, minV);
-		putVertex(ms, builder, v2, maxU, minV);
-		putVertex(ms, builder, v3, maxU, maxV);
-		putVertex(ms, builder, v4, minU, maxV);
+		float minV, float maxU, float maxV, Direction normal) {
+		putVertex(ms, builder, v1, minU, minV, normal);
+		putVertex(ms, builder, v2, maxU, minV, normal);
+		putVertex(ms, builder, v3, maxU, maxV, normal);
+		putVertex(ms, builder, v4, minU, maxV, normal);
 	}
 
-	protected void putVertex(MatrixStack ms, IVertexBuilder builder, Vec3d pos, float u, float v) {
+	protected void putVertex(MatrixStack ms, IVertexBuilder builder, Vec3d pos, float u, float v, Direction normal) {
 		int i = 15 << 20 | 15 << 4;
 		int j = i >> 16 & '\uffff';
 		int k = i & '\uffff';
 		Entry peek = ms.peek();
 		Vec3d rgb = params.rgb;
+		if (transformNormals == null)
+			transformNormals = peek.getNormal();
+
+		int xOffset = 0;
+		int yOffset = 0;
+		int zOffset = 0;
+
+		if (normal != null) {
+			xOffset = normal.getXOffset();
+			yOffset = normal.getYOffset();
+			zOffset = normal.getZOffset();
+		}
 
 		builder.vertex(peek.getModel(), (float) pos.x, (float) pos.y, (float) pos.z)
 			.color((float) rgb.x, (float) rgb.y, (float) rgb.z, params.alpha)
 			.texture(u, v)
 			.overlay(OverlayTexture.DEFAULT_UV)
 			.light(j, k)
-			.normal(peek.getNormal(), 0, 1, 0)
+			.normal(peek.getNormal(), xOffset, yOffset, zOffset)
 			.endVertex();
+
+		transformNormals = null;
 	}
 
 	public void tick() {}
@@ -105,15 +141,16 @@ public abstract class Outline {
 	}
 
 	public static class OutlineParams {
-		Optional<AllSpecialTextures> faceTexture;
-		Optional<AllSpecialTextures> hightlightedFaceTexture;
-		Direction highlightedFace;
-		boolean fadeLineWidth;
-		boolean disableCull;
-		float alpha;
+		protected Optional<AllSpecialTextures> faceTexture;
+		protected Optional<AllSpecialTextures> hightlightedFaceTexture;
+		protected Direction highlightedFace;
+		protected boolean fadeLineWidth;
+		protected boolean disableCull;
+		protected boolean disableNormals;
+		protected float alpha;
+		protected int lightMapU, lightMapV;
+		protected Vec3d rgb;
 		private float lineWidth;
-		int lightMapU, lightMapV;
-		Vec3d rgb;
 
 		public OutlineParams() {
 			faceTexture = hightlightedFaceTexture = Optional.empty();
@@ -140,13 +177,13 @@ public abstract class Outline {
 		}
 
 		public OutlineParams withFaceTexture(AllSpecialTextures texture) {
-			this.faceTexture = Optional.of(texture);
+			this.faceTexture = Optional.ofNullable(texture);
 			return this;
 		}
 
 		public OutlineParams withFaceTextures(AllSpecialTextures texture, AllSpecialTextures highlightTexture) {
-			this.faceTexture = Optional.of(texture);
-			this.hightlightedFaceTexture = Optional.of(highlightTexture);
+			this.faceTexture = Optional.ofNullable(texture);
+			this.hightlightedFaceTexture = Optional.ofNullable(highlightTexture);
 			return this;
 		}
 
@@ -155,10 +192,24 @@ public abstract class Outline {
 			return this;
 		}
 
-		// util
+		public OutlineParams disableNormals() {
+			disableNormals = true;
+			return this;
+		}
 
-		float getLineWidth() {
+		public OutlineParams disableCull() {
+			disableCull = true;
+			return this;
+		}
+
+		// getter
+
+		public float getLineWidth() {
 			return fadeLineWidth ? alpha * lineWidth : lineWidth;
+		}
+
+		public Direction getHighlightedFace() {
+			return highlightedFace;
 		}
 
 	}

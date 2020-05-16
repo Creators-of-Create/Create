@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.logistics.block.funnel;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -31,18 +32,19 @@ public class FunnelFilterSlot extends ValueBoxTransform {
 	}
 
 	@Override
-	protected Vec3d getOrientation(BlockState state) {
+	protected void rotate(BlockState state, MatrixStack ms) {
 		Direction blockFacing = AttachedLogisticalBlock.getBlockFacing(state);
 		boolean vertical = AttachedLogisticalBlock.isVertical(state);
 		float horizontalAngle = AngleHelper.horizontalAngle(state.get(ExtractorBlock.HORIZONTAL_FACING));
 
 		float yRot = blockFacing == Direction.DOWN ? horizontalAngle + 180 : horizontalAngle;
-		float zRot = (vertical || state.get(FunnelBlock.BELT)) ? 90 : 0;
+		float xRot = (vertical || state.get(FunnelBlock.BELT)) ? 90 : 0;
 
 		if (blockFacing == Direction.UP)
-			zRot += 180;
-
-		return new Vec3d(0, yRot, zRot);
+			xRot += 180;
+		
+		ms.multiply(VecHelper.rotateY(yRot));
+		ms.multiply(VecHelper.rotateX(xRot));
 	}
 
 }

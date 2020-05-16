@@ -1,5 +1,6 @@
 package com.simibubi.create.modules.logistics.block.belts.observer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -18,9 +19,9 @@ public class BeltObserverFilterSlot extends ValueBoxTransform {
 	}
 
 	@Override
-	protected Vec3d getOrientation(BlockState state) {
-		float yRot = AngleHelper.horizontalAngle(state.get(HorizontalBlock.HORIZONTAL_FACING));
-		return new Vec3d(0, 180 + yRot, 90);
+	protected void rotate(BlockState state, MatrixStack ms) {
+		ms.multiply(VecHelper.rotateY(AngleHelper.horizontalAngle(state.get(HorizontalBlock.HORIZONTAL_FACING)) + 180));
+		ms.multiply(VecHelper.rotateX(90));
 	}
 
 }

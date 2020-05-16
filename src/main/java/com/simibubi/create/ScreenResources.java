@@ -1,9 +1,17 @@
 package com.simibubi.create;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.matrix.MatrixStack.Entry;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.simibubi.create.foundation.utility.ColorHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -149,6 +157,7 @@ public enum ScreenResources {
 	;
 
 	public static final int FONT_COLOR = 0x575F7A;
+	public static final ResourceLocation ICON_ATLAS = Create.asResource("textures/gui/icons.png");
 
 	public final ResourceLocation location;
 	public int width, height;
@@ -172,7 +181,9 @@ public enum ScreenResources {
 
 	@OnlyIn(Dist.CLIENT)
 	public void bind() {
-		Minecraft.getInstance().getTextureManager().bindTexture(location);
+		Minecraft.getInstance()
+			.getTextureManager()
+			.bindTexture(location);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -185,6 +196,41 @@ public enum ScreenResources {
 	public void draw(int x, int y) {
 		draw(new Screen(null) {
 		}, x, y);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public void draw(MatrixStack ms, IRenderTypeBuffer buffer, int color) {
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getTextSeeThrough(this.location));
+		float sheetSize = 256;
+		int i = 15 << 20 | 15 << 4;
+		int j = i >> 16 & '\uffff';
+		int k = i & '\uffff';
+		Entry peek = ms.peek();
+		Vec3d rgb = ColorHelper.getRGB(color);
+
+		Vec3d vec4 = new Vec3d(1, 1, 0);
+		Vec3d vec3 = new Vec3d(0, 1, 0);
+		Vec3d vec2 = new Vec3d(0, 0, 0);
+		Vec3d vec1 = new Vec3d(1, 0, 0);
+
+		float u1 = (startX + width) / sheetSize;
+		float u2 = startX / sheetSize;
+		float v1 = startY / sheetSize;
+		float v2 = (startY + height) / sheetSize;
+
+		vertex(peek, builder, j, k, rgb, vec1, u1, v1);
+		vertex(peek, builder, j, k, rgb, vec2, u2, v1);
+		vertex(peek, builder, j, k, rgb, vec3, u2, v2);
+		vertex(peek, builder, j, k, rgb, vec4, u1, v2);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void vertex(Entry peek, IVertexBuilder builder, int j, int k, Vec3d rgb, Vec3d vec, float u, float v) {
+		builder.vertex(peek.getModel(), (float) vec.x, (float) vec.y, (float) vec.z)
+			.color((float) rgb.x, (float) rgb.y, (float) rgb.z, 1)
+			.texture(u, v)
+			.light(j, k)
+			.endVertex();
 	}
 
 }

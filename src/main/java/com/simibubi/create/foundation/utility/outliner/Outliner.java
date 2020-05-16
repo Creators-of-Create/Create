@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 
 import net.minecraft.client.Minecraft;
@@ -21,6 +22,11 @@ public class Outliner {
 
 	// Facade
 
+	public OutlineParams showValueBox(Object slot, ValueBox box) {
+		outlines.put(slot, new OutlineEntry(box));
+		return box.getParams();
+	}
+	
 	public OutlineParams showAABB(Object slot, AxisAlignedBB bb) {
 		createAABBOutlineIfMissing(slot, bb);
 		ChasingAABBOutline outline = getAndRefreshAABB(slot);

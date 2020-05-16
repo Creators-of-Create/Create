@@ -2,8 +2,10 @@ package com.simibubi.create.modules.contraptions.components.contraptions;
 
 import java.util.function.BiPredicate;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -23,10 +25,9 @@ public class DirectionalExtenderScrollOptionSlot extends CenteredSideValueBoxTra
 	}
 
 	@Override
-	protected Vec3d getOrientation(BlockState state) {
-		Vec3d orientation = super.getOrientation(state);
-		if (direction.getAxis().isHorizontal())
-			return orientation;
-		return orientation.add(0, AngleHelper.horizontalAngle(state.get(BlockStateProperties.FACING)) - 90, 0);
+	protected void rotate(BlockState state, MatrixStack ms) {
+		if (!direction.getAxis().isHorizontal())
+			ms.multiply(VecHelper.rotateY(AngleHelper.horizontalAngle(state.get(BlockStateProperties.FACING)) - 90));
+		super.rotate(state, ms);
 	}
 }

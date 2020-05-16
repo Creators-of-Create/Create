@@ -74,7 +74,7 @@ public class BlockClusterOutline extends Outline {
 		plane = VecHelper.rotate(plane, deg, axis);
 		Vec3d a4 = plane.add(center);
 
-		putQuad(ms, builder, a1, a2, a3, a4);
+		putQuad(ms, builder, a1, a2, a3, a4, face);
 	}
 
 	private static class Cluster {

@@ -75,7 +75,7 @@ public class AABBOutline extends Outline {
 			return;
 		
 		ResourceLocation faceTexture = params.faceTexture.get().getLocation();
-		if (direction == params.highlightedFace && params.hightlightedFaceTexture.isPresent())
+		if (direction == params.getHighlightedFace() && params.hightlightedFaceTexture.isPresent())
 			faceTexture = params.hightlightedFaceTexture.get().getLocation();
 
 		RenderType translucentType =
@@ -87,7 +87,7 @@ public class AABBOutline extends Outline {
 		Vec3d vDiff = p4.subtract(p1);
 		float maxU = (float) Math.abs(axis == Axis.X ? uDiff.z : uDiff.x);
 		float maxV = (float) Math.abs(axis == Axis.Y ? vDiff.z : vDiff.y);
-		putQuadUV(ms, builder, p1, p2, p3, p4, 0, 0, maxU, maxV);
+		putQuadUV(ms, builder, p1, p2, p3, p4, 0, 0, maxU, maxV, Direction.UP);
 	}
 
 }

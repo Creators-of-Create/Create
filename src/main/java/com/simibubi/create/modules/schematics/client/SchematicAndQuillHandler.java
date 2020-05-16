@@ -175,8 +175,9 @@ public class SchematicAndQuillHandler {
 		AxisAlignedBB currentSelectionBox = getCurrentSelectionBox();
 		if (currentSelectionBox != null)
 			outliner().chaseAABB(outlineSlot, currentSelectionBox)
-				.colored(0xDDDFFF)
+				.colored(0x6886c5)
 				.withFaceTextures(AllSpecialTextures.CHECKERED, AllSpecialTextures.HIGHLIGHT_CHECKERED)
+				.disableNormals()
 				.highlightFace(selectedFace);
 	}
 

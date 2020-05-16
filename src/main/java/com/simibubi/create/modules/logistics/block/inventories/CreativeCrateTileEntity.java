@@ -2,11 +2,13 @@ package com.simibubi.create.modules.logistics.block.inventories;
 
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -87,8 +89,8 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 		return new FilteringBehaviour(this, new ValueBoxTransform() {
 
 			@Override
-			protected Vec3d getOrientation(BlockState state) {
-				return new Vec3d(0, 0, 90);
+			protected void rotate(BlockState state, MatrixStack ms) {
+				ms.multiply(VecHelper.rotateX(90));
 			}
 
 			@Override

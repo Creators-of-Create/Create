@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.Random;
 
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
@@ -10,6 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class VecHelper {
 
@@ -19,9 +23,10 @@ public class VecHelper {
 
 	public static Vec3d rotateCentered(Vec3d vec, double deg, Axis axis) {
 		Vec3d shift = getCenterOf(BlockPos.ZERO);
-		return VecHelper.rotate(vec.subtract(shift), deg, axis).add(shift);
+		return VecHelper.rotate(vec.subtract(shift), deg, axis)
+			.add(shift);
 	}
-	
+
 	public static Vec3d rotate(Vec3d vec, double deg, Axis axis) {
 		if (deg == 0)
 			return vec;
@@ -52,7 +57,7 @@ public class VecHelper {
 
 	public static Vec3d offsetRandomly(Vec3d vec, Random r, float radius) {
 		return new Vec3d(vec.x + (r.nextFloat() - .5f) * 2 * radius, vec.y + (r.nextFloat() - .5f) * 2 * radius,
-				vec.z + (r.nextFloat() - .5f) * 2 * radius);
+			vec.z + (r.nextFloat() - .5f) * 2 * radius);
 	}
 
 	public static Vec3d planeByNormal(Vec3d vec) {
@@ -71,27 +76,42 @@ public class VecHelper {
 	public static Vec3d readNBT(ListNBT list) {
 		return new Vec3d(list.getDouble(0), list.getDouble(1), list.getDouble(2));
 	}
-	
+
 	public static Vec3d voxelSpace(double x, double y, double z) {
 		return new Vec3d(x, y, z).scale(1 / 16f);
 	}
-	
+
 	public static int getCoordinate(Vec3i pos, Axis axis) {
 		return axis.getCoordinate(pos.getX(), pos.getY(), pos.getZ());
 	}
-	
+
 	public static float getCoordinate(Vec3d vec, Axis axis) {
 		return (float) axis.getCoordinate(vec.x, vec.y, vec.z);
 	}
-	
+
 	public static boolean onSameAxis(BlockPos pos1, BlockPos pos2, Axis axis) {
 		if (pos1.equals(pos2))
 			return true;
-		for (Axis otherAxis : Axis.values()) 
+		for (Axis otherAxis : Axis.values())
 			if (axis != otherAxis)
 				if (getCoordinate(pos1, otherAxis) != getCoordinate(pos2, otherAxis))
 					return false;
 		return true;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static Quaternion rotateX(double angle) {
+		return Vector3f.POSITIVE_X.getDegreesQuaternion((float) angle);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static Quaternion rotateY(double angle) {
+		return Vector3f.POSITIVE_Y.getDegreesQuaternion((float) angle);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static Quaternion rotateZ(double angle) {
+		return Vector3f.POSITIVE_Z.getDegreesQuaternion((float) angle);
 	}
 
 }

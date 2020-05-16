@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
@@ -36,13 +37,14 @@ public class ChassisRangeDisplay {
 			this.te = te;
 			timer = DISPLAY_TIME;
 			CreateClient.outliner.showCluster(getOutlineKey(), createSelection(te))
-				.colored(0xFFFFBB)
+				.colored(0xFFFFFF)
+				.disableNormals()
 				.lineWidth(1 / 16f)
-				.withFaceTexture(AllSpecialTextures.CHECKERED);
+				.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
 		}
 
 		protected Object getOutlineKey() {
-			return te.getPos();
+			return Pair.of(te.getPos(), new Integer(1));
 		}
 
 		protected Set<BlockPos> createSelection(ChassisTileEntity chassis) {
@@ -85,7 +87,7 @@ public class ChassisRangeDisplay {
 	static Map<BlockPos, Entry> entries = new HashMap<>();
 	static List<GroupEntry> groupEntries = new ArrayList<>();
 
-	public static void clientTick() {
+	public static void tick() {
 		PlayerEntity player = Minecraft.getInstance().player;
 		World world = Minecraft.getInstance().world;
 		boolean hasWrench = AllItems.WRENCH.typeOf(player.getHeldItemMainhand());
