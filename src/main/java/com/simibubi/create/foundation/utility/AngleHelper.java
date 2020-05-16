@@ -1,9 +1,20 @@
 package com.simibubi.create.foundation.utility;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class AngleHelper {
+	
+	@OnlyIn(Dist.CLIENT)
+	public static void applyRotation(Direction direction, MatrixStack ms) {
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(direction)));
+		ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(AngleHelper.verticalAngle(direction)));
+	}
 
 	public static float horizontalAngle(Direction facing) {
 		float angle = facing.getHorizontalAngle();
