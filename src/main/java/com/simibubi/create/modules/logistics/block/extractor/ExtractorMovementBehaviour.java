@@ -35,18 +35,18 @@ public class ExtractorMovementBehaviour extends MovementBehaviour {
 		ItemStack filter = getFilter(context);
 		int amount = getFilterAmount(context);
 		ItemStack dropped = ItemHelper.extract(context.contraption.inventory,
-				stack -> FilterItem.test(context.world, stack, filter), amount == 0 ? -1 : amount, false);
+				stack -> FilterItem.test(context.world, stack, filter), amount == 0 ? 64 : amount, false);
 
 		if (dropped.isEmpty())
 			return;
 		if (world.isRemote)
 			return;
 		
-		Vec3d entityPos = VecHelper.getCenterOf(pos).add(0, -0.5f, 0);
+		Vec3d entityPos = context.position;
 		Entity entityIn = null;
 		Direction facing = AttachedLogisticalBlock.getBlockFacing(context.state);
-		if (facing == Direction.DOWN)
-			entityPos = entityPos.add(0, .5, 0);
+		if (facing != Direction.DOWN)
+			entityPos = entityPos.add(0, -0.5f, 0);
 
 		entityIn = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, dropped);
 		entityIn.setMotion(Vec3d.ZERO);
