@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.deployer;
 
-import static net.minecraftforge.eventbus.api.Event.Result.DENY;
 import static net.minecraftforge.eventbus.api.Event.Result.DEFAULT;
+import static net.minecraftforge.eventbus.api.Event.Result.DENY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +84,7 @@ public class DeployerHandler {
 
 	static boolean shouldActivate(ItemStack held, World world, BlockPos targetPos) {
 		if (held.getItem() instanceof BlockItem)
-			if (!world.getBlockState(targetPos)
-				.getMaterial()
-				.isReplaceable())
+			if (world.getBlockState(targetPos).getBlock() == ((BlockItem) held.getItem()).getBlock())
 				return false;
 
 		if (held.getItem() instanceof BucketItem) {
