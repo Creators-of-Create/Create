@@ -20,6 +20,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -136,6 +137,14 @@ public class DeployerHandler {
 					else if (entity instanceof LivingEntity
 							&& stack.interactWithEntity(player, (LivingEntity) entity, hand))
 						success = true;
+				}
+				if (!success && stack.isFood() && entity instanceof PlayerEntity) {
+					PlayerEntity playerEntity = (PlayerEntity) entity;
+					if (playerEntity.canEat(item.getFood().canEatWhenFull())) {
+						playerEntity.onFoodEaten(world, stack);
+						player.spawnedItemEffects = stack.copy();
+						success = true;
+					}
 				}
 			}
 

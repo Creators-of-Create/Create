@@ -30,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -85,6 +86,11 @@ public class DeployerFakePlayer extends FakePlayer {
 	@Override
 	public boolean canEat(boolean ignoreHunger) {
 		return false;
+	}
+
+	@Override
+	public ItemStack onFoodEaten(World world, ItemStack stack) {
+		return stack;
 	}
 
 	@SubscribeEvent
