@@ -2,6 +2,5 @@
   "replace": false,
   "values": [
     "create:zinc_ore"
-  ],
-  "optional": []
+  ]
 }

@@ -12,7 +12,10 @@ import com.simibubi.create.modules.Sections;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogwheelBlockItem;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.modules.contraptions.relays.encased.AdjustablePulleyBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.ClutchBlock;
+import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
+import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltGenerator;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxBlock;
@@ -41,6 +44,8 @@ public class AllBlocksNew {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 		.itemGroup(() -> Create.baseCreativeTab);
 
+	// Schematics
+	
 	static {
 		REGISTRATE.startSection(SCHEMATICS);
 	}
@@ -62,6 +67,8 @@ public class AllBlocksNew {
 			.simpleItem()
 			.register();
 
+	// Kinetics
+	
 	static {
 		REGISTRATE.startSection(Sections.KINETICS);
 	}
@@ -122,6 +129,33 @@ public class AllBlocksNew {
 		.build()
 		.register();
 
+	public static final BlockEntry<EncasedBeltBlock> ENCASED_BELT =
+		REGISTRATE.block("encased_belt", EncasedBeltBlock::new)
+			.initialProperties(SharedProperties::kinetic)
+			.blockstate((c, p) -> new EncasedBeltGenerator((state, suffix) -> p.models()
+				.getExistingFile(p.modLoc("block/" + c.getName() + "/" + suffix))).generate(c, p))
+			.item()
+			.model(AssetLookup::customItemModel)
+			.build()
+			.register();
+
+	public static final BlockEntry<AdjustablePulleyBlock> ADJUSTABLE_PULLEY =
+		REGISTRATE.block("adjustable_pulley", AdjustablePulleyBlock::new)
+			.initialProperties(SharedProperties::kinetic)
+			.blockstate((c, p) -> new EncasedBeltGenerator((state, suffix) -> {
+				String powered = state.get(AdjustablePulleyBlock.POWERED) ? "_powered" : "";
+				return p.models()
+					.withExistingParent(c.getName() + "_" + suffix + powered, p.modLoc("block/encased_belt/" + suffix))
+					.texture("side", p.modLoc("block/" + c.getName() + powered));
+			}).generate(c, p))
+			.item()
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/encased_belt/item"))
+				.texture("side", p.modLoc("block/" + c.getName())))
+			.build()
+			.register();
+
+	// Materials
+	
 	static {
 		REGISTRATE.startSection(Sections.MATERIALS);
 	}
@@ -175,7 +209,7 @@ public class AllBlocksNew {
 		.register();
 
 	// Utility
-	
+
 	private static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
 		String tagName) {
 		return b -> b.tag(forgeBlockTag(tagName))

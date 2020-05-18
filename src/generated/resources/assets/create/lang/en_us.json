@@ -1,6 +1,7 @@
 {
   "block.create.acacia_window": "Acacia Window",
   "block.create.acacia_window_pane": "Acacia Window Pane",
+  "block.create.adjustable_pulley": "Adjustable Pulley",
   "block.create.andesite_bricks": "Andesite Bricks",
   "block.create.andesite_bricks_slab": "Andesite Bricks Slab",
   "block.create.andesite_bricks_stairs": "Andesite Bricks Stairs",
@@ -55,6 +56,7 @@
   "block.create.dolomite_cobblestone_stairs": "Dolomite Cobblestone Stairs",
   "block.create.dolomite_cobblestone_wall": "Dolomite Cobblestone Wall",
   "block.create.dolomite_pillar": "Dolomite Pillar",
+  "block.create.encased_belt": "Encased Belt",
   "block.create.encased_shaft": "Encased Shaft",
   "block.create.fancy_andesite_bricks": "Fancy Andesite Bricks",
   "block.create.fancy_andesite_bricks_slab": "Fancy Andesite Bricks Slab",

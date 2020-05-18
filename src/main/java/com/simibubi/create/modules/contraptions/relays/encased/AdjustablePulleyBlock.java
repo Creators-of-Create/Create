@@ -18,7 +18,8 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock implements ITE<Adjus
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-	public AdjustablePulleyBlock() {
+	public AdjustablePulleyBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(POWERED, false));
 	}
 

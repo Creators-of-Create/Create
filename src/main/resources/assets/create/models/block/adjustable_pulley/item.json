@@ -1,6 +1,0 @@
-{
-	"parent": "create:block/encased_belt/item",
-	"textures": {
-		"0": "create:block/adjustable_pulley_off"
-	}
-}

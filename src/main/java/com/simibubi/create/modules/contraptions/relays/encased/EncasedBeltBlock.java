@@ -30,8 +30,8 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty CONNECTED_ALONG_FIRST_COORDINATE = DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 
-	public EncasedBeltBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public EncasedBeltBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(PART, Part.NONE));
 	}
 

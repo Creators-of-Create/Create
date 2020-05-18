@@ -43,6 +43,5 @@
     "create:dark_scoria_bricks_stairs",
     "create:fancy_dark_scoria_bricks_stairs",
     "create:paved_dark_scoria_stairs"
-  ],
-  "optional": []
+  ]
 }

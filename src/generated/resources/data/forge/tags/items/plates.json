@@ -6,6 +6,5 @@
     "#forge:plates/copper",
     "#forge:plates/brass",
     "#forge:plates/lapis"
-  ],
-  "optional": []
+  ]
 }

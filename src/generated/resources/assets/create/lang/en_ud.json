@@ -1,6 +1,7 @@
 {
   "block.create.acacia_window": "\u028Dopu\u0131M \u0250\u0131\u0254\u0250\u0254\u2C6F",
   "block.create.acacia_window_pane": "\u01DDu\u0250\u0500 \u028Dopu\u0131M \u0250\u0131\u0254\u0250\u0254\u2C6F",
+  "block.create.adjustable_pulley": "\u028E\u01DD\u05DF\u05DFn\u0500 \u01DD\u05DFq\u0250\u0287sn\u0638p\u2C6F",
   "block.create.andesite_bricks": "s\u029E\u0254\u0131\u0279\u15FA \u01DD\u0287\u0131s\u01DDpu\u2C6F",
   "block.create.andesite_bricks_slab": "q\u0250\u05DFS s\u029E\u0254\u0131\u0279\u15FA \u01DD\u0287\u0131s\u01DDpu\u2C6F",
   "block.create.andesite_bricks_stairs": "s\u0279\u0131\u0250\u0287S s\u029E\u0254\u0131\u0279\u15FA \u01DD\u0287\u0131s\u01DDpu\u2C6F",
@@ -55,6 +56,7 @@
   "block.create.dolomite_cobblestone_stairs": "s\u0279\u0131\u0250\u0287S \u01DDuo\u0287s\u01DD\u05DFqqo\u0186 \u01DD\u0287\u0131\u026Fo\u05DFo\u15E1",
   "block.create.dolomite_cobblestone_wall": "\u05DF\u05DF\u0250M \u01DDuo\u0287s\u01DD\u05DFqqo\u0186 \u01DD\u0287\u0131\u026Fo\u05DFo\u15E1",
   "block.create.dolomite_pillar": "\u0279\u0250\u05DF\u05DF\u0131\u0500 \u01DD\u0287\u0131\u026Fo\u05DFo\u15E1",
+  "block.create.encased_belt": "\u0287\u05DF\u01DD\u15FA p\u01DDs\u0250\u0254u\u018E",
   "block.create.encased_shaft": "\u0287\u025F\u0250\u0265S p\u01DDs\u0250\u0254u\u018E",
   "block.create.fancy_andesite_bricks": "s\u029E\u0254\u0131\u0279\u15FA \u01DD\u0287\u0131s\u01DDpu\u2C6F \u028E\u0254u\u0250\u2132",
   "block.create.fancy_andesite_bricks_slab": "q\u0250\u05DFS s\u029E\u0254\u0131\u0279\u15FA \u01DD\u0287\u0131s\u01DDpu\u2C6F \u028E\u0254u\u0250\u2132",

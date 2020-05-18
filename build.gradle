@@ -95,7 +95,7 @@ configurations {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.1.36'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
     
     def registrate = "com.tterrag.registrate:Registrate:MC1.15.2-0.0.3.11"
     implementation fg.deobf(registrate)

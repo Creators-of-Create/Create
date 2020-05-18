@@ -4,6 +4,5 @@
     "#forge:nuggets/copper",
     "#forge:nuggets/zinc",
     "#forge:nuggets/brass"
-  ],
-  "optional": []
+  ]
 }
