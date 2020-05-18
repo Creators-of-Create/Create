@@ -33,7 +33,7 @@ import net.minecraftforge.common.util.FakePlayer;
 public class SandPaperItem extends Item implements IHaveCustomItemModel {
 
 	public SandPaperItem(Properties properties) {
-		super(properties);
+		super(properties.maxDamage(8));
 	}
 
 	@Override
@@ -171,21 +171,6 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 	@Override
 	public int getUseDuration(ItemStack stack) {
 		return 32;
-	}
-
-	@Override
-	public int getItemStackLimit(ItemStack stack) {
-		return 1;
-	}
-
-	@Override
-	public boolean isDamageable() {
-		return true;
-	}
-
-	@Override
-	public int getMaxDamage(ItemStack stack) {
-		return 8;
 	}
 
 	@Override
