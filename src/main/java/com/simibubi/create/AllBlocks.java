@@ -38,7 +38,6 @@ import com.simibubi.create.modules.contraptions.components.flywheel.engine.Furna
 import com.simibubi.create.modules.contraptions.components.millstone.MillstoneBlock;
 import com.simibubi.create.modules.contraptions.components.mixer.BasinOperatorBlockItem;
 import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerBlock;
-import com.simibubi.create.modules.contraptions.components.motor.MotorBlock;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressBlock;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
 import com.simibubi.create.modules.contraptions.components.turntable.TurntableBlock;
@@ -108,7 +107,7 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 //	ENCASED_BELT(EncasedBeltBlock::new),
 //	ADJUSTABLE_PULLEY(AdjustablePulleyBlock::new),
 	BELT(BeltBlock::new, ComesWith.NO_BLOCKITEM),
-	CREATIVE_MOTOR(MotorBlock::new),
+//	CREATIVE_MOTOR(MotorBlock::new),
 	WATER_WHEEL(WaterWheelBlock::new),
 	ENCASED_FAN(EncasedFanBlock::new),
 	NOZZLE(NozzleBlock::new),

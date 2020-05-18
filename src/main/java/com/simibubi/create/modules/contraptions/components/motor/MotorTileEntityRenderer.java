@@ -15,7 +15,7 @@ public class MotorTileEntityRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.SHAFT_HALF.renderOnHorizontal(te.getBlockState());
+		return AllBlockPartials.SHAFT_HALF.renderOnDirectional(te.getBlockState());
 	}
 
 }

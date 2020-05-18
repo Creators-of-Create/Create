@@ -13,8 +13,8 @@ public class StressConfigDefaults {
 	public static double getDefaultStressCapacity(AllBlocks block) {
 	
 		switch (block) {
-		case CREATIVE_MOTOR:
-			return 2048;
+//		case CREATIVE_MOTOR: TODO add a builder transform to register default capacities
+//			return 2048;
 		case FURNACE_ENGINE:
 			return 1024;
 		case MECHANICAL_BEARING:

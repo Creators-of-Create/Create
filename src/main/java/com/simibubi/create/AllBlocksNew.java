@@ -9,6 +9,8 @@ import com.simibubi.create.foundation.utility.data.AssetLookup;
 import com.simibubi.create.foundation.utility.data.BlockStateGen;
 import com.simibubi.create.foundation.world.OxidizingBlock;
 import com.simibubi.create.modules.Sections;
+import com.simibubi.create.modules.contraptions.components.motor.MotorBlock;
+import com.simibubi.create.modules.contraptions.components.motor.MotorGenerator;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogwheelBlockItem;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
@@ -153,6 +155,14 @@ public class AllBlocksNew {
 				.texture("side", p.modLoc("block/" + c.getName())))
 			.build()
 			.register();
+
+	public static final BlockEntry<MotorBlock> CREATIVE_MOTOR = REGISTRATE.block("creative_motor", MotorBlock::new)
+		.initialProperties(SharedProperties::kinetic)
+		.blockstate(new MotorGenerator()::generate)
+		.item()
+		.model(AssetLookup::customItemModel)
+		.build()
+		.register();
 
 	// Materials
 	

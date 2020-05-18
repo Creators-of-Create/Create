@@ -1,8 +1,0 @@
-{
-    "variants": {
-    	"facing=north": { "model": "create:block/motor", "y": 180 },
-    	"facing=south": { "model": "create:block/motor" },
-    	"facing=east": { "model": "create:block/motor", "y": 270 },
-    	"facing=west": { "model": "create:block/motor", "y": 90 }
-	}
-}

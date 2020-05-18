@@ -25,9 +25,8 @@ public class MotorTileEntity extends GeneratingKineticTileEntity {
 		super.addBehaviours(behaviours);
 		Integer max = AllConfigs.SERVER.kinetics.maxMotorSpeed.get();
 
-		CenteredSideValueBoxTransform slot = new CenteredSideValueBoxTransform((motor, side) -> {
-			return motor.get(MotorBlock.HORIZONTAL_FACING) == side.getOpposite();
-		});
+		CenteredSideValueBoxTransform slot =
+			new CenteredSideValueBoxTransform((motor, side) -> motor.get(MotorBlock.FACING) == side.getOpposite());
 
 		generatedSpeed = new ScrollValueBehaviour(Lang.translate("generic.speed"), this, slot);
 		generatedSpeed.between(-max, max);
