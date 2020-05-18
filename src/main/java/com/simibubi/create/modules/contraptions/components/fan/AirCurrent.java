@@ -17,7 +17,9 @@ import com.simibubi.create.modules.logistics.InWorldProcessing.Type;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -113,14 +115,21 @@ public class AirCurrent {
 				} else {
 					switch (processingType) {
 					case BLASTING:
-						entity.setFire(10);
-						entity.attackEntityFrom(damageSourceLava, 4);
+						if (!entity.isImmuneToFire()) {
+							entity.setFire(10);
+							entity.attackEntityFrom(damageSourceLava, 4);
+						}
 						break;
 					case SMOKING:
-						entity.setFire(2);
-						entity.attackEntityFrom(damageSourceFire, 2);
+						if (!entity.isImmuneToFire()) {
+							entity.setFire(2);
+							entity.attackEntityFrom(damageSourceFire, 2);
+						}
 						break;
 					case SPLASHING:
+						if (entity instanceof EndermanEntity || entity.getType() == EntityType.SNOW_GOLEM || entity.getType() == EntityType.BLAZE) {
+							entity.attackEntityFrom(DamageSource.DROWN, 2);
+						}
 						if (!entity.isBurning())
 							break;
 						entity.extinguish();
