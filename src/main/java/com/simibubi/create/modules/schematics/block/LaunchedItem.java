@@ -8,17 +8,24 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
 
 public abstract class LaunchedItem {
 
@@ -108,13 +115,31 @@ public abstract class LaunchedItem {
 		void place(World world) {
 			// Piston
 			if (state.has(BlockStateProperties.EXTENDED))
-				state = state.with(BlockStateProperties.EXTENDED, false);
+				state = state.with(BlockStateProperties.EXTENDED, Boolean.FALSE);
+			if (state.has(BlockStateProperties.WATERLOGGED))
+				state = state.with(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
 
 			if (AllBlocks.BELT.typeOf(state)) {
 				world.setBlockState(target, state, 2);
 				return;
 			}
+			else if (state.getBlock() == Blocks.COMPOSTER)
+				state = Blocks.COMPOSTER.getDefaultState();
+			else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
+				state = ((IPlantable) state.getBlock()).getPlant(world, target);
 
+			if (world.dimension.doesWaterVaporize() && state.getFluidState().getFluid().isIn(FluidTags.WATER)) {
+				int i = target.getX();
+				int j = target.getY();
+				int k = target.getZ();
+				world.playSound(null, target, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
+
+				for (int l = 0; l < 8; ++l) {
+					world.addParticle(ParticleTypes.LARGE_SMOKE, i + Math.random(), j + Math.random(), k + Math.random(), 0.0D, 0.0D, 0.0D);
+				}
+				Block.spawnDrops(state, world, target);
+				return;
+			}
 			world.setBlockState(target, state, 18);
 			state.getBlock().onBlockPlacedBy(world, target, state, null, stack);
 		}

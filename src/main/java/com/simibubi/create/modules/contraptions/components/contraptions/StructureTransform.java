@@ -12,6 +12,7 @@ import com.simibubi.create.modules.contraptions.components.contraptions.chassis.
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Slope;
 
+import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFaceBlock;
@@ -19,6 +20,8 @@ import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.properties.AttachFace;
+import net.minecraft.state.properties.BellAttachment;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.Half;
 import net.minecraft.state.properties.SlabType;
 import net.minecraft.util.Direction;
@@ -78,10 +81,17 @@ public class StructureTransform {
 	 * horizontal axes
 	 */
 	public BlockState apply(BlockState state) {
-		if (rotationAxis == Axis.Y)
-			return state.rotate(rotation);
-
 		Block block = state.getBlock();
+
+		if (rotationAxis == Axis.Y) {
+			if (block instanceof BellBlock) {
+				if (state.get(BlockStateProperties.BELL_ATTACHMENT) == BellAttachment.DOUBLE_WALL) {
+					state = state.with(BlockStateProperties.BELL_ATTACHMENT, BellAttachment.SINGLE_WALL);
+				}
+				return state.with(HorizontalFaceBlock.HORIZONTAL_FACING, rotation.rotate(state.get(HorizontalFaceBlock.HORIZONTAL_FACING)));
+			}
+			return state.rotate(rotation);
+		}
 
 		if (block instanceof AbstractChassisBlock)
 			return rotateChassis(state);

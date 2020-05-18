@@ -8,10 +8,12 @@ import com.simibubi.create.AllEntities;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.modules.contraptions.components.contraptions.BlockMovementTraits;
 import com.simibubi.create.modules.schematics.ISpecialEntityItemRequirement;
 import com.simibubi.create.modules.schematics.ItemRequirement;
 import com.simibubi.create.modules.schematics.ItemRequirement.ItemUseType;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -157,9 +159,20 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		BlockPos pos2 = hangingPosition.offset(getFacingDirection().getOpposite());
 		if (!world.isAreaLoaded(pos, 0) || !world.isAreaLoaded(pos2, 0))
 			return true;
-		if (world.isAirBlock(pos) && world.isAirBlock(pos2))
+		if (!isValidFace(world, pos2, getFacingDirection()) && !isValidFace(world, pos, getFacingDirection().getOpposite()))
 			return false;
 		return world.getEntitiesInAABBexcluding(this, getBoundingBox(), e -> e instanceof SuperGlueEntity).isEmpty();
+	}
+
+	public static boolean isValidFace(World world, BlockPos pos, Direction direction) {
+		BlockState state = world.getBlockState(pos);
+		if (BlockMovementTraits.isBlockAttachedTowards(state, direction))
+			return true;
+		if (!BlockMovementTraits.movementNecessary(world, pos))
+			return false;
+		if (BlockMovementTraits.notSupportive(state, direction))
+			return false;
+		return true;
 	}
 
 	@Override
@@ -234,11 +247,6 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		int light2 = this.world.isBlockPresent(blockpos2) ? this.world.getCombinedLight(blockpos2, minLight) : 15;
 
 		return Math.max(light, light2);
-	}
-
-	@Override
-	public void applyEntityCollision(Entity entityIn) {
-		super.applyEntityCollision(entityIn);
 	}
 
 	@Override
