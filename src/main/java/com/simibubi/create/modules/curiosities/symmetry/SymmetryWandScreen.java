@@ -1,12 +1,11 @@
 package com.simibubi.create.modules.curiosities.symmetry;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
-import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
@@ -18,18 +17,11 @@ import com.simibubi.create.modules.curiosities.symmetry.mirror.PlaneMirror;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.SymmetryMirror;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.TriplePlaneMirror;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class SymmetryWandScreen extends AbstractSimiScreen {
@@ -43,7 +35,6 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	private final String orientation = Lang.translate("gui.symmetryWand.orientation");
 
 	private SymmetryMirror currentElement;
-	private float animationProgress;
 	private ItemStack wand;
 	private Hand hand;
 
@@ -56,7 +47,6 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		}
 		this.hand = hand;
 		this.wand = wand;
-		animationProgress = 0;
 	}
 
 	@Override
@@ -118,12 +108,6 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
-		animationProgress++;
-	}
-
-	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
 		ScreenResources.WAND_SYMMETRY.draw(this, guiLeft, guiTop);
 
@@ -133,54 +117,32 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		font.drawString(mirrorType, x - 5, y, ScreenResources.FONT_COLOR);
 		font.drawString(orientation, x - 5, y + 20, ScreenResources.FONT_COLOR);
 
-		minecraft.getTextureManager()
-			.bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
-		RenderSystem.enableBlend();
-
-		renderBlock();
 		renderBlock();
 
-		RenderSystem.pushLightingAttributes();
 		RenderSystem.pushMatrix();
-		
-		RenderHelper.enable();
-		RenderSystem.enableBlend();
-		RenderSystem.enableRescaleNormal();
-		RenderSystem.enableAlphaTest();
-		RenderSystem.alphaFunc(516, 0.1F);
-		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-		RenderSystem.translated((this.width - this.sWidth) / 2 + 250, this.height / 2 + this.sHeight / 2, 100);
-		RenderSystem.rotatef(-30, .4f, 0, -.2f);
-		RenderSystem.rotatef(90 + 0.2f * animationProgress, 0, 1, 0);
-		RenderSystem.scaled(100, -100, 100);
-		itemRenderer.renderItem(wand, TransformType.NONE, 0xF000F0, OverlayTexture.DEFAULT_UV, new MatrixStack(),
-			Minecraft.getInstance()
-				.getBufferBuilders()
-				.getEntityVertexConsumers());
-
-		RenderSystem.disableAlphaTest();
-		RenderSystem.disableRescaleNormal();
-		RenderSystem.disableLighting();
-
+		RenderSystem.translated(0, 0, 200);
+		RenderSystem.rotatef(-20, -3.5f, 1, 1);
+		GuiGameElement.of(wand)
+			.at(guiLeft + 220, guiTop + 220)
+			.scale(4)
+			.render();
 		RenderSystem.popMatrix();
-		RenderSystem.popAttributes();
 	}
 
 	protected void renderBlock() {
-		MatrixStack ms = new MatrixStack();
-		IRenderTypeBuffer buffer = Minecraft.getInstance()
-			.getBufferBuilders()
-			.getEntityVertexConsumers();
+		RenderSystem.pushMatrix();
 
-		ms.translate(guiLeft + 15, guiTop - 117, 20);
+		MatrixStack ms = new MatrixStack();
+		ms.translate(guiLeft + 18, guiTop + 11, 20);
 		ms.multiply(new Vector3f(.3f, 1f, 0f).getDegreesQuaternion(-22.5f));
 		ms.scale(32, -32, 32);
-		ms.translate(0, -5, 0);
-		minecraft.getBlockRendererDispatcher()
-			.renderBlock(currentElement.getModel(), ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV,
-				EmptyModelData.INSTANCE);
+		currentElement.applyModelTransform(ms);
+		RenderSystem.multMatrix(ms.peek()
+			.getModel());
+		GuiGameElement.of(currentElement.getModel())
+			.render();
+
+		RenderSystem.popMatrix();
 	}
 
 	@Override

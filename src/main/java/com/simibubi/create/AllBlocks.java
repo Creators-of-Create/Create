@@ -52,9 +52,6 @@ import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.AdjustablePulleyBlock;
 import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.modules.contraptions.relays.gauge.GaugeBlock;
-import com.simibubi.create.modules.curiosities.symmetry.block.CrossPlaneSymmetryBlock;
-import com.simibubi.create.modules.curiosities.symmetry.block.PlaneSymmetryBlock;
-import com.simibubi.create.modules.curiosities.symmetry.block.TriplePlaneSymmetryBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
 import com.simibubi.create.modules.logistics.block.StockswitchBlock;
 import com.simibubi.create.modules.logistics.block.belts.observer.BeltObserverBlock;
@@ -95,7 +92,6 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -208,9 +204,9 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 
 	_4_(Sections.CURIOSITIES),
 
-	SYMMETRY_PLANE(PlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
-	SYMMETRY_CROSSPLANE(CrossPlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
-	SYMMETRY_TRIPLEPLANE(TriplePlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
+//	SYMMETRY_PLANE(PlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
+//	SYMMETRY_CROSSPLANE(CrossPlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
+//	SYMMETRY_TRIPLEPLANE(TriplePlaneSymmetryBlock::new, ComesWith.NO_BLOCKITEM),
 
 	_5_(Sections.SCHEMATICS),
 

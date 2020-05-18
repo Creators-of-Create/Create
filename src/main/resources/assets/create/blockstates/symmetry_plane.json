@@ -1,6 +1,0 @@
-{
-  "variants": {
-		"align=xy": { "model": "create:block/symmetry_plane" },
-    "align=yz": { "model": "create:block/symmetry_plane", "y": 90 }
-	}
-}

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
@@ -41,7 +43,7 @@ public abstract class SymmetryMirror {
 
 	public static List<String> getMirrors() {
 		return ImmutableList.of(Lang.translate("symmetry.mirror.plane"), Lang.translate("symmetry.mirror.doublePlane"),
-				Lang.translate("symmetry.mirror.triplePlane"));
+			Lang.translate("symmetry.mirror.triplePlane"));
 	}
 
 	public IStringSerializable getOrientation() {
@@ -77,7 +79,9 @@ public abstract class SymmetryMirror {
 
 	public abstract String typeName();
 
-	public abstract BlockState getModel();
+	public abstract AllBlockPartials getModel();
+
+	public void applyModelTransform(MatrixStack ms) {}
 
 	private static final String $ORIENTATION = "direction";
 	private static final String $POSITION = "pos";
@@ -126,7 +130,8 @@ public abstract class SymmetryMirror {
 	}
 
 	protected Vec3d getDiff(BlockPos position) {
-		return this.position.scale(-1).add(position.getX(), position.getY(), position.getZ());
+		return this.position.scale(-1)
+			.add(position.getX(), position.getY(), position.getZ());
 	}
 
 	protected BlockPos getIDiff(BlockPos position) {
@@ -160,11 +165,13 @@ public abstract class SymmetryMirror {
 	}
 
 	protected BlockState flipD1(BlockState in) {
-		return in.rotate(Rotation.COUNTERCLOCKWISE_90).mirror(Mirror.FRONT_BACK);
+		return in.rotate(Rotation.COUNTERCLOCKWISE_90)
+			.mirror(Mirror.FRONT_BACK);
 	}
 
 	protected BlockState flipD2(BlockState in) {
-		return in.rotate(Rotation.COUNTERCLOCKWISE_90).mirror(Mirror.LEFT_RIGHT);
+		return in.rotate(Rotation.COUNTERCLOCKWISE_90)
+			.mirror(Mirror.LEFT_RIGHT);
 	}
 
 	protected BlockPos flipX(BlockPos position) {
@@ -185,13 +192,13 @@ public abstract class SymmetryMirror {
 	protected BlockPos flipD2(BlockPos position) {
 		BlockPos diff = getIDiff(position);
 		return new BlockPos(position.getX() - diff.getX() + diff.getZ(), position.getY(),
-				position.getZ() - diff.getZ() + diff.getX());
+			position.getZ() - diff.getZ() + diff.getX());
 	}
 
 	protected BlockPos flipD1(BlockPos position) {
 		BlockPos diff = getIDiff(position);
 		return new BlockPos(position.getX() - diff.getX() - diff.getZ(), position.getY(),
-				position.getZ() - diff.getZ() - diff.getX());
+			position.getZ() - diff.getZ() - diff.getX());
 	}
 
 	public void setPosition(Vec3d pos3d) {

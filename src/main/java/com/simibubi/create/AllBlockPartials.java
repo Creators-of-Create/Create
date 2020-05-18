@@ -70,6 +70,10 @@ public enum AllBlockPartials {
 	ROPE_HALF_MAGNET("pulley/rope_half_magnet"),
 	MILLSTONE_COG("millstone/inner"),
 	
+	SYMMETRY_PLANE("symmetry_effect/plane"),
+	SYMMETRY_CROSSPLANE("symmetry_effect/crossplane"),
+	SYMMETRY_TRIPLEPLANE("symmetry_effect/tripleplane"),
+	
 	;
 
 	private ResourceLocation modelLocation;

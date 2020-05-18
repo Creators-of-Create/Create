@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
@@ -42,8 +42,8 @@ public class TriplePlaneMirror extends SymmetryMirror {
 	}
 
 	@Override
-	public BlockState getModel() {
-		return AllBlocks.SYMMETRY_TRIPLEPLANE.get().getDefaultState();
+	public AllBlockPartials getModel() {
+		return AllBlockPartials.SYMMETRY_TRIPLEPLANE;
 	}
 
 	@Override

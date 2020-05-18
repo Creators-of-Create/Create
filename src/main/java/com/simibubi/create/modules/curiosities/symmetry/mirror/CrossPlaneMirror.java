@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllBlocks;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.curiosities.symmetry.block.CrossPlaneSymmetryBlock;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
@@ -84,9 +85,16 @@ public class CrossPlaneMirror extends SymmetryMirror {
 	}
 
 	@Override
-	public BlockState getModel() {
-		return AllBlocks.SYMMETRY_CROSSPLANE.get().getDefaultState().with(CrossPlaneSymmetryBlock.align,
-				(Align) orientation);
+	public AllBlockPartials getModel() {
+		return AllBlockPartials.SYMMETRY_CROSSPLANE;
+	}
+
+	@Override
+	public void applyModelTransform(MatrixStack ms) {
+		super.applyModelTransform(ms);
+		ms.translate(.5, .5, .5);
+		ms.multiply(VecHelper.rotateY(((Align) orientation) == Align.Y ? 0 : 45));
+		ms.translate(-.5, -.5, -.5);
 	}
 
 	@Override

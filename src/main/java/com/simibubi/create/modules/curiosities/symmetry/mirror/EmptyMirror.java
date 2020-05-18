@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.AllBlockPartials;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
@@ -48,7 +49,7 @@ public class EmptyMirror extends SymmetryMirror {
 	}
 
 	@Override
-	public BlockState getModel() {
+	public AllBlockPartials getModel() {
 		return null;
 	}
 	

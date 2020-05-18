@@ -3,15 +3,21 @@ package com.simibubi.create.modules.curiosities.symmetry;
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.modules.curiosities.symmetry.mirror.SymmetryMirror;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -40,7 +46,8 @@ public class SymmetryHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onBlockPlaced(EntityPlaceEvent event) {
-		if (event.getWorld().isRemote())
+		if (event.getWorld()
+			.isRemote())
 			return;
 		if (!(event.getEntity() instanceof PlayerEntity))
 			return;
@@ -48,22 +55,27 @@ public class SymmetryHandler {
 		PlayerEntity player = (PlayerEntity) event.getEntity();
 		PlayerInventory inv = player.inventory;
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
-			if (!inv.getStackInSlot(i).isEmpty() && inv.getStackInSlot(i).getItem() == AllItems.SYMMETRY_WAND.get()) {
+			if (!inv.getStackInSlot(i)
+				.isEmpty()
+				&& inv.getStackInSlot(i)
+					.getItem() == AllItems.SYMMETRY_WAND.get()) {
 				SymmetryWandItem.apply(player.world, inv.getStackInSlot(i), player, event.getPos(),
-						event.getPlacedBlock());
+					event.getPlacedBlock());
 			}
 		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onBlockDestroyed(BreakEvent event) {
-		if (event.getWorld().isRemote())
+		if (event.getWorld()
+			.isRemote())
 			return;
 
 		PlayerEntity player = event.getPlayer();
 		PlayerInventory inv = player.inventory;
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
-			if (!inv.getStackInSlot(i).isEmpty() && AllItems.SYMMETRY_WAND.typeOf(inv.getStackInSlot(i))) {
+			if (!inv.getStackInSlot(i)
+				.isEmpty() && AllItems.SYMMETRY_WAND.typeOf(inv.getStackInSlot(i))) {
 				SymmetryWandItem.remove(player.world, inv.getStackInSlot(i), player, event.getPos());
 			}
 		}
@@ -77,34 +89,48 @@ public class SymmetryHandler {
 
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			ItemStack stackInSlot = player.inventory.getStackInSlot(i);
-			if (stackInSlot != null && AllItems.SYMMETRY_WAND.typeOf(stackInSlot)
-					&& SymmetryWandItem.isEnabled(stackInSlot)) {
-				SymmetryMirror mirror = SymmetryWandItem.getMirror(stackInSlot);
-				if (mirror instanceof EmptyMirror)
-					continue;
+			if (!AllItems.SYMMETRY_WAND.typeOf(stackInSlot))
+				continue;
+			if (!SymmetryWandItem.isEnabled(stackInSlot))
+				continue;
+			SymmetryMirror mirror = SymmetryWandItem.getMirror(stackInSlot);
+			if (mirror instanceof EmptyMirror)
+				continue;
 
-				BlockPos pos = new BlockPos(mirror.getPosition());
+			BlockPos pos = new BlockPos(mirror.getPosition());
 
-				float yShift = 0;
-				double speed = 1 / 16d;
-				yShift = MathHelper.sin((float) ((tickCounter) * speed)) / 5f;
+			float yShift = 0;
+			double speed = 1 / 16d;
+			yShift = MathHelper.sin((float) (AnimationTickHolder.getRenderTick() * speed)) / 5f;
 
-				IRenderTypeBuffer buffer = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
-				ActiveRenderInfo info = mc.gameRenderer.getActiveRenderInfo();
-				Vec3d view = info.getProjectedView();
-				
-				MatrixStack ms = event.getMatrixStack();
-				ms.push();
-				ms.translate(-view.getX(), -view.getY(), -view.getZ());
-				ms.translate(pos.getX(), pos.getY(), pos.getZ());
-				ms.translate(0, yShift + .2f, 0);
-				mc.getBlockRendererDispatcher().renderModel(mirror.getModel(), pos, player.world, ms, buffer.getBuffer(Atlases.getEntityTranslucent()),
-						false, player.world.getRandom(), EmptyModelData.INSTANCE);
-				
-				Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers().draw(Atlases.getEntityTranslucent());
-				
-				ms.pop();
-			}
+			IRenderTypeBuffer buffer = Minecraft.getInstance()
+				.getBufferBuilders()
+				.getEntityVertexConsumers();
+			ActiveRenderInfo info = mc.gameRenderer.getActiveRenderInfo();
+			Vec3d view = info.getProjectedView();
+
+			MatrixStack ms = event.getMatrixStack();
+			ms.push();
+			ms.translate(-view.getX(), -view.getY(), -view.getZ());
+			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			ms.translate(0, yShift + .2f, 0);
+			mirror.applyModelTransform(ms);
+			IBakedModel model = mirror.getModel()
+				.get();
+			IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+
+			mc.getBlockRendererDispatcher()
+				.getBlockModelRenderer()
+				.renderModel(player.world, model, Blocks.AIR.getDefaultState(), pos, ms, builder, true,
+					player.world.getRandom(), MathHelper.getPositionRandom(pos), OverlayTexture.DEFAULT_UV,
+					EmptyModelData.INSTANCE);
+
+			Minecraft.getInstance()
+				.getBufferBuilders()
+				.getEntityVertexConsumers()
+				.draw(Atlases.getEntityTranslucent());
+
+			ms.pop();
 		}
 	}
 
@@ -128,7 +154,7 @@ public class SymmetryHandler {
 				ItemStack stackInSlot = player.inventory.getStackInSlot(i);
 
 				if (stackInSlot != null && AllItems.SYMMETRY_WAND.typeOf(stackInSlot)
-						&& SymmetryWandItem.isEnabled(stackInSlot)) {
+					&& SymmetryWandItem.isEnabled(stackInSlot)) {
 
 					SymmetryMirror mirror = SymmetryWandItem.getMirror(stackInSlot);
 					if (mirror instanceof EmptyMirror)
@@ -138,7 +164,8 @@ public class SymmetryHandler {
 					double offsetX = (r.nextDouble() - 0.5) * 0.3;
 					double offsetZ = (r.nextDouble() - 0.5) * 0.3;
 
-					Vec3d pos = mirror.getPosition().add(0.5 + offsetX, 1 / 4d, 0.5 + offsetZ);
+					Vec3d pos = mirror.getPosition()
+						.add(0.5 + offsetX, 1 / 4d, 0.5 + offsetZ);
 					Vec3d speed = new Vec3d(0, r.nextDouble() * 1 / 8f, 0);
 					mc.world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, speed.x, speed.y, speed.z);
 				}
@@ -153,7 +180,8 @@ public class SymmetryHandler {
 		Vec3d end = new Vec3d(to).add(0.5, 0.5, 0.5);
 		Vec3d diff = end.subtract(start);
 
-		Vec3d step = diff.normalize().scale(density);
+		Vec3d step = diff.normalize()
+			.scale(density);
 		int steps = (int) (diff.length() / step.length());
 
 		Random r = new Random();
@@ -161,20 +189,19 @@ public class SymmetryHandler {
 			Vec3d pos = start.add(step.scale(i));
 			Vec3d speed = new Vec3d(0, r.nextDouble() * -40f, 0);
 
-			Minecraft.getInstance().world.addParticle(
-					new RedstoneParticleData(1, 1, 1, 1),
-					pos.x, pos.y, pos.z, speed.x, speed.y, speed.z);
+			Minecraft.getInstance().world.addParticle(new RedstoneParticleData(1, 1, 1, 1), pos.x, pos.y, pos.z,
+				speed.x, speed.y, speed.z);
 		}
 
 		Vec3d speed = new Vec3d(0, r.nextDouble() * 1 / 32f, 0);
 		Vec3d pos = start.add(step.scale(2));
 		Minecraft.getInstance().world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, speed.x, speed.y,
-				speed.z);
+			speed.z);
 
 		speed = new Vec3d(0, r.nextDouble() * 1 / 32f, 0);
 		pos = start.add(step.scale(steps));
 		Minecraft.getInstance().world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, speed.x, speed.y,
-				speed.z);
+			speed.z);
 	}
 
 }
