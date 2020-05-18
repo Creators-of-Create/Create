@@ -266,8 +266,6 @@ public class DeployerHandler {
 		CompoundNBT tag = stack.getOrCreateTag();
 		if (stack.getItem() instanceof SandPaperItem && tag.contains("Polishing"))
 			player.spawnedItemEffects = ItemStack.read(tag.getCompound("Polishing"));
-		if (stack.isFood())
-			player.spawnedItemEffects = stack.copy();
 
 		if (!player.getActiveItemStack().isEmpty())
 			player.setHeldItem(hand, stack.onItemUseFinish(world, player));
