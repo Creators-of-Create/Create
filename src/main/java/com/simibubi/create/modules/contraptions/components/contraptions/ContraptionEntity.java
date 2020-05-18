@@ -497,13 +497,16 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public void disassemble() {
+		if (!isAlive()) {
+			return;
+		}
 		if (getContraption() != null) {
+			remove();
 			BlockPos offset = new BlockPos(getAnchorVec().add(.5, .5, .5));
 			Vec3d rotation = new Vec3d(getRoll(1), getYaw(1), getPitch(1));
 			getContraption().addBlocksToWorld(world, offset, rotation);
 			preventMovedEntitiesFromGettingStuck();
 		}
-		remove();
 	}
 
 	@Override
