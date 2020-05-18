@@ -82,6 +82,11 @@ public class DeployerFakePlayer extends FakePlayer {
 		return 1 / 64f;
 	}
 
+	@Override
+	public boolean canEat(boolean ignoreHunger) {
+		return false;
+	}
+
 	@SubscribeEvent
 	public static void deployerHasEyesOnHisFeet(EntityEvent.EyeHeight event) {
 		if (event.getEntity() instanceof DeployerFakePlayer)
