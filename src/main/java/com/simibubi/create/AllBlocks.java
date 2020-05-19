@@ -31,7 +31,6 @@ import com.simibubi.create.modules.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelBlock;
 import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.modules.contraptions.components.deployer.DeployerBlock;
-import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelBlock;
 import com.simibubi.create.modules.contraptions.components.flywheel.engine.FurnaceEngineBlock;
@@ -41,7 +40,6 @@ import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixer
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressBlock;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
 import com.simibubi.create.modules.contraptions.components.turntable.TurntableBlock;
-import com.simibubi.create.modules.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.modules.contraptions.processing.BasinBlock;
 import com.simibubi.create.modules.contraptions.redstone.AnalogLeverBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
@@ -107,8 +105,8 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 //	ADJUSTABLE_PULLEY(AdjustablePulleyBlock::new),
 //	BELT(BeltBlock::new, ComesWith.NO_BLOCKITEM),
 //	CREATIVE_MOTOR(MotorBlock::new),
-	WATER_WHEEL(WaterWheelBlock::new),
-	ENCASED_FAN(EncasedFanBlock::new),
+//	WATER_WHEEL(WaterWheelBlock::new),
+//	ENCASED_FAN(EncasedFanBlock::new),
 	NOZZLE(NozzleBlock::new),
 	TURNTABLE(TurntableBlock::new),
 	HAND_CRANK(HandCrankBlock::new),

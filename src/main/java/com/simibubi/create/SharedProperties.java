@@ -14,5 +14,9 @@ public class SharedProperties {
 	static Block kinetic() {
 		return Blocks.ANDESITE;
 	}
+	
+	static Block woodenKinetic() {
+		return Blocks.STRIPPED_SPRUCE_WOOD;
+	}
 
 }

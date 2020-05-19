@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -34,6 +35,11 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(AXIS);
+	}
+	
+	@Override
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override

@@ -1,9 +1,11 @@
 package com.simibubi.create.foundation.utility.data;
 
 import com.simibubi.create.Create;
+import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
+import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -14,23 +16,32 @@ import net.minecraftforge.client.model.generators.ModelFile;
 public class ModelGen {
 
 	public static ModelFile createOvergrown(DataGenContext<Block, ? extends Block> ctx, BlockStateProvider prov,
-			ResourceLocation block, ResourceLocation overlay) {
+		ResourceLocation block, ResourceLocation overlay) {
 		return createOvergrown(ctx, prov, block, block, block, overlay);
 	}
 
 	public static ModelFile createOvergrown(DataGenContext<Block, ? extends Block> ctx, BlockStateProvider prov,
-			ResourceLocation side, ResourceLocation top, ResourceLocation bottom, ResourceLocation overlay) {
+		ResourceLocation side, ResourceLocation top, ResourceLocation bottom, ResourceLocation overlay) {
 		return prov.models()
-				.withExistingParent(ctx.getName(), new ResourceLocation(Create.ID, "block/overgrown"))
-				.texture("particle", side)
-				.texture("side", side)
-				.texture("top", top)
-				.texture("bottom", bottom)
-				.texture("overlay", overlay);
+			.withExistingParent(ctx.getName(), new ResourceLocation(Create.ID, "block/overgrown"))
+			.texture("particle", side)
+			.texture("side", side)
+			.texture("top", top)
+			.texture("bottom", bottom)
+			.texture("overlay", overlay);
 	}
 
 	public static <P> NonNullFunction<ItemBuilder<BlockItem, P>, P> oxidizedItemModel() {
-		return b -> b.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc(ModelGen.getOxidizedModel(ctx.getName(), 0)))).build();
+		return b -> b
+			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(),
+				prov.modLoc(ModelGen.getOxidizedModel(ctx.getName(), 0))))
+			.build();
+	}
+
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> customItemModel() {
+		return b -> b.item()
+			.model(AssetLookup::customItemModel)
+			.build();
 	}
 
 	public static String getOxidizedModel(String name, int level) {

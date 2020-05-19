@@ -1,14 +1,14 @@
 package com.simibubi.create.modules.contraptions.components.waterwheel;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.WrappedWorld;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
@@ -25,8 +25,8 @@ import net.minecraft.world.World;
 
 public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<WaterWheelTileEntity> {
 
-	public WaterWheelBlock() {
-		super(Properties.from(Blocks.STRIPPED_SPRUCE_WOOD));
+	public WaterWheelBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
@@ -34,14 +34,14 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 		return new WaterWheelTileEntity();
 	}
 
-//	@Override // TODO 1.15 register layer
-//	public BlockRenderLayer getRenderLayer() {
-//		return BlockRenderLayer.CUTOUT;
-//	}
-
 	@Override
 	protected boolean hasStaticPart() {
 		return false;
+	}
+	
+	@Override
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 		for (Direction direction : Direction.values()) {
 			BlockPos neighbourPos = pos.offset(direction);
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
-			if (!AllBlocks.WATER_WHEEL.typeOf(neighbourState))
+			if (!AllBlocksNew.WATER_WHEEL.has(neighbourState))
 				continue;
 			if (neighbourState.get(HORIZONTAL_FACING).getAxis() != state.get(HORIZONTAL_FACING).getAxis()
 					|| state.get(HORIZONTAL_FACING).getAxis() != direction.getAxis())
@@ -130,7 +130,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction facing = context.getFace();
 		BlockState placedOn = context.getWorld().getBlockState(context.getPos().offset(facing.getOpposite()));
-		if (AllBlocks.WATER_WHEEL.typeOf(placedOn))
+		if (AllBlocksNew.WATER_WHEEL.has(placedOn))
 			return getDefaultState().with(HORIZONTAL_FACING, placedOn.get(HORIZONTAL_FACING));
 		if (facing.getAxis().isHorizontal())
 			return getDefaultState().with(HORIZONTAL_FACING,

@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import static com.simibubi.create.foundation.utility.data.BlockStateGen.oxidizedBlockstate;
+import static com.simibubi.create.foundation.utility.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.utility.data.ModelGen.oxidizedItemModel;
 import static com.simibubi.create.modules.Sections.SCHEMATICS;
 
@@ -10,8 +11,10 @@ import com.simibubi.create.foundation.utility.data.AssetLookup;
 import com.simibubi.create.foundation.utility.data.BlockStateGen;
 import com.simibubi.create.foundation.world.OxidizingBlock;
 import com.simibubi.create.modules.Sections;
+import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.modules.contraptions.components.motor.MotorBlock;
 import com.simibubi.create.modules.contraptions.components.motor.MotorGenerator;
+import com.simibubi.create.modules.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltGenerator;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
@@ -36,6 +39,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
@@ -60,9 +64,7 @@ public class AllBlocksNew {
 		REGISTRATE.block("schematicannon", SchematicannonBlock::new)
 			.initialProperties(() -> Blocks.DISPENSER)
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
-			.item()
-			.model(AssetLookup::customItemModel)
-			.build()
+			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<SchematicTableBlock> SCHEMATIC_TABLE =
@@ -106,33 +108,25 @@ public class AllBlocksNew {
 		REGISTRATE.block("encased_shaft", EncasedShaftBlock::new)
 			.initialProperties(SharedProperties::kinetic)
 			.blockstate(BlockStateGen.axisBlockProvider(true))
-			.item()
-			.model(AssetLookup::customItemModel)
-			.build()
+			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<GearboxBlock> GEARBOX = REGISTRATE.block("gearbox", GearboxBlock::new)
 		.initialProperties(SharedProperties::kinetic)
 		.blockstate(BlockStateGen.axisBlockProvider(true))
-		.item()
-		.model(AssetLookup::customItemModel)
-		.build()
+		.transform(customItemModel())
 		.register();
 
 	public static final BlockEntry<ClutchBlock> CLUTCH = REGISTRATE.block("clutch", ClutchBlock::new)
 		.initialProperties(SharedProperties::kinetic)
 		.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, AssetLookup.forPowered(c, p)))
-		.item()
-		.model(AssetLookup::customItemModel)
-		.build()
+		.transform(customItemModel())
 		.register();
 
 	public static final BlockEntry<GearshiftBlock> GEARSHIFT = REGISTRATE.block("gearshift", GearshiftBlock::new)
 		.initialProperties(SharedProperties::kinetic)
 		.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, AssetLookup.forPowered(c, p)))
-		.item()
-		.model(AssetLookup::customItemModel)
-		.build()
+		.transform(customItemModel())
 		.register();
 
 	public static final BlockEntry<EncasedBeltBlock> ENCASED_BELT =
@@ -140,9 +134,7 @@ public class AllBlocksNew {
 			.initialProperties(SharedProperties::kinetic)
 			.blockstate((c, p) -> new EncasedBeltGenerator((state, suffix) -> p.models()
 				.getExistingFile(p.modLoc("block/" + c.getName() + "/" + suffix))).generate(c, p))
-			.item()
-			.model(AssetLookup::customItemModel)
-			.build()
+			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<AdjustablePulleyBlock> ADJUSTABLE_PULLEY =
@@ -170,9 +162,24 @@ public class AllBlocksNew {
 		.initialProperties(SharedProperties::kinetic)
 		.blockstate(new MotorGenerator()::generate)
 		.transform(StressConfigDefaults.setCapacity(16384.0))
-		.item()
-		.model(AssetLookup::customItemModel)
-		.build()
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<WaterWheelBlock> WATER_WHEEL = REGISTRATE.block("water_wheel", WaterWheelBlock::new)
+		.initialProperties(SharedProperties::woodenKinetic)
+		.blockstate(BlockStateGen.horizontalWheelProvider(false))
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.transform(StressConfigDefaults.setCapacity(16.0))
+		.simpleItem()
+		.register();
+
+	public static final BlockEntry<EncasedFanBlock> ENCASED_FAN = REGISTRATE.block("encased_fan", EncasedFanBlock::new)
+		.initialProperties(SharedProperties::kinetic)
+		.blockstate(BlockStateGen.directionalBlockProvider(true))
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.transform(StressConfigDefaults.setCapacity(16.0))
+		.transform(StressConfigDefaults.setImpact(2.0))
+		.transform(customItemModel())
 		.register();
 
 	// Materials

@@ -6,7 +6,6 @@ import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
@@ -20,8 +19,8 @@ import net.minecraft.world.World;
 
 public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<EncasedFanTileEntity> {
 
-	public EncasedFanBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public EncasedFanBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

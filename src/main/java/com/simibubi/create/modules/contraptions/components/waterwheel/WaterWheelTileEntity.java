@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.components.waterwheel;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 
@@ -28,7 +28,8 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 		super.read(compound);
 		if (compound.contains("Flows")) {
 			for (Direction d : Direction.values())
-				setFlow(d, compound.getCompound("Flows").getFloat(d.getName()));
+				setFlow(d, compound.getCompound("Flows")
+					.getFloat(d.getName()));
 		}
 	}
 
@@ -63,8 +64,8 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		WaterWheelBlock block = (WaterWheelBlock) AllBlocks.WATER_WHEEL.get();
-		block.updateAllSides(getBlockState(), world, pos);
+		AllBlocksNew.WATER_WHEEL.get()
+			.updateAllSides(getBlockState(), world, pos);
 	}
-	
+
 }

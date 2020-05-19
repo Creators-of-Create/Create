@@ -28,7 +28,7 @@ public class EncasedFanTileEntityRenderer extends KineticTileEntityRenderer {
 		Direction direction = te.getBlockState().get(FACING);
 		SuperByteBuffer superBuffer = AllBlockPartials.SHAFT_HALF.renderOnDirectional(te.getBlockState(),
 				direction.getOpposite());
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.getCutoutMipped());
 		standardKineticRotationTransform(superBuffer, te).renderInto(ms, vb);
 
 		float time = AnimationTickHolder.getRenderTick();

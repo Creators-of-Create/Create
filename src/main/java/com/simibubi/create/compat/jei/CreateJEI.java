@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.Create;
@@ -139,7 +140,7 @@ public class CreateJEI implements IModPlugin {
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		ItemStack fan = new ItemStack(AllBlocks.ENCASED_FAN.get());
+		ItemStack fan = new ItemStack(AllBlocksNew.ENCASED_FAN.get());
 
 		ItemStack splashingFan = fan
 				.copy()

@@ -61,9 +61,9 @@ public class CreateAdvancements implements IDataProvider {
 
 		kineticsBranch(t, andesite_alloy);
 
-		Advancement water_wheel = advancement("water_wheel", AllBlocks.WATER_WHEEL.get(), TaskType.NORMAL)
+		Advancement water_wheel = advancement("water_wheel", AllBlocksNew.WATER_WHEEL.get(), TaskType.NORMAL)
 				.withParent(andesite_alloy)
-				.withCriterion("0", placeBlock(AllBlocks.WATER_WHEEL.get()))
+				.withCriterion("0", placeBlock(AllBlocksNew.WATER_WHEEL.get()))
 				.withCriterion("1", AllTriggers.WATER_WHEEL.instance())
 				.register(t, id + ":water_wheel");
 

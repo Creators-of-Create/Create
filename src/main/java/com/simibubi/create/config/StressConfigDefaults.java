@@ -47,11 +47,11 @@ public class StressConfigDefaults {
 			return 1024;
 		case MECHANICAL_BEARING:
 			return 512;
-		case ENCASED_FAN:
+//		case ENCASED_FAN:
 		case HAND_CRANK:
 			return 32;
-		case WATER_WHEEL:
-			return 8;
+//		case WATER_WHEEL:
+//			return 8;
 		default:
 			return -1;
 		}
@@ -82,7 +82,7 @@ public class StressConfigDefaults {
 			return 2;
 
 //		case BELT:
-		case ENCASED_FAN:
+//		case ENCASED_FAN:
 		case CUCKOO_CLOCK:
 			return 1;
 

@@ -20,11 +20,42 @@ import net.minecraftforge.client.model.generators.ModelFile;
 
 public class BlockStateGen {
 
+	// Functions
+
 	public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> axisBlockProvider(
 		boolean customItem) {
-		return (c, p) -> BlockStateGen.axisBlock(c, p,
-			$ -> customItem ? AssetLookup.partialBaseModel(c, p) : AssetLookup.standardModel(c, p));
+		return (c, p) -> BlockStateGen.axisBlock(c, p, getBlockModel(customItem, c, p));
 	}
+
+	public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> directionalBlockProvider(
+		boolean customItem) {
+		return (c, p) -> p.directionalBlock(c.get(), getBlockModel(customItem, c, p));
+	}
+
+	public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> horizontalWheelProvider(
+		boolean customItem) {
+		return (c, p) -> BlockStateGen.horizontalWheel(c, p, getBlockModel(customItem, c, p));
+	}
+
+	public static <P> NonNullUnaryOperator<BlockBuilder<OxidizingBlock, P>> oxidizedBlockstate() {
+		return b -> b.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
+			.forAllStates(state -> {
+				String name = ModelGen.getOxidizedModel(ctx.getName(), state.get(OxidizingBlock.OXIDIZATION));
+				return ConfiguredModel.builder()
+					.modelFile(prov.models()
+						.cubeAll(name, prov.modLoc(name)))
+					.build();
+			}));
+	}
+
+	// Utility
+
+	private static <T extends Block> Function<BlockState, ModelFile> getBlockModel(boolean customItem,
+		DataGenContext<Block, T> c, RegistrateBlockstateProvider p) {
+		return $ -> customItem ? AssetLookup.partialBaseModel(c, p) : AssetLookup.standardModel(c, p);
+	}
+
+	// Generators
 
 	public static <T extends Block> void axisBlock(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		Function<BlockState, ModelFile> modelFunc) {
@@ -37,6 +68,17 @@ public class BlockStateGen {
 					.rotationY(axis == Axis.X ? 90 : 0)
 					.build();
 			});
+	}
+
+	public static <T extends Block> void horizontalWheel(DataGenContext<Block, T> ctx,
+		RegistrateBlockstateProvider prov, Function<BlockState, ModelFile> modelFunc) {
+		prov.getVariantBuilder(ctx.get())
+			.forAllStates(state -> ConfiguredModel.builder()
+				.modelFile(modelFunc.apply(state))
+				.rotationX(90)
+				.rotationY(((int) state.get(BlockStateProperties.HORIZONTAL_FACING)
+					.getHorizontalAngle() + 180) % 360)
+				.build());
 	}
 
 	public static <T extends Block> void cubeAll(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
@@ -57,16 +99,6 @@ public class BlockStateGen {
 			.forAllStates(state -> ConfiguredModel.builder()
 				.modelFile(state.get(PavedBlock.COVERED) ? covered : top)
 				.build());
-	}
-
-	public static <P> NonNullUnaryOperator<BlockBuilder<OxidizingBlock, P>> oxidizedBlockstate() {
-		return b -> b.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
-				.forAllStates(state -> {
-					String name = ModelGen.getOxidizedModel(ctx.getName(), state.get(OxidizingBlock.OXIDIZATION));
-					return ConfiguredModel.builder()
-							.modelFile(prov.models().cubeAll(name, prov.modLoc(name)))
-							.build();
-				}));
 	}
 
 }
