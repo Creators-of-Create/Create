@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.block.ITE;
@@ -113,7 +114,7 @@ public class FunnelBlock extends AttachedLogisticalBlock
 	}
 
 	protected boolean isOnBelt(IWorld world, BlockPos pos) {
-		return AllBlocks.BELT.typeOf(world.getBlockState(pos.down()));
+		return AllBlocksNew.BELT.has(world.getBlockState(pos.down()));
 	}
 
 	@Override

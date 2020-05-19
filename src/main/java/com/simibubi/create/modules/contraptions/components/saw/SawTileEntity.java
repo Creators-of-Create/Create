@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
@@ -149,7 +150,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 			// Try moving items onto the belt
 			BlockPos nextPos = pos.add(itemMovement.x, itemMovement.y, itemMovement.z);
-			if (AllBlocks.BELT.typeOf(world.getBlockState(nextPos))) {
+			if (AllBlocksNew.BELT.has(world.getBlockState(nextPos))) {
 				TileEntity te = world.getTileEntity(nextPos);
 				if (te != null && te instanceof BeltTileEntity) {
 					for (int slot = 0; slot < inventory.getSlots(); slot++) {

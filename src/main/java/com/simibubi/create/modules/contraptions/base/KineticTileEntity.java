@@ -4,7 +4,6 @@ import static net.minecraft.util.text.TextFormatting.GOLD;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -29,14 +28,12 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public abstract class KineticTileEntity extends SmartTileEntity
-		implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation {
+	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;
@@ -146,19 +143,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public float calculateAddedStressCapacity() {
-		Map<ResourceLocation, ConfigValue<Double>> capacityMap = AllConfigs.SERVER.kinetics.stressValues.capacities;
-		ResourceLocation path = getBlockState().getBlock().getRegistryName();
-
-		float capacity = capacityMap.containsKey(path) ? capacityMap.get(path).get().floatValue() : 0;
+		float capacity = (float) AllConfigs.SERVER.kinetics.stressValues.getCapacityOf(getBlockState().getBlock());
 		this.lastCapacityProvided = capacity;
 		return capacity;
 	}
 
 	public float calculateStressApplied() {
-		Map<ResourceLocation, ConfigValue<Double>> stressEntries = AllConfigs.SERVER.kinetics.stressValues.impacts;
-		ResourceLocation path = getBlockState().getBlock().getRegistryName();
-
-		float impact = stressEntries.containsKey(path) ? stressEntries.get(path).get().floatValue() : 1;
+		float impact = (float) AllConfigs.SERVER.kinetics.stressValues.getImpactOf(getBlockState().getBlock());
 		this.lastStressApplied = impact;
 		return impact;
 	}
@@ -170,9 +161,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			flickerTally = getFlickerScore() + 5;
 
 		if (fromOrToZero && previousSpeed == 0 && !world.isRemote)
-			AllTriggers
-					.getPlayersInRange(world, pos, 4)
-					.forEach(p -> AllTriggers.KINETIC_BLOCK.trigger(p, getBlockState()));
+			AllTriggers.getPlayersInRange(world, pos, 4)
+				.forEach(p -> AllTriggers.KINETIC_BLOCK.trigger(p, getBlockState()));
 	}
 
 	@Override
@@ -368,7 +358,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		KineticTileEntity tileEntity = (KineticTileEntity) tileEntityIn;
 		if (tileEntity.hasNetwork())
-			tileEntity.getOrCreateNetwork().remove(tileEntity);
+			tileEntity.getOrCreateNetwork()
+				.remove(tileEntity);
 		tileEntity.detachKinetics();
 		tileEntity.removeSource();
 		world.setBlockState(pos, state, 3);
@@ -389,9 +380,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
 			tooltip.add(spacing + GOLD + Lang.translate("gui.stress_gauge.overstressed"));
-			String hint = Lang
-					.translate("gui.contraptions.network_overstressed",
-							I18n.format(getBlockState().getBlock().getTranslationKey()));
+			String hint = Lang.translate("gui.contraptions.network_overstressed", I18n.format(getBlockState().getBlock()
+				.getTranslationKey()));
 			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add((i == 0 ? "" : spacing) + cutString.get(i));
@@ -400,9 +390,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (notFastEnough) {
 			tooltip.add(spacing + GOLD + Lang.translate("tooltip.speedRequirement"));
-			String hint = Lang
-					.translate("gui.contraptions.not_fast_enough",
-							I18n.format(getBlockState().getBlock().getTranslationKey()));
+			String hint = Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock()
+				.getTranslationKey()));
 			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add((i == 0 ? "" : spacing) + cutString.get(i));
@@ -426,14 +415,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			String stressString =
 				spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
 
-			tooltip
-					.add(String
-							.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressAtBase),
-									Lang.translate("gui.goggles.base_value")));
-			tooltip
-					.add(String
-							.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal),
-									Lang.translate("gui.goggles.at_current_speed")));
+			tooltip.add(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressAtBase),
+				Lang.translate("gui.goggles.base_value")));
+			tooltip.add(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal),
+				Lang.translate("gui.goggles.at_current_speed")));
 
 			added = true;
 		}

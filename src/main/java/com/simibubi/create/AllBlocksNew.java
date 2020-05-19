@@ -4,6 +4,7 @@ import static com.simibubi.create.foundation.utility.data.BlockStateGen.oxidized
 import static com.simibubi.create.foundation.utility.data.ModelGen.oxidizedItemModel;
 import static com.simibubi.create.modules.Sections.SCHEMATICS;
 
+import com.simibubi.create.config.StressConfigDefaults;
 import com.simibubi.create.foundation.registrate.CreateRegistrate;
 import com.simibubi.create.foundation.utility.data.AssetLookup;
 import com.simibubi.create.foundation.utility.data.BlockStateGen;
@@ -11,6 +12,8 @@ import com.simibubi.create.foundation.world.OxidizingBlock;
 import com.simibubi.create.modules.Sections;
 import com.simibubi.create.modules.contraptions.components.motor.MotorBlock;
 import com.simibubi.create.modules.contraptions.components.motor.MotorGenerator;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.modules.contraptions.relays.belt.BeltGenerator;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogwheelBlockItem;
 import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
@@ -32,6 +35,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
@@ -47,7 +51,7 @@ public class AllBlocksNew {
 		.itemGroup(() -> Create.baseCreativeTab);
 
 	// Schematics
-	
+
 	static {
 		REGISTRATE.startSection(SCHEMATICS);
 	}
@@ -70,7 +74,7 @@ public class AllBlocksNew {
 			.register();
 
 	// Kinetics
-	
+
 	static {
 		REGISTRATE.startSection(Sections.KINETICS);
 	}
@@ -156,16 +160,23 @@ public class AllBlocksNew {
 			.build()
 			.register();
 
+	public static final BlockEntry<BeltBlock> BELT = REGISTRATE.block("belt", BeltBlock::new)
+		.initialProperties(SharedProperties.beltMaterial, MaterialColor.GRAY)
+		.transform(StressConfigDefaults.setImpact(1.0))
+		.blockstate(new BeltGenerator()::generate)
+		.register();
+
 	public static final BlockEntry<MotorBlock> CREATIVE_MOTOR = REGISTRATE.block("creative_motor", MotorBlock::new)
 		.initialProperties(SharedProperties::kinetic)
 		.blockstate(new MotorGenerator()::generate)
+		.transform(StressConfigDefaults.setCapacity(16384.0))
 		.item()
 		.model(AssetLookup::customItemModel)
 		.build()
 		.register();
 
 	// Materials
-	
+
 	static {
 		REGISTRATE.startSection(Sections.MATERIALS);
 	}

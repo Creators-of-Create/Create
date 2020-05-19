@@ -95,8 +95,8 @@ public class ItemDescription {
 			isEngine ? SpeedLevel.NONE : ((IRotate) block).getMinimumRequiredSpeedLevel();
 		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE;
 		ResourceLocation id = ((Block) block).getRegistryName();
-		Map<ResourceLocation, ConfigValue<Double>> impacts = config.stressValues.impacts;
-		Map<ResourceLocation, ConfigValue<Double>> capacities = config.stressValues.capacities;
+		Map<ResourceLocation, ConfigValue<Double>> impacts = config.stressValues.getImpacts();
+		Map<ResourceLocation, ConfigValue<Double>> capacities = config.stressValues.getCapacities();
 		boolean hasStressImpact = impacts.containsKey(id) && impacts.get(id).get() > 0 && StressImpact.isEnabled();
 		boolean hasStressCapacity = capacities.containsKey(id) && StressImpact.isEnabled();
 		boolean hasGlasses =
@@ -115,6 +115,7 @@ public class ItemDescription {
 			add(linesOnShift, GRAY + Lang.translate("tooltip.speedRequirement"));
 			add(linesOnShift, level);
 		}
+		
 		String stressUnit = Lang.translate("generic.unit.stress");
 		if (hasStressImpact && !(!isEngine && ((IRotate) block).hideStressImpact())) {
 			List<String> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
@@ -129,8 +130,8 @@ public class ItemDescription {
 
 			add(linesOnShift, GRAY + Lang.translate("tooltip.stressImpact"));
 			add(linesOnShift, level);
-
 		}
+		
 		if (hasStressCapacity) {
 			List<String> stressCapacityLevels =
 				Lang.translatedOptions("tooltip.capacityProvided", "low", "medium", "high");

@@ -2,7 +2,6 @@ package com.simibubi.create.modules.schematics.block;
 
 import java.util.Optional;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
@@ -20,9 +19,9 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -120,7 +119,7 @@ public abstract class LaunchedItem {
 			if (state.has(BlockStateProperties.WATERLOGGED))
 				state = state.with(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
 
-			if (AllBlocks.BELT.typeOf(state)) {
+			if (AllBlocksNew.BELT.has(state)) {
 				world.setBlockState(target, state, 2);
 				return;
 			}

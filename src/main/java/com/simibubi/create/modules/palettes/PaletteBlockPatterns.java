@@ -9,8 +9,8 @@ import static com.simibubi.create.modules.palettes.PatternNameType.Wrap;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.simibubi.create.Create;
 import com.simibubi.create.AllSpriteShifts;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;

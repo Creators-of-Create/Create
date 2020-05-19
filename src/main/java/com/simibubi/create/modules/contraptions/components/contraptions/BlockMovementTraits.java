@@ -1,6 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.modules.contraptions.components.actors.AttachedActorBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
@@ -95,7 +96,7 @@ public class BlockMovementTraits {
 				return !((PulleyTileEntity) te).running;
 		}
 
-		if (AllBlocks.BELT.typeOf(blockState))
+		if (AllBlocksNew.BELT.has(blockState))
 			return true;
 		if (block instanceof ExtractorBlock)
 			return true;

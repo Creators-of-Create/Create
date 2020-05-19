@@ -121,7 +121,7 @@ public enum AllTileEntities {
 	HAND_CRANK(HandCrankTileEntity::new, AllBlocks.HAND_CRANK),
 	CUCKOO_CLOCK(CuckooClockTileEntity::new, AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK),
 
-	BELT(BeltTileEntity::new, AllBlocks.BELT),
+	BELT(BeltTileEntity::new, AllBlocksNew.BELT),
 	BELT_TUNNEL(BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL),
 	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
 	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING),

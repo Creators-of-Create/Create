@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.inventory.InsertingBehaviour;
@@ -309,7 +310,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 	protected boolean isTargetingBelt() {
 		BlockPos targetPos = pos.offset(getTargetFacing());
-		if (!AllBlocks.BELT.typeOf(world.getBlockState(targetPos)))
+		if (!AllBlocksNew.BELT.has(world.getBlockState(targetPos)))
 			return false;
 		TileEntity te = world.getTileEntity(targetPos);
 		if (!(te instanceof BeltTileEntity))

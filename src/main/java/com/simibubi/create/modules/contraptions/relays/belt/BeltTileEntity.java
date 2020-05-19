@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -73,7 +73,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		// Init belt
 		if (beltLength == 0)
 			BeltBlock.initBelt(world, pos);
-		if (!AllBlocks.BELT.typeOf(world.getBlockState(pos)))
+		if (!AllBlocksNew.BELT.has(world.getBlockState(pos)))
 			return;
 
 		// Initialize Belt Attachments
@@ -253,7 +253,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public boolean hasPulley() {
-		if (!AllBlocks.BELT.typeOf(getBlockState()))
+		if (!AllBlocksNew.BELT.has(getBlockState()))
 			return false;
 		return getBlockState().get(BeltBlock.PART) != Part.MIDDLE;
 	}

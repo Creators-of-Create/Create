@@ -465,10 +465,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		ItemStack icon = requirement.isEmpty() || requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0);
 		if (entityMode)
 			launchEntity(target, icon, blockReader.getEntities().get(printingEntityIndex));
-		else if (AllBlocks.BELT.typeOf(blockState)) {
+		else if (AllBlocksNew.BELT.has(blockState)) {
 			TileEntity te = blockReader.getTileEntity(currentPos.add(schematicAnchor));
 			blockState = stripBeltIfNotLast(blockState);
-			if (te instanceof BeltTileEntity && AllBlocks.BELT.typeOf(blockState))
+			if (te instanceof BeltTileEntity && AllBlocksNew.BELT.has(blockState))
 				launchBelt(target, blockState, ((BeltTileEntity) te).beltLength);
 			else
 				launchBlock(target, icon, blockState);

@@ -18,6 +18,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -172,7 +173,7 @@ public abstract class Contraption {
 
 		if (AllBlocks.FLEXCRATE.typeOf(state))
 			FlexcrateBlock.splitCrate(world, pos);
-		if (AllBlocks.BELT.typeOf(state)) {
+		if (AllBlocksNew.BELT.has(state)) {
 			BlockPos nextPos = BeltBlock.nextSegmentPosition(state, pos, true);
 			BlockPos prevPos = BeltBlock.nextSegmentPosition(state, pos, false);
 			if (nextPos != null && !visited.contains(nextPos))

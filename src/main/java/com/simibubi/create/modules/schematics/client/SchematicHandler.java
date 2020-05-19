@@ -11,7 +11,6 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.ToolSelectionScreen;
 import com.simibubi.create.foundation.packet.NbtPacket;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
-import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 import com.simibubi.create.modules.schematics.SchematicWorld;
 import com.simibubi.create.modules.schematics.client.tools.Tools;
 import com.simibubi.create.modules.schematics.item.SchematicItem;

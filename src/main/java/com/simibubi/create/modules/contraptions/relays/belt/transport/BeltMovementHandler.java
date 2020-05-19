@@ -6,7 +6,7 @@ import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
@@ -183,8 +183,8 @@ public class BeltMovementHandler {
 		if (!isPlayer)
 			entityIn.stepHeight = step;
 
-		boolean movedPastEndingSlope = onSlope && (AllBlocks.BELT.typeOf(world.getBlockState(entityIn.getPosition()))
-				|| AllBlocks.BELT.typeOf(world.getBlockState(entityIn.getPosition().down())));
+		boolean movedPastEndingSlope = onSlope && (AllBlocksNew.BELT.has(world.getBlockState(entityIn.getPosition()))
+				|| AllBlocksNew.BELT.has(world.getBlockState(entityIn.getPosition().down())));
 
 		if (movedPastEndingSlope && !movingDown && Math.abs(movementSpeed) > 0)
 			entityIn.setPosition(entityIn.getY(), entityIn.getY() + movement.y, entityIn.getZ());

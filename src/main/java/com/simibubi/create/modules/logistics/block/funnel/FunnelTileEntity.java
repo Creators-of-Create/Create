@@ -2,7 +2,7 @@ package com.simibubi.create.modules.logistics.block.funnel;
 
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
@@ -102,7 +102,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 
 	protected BeltTileEntity getTargetingBelt() {
 		BlockPos targetPos = pos.offset(AttachedLogisticalBlock.getBlockFacing(getBlockState()));
-		if (!AllBlocks.BELT.typeOf(world.getBlockState(targetPos)))
+		if (!AllBlocksNew.BELT.has(world.getBlockState(targetPos)))
 			return null;
 		return BeltHelper.getSegmentTE(world, targetPos);
 	}

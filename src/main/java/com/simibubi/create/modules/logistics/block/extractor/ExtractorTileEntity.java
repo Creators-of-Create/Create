@@ -2,7 +2,7 @@ package com.simibubi.create.modules.logistics.block.extractor;
 
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
@@ -55,7 +55,7 @@ public class ExtractorTileEntity extends SmartTileEntity {
 	}
 
 	protected void onExtract(ItemStack stack) {
-		if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
+		if (AllBlocksNew.BELT.has(world.getBlockState(pos.down()))) {
 			TileEntity te = world.getTileEntity(pos.down());
 			if (te instanceof BeltTileEntity) {
 				if (((BeltTileEntity) te).tryInsertingFromSide(Direction.UP, stack, false))
@@ -78,11 +78,11 @@ public class ExtractorTileEntity extends SmartTileEntity {
 
 	protected boolean isAttachedToBelt() {
 		Direction blockFacing = AttachedLogisticalBlock.getBlockFacing(getBlockState());
-		return AllBlocks.BELT.typeOf(world.getBlockState(pos.offset(blockFacing)));
+		return AllBlocksNew.BELT.has(world.getBlockState(pos.offset(blockFacing)));
 	}
 
 	protected boolean isTargetingBelt() {
-		if (!AllBlocks.BELT.typeOf(world.getBlockState(pos.down())))
+		if (!AllBlocksNew.BELT.has(world.getBlockState(pos.down())))
 			return false;
 		TileEntity te = world.getTileEntity(pos.down());
 		if (te == null || !(te instanceof BeltTileEntity))
@@ -99,7 +99,7 @@ public class ExtractorTileEntity extends SmartTileEntity {
 	}
 
 	protected boolean canExtract() {
-		if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
+		if (AllBlocksNew.BELT.has(world.getBlockState(pos.down()))) {
 			TileEntity te = world.getTileEntity(pos.down());
 			if (te instanceof BeltTileEntity) {
 				BeltTileEntity belt = (BeltTileEntity) te;

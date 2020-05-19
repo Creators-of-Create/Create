@@ -76,8 +76,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty CASING = BooleanProperty.create("casing");
 
-	public BeltBlock() {
-		super(Properties.from(Blocks.BROWN_WOOL).noDrops());
+	public BeltBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(SLOPE, Slope.HORIZONTAL).with(PART, Part.START).with(CASING, false));
 	}
 
@@ -143,9 +143,9 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		BlockPos entityPosition = entityIn.getPosition();
 		BlockPos beltPos = null;
 
-		if (AllBlocks.BELT.typeOf(worldIn.getBlockState(entityPosition)))
+		if (AllBlocksNew.BELT.has(worldIn.getBlockState(entityPosition)))
 			beltPos = entityPosition;
-		else if (AllBlocks.BELT.typeOf(worldIn.getBlockState(entityPosition.down())))
+		else if (AllBlocksNew.BELT.has(worldIn.getBlockState(entityPosition.down())))
 			beltPos = entityPosition.down();
 		if (beltPos == null)
 			return;
@@ -415,14 +415,14 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return;
 
 		BlockState state = world.getBlockState(pos);
-		if (!AllBlocks.BELT.typeOf(state))
+		if (!AllBlocksNew.BELT.has(state))
 			return;
 		// Find controller
 		int limit = 1000;
 		BlockPos currentPos = pos;
 		while (limit-- > 0) {
 			BlockState currentState = world.getBlockState(currentPos);
-			if (!AllBlocks.BELT.typeOf(currentState)) {
+			if (!AllBlocksNew.BELT.has(currentState)) {
 				world.destroyBlock(pos, true);
 				return;
 			}
@@ -446,7 +446,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			TileEntity tileEntity = world.getTileEntity(beltPos);
 			BlockState currentState = world.getBlockState(beltPos);
 
-			if (tileEntity instanceof BeltTileEntity && AllBlocks.BELT.typeOf(currentState)) {
+			if (tileEntity instanceof BeltTileEntity && AllBlocksNew.BELT.has(currentState)) {
 				BeltTileEntity te = (BeltTileEntity) tileEntity;
 				te.setController(currentPos);
 				te.beltLength = beltChain.size();
@@ -494,7 +494,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			if (currentPos == null)
 				continue;
 			BlockState currentState = world.getBlockState(currentPos);
-			if (!AllBlocks.BELT.typeOf(currentState))
+			if (!AllBlocksNew.BELT.has(currentState))
 				continue;
 			if (currentState.get(CASING))
 				Block.spawnAsEntity(world, currentPos, new ItemStack(AllBlocks.BRASS_CASING.get()));
@@ -549,14 +549,14 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		List<BlockPos> positions = new LinkedList<>();
 
 		BlockState blockState = world.getBlockState(controllerPos);
-		if (!AllBlocks.BELT.typeOf(blockState))
+		if (!AllBlocksNew.BELT.has(blockState))
 			return positions;
 
 		int limit = 1000;
 		BlockPos current = controllerPos;
 		while (limit-- > 0 && current != null) {
 			BlockState state = world.getBlockState(current);
-			if (!AllBlocks.BELT.typeOf(state))
+			if (!AllBlocksNew.BELT.has(state))
 				break;
 			positions.add(current);
 			current = nextSegmentPosition(state, current, true);

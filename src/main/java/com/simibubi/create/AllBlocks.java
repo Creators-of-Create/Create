@@ -47,7 +47,6 @@ import com.simibubi.create.modules.contraptions.redstone.AnalogLeverBlock;
 import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
 import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.modules.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
 import com.simibubi.create.modules.logistics.block.StockswitchBlock;
@@ -106,7 +105,7 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 
 //	ENCASED_BELT(EncasedBeltBlock::new),
 //	ADJUSTABLE_PULLEY(AdjustablePulleyBlock::new),
-	BELT(BeltBlock::new, ComesWith.NO_BLOCKITEM),
+//	BELT(BeltBlock::new, ComesWith.NO_BLOCKITEM),
 //	CREATIVE_MOTOR(MotorBlock::new),
 	WATER_WHEEL(WaterWheelBlock::new),
 	ENCASED_FAN(EncasedFanBlock::new),

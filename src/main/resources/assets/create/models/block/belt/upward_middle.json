@@ -10,7 +10,7 @@
             "name": "Bottom Diagonal",
             "from": [ 1.0, 3.0, -3.325 ], 
             "to": [ 15.0, 5.0, 6.6 ], 
-            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": 45.0 },
+            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": -45.0 },
             "faces": {
                 "north": { "texture": "#0", "uv": [ 1.0, 11.0, 15.0, 13.0 ], "rotation": 180 },
                 "east": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 10.0 ], "rotation": 90 },
@@ -23,7 +23,7 @@
             "name": "Top Diagonal",
             "from": [ 1.0, 11.0, -3.325 ], 
             "to": [ 15.0, 13.0, 10.0 ], 
-            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": 45.0 },
+            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": -45.0 },
             "faces": {
                 "north": { "texture": "#0", "uv": [ 1.0, 3.0, 15.0, 5.0 ] },
                 "east": { "texture": "#0", "uv": [ 0.0, 3.0, 2.0, 16.0 ], "rotation": 270 },
@@ -34,9 +34,9 @@
         },
         {
             "name": "Top Diagonal First",
-            "from": [ 1.0, 11.0, 10.0 ], 
+            "from": [ 1.0, 11.0, 9.98 ], 
             "to": [ 15.0, 13.0, 19.3 ], 
-            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": 45.0 },
+            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": -45.0 },
             "faces": {
                 "north": { "texture": "#0", "uv": [ 1.0, 11.0, 15.0, 13.0 ] },
                 "east": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 10.0 ], "rotation": 270 },
@@ -47,9 +47,9 @@
         },
         {
             "name": "Bottom Diagonal First",
-            "from": [ 1.0, 3.0, 6.6 ], 
+            "from": [ 1.0, 3.0, 6.58 ], 
             "to": [ 15.0, 5.0, 19.3 ], 
-            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": 45.0 },
+            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": -45.0 },
             "faces": {
                 "north": { "texture": "#0", "uv": [ 1.0, 3.0, 15.0, 5.0 ] },
                 "east": { "texture": "#0", "uv": [ 0.0, 3.0, 2.0, 16.0 ], "rotation": 90 },

@@ -7,7 +7,6 @@ import com.simibubi.create.config.AllConfigs;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.util.ResourceLocation;
 
 public class FurnaceEngineTileEntity extends EngineTileEntity {
 
@@ -29,9 +28,9 @@ public class FurnaceEngineTileEntity extends EngineTileEntity {
 		float modifier = state.getBlock() == Blocks.BLAST_FURNACE ? 2 : 1;
 		boolean active = state.has(AbstractFurnaceBlock.LIT) && state.get(AbstractFurnaceBlock.LIT);
 		float speed = active ? 16 * modifier : 0;
-		ResourceLocation registryName = AllBlocks.FURNACE_ENGINE.get().getRegistryName();
 		float capacity =
-			active ? AllConfigs.SERVER.kinetics.stressValues.capacities.get(registryName).get().floatValue() : 0;
+			(float) (active ? AllConfigs.SERVER.kinetics.stressValues.getCapacityOf(AllBlocks.FURNACE_ENGINE.get())
+				: 0);
 
 		appliedCapacity = capacity;
 		appliedSpeed = speed;

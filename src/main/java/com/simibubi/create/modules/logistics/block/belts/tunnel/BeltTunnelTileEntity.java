@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
@@ -51,7 +52,7 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			if (!this.cap.isPresent()) {
-				if (AllBlocks.BELT.typeOf(world.getBlockState(pos.down()))) {
+				if (AllBlocksNew.BELT.has(world.getBlockState(pos.down()))) {
 					TileEntity teBelow = world.getTileEntity(pos.down());
 					if (teBelow != null) {
 						T capBelow = teBelow.getCapability(capability, Direction.UP).orElse(null);

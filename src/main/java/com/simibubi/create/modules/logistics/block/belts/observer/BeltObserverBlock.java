@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.block.ITE;
@@ -92,7 +92,7 @@ public class BeltObserverBlock extends HorizontalBlock
 		Direction direction = state.get(HORIZONTAL_FACING);
 		BlockState blockState = world.getBlockState(pos.offset(direction));
 
-		if (!AllBlocks.BELT.typeOf(blockState))
+		if (!AllBlocksNew.BELT.has(blockState))
 			return false;
 		if (blockState.get(BeltBlock.SLOPE) != Slope.HORIZONTAL)
 			return false;
@@ -114,7 +114,7 @@ public class BeltObserverBlock extends HorizontalBlock
 				continue;
 
 			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(face));
-			if (AllBlocks.BELT.typeOf(blockState)
+			if (AllBlocksNew.BELT.has(blockState)
 					&& blockState.get(BlockStateProperties.HORIZONTAL_FACING).getAxis() != face.getAxis()
 					&& blockState.get(BeltBlock.SLOPE) == Slope.HORIZONTAL)
 				if (preferredFacing == null)

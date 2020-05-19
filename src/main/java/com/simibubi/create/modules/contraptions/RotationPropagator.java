@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.contraptions;
 
-import static com.simibubi.create.AllBlocks.BELT;
 import static com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock.isLargeCog;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
@@ -8,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -421,7 +421,7 @@ public class RotationPropagator {
 		IRotate block = (IRotate) blockState.getBlock();
 
 		if (block.hasIntegratedCogwheel(te.getWorld(), te.getPos(), blockState) || isLargeWheel
-				|| BELT.typeOf(blockState)) {
+				|| AllBlocksNew.BELT.has(blockState)) {
 			Axis axis = block.getRotationAxis(blockState);
 
 			BlockPos.getAllInBox(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1)).forEach(offset -> {

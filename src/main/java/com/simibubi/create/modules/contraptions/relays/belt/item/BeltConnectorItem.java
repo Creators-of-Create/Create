@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.relays.belt.item;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.Create;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -33,7 +33,7 @@ import net.minecraft.world.World;
 public class BeltConnectorItem extends BlockItem {
 
 	public BeltConnectorItem(Properties properties) {
-		super(AllBlocks.BELT.get(), properties);
+		super(AllBlocksNew.BELT.get(), properties);
 	}
 
 	@Override
@@ -126,8 +126,7 @@ public class BeltConnectorItem extends BlockItem {
 					.get(BlockStateProperties.AXIS) == Axis.X ? Axis.Z : Axis.X);
 
 		List<BlockPos> beltsToCreate = getBeltChainBetween(start, end, slope, facing);
-		BlockState beltBlock = AllBlocks.BELT.get()
-				.getDefaultState();
+		BlockState beltBlock = AllBlocksNew.BELT.getDefaultState();
 
 		for (BlockPos pos : beltsToCreate) {
 			BeltBlock.Part part = pos.equals(start) ? Part.START : pos.equals(end) ? Part.END : Part.MIDDLE;

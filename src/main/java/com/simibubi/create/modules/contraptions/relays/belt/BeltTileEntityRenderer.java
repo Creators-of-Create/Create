@@ -7,9 +7,9 @@ import java.util.Random;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllSpriteShifts;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.IndependentShadowRenderer;
@@ -48,7 +48,7 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 			int light, int overlay) {
 
 		BlockState blockState = te.getBlockState();
-		if (!AllBlocks.BELT.typeOf(blockState))
+		if (!AllBlocksNew.BELT.has(blockState))
 			return;
 
 		BlockState renderedState = getBeltState(te);
