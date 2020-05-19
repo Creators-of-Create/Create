@@ -8,7 +8,7 @@
   "item.create.tree_fertilizer": "树木肥料",
   "item.create.empty_blueprint": "空白蓝图",
   "item.create.andesite_alloy": "安山合金",
-  "item.create.chromatic_compound": "谜之化合物",
+  "item.create.chromatic_compound": "异彩化合物",
   "item.create.shadow_steel": "暗影金属",
   "item.create.blueprint_and_quill": "蓝图与笔",
   "item.create.blueprint": "蓝图",
@@ -123,7 +123,7 @@
   "block.create.mechanical_bearing": "动力轴承",
   "block.create.clockwork_bearing": "时钟轴承",
   "block.create.rope_pulley": "绳索滑轮",
-  "block.create.rope": "Rope",
+  "block.create.rope": "绳索",
   "block.create.pulley_magnet": "滑轮磁铁",
   "block.create.translation_chassis": "机壳底盘",
   "block.create.rotation_chassis": "旋转底盘",
@@ -143,7 +143,7 @@
   "block.create.redstone_latch": "锁存器",
   "block.create.toggle_latch": "T触发器",
   "block.create.flexpeater": "高级中继器",
-  "block.create.entity_detector": "传送带观察者",
+  "block.create.entity_detector": "传送带侦测器",
   "block.create.belt_tunnel": "传送带隧道",
   "block.create.sequenced_gearshift": "可编程齿轮箱",
 
@@ -271,7 +271,7 @@
   "death.attack.create.fan_lava": "%1$s 在接受热风的洗礼中欲火焚身",
   "death.attack.create.drill": "%1$s 的钻头是突破天际的钻头",
   "death.attack.create.saw": "%1$s 被圆锯切成了两截",
-  "create.block.deployer.damage_source_name": "背叛的机械臂",
+  "create.block.deployer.damage_source_name": "机械臂二五仔",
   "death.attack.create.cuckoo_clock_explosion": "%1$s被布谷鸟闹钟炸得粉身碎骨",
 
   "create.recipe.crushing": "批量粉碎",
@@ -336,11 +336,11 @@
   "create.orientation.orthogonal": "垂直",
   "create.orientation.diagonal": "对角线",
   "create.orientation.horizontal": "水平",
-  "create.orientation.alongZ": "以z轴为中心",
-  "create.orientation.alongX": "以x轴为中心",
+  "create.orientation.alongZ": "以z轴对齐",
+  "create.orientation.alongX": "以x轴对齐",
 
   "create.gui.blockzapper.title": "手持式方块放置机",
-  "create.gui.blockzapper.replaceMode": "更换模式",
+  "create.gui.blockzapper.replaceMode": "替换模式",
   "create.gui.blockzapper.searchDiagonal": "根据对角线",
   "create.gui.blockzapper.searchFuzzy": "忽视边界",
   "create.gui.blockzapper.range": "扩散范围",
@@ -382,7 +382,7 @@
   "create.blockzapper.componentTier.blazebrass": "烈焰合金",
   "create.blockzapper.componentTier.choruschrome": "紫颂合金",
   "create.blockzapper.leftClickToSet": "左键点击方块以设定方块",
-  "create.blockzapper.empty": "出击!",
+  "create.blockzapper.empty": "方块不足！",
 
   "create.contraptions.movement_mode": "运动模式",
   "create.contraptions.movement_mode.move_place": "停止时总是实体化方块",
@@ -693,8 +693,8 @@
 	"advancement.create.crushing_wheel": "超级巨无霸",
 	"advancement.create.crushing_wheel.desc": "制作一些能更快粉碎物品的粉碎轮",
 	
-	"advancement.create.chromatic_compound": "极端材料",
-	"advancement.create.chromatic_compound.desc": "制作一个谜之化合物",
+	"advancement.create.chromatic_compound": "极性材料",
+	"advancement.create.chromatic_compound.desc": "制作一个异彩化合物",
 	"advancement.create.shadow_steel": "暗影中的宝石",
 	"advancement.create.shadow_steel.desc": "制作一些暗影金属",
 	"advancement.create.refined_radiance": "闪耀着洁白的圣光",
@@ -713,14 +713,14 @@
 	"advancement.create.eob.desc": "未来会有更多很棒棒的东西哦",
 
   "create.subtitle.schematicannon_launch_block": "蓝图大炮发射",
-  "create.subtitle.schematicannon_finish": "蓝图大炮完成",
+  "create.subtitle.schematicannon_finish": "蓝图大炮完成任务",
   "create.subtitle.slime_added": "史莱姆挤压",
   "create.subtitle.mechanical_press_activation": "辊压机工作",
   "create.subtitle.mechanical_press_item_break": "金属碰撞",
-  "create.subtitle.blockzapper_place": "方块被放置",
-  "create.subtitle.blockzapper_confirm": "完成的“叮”提示声",
-  "create.subtitle.blockzapper_deny": "拒绝的警报",
-  "create.subtitle.block_funnel_eat": "传送带漏斗咀嚼",
+  "create.subtitle.blockzapper_place": "放置方块",
+  "create.subtitle.blockzapper_confirm": "选择方块",
+  "create.subtitle.blockzapper_deny": "放置失败",
+  "create.subtitle.block_funnel_eat": "传送带漏斗吞食",
 
   "_comment": "-------------------------]  ITEM DESCRIPTIONS  [------------------------------------------------",
 
@@ -1088,7 +1088,7 @@
   "block.create.flexcrate.tooltip.action1": "打开箱子",
 
 	"block.create.creative_crate.tooltip": "THE ENDLESS CRATE",
-	"block.create.creative_crate.tooltip.summary": "这个容器可以给临近的 _蓝图大炮_ 提供无限物品 （创造专用物品）",
+	"block.create.creative_crate.tooltip.summary": "这个容器可以给临近的 _蓝图大炮_ 提供无限物品以及燃料 （创造专用物品）",
 	"block.create.creative_crate.tooltip.condition1": "当标记了物品时",
 	"block.create.creative_crate.tooltip.behaviour1": "容器将会从虚空中提供无限量的标记物品，并且任何放置到容器中的物品都会被送入虚空",
 
@@ -1219,7 +1219,7 @@
   "tool.create.blazing.tooltip.summary": "将会冶炼被破坏的方块,并且点燃怪物,在地狱中不会减少耐久",
 
   "tool.create.rose_quartz.tooltip": "ROSE QUARTZ TOOLS",
-  "tool.create.rose_quartz.tooltip.summary": "这个工具将会让你的手更长， 伸的更远.",
+  "tool.create.rose_quartz.tooltip.summary": "这个工具将会让你的手更长，伸得更远.",
 
   "itemGroup.create": "机械动力"
 }
