@@ -44,6 +44,9 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		renderBackground();
 		renderWindow(mouseX, mouseY, partialTicks);
 		
+		for (Widget widget : widgets)
+			widget.render(mouseX, mouseY, partialTicks);
+		
 		super.render(mouseX, mouseY, partialTicks);
 		
 		GlStateManager.enableAlphaTest();
@@ -52,9 +55,6 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepthTest();
-		
-		for (Widget widget : widgets)
-			widget.render(mouseX, mouseY, partialTicks);
 		renderWindowForeground(mouseX, mouseY, partialTicks);
 		for (Widget widget : widgets)
 			widget.renderToolTip(mouseX, mouseY);
