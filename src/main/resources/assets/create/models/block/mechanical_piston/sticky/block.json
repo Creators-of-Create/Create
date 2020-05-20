@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/mechanical_piston/normal/block",
+    "textures": {
+        "5": "block/piston_top_sticky"
+    }
+}

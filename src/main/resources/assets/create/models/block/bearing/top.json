@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"bearing_top": "create:block/bearing_top",
-		"particle": "create:block/bearing_side",
-		"bearing_side": "create:block/bearing_side",
+		"particle": "create:block/mechanical_bearing_side",
+		"bearing_side": "create:block/mechanical_bearing_side",
 		"brass_casing": "create:block/brass_casing"
 	},
 	"elements": [

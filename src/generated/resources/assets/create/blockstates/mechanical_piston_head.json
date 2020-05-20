@@ -1,0 +1,56 @@
+{
+  "variants": {
+    "facing=down,type=normal": {
+      "model": "create:block/mechanical_piston/normal/head",
+      "x": 180
+    },
+    "facing=up,type=normal": {
+      "model": "create:block/mechanical_piston/normal/head"
+    },
+    "facing=north,type=normal": {
+      "model": "create:block/mechanical_piston/normal/head",
+      "x": 90
+    },
+    "facing=south,type=normal": {
+      "model": "create:block/mechanical_piston/normal/head",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,type=normal": {
+      "model": "create:block/mechanical_piston/normal/head",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,type=normal": {
+      "model": "create:block/mechanical_piston/normal/head",
+      "x": 90,
+      "y": 90
+    },
+    "facing=down,type=sticky": {
+      "model": "create:block/mechanical_piston/sticky/head",
+      "x": 180
+    },
+    "facing=up,type=sticky": {
+      "model": "create:block/mechanical_piston/sticky/head"
+    },
+    "facing=north,type=sticky": {
+      "model": "create:block/mechanical_piston/sticky/head",
+      "x": 90
+    },
+    "facing=south,type=sticky": {
+      "model": "create:block/mechanical_piston/sticky/head",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,type=sticky": {
+      "model": "create:block/mechanical_piston/sticky/head",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,type=sticky": {
+      "model": "create:block/mechanical_piston/sticky/head",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

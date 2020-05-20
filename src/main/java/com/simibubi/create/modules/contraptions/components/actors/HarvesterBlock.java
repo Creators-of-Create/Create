@@ -11,6 +11,10 @@ public class HarvesterBlock extends AttachedActorBlock implements IPortableBlock
 
 	public static MovementBehaviour MOVEMENT = new HarvesterMovementBehaviour();
 
+	public HarvesterBlock(Properties p_i48377_1_) {
+		super(p_i48377_1_);
+	}
+
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
@@ -20,11 +24,6 @@ public class HarvesterBlock extends AttachedActorBlock implements IPortableBlock
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new HarvesterTileEntity();
 	}
-
-//	@Override // TOOD 1.15 register layer
-//	public BlockRenderLayer getRenderLayer() {
-//		return BlockRenderLayer.CUTOUT;
-//	}
 
 	@Override
 	public MovementBehaviour getMovementBehaviour() {

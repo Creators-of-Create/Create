@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.pulley;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.CenteredSideValueBoxTransform;
@@ -37,7 +37,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	protected void assemble() {
-		if (!(world.getBlockState(pos).getBlock() instanceof PulleyBlock))
+		if (!(world.getBlockState(pos)
+			.getBlock() instanceof PulleyBlock))
 			return;
 		if (speed == 0)
 			return;
@@ -55,7 +56,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			if (contraption != null) {
 				Direction movementDirection = getSpeed() > 0 ? Direction.DOWN : Direction.UP;
 				if (ContraptionCollider.isCollidingWithWorld(world, contraption, anchor.offset(movementDirection),
-						movementDirection))
+					movementDirection))
 					contraption = null;
 			}
 
@@ -69,7 +70,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 			if (contraption != null && !contraption.blocks.isEmpty()) {
 				contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
-				movedContraption = ContraptionEntity.createStationary(world, contraption).controlledBy(this);
+				movedContraption = ContraptionEntity.createStationary(world, contraption)
+					.controlledBy(this);
 				movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 				world.addEntity(movedContraption);
 				forceMove = true;
@@ -92,17 +94,20 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		if (!world.isRemote) {
 			if (offset > 0) {
 				BlockPos magnetPos = pos.down((int) offset);
-				world.destroyBlock(magnetPos,
-						world.getBlockState(magnetPos).getCollisionShape(world, magnetPos).isEmpty());
-				world.setBlockState(magnetPos, AllBlocks.PULLEY_MAGNET.getDefault(), 66);
+				world.destroyBlock(magnetPos, world.getBlockState(magnetPos)
+					.getCollisionShape(world, magnetPos)
+					.isEmpty());
+				world.setBlockState(magnetPos, AllBlocksNew.PULLEY_MAGNET.getDefaultState(), 66);
 			}
 
 			for (int i = 1; i <= ((int) offset) - 1; i++) {
 				BlockPos ropePos = pos.down(i);
-				world.destroyBlock(ropePos, world.getBlockState(ropePos).getCollisionShape(world, ropePos).isEmpty());
+				world.destroyBlock(ropePos, world.getBlockState(ropePos)
+					.getCollisionShape(world, ropePos)
+					.isEmpty());
 			}
 			for (int i = 1; i <= ((int) offset) - 1; i++)
-				world.setBlockState(pos.down(i), AllBlocks.ROPE.getDefault(), 66);
+				world.setBlockState(pos.down(i), AllBlocksNew.ROPE.getDefaultState(), 66);
 
 			if (movedContraption != null)
 				movedContraption.disassemble();

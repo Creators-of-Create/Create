@@ -43,13 +43,13 @@ public class StressConfigDefaults {
 		switch (block) {
 //		case CREATIVE_MOTOR: 
 //			return 2048;
-		case FURNACE_ENGINE:
-			return 1024;
-		case MECHANICAL_BEARING:
-			return 512;
+//		case FURNACE_ENGINE:
+//			return 1024;
+//		case MECHANICAL_BEARING:
+//			return 512;
 //		case ENCASED_FAN:
-		case HAND_CRANK:
-			return 32;
+//		case HAND_CRANK:
+//			return 32;
 //		case WATER_WHEEL:
 //			return 8;
 		default:
@@ -61,30 +61,30 @@ public class StressConfigDefaults {
 	public static double getDefaultStressImpact(AllBlocks block) {
 
 		switch (block) {
-		case CRUSHING_WHEEL:
-		case MECHANICAL_PRESS:
-			return 8;
+//		case CRUSHING_WHEEL:
+//		case MECHANICAL_PRESS:
+//			return 8;
 
-		case DRILL:
-		case SAW:
-		case DEPLOYER:
-		case MECHANICAL_MIXER:
-		case MILLSTONE:
-			return 4;
+//		case DRILL:
+//		case SAW:
+//		case DEPLOYER:
+//		case MECHANICAL_MIXER:
+//		case MILLSTONE:
+//			return 4;
 
-		case MECHANICAL_CRAFTER:
-		case TURNTABLE:
-		case MECHANICAL_PISTON:
-		case MECHANICAL_BEARING:
-		case CLOCKWORK_BEARING:
-		case ROPE_PULLEY:
-		case STICKY_MECHANICAL_PISTON:
-			return 2;
+//		case MECHANICAL_CRAFTER:
+//		case TURNTABLE:
+//		case MECHANICAL_PISTON:
+//		case MECHANICAL_BEARING:
+//		case CLOCKWORK_BEARING:
+//		case ROPE_PULLEY:
+//		case STICKY_MECHANICAL_PISTON:
+//			return 2;
 
 //		case BELT:
 //		case ENCASED_FAN:
-		case CUCKOO_CLOCK:
-			return 1;
+//		case CUCKOO_CLOCK:
+//			return 1;
 
 		default:
 			return 0;

@@ -3,7 +3,6 @@ package com.simibubi.create.modules.contraptions.components.contraptions.bearing
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -11,8 +10,8 @@ import net.minecraft.world.IWorldReader;
 
 public abstract class BearingBlock extends DirectionalKineticBlock {
 
-	public BearingBlock() {
-		super(Properties.from(Blocks.PISTON));
+	public BearingBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

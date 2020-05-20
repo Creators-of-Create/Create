@@ -5,8 +5,8 @@ import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.DirectionalKineticBlock;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
@@ -24,13 +24,18 @@ import net.minecraft.world.World;
 
 public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandCrankTileEntity> {
 
-	public HandCrankBlock() {
-		super(Properties.from(Blocks.OAK_PLANKS));
+	public HandCrankBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.CRANK.get(state.get(FACING));
+	}
+	
+	@Override
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override

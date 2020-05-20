@@ -1,11 +1,10 @@
 package com.simibubi.create.modules.contraptions.components.clock;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -14,6 +13,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
@@ -21,8 +22,16 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 
 	private boolean mysterious;
 
-	public CuckooClockBlock(boolean mysterious) {
-		super(Properties.from(Blocks.SPRUCE_LOG));
+	public static CuckooClockBlock regular(Properties properties) {
+		return new CuckooClockBlock(false, properties);
+	}
+	
+	public static CuckooClockBlock mysterious(Properties properties) {
+		return new CuckooClockBlock(true, properties);
+	}
+	
+	protected CuckooClockBlock(boolean mysterious, Properties properties) {
+		super(properties);
 		this.mysterious = mysterious;
 	}
 
@@ -30,11 +39,12 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new CuckooClockTileEntity();
 	}
-
-//	@Override // TOOD 1.15 register layer
-//	public BlockRenderLayer getRenderLayer() {
-//		return BlockRenderLayer.CUTOUT;
-//	}
+	
+	@Override
+	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
+		ISelectionContext p_220053_4_) {
+		return AllShapes.CUCKOO_CLOCK;
+	}
 
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
@@ -42,13 +52,6 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 			super.fillItemGroup(group, items);
 	}
 	
-	@Override
-	public String getTranslationKey() {
-		if (this == AllBlocks.MYSTERIOUS_CUCKOO_CLOCK.get())
-			return AllBlocks.CUCKOO_CLOCK.get().getTranslationKey();
-		return super.getTranslationKey();
-	}
-
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction preferred = getPreferredHorizontalFacing(context);

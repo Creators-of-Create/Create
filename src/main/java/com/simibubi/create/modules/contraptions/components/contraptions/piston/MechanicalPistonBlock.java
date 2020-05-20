@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.block.ITE;
@@ -10,7 +10,6 @@ import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.particles.ParticleTypes;
@@ -33,15 +32,23 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
-public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
-		implements ITE<MechanicalPistonTileEntity> {
+public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implements ITE<MechanicalPistonTileEntity> {
 
 	public static final EnumProperty<PistonState> STATE = EnumProperty.create("state", PistonState.class);
 	protected boolean isSticky;
 
-	public MechanicalPistonBlock(boolean sticky) {
-		super(Properties.from(Blocks.PISTON));
-		setDefaultState(getDefaultState().with(FACING, Direction.NORTH).with(STATE, PistonState.RETRACTED));
+	public static MechanicalPistonBlock normal(Properties properties) {
+		return new MechanicalPistonBlock(properties, false);
+	}
+
+	public static MechanicalPistonBlock sticky(Properties properties) {
+		return new MechanicalPistonBlock(properties, true);
+	}
+
+	protected MechanicalPistonBlock(Properties properties, boolean sticky) {
+		super(properties);
+		setDefaultState(getDefaultState().with(FACING, Direction.NORTH)
+			.with(STATE, PistonState.RETRACTED));
 		isSticky = sticky;
 	}
 
@@ -53,13 +60,16 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
 
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+		BlockRayTraceResult hit) {
 		if (!player.isAllowEdit())
 			return ActionResultType.PASS;
 		if (player.isSneaking())
 			return ActionResultType.PASS;
-		if (!player.getHeldItem(handIn).getItem().isIn(Tags.Items.SLIMEBALLS)) {
-			if (player.getHeldItem(handIn).isEmpty()) {
+		if (!player.getHeldItem(handIn)
+			.getItem()
+			.isIn(Tags.Items.SLIMEBALLS)) {
+			if (player.getHeldItem(handIn)
+				.isEmpty()) {
 				withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);
 				return ActionResultType.SUCCESS;
 			}
@@ -79,9 +89,11 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
 		}
 		worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
 		if (!player.isCreative())
-			player.getHeldItem(handIn).shrink(1);
-		worldIn.setBlockState(pos, AllBlocks.STICKY_MECHANICAL_PISTON.get().getDefaultState().with(FACING, direction)
-				.with(AXIS_ALONG_FIRST_COORDINATE, state.get(AXIS_ALONG_FIRST_COORDINATE)));
+			player.getHeldItem(handIn)
+				.shrink(1);
+		worldIn.setBlockState(pos, AllBlocksNew.STICKY_MECHANICAL_PISTON.getDefaultState()
+			.with(FACING, direction)
+			.with(AXIS_ALONG_FIRST_COORDINATE, state.get(AXIS_ALONG_FIRST_COORDINATE)));
 		return ActionResultType.SUCCESS;
 	}
 
@@ -123,11 +135,11 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
 			BlockPos currentPos = pos.offset(direction, offset);
 			BlockState block = worldIn.getBlockState(currentPos);
 
-			if (AllBlocks.PISTON_POLE.typeOf(block)
-					&& direction.getAxis() == block.get(BlockStateProperties.FACING).getAxis())
+			if (isExtensionPole(block) && direction.getAxis() == block.get(BlockStateProperties.FACING)
+				.getAxis())
 				continue;
 
-			if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(block) && block.get(BlockStateProperties.FACING) == direction) {
+			if (isPistonHead(block) && block.get(BlockStateProperties.FACING) == direction) {
 				pistonHead = currentPos;
 			}
 
@@ -135,16 +147,17 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
 		}
 
 		if (pistonHead != null && pistonBase != null) {
-			BlockPos.getAllInBox(pistonBase, pistonHead).filter(p -> !p.equals(pos))
-					.forEach(p -> worldIn.destroyBlock(p, dropBlocks));
+			BlockPos.getAllInBox(pistonBase, pistonHead)
+				.filter(p -> !p.equals(pos))
+				.forEach(p -> worldIn.destroyBlock(p, dropBlocks));
 		}
 
 		for (int offset = 1; offset < maxPoles; offset++) {
 			BlockPos currentPos = pos.offset(direction.getOpposite(), offset);
 			BlockState block = worldIn.getBlockState(currentPos);
 
-			if (AllBlocks.PISTON_POLE.typeOf(block)
-					&& direction.getAxis() == block.get(BlockStateProperties.FACING).getAxis()) {
+			if (isExtensionPole(block) && direction.getAxis() == block.get(BlockStateProperties.FACING)
+				.getAxis()) {
 				worldIn.destroyBlock(currentPos, dropBlocks);
 				continue;
 			}
@@ -176,4 +189,19 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock
 		return MechanicalPistonTileEntity.class;
 	}
 
+	public static boolean isPiston(BlockState state) {
+		return AllBlocksNew.MECHANICAL_PISTON.has(state) || isStickyPiston(state);
+	}
+
+	public static boolean isStickyPiston(BlockState state) {
+		return AllBlocksNew.STICKY_MECHANICAL_PISTON.has(state);
+	}
+
+	public static boolean isExtensionPole(BlockState state) {
+		return AllBlocksNew.PISTON_EXTENSION_POLE.has(state);
+	}
+
+	public static boolean isPistonHead(BlockState state) {
+		return AllBlocksNew.MECHANICAL_PISTON_HEAD.has(state);
+	}
 }

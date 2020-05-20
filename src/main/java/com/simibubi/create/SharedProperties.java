@@ -8,14 +8,18 @@ import net.minecraft.block.material.PushReaction;
 
 public class SharedProperties {
 
-	static Material beltMaterial =
+	public static Material beltMaterial =
 		new Material(MaterialColor.GRAY, false, true, true, true, true, false, false, PushReaction.NORMAL);
 
-	static Block kinetic() {
+	public static Block kinetic() {
 		return Blocks.ANDESITE;
 	}
 	
-	static Block woodenKinetic() {
+	public static Block metalKinetic() {
+		return Blocks.GOLD_BLOCK;
+	}
+	
+	public static Block woodenKinetic() {
 		return Blocks.STRIPPED_SPRUCE_WOOD;
 	}
 

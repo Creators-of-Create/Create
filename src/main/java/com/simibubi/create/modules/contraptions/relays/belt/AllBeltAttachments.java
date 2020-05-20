@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.Create;
 import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,19 +20,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public enum AllBeltAttachments {
+public enum AllBeltAttachments { //TODO rework this nonsense
 
-	BELT_FUNNEL(AllBlocks.BELT_FUNNEL),
-	BELT_OBSERVER(AllBlocks.ENTITY_DETECTOR),
-	MECHANICAL_PRESS(AllBlocks.MECHANICAL_PRESS),
-	LOGISTICAL_ATTACHABLES(AllBlocks.EXTRACTOR),
+	BELT_FUNNEL(AllBlocks.BELT_FUNNEL.get()),
+	BELT_OBSERVER(AllBlocks.ENTITY_DETECTOR.get()),
+	MECHANICAL_PRESS(AllBlocksNew.MECHANICAL_PRESS.get()), 
+	LOGISTICAL_ATTACHABLES(AllBlocks.EXTRACTOR.get()),
 
 	;
 
 	IBeltAttachment attachment;
 
-	private AllBeltAttachments(AllBlocks attachment) {
-		this.attachment = (IBeltAttachment) attachment.get();
+	private AllBeltAttachments(Block attachment) {
+		this.attachment = (IBeltAttachment) attachment;
 	}
 
 	public interface IBeltAttachment {

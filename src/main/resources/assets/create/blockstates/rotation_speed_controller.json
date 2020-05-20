@@ -1,6 +1,0 @@
-{
-  "variants": {
-		"axis=z": { "model": "create:block/rotation_speed_controller" },
-		"axis=x": { "model": "create:block/rotation_speed_controller", "y": 90 }
-	}
-}

@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.contraptions.components.crafter;
 
-import static com.simibubi.create.AllBlocks.MECHANICAL_CRAFTER;
 import static com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
 import java.util.ArrayList;
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Predicates;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -64,7 +64,7 @@ public class ConnectedInputHandler {
 		if (!AllItems.WRENCH.typeOf(heldItem))
 			return;
 		BlockState blockState = world.getBlockState(pos);
-		if (!MECHANICAL_CRAFTER.typeOf(blockState))
+		if (!AllBlocksNew.MECHANICAL_CRAFTER.has(blockState))
 			return;
 
 		BlockRayTraceResult ray = RaycastHelper.rayTraceRange(world, player, 10);
@@ -99,7 +99,7 @@ public class ConnectedInputHandler {
 				continue;
 			BlockPos neighbourPos = pos.offset(direction);
 			BlockState neighbour = world.getBlockState(neighbourPos);
-			if (!MECHANICAL_CRAFTER.typeOf(neighbour))
+			if (!AllBlocksNew.MECHANICAL_CRAFTER.has(neighbour))
 				continue;
 			if (refDirection != neighbour.get(HORIZONTAL_FACING))
 				continue;

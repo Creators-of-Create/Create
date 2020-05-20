@@ -13,7 +13,7 @@
     "show_toast": false,
     "announce_to_chat": false,
     "hidden": false,
-    "background": "create:textures/block/scoria_bricks.png"
+    "background": "create:textures/block/palettes/gabbro/bricks.png"
   },
   "criteria": {
     "0": {

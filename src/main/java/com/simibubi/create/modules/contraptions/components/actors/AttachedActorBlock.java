@@ -6,7 +6,6 @@ import com.simibubi.create.modules.contraptions.components.contraptions.IPortabl
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
@@ -21,10 +20,10 @@ import net.minecraft.world.IWorldReader;
 
 public abstract class AttachedActorBlock extends HorizontalBlock implements IPortableBlock, IWrenchable {
 
-	public AttachedActorBlock() {
-		super(Properties.from(Blocks.IRON_BLOCK));
+	protected AttachedActorBlock(Properties p_i48377_1_) {
+		super(p_i48377_1_);
 	}
-	
+
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		return ActionResultType.FAIL;

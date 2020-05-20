@@ -57,6 +57,7 @@ public class AllShapes {
 			SCHEMATICANNON_SHAPE = shape(1, 0, 1, 15, 8, 15).add(0.5, 8, 0.5, 15.5, 11, 15.5).build(),
 			PULLEY_MAGNET = shape(3, 0, 3, 13, 2, 13).add(FOUR_VOXEL_POLE.get(UP)).build(),
 			MILLSTONE = shape(0, 0, 0, 16, 6, 16).add(2, 6, 2, 14, 13, 14).add(3, 13, 3, 13, 16, 13).build(),
+			CUCKOO_CLOCK = shape(1, 0, 1, 15, 19, 15).build(),
 			GAUGE_SHAPE_UP = shape(1, 0, 0, 15, 2, 16).add(2, 2, 1, 14, 14, 15).build()
 
 	;

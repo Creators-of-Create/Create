@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "powered=false,shape=north_south": {
+      "model": "create:block/cart_assembler/block"
+    },
+    "powered=true,shape=north_south": {
+      "model": "create:block/cart_assembler/block_powered"
+    },
+    "powered=false,shape=east_west": {
+      "model": "create:block/cart_assembler/block",
+      "y": 90
+    },
+    "powered=true,shape=east_west": {
+      "model": "create:block/cart_assembler/block_powered",
+      "y": 90
+    }
+  }
+}

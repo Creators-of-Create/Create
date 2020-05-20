@@ -1,8 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.mounted;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.block.RenderUtilityBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.IWrenchable;
 import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionEntity;
@@ -11,7 +10,6 @@ import com.simibubi.create.modules.contraptions.components.contraptions.mounted.
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
@@ -39,8 +37,8 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 		EnumProperty.create("shape", RailShape.class, RailShape.EAST_WEST, RailShape.NORTH_SOUTH);
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-	public CartAssemblerBlock() {
-		super(true, Properties.from(Blocks.PISTON));
+	public CartAssemblerBlock(Properties properties) {
+		super(true, properties);
 		setDefaultState(getDefaultState().with(POWERED, false));
 	}
 
@@ -169,7 +167,11 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 		return false;
 	}
 
-	public static class MinecartAnchorBlock extends RenderUtilityBlock {
+	public static class MinecartAnchorBlock extends Block {
+
+		public MinecartAnchorBlock(Properties p_i48440_1_) {
+			super(p_i48440_1_);
+		}
 
 		@Override
 		protected void fillStateContainer(Builder<Block, BlockState> builder) {
@@ -187,7 +189,7 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 
 	public static BlockState createAnchor(BlockState state) {
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Axis.Z : Axis.X;
-		return AllBlocks.MINECART_ANCHOR.get().getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis);
+		return AllBlocksNew.MINECART_ANCHOR.getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis);
 	}
 
 	@Override

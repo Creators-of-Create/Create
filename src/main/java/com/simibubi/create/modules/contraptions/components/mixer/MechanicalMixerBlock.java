@@ -1,12 +1,11 @@
 package com.simibubi.create.modules.contraptions.components.mixer;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -17,11 +16,10 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
-public class MechanicalMixerBlock extends KineticBlock
-		implements ITE<MechanicalMixerTileEntity> {
+public class MechanicalMixerBlock extends KineticBlock implements ITE<MechanicalMixerTileEntity> {
 
-	public MechanicalMixerBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public MechanicalMixerBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class MechanicalMixerBlock extends KineticBlock
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		return !AllBlocks.BASIN.typeOf(worldIn.getBlockState(pos.down()));
+		return !AllBlocksNew.BASIN.has(worldIn.getBlockState(pos.down()));
 	}
 
 	@Override

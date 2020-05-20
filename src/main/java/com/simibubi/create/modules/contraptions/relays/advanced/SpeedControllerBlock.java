@@ -5,7 +5,6 @@ import com.simibubi.create.modules.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction.Axis;
@@ -16,8 +15,8 @@ import net.minecraft.world.IBlockReader;
 
 public class SpeedControllerBlock extends HorizontalAxisKineticBlock {
 
-	public SpeedControllerBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public SpeedControllerBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

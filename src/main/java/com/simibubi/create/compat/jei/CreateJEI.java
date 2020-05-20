@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipes;
@@ -154,24 +153,24 @@ public class CreateJEI implements IModPlugin {
 				.setDisplayName(
 						new StringTextComponent(TextFormatting.RESET + Lang.translate("recipe.blastingViaFan.fan")));
 
-		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MILLSTONE.get()), millingCategory.getUid());
-		registration.addRecipeCatalyst(new ItemStack(AllBlocks.CRUSHING_WHEEL.get()), crushingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocksNew.MILLSTONE.get()), millingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocksNew.CRUSHING_WHEEL.get()), crushingCategory.getUid());
 		registration.addRecipeCatalyst(splashingFan, splashingCategory.getUid());
 		registration.addRecipeCatalyst(smokingFan, smokingCategory.getUid());
 		registration.addRecipeCatalyst(blastingFan, blastingCategory.getUid());
-		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_PRESS.get()), pressingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocksNew.MECHANICAL_PRESS.get()), pressingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllItems.PLACEMENT_HANDGUN.get()), blockzapperCategory.getUid());
-		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_MIXER.get()), mixingCategory.getUid());
-		registration.addRecipeCatalyst(new ItemStack(AllBlocks.BASIN.get()), mixingCategory.getUid());
-		registration.addRecipeCatalyst(new ItemStack(AllBlocks.SAW.get()), sawingCategory.getUid());
-		registration.addRecipeCatalyst(new ItemStack(AllBlocks.SAW.get()), blockCuttingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocksNew.MECHANICAL_MIXER.get()), mixingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocksNew.BASIN.get()), mixingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocksNew.SAW.get()), sawingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocksNew.SAW.get()), blockCuttingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(Blocks.STONECUTTER), blockCuttingCategory.getUid());
-		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_PRESS.get()), packingCategory.getUid());
-		registration.addRecipeCatalyst(new ItemStack(AllBlocks.BASIN.get()), packingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocksNew.MECHANICAL_PRESS.get()), packingCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllBlocksNew.BASIN.get()), packingCategory.getUid());
 		registration.addRecipeCatalyst(AllItems.SAND_PAPER.asStack(), polishingCategory.getUid());
 		registration.addRecipeCatalyst(AllItems.RED_SAND_PAPER.asStack(), polishingCategory.getUid());
 		registration
-				.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_CRAFTER.get()),
+				.addRecipeCatalyst(new ItemStack(AllBlocksNew.MECHANICAL_CRAFTER.get()),
 						mechanicalCraftingCategory.getUid());
 	}
 

@@ -1,5 +1,7 @@
 package com.simibubi.create.modules.palettes;
 
+import static com.simibubi.create.foundation.registrate.CreateRegistrate.connectedTextures;
+
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.registrate.CreateRegistrate;
@@ -34,9 +36,7 @@ public class PalettesVariantEntry {
 			if (pattern.isTranslucent())
 				builder.addLayer(() -> RenderType::getTranslucent);
 			pattern.createCTBehaviour(variant)
-				.ifPresent(b -> {
-					builder.transform(registrate.connectedTextures(b));	
-				});
+				.ifPresent(b -> builder.transform(connectedTextures(b)));
 
 			BlockEntry<? extends Block> block = builder.initialProperties(initialProperties)
 				.simpleItem()

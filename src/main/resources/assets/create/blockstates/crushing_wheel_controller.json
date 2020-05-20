@@ -1,6 +1,0 @@
-{
-    "variants": {
-		"valid=true": { "model": "block/air" },
-		"valid=false": { "model": "block/air" }
-	}
-}

@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.IRotate;
@@ -28,11 +27,11 @@ public class CogWheelBlock extends ShaftBlock {
 	public static CogWheelBlock small(Properties properties) {
 		return new CogWheelBlock(false, properties);
 	}
-	
+
 	public static CogWheelBlock large(Properties properties) {
 		return new CogWheelBlock(true, properties);
 	}
-	
+
 	private CogWheelBlock(boolean large, Properties properties) {
 		super(properties);
 		isLarge = large;
@@ -58,23 +57,29 @@ public class CogWheelBlock extends ShaftBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
+		BlockPos placedOnPos = context.getPos()
+			.offset(context.getFace()
+				.getOpposite());
 		World world = context.getWorld();
 		BlockState placedAgainst = world.getBlockState(placedOnPos);
 		Block block = placedAgainst.getBlock();
 
-		BlockState stateBelow = world.getBlockState(context.getPos().down());
-		if (AllBlocks.ROTATION_SPEED_CONTROLLER.typeOf(stateBelow) && isLarge) {
-			return this.getDefaultState().with(AXIS,
-					stateBelow.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X);
+		BlockState stateBelow = world.getBlockState(context.getPos()
+			.down());
+		if (AllBlocksNew.ROTATION_SPEED_CONTROLLER.has(stateBelow) && isLarge) {
+			return this.getDefaultState()
+				.with(AXIS, stateBelow.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X);
 		}
 
 		if (!(block instanceof IRotate)
-				|| !(((IRotate) block).hasIntegratedCogwheel(world, placedOnPos, placedAgainst))) {
+			|| !(((IRotate) block).hasIntegratedCogwheel(world, placedOnPos, placedAgainst))) {
 			Axis preferredAxis = getPreferredAxis(context);
 			if (preferredAxis != null)
-				return this.getDefaultState().with(AXIS, preferredAxis);
-			return this.getDefaultState().with(AXIS, context.getFace().getAxis());
+				return this.getDefaultState()
+					.with(AXIS, preferredAxis);
+			return this.getDefaultState()
+				.with(AXIS, context.getFace()
+					.getAxis());
 		}
 
 		return getDefaultState().with(AXIS, ((IRotate) block).getRotationAxis(placedAgainst));
@@ -89,11 +94,11 @@ public class CogWheelBlock extends ShaftBlock {
 	public float getParticleInitialRadius() {
 		return isLarge ? 1f : .75f;
 	}
-	
+
 	public static boolean isSmallCog(BlockState state) {
 		return AllBlocksNew.COGWHEEL.has(state);
 	}
-	
+
 	public static boolean isLargeCog(BlockState state) {
 		return AllBlocksNew.LARGE_COGWHEEL.has(state);
 	}

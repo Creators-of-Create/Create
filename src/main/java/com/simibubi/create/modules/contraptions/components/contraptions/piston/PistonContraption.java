@@ -1,8 +1,11 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
-import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
-import static com.simibubi.create.AllBlocks.PISTON_POLE;
-import static com.simibubi.create.AllBlocks.STICKY_MECHANICAL_PISTON;
+import static com.simibubi.create.AllBlocksNew.MECHANICAL_PISTON_HEAD;
+import static com.simibubi.create.AllBlocksNew.PISTON_EXTENSION_POLE;
+import static com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.isExtensionPole;
+import static com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.isPiston;
+import static com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.isPistonHead;
+import static com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.isStickyPiston;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import java.util.ArrayList;
@@ -10,7 +13,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -67,20 +69,20 @@ public class PistonContraption extends Contraption {
 		BlockState nextBlock = world.getBlockState(actualStart.offset(direction));
 		int extensionsInFront = 0;
 		BlockState blockState = world.getBlockState(pos);
-		boolean sticky = STICKY_MECHANICAL_PISTON.typeOf(blockState);
+		boolean sticky = isStickyPiston(blockState);
 
-		if (!(blockState.getBlock() instanceof MechanicalPistonBlock))
+		if (!isPiston(blockState))
 			return false;
 
 		if (blockState.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED) {
-			while (PISTON_POLE.typeOf(nextBlock) && nextBlock.get(FACING).getAxis() == direction.getAxis()
-					|| MECHANICAL_PISTON_HEAD.typeOf(nextBlock) && nextBlock.get(FACING) == direction) {
+			while (isExtensionPole(nextBlock) && nextBlock.get(FACING)
+				.getAxis() == direction.getAxis() || isPistonHead(nextBlock) && nextBlock.get(FACING) == direction) {
 
 				actualStart = actualStart.offset(direction);
 				poles.add(new BlockInfo(actualStart, nextBlock.with(FACING, direction), null));
 				extensionsInFront++;
 
-				if (MECHANICAL_PISTON_HEAD.typeOf(nextBlock))
+				if (isPistonHead(nextBlock))
 					break;
 
 				nextBlock = world.getBlockState(actualStart.offset(direction));
@@ -90,19 +92,18 @@ public class PistonContraption extends Contraption {
 		}
 
 		if (extensionsInFront == 0)
-			poles.add(
-					new BlockInfo(pos,
-							MECHANICAL_PISTON_HEAD.get().getDefaultState().with(FACING, direction).with(
-									BlockStateProperties.PISTON_TYPE, sticky ? PistonType.STICKY : PistonType.DEFAULT),
-							null));
+			poles.add(new BlockInfo(pos, MECHANICAL_PISTON_HEAD.getDefaultState()
+				.with(FACING, direction)
+				.with(BlockStateProperties.PISTON_TYPE, sticky ? PistonType.STICKY : PistonType.DEFAULT), null));
 		else
-			poles.add(new BlockInfo(pos, PISTON_POLE.get().getDefaultState().with(FACING, direction), null));
+			poles.add(new BlockInfo(pos, PISTON_EXTENSION_POLE.getDefaultState()
+				.with(FACING, direction), null));
 
 		BlockPos end = pos;
 		nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
 		int extensionsInBack = 0;
 
-		while (PISTON_POLE.typeOf(nextBlock)) {
+		while (isExtensionPole(nextBlock)) {
 			end = end.offset(direction.getOpposite());
 			poles.add(new BlockInfo(end, nextBlock.with(FACING, direction), null));
 			extensionsInBack++;
@@ -115,7 +116,8 @@ public class PistonContraption extends Contraption {
 		anchor = pos.offset(direction, initialExtensionProgress + 1);
 		extensionLength = extensionsInBack + extensionsInFront;
 		initialExtensionProgress = extensionsInFront;
-		pistonExtensionCollisionBox = new AxisAlignedBB(end.offset(direction, -extensionsInFront).subtract(anchor));
+		pistonExtensionCollisionBox = new AxisAlignedBB(end.offset(direction, -extensionsInFront)
+			.subtract(anchor));
 
 		if (extensionLength == 0)
 			return false;
@@ -140,7 +142,7 @@ public class PistonContraption extends Contraption {
 	@Override
 	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, List<BlockPos> frontier) {
 		frontier.clear();
-		boolean sticky = STICKY_MECHANICAL_PISTON.typeOf(world.getBlockState(pos.offset(orientation, -1)));
+		boolean sticky = isStickyPiston(world.getBlockState(pos.offset(orientation, -1)));
 		boolean retracting = direction != orientation;
 		if (retracting && !sticky)
 			return true;
@@ -155,7 +157,7 @@ public class PistonContraption extends Contraption {
 			BlockState state = world.getBlockState(currentPos);
 			if (BlockMovementTraits.isBrittle(state) && !(state.getBlock() instanceof CarpetBlock))
 				return true;
-			if (AllBlocks.MECHANICAL_PISTON_HEAD.typeOf(state) && state.get(FACING) == direction.getOpposite())
+			if (isPistonHead(state) && state.get(FACING) == direction.getOpposite())
 				return true;
 			if (!BlockMovementTraits.movementAllowed(world, currentPos))
 				return retracting;
@@ -175,7 +177,8 @@ public class PistonContraption extends Contraption {
 	public void addGlue(SuperGlueEntity entity) {
 		BlockPos pos = entity.getHangingPosition();
 		Direction direction = entity.getFacingDirection();
-		BlockPos localPos = pos.subtract(anchor).offset(orientation, -initialExtensionProgress);
+		BlockPos localPos = pos.subtract(anchor)
+			.offset(orientation, -initialExtensionProgress);
 		this.superglue.add(Pair.of(localPos, direction));
 		glueToRemove.add(entity);
 	}
@@ -189,9 +192,9 @@ public class PistonContraption extends Contraption {
 			if (pos.equals(pistonPos)) {
 				if (te == null || te.isRemoved())
 					return true;
-				if (!AllBlocks.PISTON_POLE.typeOf(state) && pistonState.getBlock() instanceof MechanicalPistonBlock)
+				if (!isExtensionPole(state) && isPiston(pistonState))
 					world.setBlockState(pistonPos, pistonState.with(MechanicalPistonBlock.STATE, PistonState.RETRACTED),
-							3 | 16);
+						3 | 16);
 				return true;
 			}
 			return false;
@@ -203,7 +206,7 @@ public class PistonContraption extends Contraption {
 		super.removeBlocksFromWorld(world, offset, (pos, state) -> {
 			BlockPos pistonPos = anchor.offset(orientation, -1);
 			BlockState blockState = world.getBlockState(pos);
-			if (pos.equals(pistonPos) && blockState.getBlock() instanceof MechanicalPistonBlock) {
+			if (pos.equals(pistonPos) && isPiston(blockState)) {
 				world.setBlockState(pos, blockState.with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66 | 16);
 				return true;
 			}

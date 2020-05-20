@@ -43,8 +43,16 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		}
 	}
 
-	public GaugeBlock(Type type) {
-		super(Properties.from(Blocks.PISTON));
+	public static GaugeBlock speed(Properties properties) {
+		return new GaugeBlock(properties, Type.SPEED);
+	}
+	
+	public static GaugeBlock stress(Properties properties) {
+		return new GaugeBlock(properties, Type.STRESS);
+	}
+	
+	protected GaugeBlock(Properties properties, Type type) {
+		super(properties);
 		this.type = type;
 	}
 

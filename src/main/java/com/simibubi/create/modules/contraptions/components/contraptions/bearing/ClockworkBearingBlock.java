@@ -14,6 +14,10 @@ import net.minecraft.world.World;
 
 public class ClockworkBearingBlock extends BearingBlock implements ITE<ClockworkBearingTileEntity> {
 
+	public ClockworkBearingBlock(Properties properties) {
+		super(properties);
+	}
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new ClockworkBearingTileEntity();

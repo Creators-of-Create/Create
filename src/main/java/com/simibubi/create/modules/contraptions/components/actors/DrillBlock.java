@@ -8,7 +8,6 @@ import com.simibubi.create.modules.contraptions.components.contraptions.Movement
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -30,10 +29,10 @@ public class DrillBlock extends DirectionalKineticBlock implements IPortableBloc
 	public static MovementBehaviour MOVEMENT = new DrillMovementBehaviour();
 	public static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
 
-	public DrillBlock() {
-		super(Properties.from(Blocks.IRON_BLOCK));
+	public DrillBlock(Properties properties) {
+		super(properties);
 	}
-
+	
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;

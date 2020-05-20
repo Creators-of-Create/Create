@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "create:block/furnace_engine/block"
+    },
+    "facing=south": {
+      "model": "create:block/furnace_engine/block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "create:block/furnace_engine/block",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "create:block/furnace_engine/block",
+      "y": 90
+    }
+  }
+}

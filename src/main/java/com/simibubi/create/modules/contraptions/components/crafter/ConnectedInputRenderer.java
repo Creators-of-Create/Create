@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.components.crafter;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.TessellatorHelper;
@@ -46,7 +46,7 @@ public class ConnectedInputRenderer {
 			return;
 		if (!AllItems.WRENCH.typeOf(heldItem))
 			return;
-		if (!AllBlocks.MECHANICAL_CRAFTER.typeOf(blockState))
+		if (!AllBlocksNew.MECHANICAL_CRAFTER.has(blockState))
 			return;
 		if (target.getType() != Type.BLOCK)
 			return;

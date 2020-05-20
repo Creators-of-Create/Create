@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMillstone;
@@ -20,7 +20,7 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 	private AnimatedMillstone millstone = new AnimatedMillstone();
 
 	public MillingCategory() {
-		super("milling", doubleItemIcon(AllBlocks.MILLSTONE.get(), AllItems.FLOUR.get()), emptyBackground(177, 53));
+		super("milling", doubleItemIcon(AllBlocksNew.MILLSTONE.get(), AllItems.FLOUR.get()), emptyBackground(177, 53));
 	}
 
 	@Override

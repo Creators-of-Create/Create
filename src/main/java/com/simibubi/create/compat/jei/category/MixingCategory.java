@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -29,7 +29,7 @@ public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 	private AnimatedMixer mixer = new AnimatedMixer();
 
 	public MixingCategory() {
-		super("mixing", doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get()),
+		super("mixing", doubleItemIcon(AllBlocksNew.MECHANICAL_MIXER.get(), AllBlocksNew.BASIN.get()),
 				emptyBackground(177, 70));
 	}
 

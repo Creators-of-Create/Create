@@ -1,6 +1,5 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.modules.contraptions.components.actors.AttachedActorBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
@@ -222,15 +221,15 @@ public class BlockMovementTraits {
 	 * piston
 	 */
 	public static boolean notSupportive(BlockState state, Direction facing) {
-		if (AllBlocks.DRILL.typeOf(state))
+		if (AllBlocksNew.DRILL.has(state))
 			return state.get(BlockStateProperties.FACING) == facing;
-		if (AllBlocks.SAW.typeOf(state))
+		if (AllBlocksNew.SAW.has(state))
 			return state.get(BlockStateProperties.FACING) == facing;
-		if (AllBlocks.PORTABLE_STORAGE_INTERFACE.typeOf(state))
+		if (AllBlocksNew.PORTABLE_STORAGE_INTERFACE.has(state))
 			return state.get(PortableStorageInterfaceBlock.FACING) == facing;
 		if (state.getBlock() instanceof AttachedActorBlock)
 			return state.get(BlockStateProperties.HORIZONTAL_FACING) == facing;
-		if (AllBlocks.ROPE_PULLEY.typeOf(state))
+		if (AllBlocksNew.ROPE_PULLEY.has(state))
 			return facing == Direction.DOWN;
 		if (state.getBlock() instanceof CarpetBlock)
 			return facing == Direction.UP;

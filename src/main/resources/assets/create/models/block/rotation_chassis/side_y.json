@@ -1,0 +1,15 @@
+{
+	"textures": {
+		"0": "#side"
+	},
+    "elements": [
+        {
+            "name": "Cube",
+            "from": [ 0, 0, 0 ], 
+            "to": [ 16, 16, 16 ], 
+            "faces": {
+                "south": { "texture": "#0", "uv": [ 0, 0, 16, 16 ] }
+            }
+        }
+    ]
+}

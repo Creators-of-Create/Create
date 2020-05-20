@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.crafter;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -12,7 +12,6 @@ import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCra
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -42,8 +41,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 
 	public static final EnumProperty<Pointing> POINTING = EnumProperty.create("pointing", Pointing.class);
 
-	public MechanicalCrafterBlock() {
-		super(Properties.from(Blocks.GOLD_BLOCK));
+	public MechanicalCrafterBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(POINTING, Pointing.UP));
 	}
 
@@ -262,7 +261,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 		BlockState targetState = world.getBlockState(targetPos);
 		if (!world.isBlockPresent(targetPos))
 			return false;
-		if (!AllBlocks.MECHANICAL_CRAFTER.typeOf(targetState))
+		if (!AllBlocksNew.MECHANICAL_CRAFTER.has(targetState))
 			return false;
 		if (crafterState.get(HORIZONTAL_FACING) != targetState.get(HORIZONTAL_FACING))
 			return false;

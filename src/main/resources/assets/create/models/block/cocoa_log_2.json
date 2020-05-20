@@ -1,6 +1,0 @@
-{
-    "parent": "create:block/cocoa_log",
-    "textures": {
-        "side": "create:block/cocoa_log_2"
-    }
-}

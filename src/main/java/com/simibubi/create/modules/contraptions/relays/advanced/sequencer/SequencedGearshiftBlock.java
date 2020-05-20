@@ -9,7 +9,6 @@ import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -38,8 +37,8 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public static final BooleanProperty VERTICAL = BooleanProperty.create("vertical");
 	public static final IntegerProperty STATE = IntegerProperty.create("state", 0, 5);
 
-	public SequencedGearshiftBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public SequencedGearshiftBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
@@ -59,7 +58,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
+		boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
 
@@ -71,13 +70,14 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		if (state.get(VERTICAL))
-			return face.getAxis().isVertical();
+			return face.getAxis()
+				.isVertical();
 		return super.hasShaftTowards(world, pos, state, face);
 	}
 
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+		BlockRayTraceResult hit) {
 		ItemStack held = player.getHeldItemMainhand();
 		if (AllItems.WRENCH.typeOf(held))
 			return ActionResultType.PASS;
@@ -88,7 +88,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 		}
 
 		DistExecutor.runWhenOn(Dist.CLIENT,
-				() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
+			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
 		return ActionResultType.SUCCESS;
 	}
 
@@ -101,17 +101,21 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Axis preferredAxis = RotatedPillarKineticBlock.getPreferredAxis(context);
-		if (preferredAxis != null && !context.getPlayer().isSneaking())
+		if (preferredAxis != null && !context.getPlayer()
+			.isSneaking())
 			return withAxis(preferredAxis, context);
-		return withAxis(context.getNearestLookingDirection().getAxis(), context);
+		return withAxis(context.getNearestLookingDirection()
+			.getAxis(), context);
 	}
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		BlockState newState = state;
 
-		if (context.getFace().getAxis() != Axis.Y)
-			if (newState.get(HORIZONTAL_AXIS) != context.getFace().getAxis())
+		if (context.getFace()
+			.getAxis() != Axis.Y)
+			if (newState.get(HORIZONTAL_AXIS) != context.getFace()
+				.getAxis())
 				newState = newState.cycle(VERTICAL);
 
 		return super.onWrenched(newState, context);
@@ -120,7 +124,8 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	private BlockState withAxis(Axis axis, BlockItemUseContext context) {
 		BlockState state = getDefaultState().with(VERTICAL, axis.isVertical());
 		if (axis.isVertical())
-			return state.with(HORIZONTAL_AXIS, context.getPlacementHorizontalFacing().getAxis());
+			return state.with(HORIZONTAL_AXIS, context.getPlacementHorizontalFacing()
+				.getAxis());
 		return state.with(HORIZONTAL_AXIS, axis);
 	}
 

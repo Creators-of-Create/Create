@@ -5,7 +5,6 @@ import com.simibubi.create.modules.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer.Builder;
@@ -22,8 +21,8 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 
 	public static EnumProperty<ConnectionState> CONNECTION = EnumProperty.create("connection", ConnectionState.class);
 
-	public FlywheelBlock() {
-		super(Properties.from(Blocks.GOLD_BLOCK));
+	public FlywheelBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(CONNECTION, ConnectionState.NONE));
 	}
 

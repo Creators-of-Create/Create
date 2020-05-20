@@ -21,8 +21,8 @@ import net.minecraft.world.World;
 
 public class NozzleBlock extends ProperDirectionalBlock implements IWrenchable {
 
-	public NozzleBlock() {
-		super(Properties.from(AllBlocksNew.ENCASED_FAN.get()));
+	public NozzleBlock(Properties p_i48415_1_) {
+		super(p_i48415_1_);
 	}
 
 	@Override
@@ -44,11 +44,6 @@ public class NozzleBlock extends ProperDirectionalBlock implements IWrenchable {
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return getDefaultState().with(FACING, context.getFace());
 	}
-	
-//	@Override // TODO 1.15 register layer
-//	public BlockRenderLayer getRenderLayer() {
-//		return BlockRenderLayer.CUTOUT_MIPPED;
-//	}
 	
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {

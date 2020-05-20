@@ -16,6 +16,10 @@ import net.minecraft.world.World;
 
 public class MechanicalBearingBlock extends BearingBlock implements ITE<MechanicalBearingTileEntity> {
 
+	public MechanicalBearingBlock(Properties properties) {
+		super(properties);
+	}
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new MechanicalBearingTileEntity();

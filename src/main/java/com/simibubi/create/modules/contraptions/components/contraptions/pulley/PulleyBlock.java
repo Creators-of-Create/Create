@@ -1,14 +1,15 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.pulley;
 
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.HorizontalAxisKineticBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -18,6 +19,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -26,9 +28,9 @@ import net.minecraft.world.World;
 public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<PulleyTileEntity> {
 
 	public static EnumProperty<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
-
-	public PulleyBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	
+	public PulleyBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
@@ -92,6 +94,12 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 		}
 
 		@Override
+		public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
+			PlayerEntity player) {
+			return AllBlocksNew.ROPE_PULLEY.asStack();
+		}
+		
+		@Override
 		public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 			if (!isMoving) {
 				onRopeBroken(worldIn, pos.up());
@@ -113,8 +121,8 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
 	public static class MagnetBlock extends RopeBlockBase {
 
-		public MagnetBlock() {
-			super(Properties.from(Blocks.ANDESITE).noDrops());
+		public MagnetBlock(Properties properties) {
+			super(properties);
 		}
 
 		@Override
@@ -126,8 +134,8 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
 	public static class RopeBlock extends RopeBlockBase {
 
-		public RopeBlock() {
-			super(Properties.from(Blocks.WHITE_WOOL).noDrops());
+		public RopeBlock(Properties properties) {
+			super(properties);
 		}
 
 		@Override

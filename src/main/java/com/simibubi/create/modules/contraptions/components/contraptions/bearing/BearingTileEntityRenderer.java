@@ -27,7 +27,7 @@ public class BearingTileEntityRenderer extends KineticTileEntityRenderer {
 
 		IBearingTileEntity bearingTe = (IBearingTileEntity) te;
 		final Direction facing = te.getBlockState().get(BlockStateProperties.FACING);
-		SuperByteBuffer superBuffer = AllBlockPartials.MECHANICAL_BEARING_TOP.renderOn(te.getBlockState());
+		SuperByteBuffer superBuffer = AllBlockPartials.BEARING_TOP.renderOn(te.getBlockState());
 		superBuffer.rotateCentered(Axis.X, AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)));
 		if (facing.getAxis().isHorizontal())
 			superBuffer.rotateCentered(Axis.Y, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));

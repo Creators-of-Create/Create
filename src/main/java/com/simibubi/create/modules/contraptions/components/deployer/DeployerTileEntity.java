@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
@@ -326,7 +326,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	protected Vec3d getMovementVector() {
-		if (!AllBlocks.DEPLOYER.typeOf(getBlockState()))
+		if (!AllBlocksNew.DEPLOYER.has(getBlockState()))
 			return Vec3d.ZERO;
 		return new Vec3d(getBlockState().get(FACING).getDirectionVec());
 	}

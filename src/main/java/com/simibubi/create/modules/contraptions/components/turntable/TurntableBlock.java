@@ -6,8 +6,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,13 +25,18 @@ import net.minecraft.world.World;
 
 public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEntity> {
 
-	public TurntableBlock() {
-		super(Properties.from(Blocks.STRIPPED_SPRUCE_LOG));
+	public TurntableBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new TurntableTileEntity();
+	}
+
+	@Override
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
@@ -57,10 +62,13 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 			if (world.isRemote && (e instanceof PlayerEntity)) {
 				if (worldIn.getBlockState(e.getPosition()) != state) {
 					Vec3d origin = VecHelper.getCenterOf(pos);
-					Vec3d offset = e.getPositionVec().subtract(origin);
+					Vec3d offset = e.getPositionVec()
+						.subtract(origin);
 					offset = VecHelper.rotate(offset, MathHelper.clamp(speed, -16, 16) / 1f, Axis.Y);
-					Vec3d movement = origin.add(offset).subtract(e.getPositionVec());
-					e.setMotion(e.getMotion().add(movement));
+					Vec3d movement = origin.add(offset)
+						.subtract(e.getPositionVec());
+					e.setMotion(e.getMotion()
+						.add(movement));
 					e.velocityChanged = true;
 				}
 			}

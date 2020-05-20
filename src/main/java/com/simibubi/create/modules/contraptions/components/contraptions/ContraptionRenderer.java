@@ -56,7 +56,7 @@ public class ContraptionRenderer {
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
 		Random random = new Random();
-		BufferBuilder builder = new BufferBuilder(0);
+		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
 		for (BlockInfo info : c.blocks.values())

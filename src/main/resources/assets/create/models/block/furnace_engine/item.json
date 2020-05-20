@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"5": "create:block/brass_casing",
-		"particle": "create:block/steam_engine_wheel",
+		"particle": "create:block/brass_block",
 		"1_1": "create:block/furnace_cylinder"
 	},
 	"elements": [

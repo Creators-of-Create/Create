@@ -5,6 +5,7 @@ import java.util.function.Function;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
+import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
@@ -22,13 +23,13 @@ public class AssetLookup {
 	 * Adding "powered", "vertical" will look for /block_powered_vertical.json
 	 */
 	public static ModelFile partialBaseModel(DataGenContext<?, ?> ctx, RegistrateBlockstateProvider prov,
-			String... suffix) {
+		String... suffix) {
 		String string = "/block";
 		for (String suf : suffix)
 			string += "_" + suf;
 		final String location = "block/" + ctx.getName() + string;
 		return prov.models()
-				.getExistingFile(prov.modLoc(location));
+			.getExistingFile(prov.modLoc(location));
 	}
 
 	/**
@@ -36,7 +37,7 @@ public class AssetLookup {
 	 */
 	public static ModelFile standardModel(DataGenContext<?, ?> ctx, RegistrateBlockstateProvider prov) {
 		return prov.models()
-				.getExistingFile(prov.modLoc("block/" + ctx.getName()));
+			.getExistingFile(prov.modLoc("block/" + ctx.getName()));
 	}
 
 	/**
@@ -44,15 +45,34 @@ public class AssetLookup {
 	 * models/block/x/item.json
 	 */
 	public static ItemModelBuilder customItemModel(DataGenContext<Item, ? extends BlockItem> ctx,
-			RegistrateItemModelProvider prov) {
+		RegistrateItemModelProvider prov) {
 		return prov.blockItem(() -> ctx.getEntry()
-				.getBlock(), "/item");
+			.getBlock(), "/item");
+	}
+
+	/**
+	 * Generate item model inheriting from a seperate model in
+	 * models/block/folders[0]/folders[1]/.../item.json
+	 * "_" will be replaced by the item name
+	 */
+	public static <I extends BlockItem> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> customItemModel(
+		String... folders) {
+		return (c, p) -> {
+			String path = "block/";
+			for (String string : folders) 
+				path += ("_".equals(string) ? c.getName() : string) + "/";
+			p.withExistingParent(c.getName(), p.modLoc(path + "item"));
+		};
 	}
 
 	public static Function<BlockState, ModelFile> forPowered(DataGenContext<?, ?> ctx,
-			RegistrateBlockstateProvider prov) {
+		RegistrateBlockstateProvider prov) {
 		return state -> state.get(BlockStateProperties.POWERED) ? partialBaseModel(ctx, prov, "powered")
-				: partialBaseModel(ctx, prov);
+			: partialBaseModel(ctx, prov);
+	}
+
+	public static String getOxidizedModel(String name, int level) {
+		return "block/oxidized/" + name + "_" + level;
 	}
 
 }

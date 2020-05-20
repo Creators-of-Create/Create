@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,8 +31,8 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEntity> {
 
-	public MillstoneBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public MillstoneBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

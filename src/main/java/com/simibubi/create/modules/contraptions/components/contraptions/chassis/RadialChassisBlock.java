@@ -2,7 +2,6 @@ package com.simibubi.create.modules.contraptions.components.contraptions.chassis
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
@@ -15,8 +14,8 @@ public class RadialChassisBlock extends AbstractChassisBlock {
 	public static final BooleanProperty STICKY_EAST = BooleanProperty.create("sticky_east");
 	public static final BooleanProperty STICKY_WEST = BooleanProperty.create("sticky_west");
 
-	public RadialChassisBlock() {
-		super(Properties.from(Blocks.PISTON));
+	public RadialChassisBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(STICKY_EAST, false).with(STICKY_SOUTH, false).with(STICKY_NORTH, false)
 				.with(STICKY_WEST, false));
 	}

@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.processing;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -9,7 +9,6 @@ import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,8 +29,8 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchable {
 
-	public BasinBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public BasinBlock(Properties p_i48440_1_) {
+		super(p_i48440_1_);
 	}
 
 	@Override
@@ -71,7 +70,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	@Override
 	public void onLanded(IBlockReader worldIn, Entity entityIn) {
 		super.onLanded(worldIn, entityIn);
-		if (!AllBlocks.BASIN.typeOf(worldIn.getBlockState(entityIn.getPosition())))
+		if (!AllBlocksNew.BASIN.has(worldIn.getBlockState(entityIn.getPosition())))
 			return;
 		if (!(entityIn instanceof ItemEntity))
 			return;

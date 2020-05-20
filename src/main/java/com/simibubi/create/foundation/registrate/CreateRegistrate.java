@@ -99,13 +99,13 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.simpleItem();
 	}
 
-	public <T extends Block> NonNullUnaryOperator<BlockBuilder<T, CreateRegistrate>> connectedTextures(
+	public static <T extends Block> NonNullUnaryOperator<BlockBuilder<T, CreateRegistrate>> connectedTextures(
 		ConnectedTextureBehaviour behavior) {
 		return b -> b.onRegister(entry -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> registerModel(entry, behavior)));
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private void registerModel(Block entry, ConnectedTextureBehaviour behavior) {
+	private static void registerModel(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.getCustomBlockModels()
 			.register(entry.delegate, model -> new CTModel(model, behavior));
 	}

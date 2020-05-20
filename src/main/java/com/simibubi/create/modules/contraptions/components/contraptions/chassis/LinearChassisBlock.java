@@ -1,17 +1,17 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.chassis;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILightReader;
@@ -21,9 +21,10 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 	public static final BooleanProperty STICKY_TOP = BooleanProperty.create("sticky_top");
 	public static final BooleanProperty STICKY_BOTTOM = BooleanProperty.create("sticky_bottom");
 
-	public LinearChassisBlock() {
-		super(Properties.from(Blocks.PISTON));
-		setDefaultState(getDefaultState().with(STICKY_TOP, false).with(STICKY_BOTTOM, false));
+	public LinearChassisBlock(Properties properties) {
+		super(properties);
+		setDefaultState(getDefaultState().with(STICKY_TOP, false)
+			.with(STICKY_BOTTOM, false));
 	}
 
 	@Override
@@ -34,12 +35,18 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
-		BlockState blockState = context.getWorld().getBlockState(placedOnPos);
-		if (isChassis(blockState) && !context.getPlayer().isSneaking())
+		BlockPos placedOnPos = context.getPos()
+			.offset(context.getFace()
+				.getOpposite());
+		BlockState blockState = context.getWorld()
+			.getBlockState(placedOnPos);
+		if (isChassis(blockState) && !context.getPlayer()
+			.isSneaking())
 			return getDefaultState().with(AXIS, blockState.get(AXIS));
-		if (!context.getPlayer().isSneaking())
-			return getDefaultState().with(AXIS, context.getNearestLookingDirection().getAxis());
+		if (!context.getPlayer()
+			.isSneaking())
+			return getDefaultState().with(AXIS, context.getNearestLookingDirection()
+				.getAxis());
 		return super.getStateForPlacement(context);
 	}
 
@@ -50,16 +57,8 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 		return face.getAxisDirection() == AxisDirection.POSITIVE ? STICKY_TOP : STICKY_BOTTOM;
 	}
 
-	@Override
-	public String getTranslationKey() {
-		Block block = AllBlocks.TRANSLATION_CHASSIS.get();
-		if (this == block)
-			return super.getTranslationKey();
-		return block.getTranslationKey();
-	}
-
 	public static boolean isChassis(BlockState state) {
-		return AllBlocks.TRANSLATION_CHASSIS.typeOf(state) || AllBlocks.TRANSLATION_CHASSIS_SECONDARY.typeOf(state);
+		return AllBlocksNew.LINEAR_CHASSIS.has(state) || AllBlocksNew.LINEAR_CHASSIS_SECONDARY.has(state);
 	}
 
 	public static boolean sameKind(BlockState state1, BlockState state2) {
@@ -79,14 +78,15 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 
 		@Override
 		public boolean reverseUVs(BlockState state, Direction face) {
-			if (state.get(AXIS).isHorizontal() && face.getAxisDirection() == AxisDirection.POSITIVE)
+			Axis axis = state.get(AXIS);
+			if (axis.isHorizontal() && (axis == Axis.Z ^ face.getAxisDirection() == AxisDirection.POSITIVE))
 				return true;
 			return super.reverseUVs(state, face);
 		}
 
 		@Override
 		public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos,
-				BlockPos otherPos, Direction face) {
+			BlockPos otherPos, Direction face) {
 			return sameKind(state, other) && state.get(AXIS) == other.get(AXIS);
 		}
 

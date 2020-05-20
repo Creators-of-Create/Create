@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "valid=false": {
+      "model": "minecraft:block/air"
+    },
+    "valid=true": {
+      "model": "minecraft:block/air"
+    }
+  }
+}

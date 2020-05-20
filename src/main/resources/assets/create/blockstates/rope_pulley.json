@@ -1,6 +1,0 @@
-{
-  "variants": {
-		"axis=z": { "model": "create:block/pulley/casing" },
-		"axis=x": { "model": "create:block/pulley/casing", "y": 90 }
-	}
-}

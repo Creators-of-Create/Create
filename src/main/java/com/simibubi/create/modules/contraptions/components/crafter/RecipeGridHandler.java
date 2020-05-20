@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Predicates;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterBlock.Pointing;
 
@@ -35,7 +35,7 @@ public class RecipeGridHandler {
 	}
 
 	public static List<MechanicalCrafterTileEntity> getAllCraftersOfChainIf(MechanicalCrafterTileEntity root,
-			Predicate<MechanicalCrafterTileEntity> test) {
+		Predicate<MechanicalCrafterTileEntity> test) {
 		List<MechanicalCrafterTileEntity> crafters = new ArrayList<>();
 		List<Pair<MechanicalCrafterTileEntity, MechanicalCrafterTileEntity>> frontier = new ArrayList<>();
 		Set<MechanicalCrafterTileEntity> visited = new HashSet<>();
@@ -64,16 +64,17 @@ public class RecipeGridHandler {
 
 	public static MechanicalCrafterTileEntity getTargetingCrafter(MechanicalCrafterTileEntity crafter) {
 		BlockState state = crafter.getBlockState();
-		if (!AllBlocks.MECHANICAL_CRAFTER.typeOf(state))
+		if (!isCrafter(state))
 			return null;
 
-		BlockPos targetPos = crafter.getPos().offset(MechanicalCrafterBlock.getTargetDirection(state));
+		BlockPos targetPos = crafter.getPos()
+			.offset(MechanicalCrafterBlock.getTargetDirection(state));
 		MechanicalCrafterTileEntity targetTE = CrafterHelper.getCrafter(crafter.getWorld(), targetPos);
 		if (targetTE == null)
 			return null;
 
 		BlockState targetState = targetTE.getBlockState();
-		if (!AllBlocks.MECHANICAL_CRAFTER.typeOf(targetState))
+		if (!isCrafter(targetState))
 			return null;
 		if (state.get(HORIZONTAL_FACING) != targetState.get(HORIZONTAL_FACING))
 			return null;
@@ -85,7 +86,7 @@ public class RecipeGridHandler {
 		World world = crafter.getWorld();
 		List<MechanicalCrafterTileEntity> crafters = new ArrayList<>();
 		BlockState blockState = crafter.getBlockState();
-		if (!AllBlocks.MECHANICAL_CRAFTER.typeOf(blockState))
+		if (!isCrafter(blockState))
 			return crafters;
 
 		Direction blockFacing = blockState.get(HORIZONTAL_FACING);
@@ -98,7 +99,7 @@ public class RecipeGridHandler {
 
 			BlockPos neighbourPos = pos.offset(facing);
 			BlockState neighbourState = world.getBlockState(neighbourPos);
-			if (!AllBlocks.MECHANICAL_CRAFTER.typeOf(neighbourState))
+			if (!isCrafter(neighbourState))
 				continue;
 			if (MechanicalCrafterBlock.getTargetDirection(neighbourState) != facing.getOpposite())
 				continue;
@@ -114,15 +115,22 @@ public class RecipeGridHandler {
 		return crafters;
 	}
 
+	private static boolean isCrafter(BlockState state) {
+		return AllBlocksNew.MECHANICAL_CRAFTER.has(state);
+	}
+
 	public static ItemStack tryToApplyRecipe(World world, GroupedItems items) {
 		items.calcStats();
 		CraftingInventory craftinginventory = new MechanicalCraftingInventory(items);
-		ItemStack result = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftinginventory, world)
-				.map(r -> r.getCraftingResult(craftinginventory)).orElse(null);
+		ItemStack result = world.getRecipeManager()
+			.getRecipe(IRecipeType.CRAFTING, craftinginventory, world)
+			.map(r -> r.getCraftingResult(craftinginventory))
+			.orElse(null);
 		if (result == null)
 			result = world.getRecipeManager()
-					.getRecipe(AllRecipes.MECHANICAL_CRAFTING.getType(), craftinginventory, world)
-					.map(r -> r.getCraftingResult(craftinginventory)).orElse(null);
+				.getRecipe(AllRecipes.MECHANICAL_CRAFTING.getType(), craftinginventory, world)
+				.map(r -> r.getCraftingResult(craftinginventory))
+				.orElse(null);
 
 		return result;
 	}
@@ -132,8 +140,7 @@ public class RecipeGridHandler {
 		int minX, minY, maxX, maxY, width, height;
 		boolean statsReady;
 
-		public GroupedItems() {
-		}
+		public GroupedItems() {}
 
 		public GroupedItems(ItemStack stack) {
 			grid.put(Pair.of(0, 0), stack);
@@ -142,8 +149,8 @@ public class RecipeGridHandler {
 		public void mergeOnto(GroupedItems other, Pointing pointing) {
 			int xOffset = pointing == Pointing.LEFT ? 1 : pointing == Pointing.RIGHT ? -1 : 0;
 			int yOffset = pointing == Pointing.DOWN ? 1 : pointing == Pointing.UP ? -1 : 0;
-			grid.forEach((pair, stack) -> other.grid.put(Pair.of(pair.getKey() + xOffset, pair.getValue() + yOffset),
-					stack));
+			grid.forEach(
+				(pair, stack) -> other.grid.put(Pair.of(pair.getKey() + xOffset, pair.getValue() + yOffset), stack));
 			other.statsReady = false;
 		}
 

@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrushingWheels;
@@ -20,7 +20,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 	private AnimatedCrushingWheels crushingWheels = new AnimatedCrushingWheels();
 
 	public CrushingCategory() {
-		super("crushing", doubleItemIcon(AllBlocks.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get()),
+		super("crushing", doubleItemIcon(AllBlocksNew.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get()),
 				emptyBackground(177, 100));
 	}
 

@@ -8,8 +8,8 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.actors.DrillTileEntity;
 import com.simibubi.create.modules.contraptions.components.actors.DrillTileEntityRenderer;
+import com.simibubi.create.modules.contraptions.components.actors.HarvesterRenderer;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterTileEntity;
-import com.simibubi.create.modules.contraptions.components.actors.HarvesterTileEntityRenderer;
 import com.simibubi.create.modules.contraptions.components.clock.CuckooClockRenderer;
 import com.simibubi.create.modules.contraptions.components.clock.CuckooClockTileEntity;
 import com.simibubi.create.modules.contraptions.components.contraptions.bearing.BearingTileEntityRenderer;
@@ -108,48 +108,50 @@ public enum AllTileEntities {
 	SCHEMATICTABLE(SchematicTableTileEntity::new, AllBlocksNew.SCHEMATIC_TABLE),
 
 	// Kinetics
-	SHAFT(ShaftTileEntity::new, AllBlocksNew.SHAFT, AllBlocksNew.COGWHEEL, AllBlocksNew.LARGE_COGWHEEL, AllBlocksNew.ENCASED_SHAFT),
+	SHAFT(ShaftTileEntity::new, AllBlocksNew.SHAFT, AllBlocksNew.COGWHEEL, AllBlocksNew.LARGE_COGWHEEL,
+		AllBlocksNew.ENCASED_SHAFT),
 	MOTOR(MotorTileEntity::new, AllBlocksNew.CREATIVE_MOTOR),
 	GEARBOX(GearboxTileEntity::new, AllBlocksNew.GEARBOX),
-	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
 	ENCASED_SHAFT(EncasedShaftTileEntity::new, AllBlocksNew.ENCASED_SHAFT, AllBlocksNew.ENCASED_BELT),
 	ADJUSTABLE_PULLEY(AdjustablePulleyTileEntity::new, AllBlocksNew.ADJUSTABLE_PULLEY),
 	ENCASED_FAN(EncasedFanTileEntity::new, AllBlocksNew.ENCASED_FAN),
-	NOZZLE(NozzleTileEntity::new, AllBlocks.NOZZLE),
+	NOZZLE(NozzleTileEntity::new, AllBlocksNew.NOZZLE),
 	CLUTCH(ClutchTileEntity::new, AllBlocksNew.CLUTCH),
 	GEARSHIFT(GearshiftTileEntity::new, AllBlocksNew.GEARSHIFT),
-	HAND_CRANK(HandCrankTileEntity::new, AllBlocks.HAND_CRANK),
-	CUCKOO_CLOCK(CuckooClockTileEntity::new, AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK),
+	TURNTABLE(TurntableTileEntity::new, AllBlocksNew.TURNTABLE),
+	HAND_CRANK(HandCrankTileEntity::new, AllBlocksNew.HAND_CRANK),
+	CUCKOO_CLOCK(CuckooClockTileEntity::new, AllBlocksNew.CUCKOO_CLOCK, AllBlocksNew.MYSTERIOUS_CUCKOO_CLOCK),
 
 	BELT(BeltTileEntity::new, AllBlocksNew.BELT),
 	BELT_TUNNEL(BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL),
-	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON),
-	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING),
-	CLOCKWORK_BEARING(ClockworkBearingTileEntity::new, AllBlocks.CLOCKWORK_BEARING),
-	ROPE_PULLEY(PulleyTileEntity::new, AllBlocks.ROPE_PULLEY),
-	CHASSIS(ChassisTileEntity::new, AllBlocks.ROTATION_CHASSIS, AllBlocks.TRANSLATION_CHASSIS,
-			AllBlocks.TRANSLATION_CHASSIS_SECONDARY),
-	DRILL(DrillTileEntity::new, AllBlocks.DRILL),
-	SAW(SawTileEntity::new, AllBlocks.SAW),
-	HARVESTER(HarvesterTileEntity::new, AllBlocks.HARVESTER),
-	FLYWHEEL(FlywheelTileEntity::new, AllBlocks.FLYWHEEL),
-	FURNACE_ENGINE(FurnaceEngineTileEntity::new, AllBlocks.FURNACE_ENGINE),
-	
-	MILLSTONE(MillstoneTileEntity::new, AllBlocks.MILLSTONE),
-	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
-	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
+	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocksNew.MECHANICAL_PISTON,
+		AllBlocksNew.STICKY_MECHANICAL_PISTON),
+	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocksNew.MECHANICAL_BEARING),
+	CLOCKWORK_BEARING(ClockworkBearingTileEntity::new, AllBlocksNew.CLOCKWORK_BEARING),
+	ROPE_PULLEY(PulleyTileEntity::new, AllBlocksNew.ROPE_PULLEY),
+	CHASSIS(ChassisTileEntity::new, AllBlocksNew.RADIAL_CHASSIS, AllBlocksNew.LINEAR_CHASSIS,
+		AllBlocksNew.LINEAR_CHASSIS_SECONDARY),
+	DRILL(DrillTileEntity::new, AllBlocksNew.DRILL),
+	SAW(SawTileEntity::new, AllBlocksNew.SAW),
+	HARVESTER(HarvesterTileEntity::new, AllBlocksNew.HARVESTER),
+	FLYWHEEL(FlywheelTileEntity::new, AllBlocksNew.FLYWHEEL),
+	FURNACE_ENGINE(FurnaceEngineTileEntity::new, AllBlocksNew.FURNACE_ENGINE),
+
+	MILLSTONE(MillstoneTileEntity::new, AllBlocksNew.MILLSTONE),
+	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocksNew.CRUSHING_WHEEL),
+	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocksNew.CRUSHING_WHEEL_CONTROLLER),
 	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocksNew.WATER_WHEEL),
-	MECHANICAL_PRESS(MechanicalPressTileEntity::new, AllBlocks.MECHANICAL_PRESS),
-	MECHANICAL_MIXER(MechanicalMixerTileEntity::new, AllBlocks.MECHANICAL_MIXER),
-	DEPLOYER(DeployerTileEntity::new, AllBlocks.DEPLOYER),
-	BASIN(BasinTileEntity::new, AllBlocks.BASIN),
-	MECHANICAL_CRAFTER(MechanicalCrafterTileEntity::new, AllBlocks.MECHANICAL_CRAFTER),
-	SEQUENCED_GEARSHIFT(SequencedGearshiftTileEntity::new, AllBlocks.SEQUENCED_GEARSHIFT),
-	ROTATION_SPEED_CONTROLLER(SpeedControllerTileEntity::new, AllBlocks.ROTATION_SPEED_CONTROLLER),
-	SPEED_GAUGE(SpeedGaugeTileEntity::new, AllBlocks.SPEED_GAUGE),
-	STRESS_GAUGE(StressGaugeTileEntity::new, AllBlocks.STRESS_GAUGE),
+	MECHANICAL_PRESS(MechanicalPressTileEntity::new, AllBlocksNew.MECHANICAL_PRESS),
+	MECHANICAL_MIXER(MechanicalMixerTileEntity::new, AllBlocksNew.MECHANICAL_MIXER),
+	DEPLOYER(DeployerTileEntity::new, AllBlocksNew.DEPLOYER),
+	BASIN(BasinTileEntity::new, AllBlocksNew.BASIN),
+	MECHANICAL_CRAFTER(MechanicalCrafterTileEntity::new, AllBlocksNew.MECHANICAL_CRAFTER),
+	SEQUENCED_GEARSHIFT(SequencedGearshiftTileEntity::new, AllBlocksNew.SEQUENCED_GEARSHIFT),
+	ROTATION_SPEED_CONTROLLER(SpeedControllerTileEntity::new, AllBlocksNew.ROTATION_SPEED_CONTROLLER),
+	SPEED_GAUGE(SpeedGaugeTileEntity::new, AllBlocksNew.SPEEDOMETER),
+	STRESS_GAUGE(StressGaugeTileEntity::new, AllBlocksNew.STRESSOMETER),
 	ANALOG_LEVER(AnalogLeverTileEntity::new, AllBlocks.ANALOG_LEVER),
-	CART_ASSEMBLER(CartAssemblerTileEntity::new, AllBlocks.CART_ASSEMBLER),
+	CART_ASSEMBLER(CartAssemblerTileEntity::new, AllBlocksNew.CART_ASSEMBLER),
 
 	// Logistics
 	REDSTONE_BRIDGE(RedstoneLinkTileEntity::new, AllBlocks.REDSTONE_BRIDGE),
@@ -160,7 +162,7 @@ public enum AllTileEntities {
 	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR, AllBlocks.VERTICAL_LINKED_EXTRACTOR),
 	TRANSPOSER(TransposerTileEntity::new, AllBlocks.TRANSPOSER, AllBlocks.VERTICAL_TRANSPOSER),
 	LINKED_TRANSPOSER(LinkedTransposerTileEntity::new, AllBlocks.LINKED_TRANSPOSER,
-			AllBlocks.VERTICAL_LINKED_TRANSPOSER),
+		AllBlocks.VERTICAL_LINKED_TRANSPOSER),
 	BELT_FUNNEL(FunnelTileEntity::new, AllBlocks.BELT_FUNNEL, AllBlocks.VERTICAL_FUNNEL),
 	ENTITY_DETECTOR(BeltObserverTileEntity::new, AllBlocks.ENTITY_DETECTOR),
 	FLEXPEATER(FlexpeaterTileEntity::new, AllBlocks.FLEXPEATER),
@@ -179,7 +181,8 @@ public enum AllTileEntities {
 	}
 
 	public boolean typeOf(TileEntity te) {
-		return te.getType().equals(type);
+		return te.getType()
+			.equals(type);
 	}
 
 	public static void register(RegistryEvent.Register<TileEntityType<?>> event) {
@@ -189,9 +192,11 @@ public enum AllTileEntities {
 				blocks[i] = tileEntity.blocks[i].get();
 
 			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, Lang.asId(tileEntity.name()));
-			tileEntity.type = TileEntityType.Builder.create(tileEntity.supplier, blocks).build(null)
-					.setRegistryName(resourceLocation);
-			event.getRegistry().register(tileEntity.type);
+			tileEntity.type = TileEntityType.Builder.create(tileEntity.supplier, blocks)
+				.build(null)
+				.setRegistryName(resourceLocation);
+			event.getRegistry()
+				.register(tileEntity.type);
 		}
 	}
 
@@ -221,7 +226,7 @@ public enum AllTileEntities {
 		bind(MECHANICAL_BEARING, BearingTileEntityRenderer::new);
 		bind(CLOCKWORK_BEARING, BearingTileEntityRenderer::new);
 		bind(ROPE_PULLEY, PulleyRenderer::new);
-		bind(HARVESTER, HarvesterTileEntityRenderer::new);
+		bind(HARVESTER, HarvesterRenderer::new);
 
 		bind(MILLSTONE, MillstoneRenderer::new);
 		bind(CRUSHING_WHEEL, KineticTileEntityRenderer::new);
@@ -248,10 +253,13 @@ public enum AllTileEntities {
 		bind(FLEXPEATER, FlexpeaterTileEntityRenderer::new);
 	}
 
-	@SuppressWarnings("unchecked") // TODO 1.15 this generic stuff is incompatible with the enum system - need strong types
+	@SuppressWarnings("unchecked") // TODO 1.15 this generic stuff is incompatible with the enum system - need
+									// strong types
 	@OnlyIn(Dist.CLIENT)
-	private static <T extends TileEntity> void bind(AllTileEntities type, Function<? super TileEntityRendererDispatcher, ? extends TileEntityRenderer<?>> renderer) {
-		ClientRegistry.bindTileEntityRenderer((TileEntityType<T>) type.type, (Function<TileEntityRendererDispatcher, TileEntityRenderer<T>>) renderer);
+	private static <T extends TileEntity> void bind(AllTileEntities type,
+		Function<? super TileEntityRendererDispatcher, ? extends TileEntityRenderer<?>> renderer) {
+		ClientRegistry.bindTileEntityRenderer((TileEntityType<T>) type.type,
+			(Function<TileEntityRendererDispatcher, TileEntityRenderer<T>>) renderer);
 	}
 
 }

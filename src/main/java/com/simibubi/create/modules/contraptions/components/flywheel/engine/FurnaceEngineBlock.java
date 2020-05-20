@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.flywheel.engine;
 
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.WrappedWorld;
@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.utility.WrappedWorld;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -26,8 +25,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber
 public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngineTileEntity> {
 
-	public FurnaceEngineBlock() {
-		super(Properties.from(Blocks.GOLD_BLOCK));
+	public FurnaceEngineBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
@@ -70,7 +69,7 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 		if (!(item.getItem() instanceof BlockItem))
 			return;
 		BlockItem blockItem = (BlockItem) item.getItem();
-		if (blockItem.getBlock() != AllBlocks.FURNACE_ENGINE.get())
+		if (blockItem.getBlock() != AllBlocksNew.FURNACE_ENGINE.get())
 			return;
 		BlockState state = event.getWorld().getBlockState(event.getPos());
 		if (event.getFace().getAxis().isVertical())

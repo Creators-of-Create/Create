@@ -12,7 +12,6 @@ import com.simibubi.create.modules.contraptions.components.contraptions.Movement
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -38,15 +37,10 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	public static DamageSource damageSourceSaw = new DamageSource("create.saw").setDamageBypassesArmor();
 	public static MovementBehaviour MOVEMENT = new SawMovementBehaviour();
 
-	public SawBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public SawBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(RUNNING, false));
 	}
-
-//	@Override // TODO 1.15 register layer
-//	public BlockRenderLayer getRenderLayer() {
-//		return BlockRenderLayer.CUTOUT_MIPPED;
-//	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {

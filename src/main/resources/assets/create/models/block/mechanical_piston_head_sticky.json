@@ -1,7 +1,0 @@
-{
-	"parent": "create:block/mechanical_piston_head",
-    "textures": {
-		"particle": "block/piston_top_sticky",
-        "1": "block/piston_top_sticky"
-    }
-}

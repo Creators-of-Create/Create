@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": { "model": "create:block/crafter/casing", "y": 90 },
-    "facing=south": { "model": "create:block/crafter/casing", "y": 270 },
-    "facing=west": { "model": "create:block/crafter/casing", "y": 0 },
-    "facing=east": { "model": "create:block/crafter/casing", "y": 180 }
-  }
-}

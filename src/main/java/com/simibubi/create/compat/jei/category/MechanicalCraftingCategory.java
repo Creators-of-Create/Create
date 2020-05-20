@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
 
@@ -98,7 +98,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 	private AnimatedCrafter crafter = new AnimatedCrafter();
 
 	public MechanicalCraftingCategory() {
-		super("mechanical_crafting", itemIcon(AllBlocks.MECHANICAL_CRAFTER.get()), emptyBackground(177, 107));
+		super("mechanical_crafting", itemIcon(AllBlocksNew.MECHANICAL_CRAFTER.get()), emptyBackground(177, 107));
 	}
 
 	@Override

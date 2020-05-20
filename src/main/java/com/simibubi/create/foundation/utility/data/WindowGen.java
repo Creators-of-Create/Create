@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility.data;
 
+import static com.simibubi.create.foundation.registrate.CreateRegistrate.connectedTextures;
+
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -59,7 +61,7 @@ public class WindowGen {
 		Supplier<Supplier<RenderType>> renderType, NonNullFunction<String, ResourceLocation> endTexture,
 		NonNullFunction<String, ResourceLocation> sideTexture) {
 		return REGISTRATE.block(name, WindowBlock::new)
-			.transform(REGISTRATE.connectedTextures(new HorizontalCTBehaviour(ct)))
+			.transform(connectedTextures(new HorizontalCTBehaviour(ct)))
 			.addLayer(renderType)
 			.initialProperties(() -> Blocks.GLASS)
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
@@ -70,7 +72,7 @@ public class WindowGen {
 
 	public static BlockEntry<ConnectedGlassBlock> framedGlass(String name, ConnectedTextureBehaviour behaviour) {
 		return REGISTRATE.block(name, ConnectedGlassBlock::new)
-			.transform(REGISTRATE.connectedTextures(behaviour))
+			.transform(connectedTextures(behaviour))
 			.addLayer(() -> RenderType::getTranslucent)
 			.initialProperties(() -> Blocks.GLASS)
 			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
@@ -123,10 +125,10 @@ public class WindowGen {
 		ResourceLocation sideTexture, ResourceLocation itemSideTexture, ResourceLocation topTexture,
 		Supplier<Supplier<RenderType>> renderType) {
 		NonNullUnaryOperator<BlockBuilder<ConnectedGlassPaneBlock, CreateRegistrate>> connectedTextures =
-			REGISTRATE.connectedTextures(new GlassPaneCTBehaviour(ctshift));
+			connectedTextures(new GlassPaneCTBehaviour(ctshift));
 		String CGPparents = "block/connected_glass_pane/";
 		String prefix = name + "_pane_";
-
+	
 		Function<RegistrateBlockstateProvider, ModelFile> post =
 			getPaneModelProvider(CGPparents, prefix, "post", sideTexture, topTexture),
 			side = getPaneModelProvider(CGPparents, prefix, "side", sideTexture, topTexture),

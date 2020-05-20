@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -20,7 +19,6 @@ import com.simibubi.create.modules.contraptions.relays.belt.transport.Transporte
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -38,8 +36,8 @@ import net.minecraft.world.World;
 public class MechanicalPressBlock extends HorizontalKineticBlock
 		implements ITE<MechanicalPressTileEntity>, IBeltAttachment {
 
-	public MechanicalPressBlock() {
-		super(Properties.from(Blocks.PISTON));
+	public MechanicalPressBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
@@ -52,7 +50,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		return !AllBlocks.BASIN.typeOf(worldIn.getBlockState(pos.down()));
+		return !AllBlocksNew.BASIN.has(worldIn.getBlockState(pos.down()));
 	}
 
 	@Override

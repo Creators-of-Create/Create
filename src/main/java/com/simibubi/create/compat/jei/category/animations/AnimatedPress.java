@@ -4,7 +4,7 @@ import static com.simibubi.create.foundation.utility.AnimationTickHolder.ticks;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.client.Minecraft;
@@ -31,7 +31,7 @@ public class AnimatedPress extends AnimatedKinetics {
 				.scale(scale)
 				.render();
 
-		GuiGameElement.of(AllBlocks.MECHANICAL_PRESS.getDefault())
+		GuiGameElement.of(AllBlocksNew.MECHANICAL_PRESS.getDefaultState())
 				.scale(scale)
 				.render();
 
@@ -41,7 +41,7 @@ public class AnimatedPress extends AnimatedKinetics {
 				.render();
 
 		if (basin)
-			GuiGameElement.of(AllBlocks.BASIN.getDefault())
+			GuiGameElement.of(AllBlocksNew.BASIN.getDefaultState())
 					.atLocal(0, 1.65, 0)
 					.scale(scale)
 					.render();

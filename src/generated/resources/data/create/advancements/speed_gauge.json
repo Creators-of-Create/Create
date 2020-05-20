@@ -2,7 +2,7 @@
   "parent": "create:goggles",
   "display": {
     "icon": {
-      "item": "create:speed_gauge"
+      "item": "create:speedometer"
     },
     "title": {
       "translate": "advancement.create.speed_gauge"
@@ -19,13 +19,13 @@
     "0": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "create:speed_gauge"
+        "block": "create:speedometer"
       }
     },
     "1": {
       "trigger": "create:kinetic_block",
       "conditions": {
-        "block": "create:speed_gauge"
+        "block": "create:speedometer"
       }
     }
   },

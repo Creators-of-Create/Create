@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.AllTileEntities;
@@ -172,7 +171,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			}
 
 			// Try moving items onto next saw
-			if (AllBlocks.SAW.typeOf(world.getBlockState(nextPos))) {
+			if (AllBlocksNew.SAW.has(world.getBlockState(nextPos))) {
 				TileEntity te = world.getTileEntity(nextPos);
 				if (te != null && te instanceof SawTileEntity) {
 					SawTileEntity sawTileEntity = (SawTileEntity) te;

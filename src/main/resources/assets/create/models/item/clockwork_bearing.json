@@ -1,9 +1,0 @@
-{
-	"parent": "create:item/mechanical_bearing",
-    "textures": {
-        "particle": "create:block/clockwork_bearing_side",
-        "bearing_top": "create:block/bearing_top",
-        "gearbox": "create:block/brass_gearbox",
-        "bearing_side": "create:block/clockwork_bearing_side"
-    }
-}

@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -100,7 +100,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		sendData();
 
 		if (removed)
-			AllBlocks.MECHANICAL_PISTON.get().onBlockHarvested(world, pos, getBlockState(), null);
+			AllBlocksNew.MECHANICAL_PISTON.get().onBlockHarvested(world, pos, getBlockState(), null);
 	}
 
 	@Override

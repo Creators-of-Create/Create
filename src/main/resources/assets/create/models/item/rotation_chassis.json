@@ -1,8 +1,0 @@
-{
-    "parent": "block/cube_bottom_top",
-    "textures": {
-        "bottom": "create:block/rotation_chassis_top",
-        "top": "create:block/rotation_chassis_top",
-        "side": "create:block/rotation_chassis_side"
-    }
-}

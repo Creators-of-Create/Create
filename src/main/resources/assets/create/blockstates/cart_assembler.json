@@ -1,8 +1,0 @@
-{
-	"variants": {
-		"shape=north_south,powered=false": { "model": "create:block/cart_assembler" },
-		"shape=east_west,powered=false": { "model": "create:block/cart_assembler", "y": 90 },
-		"shape=north_south,powered=true": { "model": "create:block/cart_assembler_powered" },
-		"shape=east_west,powered=true": { "model": "create:block/cart_assembler_powered", "y": 90 }
-	}
-}

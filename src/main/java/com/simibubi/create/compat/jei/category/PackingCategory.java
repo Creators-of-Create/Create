@@ -2,7 +2,7 @@ package com.simibubi.create.compat.jei.category;
 
 import java.util.Arrays;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 
@@ -20,7 +20,7 @@ public class PackingCategory extends CreateRecipeCategory<IRecipe<?>> {
 	private AnimatedPress press = new AnimatedPress(true);
 
 	public PackingCategory() {
-		super("packing", doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllBlocks.BASIN.get()),
+		super("packing", doubleItemIcon(AllBlocksNew.MECHANICAL_PRESS.get(), AllBlocksNew.BASIN.get()),
 				emptyBackground(177, 70));
 	}
 

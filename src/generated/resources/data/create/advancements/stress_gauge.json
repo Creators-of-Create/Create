@@ -2,7 +2,7 @@
   "parent": "create:goggles",
   "display": {
     "icon": {
-      "item": "create:stress_gauge"
+      "item": "create:stressometer"
     },
     "title": {
       "translate": "advancement.create.stress_gauge"
@@ -19,13 +19,13 @@
     "0": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "create:stress_gauge"
+        "block": "create:stressometer"
       }
     },
     "1": {
       "trigger": "create:kinetic_block",
       "conditions": {
-        "block": "create:stress_gauge"
+        "block": "create:stressometer"
       }
     }
   },

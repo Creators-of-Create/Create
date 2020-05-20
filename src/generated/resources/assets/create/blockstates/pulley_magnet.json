@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "create:block/rope_pulley/pulley_magnet"
+    }
+  }
+}

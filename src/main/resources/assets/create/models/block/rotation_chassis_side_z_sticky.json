@@ -1,6 +1,0 @@
-{
-    "parent": "create:block/rotation_chassis_side_z",
-    "textures": {
-        "rotation_chassis_side": "create:block/rotation_chassis_side_sticky"
-    }
-}

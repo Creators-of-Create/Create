@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.AllContraptionTypes;
 import com.simibubi.create.modules.contraptions.components.contraptions.BlockMovementTraits;
@@ -50,7 +50,7 @@ public class MountedContraption extends Contraption {
 
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.X : Axis.Z;
 		contraption.add(pos, Pair.of(new BlockInfo(pos,
-				AllBlocks.MINECART_ANCHOR.get().getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis),
+			AllBlocksNew.MINECART_ANCHOR.getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis),
 				null), null));
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		contraption.initActors(world);
@@ -64,7 +64,7 @@ public class MountedContraption extends Contraption {
 		frontier.clear();
 		frontier.add(pos.up());
 		BlockState state = world.getBlockState(pos);
-		if (!AllBlocks.CART_ASSEMBLER.typeOf(state))
+		if (!AllBlocksNew.CART_ASSEMBLER.has(state))
 			return false;
 		Axis axis = state.get(CartAssemblerBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.Z : Axis.X;
 		for (AxisDirection axisDirection : AxisDirection.values()) {
@@ -82,7 +82,7 @@ public class MountedContraption extends Contraption {
 	protected Pair<BlockInfo, TileEntity> capture(World world, BlockPos pos) {
 		Pair<BlockInfo, TileEntity> pair = super.capture(world, pos);
 		BlockInfo capture = pair.getKey();
-		if (AllBlocks.CART_ASSEMBLER.typeOf(capture.state))
+		if (AllBlocksNew.CART_ASSEMBLER.has(capture.state))
 			return Pair.of(new BlockInfo(capture.pos, CartAssemblerBlock.createAnchor(capture.state), null),
 					pair.getValue());
 		return pair;
@@ -108,7 +108,7 @@ public class MountedContraption extends Contraption {
 
 	@Override
 	public void addBlocksToWorld(World world, BlockPos offset, Vec3d rotation) {
-		super.addBlocksToWorld(world, offset, rotation, (pos, state) -> AllBlocks.MINECART_ANCHOR.typeOf(state));
+		super.addBlocksToWorld(world, offset, rotation, (pos, state) -> AllBlocksNew.MINECART_ANCHOR.has(state));
 	}
 
 }

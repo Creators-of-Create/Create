@@ -2,14 +2,13 @@ package com.simibubi.create.modules.contraptions.components.crusher;
 
 import java.util.Random;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,11 +35,11 @@ import net.minecraft.world.World;
 public class CrushingWheelControllerBlock extends Block
 		implements ITE<CrushingWheelControllerTileEntity> {
 
-	public static final BooleanProperty VALID = BooleanProperty.create("valid");
-
-	public CrushingWheelControllerBlock() {
-		super(Properties.from(Blocks.AIR).noDrops());
+	public CrushingWheelControllerBlock(Properties p_i48440_1_) {
+		super(p_i48440_1_);
 	}
+
+	public static final BooleanProperty VALID = BooleanProperty.create("valid");
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
@@ -134,7 +133,7 @@ public class CrushingWheelControllerBlock extends Block
 				if (d.getAxis().isVertical())
 					continue;
 				BlockState neighbour = world.getBlockState(pos.offset(d));
-				if (!AllBlocks.CRUSHING_WHEEL.typeOf(neighbour))
+				if (!AllBlocksNew.CRUSHING_WHEEL.has(neighbour))
 					continue;
 				if (neighbour.get(BlockStateProperties.AXIS) == d.getAxis())
 					continue;

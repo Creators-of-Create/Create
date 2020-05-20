@@ -10,7 +10,6 @@ import com.simibubi.create.modules.contraptions.components.contraptions.IPortabl
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -30,8 +29,8 @@ public class DeployerBlock extends DirectionalAxisKineticBlock
 
 	public static MovementBehaviour MOVEMENT = new DeployerMovementBehaviour();
 
-	public DeployerBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public DeployerBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

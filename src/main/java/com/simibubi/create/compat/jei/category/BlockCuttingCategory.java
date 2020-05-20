@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
@@ -26,7 +26,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	private AnimatedSaw saw = new AnimatedSaw();
 
 	public BlockCuttingCategory() {
-		super("block_cutting", doubleItemIcon(AllBlocks.SAW.get(), Items.STONE_BRICK_STAIRS), emptyBackground(177, 70));
+		super("block_cutting", doubleItemIcon(AllBlocksNew.SAW.get(), Items.STONE_BRICK_STAIRS), emptyBackground(177, 70));
 	}
 
 	@Override

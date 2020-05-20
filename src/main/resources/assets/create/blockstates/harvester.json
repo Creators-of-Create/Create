@@ -1,8 +1,0 @@
-{
-    "variants": {
-		"facing=north": { "model": "create:block/harvester", "y": 180 },
-		"facing=south": { "model": "create:block/harvester" },
-		"facing=east":  { "model": "create:block/harvester", "y": 270 },
-		"facing=west":  { "model": "create:block/harvester", "y": 90 }
-	}
-}

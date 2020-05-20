@@ -1,8 +1,0 @@
-{
-    "variants": {
-		"facing=north": {"model": "create:block/mechanical_press_base", "y": 0 },
-		"facing=east": {"model": "create:block/mechanical_press_base", "y": 90 },
-		"facing=west": {"model": "create:block/mechanical_press_base", "y": 90 },
-		"facing=south": {"model": "create:block/mechanical_press_base", "y": 0 }
-	}
-}

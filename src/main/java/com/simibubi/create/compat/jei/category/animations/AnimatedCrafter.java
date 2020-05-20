@@ -1,7 +1,7 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
@@ -23,7 +23,7 @@ public class AnimatedCrafter extends AnimatedKinetics {
 				.scale(scale)
 				.render();
 
-		GuiGameElement.of(AllBlocks.MECHANICAL_CRAFTER.getDefault())
+		GuiGameElement.of(AllBlocksNew.MECHANICAL_CRAFTER.getDefaultState())
 				.rotateBlock(0, 180, 0)
 				.scale(scale)
 				.render();

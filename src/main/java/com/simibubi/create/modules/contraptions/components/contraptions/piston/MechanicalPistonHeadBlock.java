@@ -1,13 +1,14 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
-import com.simibubi.create.AllBlocks;
+import static com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.isExtensionPole;
+
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -27,8 +28,8 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock {
 
 	public static final EnumProperty<PistonType> TYPE = BlockStateProperties.PISTON_TYPE;
 
-	public MechanicalPistonHeadBlock() {
-		super(Properties.from(Blocks.PISTON_HEAD).noDrops());
+	public MechanicalPistonHeadBlock(Properties p_i48415_1_) {
+		super(p_i48415_1_);
 	}
 
 	@Override
@@ -44,8 +45,8 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock {
 
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-			PlayerEntity player) {
-		return new ItemStack(AllBlocks.PISTON_POLE.get());
+		PlayerEntity player) {
+		return AllBlocksNew.PISTON_EXTENSION_POLE.asStack();
 	}
 
 	@Override
@@ -58,24 +59,23 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock {
 			BlockPos currentPos = pos.offset(direction.getOpposite(), offset);
 			BlockState block = worldIn.getBlockState(currentPos);
 
-			if (AllBlocks.PISTON_POLE.typeOf(block)
-					&& direction.getAxis() == block.get(BlockStateProperties.FACING).getAxis())
+			if (isExtensionPole(block) && direction.getAxis() == block.get(BlockStateProperties.FACING)
+				.getAxis())
 				continue;
 
-			if ((AllBlocks.MECHANICAL_PISTON.typeOf(block) || AllBlocks.STICKY_MECHANICAL_PISTON.typeOf(block))
-					&& block.get(BlockStateProperties.FACING) == direction) {
+			if (MechanicalPistonBlock.isPiston(block) && block.get(BlockStateProperties.FACING) == direction)
 				pistonBase = currentPos;
-			}
 
 			break;
 		}
 
 		if (pistonHead != null && pistonBase != null) {
 			final BlockPos basePos = pistonBase;
-			BlockPos.getAllInBox(pistonBase, pistonHead).filter(p -> !p.equals(pos) && !p.equals(basePos))
-					.forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
-			worldIn.setBlockState(basePos,
-					worldIn.getBlockState(basePos).with(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
+			BlockPos.getAllInBox(pistonBase, pistonHead)
+				.filter(p -> !p.equals(pos) && !p.equals(basePos))
+				.forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
+			worldIn.setBlockState(basePos, worldIn.getBlockState(basePos)
+				.with(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
 		}
 
 		super.onBlockHarvested(worldIn, pos, state, player);

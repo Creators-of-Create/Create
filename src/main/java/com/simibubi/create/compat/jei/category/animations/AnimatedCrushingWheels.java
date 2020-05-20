@@ -1,7 +1,7 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.block.BlockState;
@@ -17,7 +17,7 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 		RenderSystem.rotatef(-22.5f, 0, 1, 0);
 		int scale = 22;
 		
-		BlockState wheel = AllBlocks.CRUSHING_WHEEL.get()
+		BlockState wheel = AllBlocksNew.CRUSHING_WHEEL.get()
 				.getDefaultState()
 				.with(BlockStateProperties.AXIS, Axis.X);
 

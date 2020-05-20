@@ -1,0 +1,133 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"5": "create:block/brass_casing",
+		"1_1": "create:block/furnace_cylinder",
+		"particle": "create:block/brass_block"
+	},
+	"elements": [
+		{
+			"name": "Ring",
+			"from": [0, 0, 2],
+			"to": [16, 16, 7],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#5"},
+				"east": {"uv": [0, 7, 2.5, 15], "texture": "#1_1"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#5"},
+				"west": {"uv": [0, 7, 2.5, 15], "texture": "#1_1"},
+				"up": {"uv": [0, 7, 2.5, 15], "rotation": 90, "texture": "#1_1"},
+				"down": {"uv": [0, 7, 2.5, 15], "rotation": 270, "texture": "#1_1"}
+			}
+		},
+		{
+			"name": "Cylinder",
+			"from": [1, 1, 0],
+			"to": [15, 15, 16],
+			"faces": {
+				"north": {"uv": [8, 0, 15, 7], "texture": "#1_1"},
+				"east": {"uv": [0, 0, 8, 7], "rotation": 180, "texture": "#1_1"},
+				"south": {"uv": [8, 0, 15, 7], "texture": "#1_1"},
+				"west": {"uv": [0, 0, 8, 7], "texture": "#1_1"},
+				"up": {"uv": [0, 0, 8, 7], "rotation": 90, "texture": "#1_1"},
+				"down": {"uv": [0, 0, 8, 7], "rotation": 270, "texture": "#1_1"}
+			}
+		},
+		{
+			"from": [1.5, 0, 7],
+			"to": [5.5, 4, 16],
+			"faces": {
+				"east": {"uv": [2.5, 7, 7, 9], "rotation": 180, "texture": "#1_1"},
+				"west": {"uv": [2.5, 7, 7, 9], "rotation": 180, "texture": "#1_1"},
+				"up": {"uv": [2.5, 7, 7, 9], "rotation": 270, "texture": "#1_1"},
+				"down": {"uv": [2.5, 7, 7, 9], "rotation": 90, "texture": "#1_1"}
+			}
+		},
+		{
+			"from": [10.5, 0, 7],
+			"to": [14.5, 4, 16],
+			"faces": {
+				"east": {"uv": [7, 7, 2.5, 9], "rotation": 180, "texture": "#1_1"},
+				"west": {"uv": [7, 7, 2.5, 9], "rotation": 180, "texture": "#1_1"},
+				"up": {"uv": [2.5, 9, 7, 7], "rotation": 270, "texture": "#1_1"},
+				"down": {"uv": [2.5, 9, 7, 7], "rotation": 90, "texture": "#1_1"}
+			}
+		},
+		{
+			"name": "LowerPort",
+			"from": [1.5, 0.1, -0.9],
+			"to": [5.5, 4.1, 2.1],
+			"faces": {
+				"north": {"uv": [2.5, 13, 4.5, 15], "texture": "#1_1"},
+				"east": {"uv": [3, 13, 4.5, 15], "texture": "#1_1"},
+				"south": {"uv": [10, 0, 14, 4], "texture": "#1_1"},
+				"west": {"uv": [3, 13, 4.5, 15], "rotation": 180, "texture": "#1_1"},
+				"up": {"uv": [3, 13, 4.5, 15], "rotation": 270, "texture": "#1_1"},
+				"down": {"uv": [3, 13, 4.5, 15], "rotation": 90, "texture": "#1_1"}
+			}
+		},
+		{
+			"name": "LowerPort",
+			"from": [10.5, 0.1, -0.9],
+			"to": [14.5, 4.1, 2.1],
+			"faces": {
+				"north": {"uv": [4.5, 13, 2.5, 15], "texture": "#1_1"},
+				"east": {"uv": [4.5, 13, 3, 15], "rotation": 180, "texture": "#1_1"},
+				"south": {"uv": [14, 0, 10, 4], "texture": "#1_1"},
+				"west": {"uv": [4.5, 13, 3, 15], "texture": "#1_1"},
+				"up": {"uv": [3, 15, 4.5, 13], "rotation": 270, "texture": "#1_1"},
+				"down": {"uv": [3, 15, 4.5, 13], "rotation": 90, "texture": "#1_1"}
+			}
+		},
+		{
+			"name": "Port",
+			"from": [4, 4, -1.8],
+			"to": [12, 12, 0.2],
+			"faces": {
+				"north": {"uv": [2.5, 9, 6.5, 13], "texture": "#1_1"},
+				"east": {"uv": [5.5, 9, 6.5, 13], "texture": "#1_1"},
+				"west": {"uv": [5.5, 9, 6.5, 13], "rotation": 180, "texture": "#1_1"},
+				"up": {"uv": [5.5, 9, 6.5, 13], "rotation": 270, "texture": "#1_1"},
+				"down": {"uv": [5.5, 9, 6.5, 13], "rotation": 90, "texture": "#1_1"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 135, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 135, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 225, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"rotation": [0, 180, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"groups": [
+		{
+			"name": "SteamCylinder",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3, 4, 5, 6]
+		}
+	]
+}

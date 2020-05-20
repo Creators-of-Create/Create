@@ -11,6 +11,10 @@ import net.minecraftforge.common.util.FakePlayer;
 public class PloughBlock extends AttachedActorBlock {
 
 	public static MovementBehaviour MOVEMENT = new PloughMovementBehaviour();
+	
+	public PloughBlock(Properties p_i48377_1_) {
+		super(p_i48377_1_);
+	}
 
 	@Override
 	public MovementBehaviour getMovementBehaviour() {

@@ -6,7 +6,6 @@ import com.simibubi.create.modules.contraptions.components.contraptions.IPortabl
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -17,13 +16,14 @@ public class PortableStorageInterfaceBlock extends ProperDirectionalBlock implem
 
 	public static MovementBehaviour MOVEMENT = new StorageInterfaceMovement();
 
-	public PortableStorageInterfaceBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public PortableStorageInterfaceBlock(Properties p_i48415_1_) {
+		super(p_i48415_1_);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
+		return getDefaultState().with(FACING, context.getNearestLookingDirection()
+			.getOpposite());
 	}
 
 	@Override

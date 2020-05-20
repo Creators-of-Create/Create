@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.mixer;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,7 +21,7 @@ public class BasinOperatorBlockItem extends BlockItem {
 
 		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
 		BlockState placedOnState = context.getWorld().getBlockState(placedOnPos);
-		if (AllBlocks.BASIN.typeOf(placedOnState)) {
+		if (AllBlocksNew.BASIN.has(placedOnState)) {
 			if (context.getWorld().getBlockState(placedOnPos.up(2)).getMaterial().isReplaceable())
 				context = BlockItemUseContext.func_221536_a(context, placedOnPos.up(2), Direction.UP);
 			else

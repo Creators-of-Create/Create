@@ -222,8 +222,8 @@ public class BeltInventory {
 				BlockState state = world.getBlockState(nextPosition);
 
 				// next block is a basin or a saw
-				if (AllBlocks.BASIN.typeOf(state) || AllBlocks.SAW.typeOf(state)
-						|| AllBlocks.CRUSHING_WHEEL_CONTROLLER.typeOf(state)) {
+				if (AllBlocksNew.BASIN.has(state) || AllBlocksNew.SAW.has(state)
+						|| AllBlocksNew.CRUSHING_WHEEL_CONTROLLER.has(state)) {
 					TileEntity te = world.getTileEntity(nextPosition);
 					if (te != null) {
 						LazyOptional<IItemHandler> optional =

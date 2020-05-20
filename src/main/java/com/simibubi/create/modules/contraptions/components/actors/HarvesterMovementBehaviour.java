@@ -38,7 +38,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
 	public SuperByteBuffer renderInContraption(MovementContext context) {
-		return HarvesterTileEntityRenderer.renderInContraption(context);
+		return HarvesterRenderer.renderInContraption(context);
 	}
 
 	@Override

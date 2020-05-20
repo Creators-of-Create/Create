@@ -1,8 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "#forge:storage_blocks/copper",
-    "#forge:storage_blocks/zinc",
-    "#forge:storage_blocks/brass"
-  ]
-}

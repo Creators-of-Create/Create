@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.turntable;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -15,7 +15,7 @@ public class TurntableHandler {
 		Minecraft mc = Minecraft.getInstance();
 		BlockPos pos = mc.player.getPosition();
 
-		if (!AllBlocks.TURNTABLE.typeOf(mc.world.getBlockState(pos)))
+		if (!AllBlocksNew.TURNTABLE.has(mc.world.getBlockState(pos)))
 			return;
 		if (!mc.player.onGround)
 			return;

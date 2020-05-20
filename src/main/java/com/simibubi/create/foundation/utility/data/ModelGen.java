@@ -1,11 +1,9 @@
 package com.simibubi.create.foundation.utility.data;
 
 import com.simibubi.create.Create;
-import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
-import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -31,21 +29,21 @@ public class ModelGen {
 			.texture("overlay", overlay);
 	}
 
-	public static <P> NonNullFunction<ItemBuilder<BlockItem, P>, P> oxidizedItemModel() {
+	public static <I extends BlockItem, P> NonNullFunction<ItemBuilder<I, P>, P> oxidizedItemModel() {
 		return b -> b
 			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(),
-				prov.modLoc(ModelGen.getOxidizedModel(ctx.getName(), 0))))
+				prov.modLoc(AssetLookup.getOxidizedModel(ctx.getName(), 0))))
 			.build();
 	}
 
-	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> customItemModel() {
-		return b -> b.item()
-			.model(AssetLookup::customItemModel)
+	public static <I extends BlockItem, P> NonNullFunction<ItemBuilder<I, P>, P> customItemModel() {
+		return b -> b.model(AssetLookup::customItemModel)
 			.build();
 	}
 
-	public static String getOxidizedModel(String name, int level) {
-		return "block/oxidized/" + name + "_" + level;
+	public static <I extends BlockItem, P> NonNullFunction<ItemBuilder<I, P>, P> customItemModel(String... folders) {
+		return b -> b.model(AssetLookup.customItemModel(folders))
+			.build();
 	}
 
 }
