@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.components.flywheel.engine;
 
 import java.util.List;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelBlock;
@@ -54,7 +54,7 @@ public class EngineTileEntity extends SmartTileEntity {
 		Direction engineFacing = getBlockState().get(EngineBlock.HORIZONTAL_FACING);
 		BlockPos wheelPos = pos.offset(engineFacing, 2);
 		BlockState wheelState = world.getBlockState(wheelPos);
-		if (!AllBlocksNew.FLYWHEEL.has(wheelState))
+		if (!AllBlocks.FLYWHEEL.has(wheelState))
 			return;
 		Direction wheelFacing = wheelState.get(FlywheelBlock.HORIZONTAL_FACING);
 		if (wheelFacing.getAxis() != engineFacing.rotateY().getAxis())

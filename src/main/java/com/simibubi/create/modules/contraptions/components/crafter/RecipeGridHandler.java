@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Predicates;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipes;
 import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterBlock.Pointing;
 
@@ -116,7 +116,7 @@ public class RecipeGridHandler {
 	}
 
 	private static boolean isCrafter(BlockState state) {
-		return AllBlocksNew.MECHANICAL_CRAFTER.has(state);
+		return AllBlocks.MECHANICAL_CRAFTER.has(state);
 	}
 
 	public static ItemStack tryToApplyRecipe(World world, GroupedItems items) {

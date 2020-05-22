@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.processing;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -70,7 +70,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	@Override
 	public void onLanded(IBlockReader worldIn, Entity entityIn) {
 		super.onLanded(worldIn, entityIn);
-		if (!AllBlocksNew.BASIN.has(worldIn.getBlockState(entityIn.getPosition())))
+		if (!AllBlocks.BASIN.has(worldIn.getBlockState(entityIn.getPosition())))
 			return;
 		if (!(entityIn instanceof ItemEntity))
 			return;

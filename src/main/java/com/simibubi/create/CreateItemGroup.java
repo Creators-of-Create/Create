@@ -19,7 +19,7 @@ public class CreateItemGroup extends CreateItemGroupBase {
 
 	@Override
 	public ItemStack createIcon() {
-		return AllBlocksNew.COGWHEEL.asStack();
+		return AllBlocks.COGWHEEL.asStack();
 	}
 
 }

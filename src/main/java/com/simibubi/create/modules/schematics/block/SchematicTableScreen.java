@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
@@ -113,7 +113,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(mainLeft + 217, mainTop + 48, 200);
 		RenderSystem.scaled(3, 3, 3);
-		GuiGameElement.of(AllBlocksNew.SCHEMATIC_TABLE.asStack()).render();
+		GuiGameElement.of(AllBlocks.SCHEMATIC_TABLE.asStack()).render();
 		RenderSystem.popMatrix();
 
 		minecraft.getTextureManager()

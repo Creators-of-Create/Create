@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.pulley;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.CenteredSideValueBoxTransform;
@@ -97,7 +97,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 				world.destroyBlock(magnetPos, world.getBlockState(magnetPos)
 					.getCollisionShape(world, magnetPos)
 					.isEmpty());
-				world.setBlockState(magnetPos, AllBlocksNew.PULLEY_MAGNET.getDefaultState(), 66);
+				world.setBlockState(magnetPos, AllBlocks.PULLEY_MAGNET.getDefaultState(), 66);
 			}
 
 			for (int i = 1; i <= ((int) offset) - 1; i++) {
@@ -107,7 +107,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 					.isEmpty());
 			}
 			for (int i = 1; i <= ((int) offset) - 1; i++)
-				world.setBlockState(pos.down(i), AllBlocksNew.ROPE.getDefaultState(), 66);
+				world.setBlockState(pos.down(i), AllBlocks.ROPE.getDefaultState(), 66);
 
 			if (movedContraption != null)
 				movedContraption.disassemble();

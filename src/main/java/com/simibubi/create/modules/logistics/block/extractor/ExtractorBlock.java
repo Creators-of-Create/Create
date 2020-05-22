@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.logistics.block.extractor;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -41,12 +41,12 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock implements IPo
 
 	@Override
 	protected BlockState getVerticalDefaultState() {
-		return AllBlocksNew.VERTICAL_EXTRACTOR.getDefaultState();
+		return AllBlocks.VERTICAL_EXTRACTOR.getDefaultState();
 	}
 
 	@Override
 	protected BlockState getHorizontalDefaultState() {
-		return AllBlocksNew.EXTRACTOR.getDefaultState();
+		return AllBlocks.EXTRACTOR.getDefaultState();
 	}
 
 	@Override

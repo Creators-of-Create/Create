@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.block.ITE;
@@ -91,7 +91,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		if (!player.isCreative())
 			player.getHeldItem(handIn)
 				.shrink(1);
-		worldIn.setBlockState(pos, AllBlocksNew.STICKY_MECHANICAL_PISTON.getDefaultState()
+		worldIn.setBlockState(pos, AllBlocks.STICKY_MECHANICAL_PISTON.getDefaultState()
 			.with(FACING, direction)
 			.with(AXIS_ALONG_FIRST_COORDINATE, state.get(AXIS_ALONG_FIRST_COORDINATE)));
 		return ActionResultType.SUCCESS;
@@ -190,18 +190,18 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	public static boolean isPiston(BlockState state) {
-		return AllBlocksNew.MECHANICAL_PISTON.has(state) || isStickyPiston(state);
+		return AllBlocks.MECHANICAL_PISTON.has(state) || isStickyPiston(state);
 	}
 
 	public static boolean isStickyPiston(BlockState state) {
-		return AllBlocksNew.STICKY_MECHANICAL_PISTON.has(state);
+		return AllBlocks.STICKY_MECHANICAL_PISTON.has(state);
 	}
 
 	public static boolean isExtensionPole(BlockState state) {
-		return AllBlocksNew.PISTON_EXTENSION_POLE.has(state);
+		return AllBlocks.PISTON_EXTENSION_POLE.has(state);
 	}
 
 	public static boolean isPistonHead(BlockState state) {
-		return AllBlocksNew.MECHANICAL_PISTON_HEAD.has(state);
+		return AllBlocks.MECHANICAL_PISTON_HEAD.has(state);
 	}
 }

@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -96,7 +96,7 @@ public class CogwheelBlockItem extends BlockItem {
 								continue;
 							if (blockState.get(CogWheelBlock.AXIS) != axis)
 								continue;
-							if (AllBlocksNew.LARGE_COGWHEEL.has(blockState) == large)
+							if (AllBlocks.LARGE_COGWHEEL.has(blockState) == large)
 								continue;
 							AllTriggers.triggerFor(AllTriggers.SHIFTING_GEARS, player);
 						}

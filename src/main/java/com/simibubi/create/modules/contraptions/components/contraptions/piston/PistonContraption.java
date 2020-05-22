@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
-import static com.simibubi.create.AllBlocksNew.MECHANICAL_PISTON_HEAD;
-import static com.simibubi.create.AllBlocksNew.PISTON_EXTENSION_POLE;
+import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
+import static com.simibubi.create.AllBlocks.PISTON_EXTENSION_POLE;
 import static com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.isExtensionPole;
 import static com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.isPiston;
 import static com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.isPistonHead;

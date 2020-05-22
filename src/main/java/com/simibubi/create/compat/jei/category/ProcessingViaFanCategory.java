@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.foundation.gui.GuiGameElement;
@@ -62,7 +62,7 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 			.scale(scale)
 			.render();
 
-		GuiGameElement.of(AllBlocksNew.ENCASED_FAN.getDefaultState())
+		GuiGameElement.of(AllBlocks.ENCASED_FAN.getDefaultState())
 			.rotateBlock(0, 180, 0)
 			.atLocal(0, 0, 0)
 			.scale(scale)

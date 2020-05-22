@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.waterwheel;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
@@ -49,7 +49,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 		for (Direction direction : Direction.values()) {
 			BlockPos neighbourPos = pos.offset(direction);
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
-			if (!AllBlocksNew.WATER_WHEEL.has(neighbourState))
+			if (!AllBlocks.WATER_WHEEL.has(neighbourState))
 				continue;
 			if (neighbourState.get(HORIZONTAL_FACING).getAxis() != state.get(HORIZONTAL_FACING).getAxis()
 					|| state.get(HORIZONTAL_FACING).getAxis() != direction.getAxis())
@@ -130,7 +130,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction facing = context.getFace();
 		BlockState placedOn = context.getWorld().getBlockState(context.getPos().offset(facing.getOpposite()));
-		if (AllBlocksNew.WATER_WHEEL.has(placedOn))
+		if (AllBlocks.WATER_WHEEL.has(placedOn))
 			return getDefaultState().with(HORIZONTAL_FACING, placedOn.get(HORIZONTAL_FACING));
 		if (facing.getAxis().isHorizontal())
 			return getDefaultState().with(HORIZONTAL_FACING,

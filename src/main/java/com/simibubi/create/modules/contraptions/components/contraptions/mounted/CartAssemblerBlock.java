@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.mounted;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.IWrenchable;
@@ -189,7 +189,7 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 
 	public static BlockState createAnchor(BlockState state) {
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Axis.Z : Axis.X;
-		return AllBlocksNew.MINECART_ANCHOR.getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis);
+		return AllBlocks.MINECART_ANCHOR.getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis);
 	}
 
 	@Override

@@ -120,7 +120,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.common.ToolType;
 
-public class AllBlocksNew {
+public class AllBlocks {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 		.itemGroup(() -> Create.baseCreativeTab);

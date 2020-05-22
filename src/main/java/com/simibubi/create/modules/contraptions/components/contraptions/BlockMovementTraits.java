@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.components.actors.AttachedActorBlock;
 import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
 import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
@@ -95,7 +95,7 @@ public class BlockMovementTraits {
 				return !((PulleyTileEntity) te).running;
 		}
 
-		if (AllBlocksNew.BELT.has(blockState))
+		if (AllBlocks.BELT.has(blockState))
 			return true;
 		if (block instanceof ExtractorBlock)
 			return true;
@@ -221,15 +221,15 @@ public class BlockMovementTraits {
 	 * piston
 	 */
 	public static boolean notSupportive(BlockState state, Direction facing) {
-		if (AllBlocksNew.DRILL.has(state))
+		if (AllBlocks.DRILL.has(state))
 			return state.get(BlockStateProperties.FACING) == facing;
-		if (AllBlocksNew.SAW.has(state))
+		if (AllBlocks.SAW.has(state))
 			return state.get(BlockStateProperties.FACING) == facing;
-		if (AllBlocksNew.PORTABLE_STORAGE_INTERFACE.has(state))
+		if (AllBlocks.PORTABLE_STORAGE_INTERFACE.has(state))
 			return state.get(PortableStorageInterfaceBlock.FACING) == facing;
 		if (state.getBlock() instanceof AttachedActorBlock)
 			return state.get(BlockStateProperties.HORIZONTAL_FACING) == facing;
-		if (AllBlocksNew.ROPE_PULLEY.has(state))
+		if (AllBlocks.ROPE_PULLEY.has(state))
 			return facing == Direction.DOWN;
 		if (state.getBlock() instanceof CarpetBlock)
 			return facing == Direction.UP;

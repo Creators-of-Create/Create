@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.logistics.block.inventories;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.block.BlockState;
@@ -74,7 +74,7 @@ public class AdjustableCrateBlock extends CrateBlock {
 
 	public static void splitCrate(World world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
-		if (!AllBlocksNew.ADJUSTABLE_CRATE.has(state))
+		if (!AllBlocks.ADJUSTABLE_CRATE.has(state))
 			return;
 		if (!state.get(DOUBLE))
 			return;

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.modules.contraptions.relays.belt.transport.TransportedItemStack;
 
@@ -21,10 +21,10 @@ import net.minecraft.world.World;
 
 public enum AllBeltAttachments { //TODO rework this nonsense
 
-	BELT_FUNNEL(AllBlocksNew.FUNNEL.get()),
-	BELT_OBSERVER(AllBlocksNew.BELT_OBSERVER.get()),
-	MECHANICAL_PRESS(AllBlocksNew.MECHANICAL_PRESS.get()), 
-	LOGISTICAL_ATTACHABLES(AllBlocksNew.EXTRACTOR.get()),
+	BELT_FUNNEL(AllBlocks.FUNNEL.get()),
+	BELT_OBSERVER(AllBlocks.BELT_OBSERVER.get()),
+	MECHANICAL_PRESS(AllBlocks.MECHANICAL_PRESS.get()), 
+	LOGISTICAL_ATTACHABLES(AllBlocks.EXTRACTOR.get()),
 
 	;
 

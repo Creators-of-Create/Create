@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.fan;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.IWrenchable;
@@ -67,7 +67,7 @@ public class NozzleBlock extends ProperDirectionalBlock implements IWrenchable {
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		Direction towardsFan = state.get(FACING).getOpposite();
 		BlockState fanState = worldIn.getBlockState(pos.offset(towardsFan));
-		return AllBlocksNew.ENCASED_FAN.has(fanState)
+		return AllBlocks.ENCASED_FAN.has(fanState)
 				&& fanState.get(EncasedFanBlock.FACING) == towardsFan.getOpposite();
 	}
 

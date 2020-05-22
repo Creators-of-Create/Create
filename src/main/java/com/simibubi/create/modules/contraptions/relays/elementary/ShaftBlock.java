@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
 
@@ -66,7 +66,7 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 	}
 	
 	public static boolean isShaft(BlockState state) {
-		return AllBlocksNew.SHAFT.has(state);
+		return AllBlocks.SHAFT.has(state);
 	}
 
 	// IRotate:

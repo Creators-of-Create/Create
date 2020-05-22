@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.mixer;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.KineticBlock;
@@ -34,7 +34,7 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		return !AllBlocksNew.BASIN.has(worldIn.getBlockState(pos.down()));
+		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.down()));
 	}
 
 	@Override

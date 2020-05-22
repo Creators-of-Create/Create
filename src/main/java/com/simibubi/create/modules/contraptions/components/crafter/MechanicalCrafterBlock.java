@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.crafter;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -261,7 +261,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 		BlockState targetState = world.getBlockState(targetPos);
 		if (!world.isBlockPresent(targetPos))
 			return false;
-		if (!AllBlocksNew.MECHANICAL_CRAFTER.has(targetState))
+		if (!AllBlocks.MECHANICAL_CRAFTER.has(targetState))
 			return false;
 		if (crafterState.get(HORIZONTAL_FACING) != targetState.get(HORIZONTAL_FACING))
 			return false;

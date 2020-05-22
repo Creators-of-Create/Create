@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.relays.gearbox;
 
 import java.util.Map;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 
 import net.minecraft.block.Block;
@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 public class VerticalGearboxItem extends BlockItem {
 
 	public VerticalGearboxItem(Properties builder) {
-		super(AllBlocksNew.GEARBOX.get(), builder);
+		super(AllBlocks.GEARBOX.get(), builder);
 	}
 
 	@Override

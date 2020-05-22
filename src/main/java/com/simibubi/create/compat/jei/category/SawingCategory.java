@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.modules.contraptions.components.saw.CuttingRecipe;
@@ -20,7 +20,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 	private AnimatedSaw saw = new AnimatedSaw();
 
 	public SawingCategory() {
-		super("sawing", doubleItemIcon(AllBlocksNew.SAW.get(), Items.OAK_LOG), emptyBackground(177, 70));
+		super("sawing", doubleItemIcon(AllBlocks.SAW.get(), Items.OAK_LOG), emptyBackground(177, 70));
 	}
 
 	@Override

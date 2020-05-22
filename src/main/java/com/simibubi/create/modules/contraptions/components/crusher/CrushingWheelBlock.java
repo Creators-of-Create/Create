@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.components.crusher;
 
 import static com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelControllerBlock.VALID;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.RotatedPillarKineticBlock;
@@ -55,7 +55,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 			if (d.getAxis() == state.get(AXIS) || d.getAxis()
 				.isVertical())
 				continue;
-			if (AllBlocksNew.CRUSHING_WHEEL_CONTROLLER.has(worldIn.getBlockState(pos.offset(d))))
+			if (AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(worldIn.getBlockState(pos.offset(d))))
 				worldIn.setBlockState(pos.offset(d), Blocks.AIR.getDefaultState());
 		}
 
@@ -74,14 +74,14 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 		BlockPos controllerPos = pos.offset(facing);
 		BlockPos otherWheelPos = pos.offset(facing, 2);
 
-		boolean controllerExists = AllBlocksNew.CRUSHING_WHEEL_CONTROLLER.has(world.getBlockState(controllerPos));
+		boolean controllerExists = AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(world.getBlockState(controllerPos));
 		boolean controllerIsValid = controllerExists && world.getBlockState(controllerPos)
 			.get(VALID);
 		boolean controllerShouldExist = false;
 		boolean controllerShouldBeValid = false;
 
 		BlockState otherState = world.getBlockState(otherWheelPos);
-		if (AllBlocksNew.CRUSHING_WHEEL.has(otherState)) {
+		if (AllBlocks.CRUSHING_WHEEL.has(otherState)) {
 			controllerShouldExist = true;
 
 			try {
@@ -113,14 +113,14 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 				.getMaterial()
 				.isReplaceable())
 				return;
-			world.setBlockState(controllerPos, AllBlocksNew.CRUSHING_WHEEL_CONTROLLER.getDefaultState()
+			world.setBlockState(controllerPos, AllBlocks.CRUSHING_WHEEL_CONTROLLER.getDefaultState()
 				.with(VALID, controllerShouldBeValid));
 		} else if (controllerIsValid != controllerShouldBeValid) {
 			world.setBlockState(controllerPos, world.getBlockState(controllerPos)
 				.with(VALID, controllerShouldBeValid));
 		}
 
-		((CrushingWheelControllerBlock) AllBlocksNew.CRUSHING_WHEEL_CONTROLLER.get())
+		((CrushingWheelControllerBlock) AllBlocks.CRUSHING_WHEEL_CONTROLLER.get())
 			.updateSpeed(world.getBlockState(controllerPos), world, controllerPos);
 
 	}
@@ -156,9 +156,9 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 			BlockPos neighbourPos = pos.offset(direction);
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
 			Axis stateAxis = state.get(AXIS);
-			if (AllBlocksNew.CRUSHING_WHEEL_CONTROLLER.has(neighbourState) && direction.getAxis() != stateAxis)
+			if (AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(neighbourState) && direction.getAxis() != stateAxis)
 				return false;
-			if (!AllBlocksNew.CRUSHING_WHEEL.has(neighbourState))
+			if (!AllBlocks.CRUSHING_WHEEL.has(neighbourState))
 				continue;
 			if (neighbourState.get(AXIS) != stateAxis || stateAxis != direction.getAxis())
 				return false;

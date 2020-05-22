@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.logistics.block;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.IWrenchable;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
@@ -85,7 +85,7 @@ public abstract class AttachedLogisticalBlock extends HorizontalBlock implements
 
 		if (neighbour.getBlock() instanceof TransposerBlock)
 			return false;
-		if (AllBlocksNew.BELT.has(neighbour))
+		if (AllBlocks.BELT.has(neighbour))
 			return BeltBlock.canAccessFromSide(facing, neighbour);
 		return !neighbour.getShape(worldIn, pos).isEmpty();
 	}

@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.components.crusher;
 
 import java.util.Random;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -133,7 +133,7 @@ public class CrushingWheelControllerBlock extends Block
 				if (d.getAxis().isVertical())
 					continue;
 				BlockState neighbour = world.getBlockState(pos.offset(d));
-				if (!AllBlocksNew.CRUSHING_WHEEL.has(neighbour))
+				if (!AllBlocks.CRUSHING_WHEEL.has(neighbour))
 					continue;
 				if (neighbour.get(BlockStateProperties.AXIS) == d.getAxis())
 					continue;

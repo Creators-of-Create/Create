@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
@@ -32,7 +32,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 
 	private List<Rectangle2d> extraAreas;
 
-	private final ItemStack renderedItem = new ItemStack(AllBlocksNew.ADJUSTABLE_CRATE.get());
+	private final ItemStack renderedItem = new ItemStack(AllBlocks.ADJUSTABLE_CRATE.get());
 	private final String title = Lang.translate("gui.flexcrate.title");
 	private final String storageSpace = Lang.translate("gui.flexcrate.storageSpace");
 
@@ -114,7 +114,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 	public void tick() {
 		super.tick();
 
-		if (!AllBlocksNew.ADJUSTABLE_CRATE.has(minecraft.world.getBlockState(te.getPos())))
+		if (!AllBlocks.ADJUSTABLE_CRATE.has(minecraft.world.getBlockState(te.getPos())))
 			minecraft.displayGuiScreen(null);
 
 		if (lastModification >= 0)

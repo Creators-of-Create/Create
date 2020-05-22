@@ -1,7 +1,7 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -17,7 +17,7 @@ public abstract class AnimatedKinetics implements IDrawable {
 	}
 	
 	protected BlockState shaft(Axis axis) {
-		return AllBlocksNew.SHAFT.getDefaultState().with(BlockStateProperties.AXIS, axis);
+		return AllBlocks.SHAFT.getDefaultState().with(BlockStateProperties.AXIS, axis);
 	}
 	
 	protected AllBlockPartials cogwheel() {

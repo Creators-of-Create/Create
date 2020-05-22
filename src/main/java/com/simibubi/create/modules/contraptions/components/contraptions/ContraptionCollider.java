@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.components.actors.BlockBreakingMovementBehaviour;
 
 import net.minecraft.block.BlockState;
@@ -270,7 +270,7 @@ public class ContraptionCollider {
 				}
 			}
 
-			if (AllBlocksNew.PULLEY_MAGNET.has(collidedState) && pos.equals(BlockPos.ZERO)
+			if (AllBlocks.PULLEY_MAGNET.has(collidedState) && pos.equals(BlockPos.ZERO)
 					&& movementDirection == Direction.UP)
 				continue;
 			if (collidedState.getBlock() instanceof CocoaBlock)

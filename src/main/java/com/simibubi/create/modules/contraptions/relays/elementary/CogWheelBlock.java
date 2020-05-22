@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.relays.elementary;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerBlock;
@@ -66,7 +66,7 @@ public class CogWheelBlock extends ShaftBlock {
 
 		BlockState stateBelow = world.getBlockState(context.getPos()
 			.down());
-		if (AllBlocksNew.ROTATION_SPEED_CONTROLLER.has(stateBelow) && isLarge) {
+		if (AllBlocks.ROTATION_SPEED_CONTROLLER.has(stateBelow) && isLarge) {
 			return this.getDefaultState()
 				.with(AXIS, stateBelow.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X);
 		}
@@ -96,11 +96,11 @@ public class CogWheelBlock extends ShaftBlock {
 	}
 
 	public static boolean isSmallCog(BlockState state) {
-		return AllBlocksNew.COGWHEEL.has(state);
+		return AllBlocks.COGWHEEL.has(state);
 	}
 
 	public static boolean isLargeCog(BlockState state) {
-		return AllBlocksNew.LARGE_COGWHEEL.has(state);
+		return AllBlocks.LARGE_COGWHEEL.has(state);
 	}
 
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {

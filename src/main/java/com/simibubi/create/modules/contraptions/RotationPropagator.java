@@ -6,7 +6,7 @@ import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.modules.contraptions.base.IRotate;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -179,7 +179,7 @@ public class RotationPropagator {
 	}
 
 	private static boolean isLargeCogToSpeedController(BlockState from, BlockState to, BlockPos diff) {
-		if (!isLargeCog(from) || !AllBlocksNew.ROTATION_SPEED_CONTROLLER.has(to))
+		if (!isLargeCog(from) || !AllBlocks.ROTATION_SPEED_CONTROLLER.has(to))
 			return false;
 		if (!diff.equals(BlockPos.ZERO.up()) && !diff.equals(BlockPos.ZERO.down()))
 			return false;
@@ -430,7 +430,7 @@ public class RotationPropagator {
 		IRotate block = (IRotate) blockState.getBlock();
 
 		if (block.hasIntegratedCogwheel(te.getWorld(), te.getPos(), blockState) || isLargeWheel
-			|| AllBlocksNew.BELT.has(blockState)) {
+			|| AllBlocks.BELT.has(blockState)) {
 			Axis axis = block.getRotationAxis(blockState);
 
 			BlockPos.getAllInBox(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1))

@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.base;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.block.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -102,7 +102,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	public static BlockState shaft(Axis axis) {
-		return AllBlocksNew.SHAFT.getDefaultState()
+		return AllBlocks.SHAFT.getDefaultState()
 			.with(BlockStateProperties.AXIS, axis);
 	}
 

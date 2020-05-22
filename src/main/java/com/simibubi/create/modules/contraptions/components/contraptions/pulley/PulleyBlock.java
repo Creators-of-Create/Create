@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.pulley;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.base.HorizontalAxisKineticBlock;
@@ -96,7 +96,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 		@Override
 		public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
 			PlayerEntity player) {
-			return AllBlocksNew.ROPE_PULLEY.asStack();
+			return AllBlocks.ROPE_PULLEY.asStack();
 		}
 		
 		@Override

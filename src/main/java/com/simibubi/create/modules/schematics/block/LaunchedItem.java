@@ -2,7 +2,7 @@ package com.simibubi.create.modules.schematics.block;
 
 import java.util.Optional;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.modules.contraptions.relays.belt.item.BeltConnectorItem;
@@ -119,7 +119,7 @@ public abstract class LaunchedItem {
 			if (state.has(BlockStateProperties.WATERLOGGED))
 				state = state.with(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
 
-			if (AllBlocksNew.BELT.has(state)) {
+			if (AllBlocks.BELT.has(state)) {
 				world.setBlockState(target, state, 2);
 				return;
 			}
@@ -176,7 +176,7 @@ public abstract class LaunchedItem {
 			BlockPos offset = BeltBlock.nextSegmentPosition(state, BlockPos.ZERO, isStart);
 			int i = length - 1;
 			Axis axis = state.get(BeltBlock.HORIZONTAL_FACING).rotateY().getAxis();
-			world.setBlockState(target, AllBlocksNew.SHAFT.getDefaultState().with(ShaftBlock.AXIS, axis));
+			world.setBlockState(target, AllBlocks.SHAFT.getDefaultState().with(ShaftBlock.AXIS, axis));
 			BeltConnectorItem
 					.createBelts(world, target, target.add(offset.getX() * i, offset.getY() * i, offset.getZ() * i));
 		}

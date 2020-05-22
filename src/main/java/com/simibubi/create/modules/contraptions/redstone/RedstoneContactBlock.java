@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.redstone;
 
 import java.util.Random;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.modules.contraptions.IWrenchable;
 import com.simibubi.create.modules.contraptions.components.contraptions.IPortableBlock;
@@ -81,7 +81,7 @@ public class RedstoneContactBlock extends ProperDirectionalBlock implements IPor
 
 	public static boolean hasValidContact(IWorld world, BlockPos pos, Direction direction) {
 		BlockState blockState = world.getBlockState(pos.offset(direction));
-		return AllBlocksNew.REDSTONE_CONTACT.has(blockState) && blockState.get(FACING) == direction.getOpposite();
+		return AllBlocks.REDSTONE_CONTACT.has(blockState) && blockState.get(FACING) == direction.getOpposite();
 	}
 
 	@Override

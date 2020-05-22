@@ -2,7 +2,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.piston;
 
 import static com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.isExtensionPole;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock.PistonState;
@@ -46,7 +46,7 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock {
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
 		PlayerEntity player) {
-		return AllBlocksNew.PISTON_EXTENSION_POLE.asStack();
+		return AllBlocks.PISTON_EXTENSION_POLE.asStack();
 	}
 
 	@Override

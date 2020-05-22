@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.behaviour.CenteredSideValueBoxTransform;
@@ -111,7 +111,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 					return false;
 
 				BlockState neighbourState = world.getBlockState(currentPos);
-				if (!AllBlocksNew.RADIAL_CHASSIS.has(neighbourState))
+				if (!AllBlocks.RADIAL_CHASSIS.has(neighbourState))
 					continue;
 				if (axis != neighbourState.get(BlockStateProperties.AXIS))
 					continue;

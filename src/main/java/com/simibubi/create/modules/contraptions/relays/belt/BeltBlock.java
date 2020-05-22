@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.ITE;
@@ -122,11 +122,11 @@ public class BeltBlock extends HorizontalKineticBlock
 	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.storage.loot.LootContext.Builder builder) {
 		List<ItemStack> drops = super.getDrops(state, builder);
 		if (state.get(CASING))
-			drops.addAll(AllBlocksNew.BRASS_CASING.getDefaultState()
+			drops.addAll(AllBlocks.BRASS_CASING.getDefaultState()
 				.getDrops(builder));
 		TileEntity tileEntity = builder.get(LootParameters.BLOCK_ENTITY);
 		if (tileEntity instanceof BeltTileEntity && ((BeltTileEntity) tileEntity).hasPulley())
-			drops.addAll(AllBlocksNew.SHAFT.getDefaultState()
+			drops.addAll(AllBlocks.SHAFT.getDefaultState()
 				.getDrops(builder));
 		return drops;
 	}
@@ -150,9 +150,9 @@ public class BeltBlock extends HorizontalKineticBlock
 		BlockPos entityPosition = entityIn.getPosition();
 		BlockPos beltPos = null;
 
-		if (AllBlocksNew.BELT.has(worldIn.getBlockState(entityPosition)))
+		if (AllBlocks.BELT.has(worldIn.getBlockState(entityPosition)))
 			beltPos = entityPosition;
-		else if (AllBlocksNew.BELT.has(worldIn.getBlockState(entityPosition.down())))
+		else if (AllBlocks.BELT.has(worldIn.getBlockState(entityPosition.down())))
 			beltPos = entityPosition.down();
 		if (beltPos == null)
 			return;
@@ -223,9 +223,9 @@ public class BeltBlock extends HorizontalKineticBlock
 		if (player.isSneaking() || !player.isAllowEdit())
 			return ActionResultType.PASS;
 		ItemStack heldItem = player.getHeldItem(handIn);
-		boolean isShaft = heldItem.getItem() == AllBlocksNew.SHAFT.get()
+		boolean isShaft = heldItem.getItem() == AllBlocks.SHAFT.get()
 			.asItem();
-		boolean isCasing = heldItem.getItem() == AllBlocksNew.BRASS_CASING.get()
+		boolean isCasing = heldItem.getItem() == AllBlocks.BRASS_CASING.get()
 			.asItem();
 		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
 		boolean isHand = heldItem.isEmpty() && handIn == Hand.MAIN_HAND;
@@ -297,7 +297,7 @@ public class BeltBlock extends HorizontalKineticBlock
 				return ActionResultType.SUCCESS;
 			world.setBlockState(context.getPos(), state.with(CASING, false), 3);
 			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, AllBlocksNew.BRASS_CASING.asStack());
+				player.inventory.placeItemBackInInventory(world, AllBlocks.BRASS_CASING.asStack());
 			return ActionResultType.SUCCESS;
 		}
 
@@ -311,7 +311,7 @@ public class BeltBlock extends HorizontalKineticBlock
 				belt.attachKinetics();
 			}
 			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, AllBlocksNew.SHAFT.asStack());
+				player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack());
 			return ActionResultType.SUCCESS;
 		}
 
@@ -425,14 +425,14 @@ public class BeltBlock extends HorizontalKineticBlock
 			return;
 
 		BlockState state = world.getBlockState(pos);
-		if (!AllBlocksNew.BELT.has(state))
+		if (!AllBlocks.BELT.has(state))
 			return;
 		// Find controller
 		int limit = 1000;
 		BlockPos currentPos = pos;
 		while (limit-- > 0) {
 			BlockState currentState = world.getBlockState(currentPos);
-			if (!AllBlocksNew.BELT.has(currentState)) {
+			if (!AllBlocks.BELT.has(currentState)) {
 				world.destroyBlock(pos, true);
 				return;
 			}
@@ -456,7 +456,7 @@ public class BeltBlock extends HorizontalKineticBlock
 			TileEntity tileEntity = world.getTileEntity(beltPos);
 			BlockState currentState = world.getBlockState(beltPos);
 
-			if (tileEntity instanceof BeltTileEntity && AllBlocksNew.BELT.has(currentState)) {
+			if (tileEntity instanceof BeltTileEntity && AllBlocks.BELT.has(currentState)) {
 				BeltTileEntity te = (BeltTileEntity) tileEntity;
 				te.setController(currentPos);
 				te.beltLength = beltChain.size();
@@ -468,7 +468,7 @@ public class BeltBlock extends HorizontalKineticBlock
 				boolean isVertical = currentState.get(BeltBlock.SLOPE) == Slope.VERTICAL;
 
 				if (currentState.get(CASING) && isVertical) {
-					Block.spawnAsEntity(world, beltPos, AllBlocksNew.BRASS_CASING.asStack());
+					Block.spawnAsEntity(world, beltPos, AllBlocks.BRASS_CASING.asStack());
 					world.setBlockState(beltPos, currentState.with(CASING, false), 2);
 				}
 
@@ -505,10 +505,10 @@ public class BeltBlock extends HorizontalKineticBlock
 			if (currentPos == null)
 				continue;
 			BlockState currentState = world.getBlockState(currentPos);
-			if (!AllBlocksNew.BELT.has(currentState))
+			if (!AllBlocks.BELT.has(currentState))
 				continue;
 			if (currentState.get(CASING))
-				Block.spawnAsEntity(world, currentPos, AllBlocksNew.BRASS_CASING.asStack());
+				Block.spawnAsEntity(world, currentPos, AllBlocks.BRASS_CASING.asStack());
 
 			boolean hasPulley = false;
 			TileEntity tileEntity = world.getTileEntity(currentPos);
@@ -522,7 +522,7 @@ public class BeltBlock extends HorizontalKineticBlock
 				hasPulley = te.hasPulley();
 			}
 
-			BlockState shaftState = AllBlocksNew.SHAFT.getDefaultState()
+			BlockState shaftState = AllBlocks.SHAFT.getDefaultState()
 				.with(BlockStateProperties.AXIS, getRotationAxis(currentState));
 			world.setBlockState(currentPos, hasPulley ? shaftState : Blocks.AIR.getDefaultState(), 3);
 			world.playEvent(2001, currentPos, Block.getStateId(currentState));
@@ -536,7 +536,7 @@ public class BeltBlock extends HorizontalKineticBlock
 		int offset = isEnd ? -1 : 1;
 		BlockPos tunnelPos = pos.offset(beltState.get(HORIZONTAL_FACING), offset)
 			.up();
-		if (AllBlocksNew.BELT_TUNNEL.has(world.getBlockState(tunnelPos)))
+		if (AllBlocks.BELT_TUNNEL.has(world.getBlockState(tunnelPos)))
 			BeltTunnelBlock.updateTunnel(world, tunnelPos);
 	}
 
@@ -562,14 +562,14 @@ public class BeltBlock extends HorizontalKineticBlock
 		List<BlockPos> positions = new LinkedList<>();
 
 		BlockState blockState = world.getBlockState(controllerPos);
-		if (!AllBlocksNew.BELT.has(blockState))
+		if (!AllBlocks.BELT.has(blockState))
 			return positions;
 
 		int limit = 1000;
 		BlockPos current = controllerPos;
 		while (limit-- > 0 && current != null) {
 			BlockState state = world.getBlockState(current);
-			if (!AllBlocksNew.BELT.has(state))
+			if (!AllBlocks.BELT.has(state))
 				break;
 			positions.add(current);
 			current = nextSegmentPosition(state, current, true);
@@ -642,9 +642,9 @@ public class BeltBlock extends HorizontalKineticBlock
 	public ItemRequirement getRequiredItems(BlockState state) {
 		List<ItemStack> required = new ArrayList<>();
 		if (state.get(PART) != Part.MIDDLE)
-			required.add(AllBlocksNew.SHAFT.asStack());
+			required.add(AllBlocks.SHAFT.asStack());
 		if (state.get(CASING))
-			required.add(AllBlocksNew.BRASS_CASING.asStack());
+			required.add(AllBlocks.BRASS_CASING.asStack());
 		if (state.get(PART) == Part.START)
 			required.add(AllItems.BELT_CONNECTOR.asStack());
 		if (required.isEmpty())

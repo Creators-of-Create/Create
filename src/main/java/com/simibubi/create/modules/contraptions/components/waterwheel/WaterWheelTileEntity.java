@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.components.waterwheel;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.modules.contraptions.base.GeneratingKineticTileEntity;
 
@@ -64,7 +64,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		AllBlocksNew.WATER_WHEEL.get()
+		AllBlocks.WATER_WHEEL.get()
 			.updateAllSides(getBlockState(), world, pos);
 	}
 

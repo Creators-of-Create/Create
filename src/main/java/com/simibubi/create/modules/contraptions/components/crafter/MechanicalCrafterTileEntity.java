@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.inventory.InsertingBehaviour;
@@ -309,7 +309,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 	protected boolean isTargetingBelt() {
 		BlockPos targetPos = pos.offset(getTargetFacing());
-		if (!AllBlocksNew.BELT.has(world.getBlockState(targetPos)))
+		if (!AllBlocks.BELT.has(world.getBlockState(targetPos)))
 			return false;
 		TileEntity te = world.getTileEntity(targetPos);
 		if (!(te instanceof BeltTileEntity))
@@ -361,7 +361,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 	public void eject() {
 		BlockState blockState = getBlockState();
-		boolean present = AllBlocksNew.MECHANICAL_CRAFTER.has(blockState);
+		boolean present = AllBlocks.MECHANICAL_CRAFTER.has(blockState);
 		Vec3d vec = present ? new Vec3d(blockState.get(HORIZONTAL_FACING).getDirectionVec()).scale(.75f) : Vec3d.ZERO;
 		Vec3d ejectPos = VecHelper.getCenterOf(pos).add(vec);
 		groupedItems.grid.forEach((pair, stack) -> dropItem(ejectPos, stack));

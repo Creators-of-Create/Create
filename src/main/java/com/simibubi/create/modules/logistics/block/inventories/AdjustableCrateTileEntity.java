@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.logistics.block.inventories;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -80,7 +80,7 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 	}
 
 	public AdjustableCrateTileEntity getOtherCrate() {
-		if (!AllBlocksNew.ADJUSTABLE_CRATE.has(getBlockState()))
+		if (!AllBlocks.ADJUSTABLE_CRATE.has(getBlockState()))
 			return null;
 		TileEntity tileEntity = world.getTileEntity(pos.offset(getFacing()));
 		if (tileEntity instanceof AdjustableCrateTileEntity)

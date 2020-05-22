@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.modules.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
@@ -221,8 +221,8 @@ public class BeltInventory {
 				BlockState state = world.getBlockState(nextPosition);
 
 				// next block is a basin or a saw
-				if (AllBlocksNew.BASIN.has(state) || AllBlocksNew.SAW.has(state)
-						|| AllBlocksNew.CRUSHING_WHEEL_CONTROLLER.has(state)) {
+				if (AllBlocks.BASIN.has(state) || AllBlocks.SAW.has(state)
+						|| AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(state)) {
 					TileEntity te = world.getTileEntity(nextPosition);
 					if (te != null) {
 						LazyOptional<IItemHandler> optional =
@@ -248,7 +248,7 @@ public class BeltInventory {
 				}
 
 				// next block is not a belt
-				if (!AllBlocksNew.BELT.has(state) || state.get(BeltBlock.SLOPE) == Slope.VERTICAL) {
+				if (!AllBlocks.BELT.has(state) || state.get(BeltBlock.SLOPE) == Slope.VERTICAL) {
 					if (!Block.hasSolidSide(state, world, nextPosition, movementFacing.getOpposite())) {
 						eject(current);
 						iterator.remove();
@@ -286,7 +286,7 @@ public class BeltInventory {
 
 	private boolean stuckAtTunnel(int offset, ItemStack stack, Direction movementDirection) {
 		BlockPos pos = BeltHelper.getPositionForOffset(belt, offset).up();
-		if (!AllBlocksNew.BELT_TUNNEL.has(belt.getWorld().getBlockState(pos)))
+		if (!AllBlocks.BELT_TUNNEL.has(belt.getWorld().getBlockState(pos)))
 			return false;
 		TileEntity te = belt.getWorld().getTileEntity(pos);
 		if (te == null || !(te instanceof BeltTunnelTileEntity))
@@ -324,7 +324,7 @@ public class BeltInventory {
 		if (belt.getBlockState().get(BeltBlock.SLOPE) != Slope.HORIZONTAL)
 			return;
 		BlockPos pos = BeltHelper.getPositionForOffset(belt, offset).up();
-		if (!AllBlocksNew.BELT_TUNNEL.has(belt.getWorld().getBlockState(pos)))
+		if (!AllBlocks.BELT_TUNNEL.has(belt.getWorld().getBlockState(pos)))
 			return;
 		TileEntity te = belt.getWorld().getTileEntity(pos);
 		if (te == null || !(te instanceof BeltTunnelTileEntity))

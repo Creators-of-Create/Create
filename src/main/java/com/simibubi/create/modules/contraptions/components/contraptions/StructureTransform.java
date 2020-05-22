@@ -5,7 +5,7 @@ import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.DirectionHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock;
@@ -146,7 +146,7 @@ public class StructureTransform {
 			return state;
 		}
 
-		if (AllBlocksNew.BELT.has(state)) {
+		if (AllBlocks.BELT.has(state)) {
 			if (state.get(BeltBlock.HORIZONTAL_FACING).getAxis() != rotationAxis) {
 				for (int i = 0; i < rotation.ordinal(); i++) {
 					Slope slope = state.get(BeltBlock.SLOPE);

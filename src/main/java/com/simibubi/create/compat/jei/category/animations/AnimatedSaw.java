@@ -1,7 +1,7 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
@@ -28,7 +28,7 @@ public class AnimatedSaw extends AnimatedKinetics {
 				.scale(scale)
 				.render();
 
-		GuiGameElement.of(AllBlocksNew.SAW.getDefaultState()
+		GuiGameElement.of(AllBlocks.SAW.getDefaultState()
 				.with(SawBlock.FACING, Direction.UP)
 				.with(SawBlock.RUNNING, true))
 				.rotateBlock(0, 0, 0)

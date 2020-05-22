@@ -5,7 +5,7 @@ import static com.simibubi.create.ScreenResources.STOCKSWITCH;
 import java.util.Arrays;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -31,7 +31,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 	private final String stopAt = Lang.translate("gui.stockswitch.stopAt");
 	private final String lowerLimit = Lang.translate("gui.stockswitch.lowerLimit");
 	private final String upperLimit = Lang.translate("gui.stockswitch.upperLimit");
-	private final ItemStack renderedItem = new ItemStack(AllBlocksNew.STOCKPILE_SWITCH.get());
+	private final ItemStack renderedItem = new ItemStack(AllBlocks.STOCKPILE_SWITCH.get());
 
 	private int lastModification;
 	private StockpileSwitchTileEntity te;

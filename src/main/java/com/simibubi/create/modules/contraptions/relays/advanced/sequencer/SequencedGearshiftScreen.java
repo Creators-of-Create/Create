@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.relays.advanced.sequencer;
 import java.util.Vector;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -18,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
-	private final ItemStack renderedItem = new ItemStack(AllBlocksNew.SEQUENCED_GEARSHIFT.get());
+	private final ItemStack renderedItem = new ItemStack(AllBlocks.SEQUENCED_GEARSHIFT.get());
 	private final ScreenResources background = ScreenResources.SEQUENCER;
 
 	private final String title = Lang.translate("gui.sequenced_gearshift.title");

@@ -3,7 +3,7 @@ package com.simibubi.create.modules.logistics.block.inventories;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
@@ -58,7 +58,7 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 	}
 
 	private CreativeCrateTileEntity getOtherCrate() {
-		if (!AllBlocksNew.CREATIVE_CRATE.has(getBlockState()))
+		if (!AllBlocks.CREATIVE_CRATE.has(getBlockState()))
 			return null;
 		TileEntity tileEntity = world.getTileEntity(pos.offset(getFacing()));
 		if (tileEntity instanceof CreativeCrateTileEntity)

@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.logistics.block.diodes;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -34,7 +34,7 @@ public class AdjustableRepeaterBlock extends AbstractDiodeBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return AllBlocksNew.ADJUSTABLE_REPEATER.get() == this ? new AdjustableRepeaterTileEntity()
+		return AllBlocks.ADJUSTABLE_REPEATER.get() == this ? new AdjustableRepeaterTileEntity()
 			: new AdjustablePulseRepeaterTileEntity();
 	}
 

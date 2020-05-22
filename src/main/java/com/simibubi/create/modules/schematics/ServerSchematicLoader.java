@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.config.CSchematics;
@@ -226,7 +226,7 @@ public class ServerSchematicLoader {
 					return;
 
 				BlockState blockState = dimpos.world.getBlockState(dimpos.pos);
-				if (AllBlocksNew.SCHEMATIC_TABLE.get() != blockState.getBlock())
+				if (AllBlocks.SCHEMATIC_TABLE.get() != blockState.getBlock())
 					return;
 
 				SchematicTableTileEntity table = getTable(dimpos);

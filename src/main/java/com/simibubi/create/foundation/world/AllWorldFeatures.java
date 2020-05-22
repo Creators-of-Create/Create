@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.palettes.AllPaletteBlocks;
 
@@ -20,11 +20,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public enum AllWorldFeatures {
 
-	COPPER_ORE(new CountedOreFeature(AllBlocksNew.COPPER_ORE, 18, 2).between(40, 86)),
-	COPPER_ORE_OCEAN(new CountedOreFeature(AllBlocksNew.COPPER_ORE, 15, 4).between(20, 55).inBiomes(OCEAN)),
+	COPPER_ORE(new CountedOreFeature(AllBlocks.COPPER_ORE, 18, 2).between(40, 86)),
+	COPPER_ORE_OCEAN(new CountedOreFeature(AllBlocks.COPPER_ORE, 15, 4).between(20, 55).inBiomes(OCEAN)),
 
-	ZINC_ORE(new CountedOreFeature(AllBlocksNew.ZINC_ORE, 14, 4).between(15, 70)),
-	ZINC_ORE_DESERT(new CountedOreFeature(AllBlocksNew.ZINC_ORE, 17, 5).between(10, 85).inBiomes(DESERT)),
+	ZINC_ORE(new CountedOreFeature(AllBlocks.ZINC_ORE, 14, 4).between(15, 70)),
+	ZINC_ORE_DESERT(new CountedOreFeature(AllBlocks.ZINC_ORE, 17, 5).between(10, 85).inBiomes(DESERT)),
 
 	LIMESTONE(new ChanceOreFeature(AllPaletteBlocks.LIMESTONE, 128, 1 / 32f).between(30, 70)),
 	WEATHERED_LIMESTONE(new ChanceOreFeature(AllPaletteBlocks.WEATHERED_LIMESTONE, 128, 1 / 32f).between(10, 30)),

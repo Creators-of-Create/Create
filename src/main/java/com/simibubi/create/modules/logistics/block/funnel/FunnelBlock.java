@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.block.ITE;
@@ -89,12 +89,12 @@ public class FunnelBlock extends AttachedLogisticalBlock
 
 	@Override
 	protected BlockState getVerticalDefaultState() {
-		return AllBlocksNew.VERTICAL_FUNNEL.getDefaultState();
+		return AllBlocks.VERTICAL_FUNNEL.getDefaultState();
 	}
 
 	@Override
 	protected BlockState getHorizontalDefaultState() {
-		return AllBlocksNew.FUNNEL.getDefaultState();
+		return AllBlocks.FUNNEL.getDefaultState();
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class FunnelBlock extends AttachedLogisticalBlock
 	}
 
 	protected boolean isOnBelt(IWorld world, BlockPos pos) {
-		return AllBlocksNew.BELT.has(world.getBlockState(pos.down()));
+		return AllBlocks.BELT.has(world.getBlockState(pos.down()));
 	}
 
 	@Override

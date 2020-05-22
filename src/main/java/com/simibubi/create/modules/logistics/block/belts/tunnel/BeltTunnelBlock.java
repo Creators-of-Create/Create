@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.WrappedWorld;
@@ -71,7 +71,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		BlockState blockState = worldIn.getBlockState(pos.down());
-		if (!AllBlocksNew.BELT.has(blockState))
+		if (!AllBlocks.BELT.has(blockState))
 			return false;
 		if (blockState.get(BeltBlock.SLOPE) != Slope.HORIZONTAL)
 			return false;
@@ -151,10 +151,10 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	private static BlockState getTunnelState(IBlockReader reader, BlockPos pos) {
-		BlockState state = AllBlocksNew.BELT_TUNNEL.getDefaultState();
+		BlockState state = AllBlocks.BELT_TUNNEL.getDefaultState();
 
 		BlockState belt = reader.getBlockState(pos.down());
-		if (AllBlocksNew.BELT.has(belt))
+		if (AllBlocks.BELT.has(belt))
 			state = state.with(HORIZONTAL_AXIS, belt.get(BeltBlock.HORIZONTAL_FACING)
 				.getAxis());
 		Axis axis = state.get(HORIZONTAL_AXIS);
@@ -164,11 +164,11 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 			.rotateY();
 		BlockState leftState = reader.getBlockState(pos.offset(left)
 			.down());
-		boolean onLeft = AllBlocksNew.BELT.has(leftState) && leftState.get(BeltBlock.HORIZONTAL_FACING)
+		boolean onLeft = AllBlocks.BELT.has(leftState) && leftState.get(BeltBlock.HORIZONTAL_FACING)
 			.getAxis() != axis;
 		BlockState rightState = reader.getBlockState(pos.offset(left.getOpposite())
 			.down());
-		boolean onRight = AllBlocksNew.BELT.has(rightState) && rightState.get(BeltBlock.HORIZONTAL_FACING)
+		boolean onRight = AllBlocks.BELT.has(rightState) && rightState.get(BeltBlock.HORIZONTAL_FACING)
 			.getAxis() != axis;
 
 		if (onLeft && onRight)
@@ -180,8 +180,8 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 
 		if (state.get(SHAPE) == Shape.STRAIGHT) {
 			Direction fw = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-			if (AllBlocksNew.BELT_TUNNEL.has(reader.getBlockState(pos.offset(fw)))
-				&& AllBlocksNew.BELT_TUNNEL.has(reader.getBlockState(pos.offset(fw.getOpposite()))))
+			if (AllBlocks.BELT_TUNNEL.has(reader.getBlockState(pos.offset(fw)))
+				&& AllBlocks.BELT_TUNNEL.has(reader.getBlockState(pos.offset(fw.getOpposite()))))
 				state = state.with(SHAPE, Shape.WINDOW);
 		}
 

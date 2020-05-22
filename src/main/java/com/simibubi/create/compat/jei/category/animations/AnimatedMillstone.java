@@ -2,7 +2,7 @@ package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
@@ -21,7 +21,7 @@ public class AnimatedMillstone extends AnimatedKinetics {
 			.scale(scale)
 			.render();
 		
-		GuiGameElement.of(AllBlocksNew.MILLSTONE.getDefaultState())
+		GuiGameElement.of(AllBlocks.MILLSTONE.getDefaultState())
 			.rotateBlock(22.5, 22.5, 0)
 			.scale(scale)
 			.render();

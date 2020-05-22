@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.logistics.block.transposer;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.logistics.block.belts.BeltAttachableLogisticalBlock;
 
@@ -58,12 +58,12 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 
 	@Override
 	protected BlockState getVerticalDefaultState() {
-		return AllBlocksNew.VERTICAL_TRANSPOSER.getDefaultState();
+		return AllBlocks.VERTICAL_TRANSPOSER.getDefaultState();
 	}
 
 	@Override
 	protected BlockState getHorizontalDefaultState() {
-		return AllBlocksNew.TRANSPOSER.getDefaultState();
+		return AllBlocks.TRANSPOSER.getDefaultState();
 	}
 
 	@Override

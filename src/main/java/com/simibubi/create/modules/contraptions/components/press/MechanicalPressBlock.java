@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AllShapes;
@@ -50,7 +50,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		return !AllBlocksNew.BASIN.has(worldIn.getBlockState(pos.down()));
+		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.down()));
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 	@Override
 	public boolean isAttachedCorrectly(IWorld world, BlockPos attachmentPos, BlockPos beltPos,
 			BlockState attachmentState, BlockState beltState) {
-		return AllBlocksNew.BELT.has(beltState) && beltState.get(BeltBlock.SLOPE) == Slope.HORIZONTAL;
+		return AllBlocks.BELT.has(beltState) && beltState.get(BeltBlock.SLOPE) == Slope.HORIZONTAL;
 	}
 
 	@Override

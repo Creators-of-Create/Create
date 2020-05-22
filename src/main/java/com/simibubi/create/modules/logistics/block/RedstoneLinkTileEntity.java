@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.behaviour.base.SmartTileEntity;
@@ -101,7 +101,7 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 		if (world.isRemote)
 			return;
 		BlockState blockState = getBlockState();
-		if (!AllBlocksNew.REDSTONE_LINK.has(blockState))
+		if (!AllBlocks.REDSTONE_LINK.has(blockState))
 			return;
 
 		if (receivedSignal != blockState.get(POWERED)) {

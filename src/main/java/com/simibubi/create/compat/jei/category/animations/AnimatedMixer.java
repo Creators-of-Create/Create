@@ -2,7 +2,7 @@ package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 public class AnimatedMixer extends AnimatedKinetics {
@@ -21,7 +21,7 @@ public class AnimatedMixer extends AnimatedKinetics {
 				.scale(scale)
 				.render();
 
-		GuiGameElement.of(AllBlocksNew.MECHANICAL_MIXER.getDefaultState())
+		GuiGameElement.of(AllBlocks.MECHANICAL_MIXER.getDefaultState())
 				.atLocal(0, 0, 0)
 				.scale(scale)
 				.render();
@@ -37,7 +37,7 @@ public class AnimatedMixer extends AnimatedKinetics {
 				.scale(scale)
 				.render();
 
-		GuiGameElement.of(AllBlocksNew.BASIN.getDefaultState())
+		GuiGameElement.of(AllBlocks.BASIN.getDefaultState())
 				.atLocal(0, 1.65, 0)
 				.scale(scale)
 				.render();

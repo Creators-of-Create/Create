@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.logistics.block.transposer;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -14,12 +14,12 @@ public class LinkedTransposerBlock extends TransposerBlock {
 
 	@Override
 	protected BlockState getVerticalDefaultState() {
-		return AllBlocksNew.VERTICAL_LINKED_TRANSPOSER.getDefaultState();
+		return AllBlocks.VERTICAL_LINKED_TRANSPOSER.getDefaultState();
 	}
 	
 	@Override
 	protected BlockState getHorizontalDefaultState() {
-		return AllBlocksNew.LINKED_TRANSPOSER.getDefaultState();
+		return AllBlocks.LINKED_TRANSPOSER.getDefaultState();
 	}
 	
 	@Override

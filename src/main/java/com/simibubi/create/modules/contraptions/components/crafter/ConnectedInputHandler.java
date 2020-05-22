@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Predicates;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -64,7 +64,7 @@ public class ConnectedInputHandler {
 		if (!AllItems.WRENCH.typeOf(heldItem))
 			return;
 		BlockState blockState = world.getBlockState(pos);
-		if (!AllBlocksNew.MECHANICAL_CRAFTER.has(blockState))
+		if (!AllBlocks.MECHANICAL_CRAFTER.has(blockState))
 			return;
 
 		BlockRayTraceResult ray = RaycastHelper.rayTraceRange(world, player, 10);
@@ -99,7 +99,7 @@ public class ConnectedInputHandler {
 				continue;
 			BlockPos neighbourPos = pos.offset(direction);
 			BlockState neighbour = world.getBlockState(neighbourPos);
-			if (!AllBlocksNew.MECHANICAL_CRAFTER.has(neighbour))
+			if (!AllBlocks.MECHANICAL_CRAFTER.has(neighbour))
 				continue;
 			if (refDirection != neighbour.get(HORIZONTAL_FACING))
 				continue;

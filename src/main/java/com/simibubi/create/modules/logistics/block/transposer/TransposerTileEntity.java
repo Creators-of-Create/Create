@@ -2,7 +2,7 @@ package com.simibubi.create.modules.logistics.block.transposer;
 
 import java.util.List;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.inventory.InsertingBehaviour;
@@ -69,7 +69,7 @@ public class TransposerTileEntity extends ExtractorTileEntity {
 	@Override
 	protected boolean isTargetingBelt() {
 		BlockPos targetPos = pos.offset(AttachedLogisticalBlock.getBlockFacing(getBlockState()).getOpposite());
-		if (!AllBlocksNew.BELT.has(world.getBlockState(targetPos)))
+		if (!AllBlocks.BELT.has(world.getBlockState(targetPos)))
 			return false;
 		TileEntity te = world.getTileEntity(targetPos);
 		if (te == null || !(te instanceof BeltTileEntity))

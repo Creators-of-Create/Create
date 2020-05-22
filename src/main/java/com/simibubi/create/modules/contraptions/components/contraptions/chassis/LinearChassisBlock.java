@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.components.contraptions.chassis;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
@@ -58,7 +58,7 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 	}
 
 	public static boolean isChassis(BlockState state) {
-		return AllBlocksNew.LINEAR_CHASSIS.has(state) || AllBlocksNew.LINEAR_CHASSIS_SECONDARY.has(state);
+		return AllBlocks.LINEAR_CHASSIS.has(state) || AllBlocks.LINEAR_CHASSIS_SECONDARY.has(state);
 	}
 
 	public static boolean sameKind(BlockState state1, BlockState state2) {

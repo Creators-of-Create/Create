@@ -3,7 +3,7 @@ package com.simibubi.create.modules.schematics.block;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
@@ -151,7 +151,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			if (!world.isBlockPresent(pos.offset(facing)))
 				continue;
 
-			if (AllBlocksNew.CREATIVE_CRATE.has(world.getBlockState(pos.offset(facing))))
+			if (AllBlocks.CREATIVE_CRATE.has(world.getBlockState(pos.offset(facing))))
 				hasCreativeCrate = true;
 
 			TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
@@ -465,10 +465,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (entityMode)
 			launchEntity(target, icon, blockReader.getEntities()
 				.get(printingEntityIndex));
-		else if (AllBlocksNew.BELT.has(blockState)) {
+		else if (AllBlocks.BELT.has(blockState)) {
 			TileEntity te = blockReader.getTileEntity(currentPos.add(schematicAnchor));
 			blockState = stripBeltIfNotLast(blockState);
-			if (te instanceof BeltTileEntity && AllBlocksNew.BELT.has(blockState))
+			if (te instanceof BeltTileEntity && AllBlocks.BELT.has(blockState))
 				launchBelt(target, blockState, ((BeltTileEntity) te).beltLength);
 			else
 				launchBlock(target, icon, blockState);
@@ -504,7 +504,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		}
 		if (!isLastSegment)
 			blockState = (blockState.get(BeltBlock.PART) == Part.MIDDLE) ? Blocks.AIR.getDefaultState()
-				: AllBlocksNew.SHAFT.getDefaultState()
+				: AllBlocks.SHAFT.getDefaultState()
 					.with(ShaftBlock.AXIS, facing.rotateY()
 						.getAxis());
 		return blockState;

@@ -3,7 +3,7 @@ package com.simibubi.create.modules.contraptions.components.contraptions.pulley;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.modules.contraptions.base.KineticTileEntity;
@@ -38,8 +38,8 @@ public class PulleyRenderer extends KineticTileEntityRenderer {
 
 		SuperByteBuffer halfMagnet = AllBlockPartials.ROPE_HALF_MAGNET.renderOn(blockState);
 		SuperByteBuffer halfRope = AllBlockPartials.ROPE_HALF.renderOn(blockState);
-		SuperByteBuffer magnet = CreateClient.bufferCache.renderBlock(AllBlocksNew.PULLEY_MAGNET.getDefaultState());
-		SuperByteBuffer rope = CreateClient.bufferCache.renderBlock(AllBlocksNew.ROPE.getDefaultState());
+		SuperByteBuffer magnet = CreateClient.bufferCache.renderBlock(AllBlocks.PULLEY_MAGNET.getDefaultState());
+		SuperByteBuffer rope = CreateClient.bufferCache.renderBlock(AllBlocks.ROPE.getDefaultState());
 
 		boolean moving = pulley.running && (pulley.movedContraption == null || !pulley.movedContraption.isStalled());
 		float offset = pulley.getInterpolatedOffset(moving ? partialTicks : 0.5f);

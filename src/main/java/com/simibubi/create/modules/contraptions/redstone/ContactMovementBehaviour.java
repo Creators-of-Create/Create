@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.redstone;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
@@ -32,7 +32,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 
 		deactivateLastVisitedContact(context);
 		BlockState visitedState = world.getBlockState(pos);
-		if (!AllBlocksNew.REDSTONE_CONTACT.has(visitedState))
+		if (!AllBlocks.REDSTONE_CONTACT.has(visitedState))
 			return;
 
 		Vec3d contact = new Vec3d(block.get(RedstoneContactBlock.FACING).getDirectionVec());
@@ -54,7 +54,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 	public void deactivateLastVisitedContact(MovementContext context) {
 		if (context.data.contains("lastContact")) {
 			BlockPos last = NBTUtil.readBlockPos(context.data.getCompound("lastContact"));
-			context.world.getPendingBlockTicks().scheduleTick(last, AllBlocksNew.REDSTONE_CONTACT.get(), 1, TickPriority.NORMAL);
+			context.world.getPendingBlockTicks().scheduleTick(last, AllBlocks.REDSTONE_CONTACT.get(), 1, TickPriority.NORMAL);
 			context.data.remove("lastContact");
 		}
 	}

@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.AllBlocksNew;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -175,9 +175,9 @@ public abstract class Contraption {
 		if (isChassis(state) && !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
 
-		if (AllBlocksNew.ADJUSTABLE_CRATE.has(state))
+		if (AllBlocks.ADJUSTABLE_CRATE.has(state))
 			AdjustableCrateBlock.splitCrate(world, pos);
-		if (AllBlocksNew.BELT.has(state)) {
+		if (AllBlocks.BELT.has(state)) {
 			BlockPos nextPos = BeltBlock.nextSegmentPosition(state, pos, true);
 			BlockPos prevPos = BeltBlock.nextSegmentPosition(state, pos, false);
 			if (nextPos != null && !visited.contains(nextPos))
@@ -318,13 +318,13 @@ public abstract class Contraption {
 
 	protected Pair<BlockInfo, TileEntity> capture(World world, BlockPos pos) {
 		BlockState blockstate = world.getBlockState(pos);
-		if (AllBlocksNew.SAW.has(blockstate))
+		if (AllBlocks.SAW.has(blockstate))
 			blockstate = blockstate.with(SawBlock.RUNNING, true);
 		if (blockstate.getBlock() instanceof ChestBlock)
 			blockstate = blockstate.with(ChestBlock.TYPE, ChestType.SINGLE);
-		if (AllBlocksNew.ADJUSTABLE_CRATE.has(blockstate))
+		if (AllBlocks.ADJUSTABLE_CRATE.has(blockstate))
 			blockstate = blockstate.with(AdjustableCrateBlock.DOUBLE, false);
-		if (AllBlocksNew.REDSTONE_CONTACT.has(blockstate))
+		if (AllBlocks.REDSTONE_CONTACT.has(blockstate))
 			blockstate = blockstate.with(RedstoneContactBlock.POWERED, true);
 		if (blockstate.getBlock() instanceof AbstractButtonBlock) {
 			blockstate = blockstate.with(AbstractButtonBlock.POWERED, false);
@@ -588,7 +588,7 @@ public abstract class Contraption {
 						state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world,
 							targetPos, targetPos.offset(face));
 
-				if (AllBlocksNew.SAW.has(state))
+				if (AllBlocks.SAW.has(state))
 					state = state.with(SawBlock.RUNNING, false);
 
 				BlockState blockState = world.getBlockState(targetPos);
