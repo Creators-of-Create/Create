@@ -1,7 +1,0 @@
-{
-	"parent": "create:block/contact",
-    "textures": {
-        "particle": "create:block/contact_side_powered",
-        "1": "create:block/contact_side_powered"
-    }
-}

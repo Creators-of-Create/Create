@@ -11,15 +11,15 @@ public class SharedProperties {
 	public static Material beltMaterial =
 		new Material(MaterialColor.GRAY, false, true, true, true, true, false, false, PushReaction.NORMAL);
 
-	public static Block kinetic() {
+	public static Block stone() {
 		return Blocks.ANDESITE;
 	}
 	
-	public static Block metalKinetic() {
+	public static Block softMetal() {
 		return Blocks.GOLD_BLOCK;
 	}
 	
-	public static Block woodenKinetic() {
+	public static Block wooden() {
 		return Blocks.STRIPPED_SPRUCE_WOOD;
 	}
 

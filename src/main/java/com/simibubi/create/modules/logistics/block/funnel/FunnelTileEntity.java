@@ -33,7 +33,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 	private ItemStack justEaten;
 
 	public FunnelTileEntity() {
-		super(AllTileEntities.BELT_FUNNEL.type);
+		super(AllTileEntities.FUNNEL.type);
 	}
 
 	@Override

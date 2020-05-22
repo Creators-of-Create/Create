@@ -23,7 +23,7 @@ public class SawGenerator extends SpecialBlockStateGen {
 		if (facing.getAxis()
 			.isVertical())
 			return axisAlongFirst ? 90 : 0;
-		return ((int) facing.getHorizontalAngle() + 360) % 360;
+		return horizontalAngle(facing);
 	}
 
 	@Override

@@ -21,7 +21,6 @@ import com.simibubi.create.modules.contraptions.relays.belt.transport.Transporte
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
@@ -54,8 +53,8 @@ public class BeltObserverBlock extends HorizontalBlock
 	public static final BooleanProperty BELT = BooleanProperty.create("belt");
 	public static final EnumProperty<Mode> MODE = EnumProperty.create("mode", Mode.class);
 
-	public BeltObserverBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public BeltObserverBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(POWERED, false).with(BELT, false));
 	}
 

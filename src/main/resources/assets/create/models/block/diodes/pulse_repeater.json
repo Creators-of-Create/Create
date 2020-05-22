@@ -1,0 +1,50 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "top": "create:block/diodes/pulse_repeater/idle",
+        "torch": "minecraft:block/redstone_torch_off",
+        "smooth_stone": "minecraft:block/smooth_stone",
+        "particle": "#top"
+    },
+    "elements": [
+        {
+            "name": "circuit",
+            "from": [ 0, 0, 0 ], 
+            "to": [ 16, 2, 16 ], 
+            "faces": {
+                "north": { "texture": "#smooth_stone", "uv": [ 0, 0, 16, 2 ] },
+                "east": { "texture": "#smooth_stone", "uv": [ 0, 0, 16, 2 ] },
+                "south": { "texture": "#smooth_stone", "uv": [ 0, 0, 16, 2 ] },
+                "west": { "texture": "#smooth_stone", "uv": [ 0, 0, 16, 2 ] },
+                "up": { "texture": "#top", "uv": [ 0, 0, 16, 16 ] },
+                "down": { "texture": "#smooth_stone", "uv": [ 0, 0, 16, 16 ] }
+            }
+        },
+        {
+            "name": "Front Torch",
+            "from": [ 6, 2, 3 ], 
+            "to": [ 10, 8, 5 ], 
+            "faces": {
+                "north": { "texture": "#torch", "uv": [ 6, 5, 10, 11 ] },
+                "south": { "texture": "#torch", "uv": [ 6, 5, 10, 11 ] }
+            }
+        },
+        {
+            "name": "Front Torch",
+            "from": [ 7, 2, 2 ], 
+            "to": [ 9, 8, 6 ], 
+            "faces": {
+                "east": { "texture": "#torch", "uv": [ 6, 5, 10, 11 ] },
+                "west": { "texture": "#torch", "uv": [ 6, 5, 10, 11 ] }
+            }
+        },
+        {
+            "name": "Front Torch Top",
+            "from": [ 7, 6, 3 ], 
+            "to": [ 9, 7, 5 ], 
+            "faces": {
+                "up": { "texture": "#torch", "uv": [ 7, 6, 9, 8 ] }
+            }
+        }
+    ]
+}

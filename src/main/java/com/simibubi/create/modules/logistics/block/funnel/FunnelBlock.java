@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.behaviour.base.TileEntityBehaviour;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
@@ -46,6 +45,10 @@ public class FunnelBlock extends AttachedLogisticalBlock
 	public static final BooleanProperty BELT = BooleanProperty.create("belt");
 	public static final MovementBehaviour MOVEMENT = new FunnelMovementBehaviour();
 
+	public FunnelBlock(Properties properties) {
+		super(properties);
+	}
+
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		if (!isVertical())
@@ -86,12 +89,12 @@ public class FunnelBlock extends AttachedLogisticalBlock
 
 	@Override
 	protected BlockState getVerticalDefaultState() {
-		return AllBlocks.VERTICAL_FUNNEL.getDefault();
+		return AllBlocksNew.VERTICAL_FUNNEL.getDefaultState();
 	}
 
 	@Override
 	protected BlockState getHorizontalDefaultState() {
-		return AllBlocks.BELT_FUNNEL.getDefault();
+		return AllBlocksNew.FUNNEL.getDefaultState();
 	}
 
 	@Override
@@ -214,6 +217,10 @@ public class FunnelBlock extends AttachedLogisticalBlock
 	}
 
 	public static class Vertical extends FunnelBlock {
+		public Vertical(Properties properties) {
+			super(properties);
+		}
+
 		@Override
 		protected boolean isVertical() {
 			return true;

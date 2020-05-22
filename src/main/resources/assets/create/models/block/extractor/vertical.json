@@ -3,8 +3,8 @@
 	"parent": "block/block",
 	"textures": {
 		"1": "create:block/brass_casing",
-		"particle": "create:block/extractor",
-		"extractor": "create:block/extractor"
+		"extractor": "create:block/extractor",
+		"particle": "#extractor"
 	},
 	"elements": [
 		{

@@ -1,93 +1,101 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+	"credit": "Made with Blockbench",
 	"parent": "block/block",
-    "textures": {
-        "progress": "create:block/indicator/0",
-        "brass_casing": "create:block/brass_casing",
-        "dark_oak_planks": "minecraft:block/dark_oak_planks",
-        "iron_block": "minecraft:block/iron_block",
-        "end": "create:block/stockpile_switch_end",
-		"particle": "create:block/brass_casing"
-    },
-    "elements": [
-        {
-            "name": "Indicator",
-            "from": [ 1, 2, 13 ], 
-            "to": [ 4, 14, 16 ], 
-            "faces": {
-                "east": { "texture": "#progress", "uv": [ 0, 2, 3, 14 ] },
-                "south": { "texture": "#progress", "uv": [ 1, 2, 4, 14 ] },
-                "west": { "texture": "#progress", "uv": [ 0, 2, 3, 14 ] }
-            }
-        },
-        {
-            "name": "Bottom Plate",
-            "from": [ 0, 0, 0 ], 
-            "to": [ 16, 2, 16 ], 
-            "faces": {
-                "north": { "texture": "#brass_casing", "uv": [ 0, 14, 16, 16 ] },
-                "east": { "texture": "#brass_casing", "uv": [ 0, 14, 16, 16 ] },
-                "south": { "texture": "#brass_casing", "uv": [ 0, 14, 16, 16 ] },
-                "west": { "texture": "#brass_casing", "uv": [ 0, 14, 16, 16 ] },
-                "up": { "texture": "#brass_casing", "uv": [ 0, 0, 16, 16 ] },
-                "down": { "texture": "#brass_casing", "uv": [ 0, 0, 16, 16 ] }
-            }
-        },
-        {
-            "name": "Top Plate",
-            "from": [ 0, 14, 0 ], 
-            "to": [ 16, 16, 16 ], 
-            "faces": {
-                "north": { "texture": "#brass_casing", "uv": [ 0, 0, 16, 2 ] },
-                "east": { "texture": "#brass_casing", "uv": [ 0, 0, 16, 2 ] },
-                "south": { "texture": "#brass_casing", "uv": [ 0, 0, 16, 2 ] },
-                "west": { "texture": "#brass_casing", "uv": [ 0, 0, 16, 2 ] },
-                "up": { "texture": "#brass_casing", "uv": [ 0, 0, 16, 16 ] },
-                "down": { "texture": "#brass_casing", "uv": [ 0, 0, 16, 16 ] }
-            }
-        },
-        {
-            "name": "Side Plate",
-            "from": [ 14, 2, 0 ], 
-            "to": [ 16, 14, 16 ], 
-            "faces": {
-                "north": { "texture": "#brass_casing", "uv": [ 0, 2, 2, 14 ] },
-                "east": { "texture": "#brass_casing", "uv": [ 0, 2, 16, 14 ] },
-                "south": { "texture": "#brass_casing", "uv": [ 14, 2, 16, 14 ] },
-                "west": { "texture": "#brass_casing", "uv": [ 0, 2, 16, 14 ] }
-            }
-        },
-        {
-            "name": "Center",
-            "from": [ 2, 2, 1 ], 
-            "to": [ 14, 14, 15 ], 
-            "faces": {
-                "north": { "texture": "#dark_oak_planks", "uv": [ 0, 0, 12, 12 ] },
-                "south": { "texture": "#dark_oak_planks", "uv": [ 0, 0, 12, 12 ] },
-                "west": { "texture": "#dark_oak_planks", "uv": [ 0, 0, 14, 12 ] }
-            }
-        },
-        {
-            "name": "Indicator",
-            "from": [ -1, 2, 2 ], 
-            "to": [ 1, 14, 14 ], 
-            "faces": {
-                "north": { "texture": "#iron_block", "uv": [ 14, 2, 16, 14 ] },
-                "south": { "texture": "#iron_block", "uv": [ 0, 2, 2, 14 ] },
-                "west": { "texture": "#end", "uv": [ 2, 2, 14, 14 ] },
-                "up": { "texture": "#iron_block", "uv": [ 2, 0, 14, 2 ], "rotation": 270 },
-                "down": { "texture": "#iron_block", "uv": [ 2, 14, 14, 16 ], "rotation": 90 }
-            }
-        },
-        {
-            "name": "Indicator",
-            "from": [ 1, 2, 0 ], 
-            "to": [ 4, 14, 3 ], 
-            "faces": {
-                "north": { "texture": "#progress", "uv": [ 0, 2, 3, 14 ] },
-                "east": { "texture": "#progress", "uv": [ 1, 2, 4, 14 ] },
-                "west": { "texture": "#progress", "uv": [ 1, 2, 4, 14 ] }
-            }
-        }
-    ]
+	"textures": {
+		"5": "create:block/brass_casing_inner",
+		"6": "create:block/brass_casing",
+		"indicator": "create:block/indicator/0",
+		"particle": "create:block/brass_casing_side",
+		"brass_casing": "create:block/brass_casing_side",
+		"end": "create:block/stockpile_switch_end"
+	},
+	"elements": [
+		{
+			"name": "Bottom Plate",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#brass_casing"},
+				"east": {"uv": [0, 14, 16, 16], "texture": "#brass_casing"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#brass_casing"},
+				"west": {"uv": [0, 14, 16, 16], "texture": "#brass_casing"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#6"},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#6"}
+			}
+		},
+		{
+			"name": "Top Plate",
+			"from": [0, 14, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#brass_casing"},
+				"east": {"uv": [0, 0, 16, 2], "texture": "#brass_casing"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#brass_casing"},
+				"west": {"uv": [0, 0, 16, 2], "texture": "#brass_casing"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#6"},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#6"}
+			}
+		},
+		{
+			"name": "Center",
+			"from": [1, 2, 1],
+			"to": [15, 14, 15],
+			"faces": {
+				"north": {"uv": [0, 0, 14, 12], "texture": "#5"},
+				"east": {"uv": [0, 1, 12, 15], "rotation": 90, "texture": "#5"},
+				"south": {"uv": [0, 1, 12, 15], "rotation": 90, "texture": "#5"},
+				"west": {"uv": [0, 1, 12, 15], "rotation": 90, "texture": "#5"},
+				"up": {"uv": [0, 0, 14, 14], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [0, 0, 14, 14], "rotation": 270, "texture": "#5"}
+			}
+		},
+		{
+			"name": "Indicator",
+			"from": [3.1, 3.1, -1.9],
+			"to": [12.9, 12.9, 1.1],
+			"faces": {
+				"north": {"uv": [0, 0, 10, 10], "texture": "#end"},
+				"east": {"uv": [10, 0, 13, 10], "texture": "#end"},
+				"west": {"uv": [10, 0, 13, 10], "texture": "#end"},
+				"up": {"uv": [10, 0, 13, 10], "rotation": 90, "texture": "#end"},
+				"down": {"uv": [10, 0, 13, 10], "rotation": 270, "texture": "#end"}
+			}
+		},
+		{
+			"name": "Indicator",
+			"from": [13, 2, 6],
+			"to": [16, 14, 10],
+			"faces": {
+				"north": {"uv": [0, 0, 3, 12], "texture": "#indicator"},
+				"east": {"uv": [0, 0, 4, 12], "texture": "#indicator"},
+				"south": {"uv": [1, 0, 4, 12], "texture": "#indicator"}
+			}
+		},
+		{
+			"name": "Indicator",
+			"from": [0, 2, 6],
+			"to": [3, 14, 10],
+			"faces": {
+				"north": {"uv": [3, 0, 0, 12], "texture": "#indicator"},
+				"south": {"uv": [4, 0, 1, 12], "texture": "#indicator"},
+				"west": {"uv": [4, 0, 0, 12], "texture": "#indicator"}
+			}
+		},
+		{
+			"name": "Indicator",
+			"from": [6, 2, 13],
+			"to": [10, 14, 16],
+			"faces": {
+				"east": {"uv": [4, 0, 1, 12], "texture": "#indicator"},
+				"south": {"uv": [4, 0, 0, 12], "texture": "#indicator"},
+				"west": {"uv": [3, 0, 0, 12], "texture": "#indicator"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [30, -135, 0],
+			"scale": [0.625, 0.625, 0.625]
+		}
+	}
 }

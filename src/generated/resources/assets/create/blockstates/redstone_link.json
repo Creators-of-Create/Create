@@ -1,0 +1,116 @@
+{
+  "variants": {
+    "facing=down,powered=false,receiver=false": {
+      "model": "create:block/redstone_link/transmitter",
+      "x": 180,
+      "y": 180
+    },
+    "facing=up,powered=false,receiver=false": {
+      "model": "create:block/redstone_link/transmitter",
+      "y": 180
+    },
+    "facing=north,powered=false,receiver=false": {
+      "model": "create:block/redstone_link/transmitter_vertical",
+      "x": 270,
+      "y": 180
+    },
+    "facing=south,powered=false,receiver=false": {
+      "model": "create:block/redstone_link/transmitter_vertical",
+      "x": 270
+    },
+    "facing=west,powered=false,receiver=false": {
+      "model": "create:block/redstone_link/transmitter_vertical",
+      "x": 270,
+      "y": 90
+    },
+    "facing=east,powered=false,receiver=false": {
+      "model": "create:block/redstone_link/transmitter_vertical",
+      "x": 270,
+      "y": 270
+    },
+    "facing=down,powered=true,receiver=false": {
+      "model": "create:block/redstone_link/transmitter_powered",
+      "x": 180,
+      "y": 180
+    },
+    "facing=up,powered=true,receiver=false": {
+      "model": "create:block/redstone_link/transmitter_powered",
+      "y": 180
+    },
+    "facing=north,powered=true,receiver=false": {
+      "model": "create:block/redstone_link/transmitter_vertical_powered",
+      "x": 270,
+      "y": 180
+    },
+    "facing=south,powered=true,receiver=false": {
+      "model": "create:block/redstone_link/transmitter_vertical_powered",
+      "x": 270
+    },
+    "facing=west,powered=true,receiver=false": {
+      "model": "create:block/redstone_link/transmitter_vertical_powered",
+      "x": 270,
+      "y": 90
+    },
+    "facing=east,powered=true,receiver=false": {
+      "model": "create:block/redstone_link/transmitter_vertical_powered",
+      "x": 270,
+      "y": 270
+    },
+    "facing=down,powered=false,receiver=true": {
+      "model": "create:block/redstone_link/receiver",
+      "x": 180,
+      "y": 180
+    },
+    "facing=up,powered=false,receiver=true": {
+      "model": "create:block/redstone_link/receiver",
+      "y": 180
+    },
+    "facing=north,powered=false,receiver=true": {
+      "model": "create:block/redstone_link/receiver_vertical",
+      "x": 270,
+      "y": 180
+    },
+    "facing=south,powered=false,receiver=true": {
+      "model": "create:block/redstone_link/receiver_vertical",
+      "x": 270
+    },
+    "facing=west,powered=false,receiver=true": {
+      "model": "create:block/redstone_link/receiver_vertical",
+      "x": 270,
+      "y": 90
+    },
+    "facing=east,powered=false,receiver=true": {
+      "model": "create:block/redstone_link/receiver_vertical",
+      "x": 270,
+      "y": 270
+    },
+    "facing=down,powered=true,receiver=true": {
+      "model": "create:block/redstone_link/receiver_powered",
+      "x": 180,
+      "y": 180
+    },
+    "facing=up,powered=true,receiver=true": {
+      "model": "create:block/redstone_link/receiver_powered",
+      "y": 180
+    },
+    "facing=north,powered=true,receiver=true": {
+      "model": "create:block/redstone_link/receiver_vertical_powered",
+      "x": 270,
+      "y": 180
+    },
+    "facing=south,powered=true,receiver=true": {
+      "model": "create:block/redstone_link/receiver_vertical_powered",
+      "x": 270
+    },
+    "facing=west,powered=true,receiver=true": {
+      "model": "create:block/redstone_link/receiver_vertical_powered",
+      "x": 270,
+      "y": 90
+    },
+    "facing=east,powered=true,receiver=true": {
+      "model": "create:block/redstone_link/receiver_vertical_powered",
+      "x": 270,
+      "y": 270
+    }
+  }
+}

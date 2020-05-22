@@ -52,7 +52,7 @@ public enum AllBlockPartials {
 	ANALOG_LEVER_INDICATOR("analog_lever/indicator"),
 	BELT_TUNNEL_FLAP("belt_tunnel/flap"),
 	BELT_TUNNEL_INDICATOR("belt_tunnel/indicator"),
-	FLEXPEATER_INDICATOR("repeaters/flexpeater_indicator"),
+	FLEXPEATER_INDICATOR("diodes/indicator"),
 	FLYWHEEL("flywheel/wheel"),
 	FLYWHEEL_UPPER_ROTATING("flywheel/upper_rotating_connector"),
 	FLYWHEEL_LOWER_ROTATING("flywheel/lower_rotating_connector"),

@@ -6,7 +6,6 @@ import com.simibubi.create.AllItems;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
@@ -23,8 +22,8 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 
 	public static BooleanProperty POWERING = BooleanProperty.create("powering");
 
-	public ToggleLatchBlock() {
-		super(Properties.from(Blocks.REPEATER));
+	public ToggleLatchBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(POWERING, false).with(POWERED, false));
 	}
 

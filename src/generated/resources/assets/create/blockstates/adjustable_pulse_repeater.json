@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,powered=false,powering=false": {
+      "model": "create:block/diodes/adjustable_pulse_repeater",
+      "y": 180
+    },
+    "facing=south,powered=false,powering=false": {
+      "model": "create:block/diodes/adjustable_pulse_repeater"
+    },
+    "facing=west,powered=false,powering=false": {
+      "model": "create:block/diodes/adjustable_pulse_repeater",
+      "y": 90
+    },
+    "facing=east,powered=false,powering=false": {
+      "model": "create:block/diodes/adjustable_pulse_repeater",
+      "y": 270
+    },
+    "facing=north,powered=true,powering=false": {
+      "model": "create:block/adjustable_pulse_repeater_powered",
+      "y": 180
+    },
+    "facing=south,powered=true,powering=false": {
+      "model": "create:block/adjustable_pulse_repeater_powered"
+    },
+    "facing=west,powered=true,powering=false": {
+      "model": "create:block/adjustable_pulse_repeater_powered",
+      "y": 90
+    },
+    "facing=east,powered=true,powering=false": {
+      "model": "create:block/adjustable_pulse_repeater_powered",
+      "y": 270
+    },
+    "facing=north,powered=false,powering=true": {
+      "model": "create:block/adjustable_pulse_repeater_powering",
+      "y": 180
+    },
+    "facing=south,powered=false,powering=true": {
+      "model": "create:block/adjustable_pulse_repeater_powering"
+    },
+    "facing=west,powered=false,powering=true": {
+      "model": "create:block/adjustable_pulse_repeater_powering",
+      "y": 90
+    },
+    "facing=east,powered=false,powering=true": {
+      "model": "create:block/adjustable_pulse_repeater_powering",
+      "y": 270
+    },
+    "facing=north,powered=true,powering=true": {
+      "model": "create:block/adjustable_pulse_repeater_powered_powering",
+      "y": 180
+    },
+    "facing=south,powered=true,powering=true": {
+      "model": "create:block/adjustable_pulse_repeater_powered_powering"
+    },
+    "facing=west,powered=true,powering=true": {
+      "model": "create:block/adjustable_pulse_repeater_powered_powering",
+      "y": 90
+    },
+    "facing=east,powered=true,powering=true": {
+      "model": "create:block/adjustable_pulse_repeater_powered_powering",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "belt=false,facing=north": {
+      "model": "create:block/funnel/horizontal"
+    },
+    "belt=true,facing=north": {
+      "model": "create:block/funnel/horizontal_belt"
+    },
+    "belt=false,facing=south": {
+      "model": "create:block/funnel/horizontal",
+      "y": 180
+    },
+    "belt=true,facing=south": {
+      "model": "create:block/funnel/horizontal_belt",
+      "y": 180
+    },
+    "belt=false,facing=west": {
+      "model": "create:block/funnel/horizontal",
+      "y": 270
+    },
+    "belt=true,facing=west": {
+      "model": "create:block/funnel/horizontal_belt",
+      "y": 270
+    },
+    "belt=false,facing=east": {
+      "model": "create:block/funnel/horizontal",
+      "y": 90
+    },
+    "belt=true,facing=east": {
+      "model": "create:block/funnel/horizontal_belt",
+      "y": 90
+    }
+  }
+}

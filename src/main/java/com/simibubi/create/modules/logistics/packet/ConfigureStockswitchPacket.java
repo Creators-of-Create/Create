@@ -1,12 +1,12 @@
 package com.simibubi.create.modules.logistics.packet;
 
 import com.simibubi.create.foundation.packet.TileEntityConfigurationPacket;
-import com.simibubi.create.modules.logistics.block.StockswitchTileEntity;
+import com.simibubi.create.modules.logistics.block.StockpileSwitchTileEntity;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 
-public class ConfigureStockswitchPacket extends TileEntityConfigurationPacket<StockswitchTileEntity> {
+public class ConfigureStockswitchPacket extends TileEntityConfigurationPacket<StockpileSwitchTileEntity> {
 
 	private float offBelow;
 	private float onAbove;
@@ -34,7 +34,7 @@ public class ConfigureStockswitchPacket extends TileEntityConfigurationPacket<St
 	}
 
 	@Override
-	protected void applySettings(StockswitchTileEntity te) {
+	protected void applySettings(StockpileSwitchTileEntity te) {
 		te.offWhenBelow = offBelow;
 		te.onWhenAbove = onAbove;
 	}

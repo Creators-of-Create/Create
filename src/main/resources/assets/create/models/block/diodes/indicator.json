@@ -1,0 +1,19 @@
+{
+    "textures": {
+        "flexpeater_off": "create:block/diodes/adjustable_repeater/idle"
+    },
+    "elements": [
+        {
+            "name": "Light",
+            "from": [ 3.96875, 1.96875, 3.96875 ], 
+            "to": [ 12.03125, 3, 12.03125 ], 
+            "faces": {
+                "north": { "texture": "#flexpeater_off", "uv": [ 4, 4, 12, 5 ], "rotation": 180 },
+                "east": { "texture": "#flexpeater_off", "uv": [ 11, 4, 12, 12 ], "rotation": 90 },
+                "south": { "texture": "#flexpeater_off", "uv": [ 4, 11, 12, 12 ] },
+                "west": { "texture": "#flexpeater_off", "uv": [ 4, 12, 5, 4 ], "rotation": 90 },
+                "up": { "texture": "#flexpeater_off", "uv": [ 4, 4, 12, 12 ] }
+            }
+        }
+    ]
+}

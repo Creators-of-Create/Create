@@ -1,6 +1,0 @@
-{
-	"parent": "create:block/pulse_repeater_powered",
-    "textures": {
-		"torch": "minecraft:block/redstone_torch"
-    }
-}

@@ -17,8 +17,7 @@ public class FlywheelGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return ((int) state.get(FlywheelBlock.HORIZONTAL_FACING)
-			.getHorizontalAngle() + 90 + 360) % 360;
+		return horizontalAngle(state.get(FlywheelBlock.HORIZONTAL_FACING)) + 90;
 	}
 
 	@Override

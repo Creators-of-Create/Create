@@ -36,7 +36,7 @@ public class GaugeGenerator extends SpecialBlockStateGen {
 			.isVertical())
 			return alongFirst ? 90 : 0;
 
-		return ((int) direction.getHorizontalAngle() + 360 + 90) % 360;
+		return horizontalAngle(direction) + 90;
 	}
 
 	@Override

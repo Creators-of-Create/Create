@@ -1,8 +1,8 @@
 package com.simibubi.create;
 
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.logistics.block.inventories.FlexcrateContainer;
-import com.simibubi.create.modules.logistics.block.inventories.FlexcrateScreen;
+import com.simibubi.create.modules.logistics.block.inventories.AdjustableCrateContainer;
+import com.simibubi.create.modules.logistics.block.inventories.AdjustableCrateScreen;
 import com.simibubi.create.modules.logistics.item.filter.AttributeFilterContainer;
 import com.simibubi.create.modules.logistics.item.filter.AttributeFilterScreen;
 import com.simibubi.create.modules.logistics.item.filter.FilterContainer;
@@ -29,7 +29,7 @@ public enum AllContainers {
 
 	SCHEMATIC_TABLE(SchematicTableContainer::new),
 	SCHEMATICANNON(SchematicannonContainer::new),
-	FLEXCRATE(FlexcrateContainer::new),
+	FLEXCRATE(AdjustableCrateContainer::new),
 	FILTER(FilterContainer::new),
 	ATTRIBUTE_FILTER(AttributeFilterContainer::new),
 
@@ -54,7 +54,7 @@ public enum AllContainers {
 	public static void registerScreenFactories() {
 		bind(SCHEMATIC_TABLE, SchematicTableScreen::new);
 		bind(SCHEMATICANNON, SchematicannonScreen::new);
-		bind(FLEXCRATE, FlexcrateScreen::new);
+		bind(FLEXCRATE, AdjustableCrateScreen::new);
 		bind(FILTER, FilterScreen::new);
 		bind(ATTRIBUTE_FILTER, AttributeFilterScreen::new);
 	}

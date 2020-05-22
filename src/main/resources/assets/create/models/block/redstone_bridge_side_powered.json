@@ -1,8 +1,0 @@
-{
-	"parent": "create:block/redstone_bridge_side",
-    "textures": {
-    	"redstone_antenna": "create:block/redstone_antenna_powered",
-        "redstone_bridge_side": "create:block/redstone_bridge_side_powered",
-		"particle": "create:block/redstone_bridge_powered"
-    }
-}

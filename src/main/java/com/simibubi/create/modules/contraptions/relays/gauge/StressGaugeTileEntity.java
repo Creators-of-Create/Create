@@ -14,7 +14,7 @@ import net.minecraft.util.text.TextFormatting;
 public class StressGaugeTileEntity extends GaugeTileEntity {
 
 	public StressGaugeTileEntity() {
-		super(AllTileEntities.STRESS_GAUGE.type);
+		super(AllTileEntities.STRESSOMETER.type);
 	}
 
 	@Override

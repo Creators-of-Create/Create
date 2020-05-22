@@ -37,7 +37,7 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new ShaftTileEntity();
+		return new SimpleKineticTileEntity();
 	}
 
 	@Override

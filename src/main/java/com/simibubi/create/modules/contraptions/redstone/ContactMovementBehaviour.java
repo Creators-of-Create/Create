@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.contraptions.redstone;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementBehaviour;
 import com.simibubi.create.modules.contraptions.components.contraptions.MovementContext;
@@ -17,7 +17,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(ContactBlock.FACING).getDirectionVec()).scale(.65f);
+		return new Vec3d(context.state.get(RedstoneContactBlock.FACING).getDirectionVec()).scale(.65f);
 	}
 
 	@Override
@@ -32,16 +32,16 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 
 		deactivateLastVisitedContact(context);
 		BlockState visitedState = world.getBlockState(pos);
-		if (!AllBlocks.CONTACT.typeOf(visitedState))
+		if (!AllBlocksNew.REDSTONE_CONTACT.has(visitedState))
 			return;
 
-		Vec3d contact = new Vec3d(block.get(ContactBlock.FACING).getDirectionVec());
+		Vec3d contact = new Vec3d(block.get(RedstoneContactBlock.FACING).getDirectionVec());
 		contact = VecHelper.rotate(contact, context.rotation.x, context.rotation.y, context.rotation.z);
 		Direction direction = Direction.getFacingFromVector(contact.x, contact.y, contact.z);
 
-		if (!ContactBlock.hasValidContact(world, pos.offset(direction.getOpposite()), direction))
+		if (!RedstoneContactBlock.hasValidContact(world, pos.offset(direction.getOpposite()), direction))
 			return;
-		world.setBlockState(pos, visitedState.with(ContactBlock.POWERED, true));
+		world.setBlockState(pos, visitedState.with(RedstoneContactBlock.POWERED, true));
 		context.data.put("lastContact", NBTUtil.writeBlockPos(pos));
 		return;
 	}
@@ -54,7 +54,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 	public void deactivateLastVisitedContact(MovementContext context) {
 		if (context.data.contains("lastContact")) {
 			BlockPos last = NBTUtil.readBlockPos(context.data.getCompound("lastContact"));
-			context.world.getPendingBlockTicks().scheduleTick(last, AllBlocks.CONTACT.get(), 1, TickPriority.NORMAL);
+			context.world.getPendingBlockTicks().scheduleTick(last, AllBlocksNew.REDSTONE_CONTACT.get(), 1, TickPriority.NORMAL);
 			context.data.remove("lastContact");
 		}
 	}

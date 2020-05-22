@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.SyncedTileEntity;
@@ -151,7 +150,7 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 		for (Direction direction : Direction.values()) {
 			if (direction.getAxis().isVertical())
 				continue;
-			if (AllBlocks.BELT_TUNNEL.typeOf(world.getBlockState(pos.offset(direction))))
+			if (AllBlocksNew.BELT_TUNNEL.has(world.getBlockState(pos.offset(direction))))
 				continue;
 			if (direction.getAxis() != tunnelState.get(BlockStateProperties.HORIZONTAL_AXIS)) {
 				boolean positive = direction.getAxisDirection() == AxisDirection.POSITIVE

@@ -10,7 +10,9 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 
@@ -52,16 +54,16 @@ public class AssetLookup {
 
 	/**
 	 * Generate item model inheriting from a seperate model in
-	 * models/block/folders[0]/folders[1]/.../item.json
-	 * "_" will be replaced by the item name
+	 * models/block/folders[0]/folders[1]/.../item.json "_" will be replaced by the
+	 * item name
 	 */
 	public static <I extends BlockItem> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> customItemModel(
 		String... folders) {
 		return (c, p) -> {
-			String path = "block/";
-			for (String string : folders) 
-				path += ("_".equals(string) ? c.getName() : string) + "/";
-			p.withExistingParent(c.getName(), p.modLoc(path + "item"));
+			String path = "block";
+			for (String string : folders)
+				path += "/" + ("_".equals(string) ? c.getName() : string);
+			p.withExistingParent(c.getName(), p.modLoc(path));
 		};
 	}
 
@@ -69,6 +71,25 @@ public class AssetLookup {
 		RegistrateBlockstateProvider prov) {
 		return state -> state.get(BlockStateProperties.POWERED) ? partialBaseModel(ctx, prov, "powered")
 			: partialBaseModel(ctx, prov);
+	}
+
+	public static Function<BlockState, ModelFile> forPowered(DataGenContext<?, ?> ctx,
+		RegistrateBlockstateProvider prov, String path) {
+		return state -> prov.models()
+			.getExistingFile(
+				prov.modLoc("block/" + path + (state.get(BlockStateProperties.POWERED) ? "_powered" : "")));
+	}
+
+	public static Function<BlockState, ModelFile> withIndicator(DataGenContext<?, ?> ctx,
+		RegistrateBlockstateProvider prov, Function<BlockState, ModelFile> baseModelFunc, IntegerProperty property) {
+		return state -> {
+			ResourceLocation baseModel = baseModelFunc.apply(state)
+				.getLocation();
+			Integer integer = state.get(property);
+			return prov.models()
+				.withExistingParent(ctx.getName() + "_" + integer, baseModel)
+				.texture("indicator", "block/indicator/" + integer);
+		};
 	}
 
 	public static String getOxidizedModel(String name, int level) {

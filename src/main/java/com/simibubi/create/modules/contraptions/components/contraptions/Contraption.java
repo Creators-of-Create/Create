@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -40,9 +39,9 @@ import com.simibubi.create.modules.contraptions.components.contraptions.pulley.P
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyTileEntity;
 import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
-import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
+import com.simibubi.create.modules.contraptions.redstone.RedstoneContactBlock;
 import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
+import com.simibubi.create.modules.logistics.block.inventories.AdjustableCrateBlock;
 
 import net.minecraft.block.AbstractButtonBlock;
 import net.minecraft.block.Block;
@@ -176,8 +175,8 @@ public abstract class Contraption {
 		if (isChassis(state) && !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
 
-		if (AllBlocks.FLEXCRATE.typeOf(state))
-			FlexcrateBlock.splitCrate(world, pos);
+		if (AllBlocksNew.ADJUSTABLE_CRATE.has(state))
+			AdjustableCrateBlock.splitCrate(world, pos);
 		if (AllBlocksNew.BELT.has(state)) {
 			BlockPos nextPos = BeltBlock.nextSegmentPosition(state, pos, true);
 			BlockPos prevPos = BeltBlock.nextSegmentPosition(state, pos, false);
@@ -323,10 +322,10 @@ public abstract class Contraption {
 			blockstate = blockstate.with(SawBlock.RUNNING, true);
 		if (blockstate.getBlock() instanceof ChestBlock)
 			blockstate = blockstate.with(ChestBlock.TYPE, ChestType.SINGLE);
-		if (AllBlocks.FLEXCRATE.typeOf(blockstate))
-			blockstate = blockstate.with(FlexcrateBlock.DOUBLE, false);
-		if (AllBlocks.CONTACT.typeOf(blockstate))
-			blockstate = blockstate.with(ContactBlock.POWERED, true);
+		if (AllBlocksNew.ADJUSTABLE_CRATE.has(blockstate))
+			blockstate = blockstate.with(AdjustableCrateBlock.DOUBLE, false);
+		if (AllBlocksNew.REDSTONE_CONTACT.has(blockstate))
+			blockstate = blockstate.with(RedstoneContactBlock.POWERED, true);
 		if (blockstate.getBlock() instanceof AbstractButtonBlock) {
 			blockstate = blockstate.with(AbstractButtonBlock.POWERED, false);
 			world.getPendingBlockTicks()

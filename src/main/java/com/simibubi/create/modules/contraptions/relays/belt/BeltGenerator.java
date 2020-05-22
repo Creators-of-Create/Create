@@ -27,9 +27,8 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		Slope slope = state.get(BeltBlock.SLOPE);
 
 		boolean flip = casing && slope == Slope.UPWARD;
-		int horizontalAngle = (int) state.get(BeltBlock.HORIZONTAL_FACING)
-			.getHorizontalAngle();
-		return (360 + horizontalAngle + (flip ? 180 : 0)) % 360;
+		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
+		return horizontalAngle(direction) + (flip ? 180 : 0);
 	}
 
 	@Override

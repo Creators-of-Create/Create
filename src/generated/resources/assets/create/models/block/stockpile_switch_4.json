@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/stockpile_switch",
+  "textures": {
+    "indicator": "create:block/indicator/4"
+  }
+}

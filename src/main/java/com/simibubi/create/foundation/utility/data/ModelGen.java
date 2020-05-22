@@ -41,8 +41,8 @@ public class ModelGen {
 			.build();
 	}
 
-	public static <I extends BlockItem, P> NonNullFunction<ItemBuilder<I, P>, P> customItemModel(String... folders) {
-		return b -> b.model(AssetLookup.customItemModel(folders))
+	public static <I extends BlockItem, P> NonNullFunction<ItemBuilder<I, P>, P> customItemModel(String... path) {
+		return b -> b.model(AssetLookup.customItemModel(path))
 			.build();
 	}
 

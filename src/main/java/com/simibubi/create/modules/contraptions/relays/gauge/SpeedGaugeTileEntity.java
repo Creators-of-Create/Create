@@ -16,7 +16,7 @@ import net.minecraft.util.text.TextFormatting;
 public class SpeedGaugeTileEntity extends GaugeTileEntity{
 
 	public SpeedGaugeTileEntity() {
-		super(AllTileEntities.SPEED_GAUGE.type);
+		super(AllTileEntities.SPEEDOMETER.type);
 	}
 
 	@Override

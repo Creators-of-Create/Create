@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.logistics.block.extractor;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -29,8 +29,8 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock implements IPo
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 	private static final MovementBehaviour MOVEMENT = new ExtractorMovementBehaviour();
 
-	public ExtractorBlock() {
-		super();
+	public ExtractorBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(POWERED, false));
 	}
 
@@ -41,12 +41,12 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock implements IPo
 
 	@Override
 	protected BlockState getVerticalDefaultState() {
-		return AllBlocks.VERTICAL_EXTRACTOR.getDefault();
+		return AllBlocksNew.VERTICAL_EXTRACTOR.getDefaultState();
 	}
-	
+
 	@Override
 	protected BlockState getHorizontalDefaultState() {
-		return AllBlocks.EXTRACTOR.getDefault();
+		return AllBlocksNew.EXTRACTOR.getDefaultState();
 	}
 
 	@Override
@@ -66,13 +66,13 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock implements IPo
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return super.getStateForPlacement(context).with(POWERED,
-				reactsToRedstone() && context.getWorld().isBlockPowered(context.getPos()));
+		return super.getStateForPlacement(context).with(POWERED, reactsToRedstone() && context.getWorld()
+			.isBlockPowered(context.getPos()));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
+		boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 
 		if (worldIn.isRemote)
@@ -116,6 +116,10 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock implements IPo
 	}
 
 	public static class Vertical extends ExtractorBlock {
+		public Vertical(Properties properties) {
+			super(properties);
+		}
+
 		@Override
 		protected boolean isVertical() {
 			return true;

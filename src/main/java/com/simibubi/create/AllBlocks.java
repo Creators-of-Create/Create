@@ -10,23 +10,6 @@ import com.simibubi.create.foundation.block.ProperStairsBlock;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.data.ITaggable;
 import com.simibubi.create.modules.Sections;
-import com.simibubi.create.modules.contraptions.redstone.AnalogLeverBlock;
-import com.simibubi.create.modules.contraptions.redstone.ContactBlock;
-import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
-import com.simibubi.create.modules.logistics.block.StockswitchBlock;
-import com.simibubi.create.modules.logistics.block.belts.observer.BeltObserverBlock;
-import com.simibubi.create.modules.logistics.block.belts.tunnel.BeltTunnelBlock;
-import com.simibubi.create.modules.logistics.block.diodes.FlexpeaterBlock;
-import com.simibubi.create.modules.logistics.block.diodes.LatchBlock;
-import com.simibubi.create.modules.logistics.block.diodes.PulseRepeaterBlock;
-import com.simibubi.create.modules.logistics.block.diodes.ToggleLatchBlock;
-import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
-import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorBlock;
-import com.simibubi.create.modules.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.modules.logistics.block.inventories.CreativeCrateBlock;
-import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
-import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBlock;
-import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.ProviderType;
@@ -39,7 +22,6 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Block.Properties;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FenceBlock;
@@ -122,29 +104,34 @@ public enum AllBlocks implements NonNullSupplier<Block> {
 
 	_2_(Sections.LOGISTICS),
 
-	CONTACT(ContactBlock::new),
-	REDSTONE_BRIDGE(RedstoneLinkBlock::new),
-	STOCKSWITCH(StockswitchBlock::new),
-	FLEXCRATE(FlexcrateBlock::new),
-	CREATIVE_CRATE(() -> new CreativeCrateBlock(Properties.from(Blocks.CHEST))),
-	EXTRACTOR(ExtractorBlock::new),
-	VERTICAL_EXTRACTOR(ExtractorBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
-	LINKED_EXTRACTOR(LinkedExtractorBlock::new),
-	VERTICAL_LINKED_EXTRACTOR(LinkedExtractorBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
-	TRANSPOSER(TransposerBlock::new),
-	VERTICAL_TRANSPOSER(TransposerBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
-	LINKED_TRANSPOSER(LinkedTransposerBlock::new),
-	VERTICAL_LINKED_TRANSPOSER(LinkedTransposerBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
-	BELT_FUNNEL(FunnelBlock::new),
-	VERTICAL_FUNNEL(FunnelBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
-	BELT_TUNNEL(BeltTunnelBlock::new),
-	ENTITY_DETECTOR(BeltObserverBlock::new),
-	ANALOG_LEVER(AnalogLeverBlock::new),
-	PULSE_REPEATER(PulseRepeaterBlock::new),
-	FLEXPEATER(FlexpeaterBlock::new),
-	FLEXPULSEPEATER(FlexpeaterBlock::new),
-	REDSTONE_LATCH(LatchBlock::new),
-	TOGGLE_LATCH(ToggleLatchBlock::new),
+//	CONTACT(ContactBlock::new),
+//	REDSTONE_BRIDGE(RedstoneLinkBlock::new),
+//	STOCKSWITCH(StockpileSwitchBlock::new),
+//	FLEXCRATE(FlexcrateBlock::new),
+//	CREATIVE_CRATE(() -> new CreativeCrateBlock(Properties.from(Blocks.CHEST))),
+	
+//	EXTRACTOR(ExtractorBlock::new),
+//	VERTICAL_EXTRACTOR(ExtractorBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
+//	LINKED_EXTRACTOR(LinkedExtractorBlock::new),
+//	VERTICAL_LINKED_EXTRACTOR(LinkedExtractorBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
+	
+//	TRANSPOSER(TransposerBlock::new),
+//	VERTICAL_TRANSPOSER(TransposerBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
+//	LINKED_TRANSPOSER(LinkedTransposerBlock::new),
+//	VERTICAL_LINKED_TRANSPOSER(LinkedTransposerBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
+	
+//	BELT_FUNNEL(FunnelBlock::new),
+//	VERTICAL_FUNNEL(FunnelBlock.Vertical::new, ComesWith.NO_BLOCKITEM),
+	
+//	BELT_TUNNEL(BeltTunnelBlock::new),
+//	ENTITY_DETECTOR(BeltObserverBlock::new),
+//	ANALOG_LEVER(AnalogLeverBlock::new),
+	
+//	PULSE_REPEATER(PulseRepeaterBlock::new),
+//	FLEXPEATER(FlexpeaterBlock::new),
+//	FLEXPULSEPEATER(FlexpeaterBlock::new),
+//	REDSTONE_LATCH(LatchBlock::new),
+//	TOGGLE_LATCH(ToggleLatchBlock::new),
 
 	_3_(Sections.MATERIALS),
 

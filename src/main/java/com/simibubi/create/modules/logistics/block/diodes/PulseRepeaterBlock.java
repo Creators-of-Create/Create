@@ -4,7 +4,6 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
@@ -17,8 +16,8 @@ public class PulseRepeaterBlock extends AbstractDiodeBlock {
 
 	public static BooleanProperty PULSING = BooleanProperty.create("pulsing");
 
-	public PulseRepeaterBlock() {
-		super(Properties.from(Blocks.REPEATER));
+	public PulseRepeaterBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(PULSING, false).with(POWERED, false));
 	}
 

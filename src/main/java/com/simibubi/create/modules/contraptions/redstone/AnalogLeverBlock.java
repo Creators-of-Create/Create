@@ -29,8 +29,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogLeverTileEntity> {
 
-	public AnalogLeverBlock() {
-		super(Properties.from(Blocks.LEVER));
+	public AnalogLeverBlock(Properties p_i48402_1_) {
+		super(p_i48402_1_);
 	}
 
 	@Override

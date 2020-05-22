@@ -1,12 +1,12 @@
 package com.simibubi.create.modules.logistics.packet;
 
 import com.simibubi.create.foundation.packet.TileEntityConfigurationPacket;
-import com.simibubi.create.modules.logistics.block.inventories.FlexcrateTileEntity;
+import com.simibubi.create.modules.logistics.block.inventories.AdjustableCrateTileEntity;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 
-public class ConfigureFlexcratePacket extends TileEntityConfigurationPacket<FlexcrateTileEntity> {
+public class ConfigureFlexcratePacket extends TileEntityConfigurationPacket<AdjustableCrateTileEntity> {
 
 	private int maxItems;
 	
@@ -30,7 +30,7 @@ public class ConfigureFlexcratePacket extends TileEntityConfigurationPacket<Flex
 	}
 
 	@Override
-	protected void applySettings(FlexcrateTileEntity te) {
+	protected void applySettings(AdjustableCrateTileEntity te) {
 		te.allowedAmount = maxItems;
 	}
 

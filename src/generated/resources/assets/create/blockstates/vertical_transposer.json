@@ -1,0 +1,80 @@
+{
+  "variants": {
+    "facing=north,powered=false,upward=false": {
+      "model": "create:block/transposer/block",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,powered=false,upward=false": {
+      "model": "create:block/transposer/block",
+      "x": 90
+    },
+    "facing=west,powered=false,upward=false": {
+      "model": "create:block/transposer/block",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,powered=false,upward=false": {
+      "model": "create:block/transposer/block",
+      "x": 90,
+      "y": 270
+    },
+    "facing=north,powered=true,upward=false": {
+      "model": "create:block/transposer/block_powered",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,powered=true,upward=false": {
+      "model": "create:block/transposer/block_powered",
+      "x": 90
+    },
+    "facing=west,powered=true,upward=false": {
+      "model": "create:block/transposer/block_powered",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,powered=true,upward=false": {
+      "model": "create:block/transposer/block_powered",
+      "x": 90,
+      "y": 270
+    },
+    "facing=north,powered=false,upward=true": {
+      "model": "create:block/transposer/block",
+      "x": 270
+    },
+    "facing=south,powered=false,upward=true": {
+      "model": "create:block/transposer/block",
+      "x": 270,
+      "y": 180
+    },
+    "facing=west,powered=false,upward=true": {
+      "model": "create:block/transposer/block",
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,powered=false,upward=true": {
+      "model": "create:block/transposer/block",
+      "x": 270,
+      "y": 90
+    },
+    "facing=north,powered=true,upward=true": {
+      "model": "create:block/transposer/block_powered",
+      "x": 270
+    },
+    "facing=south,powered=true,upward=true": {
+      "model": "create:block/transposer/block_powered",
+      "x": 270,
+      "y": 180
+    },
+    "facing=west,powered=true,upward=true": {
+      "model": "create:block/transposer/block_powered",
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,powered=true,upward=true": {
+      "model": "create:block/transposer/block_powered",
+      "x": 270,
+      "y": 90
+    }
+  }
+}

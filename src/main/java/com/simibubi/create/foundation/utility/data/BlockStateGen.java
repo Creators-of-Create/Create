@@ -1,6 +1,9 @@
 
 package com.simibubi.create.foundation.utility.data;
 
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -11,6 +14,7 @@ import com.simibubi.create.modules.contraptions.base.DirectionalAxisKineticBlock
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.chassis.RadialChassisBlock;
 import com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerBlock;
+import com.simibubi.create.modules.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.modules.palettes.PavedBlock;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -170,6 +174,48 @@ public class BlockStateGen {
 					.rotationY(state.get(CartAssemblerBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? 90 : 0)
 					.build();
 			});
+	}
+
+	public static NonNullBiConsumer<DataGenContext<Block, BeltObserverBlock>, RegistrateBlockstateProvider> beltObserver() {
+		return (c, p) -> {
+
+			Map<BeltObserverBlock.Mode, Map<String, ModelFile>> models = new IdentityHashMap<>();
+			Map<String, ResourceLocation> baseModels = new HashMap<>();
+
+			for (boolean powered : Iterate.trueAndFalse) {
+				for (boolean belt : Iterate.trueAndFalse) {
+					String suffix = (belt ? "_belt" : "") + (powered ? "_powered" : "");
+					baseModels.put(suffix, p.modLoc("block/belt_observer/base" + suffix));
+				}
+			}
+
+			for (BeltObserverBlock.Mode mode : BeltObserverBlock.Mode.values()) {
+				String modeName = mode.getName();
+				HashMap<String, ModelFile> map = new HashMap<>();
+				for (boolean powered : Iterate.trueAndFalse) {
+					for (boolean belt : Iterate.trueAndFalse) {
+						String suffix = (belt ? "_belt" : "") + (powered ? "_powered" : "");
+						map.put(suffix, p.models()
+							.withExistingParent("block/belt_observer/" + modeName + suffix, baseModels.get(suffix))
+							.texture("texture",
+								p.modLoc("block/belt_observer_" + modeName + (powered ? "_powered" : ""))));
+					}
+				}
+				models.put(mode, map);
+			}
+
+			p.getVariantBuilder(c.get())
+				.forAllStates(state -> {
+					String suffix = (state.get(BeltObserverBlock.BELT) ? "_belt" : "")
+						+ (state.get(BeltObserverBlock.POWERED) ? "_powered" : "");
+					return ConfiguredModel.builder()
+						.modelFile(models.get(state.get(BeltObserverBlock.MODE))
+							.get(suffix))
+						.rotationY((int) state.get(BeltObserverBlock.HORIZONTAL_FACING)
+							.getHorizontalAngle())
+						.build();
+				});
+		};
 	}
 
 	public static <B extends LinearChassisBlock> NonNullBiConsumer<DataGenContext<Block, B>, RegistrateBlockstateProvider> linearChassis() {

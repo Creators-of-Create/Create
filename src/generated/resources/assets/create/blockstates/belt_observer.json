@@ -1,0 +1,244 @@
+{
+  "variants": {
+    "belt=false,facing=north,mode=detect,powered=false": {
+      "model": "create:block/belt_observer/detect",
+      "y": 180
+    },
+    "belt=true,facing=north,mode=detect,powered=false": {
+      "model": "create:block/belt_observer/detect_belt",
+      "y": 180
+    },
+    "belt=false,facing=south,mode=detect,powered=false": {
+      "model": "create:block/belt_observer/detect"
+    },
+    "belt=true,facing=south,mode=detect,powered=false": {
+      "model": "create:block/belt_observer/detect_belt"
+    },
+    "belt=false,facing=west,mode=detect,powered=false": {
+      "model": "create:block/belt_observer/detect",
+      "y": 90
+    },
+    "belt=true,facing=west,mode=detect,powered=false": {
+      "model": "create:block/belt_observer/detect_belt",
+      "y": 90
+    },
+    "belt=false,facing=east,mode=detect,powered=false": {
+      "model": "create:block/belt_observer/detect",
+      "y": 270
+    },
+    "belt=true,facing=east,mode=detect,powered=false": {
+      "model": "create:block/belt_observer/detect_belt",
+      "y": 270
+    },
+    "belt=false,facing=north,mode=pulse,powered=false": {
+      "model": "create:block/belt_observer/pulse",
+      "y": 180
+    },
+    "belt=true,facing=north,mode=pulse,powered=false": {
+      "model": "create:block/belt_observer/pulse_belt",
+      "y": 180
+    },
+    "belt=false,facing=south,mode=pulse,powered=false": {
+      "model": "create:block/belt_observer/pulse"
+    },
+    "belt=true,facing=south,mode=pulse,powered=false": {
+      "model": "create:block/belt_observer/pulse_belt"
+    },
+    "belt=false,facing=west,mode=pulse,powered=false": {
+      "model": "create:block/belt_observer/pulse",
+      "y": 90
+    },
+    "belt=true,facing=west,mode=pulse,powered=false": {
+      "model": "create:block/belt_observer/pulse_belt",
+      "y": 90
+    },
+    "belt=false,facing=east,mode=pulse,powered=false": {
+      "model": "create:block/belt_observer/pulse",
+      "y": 270
+    },
+    "belt=true,facing=east,mode=pulse,powered=false": {
+      "model": "create:block/belt_observer/pulse_belt",
+      "y": 270
+    },
+    "belt=false,facing=north,mode=eject,powered=false": {
+      "model": "create:block/belt_observer/eject",
+      "y": 180
+    },
+    "belt=true,facing=north,mode=eject,powered=false": {
+      "model": "create:block/belt_observer/eject_belt",
+      "y": 180
+    },
+    "belt=false,facing=south,mode=eject,powered=false": {
+      "model": "create:block/belt_observer/eject"
+    },
+    "belt=true,facing=south,mode=eject,powered=false": {
+      "model": "create:block/belt_observer/eject_belt"
+    },
+    "belt=false,facing=west,mode=eject,powered=false": {
+      "model": "create:block/belt_observer/eject",
+      "y": 90
+    },
+    "belt=true,facing=west,mode=eject,powered=false": {
+      "model": "create:block/belt_observer/eject_belt",
+      "y": 90
+    },
+    "belt=false,facing=east,mode=eject,powered=false": {
+      "model": "create:block/belt_observer/eject",
+      "y": 270
+    },
+    "belt=true,facing=east,mode=eject,powered=false": {
+      "model": "create:block/belt_observer/eject_belt",
+      "y": 270
+    },
+    "belt=false,facing=north,mode=split,powered=false": {
+      "model": "create:block/belt_observer/split",
+      "y": 180
+    },
+    "belt=true,facing=north,mode=split,powered=false": {
+      "model": "create:block/belt_observer/split_belt",
+      "y": 180
+    },
+    "belt=false,facing=south,mode=split,powered=false": {
+      "model": "create:block/belt_observer/split"
+    },
+    "belt=true,facing=south,mode=split,powered=false": {
+      "model": "create:block/belt_observer/split_belt"
+    },
+    "belt=false,facing=west,mode=split,powered=false": {
+      "model": "create:block/belt_observer/split",
+      "y": 90
+    },
+    "belt=true,facing=west,mode=split,powered=false": {
+      "model": "create:block/belt_observer/split_belt",
+      "y": 90
+    },
+    "belt=false,facing=east,mode=split,powered=false": {
+      "model": "create:block/belt_observer/split",
+      "y": 270
+    },
+    "belt=true,facing=east,mode=split,powered=false": {
+      "model": "create:block/belt_observer/split_belt",
+      "y": 270
+    },
+    "belt=false,facing=north,mode=detect,powered=true": {
+      "model": "create:block/belt_observer/detect_powered",
+      "y": 180
+    },
+    "belt=true,facing=north,mode=detect,powered=true": {
+      "model": "create:block/belt_observer/detect_belt_powered",
+      "y": 180
+    },
+    "belt=false,facing=south,mode=detect,powered=true": {
+      "model": "create:block/belt_observer/detect_powered"
+    },
+    "belt=true,facing=south,mode=detect,powered=true": {
+      "model": "create:block/belt_observer/detect_belt_powered"
+    },
+    "belt=false,facing=west,mode=detect,powered=true": {
+      "model": "create:block/belt_observer/detect_powered",
+      "y": 90
+    },
+    "belt=true,facing=west,mode=detect,powered=true": {
+      "model": "create:block/belt_observer/detect_belt_powered",
+      "y": 90
+    },
+    "belt=false,facing=east,mode=detect,powered=true": {
+      "model": "create:block/belt_observer/detect_powered",
+      "y": 270
+    },
+    "belt=true,facing=east,mode=detect,powered=true": {
+      "model": "create:block/belt_observer/detect_belt_powered",
+      "y": 270
+    },
+    "belt=false,facing=north,mode=pulse,powered=true": {
+      "model": "create:block/belt_observer/pulse_powered",
+      "y": 180
+    },
+    "belt=true,facing=north,mode=pulse,powered=true": {
+      "model": "create:block/belt_observer/pulse_belt_powered",
+      "y": 180
+    },
+    "belt=false,facing=south,mode=pulse,powered=true": {
+      "model": "create:block/belt_observer/pulse_powered"
+    },
+    "belt=true,facing=south,mode=pulse,powered=true": {
+      "model": "create:block/belt_observer/pulse_belt_powered"
+    },
+    "belt=false,facing=west,mode=pulse,powered=true": {
+      "model": "create:block/belt_observer/pulse_powered",
+      "y": 90
+    },
+    "belt=true,facing=west,mode=pulse,powered=true": {
+      "model": "create:block/belt_observer/pulse_belt_powered",
+      "y": 90
+    },
+    "belt=false,facing=east,mode=pulse,powered=true": {
+      "model": "create:block/belt_observer/pulse_powered",
+      "y": 270
+    },
+    "belt=true,facing=east,mode=pulse,powered=true": {
+      "model": "create:block/belt_observer/pulse_belt_powered",
+      "y": 270
+    },
+    "belt=false,facing=north,mode=eject,powered=true": {
+      "model": "create:block/belt_observer/eject_powered",
+      "y": 180
+    },
+    "belt=true,facing=north,mode=eject,powered=true": {
+      "model": "create:block/belt_observer/eject_belt_powered",
+      "y": 180
+    },
+    "belt=false,facing=south,mode=eject,powered=true": {
+      "model": "create:block/belt_observer/eject_powered"
+    },
+    "belt=true,facing=south,mode=eject,powered=true": {
+      "model": "create:block/belt_observer/eject_belt_powered"
+    },
+    "belt=false,facing=west,mode=eject,powered=true": {
+      "model": "create:block/belt_observer/eject_powered",
+      "y": 90
+    },
+    "belt=true,facing=west,mode=eject,powered=true": {
+      "model": "create:block/belt_observer/eject_belt_powered",
+      "y": 90
+    },
+    "belt=false,facing=east,mode=eject,powered=true": {
+      "model": "create:block/belt_observer/eject_powered",
+      "y": 270
+    },
+    "belt=true,facing=east,mode=eject,powered=true": {
+      "model": "create:block/belt_observer/eject_belt_powered",
+      "y": 270
+    },
+    "belt=false,facing=north,mode=split,powered=true": {
+      "model": "create:block/belt_observer/split_powered",
+      "y": 180
+    },
+    "belt=true,facing=north,mode=split,powered=true": {
+      "model": "create:block/belt_observer/split_belt_powered",
+      "y": 180
+    },
+    "belt=false,facing=south,mode=split,powered=true": {
+      "model": "create:block/belt_observer/split_powered"
+    },
+    "belt=true,facing=south,mode=split,powered=true": {
+      "model": "create:block/belt_observer/split_belt_powered"
+    },
+    "belt=false,facing=west,mode=split,powered=true": {
+      "model": "create:block/belt_observer/split_powered",
+      "y": 90
+    },
+    "belt=true,facing=west,mode=split,powered=true": {
+      "model": "create:block/belt_observer/split_belt_powered",
+      "y": 90
+    },
+    "belt=false,facing=east,mode=split,powered=true": {
+      "model": "create:block/belt_observer/split_powered",
+      "y": 270
+    },
+    "belt=true,facing=east,mode=split,powered=true": {
+      "model": "create:block/belt_observer/split_belt_powered",
+      "y": 270
+    }
+  }
+}

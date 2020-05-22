@@ -19,7 +19,7 @@ public abstract class CrateTileEntity extends SmartTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
 	public boolean isDoubleCrate() {
-		return getBlockState().get(FlexcrateBlock.DOUBLE);
+		return getBlockState().get(AdjustableCrateBlock.DOUBLE);
 	}
 
 	public boolean isSecondaryCrate() {
@@ -31,7 +31,7 @@ public abstract class CrateTileEntity extends SmartTileEntity {
 	}
 	
 	public Direction getFacing() {
-		return getBlockState().get(FlexcrateBlock.FACING);
+		return getBlockState().get(AdjustableCrateBlock.FACING);
 	}
 
 }

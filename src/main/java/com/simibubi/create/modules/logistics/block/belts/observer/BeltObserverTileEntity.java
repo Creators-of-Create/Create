@@ -20,7 +20,7 @@ public class BeltObserverTileEntity extends SmartTileEntity {
 	public int turnOffTicks = 0;
 
 	public BeltObserverTileEntity() {
-		super(AllTileEntities.ENTITY_DETECTOR.type);
+		super(AllTileEntities.BELT_OBSERVER.type);
 		setLazyTickRate(20);
 	}
 

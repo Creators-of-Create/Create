@@ -8,7 +8,6 @@ import com.simibubi.create.modules.contraptions.IWrenchable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
@@ -32,8 +31,8 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty RECEIVER = BooleanProperty.create("receiver");
 
-	public RedstoneLinkBlock() {
-		super(Properties.from(Blocks.DARK_OAK_LOG));
+	public RedstoneLinkBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(POWERED, false).with(RECEIVER, false));
 	}
 

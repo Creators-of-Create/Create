@@ -1,0 +1,42 @@
+{
+  "variants": {
+    "facing=north,upward=false": {
+      "model": "create:block/funnel/vertical",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,upward=false": {
+      "model": "create:block/funnel/vertical",
+      "x": 90
+    },
+    "facing=west,upward=false": {
+      "model": "create:block/funnel/vertical",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,upward=false": {
+      "model": "create:block/funnel/vertical",
+      "x": 90,
+      "y": 270
+    },
+    "facing=north,upward=true": {
+      "model": "create:block/funnel/vertical",
+      "x": 270
+    },
+    "facing=south,upward=true": {
+      "model": "create:block/funnel/vertical",
+      "x": 270,
+      "y": 180
+    },
+    "facing=west,upward=true": {
+      "model": "create:block/funnel/vertical",
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,upward=true": {
+      "model": "create:block/funnel/vertical",
+      "x": 270,
+      "y": 90
+    }
+  }
+}

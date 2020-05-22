@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.block.IHaveColorHandler;
@@ -537,7 +536,7 @@ public class BeltBlock extends HorizontalKineticBlock
 		int offset = isEnd ? -1 : 1;
 		BlockPos tunnelPos = pos.offset(beltState.get(HORIZONTAL_FACING), offset)
 			.up();
-		if (AllBlocks.BELT_TUNNEL.typeOf(world.getBlockState(tunnelPos)))
+		if (AllBlocksNew.BELT_TUNNEL.has(world.getBlockState(tunnelPos)))
 			BeltTunnelBlock.updateTunnel(world, tunnelPos);
 	}
 

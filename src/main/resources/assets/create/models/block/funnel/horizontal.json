@@ -6,8 +6,8 @@
 		"4": "create:block/extractor",
 		"brass_casing": "create:block/brass_casing",
 		"belt_funnel": "create:block/belt_funnel",
-		"particle": "create:block/package_funnel_horizontal",
-		"package_funnel_horizontal": "create:block/package_funnel_horizontal"
+		"package_funnel_horizontal": "create:block/funnel_horizontal",
+		"particle": "#package_funnel_horizontal"
 	},
 	"elements": [
 		{

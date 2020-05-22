@@ -1,0 +1,25 @@
+{
+    "type": "crafting_shaped",
+        "pattern": [
+            "RCT",
+			"SSS"
+        ],
+        "key": {
+			"S": {
+                "item": "minecraft:stone"
+            },
+			"C": {
+                "item": "minecraft:clock"
+            },
+			"R": {
+                "item": "minecraft:redstone"
+            },
+			"T": {
+                "item": "minecraft:redstone_torch"
+            }
+        },
+	"result": {
+		"item": "create:adjustable_repeater",
+		"count": 1
+	}
+}

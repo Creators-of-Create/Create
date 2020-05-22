@@ -7,7 +7,6 @@ import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,8 +28,8 @@ public abstract class AttachedLogisticalBlock extends HorizontalBlock implements
 
 	public static final BooleanProperty UPWARD = BooleanProperty.create("upward");
 
-	public AttachedLogisticalBlock() {
-		super(Properties.from(Blocks.ANDESITE));
+	public AttachedLogisticalBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

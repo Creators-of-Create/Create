@@ -21,9 +21,7 @@ public class MotorGenerator extends SpecialBlockStateGen {
 	protected int getYRotation(BlockState state) {
 		return state.get(MotorBlock.FACING)
 			.getAxis()
-			.isVertical() ? 0
-				: (int) state.get(MotorBlock.FACING)
-					.getHorizontalAngle();
+			.isVertical() ? 0 : horizontalAngle(state.get(MotorBlock.FACING));
 	}
 
 	@Override

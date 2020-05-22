@@ -1,7 +1,0 @@
-{
-	"parent": "create:block/pulse_repeater",
-    "textures": {
-        "pulse_repeater": "create:block/pulse_repeater_powered",
-		"particle": "create:block/pulse_repeater_powered"
-    }
-}

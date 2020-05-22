@@ -22,6 +22,10 @@ import net.minecraft.world.World;
 
 public abstract class BeltAttachableLogisticalBlock extends AttachedLogisticalBlock implements IBeltAttachment {
 
+	public BeltAttachableLogisticalBlock(Properties properties) {
+		super(properties);
+	}
+	
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		onAttachmentPlaced(worldIn, pos, state);

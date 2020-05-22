@@ -1,7 +1,7 @@
 package com.simibubi.create.modules.contraptions.components.contraptions;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.modules.logistics.block.inventories.FlexcrateBlock;
+import com.simibubi.create.modules.logistics.block.inventories.AdjustableCrateBlock;
 
 import net.minecraft.block.ChestBlock;
 import net.minecraft.item.ItemStack;
@@ -43,9 +43,9 @@ public class MountedStorage {
 		}
 
 		// Split double flexcrates
-		if (te.getType() == AllTileEntities.FLEXCRATE.type) {
-			if (te.getBlockState().get(FlexcrateBlock.DOUBLE))
-				te.getWorld().setBlockState(te.getPos(), te.getBlockState().with(FlexcrateBlock.DOUBLE, false));
+		if (te.getType() == AllTileEntities.ADJUSTABLE_CRATE.type) {
+			if (te.getBlockState().get(AdjustableCrateBlock.DOUBLE))
+				te.getWorld().setBlockState(te.getPos(), te.getBlockState().with(AdjustableCrateBlock.DOUBLE, false));
 			te.updateContainingBlockInfo();
 		}
 
@@ -106,7 +106,7 @@ public class MountedStorage {
 		if (te == null)
 			return false;
 		TileEntityType<?> type = te.getType();
-		if (type == AllTileEntities.FLEXCRATE.type)
+		if (type == AllTileEntities.ADJUSTABLE_CRATE.type)
 			return true;
 		if (te instanceof ShulkerBoxTileEntity)
 			return true;

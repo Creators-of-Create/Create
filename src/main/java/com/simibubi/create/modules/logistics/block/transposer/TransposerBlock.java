@@ -1,6 +1,6 @@
 package com.simibubi.create.modules.logistics.block.transposer;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocksNew;
 import com.simibubi.create.foundation.utility.AllShapes;
 import com.simibubi.create.modules.logistics.block.belts.BeltAttachableLogisticalBlock;
 
@@ -26,10 +26,11 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-	public TransposerBlock() {
+	public TransposerBlock(Properties properties) {
+		super(properties);
 		setDefaultState(getDefaultState().with(POWERED, false));
 	}
-	
+
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
@@ -57,12 +58,12 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 
 	@Override
 	protected BlockState getVerticalDefaultState() {
-		return AllBlocks.VERTICAL_TRANSPOSER.getDefault();
+		return AllBlocksNew.VERTICAL_TRANSPOSER.getDefaultState();
 	}
 
 	@Override
 	protected BlockState getHorizontalDefaultState() {
-		return AllBlocks.TRANSPOSER.getDefault();
+		return AllBlocksNew.TRANSPOSER.getDefaultState();
 	}
 
 	@Override
@@ -72,7 +73,8 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 			return ActionResultType.SUCCESS;
 		Direction blockFacing = getBlockFacing(state);
 		BlockState newState = state;
-		if (blockFacing.getAxis().isHorizontal())
+		if (blockFacing.getAxis()
+			.isHorizontal())
 			newState = state.with(HORIZONTAL_FACING, blockFacing.getOpposite());
 		else
 			newState = state.cycle(UPWARD);
@@ -92,12 +94,13 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState stateForPlacement = super.getStateForPlacement(context);
-		return stateForPlacement.with(POWERED, Boolean.valueOf(context.getWorld().isBlockPowered(context.getPos())));
+		return stateForPlacement.with(POWERED, Boolean.valueOf(context.getWorld()
+			.isBlockPowered(context.getPos())));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
+		boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
 
@@ -128,6 +131,10 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 	}
 
 	public static class Vertical extends TransposerBlock {
+		public Vertical(Properties properties) {
+			super(properties);
+		}
+
 		@Override
 		protected boolean isVertical() {
 			return true;

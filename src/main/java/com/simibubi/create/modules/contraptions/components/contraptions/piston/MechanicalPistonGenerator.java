@@ -32,7 +32,7 @@ public class MechanicalPistonGenerator extends SpecialBlockStateGen {
 	protected int getYRotation(BlockState state) {
 		Direction facing = state.get(MechanicalPistonBlock.FACING);
 		return facing.getAxis()
-			.isVertical() ? 0 : ((int) facing.getHorizontalAngle() + 180 + 360) % 360;
+			.isVertical() ? 0 : horizontalAngle(facing) + 180;
 	}
 
 	@Override

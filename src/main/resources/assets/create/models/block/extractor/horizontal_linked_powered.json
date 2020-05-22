@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/extractor/horizontal_linked",
+    "textures": {
+		"redstone_antenna": "create:block/redstone_antenna_powered",
+        "extractor": "create:block/extractor_powered"
+    }
+}

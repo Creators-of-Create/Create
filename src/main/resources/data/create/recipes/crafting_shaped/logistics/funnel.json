@@ -1,0 +1,26 @@
+{
+    "type": "crafting_shaped",
+    "pattern": [
+		" B ",
+		"SCS",
+		"ICI"
+	],
+	"key": {
+		"S": {
+			"tag": "forge:plates/brass"
+		},
+		"B": {
+			"item": "create:electron_tube"
+		},
+		"C": {
+			"item": "minecraft:dried_kelp"
+		},
+		"I": {
+			"tag": "minecraft:planks"
+		}
+	},
+	"result": {
+		"item": "create:funnel",
+		"count": 4
+	}
+}

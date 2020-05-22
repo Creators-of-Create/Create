@@ -26,7 +26,7 @@ import com.simibubi.create.compat.jei.category.SplashingCategory;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.modules.logistics.block.inventories.FlexcrateScreen;
+import com.simibubi.create.modules.logistics.block.inventories.AdjustableCrateScreen;
 import com.simibubi.create.modules.schematics.block.SchematicannonScreen;
 
 import mezz.jei.api.IModPlugin;
@@ -176,7 +176,7 @@ public class CreateJEI implements IModPlugin {
 
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-		registration.addGuiContainerHandler(FlexcrateScreen.class, new SlotMover<>());
+		registration.addGuiContainerHandler(AdjustableCrateScreen.class, new SlotMover<>());
 		registration.addGuiContainerHandler(SchematicannonScreen.class, new SlotMover<>());
 	}
 

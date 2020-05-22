@@ -37,7 +37,7 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	public SchematicTableTileEntity() {
-		this(AllTileEntities.SCHEMATICTABLE.type);
+		this(AllTileEntities.SCHEMATIC_TABLE.type);
 	}
 
 	public SchematicTableTileEntity(TileEntityType<?> tileEntityTypeIn) {
