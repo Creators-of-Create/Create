@@ -1,6 +1,5 @@
 package com.simibubi.create.modules;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
@@ -60,9 +59,6 @@ public enum Sections {
 	}
 
 	static Sections ofBlock(Block block) {
-		for (AllBlocks allBlocks : AllBlocks.values())
-			if (allBlocks.get() == block)
-				return allBlocks.section;
 		return Create.registrate().getSection(block);
 	}
 

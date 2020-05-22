@@ -8,6 +8,7 @@ import java.util.function.Function;
 import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.behaviour.linked.LinkRenderer;
 import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueRenderer;
+import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
@@ -19,10 +20,12 @@ import com.simibubi.create.modules.contraptions.components.contraptions.Contrapt
 import com.simibubi.create.modules.schematics.ClientSchematicLoader;
 import com.simibubi.create.modules.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.modules.schematics.client.SchematicHandler;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -72,8 +75,8 @@ public class CreateClient {
 		AllContainers.registerScreenFactories();
 		AllTileEntities.registerRenderers();
 		AllItems.registerColorHandlers();
-		AllBlocks.registerColorHandlers();
 		AllEntities.registerRenderers();
+		registerColorHandlers();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();
@@ -166,6 +169,19 @@ public class CreateClient {
 		locations.forEach(location -> {
 			swapModels(modelRegistry, location, factory);
 		});
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	protected static void registerColorHandlers() {
+		BlockColors blockColors = Minecraft.getInstance()
+				.getBlockColors();
+		for (RegistryEntry<Block> registryEntry : Create.registrate()
+				.getAll(Block.class)) {
+			Block blockEntry = registryEntry.get();
+			if (blockEntry instanceof IHaveColorHandler) {
+				blockColors.register(((IHaveColorHandler) blockEntry).getColorHandler(), blockEntry);
+			}
+		}
 	}
 
 	public static CustomBlockModels getCustomBlockModels() {
