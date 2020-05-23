@@ -21,13 +21,5 @@ Check out the wiki and in-game Tool-tips for further info on how to use these fe
 - Support for Minecraft 1.12: Not planned
 - Support for Minecraft 1.15: Porting work is in Progress!
 - Support for Fabric: Not planned
-
-## The Creators of Create
-- evanthebruce - Resident Nitwit
-- fuzzyweapon - Contributor
-- LeastReality - Artist
-- Zelophed - Developer
-- simibubi - Developer & Artist
-- tterrag - Developer & Port-Meister
-
-### For more information, check out our [Project Page](https://www.curseforge.com/minecraft/mc-mods/create)
+<hr>
+<h4 align="center">Find out more about Create on our <a href="https://www.curseforge.com/minecraft/mc-mods/create">Project Page</a></h4>
