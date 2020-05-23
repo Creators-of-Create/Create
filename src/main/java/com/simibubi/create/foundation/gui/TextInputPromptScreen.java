@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -41,7 +40,7 @@ public class TextInputPromptScreen extends AbstractSimiScreen {
 	@Override
 	public void init() {
 		super.init();
-		setWindowSize(ScreenResources.TEXT_INPUT.width, ScreenResources.TEXT_INPUT.height + 30);
+		setWindowSize(AllGuiTextures.TEXT_INPUT.width, AllGuiTextures.TEXT_INPUT.height + 30);
 
 		this.nameField = new TextFieldWidget(font, guiLeft + 33, guiTop + 26, 128, 8, "");
 		this.nameField.setTextColor(-1);
@@ -67,9 +66,9 @@ public class TextInputPromptScreen extends AbstractSimiScreen {
 
 	@Override
 	public void renderWindow(int mouseX, int mouseY, float partialTicks) {
-		ScreenResources.TEXT_INPUT.draw(this, guiLeft, guiTop);
+		AllGuiTextures.TEXT_INPUT.draw(this, guiLeft, guiTop);
 		font.drawString(title, guiLeft + (sWidth / 2) - (font.getStringWidth(title) / 2), guiTop + 11,
-				ScreenResources.FONT_COLOR);
+				AllGuiTextures.FONT_COLOR);
 	}
 
 	@Override

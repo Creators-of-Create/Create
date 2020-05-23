@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.behaviour.ValueBox;
+import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 
 import net.minecraft.client.Minecraft;

@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMillstone;
-import com.simibubi.create.modules.contraptions.components.crusher.AbstractCrushingRecipe;
-import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -57,9 +57,9 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 	public void draw(AbstractCrushingRecipe recipe, double mouseX, double mouseY) {
 		int size = recipe.getPossibleOutputs().size();
 
-		ScreenResources.JEI_SLOT.draw(14, 8);
-		ScreenResources.JEI_ARROW.draw(85, 32);
-		ScreenResources.JEI_DOWN_ARROW.draw(43, 4);
+		AllGuiTextures.JEI_SLOT.draw(14, 8);
+		AllGuiTextures.JEI_ARROW.draw(85, 32);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(43, 4);
 		millstone.draw(48, 27);
 
 		if (size == 1) {

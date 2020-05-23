@@ -1,102 +1,103 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.foundation.registrate.CreateRegistrate.connectedTextures;
-import static com.simibubi.create.foundation.utility.data.BlockStateGen.oxidizedBlockstate;
-import static com.simibubi.create.foundation.utility.data.ModelGen.customItemModel;
-import static com.simibubi.create.foundation.utility.data.ModelGen.oxidizedItemModel;
-import static com.simibubi.create.modules.Sections.SCHEMATICS;
+import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.foundation.data.BlockStateGen.oxidizedBlockstate;
+import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
+import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
+import static com.simibubi.create.foundation.data.ModelGen.oxidizedItemModel;
 
-import com.simibubi.create.config.StressConfigDefaults;
-import com.simibubi.create.foundation.registrate.CreateRegistrate;
-import com.simibubi.create.foundation.utility.data.AssetLookup;
-import com.simibubi.create.foundation.utility.data.BlockStateGen;
-import com.simibubi.create.foundation.utility.data.BuilderTransformers;
-import com.simibubi.create.foundation.utility.data.ModelGen;
-import com.simibubi.create.foundation.world.OxidizingBlock;
-import com.simibubi.create.modules.Sections;
-import com.simibubi.create.modules.contraptions.CasingBlock;
-import com.simibubi.create.modules.contraptions.components.actors.DrillBlock;
-import com.simibubi.create.modules.contraptions.components.actors.HarvesterBlock;
-import com.simibubi.create.modules.contraptions.components.actors.PloughBlock;
-import com.simibubi.create.modules.contraptions.components.actors.PortableStorageInterfaceBlock;
-import com.simibubi.create.modules.contraptions.components.clock.CuckooClockBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.bearing.ClockworkBearingBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.bearing.MechanicalBearingBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.chassis.LinearChassisBlock.ChassisCTBehaviour;
-import com.simibubi.create.modules.contraptions.components.contraptions.chassis.RadialChassisBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.mounted.CartAssemblerBlock.MinecartAnchorBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.piston.MechanicalPistonHeadBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.piston.PistonExtensionPoleBlock;
-import com.simibubi.create.modules.contraptions.components.contraptions.pulley.PulleyBlock;
-import com.simibubi.create.modules.contraptions.components.crafter.MechanicalCrafterBlock;
-import com.simibubi.create.modules.contraptions.components.crank.HandCrankBlock;
-import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelBlock;
-import com.simibubi.create.modules.contraptions.components.crusher.CrushingWheelControllerBlock;
-import com.simibubi.create.modules.contraptions.components.deployer.DeployerBlock;
-import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
-import com.simibubi.create.modules.contraptions.components.fan.NozzleBlock;
-import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelBlock;
-import com.simibubi.create.modules.contraptions.components.flywheel.FlywheelGenerator;
-import com.simibubi.create.modules.contraptions.components.flywheel.engine.FurnaceEngineBlock;
-import com.simibubi.create.modules.contraptions.components.millstone.MillstoneBlock;
-import com.simibubi.create.modules.contraptions.components.mixer.BasinOperatorBlockItem;
-import com.simibubi.create.modules.contraptions.components.mixer.MechanicalMixerBlock;
-import com.simibubi.create.modules.contraptions.components.motor.MotorBlock;
-import com.simibubi.create.modules.contraptions.components.motor.MotorGenerator;
-import com.simibubi.create.modules.contraptions.components.press.MechanicalPressBlock;
-import com.simibubi.create.modules.contraptions.components.saw.SawBlock;
-import com.simibubi.create.modules.contraptions.components.saw.SawGenerator;
-import com.simibubi.create.modules.contraptions.components.turntable.TurntableBlock;
-import com.simibubi.create.modules.contraptions.components.waterwheel.WaterWheelBlock;
-import com.simibubi.create.modules.contraptions.processing.BasinBlock;
-import com.simibubi.create.modules.contraptions.redstone.AnalogLeverBlock;
-import com.simibubi.create.modules.contraptions.redstone.RedstoneContactBlock;
-import com.simibubi.create.modules.contraptions.relays.advanced.SpeedControllerBlock;
-import com.simibubi.create.modules.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
-import com.simibubi.create.modules.contraptions.relays.advanced.sequencer.SequencedGearshiftGenerator;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.modules.contraptions.relays.belt.BeltGenerator;
-import com.simibubi.create.modules.contraptions.relays.elementary.CogWheelBlock;
-import com.simibubi.create.modules.contraptions.relays.elementary.CogwheelBlockItem;
-import com.simibubi.create.modules.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.modules.contraptions.relays.encased.AdjustablePulleyBlock;
-import com.simibubi.create.modules.contraptions.relays.encased.ClutchBlock;
-import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltBlock;
-import com.simibubi.create.modules.contraptions.relays.encased.EncasedBeltGenerator;
-import com.simibubi.create.modules.contraptions.relays.encased.EncasedShaftBlock;
-import com.simibubi.create.modules.contraptions.relays.encased.GearshiftBlock;
-import com.simibubi.create.modules.contraptions.relays.gauge.GaugeBlock;
-import com.simibubi.create.modules.contraptions.relays.gauge.GaugeGenerator;
-import com.simibubi.create.modules.contraptions.relays.gearbox.GearboxBlock;
-import com.simibubi.create.modules.logistics.block.RedstoneLinkBlock;
-import com.simibubi.create.modules.logistics.block.RedstoneLinkGenerator;
-import com.simibubi.create.modules.logistics.block.StockpileSwitchBlock;
-import com.simibubi.create.modules.logistics.block.belts.observer.BeltObserverBlock;
-import com.simibubi.create.modules.logistics.block.belts.tunnel.BeltTunnelBlock;
-import com.simibubi.create.modules.logistics.block.diodes.AbstractDiodeGenerator;
-import com.simibubi.create.modules.logistics.block.diodes.AdjustableRepeaterBlock;
-import com.simibubi.create.modules.logistics.block.diodes.AdjustableRepeaterGenerator;
-import com.simibubi.create.modules.logistics.block.diodes.PoweredLatchBlock;
-import com.simibubi.create.modules.logistics.block.diodes.PoweredLatchGenerator;
-import com.simibubi.create.modules.logistics.block.diodes.PulseRepeaterBlock;
-import com.simibubi.create.modules.logistics.block.diodes.PulseRepeaterGenerator;
-import com.simibubi.create.modules.logistics.block.diodes.ToggleLatchBlock;
-import com.simibubi.create.modules.logistics.block.diodes.ToggleLatchGenerator;
-import com.simibubi.create.modules.logistics.block.extractor.ExtractorBlock;
-import com.simibubi.create.modules.logistics.block.extractor.LinkedExtractorBlock;
-import com.simibubi.create.modules.logistics.block.extractor.VerticalExtractorGenerator;
-import com.simibubi.create.modules.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.modules.logistics.block.funnel.VerticalFunnelGenerator;
-import com.simibubi.create.modules.logistics.block.inventories.AdjustableCrateBlock;
-import com.simibubi.create.modules.logistics.block.inventories.CreativeCrateBlock;
-import com.simibubi.create.modules.logistics.block.transposer.LinkedTransposerBlock;
-import com.simibubi.create.modules.logistics.block.transposer.TransposerBlock;
-import com.simibubi.create.modules.logistics.block.transposer.VerticalTransposerGenerator;
-import com.simibubi.create.modules.schematics.block.SchematicTableBlock;
-import com.simibubi.create.modules.schematics.block.SchematicannonBlock;
+import com.simibubi.create.content.AllSections;
+import com.simibubi.create.content.contraptions.base.CasingBlock;
+import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
+import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
+import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
+import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
+import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
+import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
+import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelBlock;
+import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
+import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
+import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
+import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
+import com.simibubi.create.content.contraptions.components.flywheel.FlywheelGenerator;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
+import com.simibubi.create.content.contraptions.components.millstone.MillstoneBlock;
+import com.simibubi.create.content.contraptions.components.mixer.BasinOperatorBlockItem;
+import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerBlock;
+import com.simibubi.create.content.contraptions.components.motor.MotorBlock;
+import com.simibubi.create.content.contraptions.components.motor.MotorGenerator;
+import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlock;
+import com.simibubi.create.content.contraptions.components.saw.SawBlock;
+import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.MinecartAnchorBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonHeadBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
+import com.simibubi.create.content.contraptions.components.turntable.TurntableBlock;
+import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
+import com.simibubi.create.content.contraptions.processing.BasinBlock;
+import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
+import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
+import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftGenerator;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.content.contraptions.relays.belt.BeltGenerator;
+import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
+import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyBlock;
+import com.simibubi.create.content.contraptions.relays.encased.ClutchBlock;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltGenerator;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
+import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
+import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
+import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
+import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
+import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.block.diodes.AbstractDiodeGenerator;
+import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock;
+import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterGenerator;
+import com.simibubi.create.content.logistics.block.diodes.PoweredLatchBlock;
+import com.simibubi.create.content.logistics.block.diodes.PoweredLatchGenerator;
+import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterBlock;
+import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterGenerator;
+import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
+import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
+import com.simibubi.create.content.logistics.block.extractor.ExtractorBlock;
+import com.simibubi.create.content.logistics.block.extractor.LinkedExtractorBlock;
+import com.simibubi.create.content.logistics.block.extractor.VerticalExtractorGenerator;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.VerticalFunnelGenerator;
+import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
+import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
+import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
+import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
+import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
+import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
+import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
+import com.simibubi.create.content.logistics.block.transposer.LinkedTransposerBlock;
+import com.simibubi.create.content.logistics.block.transposer.TransposerBlock;
+import com.simibubi.create.content.logistics.block.transposer.VerticalTransposerGenerator;
+import com.simibubi.create.content.schematics.block.SchematicTableBlock;
+import com.simibubi.create.content.schematics.block.SchematicannonBlock;
+import com.simibubi.create.foundation.config.StressConfigDefaults;
+import com.simibubi.create.foundation.data.AssetLookup;
+import com.simibubi.create.foundation.data.BlockStateGen;
+import com.simibubi.create.foundation.data.BuilderTransformers;
+import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.ModelGen;
+import com.simibubi.create.foundation.data.SharedProperties;
+import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.DataIngredient;
@@ -150,7 +151,7 @@ public class AllBlocks {
 	// Kinetics
 
 	static {
-		REGISTRATE.startSection(Sections.KINETICS);
+		REGISTRATE.startSection(AllSections.KINETICS);
 	}
 
 	public static final BlockEntry<ShaftBlock> SHAFT = REGISTRATE.block("shaft", ShaftBlock::new)
@@ -591,7 +592,7 @@ public class AllBlocks {
 	// Logistics
 
 	static {
-		REGISTRATE.startSection(Sections.LOGISTICS);
+		REGISTRATE.startSection(AllSections.LOGISTICS);
 	}
 
 	public static final BlockEntry<RedstoneContactBlock> REDSTONE_CONTACT =
@@ -781,7 +782,7 @@ public class AllBlocks {
 	// Materials
 
 	static {
-		REGISTRATE.startSection(Sections.MATERIALS);
+		REGISTRATE.startSection(AllSections.MATERIALS);
 	}
 
 	public static final BlockEntry<OxidizingBlock> COPPER_ORE =

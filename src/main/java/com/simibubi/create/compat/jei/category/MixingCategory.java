@@ -10,11 +10,11 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
+import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
-import com.simibubi.create.modules.contraptions.processing.ProcessingIngredient;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -90,19 +90,19 @@ public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 		int size = actualIngredients.size();
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
 		for (int i = 0; i < size; i++) {
-			ScreenResources jeiSlot = ScreenResources.JEI_SLOT;
+			AllGuiTextures jeiSlot = AllGuiTextures.JEI_SLOT;
 			for (ProcessingIngredient processingIngredient : recipe.getRollableIngredients()) {
 				if (processingIngredient.isCatalyst() && ItemHelper
 						.matchIngredients(processingIngredient.getIngredient(), actualIngredients.get(i).getKey())) {
-					jeiSlot = ScreenResources.JEI_CATALYST_SLOT;
+					jeiSlot = AllGuiTextures.JEI_CATALYST_SLOT;
 					break;
 				}
 			}
 			jeiSlot.draw(16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19);
 		}
-		ScreenResources.JEI_SLOT.draw(141, 50);
-		ScreenResources.JEI_DOWN_ARROW.draw(136, 32);
-		ScreenResources.JEI_SHADOW.draw(81, 57);
+		AllGuiTextures.JEI_SLOT.draw(141, 50);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(136, 32);
+		AllGuiTextures.JEI_SHADOW.draw(81, 57);
 		mixer.draw(getBackground().getWidth() / 2 + 3, 25);
 	}
 

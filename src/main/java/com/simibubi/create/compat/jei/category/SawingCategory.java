@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
-import com.simibubi.create.modules.contraptions.components.saw.CuttingRecipe;
-import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -54,14 +54,14 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 
 	@Override
 	public void draw(CuttingRecipe recipe, double mouseX, double mouseY) {
-		ScreenResources.JEI_SLOT.draw(43, 4);
+		AllGuiTextures.JEI_SLOT.draw(43, 4);
 		int size = recipe.getRollableResults().size();
 		for (int i = 0; i < size; i++) {
 			int xOffset = i % 2 == 0 ? 0 : 19;
 			int yOffset = (i / 2) * -19;
 			getRenderedSlot(recipe, i).draw(117 + xOffset, 47 + yOffset);
 		}
-		ScreenResources.JEI_DOWN_ARROW.draw(70, 6);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(70, 6);
 		saw.draw(72, 42);
 	}
 

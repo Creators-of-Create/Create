@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
-import com.simibubi.create.modules.contraptions.components.press.PressingRecipe;
-import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -52,12 +52,12 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 
 	@Override
 	public void draw(PressingRecipe recipe, double mouseX, double mouseY) {
-		ScreenResources.JEI_SLOT.draw(26, 50);
+		AllGuiTextures.JEI_SLOT.draw(26, 50);
 		getRenderedSlot(recipe, 0).draw(131, 50);
 		if (recipe.getRollableResults().size() > 1)
 			getRenderedSlot(recipe, 1).draw(131 + 19, 50);
-		ScreenResources.JEI_SHADOW.draw(61, 41);
-		ScreenResources.JEI_LONG_ARROW.draw(52, 54);
+		AllGuiTextures.JEI_SHADOW.draw(61, 41);
+		AllGuiTextures.JEI_LONG_ARROW.draw(52, 54);
 		press.draw(getBackground().getWidth() / 2 - 17, 22);
 	}
 

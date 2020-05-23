@@ -5,9 +5,8 @@ import java.util.function.Consumer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.ScreenResources;
+import com.simibubi.create.content.schematics.client.tools.Tools;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.schematics.client.tools.Tools;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -64,7 +63,7 @@ public class ToolSelectionScreen extends Screen {
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(0, -yOffset, focused ? 100 : 0);
 
-		ScreenResources gray = ScreenResources.GRAY;
+		AllGuiTextures gray = AllGuiTextures.GRAY;
 		RenderSystem.enableBlend();
 		RenderSystem.color4f(1, 1, 1, focused ? 7 / 8f : 1 / 2f);
 

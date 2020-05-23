@@ -8,14 +8,14 @@ import static com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTT
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+import com.simibubi.create.content.palettes.PaletteBlockPatterns;
+import com.simibubi.create.content.palettes.PaletteStoneVariants;
+import com.simibubi.create.content.palettes.PaletteBlockPatterns.CTs;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.palettes.PaletteBlockPatterns;
-import com.simibubi.create.modules.palettes.PaletteBlockPatterns.CTs;
-import com.simibubi.create.modules.palettes.PaletteStoneVariants;
 
 import net.minecraft.block.WoodType;
 

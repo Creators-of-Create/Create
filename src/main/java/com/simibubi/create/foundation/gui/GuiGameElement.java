@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.WrappedWorld;
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

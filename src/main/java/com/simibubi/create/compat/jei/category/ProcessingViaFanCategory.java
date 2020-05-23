@@ -5,8 +5,8 @@ import java.util.Arrays;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import mezz.jei.api.constants.VanillaTypes;
@@ -41,11 +41,11 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 	}
 
 	protected void renderWidgets(T recipe, double mouseX, double mouseY) {
-		ScreenResources.JEI_SLOT.draw(20, 47);
-		ScreenResources.JEI_SLOT.draw(139, 47);
-		ScreenResources.JEI_SHADOW.draw(47, 29);
-		ScreenResources.JEI_LIGHT.draw(66, 39);
-		ScreenResources.JEI_LONG_ARROW.draw(53, 51);
+		AllGuiTextures.JEI_SLOT.draw(20, 47);
+		AllGuiTextures.JEI_SLOT.draw(139, 47);
+		AllGuiTextures.JEI_SHADOW.draw(47, 29);
+		AllGuiTextures.JEI_LIGHT.draw(66, 39);
+		AllGuiTextures.JEI_LONG_ARROW.draw(53, 51);
 	}
 
 	@Override

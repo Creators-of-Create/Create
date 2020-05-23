@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.ScreenResources;
-import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
-import com.simibubi.create.modules.curiosities.tools.SandPaperPolishingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -55,10 +55,10 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 
 	@Override
 	public void draw(SandPaperPolishingRecipe recipe, double mouseX, double mouseY) {
-		ScreenResources.JEI_SLOT.draw(26, 28);
+		AllGuiTextures.JEI_SLOT.draw(26, 28);
 		getRenderedSlot(recipe, 0).draw(131, 28);
-		ScreenResources.JEI_SHADOW.draw(61, 21);
-		ScreenResources.JEI_LONG_ARROW.draw(52, 32);
+		AllGuiTextures.JEI_SHADOW.draw(61, 21);
+		AllGuiTextures.JEI_LONG_ARROW.draw(52, 32);
 
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		ItemStack[] matchingStacks = ingredients.get(0).getMatchingStacks();

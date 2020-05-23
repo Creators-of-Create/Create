@@ -3,11 +3,11 @@ package com.simibubi.create.compat.jei;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.AllRecipes;
+import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
-import com.simibubi.create.modules.contraptions.processing.ProcessingIngredient;
-import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
-import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -25,7 +25,7 @@ public class ConversionRecipe extends ProcessingRecipe<RecipeWrapper> {
 
 	public ConversionRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
 			List<ProcessingOutput> results, int processingDuration) {
-		super(AllRecipes.CONVERSION, id, group, ingredients, results, processingDuration);
+		super(AllRecipeTypes.CONVERSION, id, group, ingredients, results, processingDuration);
 	}
 
 	static int counter = 0;

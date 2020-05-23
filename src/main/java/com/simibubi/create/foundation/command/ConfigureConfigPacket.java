@@ -2,8 +2,8 @@ package com.simibubi.create.foundation.command;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.config.AllConfigs;
-import com.simibubi.create.foundation.packet.SimplePacketBase;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;

@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.EmptyBackground;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
-import com.simibubi.create.modules.contraptions.processing.ProcessingRecipe;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
@@ -54,8 +54,8 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		return background;
 	}
 
-	protected static ScreenResources getRenderedSlot(IRecipe<?> recipe, int index) {
-		ScreenResources jeiSlot = ScreenResources.JEI_SLOT;
+	protected static AllGuiTextures getRenderedSlot(IRecipe<?> recipe, int index) {
+		AllGuiTextures jeiSlot = AllGuiTextures.JEI_SLOT;
 		if (!(recipe instanceof ProcessingRecipe))
 			return jeiSlot;
 		ProcessingRecipe<?> processingRecipe = (ProcessingRecipe<?>) recipe;
@@ -64,7 +64,7 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 			return jeiSlot;
 		if (processingRecipe.getRollableResults().get(index).getChance() == 1)
 			return jeiSlot;
-		return ScreenResources.JEI_CHANCE_SLOT;
+		return AllGuiTextures.JEI_CHANCE_SLOT;
 	}
 
 	protected static IDrawable emptyBackground(int width, int height) {

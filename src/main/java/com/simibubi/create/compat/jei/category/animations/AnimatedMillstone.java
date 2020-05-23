@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category.animations;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.ScreenResources;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 public class AnimatedMillstone extends AnimatedKinetics {
@@ -12,7 +12,7 @@ public class AnimatedMillstone extends AnimatedKinetics {
 	public void draw(int xOffset, int yOffset) {
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(xOffset, yOffset, 0);
-		ScreenResources.JEI_SHADOW.draw(-16, 13);
+		AllGuiTextures.JEI_SHADOW.draw(-16, 13);
 		RenderSystem.translatef(-2, 18, 0);
 		int scale = 22;
 

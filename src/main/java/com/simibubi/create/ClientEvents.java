@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.config.AllConfigs;
-import com.simibubi.create.foundation.behaviour.filtering.FilteringHandler;
-import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueHandler;
+import com.simibubi.create.content.contraptions.KineticDebugger;
+import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
+import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
+import com.simibubi.create.content.curiosities.zapper.terrainzapper.TerrainZapperRenderHandler;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.modules.contraptions.KineticDebugger;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.components.turntable.TurntableHandler;
-import com.simibubi.create.modules.contraptions.relays.belt.item.BeltConnectorHandler;
-import com.simibubi.create.modules.curiosities.zapper.terrainzapper.TerrainZapperRenderHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;

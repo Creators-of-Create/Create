@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.block;
 
-import com.simibubi.create.AllContainers;
+import com.simibubi.create.AllContainerTypes;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
@@ -18,7 +18,7 @@ public abstract class AbstractTileEntityContainer<T extends TileEntity> extends 
 	public PlayerEntity player;
 
 	@SuppressWarnings("unchecked")
-	public AbstractTileEntityContainer(AllContainers containerType, int id, PlayerInventory inv,
+	public AbstractTileEntityContainer(AllContainerTypes containerType, int id, PlayerInventory inv,
 			PacketBuffer extraData) {
 		super(containerType.type, id);
 		ClientWorld world = Minecraft.getInstance().world;
@@ -28,7 +28,7 @@ public abstract class AbstractTileEntityContainer<T extends TileEntity> extends 
 		init();
 	}
 
-	public AbstractTileEntityContainer(AllContainers containerType, int id, PlayerInventory inv, T te) {
+	public AbstractTileEntityContainer(AllContainerTypes containerType, int id, PlayerInventory inv, T te) {
 		super(containerType.type, id);
 		this.te = te;
 		this.player = inv.player;

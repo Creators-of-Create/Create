@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;

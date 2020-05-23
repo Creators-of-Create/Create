@@ -9,13 +9,13 @@ import java.util.Map;
 
 import com.mojang.bridge.game.Language;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.AllSections;
+import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
+import com.simibubi.create.content.curiosities.tools.AllToolTiers;
+import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.Sections;
-import com.simibubi.create.modules.contraptions.base.IRotate;
-import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
-import com.simibubi.create.modules.curiosities.tools.AllToolTiers;
-import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -130,7 +130,7 @@ public class TooltipHelper {
 	}
 
 	private static ItemDescription buildToolTip(String translationKey, ItemStack stack) {
-		Sections module = Sections.of(stack);
+		AllSections module = AllSections.of(stack);
 		if (I18n.format(translationKey).equals("WIP"))
 			return new WipScription(module.getTooltipPalette());
 

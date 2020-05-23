@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.block;
 import java.util.function.Consumer;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;

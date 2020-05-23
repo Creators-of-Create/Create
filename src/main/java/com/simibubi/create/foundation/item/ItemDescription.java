@@ -22,16 +22,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.config.AllConfigs;
-import com.simibubi.create.config.CKinetics;
+import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
+import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
+import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
+import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CKinetics;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.contraptions.base.IRotate;
-import com.simibubi.create.modules.contraptions.base.IRotate.SpeedLevel;
-import com.simibubi.create.modules.contraptions.base.IRotate.StressImpact;
-import com.simibubi.create.modules.contraptions.components.fan.EncasedFanBlock;
-import com.simibubi.create.modules.contraptions.components.flywheel.engine.EngineBlock;
-import com.simibubi.create.modules.contraptions.components.flywheel.engine.FurnaceEngineBlock;
-import com.simibubi.create.modules.contraptions.components.waterwheel.WaterWheelBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

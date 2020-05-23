@@ -1,15 +1,15 @@
 package com.simibubi.create.compat.jei;
 
-import com.simibubi.create.ScreenResources;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.gui.AbstractGui;
 
 public class ScreenResourceWrapper implements IDrawable {
 
-	private ScreenResources resource;
+	private AllGuiTextures resource;
 
-	public ScreenResourceWrapper(ScreenResources resource) {
+	public ScreenResourceWrapper(AllGuiTextures resource) {
 		this.resource = resource;
 	}
 

@@ -2,7 +2,7 @@ package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.ScreenResources;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 public class AnimatedCrafter extends AnimatedKinetics {
@@ -11,7 +11,7 @@ public class AnimatedCrafter extends AnimatedKinetics {
 	public void draw(int xOffset, int yOffset) {
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(xOffset, yOffset, 0);
-		ScreenResources.JEI_SHADOW.draw(-16, 13);
+		AllGuiTextures.JEI_SHADOW.draw(-16, 13);
 		
 		RenderSystem.translatef(3, 16, 0);
 		RenderSystem.rotatef(-12.5f, 1, 0, 0);

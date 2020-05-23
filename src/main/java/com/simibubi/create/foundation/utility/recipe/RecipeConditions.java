@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.utility.recipe;
 
 import com.google.common.base.Predicate;
-import com.simibubi.create.foundation.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;

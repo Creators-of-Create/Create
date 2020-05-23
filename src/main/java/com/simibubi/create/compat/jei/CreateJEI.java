@@ -6,11 +6,15 @@ import java.util.stream.Collectors;
 import com.google.common.base.Predicate;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllRecipes;
+import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.BlastingViaFanCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
+import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
+import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
+import com.simibubi.create.content.schematics.block.SchematicannonScreen;
 import com.simibubi.create.compat.jei.category.BlockzapperUpgradeCategory;
 import com.simibubi.create.compat.jei.category.CrushingCategory;
 import com.simibubi.create.compat.jei.category.MechanicalCraftingCategory;
@@ -24,10 +28,6 @@ import com.simibubi.create.compat.jei.category.SawingCategory;
 import com.simibubi.create.compat.jei.category.SmokingViaFanCategory;
 import com.simibubi.create.compat.jei.category.SplashingCategory;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.contraptions.components.mixer.MixingRecipe;
-import com.simibubi.create.modules.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.modules.logistics.block.inventories.AdjustableCrateScreen;
-import com.simibubi.create.modules.schematics.block.SchematicannonScreen;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -105,35 +105,35 @@ public class CreateJEI implements IModPlugin {
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		registration.addRecipes(findRecipes(AllRecipes.MILLING), millingCategory.getUid());
-		registration.addRecipes(findRecipes(AllRecipes.CRUSHING), crushingCategory.getUid());
-		registration.addRecipes(findRecipesByTypeExcluding(AllRecipes.MILLING.getType(), AllRecipes.CRUSHING.getType()),
+		registration.addRecipes(findRecipes(AllRecipeTypes.MILLING), millingCategory.getUid());
+		registration.addRecipes(findRecipes(AllRecipeTypes.CRUSHING), crushingCategory.getUid());
+		registration.addRecipes(findRecipesByTypeExcluding(AllRecipeTypes.MILLING.getType(), AllRecipeTypes.CRUSHING.getType()),
 				crushingCategory.getUid());
-		registration.addRecipes(findRecipes(AllRecipes.SPLASHING), splashingCategory.getUid());
-		registration.addRecipes(findRecipes(AllRecipes.PRESSING), pressingCategory.getUid());
-		registration.addRecipes(findRecipesById(AllRecipes.BLOCKZAPPER_UPGRADE.serializer.getRegistryName()),
+		registration.addRecipes(findRecipes(AllRecipeTypes.SPLASHING), splashingCategory.getUid());
+		registration.addRecipes(findRecipes(AllRecipeTypes.PRESSING), pressingCategory.getUid());
+		registration.addRecipes(findRecipesById(AllRecipeTypes.BLOCKZAPPER_UPGRADE.serializer.getRegistryName()),
 				blockzapperCategory.getUid());
 		registration.addRecipes(findRecipesByType(IRecipeType.SMOKING), smokingCategory.getUid());
 		registration.addRecipes(findRecipesByTypeExcluding(IRecipeType.SMELTING, IRecipeType.SMOKING),
 				blastingCategory.getUid());
-		registration.addRecipes(findRecipes(AllRecipes.MIXING), mixingCategory.getUid());
+		registration.addRecipes(findRecipes(AllRecipeTypes.MIXING), mixingCategory.getUid());
 		registration.addRecipes(findRecipes(r -> r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS
 				&& !MechanicalPressTileEntity.canCompress(r.getIngredients())).stream().map(MixingRecipe::of)
 						.collect(Collectors.toList()),
 				mixingCategory.getUid());
-		registration.addRecipes(findRecipes(AllRecipes.CUTTING), sawingCategory.getUid());
+		registration.addRecipes(findRecipes(AllRecipeTypes.CUTTING), sawingCategory.getUid());
 		registration.addRecipes(
 				CondensedBlockCuttingRecipe.condenseRecipes(findRecipesByType(IRecipeType.STONECUTTING)),
 				blockCuttingCategory.getUid());
 		registration.addRecipes(findRecipes(
 				r -> (r instanceof ICraftingRecipe) && MechanicalPressTileEntity.canCompress(r.getIngredients())),
 				packingCategory.getUid());
-		registration.addRecipes(findRecipes(AllRecipes.SANDPAPER_POLISHING), polishingCategory.getUid());
+		registration.addRecipes(findRecipes(AllRecipeTypes.SANDPAPER_POLISHING), polishingCategory.getUid());
 		registration.addRecipes(MysteriousItemConversionCategory.getRecipes(), mysteryConversionCategory.getUid());
-		registration.addRecipes(findRecipes(r -> (r.getType() == AllRecipes.MECHANICAL_CRAFTING.type)),
+		registration.addRecipes(findRecipes(r -> (r.getType() == AllRecipeTypes.MECHANICAL_CRAFTING.type)),
 				mechanicalCraftingCategory.getUid());
 		registration.addRecipes(findRecipes(r -> (r.getType() == IRecipeType.CRAFTING 
-				&& r.getType() != AllRecipes.MECHANICAL_CRAFTING.type) && (r instanceof ShapedRecipe)),
+				&& r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.type) && (r instanceof ShapedRecipe)),
 				mechanicalCraftingCategory.getUid());
 	}
 
@@ -180,7 +180,7 @@ public class CreateJEI implements IModPlugin {
 		registration.addGuiContainerHandler(SchematicannonScreen.class, new SlotMover<>());
 	}
 
-	private static List<IRecipe<?>> findRecipes(AllRecipes recipe) {
+	private static List<IRecipe<?>> findRecipes(AllRecipeTypes recipe) {
 		return findRecipesByType(recipe.type);
 	}
 

@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -160,14 +160,14 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 					RenderSystem.pushMatrix();
 					RenderSystem.translated((int) col * 19 * scale, (int) row * 19 * scale, 0);
 					RenderSystem.scaled(scale, scale, scale);
-					ScreenResources.JEI_SLOT.draw(0, 0);
+					AllGuiTextures.JEI_SLOT.draw(0, 0);
 					RenderSystem.popMatrix();
 				}
 
 		RenderSystem.popMatrix();
 
-		ScreenResources.JEI_SLOT.draw(133, 80);
-		ScreenResources.JEI_DOWN_ARROW.draw(128, 59);
+		AllGuiTextures.JEI_SLOT.draw(133, 80);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(128, 59);
 		crafter.draw(129, 25);
 
 		RenderSystem.pushMatrix();

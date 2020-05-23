@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei.category;
 
-import static com.simibubi.create.ScreenResources.BLOCKZAPPER_UPGRADE_RECIPE;
+import static com.simibubi.create.foundation.gui.AllGuiTextures.BLOCKZAPPER_UPGRADE_RECIPE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.ScreenResourceWrapper;
+import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperUpgradeRecipe;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperUpgradeRecipe;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;

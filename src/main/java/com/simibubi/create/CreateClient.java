@@ -5,21 +5,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.simibubi.create.foundation.behaviour.filtering.FilteringRenderer;
-import com.simibubi.create.foundation.behaviour.linked.LinkRenderer;
-import com.simibubi.create.foundation.behaviour.scrollvalue.ScrollValueRenderer;
+import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.ChassisRangeDisplay;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
+import com.simibubi.create.content.schematics.ClientSchematicLoader;
+import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
+import com.simibubi.create.content.schematics.client.SchematicHandler;
+import com.simibubi.create.foundation.ResourceReloadHandler;
 import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
+import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
-import com.simibubi.create.modules.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.modules.contraptions.components.contraptions.ChassisRangeDisplay;
-import com.simibubi.create.modules.contraptions.components.contraptions.ContraptionRenderer;
-import com.simibubi.create.modules.schematics.ClientSchematicLoader;
-import com.simibubi.create.modules.schematics.client.SchematicAndQuillHandler;
-import com.simibubi.create.modules.schematics.client.SchematicHandler;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.block.Block;
@@ -57,7 +58,7 @@ public class CreateClient {
 			modEventBus.addListener(CreateClient::onModelBake);
 			modEventBus.addListener(CreateClient::onModelRegistry);
 			modEventBus.addListener(CreateClient::onTextureStitch);
-			modEventBus.addListener(AllParticles::registerFactories);
+			modEventBus.addListener(AllParticleTypes::registerFactories);
 		});
 	}
 
@@ -72,10 +73,10 @@ public class CreateClient {
 		bufferCache.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
 
 		AllKeys.register();
-		AllContainers.registerScreenFactories();
+		AllContainerTypes.registerScreenFactories();
 		AllTileEntities.registerRenderers();
 		AllItems.registerColorHandlers();
-		AllEntities.registerRenderers();
+		AllEntityTypes.registerRenderers();
 		registerColorHandlers();
 
 		IResourceManager resourceManager = Minecraft.getInstance()

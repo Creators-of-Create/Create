@@ -3,17 +3,19 @@ package com.simibubi.create;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.simibubi.create.config.AllConfigs;
+import com.simibubi.create.content.CreateItemGroup;
+import com.simibubi.create.content.contraptions.TorquePropagator;
+import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
+import com.simibubi.create.content.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.palettes.PalettesItemGroup;
+import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.command.CreateCommand;
 import com.simibubi.create.foundation.command.ServerLagger;
-import com.simibubi.create.foundation.registrate.CreateRegistrate;
-import com.simibubi.create.foundation.world.AllWorldFeatures;
-import com.simibubi.create.modules.contraptions.TorquePropagator;
-import com.simibubi.create.modules.logistics.RedstoneLinkNetworkHandler;
-import com.simibubi.create.modules.palettes.AllPaletteBlocks;
-import com.simibubi.create.modules.palettes.PalettesItemGroup;
-import com.simibubi.create.modules.schematics.ServerSchematicLoader;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.NonNullLazyValue;
 
 import net.minecraft.entity.EntityType;
@@ -58,17 +60,17 @@ public class Create {
 
 		AllBlocks.register();
 		AllPaletteBlocks.register();
-//		modEventBus.addGenericListener(Block.class, AllBlocks::register);
+		
 		modEventBus.addGenericListener(Item.class, AllItems::register);
-		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipes::register);
+		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(TileEntityType.class, AllTileEntities::register);
-		modEventBus.addGenericListener(ContainerType.class, AllContainers::register);
-		modEventBus.addGenericListener(EntityType.class, AllEntities::register);
-		modEventBus.addGenericListener(ParticleType.class, AllParticles::register);
+		modEventBus.addGenericListener(ContainerType.class, AllContainerTypes::register);
+		modEventBus.addGenericListener(EntityType.class, AllEntityTypes::register);
+		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
-
 		modEventBus.addListener(AllConfigs::onLoad);
 		modEventBus.addListener(AllConfigs::onReload);
+		
 		CreateClient.addListeners(modEventBus);
 		AllConfigs.registerClientCommon();
 	}

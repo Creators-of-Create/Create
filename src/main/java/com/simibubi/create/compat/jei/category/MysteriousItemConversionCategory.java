@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.ConversionRecipe;
-import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -50,10 +50,10 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 
 	@Override
 	public void draw(ConversionRecipe recipe, double mouseX, double mouseY) {
-		ScreenResources.JEI_SLOT.draw(26, 16);
-		ScreenResources.JEI_SLOT.draw(131, 16);
-		ScreenResources.JEI_LONG_ARROW.draw(52, 20);
-		ScreenResources.JEI_QUESTION_MARK.draw(77, 5);
+		AllGuiTextures.JEI_SLOT.draw(26, 16);
+		AllGuiTextures.JEI_SLOT.draw(131, 16);
+		AllGuiTextures.JEI_LONG_ARROW.draw(52, 20);
+		AllGuiTextures.JEI_QUESTION_MARK.draw(77, 5);
 	}
 
 }

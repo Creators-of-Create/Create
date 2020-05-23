@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.ScreenResources;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import mezz.jei.api.constants.VanillaTypes;
@@ -58,14 +58,14 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 
 	@Override
 	public void draw(CondensedBlockCuttingRecipe recipe, double mouseX, double mouseY) {
-		ScreenResources.JEI_SLOT.draw(4, 4);
+		AllGuiTextures.JEI_SLOT.draw(4, 4);
 		int size = recipe.getOutputs().size();
 		for (int i = 0; i < size; i++) {
 			int xOffset = (i % 5) * 19;
 			int yOffset = (i / 5) * -19;
-			ScreenResources.JEI_SLOT.draw(77 + xOffset, 47 + yOffset);
+			AllGuiTextures.JEI_SLOT.draw(77 + xOffset, 47 + yOffset);
 		}
-		ScreenResources.JEI_DOWN_ARROW.draw(31, 6);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(31, 6);
 		saw.draw(33, 37);
 	}
 

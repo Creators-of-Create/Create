@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.ScreenResources;
+import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.modules.contraptions.components.fan.SplashingRecipe;
-import com.simibubi.create.modules.contraptions.processing.ProcessingOutput;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -61,10 +61,10 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 		int size = recipe.getPossibleOutputs()
 				.size();
 
-		ScreenResources.JEI_SLOT.draw(20, 47);
-		ScreenResources.JEI_SHADOW.draw(47, 29);
-		ScreenResources.JEI_SHADOW.draw(66, 39);
-		ScreenResources.JEI_LONG_ARROW.draw(53, 51);
+		AllGuiTextures.JEI_SLOT.draw(20, 47);
+		AllGuiTextures.JEI_SHADOW.draw(47, 29);
+		AllGuiTextures.JEI_SHADOW.draw(66, 39);
+		AllGuiTextures.JEI_LONG_ARROW.draw(53, 51);
 
 		if (size == 1) {
 			getRenderedSlot(recipe, 0).draw(139, 47);

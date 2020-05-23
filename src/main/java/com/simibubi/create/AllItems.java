@@ -4,29 +4,29 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
+import com.simibubi.create.content.AllSections;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
+import com.simibubi.create.content.contraptions.goggles.GogglesItem;
+import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
+import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
+import com.simibubi.create.content.contraptions.wrench.WrenchItem;
+import com.simibubi.create.content.curiosities.ChromaticCompoundCubeItem;
+import com.simibubi.create.content.curiosities.RefinedRadianceItem;
+import com.simibubi.create.content.curiosities.ShadowSteelItem;
+import com.simibubi.create.content.curiosities.TreeFertilizerItem;
+import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
+import com.simibubi.create.content.curiosities.tools.DeforesterItem;
+import com.simibubi.create.content.curiosities.tools.SandPaperItem;
+import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem;
+import com.simibubi.create.content.curiosities.zapper.terrainzapper.TerrainzapperItem;
+import com.simibubi.create.content.logistics.item.filter.FilterItem;
+import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
+import com.simibubi.create.content.schematics.item.SchematicItem;
+import com.simibubi.create.foundation.data.ITaggable;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.item.IItemWithColorHandler;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.data.ITaggable;
-import com.simibubi.create.modules.Sections;
-import com.simibubi.create.modules.contraptions.GogglesItem;
-import com.simibubi.create.modules.contraptions.WrenchItem;
-import com.simibubi.create.modules.contraptions.components.contraptions.glue.SuperGlueItem;
-import com.simibubi.create.modules.contraptions.components.contraptions.mounted.MinecartContraptionItem;
-import com.simibubi.create.modules.contraptions.relays.belt.item.BeltConnectorItem;
-import com.simibubi.create.modules.contraptions.relays.gearbox.VerticalGearboxItem;
-import com.simibubi.create.modules.curiosities.ChromaticCompoundCubeItem;
-import com.simibubi.create.modules.curiosities.RefinedRadianceItem;
-import com.simibubi.create.modules.curiosities.ShadowSteelItem;
-import com.simibubi.create.modules.curiosities.TreeFertilizerItem;
-import com.simibubi.create.modules.curiosities.symmetry.SymmetryWandItem;
-import com.simibubi.create.modules.curiosities.tools.DeforesterItem;
-import com.simibubi.create.modules.curiosities.tools.SandPaperItem;
-import com.simibubi.create.modules.curiosities.zapper.blockzapper.BlockzapperItem;
-import com.simibubi.create.modules.curiosities.zapper.terrainzapper.TerrainzapperItem;
-import com.simibubi.create.modules.logistics.item.filter.FilterItem;
-import com.simibubi.create.modules.schematics.item.SchematicAndQuillItem;
-import com.simibubi.create.modules.schematics.item.SchematicItem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.ItemColors;
@@ -47,7 +47,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD)
 public enum AllItems {
 
-	_1_(Sections.MATERIALS),
+	_1_(AllSections.MATERIALS),
 	
 	COPPER_NUGGET((TaggedItem) new TaggedItem().withForgeTags("nuggets/copper")),
 	ZINC_NUGGET((TaggedItem) new TaggedItem().withForgeTags("nuggets/zinc")),
@@ -80,7 +80,7 @@ public enum AllItems {
 	ELECTRON_TUBE,
 	INTEGRATED_CIRCUIT,
 	
-	_2_(Sections.KINETICS),
+	_2_(AllSections.KINETICS),
 
 	BELT_CONNECTOR(BeltConnectorItem::new),
 	VERTICAL_GEARBOX(VerticalGearboxItem::new),
@@ -96,12 +96,12 @@ public enum AllItems {
 	MINECART_CONTRAPTION(p -> new MinecartContraptionItem(Type.RIDEABLE, p)),
 	FURNACE_MINECART_CONTRAPTION(p -> new MinecartContraptionItem(Type.FURNACE, p)),
 
-	_3_(Sections.LOGISTICS),
+	_3_(AllSections.LOGISTICS),
 	
 	FILTER(FilterItem::new),
 	PROPERTY_FILTER(FilterItem::new),
 
-	_4_(Sections.CURIOSITIES),
+	_4_(AllSections.CURIOSITIES),
 	
 	TREE_FERTILIZER(TreeFertilizerItem::new),
 	PLACEMENT_HANDGUN(BlockzapperItem::new),
@@ -109,7 +109,7 @@ public enum AllItems {
 	DEFORESTER(DeforesterItem::new),
 	SYMMETRY_WAND(SymmetryWandItem::new),
 	
-	_5_(Sections.SCHEMATICS),
+	_5_(AllSections.SCHEMATICS),
 	
 	EMPTY_BLUEPRINT(Item::new, stackSize(1)),
 	BLUEPRINT_AND_QUILL(SchematicAndQuillItem::new, stackSize(1)),
@@ -118,17 +118,17 @@ public enum AllItems {
 	;
 
 	private static class SectionTracker {
-		static Sections currentSection;
+		static AllSections currentSection;
 	}
 
 	// Common
 
-	public Sections section;
+	public AllSections section;
 	private Function<Properties, Properties> specialProperties;
 	private TaggedItem taggedItem;
 	private Item item;
 
-	AllItems(Sections section) {
+	AllItems(AllSections section) {
 		SectionTracker.currentSection = section;
 		taggedItem = new TaggedItem(null);
 	}
