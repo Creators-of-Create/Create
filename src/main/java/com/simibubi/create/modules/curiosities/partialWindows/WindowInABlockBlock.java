@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.IHaveCustomBlockModel;
 import com.simibubi.create.foundation.block.IHaveNoBlockItem;
 import com.simibubi.create.foundation.block.ITE;
@@ -15,6 +16,8 @@ import net.minecraft.block.FourWayBlock;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -47,7 +50,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class WindowInABlockBlock extends PaneBlock
-		implements ITE<WindowInABlockTileEntity>, IHaveNoBlockItem, IHaveCustomBlockModel {
+		implements ITE<WindowInABlockTileEntity>, IHaveNoBlockItem, IHaveCustomBlockModel, IHaveColorHandler {
 
 	public WindowInABlockBlock() {
 		super(Properties.create(Material.ROCK));
@@ -210,6 +213,7 @@ public class WindowInABlockBlock extends PaneBlock
 		return Blocks.AIR.getDefaultState();
 	}
 
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return false;
@@ -224,6 +228,18 @@ public class WindowInABlockBlock extends PaneBlock
 	@Override
 	public Class<WindowInABlockTileEntity> getTileEntityClass() {
 		return WindowInABlockTileEntity.class;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public IBlockColor getColorHandler() {
+		return (state, world, pos, index) -> {
+			try {
+				BlockState surrounding = getSurroundingBlockState(world, pos);
+				return Minecraft.getInstance().getBlockColors().getColor(surrounding, world, pos, index);
+			} catch (Exception e) {}
+			return -1;
+		};
 	}
 
 }
