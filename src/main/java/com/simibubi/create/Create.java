@@ -9,15 +9,18 @@ import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.command.CreateCommand;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.data.AllItemsTagProvider;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.NonNullLazyValue;
 
+import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
@@ -27,11 +30,11 @@ import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(Create.ID)
@@ -44,23 +47,22 @@ public class Create {
 	public static Logger logger = LogManager.getLogger();
 	public static ItemGroup baseCreativeTab = new CreateItemGroup();
 	public static ItemGroup palettesCreativeTab = new PalettesItemGroup();
-	
+
 	public static ServerSchematicLoader schematicReceiver;
 	public static RedstoneLinkNetworkHandler redstoneLinkNetworkHandler;
 	public static TorquePropagator torquePropagator;
 	public static ServerLagger lagger;
-	
+
 	private static final NonNullLazyValue<CreateRegistrate> registrate = CreateRegistrate.lazy(ID);
 
 	public Create() {
-		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		IEventBus modEventBus = FMLJavaModLoadingContext.get()
+			.getModEventBus();
 		modEventBus.addListener(Create::init);
-
-		MinecraftForge.EVENT_BUS.addListener(Create::serverStarting);
 
 		AllBlocks.register();
 		AllPaletteBlocks.register();
-		
+
 		modEventBus.addGenericListener(Item.class, AllItems::register);
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(TileEntityType.class, AllTileEntities::register);
@@ -71,6 +73,9 @@ public class Create {
 		modEventBus.addListener(AllConfigs::onLoad);
 		modEventBus.addListener(AllConfigs::onReload);
 		
+		// Ensure registrate runs first
+		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
+
 		CreateClient.addListeners(modEventBus);
 		AllConfigs.registerClientCommon();
 	}
@@ -83,13 +88,9 @@ public class Create {
 
 		AllPackets.registerPackets();
 		AllTriggers.register();
-		
+
 		AllWorldFeatures.reload();
 		AllConfigs.registerServer();
-	}
-
-	public static void serverStarting(FMLServerStartingEvent event) {
-		new CreateCommand(event.getCommandDispatcher());
 	}
 
 	public static void tick() {
@@ -105,11 +106,18 @@ public class Create {
 	}
 
 	public static CreateRegistrate registrate() {
-	    return registrate.get();
+		return registrate.get();
 	}
-	
+
 	public static ResourceLocation asResource(String path) {
 		return new ResourceLocation(ID, path);
 	}
-	
+
+	public void gatherData(GatherDataEvent event) {
+		DataGenerator gen = event.getGenerator();
+		gen.addProvider(new AllItemsTagProvider(gen));
+		gen.addProvider(new AllAdvancements(gen));
+		gen.addProvider(new LangMerger(gen));
+	}
+
 }

@@ -30,15 +30,15 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
+	protected CreateRegistrate(String modid) {
+		super(modid);
+	}
+
 	public static NonNullLazyValue<CreateRegistrate> lazy(String modid) {
 		return new NonNullLazyValue<>(() -> new CreateRegistrate(modid)
 				.registerEventListeners(FMLJavaModLoadingContext.get().getModEventBus()));
 	}
 
-	protected CreateRegistrate(String modid) {
-		super(modid);
-	}
-	
 	/* Section Tracking */
 
 	private static Map<RegistryEntry<?>, AllSections> sectionLookup = new IdentityHashMap<>();

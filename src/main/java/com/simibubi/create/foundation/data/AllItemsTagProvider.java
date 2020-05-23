@@ -16,7 +16,7 @@ public class AllItemsTagProvider extends ItemTagsProvider {
 
 	static Map<ResourceLocation, ItemTags.Wrapper> createdTags;
 
-	protected AllItemsTagProvider(DataGenerator generatorIn) {
+	public AllItemsTagProvider(DataGenerator generatorIn) {
 		super(generatorIn);
 	}
 

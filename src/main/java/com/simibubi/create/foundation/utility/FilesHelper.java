@@ -14,18 +14,17 @@ import com.google.gson.JsonParser;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.Create;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
 
 public class FilesHelper {
 
 	public static void createFolderIfMissing(String name) {
 		Path path = Paths.get(name);
 		if (path.getParent() != null)
-			createFolderIfMissing(path.getParent().toString());
+			createFolderIfMissing(path.getParent()
+				.toString());
 
 		if (!Files.isDirectory(path)) {
 			try {
@@ -49,7 +48,10 @@ public class FilesHelper {
 	}
 
 	public static String slug(String name) {
-		return Lang.asId(name).replace(' ', '_').replace('!', '_').replace('?', '_');
+		return Lang.asId(name)
+			.replace(' ', '_')
+			.replace('!', '_')
+			.replace('?', '_');
 	}
 
 	public static boolean saveTagCompoundAsJson(CompoundNBT compound, String path) {
@@ -80,29 +82,28 @@ public class FilesHelper {
 
 	}
 
-	public static CompoundNBT loadJsonNBT(InputStream inputStream) {
+	private static JsonElement loadJson(InputStream inputStream) {
 		try {
 			JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(inputStream)));
 			reader.setLenient(true);
 			JsonElement element = Streams.parse(reader);
 			reader.close();
 			inputStream.close();
-			return JsonToNBT.getTagFromJson(element.toString());
+			return element;
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (CommandSyntaxException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public static CompoundNBT loadJsonResourceAsNBT(String filepath) {
-		return loadJsonNBT(Create.class.getClassLoader().getResourceAsStream(filepath));
+	public static JsonElement loadJsonResource(String filepath) {
+		return loadJson(Create.class.getClassLoader()
+			.getResourceAsStream(filepath));
 	}
 
-	public static CompoundNBT loadJsonAsNBT(String filepath) {
+	public static JsonElement loadJson(String filepath) {
 		try {
-			return loadJsonNBT(Files.newInputStream(Paths.get(filepath), StandardOpenOption.READ));
+			return loadJson(Files.newInputStream(Paths.get(filepath), StandardOpenOption.READ));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
