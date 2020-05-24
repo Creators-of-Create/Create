@@ -3,6 +3,7 @@ package com.simibubi.create.content.palettes;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.AllColorHandlers;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -29,18 +30,26 @@ public class PalettesVariantEntry {
 			CreateRegistrate registrate = Create.registrate();
 			BlockBuilder<? extends Block, CreateRegistrate> builder =
 				registrate.block(pattern.createName(name), pattern.getBlockFactory())
+					.initialProperties(initialProperties)
 					.blockstate(pattern.getBlockStateGenerator()
 						.apply(pattern)
 						.apply(name)::accept);
 
 			if (pattern.isTranslucent())
 				builder.addLayer(() -> RenderType::getTranslucent);
+			if (pattern.hasFoliage())
+				builder.transform(CreateRegistrate.blockColors(() -> AllColorHandlers::getGrassyBlock));
 			pattern.createCTBehaviour(variant)
 				.ifPresent(b -> builder.transform(connectedTextures(b)));
 
-			BlockEntry<? extends Block> block = builder.initialProperties(initialProperties)
-				.simpleItem()
-				.register();
+			if (pattern.hasFoliage())
+				builder.item()
+					.transform(CreateRegistrate.itemColors(() -> AllColorHandlers::getGrassyItem)::apply)
+					.build();
+			else
+				builder.simpleItem();
+
+			BlockEntry<? extends Block> block = builder.register();
 			registeredBlocks.add(block);
 
 			for (PaletteBlockPartial<? extends Block> partialBlock : pattern.getPartials())

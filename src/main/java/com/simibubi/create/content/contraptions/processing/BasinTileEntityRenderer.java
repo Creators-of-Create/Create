@@ -17,7 +17,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-@SuppressWarnings("deprecation")
 public class BasinTileEntityRenderer extends SafeTileEntityRenderer<BasinTileEntity> {
 
 	public BasinTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {

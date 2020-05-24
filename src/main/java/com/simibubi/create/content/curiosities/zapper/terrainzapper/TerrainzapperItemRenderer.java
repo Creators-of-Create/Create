@@ -16,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 
-@SuppressWarnings("deprecation")
 public class TerrainzapperItemRenderer extends ZapperItemRenderer {
 
 	@Override

@@ -15,7 +15,6 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 
-@SuppressWarnings("deprecation")
 public class WrappedBakedModel implements IBakedModel {
 
 	protected IBakedModel template;

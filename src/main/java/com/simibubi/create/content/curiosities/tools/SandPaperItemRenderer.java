@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 
-@SuppressWarnings("deprecation")
 public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 
 	@Override

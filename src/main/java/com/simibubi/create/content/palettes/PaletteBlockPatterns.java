@@ -57,14 +57,14 @@ public class PaletteBlockPatterns {
 			.textures("pillar", "pillar_end"),
 
 		MOSSY = create("mossy", Prefix).blockStateFactory(p -> p::cubeAllButMossy)
-			.block(MossyBlock::new)
 			.textures("bricks", "mossy")
-			.useTranslucentLayer(),
+			.useTranslucentLayer()
+			.withFoliage(),
 
 		OVERGROWN = create("overgrown", Prefix).blockStateFactory(p -> p::cubeAllButMossy)
-			.block(MossyBlock::new)
 			.textures("bricks", "overgrown")
 			.useTranslucentLayer()
+			.withFoliage()
 
 	;
 
@@ -81,6 +81,7 @@ public class PaletteBlockPatterns {
 	private String[] textures;
 	private String id;
 	private boolean isTranslucent;
+	private boolean hasFoliage;
 	private Optional<Function<PaletteStoneVariants, ConnectedTextureBehaviour>> ctBehaviour;
 
 	private IPatternBlockStateGenerator blockStateGenerator;
@@ -98,6 +99,7 @@ public class PaletteBlockPatterns {
 		pattern.nameType = nameType;
 		pattern.partials = partials;
 		pattern.isTranslucent = false;
+		pattern.hasFoliage = false;
 		pattern.blockFactory = Block::new;
 		pattern.textures = new String[] { name };
 		pattern.blockStateGenerator = p -> p::cubeAll;
@@ -110,6 +112,10 @@ public class PaletteBlockPatterns {
 
 	public boolean isTranslucent() {
 		return isTranslucent;
+	}
+	
+	public boolean hasFoliage() {
+		return hasFoliage;
 	}
 
 	public NonNullFunction<Properties, ? extends Block> getBlockFactory() {
@@ -147,6 +153,11 @@ public class PaletteBlockPatterns {
 
 	private PaletteBlockPatterns useTranslucentLayer() {
 		isTranslucent = true;
+		return this;
+	}
+	
+	private PaletteBlockPatterns withFoliage() {
+		hasFoliage = true;
 		return this;
 	}
 	

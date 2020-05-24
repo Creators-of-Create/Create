@@ -25,7 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 
-@SuppressWarnings("deprecation")
 public class BlockzapperItemRenderer extends ZapperItemRenderer {
 
 	@Override

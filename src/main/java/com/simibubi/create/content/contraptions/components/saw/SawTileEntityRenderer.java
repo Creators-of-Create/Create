@@ -25,7 +25,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
 
-@SuppressWarnings("deprecation")
 public class SawTileEntityRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 	public SawTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
