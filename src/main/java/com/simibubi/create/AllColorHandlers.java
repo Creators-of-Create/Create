@@ -3,6 +3,9 @@ package com.simibubi.create;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.simibubi.create.foundation.block.IBlockVertexColor;
+import com.simibubi.create.foundation.block.render.ColoredVertexModel;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -19,8 +22,9 @@ import net.minecraft.world.biome.BiomeColors;
 
 public class AllColorHandlers {
 
-	private static Map<Block, IBlockColor> coloredBlocks = new HashMap<>();
-	private static Map<IItemProvider, IItemColor> coloredItems = new HashMap<>();
+	private Map<Block, IBlockVertexColor> coloredVertexBlocks = new HashMap<>();
+	private Map<Block, IBlockColor> coloredBlocks = new HashMap<>();
+	private Map<IItemProvider, IItemColor> coloredItems = new HashMap<>();
 
 	//
 
@@ -36,15 +40,19 @@ public class AllColorHandlers {
 
 	//
 
-	public static void register(Block block, IBlockColor color) {
+	public void register(Block block, IBlockColor color) {
 		coloredBlocks.put(block, color);
 	}
 
-	public static void register(IItemProvider item, IItemColor color) {
+	public void register(Block block, IBlockVertexColor color) {
+		coloredVertexBlocks.put(block, color);
+	}
+
+	public void register(IItemProvider item, IItemColor color) {
 		coloredItems.put(item, color);
 	}
 
-	public static void registerColorHandlers() {
+	public void init() {
 		BlockColors blockColors = Minecraft.getInstance()
 			.getBlockColors();
 		ItemColors itemColors = Minecraft.getInstance()
@@ -52,6 +60,8 @@ public class AllColorHandlers {
 
 		coloredBlocks.forEach((block, color) -> blockColors.register(color, block));
 		coloredItems.forEach((item, color) -> itemColors.register(color, item));
+		coloredVertexBlocks.forEach((block, color) -> CreateClient.getCustomBlockModels()
+			.register(() -> block, model -> new ColoredVertexModel(model, color)));
 	}
 
 	//

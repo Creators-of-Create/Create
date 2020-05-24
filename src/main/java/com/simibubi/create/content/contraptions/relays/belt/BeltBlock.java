@@ -15,7 +15,6 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.block.IHaveColorHandler;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -27,7 +26,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.DiggingParticle;
 import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -69,8 +67,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltBlock extends HorizontalKineticBlock
-	implements ITE<BeltTileEntity>, IHaveColorHandler, ISpecialBlockItemRequirement {
+public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement {
 
 	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
@@ -415,11 +412,6 @@ public class BeltBlock extends HorizontalKineticBlock
 			: BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
-//	@Override // TODO 1.15 register layer
-//	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-//		return state.get(CASING) && state.get(SLOPE) != Slope.VERTICAL && layer == getRenderLayer();
-//	}
-
 	public static void initBelt(World world, BlockPos pos) {
 		if (world.isRemote || world.getWorldType() == WorldType.DEBUG_ALL_BLOCK_STATES)
 			return;
@@ -625,12 +617,6 @@ public class BeltBlock extends HorizontalKineticBlock
 		}
 
 		return true;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public IBlockColor getColorHandler() {
-		return new BeltColor();
 	}
 
 	@Override

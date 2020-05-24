@@ -125,8 +125,9 @@ public class AllPaletteBlocks {
 	public static final PalettesVariantEntry GABBRO_VARIANTS =
 		new PalettesVariantEntry(PaletteStoneVariants.GABBRO, PaletteBlockPatterns.standardRange, GABBRO);
 
-	public static final BlockEntry<ScoriaBlock> NATURAL_SCORIA = REGISTRATE.block("natural_scoria", ScoriaBlock::new)
+	public static final BlockEntry<Block> NATURAL_SCORIA = REGISTRATE.block("natural_scoria", Block::new)
 		.initialProperties(() -> Blocks.ANDESITE)
+		.transform(CreateRegistrate.blockVertexColors(new ScoriaVertexColor()))
 		.blockstate(palettesCubeAll())
 		.simpleItem()
 		.register();

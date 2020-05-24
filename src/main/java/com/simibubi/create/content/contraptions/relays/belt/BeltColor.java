@@ -9,7 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-class BeltColor implements IBlockColor {
+public class BeltColor implements IBlockColor {
 
 	@Override
 	public int getColor(BlockState state, ILightReader reader, BlockPos pos, int layer) {

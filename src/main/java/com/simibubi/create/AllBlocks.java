@@ -34,8 +34,8 @@ import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.MinecartAnchorBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
@@ -49,6 +49,7 @@ import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerB
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftGenerator;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.content.contraptions.relays.belt.BeltColor;
 import com.simibubi.create.content.contraptions.relays.belt.BeltGenerator;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
@@ -240,6 +241,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties.beltMaterial, MaterialColor.GRAY)
 		.properties(p -> p.sound(SoundType.CLOTH))
 		.transform(StressConfigDefaults.setImpact(1.0))
+		.transform(CreateRegistrate.blockColors(() -> BeltColor::new))
 		.blockstate(new BeltGenerator()::generate)
 		.register();
 

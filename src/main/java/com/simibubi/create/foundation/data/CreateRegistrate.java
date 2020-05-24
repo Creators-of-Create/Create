@@ -7,9 +7,9 @@ import java.util.Map.Entry;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.AllColorHandlers;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.AllSections;
+import com.simibubi.create.foundation.block.IBlockVertexColor;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.tterrag.registrate.AbstractRegistrate;
@@ -119,6 +119,11 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return b -> b.onRegister(entry -> onClient(() -> () -> registerBlockColor(entry, colorFunc)));
 	}
 
+	public static <T extends Block> NonNullUnaryOperator<BlockBuilder<T, CreateRegistrate>> blockVertexColors(
+		IBlockVertexColor colorFunc) {
+		return b -> b.onRegister(entry -> onClient(() -> () -> registerBlockVertexColor(entry, colorFunc)));
+	}
+
 	public static NonNullUnaryOperator<ItemBuilder<? extends BlockItem, ?>> itemColors(
 		Supplier<Supplier<IItemColor>> colorFunc) {
 		return b -> b.onRegister(entry -> onClient(() -> () -> registerItemColor(entry, colorFunc)));
@@ -136,14 +141,22 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerBlockColor(Block entry, Supplier<Supplier<IBlockColor>> colorFunc) {
-		AllColorHandlers.register(entry, colorFunc.get()
-			.get());
+		CreateClient.getColorHandler()
+			.register(entry, colorFunc.get()
+				.get());
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
+		CreateClient.getColorHandler()
+			.register(entry, colorFunc);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerItemColor(IItemProvider entry, Supplier<Supplier<IItemColor>> colorFunc) {
-		AllColorHandlers.register(entry, colorFunc.get()
-			.get());
+		CreateClient.getColorHandler()
+			.register(entry, colorFunc.get()
+				.get());
 	}
 
 }

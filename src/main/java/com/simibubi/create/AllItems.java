@@ -236,6 +236,7 @@ public enum AllItems {
 	}
 
 	@OnlyIn(Dist.CLIENT)
+	@Deprecated // Use CreateRegistrate#itemColor when porting AllItems
 	public static void registerColorHandlers() {
 		ItemColors itemColors = Minecraft.getInstance().getItemColors();
 		for (AllItems item : values()) {

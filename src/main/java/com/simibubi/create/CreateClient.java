@@ -47,7 +47,9 @@ public class CreateClient {
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
 	public static Outliner outliner;
+	
 	private static CustomBlockModels customBlockModels;
+	private static AllColorHandlers colorHandlers;
 
 	public static void addListeners(IEventBus modEventBus) {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
@@ -74,7 +76,7 @@ public class CreateClient {
 		AllTileEntities.registerRenderers();
 		AllItems.registerColorHandlers();
 		AllEntityTypes.registerRenderers();
-		AllColorHandlers.registerColorHandlers();
+		getColorHandler().init();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();
@@ -173,6 +175,12 @@ public class CreateClient {
 		if (customBlockModels == null)
 			customBlockModels = new CustomBlockModels();
 		return customBlockModels;
+	}
+	
+	public static AllColorHandlers getColorHandler() {
+		if (colorHandlers == null)
+			colorHandlers = new AllColorHandlers();
+		return colorHandlers;
 	}
 
 }

@@ -1,24 +1,9 @@
 package com.simibubi.create.content.palettes;
 
-import com.simibubi.create.foundation.block.IHaveColoredVertices;
+import com.simibubi.create.foundation.block.IBlockVertexColor;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-
-public class ScoriaBlock extends Block implements IHaveColoredVertices {
-
-	public ScoriaBlock(Properties p_i48440_1_) {
-		super(p_i48440_1_);
-	}
-
-	@Override
-	public MaterialColor getMaterialColor(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return MaterialColor.GRAY_TERRACOTTA;
-	}
+public class ScoriaVertexColor implements IBlockVertexColor {
 
 	@Override
 	public int getColor(float x, float y, float z) {
