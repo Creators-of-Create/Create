@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.ResourceReloadHandler;
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.IHaveCustomItemModel;
+import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
@@ -92,6 +93,7 @@ public class CreateClient {
 		LinkRenderer.tick();
 		ScrollValueRenderer.tick();
 		ChassisRangeDisplay.tick();
+		EdgeInteractionRenderer.tick();
 		outliner.tickOutlines();
 	}
 

@@ -20,7 +20,7 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 	Vec3d vertical = VecHelper.voxelSpace(10f, 2.5f, 5.5f);
 
 	@Override
-	protected Vec3d getLocation(BlockState state) {
+	protected Vec3d getLocalOffset(BlockState state) {
 		Direction facing = state.get(RedstoneLinkBlock.FACING);
 		Vec3d location = vertical;
 

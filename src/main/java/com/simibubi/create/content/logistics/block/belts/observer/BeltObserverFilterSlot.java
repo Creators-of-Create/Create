@@ -14,7 +14,7 @@ public class BeltObserverFilterSlot extends ValueBoxTransform {
 	Vec3d position = VecHelper.voxelSpace(8f, 14.5f, 16f);
 	
 	@Override
-	protected Vec3d getLocation(BlockState state) {
+	protected Vec3d getLocalOffset(BlockState state) {
 		return rotateHorizontally(state, position);
 	}
 

@@ -22,7 +22,7 @@ public class ExtractorSlots {
 		Vec3d offsetForDownward = VecHelper.voxelSpace(8f, 1.85f, 3.5f);
 
 		@Override
-		protected Vec3d getLocation(BlockState state) {
+		protected Vec3d getLocalOffset(BlockState state) {
 			Vec3d location = offsetForHorizontal;
 			if (state.getBlock() instanceof TransposerBlock)
 				location = location.add(0, 2 / 16f, 0);
@@ -52,7 +52,7 @@ public class ExtractorSlots {
 		Vec3d offsetForDownward = VecHelper.voxelSpace(10f, 2f, 11.5f);
 
 		@Override
-		protected Vec3d getLocation(BlockState state) {
+		protected Vec3d getLocalOffset(BlockState state) {
 			Vec3d location = offsetForHorizontal;
 			if (state.getBlock() instanceof TransposerBlock)
 				location = location.add(0, 2 / 16f, 0);

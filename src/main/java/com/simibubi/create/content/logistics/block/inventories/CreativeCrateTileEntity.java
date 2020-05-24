@@ -94,7 +94,7 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 			}
 
 			@Override
-			protected Vec3d getLocation(BlockState state) {
+			protected Vec3d getLocalOffset(BlockState state) {
 				return new Vec3d(0.5, 13 / 16d, 0.5);
 			}
 

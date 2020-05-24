@@ -11,7 +11,7 @@ import net.minecraft.util.math.Vec3d;
 public class SawFilterSlot extends ValueBoxTransform {
 
 	@Override
-	protected Vec3d getLocation(BlockState state) {
+	protected Vec3d getLocalOffset(BlockState state) {
 		if (state.get(SawBlock.FACING) != Direction.UP)
 			return null;
 		Vec3d x = VecHelper.voxelSpace(8f, 12.5f, 12.25f);

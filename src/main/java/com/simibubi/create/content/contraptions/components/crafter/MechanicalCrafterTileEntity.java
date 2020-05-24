@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
@@ -16,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.crafter.MechanicalCra
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InventoryManagementBehaviour.Attachments;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -81,6 +83,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 	protected GroupedItems groupedItemsBeforeCraft; // for rendering on client
 	private InsertingBehaviour inserting;
+	private EdgeInteractionBehaviour connectivity;
 
 	public MechanicalCrafterTileEntity() {
 		super(AllTileEntities.MECHANICAL_CRAFTER.type);
@@ -93,7 +96,11 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		inserting = new InsertingBehaviour(this, Attachments.toward(this::getTargetFacing));
+		connectivity = new EdgeInteractionBehaviour(this, ConnectedInputHandler::toggleConnection)
+			.connectivity(ConnectedInputHandler::shouldConnect)
+			.require(AllItems.WRENCH.get());
 		behaviours.add(inserting);
+		behaviours.add(connectivity);
 	}
 
 	public void blockChanged() {
@@ -153,7 +160,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			groupedItemsBeforeCraft = before;
 		if (phaseBefore == Phase.EXPORTING && phase == Phase.WAITING) {
 			Direction facing = getBlockState().get(MechanicalCrafterBlock.HORIZONTAL_FACING);
-			Vec3d vec = new Vec3d(facing.getDirectionVec()).scale(.75).add(VecHelper.getCenterOf(pos));
+			Vec3d vec = new Vec3d(facing.getDirectionVec()).scale(.75)
+				.add(VecHelper.getCenterOf(pos));
 			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(getBlockState());
 			vec = vec.add(new Vec3d(targetDirection.getDirectionVec()).scale(1));
 			world.addParticle(ParticleTypes.CRIT, vec.x, vec.y, vec.z, 0, 0, 0);
@@ -169,7 +177,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		phase = Phase.IDLE;
 		String name = compound.getString("Phase");
 		for (Phase phase : Phase.values())
-			if (phase.name().equals(name))
+			if (phase.name()
+				.equals(name))
 				this.phase = phase;
 		countDown = compound.getInt("CountDown");
 		covered = compound.getBoolean("Cover");
@@ -211,10 +220,12 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				if (result != null) {
 
 					List<ItemStack> containers = new ArrayList<>();
-					groupedItems.grid.values().forEach(stack -> {
-						if (stack.hasContainerItem())
-							containers.add(stack.getContainerItem().copy());
-					});
+					groupedItems.grid.values()
+						.forEach(stack -> {
+							if (stack.hasContainerItem())
+								containers.add(stack.getContainerItem()
+									.copy());
+						});
 
 					groupedItems = new GroupedItems(result);
 					for (int i = 0; i < containers.size(); i++) {
@@ -266,9 +277,13 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				Direction facing = getBlockState().get(MechanicalCrafterBlock.HORIZONTAL_FACING);
 				float progress = countDown / 2000f;
 				Vec3d facingVec = new Vec3d(facing.getDirectionVec());
-				Vec3d vec = facingVec.scale(.65).add(VecHelper.getCenterOf(pos));
+				Vec3d vec = facingVec.scale(.65)
+					.add(VecHelper.getCenterOf(pos));
 				Vec3d offset = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
-						.mul(VecHelper.planeByNormal(facingVec)).normalize().scale(progress * .5f).add(vec);
+					.mul(VecHelper.planeByNormal(facingVec))
+					.normalize()
+					.scale(progress * .5f)
+					.add(vec);
 				if (progress > .5f)
 					world.addParticle(ParticleTypes.CRIT, offset.x, offset.y, offset.z, 0, 0, 0);
 
@@ -279,11 +294,13 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 						for (int i = 0; i < 10; i++) {
 							Vec3d randVec = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
-									.mul(VecHelper.planeByNormal(facingVec)).normalize().scale(.25f);
+								.mul(VecHelper.planeByNormal(facingVec))
+								.normalize()
+								.scale(.25f);
 							Vec3d offset2 = randVec.add(vec);
 							randVec = randVec.scale(.35f);
 							world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), offset2.x, offset2.y,
-									offset2.z, randVec.x, randVec.y, randVec.z);
+								offset2.z, randVec.x, randVec.y, randVec.z);
 						}
 					}
 				}
@@ -362,10 +379,13 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	public void eject() {
 		BlockState blockState = getBlockState();
 		boolean present = AllBlocks.MECHANICAL_CRAFTER.has(blockState);
-		Vec3d vec = present ? new Vec3d(blockState.get(HORIZONTAL_FACING).getDirectionVec()).scale(.75f) : Vec3d.ZERO;
-		Vec3d ejectPos = VecHelper.getCenterOf(pos).add(vec);
+		Vec3d vec = present ? new Vec3d(blockState.get(HORIZONTAL_FACING)
+			.getDirectionVec()).scale(.75f) : Vec3d.ZERO;
+		Vec3d ejectPos = VecHelper.getCenterOf(pos)
+			.add(vec);
 		groupedItems.grid.forEach((pair, stack) -> dropItem(ejectPos, stack));
-		if (!inventory.getStackInSlot(0).isEmpty())
+		if (!inventory.getStackInSlot(0)
+			.isEmpty())
 			dropItem(ejectPos, inventory.getStackInSlot(0));
 		phase = Phase.IDLE;
 		groupedItems = new GroupedItems();
@@ -391,7 +411,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	public boolean craftingItemPresent() {
-		return !inventory.getStackInSlot(0).isEmpty() || covered;
+		return !inventory.getStackInSlot(0)
+			.isEmpty() || covered;
 	}
 
 	protected void checkCompletedRecipe() {
@@ -410,7 +431,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		phase = Phase.ACCEPTING;
 		groupedItems = new GroupedItems(inventory.getStackInSlot(0));
 		inventory.setStackInSlot(0, ItemStack.EMPTY);
-		if (RecipeGridHandler.getPrecedingCrafters(this).isEmpty()) {
+		if (RecipeGridHandler.getPrecedingCrafters(this)
+			.isEmpty()) {
 			phase = Phase.ASSEMBLING;
 			countDown = 500;
 		}

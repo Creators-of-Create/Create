@@ -73,21 +73,23 @@ public class ValueBox extends ChasingAABBOutline {
 
 	@Override
 	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
+		boolean hasTransform = transform != null;
 		if (transform instanceof Sided && params.getHighlightedFace() != null)
 			((Sided) transform).fromSide(params.getHighlightedFace());
-		if (!transform.shouldRender(blockState))
+		if (hasTransform && !transform.shouldRender(blockState))
 			return;
 
 		ms.push();
 		ms.translate(pos.getX(), pos.getY(), pos.getZ());
-		transform.transform(blockState, ms);
+		if (hasTransform)
+			transform.transform(blockState, ms);
 		transformNormals = ms.peek()
 			.getNormal()
 			.copy();
 		params.colored(isPassive ? passiveColor : highlightColor);
 		super.render(ms, buffer);
 
-		float fontScale = -1 / 64f;
+		float fontScale = hasTransform ? -transform.getFontScale() : -1 / 64f;
 		ms.scale(fontScale, fontScale, fontScale);
 
 		ms.push();

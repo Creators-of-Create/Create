@@ -19,19 +19,19 @@ public abstract class ValueBoxTransform {
 
 	protected float scale = getScale();
 
-	protected abstract Vec3d getLocation(BlockState state);
+	protected abstract Vec3d getLocalOffset(BlockState state);
 
 	protected abstract void rotate(BlockState state, MatrixStack ms);
 
 	public boolean testHit(BlockState state, Vec3d localHit) {
-		Vec3d offset = getLocation(state);
+		Vec3d offset = getLocalOffset(state);
 		if (offset == null)
 			return false;
 		return localHit.distanceTo(offset) < scale / 2;
 	}
 
 	public void transform(BlockState state, MatrixStack ms) {
-		Vec3d position = getLocation(state);
+		Vec3d position = getLocalOffset(state);
 		if (position == null)
 			return;
 		ms.translate(position.x, position.y, position.z);
@@ -40,7 +40,7 @@ public abstract class ValueBoxTransform {
 	}
 
 	public boolean shouldRender(BlockState state) {
-		return state.getMaterial() != Material.AIR && getLocation(state) != null;
+		return state.getMaterial() != Material.AIR && getLocalOffset(state) != null;
 	}
 
 	protected Vec3d rotateHorizontally(BlockState state, Vec3d vec) {
@@ -54,6 +54,10 @@ public abstract class ValueBoxTransform {
 
 	protected float getScale() {
 		return .4f;
+	}
+	
+	protected float getFontScale() {
+		return 1 / 64f;
 	}
 
 	public static abstract class Dual extends ValueBoxTransform {
@@ -73,7 +77,7 @@ public abstract class ValueBoxTransform {
 		}
 
 		public boolean testHit(BlockState state, Vec3d localHit) {
-			Vec3d offset = getLocation(state);
+			Vec3d offset = getLocalOffset(state);
 			if (offset == null)
 				return false;
 			return localHit.distanceTo(offset) < scale / 3.5f;
@@ -91,7 +95,7 @@ public abstract class ValueBoxTransform {
 		}
 
 		@Override
-		protected Vec3d getLocation(BlockState state) {
+		protected Vec3d getLocalOffset(BlockState state) {
 			Vec3d location = getSouthLocation();
 			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(direction), Axis.Y);
 			location = VecHelper.rotateCentered(location, AngleHelper.verticalAngle(direction), Axis.Z);

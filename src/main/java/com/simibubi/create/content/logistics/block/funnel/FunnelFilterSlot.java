@@ -20,7 +20,7 @@ public class FunnelFilterSlot extends ValueBoxTransform {
 	Vec3d offsetForDownward = VecHelper.voxelSpace(8f, 2.5f, 2f);
 
 	@Override
-	protected Vec3d getLocation(BlockState state) {
+	protected Vec3d getLocalOffset(BlockState state) {
 		Vec3d vec = offsetForHorizontal;
 		float yRot = AngleHelper.horizontalAngle(state.get(ExtractorBlock.HORIZONTAL_FACING));
 		if (AttachedLogisticalBlock.isVertical(state))

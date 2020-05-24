@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3d;
 public class DeployerFilterSlot extends ValueBoxTransform {
 
 	@Override
-	protected Vec3d getLocation(BlockState state) {
+	protected Vec3d getLocalOffset(BlockState state) {
 		Direction facing = state.get(DeployerBlock.FACING);
 		Vec3d vec = VecHelper.voxelSpace(8f, 13.5f, 11.5f);
 

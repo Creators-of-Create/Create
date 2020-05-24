@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 public class AdjustableRepeaterScrollSlot extends ValueBoxTransform {
 
 	@Override
-	protected Vec3d getLocation(BlockState state) {
+	protected Vec3d getLocalOffset(BlockState state) {
 		return VecHelper.voxelSpace(8, 3f, 8);
 	}
 

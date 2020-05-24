@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
+import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelBlock;
@@ -553,6 +554,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::softMetal)
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setImpact(2.0))
+			.transform(CreateRegistrate.connectedTextures(new CrafterCTBehaviour()))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.item()
 			.transform(customItemModel())

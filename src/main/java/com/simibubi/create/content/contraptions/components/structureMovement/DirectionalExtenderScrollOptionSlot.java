@@ -19,8 +19,8 @@ public class DirectionalExtenderScrollOptionSlot extends CenteredSideValueBoxTra
 	}
 
 	@Override
-	protected Vec3d getLocation(BlockState state) {
-		return super.getLocation(state)
+	protected Vec3d getLocalOffset(BlockState state) {
+		return super.getLocalOffset(state)
 				.add(new Vec3d(state.get(BlockStateProperties.FACING).getDirectionVec()).scale(-2 / 16f));
 	}
 
