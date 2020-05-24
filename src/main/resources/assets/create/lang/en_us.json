@@ -38,7 +38,7 @@
 	"item.create.red_sand_paper": "Red Sand Paper",
 	"item.create.super_glue": "Super Glue",
 	"item.create.minecart_contraption": "Minecart with Contraption",
-	
+
 	"item.create.brass_ingot": "Brass Ingot",
 	"item.create.brass_sheet": "Brass Sheets",
 	"item.create.brass_nugget": "Brass Nugget",
@@ -53,7 +53,7 @@
 
 	"item.create.electron_tube": "Electron Tube",
 	"item.create.integrated_circuit": "Integrated Circuit",
-	
+
 	"item.create.blazing_pickaxe": "Blazing Pickaxe",
 	"item.create.blazing_shovel": "Blazing Shovel",
 	"item.create.blazing_axe": "Blazing Axe",
@@ -74,7 +74,7 @@
 	"block.create.zinc_ore": "Zinc Ore",
 	"block.create.zinc_block": "Block of Zinc",
 	"block.create.brass_block": "Block of Brass",
-	
+
 	"block.create.andesite_casing": "Andesite Casing",
 	"block.create.brass_casing": "Brass Casing",
 	"block.create.copper_casing": "Copper Casing",
@@ -146,7 +146,7 @@
 	"block.create.entity_detector": "Belt Observer",
 	"block.create.belt_tunnel": "Conveyor Tunnel",
 	"block.create.sequenced_gearshift": "Sequenced Gearshift",
-	
+
 	"block.create.tiled_glass": "Tiled Glass",
 	"block.create.framed_glass": "Large Glass Window",
 	"block.create.vertical_framed_glass": "Vertical Glass Window",
@@ -158,7 +158,7 @@
 	"block.create.dark_oak_glass": "Dark Oak Window",
 	"block.create.acacia_glass": "Acacia Window",
 	"block.create.iron_glass": "Ornate Iron Window",
-	
+
 	"block.create.tiled_glass_pane": "Tiled Glass Pane",
 	"block.create.framed_glass_pane": "Large Glass Window Pane",
 	"block.create.vertical_framed_glass_pane": "Vertical Glass Window Pane",
@@ -233,7 +233,7 @@
 	"block.create.polished_limestone_slab": "Polished Limestone Slab",
 	"block.create.limestone_pillar": "Limestone Pillar",
 	"block.create.limestone_layers": "Layered Limestone",
-	
+
 	"block.create.natural_scoria": "Natural Scoria",
 	"block.create.scoria": "Scoria",
 	"block.create.scoria_stairs": "Scoria Stairs",
@@ -254,12 +254,12 @@
 	"block.create.dark_scoria_bricks_stairs": "Dark Scoria Brick Stairs",
 	"block.create.dark_scoria_bricks_slab": "Dark Scoria Brick Slab",
 	"block.create.dark_scoria_bricks_wall": "Dark Scoria Brick Wall",
-	
+
 	"block.create.schematicannon": "Schematicannon",
 	"block.create.schematic_table": "Schematic Table",
 
 	"block.create.cocoa_log": "Cocoa Jungle Log",
-	
+
 	"entity.create.contraption": "Moving Contraption",
 	"entity.create.stationary_contraption": "Stationary Contraption",
 	"entity.create.super_glue": "Superglue",
@@ -352,7 +352,7 @@
 	"create.gui.blockzapper.pattern.chance25": "25% Roll",
 	"create.gui.blockzapper.pattern.chance50": "50% Roll",
 	"create.gui.blockzapper.pattern.chance75": "75% Roll",
-	
+
 	"create.gui.terrainzapper.title": "Handheld Worldshaper",
 	"create.gui.terrainzapper.placement": "Placement",
 	"create.gui.terrainzapper.placement.merged": "Merged",
@@ -395,7 +395,7 @@
 	"create.contraptions.cart_movement_mode.rotate": "Always face toward motion",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Pause actors while rotating",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Lock rotation",
-	
+
 	"create.logistics.filter": "Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
@@ -404,14 +404,14 @@
 	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
 	"create.gui.goggles.at_current_speed": "At current Speed",
 	"create.gui.goggles.base_value": "Base Value",
-	
+
 	"create.gui.gauge.info_header": "Gauge Information:",
 	"create.gui.speed_gauge.title": "Rotation Speed",
 	"create.gui.stress_gauge.title": "Network Stress",
 	"create.gui.stress_gauge.capacity": "Remaining Capacity",
 	"create.gui.stress_gauge.overstressed": "Overstressed",
 	"create.gui.stress_gauge.no_rotation": "No Rotation",
-	
+
 	"create.gui.contraptions.not_fast_enough": "It appears that this %1$s is _not_ rotating with _enough_ _speed_.",
 	"create.gui.contraptions.network_overstressed": "It appears that this contraption is _overstressed_. Add more sources or _slow_ _down_ the components with a high _stress_ _impact_.",
 
@@ -425,7 +425,7 @@
 	"create.gui.stockswitch.startAbove": "Start Signal above",
 	"create.gui.stockswitch.stopAt": "Stop Signal at",
 	"create.gui.stockswitch.stopBelow": "Stop Signal below",
-	
+
 	"create.gui.sequenced_gearshift.title": "Sequenced Gearshift",
 	"create.gui.sequenced_gearshift.instruction": "Instruction",
 	"create.gui.sequenced_gearshift.instruction.turn_angle": "Turn",
@@ -543,7 +543,7 @@
 	"create.schematicannon.status.schematicInvalid": "Schematic Invalid",
 	"create.schematicannon.status.schematicNotPlaced": "Schematic Not Deployed",
 	"create.schematicannon.status.schematicExpired": "Schematic File Expired",
-	
+
 	"create.gui.filter.blacklist": "Blacklist",
 	"create.gui.filter.blacklist.description": "Items pass if they do NOT match any of the above. An empty Blacklist accepts everything.",
 	"create.gui.filter.whitelist": "Whitelist",
@@ -552,7 +552,7 @@
 	"create.gui.filter.respect_data.description": "Items only match if their durability, enchantments, and other attributes match as well.",
 	"create.gui.filter.ignore_data": "Ignore Data",
 	"create.gui.filter.ignore_data.description": "Items match regardless of their attributes.",
-	
+
 	"create.item_attributes.placeable": "is placeable",
 	"create.item_attributes.consumable": "can be eaten",
 	"create.item_attributes.smeltable": "can be Smelted",
@@ -568,7 +568,7 @@
 	"create.item_attributes.in_tag": "is tagged %1$s",
 	"create.item_attributes.in_item_group": "belongs to %1$s",
 	"create.item_attributes.added_by": "was added by %1$s",
-	
+
 	"create.gui.attribute_filter.no_selected_attributes": "No attributes selected",
 	"create.gui.attribute_filter.selected_attributes": "Selected attributes:",
 	"create.gui.attribute_filter.whitelist_disjunctive": "Whitelist (Any)",
@@ -606,7 +606,7 @@
 
 	"create.tooltip.wip": "WIP",
 	"create.tooltip.workInProgress": "Work in progress!",
-	
+
 	"create.tooltip.randomWipDescription0": "Please keep this item away from children.",
 	"create.tooltip.randomWipDescription1": "A baby panda dies every time you use this item. Every. Time.",
 	"create.tooltip.randomWipDescription2": "Use at your own risk.",
@@ -633,7 +633,7 @@
 	"advancement.create.andesite_alloy.desc": "Create's materials have weird names, Andesite Alloy is one of them.",
 
 	"advancement.create.its_alive": "It's Alive!",
-	"advancement.create.its_alive.desc": "Watch your first kinetic component spin.",	
+	"advancement.create.its_alive.desc": "Watch your first kinetic component spin.",
 	"advancement.create.shifting_gears": "Shifting Gear",
 	"advancement.create.shifting_gears.desc": "Connect a large to a small cogwheel allowing you to change the speed of your contraption.",
 	"advancement.create.overstressed": "Overstressed",
@@ -648,17 +648,17 @@
 	"advancement.create.speed_gauge.desc": "Place and power a Speedometer. Look at it through your goggles to read its exact value.",
 	"advancement.create.stress_gauge": "But how stressed exactly?",
 	"advancement.create.stress_gauge.desc": "Place and power a Stressometer. Look at it through your goggles to read its exact value.",
-	
+
 	"advancement.create.water_wheel": "Harnessing Hydraulics",
 	"advancement.create.water_wheel.desc": "Place a Water Wheel and try getting it to spin!",
 	"advancement.create.lava_wheel": "Magma Wheel",
 	"advancement.create.lava_wheel.desc": "This shouldn't have worked.",
 	"advancement.create.millstone": "Pocket Crusher",
-	"advancement.create.millstone.desc": "Place and power a Millstone",
+	"advancement.create.millstone.desc": "Place and power a Millstone.",
 	"advancement.create.andesite_casing": "The Andesite Age",
 	"advancement.create.andesite_casing.desc": "Use some Andesite Alloy and Wood to create a basic Casing.",
 	"advancement.create.drill": "Stationary breakers",
-	"advancement.create.drill.desc": "Place and power a Mechanical Drill",
+	"advancement.create.drill.desc": "Place and power a Mechanical Drill.",
 	"advancement.create.press": "Press goes 'Bonk!'",
 	"advancement.create.press.desc": "Power a Mechanical Press and use it to create some Plates.",
 	"advancement.create.polished_rose_quartz": "Pink Diamonds",
@@ -666,24 +666,24 @@
 	"advancement.create.electron_tube": "Beep boop",
 	"advancement.create.electron_tube.desc": "Make some Electron Tubes, useful in crafting less primitive machinery.",
 	"advancement.create.saw": "Stationary Chopping",
-	"advancement.create.saw.desc": "Place and power a Mechanical Saw",
+	"advancement.create.saw.desc": "Place and power a Mechanical Saw.",
 	"advancement.create.basin": "Basin Operation",
 	"advancement.create.basin.desc": "Place a basin and try throwing items into it.",
 	"advancement.create.mixer": "Mixin' it Up",
 	"advancement.create.mixer.desc": "Place a Mechanical Mixer above the basin, power it, and start mixing some ingredients.",
 	"advancement.create.compact": "Automated Compacting",
 	"advancement.create.compact.desc": "Use a press and a basin to compact some items.",
-	
+
 	"advancement.create.expert_lane_1": "The Andesite Expert Lane",
 	"advancement.create.expert_lane_1.desc": "Work in Progress",
-	
+
 	"advancement.create.brass": "An Actual Alloy",
 	"advancement.create.brass.desc": "Use Crushed Copper and Crushed Zinc to create some Brass.",
 	"advancement.create.brass_casing": "The Brass Age",
 	"advancement.create.brass_casing.desc": "Use newly obtained Brass and some Wood to create a more advanced Casing.",
 	"advancement.create.copper_casing": "The Copper Age",
 	"advancement.create.copper_casing.desc": "Use some copper sheets to create Copper Casing.",
-	
+
 	"advancement.create.crafter": "Automated Assembly",
 	"advancement.create.crafter.desc": "Place and power some Mechanical Crafters",
 	"advancement.create.deployer": "Poke, Place, and Attack",
@@ -692,14 +692,14 @@
 	"advancement.create.fist_bump.desc": "Make two Deployers fist-bump.",
 	"advancement.create.crushing_wheel": "A Pair of Giants",
 	"advancement.create.crushing_wheel.desc": "Create some Crushing Wheels to break down more materials more effectively.",
-	
+
 	"advancement.create.chromatic_compound": "Bipolar Minerals",
 	"advancement.create.chromatic_compound.desc": "Create a Bar of Chromatic Compound.",
 	"advancement.create.shadow_steel": "Void Returner",
 	"advancement.create.shadow_steel.desc": "Create Shadow Steel, a metal bar of nothingness.",
 	"advancement.create.refined_radiance": "Bright and Inspiring",
 	"advancement.create.refined_radiance.desc": "Create Refined Radiance, a powerful chromatic substance.",
-	
+
 	"advancement.create.zapper": "Building with style",
 	"advancement.create.zapper.desc": "Craft a Blockzapper. A radiant laser gun that helps you build.",
 	"advancement.create.upgraded_zapper": "Radiant Overdrive",
@@ -708,10 +708,10 @@
 	"advancement.create.symmetry_wand.desc": "Craft a Staff of Symmetry.",
 	"advancement.create.deforester": "Radiant Chopping",
 	"advancement.create.deforester.desc": "Craft a Deforester, and say goodbye to the local forest.",
-	
+
 	"advancement.create.eob": "End of Beta",
 	"advancement.create.eob.desc": "Expect more content here in the future. <3",
-	
+
 	"create.subtitle.schematicannon_launch_block": "Schematicannon shoots",
 	"create.subtitle.schematicannon_finish": "Schematicannon finishes",
 	"create.subtitle.slime_added": "Slime squishes",
@@ -752,7 +752,7 @@
 	"item.create.placement_handgun.tooltip.action2": "_Places_ or _Replaces_ the targeted block.",
 	"item.create.placement_handgun.tooltip.control3": "R-Click while Sneaking",
 	"item.create.placement_handgun.tooltip.action3": "Opens the _Configuration_ _Interface_.",
-	
+
 	"item.create.terrain_zapper.tooltip": "HANDHELD WORLDSHAPER",
 	"item.create.terrain_zapper.tooltip.summary": "Handy tool for creating _landscapes_ and _terrain_ _features_.",
 	"item.create.terrain_zapper.tooltip.control1": "L-Click at Block",
@@ -766,24 +766,24 @@
 	"item.create.tree_fertilizer.tooltip.summary": "A powerful combination of minerals suitable for speeding up the growth of common tree types.",
 	"item.create.tree_fertilizer.tooltip.condition1": "When used on a Sapling",
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Grows Trees _regardless_ of their _spacing_ _conditions_",
-	
+
 	"item.create.deforester.tooltip": "DEFORESTER",
 	"item.create.deforester.tooltip.summary": "A _radiant_ _axe_ able to chop down trees in a split second.",
-	
+
 	"item.create.filter.tooltip": "FILTER",
 	"item.create.filter.tooltip.summary": "_Controls_ _outputs_ and _inputs_ of logistical devices with more _precision_, matching them against a _set_ _of_ _items_ or several _nested_ _filters_.",
 	"item.create.filter.tooltip.condition1": "When in filter slot",
 	"item.create.filter.tooltip.behaviour1": "_Controls_ item flow according to its _configuration_.",
 	"item.create.filter.tooltip.condition2": "When R-Clicked",
 	"item.create.filter.tooltip.behaviour2": "Opens the _configuration_ _interface_.",
-	
+
 	"item.create.property_filter.tooltip": "ATTRIBUTE FILTER",
 	"item.create.property_filter.tooltip.summary": "_Controls_ _outputs_ and _inputs_ of logistical devices with more _precision_, matching them against a _set_ _of_ item _attributes_ and _categories_.",
 	"item.create.property_filter.tooltip.condition1": "When in filter slot",
 	"item.create.property_filter.tooltip.behaviour1": "_Controls_ item flow according to its _configuration_.",
 	"item.create.property_filter.tooltip.condition2": "When R-Clicked",
 	"item.create.property_filter.tooltip.behaviour2": "Opens the _configuration_ _interface_.",
-	
+
 	"block.create.cocoa_log.tooltip": "COCOA LOG",
 	"block.create.cocoa_log.tooltip.summary": "An augmented jungle log allowing for easier automation of _Cocoa_ _Beans_.",
 	"block.create.cocoa_log.tooltip.condition1": "When Mature",
@@ -851,7 +851,7 @@
 	"block.create.encased_belt.tooltip.summary": "_Relays_ _Rotation_ through its block and to attached _Encased_ _Belts_.",
 	"block.create.encased_belt.tooltip.condition1": "When Connected",
 	"block.create.encased_belt.tooltip.behaviour1": "Attached Blocks will have the exact _same_ _rotation_ _speed_ and direction. They do not have to face the same way.",
-	
+
 	"block.create.adjustable_pulley.tooltip": "ANALOG BELT PULLEY",
 	"block.create.adjustable_pulley.tooltip.summary": "_Relays_ _Rotation_ through its block and to attached _Encased_ _Belts_. Attached encased belts will _rotate_ _faster_ based on the _analog_ _redstone_ _signal_ this block receives.",
 	"block.create.adjustable_pulley.tooltip.condition1": "Redstone Control",
@@ -870,7 +870,7 @@
 	"item.create.goggles.tooltip.behaviour1": "Shows _colored_ _indicators_ corresponding to the _Speed_ _Level_ of a placed kinetic component as well as _Stress_ _Impact_ and _Capacity_ of individual components.",
 	"item.create.goggles.tooltip.condition2": "When looking at gauge",
 	"item.create.goggles.tooltip.behaviour2": "Shows detailed information about _Speed_ or _Stress_ of the network to which the gauge is connected.",
-	
+
 	"item.create.wrench.tooltip": "WRENCH",
 	"item.create.wrench.tooltip.summary": "A useful tool for working on kinetic contraptions. Can be used to _Rotate_, _Dismantle_ and to _Configure_ components.",
 	"item.create.wrench.tooltip.control1": "Right-Click a kinetic block",
@@ -895,12 +895,12 @@
 
 	"block.create.nozzle.tooltip": "NOZZLE",
 	"block.create.nozzle.tooltip.summary": "Attach to the front of an _Encased_ _Fan_ to distribute its effect on Entities in _all_ _directions_.",
-	
+
 	"block.create.hand_crank.tooltip": "HAND CRANK",
 	"block.create.hand_crank.tooltip.summary": "A simple _source_ of _Rotational_ _Force_ that requires the interaction of players.",
 	"block.create.hand_crank.tooltip.condition1": "When Used",
 	"block.create.hand_crank.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
+
 	"block.create.cuckoo_clock.tooltip": "CUCKOO CLOCK",
 	"block.create.cuckoo_clock.tooltip.summary": "Fine craftsmanship for _decorating_ a space and _keeping_ _track_ _of_ _time_.",
 	"block.create.cuckoo_clock.tooltip.condition1": "When Rotated",
@@ -908,7 +908,7 @@
 
 	"block.create.turntable.tooltip": "TURNTABLE",
 	"block.create.turntable.tooltip.summary": "Turns _Rotational_ _Force_ into refined Motion Sickness.",
-	
+
 	"block.create.millstone.tooltip": "MILLSTONE",
 	"block.create.millstone.tooltip.summary": "A kinetic component suitable for _grinding_ inserted _materials_. Can be powered by an adjacent cogwheel or by connecting to the shaft at the bottom. Results have to be extracted from the component.",
 	"block.create.millstone.tooltip.condition1": "When Rotated",
@@ -929,10 +929,10 @@
 	"block.create.mechanical_press.tooltip.behaviour2": "_Automatically_ compresses bypassing items on the Belt.",
 	"block.create.mechanical_press.tooltip.condition3": "When above Basin",
 	"block.create.mechanical_press.tooltip.behaviour3": "Starts to _compact_ _items_ in the basin whenever all necessary ingredients are present.",
-	
+
 	"block.create.basin.tooltip": "BASIN",
 	"block.create.basin.tooltip.summary": "A handy _item_ _container_ used in processing with the _Mechanical_ _Mixer_ and the _Mechanical_ _Press_. Supports _Redstone_ _Comparators_.",
-	
+
 	"block.create.mechanical_mixer.tooltip": "MECHANICAL MIXER",
 	"block.create.mechanical_mixer.tooltip.summary": "A kinetic whisk for applying any shapeless crafting recipes to items beneath it. Requires constant _Rotational_ _Force_ and a _Basin_ placed below (with a gap in between).",
 	"block.create.mechanical_mixer.tooltip.condition1": "When above Basin",
@@ -953,17 +953,17 @@
 	"block.create.furnace_engine.tooltip.summary": "A powerful source of _Rotational_ _Power_ that requires a _running_ _furnace_ to work.",
 	"block.create.furnace_engine.tooltip.condition1": "When Attached to Lit Furnace",
 	"block.create.furnace_engine.tooltip.behaviour1": "_Starts_ _powering_ a _Flywheel_ placed in front of it (1m apart). Use a Blast Furnace for higher speeds.",
-	
+
 	"block.create.flywheel.tooltip": "FLYWHEEL",
 	"block.create.flywheel.tooltip.summary": "A large metal wheel to _harness_ _and_ _stabilize_ generated force by an _attached_ _Engine_. Flywheels connect to engines if they are _1m_ _apart_ and at a _90°_ _Angle_ from each other.",
 	"block.create.flywheel.tooltip.condition1": "When Attached to Running Engine",
 	"block.create.flywheel.tooltip.behaviour1": "Provides _Rotational_ _Force_ to a connected contraption based on the generator's strength and speed.",
-	
+
 	"block.create.portable_storage_interface.tooltip": "PORTABLE STORAGE INTERFACE",
 	"block.create.portable_storage_interface.tooltip.summary": "A portable interchange point for _moving_ _items_ to and from a _structure_ moved by a piston, bearing, minecart, or pulley.",
 	"block.create.portable_storage_interface.tooltip.condition1": "While Moving",
 	"block.create.portable_storage_interface.tooltip.behaviour1": "Interacts with stationary _transposers_ such that transposers _facing_ _away_ from the interface _pull_ _items_, and transposers targeting the interface will _insert_ _items_ from attached inventory. The contraption will briefly stall as items are exchanged.",
-	
+
 	"block.create.rotation_speed_controller.tooltip": "ROTATION SPEED CONTROLLER",
 	"block.create.rotation_speed_controller.tooltip.summary": "A _configurable_ _relay_ able to speed up or slow down the target component to any desired speed.",
 	"block.create.rotation_speed_controller.tooltip.condition1": "When Attached to Large Cogwheel",
@@ -990,24 +990,24 @@
 	"block.create.mechanical_bearing.tooltip.behaviour1": "Starts rotating attached blocks. Use _Chassis_ or _Slime_ _Blocks_ to move more than a single block.",
 	"block.create.mechanical_bearing.tooltip.condition2": "When Powered by Redstone",
 	"block.create.mechanical_bearing.tooltip.behaviour2": "Starts providing _Rotational_ _Force_ generated from the rotation of its attached structure. The Structure has to include suitable _Sail_ _Blocks_ (Currently any Wool Block).",
-	
+
 	"block.create.clockwork_bearing.tooltip": "CLOCKWORK BEARING",
 	"block.create.clockwork_bearing.tooltip.summary": "An advanced version of the _Mechanical_ _Bearing_ for rotating up to two _clock_ _hands_ according to current _in-game_ _time_.",
 	"block.create.clockwork_bearing.tooltip.condition1": "When Rotated",
 	"block.create.clockwork_bearing.tooltip.behaviour1": "Starts rotating the attached Structure towards the _current_ _hour_. If an independent second structure exists in front of the first one, it will serve as the _minute_ _hand_.",
-	
+
 	"block.create.sequenced_gearshift.tooltip": "SEQUENCED GEARSHIFT",
 	"block.create.sequenced_gearshift.tooltip.summary": "A _programmable_ _utility_ _component,_ which can change its _rotational_ _through-put_ according to up to _5_ _consecutive_ _instructions._ Use this to power Mechanical Bearings, Pistons or Pulleys with more control over timing and speed. May become less precise at higher speeds.",
 	"block.create.sequenced_gearshift.tooltip.condition1": "When Powered by Redstone",
 	"block.create.sequenced_gearshift.tooltip.behaviour1": "_Starts_ _executing_ programmed instructions based on the input speed.",
 	"block.create.sequenced_gearshift.tooltip.condition2": "When R-Clicked",
 	"block.create.sequenced_gearshift.tooltip.behaviour2": "Opens the _configuration_ _interface._",
-	
+
 	"block.create.cart_assembler.tooltip": "CART ASSEMBLER",
 	"block.create.cart_assembler.tooltip.summary": "Mounts a connected Structure onto a _passing_ _Minecart_.",
 	"block.create.cart_assembler.tooltip.condition1": "When Powered by Redstone",
 	"block.create.cart_assembler.tooltip.behaviour1": "_Disassembles_ mounted Structures of _passing_ _carts_ and places them back into the world.",
-	
+
 	"block.create.rope_pulley.tooltip": "ROPE PULLEY",
 	"block.create.rope_pulley.tooltip.summary": "Moves attached _blocks_ and _structures_ _vertically_. Use _Chassis_ or _Slime_ _Blocks_ to move more than a single block.",
 	"block.create.rope_pulley.tooltip.condition1": "When Rotated",
@@ -1042,7 +1042,7 @@
 	"block.create.harvester.tooltip.summary": "A mechanical plant cutter suitable for medium scale crop automation. It is movable with _Mechanical_ _Pistons_, _Bearings_ or other controllers.",
 	"block.create.harvester.tooltip.condition1": "While Moving",
 	"block.create.harvester.tooltip.behaviour1": "_Harvests_ all _mature_ _crops_ which which the blade collides and reset them to their initial growth state.",
-	
+
 	"block.create.plough.tooltip": "MECHANICAL PLOUGH",
 	"block.create.plough.tooltip.summary": "A mechanical plough has a variety of uses. It is movable with _Mechanical_ _Pistons_, _Bearings_ or other controllers.",
 	"block.create.plough.tooltip.condition1": "While Moving",
@@ -1086,7 +1086,7 @@
 	"block.create.flexcrate.tooltip.summary": "This _Storage_ _Container_ allows Manual control over its capacity. It can hold up to _16_ _Stacks_ of any Item. Supports _Redstone_ _Comparators_.",
 	"block.create.flexcrate.tooltip.control1": "When R-Clicked",
 	"block.create.flexcrate.tooltip.action1": "Opens the _Interface_.",
-	
+
 	"block.create.creative_crate.tooltip": "THE ENDLESS CRATE",
 	"block.create.creative_crate.tooltip.summary": "This _Storage_ _Container_ allows infinite replication of any item. Place next to a _Schematicannon_ to remove any material requirements.",
 	"block.create.creative_crate.tooltip.condition1": "When Item in Filter Slot",
@@ -1100,7 +1100,7 @@
 	"block.create.extractor.tooltip.behaviour2": "Extractors can pull items _from_ _belts_ reinforced with _brass_ _casing_. When the extractor is blocked, the _belt_ _will_ _stall_.",
 	"block.create.extractor.tooltip.control1": "R-Click on Filter Space",
 	"block.create.extractor.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter_. The Extractor will pull the item _type_ and _count_ of the filter stack exclusively.",
-	
+
 	"block.create.transposer.tooltip": "TRANSPOSER",
 	"block.create.transposer.tooltip.summary": "_Takes_ _items_ from an attached _Inventory_ and immediately puts them into the target _Inventory_. Can be assigned an item-stack as a _filter_.",
 	"block.create.transposer.tooltip.condition1": "When Powered by Redstone",
@@ -1125,7 +1125,7 @@
 	"block.create.linked_extractor.tooltip.action1": "Assigns currently _held_ _stack_ as the _Filter_. The Extractor will pull the item _type_ and _count_ of the filter stack exclusively.",
 	"block.create.linked_extractor.tooltip.control2": "R-Click on Frequency Space",
 	"block.create.linked_extractor.tooltip.action2": "Assigns currently _held_ _item_ as part of the Frequency listened on. Whenever a transmitting _Redstone_ _Link_ of the same frequency is powered, this Extractor will pause.",
-	
+
 	"block.create.linked_transposer.tooltip": "LINKED TRANSPOSER",
 	"block.create.linked_transposer.tooltip.summary": "_Takes_ _items_ from an attached _Inventory_ and immediately puts them into the target _Inventory_. Can be assigned an item-stack as a _filter_. Can be controlled remotely via a _Redstone_ _Link_.",
 	"block.create.linked_transposer.tooltip.condition1": "When Redstone Link Active",
@@ -1168,34 +1168,34 @@
 
 	"block.create.flexpeater.tooltip": "FLEX REPEATER",
 	"block.create.flexpeater.tooltip.summary": "An advanced _Redstone_ _Repeater_ with a _configurable_ _Delay_ up to 30 Minutes.",
-	
+
 	"block.create.flexpulsepeater.tooltip": "FLEX PULSE REPEATER",
 	"block.create.flexpulsepeater.tooltip.summary": "A _Pulse_ _Repeater_ with a _configurable_ _Delay_ up to 30 Minutes.",
-	
+
 	"block.create.analog_lever.tooltip": "ANALOG LEVER",
 	"block.create.analog_lever.tooltip.summary": "A lever with more _precise_ _control_ over its emitted _signal_ _strength_.",
-		
+
 	"block.create.toggle_latch.tooltip": "POWERED TOGGLE LATCH",
 	"block.create.toggle_latch.tooltip.summary": "A lever that can be toggled by a _Redstone_ _Pulse_.",
-		
+
 	"block.create.redstone_latch.tooltip": "POWERED LATCH",
 	"block.create.redstone_latch.tooltip.summary": "A lever that can be controlled by _Redstone_ _Signals_. A signal on the _back_ _enables_ it, a signal from the _side_ _will_ _reset_ it.",
-	
+
 	"block.create.speed_gauge.tooltip": "SPEEDOMETER",
 	"block.create.speed_gauge.tooltip.summary": "Measures and displays the _rotational_ _speed_ of attached kinetic components. Supports _Redstone_ _Comparators_.",
 	"block.create.speed_gauge.tooltip.condition1": "When Rotated",
 	"block.create.speed_gauge.tooltip.behaviour1": "Indicates a color corresponding to the level of speed. _Green_ indicates Slow, _Blue_ Moderate and _Purple_ Fast rotation. Some mechanical components require a sufficient level of speed to work properly.",
-	
+
 	"block.create.stress_gauge.tooltip": "STRESSOMETER",
 	"block.create.stress_gauge.tooltip.summary": "Measures and displays the _overall_ _stress_ of the attached kinetic network. Supports _Redstone_ _Comparators_.",
 	"block.create.stress_gauge.tooltip.condition1": "When Rotated",
 	"block.create.stress_gauge.tooltip.behaviour1": "Indicates a color corresponding to the level of stress. _Over-stressed_ _networks_ will cease to move. Stress can be relieved by adding more _rotational_ _sources_ to the network.",
-	
+
 	"tool.create.sand_paper.tooltip": "SAND PAPER",
 	"tool.create.sand_paper.tooltip.summary": "A rough paper that can be used to _polish_ _materials_. Can be automatically applied using the Deployer.",
 	"tool.create.sand_paper.tooltip.condition1": "When Used",
 	"tool.create.sand_paper.tooltip.behaviour1": "Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking_ _at_ _them_",
-	
+
 	"item.create.super_glue.tooltip": "SUPER GLUE",
 	"item.create.super_glue.tooltip.summary": "Glue a block to another, and they will forever be inseparable.",
 	"item.create.super_glue.tooltip.condition1": "When Used",
@@ -1205,21 +1205,21 @@
 
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed_ _light_.",
-	
+
 	"item.create.shadow_steel.tooltip": "SHADOW STEEL",
 	"item.create.shadow_steel.tooltip.summary": "A Chromatic material forged _in_ _the_ _void_.",
-	
+
 	"item.create.slot_cover.tooltip": "SLOT COVER",
 	"item.create.slot_cover.tooltip.summary": "Used to mark a _Mechanical_ _Crafter_ as an empty slot in a recipe. Crafters do not necessarily have to form a full square grid. This is useful when there are recipes where _ingredients_ _are_ _diagonal_ to each other.",
-	
+
 	"tool.create.shadow_steel.tooltip": "SHADOW STEEL TOOLS",
 	"tool.create.shadow_steel.tooltip.summary": "A fast and powerful tool that _destroys_ _drops_ from any block or entity. Killed mobs can drop _more_ _experience_ based on the _Looting_ modifier of this tool.",
-	
+
 	"tool.create.blazing.tooltip": "BLAZING TOOLS",
 	"tool.create.blazing.tooltip.summary": "This tool will _melt_ _broken_ _blocks_ and _ignite_ _attacked_ _mobs_. It will not lose Durability while being used in the _Nether_.",
-	
+
 	"tool.create.rose_quartz.tooltip": "ROSE QUARTZ TOOLS",
 	"tool.create.rose_quartz.tooltip.summary": "This tool grants you a _greater_ _reach_ for _breaking_ _blocks_ or _placing_ _blocks_ from the off-hand.",
-	
+
 	"itemGroup.create": "Create"
 }
