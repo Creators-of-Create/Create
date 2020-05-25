@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
@@ -12,9 +13,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.ListNBT;
@@ -22,15 +23,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class DeployerMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(DeployerBlock.FACING).getDirectionVec()).scale(2);
+		return new Vec3d(context.state.get(DeployerBlock.FACING)
+			.getDirectionVec()).scale(2);
 	}
 
 	@Override
@@ -50,7 +50,8 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	public void activate(MovementContext context, BlockPos pos, DeployerFakePlayer player, Mode mode) {
-		Vec3d facingVec = new Vec3d(context.state.get(DeployerBlock.FACING).getDirectionVec());
+		Vec3d facingVec = new Vec3d(context.state.get(DeployerBlock.FACING)
+			.getDirectionVec());
 		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
 		Vec3d vec = context.position.subtract(facingVec.scale(2));
 		player.rotationYaw = ContraptionEntity.yawFromVector(facingVec);
@@ -103,10 +104,11 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
-		if (player.getHeldItemMainhand().isEmpty()) {
+		if (player.getHeldItemMainhand()
+			.isEmpty()) {
 			ItemStack filter = getFilter(context);
 			ItemStack held = ItemHelper.extract(context.contraption.inventory,
-					stack -> FilterItem.test(context.world, stack, filter), 1, false);
+				stack -> FilterItem.test(context.world, stack, filter), 1, false);
 			player.setHeldItem(Hand.MAIN_HAND, held);
 		}
 	}
@@ -125,7 +127,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 					continue;
 
 				if (list == inv.mainInventory && i == inv.currentItem
-						&& FilterItem.test(context.world, itemstack, filter))
+					&& FilterItem.test(context.world, itemstack, filter))
 					continue;
 
 				dropItem(context, itemstack);
@@ -139,7 +141,8 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
-		context.data.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
+		context.data.put("HeldItem", player.getHeldItemMainhand()
+			.serializeNBT());
 	}
 
 	private DeployerFakePlayer getPlayer(MovementContext context) {
@@ -163,9 +166,9 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public List<SuperByteBuffer> renderListInContraption(MovementContext context) {
-		return DeployerTileEntityRenderer.renderListInContraption(context);
+	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
+		IRenderTypeBuffer buffers) {
+		DeployerTileEntityRenderer.renderInContraption(context, ms, msLocal, buffers);
 	}
 
 }

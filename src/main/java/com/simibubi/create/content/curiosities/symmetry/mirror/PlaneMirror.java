@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
@@ -84,13 +84,14 @@ public class PlaneMirror extends SymmetryMirror {
 	public AllBlockPartials getModel() {
 		return AllBlockPartials.SYMMETRY_PLANE;
 	}
-	
+
 	@Override
 	public void applyModelTransform(MatrixStack ms) {
 		super.applyModelTransform(ms);
-		ms.translate(.5, .5, .5);
-		ms.multiply(VecHelper.rotateY(((Align) orientation) == Align.XY ? 0 : 90));
-		ms.translate(-.5, -.5, -.5);
+		MatrixStacker.of(ms)
+			.centre()
+			.rotateY(((Align) orientation) == Align.XY ? 0 : 90)
+			.unCentre();
 	}
 
 	@Override

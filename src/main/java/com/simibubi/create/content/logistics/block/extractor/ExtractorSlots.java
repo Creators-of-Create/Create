@@ -7,6 +7,7 @@ import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.content.logistics.block.transposer.TransposerBlock;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -35,8 +36,9 @@ public class ExtractorSlots {
 		protected void rotate(BlockState state, MatrixStack ms) {
 			float yRot = AngleHelper.horizontalAngle(state.get(HORIZONTAL_FACING));
 			float xRot = (AttachedLogisticalBlock.isVertical(state)) ? 0 : 90;
-			ms.multiply(VecHelper.rotateY(yRot));
-			ms.multiply(VecHelper.rotateX(xRot));
+			MatrixStacker.of(ms)
+				.rotateY(yRot)
+				.rotateX(xRot);
 		}
 
 	}
@@ -74,10 +76,11 @@ public class ExtractorSlots {
 		protected void rotate(BlockState state, MatrixStack ms) {
 			float horizontalAngle = AngleHelper.horizontalAngle(state.get(HORIZONTAL_FACING));
 			boolean vertical = AttachedLogisticalBlock.isVertical(state);
-			float xRot = vertical ? (state.get(AttachedLogisticalBlock.UPWARD) ? 90 : 270) : 0;
 			float yRot = vertical ? horizontalAngle + 180 : horizontalAngle + 270;
-			ms.multiply(VecHelper.rotateY(yRot));
-			ms.multiply(VecHelper.rotateZ(xRot));
+			float zRot = vertical ? (state.get(AttachedLogisticalBlock.UPWARD) ? 90 : 270) : 0;
+			MatrixStacker.of(ms)
+				.rotateY(yRot)
+				.rotateZ(zRot);
 		}
 
 	}

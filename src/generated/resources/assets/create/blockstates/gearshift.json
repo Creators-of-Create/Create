@@ -10,7 +10,8 @@
     },
     "axis=z,powered=false": {
       "model": "create:block/gearshift/block",
-      "x": 90
+      "x": 90,
+      "y": 180
     },
     "axis=x,powered=true": {
       "model": "create:block/gearshift/block_powered",
@@ -22,7 +23,8 @@
     },
     "axis=z,powered=true": {
       "model": "create:block/gearshift/block_powered",
-      "x": 90
+      "x": 90,
+      "y": 180
     }
   }
 }

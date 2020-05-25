@@ -29,7 +29,7 @@ public class EncasedFanTileEntityRenderer extends KineticTileEntityRenderer {
 		SuperByteBuffer superBuffer = AllBlockPartials.SHAFT_HALF.renderOnDirectional(te.getBlockState(),
 				direction.getOpposite());
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getCutoutMipped());
-		standardKineticRotationTransform(superBuffer, te).renderInto(ms, vb);
+		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 
 		float time = AnimationTickHolder.getRenderTick();
 		float speed = te.getSpeed() * 5;
@@ -42,7 +42,7 @@ public class EncasedFanTileEntityRenderer extends KineticTileEntityRenderer {
 
 		SuperByteBuffer superByteBuffer = AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectional(te.getBlockState(),
 				direction.getOpposite());
-		kineticRotationTransform(superByteBuffer, te, direction.getAxis(), angle);
+		kineticRotationTransform(superByteBuffer, te, direction.getAxis(), angle, light);
 		superByteBuffer.renderInto(ms, vb);
 	}
 

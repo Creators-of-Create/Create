@@ -38,18 +38,18 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		int light, int overlay) {
 		for (RenderType type : RenderType.getBlockLayers())
 			if (RenderTypeLookup.canRenderInLayer(te.getBlockState(), type))
-				renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(type));
+				renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(type), light);
 	}
 
 	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, MatrixStack ms,
-		IVertexBuilder buffer) {
+		IVertexBuilder buffer, int light) {
 		SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, renderedState);
-		renderRotatingBuffer(te, superByteBuffer, ms, buffer);
+		renderRotatingBuffer(te, superByteBuffer, ms, buffer, light);
 	}
 
 	public static void renderRotatingBuffer(KineticTileEntity te, SuperByteBuffer superBuffer, MatrixStack ms,
-		IVertexBuilder buffer) {
-		standardKineticRotationTransform(superBuffer, te).renderInto(ms, buffer);
+		IVertexBuilder buffer, int light) {
+		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, buffer);
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
@@ -59,18 +59,17 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		return angle;
 	}
 
-	public static SuperByteBuffer standardKineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te) {
+	public static SuperByteBuffer standardKineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te,
+		int light) {
 		final BlockPos pos = te.getPos();
 		Axis axis = ((IRotate) te.getBlockState()
 			.getBlock()).getRotationAxis(te.getBlockState());
-		return kineticRotationTransform(buffer, te, axis, getAngleForTe(te, pos, axis));
+		return kineticRotationTransform(buffer, te, axis, getAngleForTe(te, pos, axis), light);
 	}
 
 	public static SuperByteBuffer kineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te, Axis axis,
-		float angle) {
-		int light = te.getBlockState()
-			.getLightValue(te.getWorld(), te.getPos());
-		buffer.light((0xF0 << 16) | (light << 4));
+		float angle, int light) {
+		buffer.light(light);
 		buffer.rotateCentered(axis, angle);
 
 		int white = 0xFFFFFF;

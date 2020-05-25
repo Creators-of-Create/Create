@@ -49,7 +49,7 @@ public class GearboxTileEntityRenderer extends KineticTileEntityRenderer {
 			angle += offset;
 			angle = angle / 180f * (float) Math.PI;
 
-			kineticRotationTransform(shaft, te, axis, angle);
+			kineticRotationTransform(shaft, te, axis, angle, light);
 			shaft.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 		}
 	}

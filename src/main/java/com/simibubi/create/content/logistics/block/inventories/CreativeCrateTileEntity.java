@@ -8,7 +8,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -90,7 +90,7 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 
 			@Override
 			protected void rotate(BlockState state, MatrixStack ms) {
-				ms.multiply(VecHelper.rotateX(90));
+				MatrixStacker.of(ms).rotateX(90);
 			}
 
 			@Override

@@ -5,6 +5,7 @@ import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.content.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -13,7 +14,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
 
 public class FunnelFilterSlot extends ValueBoxTransform {
-	
+
 	Vec3d offsetForHorizontal = VecHelper.voxelSpace(8f, 14f, 13.5f);
 	Vec3d offsetForBelt = VecHelper.voxelSpace(8f, 8.5f, 14f);
 	Vec3d offsetForUpward = VecHelper.voxelSpace(8f, 13.5f, 2f);
@@ -42,9 +43,10 @@ public class FunnelFilterSlot extends ValueBoxTransform {
 
 		if (blockFacing == Direction.UP)
 			xRot += 180;
-		
-		ms.multiply(VecHelper.rotateY(yRot));
-		ms.multiply(VecHelper.rotateX(xRot));
+
+		MatrixStacker.of(ms)
+			.rotateY(yRot)
+			.rotateX(xRot);
 	}
 
 }

@@ -58,7 +58,7 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		ms.pop();
 
-		renderFast(te, partialTicks, ms, buffer);
+		renderFast(te, partialTicks, ms, buffer, light);
 		//TessellatorHelper.draw();
 	}
 
@@ -132,7 +132,7 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 		}
 	}
 
-	public void renderFast(MechanicalCrafterTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer) {
+	public void renderFast(MechanicalCrafterTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light) {
 		BlockState blockState = te.getBlockState();
 		
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
@@ -141,7 +141,7 @@ public class MechanicalCrafterTileEntityRenderer extends SafeTileEntityRenderer<
 		superBuffer.rotateCentered(Axis.X, (float) (Math.PI / 2));
 		superBuffer.rotateCentered(Axis.Y,
 				(float) (blockState.get(HORIZONTAL_FACING).getAxis() != Axis.X ? 0 : Math.PI / 2));
-		standardKineticRotationTransform(superBuffer, te).renderInto(ms, vb);
+		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 
 		Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(blockState);
 		BlockPos pos = te.getPos();

@@ -60,7 +60,7 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 					false, rotation, flip), connection).light(light).renderInto(ms, vb);
 		}
 
-		kineticRotationTransform(wheel, te, blockState.get(HORIZONTAL_FACING).getAxis(), AngleHelper.rad(angle));
+		kineticRotationTransform(wheel, te, blockState.get(HORIZONTAL_FACING).getAxis(), AngleHelper.rad(angle), light);
 		wheel.renderInto(ms, vb);
 	}
 

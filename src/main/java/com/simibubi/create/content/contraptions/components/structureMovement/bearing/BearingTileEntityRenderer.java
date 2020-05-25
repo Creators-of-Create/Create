@@ -32,7 +32,7 @@ public class BearingTileEntityRenderer extends KineticTileEntityRenderer {
 		if (facing.getAxis().isHorizontal())
 			superBuffer.rotateCentered(Axis.Y, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));
 		float interpolatedAngle = bearingTe.getInterpolatedAngle(partialTicks - 1);
-		kineticRotationTransform(superBuffer, te, facing.getAxis(), (float) (interpolatedAngle / 180 * Math.PI));
+		kineticRotationTransform(superBuffer, te, facing.getAxis(), (float) (interpolatedAngle / 180 * Math.PI), light);
 		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 

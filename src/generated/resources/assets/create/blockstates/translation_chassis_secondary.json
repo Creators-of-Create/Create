@@ -10,7 +10,8 @@
     },
     "axis=z,sticky_bottom=false,sticky_top=false": {
       "model": "create:block/translation_chassis_secondary",
-      "x": 90
+      "x": 90,
+      "y": 180
     },
     "axis=x,sticky_bottom=true,sticky_top=false": {
       "model": "create:block/translation_chassis_secondary_bottom",
@@ -22,7 +23,8 @@
     },
     "axis=z,sticky_bottom=true,sticky_top=false": {
       "model": "create:block/translation_chassis_secondary_bottom",
-      "x": 90
+      "x": 90,
+      "y": 180
     },
     "axis=x,sticky_bottom=false,sticky_top=true": {
       "model": "create:block/translation_chassis_secondary_top",
@@ -34,7 +36,8 @@
     },
     "axis=z,sticky_bottom=false,sticky_top=true": {
       "model": "create:block/translation_chassis_secondary_top",
-      "x": 90
+      "x": 90,
+      "y": 180
     },
     "axis=x,sticky_bottom=true,sticky_top=true": {
       "model": "create:block/translation_chassis_secondary_top_bottom",
@@ -46,7 +49,8 @@
     },
     "axis=z,sticky_bottom=true,sticky_top=true": {
       "model": "create:block/translation_chassis_secondary_top_bottom",
-      "x": 90
+      "x": 90,
+      "y": 180
     }
   }
 }

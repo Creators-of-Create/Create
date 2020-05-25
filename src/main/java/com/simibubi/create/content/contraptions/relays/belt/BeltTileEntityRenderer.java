@@ -87,7 +87,7 @@ public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntit
 			modelTransform.multiply(Vector3f.POSITIVE_X.getRadialQuaternion((float) (Math.PI / 2)));
 			modelTransform.translate(-0.5, -0.5, -0.5);
 			SuperByteBuffer superBuffer = CreateClient.bufferCache.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, modelTransform);
-			KineticTileEntityRenderer.standardKineticRotationTransform(superBuffer, te)
+			KineticTileEntityRenderer.standardKineticRotationTransform(superBuffer, te, light)
 					.renderInto(ms, vb);
 		}
 		

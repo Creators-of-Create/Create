@@ -95,7 +95,7 @@ public class BlockStateGen {
 				return ConfiguredModel.builder()
 					.modelFile(modelFunc.apply(state))
 					.rotationX(axis == Axis.Y ? 0 : 90)
-					.rotationY(axis == Axis.X ? 90 : 0)
+					.rotationY(axis == Axis.X ? 90 : axis == Axis.Z ? 180 : 0)
 					.build();
 			});
 	}

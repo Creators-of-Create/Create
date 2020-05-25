@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.BufferBuilder.DrawState;
 import net.minecraft.client.renderer.GLAllocation;
@@ -18,6 +19,9 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LightType;
+import net.minecraft.world.World;
 
 public class SuperByteBuffer {
 
@@ -40,9 +44,8 @@ public class SuperByteBuffer {
 
 	// Vertex Lighting
 	private boolean shouldLight;
-	private IVertexLighter vertexLighter;
-	private float lightOffsetX, lightOffsetY, lightOffsetZ;
 	private int packedLightCoords;
+	private Matrix4f lightTransform;
 
 	// Vertex Coloring
 	private boolean shouldColor;
@@ -54,8 +57,10 @@ public class SuperByteBuffer {
 		ByteBuffer original = state.getSecond();
 		original.order(ByteOrder.nativeOrder()); // Vanilla bug, endianness does not carry over into sliced buffers
 		this.original = original;
-		
-		this.mutable = GLAllocation.createDirectByteBuffer(state.getFirst().getCount() * buf.getVertexFormat().getSize());
+		this.mutable = GLAllocation.createDirectByteBuffer(state.getFirst()
+			.getCount()
+			* buf.getVertexFormat()
+				.getSize());
 		this.mutable.order(original.order());
 		this.mutable.limit(original.limit());
 		mutable.put(this.original);
@@ -64,16 +69,24 @@ public class SuperByteBuffer {
 		transforms = new MatrixStack();
 	}
 
-	public ByteBuffer build(MatrixStack input) {
+	public ByteBuffer build(MatrixStack view) {
 		original.rewind();
 		mutable.rewind();
 
-		Matrix4f t = input.peek().getModel().copy();
-		t.multiply(transforms.peek().getModel());
+		Matrix4f t = view.peek()
+			.getModel()
+			.copy();
+		Matrix4f localTransforms = transforms.peek()
+			.getModel();
+
+		t.multiply(localTransforms);
+
 		for (int vertex = 0; vertex < vertexCount(original); vertex++) {
 			Vector4f pos = new Vector4f(getX(original, vertex), getY(original, vertex), getZ(original, vertex), 1F);
-			
+			Vector4f lightPos = new Vector4f(pos.getX(), pos.getY(), pos.getZ(), pos.getW());
+
 			pos.transform(t);
+			lightPos.transform(localTransforms);
 			putPos(mutable, vertex, pos.getX(), pos.getY(), pos.getZ());
 
 			if (shouldColor) {
@@ -89,9 +102,9 @@ public class SuperByteBuffer {
 				float u = getU(original, vertex);
 				float v = getV(original, vertex);
 				float targetU = spriteShift.getTarget()
-						.getInterpolatedU((getUnInterpolatedU(spriteShift.getOriginal(), u) / sheetSize) + uTarget * 16);
+					.getInterpolatedU((getUnInterpolatedU(spriteShift.getOriginal(), u) / sheetSize) + uTarget * 16);
 				float targetV = spriteShift.getTarget()
-						.getInterpolatedV((getUnInterpolatedV(spriteShift.getOriginal(), v) / sheetSize) + vTarget * 16);
+					.getInterpolatedV((getUnInterpolatedV(spriteShift.getOriginal(), v) / sheetSize) + vTarget * 16);
 				putUV(mutable, vertex, targetU, targetV);
 			}
 
@@ -99,11 +112,12 @@ public class SuperByteBuffer {
 				putUV(mutable, vertex, getU(original, vertex), getV(original, vertex));
 
 			if (shouldLight) {
-				if (vertexLighter != null)
-					putLight(mutable, vertex,
-							vertexLighter.getPackedLight(pos.getX() + lightOffsetX, pos.getY() + lightOffsetY, pos.getZ() + lightOffsetZ));
-				else
-					putLight(mutable, vertex, packedLightCoords);
+				int light = packedLightCoords;
+				if (lightTransform != null) {
+					lightPos.transform(lightTransform);
+					light = getLight(Minecraft.getInstance().world, lightPos);
+				}
+				putLight(mutable, vertex, light);
 			}
 		}
 
@@ -114,12 +128,12 @@ public class SuperByteBuffer {
 		mutable.rewind();
 		return mutable;
 	}
-	
+
 	public static float getUnInterpolatedU(TextureAtlasSprite sprite, float u) {
 		float f = sprite.getMaxU() - sprite.getMinU();
 		return (u - sprite.getMinU()) / f * 16.0F;
 	}
-	
+
 	public static float getUnInterpolatedV(TextureAtlasSprite sprite, float v) {
 		float f = sprite.getMaxV() - sprite.getMinV();
 		return (v - sprite.getMinV()) / f * 16.0F;
@@ -132,7 +146,7 @@ public class SuperByteBuffer {
 			// TODO 1.15 add "slow" path that writes all the data instead of using bulk put
 			throw new IllegalArgumentException("Unsupported buffer type!");
 		}
-		((BufferBuilder)buffer).putBulkData(build(input));
+		((BufferBuilder) buffer).putBulkData(build(input));
 	}
 
 	public SuperByteBuffer translate(double x, double y, double z) {
@@ -152,17 +166,19 @@ public class SuperByteBuffer {
 	public SuperByteBuffer rotate(Direction axis, float radians) {
 		if (radians == 0)
 			return this;
-		transforms.multiply(axis.getUnitVector().getRadialQuaternion(radians));
+		transforms.multiply(axis.getUnitVector()
+			.getRadialQuaternion(radians));
 		return this;
 	}
-	
+
 	@Deprecated
 	public SuperByteBuffer rotateCentered(Axis axis, float radians) {
 		return rotateCentered(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis), radians);
 	}
-	
+
 	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
-		return translate(.5f, .5f, .5f).rotate(axis, radians).translate(-.5f, -.5f, -.5f);
+		return translate(.5f, .5f, .5f).rotate(axis, radians)
+			.translate(-.5f, -.5f, -.5f);
 	}
 
 	public SuperByteBuffer shiftUV(SpriteShiftEntry entry) {
@@ -193,21 +209,14 @@ public class SuperByteBuffer {
 
 	public SuperByteBuffer light(int packedLightCoords) {
 		shouldLight = true;
-		vertexLighter = null;
+		lightTransform = null;
 		this.packedLightCoords = packedLightCoords;
 		return this;
 	}
 
-	public SuperByteBuffer light(IVertexLighter lighter) {
+	public SuperByteBuffer light(Matrix4f lightTransform) {
 		shouldLight = true;
-		vertexLighter = lighter;
-		return this;
-	}
-
-	public SuperByteBuffer offsetLighting(double x, double y, double z) {
-		lightOffsetX = (float) x;
-		lightOffsetY = (float) y;
-		lightOffsetZ = (float) z;
+		this.lightTransform = lightTransform;
 		return this;
 	}
 
@@ -288,6 +297,21 @@ public class SuperByteBuffer {
 		buffer.put(bufferPosition + 13, g);
 		buffer.put(bufferPosition + 14, b);
 		buffer.put(bufferPosition + 15, a);
+	}
+
+	private static int getLight(World world, Vector4f lightPos) {
+		BlockPos.Mutable pos = new BlockPos.Mutable();
+		float sky = 0, block = 0;
+		float offset = 1 / 8f;
+		for (float zOffset = offset; zOffset >= -offset; zOffset -= 2 * offset)
+			for (float yOffset = offset; yOffset >= -offset; yOffset -= 2 * offset)
+				for (float xOffset = offset; xOffset >= -offset; xOffset -= 2 * offset) {
+					pos.setPos(lightPos.getX() + xOffset, lightPos.getY() + yOffset, lightPos.getZ() + zOffset);
+					sky += world.getLightLevel(LightType.SKY, pos) / 8f;
+					block += world.getLightLevel(LightType.BLOCK, pos) / 8f;
+				}
+
+		return ((int) sky) << 20 | ((int) block) << 4;
 	}
 
 }

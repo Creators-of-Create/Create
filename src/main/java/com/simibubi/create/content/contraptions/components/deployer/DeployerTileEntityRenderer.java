@@ -3,9 +3,6 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -26,6 +23,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -45,17 +43,17 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 	public DeployerTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
-	
+
 	@Override
 	protected void renderSafe(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-			int light, int overlay) {
+		int light, int overlay) {
 		renderItem(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
 	}
 
 	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-			int light, int overlay) {
+		int light, int overlay) {
 		BlockState deployerState = te.getBlockState();
 		Vec3d offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
 		ms.push();
@@ -77,11 +75,13 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		if (punching)
 			ms.translate(0, 1 / 8f, -1 / 16f);
 
-		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+		ItemRenderer itemRenderer = Minecraft.getInstance()
+			.getItemRenderer();
 
 		TransformType transform = TransformType.NONE;
-		boolean isBlockItem =
-			(te.heldItem.getItem() instanceof BlockItem) && itemRenderer.getItemModelWithOverrides(te.heldItem, Minecraft.getInstance().world, null).isGui3d();
+		boolean isBlockItem = (te.heldItem.getItem() instanceof BlockItem)
+			&& itemRenderer.getItemModelWithOverrides(te.heldItem, Minecraft.getInstance().world, null)
+				.isGui3d();
 
 		if (displayMode) {
 			float scale = isBlockItem ? 1.25f : 1;
@@ -101,9 +101,9 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 	}
 
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-			int light, int overlay) {
+		int light, int overlay) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb);
+		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
@@ -112,8 +112,10 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		SuperByteBuffer hand = renderAndTransform(te.getWorld(), te.getHandPose(), blockState, pos, false);
 
 		Vec3d offset = getHandOffset(te, partialTicks, blockState);
-		pole.translate(offset.x, offset.y, offset.z).renderInto(ms, vb);
-		hand.translate(offset.x, offset.y, offset.z).renderInto(ms, vb);
+		pole.translate(offset.x, offset.y, offset.z)
+			.renderInto(ms, vb);
+		hand.translate(offset.x, offset.y, offset.z)
+			.renderInto(ms, vb);
 	}
 
 	protected Vec3d getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {
@@ -124,9 +126,10 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 			progress = (te.timer - partialTicks * te.getTimerSpeed()) / 1000f;
 
 		float handLength = te.getHandPose() == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
-				: te.getHandPose() == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
+			: te.getHandPose() == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
 		float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (te.reach + handLength), 21 / 16f);
-		Vec3d offset = new Vec3d(blockState.get(FACING).getDirectionVec()).scale(distance);
+		Vec3d offset = new Vec3d(blockState.get(FACING)
+			.getDirectionVec()).scale(distance);
 		return offset;
 	}
 
@@ -135,13 +138,13 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 	}
 
 	private static SuperByteBuffer renderAndTransform(World world, AllBlockPartials renderBlock,
-			BlockState deployerState, BlockPos pos, boolean axisDirectionMatters) {
+		BlockState deployerState, BlockPos pos, boolean axisDirectionMatters) {
 		SuperByteBuffer buffer = renderBlock.renderOn(deployerState);
 		Direction facing = deployerState.get(FACING);
 
 		float zRotFirst =
 			axisDirectionMatters && (deployerState.get(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Axis.Z) ? 90
-					: 0;
+				: 0;
 		float yRot = AngleHelper.horizontalAngle(facing);
 		float zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
 
@@ -152,7 +155,10 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		return buffer;
 	}
 
-	public static List<SuperByteBuffer> renderListInContraption(MovementContext context) {
+	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
+		IRenderTypeBuffer buffer) {
+		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 		BlockState blockState = context.state;
 		BlockPos pos = BlockPos.ZERO;
 		Mode mode = NBTHelper.readEnum(context.tileData.getString("Mode"), Mode.class);
@@ -169,16 +175,23 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		} else {
 			Vec3d center = VecHelper.getCenterOf(new BlockPos(context.position));
 			double distance = context.position.distanceTo(center);
-			double nextDistance = context.position.add(context.motion).distanceTo(center);
-			factor = .5f - MathHelper.clamp(
-					MathHelper.lerp(Minecraft.getInstance().getRenderPartialTicks(), distance, nextDistance), 0, 1);
+			double nextDistance = context.position.add(context.motion)
+				.distanceTo(center);
+			factor = .5f - MathHelper.clamp(MathHelper.lerp(Minecraft.getInstance()
+				.getRenderPartialTicks(), distance, nextDistance), 0, 1);
 		}
 
-		Vec3d offset = new Vec3d(blockState.get(FACING).getDirectionVec()).scale(factor);
-		pole.translate(offset.x, offset.y, offset.z);
-		hand.translate(offset.x, offset.y, offset.z);
+		Vec3d offset = new Vec3d(blockState.get(FACING)
+			.getDirectionVec()).scale(factor);
 
-		return Arrays.asList(pole, hand);
+		Matrix4f lighting = msLocal.peek()
+			.getModel();
+		for (MatrixStack m : matrixStacks)
+			m.translate(offset.x, offset.y, offset.z);
+		pole.light(lighting)
+			.renderInto(ms, builder);
+		hand.light(lighting)
+			.renderInto(ms, builder);
 	}
 
 }

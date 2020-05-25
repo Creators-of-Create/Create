@@ -32,7 +32,7 @@ public class MechanicalMixerTileEntityRenderer extends KineticTileEntityRenderer
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 		
 		SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
-		standardKineticRotationTransform(superBuffer, te).renderInto(ms, vb);
+		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 
 		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, pos);
 		float renderedHeadOffset = mixer.getRenderedHeadOffset(partialTicks);

@@ -79,7 +79,7 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 		@Override
 		public boolean reverseUVs(BlockState state, Direction face) {
 			Axis axis = state.get(AXIS);
-			if (axis.isHorizontal() && (axis == Axis.Z ^ face.getAxisDirection() == AxisDirection.POSITIVE))
+			if (axis.isHorizontal() && (face.getAxisDirection() == AxisDirection.POSITIVE))
 				return true;
 			return super.reverseUVs(state, face);
 		}

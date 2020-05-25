@@ -2,8 +2,6 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.Random;
 
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
@@ -12,8 +10,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class VecHelper {
 
@@ -97,21 +93,6 @@ public class VecHelper {
 				if (getCoordinate(pos1, otherAxis) != getCoordinate(pos2, otherAxis))
 					return false;
 		return true;
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static Quaternion rotateX(double angle) {
-		return Vector3f.POSITIVE_X.getDegreesQuaternion((float) angle);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static Quaternion rotateY(double angle) {
-		return Vector3f.POSITIVE_Y.getDegreesQuaternion((float) angle);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static Quaternion rotateZ(double angle) {
-		return Vector3f.POSITIVE_Z.getDegreesQuaternion((float) angle);
 	}
 
 }

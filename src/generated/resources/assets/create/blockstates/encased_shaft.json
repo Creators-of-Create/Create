@@ -10,7 +10,8 @@
     },
     "axis=z": {
       "model": "create:block/encased_shaft/block",
-      "x": 90
+      "x": 90,
+      "y": 180
     }
   }
 }

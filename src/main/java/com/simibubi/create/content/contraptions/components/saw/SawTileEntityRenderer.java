@@ -41,7 +41,7 @@ public class SawTileEntityRenderer extends SafeTileEntityRenderer<SawTileEntity>
 
 	protected void renderShaft(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light,
 			int overlay) {
-		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(RenderType.getSolid()));
+		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(RenderType.getSolid()), light);
 	}
 
 	protected void renderItems(SawTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,

@@ -1,10 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.util.Arrays;
-import java.util.List;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
-
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -19,14 +17,11 @@ public abstract class MovementBehaviour {
 		return true;
 	}
 
-	public void tick(MovementContext context) {
-	}
+	public void tick(MovementContext context) {}
 
-	public void startMoving(MovementContext context) {
-	}
+	public void startMoving(MovementContext context) {}
 
-	public void visitNewPosition(MovementContext context, BlockPos pos) {
-	}
+	public void visitNewPosition(MovementContext context, BlockPos pos) {}
 
 	public Vec3d getActiveAreaOffset(MovementContext context) {
 		return Vec3d.ZERO;
@@ -39,26 +34,21 @@ public abstract class MovementBehaviour {
 
 		Vec3d vec = context.position;
 		ItemEntity itemEntity = new ItemEntity(context.world, vec.x, vec.y, vec.z, remainder);
-		itemEntity.setMotion(context.motion.add(0, 0.5f, 0).scale(context.world.rand.nextFloat() * .3f));
+		itemEntity.setMotion(context.motion.add(0, 0.5f, 0)
+			.scale(context.world.rand.nextFloat() * .3f));
 		context.world.addEntity(itemEntity);
 	}
 
-	@OnlyIn(value = Dist.CLIENT)
-	public SuperByteBuffer renderInContraption(MovementContext context) {
-		return null;
-	}
-	
-	@OnlyIn(value = Dist.CLIENT)
-	public List<SuperByteBuffer> renderListInContraption(MovementContext context) {
-		return Arrays.asList(renderInContraption(context));
-	}
-	
 	public void stopMoving(MovementContext context) {
-		
+
 	}
-	
+
 	public void writeExtraData(MovementContext context) {
-		
+
 	}
+
+	@OnlyIn(Dist.CLIENT)
+	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
+		IRenderTypeBuffer buffer) {}
 
 }

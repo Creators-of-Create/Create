@@ -10,7 +10,8 @@
     },
     "axis=z": {
       "model": "create:block/dark_scoria_pillar",
-      "x": 90
+      "x": 90,
+      "y": 180
     }
   }
 }

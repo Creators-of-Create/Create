@@ -2,38 +2,36 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.Iterator;
 
-import org.lwjgl.opengl.GL13;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.crash.ReportedException;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 public class TileEntityRenderHelper {
 
 	protected static LightingWorld lightingWorld;
 
-	public static void renderTileEntities(World world, Vec3d position, Vec3d rotation,
-			Iterable<TileEntity> customRenderTEs, MatrixStack ms, IRenderTypeBuffer buffer) {
-		float pt = Minecraft.getInstance().getRenderPartialTicks();
+	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
+		MatrixStack localTransform, IRenderTypeBuffer buffer) {
+		float pt = Minecraft.getInstance()
+			.getRenderPartialTicks();
 
 		if (lightingWorld == null)
 			lightingWorld = new LightingWorld(world);
 		lightingWorld.setWorld(world);
-		lightingWorld.setTransform(position, rotation);
+		lightingWorld.setTransform(localTransform.peek()
+			.getModel());
 
 		for (Iterator<TileEntity> iterator = customRenderTEs.iterator(); iterator.hasNext();) {
 			TileEntity tileEntity = iterator.next();
@@ -45,29 +43,24 @@ public class TileEntityRenderHelper {
 			try {
 
 				BlockPos pos = tileEntity.getPos();
-				if (!tileEntity.hasFastRenderer()) {
-					RenderHelper.enable();
-					int i = WorldRenderer.getLightmapCoordinates(lightingWorld, pos);
-					int j = LightTexture.getBlockLightCoordinates(i);
-					int k = LightTexture.getSkyLightCoordinates(i);
-					RenderSystem.glMultiTexCoord2f(GL13.GL_TEXTURE1, (float) j, (float) k);
-					RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-				}
-
-				RenderSystem.disableCull();
 				World prevTileWorld = tileEntity.getWorld();
+				ms.push();
+				MatrixStacker.of(ms)
+					.translate(pos);
 				tileEntity.setLocation(lightingWorld, pos);
 				TileEntityRendererDispatcher.instance.render(tileEntity, pt, ms, buffer);
 				tileEntity.setLocation(prevTileWorld, pos);
-				RenderSystem.enableCull();
+				ms.pop();
 
 			} catch (ReportedException e) {
 				if (AllConfigs.CLIENT.explainRenderErrors.get()) {
-					Create.logger.error("TileEntity " + tileEntity.getType().getRegistryName().toString()
-							+ " didn't want to render while moved.\n", e);
+					Create.logger.error("TileEntity " + tileEntity.getType()
+						.getRegistryName()
+						.toString() + " didn't want to render while moved.\n", e);
 				} else {
-					Create.logger.error("TileEntity " + tileEntity.getType().getRegistryName().toString()
-							+ " didn't want to render while moved.\n");
+					Create.logger.error("TileEntity " + tileEntity.getType()
+						.getRegistryName()
+						.toString() + " didn't want to render while moved.\n");
 				}
 				iterator.remove();
 				continue;
@@ -77,8 +70,7 @@ public class TileEntityRenderHelper {
 
 	private static class LightingWorld extends WrappedWorld {
 
-		private Vec3d offset;
-		private Vec3d rotation;
+		private Matrix4f matrix;
 
 		public LightingWorld(World world) {
 			super(world);
@@ -88,21 +80,19 @@ public class TileEntityRenderHelper {
 			this.world = world;
 		}
 
-		void setTransform(Vec3d offset, Vec3d rotation) {
-			this.offset = offset;
-			this.rotation = rotation;
+		void setTransform(Matrix4f matrix) {
+			this.matrix = matrix;
 		}
 
 		@Override
-		public int getBaseLightLevel(BlockPos pos, int minLight) {
-			return super.getBaseLightLevel(transformPos(pos), minLight);
+		public int getLightLevel(LightType p_226658_1_, BlockPos p_226658_2_) {
+			return super.getLightLevel(p_226658_1_, transformPos(p_226658_2_));
 		}
 
 		private BlockPos transformPos(BlockPos pos) {
-			Vec3d vec = VecHelper.getCenterOf(pos);
-			vec = VecHelper.rotate(vec, rotation.x, rotation.y, rotation.z);
-			vec = vec.add(offset).subtract(VecHelper.getCenterOf(BlockPos.ZERO));
-			return new BlockPos(vec);
+			Vector4f vec = new Vector4f(pos.getX(), pos.getY(), pos.getZ(), 1);
+			vec.transform(matrix);
+			return new BlockPos(vec.getX(), vec.getY(), vec.getZ());
 		}
 
 	}

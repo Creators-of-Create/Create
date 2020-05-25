@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -28,10 +29,11 @@ public class DeployerFilterSlot extends ValueBoxTransform {
 	@Override
 	protected void rotate(BlockState state, MatrixStack ms) {
 		Direction facing = state.get(DeployerBlock.FACING);
+		float xRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
-		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
-		ms.multiply(VecHelper.rotateY(yRot));
-		ms.multiply(VecHelper.rotateX(zRot));
+		MatrixStacker.of(ms)
+			.rotateY(yRot)
+			.rotateX(xRot);
 	}
 
 }

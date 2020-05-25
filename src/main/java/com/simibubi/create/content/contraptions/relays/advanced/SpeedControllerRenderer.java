@@ -22,7 +22,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
 		KineticTileEntityRenderer.renderRotatingBuffer(tileEntityIn, getRotatedModel(tileEntityIn), ms,
-				buffer.getBuffer(RenderType.getSolid()));
+				buffer.getBuffer(RenderType.getSolid()), light);
 	}
 
 	private SuperByteBuffer getRotatedModel(SpeedControllerTileEntity te) {

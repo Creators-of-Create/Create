@@ -30,7 +30,7 @@ public class HandCrankTileEntityRenderer extends KineticTileEntityRenderer {
 		SuperByteBuffer handle = AllBlockPartials.HAND_CRANK_HANDLE.renderOnDirectional(state, facing.getOpposite());
 		HandCrankTileEntity crank = (HandCrankTileEntity) te;
 		kineticRotationTransform(handle, te, facing.getAxis(),
-				(crank.independentAngle + partialTicks * crank.chasingVelocity) / 360);
+				(crank.independentAngle + partialTicks * crank.chasingVelocity) / 360, light);
 		handle.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 
