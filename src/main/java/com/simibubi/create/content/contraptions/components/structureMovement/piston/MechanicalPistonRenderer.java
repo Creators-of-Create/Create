@@ -6,9 +6,9 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
-public class MechanicalPistonTileEntityRenderer extends KineticTileEntityRenderer {
+public class MechanicalPistonRenderer extends KineticTileEntityRenderer {
 
-	public MechanicalPistonTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public MechanicalPistonRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

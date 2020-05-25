@@ -18,7 +18,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -70,7 +72,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	public static SuperByteBuffer kineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te, Axis axis,
 		float angle, int light) {
 		buffer.light(light);
-		buffer.rotateCentered(axis, angle);
+		buffer.rotateCentered(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis), angle);
 
 		int white = 0xFFFFFF;
 		if (KineticDebugger.isActive()) {

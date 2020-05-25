@@ -27,8 +27,8 @@ import com.simibubi.create.content.contraptions.components.flywheel.engine.Furna
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneBlock;
 import com.simibubi.create.content.contraptions.components.mixer.BasinOperatorBlockItem;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerBlock;
-import com.simibubi.create.content.contraptions.components.motor.MotorBlock;
-import com.simibubi.create.content.contraptions.components.motor.MotorGenerator;
+import com.simibubi.create.content.contraptions.components.motor.CreativeMotorBlock;
+import com.simibubi.create.content.contraptions.components.motor.CreativeMotorGenerator;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
@@ -246,9 +246,9 @@ public class AllBlocks {
 		.blockstate(new BeltGenerator()::generate)
 		.register();
 
-	public static final BlockEntry<MotorBlock> CREATIVE_MOTOR = REGISTRATE.block("creative_motor", MotorBlock::new)
+	public static final BlockEntry<CreativeMotorBlock> CREATIVE_MOTOR = REGISTRATE.block("creative_motor", CreativeMotorBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.blockstate(new MotorGenerator()::generate)
+		.blockstate(new CreativeMotorGenerator()::generate)
 		.transform(StressConfigDefaults.setCapacity(16384.0))
 		.item()
 		.transform(customItemModel())
@@ -256,6 +256,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<WaterWheelBlock> WATER_WHEEL = REGISTRATE.block("water_wheel", WaterWheelBlock::new)
 		.initialProperties(SharedProperties::wooden)
+		.properties(p -> p.nonOpaque())
 		.blockstate(BlockStateGen.horizontalWheelProvider(false))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.transform(StressConfigDefaults.setCapacity(16.0))
@@ -317,6 +318,7 @@ public class AllBlocks {
 	public static final BlockEntry<CrushingWheelBlock> CRUSHING_WHEEL =
 		REGISTRATE.block("crushing_wheel", CrushingWheelBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.nonOpaque())
 			.blockstate(BlockStateGen.axisBlockProvider(false))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.transform(StressConfigDefaults.setImpact(8.0))
@@ -552,6 +554,7 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalCrafterBlock> MECHANICAL_CRAFTER =
 		REGISTRATE.block("mechanical_crafter", MechanicalCrafterBlock::new)
 			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.nonOpaque())
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setImpact(2.0))
 			.transform(CreateRegistrate.connectedTextures(new CrafterCTBehaviour()))
@@ -571,6 +574,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<FlywheelBlock> FLYWHEEL = REGISTRATE.block("flywheel", FlywheelBlock::new)
 		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.nonOpaque())
 		.blockstate(new FlywheelGenerator()::generate)
 		.item()
 		.transform(customItemModel())

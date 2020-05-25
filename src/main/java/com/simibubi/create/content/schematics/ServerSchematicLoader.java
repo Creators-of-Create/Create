@@ -46,6 +46,7 @@ public class ServerSchematicLoader {
 			this.stream = stream;
 			this.totalBytes = totalBytes;
 			this.tablePos = tablePos;
+			this.world = world;
 			this.bytesUploaded = 0;
 			this.idleTime = 0;
 		}
@@ -134,7 +135,7 @@ public class ServerSchematicLoader {
 			OutputStream writer =
 				Files.newOutputStream(Paths.get(getSchematicPath(), playerSchematicId), StandardOpenOption.CREATE_NEW);
 			activeUploads.put(playerSchematicId,
-				new SchematicUploadEntry(writer, size, player.getEntityWorld(), pos));
+				new SchematicUploadEntry(writer, size, player.getServerWorld(), pos));
 
 			// Notify Tile Entity
 			table.startUpload(schematic);

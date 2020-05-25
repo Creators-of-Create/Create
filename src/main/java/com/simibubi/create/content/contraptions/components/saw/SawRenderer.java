@@ -25,9 +25,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
 
-public class SawTileEntityRenderer extends SafeTileEntityRenderer<SawTileEntity> {
+public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
-	public SawTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public SawRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 	

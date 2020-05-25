@@ -7,9 +7,9 @@ import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
-public class MotorTileEntityRenderer extends KineticTileEntityRenderer {
+public class CreativeMotorRenderer extends KineticTileEntityRenderer {
 
-	public MotorTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public CreativeMotorRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

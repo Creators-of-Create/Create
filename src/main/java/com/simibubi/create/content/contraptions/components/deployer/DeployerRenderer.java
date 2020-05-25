@@ -37,10 +37,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-@SuppressWarnings("deprecation")
-public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
+public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
 
-	public DeployerTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public DeployerRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
@@ -107,15 +106,16 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
-
-		SuperByteBuffer pole = renderAndTransform(te.getWorld(), AllBlockPartials.DEPLOYER_POLE, blockState, pos, true);
-		SuperByteBuffer hand = renderAndTransform(te.getWorld(), te.getHandPose(), blockState, pos, false);
-
 		Vec3d offset = getHandOffset(te, partialTicks, blockState);
-		pole.translate(offset.x, offset.y, offset.z)
-			.renderInto(ms, vb);
-		hand.translate(offset.x, offset.y, offset.z)
-			.renderInto(ms, vb);
+
+		SuperByteBuffer pole = AllBlockPartials.DEPLOYER_POLE.renderOn(blockState);
+		SuperByteBuffer hand = te.getHandPose()
+			.renderOn(blockState);
+
+		transform(te.getWorld(), pole.translate(offset.x, offset.y, offset.z), blockState, pos, true).renderInto(ms,
+			vb);
+		transform(te.getWorld(), hand.translate(offset.x, offset.y, offset.z), blockState, pos, false).renderInto(ms,
+			vb);
 	}
 
 	protected Vec3d getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {
@@ -137,20 +137,19 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		return KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te));
 	}
 
-	private static SuperByteBuffer renderAndTransform(World world, AllBlockPartials renderBlock,
-		BlockState deployerState, BlockPos pos, boolean axisDirectionMatters) {
-		SuperByteBuffer buffer = renderBlock.renderOn(deployerState);
+	private static SuperByteBuffer transform(World world, SuperByteBuffer buffer, BlockState deployerState,
+		BlockPos pos, boolean axisDirectionMatters) {
 		Direction facing = deployerState.get(FACING);
 
-		float zRotFirst =
+		float zRotLast =
 			axisDirectionMatters && (deployerState.get(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Axis.Z) ? 90
 				: 0;
 		float yRot = AngleHelper.horizontalAngle(facing);
 		float zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
 
-		buffer.rotateCentered(Axis.Z, (float) ((zRotFirst) / 180 * Math.PI));
-		buffer.rotateCentered(Axis.Y, (float) ((yRot) / 180 * Math.PI));
-		buffer.rotateCentered(Axis.Z, (float) ((zRot) / 180 * Math.PI));
+		buffer.rotateCentered(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
+		buffer.rotateCentered(Direction.UP, (float) ((yRot) / 180 * Math.PI));
+		buffer.rotateCentered(Direction.SOUTH, (float) ((zRotLast) / 180 * Math.PI));
 		buffer.light(WorldRenderer.getLightmapCoordinates(world, deployerState, pos));
 		return buffer;
 	}
@@ -166,8 +165,10 @@ public class DeployerTileEntityRenderer extends SafeTileEntityRenderer<DeployerT
 		AllBlockPartials handPose =
 			mode == Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING : AllBlockPartials.DEPLOYER_HAND_POINTING;
 
-		SuperByteBuffer pole = renderAndTransform(world, AllBlockPartials.DEPLOYER_POLE, blockState, pos, true);
-		SuperByteBuffer hand = renderAndTransform(world, handPose, blockState, pos, false);
+		SuperByteBuffer pole = AllBlockPartials.DEPLOYER_POLE.renderOn(blockState);
+		SuperByteBuffer hand = handPose.renderOn(blockState);
+		pole = transform(world, pole, blockState, pos, true);
+		hand = transform(world, hand, blockState, pos, false);
 
 		double factor;
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {

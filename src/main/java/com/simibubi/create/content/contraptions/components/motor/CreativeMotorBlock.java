@@ -14,9 +14,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
-public class MotorBlock extends DirectionalKineticBlock {
+public class CreativeMotorBlock extends DirectionalKineticBlock {
 
-	public MotorBlock(Properties properties) {
+	public CreativeMotorBlock(Properties properties) {
 		super(properties);
 	}
 
@@ -27,7 +27,7 @@ public class MotorBlock extends DirectionalKineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new MotorTileEntity();
+		return new CreativeMotorTileEntity();
 	}
 
 	@Override

@@ -18,15 +18,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class BeltTunnelTileEntityRenderer extends SafeTileEntityRenderer<BeltTunnelTileEntity> {
+public class BeltTunnelRenderer extends SafeTileEntityRenderer<BeltTunnelTileEntity> {
 
-	public BeltTunnelTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public BeltTunnelRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
 	protected void renderSafe(BeltTunnelTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-			int light, int overlay) {
+		int light, int overlay) {
 		SuperByteBuffer flapBuffer = AllBlockPartials.BELT_TUNNEL_FLAP.renderOn(te.getBlockState());
 		SuperByteBuffer indicatorBuffer = AllBlockPartials.BELT_TUNNEL_INDICATOR.renderOn(te.getBlockState());
 		BlockPos pos = te.getPos();
@@ -45,7 +45,8 @@ public class BeltTunnelTileEntityRenderer extends SafeTileEntityRenderer<BeltTun
 			float flapPivotZ = 0;
 			for (int segment = 0; segment <= 3; segment++) {
 
-				float f = te.flaps.get(direction).get(partialTicks);
+				float f = te.flaps.get(direction)
+					.get(partialTicks);
 				if (direction.getAxis() == Axis.X)
 					f *= -1;
 
@@ -53,7 +54,7 @@ public class BeltTunnelTileEntityRenderer extends SafeTileEntityRenderer<BeltTun
 				float abs = Math.abs(f);
 				float flapAngle = MathHelper.sin((float) ((1 - abs) * Math.PI * intensity)) * 30 * -f;
 				flapAngle = (float) (flapAngle / 180 * Math.PI);
-				
+
 				IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
 				if (te.syncedFlaps.containsKey(direction)) {
@@ -64,15 +65,19 @@ public class BeltTunnelTileEntityRenderer extends SafeTileEntityRenderer<BeltTun
 					indicatorBlockLight = Math.max(indicatorBlockLight, (int) (12 * lightIntensity));
 					indicatorLight = LightTexture.pack(indicatorBlockLight, indicatorSkyLight);
 					int color = ColorHelper.mixColors(0x808080, 0xFFFFFF, lightIntensity);
-					indicatorBuffer.rotateCentered(Axis.Y, (float) ((horizontalAngle + 90) / 180f * Math.PI))
-							.color(color).light(indicatorLight).renderInto(ms, vb);
+					indicatorBuffer.rotateCentered(Direction.UP, (float) ((horizontalAngle + 90) / 180f * Math.PI))
+						.color(color)
+						.light(indicatorLight)
+						.renderInto(ms, vb);
 				}
 
-				flapBuffer.translate(0, 0, -segment * 3 / 16f);
-				flapBuffer.translate(flapPivotX, flapPivotY, flapPivotZ).rotate(Axis.Z, flapAngle)
-						.translate(-flapPivotX, -flapPivotY, -flapPivotZ);
 				flapBuffer.rotateCentered(Direction.UP, (float) (horizontalAngle / 180f * Math.PI));
-				flapBuffer.light(WorldRenderer.getLightmapCoordinates(world, te.getBlockState(), pos)).renderInto(ms, vb);
+				flapBuffer.translate(-flapPivotX, -flapPivotY, -flapPivotZ)
+					.rotate(Direction.SOUTH, flapAngle)
+					.translate(flapPivotX, flapPivotY, flapPivotZ);
+				flapBuffer.translate(0, 0, -segment * 3 / 16f);
+				flapBuffer.light(WorldRenderer.getLightmapCoordinates(world, te.getBlockState(), pos))
+					.renderInto(ms, vb);
 			}
 		}
 

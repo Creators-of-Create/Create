@@ -17,9 +17,9 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
-public class DrillTileEntityRenderer extends KineticTileEntityRenderer {
+public class DrillRenderer extends KineticTileEntityRenderer {
 
-	public DrillTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public DrillRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

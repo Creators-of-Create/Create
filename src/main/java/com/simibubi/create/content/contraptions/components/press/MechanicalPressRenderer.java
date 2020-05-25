@@ -13,9 +13,9 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
 
-public class MechanicalPressTileEntityRenderer extends KineticTileEntityRenderer {
+public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 
-	public MechanicalPressTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public MechanicalPressRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

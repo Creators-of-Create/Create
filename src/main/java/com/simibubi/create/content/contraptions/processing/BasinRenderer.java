@@ -17,9 +17,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BasinTileEntityRenderer extends SafeTileEntityRenderer<BasinTileEntity> {
+public class BasinRenderer extends SafeTileEntityRenderer<BasinTileEntity> {
 
-	public BasinTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public BasinRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

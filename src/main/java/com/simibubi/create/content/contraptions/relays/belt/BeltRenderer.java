@@ -37,9 +37,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
 @SuppressWarnings("deprecation")
-public class BeltTileEntityRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
+public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
-	public BeltTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public BeltRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 	

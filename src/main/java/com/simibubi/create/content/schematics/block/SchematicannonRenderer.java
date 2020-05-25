@@ -148,17 +148,17 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
 		SuperByteBuffer connector = AllBlockPartials.SCHEMATICANNON_CONNECTOR.renderOn(state);
-		connector.translate(-.5f, 0, -.5f);
-		connector.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		connector.translate(.5f, 0, .5f);
+		connector.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
+		connector.translate(-.5f, 0, -.5f);
 		connector.light(lightCoords).renderInto(ms, vb);
 
 		SuperByteBuffer pipe = AllBlockPartials.SCHEMATICANNON_PIPE.renderOn(state);
-		pipe.translate(0, -recoil / 100, 0);
-		pipe.translate(-.5f, -15 / 16f, -.5f);
-		pipe.rotate(Direction.SOUTH, (float) (pitch / 180 * Math.PI));
-		pipe.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		pipe.translate(.5f, 15 / 16f, .5f);
+		pipe.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
+		pipe.rotate(Direction.SOUTH, (float) (pitch / 180 * Math.PI));
+		pipe.translate(-.5f, -15 / 16f, -.5f);
+		pipe.translate(0, -recoil / 100, 0);
 		pipe.light(lightCoords).renderInto(ms, vb);
 
 		ms.pop();

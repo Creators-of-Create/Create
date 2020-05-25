@@ -9,9 +9,9 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.BlockStateProperties;
 
-public class BeltObserverTileEntityRenderer extends SafeTileEntityRenderer<BeltObserverTileEntity> {
+public class BeltObserverRenderer extends SafeTileEntityRenderer<BeltObserverTileEntity> {
 
-	public BeltObserverTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public BeltObserverRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

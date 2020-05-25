@@ -12,25 +12,32 @@ import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 
-public class EncasedFanTileEntityRenderer extends KineticTileEntityRenderer {
+public class EncasedFanRenderer extends KineticTileEntityRenderer {
 
-	public EncasedFanTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public EncasedFanRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-			int light, int overlay) {
-		Direction direction = te.getBlockState().get(FACING);
-		SuperByteBuffer superBuffer = AllBlockPartials.SHAFT_HALF.renderOnDirectional(te.getBlockState(),
-				direction.getOpposite());
+		int light, int overlay) {
+		Direction direction = te.getBlockState()
+			.get(FACING);
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getCutoutMipped());
-		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 
+		int lightBehind = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction.getOpposite()));
+		int lightInFront = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction));
+		
+		SuperByteBuffer shaftHalf =
+			AllBlockPartials.SHAFT_HALF.renderOnDirectional(te.getBlockState(), direction.getOpposite());
+		SuperByteBuffer fanInner =
+			AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectional(te.getBlockState(), direction.getOpposite());
+		
 		float time = AnimationTickHolder.getRenderTick();
 		float speed = te.getSpeed() * 5;
 		if (speed > 0)
@@ -40,10 +47,8 @@ public class EncasedFanTileEntityRenderer extends KineticTileEntityRenderer {
 		float angle = (time * speed * 3 / 10f) % 360;
 		angle = angle / 180f * (float) Math.PI;
 
-		SuperByteBuffer superByteBuffer = AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectional(te.getBlockState(),
-				direction.getOpposite());
-		kineticRotationTransform(superByteBuffer, te, direction.getAxis(), angle, light);
-		superByteBuffer.renderInto(ms, vb);
+		standardKineticRotationTransform(shaftHalf, te, lightBehind).renderInto(ms, vb);
+		kineticRotationTransform(fanInner, te, direction.getAxis(), angle, lightInFront).renderInto(ms, vb);
 	}
 
 }

@@ -168,7 +168,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffers) {
-		DeployerTileEntityRenderer.renderInContraption(context, ms, msLocal, buffers);
+		DeployerRenderer.renderInContraption(context, ms, msLocal, buffers);
 	}
 
 }

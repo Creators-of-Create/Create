@@ -5,7 +5,7 @@ import java.util.List;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.motor.MotorTileEntity;
+import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -38,7 +38,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		targetSpeed.moveText(new Vec3d(9, 0, 10));
 		targetSpeed.withUnit(i -> Lang.translate("generic.unit.rpm"));
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
-		targetSpeed.withStepFunction(MotorTileEntity::step);
+		targetSpeed.withStepFunction(CreativeMotorTileEntity::step);
 		behaviours.add(targetSpeed);
 	}
 

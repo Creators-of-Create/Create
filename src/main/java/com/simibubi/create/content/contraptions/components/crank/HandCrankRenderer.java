@@ -14,9 +14,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 
-public class HandCrankTileEntityRenderer extends KineticTileEntityRenderer {
+public class HandCrankRenderer extends KineticTileEntityRenderer {
 
-	public HandCrankTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public HandCrankRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

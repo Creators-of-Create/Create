@@ -15,9 +15,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 
-public class GearboxTileEntityRenderer extends KineticTileEntityRenderer {
+public class GearboxRenderer extends KineticTileEntityRenderer {
 
-	public GearboxTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public GearboxRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

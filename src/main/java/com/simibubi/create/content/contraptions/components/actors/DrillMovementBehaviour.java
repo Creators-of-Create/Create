@@ -31,7 +31,7 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 	@OnlyIn(value = Dist.CLIENT)
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		DrillTileEntityRenderer.renderInContraption(context, ms, msLocal, buffer);
+		DrillRenderer.renderInContraption(context, ms, msLocal, buffer);
 	}
 
 	@Override

@@ -16,9 +16,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 
-public class SplitShaftTileEntityRenderer extends KineticTileEntityRenderer {
+public class SplitShaftRenderer extends KineticTileEntityRenderer {
 
-	public SplitShaftTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public SplitShaftRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

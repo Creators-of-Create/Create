@@ -4,22 +4,20 @@
 	"textures": {
 		"0": "create:block/axis",
 		"1": "create:block/axis_top",
-		"2": "create:block/andesite_casing_short",
-		"3": "block/spruce_log",
 		"particle": "create:block/axis"
 	},
 	"elements": [
 		{
 			"name": "Axis",
-			"from": [6, 6, 11],
-			"to": [10, 10, 16],
+			"from": [6, 0, 6],
+			"to": [10, 5, 10],
 			"shade": false,
 			"faces": {
-				"east": {"uv": [6, 0, 10, 5], "rotation": 270, "texture": "#0"},
-				"south": {"uv": [6, 6, 10, 10], "texture": "#1"},
-				"west": {"uv": [6, 0, 10, 5], "rotation": 90, "texture": "#0"},
-				"up": {"uv": [6, 0, 10, 5], "rotation": 180, "texture": "#0"},
-				"down": {"uv": [6, 0, 10, 5], "texture": "#0"}
+				"north": {"uv": [6, 0, 10, 5], "rotation": 180, "texture": "#0"},
+				"east": {"uv": [6, 0, 10, 5], "rotation": 180, "texture": "#0"},
+				"south": {"uv": [6, 0, 10, 5], "rotation": 180, "texture": "#0"},
+				"west": {"uv": [6, 0, 10, 5], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [6, 6, 10, 10], "texture": "#1"}
 			}
 		}
 	],
@@ -28,5 +26,6 @@
 			"name": "shaft_half",
 			"origin": [8, 8, 8],
 			"children": [0]
-		}, 1, 2, 3, 4]
+		}
+	]
 }

@@ -13,24 +13,24 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
-public class MechanicalMixerTileEntityRenderer extends KineticTileEntityRenderer {
+public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 
-	public MechanicalMixerTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public MechanicalMixerRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-			int light, int overlay) {
+		int light, int overlay) {
 		BlockState blockState = te.getBlockState();
 		MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) te;
 		BlockPos pos = te.getPos();
-		
+
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		
+
 		SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
 		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 
@@ -41,11 +41,15 @@ public class MechanicalMixerTileEntityRenderer extends KineticTileEntityRenderer
 		float angle = (float) (((time * speed * 6 / 10f) % 360) / 180 * (float) Math.PI);
 
 		SuperByteBuffer poleRender = AllBlockPartials.MECHANICAL_MIXER_POLE.renderOn(blockState);
-		poleRender.translate(0, -renderedHeadOffset, 0).light(packedLightmapCoords).renderInto(ms, vb);
+		poleRender.translate(0, -renderedHeadOffset, 0)
+			.light(packedLightmapCoords)
+			.renderInto(ms, vb);
 
 		SuperByteBuffer headRender = AllBlockPartials.MECHANICAL_MIXER_HEAD.renderOn(blockState);
-		headRender.rotateCentered(Axis.Y, angle).translate(0, -renderedHeadOffset, 0).light(packedLightmapCoords)
-				.renderInto(ms, vb);
+		headRender.rotateCentered(Direction.UP, angle)
+			.translate(0, -renderedHeadOffset, 0)
+			.light(packedLightmapCoords)
+			.renderInto(ms, vb);
 	}
 
 }

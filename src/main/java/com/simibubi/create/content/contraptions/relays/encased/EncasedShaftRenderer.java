@@ -6,9 +6,9 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
-public class EncasedShaftTileEntityRenderer extends KineticTileEntityRenderer {
+public class EncasedShaftRenderer extends KineticTileEntityRenderer {
 
-	public EncasedShaftTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public EncasedShaftRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
