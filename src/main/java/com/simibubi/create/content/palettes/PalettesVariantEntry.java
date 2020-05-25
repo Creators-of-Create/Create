@@ -44,8 +44,7 @@ public class PalettesVariantEntry {
 
 			if (pattern.hasFoliage())
 				builder.item()
-					.transform(CreateRegistrate.itemColors(() -> AllColorHandlers::getGrassyItem)::apply)
-					.build();
+					.transform(CreateRegistrate.itemColors(() -> AllColorHandlers::getGrassyItem));
 			else
 				builder.simpleItem();
 

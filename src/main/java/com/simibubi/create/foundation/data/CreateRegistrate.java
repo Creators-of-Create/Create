@@ -124,9 +124,10 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return b -> b.onRegister(entry -> onClient(() -> () -> registerBlockVertexColor(entry, colorFunc)));
 	}
 
-	public static NonNullUnaryOperator<ItemBuilder<? extends BlockItem, ?>> itemColors(
+	public static <I extends BlockItem, P> NonNullFunction<ItemBuilder<I, P>, P> itemColors(
 		Supplier<Supplier<IItemColor>> colorFunc) {
-		return b -> b.onRegister(entry -> onClient(() -> () -> registerItemColor(entry, colorFunc)));
+		return b -> b.onRegister(entry -> onClient(() -> () -> registerItemColor(entry, colorFunc)))
+			.build();
 	}
 
 	protected static void onClient(Supplier<Runnable> toRun) {
