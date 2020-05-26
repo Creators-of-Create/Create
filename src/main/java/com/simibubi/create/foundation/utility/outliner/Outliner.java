@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 public class Outliner {
 
@@ -25,6 +26,17 @@ public class Outliner {
 	public OutlineParams showValueBox(Object slot, ValueBox box) {
 		outlines.put(slot, new OutlineEntry(box));
 		return box.getParams();
+	}
+	
+	public OutlineParams showLine(Object slot, Vec3d start, Vec3d end) {
+		if (!outlines.containsKey(slot)) {
+			LineOutline outline = new LineOutline();
+			outlines.put(slot, new OutlineEntry(outline));
+		}
+		OutlineEntry entry = outlines.get(slot);
+		entry.ticksTillRemoval = 1;
+		((LineOutline) entry.outline).set(start, end);
+		return entry.outline.getParams();
 	}
 	
 	public OutlineParams showAABB(Object slot, AxisAlignedBB bb) {

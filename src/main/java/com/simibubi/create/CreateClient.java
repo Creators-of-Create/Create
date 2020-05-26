@@ -8,6 +8,9 @@ import java.util.function.Function;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
+import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
+import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
+import com.simibubi.create.content.curiosities.zapper.terrainzapper.TerrainZapperRenderHandler;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
@@ -89,11 +92,14 @@ public class CreateClient {
 		schematicSender.tick();
 		schematicAndQuillHandler.tick();
 		schematicHandler.tick();
+		BeltConnectorHandler.gameTick();
 		FilteringRenderer.tick();
 		LinkRenderer.tick();
 		ScrollValueRenderer.tick();
 		ChassisRangeDisplay.tick();
 		EdgeInteractionRenderer.tick();
+		TerrainZapperRenderHandler.tick();
+		ZapperRenderHandler.tick();
 		outliner.tickOutlines();
 	}
 

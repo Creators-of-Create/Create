@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
-import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
-import com.simibubi.create.content.curiosities.zapper.terrainzapper.TerrainZapperRenderHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -18,6 +17,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.item.ItemStack;
@@ -59,13 +59,7 @@ public class ClientEvents {
 		}
 
 		ScreenOpener.tick();
-		onGameTick();
-	}
-
-	public static void onGameTick() {
 		CreateClient.gameTick();
-		BeltConnectorHandler.gameTick();
-		TerrainZapperRenderHandler.tick();
 	}
 
 	@SubscribeEvent
@@ -76,18 +70,14 @@ public class ClientEvents {
 
 		ms.push();
 		ms.translate(-view.getX(), -view.getY(), -view.getZ());
-
 		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance()
 			.getBufferBuilders()
 			.getEntityVertexConsumers();
-		
+
 		CreateClient.schematicHandler.render(ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV);
 		CreateClient.outliner.renderOutlines(ms, buffer);
 		KineticDebugger.renderSourceOutline(ms, buffer);
-		TerrainZapperRenderHandler.render(ms, buffer);
-
 		ms.pop();
-
 		buffer.draw();
 	}
 

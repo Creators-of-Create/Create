@@ -16,9 +16,9 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.ShadowRenderHelper;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -36,7 +36,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
-@SuppressWarnings("deprecation")
 public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 	public BeltRenderer(TileEntityRendererDispatcher dispatcher) {
@@ -112,7 +111,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 		for (TransportedItemStack transported : te.getInventory().getItems()) {
 			ms.push();
-			TessellatorHelper.fightZFighting(transported.angle, ms);
+			MatrixStacker.of(ms).nudge(transported.angle);
 			float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
 			float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
 			float verticalMovement = verticality;

@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.shapes.VoxelShape;
 
 public abstract class Brush {
 
@@ -46,8 +45,6 @@ public abstract class Brush {
 	public BlockPos getOffset(Vec3d ray, Direction face, PlacementOptions option) {
 		return BlockPos.ZERO;
 	}
-
-	abstract VoxelShape getSelectionBox();
 
 	abstract List<BlockPos> getIncludedPositions();
 

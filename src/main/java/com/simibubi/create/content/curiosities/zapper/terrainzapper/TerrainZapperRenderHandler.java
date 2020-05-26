@@ -1,14 +1,15 @@
 package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -19,14 +20,27 @@ import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.shapes.VoxelShape;
 
 public class TerrainZapperRenderHandler {
 
-	private static VoxelShape renderedShape;
+	private static Iterable<BlockPos> renderedShape;
 	private static BlockPos renderedPosition;
 
 	public static void tick() {
+		gatherSelectedBlocks();
+		if (renderedPosition == null)
+			return;
+		List<BlockPos> shape = (List<BlockPos>) renderedShape;
+
+		CreateClient.outliner.showCluster("terrainZapper", shape.stream()
+			.map(pos -> pos.add(renderedPosition))
+			.collect(Collectors.toList()))
+			.disableNormals()
+			.lineWidth(1 / 32f)
+			.withFaceTexture(AllSpecialTextures.CHECKERED);
+	}
+
+	protected static void gatherSelectedBlocks() {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		ItemStack heldMain = player.getHeldItemMainhand();
 		ItemStack heldOff = player.getHeldItemOffhand();
@@ -56,16 +70,19 @@ public class TerrainZapperRenderHandler {
 			return;
 		}
 
-		Brush brush = NBTHelper.readEnum(tag.getString("Brush"), TerrainBrushes.class).get();
+		Brush brush = NBTHelper.readEnum(tag.getString("Brush"), TerrainBrushes.class)
+			.get();
 		PlacementOptions placement = NBTHelper.readEnum(tag.getString("Placement"), PlacementOptions.class);
 		BlockPos params = NBTUtil.readBlockPos(tag.getCompound("BrushParams"));
 		brush.set(params.getX(), params.getY(), params.getZ());
-		renderedShape = brush.getSelectionBox();
+		renderedShape = brush.getIncludedPositions();
 
-		Vec3d start = player.getPositionVec().add(0, player.getEyeHeight(), 0);
-		Vec3d range = player.getLookVec().scale(128);
-		BlockRayTraceResult raytrace = player.world.rayTraceBlocks(
-				new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
+		Vec3d start = player.getPositionVec()
+			.add(0, player.getEyeHeight(), 0);
+		Vec3d range = player.getLookVec()
+			.scale(128);
+		BlockRayTraceResult raytrace = player.world
+			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
 		if (raytrace == null || raytrace.getType() == Type.MISS) {
 			renderedPosition = null;
 			return;
@@ -73,26 +90,6 @@ public class TerrainZapperRenderHandler {
 
 		BlockPos pos = raytrace.getPos();
 		renderedPosition = pos.add(brush.getOffset(player.getLookVec(), raytrace.getFace(), placement));
-	}
-
-	public static void render(MatrixStack ms, IRenderTypeBuffer buffer) {
-		if (renderedPosition == null)
-			return;
-
-		// TODO 1.15 buffered render
-//		RenderSystem.lineWidth(2);
-//		TessellatorHelper.prepareForDrawing();
-//		RenderSystem.disableTexture();
-
-		ms.push();
-		ms.translate(renderedPosition.getX(), renderedPosition.getY(), renderedPosition.getZ());
-		WorldRenderer.func_228431_a_(ms, buffer.getBuffer(RenderType.getLines()), renderedShape, 0, 0, 0, 0f, 0f, 0f, 0.5f);
-
-//		RenderSystem.enableTexture();
-//		TessellatorHelper.cleanUpAfterDrawing();
-//		RenderSystem.lineWidth(1);
-		
-		ms.pop();
 	}
 
 }

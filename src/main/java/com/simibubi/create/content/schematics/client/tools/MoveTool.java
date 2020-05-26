@@ -17,11 +17,6 @@ public class MoveTool extends PlacementToolBase {
 	@Override
 	public void updateSelection() {
 		super.updateSelection();
-
-		if (!schematicSelected)
-			return;
-
-		renderSelectedFace = selectedFace.getAxis().isHorizontal();
 	}
 
 	@Override

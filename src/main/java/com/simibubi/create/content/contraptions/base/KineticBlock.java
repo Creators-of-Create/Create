@@ -84,11 +84,6 @@ public abstract class KineticBlock extends Block implements IRotate {
 		kte.updateSpeed = true;
 	}
 
-//	@Override // TODO 1.15 register layer
-//	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-//		return hasStaticPart() && layer == getRenderLayer();
-//	}
-
 	protected abstract boolean hasStaticPart();
 
 	@Override

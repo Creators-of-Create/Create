@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.NbtPacket;
@@ -167,9 +168,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		
 		RenderSystem.translated(0, -5, 0);
 
-		minecraft.getBlockRendererDispatcher().renderBlock(state, new MatrixStack(),
-				getMinecraft().getBufferBuilders().getEffectVertexConsumers(), 0xF000F0, OverlayTexture.DEFAULT_UV,
-				EmptyModelData.INSTANCE);
+		GuiGameElement.of(state).render();
 
 		RenderSystem.popMatrix();
 	}
