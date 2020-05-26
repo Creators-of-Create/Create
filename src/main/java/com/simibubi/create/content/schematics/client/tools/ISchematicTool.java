@@ -14,6 +14,6 @@ public interface ISchematicTool {
 	
 	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay);
 	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay);
-	public void renderToolLocal(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay);
+	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay);
 	
 }

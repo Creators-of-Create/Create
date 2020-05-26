@@ -1,8 +1,9 @@
 package com.simibubi.create.content.schematics.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -38,7 +39,8 @@ public class SchematicTransformation {
 		xOrigin = bounds.getXSize() / 2f;
 		zOrigin = bounds.getZSize() / 2f;
 
-		int r = -(settings.getRotation().ordinal() * 90);
+		int r = -(settings.getRotation()
+			.ordinal() * 90);
 		rotation.start(r);
 
 		Vec3d vec = fromAnchor(anchor);
@@ -47,21 +49,22 @@ public class SchematicTransformation {
 		z.start((float) vec.z);
 	}
 
-	public void applyGLTransformations() {
-		float pt = Minecraft.getInstance().getRenderPartialTicks();
+	public void applyGLTransformations(MatrixStack ms) {
+		float pt = Minecraft.getInstance()
+			.getRenderPartialTicks();
 
 		// Translation
-		RenderSystem.translated(x.get(pt), y.get(pt), z.get(pt));
-
+		ms.translate(x.get(pt), y.get(pt), z.get(pt));
 		Vec3d rotationOffset = getRotationOffset(true);
 
 		// Rotation & Mirror
-		
-		RenderSystem.translated(xOrigin + rotationOffset.x, 0, zOrigin + rotationOffset.z);
-		RenderSystem.rotatef(rotation.get(pt), 0, 1, 0);
-		RenderSystem.translated(-rotationOffset.x, 0, -rotationOffset.z);
-		RenderSystem.scaled(scaleFrontBack.get(pt), 1, scaleLeftRight.get(pt));
-		RenderSystem.translated(-xOrigin, 0, -zOrigin);
+		ms.translate(xOrigin, 0, zOrigin);
+		MatrixStacker.of(ms)
+			.translate(rotationOffset)
+			.rotateY(rotation.get(pt))
+			.translateBack(rotationOffset);
+		ms.scale(scaleFrontBack.get(pt), 1, scaleLeftRight.get(pt));
+		ms.translate(-xOrigin, 0, -zOrigin);
 
 	}
 
@@ -81,7 +84,8 @@ public class SchematicTransformation {
 	}
 
 	public Vec3d toLocalSpace(Vec3d vec) {
-		float pt = Minecraft.getInstance().getRenderPartialTicks();
+		float pt = Minecraft.getInstance()
+			.getRenderPartialTicks();
 		Vec3d rotationOffset = getRotationOffset(true);
 
 		vec = vec.subtract(x.get(pt), y.get(pt), z.get(pt));
@@ -168,7 +172,8 @@ public class SchematicTransformation {
 	}
 
 	public float getCurrentRotation() {
-		float pt = Minecraft.getInstance().getRenderPartialTicks();
+		float pt = Minecraft.getInstance()
+			.getRenderPartialTicks();
 		return rotation.get(pt);
 	}
 

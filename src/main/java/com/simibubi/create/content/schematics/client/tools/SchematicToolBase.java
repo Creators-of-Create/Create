@@ -4,18 +4,19 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -63,7 +64,8 @@ public abstract class SchematicToolBase implements ISchematicTool {
 			return;
 		}
 
-		chasingSelectedPos = chasingSelectedPos.add(target.subtract(chasingSelectedPos).scale(1 / 2f));
+		chasingSelectedPos = chasingSelectedPos.add(target.subtract(chasingSelectedPos)
+			.scale(1 / 2f));
 	}
 
 	public void updateTargetPos() {
@@ -88,8 +90,11 @@ public abstract class SchematicToolBase implements ISchematicTool {
 
 		// Select location at distance
 		if (selectIgnoreBlocks) {
-			float pt = Minecraft.getInstance().getRenderPartialTicks();
-			selectedPos = new BlockPos(player.getEyePosition(pt).add(player.getLookVec().scale(selectionRange)));
+			float pt = Minecraft.getInstance()
+				.getRenderPartialTicks();
+			selectedPos = new BlockPos(player.getEyePosition(pt)
+				.add(player.getLookVec()
+					.scale(selectionRange)));
 			if (snap)
 				lastChasingSelectedPos = chasingSelectedPos = new Vec3d(selectedPos);
 			return;
@@ -102,8 +107,12 @@ public abstract class SchematicToolBase implements ISchematicTool {
 			return;
 
 		BlockPos hit = new BlockPos(trace.getHitVec());
-		boolean replaceable = player.world.getBlockState(hit).getMaterial().isReplaceable();
-		if (trace.getFace().getAxis().isVertical() && !replaceable)
+		boolean replaceable = player.world.getBlockState(hit)
+			.getMaterial()
+			.isReplaceable();
+		if (trace.getFace()
+			.getAxis()
+			.isVertical() && !replaceable)
 			hit = hit.offset(trace.getFace());
 		selectedPos = hit;
 		if (snap)
@@ -111,30 +120,30 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	}
 
 	@Override
-	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		if (!schematicHandler.isDeployed())
-			return;
-
-//		AABBOutline outline = schematicHandler.getOutline();
-		if (renderSelectedFace) {
-//			schematicHandler.getOutline().setTextures(null,
-//					AllKeys.ctrlDown() ? AllSpecialTextures.HIGHLIGHT_CHECKERED : AllSpecialTextures.CHECKERED);
-//			outline.highlightFace(selectedFace);
-		}
-
-		RenderHelper.disableStandardItemLighting();
-		RenderSystem.pushMatrix();
-		RenderSystem.enableBlend();
-//		outline.render(Tessellator.getInstance().getBuffer());TODO
-		RenderSystem.popMatrix();
-//		outline.setTextures(null, null);
-
-	}
+	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {}
 
 	@Override
 	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {}
-	
+
 	@Override
-	public void renderToolLocal(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {}
+	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		if (!schematicHandler.isDeployed())
+			return;
+
+		ms.push();
+		AABBOutline outline = schematicHandler.getOutline();
+		if (renderSelectedFace) {
+			outline.getParams()
+				.highlightFace(selectedFace)
+				.withFaceTextures(AllSpecialTextures.CHECKERED,
+					AllKeys.ctrlDown() ? AllSpecialTextures.HIGHLIGHT_CHECKERED : AllSpecialTextures.CHECKERED);
+		}
+		outline.getParams()
+			.disableCull();
+		outline.render(ms, buffer);
+		outline.getParams()
+			.withFaceTextures(null, null);
+		ms.pop();
+	}
 
 }

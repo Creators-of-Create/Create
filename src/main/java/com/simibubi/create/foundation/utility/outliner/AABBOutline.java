@@ -17,7 +17,7 @@ public class AABBOutline extends Outline {
 	protected AxisAlignedBB bb;
 
 	public AABBOutline(AxisAlignedBB bb) {
-		this.bb = bb;
+		this.setBounds(bb);
 	}
 
 	@Override
@@ -28,8 +28,9 @@ public class AABBOutline extends Outline {
 	public void renderBB(MatrixStack ms, IRenderTypeBuffer buffer, AxisAlignedBB bb) {
 		Vec3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
 			.getProjectedView();
-		boolean inside = bb.contains(projectedView);
-		bb = bb.grow(inside ? -1 / 128d : 1 / 128d);
+		boolean noCull = bb.contains(projectedView);
+		bb = bb.grow(noCull ? -1 / 128d : 1 / 128d);
+		noCull |= params.disableCull;
 
 		Vec3d xyz = new Vec3d(bb.minX, bb.minY, bb.minZ);
 		Vec3d Xyz = new Vec3d(bb.maxX, bb.minY, bb.minZ);
@@ -41,34 +42,35 @@ public class AABBOutline extends Outline {
 		Vec3d XYZ = new Vec3d(bb.maxX, bb.maxY, bb.maxZ);
 
 		Vec3d start = xyz;
-		renderAACuboidLine(ms, buffer, start, Xyz);
-		renderAACuboidLine(ms, buffer, start, xYz);
-		renderAACuboidLine(ms, buffer, start, xyZ);
+		renderAACuboidLine(ms, buffer, start, Xyz, noCull);
+		renderAACuboidLine(ms, buffer, start, xYz, noCull);
+		renderAACuboidLine(ms, buffer, start, xyZ, noCull);
 
 		start = XyZ;
-		renderAACuboidLine(ms, buffer, start, xyZ);
-		renderAACuboidLine(ms, buffer, start, XYZ);
-		renderAACuboidLine(ms, buffer, start, Xyz);
+		renderAACuboidLine(ms, buffer, start, xyZ, noCull);
+		renderAACuboidLine(ms, buffer, start, XYZ, noCull);
+		renderAACuboidLine(ms, buffer, start, Xyz, noCull);
 
 		start = XYz;
-		renderAACuboidLine(ms, buffer, start, xYz);
-		renderAACuboidLine(ms, buffer, start, Xyz);
-		renderAACuboidLine(ms, buffer, start, XYZ);
+		renderAACuboidLine(ms, buffer, start, xYz, noCull);
+		renderAACuboidLine(ms, buffer, start, Xyz, noCull);
+		renderAACuboidLine(ms, buffer, start, XYZ, noCull);
 
 		start = xYZ;
-		renderAACuboidLine(ms, buffer, start, XYZ);
-		renderAACuboidLine(ms, buffer, start, xyZ);
-		renderAACuboidLine(ms, buffer, start, xYz);
+		renderAACuboidLine(ms, buffer, start, XYZ, noCull);
+		renderAACuboidLine(ms, buffer, start, xyZ, noCull);
+		renderAACuboidLine(ms, buffer, start, xYz, noCull);
 
-		renderFace(ms, buffer, Direction.NORTH, xYz, XYz, Xyz, xyz, inside);
-		renderFace(ms, buffer, Direction.SOUTH, XYZ, xYZ, xyZ, XyZ, inside);
-		renderFace(ms, buffer, Direction.EAST, XYz, XYZ, XyZ, Xyz, inside);
-		renderFace(ms, buffer, Direction.WEST, xYZ, xYz, xyz, xyZ, inside);
-		renderFace(ms, buffer, Direction.UP, xYZ, XYZ, XYz, xYz, inside);
-		renderFace(ms, buffer, Direction.DOWN, xyz, Xyz, XyZ, xyZ, inside);
+		renderFace(ms, buffer, Direction.NORTH, xYz, XYz, Xyz, xyz, noCull);
+		renderFace(ms, buffer, Direction.SOUTH, XYZ, xYZ, xyZ, XyZ, noCull);
+		renderFace(ms, buffer, Direction.EAST, XYz, XYZ, XyZ, Xyz, noCull);
+		renderFace(ms, buffer, Direction.WEST, xYZ, xYz, xyz, xyZ, noCull);
+		renderFace(ms, buffer, Direction.UP, xYZ, XYZ, XYz, xYz, noCull);
+		renderFace(ms, buffer, Direction.DOWN, xyz, Xyz, XyZ, xyZ, noCull);
 
 	}
 
+	//TODO noCull has no effect
 	protected void renderFace(MatrixStack ms, IRenderTypeBuffer buffer, Direction direction, Vec3d p1, Vec3d p2,
 		Vec3d p3, Vec3d p4, boolean noCull) {
 		if (!params.faceTexture.isPresent())
@@ -88,6 +90,10 @@ public class AABBOutline extends Outline {
 		float maxU = (float) Math.abs(axis == Axis.X ? uDiff.z : uDiff.x);
 		float maxV = (float) Math.abs(axis == Axis.Y ? vDiff.z : vDiff.y);
 		putQuadUV(ms, builder, p1, p2, p3, p4, 0, 0, maxU, maxV, Direction.UP);
+	}
+
+	public void setBounds(AxisAlignedBB bb) {
+		this.bb = bb;
 	}
 
 }

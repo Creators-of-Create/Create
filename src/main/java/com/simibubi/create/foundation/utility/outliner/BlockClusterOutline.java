@@ -33,7 +33,7 @@ public class BlockClusterOutline extends Outline {
 		for (MergeEntry edge : cluster.visibleEdges) {
 			Vec3d start = new Vec3d(edge.pos);
 			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, edge.axis);
-			renderAACuboidLine(ms, buffer, start, new Vec3d(edge.pos.offset(direction)));
+			renderAACuboidLine(ms, buffer, start, new Vec3d(edge.pos.offset(direction)), false);
 		}
 		
 		for (MergeEntry face : cluster.visibleFaces.keySet()) {

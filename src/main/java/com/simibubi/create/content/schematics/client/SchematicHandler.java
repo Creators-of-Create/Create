@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.SchematicWorld;
@@ -14,7 +13,7 @@ import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.foundation.gui.ToolSelectionScreen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.NbtPacket;
-import com.simibubi.create.foundation.utility.TessellatorHelper;
+import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -33,7 +32,7 @@ public class SchematicHandler {
 
 	private String displayedSchematic;
 	private SchematicTransformation transformation;
-	private AxisAlignedBB bounds; 
+	private AxisAlignedBB bounds;
 	private boolean deployed;
 	private boolean active;
 	private Tools currentTool;
@@ -42,6 +41,7 @@ public class SchematicHandler {
 	private int syncCooldown;
 	private int activeHotbarSlot;
 	private ItemStack activeSchematicItem;
+	private AABBOutline outline;
 
 	private SchematicRenderer renderer;
 	private SchematicHotbarSlotOverlay overlay;
@@ -73,7 +73,9 @@ public class SchematicHandler {
 			return;
 		}
 
-		if (!active || !stack.getTag().getString("File").equals(displayedSchematic))
+		if (!active || !stack.getTag()
+			.getString("File")
+			.equals(displayedSchematic))
 			init(player, stack);
 		if (!active)
 			return;
@@ -85,12 +87,14 @@ public class SchematicHandler {
 			sync();
 
 		selectionScreen.update();
-		currentTool.getTool().updateSelection();
+		currentTool.getTool()
+			.updateSelection();
 	}
 
 	private void init(ClientPlayerEntity player, ItemStack stack) {
 		loadSettings(stack);
-		displayedSchematic = stack.getTag().getString("File");
+		displayedSchematic = stack.getTag()
+			.getString("File");
 		active = true;
 		if (deployed) {
 			setupRenderer();
@@ -106,7 +110,8 @@ public class SchematicHandler {
 
 	private void setupRenderer() {
 		Template schematic = SchematicItem.loadSchematic(activeSchematicItem);
-		if (schematic.getSize().equals(BlockPos.ZERO))
+		if (schematic.getSize()
+			.equals(BlockPos.ZERO))
 			return;
 
 		SchematicWorld w = new SchematicWorld(BlockPos.ZERO, Minecraft.getInstance().world);
@@ -118,25 +123,21 @@ public class SchematicHandler {
 		boolean present = activeSchematicItem != null;
 		if (!active && !present)
 			return;
-		if (active) {
-			TessellatorHelper.prepareForDrawing();
-			currentTool.getTool().renderTool(ms, buffer, light, overlay);
-			TessellatorHelper.cleanUpAfterDrawing();
-		}
 
-		GlStateManager.pushMatrix();
-		TessellatorHelper.prepareForDrawing();
-		transformation.applyGLTransformations();
+		ms.push();
+		transformation.applyGLTransformations(ms);
 		renderer.render(ms, buffer);
-		GlStateManager.disableCull();
+		if (active) 
+			currentTool.getTool()
+				.renderOnSchematic(ms, buffer, light, overlay);
+		ms.pop();
 
-		if (active)
-			currentTool.getTool().renderToolLocal(ms, buffer, light, overlay);
-
-		GlStateManager.enableCull();
-		GlStateManager.depthMask(true);
-		TessellatorHelper.cleanUpAfterDrawing();
-		GlStateManager.popMatrix();
+		if (active) {
+			ms.push();
+			currentTool.getTool()
+				.renderTool(ms, buffer, light, overlay);
+			ms.pop();
+		}
 	}
 
 	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
@@ -145,8 +146,10 @@ public class SchematicHandler {
 		if (activeSchematicItem != null)
 			this.overlay.renderOn(activeHotbarSlot);
 
-		currentTool.getTool().renderOverlay(ms, buffer, light, overlay);
-		selectionScreen.renderPassive(Minecraft.getInstance().getRenderPartialTicks());
+		currentTool.getTool()
+			.renderOverlay(ms, buffer, light, overlay);
+		selectionScreen.renderPassive(Minecraft.getInstance()
+			.getRenderPartialTicks());
 	}
 
 	public void onMouseInput(int button, boolean pressed) {
@@ -157,7 +160,8 @@ public class SchematicHandler {
 		if (Minecraft.getInstance().player.isSneaking())
 			return;
 
-		currentTool.getTool().handleRightClick();
+		currentTool.getTool()
+			.handleRightClick();
 	}
 
 	public void onKeyInput(int key, boolean pressed) {
@@ -183,7 +187,8 @@ public class SchematicHandler {
 			return true;
 		}
 		if (AllKeys.ACTIVATE_TOOL.isPressed())
-			return currentTool.getTool().handleMouseWheel(delta);
+			return currentTool.getTool()
+				.handleMouseWheel(delta);
 		return false;
 	}
 
@@ -201,7 +206,8 @@ public class SchematicHandler {
 
 	private boolean itemLost(PlayerEntity player) {
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
-			if (!player.inventory.getStackInSlot(i).isItemEqual(activeSchematicItem))
+			if (!player.inventory.getStackInSlot(i)
+				.isItemEqual(activeSchematicItem))
 				continue;
 			if (!ItemStack.areItemStackTagsEqual(player.inventory.getStackInSlot(i), activeSchematicItem))
 				continue;
@@ -222,15 +228,18 @@ public class SchematicHandler {
 		CompoundNBT tag = activeSchematicItem.getTag();
 		tag.putBoolean("Deployed", deployed);
 		tag.put("Anchor", NBTUtil.writeBlockPos(transformation.getAnchor()));
-		tag.putString("Rotation", settings.getRotation().name());
-		tag.putString("Mirror", settings.getMirror().name());
+		tag.putString("Rotation", settings.getRotation()
+			.name());
+		tag.putString("Mirror", settings.getMirror()
+			.name());
 
 		AllPackets.channel.sendToServer(new NbtPacket(activeSchematicItem, activeHotbarSlot));
 	}
 
 	public void equip(Tools tool) {
 		this.currentTool = tool;
-		currentTool.getTool().init();
+		currentTool.getTool()
+			.init();
 	}
 
 	public void loadSettings(ItemStack blueprint) {
@@ -245,8 +254,10 @@ public class SchematicHandler {
 		BlockPos size = NBTUtil.readBlockPos(tag.getCompound("Bounds"));
 
 		bounds = new AxisAlignedBB(BlockPos.ZERO, size);
-//		outline = new AABBOutline(bounds);
-//		outline.disableCull = true;
+		outline = new AABBOutline(bounds);
+		outline.getParams()
+			.lineWidth(1 / 16f)
+			.disableNormals();
 		transformation.init(anchor, settings, bounds);
 	}
 
@@ -291,6 +302,10 @@ public class SchematicHandler {
 
 	public ItemStack getActiveSchematicItem() {
 		return activeSchematicItem;
+	}
+
+	public AABBOutline getOutline() {
+		return outline;
 	}
 
 }

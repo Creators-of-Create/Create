@@ -1,22 +1,17 @@
 package com.simibubi.create.content.schematics.client;
 
-import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.system.MemoryUtil;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.content.schematics.SchematicWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -24,10 +19,7 @@ import net.minecraft.client.renderer.RegionRenderCacheBuilder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
@@ -75,40 +67,40 @@ public class SchematicRenderer {
 
 	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
 		// TODO 1.15 buffered render
-		if (!active)
-			return;
-
-		final Entity entity = Minecraft.getInstance()
-			.getRenderViewEntity();
-
-		if (entity == null) {
-			return;
-		}
-
-		ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-		Vec3d view = renderInfo.getProjectedView();
-		double renderPosX = view.x;
-		double renderPosY = view.y;
-		double renderPosZ = view.z;
-
-		RenderSystem.enableAlphaTest();
-		RenderSystem.enableBlend();
-		Minecraft.getInstance()
-			.getTextureManager()
-			.bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
-
-		for (RenderType layer : RenderType.getBlockLayers()) {
-			if (!usedBlockRenderLayers.contains(layer)) {
-				continue;
-			}
-			final BufferBuilder bufferBuilder = bufferCache.get(layer);
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(-renderPosX, -renderPosY, -renderPosZ);
-			drawBuffer(bufferBuilder);
-			RenderSystem.popMatrix();
-		}
-		RenderSystem.disableAlphaTest();
-		RenderSystem.disableBlend();
+//		if (!active)
+//			return;
+//
+//		final Entity entity = Minecraft.getInstance()
+//			.getRenderViewEntity();
+//
+//		if (entity == null) {
+//			return;
+//		}
+//
+//		ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
+//		Vec3d view = renderInfo.getProjectedView();
+//		double renderPosX = view.x;
+//		double renderPosY = view.y;
+//		double renderPosZ = view.z;
+//
+//		RenderSystem.enableAlphaTest();
+//		RenderSystem.enableBlend();
+//		Minecraft.getInstance()
+//			.getTextureManager()
+//			.bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
+//
+//		for (RenderType layer : RenderType.getBlockLayers()) {
+//			if (!usedBlockRenderLayers.contains(layer)) {
+//				continue;
+//			}
+//			final BufferBuilder bufferBuilder = bufferCache.get(layer);
+//			RenderSystem.pushMatrix();
+//			RenderSystem.translated(-renderPosX, -renderPosY, -renderPosZ);
+//			drawBuffer(bufferBuilder);
+//			RenderSystem.popMatrix();
+//		}
+//		RenderSystem.disableAlphaTest();
+//		RenderSystem.disableBlend();
 	}
 
 	private void redraw(Minecraft minecraft) {
@@ -153,17 +145,17 @@ public class SchematicRenderer {
 		}
 	}
 
-	private static void drawBuffer(final BufferBuilder bufferBuilder) {
-		Pair<BufferBuilder.DrawState, ByteBuffer> pair = bufferBuilder.popData();
-		BufferBuilder.DrawState state = pair.getFirst();
-
-		if (state.getCount() > 0) {
-			state.getVertexFormat()
-				.startDrawing(MemoryUtil.memAddress(pair.getSecond()));
-			RenderSystem.drawArrays(state.getMode(), 0, state.getCount());
-			state.getVertexFormat()
-				.endDrawing();
-		}
-	}
+//	private static void drawBuffer(final BufferBuilder bufferBuilder) {
+//		Pair<BufferBuilder.DrawState, ByteBuffer> pair = bufferBuilder.popData();
+//		BufferBuilder.DrawState state = pair.getFirst();
+//
+//		if (state.getCount() > 0) {
+//			state.getVertexFormat()
+//				.startDrawing(MemoryUtil.memAddress(pair.getSecond()));
+//			RenderSystem.drawArrays(state.getMode(), 0, state.getCount());
+//			state.getVertexFormat()
+//				.endDrawing();
+//		}
+//	}
 
 }

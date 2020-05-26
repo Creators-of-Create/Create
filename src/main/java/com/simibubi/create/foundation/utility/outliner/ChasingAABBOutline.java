@@ -25,7 +25,7 @@ public class ChasingAABBOutline extends AABBOutline {
 	@Override
 	public void tick() {
 		prevBB = bb;
-		bb = interpolateBBs(bb, targetBB, .5f);
+		setBounds(interpolateBBs(bb, targetBB, .5f));
 	}
 
 	@Override

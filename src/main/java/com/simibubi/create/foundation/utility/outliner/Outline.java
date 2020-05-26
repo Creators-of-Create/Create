@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 
 public abstract class Outline {
@@ -30,8 +31,11 @@ public abstract class Outline {
 
 	public abstract void render(MatrixStack ms, IRenderTypeBuffer buffer);
 
-	public void renderAACuboidLine(MatrixStack ms, IRenderTypeBuffer buffer, Vec3d start, Vec3d end) {
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getEntitySolid(AllSpecialTextures.BLANK.getLocation()));
+	//TODO noCull has no effect
+	public void renderAACuboidLine(MatrixStack ms, IRenderTypeBuffer buffer, Vec3d start, Vec3d end, boolean noCull) {
+		ResourceLocation tex = AllSpecialTextures.BLANK.getLocation();
+		IVertexBuilder builder =
+			buffer.getBuffer(noCull ? RenderType.getCutoutNoCull(tex, true) : RenderType.getEntitySolid(tex));
 
 		Vec3d diff = end.subtract(start);
 		if (diff.x + diff.y + diff.z < 0) {
@@ -179,6 +183,10 @@ public abstract class Outline {
 		public OutlineParams withFaceTexture(AllSpecialTextures texture) {
 			this.faceTexture = Optional.ofNullable(texture);
 			return this;
+		}
+
+		public OutlineParams clearTextures() {
+			return this.withFaceTextures(null, null);
 		}
 
 		public OutlineParams withFaceTextures(AllSpecialTextures texture, AllSpecialTextures highlightTexture) {

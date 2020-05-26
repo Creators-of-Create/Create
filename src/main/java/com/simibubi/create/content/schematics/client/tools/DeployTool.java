@@ -1,13 +1,14 @@
 package com.simibubi.create.content.schematics.client.tools;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
+import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -26,7 +27,9 @@ public class DeployTool extends PlacementToolBase {
 	@Override
 	public void updateSelection() {
 		if (schematicHandler.isActive() && selectionRange == -1) {
-			selectionRange = (int) (schematicHandler.getBounds().getCenter().length() / 2);
+			selectionRange = (int) (schematicHandler.getBounds()
+				.getCenter()
+				.length() / 2);
 			selectionRange = MathHelper.clamp(selectionRange, 1, 100);
 		}
 		selectIgnoreBlocks = AllKeys.ACTIVATE_TOOL.isPressed();
@@ -40,10 +43,9 @@ public class DeployTool extends PlacementToolBase {
 		if (selectedPos == null)
 			return;
 
-		RenderSystem.pushMatrix();
-		RenderHelper.disableStandardItemLighting();
-		RenderSystem.enableBlend();
-		float pt = Minecraft.getInstance().getRenderPartialTicks();
+		ms.push();
+		float pt = Minecraft.getInstance()
+			.getRenderPartialTicks();
 		double x = MathHelper.lerp(pt, lastChasingSelectedPos.x, chasingSelectedPos.x);
 		double y = MathHelper.lerp(pt, lastChasingSelectedPos.y, chasingSelectedPos.y);
 		double z = MathHelper.lerp(pt, lastChasingSelectedPos.z, chasingSelectedPos.z);
@@ -56,17 +58,23 @@ public class DeployTool extends PlacementToolBase {
 		int centerZ = (int) center.z;
 		double xOrigin = bounds.getXSize() / 2f;
 		double zOrigin = bounds.getZSize() / 2f;
+		Vec3d origin = new Vec3d(xOrigin, 0, zOrigin);
 
-		RenderSystem.translated(x - centerX, y, z - centerZ);
-		RenderSystem.translated(xOrigin + rotationOffset.x, 0, zOrigin + rotationOffset.z);
-		RenderSystem.rotatef(transformation.getCurrentRotation(), 0, 1, 0);
-		RenderSystem.translated(-rotationOffset.x, 0, -rotationOffset.z);
-		RenderSystem.translated(-xOrigin, 0, -zOrigin);
+		ms.translate(x - centerX, y, z - centerZ);
+		MatrixStacker.of(ms)
+			.translate(origin)
+			.translate(rotationOffset)
+			.rotateY(transformation.getCurrentRotation())
+			.translateBack(rotationOffset)
+			.translateBack(origin);
 
-//		schematicHandler.getOutline().setTextures(AllSpecialTextures.CHECKERED, null);
-//		schematicHandler.getOutline().render(Tessellator.getInstance().getBuffer());TODO
-//		schematicHandler.getOutline().setTextures(null, null);
-		RenderSystem.popMatrix();
+		AABBOutline outline = schematicHandler.getOutline();
+		outline.getParams()
+			.withFaceTexture(AllSpecialTextures.CHECKERED);
+		outline.render(ms, buffer);
+		outline.getParams()
+			.clearTextures();
+		ms.pop();
 	}
 
 	@Override
@@ -82,16 +90,20 @@ public class DeployTool extends PlacementToolBase {
 	public boolean handleRightClick() {
 		if (selectedPos == null)
 			return super.handleRightClick();
-		Vec3d center = schematicHandler.getBounds().getCenter();
+		Vec3d center = schematicHandler.getBounds()
+			.getCenter();
 		BlockPos target = selectedPos.add(-((int) center.x), 0, -((int) center.z));
 
 		ItemStack item = schematicHandler.getActiveSchematicItem();
 		if (item != null) {
-			item.getTag().putBoolean("Deployed", true);
-			item.getTag().put("Anchor", NBTUtil.writeBlockPos(target));
+			item.getTag()
+				.putBoolean("Deployed", true);
+			item.getTag()
+				.put("Anchor", NBTUtil.writeBlockPos(target));
 		}
 
-		schematicHandler.getTransformation().moveTo(target);
+		schematicHandler.getTransformation()
+			.moveTo(target);
 		schematicHandler.markDirty();
 		schematicHandler.deploy();
 		return true;
