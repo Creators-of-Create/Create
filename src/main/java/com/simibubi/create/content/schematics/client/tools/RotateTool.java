@@ -21,8 +21,6 @@ public class RotateTool extends PlacementToolBase {
 
 	@Override
 	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		super.renderOnSchematic(ms, buffer, light, overlay);
-
 		AxisAlignedBB bounds = schematicHandler.getBounds();
 		double height = bounds.getYSize() + Math.max(20, bounds.getYSize());
 		Vec3d center = bounds.getCenter()
@@ -32,12 +30,14 @@ public class RotateTool extends PlacementToolBase {
 		Vec3d end = center.add(0, height / 2, 0);
 
 		line.getParams()
-			.colored(0x4d80e4)
 			.disableCull()
 			.disableNormals()
+			.colored(0xdddddd)
 			.lineWidth(1 / 16f);
 		line.set(start, end)
 			.render(ms, buffer);
+
+		super.renderOnSchematic(ms, buffer, light, overlay);
 	}
 
 }

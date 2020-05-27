@@ -35,6 +35,7 @@ public class TerrainZapperRenderHandler {
 		CreateClient.outliner.showCluster("terrainZapper", shape.stream()
 			.map(pos -> pos.add(renderedPosition))
 			.collect(Collectors.toList()))
+			.colored(0x999999)
 			.disableNormals()
 			.lineWidth(1 / 32f)
 			.withFaceTexture(AllSpecialTextures.CHECKERED);

@@ -31,7 +31,6 @@ public abstract class Outline {
 
 	public abstract void render(MatrixStack ms, IRenderTypeBuffer buffer);
 
-	//TODO noCull has no effect
 	public void renderAACuboidLine(MatrixStack ms, IRenderTypeBuffer buffer, Vec3d start, Vec3d end, boolean noCull) {
 		ResourceLocation tex = AllSpecialTextures.BLANK.getLocation();
 		IVertexBuilder builder =

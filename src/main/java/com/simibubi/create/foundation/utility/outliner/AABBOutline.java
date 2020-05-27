@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.simibubi.create.AllSpecialTextures;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -40,6 +41,9 @@ public class AABBOutline extends Outline {
 		Vec3d XyZ = new Vec3d(bb.maxX, bb.minY, bb.maxZ);
 		Vec3d xYZ = new Vec3d(bb.minX, bb.maxY, bb.maxZ);
 		Vec3d XYZ = new Vec3d(bb.maxX, bb.maxY, bb.maxZ);
+		
+		// Buffers with no Culling only seem to work right with when this line is present
+		buffer.getBuffer(RenderType.getEntityCutout(AllSpecialTextures.BLANK.getLocation()));
 
 		Vec3d start = xyz;
 		renderAACuboidLine(ms, buffer, start, Xyz, noCull);
@@ -70,15 +74,16 @@ public class AABBOutline extends Outline {
 
 	}
 
-	//TODO noCull has no effect
 	protected void renderFace(MatrixStack ms, IRenderTypeBuffer buffer, Direction direction, Vec3d p1, Vec3d p2,
 		Vec3d p3, Vec3d p4, boolean noCull) {
 		if (!params.faceTexture.isPresent())
 			return;
-		
-		ResourceLocation faceTexture = params.faceTexture.get().getLocation();
+
+		ResourceLocation faceTexture = params.faceTexture.get()
+			.getLocation();
 		if (direction == params.getHighlightedFace() && params.hightlightedFaceTexture.isPresent())
-			faceTexture = params.hightlightedFaceTexture.get().getLocation();
+			faceTexture = params.hightlightedFaceTexture.get()
+				.getLocation();
 
 		RenderType translucentType =
 			noCull ? RenderType.getEntityTranslucent(faceTexture) : RenderType.getEntityTranslucentCull(faceTexture);

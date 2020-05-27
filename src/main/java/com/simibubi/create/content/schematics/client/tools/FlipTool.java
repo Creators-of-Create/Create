@@ -49,11 +49,11 @@ public class FlipTool extends PlacementToolBase {
 
 	@Override
 	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		super.renderOnSchematic(ms, buffer, light, overlay);
-
 		if (!schematicSelected || !selectedFace.getAxis()
-			.isHorizontal())
+			.isHorizontal()) {
+			super.renderOnSchematic(ms, buffer, light, overlay);
 			return;
+		}
 
 		Direction facing = selectedFace.rotateY();
 		AxisAlignedBB bounds = schematicHandler.getBounds();
@@ -66,15 +66,18 @@ public class FlipTool extends PlacementToolBase {
 			.grow(1 - directionVec.x, 1 - directionVec.y, 1 - directionVec.z);
 		bounds = bounds.offset(directionVec.scale(.5f)
 			.mul(boundsSize));
-
+		
 		outline.setBounds(bounds);
-		AllSpecialTextures tex = AllSpecialTextures.HIGHLIGHT_CHECKERED;
+		AllSpecialTextures tex = AllSpecialTextures.CHECKERED;
 		outline.getParams()
 			.lineWidth(1 / 16f)
+			.disableCull()
 			.disableNormals()
-			.colored(0x4d80e4)
+			.colored(0xdddddd)
 			.withFaceTextures(tex, tex);
 		outline.render(ms, buffer);
+		
+		super.renderOnSchematic(ms, buffer, light, overlay);
 	}
 
 }

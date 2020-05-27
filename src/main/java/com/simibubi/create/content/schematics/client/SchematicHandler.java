@@ -124,6 +124,13 @@ public class SchematicHandler {
 		if (!active && !present)
 			return;
 
+		if (active) {
+			ms.push();
+			currentTool.getTool()
+			.renderTool(ms, buffer, light, overlay);
+			ms.pop();
+		}
+		
 		ms.push();
 		transformation.applyGLTransformations(ms);
 		renderer.render(ms, buffer);
@@ -132,12 +139,6 @@ public class SchematicHandler {
 				.renderOnSchematic(ms, buffer, light, overlay);
 		ms.pop();
 
-		if (active) {
-			ms.push();
-			currentTool.getTool()
-				.renderTool(ms, buffer, light, overlay);
-			ms.pop();
-		}
 	}
 
 	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {

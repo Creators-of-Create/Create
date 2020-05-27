@@ -139,10 +139,13 @@ public abstract class SchematicToolBase implements ISchematicTool {
 					AllKeys.ctrlDown() ? AllSpecialTextures.HIGHLIGHT_CHECKERED : AllSpecialTextures.CHECKERED);
 		}
 		outline.getParams()
+			.colored(0x6886c5)
+			.withFaceTexture(AllSpecialTextures.CHECKERED)
+			.lineWidth(1 / 32f)
 			.disableCull();
 		outline.render(ms, buffer);
 		outline.getParams()
-			.withFaceTextures(null, null);
+			.clearTextures();
 		ms.pop();
 	}
 
