@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -141,7 +141,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(guiLeft + 220, guiTop + 20, 0);
 		RenderSystem.scaled(3, 3, 3);
-		itemRenderer.renderItemIntoGUI(new ItemStack(AllItemsNew.SCHEMATIC.get()), 0, 0);
+		itemRenderer.renderItemIntoGUI(new ItemStack(AllItems.SCHEMATIC.get()), 0, 0);
 		RenderSystem.popMatrix();
 	}
 

@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -44,8 +44,8 @@ public class WorldshaperRenderHandler {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		ItemStack heldMain = player.getHeldItemMainhand();
 		ItemStack heldOff = player.getHeldItemOffhand();
-		boolean zapperInMain = AllItemsNew.typeOf(AllItemsNew.WORLDSHAPER, heldMain);
-		boolean zapperInOff = AllItemsNew.typeOf(AllItemsNew.WORLDSHAPER, heldOff);
+		boolean zapperInMain = AllItems.typeOf(AllItems.WORLDSHAPER, heldMain);
+		boolean zapperInOff = AllItems.typeOf(AllItems.WORLDSHAPER, heldOff);
 
 		if (zapperInMain) {
 			CompoundNBT tag = heldMain.getOrCreateTag();

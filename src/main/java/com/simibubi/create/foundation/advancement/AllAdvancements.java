@@ -13,7 +13,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
@@ -45,7 +45,7 @@ public class AllAdvancements implements IDataProvider {
 		String id = Create.ID;
 
 		Advancement root = Advancement.Builder.builder()
-			.withDisplay(AllItemsNew.BRASS_HAND.asStack(), new TranslationTextComponent(LANG + "root"),
+			.withDisplay(AllItems.BRASS_HAND.asStack(), new TranslationTextComponent(LANG + "root"),
 				new TranslationTextComponent(LANG + "root.desc"),
 				new ResourceLocation(Create.ID, "textures/block/palettes/gabbro/bricks.png"), FrameType.TASK, false,
 				false, false)
@@ -53,8 +53,8 @@ public class AllAdvancements implements IDataProvider {
 			.register(t, id + ":root");
 
 		Advancement andesite_alloy =
-			advancement("andesite_alloy", AllItemsNew.ANDESITE_ALLOY.get(), TaskType.NORMAL).withParent(root)
-				.withCriterion("0", itemGathered(AllItemsNew.ANDESITE_ALLOY.get()))
+			advancement("andesite_alloy", AllItems.ANDESITE_ALLOY.get(), TaskType.NORMAL).withParent(root)
+				.withCriterion("0", itemGathered(AllItems.ANDESITE_ALLOY.get()))
 				.register(t, id + ":andesite_alloy");
 
 		kineticsBranch(t, andesite_alloy);
@@ -90,12 +90,12 @@ public class AllAdvancements implements IDataProvider {
 				.register(t, id + ":press");
 
 		Advancement rose_quartz =
-			itemAdvancement("polished_rose_quartz", AllItemsNew.POLISHED_ROSE_QUARTZ, TaskType.NORMAL)
+			itemAdvancement("polished_rose_quartz", AllItems.POLISHED_ROSE_QUARTZ, TaskType.NORMAL)
 				.withParent(andesite_casing)
 				.register(t, id + ":polished_rose_quartz");
 
 		Advancement electron_tube =
-			itemAdvancement("electron_tube", AllItemsNew.ELECTRON_TUBE, TaskType.NORMAL).withParent(rose_quartz)
+			itemAdvancement("electron_tube", AllItems.ELECTRON_TUBE, TaskType.NORMAL).withParent(rose_quartz)
 				.register(t, id + ":electron_tube");
 
 		Advancement saw = kinecticAdvancement("saw", AllBlocks.SAW.get(), TaskType.NORMAL).withParent(press)
@@ -118,7 +118,7 @@ public class AllAdvancements implements IDataProvider {
 			.withParent(basin)
 			.register(t, id + ":compact");
 
-		Advancement brass = itemAdvancement("brass", AllItemsNew.BRASS_INGOT, TaskType.NORMAL).withParent(mixer)
+		Advancement brass = itemAdvancement("brass", AllItems.BRASS_INGOT, TaskType.NORMAL).withParent(mixer)
 			.register(t, id + ":brass");
 
 		brassAge(t, brass);
@@ -132,14 +132,14 @@ public class AllAdvancements implements IDataProvider {
 			.withCriterion("0", AllTriggers.ROTATION.instance())
 			.register(t, id + ":its_alive");
 
-		Advancement belt = advancement("belt", AllItemsNew.BELT_CONNECTOR.get(), TaskType.NORMAL).withParent(its_alive)
+		Advancement belt = advancement("belt", AllItems.BELT_CONNECTOR.get(), TaskType.NORMAL).withParent(its_alive)
 			.withCriterion("0", AllTriggers.CONNECT_BELT.instance())
 			.register(t, id + ":belt");
 
-		Advancement wrench = itemAdvancement("wrench", AllItemsNew.WRENCH, TaskType.NORMAL).withParent(its_alive)
+		Advancement wrench = itemAdvancement("wrench", AllItems.WRENCH, TaskType.NORMAL).withParent(its_alive)
 			.register(t, id + ":wrench");
 
-		Advancement goggles = itemAdvancement("goggles", AllItemsNew.GOGGLES, TaskType.NORMAL).withParent(its_alive)
+		Advancement goggles = itemAdvancement("goggles", AllItems.GOGGLES, TaskType.NORMAL).withParent(its_alive)
 			.register(t, id + ":goggles");
 
 		Advancement speed_gauge =
@@ -200,27 +200,27 @@ public class AllAdvancements implements IDataProvider {
 				.register(t, id + ":crushing_wheel");
 
 		Advancement chromatic_compound =
-			itemAdvancement("chromatic_compound", AllItemsNew.CHROMATIC_COMPOUND, TaskType.NORMAL)
+			itemAdvancement("chromatic_compound", AllItems.CHROMATIC_COMPOUND, TaskType.NORMAL)
 				.withParent(crushing_wheel)
 				.register(t, id + ":chromatic_compound");
 
 		Advancement shadow_steel =
-			itemAdvancement("shadow_steel", AllItemsNew.SHADOW_STEEL, TaskType.GOAL).withParent(chromatic_compound)
+			itemAdvancement("shadow_steel", AllItems.SHADOW_STEEL, TaskType.GOAL).withParent(chromatic_compound)
 				.register(t, id + ":shadow_steel");
 
-		Advancement refined_radiance = itemAdvancement("refined_radiance", AllItemsNew.REFINED_RADIANCE, TaskType.GOAL)
+		Advancement refined_radiance = itemAdvancement("refined_radiance", AllItems.REFINED_RADIANCE, TaskType.GOAL)
 			.withParent(chromatic_compound)
 			.register(t, id + ":refined_radiance");
 
 		Advancement deforester =
-			itemAdvancement("deforester", AllItemsNew.DEFORESTER, TaskType.NORMAL).withParent(refined_radiance)
+			itemAdvancement("deforester", AllItems.DEFORESTER, TaskType.NORMAL).withParent(refined_radiance)
 				.register(t, id + ":deforester");
 
 		Advancement zapper =
-			itemAdvancement("zapper", AllItemsNew.BLOCKZAPPER, TaskType.NORMAL).withParent(refined_radiance)
+			itemAdvancement("zapper", AllItems.BLOCKZAPPER, TaskType.NORMAL).withParent(refined_radiance)
 				.register(t, id + ":zapper");
 
-		ItemStack gunWithPurpurStuff = AllItemsNew.BLOCKZAPPER.asStack();
+		ItemStack gunWithPurpurStuff = AllItems.BLOCKZAPPER.asStack();
 		for (Components c : Components.values())
 			BlockzapperItem.setTier(c, ComponentTier.Chromatic, gunWithPurpurStuff);
 		Advancement upgraded_zapper = advancement("upgraded_zapper", gunWithPurpurStuff, TaskType.CHALLENGE)
@@ -229,11 +229,11 @@ public class AllAdvancements implements IDataProvider {
 			.register(t, id + ":upgraded_zapper");
 
 		Advancement symmetry_wand =
-			itemAdvancement("symmetry_wand", AllItemsNew.WAND_OF_SYMMETRY, TaskType.NORMAL).withParent(refined_radiance)
+			itemAdvancement("symmetry_wand", AllItems.WAND_OF_SYMMETRY, TaskType.NORMAL).withParent(refined_radiance)
 				.register(t, id + ":symmetry_wand");
 
 		Advancement shadow_end = deadEnd().withParent(shadow_steel)
-			.withCriterion("0", itemGathered(AllItemsNew.SHADOW_STEEL.get()))
+			.withCriterion("0", itemGathered(AllItems.SHADOW_STEEL.get()))
 			.register(t, id + ":shadow_end");
 	}
 

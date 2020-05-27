@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -36,7 +36,7 @@ public class ScrollValueRenderer {
 		if (behaviour == null)
 			return;
 		if (behaviour.needsWrench
-			&& !AllItemsNew.typeOf(AllItemsNew.WRENCH, Minecraft.getInstance().player.getHeldItemMainhand()))
+			&& !AllItems.typeOf(AllItems.WRENCH, Minecraft.getInstance().player.getHeldItemMainhand()))
 			return;
 		boolean highlight = behaviour.testHit(target.getHitVec());
 

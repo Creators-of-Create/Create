@@ -1,6 +1,6 @@
 package com.simibubi.create.content.schematics.block;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -27,7 +27,7 @@ public class SchematicannonInventory extends ItemStackHandler {
 	public boolean isItemValid(int slot, ItemStack stack) {
 		switch (slot) {
 		case 0: // Blueprint Slot
-			return AllItemsNew.typeOf(AllItemsNew.SCHEMATIC, stack);
+			return AllItems.typeOf(AllItems.SCHEMATIC, stack);
 		case 1: // Blueprint output
 			return false;
 		case 2: // Book input

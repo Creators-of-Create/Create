@@ -59,7 +59,7 @@ public class Create {
 		modEventBus.addListener(Create::init);
 
 		AllBlocks.register();
-		AllItemsNew.register();
+		AllItems.register();
 		AllPaletteBlocks.register();
 
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipeTypes::register);

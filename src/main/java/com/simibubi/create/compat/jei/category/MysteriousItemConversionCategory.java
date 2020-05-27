@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -18,13 +18,13 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 
 	public static List<ConversionRecipe> getRecipes() {
 		List<ConversionRecipe> recipes = new ArrayList<>();
-		recipes.add(ConversionRecipe.create(AllItemsNew.CHROMATIC_COMPOUND.asStack(), AllItemsNew.SHADOW_STEEL.asStack()));
-		recipes.add(ConversionRecipe.create(AllItemsNew.CHROMATIC_COMPOUND.asStack(), AllItemsNew.REFINED_RADIANCE.asStack()));
+		recipes.add(ConversionRecipe.create(AllItems.CHROMATIC_COMPOUND.asStack(), AllItems.SHADOW_STEEL.asStack()));
+		recipes.add(ConversionRecipe.create(AllItems.CHROMATIC_COMPOUND.asStack(), AllItems.REFINED_RADIANCE.asStack()));
 		return recipes;
 	}
 	
 	public MysteriousItemConversionCategory() {
-		super("mystery_conversion", itemIcon(AllItemsNew.CHROMATIC_COMPOUND.get()), emptyBackground(177, 50));
+		super("mystery_conversion", itemIcon(AllItems.CHROMATIC_COMPOUND.get()), emptyBackground(177, 50));
 	}
 
 	@Override

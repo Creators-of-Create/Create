@@ -8,7 +8,7 @@ import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.IOUtils;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
@@ -192,7 +192,7 @@ public class SchematicAndQuillHandler {
 	}
 
 	private boolean isActive() {
-		return isPresent() && AllItemsNew.typeOf(AllItemsNew.SCHEMATIC_AND_QUILL,
+		return isPresent() && AllItems.typeOf(AllItems.SCHEMATIC_AND_QUILL,
 			Minecraft.getInstance().player.getHeldItemMainhand());
 	}
 

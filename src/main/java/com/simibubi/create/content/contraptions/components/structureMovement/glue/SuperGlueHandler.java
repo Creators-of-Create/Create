@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.worldWrappers.RayTraceWorld;
 
@@ -63,7 +63,7 @@ public class SuperGlueHandler {
 
 	public static void glueInOffHandAppliesOnBlockPlace(EntityPlaceEvent event, BlockPos pos, PlayerEntity placer) {
 		ItemStack itemstack = placer.getHeldItemOffhand();
-		if (!AllItemsNew.typeOf(AllItemsNew.SUPER_GLUE, itemstack))
+		if (!AllItems.typeOf(AllItems.SUPER_GLUE, itemstack))
 			return;
 
 		double distance = placer.getAttribute(PlayerEntity.REACH_DISTANCE)

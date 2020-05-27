@@ -1,12 +1,12 @@
 package com.simibubi.create.content.curiosities.symmetry;
 
-import static com.simibubi.create.AllItemsNew.typeOf;
+import static com.simibubi.create.AllItems.typeOf;
 
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -60,7 +60,7 @@ public class SymmetryHandler {
 			if (!inv.getStackInSlot(i)
 				.isEmpty()
 				&& inv.getStackInSlot(i)
-					.getItem() == AllItemsNew.WAND_OF_SYMMETRY.get()) {
+					.getItem() == AllItems.WAND_OF_SYMMETRY.get()) {
 				SymmetryWandItem.apply(player.world, inv.getStackInSlot(i), player, event.getPos(),
 					event.getPlacedBlock());
 			}
@@ -77,7 +77,7 @@ public class SymmetryHandler {
 		PlayerInventory inv = player.inventory;
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			if (!inv.getStackInSlot(i)
-				.isEmpty() && typeOf(AllItemsNew.WAND_OF_SYMMETRY, inv.getStackInSlot(i))) {
+				.isEmpty() && typeOf(AllItems.WAND_OF_SYMMETRY, inv.getStackInSlot(i))) {
 				SymmetryWandItem.remove(player.world, inv.getStackInSlot(i), player, event.getPos());
 			}
 		}
@@ -91,7 +91,7 @@ public class SymmetryHandler {
 
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			ItemStack stackInSlot = player.inventory.getStackInSlot(i);
-			if (!typeOf(AllItemsNew.WAND_OF_SYMMETRY, stackInSlot))
+			if (!typeOf(AllItems.WAND_OF_SYMMETRY, stackInSlot))
 				continue;
 			if (!SymmetryWandItem.isEnabled(stackInSlot))
 				continue;
@@ -155,7 +155,7 @@ public class SymmetryHandler {
 			for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 				ItemStack stackInSlot = player.inventory.getStackInSlot(i);
 
-				if (stackInSlot != null && typeOf(AllItemsNew.WAND_OF_SYMMETRY, stackInSlot)
+				if (stackInSlot != null && typeOf(AllItems.WAND_OF_SYMMETRY, stackInSlot)
 					&& SymmetryWandItem.isEnabled(stackInSlot)) {
 
 					SymmetryMirror mirror = SymmetryWandItem.getMirror(stackInSlot);

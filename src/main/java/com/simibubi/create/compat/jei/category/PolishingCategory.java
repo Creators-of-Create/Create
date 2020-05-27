@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -25,8 +25,8 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	private ItemStack renderedSandpaper;
 
 	public PolishingCategory() {
-		super("sandpaper_polishing", itemIcon(AllItemsNew.SAND_PAPER.get()), emptyBackground(177, 55));
-		renderedSandpaper = AllItemsNew.SAND_PAPER.asStack();
+		super("sandpaper_polishing", itemIcon(AllItems.SAND_PAPER.get()), emptyBackground(177, 55));
+		renderedSandpaper = AllItems.SAND_PAPER.asStack();
 	}
 
 	@Override

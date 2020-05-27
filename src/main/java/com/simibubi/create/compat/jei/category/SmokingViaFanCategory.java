@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei.category;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.block.Blocks;
@@ -10,7 +10,7 @@ import net.minecraft.item.crafting.SmokingRecipe;
 public class SmokingViaFanCategory extends ProcessingViaFanCategory<SmokingRecipe> {
 
 	public SmokingViaFanCategory() {
-		super("smoking_via_fan", doubleItemIcon(AllItemsNew.PROPELLER.get(), Items.BLAZE_POWDER));
+		super("smoking_via_fan", doubleItemIcon(AllItems.PROPELLER.get(), Items.BLAZE_POWDER));
 	}
 
 	@Override

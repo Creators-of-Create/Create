@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
@@ -84,7 +84,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 		BlockRayTraceResult hit) {
 		ItemStack heldByPlayer = player.getHeldItem(handIn)
 			.copy();
-		if (AllItemsNew.typeOf(AllItemsNew.WRENCH, heldByPlayer))
+		if (AllItems.typeOf(AllItems.WRENCH, heldByPlayer))
 			return ActionResultType.PASS;
 
 		if (hit.getFace() != state.get(FACING))

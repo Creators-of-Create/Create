@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.crafter;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
@@ -109,7 +109,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 			MechanicalCrafterTileEntity crafter = CrafterHelper.getCrafter(worldIn, pos);
 			if (crafter != null) {
 				if (crafter.covered)
-					Block.spawnAsEntity(worldIn, pos, AllItemsNew.CRAFTER_SLOT_COVER.asStack());
+					Block.spawnAsEntity(worldIn, pos, AllItems.CRAFTER_SLOT_COVER.asStack());
 				crafter.ejectWholeGrid();
 			}
 
@@ -172,7 +172,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 		if (!(te instanceof MechanicalCrafterTileEntity))
 			return ActionResultType.PASS;
 		MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
-		boolean wrenched = AllItemsNew.typeOf(AllItemsNew.WRENCH, heldItem);
+		boolean wrenched = AllItems.typeOf(AllItems.WRENCH, heldItem);
 
 		if (hit.getFace() == state.get(HORIZONTAL_FACING)) {
 
@@ -185,7 +185,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 				if (worldIn.isRemote)
 					return ActionResultType.SUCCESS;
 
-				if (AllItemsNew.typeOf(AllItemsNew.CRAFTER_SLOT_COVER, heldItem)) {
+				if (AllItems.typeOf(AllItems.CRAFTER_SLOT_COVER, heldItem)) {
 					if (crafter.covered)
 						return ActionResultType.PASS;
 					crafter.covered = true;
@@ -216,7 +216,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 					crafter.markDirty();
 					crafter.sendData();
 					if (!player.isCreative())
-						player.inventory.placeItemBackInInventory(worldIn, AllItemsNew.CRAFTER_SLOT_COVER.asStack());
+						player.inventory.placeItemBackInInventory(worldIn, AllItems.CRAFTER_SLOT_COVER.asStack());
 					return ActionResultType.SUCCESS;
 				}
 				return ActionResultType.PASS;

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.ScreenResourceWrapper;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperUpgradeRecipe;
 import com.simibubi.create.foundation.gui.GuiGameElement;
@@ -29,7 +29,7 @@ import net.minecraft.util.text.ITextComponent;
 public class BlockzapperUpgradeCategory extends CreateRecipeCategory<BlockzapperUpgradeRecipe> {
 
 	public BlockzapperUpgradeCategory() {
-		super("blockzapper_upgrade", itemIcon(AllItemsNew.BLOCKZAPPER.get()),
+		super("blockzapper_upgrade", itemIcon(AllItems.BLOCKZAPPER.get()),
 				new ScreenResourceWrapper(BLOCKZAPPER_UPGRADE_RECIPE));
 	}
 

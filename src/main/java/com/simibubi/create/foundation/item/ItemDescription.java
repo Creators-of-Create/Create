@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
@@ -101,7 +101,7 @@ public class ItemDescription {
 			.get() > 0 && StressImpact.isEnabled();
 		boolean hasStressCapacity = capacities.containsKey(id) && StressImpact.isEnabled();
 		boolean hasGlasses =
-			AllItemsNew.GOGGLES.get() == Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD)
+			AllItems.GOGGLES.get() == Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD)
 				.getItem();
 
 		String rpmUnit = Lang.translate("generic.unit.rpm");

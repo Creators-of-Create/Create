@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.curiosities.zapper.PlacementPatterns;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
@@ -151,7 +151,7 @@ public class BlockzapperItem extends ZapperItem {
 
 	@Override
 	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-		if (AllItemsNew.typeOf(AllItemsNew.BLOCKZAPPER, stack)) {
+		if (AllItems.typeOf(AllItems.BLOCKZAPPER, stack)) {
 			CompoundNBT nbt = stack.getOrCreateTag();
 			if (!nbt.contains("Replace"))
 				nbt.putBoolean("Replace", false);

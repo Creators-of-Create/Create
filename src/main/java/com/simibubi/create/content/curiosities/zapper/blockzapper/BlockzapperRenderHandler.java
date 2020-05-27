@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.zapper.blockzapper;
 import java.util.Collections;
 import java.util.List;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 
@@ -33,8 +33,8 @@ public class BlockzapperRenderHandler {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		ItemStack heldMain = player.getHeldItemMainhand();
 		ItemStack heldOff = player.getHeldItemOffhand();
-		boolean zapperInMain = AllItemsNew.typeOf(AllItemsNew.BLOCKZAPPER, heldMain);
-		boolean zapperInOff = AllItemsNew.typeOf(AllItemsNew.BLOCKZAPPER, heldOff);
+		boolean zapperInMain = AllItems.typeOf(AllItems.BLOCKZAPPER, heldMain);
+		boolean zapperInOff = AllItems.typeOf(AllItems.BLOCKZAPPER, heldOff);
 
 		if (zapperInMain) {
 			CompoundNBT tag = heldMain.getOrCreateTag();

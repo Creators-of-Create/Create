@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 
@@ -185,7 +185,7 @@ public class MinecartContraptionItem extends Item {
 			return;
 
 		ItemStack wrench = player.getHeldItem(event.getHand());
-		if (!AllItemsNew.typeOf(AllItemsNew.WRENCH, wrench))
+		if (!AllItems.typeOf(AllItems.WRENCH, wrench))
 			return;
 		if (entity instanceof ContraptionEntity)
 			entity = entity.getRidingEntity();
@@ -212,7 +212,7 @@ public class MinecartContraptionItem extends Item {
 
 	public static ItemStack create(Type type, ContraptionEntity entity) {
 		ItemStack stack =
-			(type == Type.RIDEABLE ? AllItemsNew.MINECART_CONTRAPTION : AllItemsNew.FURNACE_MINECART_CONTRAPTION)
+			(type == Type.RIDEABLE ? AllItems.MINECART_CONTRAPTION : AllItems.FURNACE_MINECART_CONTRAPTION)
 				.asStack();
 		CompoundNBT tag = entity.getContraption()
 			.writeNBT();

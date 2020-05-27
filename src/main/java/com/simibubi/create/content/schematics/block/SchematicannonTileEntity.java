@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
@@ -541,7 +541,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			state = State.STOPPED;
 			statusMsg = "schematicExpired";
 			inventory.setStackInSlot(0, ItemStack.EMPTY);
-			inventory.setStackInSlot(1, new ItemStack(AllItemsNew.EMPTY_SCHEMATIC.get()));
+			inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_SCHEMATIC.get()));
 			return;
 		}
 
@@ -678,7 +678,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	public void finishedPrinting() {
 		inventory.setStackInSlot(0, ItemStack.EMPTY);
-		inventory.setStackInSlot(1, new ItemStack(AllItemsNew.EMPTY_SCHEMATIC.get(), inventory.getStackInSlot(1)
+		inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_SCHEMATIC.get(), inventory.getStackInSlot(1)
 			.getCount() + 1));
 		state = State.STOPPED;
 		statusMsg = "finished";
@@ -828,7 +828,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	protected void launchBelt(BlockPos target, BlockState state, int length) {
 		blocksPlaced++;
-		ItemStack connector = AllItemsNew.BELT_CONNECTOR.asStack();
+		ItemStack connector = AllItems.BELT_CONNECTOR.asStack();
 		flyingBlocks.add(new LaunchedItem.ForBelt(this.getPos(), target, connector, state, length));
 		playFiringSound();
 	}

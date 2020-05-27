@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.client.Minecraft;
@@ -51,7 +51,7 @@ public class GoggleOverlayRenderer {
 
 		List<String> tooltip = new ArrayList<>();
 
-		if (goggleInformation && AllItemsNew.typeOf(AllItemsNew.GOGGLES, goggles)) {
+		if (goggleInformation && AllItems.typeOf(AllItems.GOGGLES, goggles)) {
 			IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
 			if (!gte.addToGoggleTooltip(tooltip, mc.player.isSneaking()))
 				goggleInformation = false;
@@ -78,7 +78,7 @@ public class GoggleOverlayRenderer {
 		tooltipScreen.init(mc, mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
 		tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
 		
-		ItemStack item = AllItemsNew.GOGGLES.asStack();
+		ItemStack item = AllItems.GOGGLES.asStack();
 		GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16).render();
 		RenderSystem.popMatrix();
 	}

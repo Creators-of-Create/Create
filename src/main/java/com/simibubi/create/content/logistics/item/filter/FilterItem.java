@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -159,7 +159,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 
 	public static ItemStackHandler getFilterItems(ItemStack stack) {
 		ItemStackHandler newInv = new ItemStackHandler(18);
-		if (AllItemsNew.FILTER.get() != stack.getItem())
+		if (AllItems.FILTER.get() != stack.getItem())
 			throw new IllegalArgumentException("Cannot get filter items from non-filter: " + stack);
 		CompoundNBT invNBT = stack.getOrCreateChildTag("Items");
 		if (!invNBT.isEmpty())
@@ -179,7 +179,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			return (matchNBT ? ItemHandlerHelper.canItemStacksStack(filter, stack)
 					: ItemStack.areItemsEqual(filter, stack));
 
-		if (AllItemsNew.FILTER.get() == filter.getItem()) {
+		if (AllItems.FILTER.get() == filter.getItem()) {
 			ItemStackHandler filterItems = getFilterItems(filter);
 			boolean respectNBT = filter.getOrCreateTag().getBoolean("RespectNBT");
 			boolean blacklist = filter.getOrCreateTag().getBoolean("Blacklist");
@@ -194,7 +194,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			return blacklist;
 		}
 
-		if (AllItemsNew.ATTRIBUTE_FILTER.get() == filter.getItem()) {
+		if (AllItems.ATTRIBUTE_FILTER.get() == filter.getItem()) {
 			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag().getInt("WhitelistMode")];
 			ListNBT attributes = filter.getOrCreateTag().getList("MatchedAttributes", NBT.TAG_COMPOUND);
 			for (INBT inbt : attributes) {

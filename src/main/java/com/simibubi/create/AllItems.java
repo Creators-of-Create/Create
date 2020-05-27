@@ -41,7 +41,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.tags.Tag;
 
-public class AllItemsNew {
+public class AllItems {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 		.itemGroup(() -> Create.baseCreativeTab);

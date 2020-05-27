@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.block.diodes;
 
 import java.util.Random;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -50,7 +50,7 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 			return ActionResultType.PASS;
 		if (player.isSneaking())
 			return ActionResultType.PASS;
-		if (AllItemsNew.typeOf(AllItemsNew.WRENCH, player.getHeldItem(handIn)))
+		if (AllItems.typeOf(AllItems.WRENCH, player.getHeldItem(handIn)))
 			return ActionResultType.PASS;
 		return activated(worldIn, pos, state);
 	}

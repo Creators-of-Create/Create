@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -36,7 +36,7 @@ public class ScrollValueHandler {
 			return false;
 		if (!mc.player.isAllowEdit())
 			return false;
-		if (scrolling.needsWrench && !AllItemsNew.typeOf(AllItemsNew.WRENCH, mc.player.getHeldItemMainhand()))
+		if (scrolling.needsWrench && !AllItems.typeOf(AllItems.WRENCH, mc.player.getHeldItemMainhand()))
 			return false;
 		if (scrolling.slotPositioning instanceof Sided)
 			((Sided) scrolling.slotPositioning).fromSide(result.getFace());

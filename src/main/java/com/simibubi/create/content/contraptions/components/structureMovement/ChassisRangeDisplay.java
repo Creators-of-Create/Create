@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
@@ -90,7 +90,7 @@ public class ChassisRangeDisplay {
 	public static void tick() {
 		PlayerEntity player = Minecraft.getInstance().player;
 		World world = Minecraft.getInstance().world;
-		boolean hasWrench = AllItemsNew.typeOf(AllItemsNew.WRENCH, player.getHeldItemMainhand());
+		boolean hasWrench = AllItems.typeOf(AllItems.WRENCH, player.getHeldItemMainhand());
 
 		for (Iterator<BlockPos> iterator = entries.keySet()
 			.iterator(); iterator.hasNext();) {

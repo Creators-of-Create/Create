@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CCuriosities;
@@ -89,7 +89,7 @@ public class ChromaticCompoundItem extends Item {
 
 		// Convert to Shadow steel if in void
 		if (y < 0 && y - yMotion < -10 && config.enableShadowSteelRecipe.get()) {
-			ItemStack newStack = AllItemsNew.SHADOW_STEEL.asStack();
+			ItemStack newStack = AllItems.SHADOW_STEEL.asStack();
 			newStack.setCount(stack.getCount());
 			data.putBoolean("FromVoid", true);
 			entity.setItem(newStack);
@@ -100,7 +100,7 @@ public class ChromaticCompoundItem extends Item {
 
 		// Convert to Refined Radiance if eaten enough light sources
 		if (itemData.getInt("CollectingLight") >= config.lightSourceCountForRefinedRadiance.get()) {
-			ItemStack newStack = AllItemsNew.REFINED_RADIANCE.asStack();
+			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
 			newEntity.setMotion(entity.getMotion());
 			newEntity.getPersistentData()
@@ -135,7 +135,7 @@ public class ChromaticCompoundItem extends Item {
 		}
 
 		if (isOverBeacon) {
-			ItemStack newStack = AllItemsNew.REFINED_RADIANCE.asStack();
+			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			newStack.setCount(stack.getCount());
 			data.putBoolean("FromLight", true);
 			entity.setItem(newStack);

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.client.tools.Tools;
@@ -195,7 +195,7 @@ public class SchematicHandler {
 
 	private ItemStack findBlueprintInHand(PlayerEntity player) {
 		ItemStack stack = player.getHeldItemMainhand();
-		if (!AllItemsNew.typeOf(AllItemsNew.SCHEMATIC, stack))
+		if (!AllItems.typeOf(AllItems.SCHEMATIC, stack))
 			return null;
 		if (!stack.hasTag())
 			return null;

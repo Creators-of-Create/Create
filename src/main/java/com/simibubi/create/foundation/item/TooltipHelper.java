@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.bridge.game.Language;
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
@@ -97,7 +97,7 @@ public class TooltipHelper {
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		boolean hasGlasses = player != null
-			&& AllItemsNew.typeOf(AllItemsNew.GOGGLES, player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+			&& AllItems.typeOf(AllItems.GOGGLES, player.getItemStackFromSlot(EquipmentSlotType.HEAD));
 
 		if (hasGlasses != gogglesMode) {
 			gogglesMode = hasGlasses;

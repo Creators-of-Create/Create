@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.tools;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.crafting.Ingredient;
@@ -11,7 +11,7 @@ import net.minecraft.util.LazyValue;
 public enum AllToolTiers implements IItemTier {
 
 	RADIANT(4, 1024, 16.0F, 3.5F, 10, () -> {
-		return Ingredient.fromItems(AllItemsNew.REFINED_RADIANCE.get());
+		return Ingredient.fromItems(AllItems.REFINED_RADIANCE.get());
 	}),
 
 	;

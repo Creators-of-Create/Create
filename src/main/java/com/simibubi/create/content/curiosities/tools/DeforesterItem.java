@@ -1,6 +1,6 @@
 package com.simibubi.create.content.curiosities.tools;
 
-import com.simibubi.create.AllItemsNew;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.TreeCutter.Tree;
@@ -60,7 +60,7 @@ public class DeforesterItem extends AxeItem {
 	@SubscribeEvent
 	public static void onBlockDestroyed(BlockEvent.BreakEvent event) {
 		ItemStack heldItemMainhand = event.getPlayer().getHeldItemMainhand();
-		if (!AllItemsNew.typeOf(AllItemsNew.DEFORESTER, heldItemMainhand))
+		if (!AllItems.typeOf(AllItems.DEFORESTER, heldItemMainhand))
 			return;
 		destroyTree(heldItemMainhand, event.getWorld(), event.getState(), event.getPos(), event.getPlayer());
 	}
