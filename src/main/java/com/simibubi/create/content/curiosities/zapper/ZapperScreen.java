@@ -25,7 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Hand;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 @SuppressWarnings("deprecation")
 public class ZapperScreen extends AbstractSimiScreen {

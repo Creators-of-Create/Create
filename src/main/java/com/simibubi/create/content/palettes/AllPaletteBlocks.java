@@ -127,7 +127,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<Block> NATURAL_SCORIA = REGISTRATE.block("natural_scoria", Block::new)
 		.initialProperties(() -> Blocks.ANDESITE)
-		.transform(CreateRegistrate.blockVertexColors(new ScoriaVertexColor()))
+		.onRegister(CreateRegistrate.blockVertexColors(new ScoriaVertexColor()))
 		.blockstate(palettesCubeAll())
 		.simpleItem()
 		.register();

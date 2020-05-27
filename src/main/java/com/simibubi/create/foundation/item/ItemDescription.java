@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
@@ -97,10 +97,12 @@ public class ItemDescription {
 		ResourceLocation id = ((Block) block).getRegistryName();
 		Map<ResourceLocation, ConfigValue<Double>> impacts = config.stressValues.getImpacts();
 		Map<ResourceLocation, ConfigValue<Double>> capacities = config.stressValues.getCapacities();
-		boolean hasStressImpact = impacts.containsKey(id) && impacts.get(id).get() > 0 && StressImpact.isEnabled();
+		boolean hasStressImpact = impacts.containsKey(id) && impacts.get(id)
+			.get() > 0 && StressImpact.isEnabled();
 		boolean hasStressCapacity = capacities.containsKey(id) && StressImpact.isEnabled();
 		boolean hasGlasses =
-			AllItems.GOGGLES.typeOf(Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+			AllItemsNew.GOGGLES.get() == Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD)
+				.getItem();
 
 		String rpmUnit = Lang.translate("generic.unit.rpm");
 		if (hasSpeedRequirement) {
@@ -115,29 +117,32 @@ public class ItemDescription {
 			add(linesOnShift, GRAY + Lang.translate("tooltip.speedRequirement"));
 			add(linesOnShift, level);
 		}
-		
+
 		String stressUnit = Lang.translate("generic.unit.stress");
 		if (hasStressImpact && !(!isEngine && ((IRotate) block).hideStressImpact())) {
 			List<String> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
-			double impact = impacts.get(id).get();
+			double impact = impacts.get(id)
+				.get();
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
-					: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
+				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			int index = impactId.ordinal();
 			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index) + stressLevels.get(index);
 
 			if (hasGlasses)
-				level += " (" + impacts.get(id).get() + stressUnit + ")";
+				level += " (" + impacts.get(id)
+					.get() + stressUnit + ")";
 
 			add(linesOnShift, GRAY + Lang.translate("tooltip.stressImpact"));
 			add(linesOnShift, level);
 		}
-		
+
 		if (hasStressCapacity) {
 			List<String> stressCapacityLevels =
 				Lang.translatedOptions("tooltip.capacityProvided", "low", "medium", "high");
-			double capacity = capacities.get(id).get();
+			double capacity = capacities.get(id)
+				.get();
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
-					: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
+				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
 			int index = StressImpact.values().length - 2 - impactId.ordinal();
 			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index) + stressCapacityLevels.get(index);
 
@@ -188,8 +193,10 @@ public class ItemDescription {
 		boolean hasControls = !linesOnCtrl.isEmpty();
 
 		if (hasDescription || hasControls) {
-			String[] holdKey = Lang.translate("tooltip.holdKey", "$").split("\\$");
-			String[] holdKeyOrKey = Lang.translate("tooltip.holdKeyOrKey", "$", "$").split("\\$");
+			String[] holdKey = Lang.translate("tooltip.holdKey", "$")
+				.split("\\$");
+			String[] holdKeyOrKey = Lang.translate("tooltip.holdKeyOrKey", "$", "$")
+				.split("\\$");
 			String keyShift = Lang.translate("tooltip.keyShift");
 			String keyCtrl = Lang.translate("tooltip.keyCtrl");
 			for (List<ITextComponent> list : Arrays.asList(lines, linesOnShift, linesOnCtrl)) {
@@ -288,7 +295,8 @@ public class ItemDescription {
 		}
 
 		else if (block instanceof EncasedFanBlock)
-			value = AllConfigs.SERVER.kinetics.generatingFanSpeed.get().toString();
+			value = AllConfigs.SERVER.kinetics.generatingFanSpeed.get()
+				.toString();
 
 		else if (block instanceof FurnaceEngineBlock) {
 			int baseSpeed = AllConfigs.SERVER.kinetics.furnaceEngineSpeed.get();

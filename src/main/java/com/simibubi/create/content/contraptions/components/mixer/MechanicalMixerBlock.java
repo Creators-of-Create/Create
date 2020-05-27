@@ -45,11 +45,6 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;
 	}
 
-//	@Override // TODO 1.15 register layer
-//	public BlockRenderLayer getRenderLayer() {
-//		return BlockRenderLayer.CUTOUT_MIPPED;
-//	}
-
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return Axis.Y;

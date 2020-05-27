@@ -1,29 +1,29 @@
 package com.simibubi.create.content.contraptions;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
 
 public class KineticDebugger {
 
-	public static void renderSourceOutline(MatrixStack ms, IRenderTypeBuffer buffer) {
+	public static void tick() {
 		if (!isActive())
 			return;
 		KineticTileEntity te = getSelectedTE();
@@ -33,39 +33,24 @@ public class KineticDebugger {
 		World world = Minecraft.getInstance().world;
 		BlockPos toOutline = te.hasSource() ? te.source : te.getPos();
 		BlockState state = te.getBlockState();
-		VoxelShape shape = world.getBlockState(toOutline).getShape(world, toOutline);
+		VoxelShape shape = world.getBlockState(toOutline)
+			.getRenderShape(world, toOutline);
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getLines());
+		if (te.getTheoreticalSpeed() != 0)
+			CreateClient.outliner.chaseAABB("kineticSource", shape.getBoundingBox()
+				.offset(toOutline))
+				.lineWidth(1 / 16f)
+				.colored(te.hasSource() ? ColorHelper.colorFromLong(te.network) : 0xffcc00);
 
-		ms.push();
-		ms.translate(toOutline.getX(), toOutline.getY(), toOutline.getZ());
-		float f = 1 + 1 / 128f;
-		ms.scale(f, f, f);
-
-		WorldRenderer.func_228431_a_(ms, vb, shape, 0, 0, 0, te.hasSource() ? .5f : 1, .75f, .75f, 1);
-		
-		Vec3i offset = te.getPos().subtract(toOutline);
-		ms.translate(offset.getX(), offset.getY(), offset.getZ());
-		
 		if (state.getBlock() instanceof IRotate) {
-			Axis axis = ((IRotate)state.getBlock()).getRotationAxis(state);
-			switch (axis) {
-			case X:
-				vb.vertex(ms.peek().getModel(), 0, 0.5f, 0.5f).color(1f, 1f, 1f, 1f).endVertex();
-				vb.vertex(ms.peek().getModel(), 1, 0.5f, 0.5f).color(1f, 1f, 1f, 1f).endVertex();
-				break;
-			case Y:
-				vb.vertex(ms.peek().getModel(), 0.5f, 0, 0.5f).color(1f, 1f, 1f, 1f).endVertex();
-				vb.vertex(ms.peek().getModel(), 0.5f, 1, 0.5f).color(1f, 1f, 1f, 1f).endVertex();
-				break;
-			case Z:
-				vb.vertex(ms.peek().getModel(), 0.5f, 0.5f, 0).color(1f, 1f, 1f, 1f).endVertex();
-				vb.vertex(ms.peek().getModel(), 0.5f, 0.5f, 1).color(1f, 1f, 1f, 1f).endVertex();
-				break;
-			}
+			Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
+			Vec3d vec = new Vec3d(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
+				.getDirectionVec());
+			Vec3d center = VecHelper.getCenterOf(te.getPos());
+			CreateClient.outliner.showLine("rotationAxis", center.add(vec), center.subtract(vec))
+				.lineWidth(1 / 16f);
 		}
 
-		ms.pop();
 	}
 
 	public static boolean isActive() {

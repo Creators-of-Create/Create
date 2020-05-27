@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
@@ -79,7 +79,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
 		ItemStack held = player.getHeldItemMainhand();
-		if (AllItems.WRENCH.typeOf(held))
+		if (AllItemsNew.typeOf(AllItemsNew.WRENCH, held))
 			return ActionResultType.PASS;
 		if (held.getItem() instanceof BlockItem) {
 			BlockItem blockItem = (BlockItem) held.getItem();

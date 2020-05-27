@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.zapper.blockzapper;
 
 import com.google.gson.JsonObject;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components;
@@ -45,7 +45,7 @@ public class BlockzapperUpgradeRecipe implements ICraftingRecipe {
 	public ItemStack getCraftingResult(CraftingInventory inv) {
 		for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
 			ItemStack handgun = inv.getStackInSlot(slot).copy();
-			if (!AllItems.PLACEMENT_HANDGUN.typeOf(handgun))
+			if (!AllItemsNew.typeOf(AllItemsNew.BLOCKZAPPER, handgun))
 				continue;
 			BlockzapperItem.setTier(getUpgradedComponent(), getTier(), handgun);
 			return handgun;
@@ -55,7 +55,7 @@ public class BlockzapperUpgradeRecipe implements ICraftingRecipe {
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		ItemStack handgun = new ItemStack(AllItems.PLACEMENT_HANDGUN.get());
+		ItemStack handgun = new ItemStack(AllItemsNew.BLOCKZAPPER.get());
 		BlockzapperItem.setTier(getUpgradedComponent(), getTier(), handgun);
 		return handgun;
 	}

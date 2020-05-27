@@ -1,0 +1,104 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:item/handheld_blockzapper/item",
+	"textures": {
+		"cog": "block/prismarine_bricks",
+		"particle": "block/obsidian"
+	},
+	"elements": [
+		{
+			"name": "Cog",
+			"from": [7.5, 3, 11],
+			"to": [8.5, 8, 14],
+			"faces": {
+				"north": {"uv": [6, 7, 7, 12], "texture": "#cog"},
+				"east": {"uv": [5, 3, 8, 8], "texture": "#cog"},
+				"south": {"uv": [4, 4, 5, 9], "texture": "#cog"},
+				"west": {"uv": [4, 6, 7, 11], "texture": "#cog"},
+				"up": {"uv": [4, 6, 5, 9], "texture": "#cog"},
+				"down": {"uv": [5, 6, 6, 9], "texture": "#cog"}
+			}
+		},
+		{
+			"name": "Cog",
+			"from": [7.5, 3, 11],
+			"to": [8.5, 8, 14],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 5.5, 8]},
+			"faces": {
+				"north": {"uv": [6, 7, 7, 12], "texture": "#cog"},
+				"east": {"uv": [5, 3, 8, 8], "texture": "#cog"},
+				"south": {"uv": [4, 4, 5, 9], "texture": "#cog"},
+				"west": {"uv": [4, 6, 7, 11], "texture": "#cog"},
+				"up": {"uv": [4, 6, 5, 9], "texture": "#cog"},
+				"down": {"uv": [5, 6, 6, 9], "texture": "#cog"}
+			}
+		},
+		{
+			"name": "Cog",
+			"from": [7.5, 3, 11],
+			"to": [8.5, 8, 14],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 5.5, 8]},
+			"faces": {
+				"north": {"uv": [6, 7, 7, 12], "texture": "#cog"},
+				"east": {"uv": [5, 3, 8, 8], "texture": "#cog"},
+				"south": {"uv": [4, 4, 5, 9], "texture": "#cog"},
+				"west": {"uv": [4, 6, 7, 11], "texture": "#cog"},
+				"up": {"uv": [4, 6, 5, 9], "texture": "#cog"},
+				"down": {"uv": [5, 6, 6, 9], "texture": "#cog"}
+			}
+		},
+		{
+			"name": "Cog",
+			"from": [5.5, 5, 11],
+			"to": [10.5, 6, 14],
+			"faces": {
+				"north": {"uv": [6, 7, 11, 8], "texture": "#cog"},
+				"east": {"uv": [5, 3, 8, 4], "texture": "#cog"},
+				"south": {"uv": [4, 4, 9, 5], "texture": "#cog"},
+				"west": {"uv": [4, 6, 7, 7], "texture": "#cog"},
+				"up": {"uv": [4, 6, 9, 9], "texture": "#cog"},
+				"down": {"uv": [5, 6, 10, 9], "texture": "#cog"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [1, 0, 0],
+			"translation": [0, 4, -2.5],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [1, 0, 0],
+			"translation": [0, 4, -2.5],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"firstperson_righthand": {
+			"rotation": [10, 0, 10],
+			"translation": [1, 4, 1]
+		},
+		"firstperson_lefthand": {
+			"rotation": [10, 0, 10],
+			"translation": [1, 4, 1]
+		},
+		"ground": {
+			"rotation": [0, 0, 90],
+			"translation": [-2.25, -1, -0.75],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"translation": [-0.5, 3.5, 0]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [-1.25, 4.25, -1]
+		}
+	},
+	"groups": [
+		{
+			"name": "accelerator",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3]
+		}
+	]
+}

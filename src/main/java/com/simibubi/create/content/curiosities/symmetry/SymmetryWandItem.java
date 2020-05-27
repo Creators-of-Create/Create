@@ -5,22 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.simibubi.create.content.curiosities.symmetry.client.SymmetryWandModel;
 import com.simibubi.create.content.curiosities.symmetry.mirror.CrossPlaneMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.PlaneMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -42,20 +38,22 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
+public class SymmetryWandItem extends Item {
 
 	public static final String SYMMETRY = "symmetry";
 	private static final String ENABLE = "enable";
 
 	public SymmetryWandItem(Properties properties) {
-		super(properties.maxStackSize(1).rarity(Rarity.UNCOMMON));
+		super(properties.maxStackSize(1)
+			.rarity(Rarity.UNCOMMON));
 	}
 
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		PlayerEntity player = context.getPlayer();
 		BlockPos pos = context.getPos();
-		player.getCooldownTracker().setCooldown(this, 5);
+		player.getCooldownTracker()
+			.setCooldown(this, 5);
 		ItemStack wand = player.getHeldItem(context.getHand());
 		checkNBT(wand);
 
@@ -65,7 +63,8 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 					openWandGUI(wand, context.getHand());
 				});
-				player.getCooldownTracker().setCooldown(this, 5);
+				player.getCooldownTracker()
+					.setCooldown(this, 5);
 			}
 			return ActionResultType.SUCCESS;
 		}
@@ -73,45 +72,50 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 		if (context.getWorld().isRemote || context.getHand() != Hand.MAIN_HAND)
 			return ActionResultType.SUCCESS;
 
-		CompoundNBT compound = wand.getTag().getCompound(SYMMETRY);
+		CompoundNBT compound = wand.getTag()
+			.getCompound(SYMMETRY);
 		pos = pos.offset(context.getFace());
 		SymmetryMirror previousElement = SymmetryMirror.fromNBT(compound);
 
 		// No Shift -> Make / Move Mirror
-		wand.getTag().putBoolean(ENABLE, true);
+		wand.getTag()
+			.putBoolean(ENABLE, true);
 		Vec3d pos3d = new Vec3d(pos.getX(), pos.getY(), pos.getZ());
 		SymmetryMirror newElement = new PlaneMirror(pos3d);
 
 		if (previousElement instanceof EmptyMirror) {
 			newElement.setOrientation(
-					(player.getHorizontalFacing() == Direction.NORTH || player.getHorizontalFacing() == Direction.SOUTH)
-							? PlaneMirror.Align.XY.ordinal()
-							: PlaneMirror.Align.YZ.ordinal());
+				(player.getHorizontalFacing() == Direction.NORTH || player.getHorizontalFacing() == Direction.SOUTH)
+					? PlaneMirror.Align.XY.ordinal()
+					: PlaneMirror.Align.YZ.ordinal());
 			newElement.enable = true;
-			wand.getTag().putBoolean(ENABLE, true);
+			wand.getTag()
+				.putBoolean(ENABLE, true);
 
 		} else {
 			previousElement.setPosition(pos3d);
 
 			if (previousElement instanceof PlaneMirror) {
-				previousElement.setOrientation((player.getHorizontalFacing() == Direction.NORTH
-						|| player.getHorizontalFacing() == Direction.SOUTH) ? PlaneMirror.Align.XY.ordinal()
-								: PlaneMirror.Align.YZ.ordinal());
+				previousElement.setOrientation(
+					(player.getHorizontalFacing() == Direction.NORTH || player.getHorizontalFacing() == Direction.SOUTH)
+						? PlaneMirror.Align.XY.ordinal()
+						: PlaneMirror.Align.YZ.ordinal());
 			}
 
 			if (previousElement instanceof CrossPlaneMirror) {
 				float rotation = player.getRotationYawHead();
 				float abs = Math.abs(rotation % 90);
 				boolean diagonal = abs > 22 && abs < 45 + 22;
-				previousElement.setOrientation(
-						diagonal ? CrossPlaneMirror.Align.D.ordinal() : CrossPlaneMirror.Align.Y.ordinal());
+				previousElement
+					.setOrientation(diagonal ? CrossPlaneMirror.Align.D.ordinal() : CrossPlaneMirror.Align.Y.ordinal());
 			}
 
 			newElement = previousElement;
 		}
 
 		compound = newElement.writeToNbt();
-		wand.getTag().put(SYMMETRY, compound);
+		wand.getTag()
+			.put(SYMMETRY, compound);
 
 		player.setHeldItem(context.getHand(), wand);
 		return ActionResultType.SUCCESS;
@@ -128,13 +132,15 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 					openWandGUI(playerIn.getHeldItem(handIn), handIn);
 				});
-				playerIn.getCooldownTracker().setCooldown(this, 5);
+				playerIn.getCooldownTracker()
+					.setCooldown(this, 5);
 			}
 			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, wand);
 		}
 
 		// No Shift -> Clear Mirror
-		wand.getTag().putBoolean(ENABLE, false);
+		wand.getTag()
+			.putBoolean(ENABLE, false);
 		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, wand);
 	}
 
@@ -144,21 +150,26 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 	}
 
 	private static void checkNBT(ItemStack wand) {
-		if (!wand.hasTag() || !wand.getTag().contains(SYMMETRY)) {
+		if (!wand.hasTag() || !wand.getTag()
+			.contains(SYMMETRY)) {
 			wand.setTag(new CompoundNBT());
-			wand.getTag().put(SYMMETRY, new EmptyMirror(new Vec3d(0, 0, 0)).writeToNbt());
-			wand.getTag().putBoolean(ENABLE, false);
+			wand.getTag()
+				.put(SYMMETRY, new EmptyMirror(new Vec3d(0, 0, 0)).writeToNbt());
+			wand.getTag()
+				.putBoolean(ENABLE, false);
 		}
 	}
 
 	public static boolean isEnabled(ItemStack stack) {
 		checkNBT(stack);
-		return stack.getTag().getBoolean(ENABLE);
+		return stack.getTag()
+			.getBoolean(ENABLE);
 	}
 
 	public static SymmetryMirror getMirror(ItemStack stack) {
 		checkNBT(stack);
-		return SymmetryMirror.fromNBT((CompoundNBT) stack.getTag().getCompound(SYMMETRY));
+		return SymmetryMirror.fromNBT((CompoundNBT) stack.getTag()
+			.getCompound(SYMMETRY));
 	}
 
 	public static void apply(World world, ItemStack wand, PlayerEntity player, BlockPos pos, BlockState block) {
@@ -170,13 +181,14 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 
 		Map<BlockPos, BlockState> blockSet = new HashMap<>();
 		blockSet.put(pos, block);
-		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundNBT) wand.getTag().getCompound(SYMMETRY));
+		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundNBT) wand.getTag()
+			.getCompound(SYMMETRY));
 
 		Vec3d mirrorPos = symmetry.getPosition();
 		if (mirrorPos.distanceTo(new Vec3d(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
 			return;
 		if (!player.isCreative() && isHoldingBlock(player, block)
-				&& BlockHelper.findAndRemoveInInventory(block, player, 1) == 0)
+			&& BlockHelper.findAndRemoveInInventory(block, player, 1) == 0)
 			return;
 
 		symmetry.process(blockSet);
@@ -192,7 +204,7 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 				BlockState blockState = blockSet.get(position);
 				for (Direction face : Direction.values())
 					blockState = blockState.updatePostPlacement(face, world.getBlockState(position.offset(face)), world,
-							position, position.offset(face));
+						position, position.offset(face));
 
 				if (player.isCreative()) {
 					world.setBlockState(position, blockState);
@@ -201,7 +213,8 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 				}
 
 				BlockState toReplace = world.getBlockState(position);
-				if (!toReplace.getMaterial().isReplaceable())
+				if (!toReplace.getMaterial()
+					.isReplaceable())
 					continue;
 				if (toReplace.getBlockHardness(world, position) == -1)
 					continue;
@@ -214,13 +227,15 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 		}
 
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-				new SymmetryEffectPacket(to, targets));
+			new SymmetryEffectPacket(to, targets));
 	}
 
 	private static boolean isHoldingBlock(PlayerEntity player, BlockState block) {
 		ItemStack itemBlock = BlockHelper.getRequiredItem(block);
-		return player.getHeldItemMainhand().isItemEqual(itemBlock)
-				|| player.getHeldItemOffhand().isItemEqual(itemBlock);
+		return player.getHeldItemMainhand()
+			.isItemEqual(itemBlock)
+			|| player.getHeldItemOffhand()
+				.isItemEqual(itemBlock);
 	}
 
 	public static void remove(World world, ItemStack wand, PlayerEntity player, BlockPos pos) {
@@ -232,7 +247,8 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 
 		Map<BlockPos, BlockState> blockSet = new HashMap<>();
 		blockSet.put(pos, air);
-		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundNBT) wand.getTag().getCompound(SYMMETRY));
+		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundNBT) wand.getTag()
+			.getCompound(SYMMETRY));
 
 		Vec3d mirrorPos = symmetry.getPosition();
 		if (mirrorPos.distanceTo(new Vec3d(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
@@ -245,7 +261,8 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 
 		targets.add(pos);
 		for (BlockPos position : blockSet.keySet()) {
-			if (!player.isCreative() && ogBlock.getBlock() != world.getBlockState(position).getBlock())
+			if (!player.isCreative() && ogBlock.getBlock() != world.getBlockState(position)
+				.getBlock())
 				continue;
 			if (position.equals(pos))
 				continue;
@@ -259,8 +276,10 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 				world.setBlockState(position, air, 3);
 
 				if (!player.isCreative()) {
-					if (!player.getHeldItemMainhand().isEmpty())
-						player.getHeldItemMainhand().onBlockDestroyed(world, blockstate, position, player);
+					if (!player.getHeldItemMainhand()
+						.isEmpty())
+						player.getHeldItemMainhand()
+							.onBlockDestroyed(world, blockstate, position, player);
 					TileEntity tileentity = blockstate.hasTileEntity() ? world.getTileEntity(position) : null;
 					Block.spawnDrops(blockstate, world, pos, tileentity);
 				}
@@ -268,13 +287,7 @@ public class SymmetryWandItem extends Item implements IHaveCustomItemModel {
 		}
 
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-				new SymmetryEffectPacket(to, targets));
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public CustomRenderedItemModel createModel(IBakedModel original) {
-		return new SymmetryWandModel(original);
+			new SymmetryEffectPacket(to, targets));
 	}
 
 }

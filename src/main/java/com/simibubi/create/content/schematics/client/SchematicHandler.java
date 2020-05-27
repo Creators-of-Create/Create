@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.client.tools.Tools;
@@ -116,10 +116,10 @@ public class SchematicHandler {
 
 		SchematicWorld w = new SchematicWorld(BlockPos.ZERO, Minecraft.getInstance().world);
 		schematic.addBlocksToWorld(w, BlockPos.ZERO, new PlacementSettings());
-		renderer.startHologram(w);
+		renderer.display(w);
 	}
 
-	public void render(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
 		boolean present = activeSchematicItem != null;
 		if (!active && !present)
 			return;
@@ -127,16 +127,16 @@ public class SchematicHandler {
 		if (active) {
 			ms.push();
 			currentTool.getTool()
-			.renderTool(ms, buffer, light, overlay);
+				.renderTool(ms, buffer);
 			ms.pop();
 		}
-		
+
 		ms.push();
 		transformation.applyGLTransformations(ms);
 		renderer.render(ms, buffer);
-		if (active) 
+		if (active)
 			currentTool.getTool()
-				.renderOnSchematic(ms, buffer, light, overlay);
+				.renderOnSchematic(ms, buffer);
 		ms.pop();
 
 	}
@@ -148,7 +148,7 @@ public class SchematicHandler {
 			this.overlay.renderOn(activeHotbarSlot);
 
 		currentTool.getTool()
-			.renderOverlay(ms, buffer, light, overlay);
+			.renderOverlay(ms, buffer);
 		selectionScreen.renderPassive(Minecraft.getInstance()
 			.getRenderPartialTicks());
 	}
@@ -195,7 +195,7 @@ public class SchematicHandler {
 
 	private ItemStack findBlueprintInHand(PlayerEntity player) {
 		ItemStack stack = player.getHeldItemMainhand();
-		if (!AllItems.BLUEPRINT.typeOf(stack))
+		if (!AllItemsNew.typeOf(AllItemsNew.SCHEMATIC, stack))
 			return null;
 		if (!stack.hasTag())
 			return null;

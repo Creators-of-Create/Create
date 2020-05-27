@@ -12,8 +12,8 @@ public interface ISchematicTool {
 	public boolean handleRightClick();
 	public boolean handleMouseWheel(double delta);
 	
-	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay);
-	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay);
-	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay);
+	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer);
+	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer);
+	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer);
 	
 }

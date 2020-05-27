@@ -5,16 +5,12 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.BlastingViaFanCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
-import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
-import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
-import com.simibubi.create.content.schematics.block.SchematicannonScreen;
 import com.simibubi.create.compat.jei.category.BlockzapperUpgradeCategory;
 import com.simibubi.create.compat.jei.category.CrushingCategory;
 import com.simibubi.create.compat.jei.category.MechanicalCraftingCategory;
@@ -27,6 +23,10 @@ import com.simibubi.create.compat.jei.category.PressingCategory;
 import com.simibubi.create.compat.jei.category.SawingCategory;
 import com.simibubi.create.compat.jei.category.SmokingViaFanCategory;
 import com.simibubi.create.compat.jei.category.SplashingCategory;
+import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
+import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
+import com.simibubi.create.content.schematics.block.SchematicannonScreen;
 import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.IModPlugin;
@@ -91,7 +91,7 @@ public class CreateJEI implements IModPlugin {
 
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistration registration) {
-		registration.useNbtForSubtypes(AllItems.PLACEMENT_HANDGUN.get());
+		registration.useNbtForSubtypes(AllItemsNew.BLOCKZAPPER.get());
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class CreateJEI implements IModPlugin {
 		registration.addRecipeCatalyst(smokingFan, smokingCategory.getUid());
 		registration.addRecipeCatalyst(blastingFan, blastingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_PRESS.get()), pressingCategory.getUid());
-		registration.addRecipeCatalyst(new ItemStack(AllItems.PLACEMENT_HANDGUN.get()), blockzapperCategory.getUid());
+		registration.addRecipeCatalyst(new ItemStack(AllItemsNew.BLOCKZAPPER.get()), blockzapperCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_MIXER.get()), mixingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.BASIN.get()), mixingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.SAW.get()), sawingCategory.getUid());
@@ -167,8 +167,8 @@ public class CreateJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(Blocks.STONECUTTER), blockCuttingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_PRESS.get()), packingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.BASIN.get()), packingCategory.getUid());
-		registration.addRecipeCatalyst(AllItems.SAND_PAPER.asStack(), polishingCategory.getUid());
-		registration.addRecipeCatalyst(AllItems.RED_SAND_PAPER.asStack(), polishingCategory.getUid());
+		registration.addRecipeCatalyst(AllItemsNew.SAND_PAPER.asStack(), polishingCategory.getUid());
+		registration.addRecipeCatalyst(AllItemsNew.RED_SAND_PAPER.asStack(), polishingCategory.getUid());
 		registration
 				.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_CRAFTER.get()),
 						mechanicalCraftingCategory.getUid());

@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.block.diodes;
 
 import java.util.Random;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -24,7 +24,8 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 
 	public ToggleLatchBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(POWERING, false).with(POWERED, false));
+		setDefaultState(getDefaultState().with(POWERING, false)
+			.with(POWERED, false));
 	}
 
 	@Override
@@ -44,12 +45,12 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+		BlockRayTraceResult hit) {
 		if (!player.isAllowEdit())
 			return ActionResultType.PASS;
 		if (player.isSneaking())
 			return ActionResultType.PASS;
-		if (AllItems.WRENCH.typeOf(player.getHeldItem(handIn)))
+		if (AllItemsNew.typeOf(AllItemsNew.WRENCH, player.getHeldItem(handIn)))
 			return ActionResultType.PASS;
 		return activated(worldIn, pos, state);
 	}
@@ -78,7 +79,8 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
 		if (side == null)
 			return false;
-		return side.getAxis() == state.get(HORIZONTAL_FACING).getAxis();
+		return side.getAxis() == state.get(HORIZONTAL_FACING)
+			.getAxis();
 	}
 
 }

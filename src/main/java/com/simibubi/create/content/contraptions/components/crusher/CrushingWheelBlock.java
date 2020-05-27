@@ -172,11 +172,6 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 		return face.getAxis() == state.get(AXIS);
 	}
 
-//	@Override // TODO 1.15 register layer
-//	public BlockRenderLayer getRenderLayer() {
-//		return BlockRenderLayer.CUTOUT;
-//	}
-
 	@Override
 	protected boolean hasStaticPart() {
 		return false;

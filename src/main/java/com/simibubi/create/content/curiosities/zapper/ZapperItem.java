@@ -47,27 +47,35 @@ import net.minecraftforge.fml.network.PacketDistributor;
 public abstract class ZapperItem extends Item {
 
 	public ZapperItem(Properties properties) {
-		super(properties.maxStackSize(1).rarity(Rarity.UNCOMMON));
+		super(properties.maxStackSize(1)
+			.rarity(Rarity.UNCOMMON));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		if (stack.hasTag() && stack.getTag().contains("BlockUsed")) {
-			String usedblock =
-				NBTUtil.readBlockState(stack.getTag().getCompound("BlockUsed")).getBlock().getTranslationKey();
+		if (stack.hasTag() && stack.getTag()
+			.contains("BlockUsed")) {
+			String usedblock = NBTUtil.readBlockState(stack.getTag()
+				.getCompound("BlockUsed"))
+				.getBlock()
+				.getTranslationKey();
 			ItemDescription.add(tooltip, TextFormatting.DARK_GRAY + Lang.translate("blockzapper.usingBlock",
-					TextFormatting.GRAY + new TranslationTextComponent(usedblock).getFormattedText()));
+				TextFormatting.GRAY + new TranslationTextComponent(usedblock).getFormattedText()));
 		}
 	}
 
 	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		boolean differentBlock = false;
-		if (oldStack.hasTag() && newStack.hasTag() && oldStack.getTag().contains("BlockUsed")
-				&& newStack.getTag().contains("BlockUsed"))
-			differentBlock = NBTUtil.readBlockState(oldStack.getTag().getCompound("BlockUsed")) != NBTUtil
-					.readBlockState(newStack.getTag().getCompound("BlockUsed"));
+		if (oldStack.hasTag() && newStack.hasTag() && oldStack.getTag()
+			.contains("BlockUsed")
+			&& newStack.getTag()
+				.contains("BlockUsed"))
+			differentBlock = NBTUtil.readBlockState(oldStack.getTag()
+				.getCompound("BlockUsed")) != NBTUtil.readBlockState(
+					newStack.getTag()
+						.getCompound("BlockUsed"));
 		return slotChanged || !isZapper(newStack) || differentBlock;
 	}
 
@@ -78,7 +86,8 @@ public abstract class ZapperItem extends Item {
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		// Shift -> open GUI
-		if (context.getPlayer().isSneaking()) {
+		if (context.getPlayer()
+			.isSneaking()) {
 			if (context.getWorld().isRemote) {
 				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 					openHandgunGUI(context.getItem(), context.getHand() == Hand.OFF_HAND);
@@ -107,38 +116,45 @@ public abstract class ZapperItem extends Item {
 		}
 
 		boolean mainHand = hand == Hand.MAIN_HAND;
-		boolean isSwap = item.getTag().contains("_Swap");
+		boolean isSwap = item.getTag()
+			.contains("_Swap");
 		boolean gunInOtherHand = isZapper(player.getHeldItem(mainHand ? Hand.OFF_HAND : Hand.MAIN_HAND));
 
 		// Pass To Offhand
 		if (mainHand && isSwap && gunInOtherHand)
 			return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
 		if (mainHand && !isSwap && gunInOtherHand)
-			item.getTag().putBoolean("_Swap", true);
+			item.getTag()
+				.putBoolean("_Swap", true);
 		if (!mainHand && isSwap)
-			item.getTag().remove("_Swap");
+			item.getTag()
+				.remove("_Swap");
 		if (!mainHand && gunInOtherHand)
-			player.getHeldItem(Hand.MAIN_HAND).getTag().remove("_Swap");
+			player.getHeldItem(Hand.MAIN_HAND)
+				.getTag()
+				.remove("_Swap");
 		player.setActiveHand(hand);
 
 		// Check if can be used
 		String msg = validateUsage(item);
 		if (msg != null) {
 			world.playSound(player, player.getPosition(), AllSoundEvents.BLOCKZAPPER_DENY.get(), SoundCategory.BLOCKS,
-					1f, 0.5f);
+				1f, 0.5f);
 			player.sendStatusMessage(new StringTextComponent(TextFormatting.RED + msg), true);
 			return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
 		}
-		
+
 		BlockState stateToUse = Blocks.AIR.getDefaultState();
 		if (nbt.contains("BlockUsed"))
 			stateToUse = NBTUtil.readBlockState(nbt.getCompound("BlockUsed"));
 
 		// Raytrace - Find the target
-		Vec3d start = player.getPositionVec().add(0, player.getEyeHeight(), 0);
-		Vec3d range = player.getLookVec().scale(getRange(item));
-		BlockRayTraceResult raytrace = world.rayTraceBlocks(
-				new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
+		Vec3d start = player.getPositionVec()
+			.add(0, player.getEyeHeight(), 0);
+		Vec3d range = player.getLookVec()
+			.scale(getZappingRange(item));
+		BlockRayTraceResult raytrace = world
+			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
 		BlockPos pos = raytrace.getPos();
 		BlockState stateReplaced = world.getBlockState(pos);
 
@@ -153,7 +169,8 @@ public abstract class ZapperItem extends Item {
 		float pitch = (float) ((player.rotationPitch) / -180 * Math.PI);
 		Vec3d barrelPosNoTransform =
 			new Vec3d(mainHand == (player.getPrimaryHand() == HandSide.RIGHT) ? -.35f : .35f, -0.1f, 1);
-		Vec3d barrelPos = start.add(barrelPosNoTransform.rotatePitch(pitch).rotateYaw(yaw));
+		Vec3d barrelPos = start.add(barrelPosNoTransform.rotatePitch(pitch)
+			.rotateYaw(yaw));
 
 		// Client side
 		if (world.isRemote) {
@@ -165,9 +182,9 @@ public abstract class ZapperItem extends Item {
 		if (activate(world, player, item, stateToUse, raytrace)) {
 			applyCooldown(player, item, gunInOtherHand);
 			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> player),
-					new ZapperBeamPacket(barrelPos, raytrace.getHitVec(), hand, false));
+				new ZapperBeamPacket(barrelPos, raytrace.getHitVec(), hand, false));
 			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player),
-					new ZapperBeamPacket(barrelPos, raytrace.getHitVec(), hand, true));
+				new ZapperBeamPacket(barrelPos, raytrace.getHitVec(), hand, true));
 		}
 
 		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
@@ -181,14 +198,14 @@ public abstract class ZapperItem extends Item {
 	}
 
 	protected abstract boolean activate(World world, PlayerEntity player, ItemStack item, BlockState stateToUse,
-			BlockRayTraceResult raytrace);
+		BlockRayTraceResult raytrace);
 
 	@OnlyIn(Dist.CLIENT)
 	protected abstract void openHandgunGUI(ItemStack item, boolean b);
 
 	protected abstract int getCooldownDelay(ItemStack item);
 
-	protected abstract int getRange(ItemStack stack);
+	protected abstract int getZappingRange(ItemStack stack);
 
 	protected boolean canActivateWithoutSelectedBlock(ItemStack stack) {
 		return false;
@@ -196,7 +213,8 @@ public abstract class ZapperItem extends Item {
 
 	protected void applyCooldown(PlayerEntity playerIn, ItemStack item, boolean dual) {
 		int delay = getCooldownDelay(item);
-		playerIn.getCooldownTracker().setCooldown(item.getItem(), dual ? delay * 2 / 3 : delay);
+		playerIn.getCooldownTracker()
+			.setCooldown(item.getItem(), dual ? delay * 2 / 3 : delay);
 	}
 
 	@Override
@@ -215,11 +233,15 @@ public abstract class ZapperItem extends Item {
 			return false;
 		if (entity.isSneaking())
 			return true;
+		if (entity.world.isRemote)
+			return true;
 
-		Vec3d start = entity.getPositionVec().add(0, entity.getEyeHeight(), 0);
-		Vec3d range = entity.getLookVec().scale(getRange(stack));
-		BlockRayTraceResult raytrace = entity.world.rayTraceBlocks(
-				new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, entity));
+		Vec3d start = entity.getPositionVec()
+			.add(0, entity.getEyeHeight(), 0);
+		Vec3d range = entity.getLookVec()
+			.scale(getZappingRange(stack));
+		BlockRayTraceResult raytrace = entity.world
+			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, entity));
 		BlockPos pos = raytrace.getPos();
 		if (pos == null)
 			return true;
@@ -227,7 +249,8 @@ public abstract class ZapperItem extends Item {
 		entity.world.sendBlockBreakProgress(entity.getEntityId(), pos, -1);
 		BlockState newState = entity.world.getBlockState(pos);
 
-		if (BlockHelper.getRequiredItem(newState).isEmpty())
+		if (BlockHelper.getRequiredItem(newState)
+			.isEmpty())
 			return true;
 		if (entity.world.getTileEntity(pos) != null)
 			return true;
@@ -245,12 +268,13 @@ public abstract class ZapperItem extends Item {
 			newState = newState.with(BlockStateProperties.PERSISTENT, true);
 
 		CompoundNBT tag = stack.getOrCreateTag();
-		if (tag.contains("BlockUsed") && NBTUtil.readBlockState(stack.getTag().getCompound("BlockUsed")) == newState)
+		if (tag.contains("BlockUsed") && NBTUtil.readBlockState(stack.getTag()
+			.getCompound("BlockUsed")) == newState)
 			return true;
 
 		tag.put("BlockUsed", NBTUtil.writeBlockState(newState));
-		entity.world.playSound((PlayerEntity) entity, entity.getPosition(), AllSoundEvents.BLOCKZAPPER_CONFIRM.get(),
-				SoundCategory.BLOCKS, 0.5f, 0.8f);
+		entity.world.playSound(null, entity.getPosition(), AllSoundEvents.BLOCKZAPPER_CONFIRM.get(),
+			SoundCategory.BLOCKS, 0.5f, 0.8f);
 
 		return true;
 	}

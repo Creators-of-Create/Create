@@ -15,13 +15,12 @@ import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.GlassPaneCTBehaviour;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
-import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
-import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
@@ -60,7 +59,7 @@ public class WindowGen {
 		Supplier<Supplier<RenderType>> renderType, NonNullFunction<String, ResourceLocation> endTexture,
 		NonNullFunction<String, ResourceLocation> sideTexture) {
 		return REGISTRATE.block(name, WindowBlock::new)
-			.transform(connectedTextures(new HorizontalCTBehaviour(ct)))
+			.onRegister(connectedTextures(new HorizontalCTBehaviour(ct)))
 			.addLayer(renderType)
 			.initialProperties(() -> Blocks.GLASS)
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
@@ -71,7 +70,7 @@ public class WindowGen {
 
 	public static BlockEntry<ConnectedGlassBlock> framedGlass(String name, ConnectedTextureBehaviour behaviour) {
 		return REGISTRATE.block(name, ConnectedGlassBlock::new)
-			.transform(connectedTextures(behaviour))
+			.onRegister(connectedTextures(behaviour))
 			.addLayer(() -> RenderType::getTranslucent)
 			.initialProperties(() -> Blocks.GLASS)
 			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
@@ -115,19 +114,17 @@ public class WindowGen {
 		ResourceLocation topTexture, Supplier<Supplier<RenderType>> renderType) {
 		NonNullBiConsumer<DataGenContext<Block, GlassPaneBlock>, RegistrateBlockstateProvider> stateProvider =
 			(c, p) -> p.paneBlock(c.get(), sideTexture, topTexture);
-		NonNullUnaryOperator<BlockBuilder<GlassPaneBlock, CreateRegistrate>> connectedTextures = b -> b;
-		return glassPane(name, sideTexture, topTexture, GlassPaneBlock::new, renderType, connectedTextures,
-			stateProvider);
+		return glassPane(name, sideTexture, topTexture, GlassPaneBlock::new, renderType, $ -> {
+		}, stateProvider);
 	}
 
 	private static BlockEntry<ConnectedGlassPaneBlock> connectedGlassPane(String name, CTSpriteShiftEntry ctshift,
 		ResourceLocation sideTexture, ResourceLocation itemSideTexture, ResourceLocation topTexture,
 		Supplier<Supplier<RenderType>> renderType) {
-		NonNullUnaryOperator<BlockBuilder<ConnectedGlassPaneBlock, CreateRegistrate>> connectedTextures =
-			connectedTextures(new GlassPaneCTBehaviour(ctshift));
+		NonNullConsumer<? super ConnectedGlassPaneBlock> connectedTextures = connectedTextures(new GlassPaneCTBehaviour(ctshift));
 		String CGPparents = "block/connected_glass_pane/";
 		String prefix = name + "_pane_";
-	
+
 		Function<RegistrateBlockstateProvider, ModelFile> post =
 			getPaneModelProvider(CGPparents, prefix, "post", sideTexture, topTexture),
 			side = getPaneModelProvider(CGPparents, prefix, "side", sideTexture, topTexture),
@@ -153,12 +150,12 @@ public class WindowGen {
 
 	private static <G extends GlassPaneBlock> BlockEntry<G> glassPane(String name, ResourceLocation sideTexture,
 		ResourceLocation topTexture, NonNullFunction<Properties, G> factory, Supplier<Supplier<RenderType>> renderType,
-		NonNullUnaryOperator<BlockBuilder<G, CreateRegistrate>> connectedTextures,
+		NonNullConsumer<? super G> connectedTextures,
 		NonNullBiConsumer<DataGenContext<Block, G>, RegistrateBlockstateProvider> stateProvider) {
 		name += "_pane";
 
 		return REGISTRATE.block(name, factory)
-			.transform(connectedTextures)
+			.onRegister(connectedTextures)
 			.addLayer(renderType)
 			.initialProperties(() -> Blocks.GLASS_PANE)
 			.blockstate(stateProvider)

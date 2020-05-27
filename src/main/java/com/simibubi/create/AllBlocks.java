@@ -1,5 +1,7 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllTags.forgeItemTag;
+import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
 import static com.simibubi.create.foundation.data.BlockStateGen.oxidizedBlockstate;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
@@ -100,26 +102,17 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
-import com.tterrag.registrate.builders.BlockBuilder;
-import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagCollection;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.common.ToolType;
 
@@ -242,7 +235,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties.beltMaterial, MaterialColor.GRAY)
 		.properties(p -> p.sound(SoundType.CLOTH))
 		.transform(StressConfigDefaults.setImpact(1.0))
-		.transform(CreateRegistrate.blockColors(() -> BeltColor::new))
+		.onRegister(CreateRegistrate.blockColors(() -> BeltColor::new))
 		.blockstate(new BeltGenerator()::generate)
 		.register();
 
@@ -460,7 +453,7 @@ public class AllBlocks {
 		REGISTRATE.block("translation_chassis", LinearChassisBlock::new)
 			.initialProperties(SharedProperties::wooden)
 			.blockstate(BlockStateGen.linearChassis())
-			.transform(connectedTextures(new ChassisCTBehaviour()))
+			.onRegister(connectedTextures(new ChassisCTBehaviour()))
 			.lang("Linear Chassis")
 			.simpleItem()
 			.register();
@@ -469,7 +462,7 @@ public class AllBlocks {
 		REGISTRATE.block("translation_chassis_secondary", LinearChassisBlock::new)
 			.initialProperties(SharedProperties::wooden)
 			.blockstate(BlockStateGen.linearChassis())
-			.transform(connectedTextures(new ChassisCTBehaviour()))
+			.onRegister(connectedTextures(new ChassisCTBehaviour()))
 			.lang("Secondary Linear Chassis")
 			.simpleItem()
 			.register();
@@ -557,7 +550,7 @@ public class AllBlocks {
 			.properties(p -> p.nonOpaque())
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setImpact(2.0))
-			.transform(CreateRegistrate.connectedTextures(new CrafterCTBehaviour()))
+			.onRegister(CreateRegistrate.connectedTextures(new CrafterCTBehaviour()))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.item()
 			.transform(customItemModel())
@@ -841,31 +834,8 @@ public class AllBlocks {
 		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/brass")), ctx, false))
 		.register();
 
-	// Utility
-
-	private static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
-		String tagName) {
-		return b -> b.tag(forgeBlockTag(tagName))
-			.item()
-			.tag(forgeItemTag(tagName));
-	}
-
-	private static Tag<Block> forgeBlockTag(String name) {
-		return forgeTag(BlockTags.getCollection(), name);
-	}
-
-	private static Tag<Item> forgeItemTag(String name) {
-		return forgeTag(ItemTags.getCollection(), name);
-	}
-
-	private static <T> Tag<T> forgeTag(TagCollection<T> collection, String name) {
-		return tag(collection, "forge", name);
-	}
-
-	private static <T> Tag<T> tag(TagCollection<T> collection, String domain, String name) {
-		return collection.getOrCreate(new ResourceLocation(domain, name));
-	}
-
+	// Load this class
+	
 	public static void register() {}
 
 }

@@ -24,10 +24,6 @@ public class SymmetryWandItemRenderer extends ItemStackTileEntityRenderer {
 		ms.push();
 		ms.translate(0.5F, 0.5F, 0.5F);
 		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay, mainModel.getBakedModel());
-
-		float lastCoordx = 0;
-		float lastCoordy = 0;
-
 		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, 0xF000F0, overlay, mainModel.getPartial("core"));
 
 		float floating = MathHelper.sin(worldTime) * .05f;

@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "create:item/deforester",
+	"parent": "create:item/deforester/item",
 	"textures": {
 		"3": "block/white_concrete_powder",
 		"4": "block/white_stained_glass"

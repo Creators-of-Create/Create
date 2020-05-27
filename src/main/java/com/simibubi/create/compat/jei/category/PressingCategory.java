@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
@@ -20,7 +20,7 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 	private AnimatedPress press = new AnimatedPress(false);
 
 	public PressingCategory() {
-		super("pressing", doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllItems.IRON_SHEET.get()),
+		super("pressing", doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllItemsNew.IRON_SHEET.get()),
 				emptyBackground(177, 70));
 	}
 

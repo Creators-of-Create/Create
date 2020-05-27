@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.content.schematics.client.SchematicEditScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Lang;
@@ -48,7 +48,7 @@ public class SchematicItem extends Item {
 	}
 
 	public static ItemStack create(String schematic, String owner) {
-		ItemStack blueprint = AllItems.BLUEPRINT.asStack();
+		ItemStack blueprint = AllItemsNew.SCHEMATIC.asStack();
 
 		CompoundNBT tag = new CompoundNBT();
 		tag.putBoolean("Deployed", false);

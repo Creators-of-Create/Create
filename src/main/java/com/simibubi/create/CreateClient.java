@@ -5,19 +5,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
-import com.simibubi.create.content.curiosities.zapper.terrainzapper.TerrainZapperRenderHandler;
+import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperRenderHandler;
+import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.foundation.ResourceReloadHandler;
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
-import com.simibubi.create.foundation.item.IHaveCustomItemModel;
+import com.simibubi.create.foundation.item.CustomItemModels;
+import com.simibubi.create.foundation.item.CustomRenderedItems;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
@@ -31,6 +34,7 @@ import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.item.Item;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -51,8 +55,10 @@ public class CreateClient {
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
 	public static Outliner outliner;
-	
+
 	private static CustomBlockModels customBlockModels;
+	private static CustomItemModels customItemModels;
+	private static CustomRenderedItems customRenderedItems;
 	private static AllColorHandlers colorHandlers;
 
 	public static void addListeners(IEventBus modEventBus) {
@@ -78,7 +84,6 @@ public class CreateClient {
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();
 		AllTileEntities.registerRenderers();
-		AllItems.registerColorHandlers();
 		AllEntityTypes.registerRenderers();
 		getColorHandler().init();
 
@@ -87,18 +92,20 @@ public class CreateClient {
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 	}
-	
+
 	public static void gameTick() {
 		schematicSender.tick();
 		schematicAndQuillHandler.tick();
 		schematicHandler.tick();
-		BeltConnectorHandler.gameTick();
+		BeltConnectorHandler.tick();
 		FilteringRenderer.tick();
 		LinkRenderer.tick();
 		ScrollValueRenderer.tick();
 		ChassisRangeDisplay.tick();
 		EdgeInteractionRenderer.tick();
-		TerrainZapperRenderHandler.tick();
+		WorldshaperRenderHandler.tick();
+		BlockzapperRenderHandler.tick();
+		KineticDebugger.tick();
 		ZapperRenderHandler.tick();
 		outliner.tickOutlines();
 	}
@@ -120,33 +127,26 @@ public class CreateClient {
 
 		getCustomBlockModels()
 			.foreach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
-
-		// todo modelswap for item registrate
-		for (AllItems item : AllItems.values()) {
-			if (item.get() instanceof IHaveCustomItemModel)
-				swapModels(modelRegistry, getItemModelLocation(item),
-					m -> ((IHaveCustomItemModel) item.get()).createModel(m)
-						.loadPartials(event));
-		}
+		getCustomItemModels()
+			.foreach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
+		getCustomRenderedItems().foreach((item, modelFunc) -> {
+			swapModels(modelRegistry, getItemModelLocation(item), m -> modelFunc.apply(m)
+				.loadPartials(event));
+		});
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void onModelRegistry(ModelRegistryEvent event) {
 		AllBlockPartials.onModelRegistry(event);
 
-		// Register submodels for custom rendered item models
-		for (AllItems item : AllItems.values()) {
-			if (item.get() instanceof IHaveCustomItemModel)
-				((IHaveCustomItemModel) item.get()).createModel(null)
-					.getModelLocations()
-					.forEach(ModelLoader::addSpecialModel);
-		}
+		getCustomRenderedItems().foreach((item, modelFunc) -> modelFunc.apply(null)
+			.getModelLocations()
+			.forEach(ModelLoader::addSpecialModel));
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	protected static ModelResourceLocation getItemModelLocation(AllItems item) {
-		return new ModelResourceLocation(item.get()
-			.getRegistryName(), "inventory");
+	protected static ModelResourceLocation getItemModelLocation(Item item) {
+		return new ModelResourceLocation(item.getRegistryName(), "inventory");
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -167,16 +167,28 @@ public class CreateClient {
 
 	@OnlyIn(Dist.CLIENT)
 	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
-		ModelResourceLocation location, Function<IBakedModel, T> factory) {
-		modelRegistry.put(location, factory.apply(modelRegistry.get(location)));
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
 		List<ModelResourceLocation> locations, Function<IBakedModel, T> factory) {
 		locations.forEach(location -> {
 			swapModels(modelRegistry, location, factory);
 		});
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
+		ModelResourceLocation location, Function<IBakedModel, T> factory) {
+		modelRegistry.put(location, factory.apply(modelRegistry.get(location)));
+	}
+
+	public static CustomItemModels getCustomItemModels() {
+		if (customItemModels == null)
+			customItemModels = new CustomItemModels();
+		return customItemModels;
+	}
+
+	public static CustomRenderedItems getCustomRenderedItems() {
+		if (customRenderedItems == null)
+			customRenderedItems = new CustomRenderedItems();
+		return customRenderedItems;
 	}
 
 	public static CustomBlockModels getCustomBlockModels() {
@@ -184,7 +196,7 @@ public class CreateClient {
 			customBlockModels = new CustomBlockModels();
 		return customBlockModels;
 	}
-	
+
 	public static AllColorHandlers getColorHandler() {
 		if (colorHandlers == null)
 			colorHandlers = new AllColorHandlers();

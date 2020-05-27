@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
@@ -98,7 +98,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		inserting = new InsertingBehaviour(this, Attachments.toward(this::getTargetFacing));
 		connectivity = new EdgeInteractionBehaviour(this, ConnectedInputHandler::toggleConnection)
 			.connectivity(ConnectedInputHandler::shouldConnect)
-			.require(AllItems.WRENCH.get());
+			.require(AllItemsNew.WRENCH.get());
 		behaviours.add(inserting);
 		behaviours.add(connectivity);
 	}

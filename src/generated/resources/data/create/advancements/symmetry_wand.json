@@ -2,7 +2,7 @@
   "parent": "create:refined_radiance",
   "display": {
     "icon": {
-      "item": "create:symmetry_wand"
+      "item": "create:wand_of_symmetry"
     },
     "title": {
       "translate": "advancement.create.symmetry_wand"
@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "create:symmetry_wand"
+            "item": "create:wand_of_symmetry"
           }
         ]
       }

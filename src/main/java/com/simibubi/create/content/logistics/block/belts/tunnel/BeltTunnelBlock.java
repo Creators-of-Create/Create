@@ -80,13 +80,6 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		return true;
 	}
 
-//	@Override // TODO 1.15 register layer
-//	public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-//		if (hasWindow(state))
-//			return layer == BlockRenderLayer.CUTOUT_MIPPED;
-//		return super.canRenderInLayer(state, layer);
-//	}
-
 	public static boolean hasWindow(BlockState state) {
 		Shape shape = state.get(SHAPE);
 		return shape == Shape.WINDOW || shape == Shape.HALFSHADE || shape == Shape.FULLSHADE;

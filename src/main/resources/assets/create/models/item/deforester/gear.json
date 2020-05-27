@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "create:item/deforester",
+	"parent": "create:item/deforester/item",
 	"textures": {
 		"5": "block/stripped_spruce_log"
 	},

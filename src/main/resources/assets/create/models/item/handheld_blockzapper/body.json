@@ -1,0 +1,64 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "ambientocclusion": true,
+	"parent": "create:item/handheld_blockzapper/item",
+    "textures": {
+        "0": "create:block/andesite_alloy_mesh"
+    },
+    "elements": [
+        {
+            "name": "Connector",
+            "from": [ 7, 4, 2 ], 
+            "to": [ 9, 5, 12 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "east": { "texture": "#0", "uv": [ 0, 0, 10, 1 ] },
+                "south": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "west": { "texture": "#0", "uv": [ 0, 0, 10, 1 ] },
+                "up": { "texture": "#0", "uv": [ 0, 0, 2, 10 ] },
+                "down": { "texture": "#0", "uv": [ 0, 0, 2, 10 ] }
+            }
+        },
+		{
+            "name": "Rod Back Cap",
+            "from": [ 7, 4.5, 14 ], 
+            "to": [ 9, 6.5, 15 ], 
+            "rotation": { "origin": [ 8, 5.5, 8 ], "axis": "z", "angle": -45.0 },
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0, 0, 2, 2 ] },
+                "east": { "texture": "#0", "uv": [ 0, 0, 1, 2 ] },
+                "south": { "texture": "#0", "uv": [ 0, 0, 2, 2 ] },
+                "west": { "texture": "#0", "uv": [ 0, 0, 1, 2 ] },
+                "up": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "down": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] }
+            }
+        },
+        {
+            "name": "Connector",
+            "from": [ 7, 6, 2 ], 
+            "to": [ 9, 7, 12 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "east": { "texture": "#0", "uv": [ 0, 0, 10, 1 ] },
+                "south": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "west": { "texture": "#0", "uv": [ 0, 0, 10, 1 ] },
+                "up": { "texture": "#0", "uv": [ 0, 0, 2, 10 ] },
+                "down": { "texture": "#0", "uv": [ 0, 0, 2, 10 ] }
+            }
+        },
+        {
+            "name": "Rod Back Cap",
+            "from": [ 7, 4.5, 11 ], 
+            "to": [ 9, 6.5, 12 ], 
+            "rotation": { "origin": [ 8, 5.5, 8 ], "axis": "z", "angle": -45.0 },
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0, 0, 2, 2 ] },
+                "east": { "texture": "#0", "uv": [ 0, 0, 1, 2 ] },
+                "south": { "texture": "#0", "uv": [ 0, 0, 2, 2 ] },
+                "west": { "texture": "#0", "uv": [ 0, 0, 1, 2 ] },
+                "up": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] },
+                "down": { "texture": "#0", "uv": [ 0, 0, 2, 1 ] }
+            }
+        }
+    ]
+}

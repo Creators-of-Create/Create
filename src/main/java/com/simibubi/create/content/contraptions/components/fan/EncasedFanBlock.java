@@ -67,11 +67,6 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 		return newState;
 	}
 
-//	@Override // TODO 1.15 register layer
-//	public BlockRenderLayer getRenderLayer() {
-//		return BlockRenderLayer.CUTOUT;
-//	}
-
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(FACING).getAxis();

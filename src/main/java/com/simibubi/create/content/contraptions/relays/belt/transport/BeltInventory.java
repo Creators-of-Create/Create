@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;

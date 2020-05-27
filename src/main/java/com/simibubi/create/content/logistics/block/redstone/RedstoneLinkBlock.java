@@ -149,11 +149,6 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 		return side != null;
 	}
 
-//	@Override // TODO 1.15 register layer
-//	public BlockRenderLayer getRenderLayer() {
-//		return BlockRenderLayer.CUTOUT;
-//	}
-
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		BlockPos neighbourPos = pos.offset(state.get(FACING).getOpposite());

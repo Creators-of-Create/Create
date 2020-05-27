@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.worldWrappers.RayTraceWorld;
 
@@ -55,7 +55,7 @@ public class SuperGlueHandler {
 		Map<Direction, SuperGlueEntity> gatheredGlue = gatherGlue(world, pos);
 		for (Direction direction : gatheredGlue.keySet())
 			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
-					new GlueEffectPacket(pos, direction, true));
+				new GlueEffectPacket(pos, direction, true));
 
 		if (entity instanceof PlayerEntity)
 			glueInOffHandAppliesOnBlockPlace(event, pos, (PlayerEntity) entity);
@@ -63,10 +63,11 @@ public class SuperGlueHandler {
 
 	public static void glueInOffHandAppliesOnBlockPlace(EntityPlaceEvent event, BlockPos pos, PlayerEntity placer) {
 		ItemStack itemstack = placer.getHeldItemOffhand();
-		if (!AllItems.SUPER_GLUE.typeOf(itemstack))
+		if (!AllItemsNew.typeOf(AllItemsNew.SUPER_GLUE, itemstack))
 			return;
 
-		double distance = placer.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+		double distance = placer.getAttribute(PlayerEntity.REACH_DISTANCE)
+			.getValue();
 		Vec3d start = placer.getEyePosition(1);
 		Vec3d look = placer.getLook(1);
 		Vec3d end = start.add(look.x * distance, look.y * distance, look.z * distance);
@@ -74,14 +75,16 @@ public class SuperGlueHandler {
 
 		RayTraceWorld rayTraceWorld =
 			new RayTraceWorld(world, (p, state) -> p.equals(pos) ? Blocks.AIR.getDefaultState() : state);
-		BlockRayTraceResult ray = rayTraceWorld.rayTraceBlocks(new RayTraceContext(start, end,
-				RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, placer));
+		BlockRayTraceResult ray = rayTraceWorld.rayTraceBlocks(
+			new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, placer));
 
 		Direction face = ray.getFace();
 		if (ray == null || face == null || ray.getType() == Type.MISS)
 			return;
 
-		if (!ray.getPos().offset(face).equals(pos)) {
+		if (!ray.getPos()
+			.offset(face)
+			.equals(pos)) {
 			event.setCanceled(true);
 			return;
 		}
@@ -96,7 +99,7 @@ public class SuperGlueHandler {
 				entity.playPlaceSound();
 				world.addEntity(entity);
 				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
-						new GlueEffectPacket(ray.getPos(), face, true));
+					new GlueEffectPacket(ray.getPos(), face, true));
 			}
 			itemstack.damageItem(1, placer, SuperGlueItem::onBroken);
 		}

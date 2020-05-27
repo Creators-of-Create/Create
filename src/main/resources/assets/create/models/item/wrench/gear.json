@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "create:item/wrench",
+	"parent": "create:item/wrench/item",
 	"textures": {
 		"0": "block/stripped_spruce_log"
 	},

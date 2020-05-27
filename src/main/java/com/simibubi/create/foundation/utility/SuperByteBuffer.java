@@ -17,8 +17,6 @@ import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -143,10 +141,27 @@ public class SuperByteBuffer {
 		if (original.limit() == 0)
 			return;
 		if (!(buffer instanceof BufferBuilder)) {
-			// TODO 1.15 add "slow" path that writes all the data instead of using bulk put
-			throw new IllegalArgumentException("Unsupported buffer type!");
-		}
-		((BufferBuilder) buffer).putBulkData(build(input));
+			Matrix4f t = input.peek()
+				.getModel()
+				.copy();
+			Matrix4f localTransforms = transforms.peek()
+				.getModel();
+			t.multiply(localTransforms);
+
+			ByteBuffer m = mutable;
+			for (int v = 0; v < vertexCount(m); v++) {
+				Vector4f pos = new Vector4f(getX(original, v), getY(original, v), getZ(original, v), 1F);
+				pos.transform(t);
+				buffer.vertex(pos.getX(), pos.getY(), pos.getZ())
+					.color(getR(m, v), getG(m, v), getB(m, v), getA(m, v))
+					.texture(getU(m, v), getV(m, v))
+					.light(getLight(m, v))
+					.normal(getNX(m, v), getNY(m, v), getNZ(m, v))
+					.endVertex();
+			}
+			transforms = new MatrixStack();
+		} else
+			((BufferBuilder) buffer).putBulkData(build(input));
 	}
 
 	public SuperByteBuffer translate(double x, double y, double z) {
@@ -158,22 +173,12 @@ public class SuperByteBuffer {
 		return this;
 	}
 
-	@Deprecated
-	public SuperByteBuffer rotate(Axis axis, float radians) {
-		return rotate(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis), radians);
-	}
-
 	public SuperByteBuffer rotate(Direction axis, float radians) {
 		if (radians == 0)
 			return this;
 		transforms.multiply(axis.getUnitVector()
 			.getRadialQuaternion(radians));
 		return this;
-	}
-
-	@Deprecated
-	public SuperByteBuffer rotateCentered(Axis axis, float radians) {
-		return rotateCentered(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis), radians);
 	}
 
 	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
@@ -271,6 +276,22 @@ public class SuperByteBuffer {
 
 	protected float getV(ByteBuffer buffer, int index) {
 		return buffer.getFloat(getBufferPosition(index) + 20);
+	}
+
+	protected int getLight(ByteBuffer buffer, int index) {
+		return buffer.getInt(getBufferPosition(index) + 24);
+	}
+
+	protected byte getNX(ByteBuffer buffer, int index) {
+		return buffer.get(getBufferPosition(index) + 28);
+	}
+
+	protected byte getNY(ByteBuffer buffer, int index) {
+		return buffer.get(getBufferPosition(index) + 29);
+	}
+
+	protected byte getNZ(ByteBuffer buffer, int index) {
+		return buffer.get(getBufferPosition(index) + 30);
 	}
 
 	protected void putPos(ByteBuffer buffer, int index, float x, float y, float z) {

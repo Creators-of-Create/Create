@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 
@@ -27,7 +27,7 @@ public class BeltConnectorHandler {
 
 	private static Random r = new Random();
 
-	public static void gameTick() {
+	public static void tick() {
 		PlayerEntity player = Minecraft.getInstance().player;
 		World world = Minecraft.getInstance().world;
 
@@ -39,7 +39,7 @@ public class BeltConnectorHandler {
 		for (Hand hand : Hand.values()) {
 			ItemStack heldItem = player.getHeldItem(hand);
 
-			if (!AllItems.BELT_CONNECTOR.typeOf(heldItem))
+			if (!AllItemsNew.typeOf(AllItemsNew.BELT_CONNECTOR, heldItem))
 				continue;
 			if (!heldItem.hasTag())
 				continue;

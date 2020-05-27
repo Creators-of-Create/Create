@@ -38,7 +38,7 @@ public class BuilderTransformers {
 
 	public static <B extends CasingBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> casing(
 		CTSpriteShiftEntry ct) {
-		return b -> b.transform(connectedTextures(new StandardCTBehaviour(ct)))
+		return b -> b.onRegister(connectedTextures(new StandardCTBehaviour(ct)))
 			.initialProperties(SharedProperties::stone)
 			.blockstate((c, p) -> p.simpleBlock(c.get()))
 			.simpleItem();

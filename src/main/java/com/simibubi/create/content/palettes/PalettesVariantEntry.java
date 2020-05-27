@@ -38,13 +38,14 @@ public class PalettesVariantEntry {
 			if (pattern.isTranslucent())
 				builder.addLayer(() -> RenderType::getTranslucent);
 			if (pattern.hasFoliage())
-				builder.transform(CreateRegistrate.blockColors(() -> AllColorHandlers::getGrassyBlock));
+				builder.onRegister(CreateRegistrate.blockColors(() -> AllColorHandlers::getGrassyBlock));
 			pattern.createCTBehaviour(variant)
-				.ifPresent(b -> builder.transform(connectedTextures(b)));
+				.ifPresent(b -> builder.onRegister(connectedTextures(b)));
 
 			if (pattern.hasFoliage())
 				builder.item()
-					.transform(CreateRegistrate.itemColors(() -> AllColorHandlers::getGrassyItem));
+					.onRegister(CreateRegistrate.itemColors(() -> AllColorHandlers::getGrassyItem))
+					.build();
 			else
 				builder.simpleItem();
 

@@ -96,4 +96,12 @@ public class AssetLookup {
 		return "block/oxidized/" + name + "_" + level;
 	}
 
+	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> existingItemModel() {
+		return (c, p) -> p.getExistingFile(p.modLoc("item/" + c.getName()));
+	}
+
+	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> itemModelWithPartials() {
+		return (c, p) -> p.withExistingParent("item/" + c.getName(), p.modLoc("item/" + c.getName() + "/item"));
+	}
+
 }

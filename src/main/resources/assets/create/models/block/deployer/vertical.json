@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "create:item/placement_handgun",
+	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
 		"6": "create:block/piston_bottom",

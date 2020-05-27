@@ -1,7 +1,9 @@
 package com.simibubi.create.content.schematics.block;
 
+import static com.simibubi.create.AllItemsNew.typeOf;
+
 import com.simibubi.create.AllContainerTypes;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
@@ -44,8 +46,9 @@ public class SchematicTableContainer extends Container {
 		inputSlot = new SlotItemHandler(te.inventory, 0, -9, 40) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				return AllItems.EMPTY_BLUEPRINT.typeOf(stack) || AllItems.BLUEPRINT_AND_QUILL.typeOf(stack)
-						|| AllItems.BLUEPRINT.typeOf(stack);
+				return typeOf(AllItemsNew.EMPTY_SCHEMATIC, stack)
+					|| typeOf(AllItemsNew.SCHEMATIC_AND_QUILL, stack)
+					|| typeOf(AllItemsNew.SCHEMATIC, stack);
 			}
 		};
 

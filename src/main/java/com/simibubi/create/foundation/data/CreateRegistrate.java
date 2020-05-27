@@ -12,12 +12,14 @@ import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.block.IBlockVertexColor;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
+import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
+import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
@@ -26,7 +28,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.BlockItem;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.item.Item;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -109,25 +112,32 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.simpleItem();
 	}
 
-	public static <T extends Block> NonNullUnaryOperator<BlockBuilder<T, CreateRegistrate>> connectedTextures(
-		ConnectedTextureBehaviour behavior) {
-		return b -> b.onRegister(entry -> onClient(() -> () -> registerModel(entry, behavior)));
+	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(ConnectedTextureBehaviour behavior) {
+		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
 
-	public static <T extends Block> NonNullUnaryOperator<BlockBuilder<T, CreateRegistrate>> blockColors(
-		Supplier<Supplier<IBlockColor>> colorFunc) {
-		return b -> b.onRegister(entry -> onClient(() -> () -> registerBlockColor(entry, colorFunc)));
+	public static <T extends Block> NonNullConsumer<? super T> blockColors(Supplier<Supplier<IBlockColor>> colorFunc) {
+		return entry -> onClient(() -> () -> registerBlockColor(entry, colorFunc));
 	}
 
-	public static <T extends Block> NonNullUnaryOperator<BlockBuilder<T, CreateRegistrate>> blockVertexColors(
-		IBlockVertexColor colorFunc) {
-		return b -> b.onRegister(entry -> onClient(() -> () -> registerBlockVertexColor(entry, colorFunc)));
+	public static <T extends Block> NonNullConsumer<? super T> blockVertexColors(IBlockVertexColor colorFunc) {
+		return entry -> onClient(() -> () -> registerBlockVertexColor(entry, colorFunc));
 	}
 
-	public static <I extends BlockItem, P> NonNullFunction<ItemBuilder<I, P>, P> itemColors(
-		Supplier<Supplier<IItemColor>> colorFunc) {
-		return b -> b.onRegister(entry -> onClient(() -> () -> registerItemColor(entry, colorFunc)))
-			.build();
+	public static <T extends Item> NonNullConsumer<? super T> itemModel(
+		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		return entry -> onClient(() -> () -> registerItemModel(entry, func));
+	}
+
+	public static <T extends Item> NonNullConsumer<? super T> itemColors(Supplier<Supplier<IItemColor>> colorFunc) {
+		return entry -> onClient(() -> () -> registerItemColor(entry, colorFunc));
+	}
+
+	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
+		Supplier<NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> func) {
+		return b -> b.properties(p -> p.setISTER(() -> func.get()
+			.apply(null)::createRenderer))
+			.onRegister(entry -> onClient(() -> () -> registerCustomRenderedItem(entry, func)));
 	}
 
 	protected static void onClient(Supplier<Runnable> toRun) {
@@ -135,9 +145,23 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void registerModel(Block entry, ConnectedTextureBehaviour behavior) {
+	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.getCustomBlockModels()
 			.register(entry.delegate, model -> new CTModel(model, behavior));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void registerItemModel(Item entry,
+		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		CreateClient.getCustomItemModels()
+			.register(entry.delegate, func.get());
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void registerCustomRenderedItem(Item entry,
+		Supplier<NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> func) {
+		CreateClient.getCustomRenderedItems()
+			.register(entry.delegate, func.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)

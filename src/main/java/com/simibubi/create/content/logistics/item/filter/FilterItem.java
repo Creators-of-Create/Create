@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -38,8 +38,23 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class FilterItem extends Item implements INamedContainerProvider {
 
-	public FilterItem(Properties properties) {
+	private FilterType type;
+
+	private enum FilterType {
+		REGULAR, ATTRIBUTE;
+	}
+	
+	public static FilterItem regular(Properties properties) {
+		return new FilterItem(FilterType.REGULAR, properties);
+	}
+	
+	public static FilterItem attribute(Properties properties) {
+		return new FilterItem(FilterType.ATTRIBUTE, properties);
+	}
+	
+	private FilterItem(FilterType type, Properties properties) {
 		super(properties);
+		this.type = type;
 	}
 
 	@Override
@@ -62,7 +77,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	private List<String> makeSummary(ItemStack filter) {
 		List<String> list = new ArrayList<>();
 
-		if (AllItems.FILTER.typeOf(filter)) {
+		if (type == FilterType.REGULAR) {
 			ItemStackHandler filterItems = getFilterItems(filter);
 			boolean blacklist = filter.getOrCreateTag().getBoolean("Blacklist");
 
@@ -86,7 +101,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 				return Collections.emptyList();
 		}
 
-		if (AllItems.PROPERTY_FILTER.typeOf(filter)) {
+		if (type == FilterType.ATTRIBUTE) {
 			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag().getInt("WhitelistMode")];
 			list.add(TextFormatting.GOLD + (whitelistMode == WhitelistMode.WHITELIST_CONJ
 					? Lang.translate("gui.attribute_filter.whitelist_conjunctive")
@@ -130,9 +145,9 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		ItemStack heldItem = player.getHeldItemMainhand();
-		if (AllItems.FILTER.typeOf(heldItem))
+		if (type == FilterType.REGULAR)
 			return new FilterContainer(id, inv, heldItem);
-		if (AllItems.PROPERTY_FILTER.typeOf(heldItem))
+		if (type == FilterType.ATTRIBUTE)
 			return new AttributeFilterContainer(id, inv, heldItem);
 		return null;
 	}
@@ -144,7 +159,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 
 	public static ItemStackHandler getFilterItems(ItemStack stack) {
 		ItemStackHandler newInv = new ItemStackHandler(18);
-		if (!AllItems.FILTER.typeOf(stack))
+		if (AllItemsNew.FILTER.get() != stack.getItem())
 			throw new IllegalArgumentException("Cannot get filter items from non-filter: " + stack);
 		CompoundNBT invNBT = stack.getOrCreateChildTag("Items");
 		if (!invNBT.isEmpty())
@@ -164,7 +179,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			return (matchNBT ? ItemHandlerHelper.canItemStacksStack(filter, stack)
 					: ItemStack.areItemsEqual(filter, stack));
 
-		if (AllItems.FILTER.typeOf(filter)) {
+		if (AllItemsNew.FILTER.get() == filter.getItem()) {
 			ItemStackHandler filterItems = getFilterItems(filter);
 			boolean respectNBT = filter.getOrCreateTag().getBoolean("RespectNBT");
 			boolean blacklist = filter.getOrCreateTag().getBoolean("Blacklist");
@@ -179,7 +194,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			return blacklist;
 		}
 
-		if (AllItems.PROPERTY_FILTER.typeOf(filter)) {
+		if (AllItemsNew.ATTRIBUTE_FILTER.get() == filter.getItem()) {
 			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag().getInt("WhitelistMode")];
 			ListNBT attributes = filter.getOrCreateTag().getList("MatchedAttributes", NBT.TAG_COMPOUND);
 			for (INBT inbt : attributes) {

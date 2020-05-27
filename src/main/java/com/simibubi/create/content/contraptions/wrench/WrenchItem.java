@@ -1,11 +1,7 @@
 package com.simibubi.create.content.contraptions.wrench;
 
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
-import com.simibubi.create.foundation.item.IHaveCustomItemModel;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,10 +10,8 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class WrenchItem extends Item implements IHaveCustomItemModel {
+public class WrenchItem extends Item {
 
 	public WrenchItem(Properties properties) {
 		super(properties);
@@ -40,9 +34,9 @@ public class WrenchItem extends Item implements IHaveCustomItemModel {
 			if (world instanceof ServerWorld) {
 				if (!player.isCreative())
 					Block.getDrops(state, (ServerWorld) world, pos, world.getTileEntity(pos), player, context.getItem())
-							.forEach(itemStack -> {
-								player.inventory.placeItemBackInInventory(world, itemStack);
-							});
+						.forEach(itemStack -> {
+							player.inventory.placeItemBackInInventory(world, itemStack);
+						});
 				state.spawnAdditionalDrops(world, pos, ItemStack.EMPTY);
 				world.destroyBlock(pos, false);
 			}
@@ -50,12 +44,6 @@ public class WrenchItem extends Item implements IHaveCustomItemModel {
 		}
 
 		return actor.onWrenched(state, context);
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public CustomRenderedItemModel createModel(IBakedModel original) {
-		return new WrenchModel(original);
 	}
 
 }

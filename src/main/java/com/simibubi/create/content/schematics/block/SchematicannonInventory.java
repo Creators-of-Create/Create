@@ -1,6 +1,6 @@
 package com.simibubi.create.content.schematics.block;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -27,12 +27,11 @@ public class SchematicannonInventory extends ItemStackHandler {
 	public boolean isItemValid(int slot, ItemStack stack) {
 		switch (slot) {
 		case 0: // Blueprint Slot
-			return AllItems.BLUEPRINT.typeOf(stack);
+			return AllItemsNew.typeOf(AllItemsNew.SCHEMATIC, stack);
 		case 1: // Blueprint output
 			return false;
 		case 2: // Book input
-			return stack.isItemEqual(new ItemStack(Items.BOOK))
-					|| stack.isItemEqual(new ItemStack(Items.WRITTEN_BOOK));
+			return stack.isItemEqual(new ItemStack(Items.BOOK)) || stack.isItemEqual(new ItemStack(Items.WRITTEN_BOOK));
 		case 3: // Material List output
 			return false;
 		case 4: // Gunpowder

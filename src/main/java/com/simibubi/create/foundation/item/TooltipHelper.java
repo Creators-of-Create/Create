@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.bridge.game.Language;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
@@ -37,7 +37,7 @@ public class TooltipHelper {
 	public static String holdShift(Palette color, boolean highlighted) {
 		TextFormatting colorFormat = highlighted ? color.hColor : color.color;
 		return DARK_GRAY
-				+ Lang.translate("tooltip.holdKey", colorFormat + Lang.translate("tooltip.keyShift") + DARK_GRAY);
+			+ Lang.translate("tooltip.holdKey", colorFormat + Lang.translate("tooltip.keyShift") + DARK_GRAY);
 	}
 
 	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor) {
@@ -45,7 +45,7 @@ public class TooltipHelper {
 	}
 
 	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor,
-			int indent) {
+		int indent) {
 		String lineStart = defaultColor.toString();
 		for (int i = 0; i < indent; i++)
 			lineStart += " ";
@@ -83,7 +83,9 @@ public class TooltipHelper {
 	}
 
 	private static void checkLocale() {
-		Language currentLanguage = Minecraft.getInstance().getLanguageManager().getCurrentLanguage();
+		Language currentLanguage = Minecraft.getInstance()
+			.getLanguageManager()
+			.getCurrentLanguage();
 		if (cachedLanguage != currentLanguage) {
 			cachedTooltips.clear();
 			cachedLanguage = currentLanguage;
@@ -94,8 +96,8 @@ public class TooltipHelper {
 		checkLocale();
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		boolean hasGlasses =
-			player != null && AllItems.GOGGLES.typeOf(player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+		boolean hasGlasses = player != null
+			&& AllItemsNew.typeOf(AllItemsNew.GOGGLES, player.getItemStackFromSlot(EquipmentSlotType.HEAD));
 
 		if (hasGlasses != gogglesMode) {
 			gogglesMode = hasGlasses;
@@ -131,7 +133,8 @@ public class TooltipHelper {
 
 	private static ItemDescription buildToolTip(String translationKey, ItemStack stack) {
 		AllSections module = AllSections.of(stack);
-		if (I18n.format(translationKey).equals("WIP"))
+		if (I18n.format(translationKey)
+			.equals("WIP"))
 			return new WipScription(module.getTooltipPalette());
 
 		ItemDescription tooltip = new ItemDescription(module.getTooltipPalette());
@@ -183,7 +186,8 @@ public class TooltipHelper {
 		if (stack.getItem() instanceof SandPaperItem)
 			return "tool.create.sand_paper.tooltip";
 
-		return stack.getItem().getTranslationKey(stack) + ".tooltip";
+		return stack.getItem()
+			.getTranslationKey(stack) + ".tooltip";
 	}
 
 }

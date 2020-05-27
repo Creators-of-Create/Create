@@ -1,11 +1,7 @@
 package com.simibubi.create.content.curiosities.tools;
 
-import com.simibubi.create.content.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
-import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -26,11 +22,9 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
 
-public class SandPaperItem extends Item implements IHaveCustomItemModel {
+public class SandPaperItem extends Item {
 
 	public SandPaperItem(Properties properties) {
 		super(properties.maxDamage(8));
@@ -51,7 +45,8 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		ActionResult<ItemStack> FAIL = new ActionResult<>(ActionResultType.FAIL, itemstack);
 
-		if (itemstack.getOrCreateTag().contains("Polishing")) {
+		if (itemstack.getOrCreateTag()
+			.contains("Polishing")) {
 			playerIn.setActiveHand(handIn);
 			return new ActionResult<>(ActionResultType.PASS, itemstack);
 		}
@@ -62,7 +57,8 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 			ItemStack item = itemInOtherHand.copy();
 			ItemStack toPolish = item.split(1);
 			playerIn.setActiveHand(handIn);
-			itemstack.getOrCreateTag().put("Polishing", toPolish.serializeNBT());
+			itemstack.getOrCreateTag()
+				.put("Polishing", toPolish.serializeNBT());
 			playerIn.setHeldItem(otherHand, item);
 			return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
 		}
@@ -78,7 +74,8 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 		AxisAlignedBB bb = new AxisAlignedBB(hitVec, hitVec).grow(1f);
 		ItemEntity pickUp = null;
 		for (ItemEntity itemEntity : worldIn.getEntitiesWithinAABB(ItemEntity.class, bb)) {
-			if (itemEntity.getPositionVec().distanceTo(playerIn.getPositionVec()) > 3)
+			if (itemEntity.getPositionVec()
+				.distanceTo(playerIn.getPositionVec()) > 3)
 				continue;
 			ItemStack stack = itemEntity.getItem();
 			if (!SandPaperPolishingRecipe.canPolish(worldIn, stack))
@@ -90,13 +87,15 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 		if (pickUp == null)
 			return FAIL;
 
-		ItemStack item = pickUp.getItem().copy();
+		ItemStack item = pickUp.getItem()
+			.copy();
 		ItemStack toPolish = item.split(1);
 
 		playerIn.setActiveHand(handIn);
 
 		if (!worldIn.isRemote) {
-			itemstack.getOrCreateTag().put("Polishing", toPolish.serializeNBT());
+			itemstack.getOrCreateTag()
+				.put("Polishing", toPolish.serializeNBT());
 			if (item.isEmpty())
 				pickUp.remove();
 			else
@@ -110,12 +109,12 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
 		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
-	
+
 	@Override
 	public int getItemEnchantability(ItemStack stack) {
 		return 1;
 	}
-	
+
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
 		if (!(entityLiving instanceof PlayerEntity))
@@ -124,12 +123,14 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 		CompoundNBT tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack toPolish = ItemStack.read(tag.getCompound("Polishing"));
-			ItemStack polished = SandPaperPolishingRecipe.applyPolish(worldIn, entityLiving.getPositionVec(), toPolish,
-					stack);
+			ItemStack polished =
+				SandPaperPolishingRecipe.applyPolish(worldIn, entityLiving.getPositionVec(), toPolish, stack);
 
 			if (worldIn.isRemote) {
-				spawnParticles(entityLiving.getEyePosition(1).add(entityLiving.getLookVec().scale(.5f)), toPolish,
-						worldIn);
+				spawnParticles(entityLiving.getEyePosition(1)
+					.add(entityLiving.getLookVec()
+						.scale(.5f)),
+					toPolish, worldIn);
 				return stack;
 			}
 
@@ -151,7 +152,7 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 		for (int i = 0; i < 20; i++) {
 			Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, 1 / 8f);
 			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, polishedStack), location.x, location.y,
-					location.z, motion.x, motion.y, motion.z);
+				location.z, motion.x, motion.y, motion.z);
 		}
 	}
 
@@ -176,12 +177,6 @@ public class SandPaperItem extends Item implements IHaveCustomItemModel {
 	@Override
 	public int getItemEnchantability() {
 		return 5;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public CustomRenderedItemModel createModel(IBakedModel original) {
-		return new SandPaperModel(original);
 	}
 
 }

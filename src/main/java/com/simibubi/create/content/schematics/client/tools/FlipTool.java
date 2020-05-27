@@ -48,10 +48,10 @@ public class FlipTool extends PlacementToolBase {
 	}
 
 	@Override
-	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer) {
 		if (!schematicSelected || !selectedFace.getAxis()
 			.isHorizontal()) {
-			super.renderOnSchematic(ms, buffer, light, overlay);
+			super.renderOnSchematic(ms, buffer);
 			return;
 		}
 
@@ -77,7 +77,7 @@ public class FlipTool extends PlacementToolBase {
 			.withFaceTextures(tex, tex);
 		outline.render(ms, buffer);
 		
-		super.renderOnSchematic(ms, buffer, light, overlay);
+		super.renderOnSchematic(ms, buffer);
 	}
 
 }

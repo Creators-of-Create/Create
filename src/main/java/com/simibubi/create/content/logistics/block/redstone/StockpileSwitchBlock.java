@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
@@ -94,7 +94,7 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		if (player != null && AllItems.WRENCH.typeOf(player.getHeldItem(handIn)))
+		if (player != null && AllItemsNew.typeOf(AllItemsNew.WRENCH, player.getHeldItem(handIn)))
 			return ActionResultType.PASS;
 		DistExecutor.runWhenOn(Dist.CLIENT,
 			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));

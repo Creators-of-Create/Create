@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 public class SymmetryWandModel extends CustomRenderedItemModel {
 
 	public SymmetryWandModel(IBakedModel template) {
-		super(template, "symmetry_wand");
+		super(template, "wand_of_symmetry");
 		addPartials("bits", "core");
 	}
 

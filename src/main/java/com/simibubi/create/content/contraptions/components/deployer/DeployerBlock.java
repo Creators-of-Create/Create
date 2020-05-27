@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
@@ -24,8 +24,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class DeployerBlock extends DirectionalAxisKineticBlock
-		implements ITE<DeployerTileEntity>, IPortableBlock {
+public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<DeployerTileEntity>, IPortableBlock {
 
 	public static MovementBehaviour MOVEMENT = new DeployerMovementBehaviour();
 
@@ -74,7 +73,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock
 					te.player = null;
 				}
 			});
-			
+
 			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeTileEntity(pos);
 		}
@@ -82,9 +81,10 @@ public class DeployerBlock extends DirectionalAxisKineticBlock
 
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
-		ItemStack heldByPlayer = player.getHeldItem(handIn).copy();
-		if (AllItems.WRENCH.typeOf(heldByPlayer))
+		BlockRayTraceResult hit) {
+		ItemStack heldByPlayer = player.getHeldItem(handIn)
+			.copy();
+		if (AllItemsNew.typeOf(AllItemsNew.WRENCH, heldByPlayer))
 			return ActionResultType.PASS;
 
 		if (hit.getFace() != state.get(FACING))
@@ -93,7 +93,8 @@ public class DeployerBlock extends DirectionalAxisKineticBlock
 			return ActionResultType.SUCCESS;
 
 		withTileEntityDo(worldIn, pos, te -> {
-			ItemStack heldByDeployer = te.player.getHeldItemMainhand().copy();
+			ItemStack heldByDeployer = te.player.getHeldItemMainhand()
+				.copy();
 			if (heldByDeployer.isEmpty() && heldByPlayer.isEmpty())
 				return;
 

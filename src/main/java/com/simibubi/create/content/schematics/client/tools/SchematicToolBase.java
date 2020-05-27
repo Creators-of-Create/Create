@@ -120,13 +120,13 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	}
 
 	@Override
-	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {}
+	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer) {}
 
 	@Override
-	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {}
+	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer) {}
 
 	@Override
-	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer) {
 		if (!schematicHandler.isDeployed())
 			return;
 

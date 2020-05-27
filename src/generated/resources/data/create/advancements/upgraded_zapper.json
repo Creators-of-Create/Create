@@ -2,7 +2,7 @@
   "parent": "create:zapper",
   "display": {
     "icon": {
-      "item": "create:placement_handgun",
+      "item": "create:handheld_blockzapper",
       "nbt": "{Retriever:\"Chromatic\",Scope:\"Chromatic\",Amplifier:\"Chromatic\",Body:\"Chromatic\",Accelerator:\"Chromatic\"}"
     },
     "title": {

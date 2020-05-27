@@ -28,6 +28,11 @@ public class VerticalGearboxItem extends BlockItem {
 	@Override
 	public void fillItemGroup(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
 	}
+	
+	@Override
+	public String getTranslationKey() {
+		return "item.create.vertical_gearbox";
+	}
 
 	@Override
 	public void addToBlockToItemMap(Map<Block, Item> p_195946_1_, Item p_195946_2_) {

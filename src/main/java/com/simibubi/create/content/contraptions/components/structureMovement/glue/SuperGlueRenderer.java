@@ -1,9 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
+import static com.simibubi.create.AllItemsNew.typeOf;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -52,8 +54,8 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 
 		PlayerEntity player = Minecraft.getInstance().player;
 		boolean visible = isVisible(entity);
-		boolean holdingGlue = AllItems.SUPER_GLUE.typeOf(player.getHeldItemMainhand())
-			|| AllItems.SUPER_GLUE.typeOf(player.getHeldItemOffhand());
+		boolean holdingGlue = typeOf(AllItemsNew.SUPER_GLUE, player.getHeldItemMainhand())
+			|| typeOf(AllItemsNew.SUPER_GLUE, player.getHeldItemOffhand());
 
 		if (!visible && !holdingGlue)
 			return;

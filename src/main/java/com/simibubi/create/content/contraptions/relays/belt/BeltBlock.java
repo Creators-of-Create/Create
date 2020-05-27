@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
@@ -82,7 +82,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@Override
 	public void fillItemGroup(ItemGroup p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
-		p_149666_2_.add(AllItems.BELT_CONNECTOR.asStack());
+		p_149666_2_.add(AllItemsNew.BELT_CONNECTOR.asStack());
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
 		PlayerEntity player) {
-		return AllItems.BELT_CONNECTOR.asStack();
+		return AllItemsNew.BELT_CONNECTOR.asStack();
 	}
 
 	@Override
@@ -632,7 +632,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (state.get(CASING))
 			required.add(AllBlocks.BRASS_CASING.asStack());
 		if (state.get(PART) == Part.START)
-			required.add(AllItems.BELT_CONNECTOR.asStack());
+			required.add(AllItemsNew.BELT_CONNECTOR.asStack());
 		if (required.isEmpty())
 			return ItemRequirement.NONE;
 		return new ItemRequirement(ItemUseType.CONSUME, required);

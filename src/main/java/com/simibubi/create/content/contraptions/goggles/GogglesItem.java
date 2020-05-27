@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.goggles;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.entity.MobEntity;
@@ -41,7 +41,7 @@ public class GogglesItem extends Item {
 
 	public static boolean canSeeParticles(PlayerEntity player) {
 		for (ItemStack itemStack : player.getArmorInventoryList())
-			if (AllItems.GOGGLES.typeOf(itemStack))
+			if (AllItemsNew.typeOf(AllItemsNew.GOGGLES, itemStack))
 				return true;
 		return false;
 	}

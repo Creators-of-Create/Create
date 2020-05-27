@@ -5,14 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.curiosities.zapper.PlacementPatterns;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.item.IHaveCustomItemModel;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -23,7 +21,6 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -51,7 +48,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.ForgeEventFactory;
 
-public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel {
+public class BlockzapperItem extends ZapperItem {
 
 	public BlockzapperItem(Properties properties) {
 		super(properties);
@@ -94,7 +91,7 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 	}
 
 	protected boolean activate(World world, PlayerEntity player, ItemStack stack, BlockState selectedState,
-			BlockRayTraceResult raytrace) {
+		BlockRayTraceResult raytrace) {
 		CompoundNBT nbt = stack.getOrCreateTag();
 		boolean replace = nbt.contains("Replace") && nbt.getBoolean("Replace");
 
@@ -110,11 +107,10 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 			if (!player.isCreative() && !canBreak(stack, world.getBlockState(placed), world, placed))
 				continue;
 			if (!player.isCreative() && BlockHelper.findAndRemoveInInventory(selectedState, player, 1) == 0) {
-				player.getCooldownTracker().setCooldown(stack.getItem(), 20);
-				player
-						.sendStatusMessage(
-								new StringTextComponent(TextFormatting.RED + Lang.translate("blockzapper.empty")),
-								true);
+				player.getCooldownTracker()
+					.setCooldown(stack.getItem(), 20);
+				player.sendStatusMessage(
+					new StringTextComponent(TextFormatting.RED + Lang.translate("blockzapper.empty")), true);
 				return false;
 			}
 
@@ -122,9 +118,8 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 				dropBlocks(world, player, stack, face, placed);
 
 			for (Direction updateDirection : Direction.values())
-				selectedState = selectedState
-						.updatePostPlacement(updateDirection, world.getBlockState(placed.offset(updateDirection)),
-								world, placed, placed.offset(updateDirection));
+				selectedState = selectedState.updatePostPlacement(updateDirection,
+					world.getBlockState(placed.offset(updateDirection)), world, placed, placed.offset(updateDirection));
 
 			BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, placed);
 			IFluidState ifluidstate = world.getFluidState(placed);
@@ -156,7 +151,7 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 
 	@Override
 	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-		if (AllItems.PLACEMENT_HANDGUN.typeOf(stack)) {
+		if (AllItemsNew.typeOf(AllItemsNew.BLOCKZAPPER, stack)) {
 			CompoundNBT nbt = stack.getOrCreateTag();
 			if (!nbt.contains("Replace"))
 				nbt.putBoolean("Replace", false);
@@ -177,7 +172,7 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 		ScreenOpener.open(new BlockzapperScreen(handgun, offhand));
 	}
 
-	public List<BlockPos> getSelectedBlocks(ItemStack stack, World worldIn, PlayerEntity player) {
+	public static List<BlockPos> getSelectedBlocks(ItemStack stack, World worldIn, PlayerEntity player) {
 		List<BlockPos> list = new LinkedList<>();
 		CompoundNBT tag = stack.getTag();
 		if (tag == null)
@@ -191,12 +186,14 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 		Set<BlockPos> visited = new HashSet<>();
 		List<BlockPos> frontier = new LinkedList<>();
 
-		Vec3d start = player.getPositionVec().add(0, player.getEyeHeight(), 0);
-		Vec3d range = player.getLookVec().scale(getRange(stack));
+		Vec3d start = player.getPositionVec()
+			.add(0, player.getEyeHeight(), 0);
+		Vec3d range = player.getLookVec()
+			.scale(getRange(stack));
 		BlockRayTraceResult raytrace = player.world
-				.rayTraceBlocks(
-						new RayTraceContext(start, start.add(range), BlockMode.COLLIDER, FluidMode.NONE, player));
-		BlockPos pos = raytrace.getPos().toImmutable();
+			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.COLLIDER, FluidMode.NONE, player));
+		BlockPos pos = raytrace.getPos()
+			.toImmutable();
 
 		if (pos == null)
 			return list;
@@ -209,7 +206,8 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 			for (int y = -1; y <= 1; y++)
 				for (int z = -1; z <= 1; z++)
 					if (Math.abs(x) + Math.abs(y) + Math.abs(z) < 2 || searchDiagonals)
-						if (face.getAxis().getCoordinate(x, y, z) == 0)
+						if (face.getAxis()
+							.getCoordinate(x, y, z) == 0)
 							offsets.add(new BlockPos(x, y, z));
 
 		BlockPos startPos = replace ? pos : pos.offset(face);
@@ -233,7 +231,8 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 					continue;
 				if (stateToReplace.getBlock() != state.getBlock() && !searchAcrossMaterials)
 					continue;
-				if (stateToReplace.getMaterial().isReplaceable())
+				if (stateToReplace.getMaterial()
+					.isReplaceable())
 					continue;
 				if (stateAboveStateToReplace.isSolid())
 					continue;
@@ -250,11 +249,13 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 			BlockState stateToPlaceOn = worldIn.getBlockState(currentPos.offset(face.getOpposite()));
 
 			// Criteria
-			if (stateToPlaceOn.getMaterial().isReplaceable())
+			if (stateToPlaceOn.getMaterial()
+				.isReplaceable())
 				continue;
 			if (stateToPlaceOn.getBlock() != state.getBlock() && !searchAcrossMaterials)
 				continue;
-			if (!stateToPlaceAt.getMaterial().isReplaceable())
+			if (!stateToPlaceAt.getMaterial()
+				.isReplaceable())
 				continue;
 			list.add(currentPos);
 
@@ -297,6 +298,10 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 
 	@Override
 	protected int getCooldownDelay(ItemStack stack) {
+		return getCooldown(stack);
+	}
+
+	public static int getCooldown(ItemStack stack) {
 		ComponentTier tier = getTier(Components.Accelerator, stack);
 		if (tier == ComponentTier.None)
 			return 10;
@@ -309,7 +314,11 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 	}
 
 	@Override
-	protected int getRange(ItemStack stack) {
+	protected int getZappingRange(ItemStack stack) {
+		return getRange(stack);
+	}
+
+	public static int getRange(ItemStack stack) {
 		ComponentTier tier = getTier(Components.Scope, stack);
 		if (tier == ComponentTier.None)
 			return 15;
@@ -322,8 +331,9 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 	}
 
 	protected static void dropBlocks(World worldIn, PlayerEntity playerIn, ItemStack item, Direction face,
-			BlockPos placed) {
-		TileEntity tileentity = worldIn.getBlockState(placed).hasTileEntity() ? worldIn.getTileEntity(placed) : null;
+		BlockPos placed) {
+		TileEntity tileentity = worldIn.getBlockState(placed)
+			.hasTileEntity() ? worldIn.getTileEntity(placed) : null;
 
 		if (getTier(Components.Retriever, item) == ComponentTier.None) {
 			Block.spawnDrops(worldIn.getBlockState(placed), worldIn, placed.offset(face), tileentity);
@@ -333,20 +343,24 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 			Block.spawnDrops(worldIn.getBlockState(placed), worldIn, playerIn.getPosition(), tileentity);
 
 		if (getTier(Components.Retriever, item) == ComponentTier.Chromatic)
-			for (ItemStack stack : Block
-					.getDrops(worldIn.getBlockState(placed), (ServerWorld) worldIn, placed, tileentity))
+			for (ItemStack stack : Block.getDrops(worldIn.getBlockState(placed), (ServerWorld) worldIn, placed,
+				tileentity))
 				if (!playerIn.inventory.addItemStackToInventory(stack))
 					Block.spawnAsEntity(worldIn, placed, stack);
 	}
 
 	public static ComponentTier getTier(Components component, ItemStack stack) {
-		if (!stack.hasTag() || !stack.getTag().contains(component.name()))
-			stack.getOrCreateTag().putString(component.name(), ComponentTier.None.name());
-		return NBTHelper.readEnum(stack.getTag().getString(component.name()), ComponentTier.class);
+		if (!stack.hasTag() || !stack.getTag()
+			.contains(component.name()))
+			stack.getOrCreateTag()
+				.putString(component.name(), ComponentTier.None.name());
+		return NBTHelper.readEnum(stack.getTag()
+			.getString(component.name()), ComponentTier.class);
 	}
 
 	public static void setTier(Components component, ComponentTier tier, ItemStack stack) {
-		stack.getOrCreateTag().putString(component.name(), NBTHelper.writeEnum(tier));
+		stack.getOrCreateTag()
+			.putString(component.name(), NBTHelper.writeEnum(tier));
 	}
 
 	public static enum ComponentTier {
@@ -361,12 +375,6 @@ public class BlockzapperItem extends ZapperItem implements IHaveCustomItemModel 
 
 	public static enum Components {
 		Body, Amplifier, Accelerator, Retriever, Scope
-	}
-
-	@Override
-	@OnlyIn(value = Dist.CLIENT)
-	public CustomRenderedItemModel createModel(IBakedModel original) {
-		return new BlockzapperModel(original);
 	}
 
 }

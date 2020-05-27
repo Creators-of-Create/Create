@@ -1,21 +1,24 @@
 package com.simibubi.create.content.schematics.client;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.schematics.SchematicWorld;
+import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RegionRenderCacheBuilder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -25,11 +28,9 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SchematicRenderer {
 
-	private final RegionRenderCacheBuilder bufferCache = new RegionRenderCacheBuilder();
-	private final Set<RenderType> usedBlockRenderLayers = new HashSet<>(RenderType.getBlockLayers()
-		.size());
-	private final Set<RenderType> startedBufferBuilders = new HashSet<>(RenderType.getBlockLayers()
-		.size());
+	private final Map<RenderType, SuperByteBuffer> bufferCache = new HashMap<>(getLayerCount());
+	private final Set<RenderType> usedBlockRenderLayers = new HashSet<>(getLayerCount());
+	private final Set<RenderType> startedBufferBuilders = new HashSet<>(getLayerCount());
 	private boolean active;
 	private boolean changed;
 	private SchematicWorld schematic;
@@ -39,7 +40,7 @@ public class SchematicRenderer {
 		changed = false;
 	}
 
-	public void startHologram(SchematicWorld world) {
+	public void display(SchematicWorld world) {
 		this.anchor = world.anchor;
 		this.schematic = world;
 		this.active = true;
@@ -66,41 +67,14 @@ public class SchematicRenderer {
 	}
 
 	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
-		// TODO 1.15 buffered render
-//		if (!active)
-//			return;
-//
-//		final Entity entity = Minecraft.getInstance()
-//			.getRenderViewEntity();
-//
-//		if (entity == null) {
-//			return;
-//		}
-//
-//		ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-//		Vec3d view = renderInfo.getProjectedView();
-//		double renderPosX = view.x;
-//		double renderPosY = view.y;
-//		double renderPosZ = view.z;
-//
-//		RenderSystem.enableAlphaTest();
-//		RenderSystem.enableBlend();
-//		Minecraft.getInstance()
-//			.getTextureManager()
-//			.bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
-//
-//		for (RenderType layer : RenderType.getBlockLayers()) {
-//			if (!usedBlockRenderLayers.contains(layer)) {
-//				continue;
-//			}
-//			final BufferBuilder bufferBuilder = bufferCache.get(layer);
-//			RenderSystem.pushMatrix();
-//			RenderSystem.translated(-renderPosX, -renderPosY, -renderPosZ);
-//			drawBuffer(bufferBuilder);
-//			RenderSystem.popMatrix();
-//		}
-//		RenderSystem.disableAlphaTest();
-//		RenderSystem.disableBlend();
+		if (!active)
+			return;
+		for (RenderType layer : RenderType.getBlockLayers()) {
+			if (!usedBlockRenderLayers.contains(layer))
+				continue;
+			SuperByteBuffer superByteBuffer = bufferCache.get(layer);
+			superByteBuffer.renderInto(ms, buffer.getBuffer(layer));
+		}
 	}
 
 	private void redraw(Minecraft minecraft) {
@@ -111,51 +85,51 @@ public class SchematicRenderer {
 		final BlockRendererDispatcher blockRendererDispatcher = minecraft.getBlockRendererDispatcher();
 
 		List<BlockState> blockstates = new LinkedList<>();
+		Map<RenderType, BufferBuilder> buffers = new HashMap<>();
+		MatrixStack ms = new MatrixStack();
 
 		BlockPos.func_229383_a_(blockAccess.getBounds())
 			.forEach(localPos -> {
+				ms.push();
+				MatrixStacker.of(ms)
+					.translate(localPos);
 				BlockPos pos = localPos.add(anchor);
 				BlockState state = blockAccess.getBlockState(pos);
-				
+
 				for (RenderType blockRenderLayer : RenderType.getBlockLayers()) {
 					if (!RenderTypeLookup.canRenderInLayer(state, blockRenderLayer))
 						continue;
 					ForgeHooksClient.setRenderLayer(blockRenderLayer);
-					
-					final BufferBuilder bufferBuilder = bufferCache.get(blockRenderLayer);
+					if (!buffers.containsKey(blockRenderLayer))
+						buffers.put(blockRenderLayer, new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize()));
+
+					BufferBuilder bufferBuilder = buffers.get(blockRenderLayer);
 					if (startedBufferBuilders.add(blockRenderLayer))
 						bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-					if (blockRendererDispatcher.renderModel(state, pos, blockAccess, new MatrixStack(), bufferBuilder,
-						true, minecraft.world.rand, EmptyModelData.INSTANCE)) {
+					if (blockRendererDispatcher.renderModel(state, pos, blockAccess, ms, bufferBuilder, true,
+						minecraft.world.rand, EmptyModelData.INSTANCE)) {
 						usedBlockRenderLayers.add(blockRenderLayer);
 					}
 					blockstates.add(state);
 				}
-				
+
 				ForgeHooksClient.setRenderLayer(null);
+				ms.pop();
 			});
 
 		// finishDrawing
 		for (RenderType layer : RenderType.getBlockLayers()) {
-			if (!startedBufferBuilders.contains(layer)) {
+			if (!startedBufferBuilders.contains(layer))
 				continue;
-			}
-			bufferCache.get(layer)
-				.finishDrawing();
+			BufferBuilder buf = buffers.get(layer);
+			buf.finishDrawing();
+			bufferCache.put(layer, new SuperByteBuffer(buf));
 		}
 	}
 
-//	private static void drawBuffer(final BufferBuilder bufferBuilder) {
-//		Pair<BufferBuilder.DrawState, ByteBuffer> pair = bufferBuilder.popData();
-//		BufferBuilder.DrawState state = pair.getFirst();
-//
-//		if (state.getCount() > 0) {
-//			state.getVertexFormat()
-//				.startDrawing(MemoryUtil.memAddress(pair.getSecond()));
-//			RenderSystem.drawArrays(state.getMode(), 0, state.getCount());
-//			state.getVertexFormat()
-//				.endDrawing();
-//		}
-//	}
+	private static int getLayerCount() {
+		return RenderType.getBlockLayers()
+			.size();
+	}
 
 }

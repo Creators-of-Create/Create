@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.data.AllItemsTagProvider;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -23,7 +22,6 @@ import com.tterrag.registrate.util.NonNullLazyValue;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
@@ -61,9 +59,9 @@ public class Create {
 		modEventBus.addListener(Create::init);
 
 		AllBlocks.register();
+		AllItemsNew.register();
 		AllPaletteBlocks.register();
 
-		modEventBus.addGenericListener(Item.class, AllItems::register);
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(TileEntityType.class, AllTileEntities::register);
 		modEventBus.addGenericListener(ContainerType.class, AllContainerTypes::register);
@@ -115,7 +113,6 @@ public class Create {
 
 	public void gatherData(GatherDataEvent event) {
 		DataGenerator gen = event.getGenerator();
-		gen.addProvider(new AllItemsTagProvider(gen));
 		gen.addProvider(new AllAdvancements(gen));
 		gen.addProvider(new LangMerger(gen));
 	}

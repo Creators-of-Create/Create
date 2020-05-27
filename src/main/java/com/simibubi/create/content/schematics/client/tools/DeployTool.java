@@ -2,7 +2,6 @@ package com.simibubi.create.content.schematics.client.tools;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
@@ -37,8 +36,8 @@ public class DeployTool extends PlacementToolBase {
 	}
 
 	@Override
-	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		super.renderTool(ms, buffer, light, overlay);
+	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer) {
+		super.renderTool(ms, buffer);
 
 		if (selectedPos == null)
 			return;

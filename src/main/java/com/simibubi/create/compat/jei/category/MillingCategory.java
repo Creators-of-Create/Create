@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMillstone;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
@@ -20,7 +20,8 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 	private AnimatedMillstone millstone = new AnimatedMillstone();
 
 	public MillingCategory() {
-		super("milling", doubleItemIcon(AllBlocks.MILLSTONE.get(), AllItems.FLOUR.get()), emptyBackground(177, 53));
+		super("milling", doubleItemIcon(AllBlocks.MILLSTONE.get(), AllItemsNew.WHEAT_FLOUR.get()),
+			emptyBackground(177, 53));
 	}
 
 	@Override
@@ -38,7 +39,9 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 	public void setRecipe(IRecipeLayout recipeLayout, AbstractCrushingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		itemStacks.init(0, true, 14, 8);
-		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
+		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
+			.get(0)
+			.getMatchingStacks()));
 
 		List<ProcessingOutput> results = recipe.getRollableResults();
 		boolean single = results.size() == 1;
@@ -47,7 +50,8 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 			int yOffset = (outputIndex / 2) * -19;
 
 			itemStacks.init(outputIndex + 1, false, single ? 139 : 133 + xOffset, 27 + yOffset);
-			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
+			itemStacks.set(outputIndex + 1, results.get(outputIndex)
+				.getStack());
 		}
 
 		addStochasticTooltip(itemStacks, results);
@@ -55,7 +59,8 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 
 	@Override
 	public void draw(AbstractCrushingRecipe recipe, double mouseX, double mouseY) {
-		int size = recipe.getPossibleOutputs().size();
+		int size = recipe.getPossibleOutputs()
+			.size();
 
 		AllGuiTextures.JEI_SLOT.draw(14, 8);
 		AllGuiTextures.JEI_ARROW.draw(85, 32);

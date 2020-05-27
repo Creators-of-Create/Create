@@ -10,30 +10,30 @@ public abstract class PlacementToolBase extends SchematicToolBase {
 	public void init() {
 		super.init();
 	}
-	
+
 	@Override
 	public void updateSelection() {
 		super.updateSelection();
 	}
-	
+
 	@Override
-	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		super.renderTool(ms, buffer, light, overlay);
+	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer) {
+		super.renderTool(ms, buffer);
 	}
 
 	@Override
-	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		super.renderOverlay(ms, buffer, light, overlay);
+	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer) {
+		super.renderOverlay(ms, buffer);
 	}
-	
+
 	@Override
 	public boolean handleMouseWheel(double delta) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean handleRightClick() {
 		return false;
 	}
-	
+
 }

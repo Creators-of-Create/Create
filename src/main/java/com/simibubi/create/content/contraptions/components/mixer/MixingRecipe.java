@@ -6,10 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInputInventory;
 import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInputInventory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;

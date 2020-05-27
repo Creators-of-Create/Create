@@ -2,7 +2,7 @@
   "parent": "create:refined_radiance",
   "display": {
     "icon": {
-      "item": "create:placement_handgun"
+      "item": "create:handheld_blockzapper"
     },
     "title": {
       "translate": "advancement.create.zapper"
@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "create:placement_handgun"
+            "item": "create:handheld_blockzapper"
           }
         ]
       }

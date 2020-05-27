@@ -1,8 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "#forge:nuggets/copper",
-    "#forge:nuggets/zinc",
-    "#forge:nuggets/brass"
-  ]
-}

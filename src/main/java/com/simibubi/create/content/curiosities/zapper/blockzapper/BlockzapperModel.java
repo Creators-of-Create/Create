@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 public class BlockzapperModel extends CustomRenderedItemModel {
 
 	public BlockzapperModel(IBakedModel template) {
-		super(template, "blockzapper");
+		super(template, "handheld_blockzapper");
 		addPartials("core", "body", "amplifier_core", "accelerator", "gold_body", "gold_scope", "gold_amplifier",
 				"gold_retriever", "gold_accelerator", "chorus_body", "chorus_scope", "chorus_amplifier", "chorus_retriever",
 				"chorus_accelerator");

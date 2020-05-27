@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.Validate;
 
 import com.simibubi.create.AllEntityTypes;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.schematics.ISpecialEntityItemRequirement;
@@ -225,7 +225,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target) {
-		return AllItems.SUPER_GLUE.asStack();
+		return AllItemsNew.SUPER_GLUE.asStack();
 	}
 
 	@Override
@@ -386,7 +386,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public ItemRequirement getRequiredItems() {
-		return new ItemRequirement(ItemUseType.DAMAGE, AllItems.SUPER_GLUE.get());
+		return new ItemRequirement(ItemUseType.DAMAGE, AllItemsNew.SUPER_GLUE.get());
 	}
 
 }

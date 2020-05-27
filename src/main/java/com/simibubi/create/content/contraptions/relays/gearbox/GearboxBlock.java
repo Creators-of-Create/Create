@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.gearbox;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllItemsNew;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -41,7 +41,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
 		super.fillItemGroup(group, items);
-		items.add(AllItems.VERTICAL_GEARBOX.asStack());
+		items.add(AllItemsNew.VERTICAL_GEARBOX.asStack());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -49,7 +49,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		if (state.get(AXIS).isVertical())
 			return super.getDrops(state, builder);
-		return Arrays.asList(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));
+		return Arrays.asList(new ItemStack(AllItemsNew.VERTICAL_GEARBOX.get()));
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 			PlayerEntity player) {
 		if (state.get(AXIS).isVertical())
 			return super.getPickBlock(state, target, world, pos, player);
-		return new ItemStack(AllItems.VERTICAL_GEARBOX.get());
+		return new ItemStack(AllItemsNew.VERTICAL_GEARBOX.get());
 	}
 
 	@Override
