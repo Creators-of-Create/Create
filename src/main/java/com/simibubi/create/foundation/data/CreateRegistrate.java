@@ -135,8 +135,9 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
 		Supplier<NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> func) {
-		return b -> b.properties(p -> p.setISTER(() -> func.get()
-			.apply(null)::createRenderer))
+		return b -> b.properties(p -> p.setISTER(() -> () -> func.get()
+			.apply(null)
+			.createRenderer()))
 			.onRegister(entry -> onClient(() -> () -> registerCustomRenderedItem(entry, func)));
 	}
 

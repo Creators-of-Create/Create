@@ -46,7 +46,7 @@ public class AssetLookup {
 	 * Generate item model inheriting from a seperate model in
 	 * models/block/x/item.json
 	 */
-	public static ItemModelBuilder customItemModel(DataGenContext<Item, ? extends BlockItem> ctx,
+	public static <I extends BlockItem> ItemModelBuilder customItemModel(DataGenContext<Item, I> ctx,
 		RegistrateItemModelProvider prov) {
 		return prov.blockItem(() -> ctx.getEntry()
 			.getBlock(), "/item");

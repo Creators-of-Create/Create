@@ -116,7 +116,7 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<VerticalGearboxItem> VERTICAL_GEARBOX = REGISTRATE.item("vertical_gearbox", VerticalGearboxItem::new)
-		.model(AssetLookup.customItemModel("gearbox", "item_vertical"))
+		.model(AssetLookup.<VerticalGearboxItem>customItemModel("gearbox", "item_vertical"))
 		.register();
 
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
