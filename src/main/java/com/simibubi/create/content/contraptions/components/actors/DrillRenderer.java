@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -16,6 +17,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.util.Direction;
 
 public class DrillRenderer extends KineticTileEntityRenderer {
 
@@ -25,7 +27,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return getRotatingModel(te.getBlockState());
+		return AllBlockPartials.DRILL_HEAD.renderOnDirectional(te.getBlockState());
 	}
 
 	protected static SuperByteBuffer getRotatingModel(BlockState state) {
@@ -36,20 +38,25 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		IRenderTypeBuffer buffer) {
 		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
 		BlockState state = context.state;
-		SuperByteBuffer superBuffer = getRotatingModel(state);
-
+		SuperByteBuffer superBuffer = AllBlockPartials.DRILL_HEAD.renderOn(state);
+		Direction facing = state.get(DrillBlock.FACING);
+		
 		float speed = (float) (context.contraption.stalled
 			|| !VecHelper.isVecPointingTowards(context.relativeMotion, state.get(FACING)
 				.getOpposite()) ? context.getAnimationSpeed() : 0);
 		float time = AnimationTickHolder.getRenderTick() / 20;
-		float angle = (float) (((time * speed) % 360) / 180 * (float) Math.PI);
+		float angle = (float) (((time * speed) % 360));
 
 		for (MatrixStack m : matrixStacks)
 			MatrixStacker.of(m)
 				.centre()
-				.rotateY(angle)
+				.rotateY(AngleHelper.horizontalAngle(facing))
+				.rotateX(AngleHelper.verticalAngle(facing))
+				.rotateZ(angle)
 				.unCentre();
-		superBuffer.light(msLocal.peek()
+		
+		superBuffer
+			.light(msLocal.peek()
 			.getModel())
 			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}

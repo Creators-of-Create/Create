@@ -2,9 +2,6 @@ package com.simibubi.create.content.curiosities.zapper;
 
 import java.util.Vector;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
-import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -17,10 +14,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -68,12 +62,14 @@ public class ZapperScreen extends AbstractSimiScreen {
 				int id = patternButtons.size();
 				PlacementPatterns pattern = PlacementPatterns.values()[id];
 				patternButtons.add(new IconButton(i + 147 + col * 18, j + 23 + row * 18, pattern.icon));
-				patternButtons.get(id).setToolTip(Lang.translate("gui.blockzapper.pattern." + pattern.translationKey));
+				patternButtons.get(id)
+					.setToolTip(Lang.translate("gui.blockzapper.pattern." + pattern.translationKey));
 			}
 		}
 
 		if (nbt.contains("Pattern"))
-			patternButtons.get(PlacementPatterns.valueOf(nbt.getString("Pattern")).ordinal()).active = false;
+			patternButtons.get(PlacementPatterns.valueOf(nbt.getString("Pattern"))
+				.ordinal()).active = false;
 
 		widgets.addAll(patternButtons);
 	}
@@ -86,7 +82,8 @@ public class ZapperScreen extends AbstractSimiScreen {
 		background.draw(this, i, j);
 		drawOnBackground(i, j);
 
-		minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		minecraft.getTextureManager()
+			.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		RenderSystem.enableBlend();
 
 		renderBlock();
@@ -120,7 +117,8 @@ public class ZapperScreen extends AbstractSimiScreen {
 			if (patternButton.isHovered()) {
 				patternButtons.forEach(b -> b.active = true);
 				patternButton.active = false;
-				patternButton.playDownSound(Minecraft.getInstance().getSoundHandler());
+				patternButton.playDownSound(Minecraft.getInstance()
+					.getSoundHandler());
 				nbt.putString("Pattern", PlacementPatterns.values()[patternButtons.indexOf(patternButton)].name());
 			}
 		}
@@ -129,50 +127,29 @@ public class ZapperScreen extends AbstractSimiScreen {
 	}
 
 	protected void renderZapper() {
-		RenderSystem.pushLightingAttributes();
-		RenderSystem.pushMatrix();
-
-		RenderHelper.enable();
-		RenderSystem.enableBlend();
-		RenderSystem.enableRescaleNormal();
-		RenderSystem.enableAlphaTest();
-		RenderSystem.alphaFunc(516, 0.1F);
-		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-		RenderSystem.translated((this.width - this.sWidth) / 2 + 260, this.height / 2 - this.sHeight / 4, 100);
-		RenderSystem.rotatef(90 + 0.2f * animationProgress, 0, 1, 0);
-		RenderSystem.rotatef(-40, .8f, 0, -.0f);
-		RenderSystem.scaled(100, -100, 100);
-
-		itemRenderer.renderItem(zapper, TransformType.FIXED, 0xF000F0, OverlayTexture.DEFAULT_UV, new MatrixStack(), getMinecraft().getBufferBuilders().getEntityVertexConsumers());
-
-		RenderSystem.disableAlphaTest();
-		RenderSystem.disableRescaleNormal();
-		RenderSystem.disableLighting();
-
-		RenderSystem.popMatrix();
-		RenderSystem.popAttributes();
+		GuiGameElement.of(zapper)
+			.at((this.width - this.sWidth) / 2 + 210, this.height / 2 - this.sHeight / 4)
+			.scale(4)
+			.render();
 	}
 
 	protected void renderBlock() {
 		RenderSystem.pushMatrix();
-		RenderSystem.translated(guiLeft + 1.7f, guiTop - 49, 120);
+		RenderSystem.translated(guiLeft + 1.7f, guiTop + 48, 120);
 		RenderSystem.rotatef(-30f, .5f, .9f, -.1f);
-		RenderSystem.scaled(20, -20, 20);
+		RenderSystem.scaled(20, 20, 20);
 
 		BlockState state = Blocks.AIR.getDefaultState();
-		if (zapper.hasTag() && zapper.getTag().contains("BlockUsed"))
-			state = NBTUtil.readBlockState(zapper.getTag().getCompound("BlockUsed"));
-		
-		RenderSystem.translated(0, -5, 0);
+		if (zapper.hasTag() && zapper.getTag()
+			.contains("BlockUsed"))
+			state = NBTUtil.readBlockState(zapper.getTag()
+				.getCompound("BlockUsed"));
 
-		GuiGameElement.of(state).render();
-
+		GuiGameElement.of(state)
+			.render();
 		RenderSystem.popMatrix();
 	}
 
-	protected void writeAdditionalOptions(CompoundNBT nbt) {
-	}
+	protected void writeAdditionalOptions(CompoundNBT nbt) {}
 
 }
