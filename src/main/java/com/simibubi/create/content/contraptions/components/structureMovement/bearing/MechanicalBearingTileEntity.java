@@ -46,7 +46,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		movementMode = new ScrollOptionBehaviour<>(RotationMode.class, Lang.translate("contraptions.movement_mode"),
-				this, getMovementModeSlot());
+			this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		behaviours.add(movementMode);
 	}
@@ -64,7 +64,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void neighbourChanged() {
 		if (!hasWorld())
 			return;
-		
+
 		boolean shouldWindmill = world.isBlockPowered(pos);
 		if (shouldWindmill == isWindmill)
 			return;
@@ -153,7 +153,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	public void assemble() {
-		if (!(world.getBlockState(pos).getBlock() instanceof MechanicalBearingBlock))
+		if (!(world.getBlockState(pos)
+			.getBlock() instanceof MechanicalBearingBlock))
 			return;
 
 		Direction direction = getBlockState().get(FACING);
@@ -168,7 +169,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			return;
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 
-		movedContraption = ContraptionEntity.createStationary(world, contraption).controlledBy(this);
+		movedContraption = ContraptionEntity.createStationary(world, contraption)
+			.controlledBy(this);
 		BlockPos anchor = pos.offset(direction);
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		world.addEntity(movedContraption);
@@ -206,7 +208,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 		if (world.isRemote)
 			clientAngleDiff /= 2;
-
+		if (movedContraption != null)
+			movedContraption.collisionTick();
 		if (running && Contraption.isFrozen())
 			disassemble();
 
@@ -214,11 +217,12 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			assembleNextTick = false;
 			if (running) {
 				boolean canDisassemble = movementMode.get() == RotationMode.ROTATE_PLACE
-						|| (isNearInitialAngle() && movementMode.get() == RotationMode.ROTATE_PLACE_RETURNED);
+					|| (isNearInitialAngle() && movementMode.get() == RotationMode.ROTATE_PLACE_RETURNED);
 				if (speed == 0 && (canDisassemble || movedContraption == null
-						|| movedContraption.getContraption().blocks.isEmpty())) {
+					|| movedContraption.getContraption().blocks.isEmpty())) {
 					if (movedContraption != null)
-						movedContraption.getContraption().stop(world);
+						movedContraption.getContraption()
+							.stop(world);
 					disassemble();
 				}
 				return;
@@ -255,9 +259,11 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 	protected void applyRotation() {
 		if (movedContraption != null) {
-			Axis axis = getBlockState().get(FACING).getAxis();
+			Axis axis = getBlockState().get(FACING)
+				.getAxis();
 			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-			Vec3d vec = new Vec3d(1, 1, 1).scale(angle).mul(new Vec3d(direction.getDirectionVec()));
+			Vec3d vec = new Vec3d(1, 1, 1).scale(angle)
+				.mul(new Vec3d(direction.getDirectionVec()));
 			movedContraption.rotateTo(vec.x, vec.y, vec.z);
 		}
 	}
@@ -294,14 +300,14 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	protected ValueBoxTransform getMovementModeSlot() {
 		return new DirectionalExtenderScrollOptionSlot((state, d) -> {
 			Axis axis = d.getAxis();
-			Axis bearingAxis = state.get(MechanicalBearingBlock.FACING).getAxis();
+			Axis bearingAxis = state.get(MechanicalBearingBlock.FACING)
+				.getAxis();
 			return bearingAxis != axis;
 		});
 	}
 
 	@Override
-	public void collided() {
-	}
+	public void collided() {}
 
 	@Override
 	public boolean isAttachedTo(ContraptionEntity contraption) {

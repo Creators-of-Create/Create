@@ -14,7 +14,6 @@ import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.piston.LinearActuatorTileEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -136,7 +135,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public boolean collisionEnabled() {
-		return getController() instanceof LinearActuatorTileEntity;
+		return true;
 	}
 
 	@Override
@@ -623,6 +622,10 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public float getInitialAngle() {
 		return initialAngle;
+	}
+	
+	public Vec3d getRotationVec() {
+		return new Vec3d(pitch, yaw, roll);
 	}
 
 }
