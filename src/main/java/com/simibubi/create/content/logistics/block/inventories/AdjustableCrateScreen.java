@@ -33,8 +33,8 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 	private List<Rectangle2d> extraAreas;
 
 	private final ItemStack renderedItem = new ItemStack(AllBlocks.ADJUSTABLE_CRATE.get());
-	private final String title = Lang.translate("gui.flexcrate.title");
-	private final String storageSpace = Lang.translate("gui.flexcrate.storageSpace");
+	private final String title = Lang.translate("gui.adjustable_crate.title");
+	private final String storageSpace = Lang.translate("gui.adjustable_crate.storageSpace");
 
 	public AdjustableCrateScreen(AdjustableCrateContainer container, PlayerInventory inv, ITextComponent title) {
 		super(container, inv, title);

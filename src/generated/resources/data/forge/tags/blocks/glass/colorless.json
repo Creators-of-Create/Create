@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "create:tiled_glass",
+    "create:framed_glass",
+    "create:horizontal_framed_glass",
+    "create:vertical_framed_glass"
+  ]
+}

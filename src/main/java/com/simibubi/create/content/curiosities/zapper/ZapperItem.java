@@ -5,7 +5,6 @@ import java.util.List;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
@@ -21,8 +20,6 @@ import net.minecraft.item.Rarity;
 import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.StairsShape;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -218,6 +215,11 @@ public abstract class ZapperItem extends Item {
 	}
 
 	@Override
+	public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+		return true;
+	}
+	
+	@Override
 	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
 		return false;
 	}
@@ -225,58 +227,6 @@ public abstract class ZapperItem extends Item {
 	@Override
 	public UseAction getUseAction(ItemStack stack) {
 		return UseAction.NONE;
-	}
-
-	@Override
-	public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-		if (!(entity instanceof PlayerEntity))
-			return false;
-		if (entity.isSneaking())
-			return true;
-		if (entity.world.isRemote)
-			return true;
-
-		Vec3d start = entity.getPositionVec()
-			.add(0, entity.getEyeHeight(), 0);
-		Vec3d range = entity.getLookVec()
-			.scale(getZappingRange(stack));
-		BlockRayTraceResult raytrace = entity.world
-			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, entity));
-		BlockPos pos = raytrace.getPos();
-		if (pos == null)
-			return true;
-
-		entity.world.sendBlockBreakProgress(entity.getEntityId(), pos, -1);
-		BlockState newState = entity.world.getBlockState(pos);
-
-		if (BlockHelper.getRequiredItem(newState)
-			.isEmpty())
-			return true;
-		if (entity.world.getTileEntity(pos) != null)
-			return true;
-		if (newState.has(BlockStateProperties.DOUBLE_BLOCK_HALF))
-			return true;
-		if (newState.has(BlockStateProperties.ATTACHED))
-			return true;
-		if (newState.has(BlockStateProperties.HANGING))
-			return true;
-		if (newState.has(BlockStateProperties.BED_PART))
-			return true;
-		if (newState.has(BlockStateProperties.STAIRS_SHAPE))
-			newState = newState.with(BlockStateProperties.STAIRS_SHAPE, StairsShape.STRAIGHT);
-		if (newState.has(BlockStateProperties.PERSISTENT))
-			newState = newState.with(BlockStateProperties.PERSISTENT, true);
-
-		CompoundNBT tag = stack.getOrCreateTag();
-		if (tag.contains("BlockUsed") && NBTUtil.readBlockState(stack.getTag()
-			.getCompound("BlockUsed")) == newState)
-			return true;
-
-		tag.put("BlockUsed", NBTUtil.writeBlockState(newState));
-		entity.world.playSound(null, entity.getPosition(), AllSoundEvents.BLOCKZAPPER_CONFIRM.get(),
-			SoundCategory.BLOCKS, 0.5f, 0.8f);
-
-		return true;
 	}
 
 }

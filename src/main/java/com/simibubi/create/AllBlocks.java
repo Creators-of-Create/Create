@@ -815,7 +815,6 @@ public class AllBlocks {
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.item()
 			.transform(oxidizedItemModel())
-			.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("plates/copper")), ctx, true))
 			.transform(oxidizedBlockstate())
 			.register();
 

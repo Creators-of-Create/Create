@@ -24,7 +24,7 @@ public class AllTags {
 			.item()
 			.tag(forgeItemTag(tagName));
 	}
-
+	
 	public static Tag<Block> forgeBlockTag(String name) {
 		return forgeTag(BlockTags.getCollection(), name);
 	}

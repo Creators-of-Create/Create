@@ -8,6 +8,7 @@ import java.util.Set;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.curiosities.zapper.PlacementPatterns;
+import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -189,7 +190,7 @@ public class BlockzapperItem extends ZapperItem {
 		Vec3d start = player.getPositionVec()
 			.add(0, player.getEyeHeight(), 0);
 		Vec3d range = player.getLookVec()
-			.scale(getRange(stack));
+			.scale(ZapperInteractionHandler.getRange(stack));
 		BlockRayTraceResult raytrace = player.world
 			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.COLLIDER, FluidMode.NONE, player));
 		BlockPos pos = raytrace.getPos()
@@ -315,10 +316,6 @@ public class BlockzapperItem extends ZapperItem {
 
 	@Override
 	protected int getZappingRange(ItemStack stack) {
-		return getRange(stack);
-	}
-
-	public static int getRange(ItemStack stack) {
 		ComponentTier tier = getTier(Components.Scope, stack);
 		if (tier == ComponentTier.None)
 			return 15;

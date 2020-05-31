@@ -24,13 +24,13 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 	private ScrollInput onAbove;
 	private Label onAboveLabel;
 
-	private final String title = Lang.translate("gui.stockswitch.title");
-	private final String startAbove = Lang.translate("gui.stockswitch.startAbove");
-	private final String startAt = Lang.translate("gui.stockswitch.startAt");
-	private final String stopBelow = Lang.translate("gui.stockswitch.stopBelow");
-	private final String stopAt = Lang.translate("gui.stockswitch.stopAt");
-	private final String lowerLimit = Lang.translate("gui.stockswitch.lowerLimit");
-	private final String upperLimit = Lang.translate("gui.stockswitch.upperLimit");
+	private final String title = Lang.translate("gui.stockpile_switch.title");
+	private final String startAbove = Lang.translate("gui.stockpile_switch.startAbove");
+	private final String startAt = Lang.translate("gui.stockpile_switch.startAt");
+	private final String stopBelow = Lang.translate("gui.stockpile_switch.stopBelow");
+	private final String stopAt = Lang.translate("gui.stockpile_switch.stopAt");
+	private final String lowerLimit = Lang.translate("gui.stockpile_switch.lowerLimit");
+	private final String upperLimit = Lang.translate("gui.stockpile_switch.upperLimit");
 	private final ItemStack renderedItem = new ItemStack(AllBlocks.STOCKPILE_SWITCH.get());
 
 	private int lastModification;
