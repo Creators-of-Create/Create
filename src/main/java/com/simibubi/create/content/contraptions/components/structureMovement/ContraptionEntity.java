@@ -89,12 +89,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public ContraptionEntity(EntityType<?> entityTypeIn, World worldIn) {
 		super(entityTypeIn, worldIn);
 		motionBeforeStall = Vec3d.ZERO;
-		stationary = entityTypeIn == AllEntityTypes.STATIONARY_CONTRAPTION.type;
+		stationary = entityTypeIn == AllEntityTypes.STATIONARY_CONTRAPTION.get();
 		forcedAngle = -1;
 	}
 
 	public static ContraptionEntity createMounted(World world, Contraption contraption, float initialAngle) {
-		ContraptionEntity entity = new ContraptionEntity(AllEntityTypes.CONTRAPTION.type, world);
+		ContraptionEntity entity = new ContraptionEntity(AllEntityTypes.CONTRAPTION.get(), world);
 		entity.contraption = contraption;
 		entity.initialAngle = initialAngle;
 		entity.forceYaw(initialAngle);
@@ -112,7 +112,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public static ContraptionEntity createStationary(World world, Contraption contraption) {
-		ContraptionEntity entity = new ContraptionEntity(AllEntityTypes.STATIONARY_CONTRAPTION.type, world);
+		ContraptionEntity entity = new ContraptionEntity(AllEntityTypes.STATIONARY_CONTRAPTION.get(), world);
 		entity.contraption = contraption;
 		if (contraption != null)
 			contraption.gatherStoredItems();
