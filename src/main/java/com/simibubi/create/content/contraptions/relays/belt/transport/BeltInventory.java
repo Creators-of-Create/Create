@@ -221,7 +221,7 @@ public class BeltInventory {
 				BlockState state = world.getBlockState(nextPosition);
 
 				// next block is a basin or a saw
-				if (AllBlocks.BASIN.has(state) || AllBlocks.SAW.has(state)
+				if (AllBlocks.BASIN.has(state) || AllBlocks.MECHANICAL_SAW.has(state)
 						|| AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(state)) {
 					TileEntity te = world.getTileEntity(nextPosition);
 					if (te != null) {

@@ -17,7 +17,6 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -56,13 +55,6 @@ public abstract class AttachedLogisticalBlock extends HorizontalBlock implements
 		}
 
 		return state;
-	}
-	
-	@Override
-	public ResourceLocation getLootTable() {
-		if (isVertical())
-			return getHorizontalDefaultState().getBlock().getLootTable();
-		return super.getLootTable();
 	}
 
 	@Override

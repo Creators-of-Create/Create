@@ -221,9 +221,9 @@ public class BlockMovementTraits {
 	 * piston
 	 */
 	public static boolean notSupportive(BlockState state, Direction facing) {
-		if (AllBlocks.DRILL.has(state))
+		if (AllBlocks.MECHANICAL_DRILL.has(state))
 			return state.get(BlockStateProperties.FACING) == facing;
-		if (AllBlocks.SAW.has(state))
+		if (AllBlocks.MECHANICAL_SAW.has(state))
 			return state.get(BlockStateProperties.FACING) == facing;
 		if (AllBlocks.PORTABLE_STORAGE_INTERFACE.has(state))
 			return state.get(PortableStorageInterfaceBlock.FACING) == facing;

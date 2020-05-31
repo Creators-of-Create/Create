@@ -12,11 +12,11 @@
                 "item": "minecraft:ender_pearl"
             },
             "E": {
-                "item": "create:placement_handgun"
+                "item": "create:handheld_blockzapper"
             }
         },
 	"result": {
-		"item": "create:placement_handgun",
+		"item": "create:handheld_blockzapper",
 		"count": 1
 	},
 	"component": "Retriever",

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:limestone_cobblestone"
+  },
+  "result": "create:limestone_cobblestone_wall",
+  "count": 1
+}

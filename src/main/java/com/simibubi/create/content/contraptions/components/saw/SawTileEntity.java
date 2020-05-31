@@ -171,7 +171,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			}
 
 			// Try moving items onto next saw
-			if (AllBlocks.SAW.has(world.getBlockState(nextPos))) {
+			if (AllBlocks.MECHANICAL_SAW.has(world.getBlockState(nextPos))) {
 				TileEntity te = world.getTileEntity(nextPos);
 				if (te != null && te instanceof SawTileEntity) {
 					SawTileEntity sawTileEntity = (SawTileEntity) te;

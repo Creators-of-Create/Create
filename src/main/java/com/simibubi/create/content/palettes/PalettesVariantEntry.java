@@ -8,6 +8,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
@@ -41,6 +42,11 @@ public class PalettesVariantEntry {
 				builder.onRegister(CreateRegistrate.blockColors(() -> AllColorHandlers::getGrassyBlock));
 			pattern.createCTBehaviour(variant)
 				.ifPresent(b -> builder.onRegister(connectedTextures(b)));
+			
+			builder.recipe((c, p) -> {
+				p.stonecutting(DataIngredient.items(variant.getBaseBlock().get()), c::get);
+				pattern.addRecipes(variant, c, p);
+			});
 
 			if (pattern.hasFoliage())
 				builder.item()

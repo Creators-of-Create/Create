@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:polished_dark_scoria"
+    ]
+  },
+  "criteria": {
+    "has_dark_scoria": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:dark_scoria"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:polished_dark_scoria"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dark_scoria",
+      "has_the_recipe"
+    ]
+  ]
+}

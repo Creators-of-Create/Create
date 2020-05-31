@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:dolomite_bricks_slab"
+    ]
+  },
+  "criteria": {
+    "has_dolomite_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:dolomite_bricks"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:dolomite_bricks_slab"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dolomite_bricks",
+      "has_the_recipe"
+    ]
+  ]
+}

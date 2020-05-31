@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:granite_bricks_slab_from_granite_bricks_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_granite_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:granite_bricks"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:granite_bricks_slab_from_granite_bricks_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_granite_bricks",
+      "has_the_recipe"
+    ]
+  ]
+}

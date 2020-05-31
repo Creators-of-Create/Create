@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:scoria"
+  },
+  "result": "create:scoria_cobblestone",
+  "count": 1
+}

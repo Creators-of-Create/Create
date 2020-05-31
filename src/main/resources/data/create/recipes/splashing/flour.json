@@ -2,7 +2,7 @@
     "type": "create:splashing",
     "ingredients": [
     	{
-    		"item": "create:flour"
+    		"item": "create:wheat_flour"
     	}
     ], 
 	"results": [

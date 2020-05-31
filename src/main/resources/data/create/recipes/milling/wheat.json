@@ -7,11 +7,11 @@
     ], 
 	"results": [
 		{
-			"item": "create:flour",
+			"item": "create:wheat_flour",
 			"count": 1
 		},
 		{
-			"item": "create:flour",
+			"item": "create:wheat_flour",
 			"count": 2,
 			"chance": 0.25
 		},

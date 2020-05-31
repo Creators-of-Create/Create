@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:dark_scoria_bricks"
+    }
+  },
+  "result": {
+    "item": "create:dark_scoria_bricks_wall",
+    "count": 6
+  }
+}

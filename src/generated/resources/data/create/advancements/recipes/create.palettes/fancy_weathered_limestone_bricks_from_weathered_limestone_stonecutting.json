@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:fancy_weathered_limestone_bricks_from_weathered_limestone_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_weathered_limestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:weathered_limestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:fancy_weathered_limestone_bricks_from_weathered_limestone_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_weathered_limestone",
+      "has_the_recipe"
+    ]
+  ]
+}

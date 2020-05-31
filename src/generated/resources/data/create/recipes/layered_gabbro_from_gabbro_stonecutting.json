@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:gabbro"
+  },
+  "result": "create:layered_gabbro",
+  "count": 1
+}

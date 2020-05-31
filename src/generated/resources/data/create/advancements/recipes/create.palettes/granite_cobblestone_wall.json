@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:granite_cobblestone_wall"
+    ]
+  },
+  "criteria": {
+    "has_granite_cobblestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:granite_cobblestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:granite_cobblestone_wall"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_granite_cobblestone",
+      "has_the_recipe"
+    ]
+  ]
+}

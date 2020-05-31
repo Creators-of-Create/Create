@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:paved_weathered_limestone"
+    }
+  },
+  "result": {
+    "item": "create:paved_weathered_limestone_wall",
+    "count": 6
+  }
+}

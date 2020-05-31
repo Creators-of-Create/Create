@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "andesite_cobblestone_slab",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:andesite_cobblestone"
+    }
+  },
+  "result": {
+    "item": "create:andesite_cobblestone_slab",
+    "count": 6
+  }
+}

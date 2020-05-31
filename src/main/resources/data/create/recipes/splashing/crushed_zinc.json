@@ -2,7 +2,7 @@
     "type": "create:splashing",
     "ingredients": [
     	{
-    		"item": "create:crushed_zinc"
+    		"item": "create:crushed_zinc_ore"
     	}
     ], 
 	"results": [

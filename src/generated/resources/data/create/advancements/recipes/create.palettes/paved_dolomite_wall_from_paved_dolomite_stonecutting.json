@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:paved_dolomite_wall_from_paved_dolomite_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_paved_dolomite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:paved_dolomite"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:paved_dolomite_wall_from_paved_dolomite_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_paved_dolomite",
+      "has_the_recipe"
+    ]
+  ]
+}

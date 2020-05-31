@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:gabbro_bricks_from_gabbro_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_gabbro": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:gabbro"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:gabbro_bricks_from_gabbro_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_gabbro",
+      "has_the_recipe"
+    ]
+  ]
+}

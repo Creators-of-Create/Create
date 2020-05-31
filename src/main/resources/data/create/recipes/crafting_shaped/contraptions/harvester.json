@@ -17,7 +17,7 @@
             }
         },
 	"result": {
-		"item": "create:harvester",
+		"item": "create:mechanical_harvester",
 		"count": 1
 	}
 }

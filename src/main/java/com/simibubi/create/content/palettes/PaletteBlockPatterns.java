@@ -19,6 +19,8 @@ import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
@@ -26,18 +28,23 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class PaletteBlockPatterns {
-	
-	public static final PaletteBlockPatterns 
-		COBBLESTONE = create("cobblestone", Suffix, AllPartials),
-		POLISHED = create("polished", Prefix, ForPolished), 
-		BRICKS = create("bricks", Suffix, AllPartials),
-		FANCY_BRICKS = create("fancy_bricks", Wrap, AllPartials),
+
+	public static final PaletteBlockPatterns
+
+	COBBLESTONE = create("cobblestone", Suffix, AllPartials),
+
+		POLISHED = create("polished", Prefix, ForPolished).addRecipes(v -> (c,
+			p) -> p.square(DataIngredient.items(v.getBaseBlock()
+				.get()), c::get, true)),
+
+		BRICKS = create("bricks", Suffix, AllPartials), FANCY_BRICKS = create("fancy_bricks", Wrap, AllPartials),
 
 		PAVED = create("paved", Prefix, AllPartials).blockStateFactory(p -> p::paved)
 			.block(PavedBlock::new)
@@ -45,16 +52,22 @@ public class PaletteBlockPatterns {
 
 		LAYERED = create("layered", Prefix).blockStateFactory(p -> p::cubeColumn)
 			.textures("layered", "polished")
-			.connectedTextures(v -> new HorizontalCTBehaviour(
-				ct(v, CTs.LAYERED), 
-				ct(v, CTs.POLISHED))),
+			.connectedTextures(v -> new HorizontalCTBehaviour(ct(v, CTs.LAYERED), ct(v, CTs.POLISHED))),
 
 		CHISELED = create("chiseled", Prefix).blockStateFactory(p -> p::cubeColumn)
 			.textures("chiseled", "chiseled_top"),
 
 		PILLAR = create("pillar", Suffix).blockStateFactory(p -> p::pillar)
 			.block(RotatedPillarBlock::new)
-			.textures("pillar", "pillar_end"),
+			.textures("pillar", "pillar_end")
+			.addRecipes(v -> (c, p) -> ShapedRecipeBuilder.shapedRecipe(c.get(), 2)
+				.key('#', v.getBaseBlock()
+					.get())
+				.patternLine("#")
+				.patternLine("#")
+				.addCriterion("has_ingredient", p.hasItem(v.getBaseBlock()
+					.get()))
+				.build(p::accept)),
 
 		MOSSY = create("mossy", Prefix).blockStateFactory(p -> p::cubeAllButMossy)
 			.textures("bricks", "mossy")
@@ -86,6 +99,7 @@ public class PaletteBlockPatterns {
 
 	private IPatternBlockStateGenerator blockStateGenerator;
 	private NonNullFunction<Properties, ? extends Block> blockFactory;
+	private NonNullFunction<PaletteStoneVariants, NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateRecipeProvider>> additionalRecipes;
 	private PaletteBlockPartial<? extends Block>[] partials;
 
 	@OnlyIn(Dist.CLIENT)
@@ -98,6 +112,7 @@ public class PaletteBlockPatterns {
 		pattern.ctBehaviour = Optional.empty();
 		pattern.nameType = nameType;
 		pattern.partials = partials;
+		pattern.additionalRecipes = $ -> NonNullBiConsumer.noop();
 		pattern.isTranslucent = false;
 		pattern.hasFoliage = false;
 		pattern.blockFactory = Block::new;
@@ -113,7 +128,7 @@ public class PaletteBlockPatterns {
 	public boolean isTranslucent() {
 		return isTranslucent;
 	}
-	
+
 	public boolean hasFoliage() {
 		return hasFoliage;
 	}
@@ -125,11 +140,17 @@ public class PaletteBlockPatterns {
 	public PaletteBlockPartial<? extends Block>[] getPartials() {
 		return partials;
 	}
-	
+
 	public String getTextureForPartials() {
 		return textures[0];
 	}
-	
+
+	public void addRecipes(PaletteStoneVariants variant, DataGenContext<Block, ? extends Block> c,
+		RegistrateRecipeProvider p) {
+		additionalRecipes.apply(variant)
+			.accept(c, p);
+	}
+
 	public Optional<ConnectedTextureBehaviour> createCTBehaviour(PaletteStoneVariants variant) {
 		return ctBehaviour.map(f -> f.apply(variant));
 	}
@@ -155,17 +176,23 @@ public class PaletteBlockPatterns {
 		isTranslucent = true;
 		return this;
 	}
-	
+
 	private PaletteBlockPatterns withFoliage() {
 		hasFoliage = true;
 		return this;
 	}
-	
+
 	private PaletteBlockPatterns connectedTextures(Function<PaletteStoneVariants, ConnectedTextureBehaviour> factory) {
 		this.ctBehaviour = Optional.of(factory);
 		return this;
 	}
-	
+
+	private PaletteBlockPatterns addRecipes(
+		NonNullFunction<PaletteStoneVariants, NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateRecipeProvider>> func) {
+		this.additionalRecipes = func;
+		return this;
+	}
+
 	// Model generators
 
 	public IBlockStateProvider cubeAll(String variant) {
@@ -240,7 +267,7 @@ public class PaletteBlockPatterns {
 	protected static CTSpriteShiftEntry ct(PaletteStoneVariants variant, CTs texture) {
 		return AllSpriteShifts.getVariantPattern(variant, texture);
 	}
-	
+
 	@FunctionalInterface
 	static interface IPatternBlockStateGenerator
 		extends Function<PaletteBlockPatterns, Function<String, IBlockStateProvider>> {
@@ -250,21 +277,21 @@ public class PaletteBlockPatterns {
 	static interface IBlockStateProvider
 		extends NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateBlockstateProvider> {
 	}
-	
+
 	// Textures with connectability, used by Spriteshifter
-	
+
 	public static enum CTs {
-		
-		POLISHED(CTType.OMNIDIRECTIONAL), 
-		LAYERED(CTType.HORIZONTAL)
-		
+
+		POLISHED(CTType.OMNIDIRECTIONAL), LAYERED(CTType.HORIZONTAL)
+
 		;
-		
+
 		public CTType type;
+
 		private CTs(CTType type) {
 			this.type = type;
 		}
-		
+
 	}
 
 }

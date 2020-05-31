@@ -1,7 +1,7 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
     "textures": {
-        "translation_chassis_side": "create:block/translation_chassis_side"
+        "translation_chassis_side": "create:block/linear_chassis_side"
     },
     "elements": [
         {

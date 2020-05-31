@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:dolomite_cobblestone_stairs_from_dolomite_cobblestone_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_dolomite_cobblestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:dolomite_cobblestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:dolomite_cobblestone_stairs_from_dolomite_cobblestone_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dolomite_cobblestone",
+      "has_the_recipe"
+    ]
+  ]
+}

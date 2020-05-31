@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:polished_scoria"
+  },
+  "result": "create:polished_scoria_wall",
+  "count": 1
+}

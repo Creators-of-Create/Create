@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:paved_andesite_slab"
+    ]
+  },
+  "criteria": {
+    "has_paved_andesite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:paved_andesite"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:paved_andesite_slab"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_paved_andesite",
+      "has_the_recipe"
+    ]
+  ]
+}

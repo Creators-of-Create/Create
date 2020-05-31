@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "paved_diorite_stairs",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:paved_diorite"
+    }
+  },
+  "result": {
+    "item": "create:paved_diorite_stairs",
+    "count": 4
+  }
+}

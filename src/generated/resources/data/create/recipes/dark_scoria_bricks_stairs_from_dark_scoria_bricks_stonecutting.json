@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:dark_scoria_bricks"
+  },
+  "result": "create:dark_scoria_bricks_stairs",
+  "count": 1
+}

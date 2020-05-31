@@ -43,8 +43,8 @@ public class AllSpriteShifts {
 		COPPER_CASING = omni("copper_casing");
 	
 	public static final CTSpriteShiftEntry 
-		CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "translation_chassis_end"),
-		CHASSIS_STICKY = getCT(CTType.OMNIDIRECTIONAL, "translation_chassis_end_sticky");
+		CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end"),
+		CHASSIS_STICKY = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end_sticky");
 
 	public static final SpriteShiftEntry 
 		BELT = SpriteShifter.get("block/belt", "block/belt_animated"),

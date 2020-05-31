@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:scoria_cobblestone"
+    }
+  },
+  "result": {
+    "item": "create:scoria_cobblestone_wall",
+    "count": 6
+  }
+}

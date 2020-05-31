@@ -81,7 +81,7 @@ public class AllAdvancements implements IDataProvider {
 		andesiteExpertLane(t, andesite_casing);
 
 		Advancement drill =
-			kinecticAdvancement("drill", AllBlocks.DRILL.get(), TaskType.NORMAL).withParent(andesite_casing)
+			kinecticAdvancement("drill", AllBlocks.MECHANICAL_DRILL.get(), TaskType.NORMAL).withParent(andesite_casing)
 				.register(t, id + ":drill");
 
 		Advancement press =
@@ -98,7 +98,7 @@ public class AllAdvancements implements IDataProvider {
 			itemAdvancement("electron_tube", AllItems.ELECTRON_TUBE, TaskType.NORMAL).withParent(rose_quartz)
 				.register(t, id + ":electron_tube");
 
-		Advancement saw = kinecticAdvancement("saw", AllBlocks.SAW.get(), TaskType.NORMAL).withParent(press)
+		Advancement saw = kinecticAdvancement("saw", AllBlocks.MECHANICAL_SAW.get(), TaskType.NORMAL).withParent(press)
 			.register(t, id + ":saw");
 
 		Advancement basin = advancement("basin", AllBlocks.BASIN.get(), TaskType.NORMAL).withParent(press)

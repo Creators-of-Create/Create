@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "andesite_bricks_slab",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:andesite_bricks"
+    }
+  },
+  "result": {
+    "item": "create:andesite_bricks_slab",
+    "count": 6
+  }
+}

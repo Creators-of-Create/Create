@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "granite_bricks_stairs",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:granite_bricks"
+    }
+  },
+  "result": {
+    "item": "create:granite_bricks_stairs",
+    "count": 4
+  }
+}

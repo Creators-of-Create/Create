@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:paved_limestone_stairs"
+    ]
+  },
+  "criteria": {
+    "has_paved_limestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:paved_limestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:paved_limestone_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_paved_limestone",
+      "has_the_recipe"
+    ]
+  ]
+}

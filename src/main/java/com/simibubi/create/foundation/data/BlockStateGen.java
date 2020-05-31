@@ -221,8 +221,8 @@ public class BlockStateGen {
 	public static <B extends LinearChassisBlock> NonNullBiConsumer<DataGenContext<Block, B>, RegistrateBlockstateProvider> linearChassis() {
 		return (c, p) -> {
 			ResourceLocation side = p.modLoc("block/" + c.getName() + "_side");
-			ResourceLocation top = p.modLoc("block/translation_chassis_end");
-			ResourceLocation top_sticky = p.modLoc("block/translation_chassis_end_sticky");
+			ResourceLocation top = p.modLoc("block/linear_chassis_end");
+			ResourceLocation top_sticky = p.modLoc("block/linear_chassis_end_sticky");
 
 			Vector<ModelFile> models = new Vector<>(4);
 			for (boolean isTopSticky : Iterate.trueAndFalse)
@@ -247,7 +247,7 @@ public class BlockStateGen {
 			ResourceLocation side = p.modLoc(path + "_side");
 			ResourceLocation side_sticky = p.modLoc(path + "_side_sticky");
 
-			String templateModelPath = "block/rotation_chassis";
+			String templateModelPath = "block/radial_chassis";
 			ModelFile base = p.models()
 				.getExistingFile(p.modLoc(templateModelPath + "/base"));
 			Vector<ModelFile> faces = new Vector<>(3);

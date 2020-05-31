@@ -28,7 +28,7 @@ public class AnimatedSaw extends AnimatedKinetics {
 				.scale(scale)
 				.render();
 
-		GuiGameElement.of(AllBlocks.SAW.getDefaultState()
+		GuiGameElement.of(AllBlocks.MECHANICAL_SAW.getDefaultState()
 				.with(SawBlock.FACING, Direction.UP)
 				.with(SawBlock.RUNNING, true))
 				.rotateBlock(0, 0, 0)

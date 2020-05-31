@@ -29,7 +29,7 @@ public class SawGenerator extends SpecialBlockStateGen {
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		String path = "block/saw/";
+		String path = "block/" + ctx.getName() + "/";
 		String orientation = state.get(SawBlock.FACING)
 			.getAxis()
 			.isVertical() ? "vertical" : "horizontal";

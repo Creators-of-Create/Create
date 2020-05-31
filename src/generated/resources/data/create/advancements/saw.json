@@ -2,7 +2,7 @@
   "parent": "create:press",
   "display": {
     "icon": {
-      "item": "create:saw"
+      "item": "create:mechanical_saw"
     },
     "title": {
       "translate": "advancement.create.saw"
@@ -19,13 +19,13 @@
     "0": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "create:saw"
+        "block": "create:mechanical_saw"
       }
     },
     "1": {
       "trigger": "create:kinetic_block",
       "conditions": {
-        "block": "create:saw"
+        "block": "create:mechanical_saw"
       }
     }
   },

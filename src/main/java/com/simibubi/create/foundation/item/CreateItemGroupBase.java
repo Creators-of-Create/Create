@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -53,6 +54,8 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 		
 		for (RegistryEntry<? extends Item> entry : getItems()) {
 			Item item = entry.get();
+			if (item instanceof BlockItem)
+				continue;
 			IBakedModel model = itemRenderer.getItemModelWithOverrides(new ItemStack(item), world, null);
 			if (model.isGui3d() != specialItems)
 				continue;

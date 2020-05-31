@@ -2,11 +2,11 @@
     "type": "crafting_shapeless",
 	"ingredients": [
 		{
-			"item": "create:translation_chassis_secondary"
+			"item": "create:secondary_linear_chassis"
 		}
 	],
 	"result": {
-		"item": "create:translation_chassis",
+		"item": "create:linear_chassis",
 		"count": 1
 	}
 }

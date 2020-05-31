@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:dark_scoria"
+  },
+  "result": "create:dark_scoria_pillar",
+  "count": 1
+}

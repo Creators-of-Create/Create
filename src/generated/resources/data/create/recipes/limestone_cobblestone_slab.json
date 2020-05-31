@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "limestone_cobblestone_slab",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:limestone_cobblestone"
+    }
+  },
+  "result": {
+    "item": "create:limestone_cobblestone_slab",
+    "count": 6
+  }
+}

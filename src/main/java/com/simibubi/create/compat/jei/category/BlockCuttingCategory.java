@@ -26,7 +26,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	private AnimatedSaw saw = new AnimatedSaw();
 
 	public BlockCuttingCategory() {
-		super("block_cutting", doubleItemIcon(AllBlocks.SAW.get(), Items.STONE_BRICK_STAIRS), emptyBackground(177, 70));
+		super("block_cutting", doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.STONE_BRICK_STAIRS), emptyBackground(177, 70));
 	}
 
 	@Override

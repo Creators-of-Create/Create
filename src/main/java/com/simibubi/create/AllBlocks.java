@@ -450,7 +450,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<LinearChassisBlock> LINEAR_CHASSIS =
-		REGISTRATE.block("translation_chassis", LinearChassisBlock::new)
+		REGISTRATE.block("linear_chassis", LinearChassisBlock::new)
 			.initialProperties(SharedProperties::wooden)
 			.blockstate(BlockStateGen.linearChassis())
 			.onRegister(connectedTextures(new ChassisCTBehaviour()))
@@ -458,20 +458,18 @@ public class AllBlocks {
 			.simpleItem()
 			.register();
 
-	public static final BlockEntry<LinearChassisBlock> LINEAR_CHASSIS_SECONDARY =
-		REGISTRATE.block("translation_chassis_secondary", LinearChassisBlock::new)
+	public static final BlockEntry<LinearChassisBlock> SECONDARY_LINEAR_CHASSIS =
+		REGISTRATE.block("secondary_linear_chassis", LinearChassisBlock::new)
 			.initialProperties(SharedProperties::wooden)
 			.blockstate(BlockStateGen.linearChassis())
 			.onRegister(connectedTextures(new ChassisCTBehaviour()))
-			.lang("Secondary Linear Chassis")
 			.simpleItem()
 			.register();
 
 	public static final BlockEntry<RadialChassisBlock> RADIAL_CHASSIS =
-		REGISTRATE.block("rotation_chassis", RadialChassisBlock::new)
+		REGISTRATE.block("radial_chassis", RadialChassisBlock::new)
 			.initialProperties(SharedProperties::wooden)
 			.blockstate(BlockStateGen.radialChassis())
-			.lang("Radial Chassis")
 			.item()
 			.model((c, p) -> {
 				String path = "block/" + c.getName();
@@ -480,21 +478,19 @@ public class AllBlocks {
 			.build()
 			.register();
 
-	public static final BlockEntry<DrillBlock> DRILL = REGISTRATE.block("drill", DrillBlock::new)
+	public static final BlockEntry<DrillBlock> MECHANICAL_DRILL = REGISTRATE.block("mechanical_drill", DrillBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(StressConfigDefaults.setImpact(4.0))
-		.lang("Mechanical Drill")
 		.item()
 		.transform(customItemModel())
 		.register();
 
-	public static final BlockEntry<SawBlock> SAW = REGISTRATE.block("saw", SawBlock::new)
+	public static final BlockEntry<SawBlock> MECHANICAL_SAW = REGISTRATE.block("mechanical_saw", SawBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.blockstate(new SawGenerator()::generate)
 		.transform(StressConfigDefaults.setImpact(4.0))
 		.addLayer(() -> RenderType::getCutoutMipped)
-		.lang("Mechanical Saw")
 		.item()
 		.model((c, p) -> p.blockItem(() -> c.getEntry()
 			.getBlock(), "/horizontal"))
@@ -516,19 +512,17 @@ public class AllBlocks {
 			.simpleItem()
 			.register();
 
-	public static final BlockEntry<HarvesterBlock> HARVESTER = REGISTRATE.block("harvester", HarvesterBlock::new)
+	public static final BlockEntry<HarvesterBlock> MECHANICAL_HARVESTER = REGISTRATE.block("mechanical_harvester", HarvesterBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.blockstate(BlockStateGen.horizontalBlockProvider(true))
 		.addLayer(() -> RenderType::getCutoutMipped)
-		.lang("Mechanical Harvester")
 		.item()
 		.transform(customItemModel())
 		.register();
 
-	public static final BlockEntry<PloughBlock> PLOUGH = REGISTRATE.block("plough", PloughBlock::new)
+	public static final BlockEntry<PloughBlock> MECHANICAL_PLOUGH = REGISTRATE.block("mechanical_plough", PloughBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.blockstate(BlockStateGen.horizontalBlockProvider(false))
-		.lang("Mechanical Plough")
 		.simpleItem()
 		.register();
 
@@ -664,6 +658,7 @@ public class AllBlocks {
 		REGISTRATE.block("vertical_extractor", ExtractorBlock.Vertical::new)
 			.initialProperties(SharedProperties::softMetal)
 			.blockstate(new VerticalExtractorGenerator(false)::generate)
+			.loot((p, b) -> p.registerDropping(b, EXTRACTOR.get()))
 			.register();
 
 	public static final BlockEntry<LinkedExtractorBlock> LINKED_EXTRACTOR =
@@ -680,6 +675,7 @@ public class AllBlocks {
 		REGISTRATE.block("vertical_linked_extractor", LinkedExtractorBlock.Vertical::new)
 			.initialProperties(SharedProperties::softMetal)
 			.blockstate(new VerticalExtractorGenerator(true)::generate)
+			.loot((p, b) -> p.registerDropping(b, LINKED_EXTRACTOR.get()))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.register();
 
@@ -695,6 +691,7 @@ public class AllBlocks {
 		REGISTRATE.block("vertical_funnel", FunnelBlock.Vertical::new)
 			.initialProperties(SharedProperties::softMetal)
 			.blockstate(new VerticalFunnelGenerator()::generate)
+			.loot((p, b) -> p.registerDropping(b, FUNNEL.get()))
 			.register();
 
 	public static final BlockEntry<TransposerBlock> TRANSPOSER = REGISTRATE.block("transposer", TransposerBlock::new)
@@ -708,6 +705,7 @@ public class AllBlocks {
 		REGISTRATE.block("vertical_transposer", TransposerBlock.Vertical::new)
 			.initialProperties(SharedProperties::softMetal)
 			.blockstate(new VerticalTransposerGenerator(false)::generate)
+			.loot((p, b) -> p.registerDropping(b, TRANSPOSER.get()))
 			.register();
 
 	public static final BlockEntry<LinkedTransposerBlock> LINKED_TRANSPOSER = REGISTRATE
@@ -724,6 +722,7 @@ public class AllBlocks {
 		REGISTRATE.block("vertical_linked_transposer", LinkedTransposerBlock.Vertical::new)
 			.initialProperties(SharedProperties::softMetal)
 			.blockstate(new VerticalTransposerGenerator(true)::generate)
+			.loot((p, b) -> p.registerDropping(b, LINKED_TRANSPOSER.get()))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.register();
 

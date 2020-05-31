@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:granite_cobblestone"
+  },
+  "result": "create:granite_cobblestone_wall",
+  "count": 1
+}

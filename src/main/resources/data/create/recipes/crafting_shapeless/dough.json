@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "create:flour"
+      "item": "create:wheat_flour"
     },
     {
       "item": "minecraft:water_bucket"

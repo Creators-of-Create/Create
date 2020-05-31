@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:paved_gabbro_wall"
+    ]
+  },
+  "criteria": {
+    "has_paved_gabbro": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:paved_gabbro"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:paved_gabbro_wall"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_paved_gabbro",
+      "has_the_recipe"
+    ]
+  ]
+}

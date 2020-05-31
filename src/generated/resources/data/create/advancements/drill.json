@@ -2,7 +2,7 @@
   "parent": "create:andesite_casing",
   "display": {
     "icon": {
-      "item": "create:drill"
+      "item": "create:mechanical_drill"
     },
     "title": {
       "translate": "advancement.create.drill"
@@ -19,13 +19,13 @@
     "0": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "create:drill"
+        "block": "create:mechanical_drill"
       }
     },
     "1": {
       "trigger": "create:kinetic_block",
       "conditions": {
-        "block": "create:drill"
+        "block": "create:mechanical_drill"
       }
     }
   },

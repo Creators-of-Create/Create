@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "paved_dark_scoria_slab",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:paved_dark_scoria"
+    }
+  },
+  "result": {
+    "item": "create:paved_dark_scoria_slab",
+    "count": 6
+  }
+}

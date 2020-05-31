@@ -7,6 +7,7 @@ import static com.simibubi.create.content.AllSections.LOGISTICS;
 import static com.simibubi.create.content.AllSections.MATERIALS;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
 
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
@@ -63,11 +64,11 @@ public class AllItems {
 		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold")),
 		LAPIS_SHEET = ingredient("lapis_sheet"),
 
-		CRUSHED_IRON = ingredient("crushed_iron_ore"), 
-		CRUSHED_GOLD = ingredient("crushed_gold_ore"),
-		CRUSHED_COPPER = ingredient("crushed_copper_ore"), 
-		CRUSHED_ZINC = ingredient("crushed_zinc_ore"),
-		CRUSHED_BRASS = ingredient("crushed_brass"),
+		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", AllItemTags.CRUSHED_ORES.tag), 
+		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", AllItemTags.CRUSHED_ORES.tag),
+		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", AllItemTags.CRUSHED_ORES.tag), 
+		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", AllItemTags.CRUSHED_ORES.tag),
+		CRUSHED_BRASS = taggedIngredient("crushed_brass", AllItemTags.CRUSHED_ORES.tag),
 
 		ANDESITE_ALLOY = ingredient("andesite_alloy"),
 		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper")),

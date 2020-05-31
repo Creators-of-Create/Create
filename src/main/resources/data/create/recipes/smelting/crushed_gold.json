@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "item": "create:crushed_gold"
+    "item": "create:crushed_gold_ore"
   },
   "result": "minecraft:gold_ingot",
   "experience": 0.1,

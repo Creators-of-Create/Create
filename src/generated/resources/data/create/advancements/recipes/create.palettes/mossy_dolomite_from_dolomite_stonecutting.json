@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:mossy_dolomite_from_dolomite_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_dolomite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:dolomite"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:mossy_dolomite_from_dolomite_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dolomite",
+      "has_the_recipe"
+    ]
+  ]
+}

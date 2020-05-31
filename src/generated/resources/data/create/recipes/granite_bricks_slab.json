@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "granite_bricks_slab",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:granite_bricks"
+    }
+  },
+  "result": {
+    "item": "create:granite_bricks_slab",
+    "count": 6
+  }
+}

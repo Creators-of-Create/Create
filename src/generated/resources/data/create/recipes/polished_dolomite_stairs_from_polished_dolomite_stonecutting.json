@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:polished_dolomite"
+  },
+  "result": "create:polished_dolomite_stairs",
+  "count": 1
+}

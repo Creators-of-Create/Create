@@ -58,7 +58,7 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 	}
 
 	public static boolean isChassis(BlockState state) {
-		return AllBlocks.LINEAR_CHASSIS.has(state) || AllBlocks.LINEAR_CHASSIS_SECONDARY.has(state);
+		return AllBlocks.LINEAR_CHASSIS.has(state) || AllBlocks.SECONDARY_LINEAR_CHASSIS.has(state);
 	}
 
 	public static boolean sameKind(BlockState state1, BlockState state2) {

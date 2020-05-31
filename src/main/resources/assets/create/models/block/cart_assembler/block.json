@@ -2,11 +2,11 @@
     "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
 	"parent": "block/block",
     "textures": {
-        "particle": "create:block/translation_chassis_side",
+        "particle": "create:block/linear_chassis_side",
         "gearbox_top": "create:block/gearbox_top",
         "clutch_off": "create:block/clutch_off",
         "rail": "minecraft:block/rail",
-        "translation_chassis_side": "create:block/translation_chassis_side"
+        "translation_chassis_side": "create:block/linear_chassis_side"
     },
     "elements": [
         {

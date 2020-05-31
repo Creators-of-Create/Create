@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "side": "create:block/radial_chassis_side",
+    "end": "create:block/radial_chassis_end"
+  }
+}

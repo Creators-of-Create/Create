@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "paved_dark_scoria_stairs",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:paved_dark_scoria"
+    }
+  },
+  "result": {
+    "item": "create:paved_dark_scoria_stairs",
+    "count": 4
+  }
+}

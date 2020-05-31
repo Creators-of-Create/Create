@@ -1,0 +1,17 @@
+{
+    "textures": {
+        "particle": "create:block/radial_chassis_side",
+        "rotation_chassis_top": "create:block/radial_chassis_end"
+    },
+    "elements": [
+        {
+            "name": "Cube",
+            "from": [ 0, 0, 0 ], 
+            "to": [ 16, 16, 16 ], 
+            "faces": {
+                "up": { "texture": "#rotation_chassis_top", "uv": [ 0, 0, 16, 16 ] },
+                "down": { "texture": "#rotation_chassis_top", "uv": [ 0, 0, 16, 16 ] }
+            }
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:chiseled_limestone_from_limestone_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_limestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:limestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:chiseled_limestone_from_limestone_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_limestone",
+      "has_the_recipe"
+    ]
+  ]
+}

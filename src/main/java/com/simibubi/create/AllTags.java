@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -31,7 +32,7 @@ public class AllTags {
 	public static Tag<Item> forgeItemTag(String name) {
 		return forgeTag(ItemTags.getCollection(), name);
 	}
-
+	
 	public static <T> Tag<T> forgeTag(TagCollection<T> collection, String name) {
 		return tag(collection, "forge", name);
 	}
@@ -41,7 +42,21 @@ public class AllTags {
 	}
 
 	public static enum AllItemTags {
-		;
+		CRUSHED_ORES;
+		public Tag<Item> tag;
+
+		private AllItemTags() {
+			this("");
+		}
+
+		private AllItemTags(String path) {
+			tag = new ItemTags.Wrapper(
+				new ResourceLocation(Create.ID, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
+		}
+
+		public boolean matches(ItemStack stack) {
+			return tag.contains(stack.getItem());
+		}
 	}
 
 	public static enum AllBlockTags {

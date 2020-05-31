@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "create:scoria"
+    }
+  },
+  "result": {
+    "item": "create:scoria_pillar",
+    "count": 2
+  }
+}

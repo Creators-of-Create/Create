@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:dolomite_cobblestone"
+  },
+  "result": "create:dolomite_cobblestone_wall",
+  "count": 1
+}

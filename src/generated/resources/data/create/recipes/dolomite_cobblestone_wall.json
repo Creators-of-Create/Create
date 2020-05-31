@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:dolomite_cobblestone"
+    }
+  },
+  "result": {
+    "item": "create:dolomite_cobblestone_wall",
+    "count": 6
+  }
+}
