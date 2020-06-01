@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.motor;
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -11,13 +10,15 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.tileentity.TileEntityType;
+
 public class CreativeMotorTileEntity extends GeneratingKineticTileEntity {
 
 	public static final int DEFAULT_SPEED = 16;
 	protected ScrollValueBehaviour generatedSpeed;
 
-	public CreativeMotorTileEntity() {
-		super(AllTileEntities.MOTOR.type);
+	public CreativeMotorTileEntity(TileEntityType<? extends CreativeMotorTileEntity> type) {
+		super(type);
 	}
 
 	@Override

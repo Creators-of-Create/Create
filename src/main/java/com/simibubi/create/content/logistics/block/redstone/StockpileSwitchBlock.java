@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -151,7 +152,7 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new StockpileSwitchTileEntity();
+		return AllTileEntities.STOCKPILE_SWITCH.create();
 	}
 
 	@Override

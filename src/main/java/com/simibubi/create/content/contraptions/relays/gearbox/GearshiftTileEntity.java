@@ -1,15 +1,15 @@
 package com.simibubi.create.content.contraptions.relays.gearbox;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 
 public class GearshiftTileEntity extends SplitShaftTileEntity {
 
-	public GearshiftTileEntity() {
-		super(AllTileEntities.GEARSHIFT.type);
+	public GearshiftTileEntity(TileEntityType<? extends GearshiftTileEntity> type) {
+		super(type);
 	}
 
 	@Override

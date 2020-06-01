@@ -23,11 +23,7 @@ public class TransposerTileEntity extends ExtractorTileEntity {
 
 	private InsertingBehaviour inserting;
 
-	public TransposerTileEntity() {
-		this(AllTileEntities.TRANSPOSER.type);
-	}
-
-	protected TransposerTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public TransposerTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 	}
 

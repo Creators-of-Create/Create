@@ -1,12 +1,13 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+
+import net.minecraft.tileentity.TileEntityType;
 
 public class EncasedShaftTileEntity extends KineticTileEntity {
 
-	public EncasedShaftTileEntity() {
-		super(AllTileEntities.ENCASED_SHAFT.type);
+	public EncasedShaftTileEntity(TileEntityType<? extends EncasedShaftTileEntity> type) {
+		super(type);
 	}
 	
 }

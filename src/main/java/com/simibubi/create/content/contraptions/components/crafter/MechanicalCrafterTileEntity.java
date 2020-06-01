@@ -10,7 +10,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock.Pointing;
@@ -29,6 +28,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -85,8 +85,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	private InsertingBehaviour inserting;
 	private EdgeInteractionBehaviour connectivity;
 
-	public MechanicalCrafterTileEntity() {
-		super(AllTileEntities.MECHANICAL_CRAFTER.type);
+	public MechanicalCrafterTileEntity(TileEntityType<? extends MechanicalCrafterTileEntity> type) {
+		super(type);
 		setLazyTickRate(20);
 		phase = Phase.IDLE;
 		groupedItemsBeforeCraft = new GroupedItems();

@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.Random;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.Block;
@@ -40,7 +41,7 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new AnalogLeverTileEntity();
+		return AllTileEntities.ANALOG_LEVER.create();
 	}
 
 	@Override

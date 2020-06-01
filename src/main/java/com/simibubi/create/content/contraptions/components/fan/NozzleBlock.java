@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 
@@ -37,7 +38,7 @@ public class NozzleBlock extends ProperDirectionalBlock implements IWrenchable {
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new NozzleTileEntity();
+		return AllTileEntities.NOZZLE.create();
 	}
 	
 	@Override

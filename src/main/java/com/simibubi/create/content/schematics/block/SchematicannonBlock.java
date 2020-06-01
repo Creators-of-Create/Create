@@ -1,6 +1,7 @@
 package com.simibubi.create.content.schematics.block;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 
@@ -33,7 +34,7 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new SchematicannonTileEntity();
+		return AllTileEntities.SCHEMATICANNON.create();
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.Random;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -60,9 +61,9 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		switch (type) {
 		case SPEED:
-			return new SpeedGaugeTileEntity();
+			return AllTileEntities.SPEEDOMETER.create();
 		case STRESS:
-			return new StressGaugeTileEntity();
+			return AllTileEntities.STRESSOMETER.create();
 		default:
 			return null;
 		}

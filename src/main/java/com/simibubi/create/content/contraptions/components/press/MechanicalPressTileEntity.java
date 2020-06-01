@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
 import com.simibubi.create.content.logistics.InWorldProcessing;
@@ -25,6 +24,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -64,8 +64,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public Mode mode;
 	public boolean finished;
 
-	public MechanicalPressTileEntity() {
-		super(AllTileEntities.MECHANICAL_PRESS.type);
+	public MechanicalPressTileEntity(TileEntityType<? extends MechanicalPressTileEntity> type) {
+		super(type);
 		mode = Mode.WORLD;
 	}
 

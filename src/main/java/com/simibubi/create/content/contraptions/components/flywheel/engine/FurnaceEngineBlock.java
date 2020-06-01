@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -46,7 +47,7 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new FurnaceEngineTileEntity();
+		return AllTileEntities.FURNACE_ENGINE.create();
 	}
 
 	@Override

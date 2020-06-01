@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
@@ -53,7 +54,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IPortableBloc
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new DrillTileEntity();
+		return AllTileEntities.DRILL.create();
 	}
 
 	@Override

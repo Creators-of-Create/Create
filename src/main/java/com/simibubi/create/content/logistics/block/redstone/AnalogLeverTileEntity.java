@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -10,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 
 public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
@@ -18,8 +18,8 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 	int lastChange;
 	InterpolatedChasingValue clientState = new InterpolatedChasingValue().withSpeed(.2f);
 
-	public AnalogLeverTileEntity() {
-		super(AllTileEntities.ANALOG_LEVER.type);
+	public AnalogLeverTileEntity(TileEntityType<? extends AnalogLeverTileEntity> type) {
+		super(type);
 	}
 
 	@Override

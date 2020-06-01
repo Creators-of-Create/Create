@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
@@ -35,7 +36,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new PulleyTileEntity();
+		return AllTileEntities.ROPE_PULLEY.create();
 	}
 
 	@Override

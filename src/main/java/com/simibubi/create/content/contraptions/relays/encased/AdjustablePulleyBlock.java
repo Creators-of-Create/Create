@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.Block;
@@ -30,7 +31,7 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock implements ITE<Adjus
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new AdjustablePulleyTileEntity();
+		return AllTileEntities.ADJUSTABLE_PULLEY.create();
 	}
 
 	@Override

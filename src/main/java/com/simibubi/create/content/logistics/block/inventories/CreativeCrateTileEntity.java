@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -13,6 +12,7 @@ import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
@@ -22,8 +22,8 @@ import net.minecraftforge.items.IItemHandler;
 
 public class CreativeCrateTileEntity extends CrateTileEntity {
 
-	public CreativeCrateTileEntity() {
-		super(AllTileEntities.CREATIVE_CRATE.type);
+	public CreativeCrateTileEntity(TileEntityType<? extends CreativeCrateTileEntity> type) {
+		super(type);
 		inv = new CreativeCrateInventory(this);
 		itemHandler = LazyOptional.of(() -> inv);
 	}

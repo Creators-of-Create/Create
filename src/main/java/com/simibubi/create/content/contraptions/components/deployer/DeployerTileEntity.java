@@ -12,7 +12,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -30,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -78,8 +78,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		PUNCH, USE
 	}
 
-	public DeployerTileEntity() {
-		super(AllTileEntities.DEPLOYER.type);
+	public DeployerTileEntity(TileEntityType<? extends DeployerTileEntity> type) {
+		super(type);
 		state = State.WAITING;
 		mode = Mode.USE;
 		heldItem = ItemStack.EMPTY;

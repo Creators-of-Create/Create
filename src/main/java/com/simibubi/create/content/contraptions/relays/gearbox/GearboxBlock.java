@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -30,7 +31,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new GearboxTileEntity();
+		return AllTileEntities.DEPLOYER.create();
 	}
 
 	@Override

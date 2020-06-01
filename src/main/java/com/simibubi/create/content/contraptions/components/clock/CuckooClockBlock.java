@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.clock;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 
 import net.minecraft.block.Block;
@@ -37,7 +38,7 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new CuckooClockTileEntity();
+		return AllTileEntities.CUCKOO_CLOCK.create();
 	}
 	
 	@Override

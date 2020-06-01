@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.simibubi.create.AllTileEntities;
-
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 
@@ -9,8 +8,8 @@ public class DrillTileEntity extends BlockBreakingKineticTileEntity {
 
 	public static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
 
-	public DrillTileEntity() {
-		super(AllTileEntities.DRILL.type);
+	public DrillTileEntity(TileEntityType<? extends DrillTileEntity> type) {
+		super(type);
 	}
 
 	@Override

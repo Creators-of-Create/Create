@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.block.inventories;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -61,10 +60,6 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 	public int allowedAmount;
 	public int itemCount;
 	protected LazyOptional<IItemHandler> invHandler;
-
-	public AdjustableCrateTileEntity() {
-		this(AllTileEntities.ADJUSTABLE_CRATE.type);
-	}
 
 	public AdjustableCrateTileEntity(TileEntityType<?> type) {
 		super(type);

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.schematics.block;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 
@@ -74,7 +75,7 @@ public class SchematicTableBlock extends HorizontalBlock implements ITE<Schemati
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new SchematicTableTileEntity();
+		return AllTileEntities.SCHEMATIC_TABLE.create();
 	}
 
 	@Override

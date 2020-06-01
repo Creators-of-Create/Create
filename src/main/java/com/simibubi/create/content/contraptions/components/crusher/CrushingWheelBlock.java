@@ -4,6 +4,7 @@ import static com.simibubi.create.content.contraptions.components.crusher.Crushi
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
@@ -29,7 +30,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new CrushingWheelTileEntity();
+		return AllTileEntities.CRUSHING_WHEEL.create();
 	}
 
 	@Override

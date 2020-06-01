@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.crafter;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
@@ -53,7 +54,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new MechanicalCrafterTileEntity();
+		return AllTileEntities.MECHANICAL_CRAFTER.create();
 	}
 
 	@Override

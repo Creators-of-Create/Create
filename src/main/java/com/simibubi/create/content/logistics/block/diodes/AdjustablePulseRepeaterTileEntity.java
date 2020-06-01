@@ -2,12 +2,12 @@ package com.simibubi.create.content.logistics.block.diodes;
 
 import static com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock.POWERING;
 
-import com.simibubi.create.AllTileEntities;
+import net.minecraft.tileentity.TileEntityType;
 
 public class AdjustablePulseRepeaterTileEntity extends AdjustableRepeaterTileEntity {
 
-	public AdjustablePulseRepeaterTileEntity() {
-		super(AllTileEntities.ADJUSTABLE_PULSE_REPEATER.type);
+	public AdjustablePulseRepeaterTileEntity(TileEntityType<? extends AdjustablePulseRepeaterTileEntity> type) {
+		super(type);
 	}
 
 	@Override

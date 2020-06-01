@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
@@ -46,6 +45,7 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -65,8 +65,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	private FilteringBehaviour filtering;
 	private boolean destroyed;
 
-	public SawTileEntity() {
-		super(AllTileEntities.SAW.type);
+	public SawTileEntity(TileEntityType<? extends SawTileEntity> type) {
+		super(type);
 		inventory = new ProcessingInventory(this::start);
 		inventory.remainingTime = -1;
 		recipeIndex = 0;

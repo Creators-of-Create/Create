@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
@@ -181,7 +182,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new EncasedShaftTileEntity();
+		return AllTileEntities.ENCASED_SHAFT.create();
 	}
 
 	@Override

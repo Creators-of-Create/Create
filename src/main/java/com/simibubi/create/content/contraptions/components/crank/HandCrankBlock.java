@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
@@ -83,7 +84,7 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new HandCrankTileEntity();
+		return AllTileEntities.HAND_CRANK.create();
 	}
 
 	@Override

@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 
@@ -15,8 +15,8 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 
 	private Map<Direction, Float> flows;
 
-	public WaterWheelTileEntity() {
-		super(AllTileEntities.WATER_WHEEL.type);
+	public WaterWheelTileEntity(TileEntityType<? extends WaterWheelTileEntity> type) {
+		super(type);
 		flows = new HashMap<>();
 		for (Direction d : Direction.values())
 			setFlow(d, 0);

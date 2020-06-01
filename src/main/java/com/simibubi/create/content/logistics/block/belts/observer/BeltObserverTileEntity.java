@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.block.belts.observer;
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock.Mode;
@@ -11,6 +10,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -19,8 +19,8 @@ public class BeltObserverTileEntity extends SmartTileEntity {
 	private FilteringBehaviour filtering;
 	public int turnOffTicks = 0;
 
-	public BeltObserverTileEntity() {
-		super(AllTileEntities.BELT_OBSERVER.type);
+	public BeltObserverTileEntity(TileEntityType<? extends BeltObserverTileEntity> type) {
+		super(type);
 		setLazyTickRate(20);
 	}
 

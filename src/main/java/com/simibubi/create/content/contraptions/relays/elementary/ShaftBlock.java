@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 
 import net.minecraft.block.BlockRenderType;
@@ -37,7 +38,7 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new SimpleKineticTileEntity();
+		return AllTileEntities.SIMPLE_KINETIC.create();
 	}
 
 	@Override

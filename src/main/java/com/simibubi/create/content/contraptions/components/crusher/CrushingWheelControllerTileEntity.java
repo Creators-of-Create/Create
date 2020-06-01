@@ -7,7 +7,6 @@ import java.util.Random;
 import java.util.UUID;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -26,6 +25,7 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -47,8 +47,8 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	private RecipeWrapper wrapper;
 	public float crushingspeed;
 
-	public CrushingWheelControllerTileEntity() {
-		super(AllTileEntities.CRUSHING_WHEEL_CONTROLLER.type);
+	public CrushingWheelControllerTileEntity(TileEntityType<? extends CrushingWheelControllerTileEntity> type) {
+		super(type);
 		inventory = new ProcessingInventory(this::itemInserted) {
 
 			@Override

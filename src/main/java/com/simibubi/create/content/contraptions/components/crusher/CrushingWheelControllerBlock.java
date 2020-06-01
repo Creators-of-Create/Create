@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.crusher;
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -58,7 +59,7 @@ public class CrushingWheelControllerBlock extends Block
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new CrushingWheelControllerTileEntity();
+		return AllTileEntities.CRUSHING_WHEEL_CONTROLLER.create();
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
@@ -23,6 +22,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -40,8 +40,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 	public ScrollValueBehaviour minIngredients;
 
-	public MechanicalMixerTileEntity() {
-		super(AllTileEntities.MECHANICAL_MIXER.type);
+	public MechanicalMixerTileEntity(TileEntityType<? extends MechanicalMixerTileEntity> type) {
+		super(type);
 	}
 
 	@Override

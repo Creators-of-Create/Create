@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.transposer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.block.belts.BeltAttachableLogisticalBlock;
 
 import net.minecraft.block.Block;
@@ -38,7 +39,7 @@ public class TransposerBlock extends BeltAttachableLogisticalBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new TransposerTileEntity();
+		return AllTileEntities.TRANSPOSER.create();
 	}
 
 	@Override

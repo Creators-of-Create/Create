@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.extractor;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
@@ -61,7 +62,7 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock implements IPo
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new ExtractorTileEntity();
+		return AllTileEntities.EXTRACTOR.create();
 	}
 
 	@Override

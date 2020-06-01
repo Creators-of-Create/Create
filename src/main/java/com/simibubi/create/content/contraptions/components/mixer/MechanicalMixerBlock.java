@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.mixer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
@@ -24,7 +25,7 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new MechanicalMixerTileEntity();
+		return AllTileEntities.MECHANICAL_MIXER.create();
 	}
 
 	@Override

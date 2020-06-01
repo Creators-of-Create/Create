@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
@@ -109,7 +110,7 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new RedstoneLinkTileEntity();
+		return AllTileEntities.REDSTONE_LINK.create();
 	}
 
 	@Override

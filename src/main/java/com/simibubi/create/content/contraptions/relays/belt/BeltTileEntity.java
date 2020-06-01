@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.Tracker;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
@@ -33,6 +32,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -58,8 +58,8 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	public CompoundNBT trackerUpdateTag;
 
-	public BeltTileEntity() {
-		super(AllTileEntities.BELT.type);
+	public BeltTileEntity(TileEntityType<? extends BeltTileEntity> type) {
+		super(type);
 		controller = BlockPos.ZERO;
 		attachmentTracker = new Tracker(this);
 		itemHandler = LazyOptional.empty();

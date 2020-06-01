@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.saw;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
@@ -59,7 +60,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new SawTileEntity();
+		return AllTileEntities.SAW.create();
 	}
 
 	@Override

@@ -2,13 +2,13 @@ package com.simibubi.create.content.contraptions.processing;
 
 import java.util.Optional;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -91,8 +91,8 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 		LazyOptional.of(() -> new BasinInventory(inputInventory, outputInventory));
 	public BasinInputInventory recipeInventory;
 
-	public BasinTileEntity() {
-		super(AllTileEntities.BASIN.type);
+	public BasinTileEntity(TileEntityType<? extends BasinTileEntity> type) {
+		super(type);
 		contentsChanged = true;
 		recipeInventory = new BasinInputInventory();
 	}

@@ -2,19 +2,19 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.TextFormatting;
 
 public class StressGaugeTileEntity extends GaugeTileEntity {
 
-	public StressGaugeTileEntity() {
-		super(AllTileEntities.STRESSOMETER.type);
+	public StressGaugeTileEntity(TileEntityType<? extends StressGaugeTileEntity> type) {
+		super(type);
 	}
 
 	@Override

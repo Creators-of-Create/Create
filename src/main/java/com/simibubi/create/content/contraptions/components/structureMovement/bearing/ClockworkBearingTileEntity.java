@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
@@ -12,6 +11,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -31,8 +31,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	protected boolean running;
 	protected boolean assembleNextTick;
 
-	public ClockworkBearingTileEntity() {
-		super(AllTileEntities.CLOCKWORK_BEARING.type);
+	public ClockworkBearingTileEntity(TileEntityType<? extends ClockworkBearingTileEntity> type) {
+		super(type);
 		setLazyTickRate(3);
 	}
 

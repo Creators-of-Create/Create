@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.waterwheel;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
@@ -31,7 +32,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new WaterWheelTileEntity();
+		return AllTileEntities.WATER_WHEEL.create();
 	}
 
 	@Override

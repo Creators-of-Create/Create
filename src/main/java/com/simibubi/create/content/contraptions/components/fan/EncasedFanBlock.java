@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
@@ -25,7 +26,7 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new EncasedFanTileEntity();
+		return AllTileEntities.ENCASED_FAN.create();
 	}
 
 	@Override

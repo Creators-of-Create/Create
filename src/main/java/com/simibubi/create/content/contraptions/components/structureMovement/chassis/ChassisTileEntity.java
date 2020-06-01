@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.contraptions.components.structureMovement.ChassisRangeDisplay;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -24,6 +23,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -35,8 +35,8 @@ public class ChassisTileEntity extends SmartTileEntity {
 
 	ScrollValueBehaviour range;
 
-	public ChassisTileEntity() {
-		super(AllTileEntities.CHASSIS.type);
+	public ChassisTileEntity(TileEntityType<? extends ChassisTileEntity> type) {
+		super(type);
 	}
 
 	@Override

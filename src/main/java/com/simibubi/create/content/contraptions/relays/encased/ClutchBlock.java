@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import com.simibubi.create.AllTileEntities;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +17,7 @@ public class ClutchBlock extends GearshiftBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new ClutchTileEntity();
+		return AllTileEntities.CLUTCH.create();
 	}
 
 	@Override

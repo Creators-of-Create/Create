@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -16,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -32,8 +32,8 @@ public class NozzleTileEntity extends SmartTileEntity {
 	private boolean pushing;
 	private BlockPos fanPos;
 
-	public NozzleTileEntity() {
-		super(AllTileEntities.NOZZLE.type);
+	public NozzleTileEntity(TileEntityType<? extends NozzleTileEntity> type) {
+		super(type);
 		setLazyTickRate(5);
 	}
 

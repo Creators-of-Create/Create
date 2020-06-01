@@ -155,7 +155,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		
 		if (!world.isRemote) {
 			SimpleTrigger trigger = AllTriggers.MIXER_MIX;
-			if (getType() == AllTileEntities.MECHANICAL_PRESS.type)
+			if (AllTileEntities.MECHANICAL_PRESS.is(this))
 				trigger = AllTriggers.PRESS_COMPACT;
 			AllTriggers.triggerForNearbyPlayers(trigger, world, pos, 4);
 		}

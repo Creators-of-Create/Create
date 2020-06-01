@@ -1,7 +1,6 @@
 package com.simibubi.create;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.actors.DrillRenderer;
@@ -88,119 +87,145 @@ import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import com.simibubi.create.foundation.utility.Lang;
+import com.tterrag.registrate.util.entry.TileEntityEntry;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
-public enum AllTileEntities {
+public class AllTileEntities {
 
 	// Schematics
-	SCHEMATICANNON(SchematicannonTileEntity::new, AllBlocks.SCHEMATICANNON),
-	SCHEMATIC_TABLE(SchematicTableTileEntity::new, AllBlocks.SCHEMATIC_TABLE),
+	public static final TileEntityEntry<SchematicannonTileEntity> SCHEMATICANNON = register(
+			"schematicannon", SchematicannonTileEntity::new, AllBlocks.SCHEMATICANNON);
+	public static final TileEntityEntry<SchematicTableTileEntity> SCHEMATIC_TABLE = register(
+			"schematic_table", SchematicTableTileEntity::new, AllBlocks.SCHEMATIC_TABLE);
 
 	// Kinetics
-	SIMPLE_KINETIC(SimpleKineticTileEntity::new, AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL,
-		AllBlocks.ENCASED_SHAFT),
-	MOTOR(CreativeMotorTileEntity::new, AllBlocks.CREATIVE_MOTOR),
-	GEARBOX(GearboxTileEntity::new, AllBlocks.GEARBOX),
-	ENCASED_SHAFT(EncasedShaftTileEntity::new, AllBlocks.ENCASED_SHAFT, AllBlocks.ENCASED_BELT),
-	ADJUSTABLE_PULLEY(AdjustablePulleyTileEntity::new, AllBlocks.ADJUSTABLE_PULLEY),
-	ENCASED_FAN(EncasedFanTileEntity::new, AllBlocks.ENCASED_FAN),
-	NOZZLE(NozzleTileEntity::new, AllBlocks.NOZZLE),
-	CLUTCH(ClutchTileEntity::new, AllBlocks.CLUTCH),
-	GEARSHIFT(GearshiftTileEntity::new, AllBlocks.GEARSHIFT),
-	TURNTABLE(TurntableTileEntity::new, AllBlocks.TURNTABLE),
-	HAND_CRANK(HandCrankTileEntity::new, AllBlocks.HAND_CRANK),
-	CUCKOO_CLOCK(CuckooClockTileEntity::new, AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK),
+	public static final TileEntityEntry<SimpleKineticTileEntity> SIMPLE_KINETIC = register(
+			"simple_kinetic", SimpleKineticTileEntity::new, AllBlocks.SHAFT, AllBlocks.COGWHEEL,
+			AllBlocks.LARGE_COGWHEEL, AllBlocks.ENCASED_SHAFT);
+	public static final TileEntityEntry<CreativeMotorTileEntity> MOTOR = register(
+			"motor", CreativeMotorTileEntity::new, AllBlocks.CREATIVE_MOTOR);
+	public static final TileEntityEntry<GearboxTileEntity> GEARBOX = register(
+			"gearbox", GearboxTileEntity::new, AllBlocks.GEARBOX);
+	public static final TileEntityEntry<EncasedShaftTileEntity> ENCASED_SHAFT = register(
+			"encased_shaft", EncasedShaftTileEntity::new, AllBlocks.ENCASED_SHAFT, AllBlocks.ENCASED_BELT);
+	public static final TileEntityEntry<AdjustablePulleyTileEntity> ADJUSTABLE_PULLEY = register(
+			"adjustable_pulley", AdjustablePulleyTileEntity::new, AllBlocks.ADJUSTABLE_PULLEY);
+	public static final TileEntityEntry<EncasedFanTileEntity> ENCASED_FAN = register(
+			"encased_fan", EncasedFanTileEntity::new, AllBlocks.ENCASED_FAN);
+	public static final TileEntityEntry<NozzleTileEntity> NOZZLE = register(
+			"nozzle", NozzleTileEntity::new, AllBlocks.NOZZLE);
+	public static final TileEntityEntry<ClutchTileEntity> CLUTCH = register(
+			"clutch", ClutchTileEntity::new, AllBlocks.CLUTCH);
+	public static final TileEntityEntry<GearshiftTileEntity> GEARSHIFT = register(
+			"gearshift", GearshiftTileEntity::new, AllBlocks.GEARSHIFT);
+	public static final TileEntityEntry<TurntableTileEntity> TURNTABLE = register(
+			"turntable", TurntableTileEntity::new, AllBlocks.TURNTABLE);
+	public static final TileEntityEntry<HandCrankTileEntity> HAND_CRANK = register(
+			"hand_crank", HandCrankTileEntity::new, AllBlocks.HAND_CRANK);
+	public static final TileEntityEntry<CuckooClockTileEntity> CUCKOO_CLOCK = register(
+			"cuckoo_clock", CuckooClockTileEntity::new, AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK);
 
-	BELT(BeltTileEntity::new, AllBlocks.BELT),
-	BELT_TUNNEL(BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL),
-	MECHANICAL_PISTON(MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON,
-		AllBlocks.STICKY_MECHANICAL_PISTON),
-	MECHANICAL_BEARING(MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING),
-	CLOCKWORK_BEARING(ClockworkBearingTileEntity::new, AllBlocks.CLOCKWORK_BEARING),
-	ROPE_PULLEY(PulleyTileEntity::new, AllBlocks.ROPE_PULLEY),
-	CHASSIS(ChassisTileEntity::new, AllBlocks.RADIAL_CHASSIS, AllBlocks.LINEAR_CHASSIS,
-		AllBlocks.SECONDARY_LINEAR_CHASSIS),
-	DRILL(DrillTileEntity::new, AllBlocks.MECHANICAL_DRILL),
-	SAW(SawTileEntity::new, AllBlocks.MECHANICAL_SAW),
-	HARVESTER(HarvesterTileEntity::new, AllBlocks.MECHANICAL_HARVESTER),
-	FLYWHEEL(FlywheelTileEntity::new, AllBlocks.FLYWHEEL),
-	FURNACE_ENGINE(FurnaceEngineTileEntity::new, AllBlocks.FURNACE_ENGINE),
+	public static final TileEntityEntry<BeltTileEntity> BELT = register(
+			"belt", BeltTileEntity::new, AllBlocks.BELT);
+	public static final TileEntityEntry<BeltTunnelTileEntity> BELT_TUNNEL = register(
+			"belt_tunnel", BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL);
+	public static final TileEntityEntry<MechanicalPistonTileEntity> MECHANICAL_PISTON = register(
+			"mechanical_piston", MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON,
+			AllBlocks.STICKY_MECHANICAL_PISTON);
+	public static final TileEntityEntry<MechanicalBearingTileEntity> MECHANICAL_BEARING = register(
+			"mechanical_bearing", MechanicalBearingTileEntity::new, AllBlocks.MECHANICAL_BEARING);
+	public static final TileEntityEntry<ClockworkBearingTileEntity> CLOCKWORK_BEARING = register(
+			"clockwork_bearing", ClockworkBearingTileEntity::new, AllBlocks.CLOCKWORK_BEARING);
+	public static final TileEntityEntry<PulleyTileEntity> ROPE_PULLEY = register(
+			"rope_pulley", PulleyTileEntity::new, AllBlocks.ROPE_PULLEY);
+	public static final TileEntityEntry<ChassisTileEntity> CHASSIS = register(
+			"chassis", ChassisTileEntity::new, AllBlocks.RADIAL_CHASSIS, AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS);
+	public static final TileEntityEntry<DrillTileEntity> DRILL = register(
+			"drill", DrillTileEntity::new, AllBlocks.MECHANICAL_DRILL);
+	public static final TileEntityEntry<SawTileEntity> SAW = register(
+			"saw", SawTileEntity::new, AllBlocks.MECHANICAL_SAW);
+	public static final TileEntityEntry<HarvesterTileEntity> HARVESTER = register(
+			"harvester", HarvesterTileEntity::new, AllBlocks.MECHANICAL_HARVESTER);
+	public static final TileEntityEntry<FlywheelTileEntity> FLYWHEEL = register(
+			"flywheel", FlywheelTileEntity::new, AllBlocks.FLYWHEEL);
+	public static final TileEntityEntry<FurnaceEngineTileEntity> FURNACE_ENGINE = register(
+			"furnace_engine", FurnaceEngineTileEntity::new, AllBlocks.FURNACE_ENGINE);
 
-	MILLSTONE(MillstoneTileEntity::new, AllBlocks.MILLSTONE),
-	CRUSHING_WHEEL(CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL),
-	CRUSHING_WHEEL_CONTROLLER(CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER),
-	WATER_WHEEL(WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL),
-	MECHANICAL_PRESS(MechanicalPressTileEntity::new, AllBlocks.MECHANICAL_PRESS),
-	MECHANICAL_MIXER(MechanicalMixerTileEntity::new, AllBlocks.MECHANICAL_MIXER),
-	DEPLOYER(DeployerTileEntity::new, AllBlocks.DEPLOYER),
-	BASIN(BasinTileEntity::new, AllBlocks.BASIN),
-	MECHANICAL_CRAFTER(MechanicalCrafterTileEntity::new, AllBlocks.MECHANICAL_CRAFTER),
-	SEQUENCED_GEARSHIFT(SequencedGearshiftTileEntity::new, AllBlocks.SEQUENCED_GEARSHIFT),
-	ROTATION_SPEED_CONTROLLER(SpeedControllerTileEntity::new, AllBlocks.ROTATION_SPEED_CONTROLLER),
-	SPEEDOMETER(SpeedGaugeTileEntity::new, AllBlocks.SPEEDOMETER),
-	STRESSOMETER(StressGaugeTileEntity::new, AllBlocks.STRESSOMETER),
-	ANALOG_LEVER(AnalogLeverTileEntity::new, AllBlocks.ANALOG_LEVER),
-	CART_ASSEMBLER(CartAssemblerTileEntity::new, AllBlocks.CART_ASSEMBLER),
+	public static final TileEntityEntry<MillstoneTileEntity> MILLSTONE = register(
+			"millstone", MillstoneTileEntity::new, AllBlocks.MILLSTONE);
+	public static final TileEntityEntry<CrushingWheelTileEntity> CRUSHING_WHEEL = register(
+			"crushing_wheel", CrushingWheelTileEntity::new, AllBlocks.CRUSHING_WHEEL);
+	public static final TileEntityEntry<CrushingWheelControllerTileEntity> CRUSHING_WHEEL_CONTROLLER = register(
+			"crushing_wheel_controller", CrushingWheelControllerTileEntity::new, AllBlocks.CRUSHING_WHEEL_CONTROLLER);
+	public static final TileEntityEntry<WaterWheelTileEntity> WATER_WHEEL = register(
+			"water_wheel", WaterWheelTileEntity::new, AllBlocks.WATER_WHEEL);
+	public static final TileEntityEntry<MechanicalPressTileEntity> MECHANICAL_PRESS = register(
+			"mechanical_press", MechanicalPressTileEntity::new, AllBlocks.MECHANICAL_PRESS);
+	public static final TileEntityEntry<MechanicalMixerTileEntity> MECHANICAL_MIXER = register(
+			"mechanical_mixer", MechanicalMixerTileEntity::new, AllBlocks.MECHANICAL_MIXER);
+	public static final TileEntityEntry<DeployerTileEntity> DEPLOYER = register(
+			"deployer", DeployerTileEntity::new, AllBlocks.DEPLOYER);
+	public static final TileEntityEntry<BasinTileEntity> BASIN = register(
+			"basin", BasinTileEntity::new, AllBlocks.BASIN);
+	public static final TileEntityEntry<MechanicalCrafterTileEntity> MECHANICAL_CRAFTER = register(
+			"mechanical_crafter", MechanicalCrafterTileEntity::new, AllBlocks.MECHANICAL_CRAFTER);
+	public static final TileEntityEntry<SequencedGearshiftTileEntity> SEQUENCED_GEARSHIFT = register(
+			"sequenced_gearshift", SequencedGearshiftTileEntity::new, AllBlocks.SEQUENCED_GEARSHIFT);
+	public static final TileEntityEntry<SpeedControllerTileEntity> ROTATION_SPEED_CONTROLLER = register(
+			"rotation_speed_controller", SpeedControllerTileEntity::new, AllBlocks.ROTATION_SPEED_CONTROLLER);
+	public static final TileEntityEntry<SpeedGaugeTileEntity> SPEEDOMETER = register(
+			"speedometer", SpeedGaugeTileEntity::new, AllBlocks.SPEEDOMETER);
+	public static final TileEntityEntry<StressGaugeTileEntity> STRESSOMETER = register(
+			"stressometer", StressGaugeTileEntity::new, AllBlocks.STRESSOMETER);
+	public static final TileEntityEntry<AnalogLeverTileEntity> ANALOG_LEVER = register(
+			"analog_lever", AnalogLeverTileEntity::new, AllBlocks.ANALOG_LEVER);
+	public static final TileEntityEntry<CartAssemblerTileEntity> CART_ASSEMBLER = register(
+			"cart_assembler", CartAssemblerTileEntity::new, AllBlocks.CART_ASSEMBLER);
 
 	// Logistics
-	REDSTONE_LINK(RedstoneLinkTileEntity::new, AllBlocks.REDSTONE_LINK),
-	STOCKPILE_SWITCH(StockpileSwitchTileEntity::new, AllBlocks.STOCKPILE_SWITCH),
-	ADJUSTABLE_CRATE(AdjustableCrateTileEntity::new, AllBlocks.ADJUSTABLE_CRATE),
-	CREATIVE_CRATE(CreativeCrateTileEntity::new, AllBlocks.CREATIVE_CRATE),
-	EXTRACTOR(ExtractorTileEntity::new, AllBlocks.EXTRACTOR, AllBlocks.VERTICAL_EXTRACTOR),
-	LINKED_EXTRACTOR(LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR,
-		AllBlocks.VERTICAL_LINKED_EXTRACTOR),
-	TRANSPOSER(TransposerTileEntity::new, AllBlocks.TRANSPOSER, AllBlocks.VERTICAL_TRANSPOSER),
-	LINKED_TRANSPOSER(LinkedTransposerTileEntity::new, AllBlocks.LINKED_TRANSPOSER,
-		AllBlocks.VERTICAL_LINKED_TRANSPOSER),
-	FUNNEL(FunnelTileEntity::new, AllBlocks.FUNNEL, AllBlocks.VERTICAL_FUNNEL),
-	BELT_OBSERVER(BeltObserverTileEntity::new, AllBlocks.BELT_OBSERVER),
-	ADJUSTABLE_REPEATER(AdjustableRepeaterTileEntity::new, AllBlocks.ADJUSTABLE_REPEATER),
-	ADJUSTABLE_PULSE_REPEATER(AdjustablePulseRepeaterTileEntity::new, AllBlocks.ADJUSTABLE_PULSE_REPEATER),
-
-	;
-
-	private Supplier<? extends TileEntity> supplier;
-	public TileEntityType<?> type;
-	private Supplier<? extends Block>[] blocks;
+	public static final TileEntityEntry<RedstoneLinkTileEntity> REDSTONE_LINK = register(
+			"redstone_link", RedstoneLinkTileEntity::new, AllBlocks.REDSTONE_LINK);
+	public static final TileEntityEntry<StockpileSwitchTileEntity> STOCKPILE_SWITCH = register(
+			"stockpile_switch", StockpileSwitchTileEntity::new, AllBlocks.STOCKPILE_SWITCH);
+	public static final TileEntityEntry<AdjustableCrateTileEntity> ADJUSTABLE_CRATE = register(
+			"adjustable_crate", AdjustableCrateTileEntity::new, AllBlocks.ADJUSTABLE_CRATE);
+	public static final TileEntityEntry<CreativeCrateTileEntity> CREATIVE_CRATE = register(
+			"creative_crate", CreativeCrateTileEntity::new, AllBlocks.CREATIVE_CRATE);
+	public static final TileEntityEntry<ExtractorTileEntity> EXTRACTOR = register(
+			"extractor", ExtractorTileEntity::new, AllBlocks.EXTRACTOR, AllBlocks.VERTICAL_EXTRACTOR);
+	public static final TileEntityEntry<LinkedExtractorTileEntity> LINKED_EXTRACTOR = register(
+			"linked_extractor", LinkedExtractorTileEntity::new, AllBlocks.LINKED_EXTRACTOR, AllBlocks.VERTICAL_LINKED_EXTRACTOR);
+	public static final TileEntityEntry<TransposerTileEntity> TRANSPOSER = register(
+			"transposer", TransposerTileEntity::new, AllBlocks.TRANSPOSER, AllBlocks.VERTICAL_TRANSPOSER);
+	public static final TileEntityEntry<LinkedTransposerTileEntity> LINKED_TRANSPOSER = register(
+			"linked_transposer", LinkedTransposerTileEntity::new, AllBlocks.LINKED_TRANSPOSER, AllBlocks.VERTICAL_LINKED_TRANSPOSER);
+	public static final TileEntityEntry<FunnelTileEntity> FUNNEL = register(
+			"funnel", FunnelTileEntity::new, AllBlocks.FUNNEL, AllBlocks.VERTICAL_FUNNEL);
+	public static final TileEntityEntry<BeltObserverTileEntity> BELT_OBSERVER = register(
+			"belt_observer", BeltObserverTileEntity::new, AllBlocks.BELT_OBSERVER);
+	public static final TileEntityEntry<AdjustableRepeaterTileEntity> ADJUSTABLE_REPEATER = register(
+			"adjustable_repeater", AdjustableRepeaterTileEntity::new, AllBlocks.ADJUSTABLE_REPEATER);
+	public static final TileEntityEntry<AdjustablePulseRepeaterTileEntity> ADJUSTABLE_PULSE_REPEATER = register(
+			"adjustable_pulse_repeater", AdjustablePulseRepeaterTileEntity::new, AllBlocks.ADJUSTABLE_PULSE_REPEATER);
 
 	@SafeVarargs
-	private AllTileEntities(Supplier<? extends TileEntity> supplier, Supplier<? extends Block>... blocks) {
-		this.supplier = supplier;
-		this.blocks = blocks;
+	public static <T extends TileEntity> TileEntityEntry<T> register(String name, NonNullFunction<TileEntityType<T>, ? extends T> supplier, NonNullSupplier<? extends Block>... blocks) {
+		return Create.registrate().<T>tileEntity(name, supplier)
+				.validBlocks(blocks)
+				.register();
 	}
 
-	public boolean typeOf(TileEntity te) {
-		return te.getType()
-			.equals(type);
-	}
-
-	public static void register(RegistryEvent.Register<TileEntityType<?>> event) {
-		for (AllTileEntities tileEntity : values()) {
-			Block[] blocks = new Block[tileEntity.blocks.length];
-			for (int i = 0; i < blocks.length; i++)
-				blocks[i] = tileEntity.blocks[i].get();
-
-			ResourceLocation resourceLocation = new ResourceLocation(Create.ID, Lang.asId(tileEntity.name()));
-			tileEntity.type = TileEntityType.Builder.create(tileEntity.supplier, blocks)
-				.build(null)
-				.setRegistryName(resourceLocation);
-			event.getRegistry()
-				.register(tileEntity.type);
-		}
-	}
-
+	// TODO move to TileEntityBuilder#renderer
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRenderers() {
 		bind(SCHEMATICANNON, SchematicannonRenderer::new);
@@ -255,13 +280,11 @@ public enum AllTileEntities {
 		bind(ADJUSTABLE_PULSE_REPEATER, AdjustableRepeaterRenderer::new);
 	}
 
-	@SuppressWarnings("unchecked") // TODO 1.15 this generic stuff is incompatible with the enum system - need
-									// strong types
 	@OnlyIn(Dist.CLIENT)
-	private static <T extends TileEntity> void bind(AllTileEntities type,
-		Function<? super TileEntityRendererDispatcher, ? extends TileEntityRenderer<?>> renderer) {
-		ClientRegistry.bindTileEntityRenderer((TileEntityType<T>) type.type,
-			(Function<TileEntityRendererDispatcher, TileEntityRenderer<T>>) renderer);
+	private static <T extends TileEntity> void bind(TileEntityEntry<T> type,
+		Function<? super TileEntityRendererDispatcher, ? extends TileEntityRenderer<? super T>> renderer) {
+		ClientRegistry.bindTileEntityRenderer(type.get(), renderer);
 	}
-
+	
+	public static void register() {}
 }

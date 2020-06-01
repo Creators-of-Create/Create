@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pi
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -99,7 +100,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new MechanicalPistonTileEntity();
+		return AllTileEntities.MECHANICAL_PISTON.create();
 	}
 
 	@Override

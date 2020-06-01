@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import java.util.Random;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearshiftTileEntity;
@@ -33,7 +34,7 @@ public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTi
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new GearshiftTileEntity();
+		return AllTileEntities.GEARSHIFT.create();
 	}
 
 	@Override

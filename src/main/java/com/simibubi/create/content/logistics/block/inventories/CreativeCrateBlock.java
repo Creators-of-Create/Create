@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.block.inventories;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.BlockState;
@@ -21,7 +22,7 @@ public class CreativeCrateBlock extends CrateBlock implements ITE<CreativeCrateT
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new CreativeCrateTileEntity();
+		return AllTileEntities.CREATIVE_CRATE.create();
 	}
 	
 	@Override

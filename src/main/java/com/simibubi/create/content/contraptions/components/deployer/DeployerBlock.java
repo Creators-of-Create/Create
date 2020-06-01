@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.deployer;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
@@ -34,7 +35,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new DeployerTileEntity();
+		return AllTileEntities.DEPLOYER.create();
 	}
 
 	@Override

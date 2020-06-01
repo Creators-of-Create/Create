@@ -4,7 +4,6 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
@@ -18,6 +17,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -36,8 +36,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	protected ScrollOptionBehaviour<RotationMode> movementMode;
 	protected float lastGeneratedSpeed;
 
-	public MechanicalBearingTileEntity() {
-		super(AllTileEntities.MECHANICAL_BEARING.type);
+	public MechanicalBearingTileEntity(TileEntityType<? extends MechanicalBearingTileEntity> type) {
+		super(type);
 		isWindmill = false;
 		setLazyTickRate(3);
 	}

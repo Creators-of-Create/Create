@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
@@ -12,6 +11,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -21,8 +21,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	protected int initialOffset;
 
-	public PulleyTileEntity() {
-		super(AllTileEntities.ROPE_PULLEY.type);
+	public PulleyTileEntity(TileEntityType<? extends PulleyTileEntity> type) {
+		super(type);
 	}
 
 	@Override

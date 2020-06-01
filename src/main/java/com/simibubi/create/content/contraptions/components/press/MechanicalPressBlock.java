@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity.Mode;
 import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
@@ -71,7 +72,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new MechanicalPressTileEntity();
+		return AllTileEntities.MECHANICAL_PRESS.create();
 	}
 
 	@Override

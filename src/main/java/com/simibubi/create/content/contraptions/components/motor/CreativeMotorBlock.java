@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.motor;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 
 import net.minecraft.block.BlockState;
@@ -27,7 +28,7 @@ public class CreativeMotorBlock extends DirectionalKineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new CreativeMotorTileEntity();
+		return AllTileEntities.MOTOR.create();
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.extractor;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -31,7 +32,7 @@ public class LinkedExtractorBlock extends ExtractorBlock {
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new LinkedExtractorTileEntity();
+		return AllTileEntities.LINKED_EXTRACTOR.create();
 	}
 
 	@Override

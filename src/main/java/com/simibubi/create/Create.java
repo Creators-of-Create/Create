@@ -61,9 +61,9 @@ public class Create {
 		AllItems.register();
 		AllPaletteBlocks.register();
 		AllEntityTypes.register();
+		AllTileEntities.register();
 
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipeTypes::register);
-		modEventBus.addGenericListener(TileEntityType.class, AllTileEntities::register);
 		modEventBus.addGenericListener(ContainerType.class, AllContainerTypes::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);

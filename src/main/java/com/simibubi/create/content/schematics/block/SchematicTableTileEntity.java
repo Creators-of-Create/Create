@@ -1,6 +1,5 @@
 package com.simibubi.create.content.schematics.block;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,10 +33,6 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements ITicka
 			super.onContentsChanged(slot);
 			markDirty();
 		}
-	}
-
-	public SchematicTableTileEntity() {
-		this(AllTileEntities.SCHEMATIC_TABLE.type);
 	}
 
 	public SchematicTableTileEntity(TileEntityType<?> tileEntityTypeIn) {

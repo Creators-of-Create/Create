@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
@@ -48,7 +49,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new SequencedGearshiftTileEntity();
+		return AllTileEntities.SEQUENCED_GEARSHIFT.create();
 	}
 
 	@Override

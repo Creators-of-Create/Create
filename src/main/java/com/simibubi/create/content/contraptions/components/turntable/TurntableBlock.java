@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.turntable;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
@@ -31,7 +32,7 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new TurntableTileEntity();
+		return AllTileEntities.TURNTABLE.create();
 	}
 
 	@Override

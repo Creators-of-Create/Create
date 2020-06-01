@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -25,10 +24,6 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	public float currentLevel;
 	public boolean powered;
 	private LazyOptional<IItemHandler> observedInventory;
-
-	public StockpileSwitchTileEntity() {
-		this(AllTileEntities.STOCKPILE_SWITCH.type);
-	}
 
 	public StockpileSwitchTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);

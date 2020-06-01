@@ -6,18 +6,19 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
+
+import net.minecraft.tileentity.TileEntityType;
 
 public class LinkedExtractorTileEntity extends ExtractorTileEntity {
 
 	public boolean receivedSignal;
 	public LinkBehaviour receiver;
 
-	public LinkedExtractorTileEntity() {
-		super(AllTileEntities.LINKED_EXTRACTOR.type);
+	public LinkedExtractorTileEntity(TileEntityType<? extends LinkedExtractorTileEntity> type) {
+		super(type);
 	}
 
 	@Override

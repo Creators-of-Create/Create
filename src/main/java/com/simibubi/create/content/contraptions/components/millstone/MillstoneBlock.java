@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.millstone;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -37,7 +38,7 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new MillstoneTileEntity();
+		return AllTileEntities.MILLSTONE.create();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.transposer;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTileEntities;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -24,7 +25,7 @@ public class LinkedTransposerBlock extends TransposerBlock {
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new LinkedTransposerTileEntity();
+		return AllTileEntities.LINKED_TRANSPOSER.create();
 	}
 
 	@Override

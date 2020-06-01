@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.millstone;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -11,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
@@ -30,8 +30,8 @@ public class MillstoneTileEntity extends KineticTileEntity {
 	public int timer;
 	private MillingRecipe lastRecipe;
 
-	public MillstoneTileEntity() {
-		super(AllTileEntities.MILLSTONE.type);
+	public MillstoneTileEntity(TileEntityType<? extends MillstoneTileEntity> type) {
+		super(type);
 		inputInv = new ItemStackHandler(1);
 		outputInv = new ItemStackHandler(9);
 	}

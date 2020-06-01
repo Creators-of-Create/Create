@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -15,6 +14,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -25,13 +25,8 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	private LinkBehaviour link;
 	private boolean transmitter;
 
-	public RedstoneLinkTileEntity() {
-		super(AllTileEntities.REDSTONE_LINK.type);
-	}
-
-	public RedstoneLinkTileEntity(boolean transmitter) {
-		this();
-		this.transmitter = transmitter;
+	public RedstoneLinkTileEntity(TileEntityType<? extends RedstoneLinkTileEntity> type) {
+		super(type);
 	}
 
 	@Override

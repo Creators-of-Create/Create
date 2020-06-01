@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.processing;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
@@ -40,7 +41,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new BasinTileEntity();
+		return AllTileEntities.BASIN.create();
 	}
 	
 	@Override

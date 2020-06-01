@@ -9,6 +9,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
@@ -403,7 +404,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new BeltTileEntity();
+		return AllTileEntities.BELT.create();
 	}
 
 	@Override

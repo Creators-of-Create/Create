@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.BlockState;
@@ -20,7 +21,7 @@ public class ClockworkBearingBlock extends BearingBlock implements ITE<Clockwork
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new ClockworkBearingTileEntity();
+		return AllTileEntities.CLOCKWORK_BEARING.create();
 	}
 
 	@Override

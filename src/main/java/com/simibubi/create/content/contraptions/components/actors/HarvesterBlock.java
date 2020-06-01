@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 
@@ -22,7 +23,7 @@ public class HarvesterBlock extends AttachedActorBlock implements IPortableBlock
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new HarvesterTileEntity();
+		return new HarvesterTileEntity(AllTileEntities.HARVESTER.get());
 	}
 
 	@Override

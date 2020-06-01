@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.mo
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -12,14 +11,15 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIco
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 
 public class CartAssemblerTileEntity extends SmartTileEntity {
 
 	protected ScrollOptionBehaviour<CartMovementMode> movementMode;
 
-	public CartAssemblerTileEntity() {
-		super(AllTileEntities.CART_ASSEMBLER.type);
+	public CartAssemblerTileEntity(TileEntityType<? extends CartAssemblerTileEntity> type) {
+		super(type);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 
@@ -21,7 +22,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new SpeedControllerTileEntity();
+		return AllTileEntities.ROTATION_SPEED_CONTROLLER.create();
 	}
 
 	@Override

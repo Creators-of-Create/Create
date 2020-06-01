@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -22,7 +23,7 @@ public class MechanicalBearingBlock extends BearingBlock implements ITE<Mechanic
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new MechanicalBearingTileEntity();
+		return AllTileEntities.MECHANICAL_BEARING.create();
 	}
 
 	@Override

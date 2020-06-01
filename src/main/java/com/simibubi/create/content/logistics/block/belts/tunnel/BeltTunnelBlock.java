@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
@@ -65,7 +66,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new BeltTunnelTileEntity();
+		return AllTileEntities.BELT_TUNNEL.create();
 	}
 
 	@Override

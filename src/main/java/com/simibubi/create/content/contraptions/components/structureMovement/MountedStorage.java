@@ -43,7 +43,7 @@ public class MountedStorage {
 		}
 
 		// Split double flexcrates
-		if (te.getType() == AllTileEntities.ADJUSTABLE_CRATE.type) {
+		if (AllTileEntities.ADJUSTABLE_CRATE.is(te)) {
 			if (te.getBlockState().get(AdjustableCrateBlock.DOUBLE))
 				te.getWorld().setBlockState(te.getPos(), te.getBlockState().with(AdjustableCrateBlock.DOUBLE, false));
 			te.updateContainingBlockInfo();
@@ -105,8 +105,7 @@ public class MountedStorage {
 	public static boolean canUseAsStorage(TileEntity te) {
 		if (te == null)
 			return false;
-		TileEntityType<?> type = te.getType();
-		if (type == AllTileEntities.ADJUSTABLE_CRATE.type)
+		if (AllTileEntities.ADJUSTABLE_CRATE.is(te))
 			return true;
 		if (te instanceof ShulkerBoxTileEntity)
 			return true;

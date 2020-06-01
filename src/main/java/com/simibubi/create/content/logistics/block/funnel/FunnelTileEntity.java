@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
@@ -20,6 +19,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -32,8 +32,8 @@ public class FunnelTileEntity extends SmartTileEntity {
 	private InsertingBehaviour inserting;
 	private ItemStack justEaten;
 
-	public FunnelTileEntity() {
-		super(AllTileEntities.FUNNEL.type);
+	public FunnelTileEntity(TileEntityType<? extends FunnelTileEntity> type) {
+		super(type);
 	}
 
 	@Override

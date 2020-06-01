@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 
@@ -19,8 +19,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	protected boolean isGenerator;
 	protected boolean updateAirFlow;
 
-	public EncasedFanTileEntity() {
-		super(AllTileEntities.ENCASED_FAN.type);
+	public EncasedFanTileEntity(TileEntityType<? extends EncasedFanTileEntity> type) {
+		super(type);
 		isGenerator = false;
 		airCurrent = new AirCurrent(this);
 		updateAirFlow = true;

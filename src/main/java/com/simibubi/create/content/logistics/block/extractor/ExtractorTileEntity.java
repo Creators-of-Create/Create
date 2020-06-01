@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.block.extractor;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
@@ -33,11 +32,7 @@ public class ExtractorTileEntity extends SmartTileEntity {
 	protected FilteringBehaviour filtering;
 	protected boolean extractingToBelt;
 
-	public ExtractorTileEntity() {
-		this(AllTileEntities.EXTRACTOR.type);
-	}
-
-	protected ExtractorTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public ExtractorTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 	}
 

@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 
 public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 
@@ -12,8 +12,8 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	public float independentAngle;
 	public float chasingVelocity;
 
-	public HandCrankTileEntity() {
-		super(AllTileEntities.HAND_CRANK.type);
+	public HandCrankTileEntity(TileEntityType<? extends HandCrankTileEntity> type) {
+		super(type);
 	}
 
 	public void turn(boolean back) {

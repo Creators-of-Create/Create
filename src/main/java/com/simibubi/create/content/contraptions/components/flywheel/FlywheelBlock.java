@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -33,7 +34,7 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new FlywheelTileEntity();
+		return AllTileEntities.FLYWHEEL.create();
 	}
 
 	@Override

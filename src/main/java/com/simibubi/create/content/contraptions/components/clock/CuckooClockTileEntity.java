@@ -4,7 +4,6 @@ import static com.simibubi.create.foundation.utility.AngleHelper.deg;
 import static com.simibubi.create.foundation.utility.AngleHelper.getShortestAngleDiff;
 import static com.simibubi.create.foundation.utility.AngleHelper.rad;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
@@ -14,6 +13,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -35,8 +35,8 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		PIG, CREEPER, SURPRISE;
 	}
 
-	public CuckooClockTileEntity() {
-		super(AllTileEntities.CUCKOO_CLOCK.type);
+	public CuckooClockTileEntity(TileEntityType<? extends CuckooClockTileEntity> type) {
+		super(type);
 	}
 
 	@Override

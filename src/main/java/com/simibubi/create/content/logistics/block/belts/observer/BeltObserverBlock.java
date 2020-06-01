@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
@@ -60,7 +61,7 @@ public class BeltObserverBlock extends HorizontalBlock
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new BeltObserverTileEntity();
+		return AllTileEntities.BELT_OBSERVER.create();
 	}
 	
 	@Override

@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
@@ -12,6 +11,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -24,8 +24,8 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	protected boolean hadCollisionWithOtherPiston;
 	protected int extensionLength;
 
-	public MechanicalPistonTileEntity() {
-		super(AllTileEntities.MECHANICAL_PISTON.type);
+	public MechanicalPistonTileEntity(TileEntityType<? extends MechanicalPistonTileEntity> type) {
+		super(type);
 	}
 
 	@Override

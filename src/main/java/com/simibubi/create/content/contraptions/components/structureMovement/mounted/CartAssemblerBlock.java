@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.mo
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
@@ -55,7 +56,7 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new CartAssemblerTileEntity();
+		return AllTileEntities.CART_ASSEMBLER.create();
 	}
 
 	@Override

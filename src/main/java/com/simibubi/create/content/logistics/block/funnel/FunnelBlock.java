@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
@@ -63,7 +64,7 @@ public class FunnelBlock extends AttachedLogisticalBlock
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new FunnelTileEntity();
+		return AllTileEntities.FUNNEL.create();
 	}
 
 	@Override

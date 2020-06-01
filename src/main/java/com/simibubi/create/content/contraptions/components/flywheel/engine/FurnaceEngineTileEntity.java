@@ -1,17 +1,17 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.tileentity.TileEntityType;
 
 public class FurnaceEngineTileEntity extends EngineTileEntity {
 
-	public FurnaceEngineTileEntity() {
-		super(AllTileEntities.FURNACE_ENGINE.type);
+	public FurnaceEngineTileEntity(TileEntityType<? extends FurnaceEngineTileEntity> type) {
+		super(type);
 	}
 
 	@Override

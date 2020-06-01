@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 
 import net.minecraft.block.BlockState;
@@ -37,7 +38,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new ChassisTileEntity();
+		return AllTileEntities.CHASSIS.create();
 	}
 
 	@Override

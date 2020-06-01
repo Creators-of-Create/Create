@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
 import java.util.Vector;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.util.Constants.NBT;
 
@@ -16,8 +16,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	int currentInstructionDuration;
 	int timer;
 
-	public SequencedGearshiftTileEntity() {
-		super(AllTileEntities.SEQUENCED_GEARSHIFT.type);
+	public SequencedGearshiftTileEntity(TileEntityType<? extends SequencedGearshiftTileEntity> type) {
+		super(type);
 		instructions = Instruction.createDefault();
 		currentInstruction = -1;
 		currentInstructionDuration = -1;

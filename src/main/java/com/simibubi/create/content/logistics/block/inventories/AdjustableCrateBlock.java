@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.inventories;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.block.BlockState;
@@ -30,7 +31,7 @@ public class AdjustableCrateBlock extends CrateBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new AdjustableCrateTileEntity();
+		return AllTileEntities.ADJUSTABLE_CRATE.create();
 	}
 
 	@Override

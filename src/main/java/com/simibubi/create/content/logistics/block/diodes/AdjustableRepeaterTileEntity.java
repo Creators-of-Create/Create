@@ -5,7 +5,6 @@ import static net.minecraft.block.RedstoneDiodeBlock.POWERED;
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
@@ -22,11 +21,7 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity {
 	public boolean charging;
 	ScrollValueBehaviour maxState;
 
-	public AdjustableRepeaterTileEntity() {
-		this(AllTileEntities.ADJUSTABLE_REPEATER.type);
-	}
-
-	protected AdjustableRepeaterTileEntity(TileEntityType<?> type) {
+	public AdjustableRepeaterTileEntity(TileEntityType<?> type) {
 		super(type);
 	}
 

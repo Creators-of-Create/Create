@@ -6,7 +6,6 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
@@ -114,10 +113,6 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	// Render
 	public boolean firstRenderTick;
-
-	public SchematicannonTileEntity() {
-		this(AllTileEntities.SCHEMATICANNON.type);
-	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {

@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
@@ -20,6 +19,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -38,8 +38,8 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 
 	private List<Pair<Direction, Boolean>> flapsToSend;
 
-	public BeltTunnelTileEntity() {
-		super(AllTileEntities.BELT_TUNNEL.type);
+	public BeltTunnelTileEntity(TileEntityType<? extends BeltTunnelTileEntity> type) {
+		super(type);
 		flaps = new HashMap<>();
 		syncedFlaps = new HashMap<>();
 		initialize = true;

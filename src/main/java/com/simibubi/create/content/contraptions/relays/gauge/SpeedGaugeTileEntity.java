@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -10,13 +9,14 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
 public class SpeedGaugeTileEntity extends GaugeTileEntity{
 
-	public SpeedGaugeTileEntity() {
-		super(AllTileEntities.SPEEDOMETER.type);
+	public SpeedGaugeTileEntity(TileEntityType<? extends SpeedGaugeTileEntity> type) {
+		super(type);
 	}
 
 	@Override
