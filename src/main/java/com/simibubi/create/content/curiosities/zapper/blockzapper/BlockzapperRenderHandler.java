@@ -33,8 +33,8 @@ public class BlockzapperRenderHandler {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		ItemStack heldMain = player.getHeldItemMainhand();
 		ItemStack heldOff = player.getHeldItemOffhand();
-		boolean zapperInMain = AllItems.typeOf(AllItems.BLOCKZAPPER, heldMain);
-		boolean zapperInOff = AllItems.typeOf(AllItems.BLOCKZAPPER, heldOff);
+		boolean zapperInMain = AllItems.BLOCKZAPPER.isIn(heldMain);
+		boolean zapperInOff = AllItems.BLOCKZAPPER.isIn(heldOff);
 
 		if (zapperInMain) {
 			CompoundNBT tag = heldMain.getOrCreateTag();

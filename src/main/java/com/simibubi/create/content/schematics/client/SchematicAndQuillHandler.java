@@ -177,7 +177,7 @@ public class SchematicAndQuillHandler {
 			outliner().chaseAABB(outlineSlot, currentSelectionBox)
 				.colored(0x6886c5)
 				.withFaceTextures(AllSpecialTextures.CHECKERED, AllSpecialTextures.HIGHLIGHT_CHECKERED)
-				.lineWidth(1/16f)
+				.lineWidth(1 / 16f)
 				.highlightFace(selectedFace);
 	}
 
@@ -192,8 +192,7 @@ public class SchematicAndQuillHandler {
 	}
 
 	private boolean isActive() {
-		return isPresent() && AllItems.typeOf(AllItems.SCHEMATIC_AND_QUILL,
-			Minecraft.getInstance().player.getHeldItemMainhand());
+		return isPresent() && AllItems.SCHEMATIC_AND_QUILL.isIn(Minecraft.getInstance().player.getHeldItemMainhand());
 	}
 
 	private boolean isPresent() {

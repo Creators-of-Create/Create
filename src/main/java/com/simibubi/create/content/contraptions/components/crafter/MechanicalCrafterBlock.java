@@ -173,7 +173,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 		if (!(te instanceof MechanicalCrafterTileEntity))
 			return ActionResultType.PASS;
 		MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
-		boolean wrenched = AllItems.typeOf(AllItems.WRENCH, heldItem);
+		boolean wrenched = AllItems.WRENCH.isIn(heldItem);
 
 		if (hit.getFace() == state.get(HORIZONTAL_FACING)) {
 
@@ -186,7 +186,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 				if (worldIn.isRemote)
 					return ActionResultType.SUCCESS;
 
-				if (AllItems.typeOf(AllItems.CRAFTER_SLOT_COVER, heldItem)) {
+				if (AllItems.CRAFTER_SLOT_COVER.isIn(heldItem)) {
 					if (crafter.covered)
 						return ActionResultType.PASS;
 					crafter.covered = true;

@@ -90,7 +90,7 @@ public class ChassisRangeDisplay {
 	public static void tick() {
 		PlayerEntity player = Minecraft.getInstance().player;
 		World world = Minecraft.getInstance().world;
-		boolean hasWrench = AllItems.typeOf(AllItems.WRENCH, player.getHeldItemMainhand());
+		boolean hasWrench = AllItems.WRENCH.isIn(player.getHeldItemMainhand());
 
 		for (Iterator<BlockPos> iterator = entries.keySet()
 			.iterator(); iterator.hasNext();) {

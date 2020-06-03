@@ -60,7 +60,7 @@ public class DeforesterItem extends AxeItem {
 	@SubscribeEvent
 	public static void onBlockDestroyed(BlockEvent.BreakEvent event) {
 		ItemStack heldItemMainhand = event.getPlayer().getHeldItemMainhand();
-		if (!AllItems.typeOf(AllItems.DEFORESTER, heldItemMainhand))
+		if (!AllItems.DEFORESTER.isIn(heldItemMainhand))
 			return;
 		destroyTree(heldItemMainhand, event.getWorld(), event.getState(), event.getPos(), event.getPlayer());
 	}

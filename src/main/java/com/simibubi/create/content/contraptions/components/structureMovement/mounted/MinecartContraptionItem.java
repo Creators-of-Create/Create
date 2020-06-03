@@ -185,7 +185,7 @@ public class MinecartContraptionItem extends Item {
 			return;
 
 		ItemStack wrench = player.getHeldItem(event.getHand());
-		if (!AllItems.typeOf(AllItems.WRENCH, wrench))
+		if (!AllItems.WRENCH.isIn(wrench))
 			return;
 		if (entity instanceof ContraptionEntity)
 			entity = entity.getRidingEntity();

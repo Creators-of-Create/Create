@@ -51,7 +51,7 @@ public class GoggleOverlayRenderer {
 
 		List<String> tooltip = new ArrayList<>();
 
-		if (goggleInformation && AllItems.typeOf(AllItems.GOGGLES, goggles)) {
+		if (goggleInformation && AllItems.GOGGLES.isIn(goggles)) {
 			IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
 			if (!gte.addToGoggleTooltip(tooltip, mc.player.isSneaking()))
 				goggleInformation = false;

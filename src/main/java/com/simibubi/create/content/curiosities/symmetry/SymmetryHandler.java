@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.symmetry;
 
-import static com.simibubi.create.AllItems.typeOf;
-
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -77,7 +75,7 @@ public class SymmetryHandler {
 		PlayerInventory inv = player.inventory;
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			if (!inv.getStackInSlot(i)
-				.isEmpty() && typeOf(AllItems.WAND_OF_SYMMETRY, inv.getStackInSlot(i))) {
+				.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getStackInSlot(i))) {
 				SymmetryWandItem.remove(player.world, inv.getStackInSlot(i), player, event.getPos());
 			}
 		}
@@ -91,7 +89,7 @@ public class SymmetryHandler {
 
 		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			ItemStack stackInSlot = player.inventory.getStackInSlot(i);
-			if (!typeOf(AllItems.WAND_OF_SYMMETRY, stackInSlot))
+			if (!AllItems.WAND_OF_SYMMETRY.isIn(stackInSlot))
 				continue;
 			if (!SymmetryWandItem.isEnabled(stackInSlot))
 				continue;
@@ -155,7 +153,7 @@ public class SymmetryHandler {
 			for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 				ItemStack stackInSlot = player.inventory.getStackInSlot(i);
 
-				if (stackInSlot != null && typeOf(AllItems.WAND_OF_SYMMETRY, stackInSlot)
+				if (stackInSlot != null && AllItems.WAND_OF_SYMMETRY.isIn(stackInSlot)
 					&& SymmetryWandItem.isEnabled(stackInSlot)) {
 
 					SymmetryMirror mirror = SymmetryWandItem.getMirror(stackInSlot);

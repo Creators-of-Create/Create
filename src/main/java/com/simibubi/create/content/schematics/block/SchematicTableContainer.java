@@ -1,7 +1,5 @@
 package com.simibubi.create.content.schematics.block;
 
-import static com.simibubi.create.AllItems.typeOf;
-
 import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.AllItems;
 
@@ -46,9 +44,8 @@ public class SchematicTableContainer extends Container {
 		inputSlot = new SlotItemHandler(te.inventory, 0, -9, 40) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				return typeOf(AllItems.EMPTY_SCHEMATIC, stack)
-					|| typeOf(AllItems.SCHEMATIC_AND_QUILL, stack)
-					|| typeOf(AllItems.SCHEMATIC, stack);
+				return AllItems.EMPTY_SCHEMATIC.isIn(stack) || AllItems.SCHEMATIC_AND_QUILL.isIn(stack)
+					|| AllItems.SCHEMATIC.isIn(stack);
 			}
 		};
 

@@ -234,7 +234,7 @@ public class SchematicHandler {
 
 	private ItemStack findBlueprintInHand(PlayerEntity player) {
 		ItemStack stack = player.getHeldItemMainhand();
-		if (!AllItems.typeOf(AllItems.SCHEMATIC, stack))
+		if (!AllItems.SCHEMATIC.isIn(stack))
 			return null;
 		if (!stack.hasTag())
 			return null;

@@ -97,7 +97,7 @@ public class TooltipHelper {
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		boolean hasGlasses = player != null
-			&& AllItems.typeOf(AllItems.GOGGLES, player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+			&& AllItems.GOGGLES.isIn(player.getItemStackFromSlot(EquipmentSlotType.HEAD));
 
 		if (hasGlasses != gogglesMode) {
 			gogglesMode = hasGlasses;

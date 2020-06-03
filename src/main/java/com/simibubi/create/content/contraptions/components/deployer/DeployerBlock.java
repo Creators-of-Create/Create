@@ -85,7 +85,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 		BlockRayTraceResult hit) {
 		ItemStack heldByPlayer = player.getHeldItem(handIn)
 			.copy();
-		if (AllItems.typeOf(AllItems.WRENCH, heldByPlayer))
+		if (AllItems.WRENCH.isIn(heldByPlayer))
 			return ActionResultType.PASS;
 
 		if (hit.getFace() != state.get(FACING))

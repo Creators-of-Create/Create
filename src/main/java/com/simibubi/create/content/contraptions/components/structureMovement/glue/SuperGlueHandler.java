@@ -63,7 +63,7 @@ public class SuperGlueHandler {
 
 	public static void glueInOffHandAppliesOnBlockPlace(EntityPlaceEvent event, BlockPos pos, PlayerEntity placer) {
 		ItemStack itemstack = placer.getHeldItemOffhand();
-		if (!AllItems.typeOf(AllItems.SUPER_GLUE, itemstack))
+		if (!AllItems.SUPER_GLUE.isIn(itemstack))
 			return;
 
 		double distance = placer.getAttribute(PlayerEntity.REACH_DISTANCE)

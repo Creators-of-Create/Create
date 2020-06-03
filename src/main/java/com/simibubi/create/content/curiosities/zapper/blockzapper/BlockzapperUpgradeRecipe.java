@@ -45,7 +45,7 @@ public class BlockzapperUpgradeRecipe implements ICraftingRecipe {
 	public ItemStack getCraftingResult(CraftingInventory inv) {
 		for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
 			ItemStack handgun = inv.getStackInSlot(slot).copy();
-			if (!AllItems.typeOf(AllItems.BLOCKZAPPER, handgun))
+			if (!AllItems.BLOCKZAPPER.isIn(handgun))
 				continue;
 			BlockzapperItem.setTier(getUpgradedComponent(), getTier(), handgun);
 			return handgun;

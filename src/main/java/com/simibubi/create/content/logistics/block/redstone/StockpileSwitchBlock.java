@@ -95,7 +95,7 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		if (player != null && AllItems.typeOf(AllItems.WRENCH, player.getHeldItem(handIn)))
+		if (player != null && AllItems.WRENCH.isIn(player.getHeldItem(handIn)))
 			return ActionResultType.PASS;
 		DistExecutor.runWhenOn(Dist.CLIENT,
 			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));

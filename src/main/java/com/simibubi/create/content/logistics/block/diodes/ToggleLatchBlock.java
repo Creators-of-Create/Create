@@ -50,7 +50,7 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 			return ActionResultType.PASS;
 		if (player.isSneaking())
 			return ActionResultType.PASS;
-		if (AllItems.typeOf(AllItems.WRENCH, player.getHeldItem(handIn)))
+		if (AllItems.WRENCH.isIn(player.getHeldItem(handIn)))
 			return ActionResultType.PASS;
 		return activated(worldIn, pos, state);
 	}

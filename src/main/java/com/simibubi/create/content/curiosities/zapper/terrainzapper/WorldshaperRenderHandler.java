@@ -44,8 +44,8 @@ public class WorldshaperRenderHandler {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		ItemStack heldMain = player.getHeldItemMainhand();
 		ItemStack heldOff = player.getHeldItemOffhand();
-		boolean zapperInMain = AllItems.typeOf(AllItems.WORLDSHAPER, heldMain);
-		boolean zapperInOff = AllItems.typeOf(AllItems.WORLDSHAPER, heldOff);
+		boolean zapperInMain = AllItems.WORLDSHAPER.isIn(heldMain);
+		boolean zapperInOff = AllItems.WORLDSHAPER.isIn(heldOff);
 
 		if (zapperInMain) {
 			CompoundNBT tag = heldMain.getOrCreateTag();

@@ -38,7 +38,6 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.tags.Tag;
 
@@ -229,12 +228,6 @@ public class AllItems {
 			.register();
 	}
 	
-	// Helper
-	
-	public static boolean typeOf(ItemEntry<?> entry, ItemStack stack) {
-		return stack != null && stack.getItem() == entry.get();
-	}
-
 	// Load this class
 
 	public static void register() {}

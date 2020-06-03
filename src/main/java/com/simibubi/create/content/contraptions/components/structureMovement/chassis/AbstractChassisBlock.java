@@ -49,7 +49,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 
 		ItemStack heldItem = player.getHeldItem(handIn);
 		boolean isSlimeBall = heldItem.getItem()
-			.isIn(Tags.Items.SLIMEBALLS) || AllItems.typeOf(AllItems.SUPER_GLUE, heldItem);
+			.isIn(Tags.Items.SLIMEBALLS) || AllItems.SUPER_GLUE.isIn(heldItem);
 
 		BooleanProperty affectedSide = getGlueableSide(state, hit.getFace());
 		if (affectedSide == null)

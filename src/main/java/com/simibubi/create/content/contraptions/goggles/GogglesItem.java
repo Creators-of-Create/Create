@@ -41,7 +41,7 @@ public class GogglesItem extends Item {
 
 	public static boolean canSeeParticles(PlayerEntity player) {
 		for (ItemStack itemStack : player.getArmorInventoryList())
-			if (AllItems.typeOf(AllItems.GOGGLES, itemStack))
+			if (AllItems.GOGGLES.isIn(itemStack))
 				return true;
 		return false;
 	}

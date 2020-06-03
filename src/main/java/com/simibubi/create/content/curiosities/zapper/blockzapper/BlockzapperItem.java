@@ -152,7 +152,7 @@ public class BlockzapperItem extends ZapperItem {
 
 	@Override
 	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-		if (AllItems.typeOf(AllItems.BLOCKZAPPER, stack)) {
+		if (AllItems.BLOCKZAPPER.isIn(stack)) {
 			CompoundNBT nbt = stack.getOrCreateTag();
 			if (!nbt.contains("Replace"))
 				nbt.putBoolean("Replace", false);

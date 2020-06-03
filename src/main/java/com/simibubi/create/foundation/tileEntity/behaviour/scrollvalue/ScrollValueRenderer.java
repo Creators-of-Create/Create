@@ -36,7 +36,7 @@ public class ScrollValueRenderer {
 		if (behaviour == null)
 			return;
 		if (behaviour.needsWrench
-			&& !AllItems.typeOf(AllItems.WRENCH, Minecraft.getInstance().player.getHeldItemMainhand()))
+			&& !AllItems.WRENCH.isIn(Minecraft.getInstance().player.getHeldItemMainhand()))
 			return;
 		boolean highlight = behaviour.testHit(target.getHitVec());
 

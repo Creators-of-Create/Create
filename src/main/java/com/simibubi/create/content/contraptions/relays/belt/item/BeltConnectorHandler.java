@@ -39,7 +39,7 @@ public class BeltConnectorHandler {
 		for (Hand hand : Hand.values()) {
 			ItemStack heldItem = player.getHeldItem(hand);
 
-			if (!AllItems.typeOf(AllItems.BELT_CONNECTOR, heldItem))
+			if (!AllItems.BELT_CONNECTOR.isIn(heldItem))
 				continue;
 			if (!heldItem.hasTag())
 				continue;
