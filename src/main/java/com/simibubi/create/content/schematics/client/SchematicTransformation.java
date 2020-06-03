@@ -1,5 +1,7 @@
 package com.simibubi.create.content.schematics.client;
 
+import static java.lang.Math.abs;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
@@ -34,8 +36,8 @@ public class SchematicTransformation {
 	public void init(BlockPos anchor, PlacementSettings settings, AxisAlignedBB bounds) {
 		int leftRight = settings.getMirror() == Mirror.LEFT_RIGHT ? -1 : 1;
 		int frontBack = settings.getMirror() == Mirror.FRONT_BACK ? -1 : 1;
-		scaleFrontBack.start(frontBack);
-		scaleLeftRight.start(leftRight);
+		getScaleFB().start(frontBack);
+		getScaleLR().start(leftRight);
 		xOrigin = bounds.getXSize() / 2f;
 		zOrigin = bounds.getZSize() / 2f;
 
@@ -58,14 +60,21 @@ public class SchematicTransformation {
 		Vec3d rotationOffset = getRotationOffset(true);
 
 		// Rotation & Mirror
+		float fb = getScaleFB().get(pt);
+		float lr = getScaleLR().get(pt);
+		float rot = rotation.get(pt) + ((fb < 0 && lr < 0) ? 180 : 0);
 		ms.translate(xOrigin, 0, zOrigin);
 		MatrixStacker.of(ms)
 			.translate(rotationOffset)
-			.rotateY(rotation.get(pt))
+			.rotateY(rot)
 			.translateBack(rotationOffset);
-		ms.scale(scaleFrontBack.get(pt), 1, scaleLeftRight.get(pt));
+		ms.scale(abs(fb), 1, abs(lr));
 		ms.translate(-xOrigin, 0, -zOrigin);
 
+	}
+
+	public boolean isFlipped() {
+		return getMirrorModifier(Axis.X) < 0 != getMirrorModifier(Axis.Z) < 0;
 	}
 
 	public Vec3d getRotationOffset(boolean ignoreMirrors) {
@@ -92,7 +101,7 @@ public class SchematicTransformation {
 		vec = vec.subtract(xOrigin + rotationOffset.x, 0, zOrigin + rotationOffset.z);
 		vec = VecHelper.rotate(vec, -rotation.get(pt), Axis.Y);
 		vec = vec.add(rotationOffset.x, 0, rotationOffset.z);
-		vec = vec.mul(scaleFrontBack.get(pt), 1, scaleLeftRight.get(pt));
+		vec = vec.mul(getScaleFB().get(pt), 1, getScaleLR().get(pt));
 		vec = vec.add(xOrigin, 0, zOrigin);
 
 		return vec;
@@ -103,8 +112,8 @@ public class SchematicTransformation {
 
 		int i = (int) rotation.getTarget();
 
-		boolean mirrorlr = scaleLeftRight.getTarget() < 0;
-		boolean mirrorfb = scaleFrontBack.getTarget() < 0;
+		boolean mirrorlr = getScaleLR().getTarget() < 0;
+		boolean mirrorfb = getScaleFB().getTarget() < 0;
 		if (mirrorlr && mirrorfb) {
 			mirrorlr = mirrorfb = false;
 			i += 180;
@@ -141,7 +150,7 @@ public class SchematicTransformation {
 		Vec3d rotationOffset = getRotationOffset(false);
 		vec = vec.subtract(xOrigin, 0, zOrigin);
 		vec = vec.subtract(rotationOffset.x, 0, rotationOffset.z);
-		vec = vec.mul(scaleFrontBack.getTarget(), 1, scaleLeftRight.getTarget());
+		vec = vec.mul(getScaleFB().getTarget(), 1, getScaleLR().getTarget());
 		vec = VecHelper.rotate(vec, rotation.getTarget(), Axis.Y);
 		vec = vec.add(xOrigin, 0, zOrigin);
 
@@ -154,7 +163,7 @@ public class SchematicTransformation {
 		Vec3d rotationOffset = getRotationOffset(false);
 		vec = vec.subtract(xOrigin, 0, zOrigin);
 		vec = vec.subtract(rotationOffset.x, 0, rotationOffset.z);
-		vec = vec.mul(scaleFrontBack.getTarget(), 1, scaleLeftRight.getTarget());
+		vec = vec.mul(getScaleFB().getTarget(), 1, getScaleLR().getTarget());
 		vec = VecHelper.rotate(vec, rotation.getTarget(), Axis.Y);
 		vec = vec.add(xOrigin, 0, zOrigin);
 
@@ -167,8 +176,8 @@ public class SchematicTransformation {
 
 	public int getMirrorModifier(Axis axis) {
 		if (axis == Axis.Z)
-			return (int) scaleLeftRight.getTarget();
-		return (int) scaleFrontBack.getTarget();
+			return (int) getScaleLR().getTarget();
+		return (int) getScaleFB().getTarget();
 	}
 
 	public float getCurrentRotation() {
@@ -181,16 +190,16 @@ public class SchematicTransformation {
 		x.tick();
 		y.tick();
 		z.tick();
-		scaleLeftRight.tick();
-		scaleFrontBack.tick();
+		getScaleLR().tick();
+		getScaleFB().tick();
 		rotation.tick();
 	}
 
 	public void flip(Axis axis) {
 		if (axis == Axis.X)
-			scaleLeftRight.target(scaleLeftRight.getTarget() * -1);
+			getScaleLR().target(getScaleLR().getTarget() * -1);
 		if (axis == Axis.Z)
-			scaleFrontBack.target(scaleFrontBack.getTarget() * -1);
+			getScaleFB().target(getScaleFB().getTarget() * -1);
 	}
 
 	public void rotate90(boolean clockwise) {
@@ -201,6 +210,13 @@ public class SchematicTransformation {
 		moveTo(x.getTarget() + xIn, y.getTarget() + yIn, z.getTarget() + zIn);
 	}
 
+	public void startAt(BlockPos pos) {
+		x.start(pos.getX());
+		y.start(0);
+		z.start(pos.getZ());
+		moveTo(pos);
+	}
+	
 	public void moveTo(BlockPos pos) {
 		moveTo(pos.getX(), pos.getY(), pos.getZ());
 	}
@@ -209,6 +225,14 @@ public class SchematicTransformation {
 		x.target(xIn);
 		y.target(yIn);
 		z.target(zIn);
+	}
+
+	public InterpolatedChasingValue getScaleFB() {
+		return scaleFrontBack;
+	}
+
+	public InterpolatedChasingValue getScaleLR() {
+		return scaleLeftRight;
 	}
 
 }

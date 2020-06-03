@@ -2,9 +2,9 @@ package com.simibubi.create.content.schematics.client.tools;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -48,7 +48,7 @@ public class FlipTool extends PlacementToolBase {
 	}
 
 	@Override
-	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer) {
+	public void renderOnSchematic(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		if (!schematicSelected || !selectedFace.getAxis()
 			.isHorizontal()) {
 			super.renderOnSchematic(ms, buffer);
@@ -71,7 +71,6 @@ public class FlipTool extends PlacementToolBase {
 		AllSpecialTextures tex = AllSpecialTextures.CHECKERED;
 		outline.getParams()
 			.lineWidth(1 / 16f)
-			.disableCull()
 			.disableNormals()
 			.colored(0xdddddd)
 			.withFaceTextures(tex, tex);

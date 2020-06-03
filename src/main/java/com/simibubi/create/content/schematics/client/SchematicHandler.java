@@ -1,6 +1,7 @@
 package com.simibubi.create.content.schematics.client;
 
 import java.util.List;
+import java.util.Vector;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -13,6 +14,7 @@ import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.foundation.gui.ToolSelectionScreen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.NbtPacket;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
@@ -23,6 +25,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.Mirror;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
@@ -43,13 +46,16 @@ public class SchematicHandler {
 	private ItemStack activeSchematicItem;
 	private AABBOutline outline;
 
-	private SchematicRenderer renderer;
+	private Vector<SchematicRenderer> renderers;
 	private SchematicHotbarSlotOverlay overlay;
 	private ToolSelectionScreen selectionScreen;
 
 	public SchematicHandler() {
+		renderers = new Vector<>(3);
+		for (int i = 0; i < renderers.capacity(); i++)
+			renderers.add(new SchematicRenderer());
+
 		overlay = new SchematicHotbarSlotOverlay();
-		renderer = new SchematicRenderer();
 		currentTool = Tools.Deploy;
 		selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
 		transformation = new SchematicTransformation();
@@ -68,7 +74,7 @@ public class SchematicHandler {
 			if (activeSchematicItem != null && itemLost(player)) {
 				activeHotbarSlot = 0;
 				activeSchematicItem = null;
-				renderer.setActive(false);
+				renderers.forEach(r -> r.setActive(false));
 			}
 			return;
 		}
@@ -80,7 +86,7 @@ public class SchematicHandler {
 		if (!active)
 			return;
 
-		renderer.tick();
+		renderers.forEach(SchematicRenderer::tick);
 		if (syncCooldown > 0)
 			syncCooldown--;
 		if (syncCooldown == 1)
@@ -110,16 +116,30 @@ public class SchematicHandler {
 
 	private void setupRenderer() {
 		Template schematic = SchematicItem.loadSchematic(activeSchematicItem);
-		if (schematic.getSize()
-			.equals(BlockPos.ZERO))
+		BlockPos size = schematic.getSize();
+		if (size.equals(BlockPos.ZERO))
 			return;
 
-		SchematicWorld w = new SchematicWorld(BlockPos.ZERO, Minecraft.getInstance().world);
-		schematic.addBlocksToWorld(w, BlockPos.ZERO, new PlacementSettings());
-		renderer.display(w);
+		SchematicWorld w = new SchematicWorld();
+		SchematicWorld wMirroredFB = new SchematicWorld();
+		SchematicWorld wMirroredLR = new SchematicWorld();
+		PlacementSettings placementSettings = new PlacementSettings();
+
+		schematic.addBlocksToWorld(w, BlockPos.ZERO, placementSettings);
+		placementSettings.setMirror(Mirror.FRONT_BACK);
+		schematic.addBlocksToWorld(wMirroredFB, BlockPos.ZERO.east(size.getX() - 1), placementSettings);
+		placementSettings.setMirror(Mirror.LEFT_RIGHT);
+		schematic.addBlocksToWorld(wMirroredLR, BlockPos.ZERO.south(size.getZ() - 1), placementSettings);
+
+		renderers.get(0)
+			.display(w);
+		renderers.get(1)
+			.display(wMirroredFB);
+		renderers.get(2)
+			.display(wMirroredLR);
 	}
 
-	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
+	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		boolean present = activeSchematicItem != null;
 		if (!active && !present)
 			return;
@@ -133,10 +153,29 @@ public class SchematicHandler {
 
 		ms.push();
 		transformation.applyGLTransformations(ms);
-		renderer.render(ms, buffer);
+
+		if (!renderers.isEmpty()) {
+			float pt = Minecraft.getInstance()
+				.getRenderPartialTicks();
+			boolean lr = transformation.getScaleLR()
+				.get(pt) < 0;
+			boolean fb = transformation.getScaleFB()
+				.get(pt) < 0;
+			if (lr && !fb)
+				renderers.get(2)
+					.render(ms, buffer);
+			else if (fb && !lr)
+				renderers.get(1)
+					.render(ms, buffer);
+			else
+				renderers.get(0)
+					.render(ms, buffer);
+		}
+		
 		if (active)
 			currentTool.getTool()
-				.renderOnSchematic(ms, buffer);
+			.renderOnSchematic(ms, buffer);
+		
 		ms.pop();
 
 	}
@@ -257,8 +296,8 @@ public class SchematicHandler {
 		bounds = new AxisAlignedBB(BlockPos.ZERO, size);
 		outline = new AABBOutline(bounds);
 		outline.getParams()
-			.lineWidth(1 / 16f)
-			.disableNormals();
+			.colored(0x6886c5)
+			.lineWidth(1 / 16f);
 		transformation.init(anchor, settings, bounds);
 	}
 
@@ -280,7 +319,7 @@ public class SchematicHandler {
 		CompoundNBT nbt = activeSchematicItem.getTag();
 		nbt.putBoolean("Deployed", false);
 		activeSchematicItem.setTag(nbt);
-		renderer.setActive(false);
+		renderers.forEach(r -> r.setActive(false));
 		active = false;
 		markDirty();
 	}

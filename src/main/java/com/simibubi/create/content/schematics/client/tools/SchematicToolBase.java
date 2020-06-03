@@ -9,6 +9,7 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -120,13 +121,13 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	}
 
 	@Override
-	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer) {}
+	public void renderTool(MatrixStack ms, SuperRenderTypeBuffer buffer) {}
 
 	@Override
 	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer) {}
 
 	@Override
-	public void renderOnSchematic(MatrixStack ms, IRenderTypeBuffer buffer) {
+	public void renderOnSchematic(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		if (!schematicHandler.isDeployed())
 			return;
 
@@ -141,8 +142,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 		outline.getParams()
 			.colored(0x6886c5)
 			.withFaceTexture(AllSpecialTextures.CHECKERED)
-			.lineWidth(1 / 32f)
-			.disableCull();
+			.lineWidth(1 / 16f);
 		outline.render(ms, buffer);
 		outline.getParams()
 			.clearTextures();

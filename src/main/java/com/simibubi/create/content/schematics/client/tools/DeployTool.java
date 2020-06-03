@@ -3,11 +3,11 @@ package com.simibubi.create.content.schematics.client.tools;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -36,7 +36,7 @@ public class DeployTool extends PlacementToolBase {
 	}
 
 	@Override
-	public void renderTool(MatrixStack ms, IRenderTypeBuffer buffer) {
+	public void renderTool(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		super.renderTool(ms, buffer);
 
 		if (selectedPos == null)

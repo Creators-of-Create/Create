@@ -7,11 +7,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -115,7 +115,7 @@ public class Outliner {
 		toClear.forEach(outlines::remove);
 	}
 
-	public void renderOutlines(MatrixStack ms, IRenderTypeBuffer buffer) {
+	public void renderOutlines(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		outlines.forEach((key, entry) -> {
 			Outline outline = entry.getOutline();
 			outline.params.alpha = 1;

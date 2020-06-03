@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.util.math.Vec3d;
 
 public class LineOutline extends Outline {
@@ -17,8 +17,8 @@ public class LineOutline extends Outline {
 	}
 
 	@Override
-	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
-		renderAACuboidLine(ms, buffer, start, end, params.disableCull);
+	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
+		renderAACuboidLine(ms, buffer, start, end);
 	}
 
 }

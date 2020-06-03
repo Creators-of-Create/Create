@@ -20,14 +20,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TileEntityRenderHelper {
-
+	
 	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
 		MatrixStack localTransform, IRenderTypeBuffer buffer) {
 		float pt = Minecraft.getInstance()
 			.getRenderPartialTicks();
 		Matrix4f matrix = localTransform.peek()
 			.getModel();
-
+		
 		for (Iterator<TileEntity> iterator = customRenderTEs.iterator(); iterator.hasNext();) {
 			TileEntity tileEntity = iterator.next();
 			TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(tileEntity);

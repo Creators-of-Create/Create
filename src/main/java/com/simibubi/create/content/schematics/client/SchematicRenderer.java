@@ -11,14 +11,15 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.schematics.SchematicWorld;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.TileEntityRenderHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -66,15 +67,18 @@ public class SchematicRenderer {
 		changed = false;
 	}
 
-	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
+	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		if (!active)
 			return;
+		buffer.getBuffer(RenderType.getSolid());
 		for (RenderType layer : RenderType.getBlockLayers()) {
 			if (!usedBlockRenderLayers.contains(layer))
 				continue;
 			SuperByteBuffer superByteBuffer = bufferCache.get(layer);
 			superByteBuffer.renderInto(ms, buffer.getBuffer(layer));
 		}
+		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getTileEntities(), ms, new MatrixStack(),
+			buffer);
 	}
 
 	private void redraw(Minecraft minecraft) {

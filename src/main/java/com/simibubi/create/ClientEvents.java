@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableHa
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -68,14 +69,13 @@ public class ClientEvents {
 
 		ms.push();
 		ms.translate(-view.getX(), -view.getY(), -view.getZ());
-		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance()
-			.getBufferBuilders()
-			.getEntityVertexConsumers();
-
+		
+		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 		CreateClient.schematicHandler.render(ms, buffer);
 		CreateClient.outliner.renderOutlines(ms, buffer);
-		ms.pop();
 		buffer.draw();
+		
+		ms.pop();
 	}
 
 	@SubscribeEvent

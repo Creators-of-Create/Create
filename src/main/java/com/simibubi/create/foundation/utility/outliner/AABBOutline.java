@@ -2,10 +2,10 @@ package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.foundation.renderState.RenderTypes;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -22,11 +22,11 @@ public class AABBOutline extends Outline {
 	}
 
 	@Override
-	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
+	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		renderBB(ms, buffer, bb);
 	}
 
-	public void renderBB(MatrixStack ms, IRenderTypeBuffer buffer, AxisAlignedBB bb) {
+	public void renderBB(MatrixStack ms, SuperRenderTypeBuffer buffer, AxisAlignedBB bb) {
 		Vec3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
 			.getProjectedView();
 		boolean noCull = bb.contains(projectedView);
@@ -41,29 +41,26 @@ public class AABBOutline extends Outline {
 		Vec3d XyZ = new Vec3d(bb.maxX, bb.minY, bb.maxZ);
 		Vec3d xYZ = new Vec3d(bb.minX, bb.maxY, bb.maxZ);
 		Vec3d XYZ = new Vec3d(bb.maxX, bb.maxY, bb.maxZ);
-		
-		// Buffers with no Culling only seem to work right with when this line is present
-		buffer.getBuffer(RenderType.getEntityCutout(AllSpecialTextures.BLANK.getLocation()));
 
 		Vec3d start = xyz;
-		renderAACuboidLine(ms, buffer, start, Xyz, noCull);
-		renderAACuboidLine(ms, buffer, start, xYz, noCull);
-		renderAACuboidLine(ms, buffer, start, xyZ, noCull);
+		renderAACuboidLine(ms, buffer, start, Xyz);
+		renderAACuboidLine(ms, buffer, start, xYz);
+		renderAACuboidLine(ms, buffer, start, xyZ);
 
 		start = XyZ;
-		renderAACuboidLine(ms, buffer, start, xyZ, noCull);
-		renderAACuboidLine(ms, buffer, start, XYZ, noCull);
-		renderAACuboidLine(ms, buffer, start, Xyz, noCull);
+		renderAACuboidLine(ms, buffer, start, xyZ);
+		renderAACuboidLine(ms, buffer, start, XYZ);
+		renderAACuboidLine(ms, buffer, start, Xyz);
 
 		start = XYz;
-		renderAACuboidLine(ms, buffer, start, xYz, noCull);
-		renderAACuboidLine(ms, buffer, start, Xyz, noCull);
-		renderAACuboidLine(ms, buffer, start, XYZ, noCull);
+		renderAACuboidLine(ms, buffer, start, xYz);
+		renderAACuboidLine(ms, buffer, start, Xyz);
+		renderAACuboidLine(ms, buffer, start, XYZ);
 
 		start = xYZ;
-		renderAACuboidLine(ms, buffer, start, XYZ, noCull);
-		renderAACuboidLine(ms, buffer, start, xyZ, noCull);
-		renderAACuboidLine(ms, buffer, start, xYz, noCull);
+		renderAACuboidLine(ms, buffer, start, XYZ);
+		renderAACuboidLine(ms, buffer, start, xyZ);
+		renderAACuboidLine(ms, buffer, start, xYz);
 
 		renderFace(ms, buffer, Direction.NORTH, xYz, XYz, Xyz, xyz, noCull);
 		renderFace(ms, buffer, Direction.SOUTH, XYZ, xYZ, xyZ, XyZ, noCull);
@@ -74,20 +71,19 @@ public class AABBOutline extends Outline {
 
 	}
 
-	protected void renderFace(MatrixStack ms, IRenderTypeBuffer buffer, Direction direction, Vec3d p1, Vec3d p2,
+	protected void renderFace(MatrixStack ms, SuperRenderTypeBuffer buffer, Direction direction, Vec3d p1, Vec3d p2,
 		Vec3d p3, Vec3d p4, boolean noCull) {
 		if (!params.faceTexture.isPresent())
 			return;
 
 		ResourceLocation faceTexture = params.faceTexture.get()
 			.getLocation();
-		if (direction == params.getHighlightedFace() && params.hightlightedFaceTexture.isPresent())
-			faceTexture = params.hightlightedFaceTexture.get()
-				.getLocation();
+		float alphaBefore = params.alpha;
+		params.alpha =
+			(direction == params.getHighlightedFace() && params.hightlightedFaceTexture.isPresent()) ? 1 : 0.5f;
 
-		RenderType translucentType =
-			noCull ? RenderType.getEntityTranslucent(faceTexture) : RenderType.getEntityTranslucentCull(faceTexture);
-		IVertexBuilder builder = buffer.getBuffer(translucentType);
+		RenderType translucentType = RenderTypes.getOutlineTranslucent(faceTexture, !noCull);
+		IVertexBuilder builder = buffer.getLateBuffer(translucentType);
 
 		Axis axis = direction.getAxis();
 		Vec3d uDiff = p2.subtract(p1);
@@ -95,6 +91,7 @@ public class AABBOutline extends Outline {
 		float maxU = (float) Math.abs(axis == Axis.X ? uDiff.z : uDiff.x);
 		float maxV = (float) Math.abs(axis == Axis.Y ? vDiff.z : vDiff.y);
 		putQuadUV(ms, builder, p1, p2, p3, p4, 0, 0, maxU, maxV, Direction.UP);
+		params.alpha = alphaBefore;
 	}
 
 	public void setBounds(AxisAlignedBB bb) {

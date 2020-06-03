@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.tileEntity.behaviour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -72,7 +73,7 @@ public class ValueBox extends ChasingAABBOutline {
 	}
 
 	@Override
-	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
+	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		boolean hasTransform = transform != null;
 		if (transform instanceof Sided && params.getHighlightedFace() != null)
 			((Sided) transform).fromSide(params.getHighlightedFace());

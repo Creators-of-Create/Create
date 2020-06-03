@@ -8,16 +8,15 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.foundation.renderState.RenderTypes;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix3f;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 
 public abstract class Outline {
@@ -29,12 +28,10 @@ public abstract class Outline {
 		params = new OutlineParams();
 	}
 
-	public abstract void render(MatrixStack ms, IRenderTypeBuffer buffer);
+	public abstract void render(MatrixStack ms, SuperRenderTypeBuffer buffer);
 
-	public void renderAACuboidLine(MatrixStack ms, IRenderTypeBuffer buffer, Vec3d start, Vec3d end, boolean noCull) {
-		ResourceLocation tex = AllSpecialTextures.BLANK.getLocation();
-		IVertexBuilder builder =
-			buffer.getBuffer(noCull ? RenderType.getCutoutNoCull(tex, true) : RenderType.getEntitySolid(tex));
+	public void renderAACuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vec3d start, Vec3d end) {
+		IVertexBuilder builder = buffer.getBuffer(RenderTypes.getOutlineSolid());
 
 		Vec3d diff = end.subtract(start);
 		if (diff.x + diff.y + diff.z < 0) {

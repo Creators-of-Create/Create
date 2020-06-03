@@ -177,7 +177,7 @@ public class SchematicAndQuillHandler {
 			outliner().chaseAABB(outlineSlot, currentSelectionBox)
 				.colored(0x6886c5)
 				.withFaceTextures(AllSpecialTextures.CHECKERED, AllSpecialTextures.HIGHLIGHT_CHECKERED)
-				.disableNormals()
+				.lineWidth(1/16f)
 				.highlightFace(selectedFace);
 	}
 

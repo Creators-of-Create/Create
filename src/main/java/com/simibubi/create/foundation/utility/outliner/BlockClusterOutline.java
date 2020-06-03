@@ -9,9 +9,10 @@ import java.util.Set;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.foundation.renderState.RenderTypes;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -29,13 +30,13 @@ public class BlockClusterOutline extends Outline {
 	}
 
 	@Override
-	public void render(MatrixStack ms, IRenderTypeBuffer buffer) {
+	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		for (MergeEntry edge : cluster.visibleEdges) {
 			Vec3d start = new Vec3d(edge.pos);
 			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, edge.axis);
-			renderAACuboidLine(ms, buffer, start, new Vec3d(edge.pos.offset(direction)), false);
+			renderAACuboidLine(ms, buffer, start, new Vec3d(edge.pos.offset(direction)));
 		}
-		
+
 		for (MergeEntry face : cluster.visibleFaces.keySet()) {
 			AxisDirection axisDirection = cluster.visibleFaces.get(face);
 			Direction direction = Direction.getFacingFromAxis(axisDirection, face.axis);
@@ -46,14 +47,14 @@ public class BlockClusterOutline extends Outline {
 		}
 	}
 
-	protected void renderBlockFace(MatrixStack ms, IRenderTypeBuffer buffer, BlockPos pos, Direction face) {
+	protected void renderBlockFace(MatrixStack ms, SuperRenderTypeBuffer buffer, BlockPos pos, Direction face) {
 		Optional<AllSpecialTextures> faceTexture = params.faceTexture;
 		if (!faceTexture.isPresent())
 			return;
 
-		RenderType translucentType = RenderType.getEntityTranslucent(faceTexture.get()
-			.getLocation());
-		IVertexBuilder builder = buffer.getBuffer(translucentType);
+		RenderType translucentType = RenderTypes.getOutlineTranslucent(faceTexture.get()
+			.getLocation(), true);
+		IVertexBuilder builder = buffer.getLateBuffer(translucentType);
 
 		Vec3d center = VecHelper.getCenterOf(pos);
 		Vec3d offset = new Vec3d(face.getDirectionVec());
