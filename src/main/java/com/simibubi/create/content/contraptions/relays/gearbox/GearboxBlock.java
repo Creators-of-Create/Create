@@ -31,7 +31,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return AllTileEntities.DEPLOYER.create();
+		return AllTileEntities.GEARBOX.create();
 	}
 
 	@Override

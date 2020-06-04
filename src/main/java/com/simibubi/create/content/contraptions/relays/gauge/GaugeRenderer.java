@@ -20,7 +20,15 @@ public class GaugeRenderer extends KineticTileEntityRenderer {
 
 	protected GaugeBlock.Type type;
 
-	public GaugeRenderer(TileEntityRendererDispatcher dispatcher, GaugeBlock.Type type) {
+	public static GaugeRenderer speed(TileEntityRendererDispatcher dispatcher) {
+		return new GaugeRenderer(dispatcher, Type.SPEED);
+	}
+	
+	public static GaugeRenderer stress(TileEntityRendererDispatcher dispatcher) {
+		return new GaugeRenderer(dispatcher, Type.STRESS);
+	}
+	
+	protected GaugeRenderer(TileEntityRendererDispatcher dispatcher, GaugeBlock.Type type) {
 		super(dispatcher);
 		this.type = type;
 	}

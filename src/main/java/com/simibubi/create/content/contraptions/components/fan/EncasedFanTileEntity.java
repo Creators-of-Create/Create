@@ -82,10 +82,12 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	public Direction getAirFlowDirection() {
-		if (getSpeed() == 0)
+		float speed = getSpeed();
+		if (speed == 0)
 			return null;
 		Direction facing = getBlockState().get(BlockStateProperties.FACING);
-		return getSpeed() > 0 ? facing : facing.getOpposite();
+		speed = convertToDirection(speed, facing);
+		return speed > 0 ? facing : facing.getOpposite();
 	}
 
 	@Override

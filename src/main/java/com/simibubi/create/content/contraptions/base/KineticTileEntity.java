@@ -28,6 +28,8 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -444,6 +446,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	public int getFlickerScore() {
 		return flickerTally;
+	}
+	
+	public static float convertToDirection(float axisSpeed, Direction d) {
+		return d.getAxisDirection() == AxisDirection.POSITIVE ? axisSpeed : -axisSpeed;
 	}
 
 }

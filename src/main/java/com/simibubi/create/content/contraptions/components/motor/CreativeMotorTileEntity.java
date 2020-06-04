@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.motor;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -48,7 +49,9 @@ public class CreativeMotorTileEntity extends GeneratingKineticTileEntity {
 
 	@Override
 	public float getGeneratedSpeed() {
-		return generatedSpeed.getValue();
+		if (!AllBlocks.CREATIVE_MOTOR.has(getBlockState()))
+			return 0;
+		return convertToDirection(generatedSpeed.getValue(), getBlockState().get(CreativeMotorBlock.FACING));
 	}
 
 	public static int step(StepContext context) {

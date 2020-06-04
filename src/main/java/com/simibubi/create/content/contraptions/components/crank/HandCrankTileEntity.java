@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -30,15 +31,18 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 
 	@Override
 	public float getGeneratedSpeed() {
-		return inUse == 0 ? 0 : backwards ? -32 : 32;
+		if (!AllBlocks.HAND_CRANK.has(getBlockState()))
+			return 0;
+		int speed = inUse == 0 ? 0 : backwards ? -32 : 32;
+		return convertToDirection(speed, getBlockState().get(HandCrankBlock.FACING));
 	}
-	
+
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.putInt("InUse", inUse);
 		return super.write(compound);
 	}
-	
+
 	@Override
 	public void read(CompoundNBT compound) {
 		inUse = compound.getInt("InUse");

@@ -125,7 +125,7 @@ public class NozzleTileEntity extends SmartTileEntity {
 			return 0;
 		if (fan.getSpeed() == 0)
 			return 0;
-		pushing = fan.getSpeed() > 0;
+		pushing = fan.getAirFlowDirection() == fan.getBlockState().get(EncasedFanBlock.FACING);
 		return fan.getMaxDistance();
 	}
 

@@ -58,7 +58,6 @@ import com.simibubi.create.content.contraptions.relays.encased.ClutchTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftRenderer;
-import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
@@ -259,8 +258,8 @@ public class AllTileEntities {
 		bind(MECHANICAL_PRESS, MechanicalPressRenderer::new);
 		bind(MECHANICAL_MIXER, MechanicalMixerRenderer::new);
 		bind(MECHANICAL_CRAFTER, MechanicalCrafterRenderer::new);
-		bind(SPEEDOMETER, disp -> new GaugeRenderer(disp, GaugeBlock.Type.SPEED));
-		bind(STRESSOMETER, disp -> new GaugeRenderer(disp, GaugeBlock.Type.STRESS));
+		bind(SPEEDOMETER, GaugeRenderer::speed);
+		bind(STRESSOMETER, GaugeRenderer::stress);
 		bind(BASIN, BasinRenderer::new);
 		bind(DEPLOYER, DeployerRenderer::new);
 		bind(FLYWHEEL, FlywheelRenderer::new);
