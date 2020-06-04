@@ -30,8 +30,8 @@ public class LinkedTransposerTileEntity extends TransposerTileEntity {
 		super.addBehaviours(behaviours);
 	}
 
-	public void setSignal(boolean powered) {
-		receivedSignal = powered;
+	public void setSignal(int powered) {
+		receivedSignal = powered > 0;
 	}
 
 	@Override

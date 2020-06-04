@@ -86,7 +86,7 @@ public class RedstoneLinkNetworkHandler {
 
 	public void updateNetworkOf(LinkBehaviour actor) {
 		Set<LinkBehaviour> network = getNetworkOf(actor);
-		boolean powered = false;
+		int power = 0;
 
 		for (Iterator<LinkBehaviour> iterator = network.iterator(); iterator.hasNext();) {
 			LinkBehaviour other = iterator.next();
@@ -105,10 +105,9 @@ public class RedstoneLinkNetworkHandler {
 			}
 			if (!withinRange(actor, other))
 				continue;
-			if (other.isTransmitting()) {
-				powered = true;
+			power = Math.max(other.getTransmittedStrength(), power);
+			if (power == 15)
 				break;
-			}
 		}
 
 		for (Iterator<LinkBehaviour> iterator = network.iterator(); iterator.hasNext();) {
@@ -120,7 +119,7 @@ public class RedstoneLinkNetworkHandler {
 			if (!withinRange(actor, other))
 				continue;
 			if (other.isListening())
-				other.updateReceiver(powered);
+				other.updateReceiver(power);
 		}
 	}
 

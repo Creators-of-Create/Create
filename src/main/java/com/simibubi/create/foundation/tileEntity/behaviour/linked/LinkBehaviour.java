@@ -36,8 +36,8 @@ public class LinkBehaviour extends TileEntityBehaviour {
 
 	public boolean newPosition;
 	private Mode mode;
-	private Supplier<Boolean> transmission;
-	private Consumer<Boolean> signalCallback;
+	private Supplier<Integer> transmission;
+	private Consumer<Integer> signalCallback;
 
 	protected LinkBehaviour(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots) {
 		super(te);
@@ -50,7 +50,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	public static LinkBehaviour receiver(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots,
-			Consumer<Boolean> signalCallback) {
+		Consumer<Integer> signalCallback) {
 		LinkBehaviour behaviour = new LinkBehaviour(te, slots);
 		behaviour.signalCallback = signalCallback;
 		behaviour.mode = Mode.RECEIVE;
@@ -58,7 +58,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	public static LinkBehaviour transmitter(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots,
-			Supplier<Boolean> transmission) {
+		Supplier<Integer> transmission) {
 		LinkBehaviour behaviour = new LinkBehaviour(te, slots);
 		behaviour.transmission = transmission;
 		behaviour.mode = Mode.TRANSMIT;
@@ -81,14 +81,14 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		return mode == Mode.RECEIVE;
 	}
 
-	public boolean isTransmitting() {
-		return mode == Mode.TRANSMIT && transmission.get();
+	public int getTransmittedStrength() {
+		return mode == Mode.TRANSMIT ? transmission.get() : 0;
 	}
 
-	public void updateReceiver(boolean networkPowered) {
+	public void updateReceiver(int networkPower) {
 		if (!newPosition)
 			return;
-		signalCallback.accept(networkPowered);
+		signalCallback.accept(networkPower);
 	}
 
 	public void notifySignalChange() {
@@ -119,14 +119,18 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	@Override
 	public void writeNBT(CompoundNBT compound) {
 		super.writeNBT(compound);
-		compound.put("FrequencyFirst", frequencyFirst.getStack().write(new CompoundNBT()));
-		compound.put("FrequencyLast", frequencyLast.getStack().write(new CompoundNBT()));
-		compound.putLong("LastKnownPosition", tileEntity.getPos().toLong());
+		compound.put("FrequencyFirst", frequencyFirst.getStack()
+			.write(new CompoundNBT()));
+		compound.put("FrequencyLast", frequencyLast.getStack()
+			.write(new CompoundNBT()));
+		compound.putLong("LastKnownPosition", tileEntity.getPos()
+			.toLong());
 	}
 
 	@Override
 	public void readNBT(CompoundNBT compound) {
-		long positionInTag = tileEntity.getPos().toLong();
+		long positionInTag = tileEntity.getPos()
+			.toLong();
 		long positionKey = compound.getLong("LastKnownPosition");
 		newPosition = positionInTag != positionKey;
 
@@ -172,7 +176,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		float scale;
 
 		public SlotPositioning(Function<BlockState, Pair<Vec3d, Vec3d>> offsetsForState,
-				Function<BlockState, Vec3d> rotationForState) {
+			Function<BlockState, Vec3d> rotationForState) {
 			offsets = offsetsForState;
 			rotation = rotationForState;
 			scale = 1;

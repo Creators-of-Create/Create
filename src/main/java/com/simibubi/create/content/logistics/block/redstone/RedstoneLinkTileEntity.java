@@ -20,8 +20,9 @@ import net.minecraft.util.math.BlockPos;
 
 public class RedstoneLinkTileEntity extends SmartTileEntity {
 
-	private boolean receivedSignal;
-	private boolean transmittedSignal;
+	private boolean receivedSignalChanged;
+	private int receivedSignal;
+	private int transmittedSignal;
 	private LinkBehaviour link;
 	private boolean transmitter;
 
@@ -46,16 +47,18 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 				: LinkBehaviour.receiver(this, slots, this::setSignal);
 	}
 
-	public boolean getSignal() {
+	public int getSignal() {
 		return transmittedSignal;
 	}
 
-	public void setSignal(boolean powered) {
-		receivedSignal = powered;
+	public void setSignal(int power) {
+		if (receivedSignal != power)
+			receivedSignalChanged = true;
+		receivedSignal = power;
 	}
 
-	public void transmit(boolean signal) {
-		transmittedSignal = signal;
+	public void transmit(int strength) {
+		transmittedSignal = strength;
 		if (link != null)
 			link.notifySignalChange();
 	}
@@ -63,8 +66,9 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.putBoolean("Transmitter", transmitter);
-		compound.putBoolean("Receive", receivedSignal);
-		compound.putBoolean("Transmit", transmittedSignal);
+		compound.putInt("Receive", getReceivedSignal());
+		compound.putBoolean("ReceivedChanged", receivedSignalChanged);
+		compound.putInt("Transmit", transmittedSignal);
 		return super.write(compound);
 	}
 
@@ -73,9 +77,10 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 		transmitter = compound.getBoolean("Transmitter");
 		super.read(compound);
 		
-		receivedSignal = compound.getBoolean("Receive");
+		receivedSignal = compound.getInt("Receive");
+		receivedSignalChanged = compound.getBoolean("ReceivedChanged");
 		if (world == null || world.isRemote || !link.newPosition)
-			transmittedSignal = compound.getBoolean("Transmit");
+			transmittedSignal = compound.getInt("Transmit");
 	}
 
 	@Override
@@ -95,21 +100,30 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 			return;
 		if (world.isRemote)
 			return;
+		
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.REDSTONE_LINK.has(blockState))
 			return;
 
-		if (receivedSignal != blockState.get(POWERED)) {
+		if ((getReceivedSignal() > 0) != blockState.get(POWERED)) {
+			receivedSignalChanged = true;
 			world.setBlockState(pos, blockState.cycle(POWERED));
+		}
+		
+		if (receivedSignalChanged) {
 			Direction attachedFace = blockState.get(RedstoneLinkBlock.FACING).getOpposite();
 			BlockPos attachedPos = pos.offset(attachedFace);
+			world.notifyNeighbors(pos, world.getBlockState(pos).getBlock());
 			world.notifyNeighbors(attachedPos, world.getBlockState(attachedPos).getBlock());
-			return;
 		}
 	}
 
 	protected Boolean isTransmitterBlock() {
 		return !getBlockState().get(RedstoneLinkBlock.RECEIVER);
+	}
+
+	public int getReceivedSignal() {
+		return receivedSignal;
 	}
 
 }
