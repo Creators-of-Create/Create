@@ -68,6 +68,7 @@ public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 		static final SortedMap<RenderType, BufferBuilder> createEntityBuilders() {
 			return Util.make(new Object2ObjectLinkedOpenHashMap<>(), (map) -> {
 				map.put(Atlases.getEntitySolid(), blockBuilders.get(RenderType.getSolid()));
+				assign(map, RenderTypes.getOutlineSolid());
 				map.put(Atlases.getEntityCutout(), blockBuilders.get(RenderType.getCutout()));
 				map.put(Atlases.getBannerPatterns(), blockBuilders.get(RenderType.getCutoutMipped()));
 				map.put(Atlases.getEntityTranslucent(), blockBuilders.get(RenderType.getTranslucent()));

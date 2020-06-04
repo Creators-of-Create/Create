@@ -8,8 +8,6 @@ import java.util.function.Supplier;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -62,12 +60,6 @@ public class ZapperRenderHandler {
 			this.mainHand = mainHand;
 			return this;
 		}
-
-		public Vec3d getStart() {
-			if (follow)
-				return getExactBarrelPos(mainHand);
-			return start;
-		}
 	}
 
 	public static Vec3d getExactBarrelPos(boolean mainHand) {
@@ -86,26 +78,26 @@ public class ZapperRenderHandler {
 	}
 
 	public static void tick() {
-		if (cachedBeams == null)
-			cachedBeams = new LinkedList<>();
-		cachedBeams.removeIf(b -> b.itensity < .1f);
-		cachedBeams.forEach(b -> b.itensity *= .4f);
-
 		lastLeftHandAnimation = leftHandAnimation;
 		lastRightHandAnimation = rightHandAnimation;
 		leftHandAnimation *= 0.8f;
 		rightHandAnimation *= 0.8f;
-
-		if (cachedBeams == null || cachedBeams.isEmpty())
+		
+		if (cachedBeams == null)
+			cachedBeams = new LinkedList<>();
+		
+		cachedBeams.removeIf(b -> b.itensity < .1f);
+		if (cachedBeams.isEmpty())
 			return;
-
+		
 		cachedBeams.forEach(beam -> {
-			CreateClient.outliner.showLine(beam, beam.getStart(), beam.end)
-				.disableNormals()
-				.colored(ColorHelper.mixColors(0xffffff, ColorHelper.rainbowColor(AnimationTickHolder.ticks),
-					MathHelper.clamp(beam.itensity * 3, 0, 1)))
-				.lineWidth(beam.itensity * 1 / 4f);
+			CreateClient.outliner.endChasingLine(beam, beam.start, beam.end, 1 - beam.itensity)
+			.disableNormals()
+			.colored(0xffffff)
+			.lineWidth(beam.itensity * 1 / 8f);
 		});
+		
+		cachedBeams.forEach(b -> b.itensity *= .6f);
 	}
 
 	public static void shoot(Hand hand) {

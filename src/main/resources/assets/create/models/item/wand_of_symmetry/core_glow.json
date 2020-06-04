@@ -1,0 +1,22 @@
+{
+	"ambientocclusion": false,
+	"parent": "create:item/wand_of_symmetry/item",
+	"textures": {
+        "3": "block/white_stained_glass"
+    },
+    "elements": [
+        {
+            "name": "Cube",
+            "from": [ 6.5, 17.5, 6.5 ], 
+            "to": [ 9.5, 26.5, 9.5 ], 
+            "faces": {
+                "north": { "texture": "#3", "uv": [ 10.0, 5.0, 13.0, 13.0 ] },
+                "east": { "texture": "#3", "uv": [ 5.0, 3.0, 8.0, 12.0 ] },
+                "south": { "texture": "#3", "uv": [ 7.0, 6.0, 10.0, 14.0 ] },
+                "west": { "texture": "#3", "uv": [ 7.0, 4.0, 4.0, 12.0 ] },
+                "up": { "texture": "#3", "uv": [ 7.0, 5.0, 10.0, 8.0 ] },
+                "down": { "texture": "#3", "uv": [ 9.0, 3.0, 12.0, 6.0 ] }
+            }
+        }
+    ]
+}

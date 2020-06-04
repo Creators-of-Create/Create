@@ -9,7 +9,7 @@ public class SymmetryWandModel extends CustomRenderedItemModel {
 
 	public SymmetryWandModel(IBakedModel template) {
 		super(template, "wand_of_symmetry");
-		addPartials("bits", "core");
+		addPartials("bits", "core", "core_glow");
 	}
 
 	@Override

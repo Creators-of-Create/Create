@@ -60,45 +60,5 @@
 				"down": {"uv": [5, 6, 10, 9], "texture": "#cog"}
 			}
 		}
-	],
-	"display": {
-		"thirdperson_righthand": {
-			"rotation": [1, 0, 0],
-			"translation": [0, 4, -2.5],
-			"scale": [0.8, 0.8, 0.8]
-		},
-		"thirdperson_lefthand": {
-			"rotation": [1, 0, 0],
-			"translation": [0, 4, -2.5],
-			"scale": [0.8, 0.8, 0.8]
-		},
-		"firstperson_righthand": {
-			"rotation": [10, 0, 10],
-			"translation": [1, 4, 1]
-		},
-		"firstperson_lefthand": {
-			"rotation": [10, 0, 10],
-			"translation": [1, 4, 1]
-		},
-		"ground": {
-			"rotation": [0, 0, 90],
-			"translation": [-2.25, -1, -0.75],
-			"scale": [0.75, 0.75, 0.75]
-		},
-		"gui": {
-			"rotation": [30, 45, 0],
-			"translation": [-0.5, 3.5, 0]
-		},
-		"fixed": {
-			"rotation": [0, 90, 0],
-			"translation": [-1.25, 4.25, -1]
-		}
-	},
-	"groups": [
-		{
-			"name": "accelerator",
-			"origin": [8, 8, 8],
-			"children": [0, 1, 2, 3]
-		}
 	]
 }

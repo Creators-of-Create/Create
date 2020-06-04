@@ -9,7 +9,7 @@ public class DeforesterModel extends CustomRenderedItemModel {
 
 	public DeforesterModel(IBakedModel template) {
 		super(template, "deforester");
-		addPartials("gear", "light", "blade");
+		addPartials("gear", "core", "core_glow");
 	}
 
 	@Override

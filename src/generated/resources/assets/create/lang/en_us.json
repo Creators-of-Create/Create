@@ -328,6 +328,10 @@
 	"block.create.zinc_block": "Zinc Block",
 	"block.create.zinc_ore": "Zinc Ore",
 
+	"entity.create.contraption": "Contraption",
+	"entity.create.stationary_contraption": "Stationary Contraption",
+	"entity.create.super_glue": "Super Glue",
+
 	"item.create.andesite_alloy": "Andesite Alloy",
 	"item.create.attribute_filter": "Attribute Filter",
 	"item.create.belt_connector": "Mechanical Belt",
@@ -378,13 +382,6 @@
 	"item.create.wrench": "Wrench",
 	"item.create.zinc_ingot": "Zinc Ingot",
 	"item.create.zinc_nugget": "Zinc Nugget",
-
-
-	"_": "->------------------------]  We aren't in Registrate yet  [------------------------<-",
-
-	"entity.create.contraption": "Moving Contraption",
-	"entity.create.stationary_contraption": "Stationary Contraption",
-	"entity.create.super_glue": "Superglue",
 
 
 	"_": "->------------------------]  Advancements  [------------------------<-",

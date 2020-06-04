@@ -9,7 +9,7 @@ public class WorldshaperModel extends CustomRenderedItemModel {
 
 	public WorldshaperModel(IBakedModel template) {
 		super(template, "handheld_worldshaper");
-		addPartials("core", "accelerator");
+		addPartials("core", "core_glow", "accelerator");
 	}
 
 	@Override

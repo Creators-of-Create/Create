@@ -34,8 +34,7 @@ public class WorldshaperRenderHandler {
 		CreateClient.outliner.showCluster("terrainZapper", renderedShape.stream()
 			.map(pos -> pos.add(renderedPosition))
 			.collect(Collectors.toList()))
-			.colored(0x999999)
-			.disableNormals()
+			.colored(0xbfbfbf)
 			.lineWidth(1 / 32f)
 			.withFaceTexture(AllSpecialTextures.CHECKERED);
 	}
@@ -49,7 +48,7 @@ public class WorldshaperRenderHandler {
 
 		if (zapperInMain) {
 			CompoundNBT tag = heldMain.getOrCreateTag();
-			if (!tag.contains("_Swap")) {
+			if (!tag.contains("_Swap") || !zapperInOff) {
 				createBrushOutline(tag, player, heldMain);
 				return;
 			}

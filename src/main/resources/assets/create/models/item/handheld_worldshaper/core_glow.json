@@ -1,0 +1,37 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:item/handheld_blockzapper/item",
+	"textures": {
+		"3": "block/white_stained_glass"
+	},
+	"elements": [
+		{
+			"name": "Core Glow",
+			"from": [6.6, 4.6, 0.5],
+			"to": [9.4, 6.4, 10.4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8.5, 8, 8]},
+			"faces": {
+				"north": {"uv": [6, 7, 8.8, 8.8], "texture": "#3"},
+				"east": {"uv": [3, 7, 12.9, 8.8], "texture": "#3"},
+				"south": {"uv": [5, 7, 7.8, 8.8], "texture": "#3"},
+				"west": {"uv": [4, 7, 13.9, 8.8], "texture": "#3"},
+				"up": {"uv": [7, 3, 9.8, 12.9], "texture": "#3"},
+				"down": {"uv": [7, 4, 9.8, 13.9], "texture": "#3"}
+			}
+		},
+		{
+			"name": "Amplifier Core Glow",
+			"from": [6.6, 2.6, 2.5],
+			"to": [9.4, 4.4, 7.4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8.5, 8, 8]},
+			"faces": {
+				"north": {"uv": [6, 7, 8.8, 8.8], "texture": "#3"},
+				"east": {"uv": [3, 7, 7.9, 8.8], "texture": "#3"},
+				"south": {"uv": [5, 7, 7.8, 8.8], "texture": "#3"},
+				"west": {"uv": [4, 7, 8.9, 8.8], "texture": "#3"},
+				"up": {"uv": [7, 3, 9.8, 7.9], "texture": "#3"},
+				"down": {"uv": [7, 4, 9.8, 8.9], "texture": "#3"}
+			}
+		}
+	]
+}

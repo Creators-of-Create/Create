@@ -13,9 +13,9 @@ public class BlockzapperModel extends CustomRenderedItemModel {
 
 	public BlockzapperModel(IBakedModel template) {
 		super(template, "handheld_blockzapper");
-		addPartials("core", "body", "amplifier_core", "accelerator", "gold_body", "gold_scope", "gold_amplifier",
-				"gold_retriever", "gold_accelerator", "chorus_body", "chorus_scope", "chorus_amplifier", "chorus_retriever",
-				"chorus_accelerator");
+		addPartials("core", "core_glow", "body", "amplifier_core", "amplifier_core_glow", "accelerator", "gold_body",
+			"gold_scope", "gold_amplifier", "gold_retriever", "gold_accelerator", "chorus_body", "chorus_scope",
+			"chorus_amplifier", "chorus_retriever", "chorus_accelerator");
 	}
 
 	@Override

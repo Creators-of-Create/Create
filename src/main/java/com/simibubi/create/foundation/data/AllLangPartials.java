@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.data;
 
 public enum AllLangPartials {
 	
-	TEMPORARY("We aren't in Registrate yet"),
 	ADVANCEMENTS("Advancements"),
 	MESSAGES("UI & Messages"),
 	TOOLTIPS("Item Descriptions"),

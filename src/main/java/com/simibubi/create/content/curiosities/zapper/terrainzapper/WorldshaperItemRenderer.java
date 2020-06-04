@@ -1,61 +1,50 @@
 package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
+import static java.lang.Math.max;
+import static net.minecraft.util.math.MathHelper.clamp;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.curiosities.zapper.ZapperItemRenderer;
-import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
+import com.simibubi.create.foundation.item.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 
-public class WorldshaperItemRenderer extends ZapperItemRenderer {
+public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel> {
 
 	@Override
-	public void render(ItemStack stack, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		WorldshaperModel mainModel = (WorldshaperModel) itemRenderer.getItemModelWithOverrides(stack, Minecraft.getInstance().world, null);
-		float pt = Minecraft.getInstance().getRenderPartialTicks();
+	protected void render(ItemStack stack, WorldshaperModel model, PartialItemModelRenderer renderer, MatrixStack ms,
+		IRenderTypeBuffer buffer, int light, int overlay) {
+		super.render(stack, model, renderer, ms, buffer, light, overlay);
+
+		float pt = Minecraft.getInstance()
+			.getRenderPartialTicks();
 		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 
-		ms.push();
-		ms.translate(0.5F, 0.5F, 0.5F);
-		int lastBl = LightTexture.getBlockLightCoordinates(light);
-		int lastSl = LightTexture.getSkyLightCoordinates(light);
-		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer,
-				LightTexture.pack(Math.min(lastBl + 4, 15), Math.min(lastSl + 7, 15)), overlay,
-				mainModel.getBakedModel());
-
-		// Block indicator
-		if (mainModel.getCurrentPerspective() == TransformType.GUI && stack.hasTag()
-				&& stack.getTag().contains("BlockUsed"))
-			renderBlockUsed(stack, itemRenderer, ms, buffer, light, overlay);
+		renderer.renderSolid(model.getBakedModel(), light);
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		boolean leftHanded = player.getPrimaryHand() == HandSide.LEFT;
 		boolean mainHand = player.getHeldItemMainhand() == stack;
 		boolean offHand = player.getHeldItemOffhand() == stack;
-		float last = mainHand ^ leftHanded ? ZapperRenderHandler.lastRightHandAnimation
-				: ZapperRenderHandler.lastLeftHandAnimation;
-		float current = mainHand ^ leftHanded ? ZapperRenderHandler.rightHandAnimation
-				: ZapperRenderHandler.leftHandAnimation;
-		float animation = MathHelper.clamp(MathHelper.lerp(pt, last, current) * 5, 0, 1);
+		float animation = getAnimationProgress(pt, leftHanded, mainHand);
 
 		// Core glows
 		float multiplier = MathHelper.sin(worldTime * 5);
-		if (mainHand || offHand) {
+		if (mainHand || offHand) 
 			multiplier = animation;
-		}
-		
-		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer,
-				LightTexture.pack((int) (15 * multiplier), 7), overlay, mainModel.getPartial("core"));
+
+		int lightItensity = (int) (15 * clamp(multiplier, 0, 1));
+		int glowLight = LightTexture.pack(lightItensity, max(lightItensity, 4));
+		renderer.renderSolidGlowing(model.getPartial("core"), glowLight);
+		renderer.renderGlowing(model.getPartial("core_glow"), glowLight);
 
 		// Accelerator spins
 		float angle = worldTime * -25;
@@ -67,10 +56,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer {
 		ms.translate(0, offset, 0);
 		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle));
 		ms.translate(0, -offset, 0);
-		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay,
-				mainModel.getPartial("accelerator"));
-
-		ms.pop();
+		renderer.render(model.getPartial("accelerator"), light);
 	}
 
 }

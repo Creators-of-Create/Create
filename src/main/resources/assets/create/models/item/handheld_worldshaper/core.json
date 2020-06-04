@@ -2,9 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "create:item/handheld_blockzapper/item",
 	"textures": {
-		"2": "block/white_concrete_powder",
-		"3": "block/white_stained_glass",
-		"particle": "block/obsidian"
+		"2": "block/white_concrete_powder"
 	},
 	"elements": [
 		{
@@ -16,20 +14,6 @@
 				"north": {"uv": [6, 5, 8.4, 6], "texture": "#2"},
 				"east": {"uv": [3, 5, 13, 6], "texture": "#2"},
 				"west": {"uv": [3, 7, 13, 8], "texture": "#2"}
-			}
-		},
-		{
-			"name": "Core Glow",
-			"from": [6.6, 4.6, 0.5],
-			"to": [9.4, 6.4, 10.4],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8.5, 8, 8]},
-			"faces": {
-				"north": {"uv": [6, 7, 8.8, 8.8], "texture": "#3"},
-				"east": {"uv": [3, 7, 12.9, 8.8], "texture": "#3"},
-				"south": {"uv": [5, 7, 7.8, 8.8], "texture": "#3"},
-				"west": {"uv": [4, 7, 13.9, 8.8], "texture": "#3"},
-				"up": {"uv": [7, 3, 9.8, 12.9], "texture": "#3"},
-				"down": {"uv": [7, 4, 9.8, 13.9], "texture": "#3"}
 			}
 		},
 		{
@@ -45,70 +29,6 @@
 				"up": {"uv": [0, 0, 2.4, 5], "texture": "#2"},
 				"down": {"uv": [0, 0, 2.4, 5], "texture": "#2"}
 			}
-		},
-		{
-			"name": "Amplifier Core Glow",
-			"from": [6.6, 2.6, 2.5],
-			"to": [9.4, 4.4, 7.4],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8.5, 8, 8]},
-			"faces": {
-				"north": {"uv": [6, 7, 8.8, 8.8], "texture": "#3"},
-				"east": {"uv": [3, 7, 7.9, 8.8], "texture": "#3"},
-				"south": {"uv": [5, 7, 7.8, 8.8], "texture": "#3"},
-				"west": {"uv": [4, 7, 8.9, 8.8], "texture": "#3"},
-				"up": {"uv": [7, 3, 9.8, 7.9], "texture": "#3"},
-				"down": {"uv": [7, 4, 9.8, 8.9], "texture": "#3"}
-			}
-		}
-	],
-	"display": {
-		"thirdperson_righthand": {
-			"rotation": [1, 0, 0],
-			"translation": [0, 4, -2.5],
-			"scale": [0.8, 0.8, 0.8]
-		},
-		"thirdperson_lefthand": {
-			"rotation": [1, 0, 0],
-			"translation": [0, 4, -2.5],
-			"scale": [0.8, 0.8, 0.8]
-		},
-		"firstperson_righthand": {
-			"rotation": [10, 0, 10],
-			"translation": [1, 4, 1]
-		},
-		"firstperson_lefthand": {
-			"rotation": [10, 0, 10],
-			"translation": [1, 4, 1]
-		},
-		"ground": {
-			"rotation": [0, 0, 90],
-			"translation": [-2.25, -1, -0.75],
-			"scale": [0.75, 0.75, 0.75]
-		},
-		"gui": {
-			"rotation": [30, 45, 0],
-			"translation": [-0.5, 3.5, 0]
-		},
-		"fixed": {
-			"rotation": [0, 90, 0],
-			"translation": [-1.25, 4.25, -1]
-		}
-	},
-	"groups": [
-		{
-			"name": "core",
-			"origin": [8, 8, 8],
-			"children": [0, 1]
-		},
-		{
-			"name": "core",
-			"origin": [8, 8, 8],
-			"children": []
-		},
-		{
-			"name": "amplifier_core",
-			"origin": [8, 8, 8],
-			"children": [2, 3]
 		}
 	]
 }

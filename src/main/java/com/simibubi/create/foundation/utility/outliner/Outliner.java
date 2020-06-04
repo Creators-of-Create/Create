@@ -9,6 +9,7 @@ import java.util.Set;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
+import com.simibubi.create.foundation.utility.outliner.LineOutline.EndChasingLineOutline;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 
 import net.minecraft.client.Minecraft;
@@ -27,7 +28,7 @@ public class Outliner {
 		outlines.put(slot, new OutlineEntry(box));
 		return box.getParams();
 	}
-	
+
 	public OutlineParams showLine(Object slot, Vec3d start, Vec3d end) {
 		if (!outlines.containsKey(slot)) {
 			LineOutline outline = new LineOutline();
@@ -38,7 +39,19 @@ public class Outliner {
 		((LineOutline) entry.outline).set(start, end);
 		return entry.outline.getParams();
 	}
-	
+
+	public OutlineParams endChasingLine(Object slot, Vec3d start, Vec3d end, float chasingProgress) {
+		if (!outlines.containsKey(slot)) {
+			EndChasingLineOutline outline = new EndChasingLineOutline();
+			outlines.put(slot, new OutlineEntry(outline));
+		}
+		OutlineEntry entry = outlines.get(slot);
+		entry.ticksTillRemoval = 1;
+		((EndChasingLineOutline) entry.outline).setProgress(chasingProgress)
+			.set(start, end);
+		return entry.outline.getParams();
+	}
+
 	public OutlineParams showAABB(Object slot, AxisAlignedBB bb) {
 		createAABBOutlineIfMissing(slot, bb);
 		ChasingAABBOutline outline = getAndRefreshAABB(slot);

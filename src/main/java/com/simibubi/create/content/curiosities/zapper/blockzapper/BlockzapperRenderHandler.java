@@ -23,8 +23,7 @@ public class BlockzapperRenderHandler {
 			return;
 
 		CreateClient.outliner.showCluster("blockzapper", renderedShape)
-			.colored(0x999999)
-			.disableNormals()
+			.colored(0xbfbfbf)
 			.lineWidth(1 / 32f)
 			.withFaceTexture(AllSpecialTextures.CHECKERED);
 	}
@@ -38,7 +37,7 @@ public class BlockzapperRenderHandler {
 
 		if (zapperInMain) {
 			CompoundNBT tag = heldMain.getOrCreateTag();
-			if (!tag.contains("_Swap")) {
+			if (!tag.contains("_Swap") || !zapperInOff) {
 				createOutline(player, heldMain);
 				return;
 			}
