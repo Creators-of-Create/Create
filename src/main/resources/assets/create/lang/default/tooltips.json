@@ -349,7 +349,12 @@
 	"block.create.redstone_link.tooltip.control2": "When R-Clicked while Sneaking",
 	"block.create.redstone_link.tooltip.action2": "Toggles between _Receiver_ and _Transmitter_ Mode.",
 
-	"block.create.redstone_contact.tooltip": "REDSTONE redstone_contact",
+	"block.create.nixie_tube.tooltip": "NIXIE TUBE",
+	"block.create.nixie_tube.tooltip.summary": "A fancy redstone-powered _Number_ _Display_ ranging from 0 to 15.",
+	"block.create.nixie_tube.tooltip.condition1": "When Powered",
+	"block.create.nixie_tube.tooltip.behaviour1": "Shows the current redstone _Signal_ _Strength_ as its displayed value.",
+
+	"block.create.redstone_contact.tooltip": "REDSTONE CONTACT",
 	"block.create.redstone_contact.tooltip.summary": "Only emits redstone power in pairs. It is movable with _Mechanical_ _Pistons_, _Bearings_ or other controllers.",
 	"block.create.redstone_contact.tooltip.condition1": "When facing other redstone_contact",
 	"block.create.redstone_contact.tooltip.behaviour1": "Provides a _Redstone_ _Signal_.",

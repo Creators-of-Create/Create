@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -63,7 +62,6 @@ public class PartialItemModelRenderer {
 			return;
 
 		ms.push();
-		model = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(ms, model, TransformType.NONE, false);
 		ms.translate(-0.5D, -0.5D, -0.5D);
 
 		if (!model.isBuiltInRenderer())

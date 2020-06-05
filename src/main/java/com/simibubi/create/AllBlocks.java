@@ -85,6 +85,8 @@ import com.simibubi.create.content.logistics.block.funnel.VerticalFunnelGenerato
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
@@ -248,13 +250,14 @@ public class AllBlocks {
 		.blockstate(new BeltGenerator()::generate)
 		.register();
 
-	public static final BlockEntry<CreativeMotorBlock> CREATIVE_MOTOR = REGISTRATE.block("creative_motor", CreativeMotorBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.blockstate(new CreativeMotorGenerator()::generate)
-		.transform(StressConfigDefaults.setCapacity(16384.0))
-		.item()
-		.transform(customItemModel())
-		.register();
+	public static final BlockEntry<CreativeMotorBlock> CREATIVE_MOTOR =
+		REGISTRATE.block("creative_motor", CreativeMotorBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.blockstate(new CreativeMotorGenerator()::generate)
+			.transform(StressConfigDefaults.setCapacity(16384.0))
+			.item()
+			.transform(customItemModel())
+			.register();
 
 	public static final BlockEntry<WaterWheelBlock> WATER_WHEEL = REGISTRATE.block("water_wheel", WaterWheelBlock::new)
 		.initialProperties(SharedProperties::wooden)
@@ -523,19 +526,21 @@ public class AllBlocks {
 			.simpleItem()
 			.register();
 
-	public static final BlockEntry<HarvesterBlock> MECHANICAL_HARVESTER = REGISTRATE.block("mechanical_harvester", HarvesterBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.blockstate(BlockStateGen.horizontalBlockProvider(true))
-		.addLayer(() -> RenderType::getCutoutMipped)
-		.item()
-		.transform(customItemModel())
-		.register();
+	public static final BlockEntry<HarvesterBlock> MECHANICAL_HARVESTER =
+		REGISTRATE.block("mechanical_harvester", HarvesterBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.blockstate(BlockStateGen.horizontalBlockProvider(true))
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.item()
+			.transform(customItemModel())
+			.register();
 
-	public static final BlockEntry<PloughBlock> MECHANICAL_PLOUGH = REGISTRATE.block("mechanical_plough", PloughBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.blockstate(BlockStateGen.horizontalBlockProvider(false))
-		.simpleItem()
-		.register();
+	public static final BlockEntry<PloughBlock> MECHANICAL_PLOUGH =
+		REGISTRATE.block("mechanical_plough", PloughBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.blockstate(BlockStateGen.horizontalBlockProvider(false))
+			.simpleItem()
+			.register();
 
 	public static final BlockEntry<CasingBlock> ANDESITE_CASING = REGISTRATE.block("andesite_casing", CasingBlock::new)
 		.transform(BuilderTransformers.casing(AllSpriteShifts.ANDESITE_CASING))
@@ -621,6 +626,15 @@ public class AllBlocks {
 			.transform(customItemModel("_", "transmitter"))
 			.register();
 
+	public static final BlockEntry<NixieTubeBlock> NIXIE_TUBE = REGISTRATE.block("nixie_tube", NixieTubeBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.lightValue(5))
+		.blockstate(new NixieTubeGenerator()::generate)
+		.addLayer(() -> RenderType::getTranslucent)
+		.item()
+		.transform(customItemModel())
+		.register();
+
 	public static final BlockEntry<StockpileSwitchBlock> STOCKPILE_SWITCH =
 		REGISTRATE.block("stockpile_switch", StockpileSwitchBlock::new)
 			.initialProperties(SharedProperties::stone)
@@ -675,15 +689,14 @@ public class AllBlocks {
 			.loot((p, b) -> p.registerDropping(b, EXTRACTOR.get()))
 			.register();
 
-	public static final BlockEntry<LinkedExtractorBlock> LINKED_EXTRACTOR =
-		REGISTRATE.block("linked_extractor", LinkedExtractorBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.addLayer(() -> RenderType::getCutoutMipped)
-			.blockstate(
-				(c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, "extractor/horizontal_linked")))
-			.item()
-			.transform(customItemModel("extractor", "horizontal_linked"))
-			.register();
+	public static final BlockEntry<LinkedExtractorBlock> LINKED_EXTRACTOR = REGISTRATE
+		.block("linked_extractor", LinkedExtractorBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, "extractor/horizontal_linked")))
+		.item()
+		.transform(customItemModel("extractor", "horizontal_linked"))
+		.register();
 
 	public static final BlockEntry<LinkedExtractorBlock.Vertical> VERTICAL_LINKED_EXTRACTOR =
 		REGISTRATE.block("vertical_linked_extractor", LinkedExtractorBlock.Vertical::new)
@@ -722,15 +735,15 @@ public class AllBlocks {
 			.loot((p, b) -> p.registerDropping(b, TRANSPOSER.get()))
 			.register();
 
-	public static final BlockEntry<LinkedTransposerBlock> LINKED_TRANSPOSER = REGISTRATE
-		.block("linked_transposer", LinkedTransposerBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.addLayer(() -> RenderType::getCutoutMipped)
-		.blockstate(
-			(c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, "transposer/horizontal_linked"), 180))
-		.item()
-		.transform(customItemModel("transposer", "horizontal_linked"))
-		.register();
+	public static final BlockEntry<LinkedTransposerBlock> LINKED_TRANSPOSER =
+		REGISTRATE.block("linked_transposer", LinkedTransposerBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.blockstate(
+				(c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, "transposer/horizontal_linked"), 180))
+			.item()
+			.transform(customItemModel("transposer", "horizontal_linked"))
+			.register();
 
 	public static final BlockEntry<LinkedTransposerBlock.Vertical> VERTICAL_LINKED_TRANSPOSER =
 		REGISTRATE.block("vertical_linked_transposer", LinkedTransposerBlock.Vertical::new)
@@ -847,7 +860,7 @@ public class AllBlocks {
 		.register();
 
 	// Load this class
-	
+
 	public static void register() {}
 
 }

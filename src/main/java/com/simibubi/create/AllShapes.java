@@ -58,7 +58,13 @@ public class AllShapes {
 		STOCKPILE_SWITCH = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 16, 15)
 			.add(0, 14, 0, 16, 16, 16)
 			.add(3, 3, -1, 13, 13, 2)
-			.forHorizontal(NORTH)
+			.forHorizontal(NORTH),
+		NIXIE_TUBE = shape(0, 0, 0, 16, 4, 16).add(9, 0, 5, 15, 15, 11)
+			.add(1, 0, 5, 7, 15, 11)
+			.forHorizontalAxis(),
+		NIXIE_TUBE_CEILING = shape(0, 12, 0, 16, 16, 16).add(9, 1, 5, 15, 16, 11)
+			.add(1, 1, 5, 7, 16, 11)
+			.forHorizontalAxis()
 
 	;
 
