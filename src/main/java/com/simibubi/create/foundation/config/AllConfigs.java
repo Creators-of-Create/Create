@@ -33,28 +33,29 @@ public class AllConfigs {
 		return config;
 	}
 
-	public static void registerClientCommon() {
+	public static void register() {
 		CLIENT = register(CClient::new, ModConfig.Type.CLIENT);
 		COMMON = register(CCommon::new, ModConfig.Type.COMMON);
-		for (Entry<ConfigBase, Type> pair : configs.entrySet())
-			if (pair.getValue() != Type.SERVER)
-				ModLoadingContext.get().registerConfig(pair.getValue(), pair.getKey().specification);
-	}
-
-	public static void registerServer() {
 		SERVER = register(CServer::new, ModConfig.Type.SERVER);
-		ModLoadingContext.get().registerConfig(configs.get(SERVER), SERVER.specification);
+
+		for (Entry<ConfigBase, Type> pair : configs.entrySet())
+			ModLoadingContext.get()
+				.registerConfig(pair.getValue(), pair.getKey().specification);
 	}
 
 	public static void onLoad(ModConfig.Loading event) {
 		for (Entry<ConfigBase, Type> pair : configs.entrySet())
-			if (pair.getKey().specification == event.getConfig().getSpec())
-				pair.getKey().onLoad();
+			if (pair.getKey().specification == event.getConfig()
+				.getSpec())
+				pair.getKey()
+					.onLoad();
 	}
 
 	public static void onReload(ModConfig.Reloading event) {
 		for (Entry<ConfigBase, Type> pair : configs.entrySet())
-			if (pair.getKey().specification == event.getConfig().getSpec())
-				pair.getKey().onReload();
+			if (pair.getKey().specification == event.getConfig()
+				.getSpec())
+				pair.getKey()
+					.onReload();
 	}
 }

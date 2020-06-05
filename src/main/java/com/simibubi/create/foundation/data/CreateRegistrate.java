@@ -102,12 +102,13 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Palettes */
 
 	public <T extends Block> BlockBuilder<T, CreateRegistrate> baseBlock(String name,
-		NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom) {
+		NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean TFworldGen) {
 		return super.block(name, factory).initialProperties(propertiesFrom)
 			.blockstate((c, p) -> {
 				final String location = "block/palettes/" + c.getName() + "/plain";
 				p.simpleBlock(c.get(), p.models()
 					.cubeAll(c.getName(), p.modLoc(location)));
+				// TODO tag with forge:stone; if TFWorldGen == true tag with forge:wg_stone aswell
 			})
 			.simpleItem();
 	}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "create:limestone",
+    "create:weathered_limestone",
+    "create:gabbro",
+    "create:dolomite",
+    "create:natural_scoria"
+  ]
+}

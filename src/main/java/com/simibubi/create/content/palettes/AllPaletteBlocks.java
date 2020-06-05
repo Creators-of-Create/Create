@@ -108,34 +108,36 @@ public class AllPaletteBlocks {
 		.register();
 
 	public static final BlockEntry<Block> LIMESTONE =
-		REGISTRATE.baseBlock("limestone", Block::new, () -> Blocks.SANDSTONE)
+		REGISTRATE.baseBlock("limestone", Block::new, () -> Blocks.SANDSTONE, true)
 			.register();
 
 	public static final PalettesVariantEntry LIMESTONE_VARIANTS =
 		new PalettesVariantEntry(PaletteStoneVariants.LIMESTONE, PaletteBlockPatterns.standardRange, LIMESTONE);
 
 	public static final BlockEntry<Block> WEATHERED_LIMESTONE =
-		REGISTRATE.baseBlock("weathered_limestone", Block::new, () -> Blocks.SANDSTONE)
+		REGISTRATE.baseBlock("weathered_limestone", Block::new, () -> Blocks.SANDSTONE, true)
 			.register();
 
 	public static final PalettesVariantEntry WEATHERED_LIMESTONE_VARIANTS = new PalettesVariantEntry(
 		PaletteStoneVariants.WEATHERED_LIMESTONE, PaletteBlockPatterns.standardRange, WEATHERED_LIMESTONE);
 
 	public static final BlockEntry<Block> DOLOMITE =
-		REGISTRATE.baseBlock("dolomite", Block::new, () -> Blocks.QUARTZ_BLOCK)
+		REGISTRATE.baseBlock("dolomite", Block::new, () -> Blocks.QUARTZ_BLOCK, true)
 			.register();
 
 	public static final PalettesVariantEntry DOLOMITE_VARIANTS =
 		new PalettesVariantEntry(PaletteStoneVariants.DOLOMITE, PaletteBlockPatterns.standardRange, DOLOMITE);
 
-	public static final BlockEntry<Block> GABBRO = REGISTRATE.baseBlock("gabbro", Block::new, () -> Blocks.ANDESITE)
-		.register();
+	public static final BlockEntry<Block> GABBRO =
+		REGISTRATE.baseBlock("gabbro", Block::new, () -> Blocks.ANDESITE, true)
+			.register();
 
 	public static final PalettesVariantEntry GABBRO_VARIANTS =
 		new PalettesVariantEntry(PaletteStoneVariants.GABBRO, PaletteBlockPatterns.standardRange, GABBRO);
 
-	public static final BlockEntry<Block> SCORIA = REGISTRATE.baseBlock("scoria", Block::new, () -> Blocks.ANDESITE)
-		.register();
+	public static final BlockEntry<Block> SCORIA =
+		REGISTRATE.baseBlock("scoria", Block::new, () -> Blocks.ANDESITE, true)
+			.register();
 
 	public static final BlockEntry<Block> NATURAL_SCORIA = REGISTRATE.block("natural_scoria", Block::new)
 		.initialProperties(() -> Blocks.ANDESITE)
@@ -149,7 +151,7 @@ public class AllPaletteBlocks {
 		new PalettesVariantEntry(PaletteStoneVariants.SCORIA, PaletteBlockPatterns.standardRange, SCORIA);
 
 	public static final BlockEntry<Block> DARK_SCORIA =
-		REGISTRATE.baseBlock("dark_scoria", Block::new, () -> Blocks.ANDESITE)
+		REGISTRATE.baseBlock("dark_scoria", Block::new, () -> Blocks.ANDESITE, false)
 			.register();
 
 	public static final PalettesVariantEntry DARK_SCORIA_VARIANTS =

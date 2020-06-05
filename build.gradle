@@ -16,7 +16,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = 'mc1.15.2_v0.2.3'
+version = 'mc1.15.2_v0.2.4'
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 

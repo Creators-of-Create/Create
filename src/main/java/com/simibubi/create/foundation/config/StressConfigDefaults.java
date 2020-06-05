@@ -22,6 +22,10 @@ public class StressConfigDefaults {
 	static Map<ResourceLocation, Double> registeredDefaultImpacts = new HashMap<>();
 	static Map<ResourceLocation, Double> registeredDefaultCapacities = new HashMap<>();
 
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> setNoImpact() {
+		return setImpact(0);
+	}
+	
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> setImpact(double impact) {
 		return b -> {
 			registeredDefaultImpacts.put(Create.asResource(b.getName()), impact);

@@ -53,7 +53,7 @@ public class AllShapes {
 			.forDirectional(),
 		CRANK = shape(5, 0, 5, 11, 6, 11).add(1, 3, 1, 15, 8, 15)
 			.forDirectional(),
-		CART_ASSEMBLER = shape(0,12,0,16,16,16).add(-2, 0, 1, 18, 14, 15)
+		CART_ASSEMBLER = shape(0, 12, 0, 16, 16, 16).add(-2, 0, 1, 18, 14, 15)
 			.forHorizontalAxis(),
 		STOCKPILE_SWITCH = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 16, 15)
 			.add(0, 14, 0, 16, 16, 16)

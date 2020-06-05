@@ -61,7 +61,7 @@ public class CreateClient {
 	private static CustomRenderedItems customRenderedItems;
 	private static AllColorHandlers colorHandlers;
 
-	public static void addListeners(IEventBus modEventBus) {
+	public static void addClientListeners(IEventBus modEventBus) {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			modEventBus.addListener(CreateClient::clientInit);
 			modEventBus.addListener(CreateClient::onModelBake);

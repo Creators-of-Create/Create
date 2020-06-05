@@ -38,7 +38,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.2.3";
+	public static final String VERSION = "0.2.4";
 
 	public static Logger logger = LogManager.getLogger();
 	public static ItemGroup baseCreativeTab = new CreateItemGroup();
@@ -54,7 +54,6 @@ public class Create {
 	public Create() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get()
 			.getModEventBus();
-		modEventBus.addListener(Create::init);
 
 		AllBlocks.register();
 		AllItems.register();
@@ -62,18 +61,16 @@ public class Create {
 		AllEntityTypes.register();
 		AllTileEntities.register();
 
+		modEventBus.addListener(Create::init);
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(ContainerType.class, AllContainerTypes::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
 		modEventBus.addListener(AllConfigs::onLoad);
 		modEventBus.addListener(AllConfigs::onReload);
-		
-		// Ensure registrate runs first
 		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
-
-		CreateClient.addListeners(modEventBus);
-		AllConfigs.registerClientCommon();
+		CreateClient.addClientListeners(modEventBus);
+		AllConfigs.register();
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
@@ -84,9 +81,7 @@ public class Create {
 
 		AllPackets.registerPackets();
 		AllTriggers.register();
-
 		AllWorldFeatures.reload();
-		AllConfigs.registerServer();
 	}
 
 	public static void tick() {
