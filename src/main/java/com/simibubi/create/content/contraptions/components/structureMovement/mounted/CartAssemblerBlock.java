@@ -76,10 +76,20 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 	public void onMinecartPass(BlockState state, World world, BlockPos pos, AbstractMinecartEntity cart) {
 		if (!cart.canBeRidden() && !(cart instanceof FurnaceMinecartEntity))
 			return;
-		if (state.get(POWERED))
-			disassemble(world, pos, cart);
-		else
-			assemble(world, pos, cart);
+		
+		withTileEntityDo(world, pos, te -> {
+			if(te.isMinecartUpdateValid()) {
+				if (state.get(POWERED)) {
+					assemble(world, pos, cart);
+					cart.setVelocity(cart.getAdjustedHorizontalFacing().getXOffset(), cart.getAdjustedHorizontalFacing().getYOffset(), cart.getAdjustedHorizontalFacing().getZOffset());
+				}
+				else {
+					disassemble(world, pos, cart);
+					cart.setVelocity(0, 0, 0);
+				}
+				te.resetTicksSinceMinecartUpdate();
+			}
+		});
 	}
 
 	protected void assemble(World world, BlockPos pos, AbstractMinecartEntity cart) {

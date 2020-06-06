@@ -5,7 +5,7 @@
 		"4": "create:block/bearing_top",
 		"5": "create:block/mechanical_bearing_side",
 		"clutch_off": "create:block/clutch_off",
-		"rail": "block/rail",
+		"rail": "block/powered_rail",
 		"translation_chassis_side": "create:block/cart_assembler_side",
 		"particle": "create:block/cart_assembler_side"
 	},

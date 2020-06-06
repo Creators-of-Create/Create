@@ -15,11 +15,22 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 
 public class CartAssemblerTileEntity extends SmartTileEntity {
+	private static final int assemblyCooldown = 8;
 
 	protected ScrollOptionBehaviour<CartMovementMode> movementMode;
+	private int ticksSinceMinecartUpdate;
 
 	public CartAssemblerTileEntity(TileEntityType<? extends CartAssemblerTileEntity> type) {
 		super(type);
+		ticksSinceMinecartUpdate = assemblyCooldown;
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		if(ticksSinceMinecartUpdate < assemblyCooldown) {
+			ticksSinceMinecartUpdate++;
+		}
 	}
 
 	@Override
@@ -59,7 +70,14 @@ public class CartAssemblerTileEntity extends SmartTileEntity {
 		public String getTranslationKey() {
 			return translationKey;
 		}
-
+	}
+	
+	public void resetTicksSinceMinecartUpdate() {
+		ticksSinceMinecartUpdate = 0;
+	}
+	
+	public boolean isMinecartUpdateValid() {
+		return ticksSinceMinecartUpdate >= assemblyCooldown;
 	}
 
 }
