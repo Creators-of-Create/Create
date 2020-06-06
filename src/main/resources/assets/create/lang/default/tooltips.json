@@ -280,7 +280,9 @@
 	"block.create.cart_assembler.tooltip": "CART ASSEMBLER",
 	"block.create.cart_assembler.tooltip.summary": "Mounts a connected Structure onto a _passing_ _Minecart_.",
 	"block.create.cart_assembler.tooltip.condition1": "When Powered by Redstone",
-	"block.create.cart_assembler.tooltip.behaviour1": "_Disassembles_ mounted Structures of _passing_ _carts_ and places them back into the world.",
+	"block.create.cart_assembler.tooltip.behaviour1": "_Assembles_ a connected Structure onto a _Minecart_ and _sends_ the Minecart on its way.",
+	"block.create.cart_assembler.tooltip.condition2": "Otherwise",
+	"block.create.cart_assembler.tooltip.behaviour2": "_Disassembles_ mounted Structures of _passing_ _carts_, places them back into the world and _stops_ the cart.",
 	
 	"block.create.rope_pulley.tooltip": "ROPE PULLEY",
 	"block.create.rope_pulley.tooltip.summary": "Moves attached _blocks_ and _structures_ _vertically_. Use _Chassis_ or _Slime_ _Blocks_ to move more than a single block.",
