@@ -1,0 +1,28 @@
+{
+  "parent": "create:extendo_grip",
+  "display": {
+    "icon": {
+      "item": "create:extendo_grip"
+    },
+    "title": {
+      "translate": "advancement.create.dual_extendo_grip"
+    },
+    "description": {
+      "translate": "advancement.create.dual_extendo_grip.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:giga_extendo"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

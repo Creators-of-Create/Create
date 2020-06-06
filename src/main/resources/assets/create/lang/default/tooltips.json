@@ -45,7 +45,12 @@
 	
 	"item.create.deforester.tooltip": "DEFORESTER",
 	"item.create.deforester.tooltip.summary": "A _radiant_ _axe_ able to chop down trees in a split second.",
-	
+
+	"item.create.extendo_grip.tooltip": "EXTENDO GRIP",
+	"item.create.extendo_grip.tooltip.summary": "Boioioing! Greatly _increases_ _reach_ _distance_ of the wielder.",
+	"item.create.extendo_grip.tooltip.condition1": "When in Off-Hand",
+	"item.create.extendo_grip.tooltip.behaviour1": "Increases _reach_ _distance_ of items used in the _Main-Hand_.",
+
 	"item.create.filter.tooltip": "FILTER",
 	"item.create.filter.tooltip.summary": "_Controls_ _outputs_ and _inputs_ of logistical devices with more _precision_, matching them against a _set_ _of_ _items_ or several _nested_ _filters_.",
 	"item.create.filter.tooltip.condition1": "When in filter slot",
@@ -490,15 +495,6 @@
 	
 	"item.create.crafter_slot_cover.tooltip": "SLOT COVER",
 	"item.create.crafter_slot_cover.tooltip.summary": "Used to mark a _Mechanical_ _Crafter_ as an empty slot in a recipe. Crafters do not necessarily have to form a full square grid. This is useful when there are recipes where _ingredients_ _are_ _diagonal_ to each other.",
-	
-	"tool.create.shadow_steel.tooltip": "SHADOW STEEL TOOLS",
-	"tool.create.shadow_steel.tooltip.summary": "A fast and powerful tool that _destroys_ _drops_ from any block or entity. Killed mobs can drop _more_ _experience_ based on the _Looting_ modifier of this tool.",
-	
-	"tool.create.blazing.tooltip": "BLAZING TOOLS",
-	"tool.create.blazing.tooltip.summary": "This tool will _melt_ _broken_ _blocks_ and _ignite_ _attacked_ _mobs_. It will not lose Durability while being used in the _Nether_.",
-	
-	"tool.create.rose_quartz.tooltip": "ROSE QUARTZ TOOLS",
-	"tool.create.rose_quartz.tooltip.summary": "This tool grants you a _greater_ _reach_ for _breaking_ _blocks_ or _placing_ _blocks_ from the off-hand.",
 	
 	"create.tooltip.wip": "WIP",
 	"create.tooltip.workInProgress": "Work in progress!",

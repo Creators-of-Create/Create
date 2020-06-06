@@ -1,0 +1,21 @@
+{
+	"textures": {
+		"4": "create:item/extendo_grip"
+	},
+	"elements": [
+		{
+			"name": "wide_short",
+			"from": [6, -1, -1],
+			"to": [10, 6, 1],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 0]},
+			"faces": {
+				"north": {"uv": [6, 0, 10, 7], "texture": "#4"},
+				"east": {"uv": [6, 9, 8, 16], "texture": "#4"},
+				"south": {"uv": [6, 0, 10, 7], "texture": "#4"},
+				"west": {"uv": [6, 9, 8, 16], "rotation": 180, "texture": "#4"},
+				"up": {"uv": [6, 7, 10, 9], "rotation": 180, "texture": "#4"},
+				"down": {"uv": [6, 7, 10, 9], "rotation": 180, "texture": "#4"}
+			}
+		}
+	]
+}

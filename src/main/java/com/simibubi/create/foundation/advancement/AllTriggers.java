@@ -31,6 +31,8 @@ public class AllTriggers {
 			BASIN_THROW = simple("basin"),
 			PRESS_COMPACT = simple("compact"),
 			UPGRADED_ZAPPER = simple("upgraded_zapper"),
+			EXTENDO = simple("extendo"),
+			GIGA_EXTENDO = simple("giga_extendo"),
 			MIXER_MIX = simple("mixer");
 
 	private static SimpleTrigger simple(String id) {

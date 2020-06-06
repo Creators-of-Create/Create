@@ -186,6 +186,16 @@ public class AllAdvancements implements IDataProvider {
 			.withParent(brass_casing)
 			.register(t, id + ":crafter");
 
+		Advancement extendo_grip =
+			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).withParent(root)
+				.withCriterion("0", AllTriggers.EXTENDO.instance())
+				.register(t, id + ":extendo_grip");
+
+		Advancement dual_extendo_grip =
+			advancement("dual_extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.SECRET).withParent(extendo_grip)
+				.withCriterion("0", AllTriggers.GIGA_EXTENDO.instance())
+				.register(t, id + ":dual_extendo_grip");
+
 		Advancement deployer =
 			kinecticAdvancement("deployer", AllBlocks.DEPLOYER.get(), TaskType.GOAL).withParent(brass_casing)
 				.register(t, id + ":deployer");
@@ -208,9 +218,9 @@ public class AllAdvancements implements IDataProvider {
 			itemAdvancement("shadow_steel", AllItems.SHADOW_STEEL, TaskType.GOAL).withParent(chromatic_compound)
 				.register(t, id + ":shadow_steel");
 
-		Advancement refined_radiance = itemAdvancement("refined_radiance", AllItems.REFINED_RADIANCE, TaskType.GOAL)
-			.withParent(chromatic_compound)
-			.register(t, id + ":refined_radiance");
+		Advancement refined_radiance =
+			itemAdvancement("refined_radiance", AllItems.REFINED_RADIANCE, TaskType.GOAL).withParent(chromatic_compound)
+				.register(t, id + ":refined_radiance");
 
 		Advancement deforester =
 			itemAdvancement("deforester", AllItems.DEFORESTER, TaskType.NORMAL).withParent(refined_radiance)

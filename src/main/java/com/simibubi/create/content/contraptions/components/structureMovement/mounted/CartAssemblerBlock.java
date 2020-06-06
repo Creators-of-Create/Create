@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
@@ -26,6 +27,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -61,10 +63,12 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		boolean alongX = context.getPlacementHorizontalFacing().getAxis() == Axis.X;
-		boolean powered = context.getWorld().isBlockPowered(context.getPos());
-		return super.getStateForPlacement(context).with(POWERED, Boolean.valueOf(powered)).with(RAIL_SHAPE,
-				alongX ? RailShape.EAST_WEST : RailShape.NORTH_SOUTH);
+		boolean alongX = context.getPlacementHorizontalFacing()
+			.getAxis() == Axis.X;
+		boolean powered = context.getWorld()
+			.isBlockPowered(context.getPos());
+		return super.getStateForPlacement(context).with(POWERED, Boolean.valueOf(powered))
+			.with(RAIL_SHAPE, alongX ? RailShape.EAST_WEST : RailShape.NORTH_SOUTH);
 	}
 
 	@Override
@@ -76,16 +80,18 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 	public void onMinecartPass(BlockState state, World world, BlockPos pos, AbstractMinecartEntity cart) {
 		if (!cart.canBeRidden() && !(cart instanceof FurnaceMinecartEntity))
 			return;
-		
+
 		withTileEntityDo(world, pos, te -> {
-			if(te.isMinecartUpdateValid()) {
+			if (te.isMinecartUpdateValid()) {
 				if (state.get(POWERED)) {
 					assemble(world, pos, cart);
-					cart.setVelocity(cart.getAdjustedHorizontalFacing().getXOffset(), cart.getAdjustedHorizontalFacing().getYOffset(), cart.getAdjustedHorizontalFacing().getZOffset());
-				}
-				else {
+					Direction facing = cart.getAdjustedHorizontalFacing();
+					cart.setVelocity(facing.getXOffset(), facing.getYOffset(), facing.getZOffset());
+				} else {
 					disassemble(world, pos, cart);
-					cart.setVelocity(0, 0, 0);
+					Vec3d diff = VecHelper.getCenterOf(pos)
+						.subtract(cart.getPositionVec());
+					cart.setVelocity(diff.x / 16f, 0, diff.z / 16f);
 				}
 				te.resetTicksSinceMinecartUpdate();
 			}
@@ -93,7 +99,8 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 	}
 
 	protected void assemble(World world, BlockPos pos, AbstractMinecartEntity cart) {
-		if (!cart.getPassengers().isEmpty())
+		if (!cart.getPassengers()
+			.isEmpty())
 			return;
 
 		MountedContraption contraption = MountedContraption.assembleMinecart(world, pos);
@@ -102,16 +109,15 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 		if (contraption.blocks.size() == 1)
 			return;
 
-		int yawFromVector = (int) (ContraptionEntity.yawFromVector(cart.getMotion()) + .5d);
-		yawFromVector = ((yawFromVector + 45) / 90) * 90;
-		float initialAngle = yawFromVector;
+		Direction facing = cart.getAdjustedHorizontalFacing();
+		float initialAngle = facing.getHorizontalAngle();
 
 		withTileEntityDo(world, pos, te -> contraption.rotationMode = CartMovementMode.values()[te.movementMode.value]);
-		ContraptionEntity entity = ContraptionEntity.createMounted(world, contraption, initialAngle);
+		ContraptionEntity entity = ContraptionEntity.createMounted(world, contraption, initialAngle, facing);
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		world.addEntity(entity);
 		entity.startRiding(cart);
-		
+
 		if (cart instanceof FurnaceMinecartEntity) {
 			CompoundNBT nbt = cart.serializeNBT();
 			nbt.putDouble("PushZ", 0);
@@ -121,12 +127,14 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 	}
 
 	protected void disassemble(World world, BlockPos pos, AbstractMinecartEntity cart) {
-		if (cart.getPassengers().isEmpty())
+		if (cart.getPassengers()
+			.isEmpty())
 			return;
-		if (!(cart.getPassengers().get(0) instanceof ContraptionEntity))
+		if (!(cart.getPassengers()
+			.get(0) instanceof ContraptionEntity))
 			return;
 		cart.removePassengers();
-		
+
 		if (cart instanceof FurnaceMinecartEntity) {
 			CompoundNBT nbt = cart.serializeNBT();
 			nbt.putDouble("PushZ", cart.getMotion().x);
@@ -137,7 +145,7 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
+		boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 
 		if (worldIn.isRemote)
@@ -157,12 +165,12 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.CART_ASSEMBLER
-				.get(state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Direction.Axis.Z : Direction.Axis.X);
+			.get(state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Direction.Axis.Z : Direction.Axis.X);
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
-			ISelectionContext context) {
+		ISelectionContext context) {
 		if (context.getEntity() instanceof AbstractMinecartEntity)
 			return VoxelShapes.empty();
 		return VoxelShapes.fullCube();
@@ -189,10 +197,10 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 			builder.add(BlockStateProperties.HORIZONTAL_AXIS);
 			super.fillStateContainer(builder);
 		}
-		
+
 		@Override
 		public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-				ISelectionContext p_220053_4_) {
+			ISelectionContext p_220053_4_) {
 			return VoxelShapes.empty();
 		}
 
@@ -200,7 +208,8 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 
 	public static BlockState createAnchor(BlockState state) {
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Axis.Z : Axis.X;
-		return AllBlocks.MINECART_ANCHOR.getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis);
+		return AllBlocks.MINECART_ANCHOR.getDefaultState()
+			.with(BlockStateProperties.HORIZONTAL_AXIS, axis);
 	}
 
 	@Override

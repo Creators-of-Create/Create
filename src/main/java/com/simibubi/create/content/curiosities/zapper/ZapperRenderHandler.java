@@ -141,6 +141,8 @@ public class ZapperRenderHandler {
 		ItemStack heldItem = event.getItemStack();
 		if (!(heldItem.getItem() instanceof ZapperItem))
 			return;
+		if (event.isCanceled())
+			return;
 
 		Minecraft mc = Minecraft.getInstance();
 		boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ mc.player.getPrimaryHand() == HandSide.LEFT;
@@ -164,11 +166,12 @@ public class ZapperRenderHandler {
 		float f2 = -0.3F * MathHelper.sin(f1 * (float) Math.PI);
 		float f3 = 0.4F * MathHelper.sin(f1 * ((float) Math.PI * 2F));
 		float f4 = -0.4F * MathHelper.sin(event.getSwingProgress() * (float) Math.PI);
+		float f5 = MathHelper.sin(event.getSwingProgress() * event.getSwingProgress() * (float) Math.PI);
+		float f6 = MathHelper.sin(f1 * (float) Math.PI);
+		
 		ms.translate(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
 			f4 + -0.71999997F + .3f + recoil);
 		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 75.0F));
-		float f5 = MathHelper.sin(event.getSwingProgress() * event.getSwingProgress() * (float) Math.PI);
-		float f6 = MathHelper.sin(f1 * (float) Math.PI);
 		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * f6 * 70.0F));
 		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(f * f5 * -20.0F));
 		AbstractClientPlayerEntity abstractclientplayerentity = mc.player;
@@ -180,6 +183,7 @@ public class ZapperRenderHandler {
 		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * -135.0F));
 		ms.translate(f * 5.6F, 0.0F, 0.0F);
 		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 40.0F));
+		
 		PlayerRenderer playerrenderer = (PlayerRenderer) mc.getRenderManager()
 			.getRenderer(abstractclientplayerentity);
 		if (rightHand) {

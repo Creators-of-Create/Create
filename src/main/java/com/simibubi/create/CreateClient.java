@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
+import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
@@ -107,6 +108,7 @@ public class CreateClient {
 		BlockzapperRenderHandler.tick();
 		KineticDebugger.tick();
 		ZapperRenderHandler.tick();
+		ExtendoGripRenderHandler.tick();
 		outliner.tickOutlines();
 	}
 

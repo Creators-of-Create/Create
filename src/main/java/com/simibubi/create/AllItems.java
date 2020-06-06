@@ -24,6 +24,8 @@ import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.content.curiosities.symmetry.client.SymmetryWandModel;
 import com.simibubi.create.content.curiosities.tools.DeforesterItem;
 import com.simibubi.create.content.curiosities.tools.DeforesterModel;
+import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
+import com.simibubi.create.content.curiosities.tools.ExtendoGripModel;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem;
@@ -52,8 +54,8 @@ public class AllItems {
 		REGISTRATE.startSection(MATERIALS);
 	}
 
-	public static final ItemEntry<Item>
-		COPPER_NUGGET = taggedIngredient("copper_nugget", forgeItemTag("nuggets/copper")),
+	public static final ItemEntry<Item> COPPER_NUGGET =
+		taggedIngredient("copper_nugget", forgeItemTag("nuggets/copper")),
 		ZINC_NUGGET = taggedIngredient("zinc_nugget", forgeItemTag("nuggets/zinc")),
 		BRASS_NUGGET = taggedIngredient("brass_nugget", forgeItemTag("nuggets/brass")),
 
@@ -63,9 +65,9 @@ public class AllItems {
 		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold")),
 		LAPIS_SHEET = ingredient("lapis_sheet"),
 
-		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", AllItemTags.CRUSHED_ORES.tag), 
+		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", AllItemTags.CRUSHED_ORES.tag),
 		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", AllItemTags.CRUSHED_ORES.tag),
-		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", AllItemTags.CRUSHED_ORES.tag), 
+		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", AllItemTags.CRUSHED_ORES.tag),
 		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", AllItemTags.CRUSHED_ORES.tag),
 		CRUSHED_BRASS = taggedIngredient("crushed_brass", AllItemTags.CRUSHED_ORES.tag),
 
@@ -74,14 +76,10 @@ public class AllItems {
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc")),
 		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass")),
 
-		WHEAT_FLOUR = ingredient("wheat_flour"), 
-		DOUGH = ingredient("dough"),
-		POWDERED_OBSIDIAN = ingredient("powdered_obsidian"), 
-		ROSE_QUARTZ = ingredient("rose_quartz"),
-		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), 
-		PROPELLER = ingredient("propeller"),
-		WHISK = ingredient("whisk"), 
-		BRASS_HAND = ingredient("brass_hand"),
+		WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
+		POWDERED_OBSIDIAN = ingredient("powdered_obsidian"), ROSE_QUARTZ = ingredient("rose_quartz"),
+		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), PROPELLER = ingredient("propeller"),
+		WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
 		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover");
 
 	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =
@@ -115,9 +113,10 @@ public class AllItems {
 			.lang("Mechanical Belt")
 			.register();
 
-	public static final ItemEntry<VerticalGearboxItem> VERTICAL_GEARBOX = REGISTRATE.item("vertical_gearbox", VerticalGearboxItem::new)
-		.model(AssetLookup.<VerticalGearboxItem>customItemModel("gearbox", "item_vertical"))
-		.register();
+	public static final ItemEntry<VerticalGearboxItem> VERTICAL_GEARBOX =
+		REGISTRATE.item("vertical_gearbox", VerticalGearboxItem::new)
+			.model(AssetLookup.<VerticalGearboxItem>customItemModel("gearbox", "item_vertical"))
+			.register();
 
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
 		.register();
@@ -196,6 +195,11 @@ public class AllItems {
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
+	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
+		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
+		.model(AssetLookup.itemModelWithPartials())
+		.register();
+
 	// Schematics
 
 	static {
@@ -227,7 +231,7 @@ public class AllItems {
 			.tag(tag)
 			.register();
 	}
-	
+
 	// Load this class
 
 	public static void register() {}

@@ -1,0 +1,28 @@
+{
+  "parent": "create:brass",
+  "display": {
+    "icon": {
+      "item": "create:extendo_grip"
+    },
+    "title": {
+      "translate": "advancement.create.extendo_grip"
+    },
+    "description": {
+      "translate": "advancement.create.extendo_grip.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:extendo"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}
