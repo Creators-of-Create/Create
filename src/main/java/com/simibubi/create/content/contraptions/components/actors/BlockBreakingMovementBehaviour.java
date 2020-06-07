@@ -155,9 +155,9 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 				data.remove("Progress");
 				data.remove("TicksUntilNextProgress");
 				data.remove("BreakingPos");
-				context.stall = false;
 				world.sendBlockBreakProgress(id, breakingPos, -1);
 			}
+			context.stall = false;
 			return;
 		}
 

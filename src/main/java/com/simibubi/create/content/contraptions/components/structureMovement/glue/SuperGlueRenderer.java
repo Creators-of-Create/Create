@@ -51,7 +51,7 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		super.render(entity, p_225623_2_, p_225623_3_, ms, buffer, light);
 
 		PlayerEntity player = Minecraft.getInstance().player;
-		boolean visible = isVisible(entity);
+		boolean visible = entity.isVisible();
 		boolean holdingGlue = AllItems.SUPER_GLUE.isIn(player.getHeldItemMainhand())
 			|| AllItems.SUPER_GLUE.isIn(player.getHeldItemOffhand());
 
@@ -81,17 +81,6 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 			face = face.getOpposite();
 		}
 		ms.pop();
-	}
-
-	private boolean isVisible(SuperGlueEntity entity) {
-		if (!entity.isAlive())
-			return false;
-		BlockPos pos = entity.hangingPosition;
-		BlockPos pos2 = pos.offset(entity.getFacingDirection()
-			.getOpposite());
-		return SuperGlueEntity.isValidFace(entity.world, pos2, entity.getFacingDirection()) != SuperGlueEntity
-			.isValidFace(entity.world, pos, entity.getFacingDirection()
-				.getOpposite());
 	}
 
 	private void initQuads() {

@@ -5,6 +5,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -102,7 +103,10 @@ public class ExtractorTileEntity extends SmartTileEntity {
 					return false;
 				BeltTileEntity controller = belt.getControllerTE();
 				if (controller != null) {
-					if (!controller.getInventory().canInsertFrom(belt.index, Direction.UP))
+					BeltInventory inventory = controller.getInventory();
+					if (inventory == null)
+						return false;
+					if (!inventory.canInsertFrom(belt.index, Direction.UP))
 						return false;
 				}
 			}

@@ -29,6 +29,10 @@ public class MountedContraption extends Contraption {
 
 	public CartMovementMode rotationMode;
 
+	public MountedContraption() {
+		rotationMode = CartMovementMode.ROTATE;
+	}
+
 	@Override
 	protected AllContraptionTypes getType() {
 		return AllContraptionTypes.MOUNTED;
@@ -47,9 +51,8 @@ public class MountedContraption extends Contraption {
 			return null;
 
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.X : Axis.Z;
-		contraption.add(pos, Pair.of(new BlockInfo(pos,
-			AllBlocks.MINECART_ANCHOR.getDefaultState().with(BlockStateProperties.HORIZONTAL_AXIS, axis),
-				null), null));
+		contraption.add(pos, Pair.of(new BlockInfo(pos, AllBlocks.MINECART_ANCHOR.getDefaultState()
+			.with(BlockStateProperties.HORIZONTAL_AXIS, axis), null), null));
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		contraption.initActors(world);
 		contraption.expandBoundsAroundAxis(Axis.Y);
@@ -70,7 +73,7 @@ public class MountedContraption extends Contraption {
 		BlockInfo capture = pair.getKey();
 		if (AllBlocks.CART_ASSEMBLER.has(capture.state))
 			return Pair.of(new BlockInfo(capture.pos, CartAssemblerBlock.createAnchor(capture.state), null),
-					pair.getValue());
+				pair.getValue());
 		return pair;
 	}
 

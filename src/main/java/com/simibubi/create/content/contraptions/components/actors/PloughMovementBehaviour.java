@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FarmlandBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -26,8 +27,8 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper
-				.isVecPointingTowards(context.relativeMotion, context.state.get(HORIZONTAL_FACING).getOpposite());
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.get(HORIZONTAL_FACING)
+			.getOpposite());
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 			return;
 
 		BlockRayTraceResult ray = world
-				.rayTraceBlocks(new RayTraceContext(vec, vec.add(0, -1, 0), BlockMode.OUTLINE, FluidMode.NONE, player));
+			.rayTraceBlocks(new RayTraceContext(vec, vec.add(0, -1, 0), BlockMode.OUTLINE, FluidMode.NONE, player));
 		if (ray == null || ray.getType() != Type.BLOCK)
 			return;
 
@@ -57,7 +58,8 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(HORIZONTAL_FACING).getDirectionVec()).scale(.45);
+		return new Vec3d(context.state.get(HORIZONTAL_FACING)
+			.getDirectionVec()).scale(.45);
 	}
 
 	@Override
@@ -67,8 +69,10 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
-		return state.getCollisionShape(world, breakingPos).isEmpty()
-				&& !(state.getBlock() instanceof FlowingFluidBlock);
+		return state.getCollisionShape(world, breakingPos)
+			.isEmpty() && !(state.getBlock() instanceof FlowingFluidBlock)
+			&& !(world.getBlockState(breakingPos.down())
+				.getBlock() instanceof FarmlandBlock);
 	}
 
 	@Override

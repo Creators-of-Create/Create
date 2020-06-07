@@ -69,9 +69,8 @@ public class ExtendoGripRenderHandler {
 		mc.getTextureManager()
 			.bindTexture(abstractclientplayerentity.getLocationSkin());
 
-		float f = rightHand ? 1.0F : -1.0F;
+		float flip = rightHand ? 1.0F : -1.0F;
 		float swingProgress = event.getSwingProgress();
-		float f3 = 0.4F * MathHelper.sin(((float) Math.PI * 2F));
 		boolean blockItem = heldItem.getItem() instanceof BlockItem;
 		float equipProgress = blockItem ? 0 : event.getEquipProgress() / 4;
 
@@ -85,16 +84,16 @@ public class ExtendoGripRenderHandler {
 				ExtendoGripRenderHandler.mainHandAnimation);
 			animation = animation * animation * animation;
 
-			ms.translate(f * (0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F, -0.71999997F + .3f);
+			ms.translate(flip * (0.64000005F - .1f), -0.4F + equipProgress * -0.6F, -0.71999997F + .3f);
 
 			ms.push();
-			msr.rotateY(f * 75.0F);
-			ms.translate(f * -1.0F, 3.6F, 3.5F);
-			msr.rotateZ(f * 120)
+			msr.rotateY(flip * 75.0F);
+			ms.translate(flip * -1.0F, 3.6F, 3.5F);
+			msr.rotateZ(flip * 120)
 				.rotateX(200)
-				.rotateY(f * -135.0F);
-			ms.translate(f * 5.6F, 0.0F, 0.0F);
-			msr.rotateY(f * 40.0F);
+				.rotateY(flip * -135.0F);
+			ms.translate(flip * 5.6F, 0.0F, 0.0F);
+			msr.rotateY(flip * 40.0F);
 			ms.translate(0.05f, -0.3f, -0.3f);
 
 			PlayerRenderer playerrenderer = (PlayerRenderer) mc.getRenderManager()
@@ -107,7 +106,7 @@ public class ExtendoGripRenderHandler {
 
 			// Render gun
 			ms.push();
-			ms.translate(f * -0.1f, 0, -0.3f);
+			ms.translate(flip * -0.1f, 0, -0.3f);
 			FirstPersonRenderer firstPersonRenderer = mc.getFirstPersonRenderer();
 			TransformType transform =
 				rightHand ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIRST_PERSON_LEFT_HAND;
@@ -117,7 +116,7 @@ public class ExtendoGripRenderHandler {
 			if (!notInOffhand) {
 				ForgeHooksClient.handleCameraTransforms(ms, mc.getItemRenderer()
 					.getItemModelWithOverrides(offhandItem, null, null), transform, false);
-				ms.translate(f * -.05f, .15f, -1.2f);
+				ms.translate(flip * -.05f, .15f, -1.2f);
 				ms.translate(0, 0, -animation * 2.25f);
 				if (blockItem && mc.getItemRenderer()
 					.getItemModelWithOverrides(heldItem, null, null)

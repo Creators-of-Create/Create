@@ -16,6 +16,9 @@ import net.minecraft.util.math.Vec3d;
 
 public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<ExtendoGripModel> {
 
+	private static final Vec3d rotationOffset = new Vec3d(0, 1 / 2f, 1 / 2f);
+	private static final Vec3d cogRotationOffset = new Vec3d(0, 1 / 16f, 0);
+
 	@Override
 	protected void render(ItemStack stack, ExtendoGripModel model, PartialItemModelRenderer renderer, MatrixStack ms,
 		IRenderTypeBuffer buffer, int light, int overlay) {
@@ -30,8 +33,6 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 				ExtendoGripRenderHandler.mainHandAnimation);
 
 		animation = animation * animation * animation;
-
-		Vec3d rotationOffset = new Vec3d(0, 1 / 2f, 1 / 2f);
 		float extensionAngle = MathHelper.lerp(animation, 24f, 156f);
 		float halfAngle = extensionAngle / 2;
 		float oppositeAngle = 180 - extensionAngle;
@@ -101,11 +102,9 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 		if (leftHand || rightHand)
 			angle += 360 * animation;
 		angle %= 360;
-		float offset = 1 / 16f;
-		rotationOffset = new Vec3d(0, offset, 0);
-		stacker.translate(rotationOffset)
+		stacker.translate(cogRotationOffset)
 			.rotateZ(angle)
-			.translateBack(rotationOffset);
+			.translateBack(cogRotationOffset);
 		renderer.renderSolid(model.getPartial("cog"), light);
 		ms.pop();
 	}

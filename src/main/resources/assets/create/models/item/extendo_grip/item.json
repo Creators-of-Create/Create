@@ -3,7 +3,7 @@
 	"textures": {
 		"3": "create:block/mechanical_press_pole",
 		"4": "create:item/extendo_grip",
-		"particle": "texture"
+		"particle": "#4"
 	},
 	"elements": [
 		{

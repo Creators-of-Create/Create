@@ -17,6 +17,7 @@ import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEnt
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -40,8 +41,14 @@ public class RotationPropagator {
 	private static float getRotationSpeedModifier(KineticTileEntity from, KineticTileEntity to) {
 		final BlockState stateFrom = from.getBlockState();
 		final BlockState stateTo = to.getBlockState();
-		final IRotate definitionFrom = (IRotate) stateFrom.getBlock();
-		final IRotate definitionTo = (IRotate) stateTo.getBlock();
+
+		Block fromBlock = stateFrom.getBlock();
+		Block toBlock = stateTo.getBlock();
+		if (!(fromBlock instanceof IRotate && toBlock instanceof IRotate))
+			return 0;
+
+		final IRotate definitionFrom = (IRotate) fromBlock;
+		final IRotate definitionTo = (IRotate) toBlock;
 		final BlockPos diff = to.getPos()
 			.subtract(from.getPos());
 		final Direction direction = Direction.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ());
@@ -75,7 +82,7 @@ public class RotationPropagator {
 		}
 
 		// Attached Encased Belts
-		if (stateFrom.getBlock() instanceof EncasedBeltBlock && stateTo.getBlock() instanceof EncasedBeltBlock) {
+		if (fromBlock instanceof EncasedBeltBlock && toBlock instanceof EncasedBeltBlock) {
 			boolean connected = EncasedBeltBlock.areBlocksConnected(stateFrom, stateTo, direction);
 			return connected ? EncasedBeltBlock.getRotationSpeedModifier(from, to) : 0;
 		}

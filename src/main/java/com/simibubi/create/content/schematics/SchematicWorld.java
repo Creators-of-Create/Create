@@ -20,6 +20,7 @@ import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -100,8 +101,12 @@ public class SchematicWorld extends WrappedWorld {
 
 		if (pos.getY() - bounds.minY == -1 && !renderMode)
 			return Blocks.GRASS_BLOCK.getDefaultState();
-		if (getBounds().isVecInside(pos) && blocks.containsKey(pos))
-			return blocks.get(pos);
+		if (getBounds().isVecInside(pos) && blocks.containsKey(pos)) {
+			BlockState blockState = blocks.get(pos);
+			if (blockState.has(BlockStateProperties.LIT))
+				blockState = blockState.with(BlockStateProperties.LIT, false);
+			return blockState;
+		}
 		return Blocks.AIR.getDefaultState();
 	}
 
