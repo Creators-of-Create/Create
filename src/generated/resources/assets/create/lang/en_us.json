@@ -1047,6 +1047,8 @@
 	"block.create.mechanical_crafter.tooltip.summary": "A kinetic assembler for _automating_ any _shaped_ _crafting_ recipe. Place _multiple_ _in_ _a_ _grid_ corresponding to your recipe, and _arrange_ _their_ _belts_ to create a _flow_ that exits the grid on one of the crafters.",
 	"block.create.mechanical_crafter.tooltip.condition1": "When Rotated",
 	"block.create.mechanical_crafter.tooltip.behaviour1": "_Starts_ _the_ _crafting_ _process_ as soon as _all_ _crafters_ in the grid have been _given_ _an_ _item_.",
+	"block.create.mechanical_crafter.tooltip.condition2": "On Redstone Pulse",
+	"block.create.mechanical_crafter.tooltip.behaviour2": "_Forces_ the start of the _crafting_ _process_ with all currently given _items_ in the grid.",
 	"block.create.mechanical_crafter.tooltip.control1": "When Wrenched at Front",
 	"block.create.mechanical_crafter.tooltip.action1": "_Cycles_ _the_ _direction_ an individual crafter _moves_ _its_ _items_ towards. To form a working grid, _arrange_ _the_ _belts_ _in_ _a_ _flow_ which moves all items towards a final crafter.  The final crafter must _point_ _away_ from the grid.",
 	"block.create.mechanical_crafter.tooltip.control2": "When Wrenched at back",

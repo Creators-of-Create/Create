@@ -33,21 +33,38 @@ public class RecipeGridHandler {
 	public static List<MechanicalCrafterTileEntity> getAllCraftersOfChain(MechanicalCrafterTileEntity root) {
 		return getAllCraftersOfChainIf(root, Predicates.alwaysTrue());
 	}
+	
+	public static List<MechanicalCrafterTileEntity> getAllCraftersOfChainIf(MechanicalCrafterTileEntity root,
+			Predicate<MechanicalCrafterTileEntity> test){
+		return getAllCraftersOfChainIf(root, test, false);
+	}
+	
 
 	public static List<MechanicalCrafterTileEntity> getAllCraftersOfChainIf(MechanicalCrafterTileEntity root,
-		Predicate<MechanicalCrafterTileEntity> test) {
+		Predicate<MechanicalCrafterTileEntity> test, boolean poweredStart) {
 		List<MechanicalCrafterTileEntity> crafters = new ArrayList<>();
 		List<Pair<MechanicalCrafterTileEntity, MechanicalCrafterTileEntity>> frontier = new ArrayList<>();
 		Set<MechanicalCrafterTileEntity> visited = new HashSet<>();
 		frontier.add(Pair.of(root, null));
+		
+		boolean powered = false;
+		boolean empty = false;
+		boolean allEmpty = true;
 
 		while (!frontier.isEmpty()) {
 			Pair<MechanicalCrafterTileEntity, MechanicalCrafterTileEntity> pair = frontier.remove(0);
 			MechanicalCrafterTileEntity current = pair.getKey();
 			MechanicalCrafterTileEntity last = pair.getValue();
 
-			if (visited.contains(current) || !test.test(current))
+			if (visited.contains(current))
 				return null;
+			if(!(test.test(current)))
+				empty = true;
+			else
+				allEmpty = false;
+			if(poweredStart && current.getWorld().isBlockPowered(current.getPos()))
+				powered = true;				
+			
 			crafters.add(current);
 			visited.add(current);
 
@@ -59,7 +76,7 @@ public class RecipeGridHandler {
 					frontier.add(Pair.of(preceding, current));
 		}
 
-		return crafters;
+		return empty && ! powered || allEmpty ? null : crafters;
 	}
 
 	public static MechanicalCrafterTileEntity getTargetingCrafter(MechanicalCrafterTileEntity crafter) {

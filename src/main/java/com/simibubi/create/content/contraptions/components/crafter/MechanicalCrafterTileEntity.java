@@ -63,10 +63,12 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				return stack;
 			return super.insertItem(slot, stack, simulate);
 		};
+		
+		
 
 		protected void onContentsChanged(int slot) {
 			if (!getStackInSlot(slot).isEmpty() && phase == Phase.IDLE)
-				checkCompletedRecipe();
+				checkCompletedRecipe(false);
 			markDirty();
 			sendData();
 		};
@@ -80,6 +82,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	protected Phase phase;
 	protected int countDown;
 	protected boolean covered;
+	private boolean wasPoweredBefore = true;
 
 	protected GroupedItems groupedItemsBeforeCraft; // for rendering on client
 	private InsertingBehaviour inserting;
@@ -198,11 +201,20 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
+	public void tick() {		
 		super.tick();
 
 		if (phase == Phase.ACCEPTING)
 			return;
+		
+		if(wasPoweredBefore != world.isBlockPowered(pos)) {
+			wasPoweredBefore = world.isBlockPowered(pos);
+			if(wasPoweredBefore) {
+				if (world.isRemote)
+					return;
+				checkCompletedRecipe(true);
+			}
+		}
 
 		if (phase == Phase.ASSEMBLING) {
 			countDown -= getCountDownSpeed();
@@ -321,7 +333,6 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				tryInsert();
 			return;
 		}
-
 	}
 
 	protected boolean isTargetingBelt() {
@@ -405,23 +416,26 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		if (world.isRemote)
 			return;
 		if (phase == Phase.IDLE && craftingItemPresent())
-			checkCompletedRecipe();
+			checkCompletedRecipe(false);
 		if (phase == Phase.INSERTING)
 			tryInsert();
 	}
 
 	public boolean craftingItemPresent() {
-		return !inventory.getStackInSlot(0)
-			.isEmpty() || covered;
+		return !inventory.getStackInSlot(0).isEmpty();
+	}
+	
+	public boolean craftingItemOrCoverPresent() {
+		return !inventory.getStackInSlot(0).isEmpty() || covered;
 	}
 
-	protected void checkCompletedRecipe() {
+	protected void checkCompletedRecipe(boolean poweredStart) {
 		if (getSpeed() == 0)
 			return;
 		if (world.isRemote)
 			return;
 		List<MechanicalCrafterTileEntity> chain =
-			RecipeGridHandler.getAllCraftersOfChainIf(this, MechanicalCrafterTileEntity::craftingItemPresent);
+			RecipeGridHandler.getAllCraftersOfChainIf(this, poweredStart ? MechanicalCrafterTileEntity::craftingItemPresent : MechanicalCrafterTileEntity::craftingItemOrCoverPresent, poweredStart);
 		if (chain == null)
 			return;
 		chain.forEach(MechanicalCrafterTileEntity::begin);
