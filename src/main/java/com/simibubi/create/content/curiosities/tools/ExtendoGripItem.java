@@ -6,14 +6,32 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.networking.AllPackets;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -90,6 +108,117 @@ public class ExtendoGripItem extends Item {
 			}
 		}
 
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void dontMissEntitiesWhenYouHaveHighReachDistance(ClickInputEvent event) {
+		Minecraft mc = Minecraft.getInstance();
+		ClientPlayerEntity player = mc.player;
+		if (mc.world == null || player == null)
+			return;
+
+		// Modified version of GameRenderer#getMouseOver
+		double d0 = player.getAttribute(PlayerEntity.REACH_DISTANCE)
+			.getValue();
+		if (!player.isCreative())
+			d0 -= 0.5f;
+		Vec3d vec3d = player.getEyePosition(mc.getRenderPartialTicks());
+		Vec3d vec3d1 = player.getLook(1.0F);
+		Vec3d vec3d2 = vec3d.add(vec3d1.x * d0, vec3d1.y * d0, vec3d1.z * d0);
+		AxisAlignedBB axisalignedbb = player.getBoundingBox()
+			.expand(vec3d1.scale(d0))
+			.grow(1.0D, 1.0D, 1.0D);
+		EntityRayTraceResult entityraytraceresult =
+			ProjectileHelper.rayTraceEntities(player, vec3d, vec3d2, axisalignedbb, (e) -> {
+				return !e.isSpectator() && e.canBeCollidedWith();
+			}, d0 * d0);
+		if (entityraytraceresult != null) {
+			Entity entity1 = entityraytraceresult.getEntity();
+			Vec3d vec3d3 = entityraytraceresult.getHitVec();
+			double d2 = vec3d.squareDistanceTo(vec3d3);
+			if (d2 < d0 * d0 || mc.objectMouseOver == null || mc.objectMouseOver.getType() == Type.MISS) {
+				mc.objectMouseOver = entityraytraceresult;
+				if (entity1 instanceof LivingEntity || entity1 instanceof ItemFrameEntity)
+					mc.pointedEntity = entity1;
+			}
+		}
+
+	}
+
+	@SubscribeEvent
+	public static void attacksByExtendoGripHaveMoreKnockback(AttackEntityEvent event) {
+		Entity entity = event.getEntity();
+		if (!(entity instanceof PlayerEntity))
+			return;
+		PlayerEntity player = (PlayerEntity) entity;
+		if (!isHoldingExtendoGrip(player))
+			return;
+		Entity target = event.getTarget();
+		if (!target.attackEntityFrom(DamageSource.causePlayerDamage(player), 0))
+			return;
+		int strength = 2;
+		float yaw = entity.rotationYaw * ((float) Math.PI / 180F);
+		if (target instanceof LivingEntity) {
+			((LivingEntity) target).knockBack(entity, strength, MathHelper.sin(yaw), -MathHelper.cos(yaw));
+			return;
+		}
+		target.addVelocity(-MathHelper.sin(yaw) * strength, 0.1D, MathHelper.cos(yaw) * strength);
+	}
+
+	private static boolean isUncaughtClientInteraction(Entity entity, Entity target) {
+		// Server ignores entity interaction further than 6m
+		if (entity.getDistanceSq(target) < 36)
+			return false;
+		if (!entity.world.isRemote)
+			return false;
+		if (!(entity instanceof PlayerEntity))
+			return false;
+		return true;
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void notifyServerOfLongRangeAttacks(AttackEntityEvent event) {
+		Entity entity = event.getEntity();
+		Entity target = event.getTarget();
+		if (!isUncaughtClientInteraction(entity, target))
+			return;
+		PlayerEntity player = (PlayerEntity) entity;
+		if (isHoldingExtendoGrip(player))
+			AllPackets.channel.sendToServer(new ExtendoGripInteractionPacket(target));
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void notifyServerOfLongRangeInteractions(PlayerInteractEvent.EntityInteract event) {
+		Entity entity = event.getEntity();
+		Entity target = event.getTarget();
+		if (!isUncaughtClientInteraction(entity, target))
+			return;
+		PlayerEntity player = (PlayerEntity) entity;
+		if (isHoldingExtendoGrip(player))
+			AllPackets.channel.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand()));
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void notifyServerOfLongRangeSpecificInteractions(PlayerInteractEvent.EntityInteractSpecific event) {
+		Entity entity = event.getEntity();
+		Entity target = event.getTarget();
+		if (!isUncaughtClientInteraction(entity, target))
+			return;
+		PlayerEntity player = (PlayerEntity) entity;
+		if (isHoldingExtendoGrip(player))
+			AllPackets.channel
+				.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand(), event.getLocalPos()));
+	}
+
+	public static boolean isHoldingExtendoGrip(PlayerEntity player) {
+		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemOffhand());
+		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemMainhand());
+		boolean holdingGrip = inOff || inMain;
+		return holdingGrip;
 	}
 
 }
