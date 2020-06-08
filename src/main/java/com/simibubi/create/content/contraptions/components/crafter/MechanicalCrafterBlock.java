@@ -245,6 +245,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 	}
 
 	public static Direction getTargetDirection(BlockState state) {
+		if (!AllBlocks.MECHANICAL_CRAFTER.has(state))
+			return Direction.UP;
 		Direction facing = state.get(HORIZONTAL_FACING);
 		Pointing point = state.get(POINTING);
 		Vec3d targetVec = new Vec3d(0, 1, 0);
