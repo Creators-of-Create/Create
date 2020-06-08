@@ -10,13 +10,19 @@ buildscript {
 }
 plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = 'mc1.15.2_v0.2.4'
+boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
+
+ext.buildnumber = 0
+project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : "custom"
+
+version = "mc${minecraft_version}_v${mod_version}" + (dev ? "+${buildnumber}" : '')
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
@@ -95,16 +101,16 @@ configurations {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.3'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     
-    def registrate = "com.tterrag.registrate:Registrate:MC1.15.2-0.0.3.17"
+    def registrate = "com.tterrag.registrate:Registrate:MC${minecraft_version}-${registrate_version}"
     implementation fg.deobf(registrate)
     shade registrate
     
     // compile against the JEI API but do not include it at runtime
- 	compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2:api")
+ 	compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
   	// at runtime, use the full JEI jar
-  	runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")
+  	runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
@@ -134,24 +140,56 @@ reobf {
     shadowJar {}
 }
 
-// Example configuration to allow publishing using the maven-publish task
-// we define a custom artifact that is sourced from the reobfJar output task
-// and then declare that to be published
-// Note you'll need to add a repository here
-def reobfFile = file("$buildDir/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
-}
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact reobfArtifact
+String getChangelogText() {
+    def changelogFile = file('changelog.txt')
+    String str = ''
+    int lineCount = 0
+    boolean done = false
+    changelogFile.eachLine {
+        if (done || it == null) {
+            return
+        }
+        if (it.size() > 1) {
+            def temp = it
+            if (lineCount == 0) {
+                temp = "Create ${version}"
+                temp = "<h2 style=\"display:inline;\">$temp </h2><em>for Minecraft ${minecraft_version}</em><br/>"
+            } else if (it.startsWith('-')) {
+                temp = "&nbsp;&nbsp;&nbsp;$temp<br/>"
+                temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>");
+                temp = temp.replaceAll("#([0-9]+)\\b(?!<\\/a>)", "<a href=\"https://github.com/$github_project/issues/\$1\">\$0</a>");
+            } else {
+                temp = "<h4>$temp</h4>"
+            }
+            str += temp
+            lineCount++
+            return
+        } else {
+            done = true
         }
     }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
+    return str
+}
+
+println getChangelogText()
+
+tasks.curseforge.enabled = !dev && project.hasProperty('simi_curseforge_key')
+    
+curseforge {
+    if (project.hasProperty('simi_curseforge_key')) {
+        apiKey = project.simi_curseforge_key
+    }
+
+    project {
+        id = project.projectId
+        changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
+        changelogType = 'html'
+        releaseType = project.curse_type
+        mainArtifact(jar) {
+            displayName = "Create - ${version}"
+        }
+        relations {
+        	optionalDependency 'jei'
         }
     }
 }
