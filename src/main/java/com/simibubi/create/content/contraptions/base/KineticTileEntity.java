@@ -353,6 +353,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		TileEntity tileEntityIn = world.getTileEntity(pos);
 		boolean isKinetic = tileEntityIn instanceof KineticTileEntity;
 
+		if (tileEntityIn == null)
+			return;
+		if (tileEntityIn.getBlockState() == state)
+			return;
 		if (!isKinetic) {
 			world.setBlockState(pos, state, 3);
 			return;
@@ -365,7 +369,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		tileEntity.detachKinetics();
 		tileEntity.removeSource();
 		world.setBlockState(pos, state, 3);
-		tileEntity.attachKinetics();
 	}
 
 	@Override

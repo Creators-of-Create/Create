@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
 import com.simibubi.create.foundation.block.ITE;
@@ -154,9 +155,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		if (context.getFace() == state.get(HORIZONTAL_FACING)) {
-			context.getWorld()
-				.setBlockState(context.getPos(), state.cycle(POINTING));
-			withTileEntityDo(context.getWorld(), context.getPos(), TileEntity::markDirty);
+			if (!context.getWorld().isRemote)
+				KineticTileEntity.switchToBlockState(context.getWorld(), context.getPos(), state.cycle(POINTING));
 			return ActionResultType.SUCCESS;
 		}
 

@@ -94,7 +94,7 @@ public class ExtendoGripRenderHandler {
 				.rotateY(flip * -135.0F);
 			ms.translate(flip * 5.6F, 0.0F, 0.0F);
 			msr.rotateY(flip * 40.0F);
-			ms.translate(0.05f, -0.3f, -0.3f);
+			ms.translate(flip * 0.05f, -0.3f, -0.3f);
 
 			PlayerRenderer playerrenderer = (PlayerRenderer) mc.getRenderManager()
 				.getRenderer(player);
@@ -115,14 +115,14 @@ public class ExtendoGripRenderHandler {
 
 			if (!notInOffhand) {
 				ForgeHooksClient.handleCameraTransforms(ms, mc.getItemRenderer()
-					.getItemModelWithOverrides(offhandItem, null, null), transform, false);
+					.getItemModelWithOverrides(offhandItem, null, null), transform, !rightHand);
 				ms.translate(flip * -.05f, .15f, -1.2f);
 				ms.translate(0, 0, -animation * 2.25f);
 				if (blockItem && mc.getItemRenderer()
 					.getItemModelWithOverrides(heldItem, null, null)
 					.isGui3d()) {
-					msr.rotateY(45);
-					ms.translate(0.15f, -0.15f, -.05f);
+					msr.rotateY(flip * 45);
+					ms.translate(flip * 0.15f, -0.15f, -.05f);
 					ms.scale(1.25f, 1.25f, 1.25f);
 				}
 
