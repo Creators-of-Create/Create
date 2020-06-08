@@ -171,8 +171,6 @@ String getChangelogText() {
     return str
 }
 
-println getChangelogText()
-
 tasks.curseforge.enabled = !dev && project.hasProperty('simi_curseforge_key')
     
 curseforge {
