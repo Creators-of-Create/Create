@@ -5,10 +5,10 @@
       "item": "create:wand_of_symmetry"
     },
     "title": {
-      "translate": "advancement.create.symmetry_wand"
+      "translate": "advancement.create.wand_of_symmetry"
     },
     "description": {
-      "translate": "advancement.create.symmetry_wand.desc"
+      "translate": "advancement.create.wand_of_symmetry.desc"
     },
     "frame": "task",
     "show_toast": true,

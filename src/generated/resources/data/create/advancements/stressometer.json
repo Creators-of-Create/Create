@@ -2,13 +2,13 @@
   "parent": "create:goggles",
   "display": {
     "icon": {
-      "item": "create:speedometer"
+      "item": "create:stressometer"
     },
     "title": {
-      "translate": "advancement.create.speed_gauge"
+      "translate": "advancement.create.stressometer"
     },
     "description": {
-      "translate": "advancement.create.speed_gauge.desc"
+      "translate": "advancement.create.stressometer.desc"
     },
     "frame": "task",
     "show_toast": true,
@@ -19,13 +19,13 @@
     "0": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "create:speedometer"
+        "block": "create:stressometer"
       }
     },
     "1": {
       "trigger": "create:kinetic_block",
       "conditions": {
-        "block": "create:speedometer"
+        "block": "create:stressometer"
       }
     }
   },

@@ -81,8 +81,8 @@ public class AllAdvancements implements IDataProvider {
 		andesiteExpertLane(t, andesite_casing);
 
 		Advancement drill =
-			kinecticAdvancement("drill", AllBlocks.MECHANICAL_DRILL.get(), TaskType.NORMAL).withParent(andesite_casing)
-				.register(t, id + ":drill");
+			kinecticAdvancement("mechanical_drill", AllBlocks.MECHANICAL_DRILL.get(), TaskType.NORMAL).withParent(andesite_casing)
+				.register(t, id + ":mechanical_drill");
 
 		Advancement press =
 			advancement("press", AllBlocks.MECHANICAL_PRESS.get(), TaskType.MILESTONE).withParent(andesite_casing)
@@ -98,8 +98,8 @@ public class AllAdvancements implements IDataProvider {
 			itemAdvancement("electron_tube", AllItems.ELECTRON_TUBE, TaskType.NORMAL).withParent(rose_quartz)
 				.register(t, id + ":electron_tube");
 
-		Advancement saw = kinecticAdvancement("saw", AllBlocks.MECHANICAL_SAW.get(), TaskType.NORMAL).withParent(press)
-			.register(t, id + ":saw");
+		Advancement saw = kinecticAdvancement("mechanical_saw", AllBlocks.MECHANICAL_SAW.get(), TaskType.NORMAL).withParent(press)
+			.register(t, id + ":mechanical_saw");
 
 		Advancement basin = advancement("basin", AllBlocks.BASIN.get(), TaskType.NORMAL).withParent(press)
 			.withCriterion("0", placeBlock(AllBlocks.BASIN.get()))
@@ -143,12 +143,12 @@ public class AllAdvancements implements IDataProvider {
 			.register(t, id + ":goggles");
 
 		Advancement speed_gauge =
-			kinecticAdvancement("speed_gauge", AllBlocks.SPEEDOMETER.get(), TaskType.NORMAL).withParent(goggles)
-				.register(t, id + ":speed_gauge");
+			kinecticAdvancement("speedometer", AllBlocks.SPEEDOMETER.get(), TaskType.NORMAL).withParent(goggles)
+				.register(t, id + ":speedometer");
 
 		Advancement stress_gauge =
-			kinecticAdvancement("stress_gauge", AllBlocks.STRESSOMETER.get(), TaskType.NORMAL).withParent(goggles)
-				.register(t, id + ":stress_gauge");
+			kinecticAdvancement("stressometer", AllBlocks.STRESSOMETER.get(), TaskType.NORMAL).withParent(goggles)
+				.register(t, id + ":stressometer");
 
 		Advancement shifting_gears =
 			advancement("shifting_gears", AllBlocks.LARGE_COGWHEEL.get(), TaskType.NORMAL).withParent(its_alive)
@@ -239,8 +239,8 @@ public class AllAdvancements implements IDataProvider {
 			.register(t, id + ":upgraded_zapper");
 
 		Advancement symmetry_wand =
-			itemAdvancement("symmetry_wand", AllItems.WAND_OF_SYMMETRY, TaskType.NORMAL).withParent(refined_radiance)
-				.register(t, id + ":symmetry_wand");
+			itemAdvancement("wand_of_symmetry", AllItems.WAND_OF_SYMMETRY, TaskType.NORMAL).withParent(refined_radiance)
+				.register(t, id + ":wand_of_symmetry");
 
 		Advancement shadow_end = deadEnd().withParent(shadow_steel)
 			.withCriterion("0", itemGathered(AllItems.SHADOW_STEEL.get()))

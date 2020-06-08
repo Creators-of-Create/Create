@@ -5,10 +5,10 @@
       "item": "create:mechanical_saw"
     },
     "title": {
-      "translate": "advancement.create.saw"
+      "translate": "advancement.create.mechanical_saw"
     },
     "description": {
-      "translate": "advancement.create.saw.desc"
+      "translate": "advancement.create.mechanical_saw.desc"
     },
     "frame": "task",
     "show_toast": true,

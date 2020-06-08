@@ -117,6 +117,8 @@ public class ExtendoGripItem extends Item {
 		ClientPlayerEntity player = mc.player;
 		if (mc.world == null || player == null)
 			return;
+		if (!isHoldingExtendoGrip(player))
+			return;
 
 		// Modified version of GameRenderer#getMouseOver
 		double d0 = player.getAttribute(PlayerEntity.REACH_DISTANCE)

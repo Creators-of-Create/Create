@@ -12,6 +12,7 @@ import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -37,19 +38,26 @@ public class MountedStorage {
 
 		// Split double chests
 		if (te.getType() == TileEntityType.CHEST || te.getType() == TileEntityType.TRAPPED_CHEST) {
-			if (te.getBlockState().get(ChestBlock.TYPE) != ChestType.SINGLE)
-				te.getWorld().setBlockState(te.getPos(), te.getBlockState().with(ChestBlock.TYPE, ChestType.SINGLE));
+			if (te.getBlockState()
+				.get(ChestBlock.TYPE) != ChestType.SINGLE)
+				te.getWorld()
+					.setBlockState(te.getPos(), te.getBlockState()
+						.with(ChestBlock.TYPE, ChestType.SINGLE));
 			te.updateContainingBlockInfo();
 		}
 
 		// Split double flexcrates
 		if (AllTileEntities.ADJUSTABLE_CRATE.is(te)) {
-			if (te.getBlockState().get(AdjustableCrateBlock.DOUBLE))
-				te.getWorld().setBlockState(te.getPos(), te.getBlockState().with(AdjustableCrateBlock.DOUBLE, false));
+			if (te.getBlockState()
+				.get(AdjustableCrateBlock.DOUBLE))
+				te.getWorld()
+					.setBlockState(te.getPos(), te.getBlockState()
+						.with(AdjustableCrateBlock.DOUBLE, false));
 			te.updateContainingBlockInfo();
 		}
 
-		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(dummyHandler);
+		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			.orElse(dummyHandler);
 		if (teHandler == dummyHandler)
 			return;
 
@@ -82,7 +90,8 @@ public class MountedStorage {
 	}
 
 	public void fill(TileEntity te) {
-		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(dummyHandler);
+		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			.orElse(dummyHandler);
 		if (teHandler != dummyHandler && teHandler instanceof IItemHandlerModifiable) {
 			IItemHandlerModifiable inv = (IItemHandlerModifiable) teHandler;
 			for (int slot = 0; slot < Math.min(inv.getSlots(), handler.getSlots()); slot++)
@@ -112,6 +121,9 @@ public class MountedStorage {
 		if (te instanceof ChestTileEntity)
 			return true;
 		if (te instanceof BarrelTileEntity)
+			return true;
+		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		if (capability.isPresent() && capability.orElse(null) instanceof ItemStackHandler)
 			return true;
 		return false;
 	}

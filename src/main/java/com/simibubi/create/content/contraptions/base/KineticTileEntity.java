@@ -381,7 +381,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
-			tooltip.add(spacing + GOLD + Lang.translate("gui.stress_gauge.overstressed"));
+			tooltip.add(spacing + GOLD + Lang.translate("gui.stressometer.overstressed"));
 			String hint = Lang.translate("gui.contraptions.network_overstressed", I18n.format(getBlockState().getBlock()
 				.getTranslationKey()));
 			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);

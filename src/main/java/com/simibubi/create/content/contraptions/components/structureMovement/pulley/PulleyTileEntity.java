@@ -92,22 +92,24 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			applyContraptionPosition();
 
 		if (!world.isRemote) {
-			if (offset > 0) {
-				BlockPos magnetPos = pos.down((int) offset);
-				world.destroyBlock(magnetPos, world.getBlockState(magnetPos)
-					.getCollisionShape(world, magnetPos)
-					.isEmpty());
-				world.setBlockState(magnetPos, AllBlocks.PULLEY_MAGNET.getDefaultState(), 66);
+			if (!removed) {
+				if (offset > 0) {
+					BlockPos magnetPos = pos.down((int) offset);
+					world.destroyBlock(magnetPos, world.getBlockState(magnetPos)
+						.getCollisionShape(world, magnetPos)
+						.isEmpty());
+					world.setBlockState(magnetPos, AllBlocks.PULLEY_MAGNET.getDefaultState(), 66);
+				}
+				
+				for (int i = 1; i <= ((int) offset) - 1; i++) {
+					BlockPos ropePos = pos.down(i);
+					world.destroyBlock(ropePos, world.getBlockState(ropePos)
+						.getCollisionShape(world, ropePos)
+						.isEmpty());
+				}
+				for (int i = 1; i <= ((int) offset) - 1; i++)
+					world.setBlockState(pos.down(i), AllBlocks.ROPE.getDefaultState(), 66);
 			}
-
-			for (int i = 1; i <= ((int) offset) - 1; i++) {
-				BlockPos ropePos = pos.down(i);
-				world.destroyBlock(ropePos, world.getBlockState(ropePos)
-					.getCollisionShape(world, ropePos)
-					.isEmpty());
-			}
-			for (int i = 1; i <= ((int) offset) - 1; i++)
-				world.setBlockState(pos.down(i), AllBlocks.ROPE.getDefaultState(), 66);
 
 			if (movedContraption != null)
 				movedContraption.disassemble();

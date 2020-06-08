@@ -65,15 +65,15 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		double capacity = getNetworkCapacity();
 		double stressFraction = getNetworkStress() / (capacity == 0 ? 1 : capacity);
 
-		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stress_gauge.title"));
+		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stressometer.title"));
 
 		if (getTheoreticalSpeed() == 0)
 			tooltip.add(TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
-					+ Lang.translate("gui.stress_gauge.no_rotation"));
+					+ Lang.translate("gui.stressometer.no_rotation"));
 		else {
 			tooltip.add(spacing + StressImpact.getFormattedStressText(stressFraction));
 
-			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stress_gauge.capacity"));
+			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stressometer.capacity"));
 
 			double remainingCapacity = capacity - getNetworkStress();
 			double remainingCapacityAtBase = remainingCapacity / Math.abs(getTheoreticalSpeed());
