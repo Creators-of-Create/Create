@@ -44,7 +44,7 @@
 	"create.generic.unit.minutes": "Minutes",
 	"create.generic.unit.rpm": "RPM",
 	"create.generic.unit.stress": "su",
-	"create.generic.unit.degrees": "°",
+	"create.generic.unit.degrees": "\u00B0",
 
 	"create.action.scroll": "Scroll",
 	"create.action.confirm": "Confirm",

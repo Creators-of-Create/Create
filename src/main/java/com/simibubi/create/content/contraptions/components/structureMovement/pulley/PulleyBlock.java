@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<PulleyTileEntity> {
 
 	public static EnumProperty<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
-	
+
 	public PulleyBlock(Properties properties) {
 		super(properties);
 	}
@@ -46,23 +46,25 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+		if (state.getBlock() != newState.getBlock()) {
 			if (!worldIn.isRemote) {
 				BlockState below = worldIn.getBlockState(pos.down());
 				if (below.getBlock() instanceof RopeBlockBase)
 					worldIn.destroyBlock(pos.down(), true);
 			}
-			worldIn.removeTileEntity(pos);
+			if (state.hasTileEntity())
+				worldIn.removeTileEntity(pos);
 		}
 	}
 
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+		BlockRayTraceResult hit) {
 		if (!player.isAllowEdit())
 			return ActionResultType.PASS;
 		if (player.isSneaking())
 			return ActionResultType.PASS;
-		if (player.getHeldItem(handIn).isEmpty()) {
+		if (player.getHeldItem(handIn)
+			.isEmpty()) {
 			withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);
 			return ActionResultType.SUCCESS;
 		}
@@ -99,7 +101,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 			PlayerEntity player) {
 			return AllBlocks.ROPE_PULLEY.asStack();
 		}
-		
+
 		@Override
 		public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 			if (!isMoving) {

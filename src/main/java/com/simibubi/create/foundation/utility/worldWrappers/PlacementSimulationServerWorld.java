@@ -22,7 +22,7 @@ public class PlacementSimulationServerWorld extends WrappedServerWorld {
 
 	@Override
 	public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
-		blocksAdded.put(pos, newState);
+		blocksAdded.put(pos.toImmutable(), newState);
 		return true;
 	}
 

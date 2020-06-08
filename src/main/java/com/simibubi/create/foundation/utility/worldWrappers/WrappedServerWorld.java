@@ -36,6 +36,11 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
+	public float getCelestialAngle(float p_72826_1_) {
+		return 0;
+	}
+	
+	@Override
 	public int getLight(BlockPos pos) {
 		return 15;
 	}

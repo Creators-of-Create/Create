@@ -343,7 +343,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public void move(double x, double y, double z) {
-		setPosition(x + getX() + x, getY() + y, getZ() + z);
+		setPosition(x + getX(), getY() + y, getZ() + z);
 	}
 
 	private Vec3d getAnchorVec() {

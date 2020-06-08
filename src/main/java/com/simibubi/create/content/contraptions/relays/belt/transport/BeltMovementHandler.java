@@ -119,7 +119,7 @@ public class BeltMovementHandler {
 			Direction.getFacingFromAxis(POSITIVE, beltFacing.rotateY().getAxis()).getDirectionVec();
 		Vec3d movement = new Vec3d(movementDirection.getDirectionVec()).scale(movementSpeed);
 
-		double diffCenter = axis == Axis.Z ? (pos.getX() + .5f - entityIn.getZ()) : (pos.getZ() + .5f - entityIn.getZ());
+		double diffCenter = axis == Axis.Z ? (pos.getX() + .5f - entityIn.getX()) : (pos.getZ() + .5f - entityIn.getZ());
 		if (Math.abs(diffCenter) > 48 / 64f)
 			return;
 
@@ -187,7 +187,7 @@ public class BeltMovementHandler {
 				|| AllBlocks.BELT.has(world.getBlockState(entityIn.getPosition().down())));
 
 		if (movedPastEndingSlope && !movingDown && Math.abs(movementSpeed) > 0)
-			entityIn.setPosition(entityIn.getY(), entityIn.getY() + movement.y, entityIn.getZ());
+			entityIn.setPosition(entityIn.getX(), entityIn.getY() + movement.y, entityIn.getZ());
 		if (movedPastEndingSlope) {
 			entityIn.setMotion(movement);
 			entityIn.velocityChanged = true;
