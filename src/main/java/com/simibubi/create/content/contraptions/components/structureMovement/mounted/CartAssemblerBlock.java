@@ -86,12 +86,12 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 				if (state.get(POWERED)) {
 					assemble(world, pos, cart);
 					Direction facing = cart.getAdjustedHorizontalFacing();
-					cart.setVelocity(facing.getXOffset(), facing.getYOffset(), facing.getZOffset());
+					cart.setMotion(facing.getXOffset(), facing.getYOffset(), facing.getZOffset());
 				} else {
 					disassemble(world, pos, cart);
 					Vec3d diff = VecHelper.getCenterOf(pos)
 						.subtract(cart.getPositionVec());
-					cart.setVelocity(diff.x / 16f, 0, diff.z / 16f);
+					cart.setMotion(diff.x / 16f, 0, diff.z / 16f);
 				}
 				te.resetTicksSinceMinecartUpdate();
 			}
