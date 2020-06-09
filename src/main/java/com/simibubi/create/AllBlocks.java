@@ -45,6 +45,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonHeadBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
+import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
@@ -455,6 +456,19 @@ public class AllBlocks {
 				.getBlock(), "/block"))
 			.build()
 			.register();
+	
+	public static final BlockEntry<ReinforcedRailBlock> REINFORCED_RAIL =
+			REGISTRATE.block("reinforced_rail", ReinforcedRailBlock::new)
+				.initialProperties(SharedProperties::stone)
+				.properties(p -> p.nonOpaque())
+				.blockstate(BlockStateGen.reinforcedRail())
+				.addLayer(() -> RenderType::getCutoutMipped)
+				.tag(BlockTags.RAILS)
+				.item()
+				.model((c, p) -> p.blockItem(() -> c.getEntry()
+					.getBlock(), "/block"))
+				.build()
+				.register();
 
 	public static final BlockEntry<MinecartAnchorBlock> MINECART_ANCHOR =
 		REGISTRATE.block("minecart_anchor", MinecartAnchorBlock::new)

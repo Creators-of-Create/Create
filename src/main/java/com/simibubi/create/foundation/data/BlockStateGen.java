@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
+import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.palettes.PavedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -172,6 +173,19 @@ public class BlockStateGen {
 						.getExistingFile(p.modLoc("block/" + c.getName() + "/block"
 							+ (state.get(CartAssemblerBlock.POWERED) ? "_powered" : ""))))
 					.rotationY(state.get(CartAssemblerBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? 90 : 0)
+					.build();
+			});
+	}
+	
+	public static NonNullBiConsumer<DataGenContext<Block, ReinforcedRailBlock>, RegistrateBlockstateProvider> reinforcedRail() {
+		return (c, p) -> p.getVariantBuilder(c.get())
+			.forAllStates(state -> {
+				return ConfiguredModel.builder()
+					.modelFile(p.models()
+						.getExistingFile(p.modLoc("block/" + c.getName() + "/block"
+								+ (state.get(ReinforcedRailBlock.CONNECTS_S) ? "_s" : "")
+								+ (state.get(ReinforcedRailBlock.CONNECTS_N) ? "_n" : ""))))
+					.rotationY(state.get(ReinforcedRailBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? 90 : 0)
 					.build();
 			});
 	}

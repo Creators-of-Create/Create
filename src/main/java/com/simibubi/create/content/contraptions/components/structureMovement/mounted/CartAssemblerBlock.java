@@ -216,5 +216,4 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 	public Class<CartAssemblerTileEntity> getTileEntityClass() {
 		return CartAssemblerTileEntity.class;
 	}
-
 }
