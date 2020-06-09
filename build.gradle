@@ -173,7 +173,8 @@ String getChangelogText() {
     return str
 }
 
-new File("changelog.html").write getChangelogText()
+//changelog debugging
+//new File("changelog.html").write getChangelogText()
 
 tasks.curseforge.enabled = !dev && project.hasProperty('simi_curseforge_key')
     
