@@ -1,4 +1,5 @@
-0.2.4b:
+0.2.4c:
 A hotfix for our dear users over in Multiplayer.
 Fixes
-- Fixed server crash when Cart Assembler accelerates held Minecarts
+- (0.2.4b) Fixed server crash when Cart Assembler accelerates held Minecarts
+- Fixed build errors of previous version

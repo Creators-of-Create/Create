@@ -183,7 +183,7 @@ curseforge {
         changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
         changelogType = 'html'
         releaseType = project.curse_type
-        mainArtifact(jar) {
+        mainArtifact(shadowJar) {
             displayName = "Create - ${version}"
         }
         relations {
