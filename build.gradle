@@ -118,6 +118,7 @@ dependencies {
 }
 
 jar {
+    classifier = 'slim'
     manifest {
         attributes([
             "Specification-Title": "create",
@@ -132,6 +133,7 @@ jar {
 }
 
 shadowJar {
+    classifier = ''
     configurations = [project.configurations.shade]
     relocate 'com.tterrag.registrate', 'com.simibubi.create.repack.registrate'
 }
