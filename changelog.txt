@@ -3,3 +3,52 @@ A hotfix for our dear users over in Multiplayer.
 Fixes
 - (0.2.4b) Fixed server crash when Cart Assembler accelerates held Minecarts
 - Fixed build errors of previous version
+
+0.2.4a:
+Just a few Bug-Fixes since the recent 1.15 release. Enjoy!
+Fixes
+- Fixed pistons moving at inconsistent speeds, overshooting their bounds
+- Fixed belts not moving entities
+- Fixed diagonal belts teleporting entities miles away
+- Fixed tree fertilizer not working
+- Patched some localization gaps
+- Fixed pulley placing down ropes when destroyed while moving
+- Fixed inconsistencies with glue removal and placement
+- Fixed crash when placing a crafter between two colliding rotation sources
+- Fixed cases of self-powering loops caused by blocks rotated using the wrench
+- Fixed Extendo Grip animation for left-handed players
+- Fixed encoding of degree symbols in tooltips
+
+0.2.4:
+Welcome to the future! Glad you are still here.
+Warning
+- Do NOT transfer world or schematic data from 1.14. This version is incompatible with any of the prior versions!
+New
+- Ported Create to Minecraft 1.15.2
+- Added Nixie Tubes
+- Added the Extendo Grip
+- Added support for TerraForged worldgen
+Changes
+- Removed Windowlogging, might come back as a stand-alone
+- Removed Blazing, Shadow Steel and Gilded Quartz Toolsets
+- Massively reworked Create palettes, offering a whole bunch of new patterns!
+- The Creative Motor can now face in any direction
+- The Creative Motor, Encased Fan and other directional blocks will now reverse their effective rotation when oriented backwards
+- Redstone link receivers now emit their signal with the level of the strongest transmitter of the same frequency
+- Changed the way cart assemblers react to redstone input
+- Blocks that couldn't be placed when a contraption disassembles, now drop as items
+- Some fixes regarding inconsistencies with Super Glue placement
+- Deployers no longer consume food
+- Deployers can now feed players
+- Ploughs no longer break blocks if farmland is below them
+- Super glue can no longer be removed while inbetween two blocks
+Fixes
+- Fixed Bells duplicating themselves when moved by a contraption
+- Fixed moved Deployers in breaking mode getting stuck on fluids or bedrock
+- Schematicannons can no longer place water in the nether
+- Fixed bug with extractors not always being able to pull from moved contraptions
+- Fixed deployers not able to place certain foods on campfires
+- Fixed fire-immune creatures taking damage from heated air currents
+- Endermen now take damage from washing fans
+- Fixed crash when assembled minecarts pick up the block below their assembler
+- Schematicannons can no longer place lit furnaces
