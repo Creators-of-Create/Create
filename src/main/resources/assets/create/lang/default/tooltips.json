@@ -212,6 +212,9 @@
 	"block.create.basin.tooltip": "BASIN",
 	"block.create.basin.tooltip.summary": "A handy _item_ _container_ used in processing with the _Mechanical_ _Mixer_ and the _Mechanical_ _Press_. Supports _Redstone_ _Comparators_.",
 	
+	"block.create.reinforced_rail.tooltip": "REINFORCED RAIL",
+	"block.create.reinforced_rail.tooltip.summary": "A timber stabilized rail, _does_ _not_ _need_ _supports_.",
+	
 	"block.create.mechanical_mixer.tooltip": "MECHANICAL MIXER",
 	"block.create.mechanical_mixer.tooltip.summary": "A kinetic whisk for applying any shapeless crafting recipes to items beneath it. Requires constant _Rotational_ _Force_ and a _Basin_ placed below (with a gap in between).",
 	"block.create.mechanical_mixer.tooltip.condition1": "When above Basin",

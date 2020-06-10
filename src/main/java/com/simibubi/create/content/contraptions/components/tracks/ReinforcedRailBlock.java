@@ -92,7 +92,7 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
     @Nonnull
     public VoxelShape getShape(BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos, ISelectionContext context) {
         boolean alongX = state.get(RAIL_SHAPE) == RailShape.EAST_WEST;
-        return VoxelShapes.or(super.getShape(state, reader, pos, context), VoxelShapes.or(makeCuboidShape(0, 0, 0, alongX ? 16 : 1, 12, alongX ? 1 : 16), makeCuboidShape(alongX ? 0 : 15, 0, alongX ? 15 : 0, 16, 12, 16)));
+        return VoxelShapes.or(makeCuboidShape(0, -2, 0, 16, 2, 16), VoxelShapes.or(makeCuboidShape(0, -2, 0, alongX ? 16 : -1, 12, alongX ? -1 : 16), makeCuboidShape(alongX ? 0 : 17, -2, alongX ? 17 : 0, 16, 12, 16)));
     }
 
     @Override
