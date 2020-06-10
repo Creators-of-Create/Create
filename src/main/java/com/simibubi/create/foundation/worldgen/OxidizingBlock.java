@@ -4,13 +4,20 @@ import java.util.LinkedList;
 import java.util.OptionalDouble;
 import java.util.Random;
 
+import com.simibubi.create.content.curiosities.tools.SandPaperItem;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 public class OxidizingBlock extends Block {
@@ -64,5 +71,17 @@ public class OxidizingBlock extends Block {
 	@Override
 	public float getBlockHardness(BlockState blockState, IBlockReader worldIn, BlockPos pos) {
 		return this.blockHardness - 0.2f * blockState.get(OXIDIZATION);
+	}
+	
+	@Override
+	public ActionResultType onUse(BlockState state, World world, BlockPos pos,
+			PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult) {
+		if(state.get(OXIDIZATION) > 0 && player.getHeldItem(hand).getItem() instanceof SandPaperItem) {
+			if(!player.isCreative())
+				player.getHeldItem(hand).damageItem(1, player, p -> p.sendBreakAnimation(p.getActiveHand()));
+			world.setBlockState(pos, state.with(OXIDIZATION, 0));
+			return ActionResultType.SUCCESS;
+		}
+		return ActionResultType.PASS;
 	}
 }
