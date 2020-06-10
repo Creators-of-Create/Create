@@ -118,6 +118,7 @@ dependencies {
 }
 
 jar {
+    classifier = 'slim'
     manifest {
         attributes([
             "Specification-Title": "create",
@@ -132,6 +133,7 @@ jar {
 }
 
 shadowJar {
+    classifier = ''
     configurations = [project.configurations.shade]
     relocate 'com.tterrag.registrate', 'com.simibubi.create.repack.registrate'
 }
@@ -153,7 +155,7 @@ String getChangelogText() {
             def temp = it
             if (lineCount == 0) {
                 temp = "Create ${version}"
-                temp = "<h2 style=\"display:inline;\">$temp </h2><em>for Minecraft ${minecraft_version}</em><br/>"
+                temp = "<span style=\"font-size: 18px; color: #333399;\">Create v${mod_version}</span>&nbsp;&nbsp;<em>for Minecraft ${minecraft_version}</em><br/>"
             } else if (it.startsWith('-')) {
                 temp = "&nbsp;&nbsp;&nbsp;$temp<br/>"
                 temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>");
@@ -163,13 +165,16 @@ String getChangelogText() {
             }
             str += temp
             lineCount++
-            return
         } else {
+            str += "<p>Please submit any Issues you come across on the&nbsp;<a href=\"https://github.com/${github_project}/issues\" rel=\"nofollow\">Issue Tracker</a>.</p>"
             done = true
         }
     }
     return str
 }
+
+//changelog debugging
+//new File("changelog.html").write getChangelogText()
 
 tasks.curseforge.enabled = !dev && project.hasProperty('simi_curseforge_key')
     
@@ -183,7 +188,7 @@ curseforge {
         changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
         changelogType = 'html'
         releaseType = project.curse_type
-        mainArtifact(jar) {
+        mainArtifact(shadowJar) {
             displayName = "Create - ${version}"
         }
         relations {

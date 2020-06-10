@@ -1,3 +1,24 @@
+0.2.4c:
+A hotfix for our dear users over in Multiplayer.
+Fixes
+- (0.2.4b) Fixed server crash when Cart Assembler accelerates held Minecarts
+- Fixed build errors of previous version
+
+0.2.4a:
+Just a few Bug-Fixes since the recent 1.15 release. Enjoy!
+Fixes
+- Fixed pistons moving at inconsistent speeds, overshooting their bounds
+- Fixed belts not moving entities
+- Fixed diagonal belts teleporting entities miles away
+- Fixed tree fertilizer not working
+- Patched some localization gaps
+- Fixed pulley placing down ropes when destroyed while moving
+- Fixed inconsistencies with glue removal and placement
+- Fixed crash when placing a crafter between two colliding rotation sources
+- Fixed cases of self-powering loops caused by blocks rotated using the wrench
+- Fixed Extendo Grip animation for left-handed players
+- Fixed encoding of degree symbols in tooltips
+
 0.2.4:
 Welcome to the future! Glad you are still here.
 Warning
