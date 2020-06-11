@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/cart_assembler/block_none",
+    "textures": {
+        "clutch_off": "create:block/clutch_on"
+    }
+}

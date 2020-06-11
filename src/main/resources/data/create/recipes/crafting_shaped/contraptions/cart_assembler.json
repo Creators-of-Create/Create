@@ -3,7 +3,7 @@
         "pattern": [
             " L ",
             "CRC",
-			"LTL"
+			"L L"
         ],
         "key": {
 			"L": {
@@ -11,9 +11,6 @@
             },
 			"R": {
                 "tag": "forge:dusts/redstone"
-            },
-			"T": {
-                "item": "minecraft:rail"
             },
 			"C": {
                 "item": "create:andesite_alloy"

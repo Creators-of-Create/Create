@@ -40,6 +40,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.MinecartAnchorBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonHeadBlock;
@@ -451,7 +452,7 @@ public class AllBlocks {
 			.blockstate(BlockStateGen.cartAssembler())
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(BlockTags.RAILS)
-			.item()
+			.item(CartAssemblerBlockItem::new)
 			.model((c, p) -> p.blockItem(() -> c.getEntry()
 				.getBlock(), "/block"))
 			.build()

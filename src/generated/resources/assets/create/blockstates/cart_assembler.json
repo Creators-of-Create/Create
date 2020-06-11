@@ -1,17 +1,73 @@
 {
   "variants": {
-    "powered=false,shape=north_south": {
-      "model": "create:block/cart_assembler/block"
+    "powered=false,rail_type=0,shape=north_south": {
+      "model": "create:block/cart_assembler/block_none"
     },
-    "powered=true,shape=north_south": {
-      "model": "create:block/cart_assembler/block_powered"
+    "powered=true,rail_type=0,shape=north_south": {
+      "model": "create:block/cart_assembler/block_powered_none"
     },
-    "powered=false,shape=east_west": {
-      "model": "create:block/cart_assembler/block",
+    "powered=false,rail_type=1,shape=north_south": {
+      "model": "create:block/cart_assembler/block_rail_normal"
+    },
+    "powered=true,rail_type=1,shape=north_south": {
+      "model": "create:block/cart_assembler/block_powered_rail_normal"
+    },
+    "powered=false,rail_type=2,shape=north_south": {
+      "model": "create:block/cart_assembler/block_rail_powered"
+    },
+    "powered=true,rail_type=2,shape=north_south": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered"
+    },
+    "powered=false,rail_type=3,shape=north_south": {
+      "model": "create:block/cart_assembler/block_rail_detector"
+    },
+    "powered=true,rail_type=3,shape=north_south": {
+      "model": "create:block/cart_assembler/block_powered_rail_detector"
+    },
+    "powered=false,rail_type=4,shape=north_south": {
+      "model": "create:block/cart_assembler/block_rail_activator"
+    },
+    "powered=true,rail_type=4,shape=north_south": {
+      "model": "create:block/cart_assembler/block_powered_rail_activator"
+    },
+    "powered=false,rail_type=0,shape=east_west": {
+      "model": "create:block/cart_assembler/block_none",
       "y": 90
     },
-    "powered=true,shape=east_west": {
-      "model": "create:block/cart_assembler/block_powered",
+    "powered=true,rail_type=0,shape=east_west": {
+      "model": "create:block/cart_assembler/block_powered_none",
+      "y": 90
+    },
+    "powered=false,rail_type=1,shape=east_west": {
+      "model": "create:block/cart_assembler/block_rail_normal",
+      "y": 90
+    },
+    "powered=true,rail_type=1,shape=east_west": {
+      "model": "create:block/cart_assembler/block_powered_rail_normal",
+      "y": 90
+    },
+    "powered=false,rail_type=2,shape=east_west": {
+      "model": "create:block/cart_assembler/block_rail_powered",
+      "y": 90
+    },
+    "powered=true,rail_type=2,shape=east_west": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered",
+      "y": 90
+    },
+    "powered=false,rail_type=3,shape=east_west": {
+      "model": "create:block/cart_assembler/block_rail_detector",
+      "y": 90
+    },
+    "powered=true,rail_type=3,shape=east_west": {
+      "model": "create:block/cart_assembler/block_powered_rail_detector",
+      "y": 90
+    },
+    "powered=false,rail_type=4,shape=east_west": {
+      "model": "create:block/cart_assembler/block_rail_activator",
+      "y": 90
+    },
+    "powered=true,rail_type=4,shape=east_west": {
+      "model": "create:block/cart_assembler/block_powered_rail_activator",
       "y": 90
     }
   }

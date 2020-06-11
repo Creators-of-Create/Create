@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/cart_assembler/block",
+    "textures": {
+        "rail": "block/detector_rail"
+    }
+}

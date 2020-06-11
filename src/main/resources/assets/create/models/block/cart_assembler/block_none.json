@@ -1,0 +1,93 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"4": "create:block/bearing_top",
+		"5": "create:block/mechanical_bearing_side",
+		"clutch_off": "create:block/clutch_off",
+		"translation_chassis_side": "create:block/cart_assembler_side",
+		"particle": "create:block/cart_assembler_side"
+	},
+	"elements": [
+		{
+			"name": "Side",
+			"from": [13.875, 0.062, 1.125],
+			"to": [17.875, 13.937, 14.875],
+			"faces": {
+				"north": {"uv": [1, 4, 15, 0], "rotation": 90, "texture": "#translation_chassis_side"},
+				"east": {"uv": [1, 1, 15, 15], "rotation": 90, "texture": "#translation_chassis_side"},
+				"south": {"uv": [1, 0, 15, 4], "rotation": 90, "texture": "#translation_chassis_side"},
+				"west": {"uv": [1, 1, 15, 15], "rotation": 90, "texture": "#translation_chassis_side"},
+				"up": {"uv": [5, 1, 9, 15], "texture": "#translation_chassis_side"},
+				"down": {"uv": [2, 1, 6, 15], "texture": "#translation_chassis_side"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [-1.875, 0.062, 1.125],
+			"to": [2.125, 13.937, 14.875],
+			"faces": {
+				"north": {"uv": [1, 0, 15, 4], "rotation": 90, "texture": "#translation_chassis_side"},
+				"east": {"uv": [1, 15, 15, 1], "rotation": 90, "texture": "#translation_chassis_side"},
+				"south": {"uv": [1, 4, 15, 0], "rotation": 90, "texture": "#translation_chassis_side"},
+				"west": {"uv": [1, 15, 15, 1], "rotation": 90, "texture": "#translation_chassis_side"},
+				"up": {"uv": [9, 1, 5, 15], "texture": "#translation_chassis_side"},
+				"down": {"uv": [6, 1, 2, 15], "texture": "#translation_chassis_side"}
+			}
+		},
+		{
+			"from": [0, 12, 0],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 23, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 4], "texture": "#5"},
+				"east": {"uv": [0, 0, 16, 4], "texture": "#5"},
+				"south": {"uv": [0, 0, 16, 4], "texture": "#5"},
+				"west": {"uv": [0, 0, 16, 4], "texture": "#5"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#4"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#translation_chassis_side"}
+			}
+		},
+		{
+			"from": [2, 10, 1],
+			"to": [14, 12, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [18, 22, 10]},
+			"faces": {
+				"north": {"uv": [2, 7, 14, 9], "texture": "#clutch_off"},
+				"south": {"uv": [2, 7, 14, 9], "texture": "#clutch_off"},
+				"down": {"uv": [2, 1, 14, 15], "texture": "#translation_chassis_side"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 225, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
+}
