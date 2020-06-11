@@ -454,7 +454,7 @@ public class AllBlocks {
 			.tag(BlockTags.RAILS)
 			.item(CartAssemblerBlockItem::new)
 			.model((c, p) -> p.blockItem(() -> c.getEntry()
-				.getBlock(), "/block"))
+				.getBlock(), "/block_none"))
 			.build()
 			.register();
 	

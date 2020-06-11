@@ -11,6 +11,7 @@
 	"death.attack.create.cuckoo_clock_explosion": "%1$s was blown up by tampered cuckoo clock",
 	"create.block.deployer.damage_source_name": "a rogue Deployer",
 	"create.block.cart_assembler.invalid": "Can not place a Cart Assembler on this rail type",
+	"create.block.cart_assembler.invalid_update": "Invalid rail to update this Cart Assembler",
 
 	"create.recipe.crushing": "Crushing",
 	"create.recipe.milling": "Milling",

@@ -2,6 +2,6 @@
 	"parent": "create:block/cart_assembler/block",
     "textures": {
         "clutch_off": "create:block/clutch_on",
-        "rail": "block/activator_rail"
+        "rail": "block/activator_rail_on"
     }
 }
