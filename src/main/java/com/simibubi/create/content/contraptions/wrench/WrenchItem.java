@@ -25,7 +25,7 @@ public class WrenchItem extends Item {
 		IWrenchable actor = (IWrenchable) state.getBlock();
 
 		if (player.isSneaking()) {
-			actor.onSneakWrenched(state, context);
+			return actor.onSneakWrenched(state, context);
 		}
 		return actor.onWrenched(state, context);
 	}
