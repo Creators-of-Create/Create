@@ -1,11 +1,14 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
@@ -333,7 +336,10 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
 
     @Override
     public ItemRequirement getRequiredItems(BlockState state) {
-        return new ItemRequirement(ItemUseType.CONSUME, getRailItem(state));
+    	ArrayList<ItemStack> reuiredItems = new ArrayList<ItemStack>();
+    	reuiredItems.add(new ItemStack(getRailItem(state)));
+    	reuiredItems.add(new ItemStack(asItem()));
+        return new ItemRequirement(ItemUseType.CONSUME, reuiredItems);
     }
 
     @SuppressWarnings("deprecation")
