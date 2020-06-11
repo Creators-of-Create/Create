@@ -30,6 +30,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -196,7 +197,6 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
         if (itemStack.getItem() != getRailItem(state)) {
 
             if (itemStack.getItem() == Items.RAIL) {
-                System.out.println("normal rail");
                 world.setBlockState(pos, state.with(RAIL_TYPE, RAIL_NORMAL));
             } else if (itemStack.getItem() == Items.POWERED_RAIL) {
                 world.setBlockState(pos, state.with(RAIL_TYPE, RAIL_POWERED));
@@ -205,7 +205,9 @@ public class CartAssemblerBlock extends AbstractRailBlock implements ITE<CartAss
             } else if (itemStack.getItem() == Items.DETECTOR_RAIL) {
                 world.setBlockState(pos, state.with(RAIL_TYPE, RAIL_DETECTOR));
             } else {
-                player.sendStatusMessage(new StringTextComponent(Lang.translate("block.cart_assembler.invalid_update")), true);
+            	if(itemStack.getItem() instanceof BlockItem && ((BlockItem) itemStack.getItem()).getBlock() instanceof AbstractRailBlock) {
+            		player.sendStatusMessage(new StringTextComponent(Lang.translate("block.cart_assembler.invalid_update")), true);
+            	}
                 return ActionResultType.PASS;
             }
             if (!player.isCreative()) {
