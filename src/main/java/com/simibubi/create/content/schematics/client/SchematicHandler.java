@@ -28,6 +28,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 
@@ -120,9 +121,10 @@ public class SchematicHandler {
 		if (size.equals(BlockPos.ZERO))
 			return;
 
-		SchematicWorld w = new SchematicWorld();
-		SchematicWorld wMirroredFB = new SchematicWorld();
-		SchematicWorld wMirroredLR = new SchematicWorld();
+		World clientWorld = Minecraft.getInstance().world;
+		SchematicWorld w = new SchematicWorld(clientWorld);
+		SchematicWorld wMirroredFB = new SchematicWorld(clientWorld);
+		SchematicWorld wMirroredLR = new SchematicWorld(clientWorld);
 		PlacementSettings placementSettings = new PlacementSettings();
 
 		schematic.addBlocksToWorld(w, BlockPos.ZERO, placementSettings);

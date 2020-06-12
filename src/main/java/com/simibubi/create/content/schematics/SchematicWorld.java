@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.item.ItemFrameEntity;
@@ -41,8 +40,8 @@ public class SchematicWorld extends WrappedWorld {
 	public BlockPos anchor;
 	public boolean renderMode;
 
-	public SchematicWorld() {
-		this(BlockPos.ZERO, Minecraft.getInstance().world);
+	public SchematicWorld(World original) {
+		this(BlockPos.ZERO, original);
 	}
 	
 	public SchematicWorld(BlockPos anchor, World original) {
