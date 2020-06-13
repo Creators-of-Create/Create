@@ -17,16 +17,14 @@ public class WrenchItem extends Item {
 		PlayerEntity player = context.getPlayer();
 		if (!player.isAllowEdit())
 			return super.onItemUse(context);
-
 		
 		BlockState state = context.getWorld().getBlockState(context.getPos());
 		if (!(state.getBlock() instanceof IWrenchable))
 			return super.onItemUse(context);
 		IWrenchable actor = (IWrenchable) state.getBlock();
 
-		if (player.isSneaking()) {
+		if (player.isSneaking()) 
 			return actor.onSneakWrenched(state, context);
-		}
 		return actor.onWrenched(state, context);
 	}
 }

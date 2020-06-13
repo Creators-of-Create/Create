@@ -82,6 +82,8 @@ public class ZapperInteractionHandler {
 			newState = newState.with(BlockStateProperties.STAIRS_SHAPE, StairsShape.STRAIGHT);
 		if (newState.has(BlockStateProperties.PERSISTENT))
 			newState = newState.with(BlockStateProperties.PERSISTENT, true);
+		if (newState.has(BlockStateProperties.WATERLOGGED))
+			newState = newState.with(BlockStateProperties.WATERLOGGED, false);
 
 		CompoundNBT tag = stack.getOrCreateTag();
 		if (tag.contains("BlockUsed") && NBTUtil.readBlockState(stack.getTag()

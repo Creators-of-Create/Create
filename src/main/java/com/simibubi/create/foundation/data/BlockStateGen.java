@@ -11,6 +11,7 @@ import java.util.function.Function;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssembleRailType;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
@@ -166,32 +167,28 @@ public class BlockStateGen {
 	}
 
 	public static NonNullBiConsumer<DataGenContext<Block, CartAssemblerBlock>, RegistrateBlockstateProvider> cartAssembler() {
-		HashMap<Integer, String> railTypes = new HashMap<Integer, String>();
-		railTypes.put(CartAssemblerBlock.RAIL_NONE, "_none");
-		railTypes.put(CartAssemblerBlock.RAIL_NORMAL, "_rail_normal");
-		railTypes.put(CartAssemblerBlock.RAIL_POWERED, "_rail_powered");
-		railTypes.put(CartAssemblerBlock.RAIL_DETECTOR, "_rail_detector");
-		railTypes.put(CartAssemblerBlock.RAIL_ACTIVATOR, "_rail_activator");
-		
 		return (c, p) -> p.getVariantBuilder(c.get())
 			.forAllStates(state -> {
+				CartAssembleRailType type = state.get(CartAssemblerBlock.RAIL_TYPE);
+				Boolean powered = state.get(CartAssemblerBlock.POWERED);
+				RailShape shape = state.get(CartAssemblerBlock.RAIL_SHAPE);
+
 				return ConfiguredModel.builder()
 					.modelFile(p.models()
-						.getExistingFile(p.modLoc("block/" + c.getName() + "/block"
-								+ (state.get(CartAssemblerBlock.POWERED) ? "_powered" : "")
-								+ railTypes.get(state.get(CartAssemblerBlock.RAIL_TYPE)))))
-					.rotationY(state.get(CartAssemblerBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? 90 : 0)
+						.getExistingFile(p
+							.modLoc("block/" + c.getName() + "/block_" + type.getName() + (powered ? "_powered" : ""))))
+					.rotationY(shape == RailShape.EAST_WEST ? 90 : 0)
 					.build();
 			});
 	}
-	
+
 	public static NonNullBiConsumer<DataGenContext<Block, ReinforcedRailBlock>, RegistrateBlockstateProvider> reinforcedRail() {
 		return (c, p) -> p.getVariantBuilder(c.get())
 			.forAllStates(state -> {
 				return ConfiguredModel.builder()
 					.modelFile(p.models()
-						.getExistingFile(p.modLoc("block/" + c.getName() + "/block"
-								+ (state.get(ReinforcedRailBlock.CONNECTS_S) ? "_s" : "")
+						.getExistingFile(p.modLoc(
+							"block/" + c.getName() + "/block" + (state.get(ReinforcedRailBlock.CONNECTS_S) ? "_s" : "")
 								+ (state.get(ReinforcedRailBlock.CONNECTS_N) ? "_n" : ""))))
 					.rotationY(state.get(ReinforcedRailBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? 90 : 0)
 					.build();

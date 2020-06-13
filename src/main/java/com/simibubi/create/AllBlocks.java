@@ -453,9 +453,7 @@ public class AllBlocks {
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(BlockTags.RAILS)
 			.item(CartAssemblerBlockItem::new)
-			.model((c, p) -> p.blockItem(() -> c.getEntry()
-				.getBlock(), "/block_none"))
-			.build()
+			.transform(customItemModel())
 			.register();
 	
 	public static final BlockEntry<ReinforcedRailBlock> REINFORCED_RAIL =
