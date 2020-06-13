@@ -1,3 +1,13 @@
+0.2.4d:
+More tiny bugfixes; we appreciate the reports!
+Changes
+- Cart assemblers now have several behaviours depending on the rail type they were placed on
+Fixes
+- Fixed dedicated server crash when using the Schematicannon
+- Fixed blockzappers placing waterlogged blocks
+- Updated chinese localization
+- Added missing recipe for Dark Scoria
+
 0.2.4c:
 A hotfix for our dear users over in Multiplayer.
 Fixes
