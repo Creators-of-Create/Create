@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.components.crafter.ConnectedInpu
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;
@@ -26,7 +26,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -263,28 +262,12 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 			return false;
 		if (crafterState.get(HORIZONTAL_FACING) != targetState.get(HORIZONTAL_FACING))
 			return false;
-		if (Math.abs(crafterState.get(POINTING).xRotation - targetState.get(POINTING).xRotation) == 180)
+		if (Math.abs(crafterState.get(POINTING)
+			.getXRotation()
+			- targetState.get(POINTING)
+				.getXRotation()) == 180)
 			return false;
 		return true;
-	}
-
-	public enum Pointing implements IStringSerializable {
-		UP(0), LEFT(270), DOWN(180), RIGHT(90);
-
-		private int xRotation;
-
-		private Pointing(int xRotation) {
-			this.xRotation = xRotation;
-		}
-
-		@Override
-		public String getName() {
-			return Lang.asId(name());
-		}
-
-		public int getXRotation() {
-			return xRotation;
-		}
 	}
 
 	@Override

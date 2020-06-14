@@ -73,9 +73,17 @@ public enum AllBlockPartials {
 	SYMMETRY_PLANE("symmetry_effect/plane"),
 	SYMMETRY_CROSSPLANE("symmetry_effect/crossplane"),
 	SYMMETRY_TRIPLEPLANE("symmetry_effect/tripleplane"),
+	
+	COPPER_PIPE_CASING("copper_pipe/casing"),
+	COPPER_PIPE_RIM_UP("copper_pipe/rim/up"),
+	COPPER_PIPE_RIM_DOWN("copper_pipe/rim/down"),
+	COPPER_PIPE_RIM_EAST("copper_pipe/rim/east"),
+	COPPER_PIPE_RIM_WEST("copper_pipe/rim/west"),
+	COPPER_PIPE_RIM_NORTH("copper_pipe/rim/north"),
+	COPPER_PIPE_RIM_SOUTH("copper_pipe/rim/south"),
 
 	;
-
+	
 	private ResourceLocation modelLocation;
 	private IBakedModel bakedModel;
 

@@ -15,7 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock.Pointing;
+import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.CraftingInventory;

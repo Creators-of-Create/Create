@@ -40,8 +40,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.MinecartAnchorBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonHeadBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
@@ -49,6 +49,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
+import com.simibubi.create.content.contraptions.fluids.PipeBlock;
+import com.simibubi.create.content.contraptions.fluids.PipeModel;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
@@ -385,6 +387,19 @@ public class AllBlocks {
 		.transform(ModelGen.customItemModel("gauge", "_", "item"))
 		.register();
 
+	// Fluids
+	
+	public static final BlockEntry<PipeBlock> COPPER_PIPE =
+		REGISTRATE.block("copper_pipe", PipeBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate(BlockStateGen.pipe())
+		.onRegister(CreateRegistrate.blockModel(() -> PipeModel::new))
+		.item()
+		.transform(customItemModel())
+		.register();
+	
+	// Contraptions
+	
 	public static final BlockEntry<MechanicalPistonBlock> MECHANICAL_PISTON =
 		REGISTRATE.block("mechanical_piston", MechanicalPistonBlock::normal)
 			.transform(BuilderTransformers.mechanicalPiston(PistonType.DEFAULT))

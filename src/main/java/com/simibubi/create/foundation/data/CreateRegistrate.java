@@ -108,13 +108,18 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				final String location = "block/palettes/" + c.getName() + "/plain";
 				p.simpleBlock(c.get(), p.models()
 					.cubeAll(c.getName(), p.modLoc(location)));
-				// TODO tag with forge:stone; if TFWorldGen == true tag with forge:wg_stone aswell
+				// TODO tag with forge:stone; if TFWorldGen == true tag with forge:wg_stone
+				// aswell
 			})
 			.simpleItem();
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(ConnectedTextureBehaviour behavior) {
 		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
+	}
+	
+	public static <T extends Block> NonNullConsumer<? super T> blockModel(Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> blockColors(Supplier<Supplier<IBlockColor>> colorFunc) {
@@ -150,6 +155,13 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.getCustomBlockModels()
 			.register(entry.delegate, model -> new CTModel(model, behavior));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void registerBlockModel(Block entry,
+		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		CreateClient.getCustomBlockModels()
+			.register(entry.delegate, func.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)
