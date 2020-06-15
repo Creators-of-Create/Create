@@ -1,0 +1,25 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/fluid_tank",
+		"particle": "create:block/fluid_tank"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 0],
+			"to": [2, 16, 1],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9, 8, 8]},
+			"faces": {
+				"west": {"uv": [14, 0, 15, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 0, 1],
+			"to": [1, 16, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 9]},
+			"faces": {
+				"north": {"uv": [14, 0, 15, 16], "texture": "#0"}
+			}
+		}
+	]
+}

@@ -2,10 +2,10 @@
 	"credit": "Made with Blockbench",
 	"parent": "create:block/block",
 	"textures": {
-		"3": "create:block/copper_pipe",
+		"3": "create:block/fluid_pipe",
 		"4": "create:block/pump",
 		"5": "create:block/millstone",
-		"particle": "create:block/copper_pipe"
+		"particle": "create:block/fluid_pipe"
 	},
 	"elements": [
 		{

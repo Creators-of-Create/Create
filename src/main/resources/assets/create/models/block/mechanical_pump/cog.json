@@ -3,7 +3,7 @@
 	"parent": "create:block/large_wheels",
 	"textures": {
 		"5": "create:block/millstone",
-		"particle": "create:block/copper_pipe"
+		"particle": "create:block/fluid_pipe"
 	},
 	"elements": [
 		{

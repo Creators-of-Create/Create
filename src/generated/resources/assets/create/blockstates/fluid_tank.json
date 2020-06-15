@@ -1,0 +1,25 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "top": "true"
+      },
+      "apply": {
+        "model": "create:block/fluid_tank/block_top"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/fluid_tank/block_windows"
+      }
+    },
+    {
+      "when": {
+        "bottom": "true"
+      },
+      "apply": {
+        "model": "create:block/fluid_tank/block_bottom"
+      }
+    }
+  ]
+}

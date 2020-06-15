@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.PaneBlock;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -24,7 +23,7 @@ import net.minecraftforge.client.model.data.ModelProperty;
 
 public class CTModel extends BakedModelWrapper<IBakedModel> {
 
-	private static ModelProperty<CTData> CT_PROPERTY = new ModelProperty<>();
+	protected static ModelProperty<CTData> CT_PROPERTY = new ModelProperty<>();
 	private ConnectedTextureBehaviour behaviour;
 
 	private class CTData {
@@ -51,9 +50,14 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 
 	@Override
 	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
+		return new ModelDataMap.Builder().withInitial(CT_PROPERTY, createCTData(world, pos, state))
+			.build();
+	}
+
+	protected CTData createCTData(ILightReader world, BlockPos pos, BlockState state) {
 		CTData data = new CTData();
 		for (Direction face : Direction.values()) {
-			if (!Block.shouldSideBeRendered(state, world, pos, face) && !(state.getBlock() instanceof PaneBlock))
+			if (!Block.shouldSideBeRendered(state, world, pos, face) && !behaviour.buildContextForOccludedDirections())
 				continue;
 			CTSpriteShiftEntry spriteShift = behaviour.get(state, face);
 			if (spriteShift == null)
@@ -61,7 +65,7 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 			CTContext ctContext = behaviour.buildContext(world, pos, state, face);
 			data.put(face, spriteShift.getTextureIndex(ctContext));
 		}
-		return new ModelDataMap.Builder().withInitial(CT_PROPERTY, data).build();
+		return data;
 	}
 
 	@Override
@@ -83,9 +87,8 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 			if (index == -1)
 				continue;
 
-			BakedQuad newQuad =
-				new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length), quad.getTintIndex(),
-						quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting());
+			BakedQuad newQuad = new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length),
+				quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting());
 			VertexFormat format = DefaultVertexFormats.BLOCK;
 			int[] vertexData = newQuad.getVertexData();
 

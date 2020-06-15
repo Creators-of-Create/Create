@@ -30,6 +30,10 @@ public abstract class ConnectedTextureBehaviour {
 		return reverseUVs(state, face);
 	}
 
+	public boolean buildContextForOccludedDirections() {
+		return false;
+	}
+	
 	public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
 

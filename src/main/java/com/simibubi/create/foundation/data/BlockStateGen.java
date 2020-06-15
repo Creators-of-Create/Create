@@ -19,7 +19,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssembleRailType;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
-import com.simibubi.create.content.contraptions.fluids.PipeBlock;
+import com.simibubi.create.content.contraptions.fluids.FluidPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.FluidTankBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.palettes.PavedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -348,7 +349,7 @@ public class BlockStateGen {
 		};
 	}
 
-	public static <P extends PipeBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> pipe() {
+	public static <P extends FluidPipeBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> pipe() {
 		return (c, p) -> {
 			String path = "block/" + c.getName();
 
@@ -415,7 +416,7 @@ public class BlockStateGen {
 					.rotationX(d == Direction.UP ? 0 : d == Direction.DOWN ? 180 : 90)
 					.rotationY((int) (d.getHorizontalAngle() + 180) % 360)
 					.addModel()
-					.condition(PipeBlock.FACING_TO_PROPERTY_MAP.get(d), true)
+					.condition(FluidPipeBlock.FACING_TO_PROPERTY_MAP.get(d), true)
 					.end();
 
 			for (Axis axis : Iterate.axes) {
@@ -437,7 +438,7 @@ public class BlockStateGen {
 	private static void putPart(Map<Pair<String, Axis>, ModelFile> coreModels, MultiPartBlockStateBuilder builder,
 		Axis axis, String s, boolean up, boolean down, boolean left, boolean right) {
 		Direction positiveAxis = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-		Map<Direction, BooleanProperty> propertyMap = PipeBlock.FACING_TO_PROPERTY_MAP;
+		Map<Direction, BooleanProperty> propertyMap = FluidPipeBlock.FACING_TO_PROPERTY_MAP;
 		builder.part()
 			.modelFile(coreModels.get(Pair.of(s, axis)))
 			.addModel()
@@ -448,4 +449,23 @@ public class BlockStateGen {
 			.end();
 	}
 
+	public static <P extends FluidTankBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> tank() {
+		return (c, p) -> {
+			p.getMultipartBuilder(c.get())
+				.part()
+				.modelFile(AssetLookup.partialBaseModel(c, p, "top"))
+				.addModel()
+				.condition(FluidTankBlock.TOP, true)
+				.end()
+				.part()
+				.modelFile(AssetLookup.partialBaseModel(c, p, "windows"))
+				.addModel()
+				.end()
+				.part()
+				.modelFile(AssetLookup.partialBaseModel(c, p, "bottom"))
+				.addModel()
+				.condition(FluidTankBlock.BOTTOM, true)
+				.end();
+		};
+	}
 }

@@ -49,8 +49,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
-import com.simibubi.create.content.contraptions.fluids.PipeBlock;
-import com.simibubi.create.content.contraptions.fluids.PipeModel;
+import com.simibubi.create.content.contraptions.fluids.FluidPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.FluidPipeModel;
+import com.simibubi.create.content.contraptions.fluids.FluidTankBlock;
+import com.simibubi.create.content.contraptions.fluids.FluidTankModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
@@ -389,27 +391,34 @@ public class AllBlocks {
 		.register();
 
 	// Fluids
-	
-	public static final BlockEntry<PipeBlock> COPPER_PIPE =
-		REGISTRATE.block("copper_pipe", PipeBlock::new)
+
+	public static final BlockEntry<FluidPipeBlock> FLUID_PIPE = REGISTRATE.block("fluid_pipe", FluidPipeBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate(BlockStateGen.pipe())
-		.onRegister(CreateRegistrate.blockModel(() -> PipeModel::new))
+		.onRegister(CreateRegistrate.blockModel(() -> FluidPipeModel::new))
 		.item()
 		.transform(customItemModel())
 		.register();
-	
-	public static final BlockEntry<PumpBlock> MECHANICAL_PUMP =
-		REGISTRATE.block("mechanical_pump", PumpBlock::new)
+
+	public static final BlockEntry<PumpBlock> MECHANICAL_PUMP = REGISTRATE.block("mechanical_pump", PumpBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(StressConfigDefaults.setImpact(4.0))
 		.item()
 		.transform(customItemModel())
 		.register();
-	
+
+	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate(BlockStateGen.tank())
+		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::new))
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.item()
+		.transform(customItemModel())
+		.register();
+
 	// Contraptions
-	
+
 	public static final BlockEntry<MechanicalPistonBlock> MECHANICAL_PISTON =
 		REGISTRATE.block("mechanical_piston", MechanicalPistonBlock::normal)
 			.transform(BuilderTransformers.mechanicalPiston(PistonType.DEFAULT))
@@ -480,19 +489,19 @@ public class AllBlocks {
 			.item(CartAssemblerBlockItem::new)
 			.transform(customItemModel())
 			.register();
-	
+
 	public static final BlockEntry<ReinforcedRailBlock> REINFORCED_RAIL =
-			REGISTRATE.block("reinforced_rail", ReinforcedRailBlock::new)
-				.initialProperties(SharedProperties::stone)
-				.properties(p -> p.nonOpaque())
-				.blockstate(BlockStateGen.reinforcedRail())
-				.addLayer(() -> RenderType::getCutoutMipped)
-				.tag(BlockTags.RAILS)
-				.item()
-				.model((c, p) -> p.blockItem(() -> c.getEntry()
-					.getBlock(), "/block"))
-				.build()
-				.register();
+		REGISTRATE.block("reinforced_rail", ReinforcedRailBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.nonOpaque())
+			.blockstate(BlockStateGen.reinforcedRail())
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.tag(BlockTags.RAILS)
+			.item()
+			.model((c, p) -> p.blockItem(() -> c.getEntry()
+				.getBlock(), "/block"))
+			.build()
+			.register();
 
 	public static final BlockEntry<MinecartAnchorBlock> MINECART_ANCHOR =
 		REGISTRATE.block("minecart_anchor", MinecartAnchorBlock::new)

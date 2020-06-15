@@ -3,7 +3,7 @@
 	"parent": "create:block/large_wheels",
 	"textures": {
 		"4": "create:block/pump",
-		"particle": "create:block/copper_pipe"
+		"particle": "create:block/fluid_pipe"
 	},
 	"elements": [
 		{

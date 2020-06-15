@@ -1,0 +1,17 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/fluid_pipe",
+		"particle": "create:block/fluid_pipe"
+	},
+	"elements": [
+		{
+			"from": [4, 4, 4],
+			"to": [12, 12, 12],
+			"faces": {
+				"north": {"uv": [1, 1, 5, 5], "rotation": 180, "texture": "#0"},
+				"south": {"uv": [1, 1, 5, 5], "rotation": 180, "texture": "#0"}
+			}
+		}
+	]
+}

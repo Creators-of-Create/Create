@@ -3,11 +3,16 @@ package com.simibubi.create;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
@@ -19,101 +24,124 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 
-public enum AllBlockPartials {
+public class AllBlockPartials {
 
-	SCHEMATICANNON_CONNECTOR("schematicannon/connector"),
-	SCHEMATICANNON_PIPE("schematicannon/pipe"),
-
-	SHAFTLESS_COGWHEEL("cogwheel_shaftless"),
-	BELT_PULLEY,
-	SHAFT_HALF,
-
-	ENCASED_FAN_INNER("encased_fan/propeller"),
-	HAND_CRANK_HANDLE("hand_crank/handle"),
-	MECHANICAL_PRESS_HEAD("mechanical_press/head"),
-	MECHANICAL_MIXER_POLE("mechanical_mixer/pole"),
-	MECHANICAL_MIXER_HEAD("mechanical_mixer/head"),
-	MECHANICAL_CRAFTER_LID("mechanical_crafter/lid"),
-	MECHANICAL_CRAFTER_ARROW("mechanical_crafter/arrow"),
-	MECHANICAL_CRAFTER_BELT_FRAME("mechanical_crafter/belt"),
-	MECHANICAL_CRAFTER_BELT("mechanical_crafter/belt_animated"),
-	GAUGE_DIAL("gauge/dial"),
-	GAUGE_INDICATOR("gauge/indicator"),
-	GAUGE_HEAD_SPEED("gauge/speedometer/head"),
-	GAUGE_HEAD_STRESS("gauge/stressometer/head"),
-	BEARING_TOP("bearing/top"),
-	DRILL_HEAD("mechanical_drill/head"),
-	HARVESTER_BLADE("mechanical_harvester/blade"),
-	DEPLOYER_POLE("deployer/pole"),
-	DEPLOYER_HAND_POINTING("deployer/hand_pointing"),
-	DEPLOYER_HAND_PUNCHING("deployer/hand_punching"),
-	DEPLOYER_HAND_HOLDING("deployer/hand_holding"),
-	ANALOG_LEVER_HANDLE("analog_lever/handle"),
-	ANALOG_LEVER_INDICATOR("analog_lever/indicator"),
-	BELT_TUNNEL_FLAP("belt_tunnel/flap"),
-	BELT_TUNNEL_INDICATOR("belt_tunnel/indicator"),
-	FLEXPEATER_INDICATOR("diodes/indicator"),
-	FLYWHEEL("flywheel/wheel"),
-	FLYWHEEL_UPPER_ROTATING("flywheel/upper_rotating_connector"),
-	FLYWHEEL_LOWER_ROTATING("flywheel/lower_rotating_connector"),
-	FLYWHEEL_UPPER_SLIDING("flywheel/upper_sliding_connector"),
-	FLYWHEEL_LOWER_SLIDING("flywheel/lower_sliding_connector"),
-	FURNACE_GENERATOR_FRAME("furnace_engine/frame"),
-	CUCKOO_MINUTE_HAND("cuckoo_clock/minute_hand"),
-	CUCKOO_HOUR_HAND("cuckoo_clock/hour_hand"),
-	CUCKOO_LEFT_DOOR("cuckoo_clock/left_door"),
-	CUCKOO_RIGHT_DOOR("cuckoo_clock/right_door"),
-	CUCKOO_PIG("cuckoo_clock/pig"),
-	CUCKOO_CREEPER("cuckoo_clock/creeper"),
-	ROPE_COIL("rope_pulley/rope_coil"),
-	ROPE_HALF("rope_pulley/rope_half"),
-	ROPE_HALF_MAGNET("rope_pulley/rope_half_magnet"),
-	MILLSTONE_COG("millstone/inner"),
-
-	SYMMETRY_PLANE("symmetry_effect/plane"),
-	SYMMETRY_CROSSPLANE("symmetry_effect/crossplane"),
-	SYMMETRY_TRIPLEPLANE("symmetry_effect/tripleplane"),
+	private static List<AllBlockPartials> all = new ArrayList<>();
 	
-	COPPER_PIPE_CASING("copper_pipe/casing"),
-	COPPER_PIPE_RIM_UP("copper_pipe/rim/up"),
-	COPPER_PIPE_RIM_DOWN("copper_pipe/rim/down"),
-	COPPER_PIPE_RIM_EAST("copper_pipe/rim/east"),
-	COPPER_PIPE_RIM_WEST("copper_pipe/rim/west"),
-	COPPER_PIPE_RIM_NORTH("copper_pipe/rim/north"),
-	COPPER_PIPE_RIM_SOUTH("copper_pipe/rim/south"),
-	
-	MECHANICAL_PUMP_ARROW("mechanical_pump/arrow"),
-	MECHANICAL_PUMP_COG("mechanical_pump/cog"),
+	public static final AllBlockPartials 
+	SCHEMATICANNON_CONNECTOR = get("schematicannon/connector"),
+		SCHEMATICANNON_PIPE = get("schematicannon/pipe"),
+
+		SHAFTLESS_COGWHEEL = get("cogwheel_shaftless"), 
+		BELT_PULLEY = get("belt_pulley"),
+		SHAFT_HALF = get("shaft_half"),
+
+		ENCASED_FAN_INNER = get("encased_fan/propeller"), 
+		HAND_CRANK_HANDLE = get("hand_crank/handle"),
+		MECHANICAL_PRESS_HEAD = get("mechanical_press/head"), 
+		MECHANICAL_MIXER_POLE = get("mechanical_mixer/pole"),
+		MECHANICAL_MIXER_HEAD = get("mechanical_mixer/head"), 
+		MECHANICAL_CRAFTER_LID = get("mechanical_crafter/lid"),
+		MECHANICAL_CRAFTER_ARROW = get("mechanical_crafter/arrow"),
+		MECHANICAL_CRAFTER_BELT_FRAME = get("mechanical_crafter/belt"),
+		MECHANICAL_CRAFTER_BELT = get("mechanical_crafter/belt_animated"), 
+		GAUGE_DIAL = get("gauge/dial"),
+		GAUGE_INDICATOR = get("gauge/indicator"), 
+		GAUGE_HEAD_SPEED = get("gauge/speedometer/head"),
+		GAUGE_HEAD_STRESS = get("gauge/stressometer/head"), 
+		BEARING_TOP = get("bearing/top"),
+		DRILL_HEAD = get("mechanical_drill/head"), 
+		HARVESTER_BLADE = get("mechanical_harvester/blade"),
+		DEPLOYER_POLE = get("deployer/pole"), 
+		DEPLOYER_HAND_POINTING = get("deployer/hand_pointing"),
+		DEPLOYER_HAND_PUNCHING = get("deployer/hand_punching"), 
+		DEPLOYER_HAND_HOLDING = get("deployer/hand_holding"),
+		ANALOG_LEVER_HANDLE = get("analog_lever/handle"), 
+		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"),
+		BELT_TUNNEL_FLAP = get("belt_tunnel/flap"), 
+		BELT_TUNNEL_INDICATOR = get("belt_tunnel/indicator"),
+		FLEXPEATER_INDICATOR = get("diodes/indicator"), 
+		FLYWHEEL = get("flywheel/wheel"),
+		FLYWHEEL_UPPER_ROTATING = get("flywheel/upper_rotating_connector"),
+		FLYWHEEL_LOWER_ROTATING = get("flywheel/lower_rotating_connector"),
+		FLYWHEEL_UPPER_SLIDING = get("flywheel/upper_sliding_connector"),
+		FLYWHEEL_LOWER_SLIDING = get("flywheel/lower_sliding_connector"),
+		FURNACE_GENERATOR_FRAME = get("furnace_engine/frame"), 
+		CUCKOO_MINUTE_HAND = get("cuckoo_clock/minute_hand"),
+		CUCKOO_HOUR_HAND = get("cuckoo_clock/hour_hand"), 
+		CUCKOO_LEFT_DOOR = get("cuckoo_clock/left_door"),
+		CUCKOO_RIGHT_DOOR = get("cuckoo_clock/right_door"), 
+		CUCKOO_PIG = get("cuckoo_clock/pig"),
+		CUCKOO_CREEPER = get("cuckoo_clock/creeper"), 
+		ROPE_COIL = get("rope_pulley/rope_coil"),
+		ROPE_HALF = get("rope_pulley/rope_half"), 
+		ROPE_HALF_MAGNET = get("rope_pulley/rope_half_magnet"),
+		MILLSTONE_COG = get("millstone/inner"),
+
+		SYMMETRY_PLANE = get("symmetry_effect/plane"), 
+		SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),
+		SYMMETRY_TRIPLEPLANE = get("symmetry_effect/tripleplane"),
+
+		MECHANICAL_PUMP_ARROW = get("mechanical_pump/arrow"), 
+		MECHANICAL_PUMP_COG = get("mechanical_pump/cog"),
+		FLUID_PIPE_CASING = get("fluid_pipe/casing");
+
+	public static final Map<Direction, AllBlockPartials> PIPE_RIMS = map();
+	public static final Map<Pair<Boolean, Direction>, AllBlockPartials> TANK_LID_FILLERS = map();
+	public static final Map<Pair<Boolean, Boolean>, AllBlockPartials> TANK_DIAGONAL_FILLERS = map();
+
+	static {
+		populateMaps();
+	}
 
 	;
-	
+
 	private ResourceLocation modelLocation;
 	private IBakedModel bakedModel;
 
-	private AllBlockPartials() {}
+	private AllBlockPartials() {
+	}
 
-	private AllBlockPartials(String path) {
-		modelLocation = new ResourceLocation(Create.ID, "block/" + path);
+	private static void populateMaps() {
+		for (Direction d : Iterate.directions) {
+			boolean horizontal = d.getAxis()
+				.isHorizontal();
+
+			PIPE_RIMS.put(d, get("fluid_pipe/rim/" + d.getName()));
+
+			if (horizontal) {
+				for (boolean top : Iterate.trueAndFalse)
+					TANK_LID_FILLERS.put(Pair.of(top, d),
+						get("fluid_tank/lid_fillers/" + (top ? "top" : "bottom") + "_" + d.getName()));
+			}
+		}
+
+		for (boolean north : Iterate.trueAndFalse)
+			for (boolean east : Iterate.trueAndFalse)
+				TANK_DIAGONAL_FILLERS.put(Pair.of(north, east),
+					get("fluid_tank/diagonal_fillers/" + (north ? "north" : "south") + "_" + (east ? "east" : "west")));
+	}
+
+	private static <T, U> Map<T, U> map() {
+		return new HashMap<>();
+	}
+
+	private static AllBlockPartials get(String path) {
+		AllBlockPartials partials = new AllBlockPartials();
+		partials.modelLocation = new ResourceLocation(Create.ID, "block/" + path);
+		all.add(partials);
+		return partials;
 	}
 
 	public static void onModelRegistry(ModelRegistryEvent event) {
-		for (AllBlockPartials partial : AllBlockPartials.values()) {
-			partial.createModelLocation();
+		for (AllBlockPartials partial : all)
 			ModelLoader.addSpecialModel(partial.modelLocation);
-		}
 	}
 
 	public static void onModelBake(ModelBakeEvent event) {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
-		for (AllBlockPartials partial : AllBlockPartials.values()) {
-			partial.createModelLocation();
+		for (AllBlockPartials partial : all)
 			partial.bakedModel = modelRegistry.get(partial.modelLocation);
-		}
-	}
-
-	private void createModelLocation() {
-		if (modelLocation == null)
-			modelLocation = new ResourceLocation(Create.ID, "block/" + Lang.asId(name()));
 	}
 
 	public IBakedModel get() {

@@ -45,6 +45,9 @@ public class AllSpriteShifts {
 	public static final CTSpriteShiftEntry 
 		CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end"),
 		CHASSIS_STICKY = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end_sticky");
+	
+	public static final CTSpriteShiftEntry 
+		FLUID_TANK = getCT(CTType.OMNIDIRECTIONAL, "fluid_tank");
 
 	public static final SpriteShiftEntry 
 		BELT = SpriteShifter.get("block/belt", "block/belt_animated"),

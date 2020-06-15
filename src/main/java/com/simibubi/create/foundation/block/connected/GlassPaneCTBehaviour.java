@@ -11,6 +11,11 @@ public class GlassPaneCTBehaviour extends StandardCTBehaviour {
 	public GlassPaneCTBehaviour(CTSpriteShiftEntry shift) {
 		super(shift);
 	}
+	
+	@Override
+	public boolean buildContextForOccludedDirections() {
+		return true;
+	}
 
 	@Override
 	public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos, BlockPos otherPos,

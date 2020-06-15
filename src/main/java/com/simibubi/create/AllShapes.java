@@ -71,6 +71,27 @@ public class AllShapes {
 
 	;
 
+	// Internally Shared Shapes
+	private static final VoxelShape
+
+	PISTON_HEAD = Blocks.PISTON_HEAD.getDefaultState()
+		.with(DirectionalBlock.FACING, UP)
+		.with(PistonHeadBlock.SHORT, true)
+		.getShape(null, null), PISTON_EXTENDED =
+			shape(CASING_12PX.get(UP)).add(FOUR_VOXEL_POLE.get(Axis.Y))
+				.build(),
+		SMALL_GEAR_SHAPE = cuboid(2, 6, 2, 14, 10, 14), LARGE_GEAR_SHAPE = cuboid(0, 6, 0, 16, 10, 16),
+		VERTICAL_TABLET_SHAPE = cuboid(3, 1, -1, 13, 15, 3), SQUARE_TABLET_SHAPE = cuboid(2, 2, -1, 14, 14, 3),
+		LOGISTICS_TABLE_SLOPE = shape(0, 10, 15, 16, 14, 10.667).add(0, 12, 10.667, 16, 16, 6.333)
+			.add(0, 14, 6.333, 16, 18, 2)
+			.build(),
+		SCHEMATICS_TABLE_SLOPE = shape(0, 10, 16, 16, 14, 11).add(0, 12, 11, 16, 16, 6)
+			.add(0, 14, 6, 16, 18, 1)
+			.build(),
+		TANK_BOTTOM_LID = shape(0, 0, 0, 16, 4, 16).build(), TANK_TOP_LID = shape(0, 12, 0, 16, 16, 16).build()
+
+	;
+
 	// Static Block Shapes
 	public static final VoxelShape
 
@@ -95,26 +116,13 @@ public class AllShapes {
 			.build(),
 		CUCKOO_CLOCK = shape(1, 0, 1, 15, 19, 15).build(),
 		GAUGE_SHAPE_UP = shape(1, 0, 0, 15, 2, 16).add(2, 2, 1, 14, 14, 15)
-			.build()
-
-	;
-
-	// Internally Shared Shapes
-	private static final VoxelShape
-
-	PISTON_HEAD = Blocks.PISTON_HEAD.getDefaultState()
-		.with(DirectionalBlock.FACING, UP)
-		.with(PistonHeadBlock.SHORT, true)
-		.getShape(null, null), PISTON_EXTENDED =
-			shape(CASING_12PX.get(UP)).add(FOUR_VOXEL_POLE.get(Axis.Y))
-				.build(),
-		SMALL_GEAR_SHAPE = cuboid(2, 6, 2, 14, 10, 14), LARGE_GEAR_SHAPE = cuboid(0, 6, 0, 16, 10, 16),
-		VERTICAL_TABLET_SHAPE = cuboid(3, 1, -1, 13, 15, 3), SQUARE_TABLET_SHAPE = cuboid(2, 2, -1, 14, 14, 3),
-		LOGISTICS_TABLE_SLOPE = shape(0, 10, 15, 16, 14, 10.667).add(0, 12, 10.667, 16, 16, 6.333)
-			.add(0, 14, 6.333, 16, 18, 2)
 			.build(),
-		SCHEMATICS_TABLE_SLOPE = shape(0, 10, 16, 16, 14, 11).add(0, 12, 11, 16, 16, 6)
-			.add(0, 14, 6, 16, 18, 1)
+		TANK = shape(1, 0, 1, 15, 16, 15).build(), TANK_TOP = shape(TANK_TOP_LID).add(TANK)
+			.build(),
+		TANK_BOTTOM = shape(TANK_BOTTOM_LID).add(TANK)
+			.build(),
+		TANK_TOP_BOTTOM = shape(TANK_BOTTOM_LID).add(TANK_TOP_LID)
+			.add(TANK)
 			.build()
 
 	;
