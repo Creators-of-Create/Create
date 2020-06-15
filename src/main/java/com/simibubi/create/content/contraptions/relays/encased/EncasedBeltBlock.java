@@ -185,11 +185,6 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 		return AllTileEntities.ENCASED_SHAFT.create();
 	}
 
-	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
 	public enum Part implements IStringSerializable {
 		START, MIDDLE, END, NONE;
 

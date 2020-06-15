@@ -64,11 +64,6 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.CASING_12PX.get(state.get(FACING));
 	}

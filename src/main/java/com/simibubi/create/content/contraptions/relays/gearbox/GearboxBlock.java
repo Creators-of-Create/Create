@@ -74,11 +74,6 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(AXIS);
 	}

@@ -42,11 +42,6 @@ public class ShaftBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return false;
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.SIX_VOXEL_POLE.get(state.get(AXIS));
 	}

@@ -138,11 +138,6 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public Class<SequencedGearshiftTileEntity> getTileEntityClass() {
 		return SequencedGearshiftTileEntity.class;
 	}

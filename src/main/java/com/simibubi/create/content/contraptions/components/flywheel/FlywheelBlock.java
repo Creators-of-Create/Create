@@ -45,11 +45,6 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing());
 	}
 
-	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
 	public static boolean isConnected(BlockState state) {
 		return getConnection(state) != null;
 	}

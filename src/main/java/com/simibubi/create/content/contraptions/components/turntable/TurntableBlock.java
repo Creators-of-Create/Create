@@ -103,11 +103,6 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return false;
-	}
-
-	@Override
 	public Class<TurntableTileEntity> getTileEntityClass() {
 		return TurntableTileEntity.class;
 	}

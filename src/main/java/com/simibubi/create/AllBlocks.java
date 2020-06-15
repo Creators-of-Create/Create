@@ -51,6 +51,7 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableBl
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.contraptions.fluids.PipeBlock;
 import com.simibubi.create.content.contraptions.fluids.PipeModel;
+import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
@@ -394,6 +395,15 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate(BlockStateGen.pipe())
 		.onRegister(CreateRegistrate.blockModel(() -> PipeModel::new))
+		.item()
+		.transform(customItemModel())
+		.register();
+	
+	public static final BlockEntry<PumpBlock> MECHANICAL_PUMP =
+		REGISTRATE.block("mechanical_pump", PumpBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate(BlockStateGen.directionalBlockProvider(true))
+		.transform(StressConfigDefaults.setImpact(4.0))
 		.item()
 		.transform(customItemModel())
 		.register();

@@ -109,11 +109,6 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	protected Direction getFacingForPlacement(BlockItemUseContext context) {
 		return context.getFace();
 	}

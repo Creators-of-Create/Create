@@ -81,6 +81,9 @@ public enum AllBlockPartials {
 	COPPER_PIPE_RIM_WEST("copper_pipe/rim/west"),
 	COPPER_PIPE_RIM_NORTH("copper_pipe/rim/north"),
 	COPPER_PIPE_RIM_SOUTH("copper_pipe/rim/south"),
+	
+	MECHANICAL_PUMP_ARROW("mechanical_pump/arrow"),
+	MECHANICAL_PUMP_COG("mechanical_pump/cog"),
 
 	;
 	

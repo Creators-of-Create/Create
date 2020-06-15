@@ -42,11 +42,6 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.MILLSTONE;
 	}

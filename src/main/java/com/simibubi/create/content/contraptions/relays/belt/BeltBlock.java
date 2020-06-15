@@ -588,11 +588,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		return pos;
 	}
 
-	@Override
-	protected boolean hasStaticPart() {
-		return false;
-	}
-
 	public static boolean canAccessFromSide(Direction facing, BlockState belt) {
 		if (facing == null)
 			return true;

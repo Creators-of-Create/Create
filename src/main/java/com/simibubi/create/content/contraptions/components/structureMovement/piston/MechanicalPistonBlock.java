@@ -104,11 +104,6 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		if (state.get(STATE) != PistonState.RETRACTED)
 			return ActionResultType.PASS;

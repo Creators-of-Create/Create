@@ -62,11 +62,6 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.get(HORIZONTAL_FACING).getOpposite();
 	}

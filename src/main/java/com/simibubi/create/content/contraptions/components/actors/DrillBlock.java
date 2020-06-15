@@ -84,11 +84,6 @@ public class DrillBlock extends DirectionalKineticBlock implements IPortableBloc
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public MovementBehaviour getMovementBehaviour() {
 		return MOVEMENT;
 	}

@@ -58,11 +58,6 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
 		return true;
 	}

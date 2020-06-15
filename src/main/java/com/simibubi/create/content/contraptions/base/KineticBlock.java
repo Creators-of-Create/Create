@@ -84,8 +84,6 @@ public abstract class KineticBlock extends Block implements IRotate {
 		kte.updateSpeed = true;
 	}
 
-	protected abstract boolean hasStaticPart();
-
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		if (worldIn.isRemote)

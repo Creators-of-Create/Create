@@ -29,11 +29,6 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.down()));
 	}

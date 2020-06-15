@@ -52,11 +52,6 @@ public class CreativeMotorBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public boolean hideStressImpact() {
 		return true;
 	}

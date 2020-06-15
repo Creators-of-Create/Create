@@ -174,11 +174,6 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return false;
-	}
-
-	@Override
 	public float getParticleTargetRadius() {
 		return 1.125f;
 	}

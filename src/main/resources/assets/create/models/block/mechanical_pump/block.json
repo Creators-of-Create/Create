@@ -1,0 +1,92 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:block/large_wheels",
+	"textures": {
+		"3": "create:block/copper_pipe",
+		"4": "create:block/pump",
+		"particle": "create:block/copper_pipe"
+	},
+	"elements": [
+		{
+			"name": "middle",
+			"from": [4, 4, 4],
+			"to": [12, 12, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 7, 8]},
+			"faces": {
+				"north": {"uv": [0, 8, 4, 12], "texture": "#3"},
+				"east": {"uv": [0, 8, 4, 12], "texture": "#3"},
+				"south": {"uv": [0, 8, 4, 12], "texture": "#3"},
+				"west": {"uv": [0, 8, 4, 12], "texture": "#3"}
+			}
+		},
+		{
+			"name": "back",
+			"from": [2, 0, 2],
+			"to": [14, 5, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [11, 8, 20]},
+			"faces": {
+				"north": {"uv": [11, 0, 13.5, 6], "rotation": 270, "texture": "#3"},
+				"east": {"uv": [11, 0, 13.5, 6], "rotation": 270, "texture": "#3"},
+				"south": {"uv": [11, 0, 13.5, 6], "rotation": 270, "texture": "#3"},
+				"west": {"uv": [11, 0, 13.5, 6], "rotation": 270, "texture": "#3"},
+				"up": {"uv": [0, 0, 6, 6], "rotation": 180, "texture": "#3"},
+				"down": {"uv": [0, 0, 12, 12], "texture": "#4"}
+			}
+		},
+		{
+			"name": "front",
+			"from": [3, 12, 3],
+			"to": [13, 16, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [10, 8, 10]},
+			"faces": {
+				"north": {"uv": [12, 4, 16, 14], "rotation": 90, "texture": "#4"},
+				"east": {"uv": [12, 4, 16, 14], "rotation": 90, "texture": "#4"},
+				"south": {"uv": [12, 4, 16, 14], "rotation": 90, "texture": "#4"},
+				"west": {"uv": [12, 4, 16, 14], "rotation": 90, "texture": "#4"},
+				"up": {"uv": [6, 0, 11, 5], "texture": "#3"},
+				"down": {"uv": [6, 0, 11, 5], "texture": "#3"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, -149, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, -149, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -55, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -55, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 1, 1.25],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"translation": [2.5, -0.5, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 1.75, -4.5],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"groups": [
+		{
+			"name": "pump",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2]
+		}
+	]
+}

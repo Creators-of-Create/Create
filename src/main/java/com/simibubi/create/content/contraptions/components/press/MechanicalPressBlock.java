@@ -94,11 +94,6 @@ public class MechanicalPressBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		onAttachmentPlaced(worldIn, pos, state);
 	}

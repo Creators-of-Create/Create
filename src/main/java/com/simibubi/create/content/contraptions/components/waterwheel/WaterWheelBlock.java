@@ -34,11 +34,6 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return AllTileEntities.WATER_WHEEL.create();
 	}
-
-	@Override
-	protected boolean hasStaticPart() {
-		return false;
-	}
 	
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {

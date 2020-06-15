@@ -88,11 +88,6 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return false;
-	}
-
-	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.get(FACING).getOpposite();
 	}

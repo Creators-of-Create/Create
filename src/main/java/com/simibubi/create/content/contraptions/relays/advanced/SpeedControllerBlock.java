@@ -26,11 +26,6 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock {
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState above = context.getWorld().getBlockState(context.getPos().up());
 		if (CogWheelBlock.isLargeCog(above) && above.get(CogWheelBlock.AXIS).isHorizontal())

@@ -30,11 +30,6 @@ public class EncasedShaftBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.PUSH_ONLY;
 	}

@@ -39,11 +39,6 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.NORMAL;
 	}

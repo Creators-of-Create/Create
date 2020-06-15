@@ -74,11 +74,6 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.get(FACING).getOpposite();
 	}

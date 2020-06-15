@@ -45,6 +45,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableTileEntity;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelTileEntity;
+import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
+import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinRenderer;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerRenderer;
@@ -135,6 +137,9 @@ public class AllTileEntities {
 		register("hand_crank", HandCrankTileEntity::new, AllBlocks.HAND_CRANK);
 	public static final TileEntityEntry<CuckooClockTileEntity> CUCKOO_CLOCK =
 		register("cuckoo_clock", CuckooClockTileEntity::new, AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK);
+
+	public static final TileEntityEntry<PumpTileEntity> MECHANICAL_PUMP =
+		register("mechanical_pump", PumpTileEntity::new, AllBlocks.MECHANICAL_PUMP);
 
 	public static final TileEntityEntry<BeltTileEntity> BELT = register("belt", BeltTileEntity::new, AllBlocks.BELT);
 	public static final TileEntityEntry<BeltTunnelTileEntity> BELT_TUNNEL =
@@ -250,6 +255,8 @@ public class AllTileEntities {
 		bind(HAND_CRANK, HandCrankRenderer::new);
 		bind(CUCKOO_CLOCK, CuckooClockRenderer::new);
 		bind(ANALOG_LEVER, AnalogLeverRenderer::new);
+		
+		bind(MECHANICAL_PUMP, PumpRenderer::new);
 
 		bind(MECHANICAL_PISTON, MechanicalPistonRenderer::new);
 		bind(MECHANICAL_BEARING, BearingRenderer::new);

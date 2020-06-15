@@ -40,11 +40,6 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 	}
 
 	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
-
-	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
 			if (!worldIn.isRemote) {

@@ -64,7 +64,10 @@ public class AllShapes {
 			.forHorizontalAxis(),
 		NIXIE_TUBE_CEILING = shape(0, 12, 0, 16, 16, 16).add(9, 1, 5, 15, 16, 11)
 			.add(1, 1, 5, 7, 16, 11)
-			.forHorizontalAxis()
+			.forHorizontalAxis(),
+		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
+			.add(3, 12, 3, 13, 16, 13)
+			.forDirectional(Direction.UP)
 
 	;
 

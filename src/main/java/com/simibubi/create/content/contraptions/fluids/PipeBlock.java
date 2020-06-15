@@ -32,7 +32,7 @@ public class PipeBlock extends SixWayBlock {
 		return updateBlockState(getDefaultState(), context.getNearestLookingDirection(), null, context.getWorld(),
 			context.getPos());
 	}
-	
+
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
 		IWorld world, BlockPos pos, BlockPos neighbourPos) {
@@ -44,8 +44,8 @@ public class PipeBlock extends SixWayBlock {
 		// Update sides that are not ignored
 		for (Direction d : Iterate.directions)
 			if (d != ignore)
-				state = state.with(FACING_TO_PROPERTY_MAP.get(d), this == world.getBlockState(pos.offset(d))
-					.getBlock());
+				state = state.with(FACING_TO_PROPERTY_MAP.get(d),
+					canConnectTo(world, pos.offset(d), world.getBlockState(pos.offset(d)), d.getOpposite()));
 
 		// See if it has enough connections
 		Direction connectedDirection = null;
@@ -70,6 +70,16 @@ public class PipeBlock extends SixWayBlock {
 		return state.getBlock() instanceof PipeBlock;
 	}
 
+	// TODO: more generic pipe connection handling. Ideally without marker interface
+	public static boolean canConnectTo(ILightReader world, BlockPos pos, BlockState neighbour, Direction blockFace) {
+		if (isPipe(neighbour))
+			return true;
+		if (neighbour.getBlock() instanceof PumpBlock && blockFace.getAxis() == neighbour.get(PumpBlock.FACING)
+			.getAxis())
+			return true;
+		return false;
+	}
+
 	public static boolean shouldDrawRim(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
 		if (!isPipe(state))
 			return false;
@@ -77,6 +87,9 @@ public class PipeBlock extends SixWayBlock {
 			return false;
 		BlockPos offsetPos = pos.offset(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
+		if (facingState.getBlock() instanceof PumpBlock && facingState.get(PumpBlock.FACING)
+			.getAxis() == direction.getAxis())
+			return false;
 		if (!isPipe(facingState))
 			return true;
 		if (!isCornerOrEndPipe(world, pos, state))
