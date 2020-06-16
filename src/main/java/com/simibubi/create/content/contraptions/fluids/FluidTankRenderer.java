@@ -168,7 +168,8 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
         float percent = (float) tank.getFluidAmount() / (float) tank.getCapacity();
 
         double tankHeight = tankBounds.maxY - tankBounds.minY;
-        double y1 = tankBounds.minY, y2 = (tankBounds.minY + (tankHeight * percent));
+        double y1 = tankBounds.minY;
+        double y2 = tank.getFluidAmount() < tank.getCapacity() ? (3 / 16f + (10 / 16f * percent)) : tankBounds.maxY;
         if (tank.getFluid().getFluid().getAttributes().isLighterThanAir()) {
             double yOff = tankBounds.maxY - y2;  // lighter than air fluids move to the top of the tank
             y1 += yOff;
@@ -178,9 +179,10 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
     }
 
     private Collection<TankRenderInfo> getTanksToRender(FluidTankTileEntity te) {
-        boolean up = te.getBlockState().get(FluidTankBlock.TOP);
-        boolean down = te.getBlockState().get(FluidTankBlock.BOTTOM);
-        // bounds.shrink(16f);
+        FluidTankTileEntity upTE = te.getOtherFluidTankTileEntity(Direction.UP);
+        FluidTankTileEntity downTE = te.getOtherFluidTankTileEntity(Direction.DOWN);
+        boolean up = upTE == null || upTE.getTank().getFluidAmount() == 0 || te.getTank().getFluid() != upTE.getTank().getFluid();
+        boolean down = downTE == null || downTE.getTank().getFluidAmount() == downTE.getTank().getCapacity() || te.getTank().getFluid() != downTE.getTank().getFluid();
         return Collections.singletonList(new FluidTankRenderInfo(te.getTank(), up, down, ((FluidTankBlock) te.getBlockState().getBlock()).getTankBodyShape(te.getWorld(), te.getPos())));
     }
 

@@ -10,8 +10,10 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.IWorld;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nullable;
 
@@ -25,17 +27,17 @@ public class FluidPipeBlock extends SixWayBlock {
         return state.getBlock() instanceof FluidPipeBlock;
     }
 
-    public static boolean isTank(BlockState state) {
-        return state.getBlock() instanceof FluidTankBlock;
+    public static boolean isTank(BlockState state, IBlockReader world, BlockPos pos, Direction blockFace) {
+        return state.hasTileEntity() && world.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite()) != null;
     }
 
     // TODO: more generic pipe connection handling. Ideally without marker interface
     public static boolean canConnectTo(ILightReader world, BlockPos pos, BlockState neighbour, Direction blockFace) {
-        if (isPipe(neighbour) || isTank(neighbour))
+        if (isPipe(neighbour) || isTank(neighbour, world, pos, blockFace))
             return true;
-		return neighbour.getBlock() instanceof PumpBlock && blockFace.getAxis() == neighbour.get(PumpBlock.FACING)
-				.getAxis();
-	}
+        return neighbour.getBlock() instanceof PumpBlock && blockFace.getAxis() == neighbour.get(PumpBlock.FACING)
+                .getAxis();
+    }
 
     public static boolean shouldDrawRim(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
         if (!isPipe(state))
