@@ -165,13 +165,11 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
     }
 
     private AxisAlignedBB getRenderBounds(IFluidTank tank, AxisAlignedBB tankBounds) {
-        float percent = (float) tank.getFluidAmount() / (float) tank.getCapacity();
-
-        double tankHeight = tankBounds.maxY - tankBounds.minY;
+        double percent = (double) tank.getFluidAmount() / (double) tank.getCapacity();
         double y1 = tankBounds.minY;
-        double y2 = tank.getFluidAmount() < tank.getCapacity() ? (3 / 16f + (10 / 16f * percent)) : tankBounds.maxY;
+        double y2 = tank.getFluidAmount() < tank.getCapacity() ? (4 + 8 * percent) / 16f : 1f;
         if (tank.getFluid().getFluid().getAttributes().isLighterThanAir()) {
-            double yOff = tankBounds.maxY - y2;  // lighter than air fluids move to the top of the tank
+            double yOff = tankBounds.maxY - y2;  // FIXME: lighter than air fluids move to the top of the tank, add behavior in TE
             y1 += yOff;
             y2 += yOff;
         }
@@ -181,19 +179,37 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
     private Collection<TankRenderInfo> getTanksToRender(FluidTankTileEntity te) {
         FluidTankTileEntity upTE = te.getOtherFluidTankTileEntity(Direction.UP);
         FluidTankTileEntity downTE = te.getOtherFluidTankTileEntity(Direction.DOWN);
-        boolean up = upTE == null || upTE.getTank().getFluidAmount() == 0 || te.getTank().getFluid() != upTE.getTank().getFluid();
-        boolean down = downTE == null || downTE.getTank().getFluidAmount() == downTE.getTank().getCapacity() || te.getTank().getFluid() != downTE.getTank().getFluid();
-        return Collections.singletonList(new FluidTankRenderInfo(te.getTank(), up, down, ((FluidTankBlock) te.getBlockState().getBlock()).getTankBodyShape(te.getWorld(), te.getPos())));
+        FluidTankTileEntity eastTE = te.getOtherFluidTankTileEntity(Direction.EAST);
+        FluidTankTileEntity westTE = te.getOtherFluidTankTileEntity(Direction.WEST);
+        FluidTankTileEntity northTE = te.getOtherFluidTankTileEntity(Direction.NORTH);
+        FluidTankTileEntity southTE = te.getOtherFluidTankTileEntity(Direction.SOUTH);
+        
+        boolean up = upTE != null && ( upTE.getTank().getFluidAmount() == 0 || te.getTank().getFluid().getRawFluid() != upTE.getTank().getFluid().getRawFluid());
+        boolean down = downTE != null && (downTE.getTank().getFluidAmount() < downTE.getTank().getCapacity() || te.getTank().getFluid().getRawFluid() != downTE.getTank().getFluid().getRawFluid());
+        boolean east = eastTE == null || te.getTank().getFluid().getRawFluid() != eastTE.getTank().getFluid().getRawFluid();
+        boolean west = westTE == null || te.getTank().getFluid().getRawFluid() != westTE.getTank().getFluid().getRawFluid();
+        boolean north = northTE == null || te.getTank().getFluid().getRawFluid() != northTE.getTank().getFluid().getRawFluid();
+        boolean south = southTE == null || te.getTank().getFluid().getRawFluid() != southTE.getTank().getFluid().getRawFluid();
+        
+        return Collections.singletonList(new FluidTankRenderInfo(te.getTank(), up, down, east, west, north, south, ((FluidTankBlock) te.getBlockState().getBlock()).getTankBodyShape(te.getWorld(), te.getPos())));
     }
 
     private static class FluidTankRenderInfo extends TankRenderInfo {
         private final boolean up;
         private final boolean down;
+        private final boolean east;
+        private final boolean west;
+        private final boolean north;
+        private final boolean south;
 
-        FluidTankRenderInfo(IFluidTank tank, boolean up, boolean down, AxisAlignedBB bounds) {
+        FluidTankRenderInfo(IFluidTank tank, boolean up, boolean down, boolean east, boolean west, boolean north, boolean south, AxisAlignedBB bounds) {
             super(tank, bounds);
             this.up = up;
             this.down = down;
+            this.east = east;
+            this.west = west;
+            this.north = north;
+            this.south = south;
         }
 
         @Override
@@ -207,6 +223,14 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
                     return down
                             || getTank().getFluid().getAmount() < getTank().getCapacity()
                             && getTank().getFluid().getFluid().getAttributes().isLighterThanAir();
+                case EAST:
+                    return east;
+                case WEST:
+                    return west;
+                case NORTH:
+                    return north;
+                case SOUTH:
+                    return south;
                 default:
                     return true;
             }

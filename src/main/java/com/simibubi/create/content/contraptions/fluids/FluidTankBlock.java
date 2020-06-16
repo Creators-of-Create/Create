@@ -88,10 +88,10 @@ public class FluidTankBlock extends Block {
 
     public AxisAlignedBB getTankBodyShape(IBlockReader world, BlockPos pos) {
         return new AxisAlignedBB((isTankToDirection(world, pos, Direction.WEST) ? 0 : 2) / 16f,
-                (isTankToDirection(world, pos, Direction.DOWN) ? 0 : 3) / 16f,
+                (isTankToDirection(world, pos, Direction.DOWN) ? 0 : 4) / 16f,
                 (isTankToDirection(world, pos, Direction.NORTH) ? 0 : 2) / 16f,
                 (isTankToDirection(world, pos, Direction.EAST) ? 16 : 14) / 16f,
-                (isTankToDirection(world, pos, Direction.UP) ? 16 : 13) / 16f,
+                (isTankToDirection(world, pos, Direction.UP) ? 16 : 12) / 16f,
                 (isTankToDirection(world, pos, Direction.SOUTH) ? 16 : 14) / 16f);
     }
 

@@ -1,13 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -19,28 +13,47 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
 public class FluidTankTileEntity extends SmartTileEntity {
 
     LazyOptional<FluidTank> fluid = LazyOptional.of(this::createFluidHandler);
+    private int priority = 1000;
 
     public FluidTankTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
 
+    private int calculateDrainAmount(FluidTankTileEntity other, int delta) {
+        boolean roundDirection = other.getPriority() > this.getPriority();
+        return (int) Math.abs(roundDirection ? Math.floor(delta / 2f) : Math.ceil(delta / 2f));
+    }
+
     @Override
     public void tick() {
         super.tick();
-
+        updatePriority();
 
         FluidTankTileEntity other;
 
         other = getOtherFluidTankTileEntity(Direction.NORTH);
+        
         if (other != null && other.getTank().isFluidValid(this.getTank().getFluid())) {
             int delta = other.getTank().getFluidAmount() - this.getTank().getFluidAmount();
             if (delta > 0) {
-                this.getTank().fill(other.getTank().drain(delta / 2, FluidAction.EXECUTE), FluidAction.EXECUTE);
+                this.getTank().fill(other.getTank().drain(calculateDrainAmount(other, delta), FluidAction.EXECUTE), FluidAction.EXECUTE);
+                other.markDirty();
+                this.markDirty();
+                other.sendData();
+                sendData();
             } else if (delta < 0) {
-                other.getTank().fill(this.getTank().drain(-delta / 2, FluidAction.EXECUTE), FluidAction.EXECUTE);
+                other.getTank().fill(this.getTank().drain(calculateDrainAmount(other, delta), FluidAction.EXECUTE), FluidAction.EXECUTE);
+                other.markDirty();
+                this.markDirty();
+                other.sendData();
+                sendData();
             }
         }
 
@@ -49,9 +62,17 @@ public class FluidTankTileEntity extends SmartTileEntity {
         if (other != null && other.getTank().isFluidValid(this.getTank().getFluid())) {
             int delta = other.getTank().getFluidAmount() - this.getTank().getFluidAmount();
             if (delta > 0) {
-                this.getTank().fill(other.getTank().drain(delta / 2, FluidAction.EXECUTE), FluidAction.EXECUTE);
+                this.getTank().fill(other.getTank().drain(calculateDrainAmount(other, delta), FluidAction.EXECUTE), FluidAction.EXECUTE);
+                other.markDirty();
+                this.markDirty();
+                other.sendData();
+                sendData();
             } else if (delta < 0) {
-                other.getTank().fill(this.getTank().drain(-delta / 2, FluidAction.EXECUTE), FluidAction.EXECUTE);
+                other.getTank().fill(this.getTank().drain(calculateDrainAmount(other, delta), FluidAction.EXECUTE), FluidAction.EXECUTE);
+                other.markDirty();
+                this.markDirty();
+                other.sendData();
+                sendData();
             }
         }
 
@@ -60,6 +81,10 @@ public class FluidTankTileEntity extends SmartTileEntity {
             int space = this.getTank().getCapacity() - this.getTank().getFluidAmount();
             if (space > 0 && other.getTank().getFluidAmount() > 0) {
                 this.getTank().fill(other.getTank().drain(space, FluidAction.EXECUTE), FluidAction.EXECUTE);
+                other.markDirty();
+                this.markDirty();
+                other.sendData();
+                sendData();
             }
         }
     }
@@ -104,5 +129,30 @@ public class FluidTankTileEntity extends SmartTileEntity {
 
     public IFluidTank getTank() {
         return fluid.orElseGet(this::createFluidHandler);
+    }
+
+    private void updatePriority() {
+        FluidTankTileEntity other = getOtherFluidTankTileEntity(Direction.DOWN);
+        priority = 1000;
+        if (other != null && other.getTank().getFluidAmount() < other.getTank().getCapacity()) {
+            priority = 0;
+            return;
+        }
+
+        updatePriorityFrom(Direction.SOUTH);
+        updatePriorityFrom(Direction.NORTH);
+        updatePriorityFrom(Direction.WEST);
+        updatePriorityFrom(Direction.EAST);
+    }
+
+    private void updatePriorityFrom(Direction direction) {
+        FluidTankTileEntity other = getOtherFluidTankTileEntity(direction);
+        if (other != null && other.getPriority() + 1 < priority) {
+            priority = other.getPriority() + 1;
+        }
+    }
+
+    public int getPriority() {
+        return priority;
     }
 }
