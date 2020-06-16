@@ -91,6 +91,7 @@ import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.VerticalFunnelGenerator;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
@@ -718,6 +719,14 @@ public class AllBlocks {
 						.getName())))
 				.rotationY(state.get(BeltTunnelBlock.HORIZONTAL_AXIS) == Axis.X ? 0 : 90)
 				.build()))
+		.item()
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<ArmBlock> MECHANICAL_ARM = REGISTRATE.block("mechanical_arm", ArmBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		.transform(StressConfigDefaults.setImpact(8.0))
 		.item()
 		.transform(customItemModel())
 		.register();

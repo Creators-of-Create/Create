@@ -82,6 +82,14 @@ public class AllBlockPartials {
 		SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),
 		SYMMETRY_TRIPLEPLANE = get("symmetry_effect/tripleplane"),
 
+		ARM_COG = get("mechanical_arm/cog"), 
+		ARM_BASE = get("mechanical_arm/base"), 
+		ARM_LOWER_BODY = get("mechanical_arm/lower_body"), 
+		ARM_UPPER_BODY = get("mechanical_arm/upper_body"), 
+		ARM_HEAD = get("mechanical_arm/head"), 
+		ARM_CLAW_BASE = get("mechanical_arm/claw_base"), 
+		ARM_CLAW_GRIP = get("mechanical_arm/claw_grip"), 
+		
 		MECHANICAL_PUMP_ARROW = get("mechanical_pump/arrow"), 
 		MECHANICAL_PUMP_COG = get("mechanical_pump/cog"),
 		FLUID_PIPE_CASING = get("fluid_pipe/casing");
