@@ -45,6 +45,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableTileEntity;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelTileEntity;
+import com.simibubi.create.content.contraptions.fluids.FluidTankRenderer;
+import com.simibubi.create.content.contraptions.fluids.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinRenderer;
@@ -140,6 +142,8 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<PumpTileEntity> MECHANICAL_PUMP =
 		register("mechanical_pump", PumpTileEntity::new, AllBlocks.MECHANICAL_PUMP);
+	public static final TileEntityEntry<FluidTankTileEntity> FLUID_TANK =
+		register("fluid_tank", FluidTankTileEntity::new, AllBlocks.FLUID_TANK);
 
 	public static final TileEntityEntry<BeltTileEntity> BELT = register("belt", BeltTileEntity::new, AllBlocks.BELT);
 	public static final TileEntityEntry<BeltTunnelTileEntity> BELT_TUNNEL =
@@ -257,6 +261,7 @@ public class AllTileEntities {
 		bind(ANALOG_LEVER, AnalogLeverRenderer::new);
 		
 		bind(MECHANICAL_PUMP, PumpRenderer::new);
+		bind(FLUID_TANK, FluidTankRenderer::new);
 
 		bind(MECHANICAL_PISTON, MechanicalPistonRenderer::new);
 		bind(MECHANICAL_BEARING, BearingRenderer::new);
