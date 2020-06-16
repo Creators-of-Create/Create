@@ -175,6 +175,7 @@
 	"block.create.linear_chassis": "Linear Chassis",
 	"block.create.linked_extractor": "Linked Extractor",
 	"block.create.linked_transposer": "Linked Transposer",
+	"block.create.mechanical_arm": "Mechanical Arm",
 	"block.create.mechanical_bearing": "Mechanical Bearing",
 	"block.create.mechanical_crafter": "Mechanical Crafter",
 	"block.create.mechanical_drill": "Mechanical Drill",

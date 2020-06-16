@@ -117,6 +117,8 @@ public class AllShapes {
 		CUCKOO_CLOCK = shape(1, 0, 1, 15, 19, 15).build(),
 		GAUGE_SHAPE_UP = shape(1, 0, 0, 15, 2, 16).add(2, 2, 1, 14, 14, 15)
 			.build(),
+		MECHANICAL_ARM = shape(2, 0, 2, 14, 10, 14).add(3, 0, 3, 13, 14, 13)
+			.build(),
 		TANK = shape(1, 0, 1, 15, 16, 15).build(), TANK_TOP = shape(TANK_TOP_LID).add(TANK)
 			.build(),
 		TANK_BOTTOM = shape(TANK_BOTTOM_LID).add(TANK)

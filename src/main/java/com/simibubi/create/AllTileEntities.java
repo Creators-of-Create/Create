@@ -80,6 +80,8 @@ import com.simibubi.create.content.logistics.block.extractor.LinkedExtractorTile
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverRenderer;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
@@ -148,6 +150,8 @@ public class AllTileEntities {
 	public static final TileEntityEntry<BeltTileEntity> BELT = register("belt", BeltTileEntity::new, AllBlocks.BELT);
 	public static final TileEntityEntry<BeltTunnelTileEntity> BELT_TUNNEL =
 		register("belt_tunnel", BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL);
+	public static final TileEntityEntry<ArmTileEntity> MECHANICAL_ARM =
+		register("mechanical_arm", ArmTileEntity::new, AllBlocks.MECHANICAL_ARM);
 	public static final TileEntityEntry<MechanicalPistonTileEntity> MECHANICAL_PISTON = register("mechanical_piston",
 		MechanicalPistonTileEntity::new, AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON);
 	public static final TileEntityEntry<MechanicalBearingTileEntity> MECHANICAL_BEARING =
@@ -291,6 +295,7 @@ public class AllTileEntities {
 		bind(LINKED_TRANSPOSER, SmartTileEntityRenderer::new);
 		bind(FUNNEL, SmartTileEntityRenderer::new);
 		bind(BELT_TUNNEL, BeltTunnelRenderer::new);
+		bind(MECHANICAL_ARM, ArmRenderer::new);
 		bind(BELT_OBSERVER, BeltObserverRenderer::new);
 		bind(ADJUSTABLE_REPEATER, AdjustableRepeaterRenderer::new);
 		bind(ADJUSTABLE_PULSE_REPEATER, AdjustableRepeaterRenderer::new);
