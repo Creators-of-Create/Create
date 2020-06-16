@@ -16,8 +16,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.IFluidTank;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntity> {
 
@@ -37,31 +37,29 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
     @Override
     protected void renderSafe(FluidTankTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
                               int light, int overlay) {
-        renderFluid(te, partialTicks, ms, buffer, light, overlay);
+        renderFluid(te, ms, buffer, light);
     }
 
-    private void renderFluid(FluidTankTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-                             int light, int overlay) {
-        if (te.getWorld().isAreaLoaded(te.getPos(), 0)) {
+    private void renderFluid(FluidTankTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer,
+                             int light) {
+        if (te.getWorld() != null && te.getWorld().isAreaLoaded(te.getPos(), 0)) {
             IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
 
             Matrix4f posMat = ms.peek().getModel();
-            for (TankRenderInfo tankRenderInfo : getTanksToRender(te)) {
+            for (FluidTankRenderInfo tankRenderInfo : getTanksToRender(te)) {
                 doRender(builder, tankRenderInfo, posMat, light);
             }
         }
-
-
-        // Minecraft.getInstance().getBlockRendererDispatcher().renderFluid(te.getPos().up(2), Minecraft.getInstance().world, buffer.getBuffer(RenderType.getSolid()), tank.getFluid().getRawFluid().getDefaultState());
     }
 
-    private void doRender(IVertexBuilder builder, TankRenderInfo tankRenderInfo, Matrix4f posMat, int combinedLight) {
+    private void doRender(IVertexBuilder builder, FluidTankRenderInfo tankRenderInfo, Matrix4f posMat, int combinedLight) {
         IFluidTank tank = tankRenderInfo.getTank();
         if (tank.getFluidAmount() == 0) return;
 
         Fluid fluid = tank.getFluid().getFluid();
         ResourceLocation texture = fluid.getAttributes().getStillTexture(tank.getFluid());
 
+        @SuppressWarnings("deprecation")
         TextureAtlasSprite still = Minecraft.getInstance().getSpriteAtlas(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
         int[] cols = decomposeColor(fluid.getAttributes().getColor(tank.getFluid()));
 
@@ -176,64 +174,43 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
         return new AxisAlignedBB(tankBounds.minX, y1, tankBounds.minZ, tankBounds.maxX, y2, tankBounds.maxZ);
     }
 
-    private Collection<TankRenderInfo> getTanksToRender(FluidTankTileEntity te) {
-        FluidTankTileEntity upTE = te.getOtherFluidTankTileEntity(Direction.UP);
-        FluidTankTileEntity downTE = te.getOtherFluidTankTileEntity(Direction.DOWN);
-        FluidTankTileEntity eastTE = te.getOtherFluidTankTileEntity(Direction.EAST);
-        FluidTankTileEntity westTE = te.getOtherFluidTankTileEntity(Direction.WEST);
-        FluidTankTileEntity northTE = te.getOtherFluidTankTileEntity(Direction.NORTH);
-        FluidTankTileEntity southTE = te.getOtherFluidTankTileEntity(Direction.SOUTH);
-        
-        boolean up = upTE != null && ( upTE.getTank().getFluidAmount() == 0 || te.getTank().getFluid().getRawFluid() != upTE.getTank().getFluid().getRawFluid());
-        boolean down = downTE != null && (downTE.getTank().getFluidAmount() < downTE.getTank().getCapacity() || te.getTank().getFluid().getRawFluid() != downTE.getTank().getFluid().getRawFluid());
-        boolean east = eastTE == null || te.getTank().getFluid().getRawFluid() != eastTE.getTank().getFluid().getRawFluid();
-        boolean west = westTE == null || te.getTank().getFluid().getRawFluid() != westTE.getTank().getFluid().getRawFluid();
-        boolean north = northTE == null || te.getTank().getFluid().getRawFluid() != northTE.getTank().getFluid().getRawFluid();
-        boolean south = southTE == null || te.getTank().getFluid().getRawFluid() != southTE.getTank().getFluid().getRawFluid();
-        
-        return Collections.singletonList(new FluidTankRenderInfo(te.getTank(), up, down, east, west, north, south, ((FluidTankBlock) te.getBlockState().getBlock()).getTankBodyShape(te.getWorld(), te.getPos())));
+    private List<FluidTankRenderInfo> getTanksToRender(FluidTankTileEntity te) {
+        return Collections.singletonList(new FluidTankRenderInfo(te, ((FluidTankBlock) te.getBlockState().getBlock()).getTankBodyShape(te.getWorld(), te.getPos())));
     }
 
-    private static class FluidTankRenderInfo extends TankRenderInfo {
-        private final boolean up;
-        private final boolean down;
-        private final boolean east;
-        private final boolean west;
-        private final boolean north;
-        private final boolean south;
+    private static class FluidTankRenderInfo {
+        private final IFluidTank tank;
+        private final AxisAlignedBB bounds;
+        private final FluidTankTileEntity te;
 
-        FluidTankRenderInfo(IFluidTank tank, boolean up, boolean down, boolean east, boolean west, boolean north, boolean south, AxisAlignedBB bounds) {
-            super(tank, bounds);
-            this.up = up;
-            this.down = down;
-            this.east = east;
-            this.west = west;
-            this.north = north;
-            this.south = south;
+        FluidTankRenderInfo(FluidTankTileEntity te, AxisAlignedBB bounds) {
+            this.te = te;
+            this.bounds = bounds;
+            this.tank = te.getTank();
         }
 
-        @Override
         public boolean shouldRender(Direction face) {
+            FluidTankTileEntity offsetTE = te.getOtherFluidTankTileEntity(face);
             switch (face) {
                 case UP:
-                    return up
-                            || getTank().getFluid().getAmount() < getTank().getCapacity()
+                    return (offsetTE != null && (offsetTE.getTank().getFluidAmount() == 0 || te.getTank().getFluid().getRawFluid() != offsetTE.getTank().getFluid().getRawFluid()))
+                            || getTank().getFluidAmount() < getTank().getCapacity()
                             && !getTank().getFluid().getFluid().getAttributes().isLighterThanAir();
                 case DOWN:
-                    return down
-                            || getTank().getFluid().getAmount() < getTank().getCapacity()
+                    return (offsetTE != null && (offsetTE.getTank().getFluidAmount() < offsetTE.getTank().getCapacity() || te.getTank().getFluid().getRawFluid() != offsetTE.getTank().getFluid().getRawFluid()))
+                            || getTank().getFluidAmount() < getTank().getCapacity()
                             && getTank().getFluid().getFluid().getAttributes().isLighterThanAir();
-                case EAST:
-                    return east;
-                case WEST:
-                    return west;
-                case NORTH:
-                    return north;
-                case SOUTH:
-                    return south;
                 default:
-                    return true;
+                    return offsetTE == null || te.getTank().getFluid().getRawFluid() != offsetTE.getTank().getFluid().getRawFluid();
             }
+        }
+
+        public IFluidTank getTank() {
+            return tank;
+        }
+
+        public AxisAlignedBB getBounds() {
+            return bounds;
         }
     }
 }
