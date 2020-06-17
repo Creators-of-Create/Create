@@ -175,7 +175,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
     }
 
     private List<FluidTankRenderInfo> getTanksToRender(FluidTankTileEntity te) {
-        return Collections.singletonList(new FluidTankRenderInfo(te, ((FluidTankBlock) te.getBlockState().getBlock()).getTankBodyShape(te.getWorld(), te.getPos())));
+        return Collections.singletonList(new FluidTankRenderInfo(te, ((FluidTankBlock) te.getBlockState().getBlock()).getTankShape(te.getWorld(), te.getPos())));
     }
 
     private static class FluidTankRenderInfo {
