@@ -104,6 +104,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
     @Override
     protected void fillStateContainer(Builder<Block, BlockState> builder) {
         builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN, BlockStateProperties.WATERLOGGED);
+        super.fillStateContainer(builder);
     }
 
     @Override
