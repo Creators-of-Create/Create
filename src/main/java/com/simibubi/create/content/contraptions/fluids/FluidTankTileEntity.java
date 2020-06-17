@@ -27,7 +27,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
     }
 
     private int calculateDrainAmount(FluidTankTileEntity other, int delta) {
-        boolean roundDirection = other.getPriority() > this.getPriority();
+        boolean roundDirection = other.getPriority() < this.getPriority();
         return (int) Math.abs(roundDirection ? Math.floor(delta / 2f) : Math.ceil(delta / 2f));
     }
 
@@ -134,7 +134,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
     private void updatePriority() {
         FluidTankTileEntity other = getOtherFluidTankTileEntity(Direction.DOWN);
         priority = 1000;
-        if (other != null && other.getTank().getFluidAmount() < other.getTank().getCapacity()) {
+        if (other != null) {
             priority = 0;
             return;
         }
