@@ -33,7 +33,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
     }
 
     public static boolean isTank(BlockState state, IBlockReader world, BlockPos pos, Direction blockFace) {
-        return state.hasTileEntity() && world.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite()) != null;
+        return state.hasTileEntity() && world.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite()).isPresent();
     }
 
     // TODO: more generic pipe connection handling. Ideally without marker interface
