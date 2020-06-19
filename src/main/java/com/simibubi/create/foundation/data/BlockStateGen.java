@@ -58,6 +58,11 @@ public class BlockStateGen {
 		boolean customItem) {
 		return (c, p) -> p.directionalBlock(c.get(), getBlockModel(customItem, c, p));
 	}
+	
+	public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> directionalBlockProviderIgnoresWaterlogged(
+		boolean customItem) {
+		return (c, p) -> directionalBlockIgnoresWaterlogged(c, p, getBlockModel(customItem, c, p));
+	}
 
 	public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> horizontalBlockProvider(
 		boolean customItem) {
@@ -99,17 +104,33 @@ public class BlockStateGen {
 
 	// Generators
 
+	public static <T extends Block> void directionalBlockIgnoresWaterlogged(DataGenContext<Block, T> ctx,
+		RegistrateBlockstateProvider prov, Function<BlockState, ModelFile> modelFunc) {
+		prov.getVariantBuilder(ctx.getEntry())
+			.forAllStatesExcept(state -> {
+				Direction dir = state.get(BlockStateProperties.FACING);
+				return ConfiguredModel.builder()
+					.modelFile(modelFunc.apply(state))
+					.rotationX(dir == Direction.DOWN ? 180
+						: dir.getAxis()
+							.isHorizontal() ? 90 : 0)
+					.rotationY(dir.getAxis()
+						.isVertical() ? 0 : (((int) dir.getHorizontalAngle()) + 180) % 360)
+					.build();
+			}, BlockStateProperties.WATERLOGGED);
+	}
+
 	public static <T extends Block> void axisBlock(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		Function<BlockState, ModelFile> modelFunc) {
 		prov.getVariantBuilder(ctx.getEntry())
-			.forAllStates(state -> {
+			.forAllStatesExcept(state -> {
 				Axis axis = state.get(BlockStateProperties.AXIS);
 				return ConfiguredModel.builder()
 					.modelFile(modelFunc.apply(state))
 					.rotationX(axis == Axis.Y ? 0 : 90)
 					.rotationY(axis == Axis.X ? 90 : axis == Axis.Z ? 180 : 0)
 					.build();
-			});
+			}, BlockStateProperties.WATERLOGGED);
 	}
 
 	public static <T extends Block> void horizontalAxisBlock(DataGenContext<Block, T> ctx,

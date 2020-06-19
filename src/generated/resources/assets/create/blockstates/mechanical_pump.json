@@ -1,53 +1,27 @@
 {
   "variants": {
-    "facing=down,waterlogged=false": {
+    "facing=down": {
       "model": "create:block/mechanical_pump/block",
       "x": 180
     },
-    "facing=up,waterlogged=false": {
+    "facing=up": {
       "model": "create:block/mechanical_pump/block"
     },
-    "facing=north,waterlogged=false": {
+    "facing=north": {
       "model": "create:block/mechanical_pump/block",
       "x": 90
     },
-    "facing=south,waterlogged=false": {
+    "facing=south": {
       "model": "create:block/mechanical_pump/block",
       "x": 90,
       "y": 180
     },
-    "facing=west,waterlogged=false": {
+    "facing=west": {
       "model": "create:block/mechanical_pump/block",
       "x": 90,
       "y": 270
     },
-    "facing=east,waterlogged=false": {
-      "model": "create:block/mechanical_pump/block",
-      "x": 90,
-      "y": 90
-    },
-    "facing=down,waterlogged=true": {
-      "model": "create:block/mechanical_pump/block",
-      "x": 180
-    },
-    "facing=up,waterlogged=true": {
-      "model": "create:block/mechanical_pump/block"
-    },
-    "facing=north,waterlogged=true": {
-      "model": "create:block/mechanical_pump/block",
-      "x": 90
-    },
-    "facing=south,waterlogged=true": {
-      "model": "create:block/mechanical_pump/block",
-      "x": 90,
-      "y": 180
-    },
-    "facing=west,waterlogged=true": {
-      "model": "create:block/mechanical_pump/block",
-      "x": 90,
-      "y": 270
-    },
-    "facing=east,waterlogged=true": {
+    "facing=east": {
       "model": "create:block/mechanical_pump/block",
       "x": 90,
       "y": 90

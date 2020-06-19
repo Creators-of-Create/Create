@@ -404,7 +404,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<PumpBlock> MECHANICAL_PUMP = REGISTRATE.block("mechanical_pump", PumpBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.blockstate(BlockStateGen.directionalBlockProvider(true))
+		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(true))
 		.transform(StressConfigDefaults.setImpact(4.0))
 		.item()
 		.transform(customItemModel())
@@ -434,7 +434,7 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalPistonHeadBlock> MECHANICAL_PISTON_HEAD =
 		REGISTRATE.block("mechanical_piston_head", MechanicalPistonHeadBlock::new)
 			.initialProperties(() -> Blocks.PISTON_HEAD)
-			.blockstate((c, p) -> p.directionalBlock(c.get(), state -> p.models()
+			.blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, state -> p.models()
 				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.get(MechanicalPistonHeadBlock.TYPE)
 					.getName() + "/head"))))
 			.register();
@@ -442,7 +442,7 @@ public class AllBlocks {
 	public static final BlockEntry<PistonExtensionPoleBlock> PISTON_EXTENSION_POLE =
 		REGISTRATE.block("piston_extension_pole", PistonExtensionPoleBlock::new)
 			.initialProperties(() -> Blocks.PISTON_HEAD)
-			.blockstate(BlockStateGen.directionalBlockProvider(false))
+			.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(false))
 			.simpleItem()
 			.register();
 

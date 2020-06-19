@@ -1,27 +1,14 @@
 {
   "variants": {
-    "axis=x,waterlogged=false": {
+    "axis=x": {
       "model": "create:block/cogwheel",
       "x": 90,
       "y": 90
     },
-    "axis=y,waterlogged=false": {
+    "axis=y": {
       "model": "create:block/cogwheel"
     },
-    "axis=z,waterlogged=false": {
-      "model": "create:block/cogwheel",
-      "x": 90,
-      "y": 180
-    },
-    "axis=x,waterlogged=true": {
-      "model": "create:block/cogwheel",
-      "x": 90,
-      "y": 90
-    },
-    "axis=y,waterlogged=true": {
-      "model": "create:block/cogwheel"
-    },
-    "axis=z,waterlogged=true": {
+    "axis=z": {
       "model": "create:block/cogwheel",
       "x": 90,
       "y": 180
