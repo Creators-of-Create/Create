@@ -47,6 +47,10 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 
 		if (running && Contraption.isFrozen())
 			disassemble();
+		if (hourHand != null)
+			hourHand.collisionTick();
+		if (minuteHand != null)
+			minuteHand.collisionTick();
 
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;

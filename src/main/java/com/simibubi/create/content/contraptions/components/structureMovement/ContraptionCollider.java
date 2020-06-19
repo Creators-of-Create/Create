@@ -65,31 +65,35 @@ public class ContraptionCollider {
 			if (entity instanceof PlayerEntity && !world.isRemote)
 				return;
 
-			Vec3d centerOf = VecHelper.getCenterOf(BlockPos.ZERO);
+			Vec3d centerOfBlock = VecHelper.getCenterOf(BlockPos.ZERO);
 			Vec3d entityPosition = entity.getPositionVec();
+			Vec3d centerY = new Vec3d(0, entity.getBoundingBox()
+				.getYSize() / 2, 0);
 			Vec3d position = entityPosition.subtract(contraptionPosition)
-				.subtract(centerOf);
+				.subtract(centerOfBlock)
+				.add(centerY);
 			position =
-				VecHelper.rotate(position, -contraptionRotation.x, -contraptionRotation.y, -contraptionRotation.z);
-			position = position.add(centerOf)
+				VecHelper.rotate(position, -contraptionRotation.z, -contraptionRotation.y, -contraptionRotation.x);
+			position = position.add(centerOfBlock)
+				.subtract(centerY)
 				.subtract(entityPosition);
 			AxisAlignedBB localBB = entity.getBoundingBox()
 				.offset(position)
 				.grow(1.0E-7D);
 
-			OrientedBB obb = new OrientedBB(localBB);
-			if (!contraptionRotation.equals(Vec3d.ZERO)) {
-				Matrix3d rotation = new Matrix3d().asIdentity();
-				rotation.multiply(new Matrix3d().asXRotation(AngleHelper.rad(contraptionRotation.x)));
-				rotation.multiply(new Matrix3d().asYRotation(AngleHelper.rad(contraptionRotation.y)));
-				rotation.multiply(new Matrix3d().asZRotation(AngleHelper.rad(contraptionRotation.z)));
-				obb.setRotation(rotation);
-			}
-
 			ReuseableStream<VoxelShape> potentialHits = getPotentiallyCollidedShapes(world, contraption, localBB);
 			if (potentialHits.createStream()
 				.count() == 0)
 				continue;
+
+			OrientedBB obb = new OrientedBB(localBB);
+			if (!contraptionRotation.equals(Vec3d.ZERO)) {
+				Matrix3d rotation = new Matrix3d().asIdentity();
+				rotation.multiply(new Matrix3d().asXRotation(AngleHelper.rad(contraptionRotation.z)));
+				rotation.multiply(new Matrix3d().asYRotation(AngleHelper.rad(contraptionRotation.y)));
+				rotation.multiply(new Matrix3d().asZRotation(AngleHelper.rad(contraptionRotation.x)));
+				obb.setRotation(rotation);
+			}
 
 			MutableBoolean onCollide = new MutableBoolean(true);
 			potentialHits.createStream()
@@ -98,12 +102,12 @@ public class ContraptionCollider {
 					Vec3d intersect = obb.intersect(bb);
 					if (intersect == null)
 						return;
-					intersect = VecHelper.rotate(intersect, contraptionRotation.x, contraptionRotation.y,
-						contraptionRotation.z);
+					intersect = VecHelper.rotate(intersect, contraptionRotation.z, contraptionRotation.y,
+						contraptionRotation.x);
 
 					obb.setCenter(obb.getCenter()
 						.add(intersect));
-					entity.move(MoverType.PISTON, intersect);
+					entity.move(MoverType.PLAYER, intersect);
 
 					Vec3d entityMotion = entity.getMotion();
 					if (entityMotion.getX() > 0 == intersect.getX() < 0)

@@ -1,7 +1,10 @@
 package com.simibubi.create.foundation.collision;
 
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class Matrix3d {
 
@@ -112,6 +115,27 @@ public class Matrix3d {
 
 	public Matrix3d copy() {
 		return new Matrix3d().add(this);
+	}
+	
+	float[] conversionBuffer = new float[16];
+	
+	@OnlyIn(Dist.CLIENT)
+	public Matrix4f getAsMatrix4f() {
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
+				conversionBuffer[j * 4 + i] = i == j ? 1 : 0;
+		
+		conversionBuffer[0] = (float) m00;
+		conversionBuffer[1] = (float) m01;
+		conversionBuffer[2] = (float) m02;
+		conversionBuffer[4] = (float) m10;
+		conversionBuffer[5] = (float) m11;
+		conversionBuffer[6] = (float) m12;
+		conversionBuffer[8] = (float) m20;
+		conversionBuffer[9] = (float) m21;
+		conversionBuffer[10] = (float) m22;
+		
+		return new Matrix4f(conversionBuffer);
 	}
 
 }

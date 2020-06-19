@@ -73,6 +73,7 @@ public class ClientEvents {
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 		CreateClient.schematicHandler.render(ms, buffer);
 		CreateClient.outliner.renderOutlines(ms, buffer);
+//		CollisionDebugger.render(ms, buffer);
 		buffer.draw();
 		
 		ms.pop();
@@ -110,6 +111,7 @@ public class ClientEvents {
 
 		double delta = event.getScrollDelta();
 
+//		CollisionDebugger.onScroll(delta);
 		boolean cancelled = CreateClient.schematicHandler.mouseScrolled(delta)
 			|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
 			|| ScrollValueHandler.onScroll(delta);

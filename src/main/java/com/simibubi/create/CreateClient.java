@@ -109,6 +109,7 @@ public class CreateClient {
 		KineticDebugger.tick();
 		ZapperRenderHandler.tick();
 		ExtendoGripRenderHandler.tick();
+//		CollisionDebugger.tick();
 		outliner.tickOutlines();
 	}
 
