@@ -102,6 +102,7 @@ import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock
 import com.simibubi.create.content.logistics.block.transposer.LinkedTransposerBlock;
 import com.simibubi.create.content.logistics.block.transposer.TransposerBlock;
 import com.simibubi.create.content.logistics.block.transposer.VerticalTransposerGenerator;
+import com.simibubi.create.content.palettes.MetalBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.config.StressConfigDefaults;
@@ -885,7 +886,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_BLOCK =
-		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f))
+		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f, true))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.transform(tagBlockAndItem("storage_blocks/copper"))
 			.transform(oxidizedItemModel())
@@ -901,19 +902,20 @@ public class AllBlocks {
 			.transform(oxidizedBlockstate())
 			.register();
 
-	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", Block::new)
+	public static final BlockEntry<MetalBlock> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new MetalBlock(p, true))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.transform(tagBlockAndItem("storage_blocks/zinc"))
 		.build()
 		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/zinc")), ctx, false))
 		.register();
 
-	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", Block::new)
-		.initialProperties(() -> Blocks.IRON_BLOCK)
-		.transform(tagBlockAndItem("storage_blocks/brass"))
-		.build()
-		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/brass")), ctx, false))
-		.register();
+	public static final BlockEntry<MetalBlock> BRASS_BLOCK =
+		REGISTRATE.block("brass_block", p -> new MetalBlock(p, true))
+			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.transform(tagBlockAndItem("storage_blocks/brass"))
+			.build()
+			.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/brass")), ctx, false))
+			.register();
 
 	// Load this class
 

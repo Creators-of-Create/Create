@@ -17,14 +17,13 @@ import net.minecraft.tags.TagCollection;
 import net.minecraft.util.ResourceLocation;
 
 public class AllTags {
-
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
 		String tagName) {
 		return b -> b.tag(forgeBlockTag(tagName))
 			.item()
 			.tag(forgeItemTag(tagName));
 	}
-	
+
 	public static Tag<Block> forgeBlockTag(String name) {
 		return forgeTag(BlockTags.getCollection(), name);
 	}
@@ -32,7 +31,7 @@ public class AllTags {
 	public static Tag<Item> forgeItemTag(String name) {
 		return forgeTag(ItemTags.getCollection(), name);
 	}
-	
+
 	public static <T> Tag<T> forgeTag(TagCollection<T> collection, String name) {
 		return tag(collection, "forge", name);
 	}
@@ -42,7 +41,8 @@ public class AllTags {
 	}
 
 	public static enum AllItemTags {
-		CRUSHED_ORES;
+		CRUSHED_ORES, beacon_payment("", "forge"), ingots("", "forge"), nuggets("", "forge"), plates("", "forge");
+
 		public Tag<Item> tag;
 
 		private AllItemTags() {
@@ -50,8 +50,12 @@ public class AllTags {
 		}
 
 		private AllItemTags(String path) {
+			this(path, Create.ID);
+		}
+
+		private AllItemTags(String path, String modid) {
 			tag = new ItemTags.Wrapper(
-				new ResourceLocation(Create.ID, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
+				new ResourceLocation(modid, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
 		}
 
 		public boolean matches(ItemStack stack) {
@@ -61,6 +65,7 @@ public class AllTags {
 
 	public static enum AllBlockTags {
 		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE,;
+
 		public Tag<Block> tag;
 
 		private AllBlockTags() {
@@ -76,5 +81,4 @@ public class AllTags {
 			return tag.contains(block.getBlock());
 		}
 	}
-
 }

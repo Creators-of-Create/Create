@@ -1,14 +1,27 @@
 {
   "variants": {
-    "axis=x": {
+    "axis=x,waterlogged=false": {
       "model": "create:block/shaft",
       "x": 90,
       "y": 90
     },
-    "axis=y": {
+    "axis=y,waterlogged=false": {
       "model": "create:block/shaft"
     },
-    "axis=z": {
+    "axis=z,waterlogged=false": {
+      "model": "create:block/shaft",
+      "x": 90,
+      "y": 180
+    },
+    "axis=x,waterlogged=true": {
+      "model": "create:block/shaft",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,waterlogged=true": {
+      "model": "create:block/shaft"
+    },
+    "axis=z,waterlogged=true": {
       "model": "create:block/shaft",
       "x": 90,
       "y": 180

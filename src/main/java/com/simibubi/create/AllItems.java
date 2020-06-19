@@ -55,14 +55,14 @@ public class AllItems {
 	}
 
 	public static final ItemEntry<Item> COPPER_NUGGET =
-		taggedIngredient("copper_nugget", forgeItemTag("nuggets/copper")),
-		ZINC_NUGGET = taggedIngredient("zinc_nugget", forgeItemTag("nuggets/zinc")),
-		BRASS_NUGGET = taggedIngredient("brass_nugget", forgeItemTag("nuggets/brass")),
+		taggedIngredient("copper_nugget", forgeItemTag("nuggets/copper"), AllItemTags.nuggets.tag),
+		ZINC_NUGGET = taggedIngredient("zinc_nugget", forgeItemTag("nuggets/zinc"), AllItemTags.nuggets.tag),
+		BRASS_NUGGET = taggedIngredient("brass_nugget", forgeItemTag("nuggets/brass"), AllItemTags.nuggets.tag),
 
-		COPPER_SHEET = taggedIngredient("copper_sheet", forgeItemTag("plates/copper")),
-		BRASS_SHEET = taggedIngredient("brass_sheet", forgeItemTag("plates/brass")),
-		IRON_SHEET = taggedIngredient("iron_sheet", forgeItemTag("plates/iron")),
-		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold")),
+		COPPER_SHEET = taggedIngredient("copper_sheet", forgeItemTag("plates/copper"), AllItemTags.plates.tag),
+		BRASS_SHEET = taggedIngredient("brass_sheet", forgeItemTag("plates/brass"), AllItemTags.plates.tag),
+		IRON_SHEET = taggedIngredient("iron_sheet", forgeItemTag("plates/iron"), AllItemTags.plates.tag),
+		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold"), AllItemTags.plates.tag),
 		LAPIS_SHEET = ingredient("lapis_sheet"),
 
 		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", AllItemTags.CRUSHED_ORES.tag),
@@ -72,9 +72,12 @@ public class AllItems {
 		CRUSHED_BRASS = taggedIngredient("crushed_brass", AllItemTags.CRUSHED_ORES.tag),
 
 		ANDESITE_ALLOY = ingredient("andesite_alloy"),
-		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper")),
-		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc")),
-		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass")),
+		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper"), AllItemTags.beacon_payment.tag,
+			AllItemTags.ingots.tag),
+		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), AllItemTags.beacon_payment.tag,
+			AllItemTags.ingots.tag),
+		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), AllItemTags.beacon_payment.tag,
+			AllItemTags.ingots.tag),
 
 		WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
 		POWDERED_OBSIDIAN = ingredient("powdered_obsidian"), ROSE_QUARTZ = ingredient("rose_quartz"),
@@ -226,9 +229,10 @@ public class AllItems {
 			.register();
 	}
 
-	private static ItemEntry<Item> taggedIngredient(String name, Tag<Item> tag) {
+	@SafeVarargs
+	private static ItemEntry<Item> taggedIngredient(String name, Tag<Item>... tags) {
 		return REGISTRATE.item(name, Item::new)
-			.tag(tag)
+			.tag(tags)
 			.register();
 	}
 
