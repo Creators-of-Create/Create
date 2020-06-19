@@ -2410,6 +2410,7 @@ d3fdb8ece6cb072a93ddb64a0baad5ac952117a4 data\create\recipes\weathered_limestone
 6eceb25fabbb6b389ca35de3b829ad061c9c456a data\create\recipes\weathered_limestone_pillar.json
 11667414f73bc2d00bda7c5c1a7d2934bf6e9165 data\create\recipes\weathered_limestone_pillar_from_weathered_limestone_stonecutting.json
 266f08e604d229a9d2b46f7272c0b06ec270bf3d data\create\recipes\zinc_block.json
+081f5aa35602fc27af2ca01ea9f2fd5e7eb284dc data\create\tags\items\create_ingots.json
 d2dc4ff179ef7b2aa9276455c196e15d44aa95a8 data\create\tags\items\crushed_ores.json
 16bcb8fcbe9170c2c11f1ca8d99d8b36cd812bbd data\forge\tags\blocks\glass\colorless.json
 81ced867d24ec814942909965dd4576eff1db685 data\forge\tags\blocks\glass_panes.json
@@ -2418,10 +2419,10 @@ d5ea262a0f5fb210612d22521818e26cf08e591a data\forge\tags\blocks\ores\zinc.json
 ff1900963bc4cd8ceffa78d58ef1952ceacb2fb7 data\forge\tags\blocks\storage_blocks\brass.json
 f6c8f34ceb475546dba5cc6ff288863ea795d20b data\forge\tags\blocks\storage_blocks\copper.json
 7f71a774800111e50b42de0e6159ed2d2a807d32 data\forge\tags\blocks\storage_blocks\zinc.json
-081f5aa35602fc27af2ca01ea9f2fd5e7eb284dc data\forge\tags\items\beacon_payment.json
+d9ffc62a496946fc4848934e7c0a6e917337f8be data\forge\tags\items\beacon_payment.json
 16bcb8fcbe9170c2c11f1ca8d99d8b36cd812bbd data\forge\tags\items\glass\colorless.json
 81ced867d24ec814942909965dd4576eff1db685 data\forge\tags\items\glass_panes.json
-081f5aa35602fc27af2ca01ea9f2fd5e7eb284dc data\forge\tags\items\ingots.json
+d9ffc62a496946fc4848934e7c0a6e917337f8be data\forge\tags\items\ingots.json
 2dfd21017cb51d4bdc18d977a7d16f103cc3a985 data\forge\tags\items\ingots\brass.json
 8e0ca32df10a50544f54fbe3dbfe485971b23315 data\forge\tags\items\ingots\copper.json
 2f9ac80569a5cc168061742f9e3c36277d4d056e data\forge\tags\items\ingots\zinc.json

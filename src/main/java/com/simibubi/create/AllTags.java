@@ -1,8 +1,10 @@
 package com.simibubi.create;
 
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.block.Block;
@@ -17,6 +19,9 @@ import net.minecraft.tags.TagCollection;
 import net.minecraft.util.ResourceLocation;
 
 public class AllTags {
+	private static final CreateRegistrate REGISTRATE = Create.registrate()
+		.itemGroup(() -> Create.baseCreativeTab);
+	
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
 		String tagName) {
 		return b -> b.tag(forgeBlockTag(tagName))
@@ -41,7 +46,12 @@ public class AllTags {
 	}
 
 	public static enum AllItemTags {
-		CRUSHED_ORES, beacon_payment("", "forge"), ingots("", "forge"), nuggets("", "forge"), plates("", "forge");
+		CRUSHED_ORES,
+		CREATE_INGOTS,
+		beacon_payment("", "forge"),
+		ingots("", "forge"),
+		nuggets("", "forge"),
+		plates("", "forge");
 
 		public Tag<Item> tag;
 
@@ -80,5 +90,12 @@ public class AllTags {
 		public boolean matches(BlockState block) {
 			return tag.contains(block.getBlock());
 		}
+	}
+	
+	public static void register() {
+		REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getBuilder(AllItemTags.beacon_payment.tag)
+			.add(AllItemTags.CREATE_INGOTS.tag));
+		REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getBuilder(AllItemTags.ingots.tag)
+			.add(AllItemTags.CREATE_INGOTS.tag));
 	}
 }

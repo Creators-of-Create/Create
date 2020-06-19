@@ -72,12 +72,9 @@ public class AllItems {
 		CRUSHED_BRASS = taggedIngredient("crushed_brass", AllItemTags.CRUSHED_ORES.tag),
 
 		ANDESITE_ALLOY = ingredient("andesite_alloy"),
-		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper"), AllItemTags.beacon_payment.tag,
-			AllItemTags.ingots.tag),
-		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), AllItemTags.beacon_payment.tag,
-			AllItemTags.ingots.tag),
-		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), AllItemTags.beacon_payment.tag,
-			AllItemTags.ingots.tag),
+		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper"), AllItemTags.CREATE_INGOTS.tag),
+		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), AllItemTags.CREATE_INGOTS.tag),
+		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), AllItemTags.CREATE_INGOTS.tag),
 
 		WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
 		POWDERED_OBSIDIAN = ingredient("powdered_obsidian"), ROSE_QUARTZ = ingredient("rose_quartz"),

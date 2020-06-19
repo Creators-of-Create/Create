@@ -57,6 +57,7 @@ public class Create {
 
 		AllBlocks.register();
 		AllItems.register();
+		AllTags.register();
 		AllPaletteBlocks.register();
 		AllEntityTypes.register();
 		AllTileEntities.register();
