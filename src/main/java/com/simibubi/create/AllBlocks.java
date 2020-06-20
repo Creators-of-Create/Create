@@ -438,19 +438,20 @@ public class AllBlocks {
 			.transform(BuilderTransformers.mechanicalPiston(PistonType.STICKY))
 			.register();
 
-	public static final BlockEntry<MechanicalPistonHeadBlock> MECHANICAL_PISTON_HEAD =
-		REGISTRATE.block("mechanical_piston_head", MechanicalPistonHeadBlock::new)
-			.initialProperties(() -> Blocks.PISTON_HEAD)
-			.blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, state -> p.models()
-				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.get(MechanicalPistonHeadBlock.TYPE)
-					.getName() + "/head"))))
-			.register();
-
 	public static final BlockEntry<PistonExtensionPoleBlock> PISTON_EXTENSION_POLE =
 		REGISTRATE.block("piston_extension_pole", PistonExtensionPoleBlock::new)
 			.initialProperties(() -> Blocks.PISTON_HEAD)
 			.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(false))
 			.simpleItem()
+			.register();
+
+	public static final BlockEntry<MechanicalPistonHeadBlock> MECHANICAL_PISTON_HEAD =
+		REGISTRATE.block("mechanical_piston_head", MechanicalPistonHeadBlock::new)
+			.initialProperties(() -> Blocks.PISTON_HEAD)
+			.loot((p, b) -> p.registerDropping(b, PISTON_EXTENSION_POLE.get()))
+			.blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, state -> p.models()
+				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.get(MechanicalPistonHeadBlock.TYPE)
+					.getName() + "/head"))))
 			.register();
 
 	public static final BlockEntry<MechanicalBearingBlock> MECHANICAL_BEARING =
