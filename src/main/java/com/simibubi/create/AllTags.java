@@ -1,5 +1,8 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllTags.NameSpace.FORGE;
+import static com.simibubi.create.AllTags.NameSpace.MOD;
+
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
@@ -21,7 +24,7 @@ import net.minecraft.util.ResourceLocation;
 public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 		.itemGroup(() -> Create.baseCreativeTab);
-	
+
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
 		String tagName) {
 		return b -> b.tag(forgeBlockTag(tagName))
@@ -45,36 +48,48 @@ public class AllTags {
 		return collection.getOrCreate(new ResourceLocation(domain, name));
 	}
 
+	public static enum NameSpace {
+
+		MOD(Create.ID), FORGE("forge"), MC("minecraft")
+
+		;
+		String id;
+
+		private NameSpace(String id) {
+			this.id = id;
+		}
+	}
+
 	public static enum AllItemTags {
-		CRUSHED_ORES,
-		CREATE_INGOTS,
-		beacon_payment("", "forge"),
-		ingots("", "forge"),
-		nuggets("", "forge"),
-		plates("", "forge");
+		CRUSHED_ORES(MOD), CREATE_INGOTS(MOD), BEACON_PAYMENT(FORGE), INGOTS(FORGE), NUGGETS(FORGE), PLATES(FORGE),
+
+		;
 
 		public Tag<Item> tag;
 
-		private AllItemTags() {
-			this("");
+		private AllItemTags(NameSpace namespace) {
+			this(namespace, "");
 		}
 
-		private AllItemTags(String path) {
-			this(path, Create.ID);
-		}
-
-		private AllItemTags(String path, String modid) {
+		private AllItemTags(NameSpace namespace, String path) {
 			tag = new ItemTags.Wrapper(
-				new ResourceLocation(modid, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
+				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
 		}
 
 		public boolean matches(ItemStack stack) {
 			return tag.contains(stack.getItem());
 		}
+
+		public void includeIn(AllItemTags parent) {
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getBuilder(parent.tag)
+				.add(tag));
+		}
 	}
 
 	public static enum AllBlockTags {
-		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE,;
+		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE,
+
+		;
 
 		public Tag<Block> tag;
 
@@ -91,11 +106,9 @@ public class AllTags {
 			return tag.contains(block.getBlock());
 		}
 	}
-	
+
 	public static void register() {
-		REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getBuilder(AllItemTags.beacon_payment.tag)
-			.add(AllItemTags.CREATE_INGOTS.tag));
-		REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getBuilder(AllItemTags.ingots.tag)
-			.add(AllItemTags.CREATE_INGOTS.tag));
+		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
+		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.INGOTS);
 	}
 }

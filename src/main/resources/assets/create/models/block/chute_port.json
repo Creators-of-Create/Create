@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"14": "create:block/chute_port",
+		"particle": "create:block/zinc_block"
+	},
+	"elements": [
+		{
+			"name": "Port",
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [12, 0, 16, 4], "texture": "#14"},
+				"east": {"uv": [0, 0, 4, 4], "texture": "#14"},
+				"south": {"uv": [0, 0, 4, 4], "texture": "#14"},
+				"west": {"uv": [0, 0, 4, 4], "texture": "#14"},
+				"up": {"uv": [4, 4, 8, 8], "texture": "#14"},
+				"down": {"uv": [0, 4, 4, 8], "texture": "#14"}
+			}
+		}
+	]
+}

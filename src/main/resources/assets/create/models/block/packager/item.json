@@ -1,0 +1,169 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "create:block/axis",
+		"1": "create:block/brass_gearbox",
+		"2": "create:block/packager_top",
+		"3": "create:block/crafter_top",
+		"5": "create:block/brass_casing",
+		"6": "create:block/sealer",
+		"particle": "create:block/axis",
+		"1_1": "create:block/axis_top"
+	},
+	"elements": [
+		{
+			"name": "Axis",
+			"from": [6, 6, 0],
+			"to": [10, 10, 16],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [6, 6, 10, 10], "rotation": 180, "texture": "#1_1"},
+				"east": {"uv": [6, 0, 10, 16], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [6, 6, 10, 10], "texture": "#1_1"},
+				"west": {"uv": [6, 0, 10, 16], "rotation": 270, "texture": "#0"},
+				"up": {"uv": [6, 0, 10, 16], "texture": "#0"},
+				"down": {"uv": [6, 0, 10, 16], "rotation": 180, "texture": "#0"}
+			}
+		},
+		{
+			"name": "HudTop",
+			"from": [0, 14, 0],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 16, 2], "texture": "#3"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#1"},
+				"west": {"uv": [0, 0, 16, 2], "texture": "#3"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+			}
+		},
+		{
+			"name": "HudBottom",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-8, -6, 8]},
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#1"},
+				"east": {"uv": [0, 14, 16, 16], "texture": "#3"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 14, 16, 16], "texture": "#3"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#5"}
+			}
+		},
+		{
+			"name": "HudLeft",
+			"from": [14, 2, 0],
+			"to": [16, 14, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-8, -4, 8]},
+			"faces": {
+				"north": {"uv": [0, 2, 2, 14], "texture": "#1"},
+				"east": {"uv": [0, 2, 16, 14], "texture": "#3"},
+				"south": {"uv": [14, 2, 16, 14], "texture": "#1"},
+				"west": {"uv": [0, 2, 16, 14], "texture": "#1"}
+			}
+		},
+		{
+			"name": "HudCenter",
+			"from": [2, 2, 1],
+			"to": [14, 14, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-8, -4, 8]},
+			"faces": {
+				"north": {"uv": [2, 2, 14, 14], "texture": "#1"},
+				"south": {"uv": [2, 2, 14, 14], "texture": "#1"}
+			}
+		},
+		{
+			"name": "HudRight",
+			"from": [0, 2, 0],
+			"to": [2, 14, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-22, -4, 8]},
+			"faces": {
+				"north": {"uv": [14, 2, 16, 14], "texture": "#1"},
+				"east": {"uv": [0, 2, 16, 14], "texture": "#1"},
+				"south": {"uv": [0, 2, 2, 14], "texture": "#1"},
+				"west": {"uv": [0, 2, 16, 14], "texture": "#3"}
+			}
+		},
+		{
+			"name": "SealerKnob",
+			"from": [5, 25.15, 5],
+			"to": [11, 27.15, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-8, 33.15, 8]},
+			"faces": {
+				"north": {"uv": [13, 4, 16, 5], "texture": "#6"},
+				"east": {"uv": [13, 4, 16, 5], "texture": "#6"},
+				"south": {"uv": [13, 4, 16, 5], "texture": "#6"},
+				"west": {"uv": [13, 4, 16, 5], "texture": "#6"},
+				"up": {"uv": [13, 1, 16, 4], "texture": "#6"},
+				"down": {"uv": [13, 4, 16, 5], "texture": "#6"}
+			}
+		},
+		{
+			"name": "Sealer",
+			"from": [2, 15.15, 2],
+			"to": [14, 25.15, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-8, 25.15, 8]},
+			"faces": {
+				"north": {"uv": [10, 11, 16, 16], "texture": "#6"},
+				"east": {"uv": [10, 11, 16, 16], "texture": "#6"},
+				"south": {"uv": [10, 11, 16, 16], "texture": "#6"},
+				"west": {"uv": [10, 11, 16, 16], "texture": "#6"},
+				"up": {"uv": [10, 5, 16, 11], "texture": "#6"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 225, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"translation": [0, -1.75, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"translation": [0, -1.75, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"groups": [
+		{
+			"name": "shaft",
+			"origin": [8, 8, 8],
+			"children": [0]
+		},
+		{
+			"name": "hud",
+			"origin": [-22, -4, 8],
+			"children": [1, 2, 3, 4, 5]
+		},
+		{
+			"name": "group",
+			"origin": [-8, 25.15, 8],
+			"children": [6, 7]
+		}
+	]
+}

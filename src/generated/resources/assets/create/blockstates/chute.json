@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "window=false": {
+      "model": "create:block/chute/block"
+    },
+    "window=true": {
+      "model": "create:block/chute/block_windowed"
+    }
+  }
+}

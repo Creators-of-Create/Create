@@ -1,13 +1,16 @@
 package com.simibubi.create;
 
 import static com.simibubi.create.AllTags.forgeItemTag;
+import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
+import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
+import static com.simibubi.create.AllTags.AllItemTags.NUGGETS;
+import static com.simibubi.create.AllTags.AllItemTags.PLATES;
 import static com.simibubi.create.content.AllSections.CURIOSITIES;
 import static com.simibubi.create.content.AllSections.KINETICS;
 import static com.simibubi.create.content.AllSections.LOGISTICS;
 import static com.simibubi.create.content.AllSections.MATERIALS;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
 
-import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
@@ -55,26 +58,26 @@ public class AllItems {
 	}
 
 	public static final ItemEntry<Item> COPPER_NUGGET =
-		taggedIngredient("copper_nugget", forgeItemTag("nuggets/copper"), AllItemTags.nuggets.tag),
-		ZINC_NUGGET = taggedIngredient("zinc_nugget", forgeItemTag("nuggets/zinc"), AllItemTags.nuggets.tag),
-		BRASS_NUGGET = taggedIngredient("brass_nugget", forgeItemTag("nuggets/brass"), AllItemTags.nuggets.tag),
+		taggedIngredient("copper_nugget", forgeItemTag("nuggets/copper"), NUGGETS.tag),
+		ZINC_NUGGET = taggedIngredient("zinc_nugget", forgeItemTag("nuggets/zinc"), NUGGETS.tag),
+		BRASS_NUGGET = taggedIngredient("brass_nugget", forgeItemTag("nuggets/brass"), NUGGETS.tag),
 
-		COPPER_SHEET = taggedIngredient("copper_sheet", forgeItemTag("plates/copper"), AllItemTags.plates.tag),
-		BRASS_SHEET = taggedIngredient("brass_sheet", forgeItemTag("plates/brass"), AllItemTags.plates.tag),
-		IRON_SHEET = taggedIngredient("iron_sheet", forgeItemTag("plates/iron"), AllItemTags.plates.tag),
-		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold"), AllItemTags.plates.tag),
+		COPPER_SHEET = taggedIngredient("copper_sheet", forgeItemTag("plates/copper"), PLATES.tag),
+		BRASS_SHEET = taggedIngredient("brass_sheet", forgeItemTag("plates/brass"), PLATES.tag),
+		IRON_SHEET = taggedIngredient("iron_sheet", forgeItemTag("plates/iron"), PLATES.tag),
+		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold"), PLATES.tag),
 		LAPIS_SHEET = ingredient("lapis_sheet"),
 
-		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", AllItemTags.CRUSHED_ORES.tag),
-		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", AllItemTags.CRUSHED_ORES.tag),
-		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", AllItemTags.CRUSHED_ORES.tag),
-		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", AllItemTags.CRUSHED_ORES.tag),
-		CRUSHED_BRASS = taggedIngredient("crushed_brass", AllItemTags.CRUSHED_ORES.tag),
+		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", CRUSHED_ORES.tag),
+		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", CRUSHED_ORES.tag),
+		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", CRUSHED_ORES.tag),
+		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", CRUSHED_ORES.tag),
+		CRUSHED_BRASS = taggedIngredient("crushed_brass", CRUSHED_ORES.tag),
 
 		ANDESITE_ALLOY = ingredient("andesite_alloy"),
-		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper"), AllItemTags.CREATE_INGOTS.tag),
-		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), AllItemTags.CREATE_INGOTS.tag),
-		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), AllItemTags.CREATE_INGOTS.tag),
+		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper"), CREATE_INGOTS.tag),
+		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
+		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag),
 
 		WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
 		POWDERED_OBSIDIAN = ingredient("powdered_obsidian"), ROSE_QUARTZ = ingredient("rose_quartz"),

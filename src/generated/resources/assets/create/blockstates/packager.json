@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:block/packager/block",
+      "y": 90
+    },
+    "axis=z": {
+      "model": "create:block/packager/block"
+    }
+  }
+}

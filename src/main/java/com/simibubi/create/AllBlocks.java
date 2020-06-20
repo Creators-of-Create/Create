@@ -75,6 +75,8 @@ import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
+import com.simibubi.create.content.logistics.block.chute.ChutePortBlock;
 import com.simibubi.create.content.logistics.block.diodes.AbstractDiodeGenerator;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterGenerator;
@@ -92,6 +94,10 @@ import com.simibubi.create.content.logistics.block.funnel.VerticalFunnelGenerato
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
+import com.simibubi.create.content.logistics.block.packager.PackagerBlock;
+import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelBlock;
+import com.simibubi.create.content.logistics.block.realityFunnel.FunnelItem;
+import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
@@ -117,6 +123,7 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Block.Properties;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MaterialColor;
@@ -352,7 +359,7 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalPressBlock> MECHANICAL_PRESS =
 		REGISTRATE.block("mechanical_press", MechanicalPressBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(p -> p.nonOpaque())
+			.properties(Properties::nonOpaque)
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setImpact(8.0))
 			.item(BasinOperatorBlockItem::new)
@@ -701,6 +708,52 @@ public class AllBlocks {
 		REGISTRATE.block("creative_crate", CreativeCrateBlock::new)
 			.transform(BuilderTransformers.crate("creative"))
 			.register();
+
+	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate((c, p) -> p.getVariantBuilder(c.get())
+			.forAllStates(s -> ConfiguredModel.builder()
+				.modelFile(s.get(ChuteBlock.WINDOW) ? AssetLookup.partialBaseModel(c, p, "windowed")
+					: AssetLookup.partialBaseModel(c, p))
+				.build()))
+		.item()
+		.transform(customItemModel("_", "block"))
+		.register();
+
+	public static final BlockEntry<ChutePortBlock> CHUTE_PORT = REGISTRATE.block("chute_port", ChutePortBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.standardModel(c, p)))
+		.simpleItem()
+		.register();
+
+	public static final BlockEntry<PackagerBlock> PACKAGER = REGISTRATE.block("packager", PackagerBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.transform(StressConfigDefaults.setImpact(4.0))
+		.properties(Properties::nonOpaque)
+		.blockstate((c, p) -> p.getVariantBuilder(c.get())
+			.forAllStates(s -> ConfiguredModel.builder()
+				.modelFile(AssetLookup.partialBaseModel(c, p))
+				.rotationY(s.get(PackagerBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
+				.build()))
+		.item()
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<RealityFunnelBlock> REALITY_FUNNEL =
+		REGISTRATE.block("reality_funnel", RealityFunnelBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate((c, p) -> p.directionalBlock(c.get(), s -> AssetLookup.partialBaseModel(c, p)))
+			.item(FunnelItem::new)
+			.transform(customItemModel())
+			.register();
+
+	public static final BlockEntry<BeltFunnelBlock> BELT_FUNNEL = REGISTRATE.block("belt_funnel", BeltFunnelBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate((c, p) -> p.horizontalBlock(c.get(),
+			s -> AssetLookup.partialBaseModel(c, p, s.get(BeltFunnelBlock.SHAPE)
+				.getName())))
+		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
+		.register();
 
 	public static final BlockEntry<BeltObserverBlock> BELT_OBSERVER =
 		REGISTRATE.block("belt_observer", BeltObserverBlock::new)

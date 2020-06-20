@@ -65,6 +65,13 @@ public class AllShapes {
 		NIXIE_TUBE_CEILING = shape(0, 12, 0, 16, 16, 16).add(9, 1, 5, 15, 16, 11)
 			.add(1, 1, 5, 7, 16, 11)
 			.forHorizontalAxis(),
+		REALITY_FUNNEL = shape(2, 2, 14, 14, 14, 18).forDirectional(NORTH),
+		BELT_FUNNEL_RETRACTED = shape(3, -5, 14, 13, 13, 19).add(0, -5, 8, 16, 16, 14)
+			.forHorizontal(NORTH),
+		BELT_FUNNEL_DEFAULT = shape(3, -5, 12, 13, 13, 17).add(0, -5, 6, 16, 16, 12)
+			.forHorizontal(NORTH),
+		BELT_FUNNEL_EXTENDED = shape(3, -5, 6, 13, 13, 17).add(0, -5, 0, 16, 16, 6)
+			.forHorizontal(NORTH),
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
 			.add(3, 12, 3, 13, 16, 13)
 			.forDirectional(Direction.UP)
@@ -118,6 +125,8 @@ public class AllShapes {
 		GAUGE_SHAPE_UP = shape(1, 0, 0, 15, 2, 16).add(2, 2, 1, 14, 14, 15)
 			.build(),
 		MECHANICAL_ARM = shape(2, 0, 2, 14, 10, 14).add(3, 0, 3, 13, 14, 13)
+			.build(),
+		CHUTE = shape(1, 8, 1, 15, 16, 15).add(2, 0, 2, 14, 8, 14)
 			.build(),
 		TANK = shape(1, 0, 1, 15, 16, 15).build(), TANK_TOP = shape(TANK_TOP_LID).add(TANK)
 			.build(),

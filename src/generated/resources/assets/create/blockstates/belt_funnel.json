@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=north,shape=retracted": {
+      "model": "create:block/belt_funnel/block_retracted"
+    },
+    "facing=south,shape=retracted": {
+      "model": "create:block/belt_funnel/block_retracted",
+      "y": 180
+    },
+    "facing=west,shape=retracted": {
+      "model": "create:block/belt_funnel/block_retracted",
+      "y": 270
+    },
+    "facing=east,shape=retracted": {
+      "model": "create:block/belt_funnel/block_retracted",
+      "y": 90
+    },
+    "facing=north,shape=default": {
+      "model": "create:block/belt_funnel/block_default"
+    },
+    "facing=south,shape=default": {
+      "model": "create:block/belt_funnel/block_default",
+      "y": 180
+    },
+    "facing=west,shape=default": {
+      "model": "create:block/belt_funnel/block_default",
+      "y": 270
+    },
+    "facing=east,shape=default": {
+      "model": "create:block/belt_funnel/block_default",
+      "y": 90
+    },
+    "facing=north,shape=extended": {
+      "model": "create:block/belt_funnel/block_extended"
+    },
+    "facing=south,shape=extended": {
+      "model": "create:block/belt_funnel/block_extended",
+      "y": 180
+    },
+    "facing=west,shape=extended": {
+      "model": "create:block/belt_funnel/block_extended",
+      "y": 270
+    },
+    "facing=east,shape=extended": {
+      "model": "create:block/belt_funnel/block_extended",
+      "y": 90
+    }
+  }
+}

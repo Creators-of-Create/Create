@@ -77,6 +77,7 @@ public class AllBlockPartials {
 		ROPE_HALF = get("rope_pulley/rope_half"), 
 		ROPE_HALF_MAGNET = get("rope_pulley/rope_half_magnet"),
 		MILLSTONE_COG = get("millstone/inner"),
+		PACKAGER_SEALER = get("packager/sealer"),
 
 		SYMMETRY_PLANE = get("symmetry_effect/plane"), 
 		SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),

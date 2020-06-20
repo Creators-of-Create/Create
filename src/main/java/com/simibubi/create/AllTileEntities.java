@@ -82,6 +82,8 @@ import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateTi
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
+import com.simibubi.create.content.logistics.block.packager.PackagerRenderer;
+import com.simibubi.create.content.logistics.block.packager.PackagerTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverRenderer;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
@@ -215,6 +217,11 @@ public class AllTileEntities {
 		register("adjustable_crate", AdjustableCrateTileEntity::new, AllBlocks.ADJUSTABLE_CRATE);
 	public static final TileEntityEntry<CreativeCrateTileEntity> CREATIVE_CRATE =
 		register("creative_crate", CreativeCrateTileEntity::new, AllBlocks.CREATIVE_CRATE);
+	
+	public static final TileEntityEntry<PackagerTileEntity> PACKAGER =
+		register("packager", PackagerTileEntity::new, AllBlocks.PACKAGER);
+	
+	
 	public static final TileEntityEntry<ExtractorTileEntity> EXTRACTOR =
 		register("extractor", ExtractorTileEntity::new, AllBlocks.EXTRACTOR, AllBlocks.VERTICAL_EXTRACTOR);
 	public static final TileEntityEntry<LinkedExtractorTileEntity> LINKED_EXTRACTOR = register("linked_extractor",
@@ -285,6 +292,7 @@ public class AllTileEntities {
 		bind(FLYWHEEL, FlywheelRenderer::new);
 		bind(FURNACE_ENGINE, EngineRenderer::new);
 		bind(ROTATION_SPEED_CONTROLLER, SpeedControllerRenderer::new);
+		bind(PACKAGER, PackagerRenderer::new);
 
 		bind(CREATIVE_CRATE, SmartTileEntityRenderer::new);
 		bind(REDSTONE_LINK, SmartTileEntityRenderer::new);
