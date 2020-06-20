@@ -134,6 +134,8 @@ public class AllShapes {
 			.build(),
 		TANK_TOP_BOTTOM = shape(TANK_BOTTOM_LID).add(TANK_TOP_LID)
 			.add(TANK)
+			.build(),
+		DEPOT = shape(CASING_11PX.get(Direction.UP)).add(1, 11, 1, 15, 13, 15)
 			.build()
 
 	;

@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
@@ -101,6 +102,8 @@ public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 
 	public static boolean isOnValidBelt(BlockState state, IWorldReader world, BlockPos pos) {
 		BlockState stateBelow = world.getBlockState(pos.down());
+		if (stateBelow.getBlock() instanceof DepotBlock)
+			return true;
 		if (!(stateBelow.getBlock() instanceof BeltBlock))
 			return false;
 		if (stateBelow.get(BeltBlock.SLOPE) == Slope.VERTICAL)

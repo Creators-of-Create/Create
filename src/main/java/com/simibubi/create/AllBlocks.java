@@ -77,6 +77,7 @@ import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBl
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.content.logistics.block.chute.ChutePortBlock;
+import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.content.logistics.block.diodes.AbstractDiodeGenerator;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterGenerator;
@@ -784,6 +785,13 @@ public class AllBlocks {
 		.transform(StressConfigDefaults.setImpact(8.0))
 		.item()
 		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		.item()
+		.transform(customItemModel("_", "block"))
 		.register();
 
 	public static final BlockEntry<ExtractorBlock> EXTRACTOR = REGISTRATE.block("extractor", ExtractorBlock::new)
