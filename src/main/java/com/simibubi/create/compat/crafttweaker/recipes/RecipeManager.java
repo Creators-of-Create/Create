@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
-import com.simibubi.create.compat.crafttweaker.expands.WeightedItemStack;
+import com.simibubi.create.compat.crafttweaker.item.WeightedItemStack;
 import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
