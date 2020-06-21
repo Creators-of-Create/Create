@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.crafttweaker;
+package com.simibubi.create.compat.crafttweaker.recipes;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;

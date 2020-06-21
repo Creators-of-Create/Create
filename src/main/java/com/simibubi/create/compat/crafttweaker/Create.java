@@ -2,6 +2,8 @@ package com.simibubi.create.compat.crafttweaker;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.compat.crafttweaker.recipes.MechanicalCrafterManager;
+import com.simibubi.create.compat.crafttweaker.recipes.RecipeManager;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingRecipe;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
@@ -35,4 +37,7 @@ public class Create {
 
     @ZenCodeType.Field
     public static final RecipeManager splashing = new RecipeManager(AllRecipeTypes.SPLASHING.type, SplashingRecipe::new);
+
+    @ZenCodeType.Field
+    public static final MechanicalCrafterManager mechanicalCrafter = new MechanicalCrafterManager();
 }
