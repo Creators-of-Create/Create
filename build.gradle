@@ -115,6 +115,9 @@ dependencies {
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     //runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
+
+    // CraftTweaker support
+    compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${minecraft_version}:${crafttweaker_version}")
 }
 
 jar {
