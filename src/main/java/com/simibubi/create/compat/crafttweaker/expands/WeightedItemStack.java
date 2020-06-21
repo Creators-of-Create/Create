@@ -2,19 +2,32 @@ package com.simibubi.create.compat.crafttweaker.expands;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("mods.create.WeightedItemStack")
-public class WeightedItemStack extends MCItemStack {
+public class WeightedItemStack {
     private final float weight;
     private final boolean isDefault;
 
-    WeightedItemStack(IItemStack stack, float weight, boolean isDefault) {
-        super(stack.getInternal());
+    private final IItemStack stack;
+    private final Ingredient ingredient;
+
+    private WeightedItemStack(IItemStack stack, Ingredient ingredient, float weight, boolean isDefault) {
+        this.stack = stack;
+        this.ingredient = ingredient;
         this.weight = weight;
         this.isDefault = isDefault;
+    }
+
+    WeightedItemStack(IItemStack stack, float weight, boolean isDefault) {
+        this(stack, stack.asVanillaIngredient(), weight, isDefault);
+    }
+
+    WeightedItemStack(Ingredient ingredient, float weight, boolean isDefault) {
+        this(null, ingredient, weight, isDefault);
     }
 
     @ZenCodeType.Constructor
@@ -26,6 +39,14 @@ public class WeightedItemStack extends MCItemStack {
     @ZenCodeType.Getter("weight")
     public float getWeight() {
         return weight;
+    }
+
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
+    public ItemStack getStack() {
+        return stack.getInternal();
     }
 
     public float withDefault(float value) {

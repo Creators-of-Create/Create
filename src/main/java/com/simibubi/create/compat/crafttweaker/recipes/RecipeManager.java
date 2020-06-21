@@ -37,8 +37,8 @@ public class RecipeManager implements IRecipeManager {
     @ZenCodeType.Method
     public void addRecipe(String name, WeightedItemStack[] ingredients, WeightedItemStack[] results,
                           int processingDuration, @ZenCodeType.OptionalString String group) {
-        List<ProcessingIngredient> input = Arrays.stream(ingredients).map(i -> new ProcessingIngredient(i.asVanillaIngredient(), inputHasOutputChance ? i.withDefault(0) : 0)).collect(Collectors.toList());
-        List<ProcessingOutput> output = Arrays.stream(results).map(r -> new ProcessingOutput(r.getInternal(), r.getWeight())).collect(Collectors.toList());
+        List<ProcessingIngredient> input = Arrays.stream(ingredients).map(i -> new ProcessingIngredient(i.getIngredient(), inputHasOutputChance ? i.withDefault(0) : 0)).collect(Collectors.toList());
+        List<ProcessingOutput> output = Arrays.stream(results).map(r -> new ProcessingOutput(r.getStack(), r.getWeight())).collect(Collectors.toList());
 
         ProcessingRecipe<?> recipe = factory.create(new ResourceLocation("crafttweaker", name), group, input, output, processingDuration);
         CraftTweakerAPI.apply(new ActionAddRecipe(this, recipe, ""));
