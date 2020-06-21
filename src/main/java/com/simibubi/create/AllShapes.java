@@ -65,7 +65,7 @@ public class AllShapes {
 		NIXIE_TUBE_CEILING = shape(0, 12, 0, 16, 16, 16).add(9, 1, 5, 15, 16, 11)
 			.add(1, 1, 5, 7, 16, 11)
 			.forHorizontalAxis(),
-		REALITY_FUNNEL = shape(2, 2, 14, 14, 14, 18).forDirectional(NORTH),
+		REALITY_FUNNEL = shape(2, -2, 2, 14, 2, 14).forDirectional(UP),
 		BELT_FUNNEL_RETRACTED = shape(3, -5, 14, 13, 13, 19).add(0, -5, 8, 16, 16, 14)
 			.forHorizontal(NORTH),
 		BELT_FUNNEL_DEFAULT = shape(3, -5, 12, 13, 13, 17).add(0, -5, 6, 16, 16, 12)
