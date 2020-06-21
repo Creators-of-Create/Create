@@ -2,6 +2,8 @@ package com.simibubi.create.compat.crafttweaker.recipes;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.simibubi.create.compat.crafttweaker.expands.WeightedItemStack;
@@ -35,20 +37,34 @@ public class RecipeManager implements IRecipeManager {
     }
 
     @ZenCodeType.Method
-    public void addRecipe(String name, WeightedItemStack[] ingredients, WeightedItemStack[] results,
-                          int processingDuration, @ZenCodeType.OptionalString String group) {
-        List<ProcessingIngredient> input = Arrays.stream(ingredients).map(i -> new ProcessingIngredient(i.getIngredient(), inputHasOutputChance ? i.withDefault(0) : 0)).collect(Collectors.toList());
-        List<ProcessingOutput> output = Arrays.stream(results).map(r -> new ProcessingOutput(r.getStack(), r.getWeight())).collect(Collectors.toList());
+    public void addRecipe(String name, IIngredient[] ingredients, IItemStack[] results, @ZenCodeType.OptionalInt int processingDuration) {
+        List<ProcessingIngredient> input = Arrays.stream(ingredients).map(i -> {
+            float chance = 0;
+            if (i instanceof WeightedItemStack) {
+                WeightedItemStack stack = (WeightedItemStack) i;
+                chance = inputHasOutputChance ? stack.getWeight() : 0;
+            }
 
-        ProcessingRecipe<?> recipe = factory.create(new ResourceLocation("crafttweaker", name), group, input, output, processingDuration);
+            return new ProcessingIngredient(i.asVanillaIngredient(), chance);
+        }).collect(Collectors.toList());
+        List<ProcessingOutput> output = Arrays.stream(results).map(r -> {
+            float chance = 1.0f;
+            if (r instanceof WeightedItemStack) {
+                WeightedItemStack stack = (WeightedItemStack) r;
+                chance = stack.getWeight();
+            }
+
+            return new ProcessingOutput(r.getInternal(), chance);
+        }).collect(Collectors.toList());
+
+        ProcessingRecipe<?> recipe = factory.create(new ResourceLocation("crafttweaker", name), "", input, output, processingDuration);
         CraftTweakerAPI.apply(new ActionAddRecipe(this, recipe, ""));
     }
 
     @ZenCodeType.Method
     @SuppressWarnings("unused")
-    public void addRecipe(String name, WeightedItemStack ingredient, WeightedItemStack result,
-                          int processingDuration, @ZenCodeType.OptionalString String group) {
-        addRecipe(name, new WeightedItemStack[]{ingredient}, new WeightedItemStack[]{result}, processingDuration, group);
+    public void addRecipe(String name, IIngredient ingredient, IItemStack result, @ZenCodeType.OptionalInt int processingDuration) {
+        addRecipe(name, new IIngredient[]{ingredient}, new IItemStack[]{result}, processingDuration);
     }
 
     @Override

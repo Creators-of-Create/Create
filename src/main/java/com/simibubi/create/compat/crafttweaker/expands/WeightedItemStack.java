@@ -1,39 +1,35 @@
 package com.simibubi.create.compat.crafttweaker.expands;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import net.minecraft.item.ItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
 import net.minecraft.item.crafting.Ingredient;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("mods.create.WeightedItemStack")
-public class WeightedItemStack {
+@SuppressWarnings("unused")
+public class WeightedItemStack extends MCItemStack {
     private final float weight;
-    private final boolean isDefault;
 
-    private final IItemStack stack;
-    private final Ingredient ingredient;
+    private final IIngredient ingredient;
 
-    private WeightedItemStack(IItemStack stack, Ingredient ingredient, float weight, boolean isDefault) {
-        this.stack = stack;
+    private WeightedItemStack(IItemStack stack, IIngredient ingredient, float weight) {
+        super(stack.getInternal());
         this.ingredient = ingredient;
         this.weight = weight;
-        this.isDefault = isDefault;
-    }
-
-    WeightedItemStack(IItemStack stack, float weight, boolean isDefault) {
-        this(stack, stack.asVanillaIngredient(), weight, isDefault);
-    }
-
-    WeightedItemStack(Ingredient ingredient, float weight, boolean isDefault) {
-        this(null, ingredient, weight, isDefault);
     }
 
     @ZenCodeType.Constructor
-    @SuppressWarnings("unused")
     public WeightedItemStack(IItemStack stack, float weight) {
-        this(stack, weight, false);
+        this(stack, null, weight);
+    }
+
+    @ZenCodeType.Constructor
+    public WeightedItemStack(MCTag tag, float weight) {
+        this(tag.getFirstItem(), tag, weight);
     }
 
     @ZenCodeType.Getter("weight")
@@ -41,26 +37,22 @@ public class WeightedItemStack {
         return weight;
     }
 
-    public Ingredient getIngredient() {
-        return ingredient;
-    }
-
-    public ItemStack getStack() {
-        return stack.getInternal();
-    }
-
-    public float withDefault(float value) {
-        if (isDefault) {
-            return value;
-        } else {
-            return weight;
+    @Override
+    public Ingredient asVanillaIngredient() {
+        if (ingredient != null) {
+            return ingredient.asVanillaIngredient();
         }
+        return super.asVanillaIngredient();
     }
 
     @ZenCodeType.Caster(implicit = true)
-    @SuppressWarnings("unused")
-    public WeightedItemStack[] castToList() {
-        return new WeightedItemStack[]{this};
+    public IItemStack asIItemStack() {
+        return this;
+    }
+
+    @ZenCodeType.Caster(implicit = true)
+    public IIngredient asIIngredient() {
+        return this;
     }
 }
 
