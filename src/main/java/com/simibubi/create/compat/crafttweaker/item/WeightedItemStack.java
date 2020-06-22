@@ -1,18 +1,13 @@
 package com.simibubi.create.compat.crafttweaker.item;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.impl.actions.items.ActionSetFood;
-import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
-import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -67,44 +62,32 @@ public class WeightedItemStack implements IItemStack {
 
     @Override
     public IItemStack setDisplayName(String name) {
-        ItemStack st = stack.getInternal().copy();
-        st.setDisplayName(new StringTextComponent(name));
-        return new WeightedItemStack(stack, ingredient, weight);
+        return new WeightedItemStack(stack.setDisplayName(name), ingredient, weight);
     }
 
     @Override
     public IItemStack setAmount(int amount) {
-        ItemStack st = stack.getInternal().copy();
-        st.setCount(amount);
-        return new WeightedItemStack(stack, ingredient, weight);
+        return new WeightedItemStack(stack.setAmount(amount), ingredient, weight);
     }
 
     @Override
     public IItemStack withDamage(int damage) {
-        ItemStack st = stack.getInternal().copy();
-        st.setDamage(damage);
-        return new WeightedItemStack(stack, ingredient, weight);
+        return new WeightedItemStack(stack.withDamage(damage), ingredient, weight);
     }
 
     @Override
     public IItemStack withTag(IData tag) {
-        ItemStack copy = stack.getInternal().copy();
-        if (!(tag instanceof MapData)) {
-            tag = new MapData(tag.asMap());
-        }
-
-        copy.setTag(((MapData) tag).getInternal());
-        return new MCItemStack(copy);
+        return new WeightedItemStack(stack.withTag(tag), ingredient, weight);
     }
 
     @Override
     public MCFood getFood() {
-        return new MCFood(stack.getInternal().getItem().getFood());
+        return stack.getFood();
     }
 
     @Override
     public void setFood(MCFood food) {
-        CraftTweakerAPI.apply(new ActionSetFood(this, food));
+        stack.setFood(food);
     }
 
     @Override
