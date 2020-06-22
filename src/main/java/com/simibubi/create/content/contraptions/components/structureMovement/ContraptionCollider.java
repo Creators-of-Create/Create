@@ -1,10 +1,18 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.util.HashMap;
-import java.util.Map;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
+import com.google.common.base.Predicates;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingMovementBehaviour;
 import com.simibubi.create.foundation.collision.Matrix3d;
@@ -14,11 +22,10 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CocoaBlock;
-import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -34,21 +41,72 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.TickEvent.WorldTickEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+@EventBusSubscriber
 public class ContraptionCollider {
 
-	static Map<Object, AxisAlignedBB> renderedBBs = new HashMap<>();
 	public static boolean wasClientPlayerGrounded;
+	public static Cache<World, List<WeakReference<ContraptionEntity>>> activeContraptions = CacheBuilder.newBuilder()
+		.expireAfterAccess(20, SECONDS)
+		.build();
+
+	@SubscribeEvent
+	public static void addSpawnedContraptionsToCollisionList(EntityJoinWorldEvent event) {
+		Entity entity = event.getEntity();
+		if (!(entity instanceof ContraptionEntity))
+			return;
+		try {
+			List<WeakReference<ContraptionEntity>> list = activeContraptions.get(event.getWorld(), ArrayList::new);
+			ContraptionEntity contraption = (ContraptionEntity) entity;
+			list.add(new WeakReference<>(contraption));
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void playerCollisionHappensOnClientTick(ClientTickEvent event) {
+		if (event.phase == Phase.START)
+			return;
+		ClientWorld world = Minecraft.getInstance().world;
+		if (world == null)
+			return;
+		runCollisions(world);
+	}
+
+	@SubscribeEvent
+	public static void entityCollisionHappensPreWorldTick(WorldTickEvent event) {
+		if (event.phase == Phase.START)
+			return;
+		World world = event.world;
+		runCollisions(world);
+	}
+
+	private static void runCollisions(World world) {
+		List<WeakReference<ContraptionEntity>> list = activeContraptions.getIfPresent(world);
+		if (list == null)
+			return;
+		for (Iterator<WeakReference<ContraptionEntity>> iterator = list.iterator(); iterator.hasNext();) {
+			WeakReference<ContraptionEntity> weakReference = iterator.next();
+			ContraptionEntity contraptionEntity = weakReference.get();
+			if (contraptionEntity == null || !contraptionEntity.isAlive()) {
+				iterator.remove();
+				continue;
+			}
+			collideEntities(contraptionEntity);
+		}
+	}
 
 	public static void collideEntities(ContraptionEntity contraptionEntity) {
-		if (Contraption.isFrozen())
-			return;
-		if (!contraptionEntity.collisionEnabled())
-			return;
-
 		World world = contraptionEntity.getEntityWorld();
-//		Vec3d contraptionMotion = contraptionEntity.getMotion();
 		Contraption contraption = contraptionEntity.getContraption();
 		AxisAlignedBB bounds = contraptionEntity.getBoundingBox();
 		Vec3d contraptionPosition = contraptionEntity.getPositionVec();
@@ -61,7 +119,7 @@ public class ContraptionCollider {
 			return;
 
 		for (Entity entity : world.getEntitiesWithinAABB((EntityType<?>) null, bounds.grow(1),
-			e -> canBeCollidedWith(e))) {
+			contraptionEntity::canCollideWith)) {
 			if (entity instanceof PlayerEntity && !world.isRemote)
 				return;
 
@@ -70,7 +128,7 @@ public class ContraptionCollider {
 			Vec3d centerY = new Vec3d(0, entity.getBoundingBox()
 				.getYSize() / 2, 0);
 			Vec3d position = entityPosition.subtract(contraptionPosition)
-				.subtract(centerOfBlock)
+				.subtract(contraptionEntity.stationary ? centerOfBlock : Vec3d.ZERO.add(0, 0.5, 0))
 				.add(centerY);
 			position =
 				VecHelper.rotate(position, -contraptionRotation.z, -contraptionRotation.y, -contraptionRotation.x);
@@ -107,7 +165,7 @@ public class ContraptionCollider {
 
 					obb.setCenter(obb.getCenter()
 						.add(intersect));
-					entity.move(MoverType.PLAYER, intersect);
+					entity.move(MoverType.PISTON, intersect);
 
 					Vec3d entityMotion = entity.getMotion();
 					if (entityMotion.getX() > 0 == intersect.getX() < 0)
@@ -134,47 +192,8 @@ public class ContraptionCollider {
 					if (entity instanceof ServerPlayerEntity)
 						((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
 				});
-
-//			Vec3d positionOffset = contraptionPosition.scale(-1);
-//			AxisAlignedBB entityBB = entity.getBoundingBox()
-//				.offset(positionOffset)
-//				.grow(1.0E-7D);
-//			Vec3d entityMotion = entity.getMotion();
-//			Vec3d relativeMotion = entityMotion.subtract(contraptionMotion);
-//			Vec3d allowedMovement = Entity.getAllowedMovement(relativeMotion, entityBB, world,
-//				ISelectionContext.forEntity(entity), potentialHits);
-//			potentialHits.createStream()
-//				.forEach(voxelShape -> pushEntityOutOfShape(entity, voxelShape, positionOffset, contraptionMotion));
-//
-//
-//			if (allowedMovement.equals(relativeMotion))
-//				continue;
-//
-//			if (allowedMovement.y != relativeMotion.y) {
-//				entity.handleFallDamage(entity.fallDistance, 1);
-//				entity.fallDistance = 0;
-//				entity.onGround = true;
-//				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> checkForClientPlayerCollision(entity));
-//			}
-//
-//			if (entity instanceof ServerPlayerEntity)
-//				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
-//			if (entity instanceof PlayerEntity && !world.isRemote)
-//				return;
-//
-//			entity.setMotion(allowedMovement.add(contraptionMotion));
 		}
 
-	}
-
-	public static boolean canBeCollidedWith(Entity e) {
-		if (e instanceof PlayerEntity && e.isSpectator())
-			return false;
-		if (e.noClip)
-			return false;
-		if (e instanceof IProjectile)
-			return false;
-		return e.getPushReaction() == PushReaction.NORMAL;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -258,7 +277,8 @@ public class ContraptionCollider {
 				BlockPos pos = contraption.blocks.get(p).pos;
 				VoxelShape collisionShape = blockState.getCollisionShape(world, p);
 				return collisionShape.withOffset(pos.getX(), pos.getY(), pos.getZ());
-			}));
+			})
+			.filter(Predicates.not(VoxelShape::isEmpty)));
 
 		return potentialHits;
 	}
