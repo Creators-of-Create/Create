@@ -76,6 +76,8 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
+import com.simibubi.create.content.logistics.block.chute.ChuteGenerator;
+import com.simibubi.create.content.logistics.block.chute.ChuteItem;
 import com.simibubi.create.content.logistics.block.chute.ChutePortBlock;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.content.logistics.block.diodes.AbstractDiodeGenerator;
@@ -713,12 +715,8 @@ public class AllBlocks {
 	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.addLayer(() -> RenderType::getCutoutMipped)
-		.blockstate((c, p) -> p.getVariantBuilder(c.get())
-			.forAllStates(s -> ConfiguredModel.builder()
-				.modelFile(s.get(ChuteBlock.WINDOW) ? AssetLookup.partialBaseModel(c, p, "windowed")
-					: AssetLookup.partialBaseModel(c, p))
-				.build()))
-		.item()
+		.blockstate(new ChuteGenerator()::generate)
+		.item(ChuteItem::new)
 		.transform(customItemModel("_", "block"))
 		.register();
 

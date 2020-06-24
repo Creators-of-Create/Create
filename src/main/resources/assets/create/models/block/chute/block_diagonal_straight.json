@@ -1,0 +1,82 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"2": "create:block/chute_diagonal",
+		"13": "create:block/chute",
+		"particle": "block/hopper_outside"
+	},
+	"elements": [
+		{
+			"from": [1.9, -12, 7.9],
+			"to": [14.1, 10.666, 14.1],
+			"rotation": {"angle": 45, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [6, 10, 9, 16], "rotation": 90, "texture": "#13"},
+				"east": {"uv": [13, 0, 16, 11], "texture": "#2"},
+				"south": {"uv": [0, 10, 11, 16], "rotation": 270, "texture": "#2"},
+				"west": {"uv": [13, 0, 16, 11], "rotation": 180, "texture": "#2"}
+			}
+		},
+		{
+			"from": [1.1, -12, 1.9],
+			"to": [14.9, 10.666, 8.1],
+			"rotation": {"angle": 45, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 3, 11, 10], "rotation": 90, "texture": "#2"},
+				"east": {"uv": [0, 0, 11, 3], "rotation": 270, "texture": "#2"},
+				"south": {"uv": [0, 3, 11, 10], "rotation": 90, "texture": "#2"},
+				"west": {"uv": [0, 0, 11, 3], "rotation": 90, "texture": "#2"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 225, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3.25, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"translation": [0, 1, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"head": {
+			"rotation": [0, 90, 0]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [0, 1.5, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"groups": [
+		{
+			"name": "group",
+			"origin": [8, 8, -8],
+			"children": [0, 1]
+		},
+		{
+			"name": "group",
+			"origin": [8, 8, -8],
+			"children": []
+		}
+	]
+}
