@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/chute_funnel/block",
+  "textures": {
+    "3": "create:block/belt_funnel_pull_off"
+  }
+}

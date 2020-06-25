@@ -1,10 +1,8 @@
 package com.simibubi.create.content.logistics.block.realityFunnel;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
-import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.foundation.utility.Lang;
@@ -12,33 +10,22 @@ import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
 
-public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
+public class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 
 	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
-	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public enum Shape implements IStringSerializable {
 		RETRACTED(AllShapes.BELT_FUNNEL_RETRACTED), EXTENDED(AllShapes.BELT_FUNNEL_EXTENDED);
@@ -57,13 +44,12 @@ public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 
 	public BeltFunnelBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
-		setDefaultState(getDefaultState().with(SHAPE, Shape.RETRACTED)
-			.with(POWERED, false));
+		setDefaultState(getDefaultState().with(SHAPE, Shape.RETRACTED));
 	}
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
-		super.fillStateContainer(p_206840_1_.add(HORIZONTAL_FACING, SHAPE, POWERED));
+		super.fillStateContainer(p_206840_1_.add(SHAPE));
 	}
 
 	@Override
@@ -73,34 +59,12 @@ public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
-		return updateShape(super.getStateForPlacement(ctx), ctx.getWorld(), ctx.getPos()).with(POWERED, ctx.getWorld()
-			.isBlockPowered(ctx.getPos()));
-	}
-
-	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-		PlayerEntity player) {
-		return AllBlocks.REALITY_FUNNEL.asStack();
-	}
-
-	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbour, IWorld world,
 		BlockPos pos, BlockPos p_196271_6_) {
-		if (direction == Direction.DOWN && !isOnValidBelt(state, world, pos))
-			return AllBlocks.REALITY_FUNNEL.getDefaultState()
-				.with(RealityFunnelBlock.FACING, state.get(HORIZONTAL_FACING));
 		if (direction == state.get(HORIZONTAL_FACING))
 			return updateShape(state, world, pos);
-		return state;
-	}
-
-	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
-		return !world.getBlockState(pos.offset(state.get(HORIZONTAL_FACING)
-			.getOpposite()))
-			.getShape(world, pos)
-			.isEmpty();
+		else
+			return super.updatePostPlacement(state, direction, neighbour, world, pos, p_196271_6_);
 	}
 
 	public static boolean isOnValidBelt(BlockState state, IWorldReader world, BlockPos pos) {
@@ -118,24 +82,7 @@ public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 		return true;
 	}
 
-	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-		boolean isMoving) {
-		if (worldIn.isRemote)
-			return;
-
-		Direction blockFacing = state.get(HORIZONTAL_FACING)
-			.getOpposite();
-		if (fromPos.equals(pos.offset(blockFacing)))
-			if (!isValidPosition(state, worldIn, pos))
-				worldIn.destroyBlock(pos, true);
-
-		boolean previouslyPowered = state.get(POWERED);
-		if (previouslyPowered != worldIn.isBlockPowered(pos))
-			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
-	}
-
-	private BlockState updateShape(BlockState state, ILightReader world, BlockPos pos) {
+	public static BlockState updateShape(BlockState state, ILightReader world, BlockPos pos) {
 		state = state.with(SHAPE, Shape.RETRACTED);
 		BlockState neighbour = world.getBlockState(pos.offset(state.get(HORIZONTAL_FACING)));
 		if (canConnectTo(state, neighbour))
@@ -143,21 +90,19 @@ public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 		return state;
 	}
 
-	private boolean canConnectTo(BlockState state, BlockState neighbour) {
+	private static boolean canConnectTo(BlockState state, BlockState neighbour) {
 		if (neighbour.getBlock() instanceof BeltTunnelBlock)
 			return true;
-		if (neighbour.getBlock() == this && neighbour.get(HORIZONTAL_FACING) == state.get(HORIZONTAL_FACING)
-			.getOpposite())
+		if (neighbour.getBlock() instanceof BeltFunnelBlock
+			&& neighbour.get(HORIZONTAL_FACING) == state.get(HORIZONTAL_FACING)
+				.getOpposite())
 			return true;
 		return false;
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		if (!context.getWorld().isRemote)
-			context.getWorld()
-				.setBlockState(context.getPos(), state.cycle(SHAPE));
-		return ActionResultType.SUCCESS;
+	protected boolean canStillInteract(BlockState state, IWorldReader world, BlockPos pos) {
+		return isOnValidBelt(state, world, pos);
 	}
 
 }

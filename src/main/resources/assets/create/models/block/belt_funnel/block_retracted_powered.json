@@ -1,6 +1,0 @@
-{
-	"parent": "create:block/belt_funnel/block_retracted",
-    "textures": {
-		"2": "create:block/funnel_on"
-    }
-}

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create:chute_port"
+          "name": "create:reality_funnel"
         }
       ],
       "conditions": [

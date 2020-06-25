@@ -78,7 +78,6 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.block.chute.ChuteItem;
-import com.simibubi.create.content.logistics.block.chute.ChutePortBlock;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.content.logistics.block.diodes.AbstractDiodeGenerator;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock;
@@ -99,6 +98,9 @@ import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBloc
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.packager.PackagerBlock;
 import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelBlock;
+import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelGenerator;
+import com.simibubi.create.content.logistics.block.realityFunnel.ChuteFunnelBlock;
+import com.simibubi.create.content.logistics.block.realityFunnel.ChuteFunnelGenerator;
 import com.simibubi.create.content.logistics.block.realityFunnel.FunnelItem;
 import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
@@ -720,12 +722,6 @@ public class AllBlocks {
 		.transform(customItemModel("_", "block"))
 		.register();
 
-	public static final BlockEntry<ChutePortBlock> CHUTE_PORT = REGISTRATE.block("chute_port", ChutePortBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.standardModel(c, p)))
-		.simpleItem()
-		.register();
-
 	public static final BlockEntry<PackagerBlock> PACKAGER = REGISTRATE.block("packager", PackagerBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.transform(StressConfigDefaults.setImpact(4.0))
@@ -749,12 +745,13 @@ public class AllBlocks {
 
 	public static final BlockEntry<BeltFunnelBlock> BELT_FUNNEL = REGISTRATE.block("belt_funnel", BeltFunnelBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.blockstate((c, p) -> p.horizontalBlock(c.get(), s -> {
-			String shape = s.get(BeltFunnelBlock.SHAPE)
-				.getName();
-			return s.get(BeltFunnelBlock.POWERED) ? AssetLookup.partialBaseModel(c, p, shape, "powered")
-				: AssetLookup.partialBaseModel(c, p, shape);
-		}))
+		.blockstate(new BeltFunnelGenerator()::generate)
+		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
+		.register();
+	
+	public static final BlockEntry<ChuteFunnelBlock> CHUTE_FUNNEL = REGISTRATE.block("chute_funnel", ChuteFunnelBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate(new ChuteFunnelGenerator()::generate)
 		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
 		.register();
 

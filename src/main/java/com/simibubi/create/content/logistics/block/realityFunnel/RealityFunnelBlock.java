@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.realityFunnel;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 
 import net.minecraft.block.Block;
@@ -22,7 +23,7 @@ import net.minecraft.world.World;
 public class RealityFunnelBlock extends ProperDirectionalBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-	
+
 	public RealityFunnelBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
 		setDefaultState(getDefaultState().with(POWERED, false));
@@ -30,16 +31,24 @@ public class RealityFunnelBlock extends ProperDirectionalBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(FACING, context.getFace())
+		Direction facing = context.getFace();
+		if (facing.getAxis()
+			.isVertical()
+			&& context.getWorld()
+				.getBlockState(context.getPos()
+					.offset(facing.getOpposite()))
+				.getBlock() instanceof ChuteBlock)
+			facing = facing.getOpposite();
+		return getDefaultState().with(FACING, facing)
 			.with(POWERED, context.getWorld()
 				.isBlockPowered(context.getPos()));
 	}
-	
+
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder.add(POWERED));
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
@@ -49,13 +58,31 @@ public class RealityFunnelBlock extends ProperDirectionalBlock {
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState p_196271_3_, IWorld world,
 		BlockPos pos, BlockPos p_196271_6_) {
-		if (state.get(FACING)
-			.getAxis()
-			.isHorizontal() && direction == Direction.DOWN) {
-			BlockState equivalentFunnel = AllBlocks.BELT_FUNNEL.getDefaultState()
-				.with(BeltFunnelBlock.HORIZONTAL_FACING, state.get(FACING));
-			if (BeltFunnelBlock.isOnValidBelt(equivalentFunnel, world, pos))
-				return equivalentFunnel;
+		Direction facing = state.get(FACING);
+		if (facing.getAxis()
+			.isHorizontal()) {
+			if (direction == Direction.DOWN) {
+				BlockState equivalentFunnel = AllBlocks.BELT_FUNNEL.getDefaultState()
+					.with(BeltFunnelBlock.HORIZONTAL_FACING, facing)
+					.with(BeltFunnelBlock.POWERED, state.get(POWERED));
+				if (BeltFunnelBlock.isOnValidBelt(equivalentFunnel, world, pos))
+					return equivalentFunnel;
+			}
+			if (direction == facing) {
+				BlockState equivalentFunnel = AllBlocks.CHUTE_FUNNEL.getDefaultState()
+					.with(ChuteFunnelBlock.HORIZONTAL_FACING, facing)
+					.with(ChuteFunnelBlock.POWERED, state.get(POWERED));
+				if (ChuteFunnelBlock.isOnValidChute(equivalentFunnel, world, pos))
+					return equivalentFunnel;
+			}
+			if (direction == facing.getOpposite()) {
+				BlockState equivalentFunnel = AllBlocks.CHUTE_FUNNEL.getDefaultState()
+					.with(ChuteFunnelBlock.HORIZONTAL_FACING, facing.getOpposite())
+					.cycle(ChuteFunnelBlock.PUSHING)
+					.with(ChuteFunnelBlock.POWERED, state.get(POWERED));
+				if (ChuteFunnelBlock.isOnValidChute(equivalentFunnel, world, pos))
+					return equivalentFunnel;
+			}
 		}
 		return state;
 	}
@@ -65,13 +92,6 @@ public class RealityFunnelBlock extends ProperDirectionalBlock {
 		boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
-
-		Direction blockFacing = state.get(FACING)
-			.getOpposite();
-		if (fromPos.equals(pos.offset(blockFacing)))
-			if (!isValidPosition(state, worldIn, pos))
-				worldIn.destroyBlock(pos, true);
-		
 		boolean previouslyPowered = state.get(POWERED);
 		if (previouslyPowered != worldIn.isBlockPowered(pos))
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
@@ -79,10 +99,10 @@ public class RealityFunnelBlock extends ProperDirectionalBlock {
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
-		return !world.getBlockState(pos.offset(state.get(FACING)
+		Block block = world.getBlockState(pos.offset(state.get(FACING)
 			.getOpposite()))
-			.getShape(world, pos)
-			.isEmpty();
+			.getBlock();
+		return !(block instanceof RealityFunnelBlock) && !(block instanceof HorizontalInteractionFunnelBlock);
 	}
 
 }
