@@ -7,6 +7,9 @@ import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -18,15 +21,25 @@ import net.minecraft.world.World;
 
 public class RealityFunnelBlock extends ProperDirectionalBlock {
 
+	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+	
 	public RealityFunnelBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
+		setDefaultState(getDefaultState().with(POWERED, false));
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(FACING, context.getFace());
+		return getDefaultState().with(FACING, context.getFace())
+			.with(POWERED, context.getWorld()
+				.isBlockPowered(context.getPos()));
 	}
-
+	
+	@Override
+	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+		super.fillStateContainer(builder.add(POWERED));
+	}
+	
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
@@ -58,6 +71,10 @@ public class RealityFunnelBlock extends ProperDirectionalBlock {
 		if (fromPos.equals(pos.offset(blockFacing)))
 			if (!isValidPosition(state, worldIn, pos))
 				worldIn.destroyBlock(pos, true);
+		
+		boolean previouslyPowered = state.get(POWERED);
+		if (previouslyPowered != worldIn.isBlockPowered(pos))
+			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
 	}
 
 	@Override

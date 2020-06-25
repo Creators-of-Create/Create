@@ -17,9 +17,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
@@ -36,11 +38,10 @@ import net.minecraft.world.World;
 public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 
 	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
+	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public enum Shape implements IStringSerializable {
-		RETRACTED(AllShapes.BELT_FUNNEL_RETRACTED),
-		DEFAULT(AllShapes.BELT_FUNNEL_DEFAULT),
-		EXTENDED(AllShapes.BELT_FUNNEL_EXTENDED);
+		RETRACTED(AllShapes.BELT_FUNNEL_RETRACTED), EXTENDED(AllShapes.BELT_FUNNEL_EXTENDED);
 
 		VoxelShaper shaper;
 
@@ -56,14 +57,15 @@ public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 
 	public BeltFunnelBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
-		setDefaultState(getDefaultState().with(SHAPE, Shape.DEFAULT));
+		setDefaultState(getDefaultState().with(SHAPE, Shape.RETRACTED)
+			.with(POWERED, false));
 	}
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
-		super.fillStateContainer(p_206840_1_.add(HORIZONTAL_FACING, SHAPE));
+		super.fillStateContainer(p_206840_1_.add(HORIZONTAL_FACING, SHAPE, POWERED));
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
@@ -71,8 +73,9 @@ public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
-		return updateShape(super.getStateForPlacement(p_196258_1_), p_196258_1_.getWorld(), p_196258_1_.getPos());
+	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+		return updateShape(super.getStateForPlacement(ctx), ctx.getWorld(), ctx.getPos()).with(POWERED, ctx.getWorld()
+			.isBlockPowered(ctx.getPos()));
 	}
 
 	@Override
@@ -80,7 +83,7 @@ public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 		PlayerEntity player) {
 		return AllBlocks.REALITY_FUNNEL.asStack();
 	}
-	
+
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbour, IWorld world,
 		BlockPos pos, BlockPos p_196271_6_) {
@@ -126,10 +129,14 @@ public class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 		if (fromPos.equals(pos.offset(blockFacing)))
 			if (!isValidPosition(state, worldIn, pos))
 				worldIn.destroyBlock(pos, true);
+
+		boolean previouslyPowered = state.get(POWERED);
+		if (previouslyPowered != worldIn.isBlockPowered(pos))
+			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
 	}
 
 	private BlockState updateShape(BlockState state, ILightReader world, BlockPos pos) {
-		state = state.with(SHAPE, Shape.DEFAULT);
+		state = state.with(SHAPE, Shape.RETRACTED);
 		BlockState neighbour = world.getBlockState(pos.offset(state.get(HORIZONTAL_FACING)));
 		if (canConnectTo(state, neighbour))
 			return state.with(SHAPE, Shape.EXTENDED);

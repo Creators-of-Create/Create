@@ -1,28 +1,54 @@
 {
   "variants": {
-    "facing=down": {
+    "facing=down,powered=false": {
       "model": "create:block/reality_funnel/block",
       "x": 180
     },
-    "facing=up": {
+    "facing=up,powered=false": {
       "model": "create:block/reality_funnel/block"
     },
-    "facing=north": {
+    "facing=north,powered=false": {
       "model": "create:block/reality_funnel/block",
       "x": 90
     },
-    "facing=south": {
+    "facing=south,powered=false": {
       "model": "create:block/reality_funnel/block",
       "x": 90,
       "y": 180
     },
-    "facing=west": {
+    "facing=west,powered=false": {
       "model": "create:block/reality_funnel/block",
       "x": 90,
       "y": 270
     },
-    "facing=east": {
+    "facing=east,powered=false": {
       "model": "create:block/reality_funnel/block",
+      "x": 90,
+      "y": 90
+    },
+    "facing=down,powered=true": {
+      "model": "create:block/reality_funnel/block_powered",
+      "x": 180
+    },
+    "facing=up,powered=true": {
+      "model": "create:block/reality_funnel/block_powered"
+    },
+    "facing=north,powered=true": {
+      "model": "create:block/reality_funnel/block_powered",
+      "x": 90
+    },
+    "facing=south,powered=true": {
+      "model": "create:block/reality_funnel/block_powered",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,powered=true": {
+      "model": "create:block/reality_funnel/block_powered",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,powered=true": {
+      "model": "create:block/reality_funnel/block_powered",
       "x": 90,
       "y": 90
     }

@@ -742,16 +742,19 @@ public class AllBlocks {
 	public static final BlockEntry<RealityFunnelBlock> REALITY_FUNNEL =
 		REGISTRATE.block("reality_funnel", RealityFunnelBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.blockstate((c, p) -> p.directionalBlock(c.get(), s -> AssetLookup.partialBaseModel(c, p)))
+			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
 			.item(FunnelItem::new)
 			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<BeltFunnelBlock> BELT_FUNNEL = REGISTRATE.block("belt_funnel", BeltFunnelBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.blockstate((c, p) -> p.horizontalBlock(c.get(),
-			s -> AssetLookup.partialBaseModel(c, p, s.get(BeltFunnelBlock.SHAPE)
-				.getName())))
+		.blockstate((c, p) -> p.horizontalBlock(c.get(), s -> {
+			String shape = s.get(BeltFunnelBlock.SHAPE)
+				.getName();
+			return s.get(BeltFunnelBlock.POWERED) ? AssetLookup.partialBaseModel(c, p, shape, "powered")
+				: AssetLookup.partialBaseModel(c, p, shape);
+		}))
 		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
 		.register();
 
