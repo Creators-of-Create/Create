@@ -529,7 +529,7 @@
 	"create.generic.unit.minutes": "Minutes",
 	"create.generic.unit.rpm": "RPM",
 	"create.generic.unit.stress": "su",
-	"create.generic.unit.degrees": "\u00B0",
+	"create.generic.unit.degrees": "°",
 
 	"create.action.scroll": "Scroll",
 	"create.action.confirm": "Confirm",
@@ -1075,7 +1075,7 @@
 	"block.create.furnace_engine.tooltip.behaviour1": "_Starts_ _powering_ a _Flywheel_ placed in front of it (1m apart). Use a Blast Furnace for higher speeds.",
 
 	"block.create.flywheel.tooltip": "FLYWHEEL",
-	"block.create.flywheel.tooltip.summary": "A large metal wheel to _harness_ _and_ _stabilize_ generated force by an _attached_ _Engine_. Flywheels connect to engines if they are _1m_ _apart_ and at a _90\u00B0_ _Angle_ from each other.",
+	"block.create.flywheel.tooltip.summary": "A large metal wheel to _harness_ _and_ _stabilize_ generated force by an _attached_ _Engine_. Flywheels connect to engines if they are _1m_ _apart_ and at a _90°_ _Angle_ from each other.",
 	"block.create.flywheel.tooltip.condition1": "When Attached to Running Engine",
 	"block.create.flywheel.tooltip.behaviour1": "Provides _Rotational_ _Force_ to a connected contraption based on the generator's strength and speed.",
 
