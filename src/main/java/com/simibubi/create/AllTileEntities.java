@@ -84,6 +84,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
 import com.simibubi.create.content.logistics.block.packager.PackagerRenderer;
 import com.simibubi.create.content.logistics.block.packager.PackagerTileEntity;
+import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverRenderer;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
@@ -217,11 +218,12 @@ public class AllTileEntities {
 		register("adjustable_crate", AdjustableCrateTileEntity::new, AllBlocks.ADJUSTABLE_CRATE);
 	public static final TileEntityEntry<CreativeCrateTileEntity> CREATIVE_CRATE =
 		register("creative_crate", CreativeCrateTileEntity::new, AllBlocks.CREATIVE_CRATE);
-	
+
+	public static final TileEntityEntry<RealityFunnelTileEntity> REALITY_FUNNEL = register("reality_funnel",
+		RealityFunnelTileEntity::new, AllBlocks.REALITY_FUNNEL, AllBlocks.BELT_FUNNEL, AllBlocks.CHUTE_FUNNEL);
 	public static final TileEntityEntry<PackagerTileEntity> PACKAGER =
 		register("packager", PackagerTileEntity::new, AllBlocks.PACKAGER);
-	
-	
+
 	public static final TileEntityEntry<ExtractorTileEntity> EXTRACTOR =
 		register("extractor", ExtractorTileEntity::new, AllBlocks.EXTRACTOR, AllBlocks.VERTICAL_EXTRACTOR);
 	public static final TileEntityEntry<LinkedExtractorTileEntity> LINKED_EXTRACTOR = register("linked_extractor",
@@ -270,7 +272,7 @@ public class AllTileEntities {
 		bind(HAND_CRANK, HandCrankRenderer::new);
 		bind(CUCKOO_CLOCK, CuckooClockRenderer::new);
 		bind(ANALOG_LEVER, AnalogLeverRenderer::new);
-		
+
 		bind(MECHANICAL_PUMP, PumpRenderer::new);
 		bind(FLUID_TANK, FluidTankRenderer::new);
 
@@ -302,6 +304,7 @@ public class AllTileEntities {
 		bind(TRANSPOSER, SmartTileEntityRenderer::new);
 		bind(LINKED_TRANSPOSER, SmartTileEntityRenderer::new);
 		bind(FUNNEL, SmartTileEntityRenderer::new);
+		bind(REALITY_FUNNEL, SmartTileEntityRenderer::new);
 		bind(BELT_TUNNEL, BeltTunnelRenderer::new);
 		bind(MECHANICAL_ARM, ArmRenderer::new);
 		bind(BELT_OBSERVER, BeltObserverRenderer::new);

@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.tileEntity.behaviour.filtering;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import net.minecraft.client.Minecraft;
@@ -47,15 +49,20 @@ public class FilteringHandler {
 		BlockRayTraceResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
 			return;
+		if (behaviour.slotPositioning instanceof ValueBoxTransform.Sided)
+			((Sided) behaviour.slotPositioning).fromSide(ray.getFace());
 
 		if (behaviour.testHit(ray.getHitVec())) {
 			if (event.getSide() != LogicalSide.CLIENT) {
-				ItemStack heldItem = player.getHeldItem(hand).copy();
+				ItemStack heldItem = player.getHeldItem(hand)
+					.copy();
 				if (!player.isCreative()) {
-					if (behaviour.getFilter().getItem() instanceof FilterItem)
+					if (behaviour.getFilter()
+						.getItem() instanceof FilterItem)
 						player.inventory.placeItemBackInInventory(world, behaviour.getFilter());
 					if (heldItem.getItem() instanceof FilterItem)
-						player.getHeldItem(hand).shrink(1);
+						player.getHeldItem(hand)
+							.shrink(1);
 				}
 				if (heldItem.getItem() instanceof FilterItem)
 					heldItem.setCount(1);
@@ -87,6 +94,8 @@ public class FilteringHandler {
 			return false;
 		if (!filtering.isCountVisible())
 			return false;
+		if (filtering.slotPositioning instanceof ValueBoxTransform.Sided)
+			((Sided) filtering.slotPositioning).fromSide(result.getFace());
 		if (!filtering.testHit(objectMouseOver.getHitVec()))
 			return false;
 		ItemStack filterItem = filtering.getFilter();

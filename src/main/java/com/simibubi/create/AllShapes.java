@@ -75,9 +75,9 @@ public class AllShapes {
 			.forDirectional(UP),
 		BELT_FUNNEL_RETRACTED = shape(3, -5, 14, 13, 13, 19).add(0, -5, 8, 16, 16, 14)
 			.forHorizontal(NORTH),
-		BELT_FUNNEL_DEFAULT = shape(3, -5, 12, 13, 13, 17).add(0, -5, 6, 16, 16, 12)
-			.forHorizontal(NORTH),
-		BELT_FUNNEL_EXTENDED = shape(3, -5, 6, 13, 13, 17).add(0, -5, 0, 16, 16, 6)
+		BELT_FUNNEL_EXTENDED = shape(3, -4, 6, 13, 13, 17).add(2, -4, 10, 14, 14, 14)
+			.add(1, -4, 6, 15, 15, 10)
+			.add(0, -5, 0, 16, 16, 6)
 			.forHorizontal(NORTH),
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
 			.add(3, 12, 3, 13, 16, 13)

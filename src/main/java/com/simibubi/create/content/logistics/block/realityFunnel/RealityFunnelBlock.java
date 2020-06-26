@@ -1,7 +1,10 @@
 package com.simibubi.create.content.logistics.block.realityFunnel;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 
@@ -11,6 +14,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -42,6 +46,16 @@ public class RealityFunnelBlock extends ProperDirectionalBlock {
 		return getDefaultState().with(FACING, facing)
 			.with(POWERED, context.getWorld()
 				.isBlockPowered(context.getPos()));
+	}
+
+	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return AllTileEntities.REALITY_FUNNEL.create();
 	}
 
 	@Override
@@ -103,6 +117,31 @@ public class RealityFunnelBlock extends ProperDirectionalBlock {
 			.getOpposite()))
 			.getBlock();
 		return !(block instanceof RealityFunnelBlock) && !(block instanceof HorizontalInteractionFunnelBlock);
+	}
+
+	@Nullable
+	public static Direction getFunnelFacing(BlockState state) {
+		if (state.has(FACING))
+			return state.get(FACING);
+		if (state.has(BlockStateProperties.HORIZONTAL_FACING))
+			return state.get(BlockStateProperties.HORIZONTAL_FACING);
+		return null;
+	}
+
+	@Override
+	public void onReplaced(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
+		boolean p_196243_5_) {
+		if (p_196243_1_.hasTileEntity()
+			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() && !isFunnel(p_196243_4_)
+				|| !p_196243_4_.hasTileEntity())) {
+			p_196243_2_.removeTileEntity(p_196243_3_);
+		}
+	}
+
+	@Nullable
+	public static boolean isFunnel(BlockState state) {
+		return state.getBlock() instanceof RealityFunnelBlock
+			|| state.getBlock() instanceof HorizontalInteractionFunnelBlock;
 	}
 
 }

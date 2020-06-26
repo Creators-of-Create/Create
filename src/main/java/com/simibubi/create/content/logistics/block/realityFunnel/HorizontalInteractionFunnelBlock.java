@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.realityFunnel;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 
 import net.minecraft.block.Block;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -34,6 +36,16 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 	}
 
 	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return AllTileEntities.REALITY_FUNNEL.create();
+	}
+
+	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
 		super.fillStateContainer(p_206840_1_.add(HORIZONTAL_FACING, POWERED, PUSHING));
 	}
@@ -42,6 +54,16 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
 		return super.getStateForPlacement(ctx).with(POWERED, ctx.getWorld()
 			.isBlockPowered(ctx.getPos()));
+	}
+
+	@Override
+	public void onReplaced(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
+		boolean p_196243_5_) {
+		if (p_196243_1_.hasTileEntity()
+			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() && !RealityFunnelBlock.isFunnel(p_196243_4_)
+				|| !p_196243_4_.hasTileEntity())) {
+			p_196243_2_.removeTileEntity(p_196243_3_);
+		}
 	}
 
 	@Override
