@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
@@ -44,7 +43,6 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -78,6 +76,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		super.addBehaviours(behaviours);
 		filtering = new FilteringBehaviour(this, new SawFilterSlot());
 		behaviours.add(filtering);
+		behaviours.add(new DirectBeltInputBehaviour(this));
 	}
 
 	@Override
@@ -142,81 +141,51 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 		Vec3d itemMovement = getItemMovementVec();
 		Direction itemMovementFacing = Direction.getFacingFromVector(itemMovement.x, itemMovement.y, itemMovement.z);
-		Vec3d outPos = VecHelper.getCenterOf(pos).add(itemMovement.scale(.5f).add(0, .5, 0));
-		Vec3d outMotion = itemMovement.scale(.0625).add(0, .125, 0);
+		if (inventory.remainingTime > 0)
+			return;
+		inventory.remainingTime = 0;
 
-		if (inventory.remainingTime <= 0) {
-
-			// Try moving items onto the belt
-			BlockPos nextPos = pos.add(itemMovement.x, itemMovement.y, itemMovement.z);
-			if (AllBlocks.BELT.has(world.getBlockState(nextPos))) {
-				TileEntity te = world.getTileEntity(nextPos);
-				if (te != null && te instanceof BeltTileEntity) {
-					for (int slot = 0; slot < inventory.getSlots(); slot++) {
-						ItemStack stack = inventory.getStackInSlot(slot);
-						if (stack.isEmpty())
-							continue;
-
-						if (((BeltTileEntity) te).tryInsertingFromSide(itemMovementFacing, stack, false))
-							inventory.setStackInSlot(slot, ItemStack.EMPTY);
-						else {
-							inventory.remainingTime = 0;
-							return;
-						}
-					}
-					inventory.clear();
-					inventory.remainingTime = -1;
-					sendData();
-				}
-			}
-
-			// Try moving items onto next saw
-			if (AllBlocks.MECHANICAL_SAW.has(world.getBlockState(nextPos))) {
-				TileEntity te = world.getTileEntity(nextPos);
-				if (te != null && te instanceof SawTileEntity) {
-					SawTileEntity sawTileEntity = (SawTileEntity) te;
-					Vec3d otherMovement = sawTileEntity.getItemMovementVec();
-					if (Direction.getFacingFromVector(otherMovement.x, otherMovement.y,
-							otherMovement.z) != itemMovementFacing.getOpposite()) {
-						for (int slot = 0; slot < inventory.getSlots(); slot++) {
-							ItemStack stack = inventory.getStackInSlot(slot);
-							if (stack.isEmpty())
-								continue;
-
-							ProcessingInventory sawInv = sawTileEntity.inventory;
-							if (sawInv.isEmpty()) {
-								sawInv.insertItem(0, stack, false);
-								inventory.setStackInSlot(slot, ItemStack.EMPTY);
-
-							} else {
-								inventory.remainingTime = 0;
-								return;
-							}
-						}
-						inventory.clear();
-						inventory.remainingTime = -1;
-						sendData();
-					}
-				}
-			}
-
-			// Eject Items
+		BlockPos nextPos = pos.add(itemMovement.x, itemMovement.y, itemMovement.z);
+		DirectBeltInputBehaviour behaviour = TileEntityBehaviour.get(world, nextPos, DirectBeltInputBehaviour.TYPE);
+		if (behaviour != null) {
+			boolean changed = false;
+			if (!behaviour.canInsertFromSide(itemMovementFacing))
+				return;
 			for (int slot = 0; slot < inventory.getSlots(); slot++) {
 				ItemStack stack = inventory.getStackInSlot(slot);
 				if (stack.isEmpty())
 					continue;
-				ItemEntity entityIn = new ItemEntity(world, outPos.x, outPos.y, outPos.z, stack);
-				entityIn.setMotion(outMotion);
-				world.addEntity(entityIn);
+				ItemStack remainder = behaviour.handleInsertion(stack, itemMovementFacing, false);
+				if (remainder.equals(stack, false))
+					continue;
+				inventory.setStackInSlot(slot, remainder);
+				changed = true;
 			}
-			inventory.clear();
-			world.updateComparatorOutputLevel(pos, getBlockState().getBlock());
-			inventory.remainingTime = -1;
-			sendData();
+			if (changed) {
+				markDirty();
+				sendData();
+			}
 			return;
 		}
 
-		return;
+		// Eject Items
+		Vec3d outPos = VecHelper.getCenterOf(pos)
+			.add(itemMovement.scale(.5f)
+				.add(0, .5, 0));
+		Vec3d outMotion = itemMovement.scale(.0625)
+			.add(0, .125, 0);
+		for (int slot = 0; slot < inventory.getSlots(); slot++) {
+			ItemStack stack = inventory.getStackInSlot(slot);
+			if (stack.isEmpty())
+				continue;
+			ItemEntity entityIn = new ItemEntity(world, outPos.x, outPos.y, outPos.z, stack);
+			entityIn.setMotion(outMotion);
+			world.addEntity(entityIn);
+		}
+		inventory.clear();
+		world.updateComparatorOutputLevel(pos, getBlockState().getBlock());
+		inventory.remainingTime = -1;
+		sendData();
 	}
 
 	@Override
@@ -240,8 +209,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		IParticleData particleData = null;
 		float speed = 1;
 		if (stack.getItem() instanceof BlockItem)
-			particleData =
-				new BlockParticleData(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock().getDefaultState());
+			particleData = new BlockParticleData(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock()
+				.getDefaultState());
 		else {
 			particleData = new ItemParticleData(ParticleTypes.ITEM, stack);
 			speed = .125f;
@@ -253,7 +222,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		float offset = inventory.recipeDuration != 0 ? (float) (inventory.remainingTime) / inventory.recipeDuration : 0;
 		offset -= .5f;
 		world.addParticle(particleData, pos.getX() + -vec.x * offset, pos.getY() + .45f, pos.getZ() + -vec.z * offset,
-				-vec.x * speed, r.nextFloat() * speed, -vec.z * speed);
+			-vec.x * speed, r.nextFloat() * speed, -vec.z * speed);
 	}
 
 	public Vec3d getItemMovementVec() {
@@ -271,7 +240,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 		IRecipe<?> recipe = recipes.get(recipeIndex);
 
-		int rolls = inventory.getStackInSlot(0).getCount();
+		int rolls = inventory.getStackInSlot(0)
+			.getCount();
 		inventory.clear();
 
 		List<ItemStack> list = new ArrayList<>();
@@ -280,7 +250,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			if (recipe instanceof CuttingRecipe)
 				results = ((CuttingRecipe) recipe).rollResults();
 			else if (recipe instanceof StonecuttingRecipe)
-				results.add(recipe.getRecipeOutput().copy());
+				results.add(recipe.getRecipeOutput()
+					.copy());
 
 			for (int i = 0; i < results.size(); i++) {
 				ItemStack stack = results.get(i);
@@ -294,10 +265,11 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	private List<? extends IRecipe<?>> getRecipes() {
 		List<IRecipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, world,
-				RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipeTypes.CUTTING.getType()));
-		return startedSearch.stream().filter(RecipeConditions.outputMatchesFilter(filtering))
-				.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0)))
-				.collect(Collectors.toList());
+			RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipeTypes.CUTTING.getType()));
+		return startedSearch.stream()
+			.filter(RecipeConditions.outputMatchesFilter(filtering))
+			.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0)))
+			.collect(Collectors.toList());
 	}
 
 	public void insertItem(ItemEntity entity) {
@@ -309,7 +281,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 
 		inventory.clear();
-		inventory.insertItem(0, entity.getItem().copy(), false);
+		inventory.insertItem(0, entity.getItem()
+			.copy(), false);
 		entity.remove();
 	}
 
@@ -357,7 +330,9 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	protected boolean shouldRun() {
-		return getBlockState().get(SawBlock.FACING).getAxis().isHorizontal();
+		return getBlockState().get(SawBlock.FACING)
+			.getAxis()
+			.isHorizontal();
 	}
 
 	@Override

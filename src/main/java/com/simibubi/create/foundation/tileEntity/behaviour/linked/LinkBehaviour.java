@@ -11,7 +11,7 @@ import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 
 import net.minecraft.block.BlockState;
@@ -21,8 +21,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class LinkBehaviour extends TileEntityBehaviour {
 
-	public static IBehaviourType<LinkBehaviour> TYPE = new IBehaviourType<LinkBehaviour>() {
-	};
+	public static BehaviourType<LinkBehaviour> TYPE = new BehaviourType<>();
 
 	enum Mode {
 		TRANSMIT, RECEIVE
@@ -162,7 +161,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public IBehaviourType<?> getType() {
+	public BehaviourType<?> getType() {
 		return TYPE;
 	}
 

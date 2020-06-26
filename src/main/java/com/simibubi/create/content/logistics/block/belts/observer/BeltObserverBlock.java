@@ -1,33 +1,21 @@
 package com.simibubi.create.content.logistics.block.belts.observer;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
-import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
@@ -37,18 +25,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
 public class BeltObserverBlock extends HorizontalBlock
-		implements ITE<BeltObserverTileEntity>, IBeltAttachment, IWrenchable {
+		implements ITE<BeltObserverTileEntity>, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty BELT = BooleanProperty.create("belt");
@@ -139,23 +122,6 @@ public class BeltObserverBlock extends HorizontalBlock
 	}
 
 	@Override
-	public List<BlockPos> getPotentialAttachmentPositions(IWorld world, BlockPos pos, BlockState beltState) {
-		Direction side = beltState.get(BeltBlock.HORIZONTAL_FACING).rotateY();
-		return Arrays.asList(pos.offset(side), pos.offset(side.getOpposite()));
-	}
-
-	@Override
-	public BlockPos getBeltPositionForAttachment(IWorld world, BlockPos pos, BlockState state) {
-		return pos.offset(state.get(HORIZONTAL_FACING));
-	}
-
-	@Override
-	public boolean isAttachedCorrectly(IWorld world, BlockPos attachmentPos, BlockPos beltPos,
-			BlockState attachmentState, BlockState beltState) {
-		return attachmentState.get(BELT);
-	}
-
-	@Override
 	public boolean canProvidePower(BlockState state) {
 		return state.get(POWERED);
 	}
@@ -172,116 +138,10 @@ public class BeltObserverBlock extends HorizontalBlock
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (newState.getBlock() != this || newState.with(POWERED, false) != state.with(POWERED, false))
-			onAttachmentRemoved(worldIn, pos, state);
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeTileEntity(pos);
 		}
-	}
-
-	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (oldState.getBlock() != this || oldState.with(POWERED, false) != state.with(POWERED, false))
-			onAttachmentPlaced(worldIn, pos, state);
-	}
-
-	@Override
-	public boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
-		World world = te.getWorld();
-		BlockState blockState = world.getBlockState(state.attachmentPos);
-		if (blockState.get(MODE) == Mode.DETECT)
-			return false;
-
-		FilteringBehaviour behaviour =
-			TileEntityBehaviour.get(te.getWorld(), state.attachmentPos, FilteringBehaviour.TYPE);
-		if (behaviour != null && !behaviour.test(transported.stack))
-			return false;
-
-		world.setBlockState(state.attachmentPos, blockState.with(POWERED, true));
-		world.notifyNeighborsOfStateChange(state.attachmentPos, this);
-		withTileEntityDo(world, state.attachmentPos, BeltObserverTileEntity::resetTurnOffCooldown);
-
-		Mode mode = blockState.get(MODE);
-		if (mode == Mode.EJECT || mode == Mode.SPLIT) {
-			ItemStack copy = transported.stack.copy();
-			ItemStack toEject = mode == Mode.EJECT ? transported.stack : copy.split(transported.stack.getCount() / 2);
-
-			if (!toEject.isEmpty()) {
-				if (!eject(world, toEject, state.attachmentPos, blockState.get(HORIZONTAL_FACING)))
-					return true;
-				transported.stack = mode == Mode.EJECT ? ItemStack.EMPTY : copy;
-			}
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean processItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
-		World world = te.getWorld();
-		BlockState blockState = world.getBlockState(state.attachmentPos);
-		withTileEntityDo(world, state.attachmentPos, BeltObserverTileEntity::resetTurnOffCooldown);
-
-		Mode mode = blockState.get(MODE);
-		if (mode == Mode.EJECT || mode == Mode.SPLIT) {
-			ItemStack copy = transported.stack.copy();
-			ItemStack toEject = mode == Mode.EJECT ? transported.stack : copy.split(transported.stack.getCount() / 2);
-
-			if (!eject(world, toEject, state.attachmentPos, blockState.get(HORIZONTAL_FACING)))
-				return true;
-			transported.stack = mode == Mode.EJECT ? ItemStack.EMPTY : copy;
-		}
-
-		return false;
-	}
-
-	private boolean eject(World world, ItemStack stack, BlockPos observerPos, Direction facing) {
-		BlockPos potentialBeltPos = observerPos.offset(facing, 2);
-		TileEntity tileEntity = world.getTileEntity(potentialBeltPos);
-		if (tileEntity instanceof BeltTileEntity) {
-			BeltTileEntity belt = (BeltTileEntity) tileEntity;
-			return belt.tryInsertingFromSide(facing, stack, false);
-		}
-
-		boolean empty = world.getBlockState(potentialBeltPos).getCollisionShape(world, potentialBeltPos).isEmpty();
-		float yOffset = empty ? 0 : .5f;
-		AxisAlignedBB bb = new AxisAlignedBB(empty ? potentialBeltPos : potentialBeltPos.up());
-		if (!world.getEntitiesWithinAABBExcludingEntity(null, bb).isEmpty())
-			return false;
-
-		Vec3d motion = new Vec3d(facing.getDirectionVec()).scale(1 / 16f);
-		Vec3d entityPos = VecHelper.getCenterOf(potentialBeltPos).add(0, yOffset + .25f, 0).subtract(motion);
-		ItemEntity entity = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, stack);
-		entity.setMotion(motion);
-		entity.setPickupDelay(5);
-		world.playSound(null, observerPos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f, .1f);
-		world.addEntity(entity);
-		return true;
-	}
-
-	@Override
-	public boolean processEntity(BeltTileEntity te, Entity entity, BeltAttachmentState state) {
-		if (te.getWorld().isRemote)
-			return false;
-		if (entity.getPositionVec().distanceTo(VecHelper.getCenterOf(te.getPos())) > .5f)
-			return false;
-
-		World world = te.getWorld();
-		BlockState blockState = world.getBlockState(state.attachmentPos);
-		if (blockState.get(POWERED))
-			return false;
-
-		world.setBlockState(state.attachmentPos, blockState.with(POWERED, true));
-		world.notifyNeighborsOfStateChange(state.attachmentPos, this);
-		withTileEntityDo(te.getWorld(), state.attachmentPos, BeltObserverTileEntity::resetTurnOffCooldown);
-		return false;
-	}
-
-	@Override
-	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		worldIn.setBlockState(pos, state.with(POWERED, false), 2);
-		worldIn.notifyNeighborsOfStateChange(pos, this);
 	}
 
 	@Override

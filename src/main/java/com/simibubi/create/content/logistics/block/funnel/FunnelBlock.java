@@ -1,19 +1,14 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
-import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -41,7 +36,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class FunnelBlock extends AttachedLogisticalBlock
-		implements IBeltAttachment, ITE<FunnelTileEntity>, IPortableBlock {
+		implements ITE<FunnelTileEntity>, IPortableBlock {
 
 	public static final BooleanProperty BELT = BooleanProperty.create("belt");
 	public static final MovementBehaviour MOVEMENT = new FunnelMovementBehaviour();
@@ -131,7 +126,6 @@ public class FunnelBlock extends AttachedLogisticalBlock
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		onAttachmentPlaced(worldIn, pos, state);
 		if (worldIn.isRemote)
 			return;
 
@@ -153,40 +147,10 @@ public class FunnelBlock extends AttachedLogisticalBlock
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		onAttachmentRemoved(worldIn, pos, state);
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeTileEntity(pos);
 		}
-	}
-
-	@Override
-	public List<BlockPos> getPotentialAttachmentPositions(IWorld world, BlockPos pos, BlockState beltState) {
-		return Arrays.asList(pos.up());
-	}
-
-	@Override
-	public BlockPos getBeltPositionForAttachment(IWorld world, BlockPos pos, BlockState state) {
-		return pos.down();
-	}
-
-	@Override
-	public boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
-		return process(te, transported, state);
-	}
-
-	@Override
-	public boolean isAttachedCorrectly(IWorld world, BlockPos attachmentPos, BlockPos beltPos,
-			BlockState attachmentState, BlockState beltState) {
-		return !isVertical(attachmentState);
-	}
-
-	@Override
-	public boolean processItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
-		Direction movementFacing = te.getMovementFacing();
-		if (movementFacing != te.getWorld().getBlockState(state.attachmentPos).get(HORIZONTAL_FACING))
-			return false;
-		return process(te, transported, state);
 	}
 
 	@Override
@@ -205,16 +169,6 @@ public class FunnelBlock extends AttachedLogisticalBlock
 		}
 
 		return ActionResultType.PASS;
-	}
-
-	public boolean process(BeltTileEntity belt, TransportedItemStack transported, BeltAttachmentState state) {
-		TileEntity te = belt.getWorld().getTileEntity(state.attachmentPos);
-		if (!(te instanceof FunnelTileEntity))
-			return false;
-		FunnelTileEntity funnel = (FunnelTileEntity) te;
-		ItemStack stack = funnel.tryToInsert(transported.stack);
-		transported.stack = stack;
-		return true;
 	}
 
 	public static class Vertical extends FunnelBlock {

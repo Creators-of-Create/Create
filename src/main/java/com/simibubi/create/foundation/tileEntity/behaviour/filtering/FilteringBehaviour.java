@@ -7,7 +7,7 @@ import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -20,8 +20,7 @@ import net.minecraft.world.World;
 
 public class FilteringBehaviour extends TileEntityBehaviour {
 
-	public static IBehaviourType<FilteringBehaviour> TYPE = new IBehaviourType<FilteringBehaviour>() {
-	};
+	public static BehaviourType<FilteringBehaviour> TYPE = new BehaviourType<>();
 
 	ValueBoxTransform slotPositioning;
 	boolean showCount;
@@ -152,7 +151,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public IBehaviourType<?> getType() {
+	public BehaviourType<?> getType() {
 		return TYPE;
 	}
 

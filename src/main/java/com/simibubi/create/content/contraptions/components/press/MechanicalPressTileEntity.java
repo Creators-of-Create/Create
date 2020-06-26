@@ -11,6 +11,8 @@ import com.simibubi.create.content.contraptions.processing.BasinTileEntity.Basin
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.entity.Entity;
@@ -59,6 +61,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	private static PressingInv pressingInv = new PressingInv();
+	public BeltProcessingBehaviour processingBehaviour;
+
 	public int runningTicks;
 	public boolean running;
 	public Mode mode;
@@ -67,6 +71,15 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public MechanicalPressTileEntity(TileEntityType<? extends MechanicalPressTileEntity> type) {
 		super(type);
 		mode = Mode.WORLD;
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		processingBehaviour =
+			new BeltProcessingBehaviour(this).whenItemEnters((s, i) -> BeltPressingCallbacks.onItemReceived(s, i, this))
+				.whileItemHeld((s, i) -> BeltPressingCallbacks.whenItemHeld(s, i, this));
+		behaviours.add(processingBehaviour);
 	}
 
 	@Override
@@ -105,7 +118,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return new AxisAlignedBB(pos).expand(0, -1.5, 0).expand(0, 1, 0);
+		return new AxisAlignedBB(pos).expand(0, -1.5, 0)
+			.expand(0, 1, 0);
 	}
 
 	public float getRenderedHeadOffset(float partialTicks) {
@@ -116,7 +130,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			}
 			if (runningTicks >= 40) {
 				return MathHelper.clamp(((60 - runningTicks) + 1 - partialTicks) / 20f * mode.headOffset, 0,
-						mode.headOffset);
+					mode.headOffset);
 			}
 		}
 		return 0;
@@ -180,7 +194,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 					if (basinInv.isPresent() && orElse instanceof BasinInventory) {
 						BasinInventory inv = (BasinInventory) orElse;
 
-						for (int slot = 0; slot < inv.getInputHandler().getSlots(); slot++) {
+						for (int slot = 0; slot < inv.getInputHandler()
+							.getSlots(); slot++) {
 							ItemStack stackInSlot = inv.getStackInSlot(slot);
 							if (stackInSlot.isEmpty())
 								continue;
@@ -194,9 +209,9 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 			if (!world.isRemote) {
 				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ITEM_BREAK.get(), SoundCategory.BLOCKS,
-						.5f, 1f);
+					.5f, 1f);
 				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.get(), SoundCategory.BLOCKS,
-						.125f, 1f);
+					.125f, 1f);
 			}
 		}
 
@@ -229,12 +244,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			pressedItems.forEach(stack -> makeCompactingParticleEffect(VecHelper.getCenterOf(pos.down(2)), stack));
 		}
 		if (mode == Mode.BELT) {
-			pressedItems.forEach(
-					stack -> makePressingParticleEffect(VecHelper.getCenterOf(pos.down(2)).add(0, 8 / 16f, 0), stack));
+			pressedItems.forEach(stack -> makePressingParticleEffect(VecHelper.getCenterOf(pos.down(2))
+				.add(0, 8 / 16f, 0), stack));
 		}
 		if (mode == Mode.WORLD) {
-			pressedItems.forEach(
-					stack -> makePressingParticleEffect(VecHelper.getCenterOf(pos.down(1)).add(0, -1 / 4f, 0), stack));
+			pressedItems.forEach(stack -> makePressingParticleEffect(VecHelper.getCenterOf(pos.down(1))
+				.add(0, -1 / 4f, 0), stack));
 		}
 
 		pressedItems.clear();
@@ -243,9 +258,10 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public void makePressingParticleEffect(Vec3d pos, ItemStack stack) {
 		if (world.isRemote) {
 			for (int i = 0; i < 20; i++) {
-				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f).mul(1, 0, 1);
+				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
+					.mul(1, 0, 1);
 				world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), pos.x, pos.y - .25f, pos.z, motion.x,
-						motion.y + .125f, motion.z);
+					motion.y + .125f, motion.z);
 			}
 		}
 	}
@@ -253,23 +269,24 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public void makeCompactingParticleEffect(Vec3d pos, ItemStack stack) {
 		if (world.isRemote) {
 			for (int i = 0; i < 20; i++) {
-				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .175f).mul(1, 0, 1);
+				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .175f)
+					.mul(1, 0, 1);
 				world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z, motion.x,
-						motion.y + .25f, motion.z);
+					motion.y + .25f, motion.z);
 			}
 		}
 	}
 
 	public Optional<PressingRecipe> getRecipe(ItemStack item) {
 		pressingInv.setInventorySlotContents(0, item);
-		Optional<PressingRecipe> recipe =
-			world.getRecipeManager().getRecipe(AllRecipeTypes.PRESSING.getType(), pressingInv, world);
+		Optional<PressingRecipe> recipe = world.getRecipeManager()
+			.getRecipe(AllRecipeTypes.PRESSING.getType(), pressingInv, world);
 		return recipe;
 	}
 
 	public static boolean canCompress(NonNullList<Ingredient> ingredients) {
-		return (ingredients.size() == 4 || ingredients.size() == 9)
-				&& ItemHelper.condenseIngredients(ingredients).size() == 1;
+		return (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.condenseIngredients(ingredients)
+			.size() == 1;
 	}
 
 	@Override
@@ -283,7 +300,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			return false;
 
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		if (!ingredients.stream().allMatch(Ingredient::isSimple))
+		if (!ingredients.stream()
+			.allMatch(Ingredient::isSimple))
 			return false;
 
 		List<ItemStack> remaining = new ArrayList<>();

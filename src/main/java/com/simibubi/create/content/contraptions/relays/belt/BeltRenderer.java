@@ -109,7 +109,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
 		boolean slopeAlongX = te.getBeltFacing().getAxis() == Axis.X;
 
-		for (TransportedItemStack transported : te.getInventory().getItems()) {
+		for (TransportedItemStack transported : te.getInventory().getTransportedItems()) {
 			ms.push();
 			MatrixStacker.of(ms).nudge(transported.angle);
 			float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);

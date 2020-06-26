@@ -1,8 +1,11 @@
 package com.simibubi.create.content.contraptions.processing;
 
+import java.util.List;
 import java.util.Optional;
 
-import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,7 +22,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEntity {
+public class BasinTileEntity extends SmartTileEntity implements ITickableTileEntity {
 
 	public boolean contentsChanged;
 
@@ -96,7 +99,12 @@ public class BasinTileEntity extends SyncedTileEntity implements ITickableTileEn
 		contentsChanged = true;
 		recipeInventory = new BasinInputInventory();
 	}
-
+	
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		behaviours.add(new DirectBeltInputBehaviour(this));
+	}
+	
 	@Override
 	public void read(CompoundNBT compound) {
 		super.read(compound);

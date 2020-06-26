@@ -210,9 +210,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		updateNeighbouringTunnel(worldIn, pos, state);
-		withTileEntityDo(worldIn, pos, te -> {
-			te.attachmentTracker.findAttachments(te);
-		});
 	}
 
 	@Override

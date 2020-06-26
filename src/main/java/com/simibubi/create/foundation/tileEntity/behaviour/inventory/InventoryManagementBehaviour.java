@@ -11,7 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -28,8 +28,7 @@ public class InventoryManagementBehaviour extends TileEntityBehaviour {
 	private Supplier<List<Pair<BlockPos, Direction>>> attachments;
 	private List<IItemHandler> activeHandlers;
 
-	public static IBehaviourType<InventoryManagementBehaviour> TYPE = new IBehaviourType<InventoryManagementBehaviour>() {
-	};
+	public static BehaviourType<InventoryManagementBehaviour> TYPE = new BehaviourType<>();
 
 	public InventoryManagementBehaviour(SmartTileEntity te, Supplier<List<Pair<BlockPos, Direction>>> attachments) {
 		super(te);
@@ -98,7 +97,7 @@ public class InventoryManagementBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public IBehaviourType<?> getType() {
+	public BehaviourType<?> getType() {
 		return TYPE;
 	}
 

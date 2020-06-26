@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
-import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
@@ -97,16 +96,6 @@ public class BeltMovementHandler {
 		boolean isPlayer = entityIn instanceof PlayerEntity;
 		if (entityIn instanceof LivingEntity && !isPlayer) {
 			((LivingEntity) entityIn).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 10, 1, false, false));
-		}
-
-		BeltTileEntity belt = (BeltTileEntity) te;
-
-		// Attachment pauses movement
-		for (BeltAttachmentState state : belt.attachmentTracker.attachments) {
-			if (state.attachment.processEntity(belt, entityIn, state)) {
-				info.ticksSinceLastCollision--;
-				return;
-			}
 		}
 
 		final Direction beltFacing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);

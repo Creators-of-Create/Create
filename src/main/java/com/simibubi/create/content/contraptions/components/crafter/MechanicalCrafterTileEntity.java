@@ -5,6 +5,7 @@ import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlo
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -13,8 +14,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InventoryManagementBehaviour.Attachments;
@@ -27,7 +28,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -91,9 +91,9 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		setLazyTickRate(20);
 		phase = Phase.IDLE;
 		groupedItemsBeforeCraft = new GroupedItems();
-		
+
 		// Does not get serialized due to active checking in tick
-		wasPoweredBefore = true; 
+		wasPoweredBefore = true;
 	}
 
 	@Override
@@ -337,13 +337,13 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	protected boolean isTargetingBelt() {
+		DirectBeltInputBehaviour behaviour = getTargetingBelt();
+		return behaviour != null && behaviour.canInsertFromSide(getTargetFacing());
+	}
+
+	protected DirectBeltInputBehaviour getTargetingBelt() {
 		BlockPos targetPos = pos.offset(getTargetFacing());
-		if (!AllBlocks.BELT.has(world.getBlockState(targetPos)))
-			return false;
-		TileEntity te = world.getTileEntity(targetPos);
-		if (!(te instanceof BeltTileEntity))
-			return false;
-		return ((KineticTileEntity) te).getSpeed() != 0;
+		return TileEntityBehaviour.get(world, targetPos, DirectBeltInputBehaviour.TYPE);
 	}
 
 	public void tryInsert() {
@@ -355,22 +355,21 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		boolean chagedPhase = phase != Phase.INSERTING;
 		final List<Pair<Integer, Integer>> inserted = new LinkedList<>();
 
-		groupedItems.grid.forEach((pair, stack) -> {
-			if (isTargetingBelt()) {
-				Direction facing = getTargetFacing();
-				BlockPos targetPos = pos.offset(facing);
-				BeltTileEntity te = (BeltTileEntity) world.getTileEntity(targetPos);
-				if (te.tryInsertingFromSide(facing, stack, false))
-					inserted.add(pair);
-				return;
-			}
+		DirectBeltInputBehaviour behaviour = getTargetingBelt();
+		for (Entry<Pair<Integer, Integer>, ItemStack> entry : groupedItems.grid.entrySet()) {
+			Pair<Integer, Integer> pair = entry.getKey();
+			ItemStack stack = entry.getValue();
+			Direction facing = getTargetFacing();
 
-			ItemStack remainder = inserting.insert(stack.copy(), false);
-			if (!remainder.isEmpty())
+			ItemStack remainder = behaviour == null ? inserting.insert(stack.copy(), false)
+				: behaviour.handleInsertion(stack, facing, false);
+			if (!remainder.isEmpty()) {
 				stack.setCount(remainder.getCount());
-			else
-				inserted.add(pair);
-		});
+				continue;
+			}
+			
+			inserted.add(pair);
+		}
 
 		inserted.forEach(groupedItems.grid::remove);
 		if (groupedItems.grid.isEmpty())

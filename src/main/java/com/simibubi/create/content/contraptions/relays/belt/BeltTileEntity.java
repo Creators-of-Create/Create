@@ -15,13 +15,15 @@ import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.Tracker;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
+import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandlerBeltSegment;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.BlockState;
@@ -46,7 +48,6 @@ import net.minecraftforge.items.IItemHandler;
 public class BeltTileEntity extends KineticTileEntity {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
-	public AllBeltAttachments.Tracker attachmentTracker;
 	public int color;
 	public int beltLength;
 	public int index;
@@ -61,9 +62,16 @@ public class BeltTileEntity extends KineticTileEntity {
 	public BeltTileEntity(TileEntityType<? extends BeltTileEntity> type) {
 		super(type);
 		controller = BlockPos.ZERO;
-		attachmentTracker = new Tracker(this);
 		itemHandler = LazyOptional.empty();
 		color = -1;
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		behaviours.add(new DirectBeltInputBehaviour(this)
+			.onlyInsertWhen(d -> getSpeed() != 0 && getMovementFacing() != d.getOpposite())
+			.setInsertionHandler(this::tryInsertingFromSide));
 	}
 
 	@Override
@@ -75,12 +83,6 @@ public class BeltTileEntity extends KineticTileEntity {
 			BeltBlock.initBelt(world, pos);
 		if (!AllBlocks.BELT.has(world.getBlockState(pos)))
 			return;
-
-		// Initialize Belt Attachments
-		if (world != null && trackerUpdateTag != null) {
-			attachmentTracker.readAndSearch(trackerUpdateTag, this);
-			trackerUpdateTag = null;
-		}
 		if (getSpeed() == 0)
 			return;
 
@@ -136,7 +138,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		BeltInventory inventory = ((BeltTileEntity) te).getInventory();
 		if (inventory == null)
 			return;
-		IItemHandler handler = inventory.createHandlerForSegment(index);
+		IItemHandler handler = new ItemHandlerBeltSegment(inventory, index);
 		itemHandler = LazyOptional.of(() -> handler);
 	}
 
@@ -163,8 +165,6 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		attachmentTracker.write(compound);
-
 		if (controller != null)
 			compound.put("Controller", NBTUtil.writeBlockPos(controller));
 		compound.putBoolean("IsController", isController());
@@ -246,7 +246,8 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public float getDirectionAwareBeltMovementSpeed() {
-		int offset = getBeltFacing().getAxisDirection().getOffset();
+		int offset = getBeltFacing().getAxisDirection()
+			.getOffset();
 		if (getBeltFacing().getAxis() == Axis.X)
 			offset *= -1;
 		return getBeltMovementSpeed() * offset;
@@ -270,8 +271,8 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (part == MIDDLE)
 			return false;
 
-		boolean movingPositively =
-			(getSpeed() > 0 == (direction.getAxisDirection().getOffset() == 1)) ^ direction.getAxis() == Axis.X;
+		boolean movingPositively = (getSpeed() > 0 == (direction.getAxisDirection()
+			.getOffset() == 1)) ^ direction.getAxis() == Axis.X;
 		return part == Part.START ^ movingPositively;
 	}
 
@@ -311,8 +312,8 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	public Direction getMovementFacing() {
 		Axis axis = getBeltFacing().getAxis();
-		return Direction
-				.getFacingFromAxisDirection(axis, getBeltMovementSpeed() < 0 ^ axis == Axis.X ? NEGATIVE : POSITIVE);
+		return Direction.getFacingFromAxisDirection(axis,
+			getBeltMovementSpeed() < 0 ^ axis == Axis.X ? NEGATIVE : POSITIVE);
 	}
 
 	protected Direction getBeltFacing() {
@@ -332,29 +333,39 @@ public class BeltTileEntity extends KineticTileEntity {
 		return inventory;
 	}
 
+	/**
+	 * always target a DirectBeltInsertionBehaviour
+	 */
+	@Deprecated
 	public boolean tryInsertingFromSide(Direction side, ItemStack stack, boolean simulate) {
-		return tryInsertingFromSide(side, new TransportedItemStack(stack), simulate);
+		return tryInsertingFromSide(new TransportedItemStack(stack), side, simulate).isEmpty();
 	}
 
-	public boolean tryInsertingFromSide(Direction side, TransportedItemStack transportedStack, boolean simulate) {
+	private ItemStack tryInsertingFromSide(TransportedItemStack transportedStack, Direction side, boolean simulate) {
 		BeltTileEntity nextBeltController = getControllerTE();
+		ItemStack inserted = transportedStack.stack;
+		ItemStack empty = ItemStack.EMPTY;
+
 		if (nextBeltController == null)
-			return false;
+			return inserted;
 		BeltInventory nextInventory = nextBeltController.getInventory();
 
 		if (getSpeed() == 0)
-			return false;
-		if (!nextInventory.canInsertFrom(index, side))
-			return false;
+			return inserted;
+		if (!nextInventory.canInsertAtFromSide(index, side))
+			return inserted;
 		if (simulate)
-			return true;
+			return empty;
 
+		transportedStack = transportedStack.copy();
 		transportedStack.beltPosition = index + .5f - Math.signum(getDirectionAwareBeltMovementSpeed()) / 16f;
 
 		Direction movementFacing = getMovementFacing();
-		if (!side.getAxis().isVertical()) {
+		if (!side.getAxis()
+			.isVertical()) {
 			if (movementFacing != side) {
-				transportedStack.sideOffset = side.getAxisDirection().getOffset() * .35f;
+				transportedStack.sideOffset = side.getAxisDirection()
+					.getOffset() * .35f;
 				if (side.getAxis() == Axis.X)
 					transportedStack.sideOffset *= -1;
 			} else
@@ -368,8 +379,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		nextInventory.addItem(transportedStack);
 		nextBeltController.markDirty();
 		nextBeltController.sendData();
-
-		return true;
+		return empty;
 	}
 
 }

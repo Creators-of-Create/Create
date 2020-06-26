@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -15,8 +15,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class AutoExtractingBehaviour extends ExtractingBehaviour {
 
-	public static IBehaviourType<AutoExtractingBehaviour> TYPE = new IBehaviourType<AutoExtractingBehaviour>() {
-	};
+	public static BehaviourType<AutoExtractingBehaviour> TYPE = new BehaviourType<>();
 
 	private int delay;
 	private int timer;
@@ -85,7 +84,7 @@ public class AutoExtractingBehaviour extends ExtractingBehaviour {
 	}
 
 	@Override
-	public IBehaviourType<?> getType() {
+	public BehaviourType<?> getType() {
 		return TYPE;
 	}
 
