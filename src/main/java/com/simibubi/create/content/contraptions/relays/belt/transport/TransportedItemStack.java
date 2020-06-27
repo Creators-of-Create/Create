@@ -54,6 +54,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 	public TransportedItemStack copy() {
 		TransportedItemStack copy = getSimilar();
 		copy.angle = angle;
+		copy.sideOffset = sideOffset;
 		return copy;
 	}
 

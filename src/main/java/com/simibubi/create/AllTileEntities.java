@@ -72,6 +72,8 @@ import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverRe
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
+import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
+import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRenderer;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterTileEntity;
@@ -219,6 +221,8 @@ public class AllTileEntities {
 	public static final TileEntityEntry<CreativeCrateTileEntity> CREATIVE_CRATE =
 		register("creative_crate", CreativeCrateTileEntity::new, AllBlocks.CREATIVE_CRATE);
 
+	public static final TileEntityEntry<DepotTileEntity> DEPOT =
+		register("depot", DepotTileEntity::new, AllBlocks.DEPOT);
 	public static final TileEntityEntry<RealityFunnelTileEntity> REALITY_FUNNEL = register("reality_funnel",
 		RealityFunnelTileEntity::new, AllBlocks.REALITY_FUNNEL, AllBlocks.BELT_FUNNEL, AllBlocks.CHUTE_FUNNEL);
 	public static final TileEntityEntry<PackagerTileEntity> PACKAGER =
@@ -295,6 +299,7 @@ public class AllTileEntities {
 		bind(FURNACE_ENGINE, EngineRenderer::new);
 		bind(ROTATION_SPEED_CONTROLLER, SpeedControllerRenderer::new);
 		bind(PACKAGER, PackagerRenderer::new);
+		bind(DEPOT, DepotRenderer::new);
 
 		bind(CREATIVE_CRATE, SmartTileEntityRenderer::new);
 		bind(REDSTONE_LINK, SmartTileEntityRenderer::new);

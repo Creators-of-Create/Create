@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity.Mode;
-import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 
 import net.minecraft.item.ItemStack;
 
 public class BeltPressingCallbacks {
 
-	static ProcessingResult onItemReceived(TransportedItemStack transported, BeltInventory beltInventory,
-		MechanicalPressTileEntity press) {
+	static ProcessingResult onItemReceived(TransportedItemStack transported,
+		TransportedItemStackHandlerBehaviour handler, MechanicalPressTileEntity press) {
 		if (press.getSpeed() == 0 || press.running)
 			return PASS;
 		if (!press.getRecipe(transported.stack)
@@ -28,9 +28,9 @@ public class BeltPressingCallbacks {
 		return HOLD;
 	}
 
-	static ProcessingResult whenItemHeld(TransportedItemStack transportedStack, BeltInventory beltInventory,
+	static ProcessingResult whenItemHeld(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler,
 		MechanicalPressTileEntity pressTe) {
-		
+
 		if (pressTe.getSpeed() == 0)
 			return PASS;
 		if (!pressTe.running)
@@ -38,9 +38,9 @@ public class BeltPressingCallbacks {
 		if (pressTe.runningTicks != 30)
 			return HOLD;
 
-		Optional<PressingRecipe> recipe = pressTe.getRecipe(transportedStack.stack);
+		Optional<PressingRecipe> recipe = pressTe.getRecipe(transported.stack);
 		pressTe.pressedItems.clear();
-		pressTe.pressedItems.add(transportedStack.stack);
+		pressTe.pressedItems.add(transported.stack);
 
 		if (!recipe.isPresent())
 			return PASS;
@@ -48,10 +48,10 @@ public class BeltPressingCallbacks {
 		ItemStack out = recipe.get()
 			.getRecipeOutput()
 			.copy();
-		List<ItemStack> multipliedOutput = ItemHelper.multipliedOutput(transportedStack.stack, out);
+		List<ItemStack> multipliedOutput = ItemHelper.multipliedOutput(transported.stack, out);
 		if (multipliedOutput.isEmpty())
-			transportedStack.stack = ItemStack.EMPTY;
-		transportedStack.stack = multipliedOutput.get(0);
+			transported.stack = ItemStack.EMPTY;
+		transported.stack = multipliedOutput.get(0);
 		pressTe.sendData();
 		return HOLD;
 	}

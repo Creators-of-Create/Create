@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.block.Block;
@@ -165,7 +166,7 @@ public class BeltInventory {
 					continue;
 				if (!inputBehaviour.canInsertFromSide(movementFacing))
 					continue;
-				
+
 				ItemStack remainder = inputBehaviour.handleInsertion(currentItem, movementFacing, false);
 				if (remainder.equals(currentItem.stack, false))
 					continue;
@@ -198,14 +199,18 @@ public class BeltInventory {
 		// Continue processing if held
 		if (currentItem.locked) {
 			BeltProcessingBehaviour processingBehaviour = getBeltProcessingAtSegment(currentSegment);
+			TransportedItemStackHandlerBehaviour stackHandlerBehaviour =
+				getTransportedItemStackHandlerAtSegment(currentSegment);
 
+			if (stackHandlerBehaviour == null)
+				return false;
 			if (processingBehaviour == null) {
 				currentItem.locked = false;
 				belt.sendData();
 				return false;
 			}
 
-			ProcessingResult result = processingBehaviour.handleHeldItem(currentItem, this);
+			ProcessingResult result = processingBehaviour.handleHeldItem(currentItem, stackHandlerBehaviour);
 			if (result == ProcessingResult.REMOVE)
 				return true;
 			if (result == ProcessingResult.HOLD)
@@ -225,10 +230,17 @@ public class BeltInventory {
 				: segment + .5f >= nextOffset; segment += step) {
 
 				BeltProcessingBehaviour processingBehaviour = getBeltProcessingAtSegment(segment);
+				TransportedItemStackHandlerBehaviour stackHandlerBehaviour =
+					getTransportedItemStackHandlerAtSegment(segment);
+
 				if (processingBehaviour == null)
 					continue;
+				if (stackHandlerBehaviour == null)
+					continue;
+				if (BeltProcessingBehaviour.isBlocked(belt.getWorld(), BeltHelper.getPositionForOffset(belt, segment)))
+					continue;
 
-				ProcessingResult result = processingBehaviour.handleReceivedItem(currentItem, this);
+				ProcessingResult result = processingBehaviour.handleReceivedItem(currentItem, stackHandlerBehaviour);
 				if (result == ProcessingResult.REMOVE)
 					return true;
 
@@ -247,6 +259,11 @@ public class BeltInventory {
 	protected BeltProcessingBehaviour getBeltProcessingAtSegment(int segment) {
 		return TileEntityBehaviour.get(belt.getWorld(), BeltHelper.getPositionForOffset(belt, segment)
 			.up(2), BeltProcessingBehaviour.TYPE);
+	}
+
+	protected TransportedItemStackHandlerBehaviour getTransportedItemStackHandlerAtSegment(int segment) {
+		return TileEntityBehaviour.get(belt.getWorld(), BeltHelper.getPositionForOffset(belt, segment),
+			TransportedItemStackHandlerBehaviour.TYPE);
 	}
 
 	private enum Ending {
@@ -373,21 +390,24 @@ public class BeltInventory {
 		belt.getWorld()
 			.addEntity(entity);
 	}
-	
+
 	public void ejectAll() {
 		items.forEach(this::eject);
 		items.clear();
 	}
 
-	public void forEachWithin(float position, float distance,
-		Function<TransportedItemStack, List<TransportedItemStack>> callback) {
+	public void applyToEachWithin(float position, float maxDistanceToPosition,
+		Function<TransportedItemStack, List<TransportedItemStack>> processFunction) {
 		List<TransportedItemStack> toBeAdded = new ArrayList<>();
 		boolean dirty = false;
 		for (Iterator<TransportedItemStack> iterator = items.iterator(); iterator.hasNext();) {
 			TransportedItemStack transportedItemStack = iterator.next();
-			if (Math.abs(position - transportedItemStack.beltPosition) < distance) {
-				List<TransportedItemStack> apply = callback.apply(transportedItemStack);
+			ItemStack stackBefore = transportedItemStack.stack.copy();
+			if (Math.abs(position - transportedItemStack.beltPosition) < maxDistanceToPosition) {
+				List<TransportedItemStack> apply = processFunction.apply(transportedItemStack);
 				if (apply == null)
+					continue;
+				if (apply.size() == 1 && apply.get(0).stack.equals(stackBefore, false))
 					continue;
 				dirty = true;
 				toBeAdded.addAll(apply);

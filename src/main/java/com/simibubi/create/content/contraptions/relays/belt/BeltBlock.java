@@ -250,7 +250,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			if (worldIn.isRemote)
 				return ActionResultType.SUCCESS;
 			controllerBelt.getInventory()
-				.forEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
+				.applyToEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
 					player.inventory.placeItemBackInInventory(worldIn, transportedItemStack.stack);
 					return Collections.emptyList();
 				});

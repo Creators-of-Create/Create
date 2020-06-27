@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -24,6 +25,7 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandle
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.BlockState;
@@ -39,6 +41,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -72,6 +75,8 @@ public class BeltTileEntity extends KineticTileEntity {
 		behaviours.add(new DirectBeltInputBehaviour(this)
 			.onlyInsertWhen(d -> getSpeed() != 0 && getMovementFacing() != d.getOpposite())
 			.setInsertionHandler(this::tryInsertingFromSide));
+		behaviours.add(new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
+			.withStackPlacement(this::getWorldPositionOf));
 	}
 
 	@Override
@@ -331,6 +336,20 @@ public class BeltTileEntity extends KineticTileEntity {
 			inventory = new BeltInventory(this);
 		}
 		return inventory;
+	}
+
+	private void applyToAllItems(Function<TransportedItemStack, List<TransportedItemStack>> processFunction) {
+		BeltTileEntity controller = getControllerTE();
+		if (controller != null)
+			controller.getInventory()
+				.applyToEachWithin(index + .5f, .51f, processFunction);
+	}
+
+	private Vec3d getWorldPositionOf(TransportedItemStack transported) {
+		BeltTileEntity controllerTE = getControllerTE();
+		if (controllerTE == null)
+			return Vec3d.ZERO;
+		return BeltHelper.getVectorForOffset(controllerTE, transported.beltPosition);
 	}
 
 	/**

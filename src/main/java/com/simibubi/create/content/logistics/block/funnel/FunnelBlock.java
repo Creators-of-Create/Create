@@ -138,7 +138,7 @@ public class FunnelBlock extends AttachedLogisticalBlock
 			if (controllerBelt == null)
 				return;
 
-			controllerBelt.getInventory().forEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
+			controllerBelt.getInventory().applyToEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
 				controllerBelt.getInventory().eject(transportedItemStack);
 				return Collections.emptyList();
 			});
