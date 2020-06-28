@@ -30,6 +30,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	public int count;
 	private Consumer<ItemStack> callback;
 	private Supplier<Boolean> isActive;
+	private Supplier<Boolean> showCountPredicate;
 
 	int scrollableValue;
 	int ticksUntilScrollPacket;
@@ -40,11 +41,13 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		filter = ItemStack.EMPTY;
 		slotPositioning = slot;
 		showCount = false;
-		callback = stack -> {};
+		callback = stack -> {
+		};
 		isActive = () -> true;
 		textShift = Vec3d.ZERO;
 		count = 0;
 		ticksUntilScrollPacket = -1;
+		showCountPredicate = () -> showCount;
 	}
 
 	@Override
@@ -95,9 +98,14 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		callback = filterCallback;
 		return this;
 	}
-	
+
 	public FilteringBehaviour onlyActiveWhen(Supplier<Boolean> condition) {
 		isActive = condition;
+		return this;
+	}
+
+	public FilteringBehaviour showCountWhen(Supplier<Boolean> condition) {
+		showCountPredicate = condition;
 		return this;
 	}
 
@@ -143,7 +151,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	}
 
 	public boolean isCountVisible() {
-		return showCount && !getFilter().isEmpty();
+		return showCountPredicate.get();
 	}
 
 	public boolean test(ItemStack stack) {
@@ -168,7 +176,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	public boolean anyAmount() {
 		return count == 0;
 	}
-	
+
 	public boolean isActive() {
 		return isActive.get();
 	}

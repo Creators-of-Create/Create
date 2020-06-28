@@ -99,9 +99,6 @@ public class FilteringHandler {
 		if (!filtering.testHit(objectMouseOver.getHitVec()))
 			return false;
 		ItemStack filterItem = filtering.getFilter();
-		if (filterItem.isEmpty())
-			return false;
-
 		filtering.ticksUntilScrollPacket = 10;
 		int maxAmount = (filterItem.getItem() instanceof FilterItem) ? 64 : filterItem.getMaxStackSize();
 		filtering.scrollableValue =

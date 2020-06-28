@@ -58,6 +58,7 @@ public class AllBlockPartials {
 		DEPLOYER_HAND_HOLDING = get("deployer/hand_holding"),
 		ANALOG_LEVER_HANDLE = get("analog_lever/handle"), 
 		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"),
+		BELT_FUNNEL_FLAP = get("belt_funnel/flap"), 
 		BELT_TUNNEL_FLAP = get("belt_tunnel/flap"), 
 		BELT_TUNNEL_INDICATOR = get("belt_tunnel/indicator"),
 		FLEXPEATER_INDICATOR = get("diodes/indicator"), 

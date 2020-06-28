@@ -86,6 +86,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
 import com.simibubi.create.content.logistics.block.packager.PackagerRenderer;
 import com.simibubi.create.content.logistics.block.packager.PackagerTileEntity;
+import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelRenderer;
 import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverRenderer;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
@@ -309,7 +310,7 @@ public class AllTileEntities {
 		bind(TRANSPOSER, SmartTileEntityRenderer::new);
 		bind(LINKED_TRANSPOSER, SmartTileEntityRenderer::new);
 		bind(FUNNEL, SmartTileEntityRenderer::new);
-		bind(REALITY_FUNNEL, SmartTileEntityRenderer::new);
+		bind(REALITY_FUNNEL, RealityFunnelRenderer::new);
 		bind(BELT_TUNNEL, BeltTunnelRenderer::new);
 		bind(MECHANICAL_ARM, ArmRenderer::new);
 		bind(BELT_OBSERVER, BeltObserverRenderer::new);
