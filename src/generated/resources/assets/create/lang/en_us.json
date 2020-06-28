@@ -815,6 +815,15 @@
 
 	"create.mechanical_mixer.min_ingredients": "Min. Ingredients",
 
+	"create.gui.config.overlay1": "Hi :)",
+	"create.gui.config.overlay2": "This is a sample overlay",
+	"create.gui.config.overlay3": "Click or drag with your mouse",
+	"create.gui.config.overlay4": "to move this preview",
+	"create.gui.config.overlay5": "Press ESC to exit this screen",
+	"create.gui.config.overlay6": "and save the new position",
+	"create.gui.config.overlay7": "Run /create overlay reset",
+	"create.gui.config.overlay8": "to reset to the default position",
+
 	"create.command.killTPSCommand": "killtps",
 	"create.command.killTPSCommand.status.slowed_by.0": "[Create]: Server tick is currently slowed by %s ms :o",
 	"create.command.killTPSCommand.status.slowed_by.1": "[Create]: Server tick is slowed by %s ms now >:)",
