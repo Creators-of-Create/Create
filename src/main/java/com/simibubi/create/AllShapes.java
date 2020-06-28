@@ -69,6 +69,10 @@ public class AllShapes {
 			.add(1, 6, 1, 15, 10, 15)
 			.add(0, 10, 0, 16, 16, 16)
 			.forDirectional(UP),
+		REALITY_FUNNEL_COLLISION = shape(3, -2, 3, 13, 2, 13).add(2, 2, 2, 14, 6, 14)
+			.add(1, 6, 1, 15, 10, 15)
+			.add(0, 10, 0, 16, 13, 16)
+			.forDirectional(UP),
 		CHUTE_FUNNEL = shape(3, -2, 3, 13, 2, 13).add(2, 2, 2, 14, 6, 14)
 			.add(1, 5, 1, 15, 16, 15)
 			.add(0, 8, 0, 16, 14, 16)

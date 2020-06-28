@@ -138,7 +138,12 @@ public class BeltInventory {
 			}
 
 			// Belt Tunnels
-			BeltTunnelInteractionHandler.flapTunnelsAndCheckIfStuck(this, currentItem, nextOffset);
+			if (BeltTunnelInteractionHandler.flapTunnelsAndCheckIfStuck(this, currentItem, nextOffset))
+				continue;
+
+			// Belt Funnels
+			if (BeltFunnelInteractionHandler.checkForFunnels(this, currentItem, nextOffset))
+				continue;
 
 			// Apply Movement
 			currentItem.beltPosition += limitedMovement;
@@ -154,10 +159,8 @@ public class BeltInventory {
 			int lastOffset = beltMovementPositive ? belt.beltLength - 1 : 0;
 			BlockPos nextPosition = BeltHelper.getPositionForOffset(belt, beltMovementPositive ? belt.beltLength : -1);
 
-			if (ending == Ending.FUNNEL) {
-				// TODO
+			if (ending == Ending.FUNNEL)
 				continue;
-			}
 
 			if (ending == Ending.INSERT) {
 				DirectBeltInputBehaviour inputBehaviour =
@@ -267,7 +270,7 @@ public class BeltInventory {
 	}
 
 	private enum Ending {
-		UNRESOLVED(0), EJECT(0), INSERT(.25f), FUNNEL(.35f), BLOCKED(.45f);
+		UNRESOLVED(0), EJECT(0), INSERT(.25f), FUNNEL(.5f), BLOCKED(.45f);
 
 		private float margin;
 

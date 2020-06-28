@@ -28,8 +28,10 @@ public class BeltTunnelInteractionHandler {
 		if (!beltInventory.beltMovementPositive && nextOffset == 0)
 			upcomingSegment = -1;
 		if (currentSegment != upcomingSegment) {
-			if (stuckAtTunnel(beltInventory, upcomingSegment, current.stack, movementFacing))
+			if (stuckAtTunnel(beltInventory, upcomingSegment, current.stack, movementFacing)) {
+				current.beltPosition = currentSegment + (beltInventory.beltMovementPositive ? .99f : -.01f);				
 				return true;
+			}
 			if (!beltInventory.belt.getWorld().isRemote) {
 				flapTunnel(beltInventory, currentSegment, movementFacing, false);
 				flapTunnel(beltInventory, upcomingSegment, movementFacing.getOpposite(), true);

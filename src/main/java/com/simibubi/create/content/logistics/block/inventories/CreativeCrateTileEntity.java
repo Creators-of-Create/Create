@@ -57,6 +57,12 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 		otherCrate.filter.setFilter(filter);
 	}
 
+	@Override
+	public void remove() {
+		if (itemHandler != null)
+			itemHandler.invalidate();
+	}
+
 	private CreativeCrateTileEntity getOtherCrate() {
 		if (!AllBlocks.CREATIVE_CRATE.has(getBlockState()))
 			return null;
@@ -72,8 +78,9 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 		CreativeCrateTileEntity otherCrate = getOtherCrate();
 		if (otherCrate == null)
 			return;
-		
-		filter.withCallback($ -> {});
+
+		filter.withCallback($ -> {
+		});
 		filter.setFilter(otherCrate.filter.getFilter());
 		filter.withCallback(this::filterChanged);
 	}
@@ -90,7 +97,8 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 
 			@Override
 			protected void rotate(BlockState state, MatrixStack ms) {
-				MatrixStacker.of(ms).rotateX(90);
+				MatrixStacker.of(ms)
+					.rotateX(90);
 			}
 
 			@Override

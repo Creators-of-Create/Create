@@ -148,8 +148,11 @@ public class DepotTileEntity extends SmartTileEntity {
 		return empty;
 	}
 
-	private void applyToAllItems(Function<TransportedItemStack, List<TransportedItemStack>> processFunction) {
+	private void applyToAllItems(float maxDistanceFromCentre,
+		Function<TransportedItemStack, List<TransportedItemStack>> processFunction) {
 		if (heldItem == null)
+			return;
+		if (.5f - heldItem.beltPosition > maxDistanceFromCentre)
 			return;
 
 		boolean dirty = false;
@@ -187,10 +190,11 @@ public class DepotTileEntity extends SmartTileEntity {
 			sendData();
 		}
 	}
-	
+
 	public boolean isOutputEmpty() {
-		for (int i = 0; i < processingOutputBuffer.getSlots(); i++) 
-			if (!processingOutputBuffer.getStackInSlot(i).isEmpty())
+		for (int i = 0; i < processingOutputBuffer.getSlots(); i++)
+			if (!processingOutputBuffer.getStackInSlot(i)
+				.isEmpty())
 				return false;
 		return true;
 	}

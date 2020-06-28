@@ -27,8 +27,13 @@ public class ExtractingBehaviour extends InventoryManagementBehaviour {
 	private Predicate<ItemStack> customFilter;
 	private Consumer<ItemStack> callback;
 
+	public ExtractingBehaviour(SmartTileEntity te, Supplier<List<Pair<BlockPos, Direction>>> attachments) {
+		this(te, attachments, item -> {
+		});
+	}
+
 	public ExtractingBehaviour(SmartTileEntity te, Supplier<List<Pair<BlockPos, Direction>>> attachments,
-			Consumer<ItemStack> onExtract) {
+		Consumer<ItemStack> onExtract) {
 		super(te, attachments);
 		customAmountFilter = stack -> 64;
 		customFilter = stack -> true;

@@ -22,20 +22,25 @@ public class TransportedItemStackHandlerBehaviour extends TileEntityBehaviour {
 		this.processingCallback = processingCallback;
 		positionGetter = t -> VecHelper.getCenterOf(te.getPos());
 	}
-	
+
 	public TransportedItemStackHandlerBehaviour withStackPlacement(PositionGetter function) {
 		this.positionGetter = function;
 		return this;
 	}
 
 	public void handleProcessingOnAllItems(Function<TransportedItemStack, List<TransportedItemStack>> processFunction) {
-		this.processingCallback.applyToAllItems(processFunction);
+		handleCenteredProcessingOnAllItems(.51f, processFunction);
+	}
+
+	public void handleCenteredProcessingOnAllItems(float maxDistanceFromCenter,
+		Function<TransportedItemStack, List<TransportedItemStack>> processFunction) {
+		this.processingCallback.applyToAllItems(maxDistanceFromCenter, processFunction);
 	}
 
 	public Vec3d getWorldPositionOf(TransportedItemStack transported) {
 		return positionGetter.getWorldPositionVector(transported);
 	}
-	
+
 	@Override
 	public BehaviourType<?> getType() {
 		return TYPE;
@@ -43,7 +48,8 @@ public class TransportedItemStackHandlerBehaviour extends TileEntityBehaviour {
 
 	@FunctionalInterface
 	public interface ProcessingCallback {
-		public void applyToAllItems(Function<TransportedItemStack, List<TransportedItemStack>> processFunction);
+		public void applyToAllItems(float maxDistanceFromCenter,
+			Function<TransportedItemStack, List<TransportedItemStack>> processFunction);
 	}
 
 	@FunctionalInterface

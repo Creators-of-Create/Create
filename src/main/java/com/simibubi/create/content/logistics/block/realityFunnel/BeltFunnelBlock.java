@@ -1,8 +1,10 @@
 package com.simibubi.create.content.logistics.block.realityFunnel;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.foundation.utility.Lang;
@@ -10,9 +12,11 @@ import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +26,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 
 public class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 
@@ -45,6 +50,26 @@ public class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 	public BeltFunnelBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
 		setDefaultState(getDefaultState().with(SHAPE, Shape.RETRACTED));
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+		BlockState state = super.getStateForPlacement(ctx);
+		World world = ctx.getWorld();
+		BlockPos posBelow = ctx.getPos()
+			.down();
+		BlockState stateBelow = world.getBlockState(posBelow);
+		if (!AllBlocks.BELT.has(stateBelow))
+			return state;
+		TileEntity teBelow = world.getTileEntity(posBelow);
+		if (teBelow == null || !(teBelow instanceof BeltTileEntity))
+			return state;
+		BeltTileEntity beltTileEntity = (BeltTileEntity) teBelow;
+		if (beltTileEntity.getSpeed() == 0)
+			return state;
+		Direction movementFacing = beltTileEntity.getMovementFacing();
+		Direction funnelFacing = ctx.getFace();
+		return state.with(PUSHING, movementFacing == funnelFacing);
 	}
 
 	@Override
