@@ -351,17 +351,16 @@ public class BlockzapperItem extends ZapperItem {
 			.contains(component.name()))
 			stack.getOrCreateTag()
 				.putString(component.name(), ComponentTier.None.name());
-		return NBTHelper.readEnum(stack.getTag()
-			.getString(component.name()), ComponentTier.class);
+		return NBTHelper.readEnum(stack.getTag(), component.name(), ComponentTier.class);
 	}
 
 	public static void setTier(Components component, ComponentTier tier, ItemStack stack) {
-		stack.getOrCreateTag()
-			.putString(component.name(), NBTHelper.writeEnum(tier));
+		NBTHelper.writeEnum(stack.getOrCreateTag(), component.name(), tier);
 	}
 
 	public static enum ComponentTier {
 		None(TextFormatting.DARK_GRAY), Brass(TextFormatting.GOLD), Chromatic(TextFormatting.LIGHT_PURPLE);
+
 		public TextFormatting color;
 
 		private ComponentTier(TextFormatting color) {

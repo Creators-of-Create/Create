@@ -96,6 +96,7 @@ import com.simibubi.create.content.logistics.block.funnel.VerticalFunnelGenerato
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
 import com.simibubi.create.content.logistics.block.packager.PackagerBlock;
 import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelGenerator;
@@ -781,7 +782,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 		.transform(StressConfigDefaults.setImpact(8.0))
-		.item()
+		.item(ArmItem::new)
 		.transform(customItemModel())
 		.register();
 

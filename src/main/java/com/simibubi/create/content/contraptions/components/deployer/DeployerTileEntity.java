@@ -333,8 +333,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	@Override
 	public void read(CompoundNBT compound) {
-		state = NBTHelper.readEnum(compound.getString("State"), State.class);
-		mode = NBTHelper.readEnum(compound.getString("Mode"), Mode.class);
+		state = NBTHelper.readEnum(compound, "State", State.class);
+		mode = NBTHelper.readEnum(compound, "Mode", Mode.class);
 		timer = compound.getInt("Timer");
 		deferredInventoryList = compound.getList("Inventory", NBT.TAG_COMPOUND);
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
@@ -345,8 +345,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		compound.putString("Mode", NBTHelper.writeEnum(mode));
-		compound.putString("State", NBTHelper.writeEnum(state));
+		NBTHelper.writeEnum(compound, "Mode", mode);
+		NBTHelper.writeEnum(compound, "State", state);
 		compound.putInt("Timer", timer);
 		if (player != null) {
 			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());

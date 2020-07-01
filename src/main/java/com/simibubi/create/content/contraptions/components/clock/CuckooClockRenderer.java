@@ -76,7 +76,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 			.renderInto(ms, vb);
 
 		// Figure
-		if (clock.animationType != null) {
+		if (clock.animationType != Animation.NONE) {
 			offset = -(angle / 135) * 1 / 2f + 10 / 16f;
 			SuperByteBuffer figure =
 				(clock.animationType == Animation.PIG ? AllBlockPartials.CUCKOO_PIG : AllBlockPartials.CUCKOO_CREEPER)

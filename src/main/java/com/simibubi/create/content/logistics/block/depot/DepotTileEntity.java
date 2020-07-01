@@ -84,6 +84,13 @@ public class DepotTileEntity extends SmartTileEntity {
 		if (heldItem.locked != wasLocked || !previousItem.equals(heldItem.stack, false))
 			sendData();
 	}
+	
+	@Override
+	public void remove() {
+		super.remove();
+		if (lazyItemHandler != null)
+			lazyItemHandler.invalidate();
+	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {

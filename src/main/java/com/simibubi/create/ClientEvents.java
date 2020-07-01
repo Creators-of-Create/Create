@@ -109,7 +109,6 @@ public class ClientEvents {
 			return;
 
 		double delta = event.getScrollDelta();
-
 		boolean cancelled = CreateClient.schematicHandler.mouseScrolled(delta)
 			|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
 			|| ScrollValueHandler.onScroll(delta);

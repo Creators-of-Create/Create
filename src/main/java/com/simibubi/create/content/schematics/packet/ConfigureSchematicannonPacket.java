@@ -49,6 +49,8 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayerEntity player = context.get().getSender();
+			if (player == null)
+				return;
 			World world = player.world;
 			if (world == null)
 				return;

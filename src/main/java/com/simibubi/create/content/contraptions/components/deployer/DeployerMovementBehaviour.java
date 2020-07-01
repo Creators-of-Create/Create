@@ -162,7 +162,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	private Mode getMode(MovementContext context) {
-		return NBTHelper.readEnum(context.tileData.getString("Mode"), Mode.class);
+		return NBTHelper.readEnum(context.tileData, "Mode", Mode.class);
 	}
 
 	@Override

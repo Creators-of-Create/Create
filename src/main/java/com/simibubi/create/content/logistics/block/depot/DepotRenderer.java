@@ -39,12 +39,12 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 			msr.nudge(0);
 			float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
 			float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
-			Vec3d offsetVec = new Vec3d(transported.insertedFrom.getOpposite()
-				.getDirectionVec()).scale(.5f - offset);
-			ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 
 			if (transported.insertedFrom.getAxis()
 				.isHorizontal()) {
+				Vec3d offsetVec = new Vec3d(transported.insertedFrom.getOpposite()
+					.getDirectionVec()).scale(.5f - offset);
+				ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 				boolean alongX = transported.insertedFrom.rotateY()
 					.getAxis() == Axis.X;
 				if (!alongX)

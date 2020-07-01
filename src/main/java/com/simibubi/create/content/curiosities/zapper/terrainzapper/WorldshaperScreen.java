@@ -53,9 +53,12 @@ public class WorldshaperScreen extends ZapperScreen {
 
 		brushLabel = new Label(i + 58, j + 28, "").withShadow();
 		brushInput = new SelectionScrollInput(i + 55, j + 25, 78, 14).forOptions(brushOptions)
-				.titled(Lang.translate("gui.terrainzapper.brush")).writingTo(brushLabel).calling(this::brushChanged);
+			.titled(Lang.translate("gui.terrainzapper.brush"))
+			.writingTo(brushLabel)
+			.calling(this::brushChanged);
 		if (nbt.contains("Brush"))
-			brushInput.setState(NBTHelper.readEnum(nbt.getString("Brush"), TerrainBrushes.class).ordinal());
+			brushInput.setState(NBTHelper.readEnum(nbt, "Brush", TerrainBrushes.class)
+				.ordinal());
 
 		widgets.add(brushLabel);
 		widgets.add(brushInput);
@@ -66,11 +69,13 @@ public class WorldshaperScreen extends ZapperScreen {
 		for (int id = 0; id < toolValues.length; id++) {
 			TerrainTools tool = toolValues[id];
 			toolButtons.add(new IconButton(i + 8 + id * 18, j + 76, tool.icon));
-			toolButtons.get(id).setToolTip(Lang.translate("gui.terrainzapper.tool." + tool.translationKey));
+			toolButtons.get(id)
+				.setToolTip(Lang.translate("gui.terrainzapper.tool." + tool.translationKey));
 		}
 
 		if (nbt.contains("Tool"))
-			toolButtons.get(NBTHelper.readEnum(nbt.getString("Tool"), TerrainTools.class).ordinal()).active = false;
+			toolButtons.get(NBTHelper.readEnum(nbt, "Tool", TerrainTools.class)
+				.ordinal()).active = false;
 		widgets.addAll(toolButtons);
 
 		placementButtons = new Vector<>(3);
@@ -78,21 +83,25 @@ public class WorldshaperScreen extends ZapperScreen {
 		for (int id = 0; id < placementValues.length; id++) {
 			PlacementOptions option = placementValues[id];
 			placementButtons.add(new IconButton(i + 147 + id * 18, j + 76, option.icon));
-			placementButtons.get(id).setToolTip(Lang.translate("gui.terrainzapper.placement." + option.translationKey));
+			placementButtons.get(id)
+				.setToolTip(Lang.translate("gui.terrainzapper.placement." + option.translationKey));
 		}
 
 		if (nbt.contains("Placement"))
-			placementButtons
-					.get(NBTHelper.readEnum(nbt.getString("Placement"), PlacementOptions.class).ordinal()).active =
-						false;
+			placementButtons.get(NBTHelper.readEnum(nbt, "Placement", PlacementOptions.class)
+				.ordinal()).active = false;
 		widgets.addAll(placementButtons);
 
 	}
 
 	public void initBrushParams() {
 		if (brushParams != null) {
-			nbt.put("BrushParams", NBTUtil.writeBlockPos(new BlockPos(brushParams.get(0).getState(),
-					brushParams.get(1).getState(), brushParams.get(2).getState())));
+			nbt.put("BrushParams", NBTUtil.writeBlockPos(new BlockPos(brushParams.get(0)
+				.getState(),
+				brushParams.get(1)
+					.getState(),
+				brushParams.get(2)
+					.getState())));
 
 			widgets.removeAll(brushParamLabels);
 			widgets.removeAll(brushParams);
@@ -109,10 +118,12 @@ public class WorldshaperScreen extends ZapperScreen {
 			brushParamLabels.add(label);
 			int indexFinal = index;
 			ScrollInput input = new ScrollInput(i + 55 + 18 * index, j + 43, 14, 14)
-					.withRange(currentBrush.getMin(index), currentBrush.getMax(index) + 1).writingTo(label)
-					.titled(currentBrush.getParamLabel(index)).calling(state -> {
-						label.x = i + 62 + 18 * indexFinal - font.getStringWidth(label.text) / 2;
-					});
+				.withRange(currentBrush.getMin(index), currentBrush.getMax(index) + 1)
+				.writingTo(label)
+				.titled(currentBrush.getParamLabel(index))
+				.calling(state -> {
+					label.x = i + 62 + 18 * indexFinal - font.getStringWidth(label.text) / 2;
+				});
 			input.setState(params[index]);
 			input.onChanged();
 			if (index >= currentBrush.amtParams) {
@@ -140,7 +151,8 @@ public class WorldshaperScreen extends ZapperScreen {
 			if (placementButton.isHovered()) {
 				placementButtons.forEach(b -> b.active = true);
 				placementButton.active = false;
-				placementButton.playDownSound(Minecraft.getInstance().getSoundHandler());
+				placementButton.playDownSound(Minecraft.getInstance()
+					.getSoundHandler());
 				nbt.putString("Placement", PlacementOptions.values()[placementButtons.indexOf(placementButton)].name());
 			}
 		}
@@ -149,7 +161,8 @@ public class WorldshaperScreen extends ZapperScreen {
 			if (toolButton.isHovered()) {
 				toolButtons.forEach(b -> b.active = true);
 				toolButton.active = false;
-				toolButton.playDownSound(Minecraft.getInstance().getSoundHandler());
+				toolButton.playDownSound(Minecraft.getInstance()
+					.getSoundHandler());
 				nbt.putString("Tool", TerrainTools.values()[toolButtons.indexOf(toolButton)].name());
 			}
 		}
@@ -173,9 +186,13 @@ public class WorldshaperScreen extends ZapperScreen {
 	@Override
 	protected void writeAdditionalOptions(CompoundNBT nbt) {
 		super.writeAdditionalOptions(nbt);
-		nbt.putString("Brush", NBTHelper.writeEnum(TerrainBrushes.values()[brushInput.getState()]));
-		nbt.put("BrushParams", NBTUtil.writeBlockPos(new BlockPos(brushParams.get(0).getState(),
-				brushParams.get(1).getState(), brushParams.get(2).getState())));
+		NBTHelper.writeEnum(nbt, "Brush", TerrainBrushes.values()[brushInput.getState()]);
+		nbt.put("BrushParams", NBTUtil.writeBlockPos(new BlockPos(brushParams.get(0)
+			.getState(),
+			brushParams.get(1)
+				.getState(),
+			brushParams.get(2)
+				.getState())));
 	}
 
 }

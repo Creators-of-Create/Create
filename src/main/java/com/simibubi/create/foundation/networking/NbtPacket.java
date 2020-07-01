@@ -40,6 +40,8 @@ public class NbtPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayerEntity player = context.get().getSender();
+			if (player == null)
+				return;
 			
 			if (slot == -1) {
 				ItemStack heldItem = player.getHeldItem(hand);

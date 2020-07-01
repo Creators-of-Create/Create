@@ -32,6 +32,8 @@ public class SchematicPlacePacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayerEntity player = context.get().getSender();
+			if (player == null)
+				return;
 			Template t = SchematicItem.loadSchematic(stack);
 			PlacementSettings settings = SchematicItem.getSettings(stack);
 			settings.setIgnoreEntities(false);

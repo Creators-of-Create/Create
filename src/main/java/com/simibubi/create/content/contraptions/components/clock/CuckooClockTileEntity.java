@@ -32,17 +32,18 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 	private boolean sendAnimationUpdate;
 
 	enum Animation {
-		PIG, CREEPER, SURPRISE;
+		PIG, CREEPER, SURPRISE, NONE;
 	}
 
 	public CuckooClockTileEntity(TileEntityType<? extends CuckooClockTileEntity> type) {
 		super(type);
+		animationType = Animation.NONE;
 	}
 
 	@Override
 	public CompoundNBT writeToClient(CompoundNBT compound) {
 		if (sendAnimationUpdate)
-			compound.putString("Animation", animationType == null ? "none" : NBTHelper.writeEnum(animationType));
+			NBTHelper.writeEnum(compound, "Animation", animationType);
 		sendAnimationUpdate = false;
 		return super.writeToClient(compound);
 	}
@@ -50,11 +51,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 	@Override
 	public void readClientUpdate(CompoundNBT tag) {
 		if (tag.contains("Animation")) {
-			String string = tag.getString("Animation");
-			if ("none".equals(string))
-				animationType = null;
-			else
-				animationType = NBTHelper.readEnum(string, Animation.class);
+			animationType = NBTHelper.readEnum(tag, "Animation", Animation.class);
 			animationProgress.lastValue = 0;
 			animationProgress.value = 0;
 		}
@@ -72,7 +69,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		int minutes = (dayTime % 1000) * 60 / 1000;
 
 		if (!world.isRemote) {
-			if (animationType == null) {
+			if (animationType == Animation.NONE) {
 				if (hours == 12 && minutes < 5)
 					startAnimation(Animation.PIG);
 				if (hours == 18 && minutes < 36 && minutes > 31)
@@ -81,13 +78,13 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 				float value = animationProgress.value;
 				animationProgress.set(value + 1);
 				if (value > 100)
-					animationType = null;
+					animationType = Animation.NONE;
 
 				if (animationType == Animation.SURPRISE && animationProgress.value == 50) {
 					Vec3d center = VecHelper.getCenterOf(pos);
 					world.destroyBlock(pos, false);
 					world.createExplosion(null, CUCKOO_SURPRISE, center.x, center.y, center.z, 3, false,
-							Explosion.Mode.BREAK);
+						Explosion.Mode.BREAK);
 				}
 
 			}
@@ -96,7 +93,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		if (world.isRemote) {
 			moveHands(hours, minutes);
 
-			if (animationType == null) {
+			if (animationType == Animation.NONE) {
 				if (AnimationTickHolder.ticks % 32 == 0)
 					playSound(SoundEvents.BLOCK_NOTE_BLOCK_HAT, 1 / 16f, 2f);
 				else if (AnimationTickHolder.ticks % 16 == 0)

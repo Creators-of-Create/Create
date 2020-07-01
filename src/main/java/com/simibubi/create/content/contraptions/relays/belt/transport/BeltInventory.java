@@ -352,8 +352,8 @@ public class BeltInventory {
 	}
 
 	public TransportedItemStack getStackAtOffset(int offset) {
-		float min = offset + .5f - (SEGMENT_WINDOW / 2);
-		float max = offset + .5f + (SEGMENT_WINDOW / 2);
+		float min = offset;
+		float max = offset + 1;
 		for (TransportedItemStack stack : items) {
 			if (stack.beltPosition > max)
 				continue;
