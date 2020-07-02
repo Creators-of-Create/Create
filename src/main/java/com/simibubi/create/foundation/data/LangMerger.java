@@ -235,7 +235,7 @@ public class LangMerger implements IDataProvider {
 		StringBuilder builder = new StringBuilder();
 		builder.append("{\n");
 		if (missingKeys != -1)
-			builder.append("\t\"_\": \"Missing Localizations: " + missingKeys + "\"\n");
+			builder.append("\t\"_\": \"Missing Localizations: " + missingKeys + "\",\n");
 		data.forEach(builder::append);
 		builder.append("\t\"_\": \"Thank you for translating Create!\"\n\n");
 		builder.append("}");
