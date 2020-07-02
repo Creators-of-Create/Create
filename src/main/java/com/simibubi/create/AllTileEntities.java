@@ -72,6 +72,8 @@ import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverRe
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
+import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
+import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
 import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
@@ -154,6 +156,8 @@ public class AllTileEntities {
 		register("fluid_tank", FluidTankTileEntity::new, AllBlocks.FLUID_TANK);
 
 	public static final TileEntityEntry<BeltTileEntity> BELT = register("belt", BeltTileEntity::new, AllBlocks.BELT);
+	public static final TileEntityEntry<ChuteTileEntity> CHUTE =
+		register("chute", ChuteTileEntity::new, AllBlocks.CHUTE);
 	public static final TileEntityEntry<BeltTunnelTileEntity> BELT_TUNNEL =
 		register("belt_tunnel", BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL);
 	public static final TileEntityEntry<ArmTileEntity> MECHANICAL_ARM =
@@ -301,6 +305,7 @@ public class AllTileEntities {
 		bind(ROTATION_SPEED_CONTROLLER, SpeedControllerRenderer::new);
 		bind(PACKAGER, PackagerRenderer::new);
 		bind(DEPOT, DepotRenderer::new);
+		bind(CHUTE, ChuteRenderer::new);
 
 		bind(CREATIVE_CRATE, SmartTileEntityRenderer::new);
 		bind(REDSTONE_LINK, SmartTileEntityRenderer::new);

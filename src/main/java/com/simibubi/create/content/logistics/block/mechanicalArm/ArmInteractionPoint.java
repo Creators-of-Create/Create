@@ -147,6 +147,8 @@ public abstract class ArmInteractionPoint {
 	static ArmInteractionPoint deserialize(IBlockReader world, CompoundNBT nbt) {
 		BlockPos pos = NBTUtil.readBlockPos(nbt.getCompound("Pos"));
 		ArmInteractionPoint interactionPoint = createAt(world, pos);
+		if (interactionPoint == null)
+			return null;
 		interactionPoint.mode = NBTHelper.readEnum(nbt, "Mode", Mode.class);
 		return interactionPoint;
 	}

@@ -2,11 +2,13 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -60,7 +62,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	public void updateGenerator(Direction facing) {
-		boolean shouldGenerate = world.isBlockPowered(pos) && facing == Direction.DOWN && world.isBlockPresent(pos.down()) && blockBelowIsHot();
+		boolean shouldGenerate = world.isBlockPowered(pos) && facing == Direction.DOWN
+			&& world.isBlockPresent(pos.down()) && blockBelowIsHot();
 		if (shouldGenerate == isGenerator)
 			return;
 
@@ -69,7 +72,9 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	public boolean blockBelowIsHot() {
-		return world.getBlockState(pos.down()).getBlock().isIn(AllBlockTags.FAN_HEATERS.tag);
+		return world.getBlockState(pos.down())
+			.getBlock()
+			.isIn(AllBlockTags.FAN_HEATERS.tag);
 	}
 
 	public float getMaxDistance() {
@@ -94,6 +99,22 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
 		updateAirFlow = true;
+		updateChute();
+	}
+
+	public void updateChute() {
+		Direction direction = getBlockState().get(EncasedFanBlock.FACING);
+		if (!direction.getAxis()
+			.isVertical())
+			return;
+		TileEntity poweredChute = world.getTileEntity(pos.offset(direction));
+		if (!(poweredChute instanceof ChuteTileEntity))
+			return;
+		ChuteTileEntity chuteTE = (ChuteTileEntity) poweredChute;
+		if (direction == Direction.DOWN)
+			chuteTE.updatePull();
+		else
+			chuteTE.updatePush(1);
 	}
 
 	public void blockInFrontChanged() {

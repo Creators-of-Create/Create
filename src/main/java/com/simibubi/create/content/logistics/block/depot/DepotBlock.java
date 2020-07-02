@@ -64,8 +64,9 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity> {
 			return ActionResultType.SUCCESS;
 
 		withTileEntityDo(world, pos, te -> {
-			boolean wasEmptyHanded = player.getHeldItem(hand)
-				.isEmpty();
+			ItemStack heldItem = player.getHeldItem(hand);
+			boolean wasEmptyHanded = heldItem.isEmpty();
+			boolean shouldntPlaceItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem);
 
 			ItemStack mainItemStack = te.getHeldItemStack();
 			if (!mainItemStack.isEmpty()) {
@@ -76,12 +77,12 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity> {
 			for (int i = 0; i < outputs.getSlots(); i++)
 				player.inventory.placeItemBackInInventory(world, outputs.extractItem(i, 64, false));
 
-			if (!wasEmptyHanded) {
-				TransportedItemStack heldItem = new TransportedItemStack(player.getHeldItem(hand));
-				heldItem.insertedFrom = player.getHorizontalFacing();
-				heldItem.prevBeltPosition = .25f;
-				heldItem.beltPosition = .25f;
-				te.setHeldItem(heldItem);
+			if (!wasEmptyHanded && !shouldntPlaceItem) {
+				TransportedItemStack transported = new TransportedItemStack(heldItem);
+				transported.insertedFrom = player.getHorizontalFacing();
+				transported.prevBeltPosition = .25f;
+				transported.beltPosition = .25f;
+				te.setHeldItem(transported);
 				player.setHeldItem(hand, ItemStack.EMPTY);
 			}
 

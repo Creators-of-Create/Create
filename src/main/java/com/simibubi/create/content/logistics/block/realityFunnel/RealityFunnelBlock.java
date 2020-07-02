@@ -76,19 +76,24 @@ public class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<Re
 		if (projectedDiff < 0 == (direction.getAxisDirection() == AxisDirection.POSITIVE))
 			return;
 
-		FilteringBehaviour filter = TileEntityBehaviour.get(worldIn, pos, FilteringBehaviour.TYPE);
-		InsertingBehaviour inserter = TileEntityBehaviour.get(worldIn, pos, InsertingBehaviour.TYPE);
-		if (inserter == null)
-			return;
 		ItemStack toInsert = itemEntity.getItem();
-		if (filter != null && !filter.test(toInsert))
-			return;
-
-		ItemStack remainder = inserter.insert(toInsert, false);
+		ItemStack remainder = tryInsert(worldIn, pos, toInsert, false);
+		
 		if (remainder.isEmpty())
 			itemEntity.remove();
 		if (remainder.getCount() < toInsert.getCount())
 			itemEntity.setItem(remainder);
+	}
+
+	public static ItemStack tryInsert(World worldIn, BlockPos pos, ItemStack toInsert, boolean simulate) {
+		FilteringBehaviour filter = TileEntityBehaviour.get(worldIn, pos, FilteringBehaviour.TYPE);
+		InsertingBehaviour inserter = TileEntityBehaviour.get(worldIn, pos, InsertingBehaviour.TYPE);
+		if (inserter == null)
+			return toInsert;
+		if (filter != null && !filter.test(toInsert))
+			return toInsert;
+		ItemStack remainder = inserter.insert(toInsert, simulate);
+		return remainder;
 	}
 
 	@Override

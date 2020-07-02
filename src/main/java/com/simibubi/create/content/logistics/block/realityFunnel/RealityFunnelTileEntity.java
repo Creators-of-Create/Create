@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -23,6 +24,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -72,6 +74,41 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 		Mode mode = determineCurrentMode();
 		if (mode == Mode.BELT)
 			tickAsBeltFunnel();
+		if (world.isRemote)
+			return;
+		if (mode == Mode.CHUTE_SIDE)
+			tickAsHorizontalChuteFunnel();
+		if (mode == Mode.CHUTE_END)
+			tickAsVerticalChuteFunnel();
+	}
+
+	public void tickAsHorizontalChuteFunnel() {
+		if (!getBlockState().get(ChuteFunnelBlock.PUSHING))
+			return;
+		BlockPos chutePos = pos.offset(RealityFunnelBlock.getFunnelFacing(getBlockState()));
+		TileEntity te = world.getTileEntity(chutePos);
+		if (!(te instanceof ChuteTileEntity))
+			return;
+		ChuteTileEntity chute = (ChuteTileEntity) te;
+		extracting.setCallback(stack -> chute.setItem(stack, .5f));
+		extracting.withAdditionalFilter(stack -> chute.getItem()
+			.isEmpty());
+		extracting.extract();
+	}
+
+	public void tickAsVerticalChuteFunnel() {
+		Direction funnelFacing = RealityFunnelBlock.getFunnelFacing(getBlockState());
+		BlockPos chutePos = pos.offset(funnelFacing);
+		TileEntity te = world.getTileEntity(chutePos);
+		if (!(te instanceof ChuteTileEntity))
+			return;
+		ChuteTileEntity chute = (ChuteTileEntity) te;
+		if (chute.getItemMotion() > 0 != (funnelFacing == Direction.UP))
+			return;
+		extracting.setCallback(stack -> chute.setItem(stack));
+		extracting.withAdditionalFilter(stack -> chute.getItem()
+			.isEmpty());
+		extracting.extract();
 	}
 
 	public void tickAsBeltFunnel() {
@@ -138,7 +175,7 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 		filtering = new FilteringBehaviour(this, new FunnelFilterSlotPositioning()).showCountWhen(() -> {
 			BlockState blockState = getBlockState();
 			return blockState.getBlock() instanceof HorizontalInteractionFunnelBlock
-				&& blockState.get(HorizontalInteractionFunnelBlock.PUSHING);
+				&& blockState.get(HorizontalInteractionFunnelBlock.PUSHING) || determineCurrentMode() == Mode.CHUTE_END;
 		});
 
 		behaviours.add(filtering);

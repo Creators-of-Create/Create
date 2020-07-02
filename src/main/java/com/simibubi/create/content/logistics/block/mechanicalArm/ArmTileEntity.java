@@ -172,9 +172,11 @@ public class ArmTileEntity extends KineticTileEntity {
 
 	protected void depositItem() {
 		ArmInteractionPoint armInteractionPoint = getTargetedInteractionPoint();
-		ItemStack toInsert = heldItem.copy();
-		ItemStack remainder = armInteractionPoint.insert(world, toInsert, false);
-		heldItem = remainder;
+		if (armInteractionPoint != null) {
+			ItemStack toInsert = heldItem.copy();
+			ItemStack remainder = armInteractionPoint.insert(world, toInsert, false);
+			heldItem = remainder;
+		}
 		phase = heldItem.isEmpty() ? Phase.SEARCH_INPUTS : Phase.SEARCH_OUTPUTS;
 		chasedPointProgress = 0;
 		chasedPointIndex = -1;
@@ -184,19 +186,20 @@ public class ArmTileEntity extends KineticTileEntity {
 
 	protected void collectItem() {
 		ArmInteractionPoint armInteractionPoint = getTargetedInteractionPoint();
-		for (int i = 0; i < armInteractionPoint.getSlotCount(world); i++) {
-			int amountExtracted = getDistributableAmount(armInteractionPoint, i);
-			if (amountExtracted == 0)
-				continue;
-
-			heldItem = armInteractionPoint.extract(world, i, amountExtracted, false);
-			phase = Phase.SEARCH_OUTPUTS;
-			chasedPointProgress = 0;
-			chasedPointIndex = -1;
-			sendData();
-			markDirty();
-			return;
-		}
+		if (armInteractionPoint != null) 
+			for (int i = 0; i < armInteractionPoint.getSlotCount(world); i++) {
+				int amountExtracted = getDistributableAmount(armInteractionPoint, i);
+				if (amountExtracted == 0)
+					continue;
+	
+				heldItem = armInteractionPoint.extract(world, i, amountExtracted, false);
+				phase = Phase.SEARCH_OUTPUTS;
+				chasedPointProgress = 0;
+				chasedPointIndex = -1;
+				sendData();
+				markDirty();
+				return;
+			}
 		
 		phase = Phase.SEARCH_INPUTS;
 		chasedPointProgress = 0;
@@ -221,6 +224,8 @@ public class ArmTileEntity extends KineticTileEntity {
 		outputs.clear();
 		for (INBT inbt : interactionPointTag) {
 			ArmInteractionPoint point = ArmInteractionPoint.deserialize(world, (CompoundNBT) inbt);
+			if (point == null)
+				continue;
 			if (point.mode == Mode.DEPOSIT)
 				outputs.add(point);
 			if (point.mode == Mode.TAKE)
