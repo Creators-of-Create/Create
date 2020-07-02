@@ -21,12 +21,13 @@ public class ToggleDebugCommand {
 				.then(Commands.argument("value", BoolArgumentType.bool())
 						.executes(ctx -> {
 							boolean value = BoolArgumentType.getBool(ctx, "value");
-							DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> AllConfigs.CLIENT.rainbowDebug.set(value));
+							//DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> AllConfigs.CLIENT.rainbowDebug.set(value));
+							DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ConfigureConfigPacket.Actions.rainbowDebug.performAction(String.valueOf(value)));
 
 							DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () ->
 									AllPackets.channel.send(
 											PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource().getEntity()),
-											new ConfigureConfigPacket("rainbowDebug", String.valueOf(value))));
+											new ConfigureConfigPacket(ConfigureConfigPacket.Actions.rainbowDebug.name(), String.valueOf(value))));
 
 							ctx.getSource().sendFeedback(new StringTextComponent((value ? "enabled" : "disabled") + " rainbow debug"), true);
 
