@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 702"
+	"_": "Missing Localizations: 710"
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -815,6 +815,15 @@
 	"create.tooltip.analogStrength": "UNLOCALIZED: Analog Strength: %1$s/15",
 
 	"create.mechanical_mixer.min_ingredients": "Min. Ingredieënten",
+
+	"create.gui.config.overlay1": "UNLOCALIZED: Hi :)",
+	"create.gui.config.overlay2": "UNLOCALIZED: This is a sample overlay",
+	"create.gui.config.overlay3": "UNLOCALIZED: Click or drag with your mouse",
+	"create.gui.config.overlay4": "UNLOCALIZED: to move this preview",
+	"create.gui.config.overlay5": "UNLOCALIZED: Press ESC to exit this screen",
+	"create.gui.config.overlay6": "UNLOCALIZED: and save the new position",
+	"create.gui.config.overlay7": "UNLOCALIZED: Run /create overlay reset",
+	"create.gui.config.overlay8": "UNLOCALIZED: to reset to the default position",
 
 	"create.command.killTPSCommand": "UNLOCALIZED: killtps",
 	"create.command.killTPSCommand.status.slowed_by.0": "UNLOCALIZED: [Create]: Server tick is currently slowed by %s ms :o",
