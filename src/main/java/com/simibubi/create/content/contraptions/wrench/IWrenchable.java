@@ -52,7 +52,7 @@ public interface IWrenchable {
 		BlockPos pos = context.getPos();
 		PlayerEntity player = context.getPlayer();
 		if (world instanceof ServerWorld) {
-			if (!player.isCreative())
+			if (player != null && !player.isCreative())
 				Block.getDrops(state, (ServerWorld) world, pos, world.getTileEntity(pos), player, context.getItem())
 					.forEach(itemStack -> {
 						player.inventory.placeItemBackInInventory(world, itemStack);

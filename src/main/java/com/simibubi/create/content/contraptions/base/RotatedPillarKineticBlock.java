@@ -16,7 +16,8 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 
 	public RotatedPillarKineticBlock(Properties properties) {
 		super(properties);
-		this.setDefaultState(this.getDefaultState().with(AXIS, Direction.Axis.Y));
+		this.setDefaultState(this.getDefaultState()
+			.with(AXIS, Direction.Axis.Y));
 	}
 
 	@Override
@@ -40,10 +41,12 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 	public static Axis getPreferredAxis(BlockItemUseContext context) {
 		Axis prefferedAxis = null;
 		for (Direction side : Direction.values()) {
-			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));
+			BlockState blockState = context.getWorld()
+				.getBlockState(context.getPos()
+					.offset(side));
 			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos().offset(side),
-						blockState, side.getOpposite()))
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos()
+					.offset(side), blockState, side.getOpposite()))
 					if (prefferedAxis != null && prefferedAxis != side.getAxis()) {
 						prefferedAxis = null;
 						break;
@@ -63,10 +66,15 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Axis preferredAxis = getPreferredAxis(context);
-		if (preferredAxis != null && !context.getPlayer().isSneaking())
-			return this.getDefaultState().with(AXIS, preferredAxis);
-		return this.getDefaultState().with(AXIS, context.getPlayer().isSneaking() ? context.getFace().getAxis()
-				: context.getNearestLookingDirection().getAxis());
+		if (preferredAxis != null && (context.getPlayer() == null || !context.getPlayer()
+			.isSneaking()))
+			return this.getDefaultState()
+				.with(AXIS, preferredAxis);
+		return this.getDefaultState()
+			.with(AXIS, preferredAxis != null && context.getPlayer()
+				.isSneaking() ? context.getFace()
+					.getAxis()
+					: context.getNearestLookingDirection()
+						.getAxis());
 	}
-
 }

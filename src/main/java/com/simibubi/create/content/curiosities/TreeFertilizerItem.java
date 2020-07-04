@@ -21,7 +21,8 @@ public class TreeFertilizerItem extends Item {
 
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
-		BlockState state = context.getWorld().getBlockState(context.getPos());
+		BlockState state = context.getWorld()
+			.getBlockState(context.getPos());
 		Block block = state.getBlock();
 		if (block instanceof SaplingBlock) {
 
@@ -34,31 +35,46 @@ public class TreeFertilizerItem extends Item {
 			BlockPos saplingPos = context.getPos();
 
 			for (BlockPos pos : BlockPos.getAllInBoxMutable(-1, 0, -1, 1, 0, 1)) {
-				if (context.getWorld().getBlockState(saplingPos.add(pos)).getBlock() == block)
+				if (context.getWorld()
+					.getBlockState(saplingPos.add(pos))
+					.getBlock() == block)
 					world.setBlockState(pos.up(10), state.with(SaplingBlock.STAGE, 1));
 			}
 
-			((SaplingBlock) block).grow(world, world.getRandom(), BlockPos.ZERO.up(10), state.with(SaplingBlock.STAGE, 1));
+			((SaplingBlock) block).grow(world, world.getRandom(), BlockPos.ZERO.up(10),
+				state.with(SaplingBlock.STAGE, 1));
 
 			for (BlockPos pos : world.blocksAdded.keySet()) {
-				BlockPos actualPos = pos.add(saplingPos).down(10);
+				BlockPos actualPos = pos.add(saplingPos)
+					.down(10);
 
 				// Don't replace Bedrock
-				if (context.getWorld().getBlockState(actualPos).getBlockHardness(context.getWorld(), actualPos) == -1)
+				if (context.getWorld()
+					.getBlockState(actualPos)
+					.getBlockHardness(context.getWorld(), actualPos) == -1)
 					continue;
 				// Don't replace solid blocks with leaves
-				if (!world.getBlockState(pos).isNormalCube(world, pos) && !context.getWorld().getBlockState(actualPos)
-						.getCollisionShape(context.getWorld(), actualPos).isEmpty())
+				if (!world.getBlockState(pos)
+					.isNormalCube(world, pos)
+					&& !context.getWorld()
+						.getBlockState(actualPos)
+						.getCollisionShape(context.getWorld(), actualPos)
+						.isEmpty())
 					continue;
-				if (world.getBlockState(pos).getBlock() == Blocks.GRASS_BLOCK
-						|| world.getBlockState(pos).getBlock() == Blocks.PODZOL)
+				if (world.getBlockState(pos)
+					.getBlock() == Blocks.GRASS_BLOCK
+					|| world.getBlockState(pos)
+						.getBlock() == Blocks.PODZOL)
 					continue;
 
-				context.getWorld().setBlockState(actualPos, world.getBlockState(pos));
+				context.getWorld()
+					.setBlockState(actualPos, world.getBlockState(pos));
 			}
 
-			if (!context.getPlayer().isCreative())
-				context.getItem().shrink(1);
+			if (context.getPlayer() != null && !context.getPlayer()
+				.isCreative())
+				context.getItem()
+					.shrink(1);
 			return ActionResultType.SUCCESS;
 
 		}

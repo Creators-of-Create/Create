@@ -29,7 +29,8 @@ import net.minecraft.world.IWorldReader;
 public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
-	public static final BooleanProperty CONNECTED_ALONG_FIRST_COORDINATE = DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
+	public static final BooleanProperty CONNECTED_ALONG_FIRST_COORDINATE =
+		DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 
 	public EncasedBeltBlock(Properties properties) {
 		super(properties);
@@ -40,12 +41,12 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	public boolean shouldCheckWeakPower(BlockState state, IWorldReader world, BlockPos pos, Direction side) {
 		return false;
 	}
-	
+
 	@Override
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.NORMAL;
 	}
-	
+
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder.add(PART, CONNECTED_ALONG_FIRST_COORDINATE));
@@ -53,8 +54,10 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Axis placedAxis = context.getNearestLookingDirection().getAxis();
-		Axis axis = context.getPlayer().isSneaking() ? placedAxis : getPreferredAxis(context);
+		Axis placedAxis = context.getNearestLookingDirection()
+			.getAxis();
+		Axis axis = context.getPlayer() != null && context.getPlayer()
+			.isSneaking() ? placedAxis : getPreferredAxis(context);
 		if (axis == null)
 			axis = placedAxis;
 
@@ -64,20 +67,20 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 				continue;
 			BlockPos pos = context.getPos();
 			BlockPos offset = pos.offset(facing);
-			state = updatePostPlacement(state, facing, context.getWorld().getBlockState(offset), context.getWorld(),
-					pos, offset);
+			state = updatePostPlacement(state, facing, context.getWorld()
+				.getBlockState(offset), context.getWorld(), pos, offset);
 		}
 		return state;
 	}
 
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction face, BlockState neighbour, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
+		BlockPos currentPos, BlockPos facingPos) {
 		Part part = stateIn.get(PART);
 		Axis axis = stateIn.get(AXIS);
 		boolean connectionAlongFirst = stateIn.get(CONNECTED_ALONG_FIRST_COORDINATE);
-		Axis connectionAxis = connectionAlongFirst ? (axis == Axis.X ? Axis.Y : Axis.X)
-				: (axis == Axis.Z ? Axis.Y : Axis.Z);
+		Axis connectionAxis =
+			connectionAlongFirst ? (axis == Axis.X ? Axis.Y : Axis.X) : (axis == Axis.Z ? Axis.Y : Axis.Z);
 
 		Axis faceAxis = face.getAxis();
 		boolean facingAlongFirst = axis == Axis.X ? faceAxis.isVertical() : faceAxis == Axis.X;
@@ -99,8 +102,8 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 		Part otherPart = neighbour.get(PART);
 		Axis otherAxis = neighbour.get(AXIS);
 		boolean otherConnection = neighbour.get(CONNECTED_ALONG_FIRST_COORDINATE);
-		Axis otherConnectionAxis = otherConnection ? (otherAxis == Axis.X ? Axis.Y : Axis.X)
-				: (otherAxis == Axis.Z ? Axis.Y : Axis.Z);
+		Axis otherConnectionAxis =
+			otherConnection ? (otherAxis == Axis.X ? Axis.Y : Axis.X) : (otherAxis == Axis.Z ? Axis.Y : Axis.Z);
 
 		if (neighbour.get(AXIS) == faceAxis)
 			return stateIn;
@@ -117,12 +120,14 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 		if ((part == Part.START) != positive)
 			part = Part.MIDDLE;
 
-		return stateIn.with(PART, part).with(CONNECTED_ALONG_FIRST_COORDINATE, connectionAlongFirst);
+		return stateIn.with(PART, part)
+			.with(CONNECTED_ALONG_FIRST_COORDINATE, connectionAlongFirst);
 	}
 
 	@Override
 	public BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
-		Blocks.AIR.getDefaultState().updateNeighbors(context.getWorld(), context.getPos(), 1);
+		Blocks.AIR.getDefaultState()
+			.updateNeighbors(context.getWorld(), context.getPos(), 1);
 		Axis axis = newState.get(AXIS);
 		newState = getDefaultState().with(AXIS, axis);
 		for (Direction facing : Direction.values()) {
@@ -130,8 +135,9 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 				continue;
 			BlockPos pos = context.getPos();
 			BlockPos offset = pos.offset(facing);
-			newState = updatePostPlacement(newState, facing, context.getWorld().getBlockState(offset), context.getWorld(),
-					pos, offset);		}
+			newState = updatePostPlacement(newState, facing, context.getWorld()
+				.getBlockState(offset), context.getWorld(), pos, offset);
+		}
 		newState.updateNeighbors(context.getWorld(), context.getPos(), 1 | 2);
 		return newState;
 	}
@@ -150,13 +156,13 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 		Part part = state.get(PART);
 		Axis axis = state.get(AXIS);
 		boolean connectionAlongFirst = state.get(CONNECTED_ALONG_FIRST_COORDINATE);
-		Axis connectionAxis = connectionAlongFirst ? (axis == Axis.X ? Axis.Y : Axis.X)
-				: (axis == Axis.Z ? Axis.Y : Axis.Z);
+		Axis connectionAxis =
+			connectionAlongFirst ? (axis == Axis.X ? Axis.Y : Axis.X) : (axis == Axis.Z ? Axis.Y : Axis.Z);
 
 		Axis otherAxis = other.get(AXIS);
 		boolean otherConnection = other.get(CONNECTED_ALONG_FIRST_COORDINATE);
-		Axis otherConnectionAxis = otherConnection ? (otherAxis == Axis.X ? Axis.Y : Axis.X)
-				: (otherAxis == Axis.Z ? Axis.Y : Axis.Z);
+		Axis otherConnectionAxis =
+			otherConnection ? (otherAxis == Axis.X ? Axis.Y : Axis.X) : (otherAxis == Axis.Z ? Axis.Y : Axis.Z);
 
 		if (otherConnectionAxis != connectionAxis)
 			return false;

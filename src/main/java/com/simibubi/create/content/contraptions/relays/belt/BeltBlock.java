@@ -291,7 +291,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
 			world.setBlockState(context.getPos(), state.with(CASING, false), 3);
-			if (!player.isCreative())
+			if (player != null && !player.isCreative())
 				player.inventory.placeItemBackInInventory(world, AllBlocks.BRASS_CASING.asStack());
 			return ActionResultType.SUCCESS;
 		}
@@ -305,7 +305,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				belt.detachKinetics();
 				belt.attachKinetics();
 			}
-			if (!player.isCreative())
+			if (player != null && !player.isCreative())
 				player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack());
 			return ActionResultType.SUCCESS;
 		}

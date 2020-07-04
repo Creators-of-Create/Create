@@ -27,14 +27,17 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 	}
 
 	protected Direction getFacingForPlacement(BlockItemUseContext context) {
-		Direction facing = context.getNearestLookingDirection().getOpposite();
-		if (context.getPlayer().isSneaking())
+		Direction facing = context.getNearestLookingDirection()
+			.getOpposite();
+		if (context.getPlayer() != null && context.getPlayer()
+			.isSneaking())
 			facing = facing.getOpposite();
 		return facing;
 	}
 
 	protected boolean getAxisAlignmentForPlacement(BlockItemUseContext context) {
-		return context.getPlacementHorizontalFacing().getAxis() == Axis.X;
+		return context.getPlacementHorizontalFacing()
+			.getAxis() == Axis.X;
 	}
 
 	@Override
@@ -44,30 +47,37 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 		World world = context.getWorld();
 		boolean alongFirst = false;
 
-		if (facing.getAxis().isHorizontal()) {
+		if (facing.getAxis()
+			.isHorizontal()) {
 			alongFirst = facing.getAxis() == Axis.Z;
 
-			Block blockAbove = world.getBlockState(pos.offset(Direction.UP)).getBlock();
+			Block blockAbove = world.getBlockState(pos.offset(Direction.UP))
+				.getBlock();
 			boolean shaftAbove = blockAbove instanceof IRotate && ((IRotate) blockAbove).hasShaftTowards(world,
-					pos.up(), world.getBlockState(pos.up()), Direction.DOWN);
-			Block blockBelow = world.getBlockState(pos.offset(Direction.DOWN)).getBlock();
+				pos.up(), world.getBlockState(pos.up()), Direction.DOWN);
+			Block blockBelow = world.getBlockState(pos.offset(Direction.DOWN))
+				.getBlock();
 			boolean shaftBelow = blockBelow instanceof IRotate && ((IRotate) blockBelow).hasShaftTowards(world,
-					pos.down(), world.getBlockState(pos.down()), Direction.UP);
+				pos.down(), world.getBlockState(pos.down()), Direction.UP);
 
 			if (shaftAbove || shaftBelow)
 				alongFirst = facing.getAxis() == Axis.X;
 		}
 
-		if (facing.getAxis().isVertical()) {
+		if (facing.getAxis()
+			.isVertical()) {
 			alongFirst = getAxisAlignmentForPlacement(context);
 			Direction prefferedSide = null;
 			for (Direction side : Direction.values()) {
-				if (side.getAxis().isVertical())
+				if (side.getAxis()
+					.isVertical())
 					continue;
-				BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));
+				BlockState blockState = context.getWorld()
+					.getBlockState(context.getPos()
+						.offset(side));
 				if (blockState.getBlock() instanceof IRotate) {
-					if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(),
-							context.getPos().offset(side), blockState, side.getOpposite()))
+					if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos()
+						.offset(side), blockState, side.getOpposite()))
 						if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
 							prefferedSide = null;
 							break;
@@ -81,12 +91,15 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 			}
 		}
 
-		return this.getDefaultState().with(FACING, facing).with(AXIS_ALONG_FIRST_COORDINATE, alongFirst);
+		return this.getDefaultState()
+			.with(FACING, facing)
+			.with(AXIS_ALONG_FIRST_COORDINATE, alongFirst);
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		Axis pistonAxis = state.get(FACING).getAxis();
+		Axis pistonAxis = state.get(FACING)
+			.getAxis();
 		boolean alongFirst = state.get(AXIS_ALONG_FIRST_COORDINATE);
 
 		if (pistonAxis == Axis.X)

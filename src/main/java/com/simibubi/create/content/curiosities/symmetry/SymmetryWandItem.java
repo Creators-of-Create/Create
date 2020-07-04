@@ -38,6 +38,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+import javax.annotation.Nonnull;
+
 public class SymmetryWandItem extends Item {
 
 	public static final String SYMMETRY = "symmetry";
@@ -48,10 +50,13 @@ public class SymmetryWandItem extends Item {
 			.rarity(Rarity.UNCOMMON));
 	}
 
+	@Nonnull
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		PlayerEntity player = context.getPlayer();
 		BlockPos pos = context.getPos();
+		if (player == null)
+			return ActionResultType.PASS;
 		player.getCooldownTracker()
 			.setCooldown(this, 5);
 		ItemStack wand = player.getHeldItem(context.getHand());

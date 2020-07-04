@@ -33,7 +33,7 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.CRANK.get(state.get(FACING));
 	}
-	
+
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
@@ -41,8 +41,9 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
-		boolean handEmpty = player.getHeldItem(handIn).isEmpty();
+		BlockRayTraceResult hit) {
+		boolean handEmpty = player.getHeldItem(handIn)
+			.isEmpty();
 
 		if (!handEmpty && player.isSneaking())
 			return ActionResultType.PASS;
@@ -54,22 +55,25 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction preferred = getPreferredFacing(context);
-		if (preferred == null || context.getPlayer().isSneaking())
+		if (preferred == null || (context.getPlayer() != null && context.getPlayer()
+			.isSneaking()))
 			return getDefaultState().with(FACING, context.getFace());
 		return getDefaultState().with(FACING, preferred.getOpposite());
 	}
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		Direction facing = state.get(FACING).getOpposite();
+		Direction facing = state.get(FACING)
+			.getOpposite();
 		BlockPos neighbourPos = pos.offset(facing);
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
-		return !neighbour.getCollisionShape(worldIn, neighbourPos).isEmpty();
+		return !neighbour.getCollisionShape(worldIn, neighbourPos)
+			.isEmpty();
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
+		boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
 
@@ -89,12 +93,14 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.get(FACING).getOpposite();
+		return face == state.get(FACING)
+			.getOpposite();
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING).getAxis();
+		return state.get(FACING)
+			.getAxis();
 	}
 
 	@Override

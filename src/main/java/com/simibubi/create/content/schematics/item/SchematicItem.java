@@ -41,6 +41,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
+import javax.annotation.Nonnull;
+
 public class SchematicItem extends Item {
 
 	public SchematicItem(Properties properties) {
@@ -70,8 +72,10 @@ public class SchematicItem extends Item {
 	@OnlyIn(value = Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		if (stack.hasTag()) {
-			if (stack.getTag().contains("File"))
-				tooltip.add(new StringTextComponent(TextFormatting.GOLD + stack.getTag().getString("File")));
+			if (stack.getTag()
+				.contains("File"))
+				tooltip.add(new StringTextComponent(TextFormatting.GOLD + stack.getTag()
+					.getString("File")));
 		} else {
 			tooltip.add(new StringTextComponent(TextFormatting.RED + Lang.translate("schematic.invalid")));
 		}
@@ -95,12 +99,15 @@ public class SchematicItem extends Item {
 
 	public static Template loadSchematic(ItemStack blueprint) {
 		Template t = new Template();
-		String owner = blueprint.getTag().getString("Owner");
-		String schematic = blueprint.getTag().getString("File");
+		String owner = blueprint.getTag()
+			.getString("Owner");
+		String schematic = blueprint.getTag()
+			.getString("File");
 
 		String filepath = "";
 
-		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER)
+		if (Thread.currentThread()
+			.getThreadGroup() == SidedThreadGroups.SERVER)
 			filepath = "schematics/uploaded/" + owner + "/" + schematic;
 		else
 			filepath = "schematics/" + schematic;
@@ -121,9 +128,10 @@ public class SchematicItem extends Item {
 		return t;
 	}
 
+	@Nonnull
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
-		if (!onItemUse(context.getPlayer(), context.getHand()))
+		if (context.getPlayer() != null && !onItemUse(context.getPlayer(), context.getHand()))
 			return super.onItemUse(context);
 		return ActionResultType.SUCCESS;
 	}
@@ -138,7 +146,8 @@ public class SchematicItem extends Item {
 	private boolean onItemUse(PlayerEntity player, Hand hand) {
 		if (!player.isSneaking() || hand != Hand.MAIN_HAND)
 			return false;
-		if (!player.getHeldItem(hand).hasTag())
+		if (!player.getHeldItem(hand)
+			.hasTag())
 			return false;
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> this::displayBlueprintScreen);
 		return true;

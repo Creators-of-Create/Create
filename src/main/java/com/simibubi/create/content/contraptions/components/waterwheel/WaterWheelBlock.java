@@ -34,7 +34,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return AllTileEntities.WATER_WHEEL.create();
 	}
-	
+
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
@@ -47,8 +47,11 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
 			if (!AllBlocks.WATER_WHEEL.has(neighbourState))
 				continue;
-			if (neighbourState.get(HORIZONTAL_FACING).getAxis() != state.get(HORIZONTAL_FACING).getAxis()
-					|| state.get(HORIZONTAL_FACING).getAxis() != direction.getAxis())
+			if (neighbourState.get(HORIZONTAL_FACING)
+				.getAxis() != state.get(HORIZONTAL_FACING)
+					.getAxis()
+				|| state.get(HORIZONTAL_FACING)
+					.getAxis() != direction.getAxis())
 				return false;
 		}
 
@@ -57,7 +60,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
+		BlockPos currentPos, BlockPos facingPos) {
 		World world = worldIn.getWorld();
 		if (world == null || worldIn instanceof WrappedWorld)
 			return stateIn;
@@ -78,7 +81,8 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 	}
 
 	private void updateFlowAt(BlockState state, World world, BlockPos pos, Direction f) {
-		if (f.getAxis() == state.get(HORIZONTAL_FACING).getAxis())
+		if (f.getAxis() == state.get(HORIZONTAL_FACING)
+			.getAxis())
 			return;
 
 		IFluidState fluid = world.getFluidState(pos.offset(f));
@@ -87,7 +91,8 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 		int clockwiseMultiplier = 2;
 
 		Vec3d vec = fluid.getFlow(world, pos.offset(f));
-		vec = vec.scale(f.getAxisDirection().getOffset());
+		vec = vec.scale(f.getAxisDirection()
+			.getOffset());
 		vec = new Vec3d(Math.signum(vec.x), Math.signum(vec.y), Math.signum(vec.z));
 		Vec3d flow = vec;
 
@@ -125,23 +130,28 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction facing = context.getFace();
-		BlockState placedOn = context.getWorld().getBlockState(context.getPos().offset(facing.getOpposite()));
+		BlockState placedOn = context.getWorld()
+			.getBlockState(context.getPos()
+				.offset(facing.getOpposite()));
 		if (AllBlocks.WATER_WHEEL.has(placedOn))
 			return getDefaultState().with(HORIZONTAL_FACING, placedOn.get(HORIZONTAL_FACING));
-		if (facing.getAxis().isHorizontal())
-			return getDefaultState().with(HORIZONTAL_FACING,
-					context.getPlayer().isSneaking() ? facing.getOpposite() : facing);
+		if (facing.getAxis()
+			.isHorizontal())
+			return getDefaultState().with(HORIZONTAL_FACING, context.getPlayer() != null && context.getPlayer()
+				.isSneaking() ? facing.getOpposite() : facing);
 		return super.getStateForPlacement(context);
 	}
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return state.get(HORIZONTAL_FACING).getAxis() == face.getAxis();
+		return state.get(HORIZONTAL_FACING)
+			.getAxis() == face.getAxis();
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(HORIZONTAL_FACING).getAxis();
+		return state.get(HORIZONTAL_FACING)
+			.getAxis();
 	}
 
 	@Override

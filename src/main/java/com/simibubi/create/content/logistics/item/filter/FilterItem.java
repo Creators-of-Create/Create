@@ -36,6 +36,8 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
+
 public class FilterItem extends Item implements INamedContainerProvider {
 
 	private FilterType type;
@@ -43,22 +45,25 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	private enum FilterType {
 		REGULAR, ATTRIBUTE;
 	}
-	
+
 	public static FilterItem regular(Properties properties) {
 		return new FilterItem(FilterType.REGULAR, properties);
 	}
-	
+
 	public static FilterItem attribute(Properties properties) {
 		return new FilterItem(FilterType.ATTRIBUTE, properties);
 	}
-	
+
 	private FilterItem(FilterType type, Properties properties) {
 		super(properties);
 		this.type = type;
 	}
 
+	@Nonnull
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
+		if (context.getPlayer() == null)
+			return ActionResultType.PASS;
 		return onItemRightClick(context.getWorld(), context.getPlayer(), context.getHand()).getType();
 	}
 
@@ -73,16 +78,17 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			ItemDescription.add(tooltip, makeSummary);
 		}
 	}
-	
+
 	private List<String> makeSummary(ItemStack filter) {
 		List<String> list = new ArrayList<>();
 
 		if (type == FilterType.REGULAR) {
 			ItemStackHandler filterItems = getFilterItems(filter);
-			boolean blacklist = filter.getOrCreateTag().getBoolean("Blacklist");
+			boolean blacklist = filter.getOrCreateTag()
+				.getBoolean("Blacklist");
 
 			list.add(TextFormatting.GOLD
-					+ (blacklist ? Lang.translate("gui.filter.blacklist") : Lang.translate("gui.filter.whitelist")));
+				+ (blacklist ? Lang.translate("gui.filter.blacklist") : Lang.translate("gui.filter.whitelist")));
 			int count = 0;
 			for (int i = 0; i < filterItems.getSlots(); i++) {
 				if (count > 3) {
@@ -93,7 +99,8 @@ public class FilterItem extends Item implements INamedContainerProvider {
 				ItemStack filterStack = filterItems.getStackInSlot(i);
 				if (filterStack.isEmpty())
 					continue;
-				list.add(TextFormatting.GRAY + "- " + filterStack.getDisplayName().getFormattedText());
+				list.add(TextFormatting.GRAY + "- " + filterStack.getDisplayName()
+					.getFormattedText());
 				count++;
 			}
 
@@ -102,15 +109,17 @@ public class FilterItem extends Item implements INamedContainerProvider {
 		}
 
 		if (type == FilterType.ATTRIBUTE) {
-			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag().getInt("WhitelistMode")];
+			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag()
+				.getInt("WhitelistMode")];
 			list.add(TextFormatting.GOLD + (whitelistMode == WhitelistMode.WHITELIST_CONJ
-					? Lang.translate("gui.attribute_filter.whitelist_conjunctive")
-					: whitelistMode == WhitelistMode.WHITELIST_DISJ
-							? Lang.translate("gui.attribute_filter.whitelist_disjunctive")
-							: Lang.translate("gui.attribute_filter.blacklist")));
+				? Lang.translate("gui.attribute_filter.whitelist_conjunctive")
+				: whitelistMode == WhitelistMode.WHITELIST_DISJ
+					? Lang.translate("gui.attribute_filter.whitelist_disjunctive")
+					: Lang.translate("gui.attribute_filter.blacklist")));
 
 			int count = 0;
-			ListNBT attributes = filter.getOrCreateTag().getList("MatchedAttributes", NBT.TAG_COMPOUND);
+			ListNBT attributes = filter.getOrCreateTag()
+				.getList("MatchedAttributes", NBT.TAG_COMPOUND);
 			for (INBT inbt : attributes) {
 				ItemAttribute attribute = ItemAttribute.fromNBT((CompoundNBT) inbt);
 				if (count > 3) {
@@ -174,15 +183,17 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	private static boolean test(World world, ItemStack stack, ItemStack filter, boolean matchNBT) {
 		if (filter.isEmpty())
 			return true;
-		
+
 		if (!(filter.getItem() instanceof FilterItem))
 			return (matchNBT ? ItemHandlerHelper.canItemStacksStack(filter, stack)
-					: ItemStack.areItemsEqual(filter, stack));
+				: ItemStack.areItemsEqual(filter, stack));
 
 		if (AllItems.FILTER.get() == filter.getItem()) {
 			ItemStackHandler filterItems = getFilterItems(filter);
-			boolean respectNBT = filter.getOrCreateTag().getBoolean("RespectNBT");
-			boolean blacklist = filter.getOrCreateTag().getBoolean("Blacklist");
+			boolean respectNBT = filter.getOrCreateTag()
+				.getBoolean("RespectNBT");
+			boolean blacklist = filter.getOrCreateTag()
+				.getBoolean("Blacklist");
 			for (int slot = 0; slot < filterItems.getSlots(); slot++) {
 				ItemStack stackInSlot = filterItems.getStackInSlot(slot);
 				if (stackInSlot.isEmpty())
@@ -195,8 +206,10 @@ public class FilterItem extends Item implements INamedContainerProvider {
 		}
 
 		if (AllItems.ATTRIBUTE_FILTER.get() == filter.getItem()) {
-			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag().getInt("WhitelistMode")];
-			ListNBT attributes = filter.getOrCreateTag().getList("MatchedAttributes", NBT.TAG_COMPOUND);
+			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag()
+				.getInt("WhitelistMode")];
+			ListNBT attributes = filter.getOrCreateTag()
+				.getList("MatchedAttributes", NBT.TAG_COMPOUND);
 			for (INBT inbt : attributes) {
 				ItemAttribute attribute = ItemAttribute.fromNBT((CompoundNBT) inbt);
 				boolean matches = attribute.appliesTo(stack, world);

@@ -28,7 +28,8 @@ public class RedstoneContactBlock extends ProperDirectionalBlock implements IPor
 
 	public RedstoneContactBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(POWERED, false).with(FACING, Direction.UP));
+		setDefaultState(getDefaultState().with(POWERED, false)
+			.with(FACING, Direction.UP));
 	}
 
 	@Override
@@ -39,10 +40,13 @@ public class RedstoneContactBlock extends ProperDirectionalBlock implements IPor
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState state = getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
-		Direction placeDirection = context.getFace().getOpposite();
+		BlockState state = getDefaultState().with(FACING, context.getNearestLookingDirection()
+			.getOpposite());
+		Direction placeDirection = context.getFace()
+			.getOpposite();
 
-		if (context.getPlayer().isSneaking() || hasValidContact(context.getWorld(), context.getPos(), placeDirection))
+		if ((context.getPlayer() != null && context.getPlayer()
+			.isSneaking()) || hasValidContact(context.getWorld(), context.getPos(), placeDirection))
 			state = state.with(FACING, placeDirection);
 		if (hasValidContact(context.getWorld(), context.getPos(), state.get(FACING)))
 			state = state.with(POWERED, true);
@@ -52,7 +56,7 @@ public class RedstoneContactBlock extends ProperDirectionalBlock implements IPor
 
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
+		BlockPos currentPos, BlockPos facingPos) {
 		if (facing != stateIn.get(FACING))
 			return stateIn;
 		boolean hasValidContact = hasValidContact(worldIn, currentPos, facing);
