@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -29,6 +30,8 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 public class BeltConnectorItem extends BlockItem {
 
@@ -48,12 +51,13 @@ public class BeltConnectorItem extends BlockItem {
 		super.fillItemGroup(p_150895_1_, p_150895_2_);
 	}
 
+	@Nonnull
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
-		if (context.getPlayer()
-				.isSneaking()) {
+		PlayerEntity playerEntity = context.getPlayer();
+		if (playerEntity != null && playerEntity.isSneaking()) {
 			context.getItem()
-					.setTag(null);
+				.setTag(null);
 			return ActionResultType.SUCCESS;
 		}
 
@@ -65,7 +69,7 @@ public class BeltConnectorItem extends BlockItem {
 			return validAxis ? ActionResultType.SUCCESS : ActionResultType.FAIL;
 
 		CompoundNBT tag = context.getItem()
-				.getOrCreateTag();
+			.getOrCreateTag();
 		BlockPos firstPulley = null;
 
 		// Remove first if no longer existant or valid
@@ -74,11 +78,11 @@ public class BeltConnectorItem extends BlockItem {
 			if (!validateAxis(world, firstPulley)) {
 				tag.remove("FirstPulley");
 				context.getItem()
-						.setTag(tag);
+					.setTag(tag);
 			}
 		}
 
-		if (!validAxis)
+		if (!validAxis || playerEntity == null)
 			return ActionResultType.FAIL;
 
 		if (tag.contains("FirstPulley")) {
@@ -86,32 +90,29 @@ public class BeltConnectorItem extends BlockItem {
 			if (!canConnect(world, firstPulley, pos))
 				return ActionResultType.FAIL;
 
-			if (firstPulley != null && !firstPulley.equals(pos) && !world.isRemote) {
+			if (firstPulley != null && !firstPulley.equals(pos)) {
 				createBelts(world, firstPulley, pos);
-				AllTriggers.triggerFor(AllTriggers.CONNECT_BELT, context.getPlayer());
-				if (!context.getPlayer()
-						.isCreative())
+				AllTriggers.triggerFor(AllTriggers.CONNECT_BELT, playerEntity);
+				if (!playerEntity.isCreative())
 					context.getItem()
-							.shrink(1);
+						.shrink(1);
 			}
 
 			if (!context.getItem()
-					.isEmpty()) {
+				.isEmpty()) {
 				context.getItem()
-						.setTag(null);
-				context.getPlayer()
-						.getCooldownTracker()
-						.setCooldown(this, 5);
+					.setTag(null);
+				playerEntity.getCooldownTracker()
+					.setCooldown(this, 5);
 			}
 			return ActionResultType.SUCCESS;
 		}
 
 		tag.put("FirstPulley", NBTUtil.writeBlockPos(pos));
 		context.getItem()
-				.setTag(tag);
-		context.getPlayer()
-				.getCooldownTracker()
-				.setCooldown(this, 5);
+			.setTag(tag);
+		playerEntity.getCooldownTracker()
+			.setCooldown(this, 5);
 		return ActionResultType.SUCCESS;
 	}
 
@@ -123,7 +124,7 @@ public class BeltConnectorItem extends BlockItem {
 		BlockPos diff = end.subtract(start);
 		if (diff.getX() == diff.getZ())
 			facing = Direction.getFacingFromAxis(facing.getAxisDirection(), world.getBlockState(start)
-					.get(BlockStateProperties.AXIS) == Axis.X ? Axis.Z : Axis.X);
+				.get(BlockStateProperties.AXIS) == Axis.X ? Axis.Z : Axis.X);
 
 		List<BlockPos> beltsToCreate = getBeltChainBetween(start, end, slope, facing);
 		BlockState beltBlock = AllBlocks.BELT.getDefaultState();
@@ -134,8 +135,8 @@ public class BeltConnectorItem extends BlockItem {
 			if (part == Part.MIDDLE && pulley)
 				part = Part.PULLEY;
 			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope)
-					.with(BeltBlock.PART, part)
-					.with(BeltBlock.HORIZONTAL_FACING, facing), 3);
+				.with(BeltBlock.PART, part)
+				.with(BeltBlock.HORIZONTAL_FACING, facing), 3);
 		}
 	}
 
@@ -148,7 +149,7 @@ public class BeltConnectorItem extends BlockItem {
 			axisDirection = diff.getY() > 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
 		else
 			axisDirection = beltAxis.getCoordinate(diff.getX(), 0, diff.getZ()) > 0 ? AxisDirection.POSITIVE
-					: AxisDirection.NEGATIVE;
+				: AxisDirection.NEGATIVE;
 
 		return Direction.getFacingFromAxis(axisDirection, beltAxis);
 	}
@@ -197,20 +198,20 @@ public class BeltConnectorItem extends BlockItem {
 
 		BlockPos diff = second.subtract(first);
 		Axis axis = world.getBlockState(first)
-				.get(BlockStateProperties.AXIS);
+			.get(BlockStateProperties.AXIS);
 
 		int x = diff.getX();
 		int y = diff.getY();
 		int z = diff.getZ();
 		int sames = ((Math.abs(x) == Math.abs(y)) ? 1 : 0) + ((Math.abs(y) == Math.abs(z)) ? 1 : 0)
-				+ ((Math.abs(z) == Math.abs(x)) ? 1 : 0);
+			+ ((Math.abs(z) == Math.abs(x)) ? 1 : 0);
 
 		if (axis.getCoordinate(x, y, z) != 0)
 			return false;
 		if (sames != 1)
 			return false;
 		if (axis != world.getBlockState(second)
-				.get(BlockStateProperties.AXIS))
+			.get(BlockStateProperties.AXIS))
 			return false;
 
 		TileEntity tileEntity = world.getTileEntity(first);
@@ -234,7 +235,7 @@ public class BeltConnectorItem extends BlockItem {
 			if (ShaftBlock.isShaft(blockState) && blockState.get(ShaftBlock.AXIS) == axis)
 				continue;
 			if (!blockState.getMaterial()
-					.isReplaceable())
+				.isReplaceable())
 				return false;
 		}
 
@@ -248,7 +249,7 @@ public class BeltConnectorItem extends BlockItem {
 		if (!ShaftBlock.isShaft(world.getBlockState(pos)))
 			return false;
 		if (world.getBlockState(pos)
-				.get(BlockStateProperties.AXIS) == Axis.Y)
+			.get(BlockStateProperties.AXIS) == Axis.Y)
 			return false;
 		return true;
 	}
