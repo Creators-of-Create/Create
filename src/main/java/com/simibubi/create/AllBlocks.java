@@ -8,6 +8,7 @@ import static com.simibubi.create.foundation.data.CreateRegistrate.connectedText
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.ModelGen.oxidizedItemModel;
 
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
@@ -301,6 +302,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<NozzleBlock> NOZZLE = REGISTRATE.block("nozzle", NozzleBlock::new)
 		.initialProperties(SharedProperties::stone)
+		.tag(AllBlockTags.BRITTLE.tag)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.item()
@@ -318,6 +320,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::wooden)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(StressConfigDefaults.setCapacity(32.0))
+		.tag(AllBlockTags.BRITTLE.tag)
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -482,6 +485,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<PulleyBlock.RopeBlock> ROPE = REGISTRATE.block("rope", PulleyBlock.RopeBlock::new)
 		.initialProperties(SharedProperties.beltMaterial, MaterialColor.BROWN)
+		.tag(AllBlockTags.BRITTLE.tag)
 		.properties(p -> p.sound(SoundType.CLOTH))
 		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 			.getExistingFile(p.modLoc("block/rope_pulley/" + c.getName()))))
@@ -490,6 +494,7 @@ public class AllBlocks {
 	public static final BlockEntry<PulleyBlock.MagnetBlock> PULLEY_MAGNET =
 		REGISTRATE.block("pulley_magnet", PulleyBlock.MagnetBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.getExistingFile(p.modLoc("block/rope_pulley/" + c.getName()))))
 			.register();
@@ -650,6 +655,7 @@ public class AllBlocks {
 	public static final BlockEntry<FurnaceEngineBlock> FURNACE_ENGINE =
 		REGISTRATE.block("furnace_engine", FurnaceEngineBlock::new)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setCapacity(1024.0))
 			.item()
@@ -682,6 +688,7 @@ public class AllBlocks {
 	public static final BlockEntry<RedstoneLinkBlock> REDSTONE_LINK =
 		REGISTRATE.block("redstone_link", RedstoneLinkBlock::new)
 			.initialProperties(SharedProperties::wooden)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate(new RedstoneLinkGenerator()::generate)
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.item()
@@ -795,6 +802,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<ExtractorBlock> EXTRACTOR = REGISTRATE.block("extractor", ExtractorBlock::new)
 		.initialProperties(SharedProperties::softMetal)
+		.tag(AllBlockTags.BRITTLE.tag)
 		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, c.getName() + "/horizontal")))
 		.item()
 		.transform(customItemModel("_", "horizontal"))
@@ -803,12 +811,14 @@ public class AllBlocks {
 	public static final BlockEntry<ExtractorBlock.Vertical> VERTICAL_EXTRACTOR =
 		REGISTRATE.block("vertical_extractor", ExtractorBlock.Vertical::new)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate(new VerticalExtractorGenerator(false)::generate)
 			.loot((p, b) -> p.registerDropping(b, EXTRACTOR.get()))
 			.register();
 
 	public static final BlockEntry<LinkedExtractorBlock> LINKED_EXTRACTOR = REGISTRATE
 		.block("linked_extractor", LinkedExtractorBlock::new)
+		.tag(AllBlockTags.BRITTLE.tag)
 		.initialProperties(SharedProperties::softMetal)
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, "extractor/horizontal_linked")))
@@ -819,6 +829,7 @@ public class AllBlocks {
 	public static final BlockEntry<LinkedExtractorBlock.Vertical> VERTICAL_LINKED_EXTRACTOR =
 		REGISTRATE.block("vertical_linked_extractor", LinkedExtractorBlock.Vertical::new)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate(new VerticalExtractorGenerator(true)::generate)
 			.loot((p, b) -> p.registerDropping(b, LINKED_EXTRACTOR.get()))
 			.addLayer(() -> RenderType::getCutoutMipped)
@@ -826,6 +837,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<FunnelBlock> FUNNEL = REGISTRATE.block("funnel", FunnelBlock::new)
 		.initialProperties(SharedProperties::softMetal)
+		.tag(AllBlockTags.BRITTLE.tag)
 		.blockstate((c, p) -> p.horizontalBlock(c.get(), state -> p.models()
 			.getExistingFile(p.modLoc("block/funnel/horizontal" + (state.get(FunnelBlock.BELT) ? "_belt" : "")))))
 		.item()
@@ -835,6 +847,7 @@ public class AllBlocks {
 	public static final BlockEntry<FunnelBlock.Vertical> VERTICAL_FUNNEL =
 		REGISTRATE.block("vertical_funnel", FunnelBlock.Vertical::new)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate(new VerticalFunnelGenerator()::generate)
 			.loot((p, b) -> p.registerDropping(b, FUNNEL.get()))
 			.register();
