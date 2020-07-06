@@ -5,27 +5,22 @@
 			"modid": "biomesoplenty"
 		}
 	],
-	"type": "create:crushing",
+	"type": "create:milling",
     "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"item": "biomesoplenty:pink_daffodil"
+    		"item": "biomesoplenty:orange_cosmos"
     	}
     ], 
 	"results": [
 		{
-			"item": "minecraft:pink_dye",
+			"item": "minecraft:orange_dye",
 			"count": 2
 		},
 		{
-			"item": "minecraft:magenta_dye",
+			"item": "minecraft:lime_dye",
 			"count": 1,
-			"chance": 0.25
-		},
-		{
-			"item": "minecraft:cyan_dye",
-			"count": 1,
-			"chance": 0.05
+			"chance": 0.1
 		}
 	],
 	"processingTime": 50

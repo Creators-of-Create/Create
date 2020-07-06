@@ -5,27 +5,27 @@
 			"modid": "biomesoplenty"
 		}
 	],
-	"type": "create:crushing",
+	"type": "create:milling",
     "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"item": "biomesoplenty:pink_hibiscus"
+    		"item": "biomesoplenty:goldenrod"
     	}
     ], 
 	"results": [
 		{
-			"item": "minecraft:pink_dye",
-			"count": 2
-		},
-		{
 			"item": "minecraft:yellow_dye",
-			"count": 1,
-			"chance": 0.25
+			"count": 3
 		},
 		{
 			"item": "minecraft:green_dye",
-			"count": 1,
+			"count": 2,
 			"chance": 0.05
+		},
+		{
+			"item": "minecraft:yellow_dye",
+			"count": 2,
+			"chance": 0.25
 		}
 	],
 	"processingTime": 50

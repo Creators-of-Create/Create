@@ -5,7 +5,7 @@
 			"modid": "biomesoplenty"
 		}
 	],
-	"type": "create:crushing",
+	"type": "create:milling",
     "group": "minecraft:misc",
     "ingredients": [
     	{

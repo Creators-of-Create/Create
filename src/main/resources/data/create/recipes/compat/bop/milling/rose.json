@@ -5,22 +5,22 @@
 			"modid": "biomesoplenty"
 		}
 	],
-	"type": "create:crushing",
+	"type": "create:milling",
     "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"item": "biomesoplenty:glowflower"
+    		"item": "biomesoplenty:rose"
     	}
     ], 
 	"results": [
 		{
-			"item": "minecraft:cyan_dye",
+			"item": "minecraft:red_dye",
 			"count": 2
 		},
 		{
-			"item": "minecraft:white_dye",
+			"item": "minecraft:green_dye",
 			"count": 1,
-			"chance": 0.1
+			"chance": 0.05
 		}
 	],
 	"processingTime": 50

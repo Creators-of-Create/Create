@@ -5,17 +5,22 @@
 			"modid": "biomesoplenty"
 		}
 	],
-	"type": "create:crushing",
+	"type": "create:milling",
     "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"item": "biomesoplenty:violet"
+    		"item": "biomesoplenty:wildflower"
     	}
     ], 
 	"results": [
 		{
-			"item": "minecraft:purple_dye",
+			"item": "minecraft:magenta_dye",
 			"count": 2
+		},
+		{
+			"item": "minecraft:lime_dye",
+			"count": 1,
+			"chance": 0.1
 		}
 	],
 	"processingTime": 50

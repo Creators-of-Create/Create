@@ -5,16 +5,16 @@
 			"modid": "biomesoplenty"
 		}
 	],
-	"type": "create:crushing",
+	"type": "create:milling",
     "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"item": "biomesoplenty:wilted_lily"
+    		"item": "biomesoplenty:violet"
     	}
     ], 
 	"results": [
 		{
-			"item": "minecraft:gray_dye",
+			"item": "minecraft:purple_dye",
 			"count": 2
 		}
 	],

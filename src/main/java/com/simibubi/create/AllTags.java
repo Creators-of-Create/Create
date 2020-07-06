@@ -1,8 +1,5 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.AllTags.NameSpace.FORGE;
-import static com.simibubi.create.AllTags.NameSpace.MOD;
-
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
@@ -20,6 +17,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagCollection;
 import net.minecraft.util.ResourceLocation;
+
+import static com.simibubi.create.AllTags.NameSpace.*;
 
 public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
@@ -61,7 +60,7 @@ public class AllTags {
 	}
 
 	public static enum AllItemTags {
-		CRUSHED_ORES(MOD), CREATE_INGOTS(MOD), BEACON_PAYMENT(FORGE), INGOTS(FORGE), NUGGETS(FORGE), PLATES(FORGE),
+		CRUSHED_ORES(MOD), CREATE_INGOTS(MOD), BEACON_PAYMENT(FORGE), INGOTS(FORGE), NUGGETS(FORGE), PLATES(FORGE), COBBLESTONE(FORGE)
 
 		;
 

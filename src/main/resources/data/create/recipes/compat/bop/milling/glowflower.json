@@ -5,20 +5,20 @@
 			"modid": "biomesoplenty"
 		}
 	],
-	"type": "create:crushing",
+	"type": "create:milling",
     "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"item": "biomesoplenty:burning_blossom"
+    		"item": "biomesoplenty:glowflower"
     	}
     ], 
 	"results": [
 		{
-			"item": "minecraft:orange_dye",
+			"item": "minecraft:cyan_dye",
 			"count": 2
 		},
 		{
-			"item": "minecraft:lime_dye",
+			"item": "minecraft:white_dye",
 			"count": 1,
 			"chance": 0.1
 		}

@@ -5,22 +5,17 @@
 			"modid": "biomesoplenty"
 		}
 	],
-	"type": "create:crushing",
+	"type": "create:milling",
     "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"item": "biomesoplenty:orange_cosmos"
+    		"item": "biomesoplenty:wilted_lily"
     	}
     ], 
 	"results": [
 		{
-			"item": "minecraft:orange_dye",
+			"item": "minecraft:gray_dye",
 			"count": 2
-		},
-		{
-			"item": "minecraft:lime_dye",
-			"count": 1,
-			"chance": 0.1
 		}
 	],
 	"processingTime": 50
