@@ -1,0 +1,21 @@
+{
+"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "swampexpansion"
+		}
+	],
+    "type": "create:cutting",
+    "ingredients": [
+    	{
+    		"item": "swampexpansion:stripped_willow_log"
+    	}
+    ],
+	"results": [
+		{
+			"item": "swampexpansion:willow_planks",
+			"count": 5
+		}
+	],
+	"processingTime": 100
+}
