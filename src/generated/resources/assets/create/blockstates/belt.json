@@ -125,13 +125,13 @@
       "y": 180
     },
     "casing=true,facing=north,part=start,slope=upward": {
-      "model": "create:block/belt_casing/diagonal_end"
+      "model": "create:block/belt_casing/diagonal_start"
     },
     "casing=false,facing=south,part=start,slope=upward": {
       "model": "create:block/belt/upward_start"
     },
     "casing=true,facing=south,part=start,slope=upward": {
-      "model": "create:block/belt_casing/diagonal_start",
+      "model": "create:block/belt_casing/diagonal_end",
       "y": 180
     },
     "casing=false,facing=west,part=start,slope=upward": {
@@ -139,7 +139,7 @@
       "y": 90
     },
     "casing=true,facing=west,part=start,slope=upward": {
-      "model": "create:block/belt_casing/diagonal_start",
+      "model": "create:block/belt_casing/diagonal_end",
       "y": 270
     },
     "casing=false,facing=east,part=start,slope=upward": {
@@ -147,7 +147,7 @@
       "y": 270
     },
     "casing=true,facing=east,part=start,slope=upward": {
-      "model": "create:block/belt_casing/diagonal_end",
+      "model": "create:block/belt_casing/diagonal_start",
       "y": 90
     },
     "casing=false,facing=north,part=middle,slope=upward": {
@@ -185,13 +185,13 @@
       "y": 180
     },
     "casing=true,facing=north,part=end,slope=upward": {
-      "model": "create:block/belt_casing/diagonal_start"
+      "model": "create:block/belt_casing/diagonal_end"
     },
     "casing=false,facing=south,part=end,slope=upward": {
       "model": "create:block/belt/upward_end"
     },
     "casing=true,facing=south,part=end,slope=upward": {
-      "model": "create:block/belt_casing/diagonal_end",
+      "model": "create:block/belt_casing/diagonal_start",
       "y": 180
     },
     "casing=false,facing=west,part=end,slope=upward": {
@@ -199,7 +199,7 @@
       "y": 90
     },
     "casing=true,facing=west,part=end,slope=upward": {
-      "model": "create:block/belt_casing/diagonal_end",
+      "model": "create:block/belt_casing/diagonal_start",
       "y": 270
     },
     "casing=false,facing=east,part=end,slope=upward": {
@@ -207,7 +207,7 @@
       "y": 270
     },
     "casing=true,facing=east,part=end,slope=upward": {
-      "model": "create:block/belt_casing/diagonal_start",
+      "model": "create:block/belt_casing/diagonal_end",
       "y": 90
     },
     "casing=false,facing=north,part=pulley,slope=upward": {
@@ -245,21 +245,21 @@
       "y": 180
     },
     "casing=true,facing=north,part=start,slope=downward": {
-      "model": "create:block/belt_casing/diagonal_end",
+      "model": "create:block/belt_casing/diagonal_start",
       "y": 180
     },
     "casing=false,facing=south,part=start,slope=downward": {
       "model": "create:block/belt/downward_start"
     },
     "casing=true,facing=south,part=start,slope=downward": {
-      "model": "create:block/belt_casing/diagonal_start"
+      "model": "create:block/belt_casing/diagonal_end"
     },
     "casing=false,facing=west,part=start,slope=downward": {
       "model": "create:block/belt/downward_start",
       "y": 90
     },
     "casing=true,facing=west,part=start,slope=downward": {
-      "model": "create:block/belt_casing/diagonal_start",
+      "model": "create:block/belt_casing/diagonal_end",
       "y": 90
     },
     "casing=false,facing=east,part=start,slope=downward": {
@@ -267,7 +267,7 @@
       "y": 270
     },
     "casing=true,facing=east,part=start,slope=downward": {
-      "model": "create:block/belt_casing/diagonal_end",
+      "model": "create:block/belt_casing/diagonal_start",
       "y": 270
     },
     "casing=false,facing=north,part=middle,slope=downward": {
@@ -305,21 +305,21 @@
       "y": 180
     },
     "casing=true,facing=north,part=end,slope=downward": {
-      "model": "create:block/belt_casing/diagonal_start",
+      "model": "create:block/belt_casing/diagonal_end",
       "y": 180
     },
     "casing=false,facing=south,part=end,slope=downward": {
       "model": "create:block/belt/downward_end"
     },
     "casing=true,facing=south,part=end,slope=downward": {
-      "model": "create:block/belt_casing/diagonal_end"
+      "model": "create:block/belt_casing/diagonal_start"
     },
     "casing=false,facing=west,part=end,slope=downward": {
       "model": "create:block/belt/downward_end",
       "y": 90
     },
     "casing=true,facing=west,part=end,slope=downward": {
-      "model": "create:block/belt_casing/diagonal_end",
+      "model": "create:block/belt_casing/diagonal_start",
       "y": 90
     },
     "casing=false,facing=east,part=end,slope=downward": {
@@ -327,7 +327,7 @@
       "y": 270
     },
     "casing=true,facing=east,part=end,slope=downward": {
-      "model": "create:block/belt_casing/diagonal_start",
+      "model": "create:block/belt_casing/diagonal_end",
       "y": 270
     },
     "casing=false,facing=north,part=pulley,slope=downward": {

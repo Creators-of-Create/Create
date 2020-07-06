@@ -50,7 +50,7 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		if (!casing && pulley)
 			part = Part.MIDDLE;
 
-		if ((!casing && vertical && negative || casing && diagonal && negative != (direction.getAxis() == Axis.X)
+		if ((!casing && vertical && negative || casing && diagonal && negative == (direction.getAxis() == Axis.X)
 			|| !casing && sideways && negative) && part != Part.MIDDLE && !pulley)
 			part = part == Part.END ? Part.START : Part.END;
 
