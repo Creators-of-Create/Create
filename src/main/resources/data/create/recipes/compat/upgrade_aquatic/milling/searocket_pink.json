@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "upgrade_aquatic"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "upgrade_aquatic:searocket_pink"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:pink_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:green_dye",
+      "count": 1,
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50
+}

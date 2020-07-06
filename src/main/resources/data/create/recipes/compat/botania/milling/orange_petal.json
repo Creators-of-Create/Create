@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "botania"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/orange"
+    }
+  ],
+  "results": [
+    {
+      "item": "botania:orange_dye",
+      "count": 1
+    }
+  ],
+  "processingTime": 50
+}

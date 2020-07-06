@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "projectvibrantjourneys"
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "projectvibrantjourneys:stripped_willow_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "projectvibrantjourneys:willow_planks",
+      "count": 5
+    }
+  ],
+  "processingTime": 100
+}
