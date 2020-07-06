@@ -511,6 +511,142 @@
       "model": "create:block/belt_casing/vertical_pulley",
       "x": 90,
       "y": 270
+    },
+    "casing=false,facing=north,part=start,slope=sideways": {
+      "model": "create:block/belt/sideways_end",
+      "x": 180,
+      "y": 180
+    },
+    "casing=true,facing=north,part=start,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=south,part=start,slope=sideways": {
+      "model": "create:block/belt/sideways_start"
+    },
+    "casing=true,facing=south,part=start,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_start"
+    },
+    "casing=false,facing=west,part=start,slope=sideways": {
+      "model": "create:block/belt/sideways_end",
+      "x": 180,
+      "y": 90
+    },
+    "casing=true,facing=west,part=start,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 180,
+      "y": 90
+    },
+    "casing=false,facing=east,part=start,slope=sideways": {
+      "model": "create:block/belt/sideways_start",
+      "y": 270
+    },
+    "casing=true,facing=east,part=start,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_start",
+      "y": 270
+    },
+    "casing=false,facing=north,part=middle,slope=sideways": {
+      "model": "create:block/belt/sideways_middle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=true,facing=north,part=middle,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=south,part=middle,slope=sideways": {
+      "model": "create:block/belt/sideways_middle"
+    },
+    "casing=true,facing=south,part=middle,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_middle"
+    },
+    "casing=false,facing=west,part=middle,slope=sideways": {
+      "model": "create:block/belt/sideways_middle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=true,facing=west,part=middle,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=false,facing=east,part=middle,slope=sideways": {
+      "model": "create:block/belt/sideways_middle",
+      "y": 270
+    },
+    "casing=true,facing=east,part=middle,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "y": 270
+    },
+    "casing=false,facing=north,part=end,slope=sideways": {
+      "model": "create:block/belt/sideways_start",
+      "x": 180,
+      "y": 180
+    },
+    "casing=true,facing=north,part=end,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=south,part=end,slope=sideways": {
+      "model": "create:block/belt/sideways_end"
+    },
+    "casing=true,facing=south,part=end,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_end"
+    },
+    "casing=false,facing=west,part=end,slope=sideways": {
+      "model": "create:block/belt/sideways_start",
+      "x": 180,
+      "y": 90
+    },
+    "casing=true,facing=west,part=end,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 180,
+      "y": 90
+    },
+    "casing=false,facing=east,part=end,slope=sideways": {
+      "model": "create:block/belt/sideways_end",
+      "y": 270
+    },
+    "casing=true,facing=east,part=end,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_end",
+      "y": 270
+    },
+    "casing=false,facing=north,part=pulley,slope=sideways": {
+      "model": "create:block/belt/sideways_middle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=true,facing=north,part=pulley,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=south,part=pulley,slope=sideways": {
+      "model": "create:block/belt/sideways_middle"
+    },
+    "casing=true,facing=south,part=pulley,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_pulley"
+    },
+    "casing=false,facing=west,part=pulley,slope=sideways": {
+      "model": "create:block/belt/sideways_middle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=true,facing=west,part=pulley,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "x": 180,
+      "y": 90
+    },
+    "casing=false,facing=east,part=pulley,slope=sideways": {
+      "model": "create:block/belt/sideways_middle",
+      "y": 270
+    },
+    "casing=true,facing=east,part=pulley,slope=sideways": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "y": 270
     }
   }
 }

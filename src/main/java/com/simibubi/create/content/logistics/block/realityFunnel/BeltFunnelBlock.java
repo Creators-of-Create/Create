@@ -98,7 +98,7 @@ public class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 			return true;
 		if (!(stateBelow.getBlock() instanceof BeltBlock))
 			return false;
-		if (stateBelow.get(BeltBlock.SLOPE) == Slope.VERTICAL)
+		if (!BeltBlock.canTransport(stateBelow))
 			return false;
 		if (stateBelow.get(BeltBlock.HORIZONTAL_FACING)
 			.getAxis() != state.get(HORIZONTAL_FACING)

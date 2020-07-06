@@ -99,6 +99,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
+		if (state.get(SLOPE) == Slope.SIDEWAYS)
+			return Axis.Y;
 		return state.get(HORIZONTAL_FACING)
 			.rotateY()
 			.getAxis();
@@ -162,7 +164,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@Override
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		if (state.get(SLOPE) == Slope.VERTICAL)
+		if (!canTransport(state))
 			return;
 		if (entityIn instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) entityIn;
@@ -205,6 +207,13 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			controller.passengers.put(entityIn, new TransportedEntityInfo(pos, state));
 			entityIn.onGround = true;
 		}
+	}
+
+	public static boolean canTransport(BlockState state) {
+		if (!AllBlocks.BELT.has(state))
+			return false;
+		Slope slope = state.get(SLOPE);
+		return slope != Slope.VERTICAL && slope != Slope.SIDEWAYS;
 	}
 
 	@Override
@@ -272,6 +281,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			if (state.get(CASING))
 				return ActionResultType.PASS;
 			if (state.get(SLOPE) == Slope.VERTICAL)
+				return ActionResultType.PASS;
+			if (state.get(SLOPE) == Slope.SIDEWAYS)
 				return ActionResultType.PASS;
 			if (!player.isCreative())
 				heldItem.shrink(1);
@@ -462,7 +473,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 					world.setBlockState(beltPos, currentState.with(CASING, false), 2);
 				}
 
-				if (te.isController() && isVertical)
+				if (te.isController() && !canTransport(currentState))
 					te.getInventory()
 						.ejectAll();
 			} else {
@@ -531,7 +542,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	public enum Slope implements IStringSerializable {
-		HORIZONTAL, UPWARD, DOWNWARD, VERTICAL;
+		HORIZONTAL, UPWARD, DOWNWARD, VERTICAL, SIDEWAYS;
 
 		@Override
 		public String getName() {
@@ -580,7 +591,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (slope == Slope.VERTICAL)
 			return pos.up(direction.getAxisDirection() == AxisDirection.POSITIVE ? offset : -offset);
 		pos = pos.offset(direction, offset);
-		if (slope != Slope.HORIZONTAL)
+		if (slope != Slope.HORIZONTAL && slope != Slope.SIDEWAYS)
 			return pos.up(slope == Slope.UPWARD ? offset : -offset);
 		return pos;
 	}
