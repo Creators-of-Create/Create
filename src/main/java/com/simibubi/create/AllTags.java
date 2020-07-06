@@ -21,6 +21,7 @@ import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagCollection;
 import net.minecraft.util.ResourceLocation;
 
+
 public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 		.itemGroup(() -> Create.baseCreativeTab);
@@ -61,7 +62,7 @@ public class AllTags {
 	}
 
 	public static enum AllItemTags {
-		CRUSHED_ORES(MOD), CREATE_INGOTS(MOD), BEACON_PAYMENT(FORGE), INGOTS(FORGE), NUGGETS(FORGE), PLATES(FORGE),
+		CRUSHED_ORES(MOD), CREATE_INGOTS(MOD), BEACON_PAYMENT(FORGE), INGOTS(FORGE), NUGGETS(FORGE), PLATES(FORGE), COBBLESTONE(FORGE)
 
 		;
 

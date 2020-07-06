@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "atmospheric:stripped_rosewood_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "atmospheric:rosewood_planks",
+      "count": 5
+    }
+  ],
+  "processingTime": 100
+}
