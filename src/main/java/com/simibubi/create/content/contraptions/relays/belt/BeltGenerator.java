@@ -18,7 +18,10 @@ public class BeltGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		return state.get(BeltBlock.SLOPE) == Slope.VERTICAL ? 90 : 0;
+		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
+		Slope slope = state.get(BeltBlock.SLOPE);
+		return slope == Slope.VERTICAL ? 90
+			: slope == Slope.SIDEWAYS && direction.getAxisDirection() == AxisDirection.NEGATIVE ? 180 : 0;
 	}
 
 	@Override
@@ -41,13 +44,14 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		boolean diagonal = slope == Slope.UPWARD || slope == Slope.DOWNWARD;
 		boolean vertical = slope == Slope.VERTICAL;
 		boolean pulley = part == Part.PULLEY;
+		boolean sideways = slope == Slope.SIDEWAYS;
 		boolean negative = direction.getAxisDirection() == AxisDirection.NEGATIVE;
 
 		if (!casing && pulley)
 			part = Part.MIDDLE;
 
-		if ((!casing && vertical && negative || casing && diagonal && negative != (direction.getAxis() == Axis.X))
-			&& part != Part.MIDDLE && !pulley)
+		if ((!casing && vertical && negative || casing && diagonal && negative != (direction.getAxis() == Axis.X)
+			|| !casing && sideways && negative) && part != Part.MIDDLE && !pulley)
 			part = part == Part.END ? Part.START : Part.END;
 
 		if (!casing && vertical)

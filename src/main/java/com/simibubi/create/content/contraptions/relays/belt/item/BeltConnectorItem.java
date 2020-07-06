@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.relays.belt.item;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -30,8 +32,6 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
 
 public class BeltConnectorItem extends BlockItem {
 
@@ -75,7 +75,7 @@ public class BeltConnectorItem extends BlockItem {
 		// Remove first if no longer existant or valid
 		if (tag.contains("FirstPulley")) {
 			firstPulley = NBTUtil.readBlockPos(tag.getCompound("FirstPulley"));
-			if (!validateAxis(world, firstPulley)) {
+			if (!validateAxis(world, firstPulley) || !firstPulley.withinDistance(pos, maxLength() * 2)) {
 				tag.remove("FirstPulley");
 				context.getItem()
 					.setTag(tag);
@@ -131,9 +131,12 @@ public class BeltConnectorItem extends BlockItem {
 
 		for (BlockPos pos : beltsToCreate) {
 			BeltBlock.Part part = pos.equals(start) ? Part.START : pos.equals(end) ? Part.END : Part.MIDDLE;
-			boolean pulley = ShaftBlock.isShaft(world.getBlockState(pos));
+			BlockState shaftState = world.getBlockState(pos);
+			boolean pulley = ShaftBlock.isShaft(shaftState);
 			if (part == Part.MIDDLE && pulley)
 				part = Part.PULLEY;
+			if (pulley && shaftState.get(ShaftBlock.AXIS) == Axis.Y)
+				slope = Slope.SIDEWAYS;
 			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope)
 				.with(BeltBlock.PART, part)
 				.with(BeltBlock.HORIZONTAL_FACING, facing), 3);
@@ -193,11 +196,11 @@ public class BeltConnectorItem extends BlockItem {
 			return false;
 		if (!world.isAreaLoaded(second, 1))
 			return false;
-		if (!second.withinDistance(first, AllConfigs.SERVER.kinetics.maxBeltLength.get()))
+		if (!second.withinDistance(first, maxLength()))
 			return false;
 
 		BlockPos diff = second.subtract(first);
-		Axis axis = world.getBlockState(first)
+		Axis shaftAxis = world.getBlockState(first)
 			.get(BlockStateProperties.AXIS);
 
 		int x = diff.getX();
@@ -206,12 +209,14 @@ public class BeltConnectorItem extends BlockItem {
 		int sames = ((Math.abs(x) == Math.abs(y)) ? 1 : 0) + ((Math.abs(y) == Math.abs(z)) ? 1 : 0)
 			+ ((Math.abs(z) == Math.abs(x)) ? 1 : 0);
 
-		if (axis.getCoordinate(x, y, z) != 0)
+		if (shaftAxis.getCoordinate(x, y, z) != 0)
 			return false;
 		if (sames != 1)
 			return false;
-		if (axis != world.getBlockState(second)
+		if (shaftAxis != world.getBlockState(second)
 			.get(BlockStateProperties.AXIS))
+			return false;
+		if (shaftAxis == Axis.Y && x != 0 && z != 0)
 			return false;
 
 		TileEntity tileEntity = world.getTileEntity(first);
@@ -232,7 +237,7 @@ public class BeltConnectorItem extends BlockItem {
 		for (BlockPos currentPos = first.add(step); !currentPos.equals(second) && limit-- > 0; currentPos =
 			currentPos.add(step)) {
 			BlockState blockState = world.getBlockState(currentPos);
-			if (ShaftBlock.isShaft(blockState) && blockState.get(ShaftBlock.AXIS) == axis)
+			if (ShaftBlock.isShaft(blockState) && blockState.get(ShaftBlock.AXIS) == shaftAxis)
 				continue;
 			if (!blockState.getMaterial()
 				.isReplaceable())
@@ -243,13 +248,14 @@ public class BeltConnectorItem extends BlockItem {
 
 	}
 
+	protected static Integer maxLength() {
+		return AllConfigs.SERVER.kinetics.maxBeltLength.get();
+	}
+
 	public static boolean validateAxis(World world, BlockPos pos) {
 		if (!world.isAreaLoaded(pos, 1))
 			return false;
 		if (!ShaftBlock.isShaft(world.getBlockState(pos)))
-			return false;
-		if (world.getBlockState(pos)
-			.get(BlockStateProperties.AXIS) == Axis.Y)
 			return false;
 		return true;
 	}

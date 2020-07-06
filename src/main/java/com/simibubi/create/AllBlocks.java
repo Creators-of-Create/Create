@@ -387,6 +387,21 @@ public class AllBlocks {
 		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.standardModel(ctx, prov)))
 		.simpleItem()
 		.register();
+	
+	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		.item()
+		.transform(customItemModel("_", "block"))
+		.register();
+	
+	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.blockstate(new ChuteGenerator()::generate)
+		.item(ChuteItem::new)
+		.transform(customItemModel("_", "block"))
+		.register();
 
 	public static final BlockEntry<GaugeBlock> SPEEDOMETER = REGISTRATE.block("speedometer", GaugeBlock::speed)
 		.initialProperties(SharedProperties::wooden)
@@ -665,11 +680,40 @@ public class AllBlocks {
 			.transform(customItemModel())
 			.register();
 
+	
 	// Logistics
 
 	static {
 		REGISTRATE.startSection(AllSections.LOGISTICS);
 	}
+	
+	public static final BlockEntry<ArmBlock> MECHANICAL_ARM = REGISTRATE.block("mechanical_arm", ArmBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		.transform(StressConfigDefaults.setImpact(8.0))
+		.item(ArmItem::new)
+		.transform(customItemModel())
+		.register();
+	
+	public static final BlockEntry<RealityFunnelBlock> REALITY_FUNNEL =
+		REGISTRATE.block("reality_funnel", RealityFunnelBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
+			.item(FunnelItem::new)
+			.transform(customItemModel())
+			.register();
+	
+	public static final BlockEntry<BeltFunnelBlock> BELT_FUNNEL = REGISTRATE.block("belt_funnel", BeltFunnelBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate(new BeltFunnelGenerator()::generate)
+		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
+		.register();
+	
+	public static final BlockEntry<ChuteFunnelBlock> CHUTE_FUNNEL = REGISTRATE.block("chute_funnel", ChuteFunnelBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate(new ChuteFunnelGenerator()::generate)
+		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
+		.register();
 
 	public static final BlockEntry<RedstoneContactBlock> REDSTONE_CONTACT =
 		REGISTRATE.block("redstone_contact", RedstoneContactBlock::new)
@@ -715,47 +759,6 @@ public class AllBlocks {
 			.transform(BuilderTransformers.crate("creative"))
 			.register();
 
-	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.addLayer(() -> RenderType::getCutoutMipped)
-		.blockstate(new ChuteGenerator()::generate)
-		.item(ChuteItem::new)
-		.transform(customItemModel("_", "block"))
-		.register();
-
-	public static final BlockEntry<PackagerBlock> PACKAGER = REGISTRATE.block("packager", PackagerBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.transform(StressConfigDefaults.setImpact(4.0))
-		.properties(p -> p.nonOpaque())
-		.blockstate((c, p) -> p.getVariantBuilder(c.get())
-			.forAllStates(s -> ConfiguredModel.builder()
-				.modelFile(AssetLookup.partialBaseModel(c, p))
-				.rotationY(s.get(PackagerBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
-				.build()))
-		.item()
-		.transform(customItemModel())
-		.register();
-
-	public static final BlockEntry<RealityFunnelBlock> REALITY_FUNNEL =
-		REGISTRATE.block("reality_funnel", RealityFunnelBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
-			.item(FunnelItem::new)
-			.transform(customItemModel())
-			.register();
-
-	public static final BlockEntry<BeltFunnelBlock> BELT_FUNNEL = REGISTRATE.block("belt_funnel", BeltFunnelBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.blockstate(new BeltFunnelGenerator()::generate)
-		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
-		.register();
-	
-	public static final BlockEntry<ChuteFunnelBlock> CHUTE_FUNNEL = REGISTRATE.block("chute_funnel", ChuteFunnelBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.blockstate(new ChuteFunnelGenerator()::generate)
-		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
-		.register();
-
 	public static final BlockEntry<BeltObserverBlock> BELT_OBSERVER =
 		REGISTRATE.block("belt_observer", BeltObserverBlock::new)
 			.initialProperties(SharedProperties::stone)
@@ -777,20 +780,18 @@ public class AllBlocks {
 		.item()
 		.transform(customItemModel())
 		.register();
-
-	public static final BlockEntry<ArmBlock> MECHANICAL_ARM = REGISTRATE.block("mechanical_arm", ArmBlock::new)
+	
+	public static final BlockEntry<PackagerBlock> PACKAGER = REGISTRATE.block("packager", PackagerBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-		.transform(StressConfigDefaults.setImpact(8.0))
-		.item(ArmItem::new)
-		.transform(customItemModel())
-		.register();
-
-	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		.transform(StressConfigDefaults.setImpact(4.0))
+		.properties(p -> p.nonOpaque())
+		.blockstate((c, p) -> p.getVariantBuilder(c.get())
+			.forAllStates(s -> ConfiguredModel.builder()
+				.modelFile(AssetLookup.partialBaseModel(c, p))
+				.rotationY(s.get(PackagerBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
+				.build()))
 		.item()
-		.transform(customItemModel("_", "block"))
+		.transform(customItemModel())
 		.register();
 
 	public static final BlockEntry<ExtractorBlock> EXTRACTOR = REGISTRATE.block("extractor", ExtractorBlock::new)
