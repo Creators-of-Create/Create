@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.block.realityFunnel;
 
-import com.simibubi.create.AllBlocks;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
@@ -41,11 +39,15 @@ public class FunnelItem extends BlockItem {
 			.isHorizontal())
 			return state;
 
-		BlockState equivalentBeltFunnel = AllBlocks.BELT_FUNNEL.get()
-			.getStateForPlacement(ctx)
+		RealityFunnelBlock block = (RealityFunnelBlock) getBlock();
+		Block beltFunnelBlock = block.getEquivalentBeltFunnel(state)
+			.getBlock();
+		Block chuteFunnelBlock = block.getEquivalentChuteFunnel(state)
+			.getBlock();
+
+		BlockState equivalentBeltFunnel = beltFunnelBlock.getStateForPlacement(ctx)
 			.with(BeltFunnelBlock.HORIZONTAL_FACING, direction);
-		BlockState equivalentChuteFunnel = AllBlocks.CHUTE_FUNNEL.get()
-			.getStateForPlacement(ctx)
+		BlockState equivalentChuteFunnel = chuteFunnelBlock.getStateForPlacement(ctx)
 			.with(ChuteFunnelBlock.HORIZONTAL_FACING, direction);
 		BlockState reversedChuteFunnel = equivalentChuteFunnel.rotate(Rotation.CLOCKWISE_180)
 			.cycle(ChuteFunnelBlock.PUSHING);

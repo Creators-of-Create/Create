@@ -81,7 +81,6 @@ import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRend
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.extractor.ExtractorTileEntity;
 import com.simibubi.create.content.logistics.block.extractor.LinkedExtractorTileEntity;
-import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
@@ -159,7 +158,7 @@ public class AllTileEntities {
 	public static final TileEntityEntry<ChuteTileEntity> CHUTE =
 		register("chute", ChuteTileEntity::new, AllBlocks.CHUTE);
 	public static final TileEntityEntry<BeltTunnelTileEntity> BELT_TUNNEL =
-		register("belt_tunnel", BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL);
+		register("belt_tunnel", BeltTunnelTileEntity::new, AllBlocks.ANDESITE_TUNNEL, AllBlocks.BRASS_TUNNEL);
 	public static final TileEntityEntry<ArmTileEntity> MECHANICAL_ARM =
 		register("mechanical_arm", ArmTileEntity::new, AllBlocks.MECHANICAL_ARM);
 	public static final TileEntityEntry<MechanicalPistonTileEntity> MECHANICAL_PISTON = register("mechanical_piston",
@@ -229,7 +228,8 @@ public class AllTileEntities {
 	public static final TileEntityEntry<DepotTileEntity> DEPOT =
 		register("depot", DepotTileEntity::new, AllBlocks.DEPOT);
 	public static final TileEntityEntry<RealityFunnelTileEntity> REALITY_FUNNEL = register("reality_funnel",
-		RealityFunnelTileEntity::new, AllBlocks.REALITY_FUNNEL, AllBlocks.BELT_FUNNEL, AllBlocks.CHUTE_FUNNEL);
+		RealityFunnelTileEntity::new, AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.BRASS_CHUTE_FUNNEL,
+		AllBlocks.ANDESITE_FUNNEL, AllBlocks.ANDESITE_BELT_FUNNEL, AllBlocks.ANDESITE_CHUTE_FUNNEL);
 	public static final TileEntityEntry<PackagerTileEntity> PACKAGER =
 		register("packager", PackagerTileEntity::new, AllBlocks.PACKAGER);
 
@@ -241,8 +241,6 @@ public class AllTileEntities {
 		register("transposer", TransposerTileEntity::new, AllBlocks.TRANSPOSER, AllBlocks.VERTICAL_TRANSPOSER);
 	public static final TileEntityEntry<LinkedTransposerTileEntity> LINKED_TRANSPOSER = register("linked_transposer",
 		LinkedTransposerTileEntity::new, AllBlocks.LINKED_TRANSPOSER, AllBlocks.VERTICAL_LINKED_TRANSPOSER);
-	public static final TileEntityEntry<FunnelTileEntity> FUNNEL =
-		register("funnel", FunnelTileEntity::new, AllBlocks.FUNNEL, AllBlocks.VERTICAL_FUNNEL);
 	public static final TileEntityEntry<BeltObserverTileEntity> BELT_OBSERVER =
 		register("belt_observer", BeltObserverTileEntity::new, AllBlocks.BELT_OBSERVER);
 	public static final TileEntityEntry<AdjustableRepeaterTileEntity> ADJUSTABLE_REPEATER =
@@ -314,7 +312,6 @@ public class AllTileEntities {
 		bind(LINKED_EXTRACTOR, SmartTileEntityRenderer::new);
 		bind(TRANSPOSER, SmartTileEntityRenderer::new);
 		bind(LINKED_TRANSPOSER, SmartTileEntityRenderer::new);
-		bind(FUNNEL, SmartTileEntityRenderer::new);
 		bind(REALITY_FUNNEL, RealityFunnelRenderer::new);
 		bind(BELT_TUNNEL, BeltTunnelRenderer::new);
 		bind(MECHANICAL_ARM, ArmRenderer::new);

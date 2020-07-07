@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
+import com.simibubi.create.content.logistics.block.realityFunnel.BrassFunnelBlock;
 import com.simibubi.create.content.logistics.block.realityFunnel.ChuteFunnelBlock;
 import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelBlock;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
@@ -146,10 +147,10 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return false;
 
 		BlockState stateBelow = world.getBlockState(pos.down());
-		if (AllBlocks.REALITY_FUNNEL.has(stateBelow)) {
-			if (stateBelow.get(RealityFunnelBlock.POWERED))
+		if (AllBlocks.BRASS_FUNNEL.has(stateBelow)) {
+			if (stateBelow.get(BrassFunnelBlock.POWERED))
 				return false;
-			if (stateBelow.get(RealityFunnelBlock.FACING) != Direction.UP)
+			if (stateBelow.get(BrassFunnelBlock.FACING) != Direction.UP)
 				return false;
 			ItemStack remainder = RealityFunnelBlock.tryInsert(world, pos.down(), item, simulate);
 			if (!simulate)
@@ -186,9 +187,9 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	private boolean handleUpwardOutput(boolean simulate) {
 		BlockState stateAbove = world.getBlockState(pos.up());
-		if (AllBlocks.REALITY_FUNNEL.has(stateAbove)) {
-			if (!stateAbove.get(RealityFunnelBlock.POWERED)
-				&& stateAbove.get(RealityFunnelBlock.FACING) == Direction.DOWN) {
+		if (AllBlocks.BRASS_FUNNEL.has(stateAbove)) {
+			if (!stateAbove.get(BrassFunnelBlock.POWERED)
+				&& stateAbove.get(BrassFunnelBlock.FACING) == Direction.DOWN) {
 				ItemStack remainder = RealityFunnelBlock.tryInsert(world, pos.up(), item, simulate);
 				if (remainder.isEmpty()) {
 					if (!simulate)
@@ -242,7 +243,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		for (Direction direction : Iterate.horizontalDirections) {
 			BlockPos funnelPos = pos.offset(direction);
 			BlockState funnelState = world.getBlockState(funnelPos);
-			if (AllBlocks.CHUTE_FUNNEL.has(funnelState)) {
+			if (AllBlocks.BRASS_CHUTE_FUNNEL.has(funnelState)) {
 				if (funnelState.get(ChuteFunnelBlock.POWERED))
 					continue;
 				if (funnelState.get(ChuteFunnelBlock.HORIZONTAL_FACING) != direction.getOpposite())

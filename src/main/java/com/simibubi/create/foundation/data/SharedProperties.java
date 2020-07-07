@@ -14,11 +14,11 @@ public class SharedProperties {
 	public static Block stone() {
 		return Blocks.ANDESITE;
 	}
-	
+
 	public static Block softMetal() {
 		return Blocks.GOLD_BLOCK;
 	}
-	
+
 	public static Block wooden() {
 		return Blocks.STRIPPED_SPRUCE_WOOD;
 	}

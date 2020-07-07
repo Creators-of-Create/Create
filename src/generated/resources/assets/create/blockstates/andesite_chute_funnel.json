@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,pushing=false": {
+      "model": "create:block/andesite_chute_funnel_pull"
+    },
+    "facing=south,pushing=false": {
+      "model": "create:block/andesite_chute_funnel_pull",
+      "y": 180
+    },
+    "facing=west,pushing=false": {
+      "model": "create:block/andesite_chute_funnel_pull",
+      "y": 270
+    },
+    "facing=east,pushing=false": {
+      "model": "create:block/andesite_chute_funnel_pull",
+      "y": 90
+    },
+    "facing=north,pushing=true": {
+      "model": "create:block/andesite_chute_funnel_push"
+    },
+    "facing=south,pushing=true": {
+      "model": "create:block/andesite_chute_funnel_push",
+      "y": 180
+    },
+    "facing=west,pushing=true": {
+      "model": "create:block/andesite_chute_funnel_push",
+      "y": 270
+    },
+    "facing=east,pushing=true": {
+      "model": "create:block/andesite_chute_funnel_push",
+      "y": 90
+    }
+  }
+}

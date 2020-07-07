@@ -522,8 +522,9 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		int offset = isEnd ? -1 : 1;
 		BlockPos tunnelPos = pos.offset(beltState.get(HORIZONTAL_FACING), offset)
 			.up();
-		if (AllBlocks.BELT_TUNNEL.has(world.getBlockState(tunnelPos)))
-			BeltTunnelBlock.updateTunnel(world, tunnelPos);
+		Block adjacent = world.getBlockState(tunnelPos).getBlock();
+		if (adjacent instanceof BeltTunnelBlock)
+			((BeltTunnelBlock) adjacent).updateTunnel(world, tunnelPos);
 	}
 
 	public enum Slope implements IStringSerializable {

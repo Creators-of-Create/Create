@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "create:block/belt_tunnel",
-		"particle": "create:block/belt_tunnel"
+		"0": "create:block/brass_tunnel",
+		"particle": "create:block/brass_tunnel"
 	},
 	"elements": [
 		{

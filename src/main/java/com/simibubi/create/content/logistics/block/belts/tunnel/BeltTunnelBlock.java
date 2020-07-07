@@ -110,7 +110,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		return tunnelState;
 	}
 
-	public static void updateTunnel(World world, BlockPos pos) {
+	public void updateTunnel(World world, BlockPos pos) {
 		BlockState tunnel = world.getBlockState(pos);
 		BlockState newTunnel = getTunnelState(world, pos);
 		if (tunnel != newTunnel) {
@@ -144,9 +144,8 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		return group;
 	}
 
-	private static BlockState getTunnelState(IBlockReader reader, BlockPos pos) {
-		BlockState state = AllBlocks.BELT_TUNNEL.getDefaultState();
-
+	private BlockState getTunnelState(IBlockReader reader, BlockPos pos) {
+		BlockState state = getDefaultState();
 		BlockState belt = reader.getBlockState(pos.down());
 		if (AllBlocks.BELT.has(belt))
 			state = state.with(HORIZONTAL_AXIS, belt.get(BeltBlock.HORIZONTAL_FACING)
@@ -174,8 +173,9 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 
 		if (state.get(SHAPE) == Shape.STRAIGHT) {
 			Direction fw = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-			if (AllBlocks.BELT_TUNNEL.has(reader.getBlockState(pos.offset(fw)))
-				&& AllBlocks.BELT_TUNNEL.has(reader.getBlockState(pos.offset(fw.getOpposite()))))
+			BlockState blockState1 = reader.getBlockState(pos.offset(fw));
+			BlockState blockState2 = reader.getBlockState(pos.offset(fw.getOpposite()));
+			if (blockState1.getBlock() instanceof BeltTunnelBlock && blockState2.getBlock() instanceof BeltTunnelBlock)
 				state = state.with(SHAPE, Shape.WINDOW);
 		}
 

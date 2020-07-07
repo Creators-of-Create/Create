@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.block.realityFunnel;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
@@ -17,15 +16,17 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -34,13 +35,10 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<RealityFunnelTileEntity> {
-
-	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+public abstract class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<RealityFunnelTileEntity> {
 
 	public RealityFunnelBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
-		setDefaultState(getDefaultState().with(POWERED, false));
 	}
 
 	@Override
@@ -53,9 +51,27 @@ public class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<Re
 					.offset(facing.getOpposite()))
 				.getBlock() instanceof ChuteBlock)
 			facing = facing.getOpposite();
-		return getDefaultState().with(FACING, facing)
-			.with(POWERED, context.getWorld()
-				.isBlockPowered(context.getPos()));
+		return getDefaultState().with(FACING, facing);
+
+	}
+
+	@Override
+	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+		BlockRayTraceResult hit) {
+
+		if (hit.getFace() == getFunnelFacing(state)) {
+			if (!worldIn.isRemote)
+				withTileEntityDo(worldIn, pos, te -> {
+					ItemStack heldItem = player.getHeldItem(handIn)
+						.copy();
+					ItemStack remainder = tryInsert(worldIn, pos, heldItem, false);
+					if (!ItemStack.areItemStacksEqual(remainder, heldItem))
+						player.setHeldItem(handIn, remainder);
+				});
+			return ActionResultType.SUCCESS;
+		}
+
+		return ActionResultType.PASS;
 	}
 
 	@Override
@@ -64,7 +80,7 @@ public class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<Re
 			return;
 		if (!(entityIn instanceof ItemEntity))
 			return;
-		if (state.get(POWERED))
+		if (!canInsertIntoFunnel(state))
 			return;
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 
@@ -78,7 +94,7 @@ public class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<Re
 
 		ItemStack toInsert = itemEntity.getItem();
 		ItemStack remainder = tryInsert(worldIn, pos, toInsert, false);
-		
+
 		if (remainder.isEmpty())
 			itemEntity.remove();
 		if (remainder.getCount() < toInsert.getCount())
@@ -107,11 +123,6 @@ public class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<Re
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(POWERED));
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
 		return AllShapes.REALITY_FUNNEL.get(state.get(FACING));
 	}
@@ -130,24 +141,17 @@ public class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<Re
 		if (facing.getAxis()
 			.isHorizontal()) {
 			if (direction == Direction.DOWN) {
-				BlockState equivalentFunnel = AllBlocks.BELT_FUNNEL.getDefaultState()
-					.with(BeltFunnelBlock.HORIZONTAL_FACING, facing)
-					.with(BeltFunnelBlock.POWERED, state.get(POWERED));
+				BlockState equivalentFunnel = getEquivalentBeltFunnel(state);
 				if (BeltFunnelBlock.isOnValidBelt(equivalentFunnel, world, pos))
 					return equivalentFunnel;
 			}
 			if (direction == facing) {
-				BlockState equivalentFunnel = AllBlocks.CHUTE_FUNNEL.getDefaultState()
-					.with(ChuteFunnelBlock.HORIZONTAL_FACING, facing)
-					.with(ChuteFunnelBlock.POWERED, state.get(POWERED));
+				BlockState equivalentFunnel = getEquivalentChuteFunnel(state);
 				if (ChuteFunnelBlock.isOnValidChute(equivalentFunnel, world, pos))
 					return equivalentFunnel;
 			}
 			if (direction == facing.getOpposite()) {
-				BlockState equivalentFunnel = AllBlocks.CHUTE_FUNNEL.getDefaultState()
-					.with(ChuteFunnelBlock.HORIZONTAL_FACING, facing.getOpposite())
-					.cycle(ChuteFunnelBlock.PUSHING)
-					.with(ChuteFunnelBlock.POWERED, state.get(POWERED));
+				BlockState equivalentFunnel = getEquivalentChuteFunnel(state);
 				if (ChuteFunnelBlock.isOnValidChute(equivalentFunnel, world, pos))
 					return equivalentFunnel;
 			}
@@ -155,15 +159,9 @@ public class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<Re
 		return state;
 	}
 
-	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-		boolean isMoving) {
-		if (worldIn.isRemote)
-			return;
-		boolean previouslyPowered = state.get(POWERED);
-		if (previouslyPowered != worldIn.isBlockPowered(pos))
-			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
-	}
+	public abstract BlockState getEquivalentChuteFunnel(BlockState state);
+
+	public abstract BlockState getEquivalentBeltFunnel(BlockState state);
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
@@ -189,6 +187,10 @@ public class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<Re
 			|| !p_196243_4_.hasTileEntity())) {
 			p_196243_2_.removeTileEntity(p_196243_3_);
 		}
+	}
+
+	protected boolean canInsertIntoFunnel(BlockState state) {
+		return true;
 	}
 
 	@Nullable

@@ -19,7 +19,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 	@Override
 	protected Vec3d getLocalOffset(BlockState state) {
-		if (AllBlocks.BELT_FUNNEL.has(state))
+		if (AllBlocks.BRASS_BELT_FUNNEL.has(state))
 			if (state.get(BeltFunnelBlock.SHAPE) == Shape.RETRACTED)
 				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 13, 7.5f),
 					AngleHelper.horizontalAngle(getSide()), Axis.Y);
@@ -33,7 +33,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 			localOffset = VecHelper.rotateCentered(southLocation, AngleHelper.horizontalAngle(getSide()), Axis.Y);
 		}
 
-		if (AllBlocks.CHUTE_FUNNEL.has(state)) {
+		if (AllBlocks.BRASS_CHUTE_FUNNEL.has(state)) {
 			Direction facing = state.get(ChuteFunnelBlock.HORIZONTAL_FACING);
 			localOffset = localOffset.subtract(new Vec3d(facing.getDirectionVec()).scale(2 / 16f));
 		}
@@ -47,7 +47,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 		if (!facing.getAxis()
 			.isVertical()
-			&& !(AllBlocks.BELT_FUNNEL.has(state) && state.get(BeltFunnelBlock.SHAPE) == Shape.RETRACTED)) {
+			&& !(AllBlocks.BRASS_BELT_FUNNEL.has(state) && state.get(BeltFunnelBlock.SHAPE) == Shape.RETRACTED)) {
 			Direction verticalDirection = DirectionHelper.rotateAround(getSide(), facing.rotateY()
 				.getAxis());
 			if (facing.getAxis() == Axis.Z)
@@ -81,7 +81,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 		if (facing == null)
 			return false;
 
-		if (AllBlocks.BELT_FUNNEL.has(state))
+		if (AllBlocks.BRASS_BELT_FUNNEL.has(state))
 			return state.get(BeltFunnelBlock.SHAPE) == Shape.RETRACTED ? direction == facing
 				: direction != Direction.DOWN && direction.getAxis() != facing.getAxis();
 

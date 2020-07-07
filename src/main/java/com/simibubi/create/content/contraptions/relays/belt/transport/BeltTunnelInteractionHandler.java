@@ -29,7 +29,7 @@ public class BeltTunnelInteractionHandler {
 			upcomingSegment = -1;
 		if (currentSegment != upcomingSegment) {
 			if (stuckAtTunnel(beltInventory, upcomingSegment, current.stack, movementFacing)) {
-				current.beltPosition = currentSegment + (beltInventory.beltMovementPositive ? .99f : -.01f);				
+				current.beltPosition = currentSegment + (beltInventory.beltMovementPositive ? .99f : -.01f);
 				return true;
 			}
 			if (!beltInventory.belt.getWorld().isRemote) {
@@ -46,7 +46,7 @@ public class BeltTunnelInteractionHandler {
 		BeltTileEntity belt = beltInventory.belt;
 		BlockPos pos = BeltHelper.getPositionForOffset(belt, offset)
 			.up();
-		if (!AllBlocks.BELT_TUNNEL.has(belt.getWorld()
+		if (!AllBlocks.BRASS_TUNNEL.has(belt.getWorld()
 			.getBlockState(pos)))
 			return false;
 		TileEntity te = belt.getWorld()
@@ -89,8 +89,9 @@ public class BeltTunnelInteractionHandler {
 			return;
 		BlockPos pos = BeltHelper.getPositionForOffset(belt, offset)
 			.up();
-		if (!AllBlocks.BELT_TUNNEL.has(belt.getWorld()
-			.getBlockState(pos)))
+		if (!(belt.getWorld()
+			.getBlockState(pos)
+			.getBlock() instanceof BeltTunnelBlock))
 			return;
 		TileEntity te = belt.getWorld()
 			.getTileEntity(pos);

@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.command;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.command.CommandSource;

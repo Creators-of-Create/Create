@@ -53,11 +53,11 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 		BlockState state = getBlockState();
 		if (!RealityFunnelBlock.isFunnel(state))
 			return Mode.INVALID;
-		if (state.get(BlockStateProperties.POWERED))
+		if (state.has(BlockStateProperties.POWERED) && state.get(BlockStateProperties.POWERED))
 			return Mode.PAUSED;
-		if (AllBlocks.BELT_FUNNEL.has(state))
+		if (state.getBlock() instanceof BeltFunnelBlock)
 			return Mode.BELT;
-		if (AllBlocks.CHUTE_FUNNEL.has(state))
+		if (state.getBlock() instanceof ChuteFunnelBlock)
 			return Mode.CHUTE_SIDE;
 
 		Direction facing = RealityFunnelBlock.getFunnelFacing(state);
@@ -172,15 +172,22 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 
 		inserting = new InsertingBehaviour(this, direction);
 		extracting = new ExtractingBehaviour(this, direction);
+		behaviours.add(inserting);
+		behaviours.add(extracting);
+
 		filtering = new FilteringBehaviour(this, new FunnelFilterSlotPositioning()).showCountWhen(() -> {
 			BlockState blockState = getBlockState();
 			return blockState.getBlock() instanceof HorizontalInteractionFunnelBlock
 				&& blockState.get(HorizontalInteractionFunnelBlock.PUSHING) || determineCurrentMode() == Mode.CHUTE_END;
 		});
-
+		filtering.onlyActiveWhen(this::supportsFiltering);
 		behaviours.add(filtering);
-		behaviours.add(inserting);
-		behaviours.add(extracting);
+
+	}
+
+	private boolean supportsFiltering() {
+		BlockState blockState = getBlockState();
+		return blockState != null && blockState.has(BlockStateProperties.POWERED);
 	}
 
 	public void flap(boolean inward) {
@@ -189,7 +196,7 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 	}
 
 	public boolean hasFlap() {
-		return AllBlocks.BELT_FUNNEL.has(getBlockState())
+		return getBlockState().getBlock() instanceof BeltFunnelBlock
 			&& getBlockState().get(BeltFunnelBlock.SHAPE) == Shape.RETRACTED;
 	}
 

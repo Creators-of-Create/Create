@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/belt_tunnel/fullshade",
+  "textures": {
+    "0": "create:block/brass_tunnel",
+    "particle": "create:block/brass_block"
+  }
+}

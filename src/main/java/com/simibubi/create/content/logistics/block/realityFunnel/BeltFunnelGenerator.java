@@ -1,6 +1,5 @@
 package com.simibubi.create.content.logistics.block.realityFunnel;
 
-import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
@@ -10,6 +9,12 @@ import net.minecraft.block.BlockState;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class BeltFunnelGenerator extends SpecialBlockStateGen {
+
+	private String type;
+
+	public BeltFunnelGenerator(String type) {
+		this.type = type;
+	}
 
 	@Override
 	protected int getXRotation(BlockState state) {
@@ -25,15 +30,18 @@ public class BeltFunnelGenerator extends SpecialBlockStateGen {
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
 		boolean pushing = state.get(BeltFunnelBlock.PUSHING);
-		boolean powered = state.get(BeltFunnelBlock.POWERED);
+		boolean powered = state.has(BeltFunnelBlock.POWERED) && state.get(BeltFunnelBlock.POWERED);
 		String shapeName = state.get(BeltFunnelBlock.SHAPE)
 			.getName();
-		if (pushing && !powered)
-			return AssetLookup.partialBaseModel(ctx, prov, shapeName);
-		String name = ctx.getName() + "_" + (pushing ? "push_" : "pull_") + (powered ? "on" : "off");
+		String suffix = (pushing ? "push" : "pull") + (powered ? "_powered" : "");
+		String name = ctx.getName() + "_" + suffix;
+		String textureName = type + "_funnel_" + suffix;
 		return prov.models()
-			.withExistingParent(name + "_" + shapeName, prov.modLoc("block/" + ctx.getName() + "/block_" + shapeName))
-			.texture("2", prov.modLoc("block/" + name));
+			.withExistingParent(name + "_" + shapeName, prov.modLoc("block/belt_funnel/block_" + shapeName))
+			.texture("particle", prov.modLoc("block/" + type + "_casing"))
+			.texture("2", prov.modLoc("block/" + textureName))
+			.texture("3", prov.modLoc("block/" + type + "_funnel_back"))
+			.texture("4", prov.modLoc("block/" + type + "_funnel_plating"));
 	}
 
 }

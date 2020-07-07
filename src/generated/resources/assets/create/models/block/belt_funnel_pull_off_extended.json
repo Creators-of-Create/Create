@@ -1,6 +1,0 @@
-{
-  "parent": "create:block/belt_funnel/block_extended",
-  "textures": {
-    "2": "create:block/belt_funnel_pull_off"
-  }
-}

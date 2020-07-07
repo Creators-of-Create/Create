@@ -1,0 +1,9 @@
+{
+  "parent": "create:block/chute_funnel/block",
+  "textures": {
+    "particle": "create:block/andesite_casing",
+    "3": "create:block/andesite_funnel_push",
+    "1_2": "create:block/andesite_funnel_back",
+    "4": "create:block/andesite_funnel_plating"
+  }
+}

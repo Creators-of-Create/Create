@@ -54,9 +54,11 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 				if (AllBlocks.BELT.has(world.getBlockState(pos.down()))) {
 					TileEntity teBelow = world.getTileEntity(pos.down());
 					if (teBelow != null) {
-						T capBelow = teBelow.getCapability(capability, Direction.UP).orElse(null);
+						T capBelow = teBelow.getCapability(capability, Direction.UP)
+							.orElse(null);
 						if (capBelow != null) {
-							cap = LazyOptional.of(() -> capBelow).cast();
+							cap = LazyOptional.of(() -> capBelow)
+								.cast();
 						}
 					}
 				}
@@ -102,7 +104,7 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 			syncedFlaps.remove(face);
 		else
 			syncedFlaps.put(face, ItemStack.EMPTY);
-		
+
 		markDirty();
 		sendData();
 		return true;
@@ -115,7 +117,8 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 			ListNBT flapsNBT = new ListNBT();
 			for (Pair<Direction, Boolean> pair : flapsToSend) {
 				CompoundNBT flap = new CompoundNBT();
-				flap.putInt("Flap", pair.getKey().getIndex());
+				flap.putInt("Flap", pair.getKey()
+					.getIndex());
 				flap.putBoolean("FlapInward", pair.getValue());
 				flapsNBT.add(flap);
 			}
@@ -148,13 +151,15 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 		flaps.clear();
 		BlockState tunnelState = getBlockState();
 		for (Direction direction : Direction.values()) {
-			if (direction.getAxis().isVertical())
+			if (direction.getAxis()
+				.isVertical())
 				continue;
-			if (AllBlocks.BELT_TUNNEL.has(world.getBlockState(pos.offset(direction))))
+			BlockState blockState = world.getBlockState(pos.offset(direction));
+			if (blockState.getBlock() instanceof BeltTunnelBlock)
 				continue;
 			if (direction.getAxis() != tunnelState.get(BlockStateProperties.HORIZONTAL_AXIS)) {
-				boolean positive = direction.getAxisDirection() == AxisDirection.POSITIVE
-						^ direction.getAxis() == Axis.Z;
+				boolean positive =
+					direction.getAxisDirection() == AxisDirection.POSITIVE ^ direction.getAxis() == Axis.Z;
 				Shape shape = tunnelState.get(BeltTunnelBlock.SHAPE);
 				if (BeltTunnelBlock.isStraight(tunnelState))
 					continue;
@@ -163,14 +168,16 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 				if (!positive && shape == Shape.T_RIGHT)
 					continue;
 			}
-			flaps.put(direction, new InterpolatedChasingValue().target(0).withSpeed(.05f));
+			flaps.put(direction, new InterpolatedChasingValue().target(0)
+				.withSpeed(.05f));
 		}
 	}
 
 	public void flap(Direction side, boolean inward) {
 		if (world.isRemote) {
 			if (flaps.containsKey(side))
-				flaps.get(side).set(inward ? -1 : 1);
+				flaps.get(side)
+					.set(inward ? -1 : 1);
 			return;
 		}
 

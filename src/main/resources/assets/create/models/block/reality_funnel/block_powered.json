@@ -1,6 +1,0 @@
-{
-	"parent": "create:block/reality_funnel/block",
-    "textures": {
-		"3": "create:block/funnel_on"
-    }
-}

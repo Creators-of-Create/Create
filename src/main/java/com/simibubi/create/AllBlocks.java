@@ -93,19 +93,19 @@ import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
 import com.simibubi.create.content.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.content.logistics.block.extractor.LinkedExtractorBlock;
 import com.simibubi.create.content.logistics.block.extractor.VerticalExtractorGenerator;
-import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.VerticalFunnelGenerator;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
 import com.simibubi.create.content.logistics.block.packager.PackagerBlock;
-import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelBlock;
+import com.simibubi.create.content.logistics.block.realityFunnel.AndesiteBeltFunnelBlock;
+import com.simibubi.create.content.logistics.block.realityFunnel.AndesiteChuteFunnelBlock;
+import com.simibubi.create.content.logistics.block.realityFunnel.AndesiteFunnelBlock;
 import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelGenerator;
-import com.simibubi.create.content.logistics.block.realityFunnel.ChuteFunnelBlock;
+import com.simibubi.create.content.logistics.block.realityFunnel.BrassBeltFunnelBlock;
+import com.simibubi.create.content.logistics.block.realityFunnel.BrassChuteFunnelBlock;
+import com.simibubi.create.content.logistics.block.realityFunnel.BrassFunnelBlock;
 import com.simibubi.create.content.logistics.block.realityFunnel.ChuteFunnelGenerator;
-import com.simibubi.create.content.logistics.block.realityFunnel.FunnelItem;
-import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
@@ -138,6 +138,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.common.ToolType;
 
@@ -703,25 +704,54 @@ public class AllBlocks {
 		.transform(customItemModel())
 		.register();
 
-	public static final BlockEntry<RealityFunnelBlock> REALITY_FUNNEL =
-		REGISTRATE.block("reality_funnel", RealityFunnelBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
-			.item(FunnelItem::new)
-			.transform(customItemModel())
+	public static final BlockEntry<AndesiteFunnelBlock> ANDESITE_FUNNEL =
+		REGISTRATE.block("andesite_funnel", AndesiteFunnelBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.transform(BuilderTransformers.funnel("andesite", Create.asResource("block/andesite_casing")))
 			.register();
 
-	public static final BlockEntry<BeltFunnelBlock> BELT_FUNNEL = REGISTRATE.block("belt_funnel", BeltFunnelBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.blockstate(new BeltFunnelGenerator()::generate)
-		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
-		.register();
+	public static final BlockEntry<AndesiteBeltFunnelBlock> ANDESITE_BELT_FUNNEL =
+		REGISTRATE.block("andesite_belt_funnel", AndesiteBeltFunnelBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.blockstate(new BeltFunnelGenerator("andesite")::generate)
+			.loot((p, b) -> p.registerDropping(b, ANDESITE_FUNNEL.get()))
+			.register();
 
-	public static final BlockEntry<ChuteFunnelBlock> CHUTE_FUNNEL =
-		REGISTRATE.block("chute_funnel", ChuteFunnelBlock::new)
+	public static final BlockEntry<AndesiteChuteFunnelBlock> ANDESITE_CHUTE_FUNNEL =
+		REGISTRATE.block("andesite_chute_funnel", AndesiteChuteFunnelBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.blockstate(new ChuteFunnelGenerator("andesite")::generate)
+			.loot((p, b) -> p.registerDropping(b, ANDESITE_FUNNEL.get()))
+			.register();
+
+	public static final BlockEntry<BrassFunnelBlock> BRASS_FUNNEL =
+		REGISTRATE.block("brass_funnel", BrassFunnelBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.blockstate(new ChuteFunnelGenerator()::generate)
-			.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
+			.transform(BuilderTransformers.funnel("brass", Create.asResource("block/brass_casing")))
+			.register();
+
+	public static final BlockEntry<BrassBeltFunnelBlock> BRASS_BELT_FUNNEL =
+		REGISTRATE.block("brass_belt_funnel", BrassBeltFunnelBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate(new BeltFunnelGenerator("brass")::generate)
+			.loot((p, b) -> p.registerDropping(b, BRASS_FUNNEL.get()))
+			.register();
+
+	public static final BlockEntry<BrassChuteFunnelBlock> BRASS_CHUTE_FUNNEL =
+		REGISTRATE.block("brass_chute_funnel", BrassChuteFunnelBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate(new ChuteFunnelGenerator("brass")::generate)
+			.loot((p, b) -> p.registerDropping(b, BRASS_FUNNEL.get()))
+			.register();
+
+	public static final BlockEntry<BeltTunnelBlock> ANDESITE_TUNNEL =
+		REGISTRATE.block("andesite_tunnel", BeltTunnelBlock::new)
+			.transform(BuilderTransformers.beltTunnel("andesite", new ResourceLocation("block/polished_andesite")))
+			.register();
+
+	public static final BlockEntry<BeltTunnelBlock> BRASS_TUNNEL =
+		REGISTRATE.block("brass_tunnel", BeltTunnelBlock::new)
+			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
 			.register();
 
 	public static final BlockEntry<RedstoneContactBlock> REDSTONE_CONTACT =
@@ -777,20 +807,6 @@ public class AllBlocks {
 			.transform(customItemModel())
 			.register();
 
-	public static final BlockEntry<BeltTunnelBlock> BELT_TUNNEL = REGISTRATE.block("belt_tunnel", BeltTunnelBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.addLayer(() -> RenderType::getCutoutMipped)
-		.blockstate((c, p) -> p.getVariantBuilder(c.get())
-			.forAllStates(state -> ConfiguredModel.builder()
-				.modelFile(p.models()
-					.getExistingFile(p.modLoc("block/belt_tunnel/" + state.get(BeltTunnelBlock.SHAPE)
-						.getName())))
-				.rotationY(state.get(BeltTunnelBlock.HORIZONTAL_AXIS) == Axis.X ? 0 : 90)
-				.build()))
-		.item()
-		.transform(customItemModel())
-		.register();
-
 	public static final BlockEntry<PackagerBlock> PACKAGER = REGISTRATE.block("packager", PackagerBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.transform(StressConfigDefaults.setImpact(4.0))
@@ -837,23 +853,6 @@ public class AllBlocks {
 			.blockstate(new VerticalExtractorGenerator(true)::generate)
 			.loot((p, b) -> p.registerDropping(b, LINKED_EXTRACTOR.get()))
 			.addLayer(() -> RenderType::getCutoutMipped)
-			.register();
-
-	public static final BlockEntry<FunnelBlock> FUNNEL = REGISTRATE.block("funnel", FunnelBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.tag(AllBlockTags.BRITTLE.tag)
-		.blockstate((c, p) -> p.horizontalBlock(c.get(), state -> p.models()
-			.getExistingFile(p.modLoc("block/funnel/horizontal" + (state.get(FunnelBlock.BELT) ? "_belt" : "")))))
-		.item()
-		.transform(customItemModel())
-		.register();
-
-	public static final BlockEntry<FunnelBlock.Vertical> VERTICAL_FUNNEL =
-		REGISTRATE.block("vertical_funnel", FunnelBlock.Vertical::new)
-			.initialProperties(SharedProperties::softMetal)
-			.tag(AllBlockTags.BRITTLE.tag)
-			.blockstate(new VerticalFunnelGenerator()::generate)
-			.loot((p, b) -> p.registerDropping(b, FUNNEL.get()))
 			.register();
 
 	public static final BlockEntry<TransposerBlock> TRANSPOSER = REGISTRATE.block("transposer", TransposerBlock::new)

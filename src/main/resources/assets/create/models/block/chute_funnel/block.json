@@ -2,12 +2,12 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"3": "create:block/belt_funnel_push_off",
-		"4": "create:block/funnel_plating",
+		"3": "create:block/brass_funnel_push",
+		"4": "create:block/brass_funnel_plating",
 		"13": "create:block/chute",
 		"particle": "create:block/brass_block",
-		"3_particle": "create:block/brass_block",
-		"1_2": "create:block/funnel_back"
+		"3_particle": "#particle",
+		"1_2": "create:block/brass_funnel_back"
 	},
 	"elements": [
 		{

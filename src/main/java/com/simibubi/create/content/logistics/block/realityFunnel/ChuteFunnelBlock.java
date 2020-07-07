@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.realityFunnel;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
+import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -11,10 +12,10 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
-public class ChuteFunnelBlock extends HorizontalInteractionFunnelBlock {
+public abstract class ChuteFunnelBlock extends HorizontalInteractionFunnelBlock {
 
-	public ChuteFunnelBlock(Properties p_i48377_1_) {
-		super(p_i48377_1_);
+	public ChuteFunnelBlock(BlockEntry<? extends RealityFunnelBlock> parent, Properties p_i48377_1_) {
+		super(parent, p_i48377_1_);
 	}
 
 	public static boolean isOnValidChute(BlockState state, IWorldReader world, BlockPos pos) {

@@ -3,12 +3,12 @@ package com.simibubi.create.content.logistics.block.realityFunnel;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VoxelShaper;
+import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -28,7 +28,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
+public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 
 	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 
@@ -47,8 +47,8 @@ public class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 		}
 	}
 
-	public BeltFunnelBlock(Properties p_i48377_1_) {
-		super(p_i48377_1_);
+	public BeltFunnelBlock(BlockEntry<? extends RealityFunnelBlock> parent, Properties p_i48377_1_) {
+		super(parent, p_i48377_1_);
 		setDefaultState(getDefaultState().with(SHAPE, Shape.RETRACTED));
 	}
 

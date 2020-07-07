@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelTileEntity;
@@ -30,7 +29,7 @@ public class BeltFunnelInteractionHandler {
 				.up();
 			World world = beltInventory.belt.getWorld();
 			BlockState funnelState = world.getBlockState(funnelPos);
-			if (!AllBlocks.BELT_FUNNEL.has(funnelState))
+			if (!(funnelState.getBlock() instanceof BeltFunnelBlock))
 				continue;
 			if (funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) != beltInventory.belt.getMovementFacing()
 				.getOpposite())
@@ -42,17 +41,17 @@ public class BeltFunnelInteractionHandler {
 				return true;
 			if (funnelState.get(BeltFunnelBlock.PUSHING))
 				return true;
-			if (funnelState.get(BeltFunnelBlock.POWERED))
+			if (funnelState.has(BeltFunnelBlock.POWERED) && funnelState.get(BeltFunnelBlock.POWERED))
 				return true;
-			
+
 			TileEntity te = world.getTileEntity(funnelPos);
 			if (!(te instanceof RealityFunnelTileEntity))
 				return true;
-			
+
 			RealityFunnelTileEntity funnelTE = (RealityFunnelTileEntity) te;
 			InsertingBehaviour inserting = TileEntityBehaviour.get(funnelTE, InsertingBehaviour.TYPE);
 			FilteringBehaviour filtering = TileEntityBehaviour.get(funnelTE, FilteringBehaviour.TYPE);
-			
+
 			if (inserting == null)
 				return true;
 			if (filtering != null && !filtering.test(currentItem.stack))

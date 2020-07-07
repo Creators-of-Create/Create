@@ -1,7 +1,0 @@
-{
-	"parent": "create:block/funnel/horizontal",
-    "textures": {
-        "particle": "create:block/funnel_vertical",
-        "package_funnel_horizontal": "create:block/funnel_vertical"
-    }
-}

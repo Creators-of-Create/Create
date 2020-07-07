@@ -1,6 +1,5 @@
 package com.simibubi.create.content.logistics.block.extractor;
 
-import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -25,7 +24,7 @@ public class VerticalExtractorGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return (state.get(FunnelBlock.UPWARD) ? 0 : 180) + horizontalAngle(state.get(FunnelBlock.HORIZONTAL_FACING));
+		return (state.get(ExtractorBlock.UPWARD) ? 0 : 180) + horizontalAngle(state.get(ExtractorBlock.HORIZONTAL_FACING));
 	}
 
 	@Override

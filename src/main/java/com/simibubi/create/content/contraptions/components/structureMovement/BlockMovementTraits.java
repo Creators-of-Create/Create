@@ -19,7 +19,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.content.logistics.block.extractor.ExtractorBlock;
-import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.transposer.TransposerBlock;
 
@@ -96,8 +95,6 @@ public class BlockMovementTraits {
 		if (AllBlocks.BELT.has(blockState))
 			return true;
 		if (block instanceof ExtractorBlock)
-			return true;
-		if (block instanceof FunnelBlock)
 			return true;
 		return blockState.getPushReaction() != PushReaction.BLOCK;
 	}

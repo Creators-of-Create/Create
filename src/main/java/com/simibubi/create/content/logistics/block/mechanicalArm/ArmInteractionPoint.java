@@ -69,7 +69,7 @@ public abstract class ArmInteractionPoint {
 
 	static boolean isInteractable(BlockState state) {
 		return AllBlocks.DEPOT.has(state) || AllBlocks.BELT.has(state) || AllBlocks.CHUTE.has(state)
-			|| AllBlocks.REALITY_FUNNEL.has(state);
+			|| state.getBlock() instanceof RealityFunnelBlock;
 	}
 
 	ArmAngleTarget getTargetAngles(BlockPos armPos) {
@@ -125,7 +125,7 @@ public abstract class ArmInteractionPoint {
 			point = new Belt();
 		if (AllBlocks.CHUTE.has(state))
 			point = new Chute();
-		if (AllBlocks.REALITY_FUNNEL.has(state))
+		if (state.getBlock() instanceof RealityFunnelBlock)
 			point = new Funnel();
 
 		if (point != null) {
@@ -209,9 +209,10 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		Direction getInteractionDirection() {
-			return RealityFunnelBlock.getFunnelFacing(state).getOpposite();
+			return RealityFunnelBlock.getFunnelFacing(state)
+				.getOpposite();
 		}
-		
+
 		@Override
 		ItemStack insert(World world, ItemStack stack, boolean simulate) {
 			FilteringBehaviour filtering = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
@@ -225,7 +226,7 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		boolean isValid(BlockState state) {
-			return AllBlocks.REALITY_FUNNEL.has(state);
+			return state.getBlock() instanceof RealityFunnelBlock;
 		}
 
 		@Override

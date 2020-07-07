@@ -10,8 +10,6 @@
     "create:extractor",
     "create:vertical_extractor",
     "create:linked_extractor",
-    "create:vertical_linked_extractor",
-    "create:funnel",
-    "create:vertical_funnel"
+    "create:vertical_linked_extractor"
   ]
 }

@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,powered=false,pushing=false": {
+      "model": "create:block/brass_chute_funnel_pull"
+    },
+    "facing=south,powered=false,pushing=false": {
+      "model": "create:block/brass_chute_funnel_pull",
+      "y": 180
+    },
+    "facing=west,powered=false,pushing=false": {
+      "model": "create:block/brass_chute_funnel_pull",
+      "y": 270
+    },
+    "facing=east,powered=false,pushing=false": {
+      "model": "create:block/brass_chute_funnel_pull",
+      "y": 90
+    },
+    "facing=north,powered=true,pushing=false": {
+      "model": "create:block/brass_chute_funnel_pull_powered"
+    },
+    "facing=south,powered=true,pushing=false": {
+      "model": "create:block/brass_chute_funnel_pull_powered",
+      "y": 180
+    },
+    "facing=west,powered=true,pushing=false": {
+      "model": "create:block/brass_chute_funnel_pull_powered",
+      "y": 270
+    },
+    "facing=east,powered=true,pushing=false": {
+      "model": "create:block/brass_chute_funnel_pull_powered",
+      "y": 90
+    },
+    "facing=north,powered=false,pushing=true": {
+      "model": "create:block/brass_chute_funnel_push"
+    },
+    "facing=south,powered=false,pushing=true": {
+      "model": "create:block/brass_chute_funnel_push",
+      "y": 180
+    },
+    "facing=west,powered=false,pushing=true": {
+      "model": "create:block/brass_chute_funnel_push",
+      "y": 270
+    },
+    "facing=east,powered=false,pushing=true": {
+      "model": "create:block/brass_chute_funnel_push",
+      "y": 90
+    },
+    "facing=north,powered=true,pushing=true": {
+      "model": "create:block/brass_chute_funnel_push_powered"
+    },
+    "facing=south,powered=true,pushing=true": {
+      "model": "create:block/brass_chute_funnel_push_powered",
+      "y": 180
+    },
+    "facing=west,powered=true,pushing=true": {
+      "model": "create:block/brass_chute_funnel_push_powered",
+      "y": 270
+    },
+    "facing=east,powered=true,pushing=true": {
+      "model": "create:block/brass_chute_funnel_push_powered",
+      "y": 90
+    }
+  }
+}

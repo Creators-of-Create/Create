@@ -1,8 +1,8 @@
 package com.simibubi.create.content.logistics.block.realityFunnel;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -28,12 +28,18 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty PUSHING = BooleanProperty.create("pushing");
+	private BlockEntry<? extends RealityFunnelBlock> parent;
 
-	public HorizontalInteractionFunnelBlock(Properties p_i48377_1_) {
+	public HorizontalInteractionFunnelBlock(BlockEntry<? extends RealityFunnelBlock> parent, Properties p_i48377_1_) {
 		super(p_i48377_1_);
-		setDefaultState(getDefaultState().with(PUSHING, true)
-			.with(POWERED, false));
+		this.parent = parent;
+		BlockState defaultState = getDefaultState().with(PUSHING, true);
+		if (hasPoweredProperty())
+			defaultState = defaultState.with(POWERED, false);
+		setDefaultState(defaultState);
 	}
+
+	public abstract boolean hasPoweredProperty();
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
@@ -47,13 +53,18 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
-		super.fillStateContainer(p_206840_1_.add(HORIZONTAL_FACING, POWERED, PUSHING));
+		if (hasPoweredProperty())
+			p_206840_1_.add(POWERED);
+		super.fillStateContainer(p_206840_1_.add(HORIZONTAL_FACING, PUSHING));
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
-		return super.getStateForPlacement(ctx).with(POWERED, ctx.getWorld()
-			.isBlockPowered(ctx.getPos()));
+		BlockState stateForPlacement = super.getStateForPlacement(ctx);
+		if (hasPoweredProperty())
+			stateForPlacement = stateForPlacement.with(POWERED, ctx.getWorld()
+				.isBlockPowered(ctx.getPos()));
+		return stateForPlacement;
 	}
 
 	@Override
@@ -69,14 +80,14 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
 		PlayerEntity player) {
-		return AllBlocks.REALITY_FUNNEL.asStack();
+		return parent.asStack();
 	}
 
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbour, IWorld world,
 		BlockPos pos, BlockPos p_196271_6_) {
 		if (!canStillInteract(state, world, pos))
-			return AllBlocks.REALITY_FUNNEL.getDefaultState()
+			return parent.getDefaultState()
 				.with(RealityFunnelBlock.FACING, state.get(HORIZONTAL_FACING));
 		return state;
 	}
@@ -94,6 +105,8 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
+		if (!hasPoweredProperty())
+			return;
 		if (worldIn.isRemote)
 			return;
 		boolean previouslyPowered = state.get(POWERED);

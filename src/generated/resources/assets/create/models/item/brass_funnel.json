@@ -1,0 +1,9 @@
+{
+  "parent": "create:block/funnel/item",
+  "textures": {
+    "2": "create:block/brass_funnel_back",
+    "3": "create:block/brass_funnel",
+    "4": "create:block/brass_funnel_plating",
+    "particle": "create:block/brass_casing"
+  }
+}
