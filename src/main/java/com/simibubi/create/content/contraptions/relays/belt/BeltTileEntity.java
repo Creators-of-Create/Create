@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -43,6 +44,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -55,6 +59,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	public int beltLength;
 	public int index;
 	public Direction lastInsert;
+	public CasingType casing;
 
 	protected BlockPos controller;
 	protected BeltInventory inventory;
@@ -62,10 +67,15 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	public CompoundNBT trackerUpdateTag;
 
+	public static enum CasingType {
+		NONE, ANDESITE, BRASS;
+	}
+
 	public BeltTileEntity(TileEntityType<? extends BeltTileEntity> type) {
 		super(type);
 		controller = BlockPos.ZERO;
 		itemHandler = LazyOptional.empty();
+		casing = CasingType.NONE;
 		color = -1;
 	}
 
@@ -176,10 +186,22 @@ public class BeltTileEntity extends KineticTileEntity {
 		compound.putInt("Color", color);
 		compound.putInt("Length", beltLength);
 		compound.putInt("Index", index);
+		NBTHelper.writeEnum(compound, "Casing", casing);
 
 		if (isController())
 			compound.put("Inventory", getInventory().write());
 		return super.write(compound);
+	}
+
+	@Override
+	public void readClientUpdate(CompoundNBT tag) {
+		CasingType casingBefore = casing;
+		super.readClientUpdate(tag);
+		if (casingBefore != casing) {
+			requestModelDataUpdate();
+			if (hasWorld())
+				world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 16);
+		}
 	}
 
 	@Override
@@ -200,6 +222,8 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		if (isController())
 			getInventory().read(compound.getCompound("Inventory"));
+
+		casing = NBTHelper.readEnum(compound, "Casing", CasingType.class);
 	}
 
 	@Override
@@ -353,6 +377,18 @@ public class BeltTileEntity extends KineticTileEntity {
 		return BeltHelper.getVectorForOffset(controllerTE, transported.beltPosition);
 	}
 
+	public void setCasingType(CasingType type) {
+		if (casing == type)
+			return;
+		casing = type;
+		boolean shouldBlockHaveCasing = type != CasingType.NONE;
+		BlockState blockState = getBlockState();
+		if (blockState.get(BeltBlock.CASING) != shouldBlockHaveCasing)
+			KineticTileEntity.switchToBlockState(world, pos, blockState.with(BeltBlock.CASING, shouldBlockHaveCasing));
+		markDirty();
+		sendData();
+	}
+
 	/**
 	 * always target a DirectBeltInsertionBehaviour
 	 */
@@ -400,6 +436,14 @@ public class BeltTileEntity extends KineticTileEntity {
 		nextBeltController.markDirty();
 		nextBeltController.sendData();
 		return empty;
+	}
+
+	public static ModelProperty<CasingType> CASING_PROPERTY = new ModelProperty<>();
+
+	@Override
+	public IModelData getModelData() {
+		return new ModelDataMap.Builder().withInitial(CASING_PROPERTY, casing)
+			.build();
 	}
 
 }

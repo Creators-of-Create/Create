@@ -62,6 +62,7 @@ import com.simibubi.create.content.contraptions.relays.advanced.sequencer.Sequen
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltColor;
 import com.simibubi.create.content.contraptions.relays.belt.BeltGenerator;
+import com.simibubi.create.content.contraptions.relays.belt.BeltModel;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
@@ -267,9 +268,11 @@ public class AllBlocks {
 	public static final BlockEntry<BeltBlock> BELT = REGISTRATE.block("belt", BeltBlock::new)
 		.initialProperties(SharedProperties.beltMaterial, MaterialColor.GRAY)
 		.properties(p -> p.sound(SoundType.CLOTH))
+		.properties(p -> p.hardnessAndResistance(0.8F))
+		.blockstate(new BeltGenerator()::generate)
 		.transform(StressConfigDefaults.setImpact(1.0))
 		.onRegister(CreateRegistrate.blockColors(() -> BeltColor::new))
-		.blockstate(new BeltGenerator()::generate)
+		.onRegister(CreateRegistrate.blockModel(() -> BeltModel::new))
 		.register();
 
 	public static final BlockEntry<CreativeMotorBlock> CREATIVE_MOTOR =
@@ -390,14 +393,14 @@ public class AllBlocks {
 		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.standardModel(ctx, prov)))
 		.simpleItem()
 		.register();
-	
+
 	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 		.item()
 		.transform(customItemModel("_", "block"))
 		.register();
-	
+
 	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.addLayer(() -> RenderType::getCutoutMipped)
@@ -686,13 +689,12 @@ public class AllBlocks {
 			.transform(customItemModel())
 			.register();
 
-	
 	// Logistics
 
 	static {
 		REGISTRATE.startSection(AllSections.LOGISTICS);
 	}
-	
+
 	public static final BlockEntry<ArmBlock> MECHANICAL_ARM = REGISTRATE.block("mechanical_arm", ArmBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
@@ -700,7 +702,7 @@ public class AllBlocks {
 		.item(ArmItem::new)
 		.transform(customItemModel())
 		.register();
-	
+
 	public static final BlockEntry<RealityFunnelBlock> REALITY_FUNNEL =
 		REGISTRATE.block("reality_funnel", RealityFunnelBlock::new)
 			.initialProperties(SharedProperties::softMetal)
@@ -708,18 +710,19 @@ public class AllBlocks {
 			.item(FunnelItem::new)
 			.transform(customItemModel())
 			.register();
-	
+
 	public static final BlockEntry<BeltFunnelBlock> BELT_FUNNEL = REGISTRATE.block("belt_funnel", BeltFunnelBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate(new BeltFunnelGenerator()::generate)
 		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
 		.register();
-	
-	public static final BlockEntry<ChuteFunnelBlock> CHUTE_FUNNEL = REGISTRATE.block("chute_funnel", ChuteFunnelBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.blockstate(new ChuteFunnelGenerator()::generate)
-		.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
-		.register();
+
+	public static final BlockEntry<ChuteFunnelBlock> CHUTE_FUNNEL =
+		REGISTRATE.block("chute_funnel", ChuteFunnelBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate(new ChuteFunnelGenerator()::generate)
+			.loot((p, b) -> p.registerDropping(b, REALITY_FUNNEL.get()))
+			.register();
 
 	public static final BlockEntry<RedstoneContactBlock> REDSTONE_CONTACT =
 		REGISTRATE.block("redstone_contact", RedstoneContactBlock::new)
@@ -787,7 +790,7 @@ public class AllBlocks {
 		.item()
 		.transform(customItemModel())
 		.register();
-	
+
 	public static final BlockEntry<PackagerBlock> PACKAGER = REGISTRATE.block("packager", PackagerBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.transform(StressConfigDefaults.setImpact(4.0))

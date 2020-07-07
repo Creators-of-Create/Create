@@ -9,7 +9,6 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -30,8 +29,9 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		Slope slope = state.get(BeltBlock.SLOPE);
 
 		boolean flip = casing && slope == Slope.UPWARD;
+		boolean rotate = casing && slope == Slope.VERTICAL;
 		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
-		return horizontalAngle(direction) + (flip ? 180 : 0);
+		return horizontalAngle(direction) + (flip ? 180 : 0) + (rotate ? 90 : 0);
 	}
 
 	@Override
@@ -41,7 +41,8 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		BeltBlock.Part part = state.get(BeltBlock.PART);
 		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
 		Slope slope = state.get(BeltBlock.SLOPE);
-		boolean diagonal = slope == Slope.UPWARD || slope == Slope.DOWNWARD;
+		boolean downward = slope == Slope.DOWNWARD;
+		boolean diagonal = slope == Slope.UPWARD || downward;
 		boolean vertical = slope == Slope.VERTICAL;
 		boolean pulley = part == Part.PULLEY;
 		boolean sideways = slope == Slope.SIDEWAYS;
@@ -50,12 +51,13 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		if (!casing && pulley)
 			part = Part.MIDDLE;
 
-		if ((!casing && vertical && negative || casing && diagonal && negative == (direction.getAxis() == Axis.X)
-			|| !casing && sideways && negative) && part != Part.MIDDLE && !pulley)
+		if ((vertical && negative || casing && downward || sideways && negative) && part != Part.MIDDLE && !pulley)
 			part = part == Part.END ? Part.START : Part.END;
 
 		if (!casing && vertical)
 			slope = Slope.HORIZONTAL;
+		if (casing && vertical)
+			slope = Slope.SIDEWAYS;
 
 		String path = "block/" + (casing ? "belt_casing/" : "belt/");
 		String slopeName = slope.getName();

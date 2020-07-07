@@ -228,6 +228,8 @@ public class BeltShapes {
 
 		if (slope == Slope.VERTICAL)
 			return VoxelShapes.empty();
+		if (slope == Slope.SIDEWAYS)
+			return VoxelShapes.empty();
 
 		if (slope == Slope.HORIZONTAL) {
 			return AllShapes.CASING_11PX.get(Direction.UP);
