@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
@@ -266,8 +267,9 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return ActionResultType.SUCCESS;
 			if (!player.isCreative())
 				heldItem.shrink(1);
-			worldIn.setBlockState(pos, state.with(PART, Part.PULLEY), 2);
-			belt.attachKinetics();
+
+			KineticTileEntity.switchToBlockState(worldIn, pos, state.with(PART, Part.PULLEY));
+
 			return ActionResultType.SUCCESS;
 		}
 
@@ -278,7 +280,9 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return ActionResultType.PASS;
 			if (!player.isCreative())
 				heldItem.shrink(1);
-			worldIn.setBlockState(pos, state.with(CASING, true), 2);
+
+			KineticTileEntity.switchToBlockState(worldIn, pos, state.with(CASING, true));
+
 			return ActionResultType.SUCCESS;
 		}
 
