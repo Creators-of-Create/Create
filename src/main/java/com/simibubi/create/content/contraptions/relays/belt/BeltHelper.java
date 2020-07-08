@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.tileentity.TileEntity;
@@ -42,16 +41,16 @@ public class BeltHelper {
 	public static BlockPos getPositionForOffset(BeltTileEntity controller, int offset) {
 		BlockPos pos = controller.getPos();
 		Vec3i vec = controller.getBeltFacing().getDirectionVec();
-		Slope slope = controller.getBlockState().get(BeltBlock.SLOPE);
-		int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
+		BeltSlope slope = controller.getBlockState().get(BeltBlock.SLOPE);
+		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 
 		return pos.add(offset * vec.getX(), MathHelper.clamp(offset, 0, controller.beltLength - 1) * verticality,
 				offset * vec.getZ());
 	}
 	
 	public static Vec3d getVectorForOffset(BeltTileEntity controller, float offset) {
-		Slope slope = controller.getBlockState().get(BeltBlock.SLOPE);
-		int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
+		BeltSlope slope = controller.getBlockState().get(BeltBlock.SLOPE);
+		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 		float verticalMovement = verticality;
 		if (offset < .5)
 			verticalMovement = 0;
@@ -60,7 +59,7 @@ public class BeltHelper {
 		Vec3d vec = VecHelper.getCenterOf(controller.getPos());
 		Vec3d horizontalMovement = new Vec3d(controller.getBeltFacing().getDirectionVec()).scale(offset - .5f);
 		
-		if (slope == Slope.VERTICAL)
+		if (slope == BeltSlope.VERTICAL)
 			horizontalMovement = Vec3d.ZERO;
 		
 		vec = vec.add(horizontalMovement).add(0, verticalMovement, 0);

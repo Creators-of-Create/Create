@@ -19,7 +19,6 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -48,7 +47,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -71,14 +69,14 @@ import net.minecraftforge.items.IItemHandler;
 
 public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement {
 
-	public static final IProperty<Slope> SLOPE = EnumProperty.create("slope", Slope.class);
-	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
+	public static final IProperty<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
+	public static final IProperty<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
 	public static final BooleanProperty CASING = BooleanProperty.create("casing");
 
 	public BeltBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(SLOPE, Slope.HORIZONTAL)
-			.with(PART, Part.START)
+		setDefaultState(getDefaultState().with(SLOPE, BeltSlope.HORIZONTAL)
+			.with(PART, BeltPart.START)
 			.with(CASING, false));
 	}
 
@@ -100,7 +98,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		if (state.get(SLOPE) == Slope.SIDEWAYS)
+		if (state.get(SLOPE) == BeltSlope.SIDEWAYS)
 			return Axis.Y;
 		return state.get(HORIZONTAL_FACING)
 			.rotateY()
@@ -210,8 +208,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	public static boolean canTransport(BlockState state) {
 		if (!AllBlocks.BELT.has(state))
 			return false;
-		Slope slope = state.get(SLOPE);
-		return slope != Slope.VERTICAL && slope != Slope.SIDEWAYS;
+		BeltSlope slope = state.get(SLOPE);
+		return slope != BeltSlope.VERTICAL && slope != BeltSlope.SIDEWAYS;
 	}
 
 	@Override
@@ -261,13 +259,13 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		}
 
 		if (isShaft) {
-			if (state.get(PART) != Part.MIDDLE)
+			if (state.get(PART) != BeltPart.MIDDLE)
 				return ActionResultType.PASS;
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
 			if (!player.isCreative())
 				heldItem.shrink(1);
-			world.setBlockState(pos, state.with(PART, Part.PULLEY), 2);
+			world.setBlockState(pos, state.with(PART, BeltPart.PULLEY), 2);
 			belt.attachKinetics();
 			return ActionResultType.SUCCESS;
 		}
@@ -302,10 +300,10 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return ActionResultType.SUCCESS;
 		}
 
-		if (state.get(PART) == Part.PULLEY) {
+		if (state.get(PART) == BeltPart.PULLEY) {
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
-			world.setBlockState(context.getPos(), state.with(PART, Part.MIDDLE), 2);
+			world.setBlockState(context.getPos(), state.with(PART, BeltPart.MIDDLE), 2);
 			BeltTileEntity belt = BeltHelper.getSegmentTE(world, context.getPos());
 			if (belt != null) {
 				belt.detachKinetics();
@@ -516,8 +514,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	private void updateNeighbouringTunnel(World world, BlockPos pos, BlockState beltState) {
-		boolean isEnd = beltState.get(PART) != Part.END;
-		if (isEnd && beltState.get(PART) != Part.START)
+		boolean isEnd = beltState.get(PART) != BeltPart.END;
+		if (isEnd && beltState.get(PART) != BeltPart.START)
 			return;
 		int offset = isEnd ? -1 : 1;
 		BlockPos tunnelPos = pos.offset(beltState.get(HORIZONTAL_FACING), offset)
@@ -525,24 +523,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		Block adjacent = world.getBlockState(tunnelPos).getBlock();
 		if (adjacent instanceof BeltTunnelBlock)
 			((BeltTunnelBlock) adjacent).updateTunnel(world, tunnelPos);
-	}
-
-	public enum Slope implements IStringSerializable {
-		HORIZONTAL, UPWARD, DOWNWARD, VERTICAL, SIDEWAYS;
-
-		@Override
-		public String getName() {
-			return Lang.asId(name());
-		}
-	}
-
-	public enum Part implements IStringSerializable {
-		START, MIDDLE, END, PULLEY;
-
-		@Override
-		public String getName() {
-			return Lang.asId(name());
-		}
 	}
 
 	public static List<BlockPos> getBeltChain(World world, BlockPos controllerPos) {
@@ -567,18 +547,18 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	public static BlockPos nextSegmentPosition(BlockState state, BlockPos pos, boolean forward) {
 		Direction direction = state.get(HORIZONTAL_FACING);
-		Slope slope = state.get(SLOPE);
-		Part part = state.get(PART);
+		BeltSlope slope = state.get(SLOPE);
+		BeltPart part = state.get(PART);
 
 		int offset = forward ? 1 : -1;
 
-		if (part == Part.END && forward || part == Part.START && !forward)
+		if (part == BeltPart.END && forward || part == BeltPart.START && !forward)
 			return null;
-		if (slope == Slope.VERTICAL)
+		if (slope == BeltSlope.VERTICAL)
 			return pos.up(direction.getAxisDirection() == AxisDirection.POSITIVE ? offset : -offset);
 		pos = pos.offset(direction, offset);
-		if (slope != Slope.HORIZONTAL && slope != Slope.SIDEWAYS)
-			return pos.up(slope == Slope.UPWARD ? offset : -offset);
+		if (slope != BeltSlope.HORIZONTAL && slope != BeltSlope.SIDEWAYS)
+			return pos.up(slope == BeltSlope.UPWARD ? offset : -offset);
 		return pos;
 	}
 
@@ -587,20 +567,20 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return true;
 		if (!belt.get(BeltBlock.CASING))
 			return false;
-		Part part = belt.get(BeltBlock.PART);
-		if (part != Part.MIDDLE && facing.getAxis() == belt.get(HORIZONTAL_FACING)
+		BeltPart part = belt.get(BeltBlock.PART);
+		if (part != BeltPart.MIDDLE && facing.getAxis() == belt.get(HORIZONTAL_FACING)
 			.rotateY()
 			.getAxis())
 			return false;
 
-		Slope slope = belt.get(BeltBlock.SLOPE);
-		if (slope != Slope.HORIZONTAL) {
-			if (slope == Slope.DOWNWARD && part == Part.END)
+		BeltSlope slope = belt.get(BeltBlock.SLOPE);
+		if (slope != BeltSlope.HORIZONTAL) {
+			if (slope == BeltSlope.DOWNWARD && part == BeltPart.END)
 				return true;
-			if (slope == Slope.UPWARD && part == Part.START)
+			if (slope == BeltSlope.UPWARD && part == BeltPart.START)
 				return true;
 			Direction beltSide = belt.get(HORIZONTAL_FACING);
-			if (slope == Slope.DOWNWARD)
+			if (slope == BeltSlope.DOWNWARD)
 				beltSide = beltSide.getOpposite();
 			if (beltSide == facing)
 				return false;
@@ -617,9 +597,9 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state) {
 		List<ItemStack> required = new ArrayList<>();
-		if (state.get(PART) != Part.MIDDLE)
+		if (state.get(PART) != BeltPart.MIDDLE)
 			required.add(AllBlocks.SHAFT.asStack());
-		if (state.get(PART) == Part.START)
+		if (state.get(PART) == BeltPart.START)
 			required.add(AllItems.BELT_CONNECTOR.asStack());
 		if (required.isEmpty())
 			return ItemRequirement.NONE;
@@ -630,15 +610,15 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	public BlockState rotate(BlockState state, Rotation rot) {
 		BlockState rotate = super.rotate(state, rot);
 
-		if (state.get(SLOPE) != Slope.VERTICAL)
+		if (state.get(SLOPE) != BeltSlope.VERTICAL)
 			return rotate;
 		if (state.get(HORIZONTAL_FACING)
 			.getAxisDirection() != rotate.get(HORIZONTAL_FACING)
 				.getAxisDirection()) {
-			if (state.get(PART) == Part.START)
-				return rotate.with(PART, Part.END);
-			if (state.get(PART) == Part.END)
-				return rotate.with(PART, Part.START);
+			if (state.get(PART) == BeltPart.START)
+				return rotate.with(PART, BeltPart.END);
+			if (state.get(PART) == BeltPart.END)
+				return rotate.with(PART, BeltPart.START);
 		}
 
 		return rotate;

@@ -9,8 +9,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -118,7 +118,7 @@ public class BeltConnectorItem extends BlockItem {
 
 	public static void createBelts(World world, BlockPos start, BlockPos end) {
 
-		BeltBlock.Slope slope = getSlopeBetween(start, end);
+		BeltSlope slope = getSlopeBetween(start, end);
 		Direction facing = getFacingFromTo(start, end);
 
 		BlockPos diff = end.subtract(start);
@@ -130,13 +130,13 @@ public class BeltConnectorItem extends BlockItem {
 		BlockState beltBlock = AllBlocks.BELT.getDefaultState();
 
 		for (BlockPos pos : beltsToCreate) {
-			BeltBlock.Part part = pos.equals(start) ? Part.START : pos.equals(end) ? Part.END : Part.MIDDLE;
+			BeltPart part = pos.equals(start) ? BeltPart.START : pos.equals(end) ? BeltPart.END : BeltPart.MIDDLE;
 			BlockState shaftState = world.getBlockState(pos);
 			boolean pulley = ShaftBlock.isShaft(shaftState);
-			if (part == Part.MIDDLE && pulley)
-				part = Part.PULLEY;
+			if (part == BeltPart.MIDDLE && pulley)
+				part = BeltPart.PULLEY;
 			if (pulley && shaftState.get(ShaftBlock.AXIS) == Axis.Y)
-				slope = Slope.SIDEWAYS;
+				slope = BeltSlope.SIDEWAYS;
 			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope)
 				.with(BeltBlock.PART, part)
 				.with(BeltBlock.HORIZONTAL_FACING, facing), 3);
@@ -157,18 +157,18 @@ public class BeltConnectorItem extends BlockItem {
 		return Direction.getFacingFromAxis(axisDirection, beltAxis);
 	}
 
-	private static Slope getSlopeBetween(BlockPos start, BlockPos end) {
+	private static BeltSlope getSlopeBetween(BlockPos start, BlockPos end) {
 		BlockPos diff = end.subtract(start);
 
 		if (diff.getY() != 0) {
 			if (diff.getZ() != 0 || diff.getX() != 0)
-				return diff.getY() > 0 ? Slope.UPWARD : Slope.DOWNWARD;
-			return Slope.VERTICAL;
+				return diff.getY() > 0 ? BeltSlope.UPWARD : BeltSlope.DOWNWARD;
+			return BeltSlope.VERTICAL;
 		}
-		return Slope.HORIZONTAL;
+		return BeltSlope.HORIZONTAL;
 	}
 
-	private static List<BlockPos> getBeltChainBetween(BlockPos start, BlockPos end, Slope slope, Direction direction) {
+	private static List<BlockPos> getBeltChainBetween(BlockPos start, BlockPos end, BeltSlope slope, Direction direction) {
 		List<BlockPos> positions = new LinkedList<>();
 		int limit = 1000;
 		BlockPos current = start;
@@ -176,14 +176,14 @@ public class BeltConnectorItem extends BlockItem {
 		do {
 			positions.add(current);
 
-			if (slope == Slope.VERTICAL) {
+			if (slope == BeltSlope.VERTICAL) {
 				current = current.up(direction.getAxisDirection() == AxisDirection.POSITIVE ? 1 : -1);
 				continue;
 			}
 
 			current = current.offset(direction);
-			if (slope != Slope.HORIZONTAL)
-				current = current.up(slope == Slope.UPWARD ? 1 : -1);
+			if (slope != BeltSlope.HORIZONTAL)
+				current = current.up(slope == BeltSlope.UPWARD ? 1 : -1);
 
 		} while (!current.equals(end) && limit-- > 0);
 

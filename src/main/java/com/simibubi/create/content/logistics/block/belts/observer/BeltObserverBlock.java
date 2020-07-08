@@ -3,8 +3,8 @@ package com.simibubi.create.content.logistics.block.belts.observer;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -77,9 +77,9 @@ public class BeltObserverBlock extends HorizontalBlock
 
 		if (!AllBlocks.BELT.has(blockState))
 			return false;
-		if (blockState.get(BeltBlock.SLOPE) != Slope.HORIZONTAL)
+		if (blockState.get(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL)
 			return false;
-		if (blockState.get(BeltBlock.PART) != Part.MIDDLE)
+		if (blockState.get(BeltBlock.PART) != BeltPart.MIDDLE)
 			return false;
 		if (blockState.get(BeltBlock.HORIZONTAL_FACING).getAxis() == direction.getAxis())
 			return false;
@@ -99,7 +99,7 @@ public class BeltObserverBlock extends HorizontalBlock
 			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(face));
 			if (AllBlocks.BELT.has(blockState)
 					&& blockState.get(BlockStateProperties.HORIZONTAL_FACING).getAxis() != face.getAxis()
-					&& blockState.get(BeltBlock.SLOPE) == Slope.HORIZONTAL)
+					&& blockState.get(BeltBlock.SLOPE) == BeltSlope.HORIZONTAL)
 				if (preferredFacing == null)
 					preferredFacing = face;
 				else {

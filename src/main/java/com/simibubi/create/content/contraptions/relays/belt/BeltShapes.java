@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.block.BlockState;
@@ -178,41 +176,41 @@ public class BeltShapes {
 	private static VoxelShape getBeltShape(BlockState state) {
 		Direction facing = state.get(BeltBlock.HORIZONTAL_FACING);
 		Axis axis = facing.getAxis();
-		Part part = state.get(BeltBlock.PART);
-		Slope slope = state.get(BeltBlock.SLOPE);
+		BeltPart part = state.get(BeltBlock.PART);
+		BeltSlope slope = state.get(BeltBlock.SLOPE);
 
 		//vertical
-		if (slope == Slope.VERTICAL) {
-			if (part == Part.MIDDLE || part == Part.PULLEY)
+		if (slope == BeltSlope.VERTICAL) {
+			if (part == BeltPart.MIDDLE || part == BeltPart.PULLEY)
 				return VERTICAL_FULL.get(axis);
 			//vertical ending
-			return (part == Part.START ? VERTICAL_START : VERTICAL_END).get(facing);
+			return (part == BeltPart.START ? VERTICAL_START : VERTICAL_END).get(facing);
 		}
 
 		//flat part
-		if (slope == Slope.HORIZONTAL) {
-			if (part == Part.MIDDLE || part == Part.PULLEY)
+		if (slope == BeltSlope.HORIZONTAL) {
+			if (part == BeltPart.MIDDLE || part == BeltPart.PULLEY)
 				return FLAT_FULL.get(axis);
 			//flat ending
-			return (part == Part.START ? FLAT_START : FLAT_END).get(facing);
+			return (part == BeltPart.START ? FLAT_START : FLAT_END).get(facing);
 		}
 		
 		//sideways part
-		if (slope == Slope.SIDEWAYS) {
-			if (part == Part.MIDDLE || part == Part.PULLEY)
+		if (slope == BeltSlope.SIDEWAYS) {
+			if (part == BeltPart.MIDDLE || part == BeltPart.PULLEY)
 				return SIDE_FULL.get(axis);
 			//flat ending
-			return (part == Part.START ? SIDE_START : SIDE_END).get(facing);
+			return (part == BeltPart.START ? SIDE_START : SIDE_END).get(facing);
 		}
 
 		//slope
-		if (part == Part.MIDDLE || part == Part.PULLEY)
-			return (slope == Slope.DOWNWARD ? SLOPE_DESC : SLOPE_ASC).get(facing);
+		if (part == BeltPart.MIDDLE || part == BeltPart.PULLEY)
+			return (slope == BeltSlope.DOWNWARD ? SLOPE_DESC : SLOPE_ASC).get(facing);
 		//sloped ending
-		if (part == Part.START)
-			return (slope == Slope.DOWNWARD ? SLOPE_DESC_START : SLOPE_ASC_START).get(facing);
-		if (part == Part.END)
-			return (slope == Slope.DOWNWARD ? SLOPE_DESC_END : SLOPE_ASC_END).get(facing);
+		if (part == BeltPart.START)
+			return (slope == BeltSlope.DOWNWARD ? SLOPE_DESC_START : SLOPE_ASC_START).get(facing);
+		if (part == BeltPart.END)
+			return (slope == BeltSlope.DOWNWARD ? SLOPE_DESC_END : SLOPE_ASC_END).get(facing);
 
 		//bad state
 		return VoxelShapes.empty();
@@ -223,25 +221,25 @@ public class BeltShapes {
 			return VoxelShapes.empty();
 
 		Direction facing = state.get(BeltBlock.HORIZONTAL_FACING);
-		Part part = state.get(BeltBlock.PART);
-		Slope slope = state.get(BeltBlock.SLOPE);
+		BeltPart part = state.get(BeltBlock.PART);
+		BeltSlope slope = state.get(BeltBlock.SLOPE);
 
-		if (slope == Slope.VERTICAL)
+		if (slope == BeltSlope.VERTICAL)
 			return VoxelShapes.empty();
-		if (slope == Slope.SIDEWAYS)
+		if (slope == BeltSlope.SIDEWAYS)
 			return VoxelShapes.empty();
 
-		if (slope == Slope.HORIZONTAL) {
+		if (slope == BeltSlope.HORIZONTAL) {
 			return AllShapes.CASING_11PX.get(Direction.UP);
 		}
 
-		if (part == Part.MIDDLE || part == Part.PULLEY)
-			return PARTIAL_CASING.get(slope == Slope.UPWARD ? facing : facing.getOpposite());
+		if (part == BeltPart.MIDDLE || part == BeltPart.PULLEY)
+			return PARTIAL_CASING.get(slope == BeltSlope.UPWARD ? facing : facing.getOpposite());
 
-		if (part == Part.START)
-			return slope == Slope.UPWARD ? AllShapes.CASING_11PX.get(Direction.UP) : PARTIAL_CASING.get(facing.getOpposite());
-		if (part == Part.END)
-			return slope == Slope.DOWNWARD ? AllShapes.CASING_11PX.get(Direction.UP) : PARTIAL_CASING.get(facing);
+		if (part == BeltPart.START)
+			return slope == BeltSlope.UPWARD ? AllShapes.CASING_11PX.get(Direction.UP) : PARTIAL_CASING.get(facing.getOpposite());
+		if (part == BeltPart.END)
+			return slope == BeltSlope.DOWNWARD ? AllShapes.CASING_11PX.get(Direction.UP) : PARTIAL_CASING.get(facing);
 
 		//something went wrong
 		return VoxelShapes.fullCube();

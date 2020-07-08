@@ -9,7 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.foundation.utility.DirectionHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -195,25 +195,25 @@ public class StructureTransform {
 
 	protected BlockState transformBelt(BlockState state, boolean halfTurn) {
 		Direction initialDirection = state.get(BeltBlock.HORIZONTAL_FACING);
-		boolean diagonal = state.get(BeltBlock.SLOPE) == Slope.DOWNWARD || state.get(BeltBlock.SLOPE) == Slope.UPWARD;
+		boolean diagonal = state.get(BeltBlock.SLOPE) == BeltSlope.DOWNWARD || state.get(BeltBlock.SLOPE) == BeltSlope.UPWARD;
 		
 		if (!diagonal) {
 			for (int i = 0; i < rotation.ordinal(); i++) {
 				Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
-				Slope slope = state.get(BeltBlock.SLOPE);
-				boolean vertical = slope == Slope.VERTICAL;
-				boolean horizontal = slope == Slope.HORIZONTAL;
-				boolean sideways = slope == Slope.SIDEWAYS;
+				BeltSlope slope = state.get(BeltBlock.SLOPE);
+				boolean vertical = slope == BeltSlope.VERTICAL;
+				boolean horizontal = slope == BeltSlope.HORIZONTAL;
+				boolean sideways = slope == BeltSlope.SIDEWAYS;
 				
 				Direction newDirection = direction.getOpposite();
-				Slope newSlope = Slope.VERTICAL;
+				BeltSlope newSlope = BeltSlope.VERTICAL;
 
 				if (vertical) {
 					if (direction.getAxis() == rotationAxis) {
 						newDirection = direction.rotateYCCW();
-						newSlope = Slope.SIDEWAYS;
+						newSlope = BeltSlope.SIDEWAYS;
 					} else {
-						newSlope = Slope.HORIZONTAL;
+						newSlope = BeltSlope.HORIZONTAL;
 						newDirection = direction;
 						if (direction.getAxis() == Axis.Z)
 							newDirection = direction.getOpposite();
@@ -223,7 +223,7 @@ public class StructureTransform {
 				if (sideways) {
 					newDirection = direction;
 					if (direction.getAxis() == rotationAxis) 
-						newSlope = Slope.HORIZONTAL;
+						newSlope = BeltSlope.HORIZONTAL;
 					else 
 						newDirection = direction.rotateYCCW();
 				}
@@ -231,7 +231,7 @@ public class StructureTransform {
 				if (horizontal) {
 					newDirection = direction;
 					if (direction.getAxis() == rotationAxis) 
-						newSlope = Slope.SIDEWAYS;
+						newSlope = BeltSlope.SIDEWAYS;
 				}
 
 				state = state.with(BeltBlock.HORIZONTAL_FACING, newDirection);
@@ -242,14 +242,14 @@ public class StructureTransform {
 			for (int i = 0; i < rotation.ordinal(); i++) {
 				Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
 				Direction newDirection = direction.getOpposite();
-				Slope slope = state.get(BeltBlock.SLOPE);
-				boolean upward = slope == Slope.UPWARD;
-				boolean downward = slope == Slope.DOWNWARD;
+				BeltSlope slope = state.get(BeltBlock.SLOPE);
+				boolean upward = slope == BeltSlope.UPWARD;
+				boolean downward = slope == BeltSlope.DOWNWARD;
 
 				// Rotate diagonal
 				if (direction.getAxisDirection() == AxisDirection.POSITIVE ^ downward
 					^ direction.getAxis() == Axis.Z) {
-					state = state.with(BeltBlock.SLOPE, upward ? Slope.DOWNWARD : Slope.UPWARD);
+					state = state.with(BeltBlock.SLOPE, upward ? BeltSlope.DOWNWARD : BeltSlope.UPWARD);
 				} else {
 					state = state.with(BeltBlock.HORIZONTAL_FACING, newDirection);
 				}
@@ -258,12 +258,12 @@ public class StructureTransform {
 		} else if (halfTurn) {
 			Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
 			Direction newDirection = direction.getOpposite();
-			Slope slope = state.get(BeltBlock.SLOPE);
-			boolean vertical = slope == Slope.VERTICAL;
+			BeltSlope slope = state.get(BeltBlock.SLOPE);
+			boolean vertical = slope == BeltSlope.VERTICAL;
 			
 			if (diagonal) {
 				state = state.with(BeltBlock.SLOPE,
-					slope == Slope.UPWARD ? Slope.DOWNWARD : slope == Slope.DOWNWARD ? Slope.UPWARD : slope);
+					slope == BeltSlope.UPWARD ? BeltSlope.DOWNWARD : slope == BeltSlope.DOWNWARD ? BeltSlope.UPWARD : slope);
 			} else if (vertical) {
 				state = state.with(BeltBlock.HORIZONTAL_FACING, newDirection);
 			}

@@ -12,7 +12,6 @@ import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -63,7 +62,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				.getAxisDirection()
 				.getOffset();
 			Direction facing = renderedState.get(BeltBlock.HORIZONTAL_FACING);
-			if (facing.getAxis() == Axis.X && renderedState.get(BeltBlock.SLOPE) != Slope.SIDEWAYS)
+			if (facing.getAxis() == Axis.X && renderedState.get(BeltBlock.SLOPE) != BeltSlope.SIDEWAYS)
 				speed = -speed;
 			int textureIndex = (int) ((speed * time / 36) % 16);
 			if (textureIndex < 0)
@@ -85,7 +84,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			MatrixStack modelTransform = new MatrixStack();
 			Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING)
 				.rotateY();
-			if (blockState.get(BeltBlock.SLOPE) == Slope.SIDEWAYS)
+			if (blockState.get(BeltBlock.SLOPE) == BeltSlope.SIDEWAYS)
 				dir = Direction.UP;
 			MatrixStacker msr = MatrixStacker.of(modelTransform);
 
@@ -120,9 +119,9 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		Vec3d beltStartOffset = new Vec3d(directionVec).scale(-.5)
 			.add(.5, 13 / 16f + .125f, .5);
 		ms.translate(beltStartOffset.x, beltStartOffset.y, beltStartOffset.z);
-		Slope slope = te.getBlockState()
+		BeltSlope slope = te.getBlockState()
 			.get(BeltBlock.SLOPE);
-		int verticality = slope == Slope.DOWNWARD ? -1 : slope == Slope.UPWARD ? 1 : 0;
+		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 		boolean slopeAlongX = te.getBeltFacing()
 			.getAxis() == Axis.X;
 
@@ -145,8 +144,8 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			verticalMovement = verticalMovement * (Math.min(offset, te.beltLength - .5f) - .5f);
 			Vec3d offsetVec = new Vec3d(directionVec).scale(offset)
 				.add(0, verticalMovement, 0);
-			boolean onSlope = slope != Slope.HORIZONTAL && MathHelper.clamp(offset, .5f, te.beltLength - .5f) == offset;
-			boolean tiltForward = (slope == Slope.DOWNWARD ^ te.getBeltFacing()
+			boolean onSlope = slope != BeltSlope.HORIZONTAL && MathHelper.clamp(offset, .5f, te.beltLength - .5f) == offset;
+			boolean tiltForward = (slope == BeltSlope.DOWNWARD ^ te.getBeltFacing()
 				.getAxisDirection() == AxisDirection.POSITIVE) == (te.getBeltFacing()
 					.getAxis() == Axis.Z);
 			float slopeAngle = onSlope ? tiltForward ? -45 : 45 : 0;

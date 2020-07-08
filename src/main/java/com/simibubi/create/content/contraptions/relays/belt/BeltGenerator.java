@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
@@ -18,18 +16,18 @@ public class BeltGenerator extends SpecialBlockStateGen {
 	@Override
 	protected int getXRotation(BlockState state) {
 		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
-		Slope slope = state.get(BeltBlock.SLOPE);
-		return slope == Slope.VERTICAL ? 90
-			: slope == Slope.SIDEWAYS && direction.getAxisDirection() == AxisDirection.NEGATIVE ? 180 : 0;
+		BeltSlope slope = state.get(BeltBlock.SLOPE);
+		return slope == BeltSlope.VERTICAL ? 90
+			: slope == BeltSlope.SIDEWAYS && direction.getAxisDirection() == AxisDirection.NEGATIVE ? 180 : 0;
 	}
 
 	@Override
 	protected int getYRotation(BlockState state) {
 		Boolean casing = state.get(BeltBlock.CASING);
-		Slope slope = state.get(BeltBlock.SLOPE);
+		BeltSlope slope = state.get(BeltBlock.SLOPE);
 
-		boolean flip = casing && slope == Slope.UPWARD;
-		boolean rotate = casing && slope == Slope.VERTICAL;
+		boolean flip = casing && slope == BeltSlope.UPWARD;
+		boolean rotate = casing && slope == BeltSlope.VERTICAL;
 		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
 		return horizontalAngle(direction) + (flip ? 180 : 0) + (rotate ? 90 : 0);
 	}
@@ -38,26 +36,26 @@ public class BeltGenerator extends SpecialBlockStateGen {
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
 		Boolean casing = state.get(BeltBlock.CASING);
-		BeltBlock.Part part = state.get(BeltBlock.PART);
+		BeltPart part = state.get(BeltBlock.PART);
 		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
-		Slope slope = state.get(BeltBlock.SLOPE);
-		boolean downward = slope == Slope.DOWNWARD;
-		boolean diagonal = slope == Slope.UPWARD || downward;
-		boolean vertical = slope == Slope.VERTICAL;
-		boolean pulley = part == Part.PULLEY;
-		boolean sideways = slope == Slope.SIDEWAYS;
+		BeltSlope slope = state.get(BeltBlock.SLOPE);
+		boolean downward = slope == BeltSlope.DOWNWARD;
+		boolean diagonal = slope == BeltSlope.UPWARD || downward;
+		boolean vertical = slope == BeltSlope.VERTICAL;
+		boolean pulley = part == BeltPart.PULLEY;
+		boolean sideways = slope == BeltSlope.SIDEWAYS;
 		boolean negative = direction.getAxisDirection() == AxisDirection.NEGATIVE;
 
 		if (!casing && pulley)
-			part = Part.MIDDLE;
+			part = BeltPart.MIDDLE;
 
-		if ((vertical && negative || casing && downward || sideways && negative) && part != Part.MIDDLE && !pulley)
-			part = part == Part.END ? Part.START : Part.END;
+		if ((vertical && negative || casing && downward || sideways && negative) && part != BeltPart.MIDDLE && !pulley)
+			part = part == BeltPart.END ? BeltPart.START : BeltPart.END;
 
 		if (!casing && vertical)
-			slope = Slope.HORIZONTAL;
+			slope = BeltSlope.HORIZONTAL;
 		if (casing && vertical)
-			slope = Slope.SIDEWAYS;
+			slope = BeltSlope.SIDEWAYS;
 
 		String path = "block/" + (casing ? "belt_casing/" : "belt/");
 		String slopeName = slope.getName();

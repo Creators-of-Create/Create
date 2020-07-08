@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
@@ -60,7 +60,7 @@ public class BeltTunnelInteractionHandler {
 	public static void flapTunnel(BeltInventory beltInventory, int offset, Direction side, boolean inward) {
 		BeltTileEntity belt = beltInventory.belt;
 		if (belt.getBlockState()
-			.get(BeltBlock.SLOPE) != Slope.HORIZONTAL)
+			.get(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL)
 			return;
 		BlockPos pos = BeltHelper.getPositionForOffset(belt, offset)
 			.up();

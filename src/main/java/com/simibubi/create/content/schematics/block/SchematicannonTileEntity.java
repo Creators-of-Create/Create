@@ -7,9 +7,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
@@ -481,10 +481,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		// is highest belt?
 		boolean isLastSegment = false;
 		Direction facing = blockState.get(BeltBlock.HORIZONTAL_FACING);
-		Slope slope = blockState.get(BeltBlock.SLOPE);
+		BeltSlope slope = blockState.get(BeltBlock.SLOPE);
 		boolean positive = facing.getAxisDirection() == AxisDirection.POSITIVE;
-		boolean start = blockState.get(BeltBlock.PART) == Part.START;
-		boolean end = blockState.get(BeltBlock.PART) == Part.END;
+		boolean start = blockState.get(BeltBlock.PART) == BeltPart.START;
+		boolean end = blockState.get(BeltBlock.PART) == BeltPart.END;
 
 		switch (slope) {
 		case DOWNWARD:
@@ -499,7 +499,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			isLastSegment = positive && end || !positive && start;
 		}
 		if (!isLastSegment)
-			blockState = (blockState.get(BeltBlock.PART) == Part.MIDDLE) ? Blocks.AIR.getDefaultState()
+			blockState = (blockState.get(BeltBlock.PART) == BeltPart.MIDDLE) ? Blocks.AIR.getDefaultState()
 				: AllBlocks.SHAFT.getDefaultState()
 					.with(ShaftBlock.AXIS, facing.rotateY()
 						.getAxis());

@@ -9,9 +9,9 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -84,7 +84,7 @@ public class BeltMovementHandler {
 		}
 
 		// Too slow
-		boolean notHorizontal = beltTe.getBlockState().get(BeltBlock.SLOPE) != Slope.HORIZONTAL;
+		boolean notHorizontal = beltTe.getBlockState().get(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL;
 		if (Math.abs(beltTe.getSpeed()) < 1)
 			return;
 
@@ -99,7 +99,7 @@ public class BeltMovementHandler {
 		}
 
 		final Direction beltFacing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
-		final Slope slope = blockState.get(BeltBlock.SLOPE);
+		final BeltSlope slope = blockState.get(BeltBlock.SLOPE);
 		final Axis axis = beltFacing.getAxis();
 		float movementSpeed = beltTe.getBeltMovementSpeed();
 		final Direction movementDirection = Direction.getFacingFromAxis(axis == Axis.X ? NEGATIVE : POSITIVE, axis);
@@ -112,14 +112,14 @@ public class BeltMovementHandler {
 		if (Math.abs(diffCenter) > 48 / 64f)
 			return;
 
-		Part part = blockState.get(BeltBlock.PART);
+		BeltPart part = blockState.get(BeltBlock.PART);
 		float top = 13 / 16f;
-		boolean onSlope = notHorizontal && (part == Part.MIDDLE || part == Part.PULLEY
-				|| part == (slope == Slope.UPWARD ? Part.END : Part.START) && entityIn.getY() - pos.getY() < top
-				|| part == (slope == Slope.UPWARD ? Part.START : Part.END) && entityIn.getY() - pos.getY() > top);
+		boolean onSlope = notHorizontal && (part == BeltPart.MIDDLE || part == BeltPart.PULLEY
+				|| part == (slope == BeltSlope.UPWARD ? BeltPart.END : BeltPart.START) && entityIn.getY() - pos.getY() < top
+				|| part == (slope == BeltSlope.UPWARD ? BeltPart.START : BeltPart.END) && entityIn.getY() - pos.getY() > top);
 
-		boolean movingDown = onSlope && slope == (movementFacing == beltFacing ? Slope.DOWNWARD : Slope.UPWARD);
-		boolean movingUp = onSlope && slope == (movementFacing == beltFacing ? Slope.UPWARD : Slope.DOWNWARD);
+		boolean movingDown = onSlope && slope == (movementFacing == beltFacing ? BeltSlope.DOWNWARD : BeltSlope.UPWARD);
+		boolean movingUp = onSlope && slope == (movementFacing == beltFacing ? BeltSlope.UPWARD : BeltSlope.DOWNWARD);
 
 		if (beltFacing.getAxis() == Axis.Z) {
 			boolean b = movingDown;

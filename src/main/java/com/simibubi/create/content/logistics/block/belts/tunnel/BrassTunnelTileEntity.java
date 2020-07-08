@@ -8,9 +8,13 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
+import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.SidedFilteringBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.BlockState;
@@ -44,6 +48,21 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		stackToDistribute = ItemStack.EMPTY;
 	}
 
+//	@Override
+//	public void tick() {
+//		super.tick();
+//
+//		if (stackToDistribute.isEmpty())
+//			return;
+//		if (distributionProgress == -1) {
+//			distributionTargets.clear();
+//			for (Pair<BrassTunnelTileEntity, Direction> pair : gatherValidOutputs()) {
+//				
+//			}
+//		}
+//
+//	}
+
 	@Override
 	public void initialize() {
 		if (filtering == null) {
@@ -52,7 +71,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		}
 		super.initialize();
 	}
-	
+
 	public boolean canInsert(Direction side, ItemStack stack) {
 		if (filtering != null && !filtering.test(side, stack))
 			return false;
@@ -62,7 +81,60 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			return false;
 		return true;
 	}
-	
+
+	public boolean onItemInserted(ItemStack stack) {
+		if (!connectedLeft && !connectedRight)
+			return false;
+		stackToDistribute = stack.copy();
+		sendData();
+		markDirty();
+		return true;
+	}
+
+	private List<Pair<BrassTunnelTileEntity, Direction>> gatherValidOutputs() {
+		List<Pair<BrassTunnelTileEntity, Direction>> validOutputs = new ArrayList<>();
+		addValidOutputsOf(this, validOutputs);
+		for (boolean left : Iterate.trueAndFalse) {
+			BrassTunnelTileEntity adjacent = this;
+			while (adjacent != null) {
+				if (!world.isAreaLoaded(adjacent.getPos(), 1))
+					return null;
+				adjacent = adjacent.getAdjacent(left);
+				if (adjacent != null)
+					addValidOutputsOf(adjacent, validOutputs);
+			}
+		}
+		return validOutputs;
+	}
+
+	private void addValidOutputsOf(BrassTunnelTileEntity tunnelTE,
+		List<Pair<BrassTunnelTileEntity, Direction>> validOutputs) {
+		BeltTileEntity below = BeltHelper.getSegmentTE(world, tunnelTE.pos.down());
+		if (below == null)
+			return;
+		if (below.getSpeed() != 0) {
+			Direction direction = below.getMovementFacing();
+			if (tunnelTE.flaps.containsKey(direction))
+				validOutputs.add(Pair.of(tunnelTE, direction));
+		}
+
+		BlockState blockState = getBlockState();
+		if (!AllBlocks.BRASS_TUNNEL.has(blockState))
+			return;
+		for (boolean left : Iterate.trueAndFalse) {
+			Axis axis = blockState.get(BrassTunnelBlock.HORIZONTAL_AXIS);
+			Direction baseDirection = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
+			Direction direction = left ? baseDirection.rotateYCCW() : baseDirection.rotateY();
+			if (tunnelTE.flaps.containsKey(direction)) {
+				DirectBeltInputBehaviour inputBehaviour = TileEntityBehaviour.get(world, tunnelTE.pos.down()
+					.offset(direction), DirectBeltInputBehaviour.TYPE);
+				if (inputBehaviour.canInsertFromSide(direction))
+					validOutputs.add(Pair.of(tunnelTE, direction));
+			}
+		}
+
+	}
+
 	@Override
 	public void addBehavioursDeferred(List<TileEntityBehaviour> behaviours) {
 		super.addBehavioursDeferred(behaviours);
@@ -185,9 +257,9 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		Axis axis = blockState.get(BrassTunnelBlock.HORIZONTAL_AXIS);
 		Direction baseDirection = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
 		Direction direction = leftSide ? baseDirection.rotateYCCW() : baseDirection.rotateY();
-
 		BlockPos adjacentPos = pos.offset(direction);
 		BlockState adjacentBlockState = world.getBlockState(adjacentPos);
+
 		if (!AllBlocks.BRASS_TUNNEL.has(adjacentBlockState))
 			return null;
 		if (adjacentBlockState.get(BrassTunnelBlock.HORIZONTAL_AXIS) != axis)

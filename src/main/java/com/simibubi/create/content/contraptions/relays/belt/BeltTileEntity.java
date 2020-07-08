@@ -1,10 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import static com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part.END;
-import static com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part.MIDDLE;
-import static com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope.DOWNWARD;
-import static com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope.HORIZONTAL;
-import static com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope.UPWARD;
+import static com.simibubi.create.content.contraptions.relays.belt.BeltPart.MIDDLE;
+import static com.simibubi.create.content.contraptions.relays.belt.BeltSlope.HORIZONTAL;
 import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
 import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
@@ -16,8 +13,6 @@ import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
@@ -286,7 +281,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	public boolean hasPulley() {
 		if (!AllBlocks.BELT.has(getBlockState()))
 			return false;
-		return getBlockState().get(BeltBlock.PART) != Part.MIDDLE;
+		return getBlockState().get(BeltBlock.PART) != BeltPart.MIDDLE;
 	}
 
 	protected boolean isLastBelt() {
@@ -294,16 +289,16 @@ public class BeltTileEntity extends KineticTileEntity {
 			return false;
 
 		Direction direction = getBeltFacing();
-		if (getBlockState().get(BeltBlock.SLOPE) == Slope.VERTICAL)
+		if (getBlockState().get(BeltBlock.SLOPE) == BeltSlope.VERTICAL)
 			return false;
 
-		Part part = getBlockState().get(BeltBlock.PART);
+		BeltPart part = getBlockState().get(BeltBlock.PART);
 		if (part == MIDDLE)
 			return false;
 
 		boolean movingPositively = (getSpeed() > 0 == (direction.getAxisDirection()
 			.getOffset() == 1)) ^ direction.getAxis() == Axis.X;
-		return part == Part.START ^ movingPositively;
+		return part == BeltPart.START ^ movingPositively;
 	}
 
 	public Vec3i getMovementDirection(boolean firstHalf) {
@@ -320,8 +315,8 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		final BlockState blockState = getBlockState();
 		final Direction beltFacing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
-		final Slope slope = blockState.get(BeltBlock.SLOPE);
-		final Part part = blockState.get(BeltBlock.PART);
+		final BeltSlope slope = blockState.get(BeltBlock.SLOPE);
+		final BeltPart part = blockState.get(BeltBlock.PART);
 		final Axis axis = beltFacing.getAxis();
 
 		Direction movementFacing = Direction.getFacingFromAxis(axis == Axis.X ? NEGATIVE : POSITIVE, axis);
@@ -330,9 +325,9 @@ public class BeltTileEntity extends KineticTileEntity {
 			movementFacing = movementFacing.getOpposite();
 		Vec3i movement = movementFacing.getDirectionVec();
 
-		boolean slopeBeforeHalf = (part == END) == (beltFacing.getAxisDirection() == POSITIVE);
+		boolean slopeBeforeHalf = (part == BeltPart.END) == (beltFacing.getAxisDirection() == POSITIVE);
 		boolean onSlope = notHorizontal && (part == MIDDLE || slopeBeforeHalf == firstHalf || ignoreHalves);
-		boolean movingUp = onSlope && slope == (movementFacing == beltFacing ? UPWARD : DOWNWARD);
+		boolean movingUp = onSlope && slope == (movementFacing == beltFacing ? BeltSlope.UPWARD : BeltSlope.DOWNWARD);
 
 		if (!onSlope)
 			return movement;

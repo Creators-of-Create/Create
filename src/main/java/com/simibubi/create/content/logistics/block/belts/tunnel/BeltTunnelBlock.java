@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.foundation.block.ITE;
@@ -80,7 +80,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		BlockState blockState = worldIn.getBlockState(pos.down());
 		if (!AllBlocks.BELT.has(blockState))
 			return false;
-		if (blockState.get(BeltBlock.SLOPE) != Slope.HORIZONTAL)
+		if (blockState.get(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL)
 			return false;
 		return true;
 	}

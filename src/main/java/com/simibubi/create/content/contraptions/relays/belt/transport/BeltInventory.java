@@ -11,9 +11,9 @@ import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
@@ -73,7 +73,7 @@ public class BeltInventory {
 		float beltSpeed = belt.getDirectionAwareBeltMovementSpeed();
 		Direction movementFacing = belt.getMovementFacing();
 		boolean horizontal = belt.getBlockState()
-			.get(BeltBlock.SLOPE) == Slope.HORIZONTAL;
+			.get(BeltBlock.SLOPE) == BeltSlope.HORIZONTAL;
 		float spacing = 1;
 		World world = belt.getWorld();
 		boolean onClient = world.isRemote;
