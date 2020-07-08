@@ -40,11 +40,16 @@ public class FilteringRenderer {
 		BlockState state = world.getBlockState(pos);
 
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
+		if (mc.player.isSneaking())
+			return;
 		if (behaviour == null)
 			return;
+		if (behaviour instanceof SidedFilteringBehaviour) {
+			behaviour = ((SidedFilteringBehaviour) behaviour).get(result.getFace());
+			if (behaviour == null)
+				return;
+		}
 		if (!behaviour.isActive())
-			return;
-		if (mc.player.isSneaking())
 			return;
 		if (behaviour.slotPositioning instanceof ValueBoxTransform.Sided)
 			((Sided) behaviour.slotPositioning).fromSide(result.getFace());
@@ -86,7 +91,7 @@ public class FilteringRenderer {
 		if (!behaviour.isActive())
 			return;
 		if (behaviour.getFilter()
-			.isEmpty())
+			.isEmpty() && !(behaviour instanceof SidedFilteringBehaviour))
 			return;
 
 		ValueBoxTransform slotPositioning = behaviour.slotPositioning;
@@ -96,13 +101,17 @@ public class FilteringRenderer {
 			ValueBoxTransform.Sided sided = (ValueBoxTransform.Sided) slotPositioning;
 			Direction side = sided.getSide();
 			for (Direction d : Iterate.directions) {
+				ItemStack filter = behaviour.getFilter(d);
+				if (filter.isEmpty())
+					continue;
+				
 				sided.fromSide(d);
 				if (!slotPositioning.shouldRender(blockState))
 					continue;
 
 				ms.push();
 				slotPositioning.transform(blockState, ms);
-				ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter(), ms, buffer, light, overlay);
+				ValueBoxRenderer.renderItemIntoValueBox(filter, ms, buffer, light, overlay);
 				ms.pop();
 			}
 			sided.fromSide(side);

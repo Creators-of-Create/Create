@@ -60,7 +60,6 @@ public class AllBlockPartials {
 		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"),
 		BELT_FUNNEL_FLAP = get("belt_funnel/flap"), 
 		BELT_TUNNEL_FLAP = get("belt_tunnel/flap"), 
-		BELT_TUNNEL_INDICATOR = get("belt_tunnel/indicator"),
 		FLEXPEATER_INDICATOR = get("diodes/indicator"), 
 		FLYWHEEL = get("flywheel/wheel"),
 		FLYWHEEL_UPPER_ROTATING = get("flywheel/upper_rotating_connector"),

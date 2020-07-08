@@ -62,7 +62,7 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 
 		ItemStack heldItem = player.getHeldItem(handIn);
 		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem);
-		
+
 		if (hit.getFace() == getFunnelFacing(state) && !shouldntInsertItem) {
 			if (!worldIn.isRemote)
 				withTileEntityDo(worldIn, pos, te -> {
@@ -188,6 +188,7 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 		boolean p_196243_5_) {
 		if (p_196243_1_.hasTileEntity() && (p_196243_1_.getBlock() != p_196243_4_.getBlock() && !isFunnel(p_196243_4_)
 			|| !p_196243_4_.hasTileEntity())) {
+			TileEntityBehaviour.destroy(p_196243_2_, p_196243_3_, FilteringBehaviour.TYPE);
 			p_196243_2_.removeTileEntity(p_196243_3_);
 		}
 	}

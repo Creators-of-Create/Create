@@ -6,6 +6,8 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -45,16 +47,14 @@ public class BeltTunnelInteractionHandler {
 			.up();
 		if (!(belt.getWorld()
 			.getBlockState(pos)
-			.getBlock() instanceof BeltTunnelBlock))
+			.getBlock() instanceof BrassTunnelBlock))
 			return false;
 		TileEntity te = belt.getWorld()
 			.getTileEntity(pos);
-		if (te == null || !(te instanceof BeltTunnelTileEntity))
+		if (te == null || !(te instanceof BrassTunnelTileEntity))
 			return false;
-
-		// TODO: ask TE if item can be inserted
-		
-		return false;
+		BrassTunnelTileEntity tunnel = (BrassTunnelTileEntity) te;
+		return !tunnel.canInsert(movementDirection.getOpposite(), stack);
 	}
 
 	public static void flapTunnel(BeltInventory beltInventory, int offset, Direction side, boolean inward) {

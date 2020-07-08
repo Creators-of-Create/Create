@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
+import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class BeltTunnelRenderer extends SafeTileEntityRenderer<BeltTunnelTileEntity> {
+public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEntity> {
 
 	public BeltTunnelRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -25,6 +25,7 @@ public class BeltTunnelRenderer extends SafeTileEntityRenderer<BeltTunnelTileEnt
 	@Override
 	protected void renderSafe(BeltTunnelTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
+		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		SuperByteBuffer flapBuffer = AllBlockPartials.BELT_TUNNEL_FLAP.renderOn(te.getBlockState());
 		BlockPos pos = te.getPos();
 		World world = te.getWorld();

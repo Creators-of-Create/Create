@@ -15,6 +15,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -125,6 +126,10 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		scrollableValue = count;
 	}
 
+	public void setFilter(Direction face, ItemStack stack) {
+		setFilter(stack);
+	}
+	
 	public void setFilter(ItemStack stack) {
 		filter = stack.copy();
 		callback.accept(filter);
@@ -146,6 +151,10 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		super.destroy();
 	}
 
+	public ItemStack getFilter(Direction side) {
+		return getFilter();
+	}
+	
 	public ItemStack getFilter() {
 		return filter.copy();
 	}

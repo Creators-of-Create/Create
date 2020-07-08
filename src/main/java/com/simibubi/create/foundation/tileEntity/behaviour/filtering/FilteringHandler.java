@@ -43,11 +43,16 @@ public class FilteringHandler {
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
 		if (behaviour == null)
 			return;
-		if (!behaviour.isActive())
-			return;
 
 		BlockRayTraceResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
+			return;
+		if (behaviour instanceof SidedFilteringBehaviour) {
+			behaviour = ((SidedFilteringBehaviour) behaviour).get(ray.getFace());
+			if (behaviour == null)
+				return;
+		}
+		if (!behaviour.isActive())
 			return;
 		if (behaviour.slotPositioning instanceof ValueBoxTransform.Sided)
 			((Sided) behaviour.slotPositioning).fromSide(ray.getFace());

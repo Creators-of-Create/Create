@@ -11,7 +11,7 @@ import net.minecraft.world.ILightReader;
 
 public abstract class ConnectedTextureBehaviour {
 
-	class CTContext {
+	public class CTContext {
 		boolean up, down, left, right;
 		boolean topLeft, topRight, bottomLeft, bottomRight;
 	}
@@ -47,7 +47,7 @@ public abstract class ConnectedTextureBehaviour {
 		return state.getBlock() == other.getBlock();
 	}
 
-	CTContext buildContext(ILightReader reader, BlockPos pos, BlockState state, Direction face) {
+	public CTContext buildContext(ILightReader reader, BlockPos pos, BlockState state, Direction face) {
 		CTContext context = new CTContext();
 		CTSpriteShiftEntry textureEntry = get(state, face);
 

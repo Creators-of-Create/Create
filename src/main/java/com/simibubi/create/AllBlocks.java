@@ -77,6 +77,8 @@ import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelCTBehaviour;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.block.chute.ChuteItem;
@@ -749,9 +751,10 @@ public class AllBlocks {
 			.transform(BuilderTransformers.beltTunnel("andesite", new ResourceLocation("block/polished_andesite")))
 			.register();
 
-	public static final BlockEntry<BeltTunnelBlock> BRASS_TUNNEL =
-		REGISTRATE.block("brass_tunnel", BeltTunnelBlock::new)
+	public static final BlockEntry<BrassTunnelBlock> BRASS_TUNNEL =
+		REGISTRATE.block("brass_tunnel", BrassTunnelBlock::new)
 			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
+			.onRegister(connectedTextures(new BrassTunnelCTBehaviour()))
 			.register();
 
 	public static final BlockEntry<RedstoneContactBlock> REDSTONE_CONTACT =

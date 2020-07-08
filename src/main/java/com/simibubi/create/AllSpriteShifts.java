@@ -47,6 +47,7 @@ public class AllSpriteShifts {
 		CHASSIS_STICKY = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end_sticky");
 	
 	public static final CTSpriteShiftEntry 
+		BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
 		FLUID_TANK = getCT(CTType.OMNIDIRECTIONAL, "fluid_tank");
 
 	public static final SpriteShiftEntry 

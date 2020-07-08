@@ -2,6 +2,7 @@
   "parent": "create:block/belt_tunnel/cross",
   "textures": {
     "0": "create:block/brass_tunnel",
+    "1": "create:block/brass_tunnel_top",
     "particle": "create:block/brass_block"
   }
 }

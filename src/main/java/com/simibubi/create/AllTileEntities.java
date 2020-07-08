@@ -72,6 +72,7 @@ import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverRe
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
 import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
@@ -157,8 +158,10 @@ public class AllTileEntities {
 	public static final TileEntityEntry<BeltTileEntity> BELT = register("belt", BeltTileEntity::new, AllBlocks.BELT);
 	public static final TileEntityEntry<ChuteTileEntity> CHUTE =
 		register("chute", ChuteTileEntity::new, AllBlocks.CHUTE);
-	public static final TileEntityEntry<BeltTunnelTileEntity> BELT_TUNNEL =
-		register("belt_tunnel", BeltTunnelTileEntity::new, AllBlocks.ANDESITE_TUNNEL, AllBlocks.BRASS_TUNNEL);
+	public static final TileEntityEntry<BeltTunnelTileEntity> ANDESITE_TUNNEL =
+		register("andesite_tunnel", BeltTunnelTileEntity::new, AllBlocks.ANDESITE_TUNNEL);
+	public static final TileEntityEntry<BrassTunnelTileEntity> BRASS_TUNNEL =
+		register("brass_tunnel", BrassTunnelTileEntity::new, AllBlocks.BRASS_TUNNEL);
 	public static final TileEntityEntry<ArmTileEntity> MECHANICAL_ARM =
 		register("mechanical_arm", ArmTileEntity::new, AllBlocks.MECHANICAL_ARM);
 	public static final TileEntityEntry<MechanicalPistonTileEntity> MECHANICAL_PISTON = register("mechanical_piston",
@@ -227,9 +230,9 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<DepotTileEntity> DEPOT =
 		register("depot", DepotTileEntity::new, AllBlocks.DEPOT);
-	public static final TileEntityEntry<FunnelTileEntity> FUNNEL = register("funnel",
-		FunnelTileEntity::new, AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.BRASS_CHUTE_FUNNEL,
-		AllBlocks.ANDESITE_FUNNEL, AllBlocks.ANDESITE_BELT_FUNNEL, AllBlocks.ANDESITE_CHUTE_FUNNEL);
+	public static final TileEntityEntry<FunnelTileEntity> FUNNEL = register("funnel", FunnelTileEntity::new,
+		AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.BRASS_CHUTE_FUNNEL, AllBlocks.ANDESITE_FUNNEL,
+		AllBlocks.ANDESITE_BELT_FUNNEL, AllBlocks.ANDESITE_CHUTE_FUNNEL);
 	public static final TileEntityEntry<PackagerTileEntity> PACKAGER =
 		register("packager", PackagerTileEntity::new, AllBlocks.PACKAGER);
 
@@ -313,7 +316,8 @@ public class AllTileEntities {
 		bind(TRANSPOSER, SmartTileEntityRenderer::new);
 		bind(LINKED_TRANSPOSER, SmartTileEntityRenderer::new);
 		bind(FUNNEL, FunnelRenderer::new);
-		bind(BELT_TUNNEL, BeltTunnelRenderer::new);
+		bind(ANDESITE_TUNNEL, BeltTunnelRenderer::new);
+		bind(BRASS_TUNNEL, BeltTunnelRenderer::new);
 		bind(MECHANICAL_ARM, ArmRenderer::new);
 		bind(BELT_OBSERVER, BeltObserverRenderer::new);
 		bind(ADJUSTABLE_REPEATER, AdjustableRepeaterRenderer::new);

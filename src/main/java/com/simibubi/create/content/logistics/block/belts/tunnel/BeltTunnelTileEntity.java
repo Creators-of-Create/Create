@@ -1,8 +1,10 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -11,10 +13,12 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.IntNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -31,8 +35,8 @@ import net.minecraftforge.items.IItemHandler;
 public class BeltTunnelTileEntity extends SmartTileEntity {
 
 	public HashMap<Direction, InterpolatedChasingValue> flaps;
-	private LazyOptional<IItemHandler> cap = LazyOptional.empty();
-	private List<Pair<Direction, Boolean>> flapsToSend;
+	protected LazyOptional<IItemHandler> cap = LazyOptional.empty();
+	protected List<Pair<Direction, Boolean>> flapsToSend;
 
 	public BeltTunnelTileEntity(TileEntityType<? extends BeltTunnelTileEntity> type) {
 		super(type);
@@ -48,11 +52,29 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
+		ListNBT flapsNBT = new ListNBT();
+		for (Direction direction : flaps.keySet())
+			flapsNBT.add(IntNBT.of(direction.getIndex()));
+		compound.put("Flaps", flapsNBT);
 		return super.write(compound);
 	}
 
 	@Override
 	public void read(CompoundNBT compound) {
+		Set<Direction> newFlaps = new HashSet<>(6);
+		ListNBT flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
+		for (INBT inbt : flapsNBT)
+			if (inbt instanceof IntNBT)
+				newFlaps.add(Direction.byIndex(((IntNBT) inbt).getInt()));
+		
+		for (Direction d : Iterate.directions) 
+			if (!newFlaps.contains(d))
+				flaps.remove(d);
+			else if (!flaps.containsKey(d))
+				flaps.put(d, new InterpolatedChasingValue().start(.25f)
+					.target(0)
+					.withSpeed(.05f));
+
 		super.read(compound);
 	}
 
@@ -68,7 +90,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 				flap.putBoolean("FlapInward", pair.getValue());
 				flapsNBT.add(flap);
 			}
-			writeToClient.put("Flaps", flapsNBT);
+			writeToClient.put("TriggerFlaps", flapsNBT);
 			flapsToSend.clear();
 		}
 		return writeToClient;
@@ -77,21 +99,17 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 	@Override
 	public void readClientUpdate(CompoundNBT tag) {
 		super.readClientUpdate(tag);
-		if (tag.contains("Flaps")) {
-			ListNBT flapsNBT = tag.getList("Flaps", NBT.TAG_COMPOUND);
+		if (tag.contains("TriggerFlaps")) {
+			ListNBT flapsNBT = tag.getList("TriggerFlaps", NBT.TAG_COMPOUND);
 			for (INBT inbt : flapsNBT) {
 				CompoundNBT flap = (CompoundNBT) inbt;
 				Direction side = Direction.byIndex(flap.getInt("Flap"));
 				flap(side, flap.getBoolean("FlapInward"));
 			}
-		} else {
-			initFlaps();
 		}
 	}
 
-	public void initFlaps() {
-		if (!world.isRemote)
-			sendData();
+	public void updateTunnelConnections() {
 		flaps.clear();
 		BlockState tunnelState = getBlockState();
 		for (Direction direction : Direction.values()) {
@@ -116,6 +134,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 				.target(0)
 				.withSpeed(.05f));
 		}
+		sendData();
 	}
 
 	public void flap(Direction side, boolean inward) {
@@ -132,7 +151,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 	@Override
 	public void initialize() {
 		super.initialize();
-		initFlaps();
+//		updateTunnelConnections();
 	}
 
 	@Override

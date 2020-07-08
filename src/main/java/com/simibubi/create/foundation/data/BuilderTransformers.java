@@ -92,6 +92,7 @@ public class BuilderTransformers {
 						.modelFile(p.models()
 							.withExistingParent(id + "/" + shapeName, p.modLoc("block/belt_tunnel/" + shapeName))
 							.texture("0", p.modLoc(id))
+							.texture("1", p.modLoc(id + "_top"))
 							.texture("particle", particleTexture))
 						.rotationY(state.get(BeltTunnelBlock.HORIZONTAL_AXIS) == Axis.X ? 0 : 90)
 						.build();
@@ -101,6 +102,7 @@ public class BuilderTransformers {
 				String id = type + "_tunnel";
 				p.withExistingParent("item/" + id, p.modLoc("block/belt_tunnel/item"))
 					.texture("0", p.modLoc("block/" + id))
+					.texture("1", p.modLoc("block/" + id + "_top"))
 					.texture("particle", particleTexture);
 			})
 			.build();
