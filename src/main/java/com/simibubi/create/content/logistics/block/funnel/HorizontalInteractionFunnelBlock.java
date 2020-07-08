@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
@@ -28,9 +28,9 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty PUSHING = BooleanProperty.create("pushing");
-	private BlockEntry<? extends RealityFunnelBlock> parent;
+	private BlockEntry<? extends FunnelBlock> parent;
 
-	public HorizontalInteractionFunnelBlock(BlockEntry<? extends RealityFunnelBlock> parent, Properties p_i48377_1_) {
+	public HorizontalInteractionFunnelBlock(BlockEntry<? extends FunnelBlock> parent, Properties p_i48377_1_) {
 		super(p_i48377_1_);
 		this.parent = parent;
 		BlockState defaultState = getDefaultState().with(PUSHING, true);
@@ -48,7 +48,7 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return AllTileEntities.REALITY_FUNNEL.create();
+		return AllTileEntities.FUNNEL.create();
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 	public void onReplaced(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
 		boolean p_196243_5_) {
 		if (p_196243_1_.hasTileEntity()
-			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() && !RealityFunnelBlock.isFunnel(p_196243_4_)
+			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() && !FunnelBlock.isFunnel(p_196243_4_)
 				|| !p_196243_4_.hasTileEntity())) {
 			p_196243_2_.removeTileEntity(p_196243_3_);
 		}
@@ -88,7 +88,7 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 		BlockPos pos, BlockPos p_196271_6_) {
 		if (!canStillInteract(state, world, pos))
 			return parent.getDefaultState()
-				.with(RealityFunnelBlock.FACING, state.get(HORIZONTAL_FACING));
+				.with(FunnelBlock.FACING, state.get(HORIZONTAL_FACING));
 		return state;
 	}
 

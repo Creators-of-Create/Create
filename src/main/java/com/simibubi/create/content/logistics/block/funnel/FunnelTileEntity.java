@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
-import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelBlock.Shape;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -29,7 +29,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
-public class RealityFunnelTileEntity extends SmartTileEntity {
+public class FunnelTileEntity extends SmartTileEntity {
 
 	private FilteringBehaviour filtering;
 	private InsertingBehaviour inserting;
@@ -42,7 +42,7 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 		INVALID, PAUSED, COLLECT, BELT, CHUTE_SIDE, CHUTE_END
 	}
 
-	public RealityFunnelTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public FunnelTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		flap = new InterpolatedChasingValue().start(.25f)
 			.target(0)
@@ -51,7 +51,7 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 
 	public Mode determineCurrentMode() {
 		BlockState state = getBlockState();
-		if (!RealityFunnelBlock.isFunnel(state))
+		if (!FunnelBlock.isFunnel(state))
 			return Mode.INVALID;
 		if (state.has(BlockStateProperties.POWERED) && state.get(BlockStateProperties.POWERED))
 			return Mode.PAUSED;
@@ -60,7 +60,7 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 		if (state.getBlock() instanceof ChuteFunnelBlock)
 			return Mode.CHUTE_SIDE;
 
-		Direction facing = RealityFunnelBlock.getFunnelFacing(state);
+		Direction facing = FunnelBlock.getFunnelFacing(state);
 		BlockState input = world.getBlockState(pos.offset(facing));
 
 		if (AllBlocks.CHUTE.has(input))
@@ -85,7 +85,7 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 	public void tickAsHorizontalChuteFunnel() {
 		if (!getBlockState().get(ChuteFunnelBlock.PUSHING))
 			return;
-		BlockPos chutePos = pos.offset(RealityFunnelBlock.getFunnelFacing(getBlockState()));
+		BlockPos chutePos = pos.offset(FunnelBlock.getFunnelFacing(getBlockState()));
 		TileEntity te = world.getTileEntity(chutePos);
 		if (!(te instanceof ChuteTileEntity))
 			return;
@@ -97,7 +97,7 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 	}
 
 	public void tickAsVerticalChuteFunnel() {
-		Direction funnelFacing = RealityFunnelBlock.getFunnelFacing(getBlockState());
+		Direction funnelFacing = FunnelBlock.getFunnelFacing(getBlockState());
 		BlockPos chutePos = pos.offset(funnelFacing);
 		TileEntity te = world.getTileEntity(chutePos);
 		if (!(te instanceof ChuteTileEntity))
@@ -167,7 +167,7 @@ public class RealityFunnelTileEntity extends SmartTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		Supplier<List<Pair<BlockPos, Direction>>> direction =
-			Attachments.toward(() -> RealityFunnelBlock.getFunnelFacing(getBlockState())
+			Attachments.toward(() -> FunnelBlock.getFunnelFacing(getBlockState())
 				.getOpposite());
 
 		inserting = new InsertingBehaviour(this, direction);

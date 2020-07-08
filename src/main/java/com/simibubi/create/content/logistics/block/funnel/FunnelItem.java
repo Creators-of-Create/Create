@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -32,14 +32,14 @@ public class FunnelItem extends BlockItem {
 		BlockState state = super.getStateForPlacement(ctx);
 		if (state == null)
 			return state;
-		if (!(state.getBlock() instanceof RealityFunnelBlock))
+		if (!(state.getBlock() instanceof FunnelBlock))
 			return state;
-		Direction direction = state.get(RealityFunnelBlock.FACING);
+		Direction direction = state.get(FunnelBlock.FACING);
 		if (!direction.getAxis()
 			.isHorizontal())
 			return state;
 
-		RealityFunnelBlock block = (RealityFunnelBlock) getBlock();
+		FunnelBlock block = (FunnelBlock) getBlock();
 		Block beltFunnelBlock = block.getEquivalentBeltFunnel(state)
 			.getBlock();
 		Block chuteFunnelBlock = block.getEquivalentChuteFunnel(state)

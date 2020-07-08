@@ -5,7 +5,8 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelBlock;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
@@ -69,7 +70,7 @@ public abstract class ArmInteractionPoint {
 
 	static boolean isInteractable(BlockState state) {
 		return AllBlocks.DEPOT.has(state) || AllBlocks.BELT.has(state) || AllBlocks.CHUTE.has(state)
-			|| state.getBlock() instanceof RealityFunnelBlock;
+			|| state.getBlock() instanceof FunnelBlock;
 	}
 
 	ArmAngleTarget getTargetAngles(BlockPos armPos) {
@@ -121,11 +122,12 @@ public abstract class ArmInteractionPoint {
 
 		if (AllBlocks.DEPOT.has(state))
 			point = new Depot();
-		if (AllBlocks.BELT.has(state))
+		if (AllBlocks.BELT.has(state) && !(world.getBlockState(pos.up())
+			.getBlock() instanceof BeltTunnelBlock))
 			point = new Belt();
 		if (AllBlocks.CHUTE.has(state))
 			point = new Chute();
-		if (state.getBlock() instanceof RealityFunnelBlock)
+		if (state.getBlock() instanceof FunnelBlock)
 			point = new Funnel();
 
 		if (point != null) {
@@ -193,7 +195,7 @@ public abstract class ArmInteractionPoint {
 		@Override
 		Vec3d getInteractionPositionVector() {
 			return VecHelper.getCenterOf(pos)
-				.add(new Vec3d(RealityFunnelBlock.getFunnelFacing(state)
+				.add(new Vec3d(FunnelBlock.getFunnelFacing(state)
 					.getDirectionVec()).scale(.5f));
 		}
 
@@ -209,7 +211,7 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		Direction getInteractionDirection() {
-			return RealityFunnelBlock.getFunnelFacing(state)
+			return FunnelBlock.getFunnelFacing(state)
 				.getOpposite();
 		}
 
@@ -226,7 +228,7 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		boolean isValid(BlockState state) {
-			return state.getBlock() instanceof RealityFunnelBlock;
+			return state.getBlock() instanceof FunnelBlock;
 		}
 
 		@Override

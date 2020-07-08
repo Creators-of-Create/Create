@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -47,7 +47,7 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 		}
 	}
 
-	public BeltFunnelBlock(BlockEntry<? extends RealityFunnelBlock> parent, Properties p_i48377_1_) {
+	public BeltFunnelBlock(BlockEntry<? extends FunnelBlock> parent, Properties p_i48377_1_) {
 		super(parent, p_i48377_1_);
 		setDefaultState(getDefaultState().with(SHAPE, Shape.RETRACTED));
 	}

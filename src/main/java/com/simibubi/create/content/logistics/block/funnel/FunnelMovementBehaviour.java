@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import java.util.List;
 

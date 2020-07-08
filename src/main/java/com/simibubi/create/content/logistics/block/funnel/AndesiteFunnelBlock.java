@@ -1,11 +1,11 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.AllBlocks;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 
-public class AndesiteFunnelBlock extends RealityFunnelBlock {
+public class AndesiteFunnelBlock extends FunnelBlock {
 
 	public AndesiteFunnelBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);

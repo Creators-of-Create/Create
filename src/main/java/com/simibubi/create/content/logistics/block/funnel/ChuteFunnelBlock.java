@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
@@ -14,7 +14,7 @@ import net.minecraft.world.IWorldReader;
 
 public abstract class ChuteFunnelBlock extends HorizontalInteractionFunnelBlock {
 
-	public ChuteFunnelBlock(BlockEntry<? extends RealityFunnelBlock> parent, Properties p_i48377_1_) {
+	public ChuteFunnelBlock(BlockEntry<? extends FunnelBlock> parent, Properties p_i48377_1_) {
 		super(parent, p_i48377_1_);
 	}
 

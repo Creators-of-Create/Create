@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelBlock;
-import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelTileEntity;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
@@ -45,10 +45,10 @@ public class BeltFunnelInteractionHandler {
 				return true;
 
 			TileEntity te = world.getTileEntity(funnelPos);
-			if (!(te instanceof RealityFunnelTileEntity))
+			if (!(te instanceof FunnelTileEntity))
 				return true;
 
-			RealityFunnelTileEntity funnelTE = (RealityFunnelTileEntity) te;
+			FunnelTileEntity funnelTE = (FunnelTileEntity) te;
 			InsertingBehaviour inserting = TileEntityBehaviour.get(funnelTE, InsertingBehaviour.TYPE);
 			FilteringBehaviour filtering = TileEntityBehaviour.get(funnelTE, FilteringBehaviour.TYPE);
 

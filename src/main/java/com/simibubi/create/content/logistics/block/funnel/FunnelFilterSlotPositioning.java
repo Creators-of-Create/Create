@@ -1,8 +1,8 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.logistics.block.realityFunnel.BeltFunnelBlock.Shape;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.DirectionHelper;
@@ -43,7 +43,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 	@Override
 	protected void rotate(BlockState state, MatrixStack ms) {
-		Direction facing = RealityFunnelBlock.getFunnelFacing(state);
+		Direction facing = FunnelBlock.getFunnelFacing(state);
 
 		if (!facing.getAxis()
 			.isVertical()
@@ -76,7 +76,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 	@Override
 	protected boolean isSideActive(BlockState state, Direction direction) {
-		Direction facing = RealityFunnelBlock.getFunnelFacing(state);
+		Direction facing = FunnelBlock.getFunnelFacing(state);
 
 		if (facing == null)
 			return false;

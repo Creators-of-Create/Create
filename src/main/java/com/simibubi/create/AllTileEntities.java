@@ -81,14 +81,14 @@ import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRend
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.extractor.ExtractorTileEntity;
 import com.simibubi.create.content.logistics.block.extractor.LinkedExtractorTileEntity;
+import com.simibubi.create.content.logistics.block.funnel.FunnelRenderer;
+import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
 import com.simibubi.create.content.logistics.block.packager.PackagerRenderer;
 import com.simibubi.create.content.logistics.block.packager.PackagerTileEntity;
-import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelRenderer;
-import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverRenderer;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
@@ -227,8 +227,8 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<DepotTileEntity> DEPOT =
 		register("depot", DepotTileEntity::new, AllBlocks.DEPOT);
-	public static final TileEntityEntry<RealityFunnelTileEntity> REALITY_FUNNEL = register("reality_funnel",
-		RealityFunnelTileEntity::new, AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.BRASS_CHUTE_FUNNEL,
+	public static final TileEntityEntry<FunnelTileEntity> FUNNEL = register("funnel",
+		FunnelTileEntity::new, AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.BRASS_CHUTE_FUNNEL,
 		AllBlocks.ANDESITE_FUNNEL, AllBlocks.ANDESITE_BELT_FUNNEL, AllBlocks.ANDESITE_CHUTE_FUNNEL);
 	public static final TileEntityEntry<PackagerTileEntity> PACKAGER =
 		register("packager", PackagerTileEntity::new, AllBlocks.PACKAGER);
@@ -312,7 +312,7 @@ public class AllTileEntities {
 		bind(LINKED_EXTRACTOR, SmartTileEntityRenderer::new);
 		bind(TRANSPOSER, SmartTileEntityRenderer::new);
 		bind(LINKED_TRANSPOSER, SmartTileEntityRenderer::new);
-		bind(REALITY_FUNNEL, RealityFunnelRenderer::new);
+		bind(FUNNEL, FunnelRenderer::new);
 		bind(BELT_TUNNEL, BeltTunnelRenderer::new);
 		bind(MECHANICAL_ARM, ArmRenderer::new);
 		bind(BELT_OBSERVER, BeltObserverRenderer::new);

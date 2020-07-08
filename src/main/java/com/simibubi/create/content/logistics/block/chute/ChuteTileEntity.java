@@ -10,9 +10,9 @@ import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
-import com.simibubi.create.content.logistics.block.realityFunnel.BrassFunnelBlock;
-import com.simibubi.create.content.logistics.block.realityFunnel.ChuteFunnelBlock;
-import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.ChuteFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -152,7 +152,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				return false;
 			if (stateBelow.get(BrassFunnelBlock.FACING) != Direction.UP)
 				return false;
-			ItemStack remainder = RealityFunnelBlock.tryInsert(world, pos.down(), item, simulate);
+			ItemStack remainder = FunnelBlock.tryInsert(world, pos.down(), item, simulate);
 			if (!simulate)
 				setItem(remainder);
 			return remainder.isEmpty();
@@ -190,7 +190,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (AllBlocks.BRASS_FUNNEL.has(stateAbove)) {
 			if (!stateAbove.get(BrassFunnelBlock.POWERED)
 				&& stateAbove.get(BrassFunnelBlock.FACING) == Direction.DOWN) {
-				ItemStack remainder = RealityFunnelBlock.tryInsert(world, pos.up(), item, simulate);
+				ItemStack remainder = FunnelBlock.tryInsert(world, pos.up(), item, simulate);
 				if (remainder.isEmpty()) {
 					if (!simulate)
 						setItem(remainder);
@@ -250,7 +250,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 					continue;
 				if (funnelState.get(ChuteFunnelBlock.PUSHING))
 					continue;
-				ItemStack remainder = RealityFunnelBlock.tryInsert(world, funnelPos, item.copy(), world.isRemote);
+				ItemStack remainder = FunnelBlock.tryInsert(world, funnelPos, item.copy(), world.isRemote);
 				if (remainder.getCount() != item.getCount() && !world.isRemote)
 					setItem(remainder);
 			}

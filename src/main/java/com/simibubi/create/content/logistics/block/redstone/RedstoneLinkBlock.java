@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -165,7 +165,7 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 		BlockPos neighbourPos = pos.offset(state.get(FACING)
 			.getOpposite());
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
-		if (RealityFunnelBlock.isFunnel(neighbour))
+		if (FunnelBlock.isFunnel(neighbour))
 			return true;
 		return Block.hasSolidSide(neighbour, worldIn, neighbourPos, state.get(FACING));
 	}

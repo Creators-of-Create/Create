@@ -10,9 +10,10 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonGenerator;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
 import com.simibubi.create.content.logistics.block.inventories.CrateBlock;
-import com.simibubi.create.content.logistics.block.realityFunnel.FunnelItem;
-import com.simibubi.create.content.logistics.block.realityFunnel.RealityFunnelBlock;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
 import com.simibubi.create.foundation.config.StressConfigDefaults;
@@ -50,7 +51,7 @@ public class BuilderTransformers {
 			.simpleItem();
 	}
 
-	public static <B extends RealityFunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> funnel(
+	public static <B extends FunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> funnel(
 		String type, ResourceLocation particleTexture) {
 		return b -> {
 			return b.blockstate((c, p) -> {
@@ -95,7 +96,7 @@ public class BuilderTransformers {
 						.rotationY(state.get(BeltTunnelBlock.HORIZONTAL_AXIS) == Axis.X ? 0 : 90)
 						.build();
 				}))
-			.item()
+			.item(BeltTunnelItem::new)
 			.model((c, p) -> {
 				String id = type + "_tunnel";
 				p.withExistingParent("item/" + id, p.modLoc("block/belt_tunnel/item"))

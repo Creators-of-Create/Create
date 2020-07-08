@@ -1,8 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
-import java.util.List;
-
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
@@ -46,40 +43,18 @@ public class BeltTunnelInteractionHandler {
 		BeltTileEntity belt = beltInventory.belt;
 		BlockPos pos = BeltHelper.getPositionForOffset(belt, offset)
 			.up();
-		if (!AllBlocks.BRASS_TUNNEL.has(belt.getWorld()
-			.getBlockState(pos)))
+		if (!(belt.getWorld()
+			.getBlockState(pos)
+			.getBlock() instanceof BeltTunnelBlock))
 			return false;
 		TileEntity te = belt.getWorld()
 			.getTileEntity(pos);
 		if (te == null || !(te instanceof BeltTunnelTileEntity))
 			return false;
 
-		Direction flapFacing = movementDirection.getOpposite();
-
-		BeltTunnelTileEntity tunnel = (BeltTunnelTileEntity) te;
-		if (!tunnel.flaps.containsKey(flapFacing))
-			return false;
-		if (!tunnel.syncedFlaps.containsKey(flapFacing))
-			return false;
-		ItemStack heldItem = tunnel.syncedFlaps.get(flapFacing);
-		if (heldItem == null) {
-			tunnel.syncedFlaps.put(flapFacing, ItemStack.EMPTY);
-			belt.sendData();
-			return false;
-		}
-		if (heldItem == ItemStack.EMPTY) {
-			tunnel.syncedFlaps.put(flapFacing, stack);
-			return true;
-		}
-
-		List<BeltTunnelTileEntity> group = BeltTunnelBlock.getSynchronizedGroup(belt.getWorld(), pos, flapFacing);
-		for (BeltTunnelTileEntity otherTunnel : group)
-			if (otherTunnel.syncedFlaps.get(flapFacing) == ItemStack.EMPTY)
-				return true;
-		for (BeltTunnelTileEntity otherTunnel : group)
-			otherTunnel.syncedFlaps.put(flapFacing, null);
-
-		return true;
+		// TODO: ask TE if item can be inserted
+		
+		return false;
 	}
 
 	public static void flapTunnel(BeltInventory beltInventory, int offset, Direction side, boolean inward) {

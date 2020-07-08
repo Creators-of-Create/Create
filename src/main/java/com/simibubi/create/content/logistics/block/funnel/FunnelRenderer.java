@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -15,14 +15,14 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public class RealityFunnelRenderer extends SmartTileEntityRenderer<RealityFunnelTileEntity> {
+public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 
-	public RealityFunnelRenderer(TileEntityRendererDispatcher dispatcher) {
+	public FunnelRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
-	protected void renderSafe(RealityFunnelTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderSafe(FunnelTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
@@ -34,7 +34,7 @@ public class RealityFunnelRenderer extends SmartTileEntityRenderer<RealityFunnel
 		Vec3d pivot = VecHelper.voxelSpace(0, 10, 9.5f);
 		MatrixStacker msr = MatrixStacker.of(ms);
 
-		float horizontalAngle = AngleHelper.horizontalAngle(RealityFunnelBlock.getFunnelFacing(te.getBlockState())
+		float horizontalAngle = AngleHelper.horizontalAngle(FunnelBlock.getFunnelFacing(te.getBlockState())
 			.getOpposite());
 		float f = te.flap.get(partialTicks);
 

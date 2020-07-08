@@ -1,7 +1,8 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
@@ -35,9 +36,9 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public abstract class RealityFunnelBlock extends ProperDirectionalBlock implements ITE<RealityFunnelTileEntity> {
+public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<FunnelTileEntity> {
 
-	public RealityFunnelBlock(Properties p_i48415_1_) {
+	public FunnelBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
 	}
 
@@ -59,13 +60,15 @@ public abstract class RealityFunnelBlock extends ProperDirectionalBlock implemen
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
 
-		if (hit.getFace() == getFunnelFacing(state)) {
+		ItemStack heldItem = player.getHeldItem(handIn);
+		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem);
+		
+		if (hit.getFace() == getFunnelFacing(state) && !shouldntInsertItem) {
 			if (!worldIn.isRemote)
 				withTileEntityDo(worldIn, pos, te -> {
-					ItemStack heldItem = player.getHeldItem(handIn)
-						.copy();
-					ItemStack remainder = tryInsert(worldIn, pos, heldItem, false);
-					if (!ItemStack.areItemStacksEqual(remainder, heldItem))
+					ItemStack toInsert = heldItem.copy();
+					ItemStack remainder = tryInsert(worldIn, pos, toInsert, false);
+					if (!ItemStack.areItemStacksEqual(remainder, toInsert))
 						player.setHeldItem(handIn, remainder);
 				});
 			return ActionResultType.SUCCESS;
@@ -119,18 +122,18 @@ public abstract class RealityFunnelBlock extends ProperDirectionalBlock implemen
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return AllTileEntities.REALITY_FUNNEL.create();
+		return AllTileEntities.FUNNEL.create();
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-		return AllShapes.REALITY_FUNNEL.get(state.get(FACING));
+		return AllShapes.FUNNEL.get(state.get(FACING));
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
 		if (context.getEntity() instanceof ItemEntity)
-			return AllShapes.REALITY_FUNNEL_COLLISION.get(state.get(FACING));
+			return AllShapes.FUNNEL_COLLISION.get(state.get(FACING));
 		return getShape(state, world, pos, context);
 	}
 
@@ -168,7 +171,7 @@ public abstract class RealityFunnelBlock extends ProperDirectionalBlock implemen
 		Block block = world.getBlockState(pos.offset(state.get(FACING)
 			.getOpposite()))
 			.getBlock();
-		return !(block instanceof RealityFunnelBlock) && !(block instanceof HorizontalInteractionFunnelBlock);
+		return !(block instanceof FunnelBlock) && !(block instanceof HorizontalInteractionFunnelBlock);
 	}
 
 	@Nullable
@@ -195,13 +198,12 @@ public abstract class RealityFunnelBlock extends ProperDirectionalBlock implemen
 
 	@Nullable
 	public static boolean isFunnel(BlockState state) {
-		return state.getBlock() instanceof RealityFunnelBlock
-			|| state.getBlock() instanceof HorizontalInteractionFunnelBlock;
+		return state.getBlock() instanceof FunnelBlock || state.getBlock() instanceof HorizontalInteractionFunnelBlock;
 	}
 
 	@Override
-	public Class<RealityFunnelTileEntity> getTileEntityClass() {
-		return RealityFunnelTileEntity.class;
+	public Class<FunnelTileEntity> getTileEntityClass() {
+		return FunnelTileEntity.class;
 	}
 
 }

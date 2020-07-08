@@ -21,6 +21,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandlerBeltSegment;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -432,6 +433,9 @@ public class BeltTileEntity extends KineticTileEntity {
 		transportedStack.insertedAt = index;
 		transportedStack.insertedFrom = side;
 		transportedStack.prevBeltPosition = transportedStack.beltPosition;
+
+		BeltTunnelInteractionHandler.flapTunnel(nextInventory, index, side.getOpposite(), true);
+
 		nextInventory.addItem(transportedStack);
 		nextBeltController.markDirty();
 		nextBeltController.sendData();

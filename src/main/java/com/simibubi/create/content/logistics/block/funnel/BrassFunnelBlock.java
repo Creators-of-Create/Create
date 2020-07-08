@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.block.realityFunnel;
+package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.AllBlocks;
 
@@ -12,7 +12,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BrassFunnelBlock extends RealityFunnelBlock {
+public class BrassFunnelBlock extends FunnelBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 

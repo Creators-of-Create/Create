@@ -1,14 +1,11 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Slope;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
@@ -72,11 +69,18 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		BlockState blockState = worldIn.getBlockState(pos.down());
+		if (!isValidPositionForPlacement(state, worldIn, pos))
+			return false;
+		if (!blockState.get(BeltBlock.CASING))
+			return false;
+		return true;
+	}
+	
+	public boolean isValidPositionForPlacement(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		BlockState blockState = worldIn.getBlockState(pos.down());
 		if (!AllBlocks.BELT.has(blockState))
 			return false;
 		if (blockState.get(BeltBlock.SLOPE) != Slope.HORIZONTAL)
-			return false;
-		if (!blockState.get(BeltBlock.CASING))
 			return false;
 		return true;
 	}
@@ -98,10 +102,12 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld worldIn,
 		BlockPos currentPos, BlockPos facingPos) {
+		if (facing.getAxis()
+			.isVertical())
+			return state;
 		if (!(worldIn instanceof WrappedWorld))
 			withTileEntityDo(worldIn, currentPos, BeltTunnelTileEntity::initFlaps);
 		BlockState tunnelState = getTunnelState(worldIn, currentPos);
-
 		if (tunnelState.get(HORIZONTAL_AXIS) == state.get(HORIZONTAL_AXIS)) {
 			if (hasWindow(tunnelState) == hasWindow(state))
 				return state;
@@ -119,29 +125,6 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 			if (te != null && (te instanceof BeltTunnelTileEntity))
 				((BeltTunnelTileEntity) te).initFlaps();
 		}
-	}
-
-	public static List<BeltTunnelTileEntity> getSynchronizedGroup(World world, BlockPos pos, Direction flapFacing) {
-		List<BeltTunnelTileEntity> group = new ArrayList<>();
-		Direction searchDirection = flapFacing.rotateY();
-
-		for (Direction d : Arrays.asList(searchDirection, searchDirection.getOpposite())) {
-			BlockPos currentPos = pos;
-			while (true) {
-				if (!world.isBlockPresent(currentPos))
-					break;
-				TileEntity te = world.getTileEntity(currentPos);
-				if (te == null || !(te instanceof BeltTunnelTileEntity))
-					break;
-				BeltTunnelTileEntity tunnel = (BeltTunnelTileEntity) te;
-				if (!tunnel.syncedFlaps.containsKey(flapFacing))
-					break;
-				group.add(tunnel);
-				currentPos = currentPos.offset(d);
-			}
-		}
-
-		return group;
 	}
 
 	private BlockState getTunnelState(IBlockReader reader, BlockPos pos) {
@@ -175,7 +158,13 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 			Direction fw = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
 			BlockState blockState1 = reader.getBlockState(pos.offset(fw));
 			BlockState blockState2 = reader.getBlockState(pos.offset(fw.getOpposite()));
-			if (blockState1.getBlock() instanceof BeltTunnelBlock && blockState2.getBlock() instanceof BeltTunnelBlock)
+			boolean valid1 =
+				blockState1.getBlock() instanceof BeltTunnelBlock || blockState1.getBlock() instanceof BeltFunnelBlock
+					&& blockState1.get(BeltFunnelBlock.HORIZONTAL_FACING) == fw.getOpposite();
+			boolean valid2 =
+				blockState2.getBlock() instanceof BeltTunnelBlock || blockState2.getBlock() instanceof BeltFunnelBlock
+					&& blockState2.get(BeltFunnelBlock.HORIZONTAL_FACING) == fw;
+			if (valid1 && valid2)
 				state = state.with(SHAPE, Shape.WINDOW);
 		}
 
@@ -184,10 +173,6 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-
-		// Toggle sync
-		if (toggleSync(context.getWorld(), context.getPos(), context.getFace()))
-			return ActionResultType.SUCCESS;
 
 		// Toggle windows
 		if (!hasWindow(state))
@@ -210,14 +195,6 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 			context.getWorld()
 				.setBlockState(context.getPos(), state.with(SHAPE, next), 2);
 		return ActionResultType.SUCCESS;
-	}
-
-	private boolean toggleSync(World world, BlockPos pos, Direction face) {
-		TileEntity te = world.getTileEntity(pos);
-		if (te == null || !(te instanceof BeltTunnelTileEntity))
-			return false;
-		BeltTunnelTileEntity tunnel = (BeltTunnelTileEntity) te;
-		return tunnel.toggleSyncForFlap(face);
 	}
 
 	@Override
