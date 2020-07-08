@@ -43,7 +43,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return AllTileEntities.BASIN.create();
 	}
-	
+
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		return ActionResultType.FAIL;
@@ -51,8 +51,9 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
-		if (!player.getHeldItem(handIn).isEmpty())
+		BlockRayTraceResult hit) {
+		if (!player.getHeldItem(handIn)
+			.isEmpty())
 			return ActionResultType.PASS;
 
 		try {
@@ -63,7 +64,8 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
 			}
 			te.onEmptied();
-		} catch (TileEntityException e) {}
+		} catch (TileEntityException e) {
+		}
 
 		return ActionResultType.SUCCESS;
 	}
@@ -79,15 +81,15 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			return;
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 		withTileEntityDo(worldIn, entityIn.getPosition(), te -> {
-			ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputInventory, itemEntity.getItem().copy(), false);
+			ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputItemInventory, itemEntity.getItem()
+				.copy(), false);
 
 			if (insertItem.isEmpty()) {
 				itemEntity.remove();
 
 				if (!itemEntity.world.isRemote)
-					AllTriggers
-							.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.world,
-									itemEntity.getPosition(), 3);
+					AllTriggers.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.world,
+						itemEntity.getPosition(), 3);
 				return;
 			}
 
@@ -107,8 +109,8 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		}
 
 		withTileEntityDo(worldIn, pos, te -> {
-			ItemHelper.dropContents(worldIn, pos, te.inputInventory);
-			ItemHelper.dropContents(worldIn, pos, te.outputInventory);
+			ItemHelper.dropContents(worldIn, pos, te.inputItemInventory);
+			ItemHelper.dropContents(worldIn, pos, te.outputItemInventory);
 		});
 		worldIn.removeTileEntity(pos);
 	}
@@ -121,8 +123,9 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
 		try {
-			return ItemHelper.calcRedstoneFromInventory(getTileEntity(worldIn, pos).inputInventory);
-		} catch (TileEntityException e) {}
+			return ItemHelper.calcRedstoneFromInventory(getTileEntity(worldIn, pos).inputItemInventory);
+		} catch (TileEntityException e) {
+		}
 		return 0;
 	}
 

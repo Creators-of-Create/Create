@@ -39,7 +39,7 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
-	private static Object compressingRecipesKey = new Object();
+	private static final Object compressingRecipesKey = new Object();
 	public List<ItemStack> pressedItems = new ArrayList<>();
 
 	public static class PressingInv extends RecipeWrapper {
@@ -55,12 +55,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 		float headOffset;
 
-		private Mode(float headOffset) {
+		Mode(float headOffset) {
 			this.headOffset = headOffset;
 		}
 	}
 
-	private static PressingInv pressingInv = new PressingInv();
+	private static final PressingInv pressingInv = new PressingInv();
 	public BeltProcessingBehaviour processingBehaviour;
 
 	public int runningTicks;
@@ -128,10 +128,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 				float num = (runningTicks - 1 + partialTicks) / 30f;
 				return MathHelper.clamp(num * num * num, 0, mode.headOffset);
 			}
-			if (runningTicks >= 40) {
-				return MathHelper.clamp(((60 - runningTicks) + 1 - partialTicks) / 20f * mode.headOffset, 0,
-					mode.headOffset);
-			}
+			return MathHelper.clamp(((60 - runningTicks) + 1 - partialTicks) / 20f * mode.headOffset, 0,
+				mode.headOffset);
 		}
 		return 0;
 	}
@@ -148,10 +146,6 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		return mode == Mode.WORLD;
 	}
 
-	public boolean onBelt() {
-		return mode == Mode.BELT;
-	}
-
 	public boolean onBasin() {
 		return mode == Mode.BASIN;
 	}
@@ -160,7 +154,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public void tick() {
 		super.tick();
 
-		if (!running)
+		if (!running || world == null)
 			return;
 
 		if (runningTicks == 30) {
@@ -190,8 +184,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 				if (!world.isRemote) {
 					pressedItems.clear();
 					applyBasinRecipe();
-					IItemHandler orElse = basinInv.orElse(null);
-					if (basinInv.isPresent() && orElse instanceof BasinInventory) {
+					IItemHandler orElse = basinItemInv.orElse(null);
+					if (basinItemInv.isPresent() && orElse instanceof BasinInventory) {
 						BasinInventory inv = (BasinInventory) orElse;
 
 						for (int slot = 0; slot < inv.getInputHandler()
@@ -256,7 +250,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	public void makePressingParticleEffect(Vec3d pos, ItemStack stack) {
-		if (world.isRemote) {
+		if (world != null && world.isRemote) {
 			for (int i = 0; i < 20; i++) {
 				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
 					.mul(1, 0, 1);
@@ -267,7 +261,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	public void makeCompactingParticleEffect(Vec3d pos, ItemStack stack) {
-		if (world.isRemote) {
+		if (world != null && world.isRemote) {
 			for (int i = 0; i < 20; i++) {
 				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .175f)
 					.mul(1, 0, 1);
@@ -279,9 +273,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	public Optional<PressingRecipe> getRecipe(ItemStack item) {
 		pressingInv.setInventorySlotContents(0, item);
-		Optional<PressingRecipe> recipe = world.getRecipeManager()
+		return world.getRecipeManager()
 			.getRecipe(AllRecipeTypes.PRESSING.getType(), pressingInv, world);
-		return recipe;
 	}
 
 	public static boolean canCompress(NonNullList<Ingredient> ingredients) {
@@ -305,7 +298,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			return false;
 
 		List<ItemStack> remaining = new ArrayList<>();
-		inputs.forEach(stack -> remaining.add(stack.copy()));
+		inputs.forEachItemStack(stack -> remaining.add(stack.copy()));
 
 		Ingredients: for (Ingredient ingredient : ingredients) {
 			for (ItemStack stack : remaining) {
