@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.processing;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -15,6 +16,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -22,11 +24,13 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
+import javax.annotation.Nonnull;
+
 public class BasinTileEntity extends SmartTileEntity implements ITickableTileEntity {
 
 	public boolean contentsChanged;
 
-	protected ItemStackHandler outputInventory = new ItemStackHandler(9) {
+	protected ItemStackHandler outputItemInventory = new ItemStackHandler(9) {
 		protected void onContentsChanged(int slot) {
 			sendData();
 			markDirty();
@@ -35,18 +39,19 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 
 	public class BasinInputInventory extends RecipeWrapper {
 		public BasinInputInventory() {
-			super(inputInventory);
+			super(inputItemInventory);
 		}
 	}
 
-	protected ItemStackHandler inputInventory = new ItemStackHandler(9) {
+	protected ItemStackHandler inputItemInventory = new ItemStackHandler(9) {
 		protected void onContentsChanged(int slot) {
 			contentsChanged = true;
 			sendData();
 			markDirty();
-		};
+		}
 
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		@Nonnull
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
 			for (int i = 0; i < getSlots(); i++) {
 				ItemStack stackInSlot = getStackInSlot(i);
 				if (ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
@@ -54,7 +59,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 						return stack;
 			}
 			return super.insertItem(slot, stack, simulate);
-		};
+		}
 	};
 
 	public static class BasinInventory extends CombinedInvWrapper {
@@ -62,6 +67,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 			super(input, output);
 		}
 
+		@Nonnull
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
 			if (isInput(slot))
@@ -69,8 +75,9 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 			return super.extractItem(slot, amount, simulate);
 		}
 
+		@Nonnull
 		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
 			if (!isInput(slot))
 				return stack;
 			return super.insertItem(slot, stack, simulate);
@@ -91,7 +98,11 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	}
 
 	protected LazyOptional<IItemHandlerModifiable> inventory =
-		LazyOptional.of(() -> new BasinInventory(inputInventory, outputInventory));
+		LazyOptional.of(() -> new BasinInventory(inputItemInventory, outputItemInventory));
+
+	protected LazyOptional<CombinedFluidHandler> fluidInventory =
+		LazyOptional.of(() -> new CombinedFluidHandler(9, 1000));
+
 	public BasinInputInventory recipeInventory;
 
 	public BasinTileEntity(TileEntityType<? extends BasinTileEntity> type) {
@@ -99,24 +110,28 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		contentsChanged = true;
 		recipeInventory = new BasinInputInventory();
 	}
-	
+
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(this));
 	}
-	
+
 	@Override
 	public void read(CompoundNBT compound) {
 		super.read(compound);
-		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
-		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
+		inputItemInventory.deserializeNBT(compound.getCompound("InputItems"));
+		outputItemInventory.deserializeNBT(compound.getCompound("OutputItems"));
+		if (compound.hasUniqueId("fluids"))
+			fluidInventory
+				.ifPresent(combinedFluidHandler -> combinedFluidHandler.readFromNBT(compound.getList("fluids", 10)));
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		super.write(compound);
-		compound.put("InputItems", inputInventory.serializeNBT());
-		compound.put("OutputItems", outputInventory.serializeNBT());
+		compound.put("InputItems", inputItemInventory.serializeNBT());
+		compound.put("OutputItems", outputItemInventory.serializeNBT());
+		fluidInventory.ifPresent(combinedFuidHandler -> compound.put("fluids", combinedFuidHandler.getListNBT()));
 		return compound;
 	}
 
@@ -128,13 +143,17 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	public void remove() {
 		onEmptied();
 		inventory.invalidate();
+		fluidInventory.invalidate();
 		super.remove();
 	}
 
+	@Nonnull
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return inventory.cast();
+		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			return fluidInventory.cast();
 		return super.getCapability(cap, side);
 	}
 
@@ -147,6 +166,8 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	}
 
 	private Optional<BasinOperatingTileEntity> getOperator() {
+		if (world == null)
+			return Optional.empty();
 		TileEntity te = world.getTileEntity(pos.up(2));
 		if (te instanceof BasinOperatingTileEntity)
 			return Optional.of((BasinOperatingTileEntity) te);
