@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -130,6 +131,12 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 				if (!positive && shape == Shape.T_RIGHT)
 					continue;
 			}
+			
+			BlockState funnelState = world.getBlockState(getPos().offset(direction));
+			if (funnelState.getBlock() instanceof BeltFunnelBlock) 
+				if (funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) == direction.getOpposite())
+					continue;
+				
 			flaps.put(direction, new InterpolatedChasingValue().start(.25f)
 				.target(0)
 				.withSpeed(.05f));

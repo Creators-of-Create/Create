@@ -186,12 +186,12 @@ public class ArmTileEntity extends KineticTileEntity {
 
 	protected void collectItem() {
 		ArmInteractionPoint armInteractionPoint = getTargetedInteractionPoint();
-		if (armInteractionPoint != null) 
+		if (armInteractionPoint != null)
 			for (int i = 0; i < armInteractionPoint.getSlotCount(world); i++) {
 				int amountExtracted = getDistributableAmount(armInteractionPoint, i);
 				if (amountExtracted == 0)
 					continue;
-	
+
 				heldItem = armInteractionPoint.extract(world, i, amountExtracted, false);
 				phase = Phase.SEARCH_OUTPUTS;
 				chasedPointProgress = 0;
@@ -200,7 +200,7 @@ public class ArmTileEntity extends KineticTileEntity {
 				markDirty();
 				return;
 			}
-		
+
 		phase = Phase.SEARCH_INPUTS;
 		chasedPointProgress = 0;
 		chasedPointIndex = -1;
@@ -218,7 +218,7 @@ public class ArmTileEntity extends KineticTileEntity {
 	}
 
 	protected void initInteractionPoints() {
-		if (interactionPointTag == null)
+		if (!updateInteractionPoints || interactionPointTag == null)
 			return;
 		inputs.clear();
 		outputs.clear();
@@ -231,9 +231,9 @@ public class ArmTileEntity extends KineticTileEntity {
 			if (point.mode == Mode.TAKE)
 				inputs.add(point);
 		}
-		interactionPointTag = null;
-		markDirty();
+		updateInteractionPoints = false;
 		sendData();
+		markDirty();
 	}
 
 	@Override
@@ -249,7 +249,7 @@ public class ArmTileEntity extends KineticTileEntity {
 			.forEach(pointsNBT::add);
 
 		NBTHelper.writeEnum(compound, "Phase", phase);
-		compound.put("InterationPoints", pointsNBT);
+		compound.put("InteractionPoints", pointsNBT);
 		compound.put("HeldItem", heldItem.serializeNBT());
 		compound.putInt("TargetPointIndex", chasedPointIndex);
 		compound.putFloat("MovementProgress", chasedPointProgress);
@@ -259,8 +259,6 @@ public class ArmTileEntity extends KineticTileEntity {
 	@Override
 	public CompoundNBT writeToClient(CompoundNBT compound) {
 		super.writeToClient(compound);
-		if (interactionPointTag != null)
-			compound.put("InitialInterationPoints", interactionPointTag);
 		return compound;
 	}
 
@@ -271,19 +269,19 @@ public class ArmTileEntity extends KineticTileEntity {
 		phase = NBTHelper.readEnum(compound, "Phase", Phase.class);
 		chasedPointIndex = compound.getInt("TargetPointIndex");
 		chasedPointProgress = compound.getFloat("MovementProgress");
-
-		if (!hasWorld() || !world.isRemote || updateInteractionPoints)
-			interactionPointTag = compound.getList("InterationPoints", NBT.TAG_COMPOUND);
-		updateInteractionPoints = false;
+		interactionPointTag = compound.getList("InteractionPoints", NBT.TAG_COMPOUND);
 	}
 
 	@Override
 	public void readClientUpdate(CompoundNBT tag) {
 		int previousIndex = chasedPointIndex;
 		Phase previousPhase = phase;
+		ListNBT interactionPointTagBefore = interactionPointTag;
 
 		super.readClientUpdate(tag);
 
+		if (interactionPointTagBefore == null || interactionPointTagBefore.size() != interactionPointTag.size())
+			updateInteractionPoints = true;
 		if (previousIndex != chasedPointIndex || (previousPhase != phase)) {
 			ArmInteractionPoint previousPoint = null;
 			if (previousPhase == Phase.MOVE_TO_INPUT && previousIndex < inputs.size())
@@ -294,9 +292,6 @@ public class ArmTileEntity extends KineticTileEntity {
 			if (previousPoint != null)
 				previousBaseAngle = previousPoint.getTargetAngles(pos).baseAngle;
 		}
-
-		if (tag.contains("InitialInterationPoints"))
-			interactionPointTag = tag.getList("InitialInterationPoints", NBT.TAG_COMPOUND);
 	}
 
 }

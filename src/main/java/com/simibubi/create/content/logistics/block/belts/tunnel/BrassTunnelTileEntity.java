@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -17,7 +18,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.SidedFilter
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -27,7 +30,12 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 
@@ -42,26 +50,170 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 	int distributionDistanceLeft;
 	int distributionDistanceRight;
 
+	private LazyOptional<IItemHandler> beltCapability;
+	private LazyOptional<IItemHandler> tunnelCapability;
+
 	public BrassTunnelTileEntity(TileEntityType<? extends BeltTunnelTileEntity> type) {
 		super(type);
 		distributionTargets = new ArrayList<>();
 		stackToDistribute = ItemStack.EMPTY;
+		beltCapability = LazyOptional.empty();
+		tunnelCapability = LazyOptional.of(() -> new BrassTunnelItemHandler(this));
 	}
 
-//	@Override
-//	public void tick() {
-//		super.tick();
-//
-//		if (stackToDistribute.isEmpty())
-//			return;
-//		if (distributionProgress == -1) {
-//			distributionTargets.clear();
-//			for (Pair<BrassTunnelTileEntity, Direction> pair : gatherValidOutputs()) {
-//				
-//			}
-//		}
-//
-//	}
+	@Override
+	public void tick() {
+		super.tick();
+		BeltTileEntity beltBelow = BeltHelper.getSegmentTE(world, pos.down());
+
+		if (beltBelow == null || beltBelow.getSpeed() == 0)
+			return;
+		if (stackToDistribute.isEmpty())
+			return;
+		if (world.isRemote)
+			return;
+
+		if (distributionProgress == -1) {
+			distributionTargets.clear();
+			distributionDistanceLeft = 0;
+			distributionDistanceRight = 0;
+			for (Pair<BrassTunnelTileEntity, Direction> pair : gatherValidOutputs()) {
+				BrassTunnelTileEntity tunnel = pair.getKey();
+				Direction output = pair.getValue();
+				if (!insertIntoTunnel(tunnel, output, stackToDistribute, true).isEmpty())
+					continue;
+				distributionTargets.add(Pair.of(tunnel.pos, output));
+				int distance = tunnel.pos.getX() + tunnel.pos.getZ() - pos.getX() - pos.getZ();
+				if (distance < 0)
+					distributionDistanceLeft = Math.max(distributionDistanceLeft, -distance);
+				else
+					distributionDistanceRight = Math.max(distributionDistanceRight, distance);
+			}
+
+			if (distributionTargets.isEmpty())
+				return;
+
+			distributionProgress = 0;
+			sendData();
+			return;
+		}
+
+		// TODO this is instant for now
+		if (distributionProgress == 0) {
+			List<Pair<BrassTunnelTileEntity, Direction>> validTargets = new ArrayList<>();
+			for (Pair<BlockPos, Direction> pair : distributionTargets) {
+				BlockPos tunnelPos = pair.getKey();
+				Direction output = pair.getValue();
+				TileEntity te = world.getTileEntity(tunnelPos);
+				if (!(te instanceof BrassTunnelTileEntity))
+					continue;
+				validTargets.add(Pair.of((BrassTunnelTileEntity) te, output));
+			}
+
+			if (validTargets.size() == 0) {
+				distributionProgress = -1;
+				sendData();
+				return;
+			}
+
+			int stackSizeBefore = stackToDistribute.getCount();
+			int stackSizeForOutput = stackSizeBefore / validTargets.size();
+			int remainder = stackSizeBefore % validTargets.size();
+
+			for (Pair<BrassTunnelTileEntity, Direction> pair : validTargets) {
+				BrassTunnelTileEntity tunnel = pair.getKey();
+				Direction side = pair.getValue();
+				int stackSize = stackSizeForOutput + (remainder > 0 ? 1 : 0);
+				ItemStack toOutput = stackToDistribute.copy()
+					.split(stackSize);
+				if (!insertIntoTunnel(tunnel, side, toOutput, false).isEmpty())
+					continue;
+				stackToDistribute.shrink(stackSize);
+				remainder--;
+			}
+
+			distributionProgress = -1;
+			markDirty();
+			sendData();
+			return;
+		}
+
+	}
+
+	public void setStackToDistribute(ItemStack stack) {
+		stackToDistribute = stack;
+		distributionProgress = -1;
+		sendData();
+		markDirty();
+	}
+
+	public ItemStack getStackToDistribute() {
+		return stackToDistribute;
+	}
+
+	protected ItemStack insertIntoTunnel(BrassTunnelTileEntity tunnel, Direction side, ItemStack stack,
+		boolean simulate) {
+		if (stack.isEmpty())
+			return stack;
+		if (!tunnel.testFlapFilter(side, stack))
+			return stack;
+
+		BeltTileEntity below = BeltHelper.getSegmentTE(world, tunnel.pos.down());
+		if (below == null)
+			return stack;
+		BlockPos offset = tunnel.getPos()
+			.down()
+			.offset(side);
+		DirectBeltInputBehaviour sideOutput = TileEntityBehaviour.get(world, offset, DirectBeltInputBehaviour.TYPE);
+		if (sideOutput != null) {
+			ItemStack result = sideOutput.handleInsertion(stack, side, simulate);
+			if (result.isEmpty() && !simulate)
+				tunnel.flap(side, true);
+			return result;
+		}
+
+		Direction movementFacing = below.getMovementFacing();
+		if (side == movementFacing)
+			if (!Block.hasSolidSide(world.getBlockState(offset), world, offset, side.getOpposite())) {
+				BeltTileEntity controllerTE = below.getControllerTE();
+				if (controllerTE == null)
+					return stack;
+				
+				if (!simulate) {
+					tunnel.flap(side, true);
+					ItemStack ejected = stack;
+					float beltMovementSpeed = below.getDirectionAwareBeltMovementSpeed();
+					float movementSpeed = Math.max(Math.abs(beltMovementSpeed), 1 / 8f);
+					int additionalOffset = beltMovementSpeed > 0 ? 1 : 0;
+					Vec3d outPos = BeltHelper.getVectorForOffset(controllerTE, below.index + additionalOffset);
+					Vec3d outMotion = new Vec3d(side.getDirectionVec()).scale(movementSpeed)
+						.add(0, 1 / 8f, 0);
+					outPos.add(outMotion.normalize());
+					ItemEntity entity = new ItemEntity(world, outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);
+					entity.setMotion(outMotion);
+					entity.setDefaultPickupDelay();
+					entity.velocityChanged = true;
+					world.addEntity(entity);
+				}
+				
+				return ItemStack.EMPTY;
+			}
+
+		return stack;
+	}
+
+	public boolean testFlapFilter(Direction side, ItemStack stack) {
+		if (filtering == null)
+			return false;
+		if (filtering.get(side) == null) {
+			FilteringBehaviour adjacentFilter =
+				TileEntityBehaviour.get(world, pos.offset(side), FilteringBehaviour.TYPE);
+			if (adjacentFilter == null)
+				return true;
+			return adjacentFilter.test(stack);
+		}
+		return filtering.test(side, stack);
+	}
 
 	@Override
 	public void initialize() {
@@ -75,20 +227,26 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 	public boolean canInsert(Direction side, ItemStack stack) {
 		if (filtering != null && !filtering.test(side, stack))
 			return false;
-		if (!connectedLeft && !connectedRight)
+		if (!hasDistributionBehaviour())
 			return true;
 		if (!stackToDistribute.isEmpty())
 			return false;
 		return true;
 	}
 
-	public boolean onItemInserted(ItemStack stack) {
-		if (!connectedLeft && !connectedRight)
+	public boolean hasDistributionBehaviour() {
+		if (flaps.isEmpty())
 			return false;
-		stackToDistribute = stack.copy();
-		sendData();
-		markDirty();
-		return true;
+		if (connectedLeft || connectedRight)
+			return true;
+		BlockState blockState = getBlockState();
+		if (!AllBlocks.BRASS_TUNNEL.has(blockState))
+			return false;
+		Axis axis = blockState.get(BrassTunnelBlock.HORIZONTAL_AXIS);
+		for (Direction direction : flaps.keySet())
+			if (direction.getAxis() != axis)
+				return true;
+		return false;
 	}
 
 	private List<Pair<BrassTunnelTileEntity, Direction>> gatherValidOutputs() {
@@ -112,27 +270,41 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		BeltTileEntity below = BeltHelper.getSegmentTE(world, tunnelTE.pos.down());
 		if (below == null)
 			return;
-		if (below.getSpeed() != 0) {
-			Direction direction = below.getMovementFacing();
-			if (tunnelTE.flaps.containsKey(direction))
-				validOutputs.add(Pair.of(tunnelTE, direction));
-		}
-
+		Direction movementFacing = below.getMovementFacing();
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.BRASS_TUNNEL.has(blockState))
 			return;
-		for (boolean left : Iterate.trueAndFalse) {
-			Axis axis = blockState.get(BrassTunnelBlock.HORIZONTAL_AXIS);
-			Direction baseDirection = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-			Direction direction = left ? baseDirection.rotateYCCW() : baseDirection.rotateY();
-			if (tunnelTE.flaps.containsKey(direction)) {
-				DirectBeltInputBehaviour inputBehaviour = TileEntityBehaviour.get(world, tunnelTE.pos.down()
-					.offset(direction), DirectBeltInputBehaviour.TYPE);
+
+		for (Direction direction : Iterate.horizontalDirections) {
+			if (direction == movementFacing && below.getSpeed() == 0)
+				continue;
+			if (tunnelTE.flaps.containsKey(direction) || tunnelTE.hasValidOutputFunnel(direction)) {
+				BlockPos offset = tunnelTE.pos.down()
+					.offset(direction);
+				DirectBeltInputBehaviour inputBehaviour =
+					TileEntityBehaviour.get(world, offset, DirectBeltInputBehaviour.TYPE);
+				if (inputBehaviour == null) {
+					if (direction == movementFacing)
+						if (!Block.hasSolidSide(world.getBlockState(offset), world, offset, direction.getOpposite()))
+							validOutputs.add(Pair.of(tunnelTE, direction));
+					continue;
+				}
 				if (inputBehaviour.canInsertFromSide(direction))
 					validOutputs.add(Pair.of(tunnelTE, direction));
+				continue;
 			}
 		}
+	}
 
+	protected boolean hasValidOutputFunnel(Direction side) {
+		BlockState funnelState = world.getBlockState(getPos().offset(side));
+		if (!(funnelState.getBlock() instanceof BeltFunnelBlock))
+			return false;
+		if (funnelState.has(BeltFunnelBlock.POWERED) && funnelState.get(BeltFunnelBlock.POWERED))
+			return false;
+		if (funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) != side.getOpposite())
+			return false;
+		return !funnelState.get(BeltFunnelBlock.PUSHING);
 	}
 
 	@Override
@@ -268,6 +440,28 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		if (!(adjacentTE instanceof BrassTunnelTileEntity))
 			return null;
 		return (BrassTunnelTileEntity) adjacentTE;
+	}
+
+	@Override
+	public void remove() {
+		tunnelCapability.invalidate();
+		super.remove();
+	}
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return tunnelCapability.cast();
+		return super.getCapability(capability, side);
+	}
+
+	public LazyOptional<IItemHandler> getBeltCapability() {
+		if (!beltCapability.isPresent()) {
+			TileEntity tileEntity = world.getTileEntity(pos.down());
+			if (tileEntity != null)
+				beltCapability = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		}
+		return beltCapability;
 	}
 
 }

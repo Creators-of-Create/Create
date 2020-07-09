@@ -37,12 +37,12 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 
 		ms.push();
 
-		SuperByteBuffer base = AllBlockPartials.ARM_BASE.renderOn(blockState);
-		SuperByteBuffer lowerBody = AllBlockPartials.ARM_LOWER_BODY.renderOn(blockState);
-		SuperByteBuffer upperBody = AllBlockPartials.ARM_UPPER_BODY.renderOn(blockState);
-		SuperByteBuffer head = AllBlockPartials.ARM_HEAD.renderOn(blockState);
-		SuperByteBuffer claw = AllBlockPartials.ARM_CLAW_BASE.renderOn(blockState);
-		SuperByteBuffer clawGrip = AllBlockPartials.ARM_CLAW_GRIP.renderOn(blockState);
+		SuperByteBuffer base = AllBlockPartials.ARM_BASE.renderOn(blockState).light(light);
+		SuperByteBuffer lowerBody = AllBlockPartials.ARM_LOWER_BODY.renderOn(blockState).light(light);
+		SuperByteBuffer upperBody = AllBlockPartials.ARM_UPPER_BODY.renderOn(blockState).light(light);
+		SuperByteBuffer head = AllBlockPartials.ARM_HEAD.renderOn(blockState).light(light);
+		SuperByteBuffer claw = AllBlockPartials.ARM_CLAW_BASE.renderOn(blockState).light(light);
+		SuperByteBuffer clawGrip = AllBlockPartials.ARM_CLAW_GRIP.renderOn(blockState).light(light);
 
 		msr.centre();
 

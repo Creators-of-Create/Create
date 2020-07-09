@@ -57,6 +57,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -210,11 +211,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return false;
 		BeltSlope slope = state.get(SLOPE);
 		return slope != BeltSlope.VERTICAL && slope != BeltSlope.SIDEWAYS;
-	}
-
-	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		updateNeighbouringTunnel(worldIn, pos, state);
 	}
 
 	@Override
@@ -476,9 +472,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return;
 		if (state.getBlock() == newState.getBlock())
 			return;
-
-		updateNeighbouringTunnel(world, pos, state);
-
 		if (isMoving)
 			return;
 		TileEntity belt = world.getTileEntity(pos);
@@ -512,17 +505,19 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			world.playEvent(2001, currentPos, Block.getStateId(currentState));
 		}
 	}
+	
+	@Override
+	public BlockState updatePostPlacement(BlockState state, Direction side, BlockState p_196271_3_,
+		IWorld world, BlockPos pos, BlockPos p_196271_6_) {
+		if (side.getAxis().isHorizontal())
+			updateTunnelConnections(world, pos.up());
+		return state;
+	}
 
-	private void updateNeighbouringTunnel(World world, BlockPos pos, BlockState beltState) {
-		boolean isEnd = beltState.get(PART) != BeltPart.END;
-		if (isEnd && beltState.get(PART) != BeltPart.START)
-			return;
-		int offset = isEnd ? -1 : 1;
-		BlockPos tunnelPos = pos.offset(beltState.get(HORIZONTAL_FACING), offset)
-			.up();
-		Block adjacent = world.getBlockState(tunnelPos).getBlock();
-		if (adjacent instanceof BeltTunnelBlock)
-			((BeltTunnelBlock) adjacent).updateTunnel(world, tunnelPos);
+	private void updateTunnelConnections(IWorld world, BlockPos pos) {
+		Block tunnelBlock = world.getBlockState(pos).getBlock();
+		if (tunnelBlock instanceof BeltTunnelBlock)
+			((BeltTunnelBlock) tunnelBlock).updateTunnel(world, pos);
 	}
 
 	public static List<BlockPos> getBeltChain(World world, BlockPos controllerPos) {

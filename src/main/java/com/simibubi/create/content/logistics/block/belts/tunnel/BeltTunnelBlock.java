@@ -7,6 +7,8 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -122,7 +124,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		return tunnelState;
 	}
 
-	public void updateTunnel(World world, BlockPos pos) {
+	public void updateTunnel(IWorld world, BlockPos pos) {
 		BlockState tunnel = world.getBlockState(pos);
 		BlockState newTunnel = getTunnelState(world, pos);
 		if (tunnel != newTunnel) {
@@ -144,14 +146,8 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		// T and Cross
 		Direction left = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
 			.rotateY();
-		BlockState leftState = reader.getBlockState(pos.offset(left)
-			.down());
-		boolean onLeft = AllBlocks.BELT.has(leftState) && leftState.get(BeltBlock.HORIZONTAL_FACING)
-			.getAxis() != axis;
-		BlockState rightState = reader.getBlockState(pos.offset(left.getOpposite())
-			.down());
-		boolean onRight = AllBlocks.BELT.has(rightState) && rightState.get(BeltBlock.HORIZONTAL_FACING)
-			.getAxis() != axis;
+		boolean onLeft = hasValidOutput(reader, pos.down(), left);
+		boolean onRight = hasValidOutput(reader, pos.down(), left.getOpposite());
 
 		if (onLeft && onRight)
 			state = state.with(SHAPE, Shape.CROSS);
@@ -176,6 +172,15 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		}
 
 		return state;
+	}
+
+	private boolean hasValidOutput(IBlockReader world, BlockPos pos, Direction side) {
+		BlockState blockState = world.getBlockState(pos.offset(side));
+		if (AllBlocks.BELT.has(blockState))
+			return blockState.get(BeltBlock.HORIZONTAL_FACING).getAxis() == side.getAxis();
+		DirectBeltInputBehaviour behaviour =
+			TileEntityBehaviour.get(world, pos.offset(side), DirectBeltInputBehaviour.TYPE);
+		return behaviour != null && behaviour.canInsertFromSide(side);
 	}
 
 	@Override

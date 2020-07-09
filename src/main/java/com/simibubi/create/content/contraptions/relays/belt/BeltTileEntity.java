@@ -19,6 +19,7 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMoveme
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandlerBeltSegment;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -79,7 +80,6 @@ public class BeltTileEntity extends KineticTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		behaviours.add(new DirectBeltInputBehaviour(this)
-			.onlyInsertWhen(d -> getSpeed() != 0 && getMovementFacing() != d.getOpposite())
 			.setInsertionHandler(this::tryInsertingFromSide));
 		behaviours.add(new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf));
@@ -397,12 +397,30 @@ public class BeltTileEntity extends KineticTileEntity {
 		BeltTileEntity nextBeltController = getControllerTE();
 		ItemStack inserted = transportedStack.stack;
 		ItemStack empty = ItemStack.EMPTY;
-
+		
 		if (nextBeltController == null)
 			return inserted;
 		BeltInventory nextInventory = nextBeltController.getInventory();
+		
+		TileEntity teAbove = world.getTileEntity(pos.up());
+		if (teAbove instanceof BrassTunnelTileEntity) {
+			BrassTunnelTileEntity tunnelTE = (BrassTunnelTileEntity) teAbove;
+			if (tunnelTE.hasDistributionBehaviour()) {
+				if (!tunnelTE.getStackToDistribute().isEmpty())
+					return inserted;
+				if (!tunnelTE.testFlapFilter(side.getOpposite(), inserted))
+					return inserted;
+				if (!simulate) {
+					BeltTunnelInteractionHandler.flapTunnel(nextInventory, index, side.getOpposite(), true);
+					tunnelTE.setStackToDistribute(inserted);
+				}
+				return empty;
+			}
+		}
 
 		if (getSpeed() == 0)
+			return inserted;
+		if (getMovementFacing() == side.getOpposite())
 			return inserted;
 		if (!nextInventory.canInsertAtFromSide(index, side))
 			return inserted;
