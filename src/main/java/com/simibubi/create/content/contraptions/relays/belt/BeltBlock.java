@@ -299,12 +299,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (state.get(PART) == BeltPart.PULLEY) {
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
-			world.setBlockState(context.getPos(), state.with(PART, BeltPart.MIDDLE), 2);
-			BeltTileEntity belt = BeltHelper.getSegmentTE(world, context.getPos());
-			if (belt != null) {
-				belt.detachKinetics();
-				belt.attachKinetics();
-			}
+			KineticTileEntity.switchToBlockState(world, pos, state.with(PART, BeltPart.MIDDLE));
 			if (player != null && !player.isCreative())
 				player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack());
 			return ActionResultType.SUCCESS;
