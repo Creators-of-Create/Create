@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 40",
+	"_": "Missing Localizations: 44",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -458,6 +458,10 @@
 	"advancement.create.crafter.desc": "放置一些机械合成台并且为其供能",
 	"advancement.create.deployer": "我就指着你了咋地？",
 	"advancement.create.deployer.desc": "放置并且功能一个机械手。这可是你右手的完美复制品",
+	"advancement.create.mechanical_arm": "UNLOCALIZED: Mechanical Grab'n'Drop",
+	"advancement.create.mechanical_arm.desc": "UNLOCALIZED: Craft a Mechanical Arm, select in- and outputs, place it down and give it power; then watch it do all the work for you.",
+	"advancement.create.musical_arm": "UNLOCALIZED: Play me my Theme Tune!",
+	"advancement.create.musical_arm.desc": "UNLOCALIZED: Watch a Mechanical Arm operate your Jukebox.",
 	"advancement.create.fist_bump": "来碰个拳，哥们~",
 	"advancement.create.fist_bump.desc": "使两个机械臂互相碰拳",
 	"advancement.create.crushing_wheel": "一对大家伙",

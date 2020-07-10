@@ -135,6 +135,8 @@ public class AllShapes {
 			.build(),
 		MECHANICAL_ARM = shape(2, 0, 2, 14, 10, 14).add(3, 0, 3, 13, 14, 13)
 			.build(),
+		MECHANICAL_ARM_CEILING = shape(2, 6, 2, 14, 16, 14).add(3, 2, 3, 13, 16, 13)
+			.build(),
 		CHUTE = shape(1, 8, 1, 15, 16, 15).add(2, 0, 2, 14, 8, 14)
 			.build(),
 		TANK = shape(1, 0, 1, 15, 16, 15).build(), TANK_TOP = shape(TANK_TOP_LID).add(TANK)

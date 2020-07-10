@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 359",
+	"_": "Missing Localizations: 363",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -458,6 +458,10 @@
 	"advancement.create.crafter.desc": "UNLOCALIZED: Place and power some Mechanical Crafters",
 	"advancement.create.deployer": "UNLOCALIZED: Poke, Place, and Attack",
 	"advancement.create.deployer.desc": "UNLOCALIZED: Place and power a Deployer, the perfect reflection of yourself.",
+	"advancement.create.mechanical_arm": "UNLOCALIZED: Mechanical Grab'n'Drop",
+	"advancement.create.mechanical_arm.desc": "UNLOCALIZED: Craft a Mechanical Arm, select in- and outputs, place it down and give it power; then watch it do all the work for you.",
+	"advancement.create.musical_arm": "UNLOCALIZED: Play me my Theme Tune!",
+	"advancement.create.musical_arm.desc": "UNLOCALIZED: Watch a Mechanical Arm operate your Jukebox.",
 	"advancement.create.fist_bump": "UNLOCALIZED: Pound It, Bro!",
 	"advancement.create.fist_bump.desc": "UNLOCALIZED: Make two Deployers fist-bump.",
 	"advancement.create.crushing_wheel": "UNLOCALIZED: A Pair of Giants",

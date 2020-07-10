@@ -80,9 +80,9 @@ public class AllAdvancements implements IDataProvider {
 
 		andesiteExpertLane(t, andesite_casing);
 
-		Advancement drill =
-			kinecticAdvancement("mechanical_drill", AllBlocks.MECHANICAL_DRILL.get(), TaskType.NORMAL).withParent(andesite_casing)
-				.register(t, id + ":mechanical_drill");
+		Advancement drill = kinecticAdvancement("mechanical_drill", AllBlocks.MECHANICAL_DRILL.get(), TaskType.NORMAL)
+			.withParent(andesite_casing)
+			.register(t, id + ":mechanical_drill");
 
 		Advancement press =
 			advancement("press", AllBlocks.MECHANICAL_PRESS.get(), TaskType.MILESTONE).withParent(andesite_casing)
@@ -98,8 +98,9 @@ public class AllAdvancements implements IDataProvider {
 			itemAdvancement("electron_tube", AllItems.ELECTRON_TUBE, TaskType.NORMAL).withParent(rose_quartz)
 				.register(t, id + ":electron_tube");
 
-		Advancement saw = kinecticAdvancement("mechanical_saw", AllBlocks.MECHANICAL_SAW.get(), TaskType.NORMAL).withParent(press)
-			.register(t, id + ":mechanical_saw");
+		Advancement saw =
+			kinecticAdvancement("mechanical_saw", AllBlocks.MECHANICAL_SAW.get(), TaskType.NORMAL).withParent(press)
+				.register(t, id + ":mechanical_saw");
 
 		Advancement basin = advancement("basin", AllBlocks.BASIN.get(), TaskType.NORMAL).withParent(press)
 			.withCriterion("0", placeBlock(AllBlocks.BASIN.get()))
@@ -195,6 +196,20 @@ public class AllAdvancements implements IDataProvider {
 			advancement("dual_extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.SECRET).withParent(extendo_grip)
 				.withCriterion("0", AllTriggers.GIGA_EXTENDO.instance())
 				.register(t, id + ":dual_extendo_grip");
+
+		Advancement mechanical_arm = advancement("mechanical_arm", AllBlocks.MECHANICAL_ARM.get(), TaskType.GOAL)
+			.withCriterion("0", placeBlock(AllBlocks.MECHANICAL_ARM.get()))
+			.withCriterion("1", isPowered(AllBlocks.MECHANICAL_ARM.get()))
+			.withCriterion("2", AllTriggers.MECHANICAL_ARM.instance())
+			.withParent(brass_casing)
+			.register(t, id + ":mechanical_arm");
+		
+		Advancement musical_arm = advancement("musical_arm", Items.MUSIC_DISC_13, TaskType.MILESTONE)
+			.withCriterion("0", placeBlock(AllBlocks.MECHANICAL_ARM.get()))
+			.withCriterion("1", isPowered(AllBlocks.MECHANICAL_ARM.get()))
+			.withCriterion("2", AllTriggers.MUSICAL_ARM.instance())
+			.withParent(mechanical_arm)
+			.register(t, id + ":musical_arm");
 
 		Advancement deployer =
 			kinecticAdvancement("deployer", AllBlocks.DEPLOYER.get(), TaskType.GOAL).withParent(brass_casing)

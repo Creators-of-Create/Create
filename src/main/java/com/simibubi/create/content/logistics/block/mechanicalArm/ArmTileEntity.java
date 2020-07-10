@@ -6,11 +6,15 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Jukebox;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedAngle;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.JukeboxBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -43,7 +47,7 @@ public class ArmTileEntity extends KineticTileEntity {
 	boolean updateInteractionPoints;
 
 	enum Phase {
-		SEARCH_INPUTS, MOVE_TO_INPUT, SEARCH_OUTPUTS, MOVE_TO_OUTPUT, IDLE
+		SEARCH_INPUTS, MOVE_TO_INPUT, SEARCH_OUTPUTS, MOVE_TO_OUTPUT, DANCING
 	}
 
 	public ArmTileEntity(TileEntityType<?> typeIn) {
@@ -86,10 +90,32 @@ public class ArmTileEntity extends KineticTileEntity {
 			return;
 		if (chasedPointProgress < .5f)
 			return;
-		if (phase == Phase.SEARCH_INPUTS)
+		if (phase == Phase.SEARCH_INPUTS || phase == Phase.DANCING) {
+			checkForMusic();
 			searchForItem();
+		}
 		if (phase == Phase.SEARCH_OUTPUTS)
 			searchForDestination();
+	}
+
+	private void checkForMusic() {
+		boolean hasMusic = checkForMusicAmong(inputs) || checkForMusicAmong(outputs);
+		if (hasMusic != (phase == Phase.DANCING)) {
+			phase = hasMusic ? Phase.DANCING : Phase.SEARCH_INPUTS;
+			markDirty();
+			sendData();
+		}
+	}
+
+	private boolean checkForMusicAmong(List<ArmInteractionPoint> list) {
+		for (ArmInteractionPoint armInteractionPoint : list) {
+			if (!(armInteractionPoint instanceof Jukebox))
+				continue;
+			BlockState state = world.getBlockState(armInteractionPoint.pos);
+			if (state.has(JukeboxBlock.HAS_RECORD) && state.get(JukeboxBlock.HAS_RECORD))
+				return true;
+		}
+		return false;
 	}
 
 	private void tickMovementProgress() {
@@ -101,8 +127,8 @@ public class ArmTileEntity extends KineticTileEntity {
 
 		ArmInteractionPoint targetedInteractionPoint = getTargetedInteractionPoint();
 		ArmAngleTarget previousTarget = this.previousTarget;
-		ArmAngleTarget target =
-			targetedInteractionPoint == null ? ArmAngleTarget.NO_TARGET : targetedInteractionPoint.getTargetAngles(pos);
+		ArmAngleTarget target = targetedInteractionPoint == null ? ArmAngleTarget.NO_TARGET
+			: targetedInteractionPoint.getTargetAngles(pos, isOnCeiling());
 
 		baseAngle.set(AngleHelper.angleLerp(chasedPointProgress, previousBaseAngle,
 			target == ArmAngleTarget.NO_TARGET ? previousBaseAngle : target.baseAngle));
@@ -116,7 +142,13 @@ public class ArmTileEntity extends KineticTileEntity {
 
 		lowerArmAngle.set(MathHelper.lerp(progress, previousTarget.lowerArmAngle, target.lowerArmAngle));
 		upperArmAngle.set(MathHelper.lerp(progress, previousTarget.upperArmAngle, target.upperArmAngle));
-		headAngle.set(AngleHelper.angleLerp(progress, previousTarget.headAngle, target.headAngle));
+		
+		headAngle.set(AngleHelper.angleLerp(progress, previousTarget.headAngle % 360, target.headAngle % 360));
+	}
+
+	protected boolean isOnCeiling() {
+		BlockState state = getBlockState();
+		return hasWorld() && state != null && state.has(ArmBlock.CEILING) && state.get(ArmBlock.CEILING);
 	}
 
 	@Nullable
@@ -182,6 +214,9 @@ public class ArmTileEntity extends KineticTileEntity {
 		chasedPointIndex = -1;
 		sendData();
 		markDirty();
+
+		if (!world.isRemote)
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.MECHANICAL_ARM, world, pos, 10);
 	}
 
 	protected void collectItem() {
@@ -277,9 +312,9 @@ public class ArmTileEntity extends KineticTileEntity {
 		int previousIndex = chasedPointIndex;
 		Phase previousPhase = phase;
 		ListNBT interactionPointTagBefore = interactionPointTag;
-
 		super.readClientUpdate(tag);
 
+		boolean ceiling = isOnCeiling();
 		if (interactionPointTagBefore == null || interactionPointTagBefore.size() != interactionPointTag.size())
 			updateInteractionPoints = true;
 		if (previousIndex != chasedPointIndex || (previousPhase != phase)) {
@@ -288,9 +323,10 @@ public class ArmTileEntity extends KineticTileEntity {
 				previousPoint = inputs.get(previousIndex);
 			if (previousPhase == Phase.MOVE_TO_OUTPUT && previousIndex < outputs.size())
 				previousPoint = outputs.get(previousIndex);
-			previousTarget = previousPoint == null ? ArmAngleTarget.NO_TARGET : previousPoint.getTargetAngles(pos);
+			previousTarget =
+				previousPoint == null ? ArmAngleTarget.NO_TARGET : previousPoint.getTargetAngles(pos, ceiling);
 			if (previousPoint != null)
-				previousBaseAngle = previousPoint.getTargetAngles(pos).baseAngle;
+				previousBaseAngle = previousPoint.getTargetAngles(pos, ceiling).baseAngle;
 		}
 	}
 

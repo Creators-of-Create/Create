@@ -1,7 +1,11 @@
 {
   "variants": {
-    "": {
+    "ceiling=false": {
       "model": "create:block/mechanical_arm/block"
+    },
+    "ceiling=true": {
+      "model": "create:block/mechanical_arm/block",
+      "x": 180
     }
   }
 }

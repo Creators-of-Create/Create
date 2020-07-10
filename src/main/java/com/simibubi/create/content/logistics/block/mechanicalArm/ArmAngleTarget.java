@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 public class ArmAngleTarget {
 
 	static ArmAngleTarget NO_TARGET = new ArmAngleTarget();
-	
+
 	float baseAngle;
 	float lowerArmAngle;
 	float upperArmAngle;
@@ -24,10 +24,13 @@ public class ArmAngleTarget {
 		headAngle = -15;
 	}
 
-	public ArmAngleTarget(BlockPos armPos, Vec3d pointTarget, Direction clawFacing) {
+	public ArmAngleTarget(BlockPos armPos, Vec3d pointTarget, Direction clawFacing, boolean ceiling) {
+//		if (ceiling) 
+//			clawFacing = clawFacing.getOpposite();
+
 		Vec3d target = pointTarget;
 		Vec3d origin = VecHelper.getCenterOf(armPos)
-			.add(0, 4 / 16f, 0);
+			.add(0, ceiling ? -4 / 16f : 4 / 16f, 0);
 		Vec3d clawTarget = target;
 		target = target.add(new Vec3d(clawFacing.getOpposite()
 			.getDirectionVec()).scale(.5f));
@@ -37,6 +40,11 @@ public class ArmAngleTarget {
 			.length();
 
 		float baseAngle = AngleHelper.deg(MathHelper.atan2(diff.x, diff.z)) + 180;
+		if (ceiling) {
+			diff = diff.mul(1, -1, 1);
+			baseAngle = 180 - baseAngle;
+		}
+
 		float alphaOffset = AngleHelper.deg(MathHelper.atan2(diff.y, horizontalDistance));
 
 		float a = 18 / 16f; // lower arm length
@@ -61,8 +69,13 @@ public class ArmAngleTarget {
 		headPos = VecHelper.rotate(headPos.add(0, b, 0), beta + 180, Axis.X);
 		headPos = VecHelper.rotate(headPos.add(0, a, 0), alpha - 90, Axis.X);
 		headPos = VecHelper.rotate(headPos, baseAngle, Axis.Y);
+		headPos = VecHelper.rotate(headPos, ceiling ? 180 : 0, Axis.X);
 		headPos = headPos.add(origin);
 		Vec3d headDiff = clawTarget.subtract(headPos);
+
+		if (ceiling)
+			headDiff = headDiff.mul(1, -1, 1);
+
 		float horizontalHeadDistance = (float) headDiff.mul(1, 0, 1)
 			.length();
 		float headAngle =

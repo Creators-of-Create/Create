@@ -22,8 +22,9 @@ public class ArmItem extends BlockItem {
 
 	@Override
 	public ActionResultType onItemUse(ItemUseContext ctx) {
-		if (ArmInteractionPoint.isInteractable(ctx.getWorld()
-			.getBlockState(ctx.getPos())))
+		World world = ctx.getWorld();
+		BlockPos pos = ctx.getPos();
+		if (ArmInteractionPoint.isInteractable(world, pos, world.getBlockState(pos)))
 			return ActionResultType.SUCCESS;
 		return super.onItemUse(ctx);
 	}
@@ -37,9 +38,9 @@ public class ArmItem extends BlockItem {
 	}
 
 	@Override
-	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World p_195938_2_, BlockPos p_195938_3_,
+	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World world, BlockPos pos,
 		PlayerEntity p_195938_4_) {
-		return !ArmInteractionPoint.isInteractable(state);
+		return !ArmInteractionPoint.isInteractable(world, pos, state);
 	}
 
 }

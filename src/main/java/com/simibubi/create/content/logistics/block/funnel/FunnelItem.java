@@ -29,6 +29,8 @@ public class FunnelItem extends BlockItem {
 
 	@Override
 	protected BlockState getStateForPlacement(BlockItemUseContext ctx) {
+		World world = ctx.getWorld();
+		BlockPos pos = ctx.getPos();
 		BlockState state = super.getStateForPlacement(ctx);
 		if (state == null)
 			return state;
@@ -40,9 +42,9 @@ public class FunnelItem extends BlockItem {
 			return state;
 
 		FunnelBlock block = (FunnelBlock) getBlock();
-		Block beltFunnelBlock = block.getEquivalentBeltFunnel(state)
+		Block beltFunnelBlock = block.getEquivalentBeltFunnel(world, pos, state)
 			.getBlock();
-		Block chuteFunnelBlock = block.getEquivalentChuteFunnel(state)
+		Block chuteFunnelBlock = block.getEquivalentChuteFunnel(world, pos, state)
 			.getBlock();
 
 		BlockState equivalentBeltFunnel = beltFunnelBlock.getStateForPlacement(ctx)
@@ -52,8 +54,6 @@ public class FunnelItem extends BlockItem {
 		BlockState reversedChuteFunnel = equivalentChuteFunnel.rotate(Rotation.CLOCKWISE_180)
 			.cycle(ChuteFunnelBlock.PUSHING);
 
-		World world = ctx.getWorld();
-		BlockPos pos = ctx.getPos();
 		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos))
 			return BeltFunnelBlock.updateShape(equivalentBeltFunnel, world, pos);
 		if (ChuteFunnelBlock.isOnValidChute(equivalentChuteFunnel, world, pos))

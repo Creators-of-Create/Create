@@ -23,7 +23,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.ILightReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -55,9 +54,12 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
 		BlockState state = super.getStateForPlacement(ctx);
-		World world = ctx.getWorld();
-		BlockPos posBelow = ctx.getPos()
-			.down();
+		return getStateForPosition(ctx.getWorld(), ctx.getPos(), state, ctx.getFace());
+	}
+
+	public BlockState getStateForPosition(World world, BlockPos pos, BlockState defaultState, Direction facing) {
+		BlockState state = defaultState.with(HORIZONTAL_FACING, facing);
+		BlockPos posBelow = pos.down();
 		BlockState stateBelow = world.getBlockState(posBelow);
 		if (!AllBlocks.BELT.has(stateBelow))
 			return state;
@@ -68,8 +70,7 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 		if (beltTileEntity.getSpeed() == 0)
 			return state;
 		Direction movementFacing = beltTileEntity.getMovementFacing();
-		Direction funnelFacing = ctx.getFace();
-		return state.with(PUSHING, movementFacing == funnelFacing);
+		return state.with(PUSHING, movementFacing == facing);
 	}
 
 	@Override
@@ -107,7 +108,7 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 		return true;
 	}
 
-	public static BlockState updateShape(BlockState state, ILightReader world, BlockPos pos) {
+	public static BlockState updateShape(BlockState state, IBlockReader world, BlockPos pos) {
 		state = state.with(SHAPE, Shape.RETRACTED);
 		BlockState neighbour = world.getBlockState(pos.offset(state.get(HORIZONTAL_FACING)));
 		if (canConnectTo(state, neighbour))

@@ -1,0 +1,46 @@
+{
+  "parent": "create:brass_casing",
+  "display": {
+    "icon": {
+      "item": "create:mechanical_arm"
+    },
+    "title": {
+      "translate": "advancement.create.mechanical_arm"
+    },
+    "description": {
+      "translate": "advancement.create.mechanical_arm.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "create:mechanical_arm"
+      }
+    },
+    "1": {
+      "trigger": "create:kinetic_block",
+      "conditions": {
+        "block": "create:mechanical_arm"
+      }
+    },
+    "2": {
+      "trigger": "create:mechanical_arm"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ],
+    [
+      "1"
+    ],
+    [
+      "2"
+    ]
+  ]
+}

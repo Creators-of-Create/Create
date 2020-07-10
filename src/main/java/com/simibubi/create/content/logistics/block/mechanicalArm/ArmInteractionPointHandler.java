@@ -1,9 +1,9 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -30,7 +30,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ArmInteractionPointHandler {
 
-	static Map<BlockPos, ArmInteractionPoint> currentSelection = new HashMap<>();
+	static List<ArmInteractionPoint> currentSelection = new ArrayList<>();
 	static ItemStack currentItem;
 
 	static long lastBlockPos = -1;
@@ -44,15 +44,17 @@ public class ArmInteractionPointHandler {
 		if (!world.isRemote)
 			return;
 
-		if (!currentSelection.containsKey(pos)) {
+		ArmInteractionPoint selected = getSelected(pos);
+
+		if (selected == null) {
 			ArmInteractionPoint point = ArmInteractionPoint.createAt(world, pos);
 			if (point == null)
 				return;
-			currentSelection.put(pos, point);
+			selected = point;
+			put(point);
 		}
 
-		currentSelection.get(pos)
-			.cycleMode();
+		selected.cycleMode();
 		event.setCanceled(true);
 		event.setCancellationResult(ActionResultType.SUCCESS);
 	}
@@ -64,7 +66,7 @@ public class ArmInteractionPointHandler {
 		if (!event.getWorld().isRemote)
 			return;
 		BlockPos pos = event.getPos();
-		if (currentSelection.remove(pos) != null) {
+		if (remove(pos) != null) {
 			event.setCanceled(true);
 			event.setCancellationResult(ActionResultType.SUCCESS);
 		}
@@ -73,7 +75,7 @@ public class ArmInteractionPointHandler {
 	public static void flushSettings(BlockPos pos) {
 		if (currentItem == null)
 			return;
-		AllPackets.channel.sendToServer(new ArmPlacementPacket(currentSelection.values(), pos));
+		AllPackets.channel.sendToServer(new ArmPlacementPacket(currentSelection, pos));
 		currentSelection.clear();
 		currentItem = null;
 	}
@@ -100,7 +102,7 @@ public class ArmInteractionPointHandler {
 	}
 
 	private static void checkForWrench(ItemStack heldItem) {
-		if(!AllItems.WRENCH.isIn(heldItem)) {
+		if (!AllItems.WRENCH.isIn(heldItem)) {
 			return;
 		}
 
@@ -122,8 +124,8 @@ public class ArmInteractionPointHandler {
 		if (lastBlockPos == -1 || lastBlockPos != pos.toLong()) {
 			currentSelection.clear();
 			ArmTileEntity arm = (ArmTileEntity) te;
-			arm.inputs.forEach(point -> currentSelection.put(point.pos, point));
-			arm.outputs.forEach(point -> currentSelection.put(point.pos, point));
+			arm.inputs.forEach(ArmInteractionPointHandler::put);
+			arm.outputs.forEach(ArmInteractionPointHandler::put);
 			lastBlockPos = pos.toLong();
 		}
 
@@ -132,16 +134,14 @@ public class ArmInteractionPointHandler {
 		}
 	}
 
-	private static void drawOutlines(Map<BlockPos, ArmInteractionPoint> selection) {
+	private static void drawOutlines(Collection<ArmInteractionPoint> selection) {
 		World world = Minecraft.getInstance().world;
-		for (Iterator<Entry<BlockPos, ArmInteractionPoint>> iterator = selection.entrySet()
-			.iterator(); iterator.hasNext();) {
-			Entry<BlockPos, ArmInteractionPoint> entry = iterator.next();
-			BlockPos pos = entry.getKey();
+		for (Iterator<ArmInteractionPoint> iterator = selection.iterator(); iterator.hasNext();) {
+			ArmInteractionPoint point = iterator.next();
+			BlockPos pos = point.pos;
 			BlockState state = world.getBlockState(pos);
-			ArmInteractionPoint point = entry.getValue();
 
-			if (!point.isValid(state)) {
+			if (!point.isValid(world, pos, state)) {
 				iterator.remove();
 				continue;
 			}
@@ -156,6 +156,25 @@ public class ArmInteractionPointHandler {
 				.colored(color)
 				.lineWidth(1 / 16f);
 		}
+	}
+
+	private static void put(ArmInteractionPoint point) {
+		currentSelection.add(point);
+	}
+
+	private static ArmInteractionPoint remove(BlockPos pos) {
+		ArmInteractionPoint result = getSelected(pos);
+		if (result != null)
+			currentSelection.remove(result);
+		return result;
+	}
+
+	private static ArmInteractionPoint getSelected(BlockPos pos) {
+		for (ArmInteractionPoint point : currentSelection) {
+			if (point.pos.equals(pos))
+				return point;
+		}
+		return null;
 	}
 
 }

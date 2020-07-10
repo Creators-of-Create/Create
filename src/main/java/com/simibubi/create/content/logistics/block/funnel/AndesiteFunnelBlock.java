@@ -4,6 +4,8 @@ import com.simibubi.create.AllBlocks;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 
 public class AndesiteFunnelBlock extends FunnelBlock {
 
@@ -12,14 +14,14 @@ public class AndesiteFunnelBlock extends FunnelBlock {
 	}
 
 	@Override
-	public BlockState getEquivalentBeltFunnel(BlockState state) {
+	public BlockState getEquivalentBeltFunnel(IBlockReader world, BlockPos pos, BlockState state) {
 		Direction facing = state.get(FACING);
 		return AllBlocks.ANDESITE_BELT_FUNNEL.getDefaultState()
 			.with(BeltFunnelBlock.HORIZONTAL_FACING, facing);
 	}
-	
+
 	@Override
-	public BlockState getEquivalentChuteFunnel(BlockState state) {
+	public BlockState getEquivalentChuteFunnel(IBlockReader world, BlockPos pos, BlockState state) {
 		Direction facing = state.get(FACING);
 		return AllBlocks.ANDESITE_CHUTE_FUNNEL.getDefaultState()
 			.with(ChuteFunnelBlock.HORIZONTAL_FACING, facing);

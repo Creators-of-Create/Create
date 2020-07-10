@@ -86,9 +86,12 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbour, IWorld world,
 		BlockPos pos, BlockPos p_196271_6_) {
-		if (!canStillInteract(state, world, pos))
-			return parent.getDefaultState()
-				.with(FunnelBlock.FACING, state.get(HORIZONTAL_FACING));
+		if (!canStillInteract(state, world, pos)) {
+			BlockState parentState = parent.getDefaultState();
+			if (state.has(POWERED) && state.get(POWERED))
+				parentState = parentState.with(POWERED, true);
+			return parentState.with(FunnelBlock.FACING, state.get(HORIZONTAL_FACING));
+		}
 		return state;
 	}
 

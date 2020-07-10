@@ -1,17 +1,24 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
 import com.simibubi.create.foundation.block.ITE;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -24,8 +31,21 @@ import net.minecraft.world.World;
 
 public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity> {
 
+	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
+
 	public ArmBlock(Properties properties) {
 		super(properties);
+		setDefaultState(getDefaultState().with(CEILING, false));
+	}
+
+	@Override
+	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
+		super.fillStateContainer(p_206840_1_.add(CEILING));
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+		return getDefaultState().with(CEILING, ctx.getFace() == Direction.DOWN);
 	}
 
 	@Override
@@ -34,9 +54,9 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity> {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
+	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
-		return AllShapes.MECHANICAL_ARM;
+		return state.get(CEILING) ? AllShapes.MECHANICAL_ARM_CEILING : AllShapes.MECHANICAL_ARM;
 	}
 
 	@Override
@@ -70,10 +90,12 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity> {
 	@Override
 	public ActionResultType onUse(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player,
 		Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
-		if (world.isRemote)
-			return ActionResultType.SUCCESS;
+		MutableBoolean success = new MutableBoolean(false);
 		withTileEntityDo(world, pos, te -> {
 			if (te.heldItem.isEmpty())
+				return;
+			success.setTrue();
+			if (world.isRemote)
 				return;
 			player.inventory.placeItemBackInInventory(world, te.heldItem);
 			te.heldItem = ItemStack.EMPTY;
@@ -81,7 +103,8 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity> {
 			te.markDirty();
 			te.sendData();
 		});
-		return ActionResultType.SUCCESS;
+		
+		return success.booleanValue() ? ActionResultType.SUCCESS : ActionResultType.PASS;
 	}
 
 }

@@ -10,6 +10,7 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class BrassFunnelBlock extends FunnelBlock {
@@ -48,7 +49,7 @@ public class BrassFunnelBlock extends FunnelBlock {
 	}
 
 	@Override
-	public BlockState getEquivalentBeltFunnel(BlockState state) {
+	public BlockState getEquivalentBeltFunnel(IBlockReader world, BlockPos pos, BlockState state) {
 		Direction facing = state.get(FACING);
 		return AllBlocks.BRASS_BELT_FUNNEL.getDefaultState()
 			.with(BeltFunnelBlock.HORIZONTAL_FACING, facing)
@@ -56,7 +57,7 @@ public class BrassFunnelBlock extends FunnelBlock {
 	}
 
 	@Override
-	public BlockState getEquivalentChuteFunnel(BlockState state) {
+	public BlockState getEquivalentChuteFunnel(IBlockReader world, BlockPos pos, BlockState state) {
 		Direction facing = state.get(FACING);
 		return AllBlocks.BRASS_CHUTE_FUNNEL.getDefaultState()
 			.with(ChuteFunnelBlock.HORIZONTAL_FACING, facing)

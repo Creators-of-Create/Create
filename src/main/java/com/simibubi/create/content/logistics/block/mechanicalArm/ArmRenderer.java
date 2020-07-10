@@ -5,6 +5,9 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -18,6 +21,7 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 
 public class ArmRenderer extends KineticTileEntityRenderer {
 
@@ -35,6 +39,21 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		MatrixStacker msr = MatrixStacker.of(ms);
 		int color = 0xFFFFFF;
 
+		float baseAngle = arm.baseAngle.get(pt);
+		float lowerArmAngle = arm.lowerArmAngle.get(pt) - 135;
+		float upperArmAngle = arm.upperArmAngle.get(pt) - 90;
+		float headAngle = arm.headAngle.get(pt);
+		
+		boolean rave = te instanceof ArmTileEntity && ((ArmTileEntity) te).phase == Phase.DANCING;
+		float renderTick = AnimationTickHolder.getRenderTick() + (te.hashCode() % 64);
+		if (rave) {
+			baseAngle = (renderTick * 10) % 360;
+			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
+			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
+			headAngle = -lowerArmAngle;
+			color = ColorHelper.rainbowColor(AnimationTickHolder.ticks * 100);
+		}
+		
 		ms.push();
 
 		SuperByteBuffer base = AllBlockPartials.ARM_BASE.renderOn(blockState).light(light);
@@ -45,24 +64,27 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		SuperByteBuffer clawGrip = AllBlockPartials.ARM_CLAW_GRIP.renderOn(blockState).light(light);
 
 		msr.centre();
+		
+		if (blockState.get(ArmBlock.CEILING))
+			msr.rotateX(180);
 
 		ms.translate(0, 4 / 16d, 0);
-		msr.rotateY(arm.baseAngle.get(pt));
+		msr.rotateY(baseAngle);
 		base.renderInto(ms, builder);
 
 		ms.translate(0, 1 / 16d, -2 / 16d);
-		msr.rotateX(arm.lowerArmAngle.get(pt) - 135);
+		msr.rotateX(lowerArmAngle);
 		ms.translate(0, -1 / 16d, 0);
 		lowerBody.color(color)
 			.renderInto(ms, builder);
 
 		ms.translate(0, 12 / 16d, 12 / 16d);
-		msr.rotateX(arm.upperArmAngle.get(pt) - 90);
+		msr.rotateX(upperArmAngle);
 		upperBody.color(color)
 			.renderInto(ms, builder);
 
 		ms.translate(0, 11 / 16d, -11 / 16d);
-		msr.rotateX(arm.headAngle.get(pt));
+		msr.rotateX(headAngle);
 		head.renderInto(ms, builder);
 
 		ms.translate(0, 0, -4 / 16d);

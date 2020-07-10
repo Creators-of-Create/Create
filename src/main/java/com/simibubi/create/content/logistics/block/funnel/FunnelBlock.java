@@ -61,8 +61,8 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 		BlockRayTraceResult hit) {
 
 		ItemStack heldItem = player.getHeldItem(handIn);
-		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem);
-
+		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem) || !canInsertIntoFunnel(state);
+		
 		if (hit.getFace() == getFunnelFacing(state) && !shouldntInsertItem) {
 			if (!worldIn.isRemote)
 				withTileEntityDo(worldIn, pos, te -> {
@@ -144,17 +144,17 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 		if (facing.getAxis()
 			.isHorizontal()) {
 			if (direction == Direction.DOWN) {
-				BlockState equivalentFunnel = getEquivalentBeltFunnel(state);
+				BlockState equivalentFunnel = getEquivalentBeltFunnel(null, null, state);
 				if (BeltFunnelBlock.isOnValidBelt(equivalentFunnel, world, pos))
-					return equivalentFunnel;
+					return BeltFunnelBlock.updateShape(equivalentFunnel, world, pos);
 			}
 			if (direction == facing) {
-				BlockState equivalentFunnel = getEquivalentChuteFunnel(state);
+				BlockState equivalentFunnel = getEquivalentChuteFunnel(null, null, state);
 				if (ChuteFunnelBlock.isOnValidChute(equivalentFunnel, world, pos))
 					return equivalentFunnel;
 			}
 			if (direction == facing.getOpposite()) {
-				BlockState equivalentFunnel = getEquivalentChuteFunnel(state);
+				BlockState equivalentFunnel = getEquivalentChuteFunnel(null, null, state);
 				if (ChuteFunnelBlock.isOnValidChute(equivalentFunnel, world, pos))
 					return equivalentFunnel;
 			}
@@ -162,9 +162,9 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 		return state;
 	}
 
-	public abstract BlockState getEquivalentChuteFunnel(BlockState state);
+	public abstract BlockState getEquivalentChuteFunnel(IBlockReader world, BlockPos pos, BlockState state);
 
-	public abstract BlockState getEquivalentBeltFunnel(BlockState state);
+	public abstract BlockState getEquivalentBeltFunnel(IBlockReader world, BlockPos pos, BlockState state);
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {

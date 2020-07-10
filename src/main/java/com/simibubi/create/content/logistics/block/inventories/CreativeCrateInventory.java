@@ -35,7 +35,7 @@ public class CreativeCrateInventory implements IItemHandler {
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		ItemStack filter = te.filter.getFilter().copy();
 		if (!filter.isEmpty())
-			filter.setCount(amount);
+			filter.setCount(Math.min(filter.getMaxStackSize(), amount));
 		return filter;
 	}
 

@@ -119,9 +119,16 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		if (world.isRemote && running && !basinItemInv.isPresent()) 
+			updateBasin();
+	}
+	
+	@Override
 	public void tick() {
 		super.tick();
-
+		
 		if (runningTicks >= 40) {
 			running = false;
 			runningTicks = 0;
@@ -156,6 +163,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	public void renderParticles() {
 		IItemHandler itemHandler = basinItemInv.orElse(null);
 		BasinInventory inv = (BasinInventory) itemHandler;
+		if (inv == null)
+			return;
 
 		for (int slot = 0; slot < inv.getInputHandler()
 			.getSlots(); slot++) {

@@ -700,7 +700,11 @@ public class AllBlocks {
 
 	public static final BlockEntry<ArmBlock> MECHANICAL_ARM = REGISTRATE.block("mechanical_arm", ArmBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		.blockstate((c, p) -> p.getVariantBuilder(c.get())
+			.forAllStates(s -> ConfiguredModel.builder()
+				.modelFile(AssetLookup.partialBaseModel(c, p))
+				.rotationX(s.get(ArmBlock.CEILING) ? 180 : 0)
+				.build()))
 		.transform(StressConfigDefaults.setImpact(8.0))
 		.item(ArmItem::new)
 		.transform(customItemModel())

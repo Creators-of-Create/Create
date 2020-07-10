@@ -34,6 +34,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 	private FilteringBehaviour filtering;
 	private InsertingBehaviour inserting;
 	private ExtractingBehaviour extracting;
+	private DirectBeltInputBehaviour beltInputBehaviour;
 
 	int sendFlap;
 	InterpolatedChasingValue flap;
@@ -183,11 +184,29 @@ public class FunnelTileEntity extends SmartTileEntity {
 		filtering.onlyActiveWhen(this::supportsFiltering);
 		behaviours.add(filtering);
 
+		beltInputBehaviour = new DirectBeltInputBehaviour(this).onlyInsertWhen(this::supportsDirectBeltInput)
+			.setInsertionHandler(this::handleDirectBeltInput);
+		behaviours.add(beltInputBehaviour);
+	}
+
+	private boolean supportsDirectBeltInput(Direction side) {
+		BlockState blockState = getBlockState();
+		return blockState != null && blockState.getBlock() instanceof FunnelBlock
+			&& blockState.get(FunnelBlock.FACING) == Direction.UP;
 	}
 
 	private boolean supportsFiltering() {
 		BlockState blockState = getBlockState();
 		return blockState != null && blockState.has(BlockStateProperties.POWERED);
+	}
+
+	private ItemStack handleDirectBeltInput(TransportedItemStack stack, Direction side, boolean simulate) {
+		ItemStack inserted = stack.stack;
+		if (!filtering.test(inserted))
+			return inserted;
+		if (determineCurrentMode() == Mode.PAUSED)
+			return inserted;
+		return inserting.insert(inserted, simulate);
 	}
 
 	public void flap(boolean inward) {

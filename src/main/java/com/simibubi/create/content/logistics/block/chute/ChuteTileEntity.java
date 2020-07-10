@@ -147,8 +147,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return false;
 
 		BlockState stateBelow = world.getBlockState(pos.down());
-		if (AllBlocks.BRASS_FUNNEL.has(stateBelow)) {
-			if (stateBelow.get(BrassFunnelBlock.POWERED))
+		if (stateBelow.getBlock() instanceof FunnelBlock) {
+			if (stateBelow.has(BrassFunnelBlock.POWERED) && stateBelow.get(BrassFunnelBlock.POWERED))
 				return false;
 			if (stateBelow.get(BrassFunnelBlock.FACING) != Direction.UP)
 				return false;
@@ -187,9 +187,9 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	private boolean handleUpwardOutput(boolean simulate) {
 		BlockState stateAbove = world.getBlockState(pos.up());
-		if (AllBlocks.BRASS_FUNNEL.has(stateAbove)) {
-			if (!stateAbove.get(BrassFunnelBlock.POWERED)
-				&& stateAbove.get(BrassFunnelBlock.FACING) == Direction.DOWN) {
+		if (stateAbove.getBlock() instanceof FunnelBlock) {
+			boolean powered = stateAbove.has(BrassFunnelBlock.POWERED) && stateAbove.get(BrassFunnelBlock.POWERED);
+			if (!powered && stateAbove.get(BrassFunnelBlock.FACING) == Direction.DOWN) {
 				ItemStack remainder = FunnelBlock.tryInsert(world, pos.up(), item, simulate);
 				if (remainder.isEmpty()) {
 					if (!simulate)
