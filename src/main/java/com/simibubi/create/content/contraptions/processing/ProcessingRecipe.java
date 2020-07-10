@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.processing;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -15,7 +15,13 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<T> {
 	protected final List<ProcessingIngredient> ingredients;
 	private final List<ProcessingOutput> results;
@@ -24,9 +30,11 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	protected final ResourceLocation id;
 	protected final String group;
 	protected final int processingDuration;
+	protected final List<FluidStack> fluidIngredients;
+	protected final List<FluidStack> fluidResults;
 
 	public ProcessingRecipe(AllRecipeTypes recipeType, ResourceLocation id, String group,
-			List<ProcessingIngredient> ingredients, List<ProcessingOutput> results, int processingDuration) {
+		List<ProcessingIngredient> ingredients, List<ProcessingOutput> results, int processingDuration) {
 		this.type = recipeType.type;
 		this.serializer = recipeType.serializer;
 		this.id = id;
@@ -34,20 +42,37 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 		this.ingredients = ingredients;
 		this.results = results;
 		this.processingDuration = processingDuration;
+		this.fluidIngredients = null;
+		this.fluidResults = null;
+		validate(recipeType);
+	}
+
+	public ProcessingRecipe(AllRecipeTypes recipeType, ResourceLocation id, String group,
+		List<ProcessingIngredient> ingredients, List<ProcessingOutput> results, int processingDuration,
+		@Nullable List<FluidStack> fluidIngredients, @Nullable List<FluidStack> fluidResults) {
+		this.type = recipeType.type;
+		this.serializer = recipeType.serializer;
+		this.id = id;
+		this.group = group;
+		this.ingredients = ingredients;
+		this.results = results;
+		this.processingDuration = processingDuration;
+		this.fluidIngredients = fluidIngredients;
+		this.fluidResults = fluidResults;
 		validate(recipeType);
 	}
 
 	private void validate(AllRecipeTypes recipeType) {
 		if (ingredients.size() > getMaxInputCount())
 			Create.logger.warn("Your custom " + recipeType.name() + " recipe (" + id.toString() + ") has more inputs ("
-					+ ingredients.size() + ") than supported (" + getMaxInputCount() + ").");
+				+ ingredients.size() + ") than supported (" + getMaxInputCount() + ").");
 		if (results.size() > getMaxOutputCount())
 			Create.logger.warn("Your custom " + recipeType.name() + " recipe (" + id.toString() + ") has more outputs ("
-					+ results.size() + ") than supported (" + getMaxOutputCount() + ").");
+				+ results.size() + ") than supported (" + getMaxOutputCount() + ").");
 		ingredients.forEach(i -> {
 			if (i.isCatalyst() && !canHaveCatalysts())
 				Create.logger.warn("Your custom " + recipeType.name() + " recipe (" + id.toString()
-						+ ") has a catalyst ingredient, which act like a regular ingredient in this type.");
+					+ ") has a catalyst ingredient, which act like a regular ingredient in this type.");
 		});
 	}
 
@@ -62,14 +87,14 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 		return processingDuration;
 	}
 
-	public List<ItemStack> rollResults() {
-		List<ItemStack> stacks = new ArrayList<>();
-		for (ProcessingOutput output : getRollableResults()) {
+	public CombinedItemFluidList rollResults() {
+		CombinedItemFluidList results = new CombinedItemFluidList();
+		for (ProcessingOutput output : getRollableItemResults()) {
 			ItemStack stack = output.rollOutput();
 			if (!stack.isEmpty())
-				stacks.add(stack);
+				results.add(stack);
 		}
-		return stacks;
+		return results;
 	}
 
 	@Override
@@ -84,7 +109,9 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		return getRollableResults().isEmpty() ? ItemStack.EMPTY : getRollableResults().get(0).getStack();
+		return getRollableItemResults().isEmpty() ? ItemStack.EMPTY
+			: getRollableItemResults().get(0)
+				.getStack();
 	}
 
 	@Override
@@ -119,15 +146,25 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 		return false;
 	}
 
-	public List<ProcessingOutput> getRollableResults() {
+	public List<ProcessingOutput> getRollableItemResults() {
 		return results;
 	}
-	
+
 	public List<ProcessingIngredient> getRollableIngredients() {
 		return ingredients;
 	}
 
 	public List<ItemStack> getPossibleOutputs() {
-		return getRollableResults().stream().map(output -> output.getStack()).collect(Collectors.toList());
+		return getRollableItemResults().stream()
+			.map(ProcessingOutput::getStack)
+			.collect(Collectors.toList());
+	}
+
+	protected boolean canHaveFluidIngredient() {
+		return false;
+	}
+
+	protected boolean canHaveFluidOutput() {
+		return false;
 	}
 }

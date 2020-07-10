@@ -1,14 +1,15 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
+import com.simibubi.create.content.contraptions.processing.CombinedItemFluidList;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
@@ -29,7 +30,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.items.IItemHandler;
 
 public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
@@ -65,7 +65,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	public float getRenderedHeadOffset(float partialTicks) {
-		int localTick = 0;
+		int localTick;
 		float offset = 0;
 		if (running) {
 			if (runningTicks < 20) {
@@ -154,26 +154,45 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	public void renderParticles() {
-		IItemHandler itemHandler = basinItemInv.orElse(null);
-		BasinInventory inv = (BasinInventory) itemHandler;
+		if (world == null)
+			return;
+		basinItemInv.ifPresent(inv -> {
+			for (int slot = 0; slot < ((BasinInventory) inv).getInputHandler()
+				.getSlots(); slot++) {
+				ItemStack stackInSlot = inv.getStackInSlot(slot);
+				if (stackInSlot.isEmpty())
+					continue;
 
-		for (int slot = 0; slot < inv.getInputHandler()
-			.getSlots(); slot++) {
-			ItemStack stackInSlot = itemHandler.getStackInSlot(slot);
-			if (stackInSlot.isEmpty())
-				continue;
+				ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
+				float angle = world.rand.nextFloat() * 360;
+				Vec3d offset = new Vec3d(0, 0, 0.25f);
+				offset = VecHelper.rotate(offset, angle, Axis.Y);
+				Vec3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
+					.add(0, .25f, 0);
 
-			ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
-			float angle = world.rand.nextFloat() * 360;
-			Vec3d offset = new Vec3d(0, 0, 0.25f);
-			offset = VecHelper.rotate(offset, angle, Axis.Y);
-			Vec3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
-				.add(0, .25f, 0);
+				Vec3d center = offset.add(VecHelper.getCenterOf(pos));
+				target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
+				world.addParticle(data, center.x, center.y - 2, center.z, target.x, target.y, target.z);
+			}
+		});
 
-			Vec3d center = offset.add(VecHelper.getCenterOf(pos));
-			target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
-			world.addParticle(data, center.x, center.y - 2, center.z, target.x, target.y, target.z);
-		}
+		// Fluid Particles
+		/*
+		 * basinFluidInv.ifPresent(fluidInv -> ((CombinedFluidHandler)
+		 * fluidInv).forEachTank(fluidStack -> { if(fluidStack.isEmpty()) return; float
+		 * angle = world.rand.nextFloat() * 360; Vec3d offset = new Vec3d(0, 0, 0.25f);
+		 * offset = VecHelper.rotate(offset, angle, Axis.Y); Vec3d target =
+		 * VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y) .add(0, .25f, 0);
+		 * 
+		 * Vec3d center = offset.add(VecHelper.getCenterOf(pos)); target =
+		 * VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
+		 * IParticleData data = new AirFlowParticleData(this.pos.down(2));
+		 * world.addParticle(data, center.x, center.y - 2, center.z, target.x, target.y,
+		 * target.z);
+		 * 
+		 * }));
+		 */
+
 	}
 
 	@Override
@@ -195,14 +214,16 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			.allMatch(ingredient -> (ingredient.isSimple() || ingredient.getMatchingStacks().length == 1)))
 			return false;
 
-		List<ItemStack> remaining = new ArrayList<>();
+		CombinedItemFluidList remaining = new CombinedItemFluidList();
 		inputs.forEachItemStack(stack -> remaining.add(stack.copy()));
+		basinFluidInv.ifPresent(
+			fluidInv -> ((CombinedFluidHandler) fluidInv).forEachTank(fluidStack -> remaining.add(fluidStack.copy())));
 
 		// sort by leniency
 		List<Ingredient> sortedIngredients = new LinkedList<>(ingredients);
 		sortedIngredients.sort(Comparator.comparingInt(i -> i.getMatchingStacks().length));
 		Ingredients: for (Ingredient ingredient : sortedIngredients) {
-			for (ItemStack stack : remaining) {
+			for (ItemStack stack : remaining.getItemStacks()) {
 				if (stack.isEmpty())
 					continue;
 				if (ingredient.test(stack)) {
@@ -212,6 +233,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			}
 			return false;
 		}
+
+		if (!(recipe instanceof MixingRecipe))
+			return true;
 		return true;
 	}
 

@@ -6,8 +6,10 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
+import com.simibubi.create.content.contraptions.processing.CombinedItemFluidList;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -297,11 +299,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			.allMatch(Ingredient::isSimple))
 			return false;
 
-		List<ItemStack> remaining = new ArrayList<>();
+		CombinedItemFluidList remaining = new CombinedItemFluidList();
 		inputs.forEachItemStack(stack -> remaining.add(stack.copy()));
+		basinFluidInv.ifPresent(fluidInv -> ((CombinedFluidHandler) fluidInv).forEachTank(fluidStack -> remaining.add(fluidStack.copy())));
 
 		Ingredients: for (Ingredient ingredient : ingredients) {
-			for (ItemStack stack : remaining) {
+			for (ItemStack stack : remaining.getItemStacks()) {
 				if (stack.isEmpty())
 					continue;
 				if (ingredient.test(stack)) {

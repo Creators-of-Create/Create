@@ -7,9 +7,9 @@ import net.minecraft.network.PacketBuffer;
 
 public class ProcessingOutput {
 
-	private static Random r = new Random();
-	private ItemStack stack;
-	private float chance;
+	private static final Random r = new Random();
+	private final ItemStack stack;
+	private final float chance;
 
 	public ProcessingOutput(ItemStack stack, float chance) {
 		this.stack = stack;

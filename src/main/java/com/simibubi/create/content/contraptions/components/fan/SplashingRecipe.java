@@ -11,11 +11,16 @@ import com.simibubi.create.content.logistics.InWorldProcessing.SplashingInv;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class SplashingRecipe extends ProcessingRecipe<InWorldProcessing.SplashingInv> {
 
 	public SplashingRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
-			List<ProcessingOutput> results, int processingDuration) {
+		List<ProcessingOutput> results, int processingDuration, List<FluidStack> fluidIngredients,
+		List<FluidStack> fluidResults) {
 		super(AllRecipeTypes.SPLASHING, id, group, ingredients, results, processingDuration);
 	}
 
@@ -23,9 +28,10 @@ public class SplashingRecipe extends ProcessingRecipe<InWorldProcessing.Splashin
 	public boolean matches(SplashingInv inv, World worldIn) {
 		if (inv.isEmpty())
 			return false;
-		return ingredients.get(0).test(inv.getStackInSlot(0));
+		return ingredients.get(0)
+			.test(inv.getStackInSlot(0));
 	}
-	
+
 	@Override
 	protected int getMaxOutputCount() {
 		return 6;
