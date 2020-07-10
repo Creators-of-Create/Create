@@ -93,7 +93,7 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 		//After getting moved by pistons the generatedSpeed 
 		//attribute reads 16 but the actual speed stays at 0, 
 		//if it happens update rotation
-		if (getGeneratedSpeed() > 0 && getSpeed() == 0)
+		if (getGeneratedSpeed() != 0 && getSpeed() == 0)
 			updateGeneratedRotation();
 		
 		if (stoppingCooldown == 0)
