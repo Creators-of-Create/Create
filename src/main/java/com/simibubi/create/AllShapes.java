@@ -99,6 +99,7 @@ public class AllShapes {
 		.add(2, 0, 2, 14, 2, 14)
 		.build(),
 		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 22, 16),
+		SEAT = cuboid(0, 0, 0, 16, 8, 16),
 		MECHANICAL_PROCESSOR_SHAPE = shape(VoxelShapes.fullCube()).erase(4, 0, 4, 12, 16, 12)
 			.build(),
 		TURNTABLE_SHAPE = shape(1, 4, 1, 15, 8, 15).add(5, 0, 5, 11, 4, 11)
