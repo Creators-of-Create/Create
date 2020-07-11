@@ -11,7 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.item.ItemStack;
@@ -21,15 +21,19 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ExtractingBehaviour extends InventoryManagementBehaviour {
 
-	public static IBehaviourType<ExtractingBehaviour> TYPE = new IBehaviourType<ExtractingBehaviour>() {
-	};
+	public static BehaviourType<ExtractingBehaviour> TYPE = new BehaviourType<>();
 
 	private Function<ItemStack, Integer> customAmountFilter;
 	private Predicate<ItemStack> customFilter;
 	private Consumer<ItemStack> callback;
 
+	public ExtractingBehaviour(SmartTileEntity te, Supplier<List<Pair<BlockPos, Direction>>> attachments) {
+		this(te, attachments, item -> {
+		});
+	}
+
 	public ExtractingBehaviour(SmartTileEntity te, Supplier<List<Pair<BlockPos, Direction>>> attachments,
-			Consumer<ItemStack> onExtract) {
+		Consumer<ItemStack> onExtract) {
 		super(te, attachments);
 		customAmountFilter = stack -> 64;
 		customFilter = stack -> true;
@@ -90,7 +94,7 @@ public class ExtractingBehaviour extends InventoryManagementBehaviour {
 	}
 
 	@Override
-	public IBehaviourType<?> getType() {
+	public BehaviourType<?> getType() {
 		return TYPE;
 	}
 

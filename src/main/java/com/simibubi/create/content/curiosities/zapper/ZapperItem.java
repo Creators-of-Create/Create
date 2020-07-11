@@ -41,6 +41,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+import javax.annotation.Nonnull;
+
 public abstract class ZapperItem extends Item {
 
 	public ZapperItem(Properties properties) {
@@ -80,10 +82,11 @@ public abstract class ZapperItem extends Item {
 		return newStack.getItem() instanceof ZapperItem;
 	}
 
+	@Nonnull
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		// Shift -> open GUI
-		if (context.getPlayer()
+		if (context.getPlayer() != null && context.getPlayer()
 			.isSneaking()) {
 			if (context.getWorld().isRemote) {
 				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
@@ -218,7 +221,7 @@ public abstract class ZapperItem extends Item {
 	public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
 		return false;

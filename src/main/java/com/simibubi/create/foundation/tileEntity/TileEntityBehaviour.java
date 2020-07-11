@@ -1,13 +1,13 @@
 package com.simibubi.create.foundation.tileEntity;
 
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public abstract class TileEntityBehaviour {
@@ -23,7 +23,7 @@ public abstract class TileEntityBehaviour {
 		setLazyTickRate(10);
 	}
 
-	public abstract IBehaviourType<?> getType();
+	public abstract BehaviourType<?> getType();
 
 	public void initialize() {
 
@@ -90,19 +90,19 @@ public abstract class TileEntityBehaviour {
 		return tileEntity.getWorld();
 	}
 
-	public static <T extends TileEntityBehaviour> T get(ILightReader reader, BlockPos pos,
-			IBehaviourType<T> type) {
+	public static <T extends TileEntityBehaviour> T get(IBlockReader reader, BlockPos pos,
+			BehaviourType<T> type) {
 		return get(reader.getTileEntity(pos), type);
 	}
 	
-	public static <T extends TileEntityBehaviour> void destroy(ILightReader reader, BlockPos pos,
-			IBehaviourType<T> type) {
+	public static <T extends TileEntityBehaviour> void destroy(IBlockReader reader, BlockPos pos,
+			BehaviourType<T> type) {
 		T behaviour = get(reader.getTileEntity(pos), type);
 		if (behaviour != null)
 			behaviour.destroy();
 	}
 
-	public static <T extends TileEntityBehaviour> T get(TileEntity te, IBehaviourType<T> type) {
+	public static <T extends TileEntityBehaviour> T get(TileEntity te, BehaviourType<T> type) {
 		if (te == null)
 			return null;
 		if (!(te instanceof SmartTileEntity))

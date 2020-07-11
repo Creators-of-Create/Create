@@ -69,9 +69,9 @@ public class WorldshaperRenderHandler {
 			return;
 		}
 
-		Brush brush = NBTHelper.readEnum(tag.getString("Brush"), TerrainBrushes.class)
+		Brush brush = NBTHelper.readEnum(tag, "Brush", TerrainBrushes.class)
 			.get();
-		PlacementOptions placement = NBTHelper.readEnum(tag.getString("Placement"), PlacementOptions.class);
+		PlacementOptions placement = NBTHelper.readEnum(tag, "Placement", PlacementOptions.class);
 		BlockPos params = NBTUtil.readBlockPos(tag.getCompound("BrushParams"));
 		brush.set(params.getX(), params.getY(), params.getZ());
 		renderedShape = brush.getIncludedPositions();

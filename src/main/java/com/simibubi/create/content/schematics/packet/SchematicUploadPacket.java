@@ -68,6 +68,8 @@ public class SchematicUploadPacket extends SimplePacketBase {
 			.enqueueWork(() -> {
 				ServerPlayerEntity player = context.get()
 					.getSender();
+				if (player == null)
+					return;
 				if (code == BEGIN) {
 					BlockPos pos = ((SchematicTableContainer) player.openContainer).getTileEntity()
 						.getPos();

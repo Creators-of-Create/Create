@@ -5,6 +5,7 @@ import java.util.OptionalDouble;
 import java.util.Random;
 
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
+import com.simibubi.create.content.palettes.MetalBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,13 +21,19 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class OxidizingBlock extends Block {
+public class OxidizingBlock extends MetalBlock {
 
 	public static final IntegerProperty OXIDIZATION = IntegerProperty.create("oxidization", 0, 7);
 	private float chance;
 
 	public OxidizingBlock(Properties properties, float chance) {
 		super(properties);
+		this.chance = chance;
+		setDefaultState(getDefaultState().with(OXIDIZATION, 0));
+	}
+	
+	public OxidizingBlock(Properties properties, float chance, boolean isBeaconBaseBlock) {
+		super(properties, isBeaconBaseBlock);
 		this.chance = chance;
 		setDefaultState(getDefaultState().with(OXIDIZATION, 0));
 	}

@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.Direction;
@@ -13,8 +13,7 @@ import net.minecraft.world.World;
 
 public class EdgeInteractionBehaviour extends TileEntityBehaviour {
 
-	public static IBehaviourType<EdgeInteractionBehaviour> TYPE = new IBehaviourType<EdgeInteractionBehaviour>() {
-	};
+	public static BehaviourType<EdgeInteractionBehaviour> TYPE = new BehaviourType<>();
 	
 	ConnectionCallback connectionCallback;
 	ConnectivityPredicate connectivityPredicate;
@@ -38,7 +37,7 @@ public class EdgeInteractionBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public IBehaviourType<?> getType() {
+	public BehaviourType<?> getType() {
 		return TYPE;
 	}
 	

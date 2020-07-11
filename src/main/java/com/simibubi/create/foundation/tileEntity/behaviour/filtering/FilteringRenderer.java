@@ -9,6 +9,9 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox.ItemValueBox;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxRenderer;
+import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
@@ -16,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -36,12 +40,19 @@ public class FilteringRenderer {
 		BlockState state = world.getBlockState(pos);
 
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
-		if (behaviour == null)
-			return;
-		if (!behaviour.isActive())
-			return;
 		if (mc.player.isSneaking())
 			return;
+		if (behaviour == null)
+			return;
+		if (behaviour instanceof SidedFilteringBehaviour) {
+			behaviour = ((SidedFilteringBehaviour) behaviour).get(result.getFace());
+			if (behaviour == null)
+				return;
+		}
+		if (!behaviour.isActive())
+			return;
+		if (behaviour.slotPositioning instanceof ValueBoxTransform.Sided)
+			((Sided) behaviour.slotPositioning).fromSide(result.getFace());
 		if (!behaviour.slotPositioning.shouldRender(state))
 			return;
 
@@ -80,11 +91,35 @@ public class FilteringRenderer {
 		if (!behaviour.isActive())
 			return;
 		if (behaviour.getFilter()
-			.isEmpty())
+			.isEmpty() && !(behaviour instanceof SidedFilteringBehaviour))
 			return;
 
+		ValueBoxTransform slotPositioning = behaviour.slotPositioning;
+		BlockState blockState = tileEntityIn.getBlockState();
+
+		if (slotPositioning instanceof ValueBoxTransform.Sided) {
+			ValueBoxTransform.Sided sided = (ValueBoxTransform.Sided) slotPositioning;
+			Direction side = sided.getSide();
+			for (Direction d : Iterate.directions) {
+				ItemStack filter = behaviour.getFilter(d);
+				if (filter.isEmpty())
+					continue;
+				
+				sided.fromSide(d);
+				if (!slotPositioning.shouldRender(blockState))
+					continue;
+
+				ms.push();
+				slotPositioning.transform(blockState, ms);
+				ValueBoxRenderer.renderItemIntoValueBox(filter, ms, buffer, light, overlay);
+				ms.pop();
+			}
+			sided.fromSide(side);
+			return;
+		}
+
 		ms.push();
-		behaviour.slotPositioning.transform(tileEntityIn.getBlockState(), ms);
+		slotPositioning.transform(blockState, ms);
 		ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter(), ms, buffer, light, overlay);
 		ms.pop();
 	}

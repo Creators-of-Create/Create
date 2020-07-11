@@ -11,7 +11,9 @@ import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.entity.Entity;
@@ -24,7 +26,6 @@ import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -36,7 +37,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class CrushingWheelControllerTileEntity extends SyncedTileEntity implements ITickableTileEntity {
+public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 
 	public Entity processingEntity;
 	private UUID entityUUID;
@@ -61,13 +62,19 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	}
 
 	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		behaviours.add(new DirectBeltInputBehaviour(this));
+	}
+
+	@Override
 	public void tick() {
+		super.tick();
 		if (isFrozen())
 			return;
 		if (searchForEntity) {
 			searchForEntity = false;
 			List<Entity> search = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()),
-					e -> entityUUID.equals(e.getUniqueID()));
+				e -> entityUUID.equals(e.getUniqueID()));
 			if (search.isEmpty())
 				clear();
 			else
@@ -84,9 +91,9 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 		if (!hasEntity()) {
 
-			float processingSpeed = MathHelper.clamp(
-					(speed) / (!inventory.appliedRecipe ? MathHelper.log2(inventory.getStackInSlot(0).getCount()) : 1),
-					.25f, 20);
+			float processingSpeed =
+				MathHelper.clamp((speed) / (!inventory.appliedRecipe ? MathHelper.log2(inventory.getStackInSlot(0)
+					.getCount()) : 1), .25f, 20);
 			inventory.remainingTime -= processingSpeed;
 			spawnParticles(inventory.getStackInSlot(0));
 
@@ -107,7 +114,8 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 						continue;
 					ItemEntity entityIn = new ItemEntity(world, outPos.x, outPos.y, outPos.z, stack);
 					entityIn.setMotion(Vec3d.ZERO);
-					entityIn.getPersistentData().put("BypassCrushingWheel", NBTUtil.writeBlockPos(pos));
+					entityIn.getPersistentData()
+						.put("BypassCrushingWheel", NBTUtil.writeBlockPos(pos));
 					world.addEntity(entityIn);
 				}
 				inventory.clear();
@@ -118,8 +126,8 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 			return;
 		}
 
-		if (!processingEntity.isAlive()
-				|| !processingEntity.getBoundingBox().intersects(new AxisAlignedBB(pos).grow(.5f))) {
+		if (!processingEntity.isAlive() || !processingEntity.getBoundingBox()
+			.intersects(new AxisAlignedBB(pos).grow(.5f))) {
 			clear();
 			return;
 		}
@@ -136,7 +144,7 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 		if (!(processingEntity instanceof ItemEntity)) {
 			processingEntity.attackEntityFrom(CrushingWheelTileEntity.damageSource,
-					AllConfigs.SERVER.kinetics.crushingDamage.get());
+				AllConfigs.SERVER.kinetics.crushingDamage.get());
 			if (!processingEntity.isAlive()) {
 				processingEntity.setPosition(outPos.x, outPos.y - .75f, outPos.z);
 			}
@@ -147,7 +155,8 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 		itemEntity.setPickupDelay(20);
 		if (processingEntity.getY() < pos.getY() + .25f) {
 			inventory.clear();
-			inventory.setStackInSlot(0, itemEntity.getItem().copy());
+			inventory.setStackInSlot(0, itemEntity.getItem()
+				.copy());
 			itemInserted(inventory.getStackInSlot(0));
 			itemEntity.remove();
 			world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 2 | 16);
@@ -161,15 +170,15 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 		IParticleData particleData = null;
 		if (stack.getItem() instanceof BlockItem)
-			particleData =
-				new BlockParticleData(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock().getDefaultState());
+			particleData = new BlockParticleData(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock()
+				.getDefaultState());
 		else
 			particleData = new ItemParticleData(ParticleTypes.ITEM, stack);
 
 		Random r = world.rand;
 		for (int i = 0; i < 4; i++)
 			world.addParticle(particleData, pos.getX() + r.nextFloat(), pos.getY() + r.nextFloat(),
-					pos.getZ() + r.nextFloat(), 0, 0, 0);
+				pos.getZ() + r.nextFloat(), 0, 0, 0);
 	}
 
 	private void applyRecipe() {
@@ -177,10 +186,12 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 		List<ItemStack> list = new ArrayList<>();
 		if (recipe.isPresent()) {
-			int rolls = inventory.getStackInSlot(0).getCount();
+			int rolls = inventory.getStackInSlot(0)
+				.getCount();
 			inventory.clear();
 			for (int roll = 0; roll < rolls; roll++) {
-				List<ItemStack> rolledResults = recipe.get().rollResults();
+				List<ItemStack> rolledResults = recipe.get()
+					.rollResults();
 				for (int i = 0; i < rolledResults.size(); i++) {
 					ItemStack stack = rolledResults.get(i);
 					ItemHelper.addToList(stack, list);
@@ -195,10 +206,11 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 	}
 
 	public Optional<ProcessingRecipe<RecipeWrapper>> findRecipe() {
-		Optional<ProcessingRecipe<RecipeWrapper>> crushingRecipe =
-			world.getRecipeManager().getRecipe(AllRecipeTypes.CRUSHING.getType(), wrapper, world);
+		Optional<ProcessingRecipe<RecipeWrapper>> crushingRecipe = world.getRecipeManager()
+			.getRecipe(AllRecipeTypes.CRUSHING.getType(), wrapper, world);
 		if (!crushingRecipe.isPresent())
-			crushingRecipe = world.getRecipeManager().getRecipe(AllRecipeTypes.MILLING.getType(), wrapper, world);
+			crushingRecipe = world.getRecipeManager()
+				.getRecipe(AllRecipeTypes.MILLING.getType(), wrapper, world);
 		return crushingRecipe;
 	}
 
@@ -231,7 +243,8 @@ public class CrushingWheelControllerTileEntity extends SyncedTileEntity implemen
 
 	private void itemInserted(ItemStack stack) {
 		Optional<ProcessingRecipe<RecipeWrapper>> recipe = findRecipe();
-		inventory.remainingTime = recipe.isPresent() ? recipe.get().getProcessingDuration() : 100;
+		inventory.remainingTime = recipe.isPresent() ? recipe.get()
+			.getProcessingDuration() : 100;
 		inventory.appliedRecipe = false;
 	}
 

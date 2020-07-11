@@ -43,7 +43,9 @@ public class FilterScreenPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayerEntity player = context.get().getSender();
-
+			if (player == null)
+				return;
+			
 			if (player.openContainer instanceof AbstractFilterContainer) {
 				AbstractFilterContainer c = (AbstractFilterContainer) player.openContainer;
 				if (option == Option.CLEAR) {

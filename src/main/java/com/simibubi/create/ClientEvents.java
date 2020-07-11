@@ -110,7 +110,6 @@ public class ClientEvents {
 			return;
 
 		double delta = event.getScrollDelta();
-
 //		CollisionDebugger.onScroll(delta);
 		boolean cancelled = CreateClient.schematicHandler.mouseScrolled(delta)
 			|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta) || FilteringHandler.onScroll(delta)

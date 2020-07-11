@@ -27,10 +27,12 @@ public abstract class DirectionalKineticBlock extends KineticBlock {
 	public Direction getPreferredFacing(BlockItemUseContext context) {
 		Direction prefferedSide = null;
 		for (Direction side : Direction.values()) {
-			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));
+			BlockState blockState = context.getWorld()
+				.getBlockState(context.getPos()
+					.offset(side));
 			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos().offset(side),
-						blockState, side.getOpposite()))
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos()
+					.offset(side), blockState, side.getOpposite()))
 					if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
 						prefferedSide = null;
 						break;
@@ -45,10 +47,11 @@ public abstract class DirectionalKineticBlock extends KineticBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction preferred = getPreferredFacing(context);
-		if (preferred == null || context.getPlayer().isSneaking()) {
+		if (preferred == null || (context.getPlayer() != null && context.getPlayer()
+			.isSneaking())) {
 			Direction nearestLookingDirection = context.getNearestLookingDirection();
-			return getDefaultState().with(FACING,
-					context.getPlayer().isSneaking() ? nearestLookingDirection : nearestLookingDirection.getOpposite());
+			return getDefaultState().with(FACING, context.getPlayer() != null && context.getPlayer()
+				.isSneaking() ? nearestLookingDirection : nearestLookingDirection.getOpposite());
 		}
 		return getDefaultState().with(FACING, preferred.getOpposite());
 	}

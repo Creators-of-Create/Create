@@ -1,0 +1,53 @@
+{
+  "variants": {
+    "axis=x,shape=straight": {
+      "model": "create:block/andesite_tunnel/straight"
+    },
+    "axis=z,shape=straight": {
+      "model": "create:block/andesite_tunnel/straight",
+      "y": 90
+    },
+    "axis=x,shape=window": {
+      "model": "create:block/andesite_tunnel/window"
+    },
+    "axis=z,shape=window": {
+      "model": "create:block/andesite_tunnel/window",
+      "y": 90
+    },
+    "axis=x,shape=halfshade": {
+      "model": "create:block/andesite_tunnel/halfshade"
+    },
+    "axis=z,shape=halfshade": {
+      "model": "create:block/andesite_tunnel/halfshade",
+      "y": 90
+    },
+    "axis=x,shape=fullshade": {
+      "model": "create:block/andesite_tunnel/fullshade"
+    },
+    "axis=z,shape=fullshade": {
+      "model": "create:block/andesite_tunnel/fullshade",
+      "y": 90
+    },
+    "axis=x,shape=t_left": {
+      "model": "create:block/andesite_tunnel/t_left"
+    },
+    "axis=z,shape=t_left": {
+      "model": "create:block/andesite_tunnel/t_left",
+      "y": 90
+    },
+    "axis=x,shape=t_right": {
+      "model": "create:block/andesite_tunnel/t_right"
+    },
+    "axis=z,shape=t_right": {
+      "model": "create:block/andesite_tunnel/t_right",
+      "y": 90
+    },
+    "axis=x,shape=cross": {
+      "model": "create:block/andesite_tunnel/cross"
+    },
+    "axis=z,shape=cross": {
+      "model": "create:block/andesite_tunnel/cross",
+      "y": 90
+    }
+  }
+}

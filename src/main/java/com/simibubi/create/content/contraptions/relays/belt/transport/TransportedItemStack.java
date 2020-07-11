@@ -9,6 +9,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 
 public class TransportedItemStack implements Comparable<TransportedItemStack> {
+	
+	private static Random R = new Random();
+	
 	public ItemStack stack;
 	public float beltPosition;
 	public float sideOffset;
@@ -25,7 +28,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 
 	public TransportedItemStack(ItemStack stack) {
 		this.stack = stack;
-		angle = new Random().nextInt(360);
+		angle = R.nextInt(360);
 		sideOffset = prevSideOffset = getTargetSideOffset();
 		insertedFrom = Direction.UP;
 	}
@@ -54,6 +57,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 	public TransportedItemStack copy() {
 		TransportedItemStack copy = getSimilar();
 		copy.angle = angle;
+		copy.sideOffset = sideOffset;
 		return copy;
 	}
 

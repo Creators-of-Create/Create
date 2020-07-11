@@ -8,6 +8,7 @@ import static com.simibubi.create.foundation.data.CreateRegistrate.connectedText
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.ModelGen.oxidizedItemModel;
 
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
@@ -62,6 +63,7 @@ import com.simibubi.create.content.contraptions.relays.advanced.sequencer.Sequen
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltColor;
 import com.simibubi.create.content.contraptions.relays.belt.BeltGenerator;
+import com.simibubi.create.content.contraptions.relays.belt.BeltModel;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
@@ -76,6 +78,12 @@ import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelCTBehaviour;
+import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
+import com.simibubi.create.content.logistics.block.chute.ChuteGenerator;
+import com.simibubi.create.content.logistics.block.chute.ChuteItem;
+import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.content.logistics.block.diodes.AbstractDiodeGenerator;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterGenerator;
@@ -88,11 +96,19 @@ import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
 import com.simibubi.create.content.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.content.logistics.block.extractor.LinkedExtractorBlock;
 import com.simibubi.create.content.logistics.block.extractor.VerticalExtractorGenerator;
-import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.VerticalFunnelGenerator;
+import com.simibubi.create.content.logistics.block.funnel.AndesiteBeltFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.AndesiteChuteFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.AndesiteFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelGenerator;
+import com.simibubi.create.content.logistics.block.funnel.BrassBeltFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.BrassChuteFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.ChuteFunnelGenerator;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
+import com.simibubi.create.content.logistics.block.packager.PackagerBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
@@ -103,6 +119,7 @@ import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock
 import com.simibubi.create.content.logistics.block.transposer.LinkedTransposerBlock;
 import com.simibubi.create.content.logistics.block.transposer.TransposerBlock;
 import com.simibubi.create.content.logistics.block.transposer.VerticalTransposerGenerator;
+import com.simibubi.create.content.palettes.MetalBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.config.StressConfigDefaults;
@@ -125,6 +142,7 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.common.ToolType;
 
@@ -255,9 +273,11 @@ public class AllBlocks {
 	public static final BlockEntry<BeltBlock> BELT = REGISTRATE.block("belt", BeltBlock::new)
 		.initialProperties(SharedProperties.beltMaterial, MaterialColor.GRAY)
 		.properties(p -> p.sound(SoundType.CLOTH))
+		.properties(p -> p.hardnessAndResistance(0.8F))
+		.blockstate(new BeltGenerator()::generate)
 		.transform(StressConfigDefaults.setImpact(1.0))
 		.onRegister(CreateRegistrate.blockColors(() -> BeltColor::new))
-		.blockstate(new BeltGenerator()::generate)
+		.onRegister(CreateRegistrate.blockModel(() -> BeltModel::new))
 		.register();
 
 	public static final BlockEntry<CreativeMotorBlock> CREATIVE_MOTOR =
@@ -290,6 +310,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<NozzleBlock> NOZZLE = REGISTRATE.block("nozzle", NozzleBlock::new)
 		.initialProperties(SharedProperties::stone)
+		.tag(AllBlockTags.BRITTLE.tag)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.item()
@@ -307,6 +328,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::wooden)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(StressConfigDefaults.setCapacity(32.0))
+		.tag(AllBlockTags.BRITTLE.tag)
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -377,6 +399,21 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
+	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		.item()
+		.transform(customItemModel("_", "block"))
+		.register();
+
+	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.blockstate(new ChuteGenerator()::generate)
+		.item(ChuteItem::new)
+		.transform(customItemModel("_", "block"))
+		.register();
+
 	public static final BlockEntry<GaugeBlock> SPEEDOMETER = REGISTRATE.block("speedometer", GaugeBlock::speed)
 		.initialProperties(SharedProperties::wooden)
 		.transform(StressConfigDefaults.setNoImpact())
@@ -405,7 +442,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<PumpBlock> MECHANICAL_PUMP = REGISTRATE.block("mechanical_pump", PumpBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.blockstate(BlockStateGen.directionalBlockProvider(true))
+		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(true))
 		.transform(StressConfigDefaults.setImpact(4.0))
 		.item()
 		.transform(customItemModel())
@@ -432,19 +469,20 @@ public class AllBlocks {
 			.transform(BuilderTransformers.mechanicalPiston(PistonType.STICKY))
 			.register();
 
-	public static final BlockEntry<MechanicalPistonHeadBlock> MECHANICAL_PISTON_HEAD =
-		REGISTRATE.block("mechanical_piston_head", MechanicalPistonHeadBlock::new)
-			.initialProperties(() -> Blocks.PISTON_HEAD)
-			.blockstate((c, p) -> p.directionalBlock(c.get(), state -> p.models()
-				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.get(MechanicalPistonHeadBlock.TYPE)
-					.getName() + "/head"))))
-			.register();
-
 	public static final BlockEntry<PistonExtensionPoleBlock> PISTON_EXTENSION_POLE =
 		REGISTRATE.block("piston_extension_pole", PistonExtensionPoleBlock::new)
 			.initialProperties(() -> Blocks.PISTON_HEAD)
-			.blockstate(BlockStateGen.directionalBlockProvider(false))
+			.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(false))
 			.simpleItem()
+			.register();
+
+	public static final BlockEntry<MechanicalPistonHeadBlock> MECHANICAL_PISTON_HEAD =
+		REGISTRATE.block("mechanical_piston_head", MechanicalPistonHeadBlock::new)
+			.initialProperties(() -> Blocks.PISTON_HEAD)
+			.loot((p, b) -> p.registerDropping(b, PISTON_EXTENSION_POLE.get()))
+			.blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, state -> p.models()
+				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.get(MechanicalPistonHeadBlock.TYPE)
+					.getName() + "/head"))))
 			.register();
 
 	public static final BlockEntry<MechanicalBearingBlock> MECHANICAL_BEARING =
@@ -470,6 +508,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<PulleyBlock.RopeBlock> ROPE = REGISTRATE.block("rope", PulleyBlock.RopeBlock::new)
 		.initialProperties(SharedProperties.beltMaterial, MaterialColor.BROWN)
+		.tag(AllBlockTags.BRITTLE.tag)
 		.properties(p -> p.sound(SoundType.CLOTH))
 		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 			.getExistingFile(p.modLoc("block/rope_pulley/" + c.getName()))))
@@ -478,6 +517,7 @@ public class AllBlocks {
 	public static final BlockEntry<PulleyBlock.MagnetBlock> PULLEY_MAGNET =
 		REGISTRATE.block("pulley_magnet", PulleyBlock.MagnetBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.getExistingFile(p.modLoc("block/rope_pulley/" + c.getName()))))
 			.register();
@@ -654,6 +694,7 @@ public class AllBlocks {
 	public static final BlockEntry<FurnaceEngineBlock> FURNACE_ENGINE =
 		REGISTRATE.block("furnace_engine", FurnaceEngineBlock::new)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setCapacity(1024.0))
 			.item()
@@ -675,6 +716,69 @@ public class AllBlocks {
 		REGISTRATE.startSection(AllSections.LOGISTICS);
 	}
 
+	public static final BlockEntry<ArmBlock> MECHANICAL_ARM = REGISTRATE.block("mechanical_arm", ArmBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate((c, p) -> p.getVariantBuilder(c.get())
+			.forAllStates(s -> ConfiguredModel.builder()
+				.modelFile(AssetLookup.partialBaseModel(c, p))
+				.rotationX(s.get(ArmBlock.CEILING) ? 180 : 0)
+				.build()))
+		.transform(StressConfigDefaults.setImpact(8.0))
+		.item(ArmItem::new)
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<AndesiteFunnelBlock> ANDESITE_FUNNEL =
+		REGISTRATE.block("andesite_funnel", AndesiteFunnelBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.transform(BuilderTransformers.funnel("andesite", Create.asResource("block/andesite_casing")))
+			.register();
+
+	public static final BlockEntry<AndesiteBeltFunnelBlock> ANDESITE_BELT_FUNNEL =
+		REGISTRATE.block("andesite_belt_funnel", AndesiteBeltFunnelBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.blockstate(new BeltFunnelGenerator("andesite")::generate)
+			.loot((p, b) -> p.registerDropping(b, ANDESITE_FUNNEL.get()))
+			.register();
+
+	public static final BlockEntry<AndesiteChuteFunnelBlock> ANDESITE_CHUTE_FUNNEL =
+		REGISTRATE.block("andesite_chute_funnel", AndesiteChuteFunnelBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.blockstate(new ChuteFunnelGenerator("andesite")::generate)
+			.loot((p, b) -> p.registerDropping(b, ANDESITE_FUNNEL.get()))
+			.register();
+
+	public static final BlockEntry<BrassFunnelBlock> BRASS_FUNNEL =
+		REGISTRATE.block("brass_funnel", BrassFunnelBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.transform(BuilderTransformers.funnel("brass", Create.asResource("block/brass_casing")))
+			.register();
+
+	public static final BlockEntry<BrassBeltFunnelBlock> BRASS_BELT_FUNNEL =
+		REGISTRATE.block("brass_belt_funnel", BrassBeltFunnelBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate(new BeltFunnelGenerator("brass")::generate)
+			.loot((p, b) -> p.registerDropping(b, BRASS_FUNNEL.get()))
+			.register();
+
+	public static final BlockEntry<BrassChuteFunnelBlock> BRASS_CHUTE_FUNNEL =
+		REGISTRATE.block("brass_chute_funnel", BrassChuteFunnelBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate(new ChuteFunnelGenerator("brass")::generate)
+			.loot((p, b) -> p.registerDropping(b, BRASS_FUNNEL.get()))
+			.register();
+
+	public static final BlockEntry<BeltTunnelBlock> ANDESITE_TUNNEL =
+		REGISTRATE.block("andesite_tunnel", BeltTunnelBlock::new)
+			.transform(BuilderTransformers.beltTunnel("andesite", new ResourceLocation("block/polished_andesite")))
+			.register();
+
+	public static final BlockEntry<BrassTunnelBlock> BRASS_TUNNEL =
+		REGISTRATE.block("brass_tunnel", BrassTunnelBlock::new)
+			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
+			.onRegister(connectedTextures(new BrassTunnelCTBehaviour()))
+			.register();
+
 	public static final BlockEntry<RedstoneContactBlock> REDSTONE_CONTACT =
 		REGISTRATE.block("redstone_contact", RedstoneContactBlock::new)
 			.initialProperties(SharedProperties::stone)
@@ -686,6 +790,7 @@ public class AllBlocks {
 	public static final BlockEntry<RedstoneLinkBlock> REDSTONE_LINK =
 		REGISTRATE.block("redstone_link", RedstoneLinkBlock::new)
 			.initialProperties(SharedProperties::wooden)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate(new RedstoneLinkGenerator()::generate)
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.item()
@@ -727,30 +832,22 @@ public class AllBlocks {
 			.transform(customItemModel())
 			.register();
 
-	public static final BlockEntry<BeltTunnelBlock> BELT_TUNNEL = REGISTRATE.block("belt_tunnel", BeltTunnelBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.addLayer(() -> RenderType::getCutoutMipped)
-		.blockstate((c, p) -> p.getVariantBuilder(c.get())
-			.forAllStates(state -> ConfiguredModel.builder()
-				.modelFile(p.models()
-					.getExistingFile(p.modLoc("block/belt_tunnel/" + state.get(BeltTunnelBlock.SHAPE)
-						.getName())))
-				.rotationY(state.get(BeltTunnelBlock.HORIZONTAL_AXIS) == Axis.X ? 0 : 90)
-				.build()))
-		.item()
-		.transform(customItemModel())
-		.register();
-
-	public static final BlockEntry<ArmBlock> MECHANICAL_ARM = REGISTRATE.block("mechanical_arm", ArmBlock::new)
+	public static final BlockEntry<PackagerBlock> PACKAGER = REGISTRATE.block("packager", PackagerBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-		.transform(StressConfigDefaults.setImpact(8.0))
+		.transform(StressConfigDefaults.setImpact(4.0))
+		.properties(p -> p.nonOpaque())
+		.blockstate((c, p) -> p.getVariantBuilder(c.get())
+			.forAllStates(s -> ConfiguredModel.builder()
+				.modelFile(AssetLookup.partialBaseModel(c, p))
+				.rotationY(s.get(PackagerBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
+				.build()))
 		.item()
 		.transform(customItemModel())
 		.register();
 
 	public static final BlockEntry<ExtractorBlock> EXTRACTOR = REGISTRATE.block("extractor", ExtractorBlock::new)
 		.initialProperties(SharedProperties::softMetal)
+		.tag(AllBlockTags.BRITTLE.tag)
 		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, c.getName() + "/horizontal")))
 		.item()
 		.transform(customItemModel("_", "horizontal"))
@@ -759,12 +856,14 @@ public class AllBlocks {
 	public static final BlockEntry<ExtractorBlock.Vertical> VERTICAL_EXTRACTOR =
 		REGISTRATE.block("vertical_extractor", ExtractorBlock.Vertical::new)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate(new VerticalExtractorGenerator(false)::generate)
 			.loot((p, b) -> p.registerDropping(b, EXTRACTOR.get()))
 			.register();
 
 	public static final BlockEntry<LinkedExtractorBlock> LINKED_EXTRACTOR = REGISTRATE
 		.block("linked_extractor", LinkedExtractorBlock::new)
+		.tag(AllBlockTags.BRITTLE.tag)
 		.initialProperties(SharedProperties::softMetal)
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, "extractor/horizontal_linked")))
@@ -775,24 +874,10 @@ public class AllBlocks {
 	public static final BlockEntry<LinkedExtractorBlock.Vertical> VERTICAL_LINKED_EXTRACTOR =
 		REGISTRATE.block("vertical_linked_extractor", LinkedExtractorBlock.Vertical::new)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate(new VerticalExtractorGenerator(true)::generate)
 			.loot((p, b) -> p.registerDropping(b, LINKED_EXTRACTOR.get()))
 			.addLayer(() -> RenderType::getCutoutMipped)
-			.register();
-
-	public static final BlockEntry<FunnelBlock> FUNNEL = REGISTRATE.block("funnel", FunnelBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.blockstate((c, p) -> p.horizontalBlock(c.get(), state -> p.models()
-			.getExistingFile(p.modLoc("block/funnel/horizontal" + (state.get(FunnelBlock.BELT) ? "_belt" : "")))))
-		.item()
-		.transform(customItemModel())
-		.register();
-
-	public static final BlockEntry<FunnelBlock.Vertical> VERTICAL_FUNNEL =
-		REGISTRATE.block("vertical_funnel", FunnelBlock.Vertical::new)
-			.initialProperties(SharedProperties::softMetal)
-			.blockstate(new VerticalFunnelGenerator()::generate)
-			.loot((p, b) -> p.registerDropping(b, FUNNEL.get()))
 			.register();
 
 	public static final BlockEntry<TransposerBlock> TRANSPOSER = REGISTRATE.block("transposer", TransposerBlock::new)
@@ -903,7 +988,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_BLOCK =
-		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f))
+		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f, true))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.transform(tagBlockAndItem("storage_blocks/copper"))
 			.transform(oxidizedItemModel())
@@ -919,19 +1004,20 @@ public class AllBlocks {
 			.transform(oxidizedBlockstate())
 			.register();
 
-	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", Block::new)
+	public static final BlockEntry<MetalBlock> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new MetalBlock(p, true))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.transform(tagBlockAndItem("storage_blocks/zinc"))
 		.build()
 		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/zinc")), ctx, false))
 		.register();
 
-	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", Block::new)
-		.initialProperties(() -> Blocks.IRON_BLOCK)
-		.transform(tagBlockAndItem("storage_blocks/brass"))
-		.build()
-		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/brass")), ctx, false))
-		.register();
+	public static final BlockEntry<MetalBlock> BRASS_BLOCK =
+		REGISTRATE.block("brass_block", p -> new MetalBlock(p, true))
+			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.transform(tagBlockAndItem("storage_blocks/brass"))
+			.build()
+			.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/brass")), ctx, false))
+			.register();
 
 	// Load this class
 

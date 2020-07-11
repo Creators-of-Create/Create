@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock.Part;
+import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 
@@ -172,7 +172,7 @@ public abstract class LaunchedItem {
 		@Override
 		void place(World world) {
 			// todo place belt
-			boolean isStart = state.get(BeltBlock.PART) == Part.START;
+			boolean isStart = state.get(BeltBlock.PART) == BeltPart.START;
 			BlockPos offset = BeltBlock.nextSegmentPosition(state, BlockPos.ZERO, isStart);
 			int i = length - 1;
 			Axis axis = state.get(BeltBlock.HORIZONTAL_FACING).rotateY().getAxis();

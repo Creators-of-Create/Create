@@ -3,9 +3,13 @@ package com.simibubi.create.content.contraptions.fluids;
 import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SixWayBlock;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -17,10 +21,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nullable;
 
-public class FluidPipeBlock extends SixWayBlock {
+public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
 
     public FluidPipeBlock(Properties properties) {
         super(4 / 16f, properties);
+        this.setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
     }
 
     public static boolean isPipe(BlockState state) {
@@ -28,7 +33,7 @@ public class FluidPipeBlock extends SixWayBlock {
     }
 
     public static boolean isTank(BlockState state, IBlockReader world, BlockPos pos, Direction blockFace) {
-        return state.hasTileEntity() && world.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite()) != null;
+        return state.hasTileEntity() && world.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite()).isPresent();
     }
 
     // TODO: more generic pipe connection handling. Ideally without marker interface
@@ -98,18 +103,23 @@ public class FluidPipeBlock extends SixWayBlock {
 
     @Override
     protected void fillStateContainer(Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);
+        builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN, BlockStateProperties.WATERLOGGED);
+        super.fillStateContainer(builder);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
+        IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
         return updateBlockState(getDefaultState(), context.getNearestLookingDirection(), null, context.getWorld(),
-                context.getPos());
+                context.getPos()).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
     }
 
     @Override
     public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
                                           IWorld world, BlockPos pos, BlockPos neighbourPos) {
+        if (state.get(BlockStateProperties.WATERLOGGED)) {
+            world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
         return updateBlockState(state, direction, direction.getOpposite(), world, pos);
     }
 
@@ -138,5 +148,10 @@ public class FluidPipeBlock extends SixWayBlock {
         // Use preferred
         return state.with(FACING_TO_PROPERTY_MAP.get(preferredDirection), true)
                 .with(FACING_TO_PROPERTY_MAP.get(preferredDirection.getOpposite()), true);
+    }
+
+    @Override
+    public IFluidState getFluidState(BlockState state) {
+        return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : Fluids.EMPTY.getDefaultState();
     }
 }

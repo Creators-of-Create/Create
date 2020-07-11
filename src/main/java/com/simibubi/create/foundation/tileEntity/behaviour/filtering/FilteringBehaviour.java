@@ -7,7 +7,7 @@ import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -15,13 +15,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class FilteringBehaviour extends TileEntityBehaviour {
 
-	public static IBehaviourType<FilteringBehaviour> TYPE = new IBehaviourType<FilteringBehaviour>() {
-	};
+	public static BehaviourType<FilteringBehaviour> TYPE = new BehaviourType<>();
 
 	ValueBoxTransform slotPositioning;
 	boolean showCount;
@@ -31,6 +31,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	public int count;
 	private Consumer<ItemStack> callback;
 	private Supplier<Boolean> isActive;
+	private Supplier<Boolean> showCountPredicate;
 
 	int scrollableValue;
 	int ticksUntilScrollPacket;
@@ -41,11 +42,13 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		filter = ItemStack.EMPTY;
 		slotPositioning = slot;
 		showCount = false;
-		callback = stack -> {};
+		callback = stack -> {
+		};
 		isActive = () -> true;
 		textShift = Vec3d.ZERO;
 		count = 0;
 		ticksUntilScrollPacket = -1;
+		showCountPredicate = () -> showCount;
 	}
 
 	@Override
@@ -96,9 +99,14 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		callback = filterCallback;
 		return this;
 	}
-	
+
 	public FilteringBehaviour onlyActiveWhen(Supplier<Boolean> condition) {
 		isActive = condition;
+		return this;
+	}
+
+	public FilteringBehaviour showCountWhen(Supplier<Boolean> condition) {
+		showCountPredicate = condition;
 		return this;
 	}
 
@@ -118,6 +126,10 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		scrollableValue = count;
 	}
 
+	public void setFilter(Direction face, ItemStack stack) {
+		setFilter(stack);
+	}
+	
 	public void setFilter(ItemStack stack) {
 		filter = stack.copy();
 		callback.accept(filter);
@@ -139,20 +151,24 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		super.destroy();
 	}
 
+	public ItemStack getFilter(Direction side) {
+		return getFilter();
+	}
+	
 	public ItemStack getFilter() {
 		return filter.copy();
 	}
 
 	public boolean isCountVisible() {
-		return showCount && !getFilter().isEmpty();
+		return showCountPredicate.get();
 	}
 
 	public boolean test(ItemStack stack) {
-		return filter.isEmpty() || FilterItem.test(tileEntity.getWorld(), stack, filter);
+		return !isActive() || filter.isEmpty() || FilterItem.test(tileEntity.getWorld(), stack, filter);
 	}
 
 	@Override
-	public IBehaviourType<?> getType() {
+	public BehaviourType<?> getType() {
 		return TYPE;
 	}
 
@@ -169,7 +185,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	public boolean anyAmount() {
 		return count == 0;
 	}
-	
+
 	public boolean isActive() {
 		return isActive.get();
 	}

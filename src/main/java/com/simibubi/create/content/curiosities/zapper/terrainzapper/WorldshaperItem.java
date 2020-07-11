@@ -53,7 +53,7 @@ public class WorldshaperItem extends ZapperItem {
 	@Override
 	protected boolean canActivateWithoutSelectedBlock(ItemStack stack) {
 		CompoundNBT tag = stack.getOrCreateTag();
-		TerrainTools tool = NBTHelper.readEnum(tag.getString("Tool"), TerrainTools.class);
+		TerrainTools tool = NBTHelper.readEnum(tag, "Tool", TerrainTools.class);
 		return !tool.requiresSelectedBlock();
 	}
 
@@ -65,11 +65,11 @@ public class WorldshaperItem extends ZapperItem {
 		List<BlockPos> affectedPositions = new ArrayList<>();
 
 		CompoundNBT tag = stack.getOrCreateTag();
-		Brush brush = NBTHelper.readEnum(tag.getString("Brush"), TerrainBrushes.class)
+		Brush brush = NBTHelper.readEnum(tag, "Brush", TerrainBrushes.class)
 			.get();
 		BlockPos params = NBTUtil.readBlockPos(tag.getCompound("BrushParams"));
-		PlacementOptions option = NBTHelper.readEnum(tag.getString("Placement"), PlacementOptions.class);
-		TerrainTools tool = NBTHelper.readEnum(tag.getString("Tool"), TerrainTools.class);
+		PlacementOptions option = NBTHelper.readEnum(tag, "Placement", PlacementOptions.class);
+		TerrainTools tool = NBTHelper.readEnum(tag, "Tool", TerrainTools.class);
 
 		brush.set(params.getX(), params.getY(), params.getZ());
 		targetPos = targetPos.add(brush.getOffset(player.getLookVec(), raytrace.getFace(), option));

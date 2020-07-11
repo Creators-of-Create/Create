@@ -106,7 +106,7 @@ public class ExtractorTileEntity extends SmartTileEntity {
 					BeltInventory inventory = controller.getInventory();
 					if (inventory == null)
 						return false;
-					if (!inventory.canInsertFrom(belt.index, Direction.UP))
+					if (!inventory.canInsertAtFromSide(belt.index, Direction.UP))
 						return false;
 				}
 			}

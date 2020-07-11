@@ -35,6 +35,8 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayerEntity player = context.get().getSender();
+			if (player == null)
+				return;
 			World world = player.world;
 
 			if (world == null || world.getTileEntity(pos) == null)

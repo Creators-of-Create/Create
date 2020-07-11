@@ -53,7 +53,7 @@ public class BeltObserverTileEntity extends SmartTileEntity {
 		if (controllerTE == null)
 			return;
 
-		controllerTE.getInventory().forEachWithin(beltTE.index + .5f, .45f, stack -> {
+		controllerTE.getInventory().applyToEachWithin(beltTE.index + .5f, .45f, stack -> {
 			if (filtering.test(stack.stack) && turnOffTicks != 6) {
 				world.setBlockState(pos, getBlockState().with(BeltObserverBlock.POWERED, true));
 				world.notifyNeighborsOfStateChange(pos, getBlockState().getBlock());

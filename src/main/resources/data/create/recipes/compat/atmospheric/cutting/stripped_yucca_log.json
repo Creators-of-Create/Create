@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "atmospheric:stripped_yucca_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "atmospheric:yucca_planks",
+      "count": 5
+    }
+  ],
+  "processingTime": 100
+}

@@ -160,7 +160,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 		BlockState blockState = context.state;
 		BlockPos pos = BlockPos.ZERO;
-		Mode mode = NBTHelper.readEnum(context.tileData.getString("Mode"), Mode.class);
+		Mode mode = NBTHelper.readEnum(context.tileData, "Mode", Mode.class);
 		World world = context.world;
 		AllBlockPartials handPose =
 			mode == Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING : AllBlockPartials.DEPLOYER_HAND_POINTING;

@@ -23,7 +23,8 @@ public class CrateBlock extends ProperDirectionalBlock implements IWrenchable {
 
 	public CrateBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
-		setDefaultState(getDefaultState().with(FACING, Direction.UP).with(DOUBLE, false));
+		setDefaultState(getDefaultState().with(FACING, Direction.UP)
+			.with(DOUBLE, false));
 	}
 
 	@Override
@@ -33,17 +34,18 @@ public class CrateBlock extends ProperDirectionalBlock implements IWrenchable {
 
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
+		BlockPos currentPos, BlockPos facingPos) {
 
 		boolean isDouble = stateIn.get(DOUBLE);
 		Direction blockFacing = stateIn.get(FACING);
 		boolean isFacingOther = facingState.getBlock() == this && facingState.get(DOUBLE)
-				&& facingState.get(FACING) == facing.getOpposite();
+			&& facingState.get(FACING) == facing.getOpposite();
 
 		if (!isDouble) {
 			if (!isFacingOther)
 				return stateIn;
-			return stateIn.with(DOUBLE, true).with(FACING, facing);
+			return stateIn.with(DOUBLE, true)
+				.with(FACING, facing);
 		}
 
 		if (facing != blockFacing)
@@ -59,18 +61,22 @@ public class CrateBlock extends ProperDirectionalBlock implements IWrenchable {
 		BlockPos pos = context.getPos();
 		World world = context.getWorld();
 
-		if (!context.getPlayer().isSneaking()) {
+		if (context.getPlayer() == null || !context.getPlayer()
+			.isSneaking()) {
 			for (Direction d : Direction.values()) {
 				BlockState state = world.getBlockState(pos.offset(d));
 				if (state.getBlock() == this && !state.get(DOUBLE))
-					return getDefaultState().with(FACING, d).with(DOUBLE, true);
+					return getDefaultState().with(FACING, d)
+						.with(DOUBLE, true);
 			}
 		}
 
-		Direction placedOnFace = context.getFace().getOpposite();
+		Direction placedOnFace = context.getFace()
+			.getOpposite();
 		BlockState state = world.getBlockState(pos.offset(placedOnFace));
 		if (state.getBlock() == this && !state.get(DOUBLE))
-			return getDefaultState().with(FACING, placedOnFace).with(DOUBLE, true);
+			return getDefaultState().with(FACING, placedOnFace)
+				.with(DOUBLE, true);
 		return getDefaultState();
 	}
 

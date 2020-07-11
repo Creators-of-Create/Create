@@ -10,6 +10,7 @@ public class CreateCommand {
 	public CreateCommand(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(Commands.literal("create")
 				.then(ToggleDebugCommand.register())
+				.then(OverlayConfigCommand.register())
 				.then(ClearBufferCacheCommand.register())
 				//.then(KillTPSCommand.register()) //Commented out for release
 				);

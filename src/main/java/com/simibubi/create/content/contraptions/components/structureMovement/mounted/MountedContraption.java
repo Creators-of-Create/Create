@@ -80,13 +80,13 @@ public class MountedContraption extends Contraption {
 	@Override
 	public CompoundNBT writeNBT() {
 		CompoundNBT writeNBT = super.writeNBT();
-		writeNBT.putString("RotationMode", NBTHelper.writeEnum(rotationMode));
+		NBTHelper.writeEnum(writeNBT, "RotationMode", rotationMode);
 		return writeNBT;
 	}
 
 	@Override
 	public void readNBT(World world, CompoundNBT nbt) {
-		rotationMode = NBTHelper.readEnum(nbt.getString("RotationMode"), CartMovementMode.class);
+		rotationMode = NBTHelper.readEnum(nbt, "RotationMode", CartMovementMode.class);
 		super.readNBT(world, nbt);
 	}
 

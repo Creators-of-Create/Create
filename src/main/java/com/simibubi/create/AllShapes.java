@@ -28,8 +28,6 @@ public class AllShapes {
 		CASING_11PX = shape(0, 0, 0, 16, 11, 16).forDirectional(),
 		MOTOR_BLOCK = shape(3, 0, 3, 13, 14, 13).forDirectional(),
 		FOUR_VOXEL_POLE = shape(6, 0, 6, 10, 16, 10).forAxis(), SIX_VOXEL_POLE = shape(5, 0, 5, 11, 16, 11).forAxis(),
-		BELT_FUNNEL = shape(3, -4, 11, 13, 8, 17).forHorizontal(SOUTH),
-		FUNNEL = shape(1, 1, 13, 15, 15, 17).forDirectional(SOUTH),
 		EXTRACTOR = shape(4, 2, 11, 12, 10, 17).forDirectional(SOUTH)
 			.withVerticalShapes(cuboid(4, 11, 4, 12, 17, 12)),
 		TRANSPOSER = shape(4, 4, -1, 12, 12, 1).add(5, 5, 0, 11, 11, 16)
@@ -65,6 +63,24 @@ public class AllShapes {
 		NIXIE_TUBE_CEILING = shape(0, 12, 0, 16, 16, 16).add(9, 1, 5, 15, 16, 11)
 			.add(1, 1, 5, 7, 16, 11)
 			.forHorizontalAxis(),
+		FUNNEL = shape(3, -2, 3, 13, 2, 13).add(2, 2, 2, 14, 6, 14)
+			.add(1, 6, 1, 15, 10, 15)
+			.add(0, 10, 0, 16, 16, 16)
+			.forDirectional(UP),
+		FUNNEL_COLLISION = shape(3, -2, 3, 13, 2, 13).add(2, 2, 2, 14, 6, 14)
+			.add(1, 6, 1, 15, 10, 15)
+			.add(0, 10, 0, 16, 13, 16)
+			.forDirectional(UP),
+		CHUTE_FUNNEL = shape(3, -2, 3, 13, 2, 13).add(2, 2, 2, 14, 6, 14)
+			.add(0, 8, 0, 16, 14, 16)
+			.add(1, 5, 1, 15, 18, 15)
+			.forDirectional(UP),
+		BELT_FUNNEL_RETRACTED = shape(3, -5, 14, 13, 13, 19).add(0, -5, 8, 16, 16, 14)
+			.forHorizontal(NORTH),
+		BELT_FUNNEL_EXTENDED = shape(3, -4, 6, 13, 13, 17).add(2, -4, 10, 14, 14, 14)
+			.add(1, -4, 6, 15, 15, 10)
+			.add(0, -5, 0, 16, 16, 6)
+			.forHorizontal(NORTH),
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
 			.add(3, 12, 3, 13, 16, 13)
 			.forDirectional(Direction.UP)
@@ -120,12 +136,18 @@ public class AllShapes {
 			.build(),
 		MECHANICAL_ARM = shape(2, 0, 2, 14, 10, 14).add(3, 0, 3, 13, 14, 13)
 			.build(),
+		MECHANICAL_ARM_CEILING = shape(2, 6, 2, 14, 16, 14).add(3, 2, 3, 13, 16, 13)
+			.build(),
+		CHUTE = shape(1, 8, 1, 15, 16, 15).add(2, 0, 2, 14, 8, 14)
+			.build(),
 		TANK = shape(1, 0, 1, 15, 16, 15).build(), TANK_TOP = shape(TANK_TOP_LID).add(TANK)
 			.build(),
 		TANK_BOTTOM = shape(TANK_BOTTOM_LID).add(TANK)
 			.build(),
 		TANK_TOP_BOTTOM = shape(TANK_BOTTOM_LID).add(TANK_TOP_LID)
 			.add(TANK)
+			.build(),
+		DEPOT = shape(CASING_11PX.get(Direction.UP)).add(1, 11, 1, 15, 13, 15)
 			.build()
 
 	;

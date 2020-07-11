@@ -29,7 +29,7 @@ public class AllBlockPartials {
 	private static List<AllBlockPartials> all = new ArrayList<>();
 	
 	public static final AllBlockPartials 
-	SCHEMATICANNON_CONNECTOR = get("schematicannon/connector"),
+		SCHEMATICANNON_CONNECTOR = get("schematicannon/connector"),
 		SCHEMATICANNON_PIPE = get("schematicannon/pipe"),
 
 		SHAFTLESS_COGWHEEL = get("cogwheel_shaftless"), 
@@ -58,8 +58,8 @@ public class AllBlockPartials {
 		DEPLOYER_HAND_HOLDING = get("deployer/hand_holding"),
 		ANALOG_LEVER_HANDLE = get("analog_lever/handle"), 
 		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"),
+		BELT_FUNNEL_FLAP = get("belt_funnel/flap"), 
 		BELT_TUNNEL_FLAP = get("belt_tunnel/flap"), 
-		BELT_TUNNEL_INDICATOR = get("belt_tunnel/indicator"),
 		FLEXPEATER_INDICATOR = get("diodes/indicator"), 
 		FLYWHEEL = get("flywheel/wheel"),
 		FLYWHEEL_UPPER_ROTATING = get("flywheel/upper_rotating_connector"),
@@ -77,6 +77,7 @@ public class AllBlockPartials {
 		ROPE_HALF = get("rope_pulley/rope_half"), 
 		ROPE_HALF_MAGNET = get("rope_pulley/rope_half_magnet"),
 		MILLSTONE_COG = get("millstone/inner"),
+		PACKAGER_SEALER = get("packager/sealer"),
 
 		SYMMETRY_PLANE = get("symmetry_effect/plane"), 
 		SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),
@@ -89,6 +90,11 @@ public class AllBlockPartials {
 		ARM_HEAD = get("mechanical_arm/head"), 
 		ARM_CLAW_BASE = get("mechanical_arm/claw_base"), 
 		ARM_CLAW_GRIP = get("mechanical_arm/claw_grip"), 
+		
+		FLAG_SHORT_IN = get("mechanical_arm/flag/short_in"), 
+		FLAG_SHORT_OUT = get("mechanical_arm/flag/short_out"), 
+		FLAG_LONG_IN = get("mechanical_arm/flag/long_in"), 
+		FLAG_LONG_OUT = get("mechanical_arm/flag/long_out"), 
 		
 		MECHANICAL_PUMP_ARROW = get("mechanical_pump/arrow"), 
 		MECHANICAL_PUMP_COG = get("mechanical_pump/cog"),

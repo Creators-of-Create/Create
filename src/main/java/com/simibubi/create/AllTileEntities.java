@@ -72,16 +72,24 @@ import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverRe
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
+import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
+import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
+import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
+import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRenderer;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.extractor.ExtractorTileEntity;
 import com.simibubi.create.content.logistics.block.extractor.LinkedExtractorTileEntity;
+import com.simibubi.create.content.logistics.block.funnel.FunnelRenderer;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
+import com.simibubi.create.content.logistics.block.packager.PackagerRenderer;
+import com.simibubi.create.content.logistics.block.packager.PackagerTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverRenderer;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
@@ -148,8 +156,12 @@ public class AllTileEntities {
 		register("fluid_tank", FluidTankTileEntity::new, AllBlocks.FLUID_TANK);
 
 	public static final TileEntityEntry<BeltTileEntity> BELT = register("belt", BeltTileEntity::new, AllBlocks.BELT);
-	public static final TileEntityEntry<BeltTunnelTileEntity> BELT_TUNNEL =
-		register("belt_tunnel", BeltTunnelTileEntity::new, AllBlocks.BELT_TUNNEL);
+	public static final TileEntityEntry<ChuteTileEntity> CHUTE =
+		register("chute", ChuteTileEntity::new, AllBlocks.CHUTE);
+	public static final TileEntityEntry<BeltTunnelTileEntity> ANDESITE_TUNNEL =
+		register("andesite_tunnel", BeltTunnelTileEntity::new, AllBlocks.ANDESITE_TUNNEL);
+	public static final TileEntityEntry<BrassTunnelTileEntity> BRASS_TUNNEL =
+		register("brass_tunnel", BrassTunnelTileEntity::new, AllBlocks.BRASS_TUNNEL);
 	public static final TileEntityEntry<ArmTileEntity> MECHANICAL_ARM =
 		register("mechanical_arm", ArmTileEntity::new, AllBlocks.MECHANICAL_ARM);
 	public static final TileEntityEntry<MechanicalPistonTileEntity> MECHANICAL_PISTON = register("mechanical_piston",
@@ -215,6 +227,15 @@ public class AllTileEntities {
 		register("adjustable_crate", AdjustableCrateTileEntity::new, AllBlocks.ADJUSTABLE_CRATE);
 	public static final TileEntityEntry<CreativeCrateTileEntity> CREATIVE_CRATE =
 		register("creative_crate", CreativeCrateTileEntity::new, AllBlocks.CREATIVE_CRATE);
+
+	public static final TileEntityEntry<DepotTileEntity> DEPOT =
+		register("depot", DepotTileEntity::new, AllBlocks.DEPOT);
+	public static final TileEntityEntry<FunnelTileEntity> FUNNEL = register("funnel", FunnelTileEntity::new,
+		AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.BRASS_CHUTE_FUNNEL, AllBlocks.ANDESITE_FUNNEL,
+		AllBlocks.ANDESITE_BELT_FUNNEL, AllBlocks.ANDESITE_CHUTE_FUNNEL);
+	public static final TileEntityEntry<PackagerTileEntity> PACKAGER =
+		register("packager", PackagerTileEntity::new, AllBlocks.PACKAGER);
+
 	public static final TileEntityEntry<ExtractorTileEntity> EXTRACTOR =
 		register("extractor", ExtractorTileEntity::new, AllBlocks.EXTRACTOR, AllBlocks.VERTICAL_EXTRACTOR);
 	public static final TileEntityEntry<LinkedExtractorTileEntity> LINKED_EXTRACTOR = register("linked_extractor",
@@ -223,8 +244,6 @@ public class AllTileEntities {
 		register("transposer", TransposerTileEntity::new, AllBlocks.TRANSPOSER, AllBlocks.VERTICAL_TRANSPOSER);
 	public static final TileEntityEntry<LinkedTransposerTileEntity> LINKED_TRANSPOSER = register("linked_transposer",
 		LinkedTransposerTileEntity::new, AllBlocks.LINKED_TRANSPOSER, AllBlocks.VERTICAL_LINKED_TRANSPOSER);
-	public static final TileEntityEntry<FunnelTileEntity> FUNNEL =
-		register("funnel", FunnelTileEntity::new, AllBlocks.FUNNEL, AllBlocks.VERTICAL_FUNNEL);
 	public static final TileEntityEntry<BeltObserverTileEntity> BELT_OBSERVER =
 		register("belt_observer", BeltObserverTileEntity::new, AllBlocks.BELT_OBSERVER);
 	public static final TileEntityEntry<AdjustableRepeaterTileEntity> ADJUSTABLE_REPEATER =
@@ -263,7 +282,7 @@ public class AllTileEntities {
 		bind(HAND_CRANK, HandCrankRenderer::new);
 		bind(CUCKOO_CLOCK, CuckooClockRenderer::new);
 		bind(ANALOG_LEVER, AnalogLeverRenderer::new);
-		
+
 		bind(MECHANICAL_PUMP, PumpRenderer::new);
 		bind(FLUID_TANK, FluidTankRenderer::new);
 
@@ -285,6 +304,9 @@ public class AllTileEntities {
 		bind(FLYWHEEL, FlywheelRenderer::new);
 		bind(FURNACE_ENGINE, EngineRenderer::new);
 		bind(ROTATION_SPEED_CONTROLLER, SpeedControllerRenderer::new);
+		bind(PACKAGER, PackagerRenderer::new);
+		bind(DEPOT, DepotRenderer::new);
+		bind(CHUTE, ChuteRenderer::new);
 
 		bind(CREATIVE_CRATE, SmartTileEntityRenderer::new);
 		bind(REDSTONE_LINK, SmartTileEntityRenderer::new);
@@ -293,8 +315,9 @@ public class AllTileEntities {
 		bind(LINKED_EXTRACTOR, SmartTileEntityRenderer::new);
 		bind(TRANSPOSER, SmartTileEntityRenderer::new);
 		bind(LINKED_TRANSPOSER, SmartTileEntityRenderer::new);
-		bind(FUNNEL, SmartTileEntityRenderer::new);
-		bind(BELT_TUNNEL, BeltTunnelRenderer::new);
+		bind(FUNNEL, FunnelRenderer::new);
+		bind(ANDESITE_TUNNEL, BeltTunnelRenderer::new);
+		bind(BRASS_TUNNEL, BeltTunnelRenderer::new);
 		bind(MECHANICAL_ARM, ArmRenderer::new);
 		bind(BELT_OBSERVER, BeltObserverRenderer::new);
 		bind(ADJUSTABLE_REPEATER, AdjustableRepeaterRenderer::new);

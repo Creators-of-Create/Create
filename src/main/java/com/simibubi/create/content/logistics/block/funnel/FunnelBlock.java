@@ -1,23 +1,17 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.BeltAttachmentState;
-import com.simibubi.create.content.contraptions.relays.belt.AllBeltAttachments.IBeltAttachment;
-import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
+import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,35 +20,99 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class FunnelBlock extends AttachedLogisticalBlock
-		implements IBeltAttachment, ITE<FunnelTileEntity>, IPortableBlock {
+public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<FunnelTileEntity> {
 
-	public static final BooleanProperty BELT = BooleanProperty.create("belt");
-	public static final MovementBehaviour MOVEMENT = new FunnelMovementBehaviour();
-
-	public FunnelBlock(Properties properties) {
-		super(properties);
+	public FunnelBlock(Properties p_i48415_1_) {
+		super(p_i48415_1_);
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		if (!isVertical())
-			builder.add(BELT);
-		super.fillStateContainer(builder);
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		Direction facing = context.getFace();
+		if (facing.getAxis()
+			.isVertical()
+			&& context.getWorld()
+				.getBlockState(context.getPos()
+					.offset(facing.getOpposite()))
+				.getBlock() instanceof ChuteBlock)
+			facing = facing.getOpposite();
+		return getDefaultState().with(FACING, facing);
+
+	}
+
+	@Override
+	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+		BlockRayTraceResult hit) {
+
+		ItemStack heldItem = player.getHeldItem(handIn);
+		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem) || !canInsertIntoFunnel(state);
+		
+		if (hit.getFace() == getFunnelFacing(state) && !shouldntInsertItem) {
+			if (!worldIn.isRemote)
+				withTileEntityDo(worldIn, pos, te -> {
+					ItemStack toInsert = heldItem.copy();
+					ItemStack remainder = tryInsert(worldIn, pos, toInsert, false);
+					if (!ItemStack.areItemStacksEqual(remainder, toInsert))
+						player.setHeldItem(handIn, remainder);
+				});
+			return ActionResultType.SUCCESS;
+		}
+
+		return ActionResultType.PASS;
+	}
+
+	@Override
+	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+		if (worldIn.isRemote)
+			return;
+		if (!(entityIn instanceof ItemEntity))
+			return;
+		if (!canInsertIntoFunnel(state))
+			return;
+		ItemEntity itemEntity = (ItemEntity) entityIn;
+
+		Direction direction = state.get(FACING);
+		Vec3d diff = entityIn.getPositionVec()
+			.subtract(VecHelper.getCenterOf(pos));
+		double projectedDiff = direction.getAxis()
+			.getCoordinate(diff.x, diff.y, diff.z);
+		if (projectedDiff < 0 == (direction.getAxisDirection() == AxisDirection.POSITIVE))
+			return;
+
+		ItemStack toInsert = itemEntity.getItem();
+		ItemStack remainder = tryInsert(worldIn, pos, toInsert, false);
+
+		if (remainder.isEmpty())
+			itemEntity.remove();
+		if (remainder.getCount() < toInsert.getCount())
+			itemEntity.setItem(remainder);
+	}
+
+	public static ItemStack tryInsert(World worldIn, BlockPos pos, ItemStack toInsert, boolean simulate) {
+		FilteringBehaviour filter = TileEntityBehaviour.get(worldIn, pos, FilteringBehaviour.TYPE);
+		InsertingBehaviour inserter = TileEntityBehaviour.get(worldIn, pos, InsertingBehaviour.TYPE);
+		if (inserter == null)
+			return toInsert;
+		if (filter != null && !filter.test(toInsert))
+			return toInsert;
+		ItemStack remainder = inserter.insert(toInsert, simulate);
+		return remainder;
 	}
 
 	@Override
@@ -68,169 +126,80 @@ public class FunnelBlock extends AttachedLogisticalBlock
 	}
 
 	@Override
-	protected boolean isVertical() {
-		return false;
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+		return AllShapes.FUNNEL.get(state.get(FACING));
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		if (worldIn.isRemote)
-			return;
-		if (!(entityIn instanceof ItemEntity))
-			return;
-		ItemEntity itemEntity = (ItemEntity) entityIn;
-		withTileEntityDo(worldIn, pos, te -> {
-			ItemStack remainder = te.tryToInsert(itemEntity.getItem());
-			if (remainder.isEmpty())
-				itemEntity.remove();
-			if (remainder.getCount() < itemEntity.getItem().getCount())
-				itemEntity.setItem(remainder);
-		});
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+		if (context.getEntity() instanceof ItemEntity)
+			return AllShapes.FUNNEL_COLLISION.get(state.get(FACING));
+		return getShape(state, world, pos, context);
 	}
 
 	@Override
-	protected BlockState getVerticalDefaultState() {
-		return AllBlocks.VERTICAL_FUNNEL.getDefaultState();
-	}
-
-	@Override
-	protected BlockState getHorizontalDefaultState() {
-		return AllBlocks.FUNNEL.getDefaultState();
-	}
-
-	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
-		if (facing == Direction.DOWN && !isVertical(stateIn))
-			return stateIn.with(BELT, isOnBelt(worldIn, currentPos));
-		return stateIn;
-	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState state = super.getStateForPlacement(context);
-		if (!isVertical(state)) {
-			World world = context.getWorld();
-			BlockPos pos = context.getPos();
-			state = state.with(BELT, isOnBelt(world, pos));
+	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState p_196271_3_, IWorld world,
+		BlockPos pos, BlockPos p_196271_6_) {
+		Direction facing = state.get(FACING);
+		if (facing.getAxis()
+			.isHorizontal()) {
+			if (direction == Direction.DOWN) {
+				BlockState equivalentFunnel = getEquivalentBeltFunnel(null, null, state);
+				if (BeltFunnelBlock.isOnValidBelt(equivalentFunnel, world, pos))
+					return BeltFunnelBlock.updateShape(equivalentFunnel, world, pos);
+			}
+			if (direction == facing) {
+				BlockState equivalentFunnel = getEquivalentChuteFunnel(null, null, state);
+				if (ChuteFunnelBlock.isOnValidChute(equivalentFunnel, world, pos))
+					return equivalentFunnel;
+			}
+			if (direction == facing.getOpposite()) {
+				BlockState equivalentFunnel = getEquivalentChuteFunnel(null, null, state);
+				if (ChuteFunnelBlock.isOnValidChute(equivalentFunnel, world, pos))
+					return equivalentFunnel;
+			}
 		}
 		return state;
 	}
 
-	protected boolean isOnBelt(IWorld world, BlockPos pos) {
-		return AllBlocks.BELT.has(world.getBlockState(pos.down()));
+	public abstract BlockState getEquivalentChuteFunnel(IBlockReader world, BlockPos pos, BlockState state);
+
+	public abstract BlockState getEquivalentBeltFunnel(IBlockReader world, BlockPos pos, BlockState state);
+
+	@Override
+	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
+		Block block = world.getBlockState(pos.offset(state.get(FACING)
+			.getOpposite()))
+			.getBlock();
+		return !(block instanceof FunnelBlock) && !(block instanceof HorizontalInteractionFunnelBlock);
+	}
+
+	@Nullable
+	public static Direction getFunnelFacing(BlockState state) {
+		if (state.has(FACING))
+			return state.get(FACING);
+		if (state.has(BlockStateProperties.HORIZONTAL_FACING))
+			return state.get(BlockStateProperties.HORIZONTAL_FACING);
+		return null;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		Direction direction = getBlockFacing(state);
-		if (!isVertical(state) && state.get(BELT))
-			return AllShapes.BELT_FUNNEL.get(direction);
-		return AllShapes.FUNNEL.get(direction);
-	}
-
-	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		onAttachmentPlaced(worldIn, pos, state);
-		if (worldIn.isRemote)
-			return;
-
-		if (isOnBelt(worldIn, pos)) {
-			BeltTileEntity belt = BeltHelper.getSegmentTE(worldIn, pos.down());
-			if (belt == null)
-				return;
-
-			BeltTileEntity controllerBelt = belt.getControllerTE();
-			if (controllerBelt == null)
-				return;
-
-			controllerBelt.getInventory().forEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
-				controllerBelt.getInventory().eject(transportedItemStack);
-				return Collections.emptyList();
-			});
+	public void onReplaced(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
+		boolean p_196243_5_) {
+		if (p_196243_1_.hasTileEntity() && (p_196243_1_.getBlock() != p_196243_4_.getBlock() && !isFunnel(p_196243_4_)
+			|| !p_196243_4_.hasTileEntity())) {
+			TileEntityBehaviour.destroy(p_196243_2_, p_196243_3_, FilteringBehaviour.TYPE);
+			p_196243_2_.removeTileEntity(p_196243_3_);
 		}
 	}
 
-	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		onAttachmentRemoved(worldIn, pos, state);
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
-			worldIn.removeTileEntity(pos);
-		}
-	}
-
-	@Override
-	public List<BlockPos> getPotentialAttachmentPositions(IWorld world, BlockPos pos, BlockState beltState) {
-		return Arrays.asList(pos.up());
-	}
-
-	@Override
-	public BlockPos getBeltPositionForAttachment(IWorld world, BlockPos pos, BlockState state) {
-		return pos.down();
-	}
-
-	@Override
-	public boolean startProcessingItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
-		return process(te, transported, state);
-	}
-
-	@Override
-	public boolean isAttachedCorrectly(IWorld world, BlockPos attachmentPos, BlockPos beltPos,
-			BlockState attachmentState, BlockState beltState) {
-		return !isVertical(attachmentState);
-	}
-
-	@Override
-	public boolean processItem(BeltTileEntity te, TransportedItemStack transported, BeltAttachmentState state) {
-		Direction movementFacing = te.getMovementFacing();
-		if (movementFacing != te.getWorld().getBlockState(state.attachmentPos).get(HORIZONTAL_FACING))
-			return false;
-		return process(te, transported, state);
-	}
-
-	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
-
-		if (hit.getFace() == getBlockFacing(state).getOpposite()) {
-			if (!worldIn.isRemote)
-				withTileEntityDo(worldIn, pos, te -> {
-					ItemStack heldItem = player.getHeldItem(handIn).copy();
-					ItemStack remainder = te.tryToInsert(heldItem);
-					if (!ItemStack.areItemStacksEqual(remainder, heldItem))
-						player.setHeldItem(handIn, remainder);
-				});
-			return ActionResultType.SUCCESS;
-		}
-
-		return ActionResultType.PASS;
-	}
-
-	public boolean process(BeltTileEntity belt, TransportedItemStack transported, BeltAttachmentState state) {
-		TileEntity te = belt.getWorld().getTileEntity(state.attachmentPos);
-		if (!(te instanceof FunnelTileEntity))
-			return false;
-		FunnelTileEntity funnel = (FunnelTileEntity) te;
-		ItemStack stack = funnel.tryToInsert(transported.stack);
-		transported.stack = stack;
+	protected boolean canInsertIntoFunnel(BlockState state) {
 		return true;
 	}
 
-	public static class Vertical extends FunnelBlock {
-		public Vertical(Properties properties) {
-			super(properties);
-		}
-
-		@Override
-		protected boolean isVertical() {
-			return true;
-		}
-	}
-
-	@Override
-	public MovementBehaviour getMovementBehaviour() {
-		return MOVEMENT;
+	@Nullable
+	public static boolean isFunnel(BlockState state) {
+		return state.getBlock() instanceof FunnelBlock || state.getBlock() instanceof HorizontalInteractionFunnelBlock;
 	}
 
 	@Override

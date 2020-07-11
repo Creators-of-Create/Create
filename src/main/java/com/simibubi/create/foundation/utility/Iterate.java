@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 public class Iterate {
 
 	public static final boolean[] trueAndFalse = { true, false };
-	public static final int[] zeroAndOne = { 1, -1 };
+	public static final int[] zeroAndOne = { 0, 1 };
 	public static final int[] positiveAndNegative = { 1, -1 };
 	public static final Direction[] directions = Direction.values();
 	public static final Direction[] horizontalDirections = getHorizontals();

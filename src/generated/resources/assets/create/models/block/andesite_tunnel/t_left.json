@@ -1,0 +1,8 @@
+{
+  "parent": "create:block/belt_tunnel/t_left",
+  "textures": {
+    "0": "create:block/andesite_tunnel",
+    "1": "create:block/andesite_tunnel_top",
+    "particle": "block/polished_andesite"
+  }
+}

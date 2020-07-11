@@ -98,8 +98,8 @@ public abstract class ValueBoxTransform {
 		@Override
 		protected Vec3d getLocalOffset(BlockState state) {
 			Vec3d location = getSouthLocation();
-			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(direction), Axis.Y);
-			location = VecHelper.rotateCentered(location, AngleHelper.verticalAngle(direction), Axis.Z);
+			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Axis.Y);
+			location = VecHelper.rotateCentered(location, AngleHelper.verticalAngle(getSide()), Axis.Z);
 			return location;
 		}
 
@@ -107,8 +107,8 @@ public abstract class ValueBoxTransform {
 
 		@Override
 		protected void rotate(BlockState state, MatrixStack ms) {
-			float yRot = AngleHelper.horizontalAngle(direction) + 180;
-			float xRot = direction == Direction.UP ? 90 : direction == Direction.DOWN ? 270 : 0;
+			float yRot = AngleHelper.horizontalAngle(getSide()) + 180;
+			float xRot = getSide() == Direction.UP ? 90 : getSide() == Direction.DOWN ? 270 : 0;
 			MatrixStacker.of(ms)
 				.rotateY(yRot)
 				.rotateX(xRot);
@@ -116,16 +116,20 @@ public abstract class ValueBoxTransform {
 
 		@Override
 		public boolean shouldRender(BlockState state) {
-			return super.shouldRender(state) && isSideActive(state, direction);
+			return super.shouldRender(state) && isSideActive(state, getSide());
 		}
 
 		@Override
 		public boolean testHit(BlockState state, Vec3d localHit) {
-			return isSideActive(state, direction) && super.testHit(state, localHit);
+			return isSideActive(state, getSide()) && super.testHit(state, localHit);
 		}
 
 		protected boolean isSideActive(BlockState state, Direction direction) {
 			return true;
+		}
+
+		public Direction getSide() {
+			return direction;
 		}
 
 	}

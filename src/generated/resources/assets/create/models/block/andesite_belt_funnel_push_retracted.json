@@ -1,0 +1,9 @@
+{
+  "parent": "create:block/belt_funnel/block_retracted",
+  "textures": {
+    "particle": "create:block/andesite_casing",
+    "2": "create:block/andesite_funnel_push",
+    "3": "create:block/andesite_funnel_back",
+    "4": "create:block/andesite_funnel_plating"
+  }
+}

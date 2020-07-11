@@ -4,14 +4,13 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.nbt.CompoundNBT;
 
 public class DeferralBehaviour extends TileEntityBehaviour {
 
-	public static IBehaviourType<DeferralBehaviour> TYPE = new IBehaviourType<DeferralBehaviour>() {
-	};
+	public static BehaviourType<DeferralBehaviour> TYPE = new BehaviourType<>();
 
 	private boolean needsUpdate;
 	private Supplier<Boolean> callback;
@@ -45,7 +44,7 @@ public class DeferralBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public IBehaviourType<?> getType() {
+	public BehaviourType<?> getType() {
 		return TYPE;
 	}
 

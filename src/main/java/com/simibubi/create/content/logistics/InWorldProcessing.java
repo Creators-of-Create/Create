@@ -8,7 +8,6 @@ import java.util.Optional;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -61,7 +60,7 @@ public class InWorldProcessing {
 			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			if (blockState.getBlock() == Blocks.FIRE
-					|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)))
+				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)))
 				return Type.SMOKING;
 			if (blockState.getBlock() == Blocks.LAVA)
 				return Type.BLASTING;
@@ -70,8 +69,10 @@ public class InWorldProcessing {
 	}
 
 	public static boolean canProcess(ItemEntity entity, Type type) {
-		if (entity.getPersistentData().contains("CreateData")) {
-			CompoundNBT compound = entity.getPersistentData().getCompound("CreateData");
+		if (entity.getPersistentData()
+			.contains("CreateData")) {
+			CompoundNBT compound = entity.getPersistentData()
+				.getCompound("CreateData");
 			if (compound.contains("Processing")) {
 				CompoundNBT processing = compound.getCompound("Processing");
 
@@ -100,7 +101,8 @@ public class InWorldProcessing {
 			SmokerTileEntity smoker = new SmokerTileEntity();
 			smoker.setLocation(world, BlockPos.ZERO);
 			smoker.setInventorySlotContents(0, stack);
-			Optional<SmokingRecipe> recipe = world.getRecipeManager().getRecipe(IRecipeType.SMOKING, smoker, world);
+			Optional<SmokingRecipe> recipe = world.getRecipeManager()
+				.getRecipe(IRecipeType.SMOKING, smoker, world);
 			return recipe.isPresent();
 		}
 
@@ -112,8 +114,8 @@ public class InWorldProcessing {
 
 	public static boolean isWashable(ItemStack stack, World world) {
 		splashingInv.setInventorySlotContents(0, stack);
-		Optional<SplashingRecipe> recipe =
-			world.getRecipeManager().getRecipe(AllRecipeTypes.SPLASHING.getType(), splashingInv, world);
+		Optional<SplashingRecipe> recipe = world.getRecipeManager()
+			.getRecipe(AllRecipeTypes.SPLASHING.getType(), splashingInv, world);
 		return recipe.isPresent();
 	}
 
@@ -135,15 +137,15 @@ public class InWorldProcessing {
 		}
 	}
 
-	public static List<TransportedItemStack> applyProcessing(TransportedItemStack transported, BeltTileEntity belt,
-			Type type) {
+	public static List<TransportedItemStack> applyProcessing(TransportedItemStack transported,
+		World world, Type type) {
 		if (transported.processedBy != type) {
 			transported.processedBy = type;
 			int timeModifierForStackSize = ((transported.stack.getCount() - 1) / 16) + 1;
 			int processingTime =
 				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			transported.processingTime = processingTime;
-			if (!canProcess(transported.stack, type, belt.getWorld()))
+			if (!canProcess(transported.stack, type, world))
 				transported.processingTime = -1;
 			return null;
 		}
@@ -152,15 +154,13 @@ public class InWorldProcessing {
 		if (transported.processingTime-- > 0)
 			return null;
 
-		List<ItemStack> stacks = process(transported.stack, type, belt.getWorld());
+		List<ItemStack> stacks = process(transported.stack, type, world);
 		if (stacks == null)
 			return null;
-		
+
 		List<TransportedItemStack> transportedStacks = new ArrayList<>();
 		for (ItemStack additional : stacks) {
 			TransportedItemStack newTransported = transported.getSimilar();
-			newTransported.beltPosition -= Math.signum(belt.getDirectionAwareBeltMovementSpeed()) * 1/32f;
-			newTransported.prevBeltPosition = newTransported.beltPosition;
 			newTransported.stack = additional.copy();
 			transportedStacks.add(newTransported);
 		}
@@ -170,8 +170,8 @@ public class InWorldProcessing {
 	private static List<ItemStack> process(ItemStack stack, Type type, World world) {
 		if (type == Type.SPLASHING) {
 			splashingInv.setInventorySlotContents(0, stack);
-			Optional<SplashingRecipe> recipe =
-				world.getRecipeManager().getRecipe(AllRecipeTypes.SPLASHING.getType(), splashingInv, world);
+			Optional<SplashingRecipe> recipe = world.getRecipeManager()
+				.getRecipe(AllRecipeTypes.SPLASHING.getType(), splashingInv, world);
 			if (recipe.isPresent())
 				return applyRecipeOn(stack, recipe.get());
 			return null;
@@ -181,15 +181,16 @@ public class InWorldProcessing {
 		SmokerTileEntity smoker = new SmokerTileEntity();
 		smoker.setLocation(world, BlockPos.ZERO);
 		smoker.setInventorySlotContents(0, stack);
-		Optional<SmokingRecipe> smokingRecipe = world.getRecipeManager().getRecipe(IRecipeType.SMOKING, smoker, world);
+		Optional<SmokingRecipe> smokingRecipe = world.getRecipeManager()
+			.getRecipe(IRecipeType.SMOKING, smoker, world);
 
 		if (type == Type.BLASTING) {
 			// FIXME this does not need to be a TE
 			FurnaceTileEntity furnace = new FurnaceTileEntity();
 			furnace.setLocation(world, BlockPos.ZERO);
 			furnace.setInventorySlotContents(0, stack);
-			Optional<FurnaceRecipe> smeltingRecipe =
-				world.getRecipeManager().getRecipe(IRecipeType.SMELTING, furnace, world);
+			Optional<FurnaceRecipe> smeltingRecipe = world.getRecipeManager()
+				.getRecipe(IRecipeType.SMELTING, furnace, world);
 
 			if (!smokingRecipe.isPresent()) {
 				if (smeltingRecipe.isPresent())
@@ -199,8 +200,8 @@ public class InWorldProcessing {
 				BlastFurnaceTileEntity blastFurnace = new BlastFurnaceTileEntity();
 				blastFurnace.setLocation(world, BlockPos.ZERO);
 				blastFurnace.setInventorySlotContents(0, stack);
-				Optional<BlastingRecipe> blastingRecipe =
-					world.getRecipeManager().getRecipe(IRecipeType.BLASTING, blastFurnace, world);
+				Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager()
+					.getRecipe(IRecipeType.BLASTING, blastFurnace, world);
 
 				if (blastingRecipe.isPresent())
 					return applyRecipeOn(stack, blastingRecipe.get());
@@ -228,7 +229,8 @@ public class InWorldProcessing {
 
 		if (!processing.contains("Type") || Type.valueOf(processing.getString("Type")) != type) {
 			processing.putString("Type", type.name());
-			int timeModifierForStackSize = ((entity.getItem().getCount() - 1) / 16) + 1;
+			int timeModifierForStackSize = ((entity.getItem()
+				.getCount() - 1) / 16) + 1;
 			int processingTime =
 				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			processing.putInt("Time", processingTime);
@@ -269,7 +271,7 @@ public class InWorldProcessing {
 						if (!ItemHandlerHelper.canItemStacksStack(stack, previouslyRolled))
 							continue;
 						int amount = Math.min(previouslyRolled.getMaxStackSize() - previouslyRolled.getCount(),
-								stack.getCount());
+							stack.getCount());
 						previouslyRolled.grow(amount);
 						stack.shrink(amount);
 					}
@@ -281,7 +283,8 @@ public class InWorldProcessing {
 				}
 			}
 		} else {
-			ItemStack out = recipe.getRecipeOutput().copy();
+			ItemStack out = recipe.getRecipeOutput()
+				.copy();
 			stacks = ItemHelper.multipliedOutput(stackIn, out);
 		}
 
@@ -304,10 +307,10 @@ public class InWorldProcessing {
 		case SPLASHING:
 			Vec3d color = ColorHelper.getRGB(0x0055FF);
 			world.addParticle(new RedstoneParticleData((float) color.x, (float) color.y, (float) color.z, 1),
-					vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f,
-					vec.z + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+				vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f, vec.z + (world.rand.nextFloat() - .5f) * .5f,
+				0, 1 / 8f, 0);
 			world.addParticle(ParticleTypes.SPIT, vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f,
-					vec.z + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+				vec.z + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
 			break;
 		default:
 			break;

@@ -33,6 +33,8 @@ public class AllTriggers {
 			UPGRADED_ZAPPER = simple("upgraded_zapper"),
 			EXTENDO = simple("extendo"),
 			GIGA_EXTENDO = simple("giga_extendo"),
+			MECHANICAL_ARM = simple("mechanical_arm"),
+			MUSICAL_ARM = simple("musical_arm"),
 			MIXER_MIX = simple("mixer");
 
 	private static SimpleTrigger simple(String id) {

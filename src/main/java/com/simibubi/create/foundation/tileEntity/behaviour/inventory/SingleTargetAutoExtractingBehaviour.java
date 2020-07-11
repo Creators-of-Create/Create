@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -13,16 +13,14 @@ import net.minecraft.util.math.BlockPos;
 
 public class SingleTargetAutoExtractingBehaviour extends AutoExtractingBehaviour {
 
-	public static IBehaviourType<SingleTargetAutoExtractingBehaviour> TYPE =
-		new IBehaviourType<SingleTargetAutoExtractingBehaviour>() {
-		};
+	public static BehaviourType<SingleTargetAutoExtractingBehaviour> TYPE = new BehaviourType<>();
 
 	private Supplier<Direction> attachmentDirection;
 	boolean synced;
 	boolean advantageOnNextSync;
 
 	public SingleTargetAutoExtractingBehaviour(SmartTileEntity te, Supplier<Direction> attachmentDirection,
-			Consumer<ItemStack> onExtract, int delay) {
+		Consumer<ItemStack> onExtract, int delay) {
 		super(te, Attachments.toward(attachmentDirection), onExtract, delay);
 		this.attachmentDirection = attachmentDirection;
 		synced = true;
@@ -49,7 +47,8 @@ public class SingleTargetAutoExtractingBehaviour extends AutoExtractingBehaviour
 	@Override
 	public boolean extract() {
 		if (synced) {
-			BlockPos invPos = tileEntity.getPos().offset(attachmentDirection.get());
+			BlockPos invPos = tileEntity.getPos()
+				.offset(attachmentDirection.get());
 			return SynchronizedExtraction.extractSynchronized(getWorld(), invPos);
 		} else
 			return extractFromInventory();
@@ -60,7 +59,7 @@ public class SingleTargetAutoExtractingBehaviour extends AutoExtractingBehaviour
 	}
 
 	@Override
-	public IBehaviourType<?> getType() {
+	public BehaviourType<?> getType() {
 		return TYPE;
 	}
 

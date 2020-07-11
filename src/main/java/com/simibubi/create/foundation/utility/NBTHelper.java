@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import net.minecraft.item.ItemStack;
@@ -12,8 +13,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public class NBTHelper {
 
-	public static <T extends Enum<?>> T readEnum(String name, Class<T> enumClass) {
+	public static <T extends Enum<?>> T readEnum(CompoundNBT nbt, String key, Class<T> enumClass) {
 		T[] enumConstants = enumClass.getEnumConstants();
+		String name = nbt.getString(key);
 		if (enumConstants == null)
 			throw new IllegalArgumentException("Non-Enum class passed to readEnum(): " + enumClass.getName());
 		for (T t : enumConstants) {
@@ -22,12 +24,12 @@ public class NBTHelper {
 		}
 		return enumConstants[0];
 	}
-
-	public static <T extends Enum<?>> String writeEnum(T enumConstant) {
-		return enumConstant.name();
+	
+	public static <T extends Enum<?>> void writeEnum(CompoundNBT nbt, String key, T enumConstant) {
+		nbt.putString(key, enumConstant.name());
 	}
-
-	public static <T> ListNBT writeCompoundList(List<T> list, Function<T, CompoundNBT> serializer) {
+	
+	public static <T> ListNBT writeCompoundList(Iterable<T> list, Function<T, CompoundNBT> serializer) {
 		ListNBT listNBT = new ListNBT();
 		list.forEach(t -> listNBT.add(serializer.apply(t)));
 		return listNBT;
@@ -37,6 +39,10 @@ public class NBTHelper {
 		List<T> list = new ArrayList<>(listNBT.size());
 		listNBT.forEach(inbt -> list.add(deserializer.apply((CompoundNBT) inbt)));
 		return list;
+	}
+	
+	public static <T> void iterateCompoundList(ListNBT listNBT, Consumer<CompoundNBT> consumer) {
+		listNBT.forEach(inbt -> consumer.accept((CompoundNBT) inbt));
 	}
 	
 	public static ListNBT writeItemList(List<ItemStack> stacks) {

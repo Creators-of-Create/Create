@@ -50,23 +50,27 @@ public class BeltConnectorHandler {
 
 			BlockPos first = NBTUtil.readBlockPos(tag.getCompound("FirstPulley"));
 
-			if (!world.getBlockState(first).has(BlockStateProperties.AXIS))
+			if (!world.getBlockState(first)
+				.has(BlockStateProperties.AXIS))
 				continue;
-			Axis axis = world.getBlockState(first).get(BlockStateProperties.AXIS);
+			Axis axis = world.getBlockState(first)
+				.get(BlockStateProperties.AXIS);
 
 			RayTraceResult rayTrace = Minecraft.getInstance().objectMouseOver;
 			if (rayTrace == null || !(rayTrace instanceof BlockRayTraceResult)) {
 				if (r.nextInt(50) == 0) {
 					world.addParticle(new RedstoneParticleData(.3f, .9f, .5f, 1),
-							first.getX() + .5f + randomOffset(.25f), first.getY() + .5f + randomOffset(.25f),
-							first.getZ() + .5f + randomOffset(.25f), 0, 0, 0);
+						first.getX() + .5f + randomOffset(.25f), first.getY() + .5f + randomOffset(.25f),
+						first.getZ() + .5f + randomOffset(.25f), 0, 0, 0);
 				}
 				return;
 			}
 
 			BlockPos selected = ((BlockRayTraceResult) rayTrace).getPos();
 
-			if (world.getBlockState(selected).getMaterial().isReplaceable())
+			if (world.getBlockState(selected)
+				.getMaterial()
+				.isReplaceable())
 				return;
 			if (!ShaftBlock.isShaft(world.getBlockState(selected)))
 				selected = selected.offset(((BlockRayTraceResult) rayTrace).getFace());
@@ -79,7 +83,8 @@ public class BeltConnectorHandler {
 			Vec3d start = new Vec3d(first);
 			Vec3d end = new Vec3d(selected);
 			Vec3d actualDiff = end.subtract(start);
-			end = end.subtract(axis.getCoordinate(actualDiff.x, 0, 0), 0, axis.getCoordinate(0, 0, actualDiff.z));
+			end = end.subtract(axis.getCoordinate(actualDiff.x, 0, 0), axis.getCoordinate(0, actualDiff.y, 0),
+				axis.getCoordinate(0, 0, actualDiff.z));
 			Vec3d diff = end.subtract(start);
 
 			double x = Math.abs(diff.x);
@@ -96,6 +101,8 @@ public class BeltConnectorHandler {
 						for (int k = -1; k <= 1; k++) {
 							if (axis.getCoordinate(i, j, k) != 0)
 								continue;
+							if (axis == Axis.Y && i != 0 && k != 0)
+								continue;
 							if (i == 0 && j == 0 && k == 0)
 								continue;
 							validDiffs.add(new Vec3d(i, j, k));
@@ -110,15 +117,17 @@ public class BeltConnectorHandler {
 					}
 				}
 				step = validDiffs.get(closestIndex);
-
 			}
+
+			if (axis == Axis.Y && step.x != 0 && step.z != 0)
+				return;
 
 			step = new Vec3d(Math.signum(step.x), Math.signum(step.y), Math.signum(step.z));
 			for (float f = 0; f < length; f += .0625f) {
 				Vec3d position = start.add(step.scale(f));
 				if (r.nextInt(10) == 0) {
 					world.addParticle(new RedstoneParticleData(canConnect ? .3f : .9f, canConnect ? .9f : .3f, .5f, 1),
-							position.x + .5f, position.y + .5f, position.z + .5f, 0, 0, 0);
+						position.x + .5f, position.y + .5f, position.z + .5f, 0, 0, 0);
 				}
 			}
 

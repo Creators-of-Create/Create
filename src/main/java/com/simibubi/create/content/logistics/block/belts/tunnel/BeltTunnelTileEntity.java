@@ -1,23 +1,27 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
-import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.IntNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -29,41 +33,16 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableTileEntity {
+public class BeltTunnelTileEntity extends SmartTileEntity {
 
 	public HashMap<Direction, InterpolatedChasingValue> flaps;
-	public HashMap<Direction, ItemStack> syncedFlaps;
-	private LazyOptional<IItemHandler> cap = LazyOptional.empty();
-	private boolean initialize;
-
-	private List<Pair<Direction, Boolean>> flapsToSend;
+	protected LazyOptional<IItemHandler> cap = LazyOptional.empty();
+	protected List<Pair<Direction, Boolean>> flapsToSend;
 
 	public BeltTunnelTileEntity(TileEntityType<? extends BeltTunnelTileEntity> type) {
 		super(type);
 		flaps = new HashMap<>();
-		syncedFlaps = new HashMap<>();
-		initialize = true;
 		flapsToSend = new LinkedList<>();
-	}
-
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			if (!this.cap.isPresent()) {
-				if (AllBlocks.BELT.has(world.getBlockState(pos.down()))) {
-					TileEntity teBelow = world.getTileEntity(pos.down());
-					if (teBelow != null) {
-						T capBelow = teBelow.getCapability(capability, Direction.UP).orElse(null);
-						if (capBelow != null) {
-							cap = LazyOptional.of(() -> capBelow).cast();
-						}
-					}
-				}
-			}
-			return this.cap.cast();
-		}
-		return super.getCapability(capability, side);
 	}
 
 	@Override
@@ -74,38 +53,30 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		CompoundNBT dyedFlapsNBT = new CompoundNBT();
-		syncedFlaps.forEach((direction, pair) -> {
-			dyedFlapsNBT.putBoolean(direction.name(), true);
-		});
-		compound.put("syncedFlaps", dyedFlapsNBT);
+		ListNBT flapsNBT = new ListNBT();
+		for (Direction direction : flaps.keySet())
+			flapsNBT.add(IntNBT.of(direction.getIndex()));
+		compound.put("Flaps", flapsNBT);
 		return super.write(compound);
 	}
 
 	@Override
 	public void read(CompoundNBT compound) {
-		if (compound.contains("syncedFlaps")) {
-			syncedFlaps.clear();
-			CompoundNBT dyedFlapsNBT = compound.getCompound("syncedFlaps");
-			for (Direction direction : Direction.values()) {
-				if (dyedFlapsNBT.contains(direction.name()))
-					syncedFlaps.put(direction, ItemStack.EMPTY);
-			}
-		}
-		super.read(compound);
-	}
-
-	public boolean toggleSyncForFlap(Direction face) {
-		if (!flaps.containsKey(face))
-			return false;
-		if (syncedFlaps.containsKey(face))
-			syncedFlaps.remove(face);
-		else
-			syncedFlaps.put(face, ItemStack.EMPTY);
+		Set<Direction> newFlaps = new HashSet<>(6);
+		ListNBT flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
+		for (INBT inbt : flapsNBT)
+			if (inbt instanceof IntNBT)
+				newFlaps.add(Direction.byIndex(((IntNBT) inbt).getInt()));
 		
-		markDirty();
-		sendData();
-		return true;
+		for (Direction d : Iterate.directions) 
+			if (!newFlaps.contains(d))
+				flaps.remove(d);
+			else if (!flaps.containsKey(d))
+				flaps.put(d, new InterpolatedChasingValue().start(.25f)
+					.target(0)
+					.withSpeed(.05f));
+
+		super.read(compound);
 	}
 
 	@Override
@@ -115,11 +86,12 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 			ListNBT flapsNBT = new ListNBT();
 			for (Pair<Direction, Boolean> pair : flapsToSend) {
 				CompoundNBT flap = new CompoundNBT();
-				flap.putInt("Flap", pair.getKey().getIndex());
+				flap.putInt("Flap", pair.getKey()
+					.getIndex());
 				flap.putBoolean("FlapInward", pair.getValue());
 				flapsNBT.add(flap);
 			}
-			writeToClient.put("Flaps", flapsNBT);
+			writeToClient.put("TriggerFlaps", flapsNBT);
 			flapsToSend.clear();
 		}
 		return writeToClient;
@@ -128,33 +100,29 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 	@Override
 	public void readClientUpdate(CompoundNBT tag) {
 		super.readClientUpdate(tag);
-		if (tag.contains("Flaps")) {
-			ListNBT flapsNBT = tag.getList("Flaps", NBT.TAG_COMPOUND);
+		if (tag.contains("TriggerFlaps")) {
+			ListNBT flapsNBT = tag.getList("TriggerFlaps", NBT.TAG_COMPOUND);
 			for (INBT inbt : flapsNBT) {
 				CompoundNBT flap = (CompoundNBT) inbt;
 				Direction side = Direction.byIndex(flap.getInt("Flap"));
 				flap(side, flap.getBoolean("FlapInward"));
 			}
-		} else
-			initFlaps();
+		}
 	}
 
-	public void initFlaps() {
-		if (!world.isRemote) {
-			sendData();
-		}
-
-		initialize = false;
+	public void updateTunnelConnections() {
 		flaps.clear();
 		BlockState tunnelState = getBlockState();
 		for (Direction direction : Direction.values()) {
-			if (direction.getAxis().isVertical())
+			if (direction.getAxis()
+				.isVertical())
 				continue;
-			if (AllBlocks.BELT_TUNNEL.has(world.getBlockState(pos.offset(direction))))
+			BlockState blockState = world.getBlockState(pos.offset(direction));
+			if (blockState.getBlock() instanceof BeltTunnelBlock)
 				continue;
 			if (direction.getAxis() != tunnelState.get(BlockStateProperties.HORIZONTAL_AXIS)) {
-				boolean positive = direction.getAxisDirection() == AxisDirection.POSITIVE
-						^ direction.getAxis() == Axis.Z;
+				boolean positive =
+					direction.getAxisDirection() == AxisDirection.POSITIVE ^ direction.getAxis() == Axis.Z;
 				Shape shape = tunnelState.get(BeltTunnelBlock.SHAPE);
 				if (BeltTunnelBlock.isStraight(tunnelState))
 					continue;
@@ -163,14 +131,24 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 				if (!positive && shape == Shape.T_RIGHT)
 					continue;
 			}
-			flaps.put(direction, new InterpolatedChasingValue().target(0).withSpeed(.05f));
+			
+			BlockState funnelState = world.getBlockState(getPos().offset(direction));
+			if (funnelState.getBlock() instanceof BeltFunnelBlock) 
+				if (funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) == direction.getOpposite())
+					continue;
+				
+			flaps.put(direction, new InterpolatedChasingValue().start(.25f)
+				.target(0)
+				.withSpeed(.05f));
 		}
+		sendData();
 	}
 
 	public void flap(Direction side, boolean inward) {
 		if (world.isRemote) {
 			if (flaps.containsKey(side))
-				flaps.get(side).set(inward ? -1 : 1);
+				flaps.get(side)
+					.set(inward ? -1 : 1);
 			return;
 		}
 
@@ -178,15 +156,44 @@ public class BeltTunnelTileEntity extends SyncedTileEntity implements ITickableT
 	}
 
 	@Override
+	public void initialize() {
+		super.initialize();
+//		updateTunnelConnections();
+	}
+
+	@Override
 	public void tick() {
-		if (initialize)
-			initFlaps();
+		super.tick();
 		if (!world.isRemote) {
 			if (!flapsToSend.isEmpty())
 				sendData();
 			return;
 		}
 		flaps.forEach((d, value) -> value.tick());
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
+		if (capability != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return super.getCapability(capability, side);
+
+		if (!this.cap.isPresent()) {
+			if (AllBlocks.BELT.has(world.getBlockState(pos.down()))) {
+				TileEntity teBelow = world.getTileEntity(pos.down());
+				if (teBelow != null) {
+					T capBelow = teBelow.getCapability(capability, Direction.UP)
+						.orElse(null);
+					if (capBelow != null) {
+						cap = LazyOptional.of(() -> capBelow)
+							.cast();
+					}
+				}
+			}
+		}
+		return this.cap.cast();
 	}
 
 }

@@ -7,11 +7,12 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
-import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.content.logistics.InWorldProcessing.Type;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -21,9 +22,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
@@ -42,10 +41,10 @@ import net.minecraftforge.common.Tags;
 
 public class AirCurrent {
 
-	private static DamageSource damageSourceFire =
-		new DamageSource("create.fan_fire").setDifficultyScaled().setFireDamage();
-	private static DamageSource damageSourceLava =
-		new DamageSource("create.fan_lava").setDifficultyScaled().setFireDamage();
+	private static DamageSource damageSourceFire = new DamageSource("create.fan_fire").setDifficultyScaled()
+		.setFireDamage();
+	private static DamageSource damageSourceLava = new DamageSource("create.fan_lava").setDifficultyScaled()
+		.setFireDamage();
 
 	public final EncasedFanTileEntity source;
 	public AxisAlignedBB bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
@@ -54,7 +53,8 @@ public class AirCurrent {
 	public boolean pushing;
 	public float maxDistance;
 
-	protected List<Pair<BeltTileEntity, InWorldProcessing.Type>> affectedBelts = new ArrayList<>();
+	protected List<Pair<TransportedItemStackHandlerBehaviour, InWorldProcessing.Type>> affectedItemHandlers =
+		new ArrayList<>();
 	protected List<Entity> caughtEntities = new ArrayList<>();
 
 	public AirCurrent(EncasedFanTileEntity source) {
@@ -66,14 +66,16 @@ public class AirCurrent {
 		Direction facing = direction;
 		if (world.isRemote) {
 			float offset = pushing ? 0.5f : maxDistance + .5f;
-			Vec3d pos = VecHelper.getCenterOf(source.getPos()).add(new Vec3d(facing.getDirectionVec()).scale(offset));
+			Vec3d pos = VecHelper.getCenterOf(source.getPos())
+				.add(new Vec3d(facing.getDirectionVec()).scale(offset));
 			if (world.rand.nextFloat() < AllConfigs.CLIENT.fanParticleDensity.get())
 				world.addParticle(new AirFlowParticleData(source.getPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
 
 		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
-			if (!entity.getBoundingBox().intersects(bounds)) {
+			if (!entity.getBoundingBox()
+				.intersects(bounds)) {
 				iterator.remove();
 				continue;
 			}
@@ -83,7 +85,8 @@ public class AirCurrent {
 
 			float sneakModifier = entity.isSneaking() ? 4096f : 512f;
 			float speed = Math.abs(source.getSpeed());
-			double entityDistance = entity.getPositionVec().distanceTo(center);
+			double entityDistance = entity.getPositionVec()
+				.distanceTo(center);
 			float acceleration = (float) (speed / sneakModifier / (entityDistance / maxDistance));
 			Vec3d previousMotion = entity.getMotion();
 			float maxAcceleration = 5;
@@ -127,15 +130,16 @@ public class AirCurrent {
 						}
 						break;
 					case SPLASHING:
-						if (entity instanceof EndermanEntity || entity.getType() == EntityType.SNOW_GOLEM || entity.getType() == EntityType.BLAZE) {
+						if (entity instanceof EndermanEntity || entity.getType() == EntityType.SNOW_GOLEM
+							|| entity.getType() == EntityType.BLAZE) {
 							entity.attackEntityFrom(DamageSource.DROWN, 2);
 						}
 						if (!entity.isBurning())
 							break;
 						entity.extinguish();
 						world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-								SoundCategory.NEUTRAL, 0.7F,
-								1.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.4F);
+							SoundCategory.NEUTRAL, 0.7F,
+							1.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.4F);
 						break;
 					default:
 						break;
@@ -145,7 +149,7 @@ public class AirCurrent {
 
 		}
 
-		tickBelts();
+		tickAffectedHandlers();
 	}
 
 	public void rebuild() {
@@ -158,7 +162,8 @@ public class AirCurrent {
 
 		World world = source.getWorld();
 		BlockPos start = source.getPos();
-		direction = source.getBlockState().get(BlockStateProperties.FACING);
+		direction = source.getBlockState()
+			.get(BlockStateProperties.FACING);
 		pushing = source.getAirFlowDirection() == direction;
 		Vec3d directionVec = new Vec3d(direction.getDirectionVec());
 		Vec3d planeVec = VecHelper.planeByNormal(directionVec);
@@ -166,9 +171,9 @@ public class AirCurrent {
 		// 4 Rays test for holes in the shapes blocking the flow
 		float offsetDistance = .25f;
 		Vec3d[] offsets = new Vec3d[] { planeVec.mul(offsetDistance, offsetDistance, offsetDistance),
-				planeVec.mul(-offsetDistance, -offsetDistance, offsetDistance),
-				planeVec.mul(offsetDistance, -offsetDistance, -offsetDistance),
-				planeVec.mul(-offsetDistance, offsetDistance, -offsetDistance), };
+			planeVec.mul(-offsetDistance, -offsetDistance, offsetDistance),
+			planeVec.mul(offsetDistance, -offsetDistance, -offsetDistance),
+			planeVec.mul(-offsetDistance, offsetDistance, -offsetDistance), };
 
 		maxDistance = source.getMaxDistance();
 		float limitedDistance = 0;
@@ -190,15 +195,17 @@ public class AirCurrent {
 			}
 
 			for (Vec3d offset : offsets) {
-				Vec3d rayStart =
-					VecHelper.getCenterOf(currentPos).subtract(directionVec.scale(.5f + 1 / 32f)).add(offset);
+				Vec3d rayStart = VecHelper.getCenterOf(currentPos)
+					.subtract(directionVec.scale(.5f + 1 / 32f))
+					.add(offset);
 				Vec3d rayEnd = rayStart.add(directionVec.scale(1 + 1 / 32f));
 				BlockRayTraceResult blockraytraceresult =
 					world.rayTraceBlocks(rayStart, rayEnd, currentPos, voxelshape, state);
 				if (blockraytraceresult == null)
 					continue Outer;
 
-				double distance = i - 1 + blockraytraceresult.getHitVec().distanceTo(rayStart);
+				double distance = i - 1 + blockraytraceresult.getHitVec()
+					.distanceTo(rayStart);
 				if (limitedDistance < distance)
 					limitedDistance = (float) distance;
 			}
@@ -244,66 +251,56 @@ public class AirCurrent {
 			if (factor > 0)
 				bounds = new AxisAlignedBB(start.offset(direction)).expand(scale);
 			else {
-				bounds = new AxisAlignedBB(start.offset(direction)).contract(scale.x, scale.y, scale.z).offset(scale);
+				bounds = new AxisAlignedBB(start.offset(direction)).contract(scale.x, scale.y, scale.z)
+					.offset(scale);
 			}
 		}
-		findAffectedBelts();
+		findAffectedHandlers();
 	}
 
 	public void findEntities() {
 		caughtEntities.clear();
-		caughtEntities = source.getWorld().getEntitiesWithinAABBExcludingEntity(null, bounds);
+		caughtEntities = source.getWorld()
+			.getEntitiesWithinAABBExcludingEntity(null, bounds);
 	}
 
-	public void findAffectedBelts() {
+	public void findAffectedHandlers() {
 		World world = source.getWorld();
 		BlockPos start = source.getPos();
-		affectedBelts.clear();
+		affectedItemHandlers.clear();
 		for (int i = 0; i < maxDistance + 1; i++) {
 			Type type = getSegmentAt(i);
 			if (type == null)
 				continue;
-			BlockPos pos = start.offset(direction, i);
-			TileEntity te = world.getTileEntity(pos);
-			if (te != null && (te instanceof BeltTileEntity))
-				affectedBelts.add(Pair.of((BeltTileEntity) te, type));
-			if (direction.getAxis().isVertical())
-				continue;
 
-			pos = pos.down();
-			te = world.getTileEntity(pos);
-			if (te == null || !(te instanceof BeltTileEntity))
-				continue;
-			affectedBelts.add(Pair.of((BeltTileEntity) te, type));
+			for (int offset : Iterate.zeroAndOne) {
+				BlockPos pos = start.offset(direction, i)
+					.down(offset);
+				TransportedItemStackHandlerBehaviour behaviour =
+					TileEntityBehaviour.get(world, pos, TransportedItemStackHandlerBehaviour.TYPE);
+				if (behaviour != null)
+					affectedItemHandlers.add(Pair.of(behaviour, type));
+				if (direction.getAxis()
+					.isVertical())
+					break;
+			}
 		}
 	}
 
-	public void tickBelts() {
-		for (Pair<BeltTileEntity, Type> pair : affectedBelts) {
-			BeltTileEntity belt = pair.getKey();
-			World world = belt.getWorld();
+	public void tickAffectedHandlers() {
+		for (Pair<TransportedItemStackHandlerBehaviour, Type> pair : affectedItemHandlers) {
+			TransportedItemStackHandlerBehaviour handler = pair.getKey();
+			World world = handler.getWorld();
 			InWorldProcessing.Type processingType = pair.getRight();
 
-			BeltTileEntity controller = belt.getControllerTE();
-			if (controller == null)
-				continue;
-
-			controller.getInventory().forEachWithin(belt.index + .5f, .51f, (transported) -> {
-				InWorldProcessing.spawnParticlesForProcessing(world,
-						BeltHelper.getVectorForOffset(controller, transported.beltPosition), processingType);
+			handler.handleProcessingOnAllItems((transported) -> {
+				InWorldProcessing.spawnParticlesForProcessing(world, handler.getWorldPositionOf(transported),
+					processingType);
 				if (world.isRemote)
 					return null;
-				return InWorldProcessing.applyProcessing(transported, belt, processingType);
+				return InWorldProcessing.applyProcessing(transported, world, processingType);
 			});
 		}
-	}
-
-	public void writeToNBT(CompoundNBT nbt) {
-
-	}
-
-	public void readFromNBT(CompoundNBT nbt) {
-
 	}
 
 	private static boolean shouldAlwaysPass(BlockState state) {

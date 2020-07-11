@@ -57,6 +57,8 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 			.enqueueWork(() -> {
 				ServerPlayerEntity sender = context.get()
 					.getSender();
+				if (sender == null)
+					return;
 				Entity entityByID = sender.getServerWorld()
 					.getEntityByID(target);
 				if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {

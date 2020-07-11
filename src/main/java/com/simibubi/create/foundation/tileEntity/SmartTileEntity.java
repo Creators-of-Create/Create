@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntityType;
 
 public abstract class SmartTileEntity extends SyncedTileEntity implements ITickableTileEntity {
 
-	private Map<IBehaviourType<?>, TileEntityBehaviour> behaviours;
+	private Map<BehaviourType<?>, TileEntityBehaviour> behaviours;
 	private boolean initialized;
 	private boolean firstNbtRead;
 	private int lazyTickRate;
@@ -120,14 +120,14 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 		behaviour.initialize();
 	}
 
-	protected void removeBehaviour(IBehaviourType<?> type) {
+	protected void removeBehaviour(BehaviourType<?> type) {
 		TileEntityBehaviour remove = behaviours.remove(type);
 		if (remove != null)
 			remove.remove();
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T extends TileEntityBehaviour> T getBehaviour(IBehaviourType<T> type) {
+	protected <T extends TileEntityBehaviour> T getBehaviour(BehaviourType<T> type) {
 		if (behaviours.containsKey(type))
 			return (T) behaviours.get(type);
 		return null;

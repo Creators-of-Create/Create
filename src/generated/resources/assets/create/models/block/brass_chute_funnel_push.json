@@ -1,0 +1,9 @@
+{
+  "parent": "create:block/chute_funnel/block",
+  "textures": {
+    "particle": "create:block/brass_casing",
+    "3": "create:block/brass_funnel_push",
+    "1_2": "create:block/brass_funnel_back",
+    "4": "create:block/brass_funnel_plating"
+  }
+}

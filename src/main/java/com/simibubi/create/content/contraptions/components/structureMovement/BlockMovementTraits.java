@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.components.actors.AttachedActorBlock;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
@@ -15,12 +16,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.MagnetBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
 import com.simibubi.create.content.logistics.block.extractor.ExtractorBlock;
-import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.transposer.TransposerBlock;
 
@@ -29,7 +27,6 @@ import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.CarpetBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceGateBlock;
@@ -73,7 +70,7 @@ public class BlockMovementTraits {
 			return true;
 		if (blockState.getBlockHardness(world, pos) == -1)
 			return false;
-		if (block == Blocks.OBSIDIAN)
+		if (AllBlockTags.NON_MOVABLE.tag.contains(block))
 			return false;
 
 		// Move controllers only when they aren't moving
@@ -99,8 +96,6 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof ExtractorBlock)
 			return true;
-		if (block instanceof FunnelBlock)
-			return true;
 		return blockState.getPushReaction() != PushReaction.BLOCK;
 	}
 
@@ -112,21 +107,12 @@ public class BlockMovementTraits {
 		Block block = state.getBlock();
 		if (state.has(BlockStateProperties.HANGING))
 			return true;
-		if (block instanceof HandCrankBlock)
-			return true;
+		
 		if (block instanceof LadderBlock)
-			return true;
-		if (block instanceof ExtractorBlock)
-			return true;
-		if (block instanceof FunnelBlock)
 			return true;
 		if (block instanceof TorchBlock)
 			return true;
-		if (block instanceof FlowerPotBlock)
-			return true;
 		if (block instanceof AbstractPressurePlateBlock)
-			return true;
-		if (block instanceof DoorBlock)
 			return true;
 		if (block instanceof HorizontalFaceBlock)
 			return true;
@@ -136,21 +122,9 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof RedstoneWireBlock)
 			return true;
-		if (block instanceof RedstoneLinkBlock)
-			return true;
-		if (block instanceof RopeBlock)
-			return true;
-		if (block instanceof NozzleBlock)
-			return true;
-		if (block instanceof MagnetBlock)
-			return true;
-		if (block instanceof EngineBlock)
-			return true;
 		if (block instanceof CarpetBlock)
 			return true;
-		if (block instanceof BellBlock)
-			return true;
-		return false;
+		return AllBlockTags.BRITTLE.tag.contains(block);
 	}
 
 	/**

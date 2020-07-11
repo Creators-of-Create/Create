@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "create:nozzle",
+    "create:hand_crank",
+    "create:rope",
+    "create:pulley_magnet",
+    "create:furnace_engine",
+    "create:redstone_link",
+    "create:extractor",
+    "create:vertical_extractor",
+    "create:linked_extractor",
+    "create:vertical_linked_extractor"
+  ]
+}

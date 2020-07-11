@@ -98,14 +98,14 @@ public class ClockworkContraption extends Contraption {
 		CompoundNBT tag = super.writeNBT();
 		tag.putInt("facing", facing.getIndex());
 		tag.putInt("offset", offset);
-		tag.putString("HandType", NBTHelper.writeEnum(handType));
+		NBTHelper.writeEnum(tag, "HandType", handType);
 		return tag;
 	}
 
 	@Override
 	public void readNBT(World world, CompoundNBT tag) {
 		facing = Direction.byIndex(tag.getInt("Facing"));
-		handType = NBTHelper.readEnum(tag.getString("HandType"), HandType.class);
+		handType = NBTHelper.readEnum(tag, "HandType", HandType.class);
 		offset = tag.getInt("offset");
 		super.readNBT(world, tag);
 	}

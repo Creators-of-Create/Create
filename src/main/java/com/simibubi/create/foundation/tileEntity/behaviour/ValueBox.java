@@ -138,12 +138,19 @@ public class ValueBox extends ChasingAABBOutline {
 			ms.translate(17.5f, -5f, 7f);
 
 			boolean isFilter = stack.getItem() instanceof FilterItem;
+			boolean isEmpty = stack.isEmpty();
+			float scale = 1.5f;
+			ms.translate(-font.getStringWidth(countString), 0, 0);
+			
 			if (isFilter)
 				ms.translate(3, 8, 7.25f);
+			else if (isEmpty) {
+				ms.translate(-17, -2, 3f);
+				scale = 2f;
+			}
 			else
-				ms.translate(-7 - font.getStringWidth(countString), 10, 10 + 1 / 4f);
+				ms.translate(-7, 10, 10 + 1 / 4f);
 
-			float scale = 1.5f;
 			ms.scale(scale, scale, scale);
 			drawString(ms, buffer, countString, 0, 0, isFilter ? 0xFFFFFF : 0xEDEDED);
 			ms.translate(0, 0, -1 / 16f);

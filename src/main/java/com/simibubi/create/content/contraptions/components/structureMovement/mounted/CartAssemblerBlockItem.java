@@ -13,6 +13,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -25,8 +27,10 @@ public class CartAssemblerBlockItem extends BlockItem {
 	@Override
 	@Nonnull
 	public ActionResultType onItemUse(ItemUseContext context) {
-		if (tryPlaceAssembler(context))
+		if (tryPlaceAssembler(context)) {
+			context.getWorld().playSound(null, context.getPos(), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1, 1);
 			return ActionResultType.SUCCESS;
+		}
 		return super.onItemUse(context);
 	}
 

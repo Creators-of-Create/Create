@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:doors",
+    "minecraft:flower_pot",
+    "minecraft:bell"
+  ],
+  "optional": [
+    
+  ]
+}

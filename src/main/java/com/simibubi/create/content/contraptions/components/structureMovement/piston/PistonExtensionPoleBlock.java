@@ -1,18 +1,18 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPiston;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
-
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
-
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -21,75 +21,98 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements IWrenchable {
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
 
-	public PistonExtensionPoleBlock(Properties properties) {
-		super(properties);
-		setDefaultState(getDefaultState().with(FACING, Direction.UP));
-	}
+public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements IWrenchable, IWaterLoggable {
 
-	@Override
-	public PushReaction getPushReaction(BlockState state) {
-		return PushReaction.NORMAL;
-	}
+    public PistonExtensionPoleBlock(Properties properties) {
+        super(properties);
+        setDefaultState(getDefaultState().with(FACING, Direction.UP).with(BlockStateProperties.WATERLOGGED, false));
+    }
 
-	@Override
-	public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-		Axis axis = state.get(FACING)
-			.getAxis();
-		Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-		BlockPos pistonHead = null;
-		BlockPos pistonBase = null;
+    @Override
+    public PushReaction getPushReaction(BlockState state) {
+        return PushReaction.NORMAL;
+    }
 
-		for (int modifier : new int[] { 1, -1 }) {
-			for (int offset = modifier; modifier * offset < MechanicalPistonBlock.maxAllowedPistonPoles(); offset +=
-				modifier) {
-				BlockPos currentPos = pos.offset(direction, offset);
-				BlockState block = worldIn.getBlockState(currentPos);
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        Axis axis = state.get(FACING)
+                .getAxis();
+        Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
+        BlockPos pistonHead = null;
+        BlockPos pistonBase = null;
 
-				if (isExtensionPole(block) && axis == block.get(FACING)
-					.getAxis())
-					continue;
+        for (int modifier : new int[]{1, -1}) {
+            for (int offset = modifier; modifier * offset < MechanicalPistonBlock.maxAllowedPistonPoles(); offset +=
+                    modifier) {
+                BlockPos currentPos = pos.offset(direction, offset);
+                BlockState block = worldIn.getBlockState(currentPos);
 
-				if (isPiston(block) && block.get(BlockStateProperties.FACING)
-					.getAxis() == axis)
-					pistonBase = currentPos;
+                if (isExtensionPole(block) && axis == block.get(FACING)
+                        .getAxis())
+                    continue;
 
-				if (isPistonHead(block) && block.get(BlockStateProperties.FACING)
-					.getAxis() == axis)
-					pistonHead = currentPos;
+                if (isPiston(block) && block.get(BlockStateProperties.FACING)
+                        .getAxis() == axis)
+                    pistonBase = currentPos;
 
-				break;
-			}
-		}
+                if (isPistonHead(block) && block.get(BlockStateProperties.FACING)
+                        .getAxis() == axis)
+                    pistonHead = currentPos;
 
-		if (pistonHead != null && pistonBase != null && worldIn.getBlockState(pistonHead)
-			.get(BlockStateProperties.FACING) == worldIn.getBlockState(pistonBase)
-				.get(BlockStateProperties.FACING)) {
+                break;
+            }
+        }
 
-			final BlockPos basePos = pistonBase;
-			BlockPos.getAllInBox(pistonBase, pistonHead)
-				.filter(p -> !p.equals(pos) && !p.equals(basePos))
-				.forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
-			worldIn.setBlockState(basePos, worldIn.getBlockState(basePos)
-				.with(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
-		}
+        if (pistonHead != null && pistonBase != null && worldIn.getBlockState(pistonHead)
+                .get(BlockStateProperties.FACING) == worldIn.getBlockState(pistonBase)
+                .get(BlockStateProperties.FACING)) {
 
-		super.onBlockHarvested(worldIn, pos, state, player);
-	}
+            final BlockPos basePos = pistonBase;
+            BlockPos.getAllInBox(pistonBase, pistonHead)
+                    .filter(p -> !p.equals(pos) && !p.equals(basePos))
+                    .forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
+            worldIn.setBlockState(basePos, worldIn.getBlockState(basePos)
+                    .with(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
+        }
 
-	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.FOUR_VOXEL_POLE.get(state.get(FACING)
-			.getAxis());
-	}
+        super.onBlockHarvested(worldIn, pos, state, player);
+    }
 
-	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(FACING, context.getFace()
-			.getOpposite());
-	}
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return AllShapes.FOUR_VOXEL_POLE.get(state.get(FACING)
+                .getAxis());
+    }
 
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+        return getDefaultState().with(FACING, context.getFace().getOpposite())
+                .with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+    }
+
+    @Override
+    public IFluidState getFluidState(BlockState state) {
+        return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : Fluids.EMPTY.getDefaultState();
+    }
+
+    @Override
+    protected void fillStateContainer(Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.WATERLOGGED);
+        super.fillStateContainer(builder);
+    }
+
+    @Override
+    public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
+                                          IWorld world, BlockPos pos, BlockPos neighbourPos) {
+        if (state.get(BlockStateProperties.WATERLOGGED)) {
+            world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+        return state;
+    }
 }

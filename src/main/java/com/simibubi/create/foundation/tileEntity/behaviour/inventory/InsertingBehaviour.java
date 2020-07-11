@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.IBehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -16,8 +16,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class InsertingBehaviour extends InventoryManagementBehaviour {
 
-	public static IBehaviourType<InsertingBehaviour> TYPE = new IBehaviourType<InsertingBehaviour>() {
-	};
+	public static BehaviourType<InsertingBehaviour> TYPE = new BehaviourType<>();
 
 	public InsertingBehaviour(SmartTileEntity te, Supplier<List<Pair<BlockPos, Direction>>> attachments) {
 		super(te, attachments);
@@ -33,7 +32,7 @@ public class InsertingBehaviour extends InventoryManagementBehaviour {
 	}
 
 	@Override
-	public IBehaviourType<?> getType() {
+	public BehaviourType<?> getType() {
 		return TYPE;
 	}
 

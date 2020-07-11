@@ -88,16 +88,16 @@ public class Instruction {
 
 	CompoundNBT serialize() {
 		CompoundNBT tag = new CompoundNBT();
-		tag.putString("Type", NBTHelper.writeEnum(instruction));
-		tag.putString("Modifier", NBTHelper.writeEnum(speedModifier));
+		NBTHelper.writeEnum(tag, "Type", instruction);
+		NBTHelper.writeEnum(tag, "Modifier", speedModifier);
 		tag.putInt("Value", value);
 		return tag;
 	}
 
 	static Instruction deserialize(CompoundNBT tag) {
 		Instruction instruction =
-			new Instruction(NBTHelper.readEnum(tag.getString("Type"), SequencerInstructions.class));
-		instruction.speedModifier = NBTHelper.readEnum(tag.getString("Modifier"), InstructionSpeedModifiers.class);
+			new Instruction(NBTHelper.readEnum(tag, "Type", SequencerInstructions.class));
+		instruction.speedModifier = NBTHelper.readEnum(tag, "Modifier", InstructionSpeedModifiers.class);
 		instruction.value = tag.getInt("Value");
 		return instruction;
 	}

@@ -4,6 +4,7 @@ import static com.simibubi.create.foundation.data.CreateRegistrate.connectedText
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllColorHandlers;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -38,13 +39,16 @@ public class PalettesVariantEntry {
 
 			if (pattern.isTranslucent())
 				builder.addLayer(() -> RenderType::getTranslucent);
+			if (pattern == PaletteBlockPatterns.COBBLESTONE)
+				builder.item().tag(AllTags.AllItemTags.COBBLESTONE.tag);
 			if (pattern.hasFoliage())
 				builder.onRegister(CreateRegistrate.blockColors(() -> AllColorHandlers::getGrassyBlock));
 			pattern.createCTBehaviour(variant)
 				.ifPresent(b -> builder.onRegister(connectedTextures(b)));
-			
+
 			builder.recipe((c, p) -> {
-				p.stonecutting(DataIngredient.items(variant.getBaseBlock().get()), c::get);
+				p.stonecutting(DataIngredient.items(variant.getBaseBlock()
+					.get()), c::get);
 				pattern.addRecipes(variant, c, p);
 			});
 

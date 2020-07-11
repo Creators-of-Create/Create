@@ -61,18 +61,25 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			if (te.getSpeed() < 0 ^ alongZ)
 				offset = 1 - offset;
 
-			ItemStack stack = te.inventory.getStackInSlot(0);
-			ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-			IBakedModel modelWithOverrides = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), null);
-			boolean blockItem = modelWithOverrides.isGui3d();
-
-			ms.translate(alongZ ? offset : .5, blockItem ? .925f : 13f / 16f, alongZ ? .5 : offset);
-
-			ms.scale(.5f, .5f, .5f);
-			if (alongZ)
-				ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90));
-			ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90));
-			itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, light, overlay, ms, buffer);
+			for (int i = 0; i < te.inventory.getSlots(); i++) {
+				ItemStack stack = te.inventory.getStackInSlot(i);
+				if (stack.isEmpty())
+					continue;
+				
+				ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+				IBakedModel modelWithOverrides = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), null);
+				boolean blockItem = modelWithOverrides.isGui3d();
+				
+				ms.translate(alongZ ? offset : .5, blockItem ? .925f : 13f / 16f, alongZ ? .5 : offset);
+				
+				ms.scale(.5f, .5f, .5f);
+				if (alongZ)
+					ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90));
+				ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90));
+				itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, light, overlay, ms, buffer);
+				break;
+			}
+			
 			ms.pop();
 		}
 	}

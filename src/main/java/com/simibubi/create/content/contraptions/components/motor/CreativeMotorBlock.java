@@ -34,7 +34,8 @@ public class CreativeMotorBlock extends DirectionalKineticBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction preferred = getPreferredFacing(context);
-		if (context.getPlayer().isSneaking() || preferred == null)
+		if ((context.getPlayer() != null && context.getPlayer()
+			.isSneaking()) || preferred == null)
 			return super.getStateForPlacement(context);
 		return getDefaultState().with(FACING, preferred);
 	}
@@ -48,7 +49,8 @@ public class CreativeMotorBlock extends DirectionalKineticBlock {
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING).getAxis();
+		return state.get(FACING)
+			.getAxis();
 	}
 
 	@Override
