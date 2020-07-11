@@ -21,6 +21,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidTankBlock;
+import com.simibubi.create.content.contraptions.processing.HeaterBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.palettes.PavedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -211,6 +212,10 @@ public class BlockStateGen {
 					.rotationY(shape == RailShape.EAST_WEST ? 90 : 0)
 					.build();
 			});
+	}
+	
+	public static NonNullBiConsumer<DataGenContext<Block, HeaterBlock>, RegistrateBlockstateProvider> blazeHeater(){
+		return (c, p) -> ConfiguredModel.builder().modelFile(p.models().getExistingFile(p.modLoc("block/" + c.getName() + "/block"))).build();
 	}
 
 	public static NonNullBiConsumer<DataGenContext<Block, ReinforcedRailBlock>, RegistrateBlockstateProvider> reinforcedRail() {
