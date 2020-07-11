@@ -1,11 +1,7 @@
 package com.simibubi.create.content.contraptions.processing;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
@@ -17,7 +13,10 @@ import net.minecraft.util.registry.Registry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -39,18 +38,11 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 		for (JsonElement e : JSONUtils.getJsonArray(json, "ingredients")) {
 			JsonObject entry = e.getAsJsonObject();
 			if (JSONUtils.hasField(entry, "fluid")) {
-				Fluid fluid = ForgeRegistries.FLUIDS
-					.getValue(ResourceLocation.tryCreate(JSONUtils.getString(entry.get("fluid"), "fluid")));
-				int amount = 1;
-				if (JSONUtils.hasField((JsonObject) e, "amount")) {
-					amount = JSONUtils.getInt(entry.get("amount"), "amount");
-				}
-				if (fluid != null && amount > 0)
-					fluidIngredients.add(new FluidStack(fluid, amount));
+				addFluidToList(fluidIngredients, entry);
 			} else {
 				int count = 1;
-				if (JSONUtils.hasField((JsonObject) e, "count")) {
-					count = JSONUtils.getInt(entry.get("count"), "count");
+				if (JSONUtils.hasField(entry, "count")) {
+					count = JSONUtils.getInt(entry, "count");
 				}
 				for (int i = 0; i < count; i++) {
 					ingredients.add(ProcessingIngredient.parse(entry));
@@ -63,20 +55,13 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 		for (JsonElement e : JSONUtils.getJsonArray(json, "results")) {
 			JsonObject entry = e.getAsJsonObject();
 			if (JSONUtils.hasField(entry, "fluid")) {
-				Fluid fluid = ForgeRegistries.FLUIDS
-					.getValue(ResourceLocation.tryCreate(JSONUtils.getString(entry.get("fluid"), "fluid")));
-				int amount = 1;
-				if (JSONUtils.hasField((JsonObject) e, "amount")) {
-					amount = JSONUtils.getInt(entry.get("amount"), "amount");
-				}
-				if (fluid != null && amount > 0)
-					fluidResults.add(new FluidStack(fluid, amount));
+				addFluidToList(fluidResults, entry);
 			} else {
-				String s1 = JSONUtils.getString(entry.get("item"), "item");
-				int i = JSONUtils.getInt(entry.get("count"), "count");
+				String s1 = JSONUtils.getString(entry, "item");
+				int i = JSONUtils.getInt(entry, "count");
 				float chance = 1;
-				if (JSONUtils.hasField((JsonObject) e, "chance"))
-					chance = JSONUtils.getFloat(entry.get("chance"), "chance");
+				if (JSONUtils.hasField(entry, "chance"))
+					chance = JSONUtils.getFloat(entry, "chance");
 				ItemStack itemstack = new ItemStack(Registry.ITEM.getOrDefault(new ResourceLocation(s1)), i);
 				results.add(new ProcessingOutput(itemstack, chance));
 			}
@@ -86,7 +71,22 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 		if (JSONUtils.hasField(json, "processingTime"))
 			duration = JSONUtils.getInt(json, "processingTime");
 
-		return this.factory.create(recipeId, s, ingredients, results, duration, fluidIngredients, fluidResults);
+		int requiredHeat = 0;
+		if (JSONUtils.hasField(json, "requiredHeat"))
+			requiredHeat = JSONUtils.getInt(json, "requiredHeat");
+
+		return this.factory.create(recipeId, s, ingredients, results, duration, fluidIngredients, fluidResults,
+			requiredHeat);
+	}
+
+	private void addFluidToList(List<FluidStack> fluidStacks, JsonObject entry) {
+		Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(JSONUtils.getString(entry, "fluid")));
+		int amount = 1;
+		if (JSONUtils.hasField(entry, "amount")) {
+			amount = JSONUtils.getInt(entry, "amount");
+		}
+		if (fluid != null && amount > 0)
+			fluidStacks.add(new FluidStack(fluid, amount));
 	}
 
 	public T read(ResourceLocation recipeId, PacketBuffer buffer) {
@@ -113,8 +113,10 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 			fluidResults.add(FluidStack.readFromPacket(buffer));
 
 		int duration = buffer.readInt();
+		int requiredHeat = buffer.readInt();
 
-		return this.factory.create(recipeId, s, ingredients, results, duration, fluidIngredients, fluidResults);
+		return this.factory.create(recipeId, s, ingredients, results, duration, fluidIngredients, fluidResults,
+			requiredHeat);
 	}
 
 	public void write(PacketBuffer buffer, T recipe) {
@@ -141,12 +143,30 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 		}
 
 		buffer.writeInt(recipe.processingDuration);
+		buffer.writeInt(recipe.requiredHeat);
 	}
 
 	public interface IRecipeFactory<T extends ProcessingRecipe<?>> {
+		default T create(ResourceLocation recipeId, String s, List<ProcessingIngredient> ingredients,
+			List<ProcessingOutput> results, int duration, @Nullable List<FluidStack> fluidIngredients,
+			@Nullable List<FluidStack> fluidResults, int requiredHeat) {
+			return create(recipeId, s, ingredients, results, duration);
+		}
+
 		T create(ResourceLocation recipeId, String s, List<ProcessingIngredient> ingredients,
-			List<ProcessingOutput> results, int duration, List<FluidStack> fluidIngredients,
-			List<FluidStack> fluidResults);
+			List<ProcessingOutput> results, int duration);
 	}
 
+	public interface IExtendedRecipeFactory<T extends ProcessingRecipe<?>> extends IRecipeFactory<T> {
+		@Override
+		T create(ResourceLocation recipeId, String s, List<ProcessingIngredient> ingredients,
+			List<ProcessingOutput> results, int duration, @Nullable List<FluidStack> fluidIngredients,
+			@Nullable List<FluidStack> fluidResults, int requiredHeat);
+
+		@Override
+		default T create(ResourceLocation recipeId, String s, List<ProcessingIngredient> ingredients,
+			List<ProcessingOutput> results, int duration) {
+			throw new IllegalStateException("Incorrect recipe creation function used: " + recipeId);
+		}
+	}
 }

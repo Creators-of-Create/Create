@@ -3,7 +3,6 @@ package com.simibubi.create.compat.jei;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllRecipeTypes;
@@ -16,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 /**
@@ -29,8 +27,7 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 public class ConversionRecipe extends ProcessingRecipe<RecipeWrapper> {
 
 	public ConversionRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
-		List<ProcessingOutput> results, int processingDuration, @Nullable List<FluidStack> fluidIngredients,
-		@Nullable List<FluidStack> fluidResults) {
+		List<ProcessingOutput> results, int processingDuration) {
 		super(AllRecipeTypes.CONVERSION, id, group, ingredients, results, processingDuration);
 	}
 
@@ -45,7 +42,7 @@ public class ConversionRecipe extends ProcessingRecipe<RecipeWrapper> {
 
 	public ConversionRecipe(ResourceLocation id, List<ProcessingIngredient> ingredients,
 		List<ProcessingOutput> results) {
-		this(id, "conversions", ingredients, results, -1, null, null);
+		this(id, "conversions", ingredients, results, -1);
 	}
 
 	@Override

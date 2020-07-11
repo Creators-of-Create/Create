@@ -1,11 +1,7 @@
 package com.simibubi.create.content.contraptions.processing;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
-
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -19,37 +15,31 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<T> {
 	protected final List<ProcessingIngredient> ingredients;
-	private final List<ProcessingOutput> results;
-	private final IRecipeType<?> type;
-	private final IRecipeSerializer<?> serializer;
 	protected final ResourceLocation id;
 	protected final String group;
 	protected final int processingDuration;
 	protected final List<FluidStack> fluidIngredients;
 	protected final List<FluidStack> fluidResults;
+	protected final int requiredHeat;
+	private final List<ProcessingOutput> results;
+	private final IRecipeType<?> type;
+	private final IRecipeSerializer<?> serializer;
 
 	public ProcessingRecipe(AllRecipeTypes recipeType, ResourceLocation id, String group,
 		List<ProcessingIngredient> ingredients, List<ProcessingOutput> results, int processingDuration) {
-		this.type = recipeType.type;
-		this.serializer = recipeType.serializer;
-		this.id = id;
-		this.group = group;
-		this.ingredients = ingredients;
-		this.results = results;
-		this.processingDuration = processingDuration;
-		this.fluidIngredients = null;
-		this.fluidResults = null;
-		validate(recipeType);
+		this(recipeType, id, group, ingredients, results, processingDuration, null, null, 0);
 	}
 
 	public ProcessingRecipe(AllRecipeTypes recipeType, ResourceLocation id, String group,
 		List<ProcessingIngredient> ingredients, List<ProcessingOutput> results, int processingDuration,
-		@Nullable List<FluidStack> fluidIngredients, @Nullable List<FluidStack> fluidResults) {
+		@Nullable List<FluidStack> fluidIngredients, @Nullable List<FluidStack> fluidResults, int requiredHeat) {
 		this.type = recipeType.type;
 		this.serializer = recipeType.serializer;
 		this.id = id;
@@ -59,6 +49,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 		this.processingDuration = processingDuration;
 		this.fluidIngredients = fluidIngredients;
 		this.fluidResults = fluidResults;
+		this.requiredHeat = requiredHeat;
 		validate(recipeType);
 	}
 
@@ -165,6 +156,10 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	}
 
 	protected boolean canHaveFluidOutput() {
+		return false;
+	}
+
+	protected boolean requiresHeating() {
 		return false;
 	}
 }

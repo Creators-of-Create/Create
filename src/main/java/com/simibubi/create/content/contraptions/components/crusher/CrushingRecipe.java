@@ -1,21 +1,20 @@
 package com.simibubi.create.content.contraptions.components.crusher;
 
-import java.util.List;
-
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
+
+@ParametersAreNonnullByDefault
 public class CrushingRecipe extends AbstractCrushingRecipe {
 
 	public CrushingRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
-		List<ProcessingOutput> results, int processingDuration, List<FluidStack> fluidIngredients,
-		List<FluidStack> fluidResults) {
+		List<ProcessingOutput> results, int processingDuration) {
 		super(AllRecipeTypes.CRUSHING, id, group, ingredients, results, processingDuration);
 	}
 
