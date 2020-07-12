@@ -49,8 +49,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidTankRenderer;
 import com.simibubi.create.content.contraptions.fluids.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
-import com.simibubi.create.content.contraptions.processing.BasinRenderer;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
+import com.simibubi.create.content.contraptions.processing.*;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerRenderer;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftTileEntity;
@@ -198,6 +197,8 @@ public class AllTileEntities {
 		register("deployer", DeployerTileEntity::new, AllBlocks.DEPLOYER);
 	public static final TileEntityEntry<BasinTileEntity> BASIN =
 		register("basin", BasinTileEntity::new, AllBlocks.BASIN);
+	public static final TileEntityEntry<HeaterTileEntity> HEATER =
+		register("blaze_heater", HeaterTileEntity::new, AllBlocks.HEATER);
 	public static final TileEntityEntry<MechanicalCrafterTileEntity> MECHANICAL_CRAFTER =
 		register("mechanical_crafter", MechanicalCrafterTileEntity::new, AllBlocks.MECHANICAL_CRAFTER);
 	public static final TileEntityEntry<SequencedGearshiftTileEntity> SEQUENCED_GEARSHIFT =
@@ -227,9 +228,9 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<DepotTileEntity> DEPOT =
 		register("depot", DepotTileEntity::new, AllBlocks.DEPOT);
-	public static final TileEntityEntry<FunnelTileEntity> FUNNEL = register("funnel",
-		FunnelTileEntity::new, AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.BRASS_CHUTE_FUNNEL,
-		AllBlocks.ANDESITE_FUNNEL, AllBlocks.ANDESITE_BELT_FUNNEL, AllBlocks.ANDESITE_CHUTE_FUNNEL);
+	public static final TileEntityEntry<FunnelTileEntity> FUNNEL = register("funnel", FunnelTileEntity::new,
+		AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.BRASS_CHUTE_FUNNEL, AllBlocks.ANDESITE_FUNNEL,
+		AllBlocks.ANDESITE_BELT_FUNNEL, AllBlocks.ANDESITE_CHUTE_FUNNEL);
 	public static final TileEntityEntry<PackagerTileEntity> PACKAGER =
 		register("packager", PackagerTileEntity::new, AllBlocks.PACKAGER);
 
@@ -297,6 +298,7 @@ public class AllTileEntities {
 		bind(SPEEDOMETER, GaugeRenderer::speed);
 		bind(STRESSOMETER, GaugeRenderer::stress);
 		bind(BASIN, BasinRenderer::new);
+		bind(HEATER, HeaterRenderer::new);
 		bind(DEPLOYER, DeployerRenderer::new);
 		bind(FLYWHEEL, FlywheelRenderer::new);
 		bind(FURNACE_ENGINE, EngineRenderer::new);

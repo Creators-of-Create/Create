@@ -94,4 +94,8 @@ public class MixingRecipe extends ProcessingRecipe<BasinInputInventory> {
 	protected boolean requiresHeating() {
 		return this.requiredHeat > 0;
 	}
+
+	public int getHeatLevelRequired() {
+		return requiredHeat;
+	}
 }

@@ -398,12 +398,13 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<HeaterBlock> HEATER = REGISTRATE.block("blaze_heater", HeaterBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.lightValue(12))
-			.addLayer(() -> RenderType::getCutoutMipped)
-			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-			.simpleItem()
-			.register();
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.lightValue(12))
+		.tag(AllBlockTags.FAN_HEATERS.tag)
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		.simpleItem()
+		.register();
 
 	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)
 		.initialProperties(SharedProperties::stone)

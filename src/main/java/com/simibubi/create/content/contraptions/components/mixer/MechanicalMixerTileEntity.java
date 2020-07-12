@@ -5,11 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
 import com.simibubi.create.content.contraptions.processing.CombinedItemFluidList;
+import com.simibubi.create.content.contraptions.processing.HeaterTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
@@ -24,6 +26,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.NonNullList;
@@ -236,7 +239,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 		if (!(recipe instanceof MixingRecipe))
 			return true;
-		return true;
+		return ((MixingRecipe) recipe).getHeatLevelRequired() <= getHeatLevelApplied();
 	}
 
 	@Override
@@ -271,6 +274,15 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	@Override
 	protected boolean isRunning() {
 		return running;
+	}
+
+	private int getHeatLevelApplied() {
+		if (world == null)
+			return 0;
+		TileEntity te = world.getTileEntity(pos.down(3));
+		if (!(te instanceof HeaterTileEntity))
+			return AllTags.AllBlockTags.FAN_HEATERS.matches(world.getBlockState(pos.down(3))) ? 1 : 0;
+		return ((HeaterTileEntity) te).getHeatLevel();
 	}
 
 }
