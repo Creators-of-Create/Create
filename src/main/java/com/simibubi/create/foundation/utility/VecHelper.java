@@ -26,6 +26,8 @@ public class VecHelper {
 	public static Vec3d rotate(Vec3d vec, double deg, Axis axis) {
 		if (deg == 0)
 			return vec;
+		if (vec == Vec3d.ZERO)
+			return vec;
 
 		float angle = (float) (deg / 180f * Math.PI);
 		double sin = MathHelper.sin(angle);

@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.google.common.base.Predicates;
 import com.google.common.cache.Cache;
@@ -29,6 +29,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -41,6 +42,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
@@ -118,7 +120,11 @@ public class ContraptionCollider {
 		if (bounds == null)
 			return;
 
-		for (Entity entity : world.getEntitiesWithinAABB((EntityType<?>) null, bounds.grow(1),
+		double conRotX = contraptionRotation.z;
+		double conRotY = contraptionRotation.y;
+		double conRotZ = contraptionRotation.x;
+
+		for (Entity entity : world.getEntitiesWithinAABB((EntityType<?>) null, bounds.grow(2),
 			contraptionEntity::canCollideWith)) {
 			if (entity instanceof PlayerEntity && !world.isRemote)
 				return;
@@ -127,17 +133,29 @@ public class ContraptionCollider {
 			Vec3d entityPosition = entity.getPositionVec();
 			Vec3d centerY = new Vec3d(0, entity.getBoundingBox()
 				.getYSize() / 2, 0);
-			Vec3d position = entityPosition.subtract(contraptionPosition)
-				.subtract(contraptionEntity.stationary ? centerOfBlock : Vec3d.ZERO.add(0, 0.5, 0))
-				.add(centerY);
-			position =
-				VecHelper.rotate(position, -contraptionRotation.z, -contraptionRotation.y, -contraptionRotation.x);
+
+			Vec3d position =
+				entityPosition.subtract(contraptionEntity.stationary ? centerOfBlock : Vec3d.ZERO.add(0, 0.5, 0))
+					.add(centerY);
+
+			position = position.subtract(contraptionPosition);
+			position = VecHelper.rotate(position, -conRotX, -conRotY, -conRotZ);
 			position = position.add(centerOfBlock)
 				.subtract(centerY)
 				.subtract(entityPosition);
 			AxisAlignedBB localBB = entity.getBoundingBox()
 				.offset(position)
 				.grow(1.0E-7D);
+
+			String nbtMotionKey = "ContraptionCollisionFeedback";
+			CompoundNBT entityData = entity.getPersistentData();
+			Vec3d previousIntersection = Vec3d.ZERO;
+			if (entityData.contains(nbtMotionKey)) {
+				previousIntersection = VecHelper.readNBT(entityData.getList(nbtMotionKey, NBT.TAG_DOUBLE));
+				entity.setMotion(entity.getMotion()
+					.subtract(previousIntersection.mul(1, 0, 1)));
+				entityData.remove(nbtMotionKey);
+			}
 
 			ReuseableStream<VoxelShape> potentialHits = getPotentiallyCollidedShapes(world, contraption, localBB);
 			if (potentialHits.createStream()
@@ -147,51 +165,72 @@ public class ContraptionCollider {
 			OrientedBB obb = new OrientedBB(localBB);
 			if (!contraptionRotation.equals(Vec3d.ZERO)) {
 				Matrix3d rotation = new Matrix3d().asIdentity();
-				rotation.multiply(new Matrix3d().asXRotation(AngleHelper.rad(contraptionRotation.z)));
-				rotation.multiply(new Matrix3d().asYRotation(AngleHelper.rad(contraptionRotation.y)));
-				rotation.multiply(new Matrix3d().asZRotation(AngleHelper.rad(contraptionRotation.x)));
+				rotation.multiply(new Matrix3d().asXRotation(AngleHelper.rad(-conRotX)));
+				rotation.multiply(new Matrix3d().asYRotation(AngleHelper.rad(conRotY)));
+				rotation.multiply(new Matrix3d().asZRotation(AngleHelper.rad(-conRotZ)));
 				obb.setRotation(rotation);
 			}
 
-			MutableBoolean onCollide = new MutableBoolean(true);
+			MutableObject<Vec3d> collisionResponse = new MutableObject<>(Vec3d.ZERO);
+			Vec3d obbCenter = obb.getCenter();
+
 			potentialHits.createStream()
 				.forEach(shape -> {
-					AxisAlignedBB bb = shape.getBoundingBox();
-					Vec3d intersect = obb.intersect(bb);
-					if (intersect == null)
-						return;
-					intersect = VecHelper.rotate(intersect, contraptionRotation.z, contraptionRotation.y,
-						contraptionRotation.x);
-
-					obb.setCenter(obb.getCenter()
-						.add(intersect));
-					entity.move(MoverType.PISTON, intersect);
-
-					Vec3d entityMotion = entity.getMotion();
-					if (entityMotion.getX() > 0 == intersect.getX() < 0)
-						entityMotion = entityMotion.mul(0, 1, 1);
-					if (entityMotion.getY() > 0 == intersect.getY() < 0)
-						entityMotion = entityMotion.mul(1, 0, 1);
-					if (entityMotion.getZ() > 0 == intersect.getZ() < 0)
-						entityMotion = entityMotion.mul(1, 1, 0);
-					entity.setMotion(entityMotion);
-
-					if (onCollide.isTrue()) {
-						onCollide.setFalse();
-						contraptionEntity.collidingEntities.add(entity);
-						entity.velocityChanged = true;
-					}
-
-					if (intersect.y > 0) {
-						entity.handleFallDamage(entity.fallDistance, 1);
-						entity.fallDistance = 0;
-						entity.onGround = true;
-						DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> checkForClientPlayerCollision(entity));
-					}
-
-					if (entity instanceof ServerPlayerEntity)
-						((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
+					Vec3d currentResponse = collisionResponse.getValue();
+					shape.toBoundingBoxList()
+						.parallelStream()
+						.forEach(bb -> {
+							obb.setCenter(obbCenter.add(currentResponse));
+							Vec3d intersect = obb.intersect(bb);
+							if (intersect != null)
+								collisionResponse.setValue(currentResponse.add(intersect));
+						});
 				});
+
+			Vec3d entityMotion = entity.getMotion();
+			Vec3d totalResponse = collisionResponse.getValue();
+
+			if (totalResponse == Vec3d.ZERO)
+				continue;
+
+			totalResponse = VecHelper.rotate(totalResponse, conRotX, Axis.X);
+			totalResponse = VecHelper.rotate(totalResponse, conRotY, Axis.Y);
+			totalResponse = VecHelper.rotate(totalResponse, conRotZ, Axis.Z);
+
+			double motionX = entityMotion.getX();
+			double motionY = entityMotion.getY();
+			double motionZ = entityMotion.getZ();
+			double intersectX = totalResponse.getX();
+			double intersectY = totalResponse.getY();
+			double intersectZ = totalResponse.getZ();
+
+			double horizonalEpsilon = 1 / 128f;
+
+			if (motionX != 0 && Math.abs(intersectX) > horizonalEpsilon && motionX > 0 == intersectX < 0)
+				entityMotion = entityMotion.mul(0, 1, 1);
+			if (motionY != 0 && intersectY != 0 && motionY > 0 == intersectY < 0)
+				entityMotion = entityMotion.mul(1, 0, 1);
+			if (motionZ != 0 && Math.abs(intersectZ) > horizonalEpsilon && motionZ > 0 == intersectZ < 0)
+				entityMotion = entityMotion.mul(1, 1, 0);
+
+			entityMotion = entityMotion.add(totalResponse.mul(1, 0, 1));
+			contraptionEntity.collidingEntities.add(entity);
+			entity.velocityChanged = true;
+
+			if (totalResponse.y > 0) {
+				entity.handleFallDamage(entity.fallDistance, 1);
+				entity.fallDistance = 0;
+				entity.onGround = true;
+				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> checkForClientPlayerCollision(entity));
+			}
+
+			if (entity instanceof ServerPlayerEntity)
+				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
+
+			entity.setMotion(entityMotion);
+			Vec3d epos = entityPosition;
+			entity.setPosition(epos.x, epos.y + totalResponse.y, epos.z);
+			entityData.put(nbtMotionKey, VecHelper.writeNBT(totalResponse));
 		}
 
 	}
@@ -266,7 +305,14 @@ public class ContraptionCollider {
 
 	public static ReuseableStream<VoxelShape> getPotentiallyCollidedShapes(World world, Contraption contraption,
 		AxisAlignedBB localBB) {
+
+		double height = localBB.getYSize();
+		double width = localBB.getXSize();
+		double horizontalFactor = (height > width && width != 0) ? height / width : 1;
+		double verticalFactor = (width > height && height != 0) ? width / height : 1;
 		AxisAlignedBB blockScanBB = localBB.grow(.5f);
+		blockScanBB = blockScanBB.grow(horizontalFactor, verticalFactor, horizontalFactor);
+
 		BlockPos min = new BlockPos(blockScanBB.minX, blockScanBB.minY, blockScanBB.minZ);
 		BlockPos max = new BlockPos(blockScanBB.maxX, blockScanBB.maxY, blockScanBB.maxZ);
 

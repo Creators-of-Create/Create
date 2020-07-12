@@ -29,6 +29,10 @@ public class OrientedBB {
 		this.extents = extents;
 		this.setRotation(rotation);
 	}
+	
+	public OrientedBB copy() {
+		return new OrientedBB(center, extents, rotation);
+	}
 
 	public Vec3d intersect(AxisAlignedBB bb) {
 		Vec3d extentsA = extentsFromBB(bb);
@@ -152,7 +156,7 @@ public class OrientedBB {
 	}
 
 	static void showDebugLine(Vec3d relativeStart, Vec3d relativeEnd, int color, String id, int offset) {
-		Vec3d center = CollisionDebugger.staticBB.getCenter()
+		Vec3d center = CollisionDebugger.AABB.getCenter()
 			.add(0, 1 + offset / 16f, 0);
 		CreateClient.outliner.showLine(id + checkCount, center.add(relativeStart), center.add(relativeEnd))
 			.colored(color)
@@ -173,6 +177,10 @@ public class OrientedBB {
 
 	public void setCenter(Vec3d center) {
 		this.center = center;
+	}
+	
+	public void move(Vec3d offset) {
+		setCenter(getCenter().add(offset));
 	}
 
 	public AxisAlignedBB getAsAxisAlignedBB() {
