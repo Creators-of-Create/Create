@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 368",
+	"_": "Missing Localizations: 369",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -29,6 +29,7 @@
 	"block.create.belt_observer": "벨트 감지기",
 	"block.create.birch_window": "UNLOCALIZED: Birch Window",
 	"block.create.birch_window_pane": "UNLOCALIZED: Birch Window Pane",
+	"block.create.blaze_heater": "UNLOCALIZED: Blaze Heater",
 	"block.create.brass_belt_funnel": "UNLOCALIZED: Brass Belt Funnel",
 	"block.create.brass_block": "황동 블럭",
 	"block.create.brass_casing": "황동 케이스",

@@ -1,14 +1,17 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
+import com.simibubi.create.content.contraptions.processing.CombinedItemFluidList;
+import com.simibubi.create.content.contraptions.processing.HeaterTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
@@ -23,6 +26,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.NonNullList;
@@ -65,7 +69,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	public float getRenderedHeadOffset(float partialTicks) {
-		int localTick = 0;
+		int localTick;
 		float offset = 0;
 		if (running) {
 			if (runningTicks < 20) {
@@ -121,7 +125,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (world.isRemote && running && !basinItemInv.isPresent()) 
+		if (world != null && world.isRemote && running && !basinItemInv.isPresent())
 			updateBasin();
 	}
 	
@@ -163,7 +167,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	public void renderParticles() {
 		IItemHandler itemHandler = basinItemInv.orElse(null);
 		BasinInventory inv = (BasinInventory) itemHandler;
-		if (inv == null)
+		if (inv == null || world == null)
 			return;
 
 		for (int slot = 0; slot < inv.getInputHandler()
@@ -204,14 +208,16 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			.allMatch(ingredient -> (ingredient.isSimple() || ingredient.getMatchingStacks().length == 1)))
 			return false;
 
-		List<ItemStack> remaining = new ArrayList<>();
+		CombinedItemFluidList remaining = new CombinedItemFluidList();
 		inputs.forEachItemStack(stack -> remaining.add(stack.copy()));
+		basinFluidInv.ifPresent(
+			fluidInv -> ((CombinedFluidHandler) fluidInv).forEachTank(fluidStack -> remaining.add(fluidStack.copy())));
 
 		// sort by leniency
 		List<Ingredient> sortedIngredients = new LinkedList<>(ingredients);
 		sortedIngredients.sort(Comparator.comparingInt(i -> i.getMatchingStacks().length));
 		Ingredients: for (Ingredient ingredient : sortedIngredients) {
-			for (ItemStack stack : remaining) {
+			for (ItemStack stack : remaining.getItemStacks()) {
 				if (stack.isEmpty())
 					continue;
 				if (ingredient.test(stack)) {
@@ -221,7 +227,10 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			}
 			return false;
 		}
-		return true;
+
+		if (!(recipe instanceof MixingRecipe))
+			return true;
+		return ((MixingRecipe) recipe).getHeatLevelRequired() <= getHeatLevelApplied();
 	}
 
 	@Override
@@ -256,6 +265,15 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	@Override
 	protected boolean isRunning() {
 		return running;
+	}
+
+	private int getHeatLevelApplied() {
+		if (world == null)
+			return 0;
+		TileEntity te = world.getTileEntity(pos.down(3));
+		if (!(te instanceof HeaterTileEntity))
+			return AllTags.AllBlockTags.FAN_HEATERS.matches(world.getBlockState(pos.down(3))) ? 1 : 0;
+		return ((HeaterTileEntity) te).getHeatLevel();
 	}
 
 }

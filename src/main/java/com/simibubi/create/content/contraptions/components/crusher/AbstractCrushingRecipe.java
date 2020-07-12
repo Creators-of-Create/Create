@@ -13,7 +13,7 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 public abstract class AbstractCrushingRecipe extends ProcessingRecipe<RecipeWrapper> {
 
 	public AbstractCrushingRecipe(AllRecipeTypes recipeType, ResourceLocation id, String group,
-			List<ProcessingIngredient> ingredients, List<ProcessingOutput> results, int processingDuration) {
+		List<ProcessingIngredient> ingredients, List<ProcessingOutput> results, int processingDuration) {
 		super(recipeType, id, group, ingredients, results, processingDuration);
 	}
 

@@ -16,5 +16,6 @@
 			"item": "create:brass_ingot",
 			"count": 2
 		}
-	]
+	],
+	"requiredHeat": 1
 }

@@ -263,7 +263,7 @@ public class InWorldProcessing {
 		if (recipe instanceof ProcessingRecipe) {
 			stacks = new ArrayList<>();
 			for (int i = 0; i < stackIn.getCount(); i++) {
-				List<ItemStack> rollResults = ((ProcessingRecipe<?>) recipe).rollResults();
+				List<ItemStack> rollResults = ((ProcessingRecipe<?>) recipe).rollResults().getItemStacks();
 				for (ItemStack stack : rollResults) {
 					for (ItemStack previouslyRolled : stacks) {
 						if (stack.isEmpty())

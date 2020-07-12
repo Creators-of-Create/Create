@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 368",
+	"_": "Missing Localizations: 369",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -29,6 +29,7 @@
 	"block.create.belt_observer": "Osservatore a Cinghia",
 	"block.create.birch_window": "UNLOCALIZED: Birch Window",
 	"block.create.birch_window_pane": "UNLOCALIZED: Birch Window Pane",
+	"block.create.blaze_heater": "UNLOCALIZED: Blaze Heater",
 	"block.create.brass_belt_funnel": "UNLOCALIZED: Brass Belt Funnel",
 	"block.create.brass_block": "Blocco di Ottone",
 	"block.create.brass_casing": "Involucro di Ottone",

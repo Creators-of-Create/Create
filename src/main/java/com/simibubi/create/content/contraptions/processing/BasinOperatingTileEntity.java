@@ -37,7 +37,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	protected IRecipe<?> lastRecipe;
 	protected LazyOptional<IItemHandler> basinItemInv = LazyOptional.empty();
 	protected LazyOptional<IFluidHandler> basinFluidInv = LazyOptional.empty();
-	protected MultiIngredientTypeList inputs;
+	protected CombinedItemFluidList inputs;
 
 	public BasinOperatingTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -59,7 +59,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	}
 
 	public void gatherInputs() {
-		inputs = new MultiIngredientTypeList();
+		inputs = new CombinedItemFluidList();
 
 		basinItemInv.ifPresent(inv -> {
 			IItemHandlerModifiable inputHandler = ((BasinInventory) inv).getInputHandler();

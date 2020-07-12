@@ -43,7 +43,7 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 			.get(0)
 			.getMatchingStacks()));
 
-		List<ProcessingOutput> results = recipe.getRollableResults();
+		List<ProcessingOutput> results = recipe.getRollableItemResults();
 		boolean single = results.size() == 1;
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
 			int xOffset = outputIndex % 2 == 0 ? 0 : 19;

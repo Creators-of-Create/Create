@@ -94,7 +94,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		ItemStack stackInSlot = inputInv.getStackInSlot(0);
 		stackInSlot.shrink(1);
 		inputInv.setStackInSlot(0, stackInSlot);
-		lastRecipe.rollResults().forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
+		lastRecipe.rollResults().forEachItemStack(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
 		sendData();
 		markDirty();
 	}

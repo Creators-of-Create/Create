@@ -1,7 +1,9 @@
 package com.simibubi.create.compat.jei;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
@@ -21,23 +23,25 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
  * @author simibubi
  *
  */
+@ParametersAreNonnullByDefault
 public class ConversionRecipe extends ProcessingRecipe<RecipeWrapper> {
 
 	public ConversionRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
-			List<ProcessingOutput> results, int processingDuration) {
+		List<ProcessingOutput> results, int processingDuration) {
 		super(AllRecipeTypes.CONVERSION, id, group, ingredients, results, processingDuration);
 	}
 
 	static int counter = 0;
 
 	public static ConversionRecipe create(ItemStack from, ItemStack to) {
-		List<ProcessingIngredient> ingredients = Arrays.asList(new ProcessingIngredient(Ingredient.fromStacks(from)));
-		List<ProcessingOutput> outputs = Arrays.asList(new ProcessingOutput(to, 1));
+		List<ProcessingIngredient> ingredients =
+			Collections.singletonList(new ProcessingIngredient(Ingredient.fromStacks(from)));
+		List<ProcessingOutput> outputs = Collections.singletonList(new ProcessingOutput(to, 1));
 		return new ConversionRecipe(new ResourceLocation(Create.ID, "conversion_" + counter++), ingredients, outputs);
 	}
 
 	public ConversionRecipe(ResourceLocation id, List<ProcessingIngredient> ingredients,
-			List<ProcessingOutput> results) {
+		List<ProcessingOutput> results) {
 		this(id, "conversions", ingredients, results, -1);
 	}
 
