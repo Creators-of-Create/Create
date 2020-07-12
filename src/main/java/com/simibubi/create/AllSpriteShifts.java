@@ -52,6 +52,8 @@ public class AllSpriteShifts {
 
 	public static final SpriteShiftEntry 
 		BELT = SpriteShifter.get("block/belt", "block/belt_animated"),
+		BELT_OFFSET = SpriteShifter.get("block/belt_offset", "block/belt_animated"),
+		BELT_DIAGONAL = SpriteShifter.get("block/belt_diagonal", "block/belt_diagonal_animated"),
 		ANDESIDE_BELT_CASING = SpriteShifter.get("block/brass_casing_belt", "block/andesite_casing_belt"),
 		CRAFTER_THINGIES = SpriteShifter.get("block/crafter_thingies", "block/crafter_thingies");
 

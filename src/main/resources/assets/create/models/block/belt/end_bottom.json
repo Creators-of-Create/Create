@@ -1,0 +1,31 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"1": "create:block/belt_offset"
+	},
+	"elements": [
+		{
+			"name": "Bottom",
+			"from": [1, 3, 0],
+			"to": [15, 5, 15],
+			"faces": {
+				"east": {"uv": [0, 0, 2, 15], "rotation": 90, "texture": "#1"},
+				"south": {"uv": [1, 15, 15, 16], "rotation": 180, "texture": "#1"},
+				"west": {"uv": [14, 0, 16, 15], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [1, 0, 15, 15], "texture": "#1"},
+				"down": {"uv": [1, 0, 15, 15], "rotation": 180, "texture": "#1"}
+			}
+		},
+		{
+			"name": "Bottom",
+			"from": [3, 5, 0],
+			"to": [13, 6, 14],
+			"faces": {
+				"east": {"uv": [3, 0, 4, 14], "rotation": 90, "texture": "#1"},
+				"west": {"uv": [12, 0, 13, 14], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [3, 0, 13, 14], "texture": "#1"}
+			}
+		}
+	]
+}

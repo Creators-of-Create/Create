@@ -33,8 +33,18 @@ public class AllBlockPartials {
 		SCHEMATICANNON_PIPE = get("schematicannon/pipe"),
 
 		SHAFTLESS_COGWHEEL = get("cogwheel_shaftless"), 
-		BELT_PULLEY = get("belt_pulley"),
 		SHAFT_HALF = get("shaft_half"),
+		
+		BELT_PULLEY = get("belt_pulley"),
+		BELT_START = get("belt/start"),
+		BELT_MIDDLE = get("belt/middle"),
+		BELT_END = get("belt/end"),
+		BELT_START_BOTTOM = get("belt/start_bottom"),
+		BELT_MIDDLE_BOTTOM = get("belt/middle_bottom"),
+		BELT_END_BOTTOM = get("belt/end_bottom"),
+		BELT_DIAGONAL_START = get("belt/diagonal_start"),
+		BELT_DIAGONAL_MIDDLE = get("belt/diagonal_middle"),
+		BELT_DIAGONAL_END = get("belt/diagonal_end"),
 
 		ENCASED_FAN_INNER = get("encased_fan/propeller"), 
 		HAND_CRANK_HANDLE = get("hand_crank/handle"),

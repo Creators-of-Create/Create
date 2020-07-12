@@ -74,6 +74,8 @@ public class MatrixStacker {
 	}
 
 	private MatrixStacker multiply(Vector3f axis, double angle) {
+		if (angle == 0)
+			return this;
 		ms.multiply(axis.getDegreesQuaternion((float) angle));
 		return this;
 	}
