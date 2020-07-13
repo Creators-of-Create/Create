@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.processing;
 
 import java.util.List;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -58,20 +58,21 @@ public class HeaterTileEntity extends SmartTileEntity {
 		fuelLevel = compound.getInt("fuelLevel");
 		burnTimeRemaining = compound.getInt("burnTimeRemaining");
 		super.read(compound);
-		if (fuelLevel == 0) {
+		if (fuelLevel == 0)
 			burnTimeRemaining = 0;
-			markDirty();
-		}
+		updateHeatLevel();
 	}
 
 	boolean tryUpdateFuel(ItemStack itemStack) {
 		int burnTime = itemStack.getItem()
 			.getBurnTime(itemStack);
-		int newFuelLevel = 1; // todo: int newFuelLevel = itemStack.getItem() == AllItems.SUPER_SPECIAL_FUEL.get() ? 2 : 1;
+
 		if (burnTime == -1)
 			burnTime = ForgeHooks.getBurnTime(itemStack);
-		if (burnTime < burnTimeRemaining && newFuelLevel <= fuelLevel)
+		int newFuelLevel = (burnTime > burnTimeRemaining ? 1 : 0); // todo: + (itemStack.getItem() == AllItems.SUPER_SPECIAL_FUEL.get() ? 1 : 0);
+		if (newFuelLevel <= fuelLevel) {
 			return false;
+		}
 		burnTimeRemaining = burnTime;
 		fuelLevel = newFuelLevel;
 		updateHeatLevel();
@@ -83,9 +84,14 @@ public class HeaterTileEntity extends SmartTileEntity {
 	}
 
 	private void updateHeatLevel() {
-		bufferedHeatLevel = 1 + fuelLevel;
-		// todo: check for fan
-		markDirty();
-		sendData();
+		int newHeatLevel = 1 + fuelLevel;
+		if (newHeatLevel != bufferedHeatLevel) {
+			bufferedHeatLevel = newHeatLevel;
+			// Block block = getBlockState().getBlock();
+			// if (block instanceof HeaterBlock)
+			// ((HeaterBlock) block).setLightLevel();
+			markDirty();
+			sendData();
+		}
 	}
 }

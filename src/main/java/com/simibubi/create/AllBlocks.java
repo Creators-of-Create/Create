@@ -57,6 +57,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidTankModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
 import com.simibubi.create.content.contraptions.processing.HeaterBlock;
+import com.simibubi.create.content.contraptions.processing.HeaterBlockItem;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftGenerator;
@@ -402,10 +403,11 @@ public class AllBlocks {
 	public static final BlockEntry<HeaterBlock> HEATER = REGISTRATE.block("blaze_heater", HeaterBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.lightValue(12))
-		.tag(AllBlockTags.FAN_HEATERS.tag)
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-		.simpleItem()
+		.item(HeaterBlockItem::new)
+		.build()
+		// .transform(heaterItemModel())
 		.register();
 
 	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)

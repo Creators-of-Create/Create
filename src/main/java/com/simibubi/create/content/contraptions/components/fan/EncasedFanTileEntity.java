@@ -2,10 +2,12 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.processing.HeaterBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -72,9 +74,10 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	public boolean blockBelowIsHot() {
-		return world.getBlockState(pos.down())
-			.getBlock()
-			.isIn(AllBlockTags.FAN_HEATERS.tag);
+		BlockState checkState = world.getBlockState(pos.down());
+		return checkState.getBlock()
+			.isIn(AllBlockTags.FAN_HEATERS.tag)
+			|| (checkState.has(HeaterBlock.HAS_BLAZE) && checkState.get(HeaterBlock.HAS_BLAZE));
 	}
 
 	public float getMaxDistance() {

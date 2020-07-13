@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 364",
+	"_": "Missing Localizations: 372",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1064,6 +1064,15 @@
 
 	"block.create.basin.tooltip": "鉢",
 	"block.create.basin.tooltip.summary": "_メカニカルミキサー_と_メカニカルプレス_での処理に使用される便利な_アイテムの入れ物_。_レッドストーンコンパレータ_をサポートします。",
+
+	"block.create.blaze_heater.tooltip": "UNLOCALIZED: BLAZE HEATER",
+	"block.create.blaze_heater.tooltip.summary": "UNLOCALIZED: A block to heat a basin when housing a tamed blaze.",
+	"block.create.blaze_heater.tooltip.condition1": "UNLOCALIZED: When using on a blaze or blaze spawner",
+	"block.create.blaze_heater.tooltip.behaviour1": "UNLOCALIZED: _Captures_ a blaze in the item",
+	"block.create.blaze_heater.tooltip.condition2": "UNLOCALIZED: When placed below a basin",
+	"block.create.blaze_heater.tooltip.behaviour2": "UNLOCALIZED: Provides _heat_ to basin recipes.",
+	"block.create.blaze_heater.tooltip.condition3": "UNLOCALIZED: When fuel is used on the blaze heater",
+	"block.create.blaze_heater.tooltip.behaviour3": "UNLOCALIZED: Increases the remaining burn time by the furnace brn time of the used item. Consumes the item. Use _special_ _fuel_ for best results.",
 
 	"block.create.reinforced_rail.tooltip": "UNLOCALIZED: REINFORCED RAIL",
 	"block.create.reinforced_rail.tooltip.summary": "UNLOCALIZED: A timber stabilized rail, _does_ _not_ _need_ _supports_.",

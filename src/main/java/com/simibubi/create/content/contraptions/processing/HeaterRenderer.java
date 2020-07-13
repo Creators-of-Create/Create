@@ -12,42 +12,41 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 
+import java.util.HashMap;
+
 public class HeaterRenderer extends SafeTileEntityRenderer<HeaterTileEntity> {
 	private static final Minecraft INSTANCE = Minecraft.getInstance();
+	private static final HashMap<Integer, AllBlockPartials> blazeModelMap = new HashMap<>();
 
 	public HeaterRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
+		blazeModelMap.put(2, AllBlockPartials.BLAZE_HEATER_BLAZE_TWO);
+		blazeModelMap.put(3, AllBlockPartials.BLAZE_HEATER_BLAZE_THREE);
+		blazeModelMap.put(4, AllBlockPartials.BLAZE_HEATER_BLAZE_FOUR);
 	}
 
 	@Override
 	protected void renderSafe(HeaterTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
-		AllBlockPartials blazeModel;
-		switch (te.getHeatLevel()) {
-		case 2:
-			blazeModel = AllBlockPartials.BLAZE_HEATER_BLAZE_TWO;
-			break;
-		case 3:
-			blazeModel = AllBlockPartials.BLAZE_HEATER_BLAZE_THREE;
-			break;
-		case 4:
-			blazeModel = AllBlockPartials.BLAZE_HEATER_BLAZE_FOUR;
-			break;
-		default:
-			blazeModel = AllBlockPartials.BLAZE_HEATER_BLAZE_ONE;
-		}
-		Vector3f difference = new Vector3f(INSTANCE.player.getPositionVector()
-			.subtract(te.getPos()
-				.getX() + 0.5, 0,
-				te.getPos()
-					.getZ() + 0.5)
-			.mul(1, 0, 1));
-		difference.normalize();
+		AllBlockPartials blazeModel =
+			blazeModelMap.getOrDefault(te.getHeatLevel(), AllBlockPartials.BLAZE_HEATER_BLAZE_ONE);
 
+		float angle;
+		if (INSTANCE.player == null) {
+			angle = 0;
+		} else {
+			Vector3f difference = new Vector3f(INSTANCE.player.getPositionVector()
+				.subtract(te.getPos()
+					.getX() + 0.5, 0,
+					te.getPos()
+						.getZ() + 0.5)
+				.mul(1, 0, 1));
+			difference.normalize();
+			angle = (float) ((difference.getX() < 0 ? 1 : -1) * Math.acos(Direction.NORTH.getUnitVector()
+				.dot(difference)));
+		}
 		SuperByteBuffer blazeBuffer = blazeModel.renderOn(te.getBlockState());
-		blazeBuffer.rotateCentered(Direction.UP,
-			(float) ((difference.getX() < 0 ? 1 : -1) * Math.acos(Direction.NORTH.getUnitVector()
-				.dot(difference))));
+		blazeBuffer.rotateCentered(Direction.UP, angle);
 		blazeBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 }

@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"parent": "block/block",
 	"textures": {
 		"0": "create:block/blaze_heater_brazier",
 		"particle": "create:block/blaze_heater_brazier"
