@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.processing.HeaterTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -31,6 +32,7 @@ import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tileentity.BlastFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.SmokerTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
@@ -60,11 +62,16 @@ public class InWorldProcessing {
 			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			if (blockState.getBlock() == Blocks.FIRE
-				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)))
+				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)) || getHeaterLevel(reader, pos) == 1)
 				return Type.SMOKING;
-			if (blockState.getBlock() == Blocks.LAVA)
+			if (blockState.getBlock() == Blocks.LAVA || getHeaterLevel(reader, pos) >= 2)
 				return Type.BLASTING;
 			return null;
+		}
+
+		private static int getHeaterLevel(IBlockReader reader, BlockPos pos) {
+			TileEntity te = reader.getTileEntity(pos);
+			return te instanceof HeaterTileEntity ? ((HeaterTileEntity) te).getHeatLevel() : 0;
 		}
 	}
 

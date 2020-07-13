@@ -404,6 +404,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.lightValue(12))
 		.addLayer(() -> RenderType::getCutoutMipped)
+		.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 		.item(HeaterBlockItem::new)
 		.build()

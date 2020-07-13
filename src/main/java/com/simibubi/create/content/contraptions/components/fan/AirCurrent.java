@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.simibubi.create.AllTags;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
@@ -304,11 +305,7 @@ public class AirCurrent {
 	}
 
 	private static boolean shouldAlwaysPass(BlockState state) {
-		if (state.isIn(Tags.Blocks.FENCES))
-			return true;
-		if (state.getBlock() == Blocks.IRON_BARS)
-			return true;
-		return false;
+		return AllTags.AllBlockTags.FAN_TRANSPARENT.matches(state);
 	}
 
 	public InWorldProcessing.Type getSegmentAt(float offset) {
