@@ -39,7 +39,6 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
 import net.minecraft.tags.Tag;
 
@@ -116,7 +115,7 @@ public class AllItems {
 
 	public static final ItemEntry<VerticalGearboxItem> VERTICAL_GEARBOX =
 		REGISTRATE.item("vertical_gearbox", VerticalGearboxItem::new)
-			.model(AssetLookup.customItemModel("gearbox", "item_vertical"))
+			.model(AssetLookup.<VerticalGearboxItem>customItemModel("gearbox", "item_vertical"))
 			.register();
 
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
