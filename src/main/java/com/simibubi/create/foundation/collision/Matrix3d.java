@@ -20,6 +20,9 @@ public class Matrix3d {
 
 	public Matrix3d asXRotation(float radians) {
 		asIdentity();
+		if (radians == 0)
+			return this;
+		
 		double s = MathHelper.sin(radians);
 		double c = MathHelper.cos(radians);
 		m22 = m11 = c;
@@ -30,6 +33,9 @@ public class Matrix3d {
 
 	public Matrix3d asYRotation(float radians) {
 		asIdentity();
+		if (radians == 0)
+			return this;
+		
 		double s = MathHelper.sin(radians);
 		double c = MathHelper.cos(radians);
 		m00 = m22 = c;
@@ -40,6 +46,9 @@ public class Matrix3d {
 
 	public Matrix3d asZRotation(float radians) {
 		asIdentity();
+		if (radians == 0)
+			return this;
+		
 		double s = MathHelper.sin(radians);
 		double c = MathHelper.cos(radians);
 		m00 = m11 = c;
@@ -104,12 +113,9 @@ public class Matrix3d {
 	}
 
 	public Vec3d transform(Vec3d vec) {
-		double x = vec.x;
-		double y = vec.y;
-		double z = vec.z;
-		x = x * m00 + y * m01 + z * m02;
-		y = x * m10 + y * m11 + z * m12;
-		z = x * m20 + y * m21 + z * m22;
+		double x = vec.x * m00 + vec.y * m01 + vec.z * m02;
+		double y = vec.x * m10 + vec.y * m11 + vec.z * m12;
+		double z = vec.x * m20 + vec.y * m21 + vec.z * m22;
 		return new Vec3d(x, y, z);
 	}
 
