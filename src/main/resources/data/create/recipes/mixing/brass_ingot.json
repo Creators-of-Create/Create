@@ -6,10 +6,7 @@
     	},
 		{
     		"tag": "forge:ingots/zinc"
-    	},
-		{
-			"item": "minecraft:blaze_powder"
-		}
+    	}
     ], 
 	"results": [
 		{
@@ -17,5 +14,5 @@
 			"count": 2
 		}
 	],
-	"requiredHeat": 1
+	"requiredHeat": 3
 }

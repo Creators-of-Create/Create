@@ -10,6 +10,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeHeater;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
 import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
@@ -27,10 +28,11 @@ import net.minecraft.util.NonNullList;
 public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 
 	private AnimatedMixer mixer = new AnimatedMixer();
+	private AnimatedBlazeHeater heater = new AnimatedBlazeHeater(); 
 
 	public MixingCategory() {
 		super("mixing", doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get()),
-				emptyBackground(177, 70));
+			emptyBackground(177, 110));
 	}
 
 	@Override
@@ -54,8 +56,9 @@ public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 		Map<Integer, Float> catalystIndices = new HashMap<>(9);
 		for (int i = 0; i < actualIngredients.size(); i++) {
 			for (ProcessingIngredient processingIngredient : recipe.getRollableIngredients()) {
-				if (processingIngredient.isCatalyst() && ItemHelper
-						.matchIngredients(processingIngredient.getIngredient(), actualIngredients.get(i).getKey())) {
+				if (processingIngredient.isCatalyst()
+					&& ItemHelper.matchIngredients(processingIngredient.getIngredient(), actualIngredients.get(i)
+						.getKey())) {
 					catalystIndices.put(i, processingIngredient.getOutputChance());
 					break;
 				}
@@ -65,20 +68,26 @@ public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 		int size = actualIngredients.size();
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
 		int i = 0;
+		int yOffset = recipe.getHeatLevelRequired() > 0 ? 30 : 10;
 		while (i < size) {
 			Pair<Ingredient, MutableInt> ingredient = actualIngredients.get(i);
-			itemStacks.init(i, true, 16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19);
-			List<ItemStack> asList = Arrays.asList(ingredient.getKey().getMatchingStacks());
-			itemStacks.set(i, asList.stream().map(stack -> {
-				stack = stack.copy();
-				stack.setCount(ingredient.getRight().getValue());
-				return stack;
-			}).collect(Collectors.toList()));
+			itemStacks.init(i, true, 16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
+			List<ItemStack> asList = Arrays.asList(ingredient.getKey()
+				.getMatchingStacks());
+			itemStacks.set(i, asList.stream()
+				.map(stack -> {
+					stack = stack.copy();
+					stack.setCount(ingredient.getRight()
+						.getValue());
+					return stack;
+				})
+				.collect(Collectors.toList()));
 			i++;
 		}
 
-		itemStacks.init(i, false, 141, 50);
-		itemStacks.set(i, recipe.getRecipeOutput().getStack());
+		itemStacks.init(i, false, 141, 50 + yOffset);
+		itemStacks.set(i, recipe.getRecipeOutput()
+			.getStack());
 
 		addCatalystTooltip(itemStacks, catalystIndices);
 	}
@@ -89,21 +98,25 @@ public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 
 		int size = actualIngredients.size();
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
+		int yOffset = recipe.getHeatLevelRequired() > 0 ? 30 : 10;
 		for (int i = 0; i < size; i++) {
 			AllGuiTextures jeiSlot = AllGuiTextures.JEI_SLOT;
 			for (ProcessingIngredient processingIngredient : recipe.getRollableIngredients()) {
-				if (processingIngredient.isCatalyst() && ItemHelper
-						.matchIngredients(processingIngredient.getIngredient(), actualIngredients.get(i).getKey())) {
+				if (processingIngredient.isCatalyst()
+					&& ItemHelper.matchIngredients(processingIngredient.getIngredient(), actualIngredients.get(i)
+						.getKey())) {
 					jeiSlot = AllGuiTextures.JEI_CATALYST_SLOT;
 					break;
 				}
 			}
-			jeiSlot.draw(16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19);
+			jeiSlot.draw(16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
 		}
-		AllGuiTextures.JEI_SLOT.draw(141, 50);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(136, 32);
-		AllGuiTextures.JEI_SHADOW.draw(81, 57);
-		mixer.draw(getBackground().getWidth() / 2 + 3, 25);
+		AllGuiTextures.JEI_SLOT.draw(141, 50 + yOffset);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(136, 32 + yOffset);
+		AllGuiTextures.JEI_SHADOW.draw(81, 57 + yOffset);
+		if (recipe.getHeatLevelRequired() > 0)
+			heater.drawWithHeatLevel(getBackground().getWidth() / 2 + 3, 55, recipe.getHeatLevelRequired());
+		mixer.draw(getBackground().getWidth() / 2 + 3, 34);
 	}
 
 }
