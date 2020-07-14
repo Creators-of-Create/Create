@@ -65,7 +65,7 @@ public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 		if (!hasTileEntity(state))
 			return ActionResultType.PASS;
 		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof HeaterTileEntity && ((HeaterTileEntity) te).tryUpdateFuel(player.getHeldItem(hand))) {
+		if (te instanceof HeaterTileEntity && ((HeaterTileEntity) te).tryUpdateFuel(player.getHeldItem(hand), player)) {
 			if (!player.isCreative())
 				player.getHeldItem(hand)
 					.shrink(1);
@@ -87,5 +87,16 @@ public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
 		return AllShapes.HEATER_BLOCK_SHAPE;
+	}
+
+	@Override
+	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+		// System.out.println("light " + pos);
+		// return 15;
+		try {
+			return getTileEntity(world, pos).getHeatLevel() * 4 - 1;
+		} catch (TileEntityException e) {
+			return 0;
+		}
 	}
 }

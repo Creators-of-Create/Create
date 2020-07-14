@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 791",
+	"_": "Missing Localizations: 792",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -371,6 +371,7 @@
 	"item.create.empty_schematic": "Пустая схема",
 	"item.create.extendo_grip": "UNLOCALIZED: Extendo Grip",
 	"item.create.filter": "Фильтр",
+	"item.create.fuel_pellet": "UNLOCALIZED: Fuel Pellet",
 	"item.create.furnace_minecart_contraption": "UNLOCALIZED: Furnace Minecart Contraption",
 	"item.create.goggles": "UNLOCALIZED: Engineer's Goggles",
 	"item.create.golden_sheet": "UNLOCALIZED: Golden Sheet",

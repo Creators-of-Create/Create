@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 727",
+	"_": "Missing Localizations: 728",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -371,6 +371,7 @@
 	"item.create.empty_schematic": "Lege bouwtekening",
 	"item.create.extendo_grip": "UNLOCALIZED: Extendo Grip",
 	"item.create.filter": "Filter",
+	"item.create.fuel_pellet": "UNLOCALIZED: Fuel Pellet",
 	"item.create.furnace_minecart_contraption": "UNLOCALIZED: Furnace Minecart Contraption",
 	"item.create.goggles": "Ingenieur's Bril",
 	"item.create.golden_sheet": "UNLOCALIZED: Golden Sheet",

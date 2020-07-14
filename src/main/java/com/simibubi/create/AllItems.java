@@ -18,11 +18,7 @@ import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorIt
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.contraptions.wrench.WrenchModel;
-import com.simibubi.create.content.curiosities.ChromaticCompoundColor;
-import com.simibubi.create.content.curiosities.ChromaticCompoundItem;
-import com.simibubi.create.content.curiosities.RefinedRadianceItem;
-import com.simibubi.create.content.curiosities.ShadowSteelItem;
-import com.simibubi.create.content.curiosities.TreeFertilizerItem;
+import com.simibubi.create.content.curiosities.*;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.content.curiosities.symmetry.client.SymmetryWandModel;
 import com.simibubi.create.content.curiosities.tools.DeforesterItem;
@@ -43,9 +39,11 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
 import net.minecraft.tags.Tag;
 
+@SuppressWarnings("unused")
 public class AllItems {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
@@ -118,7 +116,7 @@ public class AllItems {
 
 	public static final ItemEntry<VerticalGearboxItem> VERTICAL_GEARBOX =
 		REGISTRATE.item("vertical_gearbox", VerticalGearboxItem::new)
-			.model(AssetLookup.<VerticalGearboxItem>customItemModel("gearbox", "item_vertical"))
+			.model(AssetLookup.customItemModel("gearbox", "item_vertical"))
 			.register();
 
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
@@ -174,6 +172,10 @@ public class AllItems {
 	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =
 		REGISTRATE.item("tree_fertilizer", TreeFertilizerItem::new)
 			.register();
+
+	public static final ItemEntry<CombustibleItem> FUEL_PELLET = REGISTRATE.item("fuel_pellet", CombustibleItem::new)
+		// .onRegister(item -> item.setBurnTime(2048))
+		.register();
 
 	public static final ItemEntry<BlockzapperItem> BLOCKZAPPER =
 		REGISTRATE.item("handheld_blockzapper", BlockzapperItem::new)
