@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.ForgeHooks;
@@ -64,13 +65,15 @@ public class HeaterTileEntity extends SmartTileEntity {
 	}
 
 	boolean tryUpdateFuel(ItemStack itemStack) {
-		int burnTime = itemStack.getItem()
+		int burnTime = itemStack.getItem() == Items.EGG ? 150 : itemStack.getItem()
 			.getBurnTime(itemStack);
-
 		if (burnTime == -1)
 			burnTime = ForgeHooks.getBurnTime(itemStack);
-		int newFuelLevel = (burnTime > burnTimeRemaining ? 1 : 0); // todo: + (itemStack.getItem() == AllItems.SUPER_SPECIAL_FUEL.get() ? 1 : 0);
-		if (newFuelLevel <= fuelLevel) {
+		if (burnTime <= 0)
+			return false;
+		
+		int newFuelLevel = 1; // todo: + (itemStack.getItem() == AllItems.SUPER_SPECIAL_FUEL.get() ? 1 : 0);
+		if (newFuelLevel < fuelLevel ^ burnTime <= burnTimeRemaining) {
 			return false;
 		}
 		burnTimeRemaining = burnTime;
@@ -87,11 +90,9 @@ public class HeaterTileEntity extends SmartTileEntity {
 		int newHeatLevel = 1 + fuelLevel;
 		if (newHeatLevel != bufferedHeatLevel) {
 			bufferedHeatLevel = newHeatLevel;
-			// Block block = getBlockState().getBlock();
-			// if (block instanceof HeaterBlock)
-			// ((HeaterBlock) block).setLightLevel();
 			markDirty();
-			sendData();
+			if(world != null)
+				sendData();
 		}
 	}
 }

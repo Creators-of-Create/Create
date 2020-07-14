@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.processing;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 
@@ -20,6 +21,8 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -74,9 +77,15 @@ public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		ItemStack item = context.getItem();
-		return super.getStateForPlacement(context).with(HAS_BLAZE, item.hasTag() && item.getTag()
-			.contains("has_blaze")
-			&& item.getTag()
-				.getBoolean("has_blaze"));
+		BlockState state = super.getStateForPlacement(context);
+		return (state != null ? state : getDefaultState()).with(HAS_BLAZE,
+			item.hasTag() && item.getTag() != null && item.getTag()
+				.contains("has_blaze") && item.getTag()
+					.getBoolean("has_blaze"));
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+		return AllShapes.HEATER_BLOCK_SHAPE;
 	}
 }

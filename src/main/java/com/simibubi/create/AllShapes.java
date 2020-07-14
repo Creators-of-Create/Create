@@ -113,7 +113,11 @@ public class AllShapes {
 
 	BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 14, 14)
 		.add(2, 0, 2, 14, 2, 14)
-		.build(),
+		.build(), 
+		HEATER_BLOCK_SHAPE =
+			shape(2, 0, 2, 14, 16, 14).add(0, 0, 0, 16, 2, 16)
+				.erase(3, 5, 3, 13, 16, 13)
+				.build(),
 		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 22, 16),
 		MECHANICAL_PROCESSOR_SHAPE = shape(VoxelShapes.fullCube()).erase(4, 0, 4, 12, 16, 12)
 			.build(),
