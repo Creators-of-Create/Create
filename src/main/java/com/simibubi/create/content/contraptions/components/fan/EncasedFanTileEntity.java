@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.processing.HeaterBlock;
 import com.simibubi.create.content.contraptions.processing.HeaterTileEntity;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -74,11 +75,12 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	public boolean blockBelowIsHot() {
+		if (world == null)
+			return false;
 		BlockState checkState = world.getBlockState(pos.down());
-		TileEntity te = world.getTileEntity(pos.down());
 		return checkState.getBlock()
 			.isIn(AllBlockTags.FAN_HEATERS.tag)
-			|| (te instanceof HeaterTileEntity && ((HeaterTileEntity) te).getHeatLevel() >= 2);
+			|| (checkState.has(HeaterBlock.BLAZE_LEVEL) && checkState.get(HeaterBlock.BLAZE_LEVEL) >= 1);
 	}
 
 	public float getMaxDistance() {

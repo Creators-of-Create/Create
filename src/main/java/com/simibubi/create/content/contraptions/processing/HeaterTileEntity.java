@@ -18,14 +18,12 @@ import net.minecraftforge.common.ForgeHooks;
 public class HeaterTileEntity extends SmartTileEntity {
 	private int fuelLevel;
 	private int burnTimeRemaining;
-	private int bufferedHeatLevel;
 	private static final int maxHeatCapacity = 5000;
 
 	public HeaterTileEntity(TileEntityType<? extends HeaterTileEntity> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		fuelLevel = 0;
 		burnTimeRemaining = 0;
-		bufferedHeatLevel = 1;
 		setLazyTickRate(40);
 	}
 
@@ -89,17 +87,10 @@ public class HeaterTileEntity extends SmartTileEntity {
 	}
 
 	public int getHeatLevel() {
-		return bufferedHeatLevel;
+		return HeaterBlock.getHeaterLevel(getBlockState());
 	}
 
 	private void updateHeatLevel() {
-		int newHeatLevel = 1 + fuelLevel;
-		if (newHeatLevel != bufferedHeatLevel) {
-			bufferedHeatLevel = newHeatLevel;
-			markDirty();
-			if (world != null) {
-				sendData();
-			}
-		}
+		HeaterBlock.setBlazeLevel(world, pos, 1 + fuelLevel);
 	}
 }

@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
-import com.simibubi.create.content.contraptions.processing.HeaterTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -32,7 +31,6 @@ import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tileentity.BlastFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.SmokerTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
@@ -40,6 +38,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+
+import static com.simibubi.create.content.contraptions.processing.HeaterBlock.getHeaterLevel;
 
 public class InWorldProcessing {
 
@@ -62,16 +62,11 @@ public class InWorldProcessing {
 			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			if (blockState.getBlock() == Blocks.FIRE
-				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)) || getHeaterLevel(reader, pos) == 1)
+				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)) || getHeaterLevel(blockState) == 1)
 				return Type.SMOKING;
-			if (blockState.getBlock() == Blocks.LAVA || getHeaterLevel(reader, pos) >= 2)
+			if (blockState.getBlock() == Blocks.LAVA || getHeaterLevel(blockState) >= 2)
 				return Type.BLASTING;
 			return null;
-		}
-
-		private static int getHeaterLevel(IBlockReader reader, BlockPos pos) {
-			TileEntity te = reader.getTileEntity(pos);
-			return te instanceof HeaterTileEntity ? ((HeaterTileEntity) te).getHeatLevel() : 0;
 		}
 	}
 

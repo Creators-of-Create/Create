@@ -11,13 +11,14 @@ import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
 import com.simibubi.create.content.contraptions.processing.CombinedItemFluidList;
-import com.simibubi.create.content.contraptions.processing.HeaterTileEntity;
+import com.simibubi.create.content.contraptions.processing.HeaterBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -26,7 +27,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.NonNullList;
@@ -34,6 +34,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.IItemHandler;
+
+import static com.simibubi.create.content.contraptions.processing.HeaterBlock.getHeaterLevel;
 
 public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
@@ -270,10 +272,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	private int getHeatLevelApplied() {
 		if (world == null)
 			return 0;
-		TileEntity te = world.getTileEntity(pos.down(3));
-		if (!(te instanceof HeaterTileEntity))
-			return AllTags.AllBlockTags.FAN_HEATERS.matches(world.getBlockState(pos.down(3))) ? 1 : 0;
-		return ((HeaterTileEntity) te).getHeatLevel();
+		BlockState state = world.getBlockState(pos.down(3));
+		if (state.has(HeaterBlock.BLAZE_LEVEL))
+			return state.get(HeaterBlock.BLAZE_LEVEL);
+		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? 1 : 0;
 	}
-
 }

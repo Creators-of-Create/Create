@@ -13,14 +13,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -30,22 +31,22 @@ import net.minecraft.world.World;
 @ParametersAreNonnullByDefault
 public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 
-	public static IProperty<Boolean> HAS_BLAZE = BooleanProperty.create("has_blaze");
+	public static IProperty<Integer> BLAZE_LEVEL = IntegerProperty.create("blaze_level", 0, 4);
 
 	public HeaterBlock(Properties properties) {
 		super(properties);
-		setDefaultState(super.getDefaultState().with(HAS_BLAZE, false));
+		setDefaultState(super.getDefaultState().with(BLAZE_LEVEL, 0));
 	}
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
-		builder.add(HAS_BLAZE);
+		builder.add(BLAZE_LEVEL);
 	}
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
-		return state.get(HAS_BLAZE);
+		return state.get(BLAZE_LEVEL) >= 1;
 	}
 
 	@Nullable
@@ -78,10 +79,10 @@ public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		ItemStack item = context.getItem();
 		BlockState state = super.getStateForPlacement(context);
-		return (state != null ? state : getDefaultState()).with(HAS_BLAZE,
-			item.hasTag() && item.getTag() != null && item.getTag()
+		return (state != null ? state : getDefaultState()).with(BLAZE_LEVEL,
+				(item.hasTag() && item.getTag() != null && item.getTag()
 				.contains("has_blaze") && item.getTag()
-					.getBoolean("has_blaze"));
+					.getBoolean("has_blaze")) ? 1 : 0);
 	}
 
 	@Override
@@ -91,12 +92,15 @@ public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 
 	@Override
 	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-		// System.out.println("light " + pos);
-		// return 15;
-		try {
-			return getTileEntity(world, pos).getHeatLevel() * 4 - 1;
-		} catch (TileEntityException e) {
-			return 0;
-		}
+		return MathHelper.clamp(state.get(BLAZE_LEVEL) * 4 - 1, 0, 15);
+	}
+
+	static void setBlazeLevel(@Nullable World world, BlockPos pos, int blazeLevel) {
+		if (world != null)
+			world.setBlockState(pos, world.getBlockState(pos).with(BLAZE_LEVEL, blazeLevel));
+	}
+
+	public static int getHeaterLevel(BlockState blockState) {
+		return blockState.has(HeaterBlock.BLAZE_LEVEL) ? blockState.get(HeaterBlock.BLAZE_LEVEL) : 0;
 	}
 }
