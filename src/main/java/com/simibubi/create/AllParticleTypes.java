@@ -3,6 +3,7 @@ package com.simibubi.create;
 import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
+import com.simibubi.create.content.contraptions.particle.HeaterParticleData;
 import com.simibubi.create.content.contraptions.particle.ICustomParticle;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.foundation.utility.Lang;
@@ -22,6 +23,7 @@ public enum AllParticleTypes {
 
 	ROTATION_INDICATOR(RotationIndicatorParticleData::new),
 	AIR_FLOW(AirFlowParticleData::new),
+	HEATER_PARTICLE(HeaterParticleData::new)
 
 	;
 
@@ -40,14 +42,14 @@ public enum AllParticleTypes {
 	@OnlyIn(Dist.CLIENT)
 	public static void registerFactories(ParticleFactoryRegisterEvent event) {
 		ParticleManager particles = Minecraft.getInstance().particles;
-		for (AllParticleTypes particle : values()) 
+		for (AllParticleTypes particle : values())
 			particle.entry.registerFactory(particles);
 	}
 
 	public ParticleType<?> get() {
 		return entry.getType();
 	}
-	
+
 	public String parameter() {
 		return Lang.asId(name());
 	}
@@ -74,7 +76,8 @@ public enum AllParticleTypes {
 
 		void makeType() {
 			if (type == null) {
-				type = typeFactory.get().createType();
+				type = typeFactory.get()
+					.createType();
 				type.setRegistryName(id);
 			}
 		}
@@ -82,7 +85,8 @@ public enum AllParticleTypes {
 		@OnlyIn(Dist.CLIENT)
 		void registerFactory(ParticleManager particles) {
 			makeType();
-			particles.registerFactory(type, typeFactory.get().getFactory());
+			particles.registerFactory(type, typeFactory.get()
+				.getFactory());
 		}
 
 	}

@@ -1,9 +1,11 @@
 package com.simibubi.create.content.contraptions.processing;
 
 import java.util.List;
+import java.util.Random;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
+import com.simibubi.create.content.contraptions.particle.HeaterParticleData;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -11,6 +13,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.ForgeHooks;
@@ -24,7 +28,7 @@ public class HeaterTileEntity extends SmartTileEntity {
 		super(tileEntityTypeIn);
 		fuelLevel = 0;
 		burnTimeRemaining = 0;
-		setLazyTickRate(40);
+		setLazyTickRate(20);
 	}
 
 	@Override
@@ -44,7 +48,13 @@ public class HeaterTileEntity extends SmartTileEntity {
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		updateHeatLevel();
+		spawnParticles(ParticleTypes.SMOKE);
+		int heatLevel = getHeatLevel();
+		if (heatLevel >= 2)
+			spawnParticles(ParticleTypes.FLAME);
+		if (heatLevel > 3) {
+			spawnParticles(new HeaterParticleData(0.3f, 0.3f, 1f));
+		}
 	}
 
 	@Override
@@ -98,5 +108,16 @@ public class HeaterTileEntity extends SmartTileEntity {
 		else {
 			HeaterBlock.setBlazeLevel(world, pos, (double) burnTimeRemaining / maxHeatCapacity > 0.1 ? 3 : 2);
 		}
+	}
+
+	private void spawnParticles(IParticleData basicparticletype) {
+		if (world == null)
+			return;
+		Random random = world.getRandom();
+		world.addOptionalParticle(basicparticletype, true,
+			(double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1),
+			(double) pos.getY() + random.nextDouble() + random.nextDouble(),
+			(double) pos.getZ() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D,
+			0.07D, 0.0D);
 	}
 }
