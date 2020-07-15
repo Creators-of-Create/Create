@@ -130,28 +130,40 @@ public class ContraptionCollider {
 		if (bounds == null)
 			return;
 
+		Vec3d centerOfBlock = VecHelper.getCenterOf(BlockPos.ZERO);
 		double conRotX = contraptionRotation.z;
 		double conRotY = contraptionRotation.y;
 		double conRotZ = contraptionRotation.x;
+		Vec3d conMotion = contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
+		Vec3d conAngularMotion = contraptionRotation.subtract(contraptionEntity.getPrevRotationVec());
+		Vec3d contraptionCentreOffset = contraptionEntity.stationary ? centerOfBlock : Vec3d.ZERO.add(0, 0.5, 0);
+		boolean axisAlignedCollision = contraptionRotation.equals(Vec3d.ZERO);
+		Matrix3d rotation = null;
 
 		for (Entity entity : world.getEntitiesWithinAABB((EntityType<?>) null, bounds.grow(2)
 			.expand(0, 32, 0), contraptionEntity::canCollideWith)) {
 			boolean serverPlayer = entity instanceof PlayerEntity && !world.isRemote;
 
+			// Init matrix
+			if (rotation == null) {
+				rotation = new Matrix3d().asIdentity();
+				if (!axisAlignedCollision) {
+					rotation.multiply(new Matrix3d().asXRotation(AngleHelper.rad(-conRotX)));
+					rotation.multiply(new Matrix3d().asYRotation(AngleHelper.rad(conRotY)));
+					rotation.multiply(new Matrix3d().asZRotation(AngleHelper.rad(-conRotZ)));
+				}
+			}
+
 			// Transform entity position and motion to local space
-			Vec3d centerOfBlock = VecHelper.getCenterOf(BlockPos.ZERO);
 			Vec3d entityPosition = entity.getPositionVec();
 			AxisAlignedBB entityBounds = entity.getBoundingBox();
 			Vec3d centerY = new Vec3d(0, entityBounds.getYSize() / 2, 0);
 			Vec3d motion = entity.getMotion();
-			boolean axisAlignedCollision = contraptionRotation.equals(Vec3d.ZERO);
 
-			Vec3d position =
-				entityPosition.subtract(contraptionEntity.stationary ? centerOfBlock : Vec3d.ZERO.add(0, 0.5, 0))
-					.add(centerY);
-
+			Vec3d position = entityPosition.subtract(contraptionCentreOffset)
+				.add(centerY);
 			position = position.subtract(contraptionPosition);
-			position = VecHelper.rotate(position, -conRotX, -conRotY, -conRotZ);
+			position = rotation.transform(position);
 			position = position.add(centerOfBlock)
 				.subtract(centerY)
 				.subtract(entityPosition);
@@ -165,18 +177,10 @@ public class ContraptionCollider {
 				.count() == 0)
 				continue;
 
-			if (!axisAlignedCollision)
-				motion = VecHelper.rotate(motion, -conRotX, -conRotY, -conRotZ);
-
 			// Prepare entity bounds
 			OrientedBB obb = new OrientedBB(localBB);
-			if (!axisAlignedCollision) {
-				Matrix3d rotation = new Matrix3d().asIdentity();
-				rotation.multiply(new Matrix3d().asXRotation(AngleHelper.rad(-conRotX)));
-				rotation.multiply(new Matrix3d().asYRotation(AngleHelper.rad(conRotY)));
-				rotation.multiply(new Matrix3d().asZRotation(AngleHelper.rad(-conRotZ)));
-				obb.setRotation(rotation);
-			}
+			obb.setRotation(rotation);
+			motion = rotation.transform(motion);
 
 //			Vec3d visualizerOrigin = new Vec3d(10, 64, 0);
 //			CollisionDebugger.OBB = obb.copy();
@@ -233,10 +237,14 @@ public class ContraptionCollider {
 			Vec3d entityMotion = entity.getMotion();
 			Vec3d totalResponse = collisionResponse.getValue();
 			Vec3d motionResponse = allowedMotion.getValue();
+			boolean hardCollision = !totalResponse.equals(Vec3d.ZERO);
+
+			rotation.transpose();
+			motionResponse = rotation.transform(motionResponse);
+			totalResponse = rotation.transform(totalResponse);
+			rotation.transpose();
 
 			if (futureCollision.isTrue() && !serverPlayer) {
-				if (!axisAlignedCollision)
-					motionResponse = VecHelper.rotate(motionResponse, conRotX, conRotY, conRotZ);
 				if (motionResponse.y != entityMotion.y) {
 					entity.setMotion(entityMotion.mul(1, 0, 1)
 						.add(0, motionResponse.y, 0));
@@ -244,47 +252,58 @@ public class ContraptionCollider {
 				}
 			}
 
-			if (!axisAlignedCollision)
-				totalResponse = VecHelper.rotate(totalResponse, conRotX, conRotY, conRotZ);
-
+			Vec3d contactPointMotion = Vec3d.ZERO;
 			if (surfaceCollision.isTrue()) {
 //				entity.handleFallDamage(entity.fallDistance, 1); tunnelling issue
 				entity.fallDistance = 0;
 				entity.onGround = true;
 				if (!serverPlayer) {
+
+					Vec3d contactPoint = entityPosition.subtract(contraptionCentreOffset)
+						.subtract(contraptionPosition);
+					contactPoint =
+						VecHelper.rotate(contactPoint, conAngularMotion.z, conAngularMotion.y, conAngularMotion.x);
+					contactPoint = contactPoint.add(contraptionPosition)
+						.add(contraptionCentreOffset)
+						.add(conMotion);
+					contactPointMotion = contactPoint.subtract(entityPosition);
+
 					DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> checkForClientPlayerCollision(entity));
 				}
 			}
 
-			if (totalResponse.equals(Vec3d.ZERO))
+			if (hardCollision) {
+				double motionX = entityMotion.getX();
+				double motionY = entityMotion.getY();
+				double motionZ = entityMotion.getZ();
+				double intersectX = totalResponse.getX();
+				double intersectY = totalResponse.getY();
+				double intersectZ = totalResponse.getZ();
+
+				double horizonalEpsilon = 1 / 128f;
+				if (motionX != 0 && Math.abs(intersectX) > horizonalEpsilon && motionX > 0 == intersectX < 0)
+					entityMotion = entityMotion.mul(0, 1, 1);
+				if (motionY != 0 && intersectY != 0 && motionY > 0 == intersectY < 0)
+					entityMotion = entityMotion.mul(1, 0, 1);
+				if (motionZ != 0 && Math.abs(intersectZ) > horizonalEpsilon && motionZ > 0 == intersectZ < 0)
+					entityMotion = entityMotion.mul(1, 1, 0);
+			}
+
+			if (!hardCollision && surfaceCollision.isFalse())
 				continue;
 
-			double motionX = entityMotion.getX();
-			double motionY = entityMotion.getY();
-			double motionZ = entityMotion.getZ();
-			double intersectX = totalResponse.getX();
-			double intersectY = totalResponse.getY();
-			double intersectZ = totalResponse.getZ();
-
-			double horizonalEpsilon = 1 / 128f;
-			if (motionX != 0 && Math.abs(intersectX) > horizonalEpsilon && motionX > 0 == intersectX < 0)
-				entityMotion = entityMotion.mul(0, 1, 1);
-			if (motionY != 0 && intersectY != 0 && motionY > 0 == intersectY < 0)
-				entityMotion = entityMotion.mul(1, 0, 1);
-			if (motionZ != 0 && Math.abs(intersectZ) > horizonalEpsilon && motionZ > 0 == intersectZ < 0)
-				entityMotion = entityMotion.mul(1, 1, 0);
-
-			if (entity instanceof ServerPlayerEntity)
+			if (serverPlayer && entity instanceof ServerPlayerEntity) {
 				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
-
-			if (!serverPlayer) {
-				Vec3d allowedMovement = getAllowedMovement(totalResponse, entity);
-				contraptionEntity.collidingEntities.add(entity);
-				entity.velocityChanged = true;
-				entity.setPosition(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
-					entityPosition.z + allowedMovement.z);
-				entity.setMotion(entityMotion);
+				continue;
 			}
+
+			totalResponse = totalResponse.add(contactPointMotion);
+			Vec3d allowedMovement = getAllowedMovement(totalResponse, entity);
+			contraptionEntity.collidingEntities.add(entity);
+			entity.velocityChanged = true;
+			entity.setPosition(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
+				entityPosition.z + allowedMovement.z);
+			entity.setMotion(entityMotion);
 		}
 
 	}

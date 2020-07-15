@@ -636,6 +636,14 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		return new Vec3d(getPitch(1), getYaw(1), getRoll(1));
 	}
 
+	public Vec3d getPrevRotationVec() {
+		return new Vec3d(getPitch(0), getYaw(0), getRoll(0));
+	}
+
+	public Vec3d getPrevPositionVec() {
+		return new Vec3d(prevPosX, prevPosY, prevPosZ);
+	}
+
 	public boolean canCollideWith(Entity e) {
 		if (e instanceof PlayerEntity && e.isSpectator())
 			return false;
@@ -647,14 +655,14 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			return false;
 		if (e instanceof IProjectile)
 			return false;
-		
+
 		Entity riding = this.getRidingEntity();
 		while (riding != null) {
 			if (riding == e)
 				return false;
 			riding = riding.getRidingEntity();
 		}
-		
+
 		return e.getPushReaction() == PushReaction.NORMAL;
 	}
 
