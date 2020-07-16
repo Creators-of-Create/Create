@@ -15,7 +15,7 @@ public class BeltTunnelShapes {
 
 	private static VoxelShape block = makeCuboidShape(0, -5, 0, 16, 16, 16);
 
-	private static VoxelShaper opening = VoxelShaper.forHorizontal(makeCuboidShape(2, -5, 14, 14, 8, 16),
+	private static VoxelShaper opening = VoxelShaper.forHorizontal(makeCuboidShape(2, -5, 14, 14, 10, 16),
 			Direction.SOUTH);
 
 	private static final VoxelShaper STRAIGHT = VoxelShaper.forHorizontalAxis(VoxelShapes.combineAndSimplify(block,

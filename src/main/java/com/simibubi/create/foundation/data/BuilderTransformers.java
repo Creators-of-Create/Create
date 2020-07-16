@@ -10,6 +10,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonGenerator;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
@@ -51,8 +52,8 @@ public class BuilderTransformers {
 			.simpleItem();
 	}
 
-	public static <B extends FunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> funnel(
-		String type, ResourceLocation particleTexture) {
+	public static <B extends FunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> funnel(String type,
+		ResourceLocation particleTexture) {
 		return b -> {
 			return b.blockstate((c, p) -> {
 				Function<BlockState, ModelFile> model = s -> {
@@ -86,13 +87,16 @@ public class BuilderTransformers {
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStates(state -> {
 					String id = "block/" + type + "_tunnel";
-					String shapeName = state.get(BeltTunnelBlock.SHAPE)
-						.getName();
+					Shape shape = state.get(BeltTunnelBlock.SHAPE);
+					if (shape == BeltTunnelBlock.Shape.CLOSED)
+						shape = BeltTunnelBlock.Shape.STRAIGHT;
+					String shapeName = shape.getName();
 					return ConfiguredModel.builder()
 						.modelFile(p.models()
 							.withExistingParent(id + "/" + shapeName, p.modLoc("block/belt_tunnel/" + shapeName))
-							.texture("0", p.modLoc(id))
 							.texture("1", p.modLoc(id + "_top"))
+							.texture("2", p.modLoc(id))
+							.texture("3", p.modLoc(id + "_top_window"))
 							.texture("particle", particleTexture))
 						.rotationY(state.get(BeltTunnelBlock.HORIZONTAL_AXIS) == Axis.X ? 0 : 90)
 						.build();
@@ -101,8 +105,8 @@ public class BuilderTransformers {
 			.model((c, p) -> {
 				String id = type + "_tunnel";
 				p.withExistingParent("item/" + id, p.modLoc("block/belt_tunnel/item"))
-					.texture("0", p.modLoc("block/" + id))
 					.texture("1", p.modLoc("block/" + id + "_top"))
+					.texture("2", p.modLoc("block/" + id))
 					.texture("particle", particleTexture);
 			})
 			.build();
