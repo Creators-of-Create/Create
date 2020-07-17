@@ -12,6 +12,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -95,21 +96,46 @@ public class AllTags {
 		public Tag<Block> tag;
 
 		private AllBlockTags() {
-			this("");
+			this(MOD, "");
 		}
-
-		private AllBlockTags(String path) {
+		
+		private AllBlockTags(NameSpace namespace) {
+			this(namespace, "");
+		}
+		
+		private AllBlockTags(NameSpace namespace, String path) {
 			tag = new BlockTags.Wrapper(
-				new ResourceLocation(Create.ID, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
+				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
 		}
 
 		public boolean matches(BlockState block) {
 			return tag.contains(block.getBlock());
+		}
+		
+		public void includeIn(AllBlockTags parent) {
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getBuilder(parent.tag)
+				.add(tag));
+		}
+		
+		public void includeAll(Tag<Block> child) {
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getBuilder(tag).add(child));
+		}
+		
+		public void add(Block ...values) {
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getBuilder(tag).add(values));
 		}
 	}
 
 	public static void register() {
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.INGOTS);
+		
+		AllBlockTags.BRITTLE.includeAll(BlockTags.DOORS);
+		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL);
+		
+		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.FENCES);
+		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
+		
+		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE);
 	}
 }
