@@ -6,9 +6,7 @@ import com.simibubi.create.content.contraptions.processing.HeaterBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
-
 import net.minecraft.block.BlockState;
-import net.minecraft.block.CampfireBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -78,9 +76,17 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 		if (world == null)
 			return false;
 		BlockState checkState = world.getBlockState(pos.down());
-		return checkState.getBlock().isIn(AllBlockTags.FAN_HEATERS.tag)
-			&& ((!checkState.has(HeaterBlock.BLAZE_LEVEL)) || checkState.get(HeaterBlock.BLAZE_LEVEL) >= 1)
-			&& (!checkState.has(BlockStateProperties.LIT) || checkState.get(BlockStateProperties.LIT));
+
+		if (!checkState.getBlock().isIn(AllBlockTags.FAN_HEATERS.tag))
+			return false;
+
+		if (checkState.has(HeaterBlock.BLAZE_LEVEL) && !checkState.get(HeaterBlock.BLAZE_LEVEL).min(HeaterBlock.HeatLevel.FADING))
+			return false;
+
+		if (checkState.has(BlockStateProperties.LIT) && !checkState.get(BlockStateProperties.LIT))
+			return false;
+
+		return true;
 	}
 
 	public float getMaxDistance() {
