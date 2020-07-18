@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -99,8 +97,6 @@ public class AllBlockPartials {
 		FLUID_PIPE_CASING = get("fluid_pipe/casing");
 
 	public static final Map<Direction, AllBlockPartials> PIPE_RIMS = map();
-	public static final Map<Pair<Boolean, Direction>, AllBlockPartials> TANK_LID_FILLERS = map();
-	public static final Map<Pair<Boolean, Boolean>, AllBlockPartials> TANK_DIAGONAL_FILLERS = map();
 
 	static {
 		populateMaps();
@@ -115,22 +111,8 @@ public class AllBlockPartials {
 
 	private static void populateMaps() {
 		for (Direction d : Iterate.directions) {
-			boolean horizontal = d.getAxis()
-				.isHorizontal();
-
 			PIPE_RIMS.put(d, get("fluid_pipe/rim/" + d.getName()));
-
-			if (horizontal) {
-				for (boolean top : Iterate.trueAndFalse)
-					TANK_LID_FILLERS.put(Pair.of(top, d),
-						get("fluid_tank/lid_fillers/" + (top ? "top" : "bottom") + "_" + d.getName()));
-			}
 		}
-
-		for (boolean north : Iterate.trueAndFalse)
-			for (boolean east : Iterate.trueAndFalse)
-				TANK_DIAGONAL_FILLERS.put(Pair.of(north, east),
-					get("fluid_tank/diagonal_fillers/" + (north ? "north" : "south") + "_" + (east ? "east" : "west")));
 	}
 
 	private static <T, U> Map<T, U> map() {

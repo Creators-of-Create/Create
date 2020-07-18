@@ -13,8 +13,7 @@ public class FluidTankCTBehaviour extends HorizontalCTBehaviour {
 	public FluidTankCTBehaviour(CTSpriteShiftEntry layerShift, CTSpriteShiftEntry topShift) {
 		super(layerShift, topShift);
 	}
-	
-	@Override
+
 	public boolean buildContextForOccludedDirections() {
 		return true;
 	}
@@ -22,7 +21,6 @@ public class FluidTankCTBehaviour extends HorizontalCTBehaviour {
 	@Override
 	public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
-		// TODO only if TEs are actually connected
-		return state.getBlock() == other.getBlock();
+		return state.getBlock() == other.getBlock() && FluidTankConnectivityHandler.isConnected(reader, pos, otherPos);
 	}
 }

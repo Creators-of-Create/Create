@@ -20,7 +20,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPipeBlock;
-import com.simibubi.create.content.contraptions.fluids.FluidTankBlock;
 import com.simibubi.create.content.contraptions.processing.HeaterBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.palettes.PavedBlock;
@@ -475,23 +474,4 @@ public class BlockStateGen {
 			.end();
 	}
 
-	public static <P extends FluidTankBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> tank() {
-		return (c, p) -> {
-			p.getMultipartBuilder(c.get())
-				.part()
-				.modelFile(AssetLookup.partialBaseModel(c, p, "top"))
-				.addModel()
-				.condition(FluidTankBlock.TOP, true)
-				.end()
-				.part()
-				.modelFile(AssetLookup.partialBaseModel(c, p, "windows"))
-				.addModel()
-				.end()
-				.part()
-				.modelFile(AssetLookup.partialBaseModel(c, p, "bottom"))
-				.addModel()
-				.condition(FluidTankBlock.BOTTOM, true)
-				.end();
-		};
-	}
 }

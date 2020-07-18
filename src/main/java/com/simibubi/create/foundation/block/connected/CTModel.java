@@ -19,6 +19,7 @@ import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelDataMap.Builder;
 import net.minecraftforge.client.model.data.ModelProperty;
 
 public class CTModel extends BakedModelWrapper<IBakedModel> {
@@ -50,8 +51,11 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 
 	@Override
 	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
-		return new ModelDataMap.Builder().withInitial(CT_PROPERTY, createCTData(world, pos, state))
-			.build();
+		return getCTDataMapBuilder(world, pos, state).build();
+	}
+
+	protected Builder getCTDataMapBuilder(ILightReader world, BlockPos pos, BlockState state) {
+		return new ModelDataMap.Builder().withInitial(CT_PROPERTY, createCTData(world, pos, state));
 	}
 
 	protected CTData createCTData(ILightReader world, BlockPos pos, BlockState state) {

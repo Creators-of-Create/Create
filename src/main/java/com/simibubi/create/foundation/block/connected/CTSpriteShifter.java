@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 public class CTSpriteShifter extends SpriteShifter {
 
 	public enum CTType {
-		OMNIDIRECTIONAL, HORIZONTAL, VERTICAL;
+		OMNIDIRECTIONAL, HORIZONTAL, VERTICAL, CROSS;
 	}
 
 	public static CTSpriteShiftEntry getCT(CTType type, String blockTextureName) {
@@ -42,6 +42,8 @@ public class CTSpriteShifter extends SpriteShifter {
 			return new CTSpriteShiftEntry.Omnidirectional();
 		case VERTICAL:
 			return new CTSpriteShiftEntry.Vertical();
+		case CROSS:
+			return new CTSpriteShiftEntry.Cross();
 		default:
 			return null;
 		}

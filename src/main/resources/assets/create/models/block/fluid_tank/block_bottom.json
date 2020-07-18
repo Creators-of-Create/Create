@@ -3,23 +3,70 @@
 	"parent": "block/block",
 	"textures": {
 		"0": "create:block/copper_casing",
-		"2": "create:block/fluid_tank",
-		"3": "create:block/oxidized/copper_block_0",
-		"particle": "create:block/copper_casing"
+		"1": "create:block/fluid_tank",
+		"particle": "create:block/fluid_tank"
 	},
 	"elements": [
 		{
-			"name": "bottom",
+			"name": "Lid",
 			"from": [0, 0, 0],
 			"to": [16, 4, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, -23]},
 			"faces": {
-				"north": {"uv": [0, 12, 16, 16], "texture": "#2"},
-				"east": {"uv": [0, 12, 16, 16], "texture": "#2"},
-				"south": {"uv": [0, 12, 16, 16], "texture": "#2"},
-				"west": {"uv": [0, 12, 16, 16], "texture": "#2"},
+				"north": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "north"},
+				"east": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "east"},
+				"south": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "south"},
+				"west": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "west"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#3"}
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "down"}
 			}
+		},
+		{
+			"name": "SideRight",
+			"from": [0, 4, 0],
+			"to": [16, 16, 1],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 12, -23]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 12], "texture": "#1", "cullface": "north"},
+				"south": {"uv": [0, 0, 16, 12], "texture": "#1", "cullface": "north"}
+			}
+		},
+		{
+			"name": "SideRight",
+			"from": [15, 4, 0],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 12, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 12], "texture": "#1", "cullface": "east"},
+				"west": {"uv": [0, 0, 16, 12], "texture": "#1", "cullface": "east"}
+			}
+		},
+		{
+			"name": "SideRight",
+			"from": [0, 4, 15],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 12, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 12], "texture": "#1", "cullface": "south"},
+				"south": {"uv": [0, 0, 16, 12], "texture": "#1", "cullface": "south"}
+			}
+		},
+		{
+			"name": "SideRight",
+			"from": [0, 4, 0],
+			"to": [1, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 12, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 12], "texture": "#1", "cullface": "west"},
+				"west": {"uv": [0, 0, 16, 12], "texture": "#1", "cullface": "west"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "tank",
+			"origin": [8, 8, -23],
+			"children": [0, 1, 2, 3, 4]
 		}
 	]
 }

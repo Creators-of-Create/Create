@@ -48,7 +48,7 @@ public class AllSpriteShifts {
 	
 	public static final CTSpriteShiftEntry 
 		BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
-		FLUID_TANK = getCT(CTType.OMNIDIRECTIONAL, "fluid_tank");
+		FLUID_TANK = getCT(CTType.CROSS, "fluid_tank");
 
 	public static final SpriteShiftEntry 
 		BELT = SpriteShifter.get("block/belt", "block/belt_animated"),

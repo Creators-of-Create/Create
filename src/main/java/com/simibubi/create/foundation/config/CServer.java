@@ -7,6 +7,7 @@ public class CServer extends ConfigBase {
 		i(20, 5, "tickrateSyncTimer", "[in Ticks]", Comments.tickrateSyncTimer, Comments.tickrateSyncTimer2);
 
 	public CKinetics kinetics = nested(0, CKinetics::new, Comments.kinetics);
+	public CFluids fluids = nested(0, CFluids::new, Comments.fluids);
 	public CLogistics logistics = nested(0, CLogistics::new, Comments.logistics);
 	public CSchematics schematics = nested(0, CSchematics::new, Comments.schematics);
 	public CCuriosities curiosities = nested(0, CCuriosities::new, Comments.curiosities);
@@ -20,6 +21,7 @@ public class CServer extends ConfigBase {
 	private static class Comments {
 		static String schematics = "Everything related to Schematic tools";
 		static String kinetics = "Parameters and abilities of Create's kinetic mechanisms";
+		static String fluids = "Create's liquid manipulation tools";
 		static String logistics = "Tweaks for logistical components";
 		static String curiosities = "Gadgets and other Shenanigans added by Create";
 		static String control = "You can try inhibiting related game mechanics for troubleshooting repeated crashes.";

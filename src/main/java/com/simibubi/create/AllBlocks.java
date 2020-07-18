@@ -53,6 +53,8 @@ import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheel
 import com.simibubi.create.content.contraptions.fluids.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPipeModel;
 import com.simibubi.create.content.contraptions.fluids.FluidTankBlock;
+import com.simibubi.create.content.contraptions.fluids.FluidTankGenerator;
+import com.simibubi.create.content.contraptions.fluids.FluidTankItem;
 import com.simibubi.create.content.contraptions.fluids.FluidTankModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
@@ -146,7 +148,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.common.ToolType;
 
-@SuppressWarnings("unused")
 public class AllBlocks {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
@@ -462,11 +463,13 @@ public class AllBlocks {
 
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.blockstate(BlockStateGen.tank())
+		.properties(Block.Properties::nonOpaque)
+		.blockstate(new FluidTankGenerator()::generate)
 		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::new))
 		.addLayer(() -> RenderType::getCutoutMipped)
-		.item()
-		.transform(customItemModel())
+		.item(FluidTankItem::new)
+		.model(AssetLookup.customItemModel("_", "block_single_window"))
+		.build()
 		.register();
 
 	// Contraptions

@@ -1,0 +1,119 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "create:block/copper_casing",
+		"1": "create:block/fluid_tank",
+		"particle": "create:block/fluid_tank"
+	},
+	"elements": [
+		{
+			"name": "Lid",
+			"from": [0, 0, 0],
+			"to": [16, 4, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, -23]},
+			"faces": {
+				"north": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "north"},
+				"east": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "east"},
+				"south": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "south"},
+				"west": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "down"}
+			}
+		},
+		{
+			"name": "SideRight",
+			"from": [15, 4, 0],
+			"to": [16, 12, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 12, 8]},
+			"faces": {
+				"east": {"uv": [0, 4, 16, 12], "texture": "#1", "cullface": "east"},
+				"west": {"uv": [0, 4, 16, 12], "texture": "#1", "cullface": "east"}
+			}
+		},
+		{
+			"name": "SideRight",
+			"from": [0, 4, 15],
+			"to": [16, 12, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 12, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 16, 12], "texture": "#1", "cullface": "south"},
+				"south": {"uv": [0, 4, 16, 12], "texture": "#1", "cullface": "south"}
+			}
+		},
+		{
+			"name": "SideRight",
+			"from": [0, 4, 0],
+			"to": [1, 12, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 12, 8]},
+			"faces": {
+				"east": {"uv": [0, 4, 16, 12], "texture": "#1", "cullface": "west"},
+				"west": {"uv": [0, 4, 16, 12], "texture": "#1", "cullface": "west"}
+			}
+		},
+		{
+			"name": "Lid",
+			"from": [0, 12, 0],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, -23]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 4], "texture": "#1", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 4], "texture": "#1", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 4], "texture": "#1", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 4], "texture": "#1", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "SideRight",
+			"from": [0, 4, 0],
+			"to": [16, 12, 1],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, -23]},
+			"faces": {
+				"north": {"uv": [0, 4, 16, 12], "texture": "#1", "cullface": "north"},
+				"south": {"uv": [0, 4, 16, 12], "texture": "#1", "cullface": "north"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "tank",
+			"origin": [8, 8, -23],
+			"children": []
+		},
+		{
+			"name": "block_middle",
+			"origin": [8, 8, 8],
+			"children": [
+				{
+					"name": "tank",
+					"origin": [8, 8, -23],
+					"children": []
+				}
+			]
+		},
+		{
+			"name": "block_bottom",
+			"origin": [8, 8, 8],
+			"children": [
+				{
+					"name": "tank",
+					"origin": [8, 8, -23],
+					"children": [0, 1, 2, 3]
+				}
+			]
+		},
+		{
+			"name": "block_top",
+			"origin": [8, 8, 8],
+			"children": [
+				{
+					"name": "tank",
+					"origin": [8, 8, -23],
+					"children": [4, 5]
+				}
+			]
+		}
+	]
+}

@@ -18,7 +18,12 @@ import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorIt
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.contraptions.wrench.WrenchModel;
-import com.simibubi.create.content.curiosities.*;
+import com.simibubi.create.content.curiosities.ChromaticCompoundColor;
+import com.simibubi.create.content.curiosities.ChromaticCompoundItem;
+import com.simibubi.create.content.curiosities.CombustibleItem;
+import com.simibubi.create.content.curiosities.RefinedRadianceItem;
+import com.simibubi.create.content.curiosities.ShadowSteelItem;
+import com.simibubi.create.content.curiosities.TreeFertilizerItem;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.content.curiosities.symmetry.client.SymmetryWandModel;
 import com.simibubi.create.content.curiosities.tools.DeforesterItem;
@@ -42,7 +47,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 import net.minecraft.tags.Tag;
 
-@SuppressWarnings("unused")
 public class AllItems {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
