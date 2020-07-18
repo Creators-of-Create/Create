@@ -232,7 +232,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 		if (!(recipe instanceof MixingRecipe))
 			return true;
-		return ((MixingRecipe) recipe).getHeatLevelRequired() <= getHeatLevelApplied();
+		return ((MixingRecipe) recipe).getHeatLevelRequired() <= getHeatLevelApplied().ordinal();
 	}
 
 	@Override
@@ -269,12 +269,12 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		return running;
 	}
 
-	private int getHeatLevelApplied() {
+	private HeaterBlock.HeatLevel getHeatLevelApplied() {
 		if (world == null)
-			return 0;
+			return HeaterBlock.HeatLevel.NONE;
 		BlockState state = world.getBlockState(pos.down(3));
 		if (state.has(HeaterBlock.BLAZE_LEVEL))
 			return state.get(HeaterBlock.BLAZE_LEVEL);
-		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? 1 : 0;
+		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeaterBlock.HeatLevel.SMOULDERING : HeaterBlock.HeatLevel.NONE;
 	}
 }

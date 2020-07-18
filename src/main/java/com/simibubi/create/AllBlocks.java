@@ -405,11 +405,10 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.lightValue(12))
 		.addLayer(() -> RenderType::getCutoutMipped)
-		.tag(AllBlockTags.FAN_TRANSPARENT.tag)
+		.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 		.item(HeaterBlockItem::new)
 		.build()
-		// .transform(heaterItemModel())
 		.register();
 
 	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)

@@ -7,18 +7,20 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 
+import com.simibubi.create.foundation.utility.Lang;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
-import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
@@ -31,11 +33,12 @@ import net.minecraft.world.World;
 @ParametersAreNonnullByDefault
 public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 
-	public static IProperty<Integer> BLAZE_LEVEL = IntegerProperty.create("blaze_level", 0, 4);
+	//public static IProperty<Integer> BLAZE_LEVEL = IntegerProperty.create("blaze_level", 0, 4);
+	public static IProperty<HeatLevel> BLAZE_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
 
 	public HeaterBlock(Properties properties) {
 		super(properties);
-		setDefaultState(super.getDefaultState().with(BLAZE_LEVEL, 0));
+		setDefaultState(super.getDefaultState().with(BLAZE_LEVEL, HeatLevel.NONE));
 	}
 
 	@Override
@@ -46,7 +49,7 @@ public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
-		return state.get(BLAZE_LEVEL) >= 1;
+		return state.get(BLAZE_LEVEL).min(HeatLevel.SMOULDERING);
 	}
 
 	@Nullable
@@ -61,28 +64,36 @@ public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult blockRayTraceResult) {
+	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult) {
 		if (!hasTileEntity(state))
 			return ActionResultType.PASS;
+
 		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof HeaterTileEntity && ((HeaterTileEntity) te).tryUpdateFuel(player.getHeldItem(hand), player)) {
-			if (!player.isCreative())
-				player.getHeldItem(hand)
-					.shrink(1);
-			return ActionResultType.SUCCESS;
-		}
-		return ActionResultType.PASS;
+		if (!(te instanceof HeaterTileEntity))
+			return ActionResultType.PASS;
+
+		if (!((HeaterTileEntity) te).tryUpdateFuel(player.getHeldItem(hand), player))
+			return ActionResultType.PASS;
+
+		if (!player.isCreative())
+			player.getHeldItem(hand).shrink(1);
+
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		ItemStack item = context.getItem();
-		BlockState state = super.getStateForPlacement(context);
-		return (state != null ? state : getDefaultState()).with(BLAZE_LEVEL,
-				(item.hasTag() && item.getTag() != null && item.getTag()
-				.contains("has_blaze") && item.getTag()
-					.getBoolean("has_blaze")) ? 1 : 0);
+		if (!context.getItem().hasTag())
+			return getDefaultState();
+
+		CompoundNBT tag = context.getItem().getTag();
+		if (!tag.contains("has_blaze"))
+			return getDefaultState();
+
+		if (tag.getBoolean("has_blaze"))
+			return getDefaultState().with(BLAZE_LEVEL, HeatLevel.SMOULDERING);
+
+		return getDefaultState();
 	}
 
 	@Override
@@ -91,16 +102,43 @@ public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 	}
 
 	@Override
-	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-		return MathHelper.clamp(state.get(BLAZE_LEVEL) * 4 - 1, 0, 15);
+	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_, ISelectionContext p_220071_4_) {
+		if (p_220071_4_ == ISelectionContext.dummy())
+			return AllShapes.HEATER_BLOCK_SPECIAL_COLLISION_SHAPE;
+
+		return super.getShape(p_220071_1_, p_220071_2_, p_220071_3_, p_220071_4_);
 	}
 
-	static void setBlazeLevel(@Nullable World world, BlockPos pos, int blazeLevel) {
+	@Override
+	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+		return MathHelper.clamp(state.get(BLAZE_LEVEL).ordinal() * 4 - 1, 0, 15);
+	}
+
+	static void setBlazeLevel(@Nullable World world, BlockPos pos, HeatLevel blazeLevel) {
 		if (world != null)
 			world.setBlockState(pos, world.getBlockState(pos).with(BLAZE_LEVEL, blazeLevel));
 	}
 
-	public static int getHeaterLevel(BlockState blockState) {
-		return blockState.has(HeaterBlock.BLAZE_LEVEL) ? blockState.get(HeaterBlock.BLAZE_LEVEL) : 0;
+	public static HeatLevel getHeaterLevel(BlockState blockState) {
+		return blockState.has(HeaterBlock.BLAZE_LEVEL) ? blockState.get(HeaterBlock.BLAZE_LEVEL) : HeatLevel.NONE;
+	}
+
+	public enum HeatLevel implements IStringSerializable {
+		NONE,
+		SMOULDERING,
+		FADING,
+		KINDLED,
+		SEETHING,
+		//if you think you have better names let me know :)
+		;
+
+		@Override
+		public String getName() {
+			return Lang.asId(name());
+		}
+
+		public boolean min(HeatLevel heatLevel) {
+			return this.ordinal() >= heatLevel.ordinal();
+		}
 	}
 }

@@ -16,13 +16,13 @@ import java.util.HashMap;
 
 public class HeaterRenderer extends SafeTileEntityRenderer<HeaterTileEntity> {
 	private static final Minecraft INSTANCE = Minecraft.getInstance();
-	private static final HashMap<Integer, AllBlockPartials> blazeModelMap = new HashMap<>();
+	private static final HashMap<HeaterBlock.HeatLevel, AllBlockPartials> blazeModelMap = new HashMap<>();
 
 	public HeaterRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
-		blazeModelMap.put(2, AllBlockPartials.BLAZE_HEATER_BLAZE_TWO);
-		blazeModelMap.put(3, AllBlockPartials.BLAZE_HEATER_BLAZE_THREE);
-		blazeModelMap.put(4, AllBlockPartials.BLAZE_HEATER_BLAZE_FOUR);
+		blazeModelMap.put(HeaterBlock.HeatLevel.FADING, AllBlockPartials.BLAZE_HEATER_BLAZE_TWO);
+		blazeModelMap.put(HeaterBlock.HeatLevel.KINDLED, AllBlockPartials.BLAZE_HEATER_BLAZE_THREE);
+		blazeModelMap.put(HeaterBlock.HeatLevel.SEETHING, AllBlockPartials.BLAZE_HEATER_BLAZE_FOUR);
 	}
 
 	@Override

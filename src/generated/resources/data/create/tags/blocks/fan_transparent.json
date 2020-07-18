@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "create:blaze_heater"
+    "create:blaze_heater",
+    "#minecraft:fences",
+    "minecraft:iron_bars"
   ]
 }
