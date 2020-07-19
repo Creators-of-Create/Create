@@ -33,6 +33,8 @@ public class ContinuousOBBCollider extends OBBCollider {
 		Vec3d uB2 = new Vec3d(m.m02, m.m12, m.m22);
 
 		checkCount = 0;
+		mf.stepSeparationAxis = uB1;
+		mf.stepSeparation = Double.MAX_VALUE;
 
 		if (
 		// Separate along A's local axes (global XYZ)
@@ -60,29 +62,62 @@ public class ContinuousOBBCollider extends OBBCollider {
 			return true;
 
 		double sTL = signum(TL);
-		double value = sTL * abs(diff);
+		double seperation = sTL * abs(diff);
 
 		double entryTime = 0;
 		double exitTime = Double.MAX_VALUE;
 		if (!discreteCollision) {
 			mf.isDiscreteCollision = false;
 
-			if (abs(value) > abs(projectedMotion))
+			if (abs(seperation) > abs(projectedMotion))
 				return true;
 
-			entryTime = abs(value) / abs(projectedMotion);
+			entryTime = abs(seperation) / abs(projectedMotion);
 			exitTime = (diff + abs(rA) + abs(rB)) / abs(projectedMotion);
 			mf.latestCollisionEntryTime = Math.max(entryTime, mf.latestCollisionEntryTime);
 			mf.earliestCollisionExitTime = Math.min(exitTime, mf.earliestCollisionExitTime);
 		}
 
+		Vec3d normalizedAxis = axis.normalize();
+
 		boolean isBestSeperation = distance != 0 && -(diff) <= abs(mf.separation);
 //		boolean isBestSeperation = discreteCollision && checkCount == 5; // Debug specific separations
 
+		double dot = mf.stepSeparationAxis.dotProduct(axis);
+		if (dot != 0 && discreteCollision) {
+			Vec3d cross = axis.crossProduct(mf.stepSeparationAxis);
+			double dotSeparation = signum(dot) * TL - (rA + rB);
+			double stepSeparation = -dotSeparation;
+			Vec3d stepSeparationVec = axis;
+
+			if (!cross.equals(Vec3d.ZERO)) {
+				Vec3d sepVec = normalizedAxis.scale(dotSeparation);
+				Vec3d axisPlane = axis.crossProduct(cross);
+				Vec3d stepPlane = mf.stepSeparationAxis.crossProduct(cross);
+				stepSeparationVec =
+					sepVec.subtract(axisPlane.scale(sepVec.dotProduct(stepPlane) / axisPlane.dotProduct(stepPlane)));
+				stepSeparation = stepSeparationVec.length();
+
+
+				if (abs(mf.stepSeparation) > abs(stepSeparation) && stepSeparation != 0) {
+//					CollisionDebugger.showDebugLine(Vec3d.ZERO, sepVec, 0x111155, "stepsep", -16);
+					mf.stepSeparation = stepSeparation;
+				}
+
+			} else {
+				if (abs(mf.stepSeparation) > stepSeparation) {
+					mf.stepSeparation = stepSeparation;
+//					CollisionDebugger.showDebugLine(Vec3d.ZERO, stepSeparationVec, 0xff9999, "axis", -16);
+				}
+			}
+
+//			if (abs(mf.separation) < abs(stepSeparation) && stepSeparation != 0)
+		}
+
 		if (isBestSeperation) {
 
-			mf.axis = axis.normalize();
-			mf.separation = value;
+			mf.axis = normalizedAxis;
+			mf.separation = seperation;
 
 			// Visualize values
 //			if (CollisionDebugger.AABB != null) {
@@ -113,6 +148,9 @@ public class ContinuousOBBCollider extends OBBCollider {
 		double earliestCollisionExitTime = Double.MAX_VALUE;
 		boolean isDiscreteCollision = true;
 
+		Vec3d stepSeparationAxis;
+		double stepSeparation;
+
 		public double getTimeOfImpact() {
 			if (latestCollisionEntryTime == UNDEFINED)
 				return UNDEFINED;
@@ -131,14 +169,21 @@ public class ContinuousOBBCollider extends OBBCollider {
 				.scale(getTimeOfImpact() * length);
 		}
 
-		@Override
-		public Vec3d asSeparationVec() {
-			if (isDiscreteCollision)
+		public Vec3d asSeparationVec(double obbStepHeight) {
+			if (isDiscreteCollision) {
+				if (stepSeparation <= obbStepHeight) 
+					return createSeparationVec(stepSeparation, stepSeparationAxis);
 				return super.asSeparationVec();
+			}
 			double t = getTimeOfImpact();
 			if (t == UNDEFINED)
 				return null;
 			return Vec3d.ZERO;
+		}
+		
+		@Override
+		public Vec3d asSeparationVec() {
+			return asSeparationVec(0);
 		}
 
 	}

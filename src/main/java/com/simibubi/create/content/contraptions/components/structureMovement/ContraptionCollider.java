@@ -222,7 +222,7 @@ public class ContraptionCollider {
 //					params.colored(0x4499ff);
 					continue;
 				}
-				Vec3d separation = intersect.asSeparationVec();
+				Vec3d separation = intersect.asSeparationVec(entity.stepHeight);
 				if (separation != null && !separation.equals(Vec3d.ZERO)) {
 					collisionResponse.setValue(currentResponse.add(separation));
 //					Debug.debugChat("Collision " + currentResponse.add(separation)

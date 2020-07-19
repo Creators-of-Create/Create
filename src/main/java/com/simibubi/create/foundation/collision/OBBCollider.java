@@ -95,6 +95,11 @@ public class OBBCollider {
 
 		public Vec3d asSeparationVec() {
 			double sep = separation;
+			Vec3d axis = this.axis;
+			return createSeparationVec(sep, axis);
+		}
+
+		protected Vec3d createSeparationVec(double sep, Vec3d axis) {
 			return axis.normalize()
 				.scale(signum(sep) * (abs(sep) + 1E-4));
 		}

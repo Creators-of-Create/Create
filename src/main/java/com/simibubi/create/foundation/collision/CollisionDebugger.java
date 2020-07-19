@@ -6,6 +6,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
@@ -28,7 +29,9 @@ public class CollisionDebugger {
 
 	public static void onScroll(double delta) {
 		angle += delta;
+		angle = (int) angle;
 		OBB.setRotation(new Matrix3d().asZRotation(AngleHelper.rad(angle)));
+		Debug.debugMessage("Angle: " + angle);
 	}
 
 	public static void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
@@ -51,26 +54,26 @@ public class CollisionDebugger {
 		outline.render(ms, buffer);
 		ms.pop();
 
-		ms.push();
-		if (motion.length() != 0 && (seperation == null || seperation.getTimeOfImpact() != 1)) {
-			outline.getParams()
-				.colored(0x6544ff)
-				.lineWidth(1 / 32f);
-			MatrixStacker.of(ms)
-				.translate(seperation != null ? seperation.getAllowedMotion(motion) : motion)
-				.translate(OBB.center);
-			ms.peek()
-				.getModel()
-				.multiply(OBB.rotation.getAsMatrix4f());
-			MatrixStacker.of(ms)
-				.translateBack(OBB.center);
-			outline.render(ms, buffer);
-		}
-		ms.pop();
+//		ms.push();
+//		if (motion.length() != 0 && (seperation == null || seperation.getTimeOfImpact() != 1)) {
+//			outline.getParams()
+//				.colored(0x6544ff)
+//				.lineWidth(1 / 32f);
+//			MatrixStacker.of(ms)
+//				.translate(seperation != null ? seperation.getAllowedMotion(motion) : motion)
+//				.translate(OBB.center);
+//			ms.peek()
+//				.getModel()
+//				.multiply(OBB.rotation.getAsMatrix4f());
+//			MatrixStacker.of(ms)
+//				.translateBack(OBB.center);
+//			outline.render(ms, buffer);
+//		}
+//		ms.pop();
 
 		ms.push();
 		if (seperation != null) {
-			Vec3d asSeparationVec = seperation.asSeparationVec();
+			Vec3d asSeparationVec = seperation.asSeparationVec(.5f);
 			if (asSeparationVec != null) {
 				outline.getParams()
 					.colored(0x65ff44)
@@ -91,7 +94,7 @@ public class CollisionDebugger {
 
 	public static void tick() {
 		AABB = new AxisAlignedBB(BlockPos.ZERO.up(60)).offset(.5, 0, .5);
-		motion = new Vec3d(0, -2, -.5f);
+		motion = Vec3d.ZERO;
 		RayTraceResult mouse = Minecraft.getInstance().objectMouseOver;
 		if (mouse != null && mouse.getType() == Type.BLOCK) {
 			BlockRayTraceResult hit = (BlockRayTraceResult) mouse;
