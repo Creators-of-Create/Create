@@ -2,7 +2,12 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.content.contraptions.particle.*;
+import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
+import com.simibubi.create.content.contraptions.particle.CubeParticle;
+import com.simibubi.create.content.contraptions.particle.CubeParticleData;
+import com.simibubi.create.content.contraptions.particle.HeaterParticleData;
+import com.simibubi.create.content.contraptions.particle.ICustomParticle;
+import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
@@ -22,7 +27,7 @@ public enum AllParticleTypes {
 	ROTATION_INDICATOR(RotationIndicatorParticleData::new),
 	AIR_FLOW(AirFlowParticleData::new),
 	HEATER_PARTICLE(HeaterParticleData::new),
-	CUBE(CubeParticleData::dummy, CubeParticle.Factory::new)
+	CUBE(CubeParticleData::dummy, () -> CubeParticle.Factory::new)
 
 	;
 
@@ -33,7 +38,8 @@ public enum AllParticleTypes {
 		entry = new ParticleEntry<>(new ResourceLocation(Create.ID, asId), typeFactory);
 	}
 
-	<D extends IParticleData> AllParticleTypes(Supplier<? extends ICustomParticle<D>> typeFactory, Supplier<IParticleFactory<D>> particleMetaFactory) {
+	<D extends IParticleData> AllParticleTypes(Supplier<? extends ICustomParticle<D>> typeFactory,
+		Supplier<Supplier<IParticleFactory<D>>> particleMetaFactory) {
 		String asId = Lang.asId(this.name());
 		entry = new ParticleEntry<>(new ResourceLocation(Create.ID, asId), typeFactory, particleMetaFactory);
 	}
@@ -60,11 +66,12 @@ public enum AllParticleTypes {
 
 	private class ParticleEntry<D extends IParticleData> {
 		Supplier<? extends ICustomParticle<D>> typeFactory;
-		Supplier<IParticleFactory<D>> particleMetaFactory;
+		Supplier<Supplier<IParticleFactory<D>>> particleMetaFactory;
 		ParticleType<D> type;
 		ResourceLocation id;
 
-		public ParticleEntry(ResourceLocation id, Supplier<? extends ICustomParticle<D>> typeFactory, Supplier<IParticleFactory<D>> particleMetaFactory) {
+		public ParticleEntry(ResourceLocation id, Supplier<? extends ICustomParticle<D>> typeFactory,
+			Supplier<Supplier<IParticleFactory<D>>> particleMetaFactory) {
 			this.id = id;
 			this.typeFactory = typeFactory;
 			this.particleMetaFactory = particleMetaFactory;
@@ -96,9 +103,10 @@ public enum AllParticleTypes {
 		void registerFactory(ParticleManager particles) {
 			makeType();
 			if (particleMetaFactory == null)
-				particles.registerFactory(type, typeFactory.get().getFactory());
+				particles.registerFactory(type, typeFactory.get()
+					.getFactory());
 			else
-				particles.registerFactory(type, particleMetaFactory.get());
+				particles.registerFactory(type, particleMetaFactory.get().get());
 		}
 
 	}

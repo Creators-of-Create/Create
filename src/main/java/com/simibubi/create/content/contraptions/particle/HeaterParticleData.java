@@ -13,10 +13,13 @@ import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class HeaterParticleData implements IParticleData, ICustomParticle<HeaterParticleData> {
+
 	public static final IParticleData.IDeserializer<HeaterParticleData> DESERIALIZER =
 		new IParticleData.IDeserializer<HeaterParticleData>() {
 			@Override
@@ -57,6 +60,7 @@ public class HeaterParticleData implements IParticleData, ICustomParticle<Heater
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public IParticleMetaFactory<HeaterParticleData> getFactory() {
 		return HeaterParticle.Factory::new;
 	}

@@ -467,7 +467,7 @@ public class AllBlocks {
 		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::new))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.item(FluidTankItem::new)
-		.model(AssetLookup.customItemModel("_", "block_single_window"))
+		.model(AssetLookup.<FluidTankItem>customItemModel("_", "block_single_window"))
 		.build()
 		.register();
 

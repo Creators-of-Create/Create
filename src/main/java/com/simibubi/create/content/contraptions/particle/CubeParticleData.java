@@ -1,14 +1,17 @@
 package com.simibubi.create.content.contraptions.particle;
 
+import java.util.Locale;
+
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.AllParticleTypes;
+
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
-
-import java.util.Locale;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class CubeParticleData implements IParticleData, ICustomParticle<CubeParticleData> {
 
@@ -58,6 +61,7 @@ public class CubeParticleData implements IParticleData, ICustomParticle<CubePart
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ParticleManager.IParticleMetaFactory<CubeParticleData> getFactory() {
 		return null;
 	}
