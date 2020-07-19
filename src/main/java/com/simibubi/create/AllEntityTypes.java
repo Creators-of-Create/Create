@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
@@ -24,6 +25,8 @@ public class AllEntityTypes {
 			register("stationary_contraption", ContraptionEntity::new, EntityClassification.MISC, 20, 40, false, ContraptionEntity::build);
 	public static final RegistryEntry<EntityType<SuperGlueEntity>> SUPER_GLUE =
 			register("super_glue", SuperGlueEntity::new, EntityClassification.MISC, 10, Integer.MAX_VALUE, false, SuperGlueEntity::build);
+	public static final RegistryEntry<EntityType<SeatEntity>> SEAT =
+			register("seat", SeatEntity::new, EntityClassification.MISC, 0, Integer.MAX_VALUE, false, SeatEntity::build);
 
 	private static <T extends Entity> RegistryEntry<EntityType<T>> register(String name, IFactory<T> factory,
 			EntityClassification group, int range, int updateFrequency, boolean sendVelocity,
@@ -45,5 +48,6 @@ public class AllEntityTypes {
 		RenderingRegistry.registerEntityRenderingHandler(STATIONARY_CONTRAPTION.get(), ContraptionEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(CONTRAPTION.get(), ContraptionEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(SUPER_GLUE.get(), SuperGlueRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(SEAT.get(), SeatEntity.Render::new);
 	}
 }
