@@ -1,15 +1,15 @@
 {
-  "creeperclock": {
-    "sounds": [
-      "create:creeperclock"
-    ],
-    "subtitle": "create.subtitle.creeperclock"
-  },
   "pigclock": {
     "sounds": [
       "create:pigclock"
     ],
     "subtitle": "create.subtitle.pigclock"
+  },
+  "creeperclock": {
+    "sounds": [
+      "create:creeperclock"
+    ],
+    "subtitle": "create.subtitle.creeperclock"
   },
   "schematicannon_launch_block": {
     "sounds": [
@@ -91,5 +91,14 @@
       }
     ],
     "subtitle": "create.subtitle.block_funnel_eat"
+  },
+  "blaze_munch": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.generic.eat",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.blaze_munch"
   }
 }

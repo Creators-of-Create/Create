@@ -109,6 +109,7 @@ public class Create {
 		DataGenerator gen = event.getGenerator();
 		gen.addProvider(new AllAdvancements(gen));
 		gen.addProvider(new LangMerger(gen));
+		gen.addProvider(AllSoundEvents.BLAZE_MUNCH.generator(gen));
 	}
 
 }

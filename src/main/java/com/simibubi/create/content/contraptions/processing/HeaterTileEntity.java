@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -16,10 +17,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -213,10 +216,18 @@ public class HeaterTileEntity extends SmartTileEntity {
 		event.getThrowable().remove();
 
 		HeaterTileEntity heater = (HeaterTileEntity) tile;
-		if (heater.activeFuel != FuelType.SPECIAL)
+		if (heater.activeFuel != FuelType.SPECIAL) {
 			heater.activeFuel = FuelType.NORMAL;
 			heater.remainingBurnTime = MathHelper.clamp(heater.remainingBurnTime + 80, 0, maxHeatCapacity);
 			heater.markDirty();
+		}
+
+		World world = event.getThrowable().world;
+		if (world.isRemote)
+			return;
+
+		world.playSound(null, heater.getPos(), AllSoundEvents.BLAZE_MUNCH.get(), SoundCategory.BLOCKS, .5F, 1F);
+
 
 	}
 

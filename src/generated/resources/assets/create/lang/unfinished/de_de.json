@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 791",
+	"_": "Missing Localizations: 792",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -850,6 +850,7 @@
 	"create.subtitle.blockzapper_confirm": "UNLOCALIZED: Affirmative Ding",
 	"create.subtitle.blockzapper_deny": "UNLOCALIZED: Declining Boop",
 	"create.subtitle.block_funnel_eat": "UNLOCALIZED: Funnel CHOMPS",
+	"create.subtitle.blaze_munch": "UNLOCALIZED: Blaze munches happily",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",
