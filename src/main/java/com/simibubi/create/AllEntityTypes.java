@@ -26,7 +26,7 @@ public class AllEntityTypes {
 	public static final RegistryEntry<EntityType<SuperGlueEntity>> SUPER_GLUE =
 			register("super_glue", SuperGlueEntity::new, EntityClassification.MISC, 10, Integer.MAX_VALUE, false, SuperGlueEntity::build);
 	public static final RegistryEntry<EntityType<SeatEntity>> SEAT =
-			register("seat", SeatEntity::new, EntityClassification.MISC, 0, Integer.MAX_VALUE, false, SeatEntity::build);
+			register("seat", SeatEntity::new, EntityClassification.MISC, 5, Integer.MAX_VALUE, false, SeatEntity::build);
 
 	private static <T extends Entity> RegistryEntry<EntityType<T>> register(String name, IFactory<T> factory,
 			EntityClassification group, int range, int updateFrequency, boolean sendVelocity,

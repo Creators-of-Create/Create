@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllEntityTypes;
+
 import net.minecraft.client.renderer.culling.ClippingHelperImpl;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -8,18 +9,16 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class SeatEntity extends Entity {
-
-	public static final Map<BlockPos, SeatEntity> TAKEN = new HashMap<>();
+public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	public SeatEntity(EntityType<?> p_i48580_1_, World p_i48580_2_) {
 		super(p_i48580_1_, p_i48580_2_);
@@ -27,28 +26,39 @@ public class SeatEntity extends Entity {
 
 	public SeatEntity(World world, BlockPos pos) {
 		this(AllEntityTypes.SEAT.get(), world);
-		this.setPos(pos.getX() + 0.5, pos.getY() + 0.30, pos.getZ() + 0.5);
 		noClip = true;
-		TAKEN.put(pos, this);
-
 	}
 
 	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
 		@SuppressWarnings("unchecked")
 		EntityType.Builder<SeatEntity> entityBuilder = (EntityType.Builder<SeatEntity>) builder;
-		return entityBuilder.size(0, 0);
+		return entityBuilder.size(0.25f, 0.35f);
 	}
 
 	@Override
+	public AxisAlignedBB getBoundingBox() {
+		return super.getBoundingBox();
+	}
+	
+	@Override
+	public void setPos(double x, double y, double z) {
+		super.setPos(x, y, z);
+		AxisAlignedBB bb = getBoundingBox();
+		Vec3d diff = new Vec3d(x, y, z).subtract(bb.getCenter());
+		setBoundingBox(bb.offset(diff));
+	}
+
+	@Override
+	public void setMotion(Vec3d p_213317_1_) {}
+
+	@Override
 	public void tick() {
-		if (world.isRemote)
+		if (world.isRemote) 
 			return;
-
-		BlockPos blockPos = new BlockPos(getX(), getY(), getZ());
-		if (isBeingRidden() && world.getBlockState(blockPos).getBlock() instanceof SeatBlock)
+		boolean blockPresent = world.getBlockState(getPosition())
+			.getBlock() instanceof SeatBlock;
+		if (isBeingRidden() && blockPresent)
 			return;
-
-		TAKEN.remove(blockPos);
 		this.remove();
 	}
 
@@ -61,7 +71,7 @@ public class SeatEntity extends Entity {
 	protected void removePassenger(Entity entity) {
 		super.removePassenger(entity);
 		Vec3d pos = entity.getPositionVec();
-		entity.setPosition(pos.x, pos.y + 0.7, pos.z);
+		entity.setPosition(pos.x, pos.y + 0.85f, pos.z);
 	}
 
 	@Override
@@ -85,7 +95,8 @@ public class SeatEntity extends Entity {
 		}
 
 		@Override
-		public boolean shouldRender(SeatEntity p_225626_1_, ClippingHelperImpl p_225626_2_, double p_225626_3_, double p_225626_5_, double p_225626_7_) {
+		public boolean shouldRender(SeatEntity p_225626_1_, ClippingHelperImpl p_225626_2_, double p_225626_3_,
+			double p_225626_5_, double p_225626_7_) {
 			return false;
 		}
 
@@ -94,4 +105,10 @@ public class SeatEntity extends Entity {
 			return null;
 		}
 	}
+
+	@Override
+	public void writeSpawnData(PacketBuffer buffer) {}
+
+	@Override
+	public void readSpawnData(PacketBuffer additionalData) {}
 }

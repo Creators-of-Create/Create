@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.collision.ContinuousOBBCollider.Continuous
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.collision.OrientedBB;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -32,9 +33,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -51,10 +54,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -66,7 +71,7 @@ public class ContraptionCollider {
 		new DamageSource("create.contraption_suffocate").setDamageBypassesArmor();
 	public static boolean wasClientPlayerGrounded;
 	public static Cache<World, List<WeakReference<ContraptionEntity>>> activeContraptions = CacheBuilder.newBuilder()
-		.expireAfterAccess(40, SECONDS)
+		.expireAfterAccess(400, SECONDS)
 		.build();
 
 	@SubscribeEvent
@@ -102,6 +107,22 @@ public class ContraptionCollider {
 		runCollisions(world);
 	}
 
+	@SubscribeEvent
+	public static void entitiesWhoJustDismountedGetSentToTheRightLocation(LivingUpdateEvent event) {
+		LivingEntity entityLiving = event.getEntityLiving();
+		if (entityLiving == null)
+			return;
+		if (entityLiving.world.isRemote)
+			return;
+		CompoundNBT data = entityLiving.getPersistentData();
+		if (!data.contains("ContraptionDismountLocation"))
+			return;
+		Vec3d position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", NBT.TAG_DOUBLE));
+		if (entityLiving.getRidingEntity() == null) 
+			entityLiving.setPositionAndUpdate(position.x, position.y, position.z);
+		data.remove("ContraptionDismountLocation");
+	}
+
 	private static void runCollisions(World world) {
 		List<WeakReference<ContraptionEntity>> list = activeContraptions.getIfPresent(world);
 		if (list == null)
@@ -131,9 +152,9 @@ public class ContraptionCollider {
 			return;
 
 		Vec3d centerOfBlock = VecHelper.getCenterOf(BlockPos.ZERO);
-		double conRotX = contraptionRotation.z;
+		double conRotX = contraptionRotation.x;
 		double conRotY = contraptionRotation.y;
-		double conRotZ = contraptionRotation.x;
+		double conRotZ = contraptionRotation.z;
 		Vec3d conMotion = contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
 		Vec3d conAngularMotion = contraptionRotation.subtract(contraptionEntity.getPrevRotationVec());
 		Vec3d contraptionCentreOffset = contraptionEntity.stationary ? centerOfBlock : Vec3d.ZERO.add(0, 0.5, 0);
@@ -180,6 +201,7 @@ public class ContraptionCollider {
 			// Prepare entity bounds
 			OrientedBB obb = new OrientedBB(localBB);
 			obb.setRotation(rotation);
+			motion = motion.subtract(conMotion);
 			motion = rotation.transform(motion);
 
 //			Vec3d visualizerOrigin = new Vec3d(10, 64, 0);
@@ -198,40 +220,47 @@ public class ContraptionCollider {
 				.forEach(shape -> shape.toBoundingBoxList()
 					.forEach(bbs::add));
 
-			for (AxisAlignedBB bb : bbs) {
-				Vec3d currentResponse = collisionResponse.getValue();
-				obb.setCenter(obbCenter.add(currentResponse));
-				ContinuousSeparationManifold intersect = obb.intersect(bb, allowedMotion.getValue());
-//				OutlineParams params = CreateClient.outliner.showAABB(bb, bb.offset(visualizerOrigin))
-//					.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
-//				params.colored(0xffffff);
+			boolean doHorizontalPass = conRotX == 0 && conRotZ == 0;
+			for (boolean horizontalPass : Iterate.trueAndFalse) {
 
-				if (intersect == null)
-					continue;
-				if (surfaceCollision.isFalse())
-					surfaceCollision.setValue(intersect.isSurfaceCollision());
+				for (AxisAlignedBB bb : bbs) {
+					Vec3d currentResponse = collisionResponse.getValue();
+					obb.setCenter(obbCenter.add(currentResponse));
+					ContinuousSeparationManifold intersect = obb.intersect(bb, allowedMotion.getValue());
 
-				double timeOfImpact = intersect.getTimeOfImpact();
-				if (timeOfImpact > 0 && timeOfImpact < 1) {
-					futureCollision.setTrue();
-//					Vec3d prev = allowedMotion.getValue();
-					allowedMotion.setValue(intersect.getAllowedMotion(allowedMotion.getValue()));
-//					Debug.debugChat("Allowed Motion FROM " + prev.toString());
-//					Debug.debugChat("Allowed Motion TO " + allowedMotion.getValue()
-//						.toString());
-//					params.colored(0x4499ff);
-					continue;
+					if (intersect == null)
+						continue;
+					if ((!horizontalPass || !doHorizontalPass) && surfaceCollision.isFalse())
+						surfaceCollision.setValue(intersect.isSurfaceCollision());
+
+					double timeOfImpact = intersect.getTimeOfImpact();
+					if (timeOfImpact > 0 && timeOfImpact < 1) {
+						futureCollision.setTrue();
+						allowedMotion.setValue(intersect.getAllowedMotion(allowedMotion.getValue()));
+						continue;
+					}
+
+					Vec3d separation = intersect.asSeparationVec(entity.stepHeight);
+					if (separation != null && !separation.equals(Vec3d.ZERO))
+						collisionResponse.setValue(currentResponse.add(separation));
 				}
-				Vec3d separation = intersect.asSeparationVec(entity.stepHeight);
-				if (separation != null && !separation.equals(Vec3d.ZERO)) {
-					collisionResponse.setValue(currentResponse.add(separation));
-//					Debug.debugChat("Collision " + currentResponse.add(separation)
-//						.toString());
-//					params.colored(0xff9944);
-				}
+
+				if (!horizontalPass || !doHorizontalPass)
+					break;
+
+				boolean noVerticalMotionResponse = allowedMotion.getValue().y == motion.y;
+				boolean noVerticalCollision = collisionResponse.getValue().y == 0;
+				if (noVerticalCollision && noVerticalMotionResponse)
+					break;
+
+				// Re-run collisions with horizontal offset
+				collisionResponse.setValue(collisionResponse.getValue()
+					.mul(1, 0, 1));
+				allowedMotion.setValue(allowedMotion.getValue()
+					.mul(1, 0, 1)
+					.add(0, motion.y, 0));
+				continue;
 			}
-
-//			Debug.debugChat("----");
 
 			// Resolve collision
 			Vec3d entityMotion = entity.getMotion();
@@ -240,7 +269,8 @@ public class ContraptionCollider {
 			boolean hardCollision = !totalResponse.equals(Vec3d.ZERO);
 
 			rotation.transpose();
-			motionResponse = rotation.transform(motionResponse);
+			motionResponse = rotation.transform(motionResponse)
+				.add(conMotion);
 			totalResponse = rotation.transform(totalResponse);
 			rotation.transpose();
 
@@ -262,7 +292,7 @@ public class ContraptionCollider {
 					Vec3d contactPoint = entityPosition.subtract(contraptionCentreOffset)
 						.subtract(contraptionPosition);
 					contactPoint =
-						VecHelper.rotate(contactPoint, conAngularMotion.z, conAngularMotion.y, conAngularMotion.x);
+						VecHelper.rotate(contactPoint, conAngularMotion.x, conAngularMotion.y, conAngularMotion.z);
 					contactPoint = contactPoint.add(contraptionPosition)
 						.add(contraptionCentreOffset)
 						.add(conMotion);

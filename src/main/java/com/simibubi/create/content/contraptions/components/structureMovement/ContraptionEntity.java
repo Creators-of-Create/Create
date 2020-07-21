@@ -5,12 +5,15 @@ import static com.simibubi.create.foundation.utility.AngleHelper.getShortestAngl
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.AllEntityTypes;
+import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
@@ -45,6 +48,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ReuseableStream;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -70,7 +74,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected BlockPos controllerPos;
 	protected Vec3d motionBeforeStall;
 	protected boolean stationary;
-
+	protected boolean initialized;
 	final List<Entity> collidingEntities = new ArrayList<>();
 
 	private static final Ingredient FUEL_ITEMS = Ingredient.fromItems(Items.COAL, Items.CHARCOAL);
@@ -98,11 +102,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public static ContraptionEntity createMounted(World world, Contraption contraption, float initialAngle) {
 		ContraptionEntity entity = new ContraptionEntity(AllEntityTypes.CONTRAPTION.get(), world);
-		entity.contraption = contraption;
+		entity.contraptionCreated(contraption);
 		entity.initialAngle = initialAngle;
 		entity.forceYaw(initialAngle);
-		if (contraption != null)
-			contraption.gatherStoredItems();
 		return entity;
 	}
 
@@ -116,10 +118,23 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public static ContraptionEntity createStationary(World world, Contraption contraption) {
 		ContraptionEntity entity = new ContraptionEntity(AllEntityTypes.STATIONARY_CONTRAPTION.get(), world);
-		entity.contraption = contraption;
-		if (contraption != null)
-			contraption.gatherStoredItems();
+		entity.contraptionCreated(contraption);
 		return entity;
+	}
+
+	protected void contraptionCreated(Contraption contraption) {
+		this.contraption = contraption;
+		if (contraption == null)
+			return;
+		if (world.isRemote)
+			return;
+		contraption.gatherStoredItems();
+	}
+
+	protected void contraptionInitialize() {
+		if (!world.isRemote)
+			contraption.mountPassengers(this);
+		initialized = true;
 	}
 
 	public <T extends TileEntity & IControlContraption> ContraptionEntity controlledBy(T controller) {
@@ -143,11 +158,118 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	@Override
+	protected void addPassenger(Entity passenger) {
+		super.addPassenger(passenger);
+	}
+
+	public void addSittingPassenger(Entity passenger, int seatIndex) {
+		passenger.startRiding(this, true);
+		if (world.isRemote)
+			return;
+		contraption.seatMapping.put(passenger.getUniqueID(), seatIndex);
+		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+			new ContraptionSeatMappingPacket(getEntityId(), contraption.seatMapping));
+	}
+
+	@Override
+	protected void removePassenger(Entity passenger) {
+		Vec3d transformedVector = getPassengerPosition(passenger);
+		super.removePassenger(passenger);
+		if (world.isRemote)
+			return;
+		if (transformedVector != null)
+			passenger.getPersistentData()
+				.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
+		contraption.seatMapping.remove(passenger.getUniqueID());
+		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+			new ContraptionSeatMappingPacket(getEntityId(), contraption.seatMapping));
+	}
+
+	@Override
+	public void updatePassengerPosition(Entity passenger, IMoveCallback callback) {
+		if (!isPassenger(passenger))
+			return;
+		Vec3d transformedVector = getPassengerPosition(passenger);
+		if (transformedVector == null)
+			return;
+		callback.accept(passenger, transformedVector.x, transformedVector.y, transformedVector.z);
+	}
+
+	protected Vec3d getPassengerPosition(Entity passenger) {
+		AxisAlignedBB bb = passenger.getBoundingBox();
+		double ySize = bb.getYSize();
+		BlockPos seat = contraption.getSeat(passenger.getUniqueID());
+		if (seat == null)
+			return null;
+		Vec3d transformedVector = toGlobalVector(new Vec3d(seat).add(.5, passenger.getYOffset() + ySize - .15f, .5))
+			.add(VecHelper.getCenterOf(BlockPos.ZERO))
+			.subtract(0.5, ySize, 0.5);
+		return transformedVector;
+	}
+
+	@Override
+	protected boolean canFitPassenger(Entity p_184219_1_) {
+		return getPassengers().size() < contraption.seats.size();
+	}
+
+	public boolean handlePlayerInteraction(PlayerEntity player, BlockPos localPos, Direction side,
+		Hand interactionHand) {
+		int indexOfSeat = contraption.seats.indexOf(localPos);
+		if (indexOfSeat == -1)
+			return false;
+
+		// Eject potential existing passenger
+		for (Entry<UUID, Integer> entry : contraption.seatMapping.entrySet()) {
+			if (entry.getValue() != indexOfSeat)
+				continue;
+			for (Entity entity : getPassengers()) {
+				if (!entry.getKey().equals(entity.getUniqueID()))
+					continue;
+				if (entity instanceof PlayerEntity)
+					return false;
+				if (!world.isRemote) {
+					Vec3d transformedVector = getPassengerPosition(entity);
+					entity.stopRiding();
+					if (transformedVector != null)
+						entity.setPositionAndUpdate(transformedVector.x, transformedVector.y, transformedVector.z);
+				}
+
+			}
+		}
+
+		if (world.isRemote)
+			return true;
+		addSittingPassenger(player, indexOfSeat);
+		return true;
+	}
+
+	public Vec3d toGlobalVector(Vec3d localVec) {
+		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
+		localVec = localVec.subtract(rotationOffset);
+		localVec = VecHelper.rotate(localVec, getRotationVec());
+		localVec = localVec.add(rotationOffset)
+			.add(getAnchorVec());
+		return localVec;
+	}
+
+	public Vec3d toLocalVector(Vec3d globalVec) {
+		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
+		globalVec = globalVec.subtract(getAnchorVec())
+			.subtract(rotationOffset);
+		globalVec = VecHelper.rotate(globalVec, getRotationVec().scale(-1));
+		globalVec = globalVec.add(rotationOffset);
+		return globalVec;
+	}
+
+	@Override
 	public void tick() {
 		if (contraption == null) {
 			remove();
 			return;
 		}
+
+		if (!initialized)
+			contraptionInitialize();
 
 		checkController();
 
@@ -171,10 +293,6 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		prevRoll = roll;
 
 		super.tick();
-	}
-
-	public void collisionTick() {
-//		ContraptionCollider.collideEntities(this);
 	}
 
 	public void tickAsPassenger(Entity e) {
@@ -266,10 +384,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public void tickActors(Vec3d movementVector) {
-		float anglePitch = getPitch(1);
-		float angleYaw = getYaw(1);
-		float angleRoll = getRoll(1);
-		Vec3d rotationVec = new Vec3d(angleRoll, angleYaw, anglePitch);
+		Vec3d rotationVec = getRotationVec();
+		Vec3d reversedRotationVec = rotationVec.scale(-1);
 		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
 		boolean stalledPreviously = contraption.stalled;
 
@@ -283,7 +399,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 			Vec3d actorPosition = new Vec3d(blockInfo.pos);
 			actorPosition = actorPosition.add(actor.getActiveAreaOffset(context));
-			actorPosition = VecHelper.rotate(actorPosition, angleRoll, angleYaw, anglePitch);
+			actorPosition = VecHelper.rotate(actorPosition, rotationVec);
 			actorPosition = actorPosition.add(rotationOffset)
 				.add(getAnchorVec());
 
@@ -295,7 +411,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 				if (previousPosition != null) {
 					context.motion = actorPosition.subtract(previousPosition);
 					Vec3d relativeMotion = context.motion;
-					relativeMotion = VecHelper.rotate(relativeMotion, -angleRoll, -angleYaw, -anglePitch);
+					relativeMotion = VecHelper.rotate(relativeMotion, reversedRotationVec);
 					context.relativeMotion = relativeMotion;
 					newPosVisited = !new BlockPos(previousPosition).equals(gridPosition)
 						|| context.relativeMotion.length() > 0 && context.firstMovement;
@@ -429,6 +545,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	@Override
 	protected void readAdditional(CompoundNBT compound) {
+		initialized = compound.getBoolean("Initialized");
 		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"));
 		initialAngle = compound.getFloat("InitialAngle");
 		forceYaw(compound.contains("ForcedYaw") ? compound.getFloat("ForcedYaw") : initialAngle);
@@ -479,6 +596,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 		compound.putFloat("InitialAngle", initialAngle);
 		compound.putBoolean("Stalled", isStalled());
+		compound.putBoolean("Initialized", initialized);
 	}
 
 	@Override
@@ -499,15 +617,15 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public void disassemble() {
-		if (!isAlive()) {
+		if (!isAlive())
 			return;
-		}
 		if (getContraption() != null) {
 			remove();
 			BlockPos offset = new BlockPos(getAnchorVec().add(.5, .5, .5));
-			Vec3d rotation = new Vec3d(getRoll(1), getYaw(1), getPitch(1));
-			getContraption().addBlocksToWorld(world, offset, rotation);
-			preventMovedEntitiesFromGettingStuck();
+			Vec3d rotation = getRotationVec();
+			setBoundingBox(new AxisAlignedBB(0, 300, 0, 0, 300, 0));
+			contraption.addBlocksToWorld(world, offset, rotation, getPassengers());
+//			preventMovedEntitiesFromGettingStuck();
 		}
 	}
 
@@ -633,11 +751,11 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public Vec3d getRotationVec() {
-		return new Vec3d(getPitch(1), getYaw(1), getRoll(1));
+		return new Vec3d(getRoll(1), getYaw(1), getPitch(1));
 	}
 
 	public Vec3d getPrevRotationVec() {
-		return new Vec3d(getPitch(0), getYaw(0), getRoll(0));
+		return new Vec3d(getRoll(0), getYaw(0), getPitch(0));
 	}
 
 	public Vec3d getPrevPositionVec() {
@@ -653,7 +771,11 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			return false;
 		if (e instanceof SuperGlueEntity)
 			return false;
+		if (e instanceof SeatEntity)
+			return false;
 		if (e instanceof IProjectile)
+			return false;
+		if (e.getRidingEntity() != null)
 			return false;
 
 		Entity riding = this.getRidingEntity();

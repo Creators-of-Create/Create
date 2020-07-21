@@ -208,8 +208,6 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 		if (world.isRemote)
 			clientAngleDiff /= 2;
-		if (movedContraption != null)
-			movedContraption.collisionTick();
 		if (running && Contraption.isFrozen())
 			disassemble();
 

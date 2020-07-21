@@ -20,7 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -91,13 +90,13 @@ public class MountedContraption extends Contraption {
 	}
 
 	@Override
-	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
-		super.removeBlocksFromWorld(world, offset, (pos, state) -> pos.equals(anchor));
+	protected boolean customBlockPlacement(IWorld world, BlockPos pos, BlockState state) {
+		return AllBlocks.MINECART_ANCHOR.has(state);
 	}
-
+	
 	@Override
-	public void addBlocksToWorld(World world, BlockPos offset, Vec3d rotation) {
-		super.addBlocksToWorld(world, offset, rotation, (pos, state) -> AllBlocks.MINECART_ANCHOR.has(state));
+	protected boolean customBlockRemoval(IWorld world, BlockPos pos, BlockState state) {
+		return pos.equals(anchor);
 	}
 
 }

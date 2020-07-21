@@ -53,7 +53,6 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		super.tick();
 
 		if (movedContraption != null) {
-			movedContraption.collisionTick();
 			if (!movedContraption.isAlive())
 				movedContraption = null;
 		}

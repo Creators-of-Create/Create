@@ -13,6 +13,10 @@ import net.minecraft.util.math.Vec3i;
 
 public class VecHelper {
 
+	public static Vec3d rotate(Vec3d vec, Vec3d rotationVec) {
+		return rotate(vec, rotationVec.x, rotationVec.y, rotationVec.z);
+	}
+	
 	public static Vec3d rotate(Vec3d vec, double xRot, double yRot, double zRot) {
 		return rotate(rotate(rotate(vec, xRot, Axis.X), yRot, Axis.Y), zRot, Axis.Z);
 	}

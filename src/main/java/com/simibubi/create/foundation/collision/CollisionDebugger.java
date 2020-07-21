@@ -6,7 +6,6 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
@@ -31,7 +30,6 @@ public class CollisionDebugger {
 		angle += delta;
 		angle = (int) angle;
 		OBB.setRotation(new Matrix3d().asZRotation(AngleHelper.rad(angle)));
-		Debug.debugMessage("Angle: " + angle);
 	}
 
 	public static void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {

@@ -6,6 +6,8 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.CancelPlayerFallPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionInteractionPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueEffectPacket;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
@@ -45,6 +47,7 @@ public enum AllPackets {
 	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new),
 	CANCEL_FALL(CancelPlayerFallPacket.class, CancelPlayerFallPacket::new),
 	EXTENDO_INTERACT(ExtendoGripInteractionPacket.class, ExtendoGripInteractionPacket::new),
+	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket::new),
 	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new),
 
 	// Server to Client
@@ -54,6 +57,7 @@ public enum AllPackets {
 	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
 	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new),
 	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket::new),
+	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new),
 	
 	;
 
