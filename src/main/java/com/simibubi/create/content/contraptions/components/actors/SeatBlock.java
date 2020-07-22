@@ -72,6 +72,12 @@ public class SeatBlock extends Block implements IPortableBlock {
 		ISelectionContext p_220053_4_) {
 		return AllShapes.SEAT;
 	}
+	
+	@Override
+	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
+		ISelectionContext p_220071_4_) {
+		return AllShapes.SEAT_COLLISION;
+	}
 
 	@Override
 	public ActionResultType onUse(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player,

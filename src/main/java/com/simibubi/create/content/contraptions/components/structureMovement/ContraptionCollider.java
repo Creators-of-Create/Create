@@ -23,6 +23,7 @@ import com.simibubi.create.content.contraptions.components.actors.BlockBreakingM
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.collision.OrientedBB;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -143,6 +144,8 @@ public class ContraptionCollider {
 		AxisAlignedBB bounds = contraptionEntity.getBoundingBox();
 		Vec3d contraptionPosition = contraptionEntity.getPositionVec();
 		Vec3d contraptionRotation = contraptionEntity.getRotationVec();
+		Vec3d contraptionMotion = contraptionEntity.stationary ? Vec3d.ZERO
+			: contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
 		contraptionEntity.collidingEntities.clear();
 
 		if (contraption == null)
@@ -154,14 +157,14 @@ public class ContraptionCollider {
 		double conRotX = contraptionRotation.x;
 		double conRotY = contraptionRotation.y;
 		double conRotZ = contraptionRotation.z;
-		Vec3d conMotion = contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
 		Vec3d contraptionCentreOffset = contraptionEntity.stationary ? centerOfBlock : Vec3d.ZERO.add(0, 0.5, 0);
 		boolean axisAlignedCollision = contraptionRotation.equals(Vec3d.ZERO);
 		Matrix3d rotation = null;
 
 		for (Entity entity : world.getEntitiesWithinAABB((EntityType<?>) null, bounds.grow(2)
 			.expand(0, 32, 0), contraptionEntity::canCollideWith)) {
-			boolean serverPlayer = entity instanceof PlayerEntity && !world.isRemote;
+			boolean player = entity instanceof PlayerEntity;
+			boolean serverPlayer = player && !world.isRemote;
 
 			// Init matrix
 			if (rotation == null) {
@@ -199,8 +202,8 @@ public class ContraptionCollider {
 			// Prepare entity bounds
 			OrientedBB obb = new OrientedBB(localBB);
 			obb.setRotation(rotation);
-			motion = motion.subtract(conMotion);
 			motion = rotation.transform(motion);
+			motion = motion.subtract(contraptionMotion);
 
 //			Vec3d visualizerOrigin = new Vec3d(10, 64, 0);
 //			CollisionDebugger.OBB = obb.copy();
@@ -268,7 +271,7 @@ public class ContraptionCollider {
 
 			rotation.transpose();
 			motionResponse = rotation.transform(motionResponse)
-				.add(conMotion);
+				.add(contraptionMotion);
 			totalResponse = rotation.transform(totalResponse);
 			rotation.transpose();
 
@@ -282,10 +285,10 @@ public class ContraptionCollider {
 
 			Vec3d contactPointMotion = Vec3d.ZERO;
 			if (surfaceCollision.isTrue()) {
-//				entity.handleFallDamage(entity.fallDistance, 1); tunnelling issue
 				entity.fallDistance = 0;
 				entity.onGround = true;
-				if (!serverPlayer)
+				contraptionEntity.collidingEntities.add(entity);
+				if (!serverPlayer) 
 					contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
 			}
 
@@ -321,6 +324,9 @@ public class ContraptionCollider {
 			entity.setPosition(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
 				entityPosition.z + allowedMovement.z);
 			entity.setMotion(entityMotion);
+			
+			if (!serverPlayer && player)
+				AllPackets.channel.sendToServer(new ClientMotionPacket(entityMotion, true));
 		}
 
 	}

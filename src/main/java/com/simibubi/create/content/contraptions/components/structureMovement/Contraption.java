@@ -89,6 +89,7 @@ public abstract class Contraption {
 	public CombinedInvWrapper inventory;
 	public List<TileEntity> customRenderTEs;
 	public Set<Pair<BlockPos, Direction>> superglue;
+	public ContraptionEntity entity;
 
 	public AxisAlignedBB bounds;
 	public boolean stalled;
@@ -203,13 +204,14 @@ public abstract class Contraption {
 	}
 
 	public void mountPassengers(ContraptionEntity contraptionEntity) {
+		this.entity = contraptionEntity;
 		if (contraptionEntity.world.isRemote)
 			return;
-		for (BlockPos seatPos : seats) {
+		for (BlockPos seatPos : getSeats()) {
 			Entity passenger = initialPassengers.get(seatPos);
 			if (passenger == null)
 				continue;
-			int seatIndex = seats.indexOf(seatPos);
+			int seatIndex = getSeats().indexOf(seatPos);
 			if (seatIndex == -1)
 				continue;
 			contraptionEntity.addSittingPassenger(passenger, seatIndex);
@@ -252,7 +254,7 @@ public abstract class Contraption {
 		// Seats transfer their passenger to the contraption
 		if (state.getBlock() instanceof SeatBlock) {
 			BlockPos local = toLocalPos(pos);
-			seats.add(local);
+			getSeats().add(local);
 			List<SeatEntity> seatsEntities = world.getEntitiesWithinAABB(SeatEntity.class, new AxisAlignedBB(pos));
 			if (!seatsEntities.isEmpty()) {
 				SeatEntity seat = seatsEntities.get(0);
@@ -516,11 +518,12 @@ public abstract class Contraption {
 		if (nbt.contains("BoundsFront"))
 			bounds = NBTHelper.readAABB(nbt.getList("BoundsFront", 5));
 
-		seats.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Seats", NBT.TAG_COMPOUND), c -> seats.add(NBTUtil.readBlockPos(c)));
-		seatMapping.clear();
+		getSeats().clear();
+		NBTHelper.iterateCompoundList(nbt.getList("Seats", NBT.TAG_COMPOUND),
+			c -> getSeats().add(NBTUtil.readBlockPos(c)));
+		getSeatMapping().clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Passengers", NBT.TAG_COMPOUND),
-			c -> seatMapping.put(NBTUtil.readUniqueId(c.getCompound("Id")), c.getInt("Seat")));
+			c -> getSeatMapping().put(NBTUtil.readUniqueId(c.getCompound("Id")), c.getInt("Seat")));
 
 		stalled = nbt.getBoolean("Stalled");
 		anchor = NBTUtil.readBlockPos(nbt.getCompound("Anchor"));
@@ -568,8 +571,8 @@ public abstract class Contraption {
 			storageNBT.add(c);
 		}
 
-		nbt.put("Seats", NBTHelper.writeCompoundList(seats, NBTUtil::writeBlockPos));
-		nbt.put("Passengers", NBTHelper.writeCompoundList(seatMapping.entrySet(), e -> {
+		nbt.put("Seats", NBTHelper.writeCompoundList(getSeats(), NBTUtil::writeBlockPos));
+		nbt.put("Passengers", NBTHelper.writeCompoundList(getSeatMapping().entrySet(), e -> {
 			CompoundNBT tag = new CompoundNBT();
 			tag.put("Id", NBTUtil.writeUniqueId(e.getKey()));
 			tag.putInt("Seat", e.getValue());
@@ -635,10 +638,8 @@ public abstract class Contraption {
 		}
 	}
 
-	public void addBlocksToWorld(World world, BlockPos offset, Vec3d rotation, List<Entity> seatedEntities) {
+	public void addBlocksToWorld(World world, StructureTransform transform) {
 		stop(world);
-		StructureTransform transform = new StructureTransform(offset, rotation);
-
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (BlockInfo block : blocks.values()) {
 				if (nonBrittles == BlockMovementTraits.isBrittle(block.state))
@@ -718,12 +719,14 @@ public abstract class Contraption {
 					world.addEntity(entity);
 			}
 		}
+	}
 
+	public void addPassengersToWorld(World world, StructureTransform transform, List<Entity> seatedEntities) {
 		for (Entity seatedEntity : seatedEntities) {
-			if (seatMapping.isEmpty())
+			if (getSeatMapping().isEmpty())
 				continue;
-			Integer seatIndex = seatMapping.get(seatedEntity.getUniqueID());
-			BlockPos seatPos = seats.get(seatIndex);
+			Integer seatIndex = getSeatMapping().get(seatedEntity.getUniqueID());
+			BlockPos seatPos = getSeats().get(seatIndex);
 			seatPos = transform.apply(seatPos);
 			if (!(world.getBlockState(seatPos)
 				.getBlock() instanceof SeatBlock))
@@ -732,7 +735,6 @@ public abstract class Contraption {
 				continue;
 			SeatBlock.sitDown(world, seatPos, seatedEntity);
 		}
-
 	}
 
 	public void initActors(World world) {
@@ -796,14 +798,22 @@ public abstract class Contraption {
 	}
 
 	public BlockPos getSeat(UUID entityId) {
-		if (!seatMapping.containsKey(entityId))
+		if (!getSeatMapping().containsKey(entityId))
 			return null;
-		int seatIndex = seatMapping.get(entityId);
-		if (seatIndex >= seats.size())
+		int seatIndex = getSeatMapping().get(entityId);
+		if (seatIndex >= getSeats().size())
 			return null;
-		return seats.get(seatIndex);
+		return getSeats().get(seatIndex);
 	}
 
 	protected abstract AllContraptionTypes getType();
+
+	public Map<UUID, Integer> getSeatMapping() {
+		return seatMapping;
+	}
+
+	public List<BlockPos> getSeats() {
+		return seats;
+	}
 
 }

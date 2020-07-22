@@ -5,6 +5,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.structureMovement.ClientMotionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionInteractionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
@@ -46,6 +47,7 @@ public enum AllPackets {
 	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new),
 	EXTENDO_INTERACT(ExtendoGripInteractionPacket.class, ExtendoGripInteractionPacket::new),
 	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket::new),
+	CLIENT_MOTION(ClientMotionPacket.class, ClientMotionPacket::new),
 	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new),
 
 	// Server to Client
