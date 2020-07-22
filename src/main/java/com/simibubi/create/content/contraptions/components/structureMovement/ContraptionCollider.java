@@ -61,7 +61,6 @@ import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
@@ -118,7 +117,7 @@ public class ContraptionCollider {
 		if (!data.contains("ContraptionDismountLocation"))
 			return;
 		Vec3d position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", NBT.TAG_DOUBLE));
-		if (entityLiving.getRidingEntity() == null) 
+		if (entityLiving.getRidingEntity() == null)
 			entityLiving.setPositionAndUpdate(position.x, position.y, position.z);
 		data.remove("ContraptionDismountLocation");
 	}
@@ -156,7 +155,6 @@ public class ContraptionCollider {
 		double conRotY = contraptionRotation.y;
 		double conRotZ = contraptionRotation.z;
 		Vec3d conMotion = contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
-		Vec3d conAngularMotion = contraptionRotation.subtract(contraptionEntity.getPrevRotationVec());
 		Vec3d contraptionCentreOffset = contraptionEntity.stationary ? centerOfBlock : Vec3d.ZERO.add(0, 0.5, 0);
 		boolean axisAlignedCollision = contraptionRotation.equals(Vec3d.ZERO);
 		Matrix3d rotation = null;
@@ -287,19 +285,8 @@ public class ContraptionCollider {
 //				entity.handleFallDamage(entity.fallDistance, 1); tunnelling issue
 				entity.fallDistance = 0;
 				entity.onGround = true;
-				if (!serverPlayer) {
-
-					Vec3d contactPoint = entityPosition.subtract(contraptionCentreOffset)
-						.subtract(contraptionPosition);
-					contactPoint =
-						VecHelper.rotate(contactPoint, conAngularMotion.x, conAngularMotion.y, conAngularMotion.z);
-					contactPoint = contactPoint.add(contraptionPosition)
-						.add(contraptionCentreOffset)
-						.add(conMotion);
-					contactPointMotion = contactPoint.subtract(entityPosition);
-
-					DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> checkForClientPlayerCollision(entity));
-				}
+				if (!serverPlayer)
+					contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
 			}
 
 			if (hardCollision) {
@@ -377,13 +364,6 @@ public class ContraptionCollider {
 		}
 
 		return vec3d;
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void checkForClientPlayerCollision(Entity entity) {
-		if (entity != Minecraft.getInstance().player)
-			return;
-		wasClientPlayerGrounded = true;
 	}
 
 	public static void pushEntityOutOfShape(Entity entity, VoxelShape voxelShape, Vec3d positionOffset,

@@ -5,7 +5,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.CancelPlayerFallPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionInteractionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
@@ -45,7 +44,6 @@ public enum AllPackets {
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new),
 	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new),
 	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new),
-	CANCEL_FALL(CancelPlayerFallPacket.class, CancelPlayerFallPacket::new),
 	EXTENDO_INTERACT(ExtendoGripInteractionPacket.class, ExtendoGripInteractionPacket::new),
 	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket::new),
 	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new),

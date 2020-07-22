@@ -172,6 +172,11 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	@Override
+	public void remove() {
+		super.remove();
+	}
+
+	@Override
 	protected void removePassenger(Entity passenger) {
 		Vec3d transformedVector = getPassengerPosition(passenger);
 		super.removePassenger(passenger);
@@ -219,22 +224,25 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			return false;
 
 		// Eject potential existing passenger
+		Entity toDismount = null;
 		for (Entry<UUID, Integer> entry : contraption.seatMapping.entrySet()) {
 			if (entry.getValue() != indexOfSeat)
 				continue;
 			for (Entity entity : getPassengers()) {
-				if (!entry.getKey().equals(entity.getUniqueID()))
+				if (!entry.getKey()
+					.equals(entity.getUniqueID()))
 					continue;
 				if (entity instanceof PlayerEntity)
 					return false;
-				if (!world.isRemote) {
-					Vec3d transformedVector = getPassengerPosition(entity);
-					entity.stopRiding();
-					if (transformedVector != null)
-						entity.setPositionAndUpdate(transformedVector.x, transformedVector.y, transformedVector.z);
-				}
-
+				toDismount = entity;
 			}
+		}
+
+		if (toDismount != null && !world.isRemote) {
+			Vec3d transformedVector = getPassengerPosition(toDismount);
+			toDismount.stopRiding();
+			if (transformedVector != null)
+				toDismount.setPositionAndUpdate(transformedVector.x, transformedVector.y, transformedVector.z);
 		}
 
 		if (world.isRemote)
@@ -623,10 +631,30 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			remove();
 			BlockPos offset = new BlockPos(getAnchorVec().add(.5, .5, .5));
 			Vec3d rotation = getRotationVec();
-			setBoundingBox(new AxisAlignedBB(0, 300, 0, 0, 300, 0));
 			contraption.addBlocksToWorld(world, offset, rotation, getPassengers());
+			removePassengers();
 //			preventMovedEntitiesFromGettingStuck();
 		}
+	}
+
+	@Override
+	public void onKillCommand() {
+		removePassengers();
+		super.onKillCommand();
+	}
+
+	@Override
+	protected void outOfWorld() {
+		removePassengers();
+		super.outOfWorld();
+	}
+
+	@Override
+	public void onRemovedFromWorld() {
+		super.onRemovedFromWorld();
+		if (world != null && world.isRemote)
+			return;
+		getPassengers().forEach(Entity::remove);
 	}
 
 	@Override
@@ -682,6 +710,32 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 				continue;
 			e.setPosition(e.getX() + vec.x, e.getY() + vec.y, e.getZ() + vec.z);
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public CompoundNBT writeWithoutTypeId(CompoundNBT nbt) {
+		Vec3d vec = getPositionVec();
+		List<Entity> passengers = getPassengers();
+		List<Vec3d> positionVecs = new ArrayList<>(passengers.size());
+
+		for (Entity entity : passengers) {
+			Vec3d prevVec = entity.getPositionVec();
+			positionVecs.add(prevVec);
+
+			// setPos has world accessing side-effects when removed == false
+			entity.removed = true;
+
+			// Gather passengers into same chunk when saving
+			entity.setPos(vec.x, prevVec.y, vec.z);
+
+			// Super requires all passengers to not be removed in order to write them to the
+			// tag
+			entity.removed = false;
+		}
+
+		CompoundNBT tag = super.writeWithoutTypeId(nbt);
+		return tag;
 	}
 
 	public Contraption getContraption() {
@@ -760,6 +814,20 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public Vec3d getPrevPositionVec() {
 		return new Vec3d(prevPosX, prevPosY, prevPosZ);
+	}
+
+	public Vec3d getContactPointMotion(Vec3d globalContactPoint) {
+		Vec3d positionVec = getPositionVec();
+		Vec3d conMotion = positionVec.subtract(getPrevPositionVec());
+		Vec3d conAngularMotion = getRotationVec().subtract(getPrevRotationVec());
+		Vec3d contraptionCentreOffset = stationary ? VecHelper.getCenterOf(BlockPos.ZERO) : Vec3d.ZERO.add(0, 0.5, 0);
+		Vec3d contactPoint = globalContactPoint.subtract(contraptionCentreOffset)
+			.subtract(positionVec);
+		contactPoint = VecHelper.rotate(contactPoint, conAngularMotion.x, conAngularMotion.y, conAngularMotion.z);
+		contactPoint = contactPoint.add(positionVec)
+			.add(contraptionCentreOffset)
+			.add(conMotion);
+		return contactPoint.subtract(globalContactPoint);
 	}
 
 	public boolean canCollideWith(Entity e) {
