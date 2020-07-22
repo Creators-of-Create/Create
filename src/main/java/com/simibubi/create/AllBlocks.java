@@ -137,6 +137,7 @@ import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
@@ -212,7 +213,7 @@ public class AllBlocks {
 	public static final BlockEntry<EncasedShaftBlock> ENCASED_SHAFT =
 		REGISTRATE.block("encased_shaft", EncasedShaftBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate(BlockStateGen.axisBlockProvider(true))
 			.item()
@@ -221,7 +222,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<GearboxBlock> GEARBOX = REGISTRATE.block("gearbox", GearboxBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(Block.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::nonOpaque)
 		.transform(StressConfigDefaults.setNoImpact())
 		.blockstate(BlockStateGen.axisBlockProvider(true))
 		.item()
@@ -230,7 +231,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<ClutchBlock> CLUTCH = REGISTRATE.block("clutch", ClutchBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(Block.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::nonOpaque)
 		.transform(StressConfigDefaults.setNoImpact())
 		.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, AssetLookup.forPowered(c, p)))
 		.item()
@@ -239,7 +240,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<GearshiftBlock> GEARSHIFT = REGISTRATE.block("gearshift", GearshiftBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(Block.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::nonOpaque)
 		.transform(StressConfigDefaults.setNoImpact())
 		.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, AssetLookup.forPowered(c, p)))
 		.item()
@@ -249,7 +250,7 @@ public class AllBlocks {
 	public static final BlockEntry<EncasedBeltBlock> ENCASED_BELT =
 		REGISTRATE.block("encased_belt", EncasedBeltBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate((c, p) -> new EncasedBeltGenerator((state, suffix) -> p.models()
 				.getExistingFile(p.modLoc("block/" + c.getName() + "/" + suffix))).generate(c, p))
@@ -260,7 +261,7 @@ public class AllBlocks {
 	public static final BlockEntry<AdjustablePulleyBlock> ADJUSTABLE_PULLEY =
 		REGISTRATE.block("adjustable_pulley", AdjustablePulleyBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate((c, p) -> new EncasedBeltGenerator((state, suffix) -> {
 				String powered = state.get(AdjustablePulleyBlock.POWERED) ? "_powered" : "";
@@ -295,7 +296,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<WaterWheelBlock> WATER_WHEEL = REGISTRATE.block("water_wheel", WaterWheelBlock::new)
 		.initialProperties(SharedProperties::wooden)
-		.properties(Block.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::nonOpaque)
 		.blockstate(BlockStateGen.horizontalWheelProvider(false))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.transform(StressConfigDefaults.setCapacity(16.0))
@@ -359,7 +360,7 @@ public class AllBlocks {
 	public static final BlockEntry<CrushingWheelBlock> CRUSHING_WHEEL =
 		REGISTRATE.block("crushing_wheel", CrushingWheelBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate(BlockStateGen.axisBlockProvider(false))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.transform(StressConfigDefaults.setImpact(8.0))
@@ -379,7 +380,7 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalPressBlock> MECHANICAL_PRESS =
 		REGISTRATE.block("mechanical_press", MechanicalPressBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setImpact(8.0))
 			.item(BasinOperatorBlockItem::new)
@@ -389,7 +390,7 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalMixerBlock> MECHANICAL_MIXER =
 		REGISTRATE.block("mechanical_mixer", MechanicalMixerBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.transform(StressConfigDefaults.setImpact(4.0))
@@ -464,7 +465,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.properties(Block.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::nonOpaque)
 		.blockstate(new FluidTankGenerator()::generate)
 		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::new))
 		.addLayer(() -> RenderType::getCutoutMipped)
@@ -541,7 +542,7 @@ public class AllBlocks {
 	public static final BlockEntry<CartAssemblerBlock> CART_ASSEMBLER =
 		REGISTRATE.block("cart_assembler", CartAssemblerBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate(BlockStateGen.cartAssembler())
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(BlockTags.RAILS)
@@ -552,7 +553,7 @@ public class AllBlocks {
 	public static final BlockEntry<ReinforcedRailBlock> REINFORCED_RAIL =
 		REGISTRATE.block("reinforced_rail", ReinforcedRailBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate(BlockStateGen.reinforcedRail())
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(BlockTags.RAILS)
@@ -679,7 +680,7 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalCrafterBlock> MECHANICAL_CRAFTER =
 		REGISTRATE.block("mechanical_crafter", MechanicalCrafterBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setImpact(2.0))
 			.onRegister(CreateRegistrate.connectedTextures(new CrafterCTBehaviour()))
@@ -691,7 +692,7 @@ public class AllBlocks {
 	public static final BlockEntry<SequencedGearshiftBlock> SEQUENCED_GEARSHIFT =
 		REGISTRATE.block("sequenced_gearshift", SequencedGearshiftBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate(new SequencedGearshiftGenerator()::generate)
 			.item()
@@ -700,7 +701,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<FlywheelBlock> FLYWHEEL = REGISTRATE.block("flywheel", FlywheelBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.properties(Block.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::nonOpaque)
 		.transform(StressConfigDefaults.setNoImpact())
 		.blockstate(new FlywheelGenerator()::generate)
 		.item()
@@ -851,7 +852,7 @@ public class AllBlocks {
 	public static final BlockEntry<PackagerBlock> PACKAGER = REGISTRATE.block("packager", PackagerBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.transform(StressConfigDefaults.setImpact(4.0))
-		.properties(Block.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::nonOpaque)
 		.blockstate((c, p) -> p.getVariantBuilder(c.get())
 			.forAllStates(s -> ConfiguredModel.builder()
 				.modelFile(AssetLookup.partialBaseModel(c, p))

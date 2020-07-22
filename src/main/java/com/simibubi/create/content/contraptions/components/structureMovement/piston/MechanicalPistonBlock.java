@@ -25,7 +25,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -84,7 +84,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		if (((MechanicalPistonBlock) state.getBlock()).isSticky)
 			return ActionResultType.PASS;
 		if (worldIn.isRemote) {
-			Vec3d vec = hit.getHitVec();
+			Vector3d vec = hit.getHitVec();
 			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
 			return ActionResultType.SUCCESS;
 		}
@@ -114,7 +114,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		RETRACTED, MOVING, EXTENDED;
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 	}

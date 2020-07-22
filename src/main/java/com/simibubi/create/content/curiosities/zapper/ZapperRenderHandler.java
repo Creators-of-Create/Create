@@ -13,7 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.FirstPersonRenderer;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.world.ClientWorld;
@@ -24,7 +24,7 @@ import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,12 +44,12 @@ public class ZapperRenderHandler {
 
 	public static class LaserBeam {
 		float itensity;
-		Vec3d start;
-		Vec3d end;
+		Vector3d start;
+		Vector3d end;
 		boolean follow;
 		boolean mainHand;
 
-		public LaserBeam(Vec3d start, Vec3d end) {
+		public LaserBeam(Vector3d start, Vector3d end) {
 			this.start = start;
 			this.end = end;
 			itensity = 1;
@@ -62,7 +62,7 @@ public class ZapperRenderHandler {
 		}
 	}
 
-	public static Vec3d getExactBarrelPos(boolean mainHand) {
+	public static Vector3d getExactBarrelPos(boolean mainHand) {
 		float partialTicks = Minecraft.getInstance()
 			.getRenderPartialTicks();
 		ClientPlayerEntity player = Minecraft.getInstance().player;
@@ -70,8 +70,8 @@ public class ZapperRenderHandler {
 		float pitch = (float) ((player.getPitch(partialTicks)) / -180 * Math.PI);
 		boolean rightHand = mainHand == (player.getPrimaryHand() == HandSide.RIGHT);
 		float zOffset = ((float) Minecraft.getInstance().gameSettings.fov - 70) / -100;
-		Vec3d barrelPosNoTransform = new Vec3d(rightHand ? -.35f : .35f, -0.115f, .75f + zOffset);
-		Vec3d barrelPos = player.getEyePosition(partialTicks)
+		Vector3d barrelPosNoTransform = new Vector3d(rightHand ? -.35f : .35f, -0.115f, .75f + zOffset);
+		Vector3d barrelPos = player.getEyePosition(partialTicks)
 			.add(barrelPosNoTransform.rotatePitch(pitch)
 				.rotateYaw(yaw));
 		return barrelPos;

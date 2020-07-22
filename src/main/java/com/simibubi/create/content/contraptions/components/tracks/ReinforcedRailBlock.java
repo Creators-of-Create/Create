@@ -10,7 +10,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.NonNullList;
@@ -27,11 +27,11 @@ import javax.annotation.Nonnull;
 
 public class ReinforcedRailBlock extends AbstractRailBlock {
 
-    public static IProperty<RailShape> RAIL_SHAPE =
+    public static Property<RailShape> RAIL_SHAPE =
             EnumProperty.create("shape", RailShape.class, RailShape.EAST_WEST, RailShape.NORTH_SOUTH);
 
-    public static IProperty<Boolean> CONNECTS_N = BooleanProperty.create("connects_n");
-    public static IProperty<Boolean> CONNECTS_S = BooleanProperty.create("connects_s");
+    public static Property<Boolean> CONNECTS_N = BooleanProperty.create("connects_n");
+    public static Property<Boolean> CONNECTS_S = BooleanProperty.create("connects_s");
 
     public ReinforcedRailBlock(Properties properties) {
         super(true, properties);
@@ -44,7 +44,7 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
 
     @Nonnull
     @Override
-    public IProperty<RailShape> getShapeProperty() {
+    public Property<RailShape> getShapeProperty() {
         return RAIL_SHAPE;
     }
 

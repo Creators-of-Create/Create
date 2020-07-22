@@ -2,14 +2,14 @@ package com.simibubi.create.foundation.utility;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 
 public class MatrixStacker {
 
-	static Vec3d center = VecHelper.getCenterOf(BlockPos.ZERO);
+	static Vector3d center = VecHelper.getCenterOf(BlockPos.ZERO);
 	static MatrixStacker instance;
 
 	MatrixStack ms;
@@ -48,17 +48,17 @@ public class MatrixStacker {
 		return translateBack(center);
 	}
 
-	public MatrixStacker translate(Vec3i vec) {
+	public MatrixStacker translate(Vector3i vec) {
 		ms.translate(vec.getX(), vec.getY(), vec.getZ());
 		return this;
 	}
 
-	public MatrixStacker translate(Vec3d vec) {
+	public MatrixStacker translate(Vector3d vec) {
 		ms.translate(vec.x, vec.y, vec.z);
 		return this;
 	}
 
-	public MatrixStacker translateBack(Vec3d vec) {
+	public MatrixStacker translateBack(Vector3d vec) {
 		ms.translate(-vec.x, -vec.y, -vec.z);
 		return this;
 	}

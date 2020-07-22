@@ -30,7 +30,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -149,9 +149,9 @@ public abstract class ZapperItem extends Item {
 			stateToUse = NBTUtil.readBlockState(nbt.getCompound("BlockUsed"));
 
 		// Raytrace - Find the target
-		Vec3d start = player.getPositionVec()
+		Vector3d start = player.getPositionVec()
 			.add(0, player.getEyeHeight(), 0);
-		Vec3d range = player.getLookVec()
+		Vector3d range = player.getLookVec()
 			.scale(getZappingRange(item));
 		BlockRayTraceResult raytrace = world
 			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
@@ -167,9 +167,9 @@ public abstract class ZapperItem extends Item {
 		// Find exact position of gun barrel for VFX
 		float yaw = (float) ((player.rotationYaw) / -180 * Math.PI);
 		float pitch = (float) ((player.rotationPitch) / -180 * Math.PI);
-		Vec3d barrelPosNoTransform =
-			new Vec3d(mainHand == (player.getPrimaryHand() == HandSide.RIGHT) ? -.35f : .35f, -0.1f, 1);
-		Vec3d barrelPos = start.add(barrelPosNoTransform.rotatePitch(pitch)
+		Vector3d barrelPosNoTransform =
+			new Vector3d(mainHand == (player.getPrimaryHand() == HandSide.RIGHT) ? -.35f : .35f, -0.1f, 1);
+		Vector3d barrelPos = start.add(barrelPosNoTransform.rotatePitch(pitch)
 			.rotateYaw(yaw));
 
 		// Client side

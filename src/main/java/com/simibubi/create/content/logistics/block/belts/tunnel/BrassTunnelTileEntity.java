@@ -30,7 +30,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
@@ -185,8 +185,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 					float beltMovementSpeed = below.getDirectionAwareBeltMovementSpeed();
 					float movementSpeed = Math.max(Math.abs(beltMovementSpeed), 1 / 8f);
 					int additionalOffset = beltMovementSpeed > 0 ? 1 : 0;
-					Vec3d outPos = BeltHelper.getVectorForOffset(controllerTE, below.index + additionalOffset);
-					Vec3d outMotion = new Vec3d(side.getDirectionVec()).scale(movementSpeed)
+					Vector3d outPos = BeltHelper.getVectorForOffset(controllerTE, below.index + additionalOffset);
+					Vector3d outMotion = Vector3d.of(side.getDirectionVec()).scale(movementSpeed)
 						.add(0, 1 / 8f, 0);
 					outPos.add(outMotion.normalize());
 					ItemEntity entity = new ItemEntity(world, outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);

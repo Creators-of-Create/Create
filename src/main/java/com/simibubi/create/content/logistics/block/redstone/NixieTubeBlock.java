@@ -14,7 +14,7 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -46,7 +46,7 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockPos pos = context.getPos();
 		boolean ceiling = context.getFace() == Direction.DOWN;
-		Vec3d hitVec = context.getHitVec();
+		Vector3d hitVec = context.getHitVec();
 		if (hitVec != null)
 			ceiling = hitVec.y - pos.getY() > .5f;
 		return getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing()

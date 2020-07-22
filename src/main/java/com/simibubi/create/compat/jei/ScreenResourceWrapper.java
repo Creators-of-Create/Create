@@ -26,7 +26,7 @@ public class ScreenResourceWrapper implements IDrawable {
 	@Override
 	public void draw(int xOffset, int yOffset) {
 		resource.bind();
-		AbstractGui.blit(xOffset, yOffset, 0, resource.startX, resource.startY, resource.width, resource.height, 256,
+		AbstractGui.drawTexture(xOffset, yOffset, 0, resource.startX, resource.startY, resource.width, resource.height, 256,
 				256);
 	}
 

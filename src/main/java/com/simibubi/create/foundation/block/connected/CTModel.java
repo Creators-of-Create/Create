@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -50,15 +50,15 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 	}
 
 	@Override
-	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
+	public IModelData getModelData(IBlockDisplayReader world, BlockPos pos, BlockState state, IModelData tileData) {
 		return getCTDataMapBuilder(world, pos, state).build();
 	}
 
-	protected Builder getCTDataMapBuilder(ILightReader world, BlockPos pos, BlockState state) {
+	protected Builder getCTDataMapBuilder(IBlockDisplayReader world, BlockPos pos, BlockState state) {
 		return new ModelDataMap.Builder().withInitial(CT_PROPERTY, createCTData(world, pos, state));
 	}
 
-	protected CTData createCTData(ILightReader world, BlockPos pos, BlockState state) {
+	protected CTData createCTData(IBlockDisplayReader world, BlockPos pos, BlockState state) {
 		CTData data = new CTData();
 		for (Direction face : Direction.values()) {
 			if (!Block.shouldSideBeRendered(state, world, pos, face) && !behaviour.buildContextForOccludedDirections())

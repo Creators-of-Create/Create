@@ -15,7 +15,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -24,7 +24,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 @SuppressWarnings("deprecation")
@@ -48,11 +48,11 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		if (tileEntityIn.target != null) {
 
 			// Calculate Angle of Cannon
-			Vec3d diff = new Vec3d(tileEntityIn.target.subtract(pos));
+			Vector3d diff = Vector3d.of(tileEntityIn.target.subtract(pos));
 			if (tileEntityIn.previousTarget != null) {
-				diff = (new Vec3d(tileEntityIn.previousTarget)
-						.add(new Vec3d(tileEntityIn.target.subtract(tileEntityIn.previousTarget)).scale(partialTicks)))
-								.subtract(new Vec3d(pos));
+				diff = (Vector3d.of(tileEntityIn.previousTarget)
+						.add(Vector3d.of(tileEntityIn.target.subtract(tileEntityIn.previousTarget)).scale(partialTicks)))
+								.subtract(Vector3d.of(pos));
 			}
 
 			double diffX = diff.getX();
@@ -74,23 +74,23 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 					continue;
 
 				// Calculate position of flying block
-				Vec3d start = new Vec3d(tileEntityIn.getPos().add(.5f, 1, .5f));
-				Vec3d target = new Vec3d(launched.target).add(-.5, 0, 1);
-				Vec3d distance = target.subtract(start);
+				Vector3d start = Vector3d.of(tileEntityIn.getPos().add(.5f, 1, .5f));
+				Vector3d target = Vector3d.of(launched.target).add(-.5, 0, 1);
+				Vector3d distance = target.subtract(start);
 
 				double targetY = target.y - start.y;
 				double throwHeight = Math.sqrt(distance.lengthSquared()) * .6f + targetY;
-				Vec3d cannonOffset = distance.add(0, throwHeight, 0).normalize().scale(2);
+				Vector3d cannonOffset = distance.add(0, throwHeight, 0).normalize().scale(2);
 				start = start.add(cannonOffset);
 
 				float progress =
 					((float) launched.totalTicks - (launched.ticksRemaining + 1 - partialTicks)) / launched.totalTicks;
-				Vec3d blockLocationXZ = new Vec3d(.5, .5, .5).add(target.subtract(start).scale(progress).mul(1, 0, 1));
+				Vector3d blockLocationXZ = new Vector3d(.5, .5, .5).add(target.subtract(start).scale(progress).mul(1, 0, 1));
 
 				// Height is determined through a bezier curve
 				float t = progress;
 				double yOffset = 2 * (1 - t) * t * throwHeight + t * t * targetY;
-				Vec3d blockLocation = blockLocationXZ.add(0, yOffset + 1, 0).add(cannonOffset);
+				Vector3d blockLocation = blockLocationXZ.add(0, yOffset + 1, 0).add(cannonOffset);
 
 				// Offset to position
 				ms.push();

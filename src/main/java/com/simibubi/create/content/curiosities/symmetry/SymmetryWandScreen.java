@@ -17,11 +17,11 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.NbtPacket;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class SymmetryWandScreen extends AbstractSimiScreen {
@@ -43,7 +43,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 		currentElement = SymmetryWandItem.getMirror(wand);
 		if (currentElement instanceof EmptyMirror) {
-			currentElement = new PlaneMirror(Vec3d.ZERO);
+			currentElement = new PlaneMirror(Vector3d.ZERO);
 		}
 		this.hand = hand;
 		this.wand = wand;

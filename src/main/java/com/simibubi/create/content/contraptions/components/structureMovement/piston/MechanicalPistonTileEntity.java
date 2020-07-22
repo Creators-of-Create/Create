@@ -17,7 +17,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
@@ -138,16 +138,16 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	protected void visitNewPosition() {}
 
 	@Override
-	protected Vec3d toMotionVector(float speed) {
+	protected Vector3d toMotionVector(float speed) {
 		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);
-		return new Vec3d(pistonDirection.getDirectionVec()).scale(speed);
+		return Vector3d.of(pistonDirection.getDirectionVec()).scale(speed);
 	}
 
 	@Override
-	protected Vec3d toPosition(float offset) {
-		Vec3d position = new Vec3d(getBlockState().get(BlockStateProperties.FACING)
+	protected Vector3d toPosition(float offset) {
+		Vector3d position = Vector3d.of(getBlockState().get(BlockStateProperties.FACING)
 			.getDirectionVec()).scale(offset);
-		return position.add(new Vec3d(movedContraption.getContraption()
+		return position.add(Vector3d.of(movedContraption.getContraption()
 			.getAnchor()));
 	}
 

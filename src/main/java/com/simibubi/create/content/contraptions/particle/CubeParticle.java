@@ -15,38 +15,38 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class CubeParticle extends Particle {
 
-	public static final Vec3d[] CUBE = {
+	public static final Vector3d[] CUBE = {
 		// TOP
-		new Vec3d(1, 1, -1), new Vec3d(1, 1, 1), new Vec3d(-1, 1, 1), new Vec3d(-1, 1, -1),
+		new Vector3d(1, 1, -1), new Vector3d(1, 1, 1), new Vector3d(-1, 1, 1), new Vector3d(-1, 1, -1),
 
 		// BOTTOM
-		new Vec3d(-1, -1, -1), new Vec3d(-1, -1, 1), new Vec3d(1, -1, 1), new Vec3d(1, -1, -1),
+		new Vector3d(-1, -1, -1), new Vector3d(-1, -1, 1), new Vector3d(1, -1, 1), new Vector3d(1, -1, -1),
 
 		// FRONT
-		new Vec3d(-1, -1, 1), new Vec3d(-1, 1, 1), new Vec3d(1, 1, 1), new Vec3d(1, -1, 1),
+		new Vector3d(-1, -1, 1), new Vector3d(-1, 1, 1), new Vector3d(1, 1, 1), new Vector3d(1, -1, 1),
 
 		// BACK
-		new Vec3d(1, -1, -1), new Vec3d(1, 1, -1), new Vec3d(-1, 1, -1), new Vec3d(-1, -1, -1),
+		new Vector3d(1, -1, -1), new Vector3d(1, 1, -1), new Vector3d(-1, 1, -1), new Vector3d(-1, -1, -1),
 
 		// LEFT
-		new Vec3d(-1, -1, -1), new Vec3d(-1, 1, -1), new Vec3d(-1, 1, 1), new Vec3d(-1, -1, 1),
+		new Vector3d(-1, -1, -1), new Vector3d(-1, 1, -1), new Vector3d(-1, 1, 1), new Vector3d(-1, -1, 1),
 
 		// RIGHT
-		new Vec3d(1, -1, 1), new Vec3d(1, 1, 1), new Vec3d(1, 1, -1), new Vec3d(1, -1, -1) };
+		new Vector3d(1, -1, 1), new Vector3d(1, 1, 1), new Vector3d(1, 1, -1), new Vector3d(1, -1, -1) };
 
-	public static final Vec3d[] CUBE_NORMALS = {
+	public static final Vector3d[] CUBE_NORMALS = {
 		// modified normals for the sides
-		new Vec3d(0, 1, 0), new Vec3d(0, -1, 0), new Vec3d(0, 0, 1), new Vec3d(0, 0, 1), new Vec3d(0, 0, 1),
-		new Vec3d(0, 0, 1),
+		new Vector3d(0, 1, 0), new Vector3d(0, -1, 0), new Vector3d(0, 0, 1), new Vector3d(0, 0, 1), new Vector3d(0, 0, 1),
+		new Vector3d(0, 0, 1),
 
 		/*
-		 * new Vec3d(0, 1, 0), new Vec3d(0, -1, 0), new Vec3d(0, 0, 1), new Vec3d(0, 0,
-		 * -1), new Vec3d(-1, 0, 0), new Vec3d(1, 0, 0)
+		 * new Vector3d(0, 1, 0), new Vector3d(0, -1, 0), new Vector3d(0, 0, 1), new Vector3d(0, 0,
+		 * -1), new Vector3d(-1, 0, 0), new Vector3d(1, 0, 0)
 		 */
 	};
 
@@ -101,7 +101,7 @@ public class CubeParticle extends Particle {
 
 	@Override
 	public void buildGeometry(IVertexBuilder builder, ActiveRenderInfo renderInfo, float p_225606_3_) {
-		Vec3d projectedView = renderInfo.getProjectedView();
+		Vector3d projectedView = renderInfo.getProjectedView();
 		float lerpedX = (float) (MathHelper.lerp(p_225606_3_, this.prevPosX, this.posX) - projectedView.getX());
 		float lerpedY = (float) (MathHelper.lerp(p_225606_3_, this.prevPosY, this.posY) - projectedView.getY());
 		float lerpedZ = (float) (MathHelper.lerp(p_225606_3_, this.prevPosZ, this.posZ) - projectedView.getZ());
@@ -113,13 +113,13 @@ public class CubeParticle extends Particle {
 		for (int i = 0; i < 6; i++) {
 			// 6 faces to a cube
 			for (int j = 0; j < 4; j++) {
-				Vec3d vec = CUBE[i * 4 + j];
+				Vector3d vec = CUBE[i * 4 + j];
 				vec = vec
 					/* .rotate(?) */
 					.scale(scale * ageMultiplier)
 					.add(lerpedX, lerpedY, lerpedZ);
 
-				Vec3d normal = CUBE_NORMALS[i];
+				Vector3d normal = CUBE_NORMALS[i];
 				builder.vertex(vec.x, vec.y, vec.z)
 					.color(particleRed, particleGreen, particleBlue, particleAlpha)
 					.texture(0, 0)

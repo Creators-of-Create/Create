@@ -17,7 +17,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -36,8 +36,8 @@ import net.minecraft.world.World;
 
 public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>, IWrenchable {
 
-	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
-	public static final IProperty<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
+	public static final Property<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
 	public BeltTunnelBlock(Properties properties) {
 		super(properties);
@@ -48,7 +48,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		STRAIGHT, WINDOW, CLOSED, T_LEFT, T_RIGHT, CROSS;
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 	}

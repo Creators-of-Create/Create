@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -27,7 +27,7 @@ public class FluidPipeModel extends WrappedBakedModel {
 	}
 
 	@Override
-	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
+	public IModelData getModelData(IBlockDisplayReader world, BlockPos pos, BlockState state, IModelData tileData) {
 		PipeModelData data = new PipeModelData();
 		for (Direction d : Iterate.directions)
 			data.putRim(d, FluidPipeBlock.shouldDrawRim(world, pos, state, d));

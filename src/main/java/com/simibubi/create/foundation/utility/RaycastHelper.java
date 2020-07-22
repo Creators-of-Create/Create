@@ -10,26 +10,26 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class RaycastHelper {
 
 	public static BlockRayTraceResult rayTraceRange(World worldIn, PlayerEntity playerIn, double range) {
-		Vec3d origin = getTraceOrigin(playerIn);
-		Vec3d target = getTraceTarget(playerIn, range, origin);
+		Vector3d origin = getTraceOrigin(playerIn);
+		Vector3d target = getTraceTarget(playerIn, range, origin);
 		RayTraceContext context = new RayTraceContext(origin, target, BlockMode.COLLIDER, FluidMode.NONE, playerIn);
 		return worldIn.rayTraceBlocks(context);
 	}
 
 	public static PredicateTraceResult rayTraceUntil(PlayerEntity playerIn, double range,
 			Predicate<BlockPos> predicate) {
-		Vec3d origin = getTraceOrigin(playerIn);
-		Vec3d target = getTraceTarget(playerIn, range, origin);
+		Vector3d origin = getTraceOrigin(playerIn);
+		Vector3d target = getTraceTarget(playerIn, range, origin);
 		return rayTraceUntil(origin, target, predicate);
 	}
 
-	public static Vec3d getTraceTarget(PlayerEntity playerIn, double range, Vec3d origin) {
+	public static Vector3d getTraceTarget(PlayerEntity playerIn, double range, Vector3d origin) {
 		float f = playerIn.rotationPitch;
 		float f1 = playerIn.rotationYaw;
 		float f2 = MathHelper.cos(-f1 * 0.017453292F - (float) Math.PI);
@@ -39,19 +39,19 @@ public class RaycastHelper {
 		float f6 = f3 * f4;
 		float f7 = f2 * f4;
 		double d3 = range;
-		Vec3d vec3d1 = origin.add((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
+		Vector3d vec3d1 = origin.add((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
 		return vec3d1;
 	}
 
-	public static Vec3d getTraceOrigin(PlayerEntity playerIn) {
+	public static Vector3d getTraceOrigin(PlayerEntity playerIn) {
 		double d0 = playerIn.getX();
 		double d1 = playerIn.getY() + (double) playerIn.getEyeHeight();
 		double d2 = playerIn.getZ();
-		Vec3d vec3d = new Vec3d(d0, d1, d2);
+		Vector3d vec3d = new Vector3d(d0, d1, d2);
 		return vec3d;
 	}
 
-	public static PredicateTraceResult rayTraceUntil(Vec3d start, Vec3d end, Predicate<BlockPos> predicate) {
+	public static PredicateTraceResult rayTraceUntil(Vector3d start, Vector3d end, Predicate<BlockPos> predicate) {
 		if (Double.isNaN(start.x) || Double.isNaN(start.y) || Double.isNaN(start.z))
 			return null;
 		if (Double.isNaN(end.x) || Double.isNaN(end.y) || Double.isNaN(end.z))
@@ -146,13 +146,13 @@ public class RaycastHelper {
 
 			if (d3 < d4 && d3 < d5) {
 				enumfacing = dx > x ? Direction.WEST : Direction.EAST;
-				start = new Vec3d(d0, start.y + d7 * d3, start.z + d8 * d3);
+				start = new Vector3d(d0, start.y + d7 * d3, start.z + d8 * d3);
 			} else if (d4 < d5) {
 				enumfacing = dy > y ? Direction.DOWN : Direction.UP;
-				start = new Vec3d(start.x + d6 * d4, d1, start.z + d8 * d4);
+				start = new Vector3d(start.x + d6 * d4, d1, start.z + d8 * d4);
 			} else {
 				enumfacing = dz > z ? Direction.NORTH : Direction.SOUTH;
-				start = new Vec3d(start.x + d6 * d5, start.y + d7 * d5, d2);
+				start = new Vector3d(start.x + d6 * d5, start.y + d7 * d5, d2);
 			}
 
 			x = MathHelper.floor(start.x) - (enumfacing == Direction.EAST ? 1 : 0);

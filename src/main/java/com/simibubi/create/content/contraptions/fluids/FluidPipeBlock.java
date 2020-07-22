@@ -6,7 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SixWayBlock;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -15,7 +15,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
@@ -37,14 +37,14 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
     }
 
     // TODO: more generic pipe connection handling. Ideally without marker interface
-    public static boolean canConnectTo(ILightReader world, BlockPos pos, BlockState neighbour, Direction blockFace) {
+    public static boolean canConnectTo(IBlockDisplayReader world, BlockPos pos, BlockState neighbour, Direction blockFace) {
         if (isPipe(neighbour) || isTank(neighbour, world, pos, blockFace))
             return true;
         return neighbour.getBlock() instanceof PumpBlock && blockFace.getAxis() == neighbour.get(PumpBlock.FACING)
                 .getAxis();
     }
 
-    public static boolean shouldDrawRim(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
+    public static boolean shouldDrawRim(IBlockDisplayReader world, BlockPos pos, BlockState state, Direction direction) {
         if (!isPipe(state))
             return false;
         if (!state.get(FACING_TO_PROPERTY_MAP.get(direction)))
@@ -67,11 +67,11 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
         return false;
     }
 
-    public static boolean isCornerOrEndPipe(ILightReader world, BlockPos pos, BlockState state) {
+    public static boolean isCornerOrEndPipe(IBlockDisplayReader world, BlockPos pos, BlockState state) {
         return isPipe(state) && !isStraightPipe(world, pos, state) && !shouldDrawCasing(world, pos, state);
     }
 
-    public static boolean isStraightPipe(ILightReader world, BlockPos pos, BlockState state) {
+    public static boolean isStraightPipe(IBlockDisplayReader world, BlockPos pos, BlockState state) {
         if (!isPipe(state))
             return false;
         boolean axisFound = false;
@@ -87,7 +87,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
         return axisFound;
     }
 
-    public static boolean shouldDrawCasing(ILightReader world, BlockPos pos, BlockState state) {
+    public static boolean shouldDrawCasing(IBlockDisplayReader world, BlockPos pos, BlockState state) {
         if (!isPipe(state))
             return false;
         for (Axis axis : Iterate.axes) {
@@ -109,7 +109,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+        FluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
         return updateBlockState(getDefaultState(), context.getNearestLookingDirection(), null, context.getWorld(),
                 context.getPos()).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
     }
@@ -124,7 +124,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
     }
 
     public BlockState updateBlockState(BlockState state, Direction preferredDirection, @Nullable Direction ignore,
-                                       ILightReader world, BlockPos pos) {
+                                       IBlockDisplayReader world, BlockPos pos) {
         // Update sides that are not ignored
         for (Direction d : Iterate.directions)
             if (d != ignore)
@@ -151,7 +151,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
     }
 
     @Override
-    public IFluidState getFluidState(BlockState state) {
+    public FluidState getFluidState(BlockState state) {
         return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : Fluids.EMPTY.getDefaultState();
     }
 }

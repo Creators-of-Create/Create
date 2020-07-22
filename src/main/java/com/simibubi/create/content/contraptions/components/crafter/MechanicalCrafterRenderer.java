@@ -19,7 +19,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -28,7 +28,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<MechanicalCrafterTileEntity> {
 
@@ -42,14 +42,14 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		ms.push();
 		Direction facing = te.getBlockState()
 			.get(HORIZONTAL_FACING);
-		Vec3d vec = new Vec3d(facing.getDirectionVec()).scale(.58)
+		Vector3d vec = Vector3d.of(facing.getDirectionVec()).scale(.58)
 			.add(.5, .5, .5);
 
 		if (te.phase == Phase.EXPORTING) {
 			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(te.getBlockState());
 			float progress =
 				MathHelper.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
-			vec = vec.add(new Vec3d(targetDirection.getDirectionVec()).scale(progress * .75f));
+			vec = vec.add(Vector3d.of(targetDirection.getDirectionVec()).scale(progress * .75f));
 		}
 
 		ms.translate(vec.x, vec.y, vec.z);
@@ -90,8 +90,8 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				float lateProgress = MathHelper.clamp(progress * 2 - 1, 0, 1);
 
 				ms.scale(1 - lateProgress, 1 - lateProgress, 1 - lateProgress);
-				Vec3d centering =
-					new Vec3d(-items.minX + (-items.width + 1) / 2f, -items.minY + (-items.height + 1) / 2f, 0)
+				Vector3d centering =
+					new Vector3d(-items.minX + (-items.width + 1) / 2f, -items.minY + (-items.height + 1) / 2f, 0)
 						.scale(earlyProgress);
 				ms.translate(centering.x * .5f, centering.y * .5f, 0);
 				distance += (-4 * (progress - .5f) * (progress - .5f) + 1) * .25f;

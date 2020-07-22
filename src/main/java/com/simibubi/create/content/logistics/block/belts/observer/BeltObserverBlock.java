@@ -158,7 +158,7 @@ public class BeltObserverBlock extends HorizontalBlock
 		DETECT, PULSE, EJECT, SPLIT;
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 	}

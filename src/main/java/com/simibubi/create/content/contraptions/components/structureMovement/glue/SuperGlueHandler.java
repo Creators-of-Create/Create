@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
@@ -68,9 +68,9 @@ public class SuperGlueHandler {
 
 		double distance = placer.getAttribute(PlayerEntity.REACH_DISTANCE)
 			.getValue();
-		Vec3d start = placer.getEyePosition(1);
-		Vec3d look = placer.getLook(1);
-		Vec3d end = start.add(look.x * distance, look.y * distance, look.z * distance);
+		Vector3d start = placer.getEyePosition(1);
+		Vector3d look = placer.getLook(1);
+		Vector3d end = start.add(look.x * distance, look.y * distance, look.z * distance);
 		World world = placer.world;
 
 		RayTraceWorld rayTraceWorld =

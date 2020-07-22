@@ -8,7 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 
 public class BrassTunnelCTBehaviour extends ConnectedTextureBehaviour {
 
@@ -18,7 +18,7 @@ public class BrassTunnelCTBehaviour extends ConnectedTextureBehaviour {
 	}
 
 	@Override
-	public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos, BlockPos otherPos,
+	public boolean connectsTo(BlockState state, BlockState other, IBlockDisplayReader reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
 		int yDiff = otherPos.getY() - pos.getY();
 		int zDiff = otherPos.getZ() - pos.getZ();
@@ -34,7 +34,7 @@ public class BrassTunnelCTBehaviour extends ConnectedTextureBehaviour {
 	}
 
 	@Override
-	public CTContext buildContext(ILightReader reader, BlockPos pos, BlockState state, Direction face) {
+	public CTContext buildContext(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face) {
 		return super.buildContext(reader, pos, state, face);
 	}
 

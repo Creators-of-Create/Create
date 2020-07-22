@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public abstract class Brush {
 
@@ -42,7 +42,7 @@ public abstract class Brush {
 		return paramIndex == 0 ? param0 : paramIndex == 1 ? param1 : param2;
 	}
 
-	public BlockPos getOffset(Vec3d ray, Direction face, PlacementOptions option) {
+	public BlockPos getOffset(Vector3d ray, Direction face, PlacementOptions option) {
 		return BlockPos.ZERO;
 	}
 

@@ -20,7 +20,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class LinkRenderer {
 
@@ -42,7 +42,7 @@ public class LinkRenderer {
 		String freq2 = Lang.translate("logistics.secondFrequency");
 
 		for (boolean first : Iterate.trueAndFalse) {
-			AxisAlignedBB bb = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO).grow(.25f);
+			AxisAlignedBB bb = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).grow(.25f);
 			String label = first ? freq2 : freq1;
 			boolean hit = behaviour.testHit(first, target.getHitVec());
 			ValueBoxTransform transform = first ? behaviour.firstSlot : behaviour.secondSlot;

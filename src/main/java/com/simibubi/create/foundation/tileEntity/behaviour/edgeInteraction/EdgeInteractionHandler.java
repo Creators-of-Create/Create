@@ -17,8 +17,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -79,7 +79,7 @@ public class EdgeInteractionHandler {
 		return sides;
 	}
 
-	public static Direction getActivatedDirection(World world, BlockPos pos, Direction face, Vec3d hit,
+	public static Direction getActivatedDirection(World world, BlockPos pos, Direction face, Vector3d hit,
 		EdgeInteractionBehaviour behaviour) {
 		for (Direction facing : getConnectiveSides(world, pos, face, behaviour)) {
 			AxisAlignedBB bb = getBB(pos, facing);
@@ -91,7 +91,7 @@ public class EdgeInteractionHandler {
 
 	static AxisAlignedBB getBB(BlockPos pos, Direction direction) {
 		AxisAlignedBB bb = new AxisAlignedBB(pos);
-		Vec3i vec = direction.getDirectionVec();
+		Vector3i vec = direction.getDirectionVec();
 		int x = vec.getX();
 		int y = vec.getY();
 		int z = vec.getZ();

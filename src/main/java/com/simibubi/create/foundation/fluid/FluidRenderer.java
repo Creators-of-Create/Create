@@ -15,8 +15,8 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -33,7 +33,7 @@ public class FluidRenderer {
 		int color = fluidAttributes.getColor(fluidStack);
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
 		MatrixStacker msr = MatrixStacker.of(ms);
-		Vec3d center = new Vec3d(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
+		Vector3d center = new Vector3d(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 
 		int blockLightIn = (light >> 4) & 0xf;
 		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
@@ -138,7 +138,7 @@ public class FluidRenderer {
 	private static void putVertex(IVertexBuilder builder, MatrixStack ms, float x, float y, float z, int color, float u,
 		float v, Direction face, int light) {
 
-		Vec3i n = face.getDirectionVec();
+		Vector3i n = face.getDirectionVec();
 		Entry peek = ms.peek();
 		int ff = 0xff;
 		int a = color >> 24 & ff;

@@ -24,15 +24,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 
 public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
@@ -154,9 +154,9 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 		ms.push();
 
-		Vec3i directionVec = te.getBeltFacing()
+		Vector3i directionVec = te.getBeltFacing()
 			.getDirectionVec();
-		Vec3d beltStartOffset = new Vec3d(directionVec).scale(-.5)
+		Vector3d beltStartOffset = Vector3d.of(directionVec).scale(-.5)
 			.add(.5, 13 / 16f + .125f, .5);
 		ms.translate(beltStartOffset.x, beltStartOffset.y, beltStartOffset.z);
 		BeltSlope slope = te.getBlockState()
@@ -182,7 +182,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			if (offset < .5)
 				verticalMovement = 0;
 			verticalMovement = verticalMovement * (Math.min(offset, te.beltLength - .5f) - .5f);
-			Vec3d offsetVec = new Vec3d(directionVec).scale(offset)
+			Vector3d offsetVec = Vector3d.of(directionVec).scale(offset)
 				.add(0, verticalMovement, 0);
 			boolean onSlope =
 				slope != BeltSlope.HORIZONTAL && MathHelper.clamp(offset, .5f, te.beltLength - .5f) == offset;
@@ -205,7 +205,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			boolean blockItem = itemRenderer.getItemModelWithOverrides(transported.stack, te.getWorld(), null)
 				.isGui3d();
 			if (Minecraft.getInstance().gameSettings.fancyGraphics) {
-				Vec3d shadowPos = new Vec3d(te.getPos()).add(beltStartOffset.scale(1)
+				Vector3d shadowPos = Vector3d.of(te.getPos()).add(beltStartOffset.scale(1)
 					.add(offsetVec)
 					.add(alongX ? sideOffset : 0, .39, alongX ? 0 : sideOffset));
 				ShadowRenderHelper.renderShadow(ms, buffer, shadowPos, .75f, blockItem ? .2f : .2f);

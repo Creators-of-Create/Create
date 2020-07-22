@@ -13,7 +13,7 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -66,8 +66,8 @@ public class KineticEffectHandler {
 			return;
 		Random r = world.rand;
 		for (int i = 0; i < amount; i++) {
-			Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, r, maxMotion);
-			Vec3d position = VecHelper.getCenterOf(kte.getPos());
+			Vector3d motion = VecHelper.offsetRandomly(Vector3d.ZERO, r, maxMotion);
+			Vector3d position = VecHelper.getCenterOf(kte.getPos());
 			world.addParticle(particle, position.x, position.y, position.z, motion.x, motion.y, motion.z);
 		}
 	}
@@ -95,7 +95,7 @@ public class KineticEffectHandler {
 			return;
 
 		char axisChar = axis.name().charAt(0);
-		Vec3d vec = VecHelper.getCenterOf(pos);
+		Vector3d vec = VecHelper.getCenterOf(pos);
 		SpeedLevel speedLevel = SpeedLevel.of(speed);
 		int color = speedLevel.getColor();
 		int particleSpeed = speedLevel.getParticleSpeed();

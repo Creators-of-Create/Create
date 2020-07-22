@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -106,11 +106,11 @@ public class MillstoneTileEntity extends KineticTileEntity {
 
 		ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
 		float angle = world.rand.nextFloat() * 360;
-		Vec3d offset = new Vec3d(0, 0, 0.5f);
+		Vector3d offset = new Vector3d(0, 0, 0.5f);
 		offset = VecHelper.rotate(offset, angle, Axis.Y);
-		Vec3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y);
+		Vector3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y);
 
-		Vec3d center = offset.add(VecHelper.getCenterOf(pos));
+		Vector3d center = offset.add(VecHelper.getCenterOf(pos));
 		target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
 		world.addParticle(data, center.x, center.y, center.z, target.x, target.y, target.z);
 	}

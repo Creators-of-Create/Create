@@ -32,7 +32,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -164,10 +164,10 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			groupedItemsBeforeCraft = before;
 		if (phaseBefore == Phase.EXPORTING && phase == Phase.WAITING) {
 			Direction facing = getBlockState().get(MechanicalCrafterBlock.HORIZONTAL_FACING);
-			Vec3d vec = new Vec3d(facing.getDirectionVec()).scale(.75)
+			Vector3d vec = Vector3d.of(facing.getDirectionVec()).scale(.75)
 				.add(VecHelper.getCenterOf(pos));
 			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(getBlockState());
-			vec = vec.add(new Vec3d(targetDirection.getDirectionVec()).scale(1));
+			vec = vec.add(Vector3d.of(targetDirection.getDirectionVec()).scale(1));
 			world.addParticle(ParticleTypes.CRIT, vec.x, vec.y, vec.z, 0, 0, 0);
 		}
 
@@ -289,10 +289,10 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			if (world.isRemote) {
 				Direction facing = getBlockState().get(MechanicalCrafterBlock.HORIZONTAL_FACING);
 				float progress = countDown / 2000f;
-				Vec3d facingVec = new Vec3d(facing.getDirectionVec());
-				Vec3d vec = facingVec.scale(.65)
+				Vector3d facingVec = Vector3d.of(facing.getDirectionVec());
+				Vector3d vec = facingVec.scale(.65)
 					.add(VecHelper.getCenterOf(pos));
-				Vec3d offset = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
+				Vector3d offset = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, .125f)
 					.mul(VecHelper.planeByNormal(facingVec))
 					.normalize()
 					.scale(progress * .5f)
@@ -306,11 +306,11 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 						groupedItemsBeforeCraft = new GroupedItems();
 
 						for (int i = 0; i < 10; i++) {
-							Vec3d randVec = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
+							Vector3d randVec = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, .125f)
 								.mul(VecHelper.planeByNormal(facingVec))
 								.normalize()
 								.scale(.25f);
-							Vec3d offset2 = randVec.add(vec);
+							Vector3d offset2 = randVec.add(vec);
 							randVec = randVec.scale(.35f);
 							world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), offset2.x, offset2.y,
 								offset2.z, randVec.x, randVec.y, randVec.z);
@@ -390,9 +390,9 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	public void eject() {
 		BlockState blockState = getBlockState();
 		boolean present = AllBlocks.MECHANICAL_CRAFTER.has(blockState);
-		Vec3d vec = present ? new Vec3d(blockState.get(HORIZONTAL_FACING)
-			.getDirectionVec()).scale(.75f) : Vec3d.ZERO;
-		Vec3d ejectPos = VecHelper.getCenterOf(pos)
+		Vector3d vec = present ? Vector3d.of(blockState.get(HORIZONTAL_FACING)
+			.getDirectionVec()).scale(.75f) : Vector3d.ZERO;
+		Vector3d ejectPos = VecHelper.getCenterOf(pos)
 			.add(vec);
 		groupedItems.grid.forEach((pair, stack) -> dropItem(ejectPos, stack));
 		if (!inventory.getStackInSlot(0)
@@ -404,7 +404,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		sendData();
 	}
 
-	public void dropItem(Vec3d ejectPos, ItemStack stack) {
+	public void dropItem(Vector3d ejectPos, ItemStack stack) {
 		ItemEntity itemEntity = new ItemEntity(world, ejectPos.x, ejectPos.y, ejectPos.z, stack);
 		itemEntity.setDefaultPickupDelay();
 		world.addEntity(itemEntity);

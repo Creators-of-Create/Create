@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ColorHelper {
 
@@ -56,11 +56,11 @@ public class ColorHelper {
 		RenderSystem.color4f(1, 1, 1, 1);
 	}
 
-	public static Vec3d getRGB(int color) {
+	public static Vector3d getRGB(int color) {
 		int r = (color >> 16);
 		int g = (color >> 8) & 0xFF;
 		int b = color & 0xFF;
-		return new Vec3d(r, g, b).scale(1 / 256d);
+		return new Vector3d(r, g, b).scale(1 / 256d);
 	}
 
 	public static int colorFromUUID(UUID uuid) {

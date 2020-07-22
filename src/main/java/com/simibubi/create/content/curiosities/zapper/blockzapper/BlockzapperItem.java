@@ -26,7 +26,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -38,7 +38,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -123,7 +123,7 @@ public class BlockzapperItem extends ZapperItem {
 					world.getBlockState(placed.offset(updateDirection)), world, placed, placed.offset(updateDirection));
 
 			BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, placed);
-			IFluidState ifluidstate = world.getFluidState(placed);
+			FluidState ifluidstate = world.getFluidState(placed);
 			world.setBlockState(placed, ifluidstate.getBlockState(), 18);
 			world.setBlockState(placed, selectedState);
 			if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
@@ -187,9 +187,9 @@ public class BlockzapperItem extends ZapperItem {
 		Set<BlockPos> visited = new HashSet<>();
 		List<BlockPos> frontier = new LinkedList<>();
 
-		Vec3d start = player.getPositionVec()
+		Vector3d start = player.getPositionVec()
 			.add(0, player.getEyeHeight(), 0);
-		Vec3d range = player.getLookVec()
+		Vector3d range = player.getLookVec()
 			.scale(ZapperInteractionHandler.getRange(stack));
 		BlockRayTraceResult raytrace = player.world
 			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.COLLIDER, FluidMode.NONE, player));

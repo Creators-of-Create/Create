@@ -14,7 +14,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 
 public class SchematicTransformation {
@@ -45,7 +45,7 @@ public class SchematicTransformation {
 			.ordinal() * 90);
 		rotation.start(r);
 
-		Vec3d vec = fromAnchor(anchor);
+		Vector3d vec = fromAnchor(anchor);
 		x.start((float) vec.x);
 		y.start((float) vec.y);
 		z.start((float) vec.z);
@@ -57,7 +57,7 @@ public class SchematicTransformation {
 
 		// Translation
 		ms.translate(x.get(pt), y.get(pt), z.get(pt));
-		Vec3d rotationOffset = getRotationOffset(true);
+		Vector3d rotationOffset = getRotationOffset(true);
 
 		// Rotation & Mirror
 		float fb = getScaleFB().get(pt);
@@ -77,8 +77,8 @@ public class SchematicTransformation {
 		return getMirrorModifier(Axis.X) < 0 != getMirrorModifier(Axis.Z) < 0;
 	}
 
-	public Vec3d getRotationOffset(boolean ignoreMirrors) {
-		Vec3d rotationOffset = Vec3d.ZERO;
+	public Vector3d getRotationOffset(boolean ignoreMirrors) {
+		Vector3d rotationOffset = Vector3d.ZERO;
 		if ((int) (zOrigin * 2) % 2 != (int) (xOrigin * 2) % 2) {
 			boolean xGreaterZ = xOrigin > zOrigin;
 			float xIn = (xGreaterZ ? 0 : .5f);
@@ -87,15 +87,15 @@ public class SchematicTransformation {
 				xIn *= getMirrorModifier(Axis.X);
 				zIn *= getMirrorModifier(Axis.Z);
 			}
-			rotationOffset = new Vec3d(xIn, 0, zIn);
+			rotationOffset = new Vector3d(xIn, 0, zIn);
 		}
 		return rotationOffset;
 	}
 
-	public Vec3d toLocalSpace(Vec3d vec) {
+	public Vector3d toLocalSpace(Vector3d vec) {
 		float pt = Minecraft.getInstance()
 			.getRenderPartialTicks();
-		Vec3d rotationOffset = getRotationOffset(true);
+		Vector3d rotationOffset = getRotationOffset(true);
 
 		vec = vec.subtract(x.get(pt), y.get(pt), z.get(pt));
 		vec = vec.subtract(xOrigin + rotationOffset.x, 0, zOrigin + rotationOffset.z);
@@ -146,8 +146,8 @@ public class SchematicTransformation {
 	}
 
 	public BlockPos getAnchor() {
-		Vec3d vec = Vec3d.ZERO.add(.5, 0, .5);
-		Vec3d rotationOffset = getRotationOffset(false);
+		Vector3d vec = Vector3d.ZERO.add(.5, 0, .5);
+		Vector3d rotationOffset = getRotationOffset(false);
 		vec = vec.subtract(xOrigin, 0, zOrigin);
 		vec = vec.subtract(rotationOffset.x, 0, rotationOffset.z);
 		vec = vec.mul(getScaleFB().getTarget(), 1, getScaleLR().getTarget());
@@ -158,16 +158,16 @@ public class SchematicTransformation {
 		return new BlockPos(vec.x, vec.y, vec.z);
 	}
 
-	public Vec3d fromAnchor(BlockPos pos) {
-		Vec3d vec = Vec3d.ZERO.add(.5, 0, .5);
-		Vec3d rotationOffset = getRotationOffset(false);
+	public Vector3d fromAnchor(BlockPos pos) {
+		Vector3d vec = Vector3d.ZERO.add(.5, 0, .5);
+		Vector3d rotationOffset = getRotationOffset(false);
 		vec = vec.subtract(xOrigin, 0, zOrigin);
 		vec = vec.subtract(rotationOffset.x, 0, rotationOffset.z);
 		vec = vec.mul(getScaleFB().getTarget(), 1, getScaleLR().getTarget());
 		vec = VecHelper.rotate(vec, rotation.getTarget(), Axis.Y);
 		vec = vec.add(xOrigin, 0, zOrigin);
 
-		return new Vec3d(pos.subtract(new BlockPos(vec.x, vec.y, vec.z)));
+		return Vector3d.of(pos.subtract(new BlockPos(vec.x, vec.y, vec.z)));
 	}
 
 	public int getRotationTarget() {

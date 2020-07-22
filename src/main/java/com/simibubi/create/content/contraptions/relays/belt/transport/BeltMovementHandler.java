@@ -26,8 +26,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 
 public class BeltMovementHandler {
@@ -104,9 +104,9 @@ public class BeltMovementHandler {
 		float movementSpeed = beltTe.getBeltMovementSpeed();
 		final Direction movementDirection = Direction.getFacingFromAxis(axis == Axis.X ? NEGATIVE : POSITIVE, axis);
 
-		Vec3i centeringDirection =
+		Vector3i centeringDirection =
 			Direction.getFacingFromAxis(POSITIVE, beltFacing.rotateY().getAxis()).getDirectionVec();
-		Vec3d movement = new Vec3d(movementDirection.getDirectionVec()).scale(movementSpeed);
+		Vector3d movement = Vector3d.of(movementDirection.getDirectionVec()).scale(movementSpeed);
 
 		double diffCenter = axis == Axis.Z ? (pos.getX() + .5f - entityIn.getX()) : (pos.getZ() + .5f - entityIn.getZ());
 		if (Math.abs(diffCenter) > 48 / 64f)
@@ -132,7 +132,7 @@ public class BeltMovementHandler {
 		if (movingDown)
 			movement = movement.add(0, -Math.abs(axis.getCoordinate(movement.x, movement.y, movement.z)), 0);
 
-		Vec3d centering = new Vec3d(centeringDirection).scale(diffCenter * Math.min(Math.abs(movementSpeed), .1f) * 4);
+		Vector3d centering = Vector3d.of(centeringDirection).scale(diffCenter * Math.min(Math.abs(movementSpeed), .1f) * 4);
 		movement = movement.add(centering);
 
 		float step = entityIn.stepHeight;
@@ -141,7 +141,7 @@ public class BeltMovementHandler {
 
 		// Entity Collisions
 		if (Math.abs(movementSpeed) < .5f) {
-			Vec3d checkDistance = movement.normalize().scale(0.5);
+			Vector3d checkDistance = movement.normalize().scale(0.5);
 			AxisAlignedBB bb = entityIn.getBoundingBox();
 			AxisAlignedBB checkBB = new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
 			checkBB = checkBB.offset(checkDistance).grow(-Math.abs(checkDistance.x), -Math.abs(checkDistance.y),
@@ -160,7 +160,7 @@ public class BeltMovementHandler {
 		if (movingUp) {
 			float minVelocity = .13f;
 			float yMovement = (float) -(Math.max(Math.abs(movement.y), minVelocity));
-			entityIn.move(SELF, new Vec3d(0, yMovement, 0));
+			entityIn.move(SELF, new Vector3d(0, yMovement, 0));
 			entityIn.move(SELF, movement.mul(1, 0, 1));
 		} else if (movingDown) {
 			entityIn.move(SELF, movement.mul(1, 0, 1));

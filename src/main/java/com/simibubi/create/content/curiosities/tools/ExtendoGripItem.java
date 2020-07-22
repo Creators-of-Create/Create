@@ -25,7 +25,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
@@ -125,9 +125,9 @@ public class ExtendoGripItem extends Item {
 			.getValue();
 		if (!player.isCreative())
 			d0 -= 0.5f;
-		Vec3d vec3d = player.getEyePosition(mc.getRenderPartialTicks());
-		Vec3d vec3d1 = player.getLook(1.0F);
-		Vec3d vec3d2 = vec3d.add(vec3d1.x * d0, vec3d1.y * d0, vec3d1.z * d0);
+		Vector3d vec3d = player.getEyePosition(mc.getRenderPartialTicks());
+		Vector3d vec3d1 = player.getLook(1.0F);
+		Vector3d vec3d2 = vec3d.add(vec3d1.x * d0, vec3d1.y * d0, vec3d1.z * d0);
 		AxisAlignedBB axisalignedbb = player.getBoundingBox()
 			.expand(vec3d1.scale(d0))
 			.grow(1.0D, 1.0D, 1.0D);
@@ -137,7 +137,7 @@ public class ExtendoGripItem extends Item {
 			}, d0 * d0);
 		if (entityraytraceresult != null) {
 			Entity entity1 = entityraytraceresult.getEntity();
-			Vec3d vec3d3 = entityraytraceresult.getHitVec();
+			Vector3d vec3d3 = entityraytraceresult.getHitVec();
 			double d2 = vec3d.squareDistanceTo(vec3d3);
 			if (d2 < d0 * d0 || mc.objectMouseOver == null || mc.objectMouseOver.getType() == Type.MISS) {
 				mc.objectMouseOver = entityraytraceresult;

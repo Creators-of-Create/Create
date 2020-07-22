@@ -23,9 +23,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -34,7 +34,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
@@ -54,7 +54,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		BlockState deployerState = te.getBlockState();
-		Vec3d offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
+		Vector3d offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
 		ms.push();
 		ms.translate(offset.x, offset.y, offset.z);
 
@@ -106,7 +106,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
-		Vec3d offset = getHandOffset(te, partialTicks, blockState);
+		Vector3d offset = getHandOffset(te, partialTicks, blockState);
 
 		SuperByteBuffer pole = AllBlockPartials.DEPLOYER_POLE.renderOn(blockState);
 		SuperByteBuffer hand = te.getHandPose()
@@ -118,7 +118,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			vb);
 	}
 
-	protected Vec3d getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {
+	protected Vector3d getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {
 		float progress = 0;
 		if (te.state == State.EXPANDING)
 			progress = 1 - (te.timer - partialTicks * te.getTimerSpeed()) / 1000f;
@@ -128,7 +128,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		float handLength = te.getHandPose() == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
 			: te.getHandPose() == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
 		float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (te.reach + handLength), 21 / 16f);
-		Vec3d offset = new Vec3d(blockState.get(FACING)
+		Vector3d offset = Vector3d.of(blockState.get(FACING)
 			.getDirectionVec()).scale(distance);
 		return offset;
 	}
@@ -174,7 +174,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
 			factor = MathHelper.sin(AnimationTickHolder.getRenderTick() * .5f) * .25f + .25f;
 		} else {
-			Vec3d center = VecHelper.getCenterOf(new BlockPos(context.position));
+			Vector3d center = VecHelper.getCenterOf(new BlockPos(context.position));
 			double distance = context.position.distanceTo(center);
 			double nextDistance = context.position.add(context.motion)
 				.distanceTo(center);
@@ -182,7 +182,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 				.getRenderPartialTicks(), distance, nextDistance), 0, 1);
 		}
 
-		Vec3d offset = new Vec3d(blockState.get(FACING)
+		Vector3d offset = Vector3d.of(blockState.get(FACING)
 			.getDirectionVec()).scale(factor);
 
 		Matrix4f lighting = msLocal.peek()

@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -31,7 +31,7 @@ public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
 	}
 
 	@Override
-	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
+	public IModelData getModelData(IBlockDisplayReader world, BlockPos pos, BlockState state, IModelData tileData) {
 		return new ModelDataMap.Builder().withInitial(POSITION_PROPERTY, pos).build();
 	}
 

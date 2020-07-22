@@ -19,7 +19,7 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -41,7 +41,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (!world.isBlockPresent(below))
 			return;
 
-		Vec3d vec = VecHelper.getCenterOf(pos);
+		Vector3d vec = VecHelper.getCenterOf(pos);
 		PloughFakePlayer player = getPlayer(context);
 
 		if (player == null)
@@ -57,8 +57,8 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	@Override
-	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(HORIZONTAL_FACING)
+	public Vector3d getActiveAreaOffset(MovementContext context) {
+		return Vector3d.of(context.state.get(HORIZONTAL_FACING)
 			.getDirectionVec()).scale(.45);
 	}
 

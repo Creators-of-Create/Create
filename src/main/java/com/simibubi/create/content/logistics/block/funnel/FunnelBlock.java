@@ -28,7 +28,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -88,7 +88,7 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 
 		Direction direction = state.get(FACING);
-		Vec3d diff = entityIn.getPositionVec()
+		Vector3d diff = entityIn.getPositionVec()
 			.subtract(VecHelper.getCenterOf(pos));
 		double projectedDiff = direction.getAxis()
 			.getCoordinate(diff.x, diff.y, diff.z);

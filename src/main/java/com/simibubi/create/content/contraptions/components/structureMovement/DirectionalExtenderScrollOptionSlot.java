@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class DirectionalExtenderScrollOptionSlot extends CenteredSideValueBoxTransform {
 
@@ -19,9 +19,9 @@ public class DirectionalExtenderScrollOptionSlot extends CenteredSideValueBoxTra
 	}
 
 	@Override
-	protected Vec3d getLocalOffset(BlockState state) {
+	protected Vector3d getLocalOffset(BlockState state) {
 		return super.getLocalOffset(state)
-				.add(new Vec3d(state.get(BlockStateProperties.FACING).getDirectionVec()).scale(-2 / 16f));
+				.add(Vector3d.of(state.get(BlockStateProperties.FACING).getDirectionVec()).scale(-2 / 16f));
 	}
 
 	@Override

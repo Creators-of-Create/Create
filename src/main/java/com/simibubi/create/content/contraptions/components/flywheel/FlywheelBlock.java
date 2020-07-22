@@ -86,7 +86,7 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 		NONE, LEFT, RIGHT;
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 	}

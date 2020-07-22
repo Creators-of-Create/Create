@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -12,7 +12,7 @@ import net.minecraft.util.Rotation;
 
 public abstract class HorizontalKineticBlock extends KineticBlock {
 
-	public static final IProperty<Direction> HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
+	public static final Property<Direction> HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
 
 	public HorizontalKineticBlock(Properties properties) {
 		super(properties);

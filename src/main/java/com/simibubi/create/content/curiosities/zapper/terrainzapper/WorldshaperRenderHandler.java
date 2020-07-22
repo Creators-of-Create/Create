@@ -19,7 +19,7 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class WorldshaperRenderHandler {
 
@@ -76,9 +76,9 @@ public class WorldshaperRenderHandler {
 		brush.set(params.getX(), params.getY(), params.getZ());
 		renderedShape = brush.getIncludedPositions();
 
-		Vec3d start = player.getPositionVec()
+		Vector3d start = player.getPositionVec()
 			.add(0, player.getEyeHeight(), 0);
-		Vec3d range = player.getLookVec()
+		Vector3d range = player.getLookVec()
 			.scale(128);
 		BlockRayTraceResult raytrace = player.world
 			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));

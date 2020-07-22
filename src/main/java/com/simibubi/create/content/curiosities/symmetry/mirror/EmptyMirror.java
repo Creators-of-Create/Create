@@ -10,7 +10,7 @@ import com.simibubi.create.AllBlockPartials;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class EmptyMirror extends SymmetryMirror {
 
@@ -19,11 +19,11 @@ public class EmptyMirror extends SymmetryMirror {
 		
 		private final String name;
 		private Align(String name) { this.name = name; }
-		@Override public String getName() { return name; }
+		@Override public String getString() { return name; }
 		@Override public String toString() { return name; }
 	}
 	
-	public EmptyMirror(Vec3d pos) {
+	public EmptyMirror(Vector3d pos) {
 		super(pos);
 		orientation = Align.None;
 	}

@@ -14,25 +14,25 @@ import net.minecraft.block.material.Material;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public abstract class ValueBoxTransform {
 
 	protected float scale = getScale();
 
-	protected abstract Vec3d getLocalOffset(BlockState state);
+	protected abstract Vector3d getLocalOffset(BlockState state);
 
 	protected abstract void rotate(BlockState state, MatrixStack ms);
 
-	public boolean testHit(BlockState state, Vec3d localHit) {
-		Vec3d offset = getLocalOffset(state);
+	public boolean testHit(BlockState state, Vector3d localHit) {
+		Vector3d offset = getLocalOffset(state);
 		if (offset == null)
 			return false;
 		return localHit.distanceTo(offset) < scale / 2;
 	}
 
 	public void transform(BlockState state, MatrixStack ms) {
-		Vec3d position = getLocalOffset(state);
+		Vector3d position = getLocalOffset(state);
 		if (position == null)
 			return;
 		ms.translate(position.x, position.y, position.z);
@@ -44,7 +44,7 @@ public abstract class ValueBoxTransform {
 		return state.getMaterial() != Material.AIR && getLocalOffset(state) != null;
 	}
 
-	protected Vec3d rotateHorizontally(BlockState state, Vec3d vec) {
+	protected Vector3d rotateHorizontally(BlockState state, Vector3d vec) {
 		float yRot = 0;
 		if (state.has(BlockStateProperties.FACING))
 			yRot = AngleHelper.horizontalAngle(state.get(BlockStateProperties.FACING));
@@ -77,8 +77,8 @@ public abstract class ValueBoxTransform {
 			return Pair.of(factory.apply(true), factory.apply(false));
 		}
 
-		public boolean testHit(BlockState state, Vec3d localHit) {
-			Vec3d offset = getLocalOffset(state);
+		public boolean testHit(BlockState state, Vector3d localHit) {
+			Vector3d offset = getLocalOffset(state);
 			if (offset == null)
 				return false;
 			return localHit.distanceTo(offset) < scale / 3.5f;
@@ -96,14 +96,14 @@ public abstract class ValueBoxTransform {
 		}
 
 		@Override
-		protected Vec3d getLocalOffset(BlockState state) {
-			Vec3d location = getSouthLocation();
+		protected Vector3d getLocalOffset(BlockState state) {
+			Vector3d location = getSouthLocation();
 			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Axis.Y);
 			location = VecHelper.rotateCentered(location, AngleHelper.verticalAngle(getSide()), Axis.Z);
 			return location;
 		}
 
-		protected abstract Vec3d getSouthLocation();
+		protected abstract Vector3d getSouthLocation();
 
 		@Override
 		protected void rotate(BlockState state, MatrixStack ms) {
@@ -120,7 +120,7 @@ public abstract class ValueBoxTransform {
 		}
 
 		@Override
-		public boolean testHit(BlockState state, Vec3d localHit) {
+		public boolean testHit(BlockState state, Vector3d localHit) {
 			return isSideActive(state, getSide()) && super.testHit(state, localHit);
 		}
 

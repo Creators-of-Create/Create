@@ -17,7 +17,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ClockworkBearingTileEntity extends KineticTileEntity implements IBearingTileEntity {
 
@@ -84,13 +84,13 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	protected void applyRotations() {
 		Axis axis = getBlockState().get(BlockStateProperties.FACING).getAxis();
 		Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-		Vec3d directionVec = new Vec3d(direction.getDirectionVec());
+		Vector3d directionVec = Vector3d.of(direction.getDirectionVec());
 		if (hourHand != null) {
-			Vec3d vec = new Vec3d(1, 1, 1).scale(hourAngle).mul(directionVec);
+			Vector3d vec = new Vector3d(1, 1, 1).scale(hourAngle).mul(directionVec);
 			hourHand.rotateTo(vec.x, vec.y, vec.z);
 		}
 		if (minuteHand != null) {
-			Vec3d vec = new Vec3d(1, 1, 1).scale(minuteAngle).mul(directionVec);
+			Vector3d vec = new Vector3d(1, 1, 1).scale(minuteAngle).mul(directionVec);
 			minuteHand.rotateTo(vec.x, vec.y, vec.z);
 		}
 	}

@@ -8,7 +8,7 @@ import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe.Sa
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -28,7 +28,7 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 		return !getMatchingRecipes(world, stack).isEmpty();
 	}
 
-	public static ItemStack applyPolish(World world, Vec3d position, ItemStack stack, ItemStack sandPaperStack) {
+	public static ItemStack applyPolish(World world, Vector3d position, ItemStack stack, ItemStack sandPaperStack) {
 		List<IRecipe<SandPaperInv>> matchingRecipes = getMatchingRecipes(world, stack);
 		if (!matchingRecipes.isEmpty())
 			return matchingRecipes.get(0)

@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerB
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -76,7 +76,7 @@ public class CogWheelBlock extends ShaftBlock {
 
         BlockState stateBelow = world.getBlockState(context.getPos()
                 .down());
-        IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+        FluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
         if (AllBlocks.ROTATION_SPEED_CONTROLLER.has(stateBelow) && isLarge) {
             return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER))
                     .with(AXIS, stateBelow.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X);

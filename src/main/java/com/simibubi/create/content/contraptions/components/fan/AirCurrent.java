@@ -32,8 +32,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -67,8 +67,8 @@ public class AirCurrent {
 		Direction facing = direction;
 		if (world.isRemote) {
 			float offset = pushing ? 0.5f : maxDistance + .5f;
-			Vec3d pos = VecHelper.getCenterOf(source.getPos())
-				.add(new Vec3d(facing.getDirectionVec()).scale(offset));
+			Vector3d pos = VecHelper.getCenterOf(source.getPos())
+				.add(Vector3d.of(facing.getDirectionVec()).scale(offset));
 			if (world.rand.nextFloat() < AllConfigs.CLIENT.fanParticleDensity.get())
 				world.addParticle(new AirFlowParticleData(source.getPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
@@ -81,15 +81,15 @@ public class AirCurrent {
 				continue;
 			}
 
-			Vec3d center = VecHelper.getCenterOf(source.getPos());
-			Vec3i flow = (pushing ? facing : facing.getOpposite()).getDirectionVec();
+			Vector3d center = VecHelper.getCenterOf(source.getPos());
+			Vector3i flow = (pushing ? facing : facing.getOpposite()).getDirectionVec();
 
 			float sneakModifier = entity.isSneaking() ? 4096f : 512f;
 			float speed = Math.abs(source.getSpeed());
 			double entityDistance = entity.getPositionVec()
 				.distanceTo(center);
 			float acceleration = (float) (speed / sneakModifier / (entityDistance / maxDistance));
-			Vec3d previousMotion = entity.getMotion();
+			Vector3d previousMotion = entity.getMotion();
 			float maxAcceleration = 5;
 
 			double xIn =
@@ -99,7 +99,7 @@ public class AirCurrent {
 			double zIn =
 				MathHelper.clamp(flow.getZ() * acceleration - previousMotion.z, -maxAcceleration, maxAcceleration);
 
-			entity.setMotion(previousMotion.add(new Vec3d(xIn, yIn, zIn).scale(1 / 8f)));
+			entity.setMotion(previousMotion.add(new Vector3d(xIn, yIn, zIn).scale(1 / 8f)));
 			entity.fallDistance = 0;
 
 			if (entity instanceof ServerPlayerEntity)
@@ -166,12 +166,12 @@ public class AirCurrent {
 		direction = source.getBlockState()
 			.get(BlockStateProperties.FACING);
 		pushing = source.getAirFlowDirection() == direction;
-		Vec3d directionVec = new Vec3d(direction.getDirectionVec());
-		Vec3d planeVec = VecHelper.planeByNormal(directionVec);
+		Vector3d directionVec = Vector3d.of(direction.getDirectionVec());
+		Vector3d planeVec = VecHelper.planeByNormal(directionVec);
 
 		// 4 Rays test for holes in the shapes blocking the flow
 		float offsetDistance = .25f;
-		Vec3d[] offsets = new Vec3d[] { planeVec.mul(offsetDistance, offsetDistance, offsetDistance),
+		Vector3d[] offsets = Vector3d.of[] { planeVec.mul(offsetDistance, offsetDistance, offsetDistance),
 			planeVec.mul(-offsetDistance, -offsetDistance, offsetDistance),
 			planeVec.mul(offsetDistance, -offsetDistance, -offsetDistance),
 			planeVec.mul(-offsetDistance, offsetDistance, -offsetDistance), };
@@ -195,11 +195,11 @@ public class AirCurrent {
 				break;
 			}
 
-			for (Vec3d offset : offsets) {
-				Vec3d rayStart = VecHelper.getCenterOf(currentPos)
+			for (Vector3d offset : offsets) {
+				Vector3d rayStart = VecHelper.getCenterOf(currentPos)
 					.subtract(directionVec.scale(.5f + 1 / 32f))
 					.add(offset);
-				Vec3d rayEnd = rayStart.add(directionVec.scale(1 + 1 / 32f));
+				Vector3d rayEnd = rayStart.add(directionVec.scale(1 + 1 / 32f));
 				BlockRayTraceResult blockraytraceresult =
 					world.rayTraceBlocks(rayStart, rayEnd, currentPos, voxelshape, state);
 				if (blockraytraceresult == null)
@@ -248,7 +248,7 @@ public class AirCurrent {
 			bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 		else {
 			float factor = maxDistance - 1;
-			Vec3d scale = directionVec.scale(factor);
+			Vector3d scale = directionVec.scale(factor);
 			if (factor > 0)
 				bounds = new AxisAlignedBB(start.offset(direction)).expand(scale);
 			else {

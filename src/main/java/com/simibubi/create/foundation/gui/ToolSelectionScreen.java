@@ -68,7 +68,7 @@ public class ToolSelectionScreen extends Screen {
 		RenderSystem.color4f(1, 1, 1, focused ? 7 / 8f : 1 / 2f);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(gray.location);
-		blit(x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
+		drawTexture(x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
 
 		float toolTipAlpha = yOffset / 10;
 		FontRenderer font = minecraft.fontRenderer;
@@ -77,7 +77,7 @@ public class ToolSelectionScreen extends Screen {
 
 		if (toolTipAlpha > 0.25f) {
 			RenderSystem.color4f(.7f, .7f, .8f, toolTipAlpha);
-			blit(x - 15, y + 33, gray.startX, gray.startY, w, h + 22, gray.width, gray.height);
+			drawTexture(x - 15, y + 33, gray.startX, gray.startY, w, h + 22, gray.width, gray.height);
 			RenderSystem.color4f(1, 1, 1, 1);
 
 			if (toolTip.size() > 0)

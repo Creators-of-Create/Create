@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class TurntableHandler {
 
@@ -32,8 +32,8 @@ public class TurntableHandler {
 		if (speed == 0)
 			return;
 		
-		Vec3d origin = VecHelper.getCenterOf(pos);
-		Vec3d offset = mc.player.getPositionVec().subtract(origin);
+		Vector3d origin = VecHelper.getCenterOf(pos);
+		Vector3d offset = mc.player.getPositionVec().subtract(origin);
 		
 		if (offset.length() > 1/4f)
 			speed *= MathHelper.clamp((1/2f - offset.length()) * 2, 0, 1);

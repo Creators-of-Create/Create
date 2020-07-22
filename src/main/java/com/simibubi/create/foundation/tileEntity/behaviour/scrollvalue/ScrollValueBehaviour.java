@@ -12,14 +12,14 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ScrollValueBehaviour extends TileEntityBehaviour {
 
 	public static BehaviourType<ScrollValueBehaviour> TYPE = new BehaviourType<>();
 
 	ValueBoxTransform slotPositioning;
-	Vec3d textShift;
+	Vector3d textShift;
 
 	int min = 0;
 	int max = 1;
@@ -43,7 +43,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		};
 		clientCallback = i -> {
 		};
-		textShift = Vec3d.ZERO;
+		textShift = Vector3d.ZERO;
 		formatter = i -> Integer.toString(i);
 		step = (c) -> 1;
 		value = 0;
@@ -108,7 +108,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		return this;
 	}
 
-	public ScrollValueBehaviour moveText(Vec3d shift) {
+	public ScrollValueBehaviour moveText(Vector3d shift) {
 		textShift = shift;
 		return this;
 	}
@@ -165,9 +165,9 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		return TYPE;
 	}
 
-	public boolean testHit(Vec3d hit) {
+	public boolean testHit(Vector3d hit) {
 		BlockState state = tileEntity.getBlockState();
-		Vec3d localHit = hit.subtract(new Vec3d(tileEntity.getPos()));
+		Vector3d localHit = hit.subtract(Vector3d.of(tileEntity.getPos()));
 		return slotPositioning.testHit(state, localHit);
 	}
 

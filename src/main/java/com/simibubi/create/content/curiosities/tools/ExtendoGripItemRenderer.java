@@ -12,12 +12,12 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<ExtendoGripModel> {
 
-	private static final Vec3d rotationOffset = new Vec3d(0, 1 / 2f, 1 / 2f);
-	private static final Vec3d cogRotationOffset = new Vec3d(0, 1 / 16f, 0);
+	private static final Vector3d rotationOffset = new Vector3d(0, 1 / 2f, 1 / 2f);
+	private static final Vector3d cogRotationOffset = new Vector3d(0, 1 / 16f, 0);
 
 	@Override
 	protected void render(ItemStack stack, ExtendoGripModel model, PartialItemModelRenderer renderer, MatrixStack ms,

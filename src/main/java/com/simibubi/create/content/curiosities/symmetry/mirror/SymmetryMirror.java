@@ -14,14 +14,14 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.FloatNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public abstract class SymmetryMirror {
 
@@ -30,12 +30,12 @@ public abstract class SymmetryMirror {
 	public static final String CROSS_PLANE = "cross_plane";
 	public static final String TRIPLE_PLANE = "triple_plane";
 
-	protected Vec3d position;
+	protected Vector3d position;
 	protected IStringSerializable orientation;
 	protected int orientationIndex;
 	public boolean enable;
 
-	public SymmetryMirror(Vec3d pos) {
+	public SymmetryMirror(Vector3d pos) {
 		position = pos;
 		enable = true;
 		orientationIndex = 0;
@@ -50,7 +50,7 @@ public abstract class SymmetryMirror {
 		return orientation;
 	}
 
-	public Vec3d getPosition() {
+	public Vector3d getPosition() {
 		return position;
 	}
 
@@ -105,7 +105,7 @@ public abstract class SymmetryMirror {
 
 	public static SymmetryMirror fromNBT(CompoundNBT nbt) {
 		ListNBT floatList = nbt.getList($POSITION, 5);
-		Vec3d pos = new Vec3d(floatList.getFloat(0), floatList.getFloat(1), floatList.getFloat(2));
+		Vector3d pos = new Vector3d(floatList.getFloat(0), floatList.getFloat(1), floatList.getFloat(2));
 		SymmetryMirror element;
 
 		switch (nbt.getString($TYPE)) {
@@ -129,13 +129,13 @@ public abstract class SymmetryMirror {
 		return element;
 	}
 
-	protected Vec3d getDiff(BlockPos position) {
+	protected Vector3d getDiff(BlockPos position) {
 		return this.position.scale(-1)
 			.add(position.getX(), position.getY(), position.getZ());
 	}
 
 	protected BlockPos getIDiff(BlockPos position) {
-		Vec3d diff = getDiff(position);
+		Vector3d diff = getDiff(position);
 		return new BlockPos((int) diff.x, (int) diff.y, (int) diff.z);
 	}
 
@@ -144,7 +144,7 @@ public abstract class SymmetryMirror {
 	}
 
 	protected BlockState flipY(BlockState in) {
-		for (IProperty<?> property : in.getProperties()) {
+		for (Property<?> property : in.getProperties()) {
 
 			if (property == BlockStateProperties.HALF)
 				return in.cycle(property);
@@ -201,7 +201,7 @@ public abstract class SymmetryMirror {
 			position.getZ() - diff.getZ() - diff.getX());
 	}
 
-	public void setPosition(Vec3d pos3d) {
+	public void setPosition(Vector3d pos3d) {
 		this.position = pos3d;
 	}
 

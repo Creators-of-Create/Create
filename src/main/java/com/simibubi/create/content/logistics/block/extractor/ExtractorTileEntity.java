@@ -25,7 +25,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ExtractorTileEntity extends SmartTileEntity {
 
@@ -59,14 +59,14 @@ public class ExtractorTileEntity extends SmartTileEntity {
 			}
 		}
 
-		Vec3d entityPos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);
+		Vector3d entityPos = VecHelper.getCenterOf(getPos()).add(0, -0.5f, 0);
 		Entity entityIn = null;
 		Direction facing = AttachedLogisticalBlock.getBlockFacing(getBlockState());
 		if (facing == Direction.DOWN)
 			entityPos = entityPos.add(0, .5, 0);
 
 		entityIn = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, stack);
-		entityIn.setMotion(Vec3d.ZERO);
+		entityIn.setMotion(Vector3d.ZERO);
 		((ItemEntity) entityIn).setPickupDelay(5);
 		world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f, .1f);
 		world.addEntity(entityIn);

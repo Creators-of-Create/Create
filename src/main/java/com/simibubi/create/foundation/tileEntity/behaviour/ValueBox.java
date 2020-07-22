@@ -17,14 +17,14 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ValueBox extends ChasingAABBOutline {
 
 	protected String label = "Value Box";
 	protected String sublabel = "";
 	protected String scrollTooltip = "";
-	protected Vec3d labelOffset = Vec3d.ZERO;
+	protected Vector3d labelOffset = Vector3d.ZERO;
 
 	protected int passiveColor;
 	protected int highlightColor;
@@ -46,7 +46,7 @@ public class ValueBox extends ChasingAABBOutline {
 		return this;
 	}
 
-	public ValueBox offsetLabel(Vec3d offset) {
+	public ValueBox offsetLabel(Vector3d offset) {
 		this.labelOffset = offset;
 		return this;
 	}

@@ -28,7 +28,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 
@@ -381,9 +381,9 @@ public class BeltInventory {
 
 	public void eject(TransportedItemStack stack) {
 		ItemStack ejected = stack.stack;
-		Vec3d outPos = BeltHelper.getVectorForOffset(belt, stack.beltPosition);
+		Vector3d outPos = BeltHelper.getVectorForOffset(belt, stack.beltPosition);
 		float movementSpeed = Math.max(Math.abs(belt.getBeltMovementSpeed()), 1 / 8f);
-		Vec3d outMotion = new Vec3d(belt.getBeltChainDirection()).scale(movementSpeed)
+		Vector3d outMotion = Vector3d.of(belt.getBeltChainDirection()).scale(movementSpeed)
 			.add(0, 1 / 8f, 0);
 		outPos.add(outMotion.normalize());
 		ItemEntity entity = new ItemEntity(belt.getWorld(), outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);

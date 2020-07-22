@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEntity> {
 
@@ -29,7 +29,7 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		SuperByteBuffer flapBuffer = AllBlockPartials.BELT_TUNNEL_FLAP.renderOn(te.getBlockState());
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		Vec3d pivot = VecHelper.voxelSpace(0, 10, 1f);
+		Vector3d pivot = VecHelper.voxelSpace(0, 10, 1f);
 		MatrixStacker msr = MatrixStacker.of(ms);
 
 		for (Direction direction : Direction.values()) {

@@ -20,7 +20,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,8 +30,8 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 
 	private ResourceLocation regular = new ResourceLocation(Create.ID, "textures/entity/super_glue/slime.png");
 
-	private Vec3d[] quad1;
-	private Vec3d[] quad2;
+	private Vector3d[] quad1;
+	private Vector3d[] quad2;
 	private float[] u = { 0, 1, 1, 0 };
 	private float[] v = { 0, 0, 1, 1 };
 
@@ -66,10 +66,10 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		AngleHelper.applyRotation(face, ms);
 		Entry peek = ms.peek();
 
-		Vec3d[][] quads = { quad1, quad2 };
-		for (Vec3d[] quad : quads) {
+		Vector3d[][] quads = { quad1, quad2 };
+		for (Vector3d[] quad : quads) {
 			for (int i = 0; i < 4; i++) {
-				Vec3d vertex = quad[i];
+				Vector3d vertex = quad[i];
 				builder.vertex(peek.getModel(), (float) vertex.x, (float) vertex.y, (float) vertex.z)
 					.color(255, 255, 255, 255)
 					.texture(u[i], v[i])
@@ -84,31 +84,31 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 	}
 
 	private void initQuads() {
-		Vec3d diff = new Vec3d(Direction.SOUTH.getDirectionVec());
-		Vec3d extension = diff.normalize()
+		Vector3d diff = Vector3d.of(Direction.SOUTH.getDirectionVec());
+		Vector3d extension = diff.normalize()
 			.scale(1 / 32f - 1 / 128f);
-		Vec3d plane = VecHelper.planeByNormal(diff);
+		Vector3d plane = VecHelper.planeByNormal(diff);
 		Axis axis = Direction.getFacingFromVector(diff.x, diff.y, diff.z)
 			.getAxis();
 
-		Vec3d start = Vec3d.ZERO.subtract(extension);
-		Vec3d end = Vec3d.ZERO.add(extension);
+		Vector3d start = Vector3d.ZERO.subtract(extension);
+		Vector3d end = Vector3d.ZERO.add(extension);
 
 		plane = plane.scale(1 / 2f);
-		Vec3d a1 = plane.add(start);
-		Vec3d b1 = plane.add(end);
+		Vector3d a1 = plane.add(start);
+		Vector3d b1 = plane.add(end);
 		plane = VecHelper.rotate(plane, -90, axis);
-		Vec3d a2 = plane.add(start);
-		Vec3d b2 = plane.add(end);
+		Vector3d a2 = plane.add(start);
+		Vector3d b2 = plane.add(end);
 		plane = VecHelper.rotate(plane, -90, axis);
-		Vec3d a3 = plane.add(start);
-		Vec3d b3 = plane.add(end);
+		Vector3d a3 = plane.add(start);
+		Vector3d b3 = plane.add(end);
 		plane = VecHelper.rotate(plane, -90, axis);
-		Vec3d a4 = plane.add(start);
-		Vec3d b4 = plane.add(end);
+		Vector3d a4 = plane.add(start);
+		Vector3d b4 = plane.add(end);
 
-		quad1 = new Vec3d[] { a2, a3, a4, a1 };
-		quad2 = new Vec3d[] { b3, b2, b1, b4 };
+		quad1 = new Vector3d[] { a2, a3, a4, a1 };
+		quad2 = new Vector3d[] { b3, b2, b1, b4 };
 	}
 
 	private int getBrightnessForRender(SuperGlueEntity entity) {

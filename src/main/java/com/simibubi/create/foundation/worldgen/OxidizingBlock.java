@@ -59,7 +59,7 @@ public class OxidizingBlock extends MetalBlock {
 				if (!worldIn.isBlockPresent(neighbourPos))
 					continue;
 				BlockState neighborState = worldIn.getBlockState(neighbourPos);
-				if (neighborState.has(OXIDIZATION) && neighborState.get(OXIDIZATION) != 0) {
+				if (neighborState.func_235903_d_(OXIDIZATION).map(ox -> ox != 0).orElse(false)) {
 					neighbors.add(neighborState.get(OXIDIZATION));
 				}
 				if (Block.hasSolidSide(neighborState, worldIn, neighbourPos, facing.getOpposite())) {
@@ -76,8 +76,10 @@ public class OxidizingBlock extends MetalBlock {
 	}
 
 	@Override
-	public float getBlockHardness(BlockState blockState, IBlockReader worldIn, BlockPos pos) {
-		return this.blockHardness - 0.2f * blockState.get(OXIDIZATION);
+	public float getPlayerRelativeBlockHardness(BlockState blockState, PlayerEntity player, IBlockReader worldIn,
+			BlockPos pos) {
+		return super.getPlayerRelativeBlockHardness(blockState, player, worldIn, pos)
+				- 0.2f * blockState.get(OXIDIZATION);
 	}
 	
 	@Override

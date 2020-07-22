@@ -30,7 +30,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -85,7 +85,7 @@ public class SymmetryWandItem extends Item {
 		// No Shift -> Make / Move Mirror
 		wand.getTag()
 			.putBoolean(ENABLE, true);
-		Vec3d pos3d = new Vec3d(pos.getX(), pos.getY(), pos.getZ());
+		Vector3d pos3d = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
 		SymmetryMirror newElement = new PlaneMirror(pos3d);
 
 		if (previousElement instanceof EmptyMirror) {
@@ -159,7 +159,7 @@ public class SymmetryWandItem extends Item {
 			.contains(SYMMETRY)) {
 			wand.setTag(new CompoundNBT());
 			wand.getTag()
-				.put(SYMMETRY, new EmptyMirror(new Vec3d(0, 0, 0)).writeToNbt());
+				.put(SYMMETRY, new EmptyMirror(new Vector3d(0, 0, 0)).writeToNbt());
 			wand.getTag()
 				.putBoolean(ENABLE, false);
 		}
@@ -189,8 +189,8 @@ public class SymmetryWandItem extends Item {
 		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundNBT) wand.getTag()
 			.getCompound(SYMMETRY));
 
-		Vec3d mirrorPos = symmetry.getPosition();
-		if (mirrorPos.distanceTo(new Vec3d(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
+		Vector3d mirrorPos = symmetry.getPosition();
+		if (mirrorPos.distanceTo(Vector3d.of(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
 			return;
 		if (!player.isCreative() && isHoldingBlock(player, block)
 			&& BlockHelper.findAndRemoveInInventory(block, player, 1) == 0)
@@ -255,8 +255,8 @@ public class SymmetryWandItem extends Item {
 		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundNBT) wand.getTag()
 			.getCompound(SYMMETRY));
 
-		Vec3d mirrorPos = symmetry.getPosition();
-		if (mirrorPos.distanceTo(new Vec3d(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
+		Vector3d mirrorPos = symmetry.getPosition();
+		if (mirrorPos.distanceTo(Vector3d.of(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
 			return;
 
 		symmetry.process(blockSet);

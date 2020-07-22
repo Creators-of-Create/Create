@@ -18,7 +18,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class BlockClusterOutline extends Outline {
 
@@ -32,9 +32,9 @@ public class BlockClusterOutline extends Outline {
 	@Override
 	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		for (MergeEntry edge : cluster.visibleEdges) {
-			Vec3d start = new Vec3d(edge.pos);
+			Vector3d start = Vector3d.of(edge.pos);
 			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, edge.axis);
-			renderAACuboidLine(ms, buffer, start, new Vec3d(edge.pos.offset(direction)));
+			renderAACuboidLine(ms, buffer, start, Vector3d.of(edge.pos.offset(direction)));
 		}
 
 		for (MergeEntry face : cluster.visibleFaces.keySet()) {
@@ -56,9 +56,9 @@ public class BlockClusterOutline extends Outline {
 			.getLocation(), true);
 		IVertexBuilder builder = buffer.getLateBuffer(translucentType);
 
-		Vec3d center = VecHelper.getCenterOf(pos);
-		Vec3d offset = new Vec3d(face.getDirectionVec());
-		Vec3d plane = VecHelper.planeByNormal(offset);
+		Vector3d center = VecHelper.getCenterOf(pos);
+		Vector3d offset = Vector3d.of(face.getDirectionVec());
+		Vector3d plane = VecHelper.planeByNormal(offset);
 		Axis axis = face.getAxis();
 
 		offset = offset.scale(1 / 2f + 1 / 64d);
@@ -67,13 +67,13 @@ public class BlockClusterOutline extends Outline {
 
 		int deg = face.getAxisDirection()
 			.getOffset() * 90;
-		Vec3d a1 = plane.add(center);
+		Vector3d a1 = plane.add(center);
 		plane = VecHelper.rotate(plane, deg, axis);
-		Vec3d a2 = plane.add(center);
+		Vector3d a2 = plane.add(center);
 		plane = VecHelper.rotate(plane, deg, axis);
-		Vec3d a3 = plane.add(center);
+		Vector3d a3 = plane.add(center);
 		plane = VecHelper.rotate(plane, deg, axis);
-		Vec3d a4 = plane.add(center);
+		Vector3d a4 = plane.add(center);
 
 		putQuad(ms, builder, a1, a2, a3, a4, face);
 	}

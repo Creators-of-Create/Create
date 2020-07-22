@@ -42,7 +42,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -216,7 +216,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void move(MoverType typeIn, Vec3d pos) {
+	public void move(MoverType typeIn, Vector3d pos) {
 		if (!world.isRemote && isAlive() && pos.lengthSquared() > 0.0D) {
 			remove();
 			onBroken(null);

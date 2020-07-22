@@ -17,7 +17,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class BlockBreakingMovementBehaviour extends MovementBehaviour {
@@ -64,7 +64,7 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 			if (damageSource != null && !world.isRemote)
 				entity.attackEntityFrom(damageSource, damage);
 			if (throwsEntities() && (world.isRemote == (entity instanceof PlayerEntity))) {
-				Vec3d motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
+				Vector3d motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
 				int maxBoost = 4;
 				if (motionBoost.length() > maxBoost) {
 					motionBoost = motionBoost.subtract(motionBoost.normalize().scale(motionBoost.length() - maxBoost));
@@ -131,7 +131,7 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 			return;
 		if (!data.contains("BreakingPos"))
 			return;
-		if (context.relativeMotion.equals(Vec3d.ZERO)) {
+		if (context.relativeMotion.equals(Vector3d.ZERO)) {
 			context.stall = false;
 			return;
 		}

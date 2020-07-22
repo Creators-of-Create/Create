@@ -28,7 +28,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -243,7 +243,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 			return Direction.UP;
 		Direction facing = state.get(HORIZONTAL_FACING);
 		Pointing point = state.get(POINTING);
-		Vec3d targetVec = new Vec3d(0, 1, 0);
+		Vector3d targetVec = new Vector3d(0, 1, 0);
 		targetVec = VecHelper.rotate(targetVec, -point.getXRotation(), Axis.Z);
 		targetVec = VecHelper.rotate(targetVec, AngleHelper.horizontalAngle(facing), Axis.Y);
 		return Direction.getFacingFromVector(targetVec.x, targetVec.y, targetVec.z);

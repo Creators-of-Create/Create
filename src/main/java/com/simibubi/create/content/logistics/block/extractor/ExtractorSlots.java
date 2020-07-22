@@ -12,19 +12,19 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ExtractorSlots {
 
 	static class Filter extends ValueBoxTransform {
 
-		Vec3d offsetForHorizontal = VecHelper.voxelSpace(8f, 10.5f, 14f);
-		Vec3d offsetForUpward = VecHelper.voxelSpace(8f, 14.15f, 3.5f);
-		Vec3d offsetForDownward = VecHelper.voxelSpace(8f, 1.85f, 3.5f);
+		Vector3d offsetForHorizontal = VecHelper.voxelSpace(8f, 10.5f, 14f);
+		Vector3d offsetForUpward = VecHelper.voxelSpace(8f, 14.15f, 3.5f);
+		Vector3d offsetForDownward = VecHelper.voxelSpace(8f, 1.85f, 3.5f);
 
 		@Override
-		protected Vec3d getLocalOffset(BlockState state) {
-			Vec3d location = offsetForHorizontal;
+		protected Vector3d getLocalOffset(BlockState state) {
+			Vector3d location = offsetForHorizontal;
 			if (state.getBlock() instanceof TransposerBlock)
 				location = location.add(0, 2 / 16f, 0);
 			if (AttachedLogisticalBlock.isVertical(state))
@@ -49,13 +49,13 @@ public class ExtractorSlots {
 			super(first);
 		}
 
-		Vec3d offsetForHorizontal = VecHelper.voxelSpace(11.5f, 4f, 14f);
-		Vec3d offsetForUpward = VecHelper.voxelSpace(10f, 14f, 11.5f);
-		Vec3d offsetForDownward = VecHelper.voxelSpace(10f, 2f, 11.5f);
+		Vector3d offsetForHorizontal = VecHelper.voxelSpace(11.5f, 4f, 14f);
+		Vector3d offsetForUpward = VecHelper.voxelSpace(10f, 14f, 11.5f);
+		Vector3d offsetForDownward = VecHelper.voxelSpace(10f, 2f, 11.5f);
 
 		@Override
-		protected Vec3d getLocalOffset(BlockState state) {
-			Vec3d location = offsetForHorizontal;
+		protected Vector3d getLocalOffset(BlockState state) {
+			Vector3d location = offsetForHorizontal;
 			if (state.getBlock() instanceof TransposerBlock)
 				location = location.add(0, 2 / 16f, 0);
 			if (!isFirst())

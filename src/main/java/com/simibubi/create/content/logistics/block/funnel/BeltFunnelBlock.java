@@ -14,7 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 
 public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 
-	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
+	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 
 	public enum Shape implements IStringSerializable {
 		RETRACTED(AllShapes.BELT_FUNNEL_RETRACTED), EXTENDED(AllShapes.BELT_FUNNEL_EXTENDED);
@@ -41,7 +41,7 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 		}
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 	}

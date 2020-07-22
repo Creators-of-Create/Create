@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -23,8 +23,8 @@ public abstract class MovementBehaviour {
 
 	public void visitNewPosition(MovementContext context, BlockPos pos) {}
 
-	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return Vec3d.ZERO;
+	public Vector3d getActiveAreaOffset(MovementContext context) {
+		return Vector3d.ZERO;
 	}
 
 	public void dropItem(MovementContext context, ItemStack stack) {
@@ -32,7 +32,7 @@ public abstract class MovementBehaviour {
 		if (remainder.isEmpty())
 			return;
 
-		Vec3d vec = context.position;
+		Vector3d vec = context.position;
 		ItemEntity itemEntity = new ItemEntity(context.world, vec.x, vec.y, vec.z, remainder);
 		itemEntity.setMotion(context.motion.add(0, 0.5f, 0)
 			.scale(context.world.rand.nextFloat() * .3f));

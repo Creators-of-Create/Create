@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class SpeedControllerTileEntity extends KineticTileEntity {
 
@@ -35,7 +35,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 			new ScrollValueBehaviour(Lang.translate("generic.speed"), this, new ControllerValueBoxTransform());
 		targetSpeed.between(-max, max);
 		targetSpeed.value = DEFAULT_SPEED;
-		targetSpeed.moveText(new Vec3d(9, 0, 10));
+		targetSpeed.moveText(new Vector3d(9, 0, 10));
 		targetSpeed.withUnit(i -> Lang.translate("generic.unit.rpm"));
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		targetSpeed.withStepFunction(CreativeMotorTileEntity::step);
@@ -106,7 +106,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {
 
 		@Override
-		protected Vec3d getSouthLocation() {
+		protected Vector3d getSouthLocation() {
 			return VecHelper.voxelSpace(8, 11.5f, 14);
 		}
 

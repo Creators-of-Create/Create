@@ -13,29 +13,29 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 	@Override
-	protected Vec3d getLocalOffset(BlockState state) {
+	protected Vector3d getLocalOffset(BlockState state) {
 		if (AllBlocks.BRASS_BELT_FUNNEL.has(state))
 			if (state.get(BeltFunnelBlock.SHAPE) == Shape.RETRACTED)
 				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 13, 7.5f),
 					AngleHelper.horizontalAngle(getSide()), Axis.Y);
 
-		Vec3d localOffset =
+		Vector3d localOffset =
 			getSide() == Direction.UP ? VecHelper.voxelSpace(8, 14.5f, 8) : VecHelper.voxelSpace(8, 1.5f, 8);
 
 		if (getSide().getAxis()
 			.isHorizontal()) {
-			Vec3d southLocation = VecHelper.voxelSpace(8, 8, 14.5f);
+			Vector3d southLocation = VecHelper.voxelSpace(8, 8, 14.5f);
 			localOffset = VecHelper.rotateCentered(southLocation, AngleHelper.horizontalAngle(getSide()), Axis.Y);
 		}
 
 		if (AllBlocks.BRASS_CHUTE_FUNNEL.has(state)) {
 			Direction facing = state.get(ChuteFunnelBlock.HORIZONTAL_FACING);
-			localOffset = localOffset.subtract(new Vec3d(facing.getDirectionVec()).scale(2 / 16f));
+			localOffset = localOffset.subtract(Vector3d.of(facing.getDirectionVec()).scale(2 / 16f));
 		}
 
 		return localOffset;
@@ -89,8 +89,8 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	protected Vec3d getSouthLocation() {
-		return Vec3d.ZERO;
+	protected Vector3d getSouthLocation() {
+		return Vector3d.ZERO;
 	}
 
 }

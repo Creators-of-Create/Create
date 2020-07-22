@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class BeltObserverTileEntity extends SmartTileEntity {
 
@@ -26,7 +26,7 @@ public class BeltObserverTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		filtering = new FilteringBehaviour(this, new BeltObserverFilterSlot()).moveText(new Vec3d(0, 5, 0));
+		filtering = new FilteringBehaviour(this, new BeltObserverFilterSlot()).moveText(new Vector3d(0, 5, 0));
 		behaviours.add(filtering);
 	}
 

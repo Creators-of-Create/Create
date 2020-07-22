@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class CenteredSideValueBoxTransform extends ValueBoxTransform.Sided {
 
@@ -21,7 +21,7 @@ public class CenteredSideValueBoxTransform extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	protected Vec3d getSouthLocation() {
+	protected Vector3d getSouthLocation() {
 		return VecHelper.voxelSpace(8, 8, 16);
 	}
 

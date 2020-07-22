@@ -15,7 +15,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -80,9 +80,9 @@ public class SuperGlueItem extends Item {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void spawnParticles(World world, BlockPos pos, Direction direction, boolean fullBlock) {
-		Vec3d vec = new Vec3d(direction.getDirectionVec());
-		Vec3d plane = VecHelper.planeByNormal(vec);
-		Vec3d facePos = VecHelper.getCenterOf(pos)
+		Vector3d vec = Vector3d.of(direction.getDirectionVec());
+		Vector3d plane = VecHelper.planeByNormal(vec);
+		Vector3d facePos = VecHelper.getCenterOf(pos)
 			.add(vec.scale(.5f));
 
 		float distance = fullBlock ? 1f : .25f + .25f * (world.rand.nextFloat() - .5f);
@@ -90,13 +90,13 @@ public class SuperGlueItem extends Item {
 		ItemStack stack = new ItemStack(Items.SLIME_BALL);
 
 		for (int i = fullBlock ? 40 : 15; i > 0; i--) {
-			Vec3d offset = VecHelper.rotate(plane, 360 * world.rand.nextFloat(), direction.getAxis());
-			Vec3d motion = offset.normalize()
+			Vector3d offset = VecHelper.rotate(plane, 360 * world.rand.nextFloat(), direction.getAxis());
+			Vector3d motion = offset.normalize()
 				.scale(1 / 16f);
 			if (fullBlock)
-				offset = new Vec3d(MathHelper.clamp(offset.x, -.5, .5), MathHelper.clamp(offset.y, -.5, .5),
+				offset = new Vector3d(MathHelper.clamp(offset.x, -.5, .5), MathHelper.clamp(offset.y, -.5, .5),
 					MathHelper.clamp(offset.z, -.5, .5));
-			Vec3d particlePos = facePos.add(offset);
+			Vector3d particlePos = facePos.add(offset);
 			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), particlePos.x, particlePos.y,
 				particlePos.z, motion.x, motion.y, motion.z);
 		}

@@ -30,7 +30,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class StructureTransform {
 
@@ -40,7 +40,7 @@ public class StructureTransform {
 	Axis rotationAxis;
 	BlockPos offset;
 
-	public StructureTransform(BlockPos offset, Vec3d rotation) {
+	public StructureTransform(BlockPos offset, Vector3d rotation) {
 		this.offset = offset;
 		if (rotation.x != 0) {
 			rotationAxis = Axis.X;
@@ -77,7 +77,7 @@ public class StructureTransform {
 	}
 	
 	public BlockPos apply(BlockPos localPos) {
-		Vec3d vec = VecHelper.getCenterOf(localPos);
+		Vector3d vec = VecHelper.getCenterOf(localPos);
 		vec = VecHelper.rotateCentered(vec, angle, rotationAxis);
 		localPos = new BlockPos(vec);
 		return localPos.add(offset);

@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class PumpRenderer extends KineticTileEntityRenderer {
 
@@ -29,7 +29,7 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 		if (!(te instanceof PumpTileEntity))
 			return;
 		PumpTileEntity pump = (PumpTileEntity) te;
-		Vec3d rotationOffset = new Vec3d(.5, 14 / 16f, .5);
+		Vector3d rotationOffset = new Vector3d(.5, 14 / 16f, .5);
 		BlockState blockState = te.getBlockState();
 		float angle = MathHelper.lerp(pump.arrowDirection.get(partialTicks), 0, 90) - 90;
 		for (float yRot : new float[] { 0, 90 }) {

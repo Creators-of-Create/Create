@@ -111,7 +111,7 @@ public class AllBlockPartials {
 
 	private static void populateMaps() {
 		for (Direction d : Iterate.directions) {
-			PIPE_RIMS.put(d, get("fluid_pipe/rim/" + d.getName()));
+			PIPE_RIMS.put(d, get("fluid_pipe/rim/" + d.getString()));
 		}
 	}
 

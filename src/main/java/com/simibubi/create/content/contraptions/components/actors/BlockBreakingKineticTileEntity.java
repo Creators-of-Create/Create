@@ -9,7 +9,7 @@ import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -17,7 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
 
@@ -135,17 +135,17 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	public void onBlockBroken(BlockState stateToBreak) {
-		IFluidState ifluidstate = world.getFluidState(breakingPos);
+		FluidState ifluidstate = world.getFluidState(breakingPos);
 		world.playEvent(2001, breakingPos, Block.getStateId(stateToBreak));
 		TileEntity tileentity = stateToBreak.hasTileEntity() ? world.getTileEntity(breakingPos) : null;
-		Vec3d vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), world.rand, .125f);
+		Vector3d vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), world.rand, .125f);
 
 		Block.getDrops(stateToBreak, (ServerWorld) world, breakingPos, tileentity).forEach((stack) -> {
 			if (!stack.isEmpty() && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)
 					&& !world.restoringBlockSnapshots) {
 				ItemEntity itementity = new ItemEntity(world, vec.x, vec.y, vec.z, stack);
 				itementity.setDefaultPickupDelay();
-				itementity.setMotion(Vec3d.ZERO);
+				itementity.setMotion(Vector3d.ZERO);
 				world.addEntity(itementity);
 			}
 		});

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 
@@ -31,7 +31,7 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 		SuperByteBuffer flapBuffer = AllBlockPartials.BELT_FUNNEL_FLAP.renderOn(te.getBlockState());
-		Vec3d pivot = VecHelper.voxelSpace(0, 10, 9.5f);
+		Vector3d pivot = VecHelper.voxelSpace(0, 10, 9.5f);
 		MatrixStacker msr = MatrixStacker.of(ms);
 
 		float horizontalAngle = AngleHelper.horizontalAngle(FunnelBlock.getFunnelFacing(te.getBlockState())

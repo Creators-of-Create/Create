@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -206,9 +206,9 @@ public class DepotTileEntity extends SmartTileEntity {
 		return true;
 	}
 
-	private Vec3d getWorldPositionOf(TransportedItemStack transported) {
-		Vec3d offsetVec = new Vec3d(.5f, 14 / 16f, .5f);
-		return offsetVec.add(new Vec3d(pos));
+	private Vector3d getWorldPositionOf(TransportedItemStack transported) {
+		Vector3d offsetVec = new Vector3d(.5f, 14 / 16f, .5f);
+		return offsetVec.add(Vector3d.of(pos));
 	}
 
 }

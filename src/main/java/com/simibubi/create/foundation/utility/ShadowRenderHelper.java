@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IWorldReader;
 
@@ -24,7 +24,7 @@ public class ShadowRenderHelper {
 
 	private static final RenderType SHADOW_LAYER = RenderType.getEntityNoOutline(new ResourceLocation("textures/misc/shadow.png"));
 
-	public static void renderShadow(MatrixStack p_229096_0_, IRenderTypeBuffer p_229096_1_, Vec3d pos,
+	public static void renderShadow(MatrixStack p_229096_0_, IRenderTypeBuffer p_229096_1_, Vector3d pos,
 			float p_229096_3_, float p_229096_6_) {
 		float f = p_229096_6_;
 

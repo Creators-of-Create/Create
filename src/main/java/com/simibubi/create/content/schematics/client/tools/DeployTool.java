@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class DeployTool extends PlacementToolBase {
 
@@ -51,13 +51,13 @@ public class DeployTool extends PlacementToolBase {
 
 		SchematicTransformation transformation = schematicHandler.getTransformation();
 		AxisAlignedBB bounds = schematicHandler.getBounds();
-		Vec3d center = bounds.getCenter();
-		Vec3d rotationOffset = transformation.getRotationOffset(true);
+		Vector3d center = bounds.getCenter();
+		Vector3d rotationOffset = transformation.getRotationOffset(true);
 		int centerX = (int) center.x;
 		int centerZ = (int) center.z;
 		double xOrigin = bounds.getXSize() / 2f;
 		double zOrigin = bounds.getZSize() / 2f;
-		Vec3d origin = new Vec3d(xOrigin, 0, zOrigin);
+		Vector3d origin = new Vector3d(xOrigin, 0, zOrigin);
 
 		ms.translate(x - centerX, y, z - centerZ);
 		MatrixStacker.of(ms)
@@ -87,7 +87,7 @@ public class DeployTool extends PlacementToolBase {
 	public boolean handleRightClick() {
 		if (selectedPos == null)
 			return super.handleRightClick();
-		Vec3d center = schematicHandler.getBounds()
+		Vector3d center = schematicHandler.getBounds()
 			.getCenter();
 		BlockPos target = selectedPos.add(-((int) center.x), 0, -((int) center.z));
 

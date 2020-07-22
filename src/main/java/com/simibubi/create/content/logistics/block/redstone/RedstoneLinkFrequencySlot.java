@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 
@@ -17,13 +17,13 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 		super(first);
 	}
 
-	Vec3d horizontal = VecHelper.voxelSpace(10f, 5.5f, 2.5f);
-	Vec3d vertical = VecHelper.voxelSpace(10f, 2.5f, 5.5f);
+	Vector3d horizontal = VecHelper.voxelSpace(10f, 5.5f, 2.5f);
+	Vector3d vertical = VecHelper.voxelSpace(10f, 2.5f, 5.5f);
 
 	@Override
-	protected Vec3d getLocalOffset(BlockState state) {
+	protected Vector3d getLocalOffset(BlockState state) {
 		Direction facing = state.get(RedstoneLinkBlock.FACING);
-		Vec3d location = vertical;
+		Vector3d location = vertical;
 
 		if (facing.getAxis()
 			.isHorizontal()) {

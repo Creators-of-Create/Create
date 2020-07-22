@@ -17,7 +17,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -62,11 +62,11 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 			World world = e.getEntityWorld();
 			if (world.isRemote && (e instanceof PlayerEntity)) {
 				if (worldIn.getBlockState(e.getPosition()) != state) {
-					Vec3d origin = VecHelper.getCenterOf(pos);
-					Vec3d offset = e.getPositionVec()
+					Vector3d origin = VecHelper.getCenterOf(pos);
+					Vector3d offset = e.getPositionVec()
 						.subtract(origin);
 					offset = VecHelper.rotate(offset, MathHelper.clamp(speed, -16, 16) / 1f, Axis.Y);
-					Vec3d movement = origin.add(offset)
+					Vector3d movement = origin.add(offset)
 						.subtract(e.getPositionVec());
 					e.setMotion(e.getMotion()
 						.add(movement));
@@ -84,7 +84,7 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 				((LivingEntity) e).setIdleTime(20);
 				e.setRenderYawOffset(diff);
 				e.setRotationYawHead(diff);
-				e.onGround = false;
+				e.setOnGround(false);
 				e.velocityChanged = true;
 			}
 

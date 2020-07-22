@@ -41,7 +41,7 @@ public class GlueEffectPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			Minecraft mc = Minecraft.getInstance();
-			if (!mc.player.getPosition().withinDistance(pos, 100))
+			if (!mc.player.getBlockPos().withinDistance(pos, 100))
 				return;
 			SuperGlueItem.spawnParticles(mc.world, pos, direction, fullBlock);
 		}));

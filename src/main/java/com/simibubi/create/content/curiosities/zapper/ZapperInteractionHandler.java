@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -52,9 +52,9 @@ public class ZapperInteractionHandler {
 		if (player.isSneaking())
 			return false;
 
-		Vec3d start = player.getPositionVec()
+		Vector3d start = player.getPositionVec()
 			.add(0, player.getEyeHeight(), 0);
-		Vec3d range = player.getLookVec()
+		Vector3d range = player.getLookVec()
 			.scale(getRange(stack));
 		BlockRayTraceResult raytrace = player.world
 			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));

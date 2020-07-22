@@ -32,7 +32,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.items.IItemHandler;
 
 import static com.simibubi.create.content.contraptions.processing.HeaterBlock.getHeaterLevel;
@@ -58,7 +58,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			.isHorizontal()) {
 
 			@Override
-			protected Vec3d getSouthLocation() {
+			protected Vector3d getSouthLocation() {
 				return super.getSouthLocation().add(0, 4 / 16f, 0);
 			}
 
@@ -180,12 +180,12 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 			ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
 			float angle = world.rand.nextFloat() * 360;
-			Vec3d offset = new Vec3d(0, 0, 0.25f);
+			Vector3d offset = new Vector3d(0, 0, 0.25f);
 			offset = VecHelper.rotate(offset, angle, Axis.Y);
-			Vec3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
+			Vector3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
 				.add(0, .25f, 0);
 
-			Vec3d center = offset.add(VecHelper.getCenterOf(pos));
+			Vector3d center = offset.add(VecHelper.getCenterOf(pos));
 			target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
 			world.addParticle(data, center.x, center.y - 2, center.z, target.x, target.y, target.z);
 		}

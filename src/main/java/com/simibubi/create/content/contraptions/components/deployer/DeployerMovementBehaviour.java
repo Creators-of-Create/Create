@@ -21,15 +21,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class DeployerMovementBehaviour extends MovementBehaviour {
 
 	@Override
-	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(DeployerBlock.FACING)
+	public Vector3d getActiveAreaOffset(MovementContext context) {
+		return Vector3d.of(context.state.get(DeployerBlock.FACING)
 			.getDirectionVec()).scale(2);
 	}
 
@@ -50,10 +50,10 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	public void activate(MovementContext context, BlockPos pos, DeployerFakePlayer player, Mode mode) {
-		Vec3d facingVec = new Vec3d(context.state.get(DeployerBlock.FACING)
+		Vector3d facingVec = Vector3d.of(context.state.get(DeployerBlock.FACING)
 			.getDirectionVec());
 		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
-		Vec3d vec = context.position.subtract(facingVec.scale(2));
+		Vector3d vec = context.position.subtract(facingVec.scale(2));
 		player.rotationYaw = ContraptionEntity.yawFromVector(facingVec);
 		player.rotationPitch = ContraptionEntity.pitchFromVector(facingVec) - 90;
 

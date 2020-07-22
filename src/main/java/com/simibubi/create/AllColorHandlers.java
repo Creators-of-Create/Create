@@ -17,7 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GrassColors;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.biome.BiomeColors;
 
 public class AllColorHandlers {
@@ -92,7 +92,7 @@ public class AllColorHandlers {
 
 		@FunctionalInterface
 		interface Function {
-			int apply(BlockState state, ILightReader world, BlockPos pos, int layer);
+			int apply(BlockState state, IBlockDisplayReader world, BlockPos pos, int layer);
 		}
 
 		public BlockColor(Function function) {
@@ -100,7 +100,7 @@ public class AllColorHandlers {
 		}
 
 		@Override
-		public int getColor(BlockState state, ILightReader world, BlockPos pos, int layer) {
+		public int getColor(BlockState state, IBlockDisplayReader world, BlockPos pos, int layer) {
 			return function.apply(state, world, pos, layer);
 		}
 

@@ -31,7 +31,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -171,10 +171,10 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 						if (reversed)
 							level = 1 - level;
 
-						Vec3d vec = ray.getHitVec();
-						vec = new Vec3d(vec.x, controllerTE.getPos()
+						Vector3d vec = ray.getHitVec();
+						vec = new Vector3d(vec.x, controllerTE.getPos()
 							.getY() + level * (controllerTE.height - .5f) + .25f, vec.z);
-						Vec3d motion = player.getPositionVec()
+						Vector3d motion = player.getPositionVec()
 							.subtract(vec)
 							.scale(1 / 20f);
 						vec = vec.add(motion);
@@ -222,7 +222,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		PLAIN, WINDOW, WINDOW_NW, WINDOW_SW, WINDOW_NE, WINDOW_SE;
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 	}

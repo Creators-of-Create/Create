@@ -16,7 +16,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class FilteringBehaviour extends TileEntityBehaviour {
@@ -25,7 +25,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 
 	ValueBoxTransform slotPositioning;
 	boolean showCount;
-	Vec3d textShift;
+	Vector3d textShift;
 
 	private ItemStack filter;
 	public int count;
@@ -45,7 +45,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		callback = stack -> {
 		};
 		isActive = () -> true;
-		textShift = Vec3d.ZERO;
+		textShift = Vector3d.ZERO;
 		count = 0;
 		ticksUntilScrollPacket = -1;
 		showCountPredicate = () -> showCount;
@@ -115,7 +115,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		return this;
 	}
 
-	public FilteringBehaviour moveText(Vec3d shift) {
+	public FilteringBehaviour moveText(Vector3d shift) {
 		textShift = shift;
 		return this;
 	}
@@ -143,7 +143,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	@Override
 	public void destroy() {
 		if (filter.getItem() instanceof FilterItem) {
-			Vec3d pos = VecHelper.getCenterOf(getPos());
+			Vector3d pos = VecHelper.getCenterOf(getPos());
 			World world = getWorld();
 			world.addEntity(new ItemEntity(world, pos.x, pos.y, pos.z, filter.copy()));
 		}
@@ -172,9 +172,9 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		return TYPE;
 	}
 
-	public boolean testHit(Vec3d hit) {
+	public boolean testHit(Vector3d hit) {
 		BlockState state = tileEntity.getBlockState();
-		Vec3d localHit = hit.subtract(new Vec3d(tileEntity.getPos()));
+		Vector3d localHit = hit.subtract(Vector3d.of(tileEntity.getPos()));
 		return slotPositioning.testHit(state, localHit);
 	}
 

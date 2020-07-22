@@ -15,7 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -33,8 +33,8 @@ import net.minecraft.world.World;
 @ParametersAreNonnullByDefault
 public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 
-	//public static IProperty<Integer> BLAZE_LEVEL = IntegerProperty.create("blaze_level", 0, 4);
-	public static IProperty<HeatLevel> BLAZE_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
+	//public static Property<Integer> BLAZE_LEVEL = IntegerProperty.create("blaze_level", 0, 4);
+	public static Property<HeatLevel> BLAZE_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
 
 	public HeaterBlock(Properties properties) {
 		super(properties);
@@ -133,7 +133,7 @@ public class HeaterBlock extends Block implements ITE<HeaterTileEntity> {
 		;
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 

@@ -43,7 +43,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
@@ -99,7 +99,7 @@ public class DeployerHandler {
 		return true;
 	}
 
-	static void activate(DeployerFakePlayer player, Vec3d vec, BlockPos clickedPos, Vec3d extensionVector, Mode mode) {
+	static void activate(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos, Vector3d extensionVector, Mode mode) {
 		Multimap<String, AttributeModifier> attributeModifiers = player.getHeldItemMainhand()
 			.getAttributeModifiers(EquipmentSlotType.MAINHAND);
 		player.getAttributes()
@@ -109,11 +109,11 @@ public class DeployerHandler {
 			.removeAttributeModifiers(attributeModifiers);
 	}
 
-	private static void activateInner(DeployerFakePlayer player, Vec3d vec, BlockPos clickedPos, Vec3d extensionVector,
+	private static void activateInner(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos, Vector3d extensionVector,
 		Mode mode) {
 
-		Vec3d rayOrigin = vec.add(extensionVector.scale(3 / 2f + 1 / 64f));
-		Vec3d rayTarget = vec.add(extensionVector.scale(5 / 2f - 1 / 64f));
+		Vector3d rayOrigin = vec.add(extensionVector.scale(3 / 2f + 1 / 64f));
+		Vector3d rayTarget = vec.add(extensionVector.scale(5 / 2f - 1 / 64f));
 		player.setPosition(rayOrigin.x, rayOrigin.y, rayOrigin.z);
 		BlockPos pos = new BlockPos(vec);
 		ItemStack stack = player.getHeldItemMainhand();

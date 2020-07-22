@@ -7,7 +7,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 
 public abstract class ConnectedTextureBehaviour {
 
@@ -34,7 +34,7 @@ public abstract class ConnectedTextureBehaviour {
 		return false;
 	}
 	
-	public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos, BlockPos otherPos,
+	public boolean connectsTo(BlockState state, BlockState other, IBlockDisplayReader reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
 
 		BlockPos blockingPos = otherPos.offset(face);
@@ -47,7 +47,7 @@ public abstract class ConnectedTextureBehaviour {
 		return state.getBlock() == other.getBlock();
 	}
 
-	public CTContext buildContext(ILightReader reader, BlockPos pos, BlockState state, Direction face) {
+	public CTContext buildContext(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face) {
 		CTContext context = new CTContext();
 		CTSpriteShiftEntry textureEntry = get(state, face);
 
@@ -94,7 +94,7 @@ public abstract class ConnectedTextureBehaviour {
 		return context;
 	}
 
-	private boolean testConnection(ILightReader reader, BlockPos pos, BlockState state, Direction face,
+	private boolean testConnection(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face,
 		final Direction horizontal, final Direction vertical, int sh, int sv) {
 		BlockPos p = pos.offset(horizontal, sh)
 			.offset(vertical, sv);

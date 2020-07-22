@@ -87,22 +87,22 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		int hFontColor = 0xD3CBBE;
 		int fontColor = 0x4B3A22;
 		STOCKSWITCH.draw(this, guiLeft, guiTop);
-		font.drawStringWithShadow(title, guiLeft - 3 + (STOCKSWITCH.width - font.getStringWidth(title)) / 2,
+		textRenderer.drawWithShadow(title, guiLeft - 3 + (STOCKSWITCH.width - textRenderer.getStringWidth(title)) / 2,
 				guiTop + 10, hFontColor);
-		font.drawString(onAbove.getState() == 100 ? startAt : startAbove, guiLeft + 13, guiTop + 55, fontColor);
-		font.drawString(offBelow.getState() == 0 ? stopAt : stopBelow, guiLeft + 13, guiTop + 72, fontColor);
+		textRenderer.draw(onAbove.getState() == 100 ? startAt : startAbove, guiLeft + 13, guiTop + 55, fontColor);
+		textRenderer.draw(offBelow.getState() == 0 ? stopAt : stopBelow, guiLeft + 13, guiTop + 72, fontColor);
 
 		AllGuiTextures sprite = AllGuiTextures.STOCKSWITCH_INTERVAL;
 		float lowerBound = offBelow.getState() / 100f * (sprite.width - 20) + 10;
 		float upperBound = onAbove.getState() / 100f * (sprite.width - 20) + 10;
 
 		sprite.bind();
-		blit((int) (guiLeft + lowerBound), guiTop + 26, (int) (sprite.startX + lowerBound), sprite.startY,
+		drawTexture((int) (guiLeft + lowerBound), guiTop + 26, (int) (sprite.startX + lowerBound), sprite.startY,
 				(int) (upperBound - lowerBound), sprite.height);
 
 		sprite = AllGuiTextures.STOCKSWITCH_INTERVAL_END;
 		sprite.bind();
-		blit((int) (guiLeft + upperBound), guiTop + 26, (int) (sprite.startX + upperBound), sprite.startY,
+		drawTexture((int) (guiLeft + upperBound), guiTop + 26, (int) (sprite.startX + upperBound), sprite.startY,
 				(int) (sprite.width - upperBound), sprite.height);
 
 		AllGuiTextures.STOCKSWITCH_BOUND_LEFT.draw(this, (int) (guiLeft + lowerBound) - 1, guiTop + 24);

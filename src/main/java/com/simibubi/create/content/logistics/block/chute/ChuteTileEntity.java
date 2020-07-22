@@ -33,7 +33,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -173,7 +173,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return false;
 
 		if (!simulate) {
-			Vec3d dropVec = VecHelper.getCenterOf(pos)
+			Vector3d dropVec = VecHelper.getCenterOf(pos)
 				.add(0, -12 / 16f, 0);
 			ItemEntity dropped = new ItemEntity(world, dropVec.x, dropVec.y, dropVec.z, item.copy());
 			dropped.setDefaultPickupDelay();
@@ -226,7 +226,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return false;
 
 		if (!simulate) {
-			Vec3d dropVec = VecHelper.getCenterOf(pos)
+			Vector3d dropVec = VecHelper.getCenterOf(pos)
 				.add(0, 8 / 16f, 0);
 			ItemEntity dropped = new ItemEntity(world, dropVec.x, dropVec.y, dropVec.z, item.copy());
 			dropped.setDefaultPickupDelay();
@@ -297,9 +297,9 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (hasWorld() && world.isRemote && !previousItem.equals(item, false) && !item.isEmpty()) {
 			if (world.rand.nextInt(3) != 0)
 				return;
-			Vec3d p = VecHelper.getCenterOf(pos);
+			Vector3d p = VecHelper.getCenterOf(pos);
 			p = VecHelper.offsetRandomly(p, world.rand, .5f);
-			Vec3d m = Vec3d.ZERO;
+			Vector3d m = Vector3d.ZERO;
 			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, item), p.x, p.y, p.z, m.x, m.y, m.z);
 		}
 	}

@@ -11,7 +11,7 @@ import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
@@ -128,7 +128,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
 
         @Override
-        public IFluidState getFluidState(BlockState state) {
+        public FluidState getFluidState(BlockState state) {
             return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : Fluids.EMPTY.getDefaultState();
         }
 
@@ -149,7 +149,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
         @Override
         public BlockState getStateForPlacement(BlockItemUseContext context) {
-            IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+            FluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
             return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
         }
 

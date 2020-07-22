@@ -5,14 +5,14 @@ import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class LineOutline extends Outline {
 
-	protected Vec3d start = Vec3d.ZERO;
-	protected Vec3d end = Vec3d.ZERO;
+	protected Vector3d start = Vector3d.ZERO;
+	protected Vector3d end = Vector3d.ZERO;
 
-	public LineOutline set(Vec3d start, Vec3d end) {
+	public LineOutline set(Vector3d start, Vector3d end) {
 		this.start = start;
 		this.end = end;
 		return this;
@@ -39,7 +39,7 @@ public class LineOutline extends Outline {
 		}
 
 		@Override
-		public LineOutline set(Vec3d start, Vec3d end) {
+		public LineOutline set(Vector3d start, Vector3d end) {
 			if (!end.equals(this.end))
 				super.set(start, end);
 			return this;
@@ -50,7 +50,7 @@ public class LineOutline extends Outline {
 			float pt = Minecraft.getInstance()
 				.getRenderPartialTicks();
 			float distanceToTarget = 1 - MathHelper.lerp(pt, prevProgress, progress);
-			Vec3d start = end.add(this.start.subtract(end)
+			Vector3d start = end.add(this.start.subtract(end)
 				.scale(distanceToTarget));
 			renderAACuboidLine(ms, buffer, start, end);
 		}

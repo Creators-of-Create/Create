@@ -4,7 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BeltColor implements IBlockColor {
 
 	@Override
-	public int getColor(BlockState state, ILightReader reader, BlockPos pos, int layer) {
+	public int getColor(BlockState state, IBlockDisplayReader reader, BlockPos pos, int layer) {
 		if (reader == null)
 			return 0;
 		TileEntity tileEntity = reader.getTileEntity(pos);

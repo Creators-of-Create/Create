@@ -11,14 +11,14 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -85,16 +85,16 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 			.getAxis())
 			return;
 
-		IFluidState fluid = world.getFluidState(pos.offset(f));
+		FluidState fluid = world.getFluidState(pos.offset(f));
 		Direction wf = state.get(HORIZONTAL_FACING);
 		boolean clockwise = wf.getAxisDirection() == AxisDirection.POSITIVE;
 		int clockwiseMultiplier = 2;
 
-		Vec3d vec = fluid.getFlow(world, pos.offset(f));
+		Vector3d vec = fluid.getFlow(world, pos.offset(f));
 		vec = vec.scale(f.getAxisDirection()
 			.getOffset());
-		vec = new Vec3d(Math.signum(vec.x), Math.signum(vec.y), Math.signum(vec.z));
-		Vec3d flow = vec;
+		vec = new Vector3d(Math.signum(vec.x), Math.signum(vec.y), Math.signum(vec.z));
+		Vector3d flow = vec;
 
 		withTileEntityDo(world, pos, te -> {
 			double flowStrength = 0;

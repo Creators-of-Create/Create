@@ -39,7 +39,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -106,7 +106,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 				heldItem = player.getHeldItemMainhand();
 				sendData();
 			}
-			Vec3d initialPos = VecHelper.getCenterOf(pos.offset(getBlockState().get(FACING)));
+			Vector3d initialPos = VecHelper.getCenterOf(pos.offset(getBlockState().get(FACING)));
 			player.setPosition(initialPos.x, initialPos.y, initialPos.z);
 		}
 		invHandler = LazyOptional.of(this::createHandler);
@@ -181,9 +181,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 				return;
 
 			state = State.EXPANDING;
-			Vec3d movementVector = getMovementVector();
-			Vec3d rayOrigin = VecHelper.getCenterOf(pos).add(movementVector.scale(3 / 2f));
-			Vec3d rayTarget = VecHelper.getCenterOf(pos).add(movementVector.scale(5 / 2f));
+			Vector3d movementVector = getMovementVector();
+			Vector3d rayOrigin = VecHelper.getCenterOf(pos).add(movementVector.scale(3 / 2f));
+			Vector3d rayTarget = VecHelper.getCenterOf(pos).add(movementVector.scale(5 / 2f));
 			RayTraceContext rayTraceContext =
 				new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE, FluidMode.NONE, player);
 			BlockRayTraceResult result = world.rayTraceBlocks(rayTraceContext);
@@ -262,9 +262,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	protected void activate() {
-		Vec3d movementVector = getMovementVector();
+		Vector3d movementVector = getMovementVector();
 		Direction direction = getBlockState().get(FACING);
-		Vec3d center = VecHelper.getCenterOf(pos);
+		Vector3d center = VecHelper.getCenterOf(pos);
 		BlockPos clickedPos = pos.offset(direction, 2);
 		player.rotationYaw = direction.getHorizontalAngle();
 		player.rotationPitch = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
@@ -300,9 +300,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 			ItemStack itemStack = iterator.next();
 
 			if (noInv) {
-				Vec3d offset = getMovementVector();
-				Vec3d outPos = VecHelper.getCenterOf(pos).add(offset.scale(-.65f));
-				Vec3d motion = offset.scale(-.25f);
+				Vector3d offset = getMovementVector();
+				Vector3d outPos = VecHelper.getCenterOf(pos).add(offset.scale(-.65f));
+				Vector3d motion = offset.scale(-.25f);
 				ItemEntity e = new ItemEntity(world, outPos.x, outPos.y, outPos.z, itemStack.copy());
 				e.setMotion(motion);
 				world.addEntity(e);
@@ -325,10 +325,10 @@ public class DeployerTileEntity extends KineticTileEntity {
 		return stack;
 	}
 
-	protected Vec3d getMovementVector() {
+	protected Vector3d getMovementVector() {
 		if (!AllBlocks.DEPLOYER.has(getBlockState()))
-			return Vec3d.ZERO;
-		return new Vec3d(getBlockState().get(FACING).getDirectionVec());
+			return Vector3d.ZERO;
+		return Vector3d.of(getBlockState().get(FACING).getDirectionVec());
 	}
 
 	@Override

@@ -8,14 +8,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ExtendoGripInteractionPacket extends SimplePacketBase {
 
 	private Hand interactionHand;
 	private int target;
-	private Vec3d specificPoint;
+	private Vector3d specificPoint;
 
 	public ExtendoGripInteractionPacket(Entity target) {
 		this(target, null);
@@ -25,7 +25,7 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 		this(target, hand, null);
 	}
 
-	public ExtendoGripInteractionPacket(Entity target, Hand hand, Vec3d specificPoint) {
+	public ExtendoGripInteractionPacket(Entity target, Hand hand, Vector3d specificPoint) {
 		interactionHand = hand;
 		this.specificPoint = specificPoint;
 		this.target = target.getEntityId();
@@ -36,7 +36,7 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 		int handId = buffer.readInt();
 		interactionHand = handId == -1 ? null : Hand.values()[handId];
 		if (buffer.readBoolean())
-			specificPoint = new Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+			specificPoint = new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
 	}
 
 	@Override

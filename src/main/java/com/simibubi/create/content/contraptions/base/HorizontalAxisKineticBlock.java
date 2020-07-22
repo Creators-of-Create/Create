@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -16,7 +16,7 @@ import net.minecraft.world.IWorldReader;
 
 public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 
-	public static final IProperty<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+	public static final Property<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
 	public HorizontalAxisKineticBlock(Properties properties) {
 		super(properties);

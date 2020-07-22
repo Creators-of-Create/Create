@@ -9,19 +9,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ZapperBeamPacket extends SimplePacketBase {
 
-	public Vec3d start;
-	public Vec3d target;
+	public Vector3d start;
+	public Vector3d target;
 	public Hand hand;
 	public boolean self;
 
-	public ZapperBeamPacket(Vec3d start, Vec3d target, Hand hand, boolean self) {
+	public ZapperBeamPacket(Vector3d start, Vector3d target, Hand hand, boolean self) {
 		this.start = start;
 		this.target = target;
 		this.hand = hand;
@@ -29,8 +29,8 @@ public class ZapperBeamPacket extends SimplePacketBase {
 	}
 	
 	public ZapperBeamPacket(PacketBuffer buffer) {
-		start = new Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-		target = new Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+		start = new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+		target = new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
 		hand = buffer.readBoolean()? Hand.MAIN_HAND : Hand.OFF_HAND;
 		self = buffer.readBoolean();
 	}

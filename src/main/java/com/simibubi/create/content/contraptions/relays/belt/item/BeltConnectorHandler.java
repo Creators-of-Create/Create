@@ -20,7 +20,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class BeltConnectorHandler {
@@ -80,22 +80,22 @@ public class BeltConnectorHandler {
 			boolean canConnect =
 				BeltConnectorItem.validateAxis(world, selected) && BeltConnectorItem.canConnect(world, first, selected);
 
-			Vec3d start = new Vec3d(first);
-			Vec3d end = new Vec3d(selected);
-			Vec3d actualDiff = end.subtract(start);
+			Vector3d start = Vector3d.of(first);
+			Vector3d end = Vector3d.of(selected);
+			Vector3d actualDiff = end.subtract(start);
 			end = end.subtract(axis.getCoordinate(actualDiff.x, 0, 0), axis.getCoordinate(0, actualDiff.y, 0),
 				axis.getCoordinate(0, 0, actualDiff.z));
-			Vec3d diff = end.subtract(start);
+			Vector3d diff = end.subtract(start);
 
 			double x = Math.abs(diff.x);
 			double y = Math.abs(diff.y);
 			double z = Math.abs(diff.z);
 			float length = (float) Math.max(x, Math.max(y, z));
-			Vec3d step = diff.normalize();
+			Vector3d step = diff.normalize();
 
 			int sames = ((x == y) ? 1 : 0) + ((y == z) ? 1 : 0) + ((z == x) ? 1 : 0);
 			if (sames == 0) {
-				List<Vec3d> validDiffs = new LinkedList<>();
+				List<Vector3d> validDiffs = new LinkedList<>();
 				for (int i = -1; i <= 1; i++)
 					for (int j = -1; j <= 1; j++)
 						for (int k = -1; k <= 1; k++) {
@@ -105,11 +105,11 @@ public class BeltConnectorHandler {
 								continue;
 							if (i == 0 && j == 0 && k == 0)
 								continue;
-							validDiffs.add(new Vec3d(i, j, k));
+							validDiffs.add(new Vector3d(i, j, k));
 						}
 				int closestIndex = 0;
 				float closest = Float.MAX_VALUE;
-				for (Vec3d validDiff : validDiffs) {
+				for (Vector3d validDiff : validDiffs) {
 					double distanceTo = step.distanceTo(validDiff);
 					if (distanceTo < closest) {
 						closest = (float) distanceTo;
@@ -122,9 +122,9 @@ public class BeltConnectorHandler {
 			if (axis == Axis.Y && step.x != 0 && step.z != 0)
 				return;
 
-			step = new Vec3d(Math.signum(step.x), Math.signum(step.y), Math.signum(step.z));
+			step = new Vector3d(Math.signum(step.x), Math.signum(step.y), Math.signum(step.z));
 			for (float f = 0; f < length; f += .0625f) {
-				Vec3d position = start.add(step.scale(f));
+				Vector3d position = start.add(step.scale(f));
 				if (r.nextInt(10) == 0) {
 					world.addParticle(new RedstoneParticleData(canConnect ? .3f : .9f, canConnect ? .9f : .3f, .5f, 1),
 						position.x + .5f, position.y + .5f, position.z + .5f, 0, 0, 0);

@@ -8,12 +8,12 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class AdjustableRepeaterScrollSlot extends ValueBoxTransform {
 
 	@Override
-	protected Vec3d getLocalOffset(BlockState state) {
+	protected Vector3d getLocalOffset(BlockState state) {
 		return VecHelper.voxelSpace(8, 3f, 8);
 	}
 

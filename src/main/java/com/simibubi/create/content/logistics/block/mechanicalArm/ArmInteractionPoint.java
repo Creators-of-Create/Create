@@ -30,7 +30,7 @@ import net.minecraft.tileentity.JukeboxTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -81,7 +81,7 @@ public abstract class ArmInteractionPoint {
 		mode = mode == Mode.DEPOSIT ? Mode.TAKE : Mode.DEPOSIT;
 	}
 
-	Vec3d getInteractionPositionVector() {
+	Vector3d getInteractionPositionVector() {
 		return VecHelper.getCenterOf(pos);
 	}
 
@@ -179,8 +179,8 @@ public abstract class ArmInteractionPoint {
 	static abstract class TopFaceArmInteractionPoint extends ArmInteractionPoint {
 
 		@Override
-		Vec3d getInteractionPositionVector() {
-			return new Vec3d(pos).add(.5f, 1, .5f);
+		Vector3d getInteractionPositionVector() {
+			return Vector3d.of(pos).add(.5f, 1, .5f);
 		}
 
 	}
@@ -188,8 +188,8 @@ public abstract class ArmInteractionPoint {
 	static class Depot extends ArmInteractionPoint {
 
 		@Override
-		Vec3d getInteractionPositionVector() {
-			return new Vec3d(pos).add(.5f, 14 / 16f, .5f);
+		Vector3d getInteractionPositionVector() {
+			return Vector3d.of(pos).add(.5f, 14 / 16f, .5f);
 		}
 
 		@Override
@@ -311,9 +311,9 @@ public abstract class ArmInteractionPoint {
 	static class Funnel extends ArmInteractionPoint {
 
 		@Override
-		Vec3d getInteractionPositionVector() {
+		Vector3d getInteractionPositionVector() {
 			return VecHelper.getCenterOf(pos)
-				.add(new Vec3d(FunnelBlock.getFunnelFacing(state)
+				.add(Vector3d.of(FunnelBlock.getFunnelFacing(state)
 					.getDirectionVec()).scale(.5f));
 		}
 

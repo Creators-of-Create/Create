@@ -18,11 +18,11 @@ import net.minecraft.block.KelpBlock;
 import net.minecraft.block.SugarCaneBlock;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
@@ -41,8 +41,8 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(HORIZONTAL_FACING)
+	public Vector3d getActiveAreaOffset(MovementContext context) {
+		return Vector3d.of(context.state.get(HORIZONTAL_FACING)
 			.getDirectionVec()).scale(.45);
 	}
 
@@ -84,7 +84,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		}
 		if (state.getCollisionShape(world, pos)
 			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
-			for (IProperty<?> property : state.getProperties()) {
+			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
 				if (!property.getName()
@@ -109,7 +109,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 		if (state.getCollisionShape(world, pos)
 			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
-			for (IProperty<?> property : state.getProperties()) {
+			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
 				if (!property.getName()
@@ -141,7 +141,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		}
 		if (state.getCollisionShape(world, pos)
 			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
-			for (IProperty<?> property : state.getProperties()) {
+			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
 				if (!property.getName()

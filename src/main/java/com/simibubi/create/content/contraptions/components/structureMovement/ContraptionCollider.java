@@ -46,7 +46,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ReuseableStream;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -117,7 +117,7 @@ public class ContraptionCollider {
 		CompoundNBT data = entityLiving.getPersistentData();
 		if (!data.contains("ContraptionDismountLocation"))
 			return;
-		Vec3d position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", NBT.TAG_DOUBLE));
+		Vector3d position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", NBT.TAG_DOUBLE));
 		if (entityLiving.getRidingEntity() == null)
 			entityLiving.setPositionAndUpdate(position.x, position.y, position.z);
 		data.remove("ContraptionDismountLocation");
@@ -142,9 +142,9 @@ public class ContraptionCollider {
 		World world = contraptionEntity.getEntityWorld();
 		Contraption contraption = contraptionEntity.getContraption();
 		AxisAlignedBB bounds = contraptionEntity.getBoundingBox();
-		Vec3d contraptionPosition = contraptionEntity.getPositionVec();
-		Vec3d contraptionRotation = contraptionEntity.getRotationVec();
-		Vec3d contraptionMotion = contraptionEntity.stationary ? Vec3d.ZERO
+		Vector3d contraptionPosition = contraptionEntity.getPositionVec();
+		Vector3d contraptionRotation = contraptionEntity.getRotationVec();
+		Vector3d contraptionMotion = contraptionEntity.stationary ? Vector3d.ZERO
 			: contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
 		contraptionEntity.collidingEntities.clear();
 
@@ -153,12 +153,12 @@ public class ContraptionCollider {
 		if (bounds == null)
 			return;
 
-		Vec3d centerOfBlock = VecHelper.getCenterOf(BlockPos.ZERO);
+		Vector3d centerOfBlock = VecHelper.getCenterOf(BlockPos.ZERO);
 		double conRotX = contraptionRotation.x;
 		double conRotY = contraptionRotation.y;
 		double conRotZ = contraptionRotation.z;
-		Vec3d contraptionCentreOffset = contraptionEntity.stationary ? centerOfBlock : Vec3d.ZERO.add(0, 0.5, 0);
-		boolean axisAlignedCollision = contraptionRotation.equals(Vec3d.ZERO);
+		Vector3d contraptionCentreOffset = contraptionEntity.stationary ? centerOfBlock : Vector3d.ZERO.add(0, 0.5, 0);
+		boolean axisAlignedCollision = contraptionRotation.equals(Vector3d.ZERO);
 		Matrix3d rotation = null;
 
 		for (Entity entity : world.getEntitiesWithinAABB((EntityType<?>) null, bounds.grow(2)
@@ -177,12 +177,12 @@ public class ContraptionCollider {
 			}
 
 			// Transform entity position and motion to local space
-			Vec3d entityPosition = entity.getPositionVec();
+			Vector3d entityPosition = entity.getPositionVec();
 			AxisAlignedBB entityBounds = entity.getBoundingBox();
-			Vec3d centerY = new Vec3d(0, entityBounds.getYSize() / 2, 0);
-			Vec3d motion = entity.getMotion();
+			Vector3d centerY = new Vector3d(0, entityBounds.getYSize() / 2, 0);
+			Vector3d motion = entity.getMotion();
 
-			Vec3d position = entityPosition.subtract(contraptionCentreOffset)
+			Vector3d position = entityPosition.subtract(contraptionCentreOffset)
 				.add(centerY);
 			position = position.subtract(contraptionPosition);
 			position = rotation.transform(position);
@@ -205,15 +205,15 @@ public class ContraptionCollider {
 			motion = rotation.transform(motion);
 			motion = motion.subtract(contraptionMotion);
 
-//			Vec3d visualizerOrigin = new Vec3d(10, 64, 0);
+//			Vector3d visualizerOrigin = new Vector3d(10, 64, 0);
 //			CollisionDebugger.OBB = obb.copy();
 //			CollisionDebugger.OBB.move(visualizerOrigin);
 
-			MutableObject<Vec3d> collisionResponse = new MutableObject<>(Vec3d.ZERO);
-			MutableObject<Vec3d> allowedMotion = new MutableObject<>(motion);
+			MutableObject<Vector3d> collisionResponse = new MutableObject<>(Vector3d.ZERO);
+			MutableObject<Vector3d> allowedMotion = new MutableObject<>(motion);
 			MutableBoolean futureCollision = new MutableBoolean(false);
 			MutableBoolean surfaceCollision = new MutableBoolean(false);
-			Vec3d obbCenter = obb.getCenter();
+			Vector3d obbCenter = obb.getCenter();
 
 			// Apply separation maths
 			List<AxisAlignedBB> bbs = new ArrayList<>();
@@ -225,7 +225,7 @@ public class ContraptionCollider {
 			for (boolean horizontalPass : Iterate.trueAndFalse) {
 
 				for (AxisAlignedBB bb : bbs) {
-					Vec3d currentResponse = collisionResponse.getValue();
+					Vector3d currentResponse = collisionResponse.getValue();
 					obb.setCenter(obbCenter.add(currentResponse));
 					ContinuousSeparationManifold intersect = obb.intersect(bb, allowedMotion.getValue());
 
@@ -241,8 +241,8 @@ public class ContraptionCollider {
 						continue;
 					}
 
-					Vec3d separation = intersect.asSeparationVec(entity.stepHeight);
-					if (separation != null && !separation.equals(Vec3d.ZERO))
+					Vector3d separation = intersect.asSeparationVec(entity.stepHeight);
+					if (separation != null && !separation.equals(Vector3d.ZERO))
 						collisionResponse.setValue(currentResponse.add(separation));
 				}
 
@@ -264,10 +264,10 @@ public class ContraptionCollider {
 			}
 
 			// Resolve collision
-			Vec3d entityMotion = entity.getMotion();
-			Vec3d totalResponse = collisionResponse.getValue();
-			Vec3d motionResponse = allowedMotion.getValue();
-			boolean hardCollision = !totalResponse.equals(Vec3d.ZERO);
+			Vector3d entityMotion = entity.getMotion();
+			Vector3d totalResponse = collisionResponse.getValue();
+			Vector3d motionResponse = allowedMotion.getValue();
+			boolean hardCollision = !totalResponse.equals(Vector3d.ZERO);
 
 			rotation.transpose();
 			motionResponse = rotation.transform(motionResponse)
@@ -283,7 +283,7 @@ public class ContraptionCollider {
 				}
 			}
 
-			Vec3d contactPointMotion = Vec3d.ZERO;
+			Vector3d contactPointMotion = Vector3d.ZERO;
 			if (surfaceCollision.isTrue()) {
 				entity.fallDistance = 0;
 				entity.onGround = true;
@@ -318,7 +318,7 @@ public class ContraptionCollider {
 			}
 
 			totalResponse = totalResponse.add(contactPointMotion);
-			Vec3d allowedMovement = getAllowedMovement(totalResponse, entity);
+			Vector3d allowedMovement = getAllowedMovement(totalResponse, entity);
 			contraptionEntity.collidingEntities.add(entity);
 			entity.velocityChanged = true;
 			entity.setPosition(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
@@ -332,7 +332,7 @@ public class ContraptionCollider {
 	}
 
 	/** From Entity#getAllowedMovement **/
-	static Vec3d getAllowedMovement(Vec3d movement, Entity e) {
+	static Vector3d getAllowedMovement(Vector3d movement, Entity e) {
 		AxisAlignedBB bb = e.getBoundingBox();
 		ISelectionContext ctx = ISelectionContext.forEntity(e);
 		World world = e.world;
@@ -344,39 +344,39 @@ public class ContraptionCollider {
 				: Stream.of(voxelshape);
 		Stream<VoxelShape> stream1 = world.getEmptyCollisionShapes(e, bb.expand(movement), ImmutableSet.of());
 		ReuseableStream<VoxelShape> reuseablestream = new ReuseableStream<>(Stream.concat(stream1, stream));
-		Vec3d vec3d = movement.lengthSquared() == 0.0D ? movement
+		Vector3d Vector3d = movement.lengthSquared() == 0.0D ? movement
 			: collideBoundingBoxHeuristically(e, movement, bb, world, ctx, reuseablestream);
-		boolean flag = movement.x != vec3d.x;
-		boolean flag1 = movement.y != vec3d.y;
-		boolean flag2 = movement.z != vec3d.z;
+		boolean flag = movement.x != Vector3d.x;
+		boolean flag1 = movement.y != Vector3d.y;
+		boolean flag2 = movement.z != Vector3d.z;
 		boolean flag3 = e.onGround || flag1 && movement.y < 0.0D;
 		if (e.stepHeight > 0.0F && flag3 && (flag || flag2)) {
-			Vec3d vec3d1 = collideBoundingBoxHeuristically(e, new Vec3d(movement.x, (double) e.stepHeight, movement.z),
+			Vector3d Vector3d1 = collideBoundingBoxHeuristically(e, new Vector3d(movement.x, (double) e.stepHeight, movement.z),
 				bb, world, ctx, reuseablestream);
-			Vec3d vec3d2 = collideBoundingBoxHeuristically(e, new Vec3d(0.0D, (double) e.stepHeight, 0.0D),
+			Vector3d Vector3d2 = collideBoundingBoxHeuristically(e, new Vector3d(0.0D, (double) e.stepHeight, 0.0D),
 				bb.expand(movement.x, 0.0D, movement.z), world, ctx, reuseablestream);
-			if (vec3d2.y < (double) e.stepHeight) {
-				Vec3d vec3d3 = collideBoundingBoxHeuristically(e, new Vec3d(movement.x, 0.0D, movement.z),
-					bb.offset(vec3d2), world, ctx, reuseablestream).add(vec3d2);
-				if (horizontalMag(vec3d3) > horizontalMag(vec3d1)) {
-					vec3d1 = vec3d3;
+			if (Vector3d2.y < (double) e.stepHeight) {
+				Vector3d Vector3d3 = collideBoundingBoxHeuristically(e, new Vector3d(movement.x, 0.0D, movement.z),
+					bb.offset(Vector3d2), world, ctx, reuseablestream).add(Vector3d2);
+				if (horizontalMag(Vector3d3) > horizontalMag(Vector3d1)) {
+					Vector3d1 = Vector3d3;
 				}
 			}
 
-			if (horizontalMag(vec3d1) > horizontalMag(vec3d)) {
-				return vec3d1.add(collideBoundingBoxHeuristically(e, new Vec3d(0.0D, -vec3d1.y + movement.y, 0.0D),
-					bb.offset(vec3d1), world, ctx, reuseablestream));
+			if (horizontalMag(Vector3d1) > horizontalMag(Vector3d)) {
+				return Vector3d1.add(collideBoundingBoxHeuristically(e, new Vector3d(0.0D, -Vector3d1.y + movement.y, 0.0D),
+					bb.offset(Vector3d1), world, ctx, reuseablestream));
 			}
 		}
 
-		return vec3d;
+		return Vector3d;
 	}
 
-	public static void pushEntityOutOfShape(Entity entity, VoxelShape voxelShape, Vec3d positionOffset,
-		Vec3d shapeMotion) {
+	public static void pushEntityOutOfShape(Entity entity, VoxelShape voxelShape, Vector3d positionOffset,
+		Vector3d shapeMotion) {
 		AxisAlignedBB entityBB = entity.getBoundingBox()
 			.offset(positionOffset);
-		Vec3d entityMotion = entity.getMotion();
+		Vector3d entityMotion = entity.getMotion();
 
 		if (!voxelShape.toBoundingBoxList()
 			.stream()
@@ -394,7 +394,7 @@ public class ContraptionCollider {
 				: axis == Axis.Y ? entityBB.getYSize() + shapeBB.getYSize() : entityBB.getZSize() + shapeBB.getZSize();
 			d = d + .5f;
 
-			Vec3d nudge = new Vec3d(face.getDirectionVec()).scale(d);
+			Vector3d nudge = Vector3d.of(face.getDirectionVec()).scale(d);
 			AxisAlignedBB nudgedBB = entityBB.offset(nudge.getX(), nudge.getY(), nudge.getZ());
 			double nudgeDistance = face.getAxisDirection() == AxisDirection.POSITIVE ? -d : d;
 			double offset = voxelShape.getAllowedOffset(face.getAxis(), nudgedBB, nudgeDistance);
@@ -407,7 +407,7 @@ public class ContraptionCollider {
 		}
 
 		if (bestOffset != 0) {
-			entity.move(MoverType.SELF, new Vec3d(bestSide.getDirectionVec()).scale(finalOffset));
+			entity.move(MoverType.SELF, Vector3d.of(bestSide.getDirectionVec()).scale(finalOffset));
 			boolean positive = bestSide.getAxisDirection() == AxisDirection.POSITIVE;
 
 			double clamped;
@@ -466,17 +466,17 @@ public class ContraptionCollider {
 			return false;
 
 		World world = contraptionEntity.getEntityWorld();
-		Vec3d motion = contraptionEntity.getMotion();
+		Vector3d motion = contraptionEntity.getMotion();
 		Contraption contraption = contraptionEntity.getContraption();
 		AxisAlignedBB bounds = contraptionEntity.getBoundingBox();
-		Vec3d position = contraptionEntity.getPositionVec();
+		Vector3d position = contraptionEntity.getPositionVec();
 		BlockPos gridPos = new BlockPos(position);
 
 		if (contraption == null)
 			return false;
 		if (bounds == null)
 			return false;
-		if (motion.equals(Vec3d.ZERO))
+		if (motion.equals(Vector3d.ZERO))
 			return false;
 
 		Direction movementDirection = Direction.getFacingFromVector(motion.x, motion.y, motion.z);
@@ -494,10 +494,10 @@ public class ContraptionCollider {
 			if (!otherContraptionEntity.collisionEnabled())
 				continue;
 
-			Vec3d otherMotion = otherContraptionEntity.getMotion();
+			Vector3d otherMotion = otherContraptionEntity.getMotion();
 			Contraption otherContraption = otherContraptionEntity.getContraption();
 			AxisAlignedBB otherBounds = otherContraptionEntity.getBoundingBox();
-			Vec3d otherPosition = otherContraptionEntity.getPositionVec();
+			Vector3d otherPosition = otherContraptionEntity.getPositionVec();
 
 			if (otherContraption == null)
 				return false;

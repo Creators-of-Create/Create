@@ -17,7 +17,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class SidedFilteringBehaviour extends FilteringBehaviour {
@@ -139,10 +139,10 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 			.destroy();
 	}
 
-	public boolean testHit(Direction direction, Vec3d hit) {
+	public boolean testHit(Direction direction, Vector3d hit) {
 		ValueBoxTransform.Sided sidedPositioning = (Sided) slotPositioning;
 		BlockState state = tileEntity.getBlockState();
-		Vec3d localHit = hit.subtract(new Vec3d(tileEntity.getPos()));
+		Vector3d localHit = hit.subtract(Vector3d.of(tileEntity.getPos()));
 		return sidedPositioning.fromSide(direction)
 			.testHit(state, localHit);
 	}

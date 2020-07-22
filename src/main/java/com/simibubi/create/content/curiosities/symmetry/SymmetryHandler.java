@@ -25,7 +25,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -107,7 +107,7 @@ public class SymmetryHandler {
 				.getBufferBuilders()
 				.getEntityVertexConsumers();
 			ActiveRenderInfo info = mc.gameRenderer.getActiveRenderInfo();
-			Vec3d view = info.getProjectedView();
+			Vector3d view = info.getProjectedView();
 
 			MatrixStack ms = event.getMatrixStack();
 			ms.push();
@@ -164,9 +164,9 @@ public class SymmetryHandler {
 					double offsetX = (r.nextDouble() - 0.5) * 0.3;
 					double offsetZ = (r.nextDouble() - 0.5) * 0.3;
 
-					Vec3d pos = mirror.getPosition()
+					Vector3d pos = mirror.getPosition()
 						.add(0.5 + offsetX, 1 / 4d, 0.5 + offsetZ);
-					Vec3d speed = new Vec3d(0, r.nextDouble() * 1 / 8f, 0);
+					Vector3d speed = new Vector3d(0, r.nextDouble() * 1 / 8f, 0);
 					mc.world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, speed.x, speed.y, speed.z);
 				}
 			}
@@ -176,29 +176,29 @@ public class SymmetryHandler {
 
 	public static void drawEffect(BlockPos from, BlockPos to) {
 		double density = 0.8f;
-		Vec3d start = new Vec3d(from).add(0.5, 0.5, 0.5);
-		Vec3d end = new Vec3d(to).add(0.5, 0.5, 0.5);
-		Vec3d diff = end.subtract(start);
+		Vector3d start = Vector3d.of(from).add(0.5, 0.5, 0.5);
+		Vector3d end = Vector3d.of(to).add(0.5, 0.5, 0.5);
+		Vector3d diff = end.subtract(start);
 
-		Vec3d step = diff.normalize()
+		Vector3d step = diff.normalize()
 			.scale(density);
 		int steps = (int) (diff.length() / step.length());
 
 		Random r = new Random();
 		for (int i = 3; i < steps - 1; i++) {
-			Vec3d pos = start.add(step.scale(i));
-			Vec3d speed = new Vec3d(0, r.nextDouble() * -40f, 0);
+			Vector3d pos = start.add(step.scale(i));
+			Vector3d speed = new Vector3d(0, r.nextDouble() * -40f, 0);
 
 			Minecraft.getInstance().world.addParticle(new RedstoneParticleData(1, 1, 1, 1), pos.x, pos.y, pos.z,
 				speed.x, speed.y, speed.z);
 		}
 
-		Vec3d speed = new Vec3d(0, r.nextDouble() * 1 / 32f, 0);
-		Vec3d pos = start.add(step.scale(2));
+		Vector3d speed = new Vector3d(0, r.nextDouble() * 1 / 32f, 0);
+		Vector3d pos = start.add(step.scale(2));
 		Minecraft.getInstance().world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, speed.x, speed.y,
 			speed.z);
 
-		speed = new Vec3d(0, r.nextDouble() * 1 / 32f, 0);
+		speed = new Vector3d(0, r.nextDouble() * 1 / 32f, 0);
 		pos = start.add(step.scale(steps));
 		Minecraft.getInstance().world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, speed.x, speed.y,
 			speed.z);

@@ -24,7 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -73,7 +73,7 @@ public class CrushingWheelControllerBlock extends Block
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.processingEntity == entityIn)
-				entityIn.setMotionMultiplier(state, new Vec3d(0.25D, (double) 0.05F, 0.25D));
+				entityIn.setMotionMultiplier(state, new Vector3d(0.25D, (double) 0.05F, 0.25D));
 		});
 	}
 

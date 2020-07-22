@@ -14,7 +14,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 
 public class LinearChassisBlock extends AbstractChassisBlock {
 
@@ -86,7 +86,7 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 		}
 
 		@Override
-		public boolean connectsTo(BlockState state, BlockState other, ILightReader reader, BlockPos pos,
+		public boolean connectsTo(BlockState state, BlockState other, IBlockDisplayReader reader, BlockPos pos,
 			BlockPos otherPos, Direction face) {
 			return sameKind(state, other) && state.get(AXIS) == other.get(AXIS);
 		}

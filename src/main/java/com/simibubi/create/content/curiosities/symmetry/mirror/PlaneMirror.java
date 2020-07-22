@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class PlaneMirror extends SymmetryMirror {
 
@@ -27,7 +27,7 @@ public class PlaneMirror extends SymmetryMirror {
 		}
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return name;
 		}
 
@@ -37,7 +37,7 @@ public class PlaneMirror extends SymmetryMirror {
 		}
 	}
 
-	public PlaneMirror(Vec3d pos) {
+	public PlaneMirror(Vector3d pos) {
 		super(pos);
 		orientation = Align.XY;
 	}

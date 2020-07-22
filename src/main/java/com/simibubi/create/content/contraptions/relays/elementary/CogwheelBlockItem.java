@@ -14,7 +14,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class CogwheelBlockItem extends BlockItem {
@@ -53,9 +53,9 @@ public class CogwheelBlockItem extends BlockItem {
 			if (largeOnLarge)
 				offsetAxis = placedOnState.get(CogWheelBlock.AXIS);
 
-			Vec3d hitVec = context.getHitVec().subtract(VecHelper.getCenterOf(placedOnPos));
+			Vector3d hitVec = context.getHitVec().subtract(VecHelper.getCenterOf(placedOnPos));
 			hitVec = hitVec
-					.mul(new Vec3d(Direction.getFacingFromAxis(AxisDirection.POSITIVE, offsetAxis).getDirectionVec()));
+					.mul(Vector3d.of(Direction.getFacingFromAxis(AxisDirection.POSITIVE, offsetAxis).getDirectionVec()));
 
 			BlockPos correctPos =
 				context.getPos().add(Math.signum(hitVec.x), Math.signum(hitVec.y), Math.signum(hitVec.z));

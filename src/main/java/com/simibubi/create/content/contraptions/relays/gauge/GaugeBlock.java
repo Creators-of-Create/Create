@@ -24,7 +24,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -39,7 +39,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		SPEED, STRESS;
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 	}
@@ -147,22 +147,22 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			if (!shouldRenderHeadOnFace(worldIn, pos, stateIn, face))
 				continue;
 
-			Vec3d rgb = ColorHelper.getRGB(color);
-			Vec3d faceVec = new Vec3d(face.getDirectionVec());
+			Vector3d rgb = ColorHelper.getRGB(color);
+			Vector3d faceVec = Vector3d.of(face.getDirectionVec());
 			Direction positiveFacing = Direction.getFacingFromAxis(AxisDirection.POSITIVE, face.getAxis());
-			Vec3d positiveFaceVec = new Vec3d(positiveFacing.getDirectionVec());
+			Vector3d positiveFaceVec = Vector3d.of(positiveFacing.getDirectionVec());
 			int particleCount = gaugeTE.dialTarget > 1 ? 4 : 1;
 
 			if (particleCount == 1 && rand.nextFloat() > 1 / 4f)
 				continue;
 
 			for (int i = 0; i < particleCount; i++) {
-				Vec3d mul = VecHelper
-						.offsetRandomly(Vec3d.ZERO, rand, .25f)
-						.mul(new Vec3d(1, 1, 1).subtract(positiveFaceVec))
+				Vector3d mul = VecHelper
+						.offsetRandomly(Vector3d.ZERO, rand, .25f)
+						.mul(new Vector3d(1, 1, 1).subtract(positiveFaceVec))
 						.normalize()
 						.scale(.3f);
-				Vec3d offset = VecHelper.getCenterOf(pos).add(faceVec.scale(.55)).add(mul);
+				Vector3d offset = VecHelper.getCenterOf(pos).add(faceVec.scale(.55)).add(mul);
 				worldIn
 						.addParticle(new RedstoneParticleData((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), offset.x,
 								offset.y, offset.z, mul.x, mul.y, mul.z);

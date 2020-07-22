@@ -18,7 +18,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 
 public class CuckooClockTileEntity extends KineticTileEntity {
@@ -81,7 +81,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 					animationType = Animation.NONE;
 
 				if (animationType == Animation.SURPRISE && animationProgress.value == 50) {
-					Vec3d center = VecHelper.getCenterOf(pos);
+					Vector3d center = VecHelper.getCenterOf(pos);
 					world.destroyBlock(pos, false);
 					world.createExplosion(null, CUCKOO_SURPRISE, center.x, center.y, center.z, 3, false,
 						Explosion.Mode.BREAK);
@@ -114,7 +114,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 					playSound(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 2, 0.793701f);
 
 				if (value > 30 && isSurprise) {
-					Vec3d pos = VecHelper.offsetRandomly(VecHelper.getCenterOf(this.pos), world.rand, .5f);
+					Vector3d pos = VecHelper.offsetRandomly(VecHelper.getCenterOf(this.pos), world.rand, .5f);
 					world.addParticle(ParticleTypes.LARGE_SMOKE, pos.x, pos.y, pos.z, 0, 0, 0);
 				}
 				if (value == 40 && isSurprise)
@@ -163,7 +163,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 	}
 
 	private void playSound(SoundEvent sound, float volume, float pitch) {
-		Vec3d vec = VecHelper.getCenterOf(pos);
+		Vector3d vec = VecHelper.getCenterOf(pos);
 		world.playSound(vec.x, vec.y, vec.z, sound, SoundCategory.BLOCKS, volume, pitch, false);
 	}
 

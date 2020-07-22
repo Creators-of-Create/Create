@@ -33,7 +33,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -251,10 +251,10 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		pressedItems.clear();
 	}
 
-	public void makePressingParticleEffect(Vec3d pos, ItemStack stack) {
+	public void makePressingParticleEffect(Vector3d pos, ItemStack stack) {
 		if (world != null && world.isRemote) {
 			for (int i = 0; i < 20; i++) {
-				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
+				Vector3d motion = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, .125f)
 					.mul(1, 0, 1);
 				world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), pos.x, pos.y - .25f, pos.z, motion.x,
 					motion.y + .125f, motion.z);
@@ -262,10 +262,10 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		}
 	}
 
-	public void makeCompactingParticleEffect(Vec3d pos, ItemStack stack) {
+	public void makeCompactingParticleEffect(Vector3d pos, ItemStack stack) {
 		if (world != null && world.isRemote) {
 			for (int i = 0; i < 20; i++) {
-				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .175f)
+				Vector3d motion = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, .175f)
 					.mul(1, 0, 1);
 				world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z, motion.x,
 					motion.y + .25f, motion.z);

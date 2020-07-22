@@ -47,7 +47,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -139,7 +139,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 		}
 
-		Vec3d itemMovement = getItemMovementVec();
+		Vector3d itemMovement = getItemMovementVec();
 		Direction itemMovementFacing = Direction.getFacingFromVector(itemMovement.x, itemMovement.y, itemMovement.z);
 		if (inventory.remainingTime > 0)
 			return;
@@ -169,10 +169,10 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		}
 
 		// Eject Items
-		Vec3d outPos = VecHelper.getCenterOf(pos)
+		Vector3d outPos = VecHelper.getCenterOf(pos)
 			.add(itemMovement.scale(.5f)
 				.add(0, .5, 0));
-		Vec3d outMotion = itemMovement.scale(.0625)
+		Vector3d outMotion = itemMovement.scale(.0625)
 			.add(0, .125, 0);
 		for (int slot = 0; slot < inventory.getSlots(); slot++) {
 			ItemStack stack = inventory.getStackInSlot(slot);
@@ -217,18 +217,18 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		}
 
 		Random r = world.rand;
-		Vec3d vec = getItemMovementVec();
-		Vec3d pos = VecHelper.getCenterOf(this.pos);
+		Vector3d vec = getItemMovementVec();
+		Vector3d pos = VecHelper.getCenterOf(this.pos);
 		float offset = inventory.recipeDuration != 0 ? (float) (inventory.remainingTime) / inventory.recipeDuration : 0;
 		offset -= .5f;
 		world.addParticle(particleData, pos.getX() + -vec.x * offset, pos.getY() + .45f, pos.getZ() + -vec.z * offset,
 			-vec.x * speed, r.nextFloat() * speed, -vec.z * speed);
 	}
 
-	public Vec3d getItemMovementVec() {
+	public Vector3d getItemMovementVec() {
 		boolean alongX = !getBlockState().get(SawBlock.AXIS_ALONG_FIRST_COORDINATE);
 		int offset = getSpeed() < 0 ? -1 : 1;
-		return new Vec3d(offset * (alongX ? 1 : 0), 0, offset * (alongX ? 0 : -1));
+		return new Vector3d(offset * (alongX ? 1 : 0), 0, offset * (alongX ? 0 : -1));
 	}
 
 	private void applyRecipe() {
@@ -354,9 +354,9 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	public void dropItemFromCutTree(BlockPos pos, ItemStack stack) {
 		float distance = (float) Math.sqrt(pos.distanceSq(breakingPos));
-		Vec3d dropPos = VecHelper.getCenterOf(pos);
+		Vector3d dropPos = VecHelper.getCenterOf(pos);
 		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, stack);
-		entity.setMotion(new Vec3d(breakingPos.subtract(this.pos)).scale(distance / 20f));
+		entity.setMotion(Vector3d.of(breakingPos.subtract(this.pos)).scale(distance / 20f));
 		world.addEntity(entity);
 	}
 

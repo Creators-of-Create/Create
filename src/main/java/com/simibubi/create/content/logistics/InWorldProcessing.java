@@ -19,7 +19,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.BlastingRecipe;
 import net.minecraft.item.crafting.FurnaceRecipe;
@@ -33,7 +33,7 @@ import net.minecraft.tileentity.BlastFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.SmokerTileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -59,7 +59,7 @@ public class InWorldProcessing {
 
 		public static Type byBlock(IBlockReader reader, BlockPos pos) {
 			BlockState blockState = reader.getBlockState(pos);
-			IFluidState fluidState = reader.getFluidState(pos);
+			FluidState fluidState = reader.getFluidState(pos);
 			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			if (blockState.getBlock() == Blocks.FIRE
@@ -294,7 +294,7 @@ public class InWorldProcessing {
 		return stacks;
 	}
 
-	public static void spawnParticlesForProcessing(World world, Vec3d vec, Type type) {
+	public static void spawnParticlesForProcessing(World world, Vector3d vec, Type type) {
 		if (!world.isRemote)
 			return;
 		if (world.rand.nextInt(8) != 0)
@@ -308,7 +308,7 @@ public class InWorldProcessing {
 			world.addParticle(ParticleTypes.POOF, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
 			break;
 		case SPLASHING:
-			Vec3d color = ColorHelper.getRGB(0x0055FF);
+			Vector3d color = ColorHelper.getRGB(0x0055FF);
 			world.addParticle(new RedstoneParticleData((float) color.x, (float) color.y, (float) color.z, 1),
 				vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f, vec.z + (world.rand.nextFloat() - .5f) * .5f,
 				0, 1 / 8f, 0);

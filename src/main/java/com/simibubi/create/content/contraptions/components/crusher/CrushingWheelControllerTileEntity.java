@@ -30,7 +30,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -87,7 +87,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 			return;
 
 		float speed = crushingspeed * 4;
-		Vec3d outPos = VecHelper.getCenterOf(pos);
+		Vector3d outPos = VecHelper.getCenterOf(pos);
 
 		if (!hasEntity()) {
 
@@ -113,7 +113,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 					if (stack.isEmpty())
 						continue;
 					ItemEntity entityIn = new ItemEntity(world, outPos.x, outPos.y, outPos.z, stack);
-					entityIn.setMotion(Vec3d.ZERO);
+					entityIn.setMotion(Vector3d.ZERO);
 					entityIn.getPersistentData()
 						.put("BypassCrushingWheel", NBTUtil.writeBlockPos(pos));
 					world.addEntity(entityIn);
@@ -137,7 +137,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 		if (processingEntity.isSneaking())
 			xMotion = zMotion = 0;
 
-		processingEntity.setMotion(new Vec3d(xMotion, Math.max(-speed / 4f, -.5f), zMotion));
+		processingEntity.setMotion(new Vector3d(xMotion, Math.max(-speed / 4f, -.5f), zMotion));
 
 		if (world.isRemote)
 			return;

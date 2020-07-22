@@ -8,14 +8,14 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class BeltObserverFilterSlot extends ValueBoxTransform {
 
-	Vec3d position = VecHelper.voxelSpace(8f, 14.5f, 16f);
+	Vector3d position = VecHelper.voxelSpace(8f, 14.5f, 16f);
 
 	@Override
-	protected Vec3d getLocalOffset(BlockState state) {
+	protected Vector3d getLocalOffset(BlockState state) {
 		return rotateHorizontally(state, position);
 	}
 

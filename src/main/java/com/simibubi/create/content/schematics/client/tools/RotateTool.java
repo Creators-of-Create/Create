@@ -5,7 +5,7 @@ import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.outliner.LineOutline;
 
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class RotateTool extends PlacementToolBase {
 
@@ -23,11 +23,11 @@ public class RotateTool extends PlacementToolBase {
 	public void renderOnSchematic(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		AxisAlignedBB bounds = schematicHandler.getBounds();
 		double height = bounds.getYSize() + Math.max(20, bounds.getYSize());
-		Vec3d center = bounds.getCenter()
+		Vector3d center = bounds.getCenter()
 			.add(schematicHandler.getTransformation()
 				.getRotationOffset(false));
-		Vec3d start = center.subtract(0, height / 2, 0);
-		Vec3d end = center.add(0, height / 2, 0);
+		Vector3d start = center.subtract(0, height / 2, 0);
+		Vector3d end = center.add(0, height / 2, 0);
 
 		line.getParams()
 			.disableCull()

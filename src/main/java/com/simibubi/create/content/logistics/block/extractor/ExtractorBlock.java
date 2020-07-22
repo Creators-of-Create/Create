@@ -19,7 +19,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -95,13 +95,13 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock implements IPo
 		return AllShapes.EXTRACTOR.get(getBlockFacing(state));
 	}
 
-	public static Vec3d getFilterSlotPosition(BlockState state) {
+	public static Vector3d getFilterSlotPosition(BlockState state) {
 		float verticalOffset = (state.getBlock() instanceof ExtractorBlock) ? 10.5f : 12.5f;
 
-		Vec3d offsetForHorizontal = VecHelper.voxelSpace(8f, verticalOffset, 14f);
-		Vec3d offsetForUpward = VecHelper.voxelSpace(8f, 14.15f, 3.5f);
-		Vec3d offsetForDownward = VecHelper.voxelSpace(8f, 1.85f, 3.5f);
-		Vec3d vec = offsetForHorizontal;
+		Vector3d offsetForHorizontal = VecHelper.voxelSpace(8f, verticalOffset, 14f);
+		Vector3d offsetForUpward = VecHelper.voxelSpace(8f, 14.15f, 3.5f);
+		Vector3d offsetForDownward = VecHelper.voxelSpace(8f, 1.85f, 3.5f);
+		Vector3d vec = offsetForHorizontal;
 
 		float yRot = AngleHelper.horizontalAngle(state.get(ExtractorBlock.HORIZONTAL_FACING));
 		if (AttachedLogisticalBlock.isVertical(state))
@@ -110,10 +110,10 @@ public class ExtractorBlock extends BeltAttachableLogisticalBlock implements IPo
 		return VecHelper.rotateCentered(vec, yRot, Axis.Y);
 	}
 
-	public static Vec3d getFilterSlotOrientation(BlockState state) {
+	public static Vector3d getFilterSlotOrientation(BlockState state) {
 		float yRot = AngleHelper.horizontalAngle(state.get(ExtractorBlock.HORIZONTAL_FACING));
 		float zRot = (AttachedLogisticalBlock.isVertical(state)) ? 0 : 90;
-		return new Vec3d(0, yRot, zRot);
+		return new Vector3d(0, yRot, zRot);
 	}
 
 	public static class Vertical extends ExtractorBlock {

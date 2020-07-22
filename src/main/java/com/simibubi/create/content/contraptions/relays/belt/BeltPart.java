@@ -8,7 +8,7 @@ public enum BeltPart implements IStringSerializable {
 	START, MIDDLE, END, PULLEY;
 
 	@Override
-	public String getName() {
+	public String getString() {
 		return Lang.asId(name());
 	}
 }

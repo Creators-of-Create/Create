@@ -261,14 +261,14 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		progress = Math.min(progress, 1);
 		AllGuiTextures sprite = AllGuiTextures.SCHEMATICANNON_PROGRESS;
 		minecraft.getTextureManager().bindTexture(sprite.location);
-		blit(guiLeft + 20 + 39, guiTop + 36, sprite.startX, sprite.startY, (int) (sprite.width * progress),
+		drawTexture(guiLeft + 20 + 39, guiTop + 36, sprite.startX, sprite.startY, (int) (sprite.width * progress),
 				sprite.height);
 	}
 
 	protected void renderChecklistPrinterProgress(float progress) {
 		AllGuiTextures sprite = AllGuiTextures.SCHEMATICANNON_PROGRESS_2;
 		minecraft.getTextureManager().bindTexture(sprite.location);
-		blit(guiLeft + 20 + 222, guiTop + 42, sprite.startX, sprite.startY, sprite.width,
+		drawTexture(guiLeft + 20 + 222, guiTop + 42, sprite.startX, sprite.startY, sprite.width,
 				(int) (sprite.height * progress));
 	}
 
@@ -279,7 +279,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			return;
 		}
 		minecraft.getTextureManager().bindTexture(sprite.location);
-		blit(guiLeft + 20 + 73, guiTop + 135, sprite.startX, sprite.startY, (int) (sprite.width * amount),
+		drawTexture(guiLeft + 20 + 73, guiTop + 135, sprite.startX, sprite.startY, (int) (sprite.width * amount),
 				sprite.height);
 	}
 

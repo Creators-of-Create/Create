@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class LinkBehaviour extends TileEntityBehaviour {
 
@@ -31,7 +31,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	Frequency frequencyLast;
 	ValueBoxTransform firstSlot;
 	ValueBoxTransform secondSlot;
-	Vec3d textShift;
+	Vector3d textShift;
 
 	public boolean newPosition;
 	private Mode mode;
@@ -44,7 +44,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		frequencyLast = new Frequency(ItemStack.EMPTY);
 		firstSlot = slots.getLeft();
 		secondSlot = slots.getRight();
-		textShift = Vec3d.ZERO;
+		textShift = Vector3d.ZERO;
 		newPosition = true;
 	}
 
@@ -64,7 +64,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		return behaviour;
 	}
 
-	public LinkBehaviour moveText(Vec3d shift) {
+	public LinkBehaviour moveText(Vector3d shift) {
 		textShift = shift;
 		return this;
 	}
@@ -170,12 +170,12 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	public static class SlotPositioning {
-		Function<BlockState, Pair<Vec3d, Vec3d>> offsets;
-		Function<BlockState, Vec3d> rotation;
+		Function<BlockState, Pair<Vector3d, Vector3d>> offsets;
+		Function<BlockState, Vector3d> rotation;
 		float scale;
 
-		public SlotPositioning(Function<BlockState, Pair<Vec3d, Vec3d>> offsetsForState,
-			Function<BlockState, Vec3d> rotationForState) {
+		public SlotPositioning(Function<BlockState, Pair<Vector3d, Vector3d>> offsetsForState,
+			Function<BlockState, Vector3d> rotationForState) {
 			offsets = offsetsForState;
 			rotation = rotationForState;
 			scale = 1;
@@ -188,9 +188,9 @@ public class LinkBehaviour extends TileEntityBehaviour {
 
 	}
 
-	public boolean testHit(Boolean first, Vec3d hit) {
+	public boolean testHit(Boolean first, Vector3d hit) {
 		BlockState state = tileEntity.getBlockState();
-		Vec3d localHit = hit.subtract(new Vec3d(tileEntity.getPos()));
+		Vector3d localHit = hit.subtract(Vector3d.of(tileEntity.getPos()));
 		return (first ? firstSlot : secondSlot).testHit(state, localHit);
 	}
 

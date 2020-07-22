@@ -5,17 +5,17 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class MovementContext {
 
-	public Vec3d position;
-	public Vec3d motion;
-	public Vec3d relativeMotion;
-	public Vec3d rotation;
+	public Vector3d position;
+	public Vector3d motion;
+	public Vector3d relativeMotion;
+	public Vector3d rotation;
 	public World world;
 	public BlockState state;
 	public BlockPos localPos;
@@ -34,9 +34,9 @@ public class MovementContext {
 		localPos = info.pos;
 
 		firstMovement = true;
-		motion = Vec3d.ZERO;
-		relativeMotion = Vec3d.ZERO;
-		rotation = Vec3d.ZERO;
+		motion = Vector3d.ZERO;
+		relativeMotion = Vector3d.ZERO;
+		rotation = Vector3d.ZERO;
 		position = null;
 		data = new CompoundNBT();
 		stall = false;

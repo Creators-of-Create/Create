@@ -14,7 +14,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
 
@@ -41,14 +41,14 @@ public class ExtractorMovementBehaviour extends MovementBehaviour {
 		if (world.isRemote)
 			return;
 		
-		Vec3d entityPos = context.position;
+		Vector3d entityPos = context.position;
 		Entity entityIn = null;
 		Direction facing = AttachedLogisticalBlock.getBlockFacing(context.state);
 		if (facing != Direction.DOWN)
 			entityPos = entityPos.add(0, -0.5f, 0);
 
 		entityIn = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, dropped);
-		entityIn.setMotion(Vec3d.ZERO);
+		entityIn.setMotion(Vector3d.ZERO);
 		((ItemEntity) entityIn).setPickupDelay(5);
 		world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1/16f, .1f);
 		world.addEntity(entityIn);

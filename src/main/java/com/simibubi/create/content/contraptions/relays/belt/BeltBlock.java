@@ -39,7 +39,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -62,7 +62,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraft.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
@@ -71,8 +71,8 @@ import net.minecraftforge.items.IItemHandler;
 
 public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement {
 
-	public static final IProperty<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
-	public static final IProperty<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
+	public static final Property<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
+	public static final Property<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
 	public static final BooleanProperty CASING = BooleanProperty.create("casing");
 
 	public BeltBlock(Properties properties) {
@@ -120,7 +120,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.storage.loot.LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, net.minecraft.loot.LootContext.Builder builder) {
 		List<ItemStack> drops = super.getDrops(state, builder);
 		TileEntity tileEntity = builder.get(LootParameters.BLOCK_ENTITY);
 		if (tileEntity instanceof BeltTileEntity && ((BeltTileEntity) tileEntity).hasPulley())
@@ -203,7 +203,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				info.refresh(pos, state);
 		} else {
 			controller.passengers.put(entityIn, new TransportedEntityInfo(pos, state));
-			entityIn.onGround = true;
+			entityIn.setOnGround(true);
 		}
 	}
 

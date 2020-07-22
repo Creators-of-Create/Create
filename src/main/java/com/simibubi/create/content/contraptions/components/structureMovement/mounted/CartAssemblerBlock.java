@@ -32,7 +32,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
@@ -45,7 +45,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -53,15 +53,15 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 
 public class CartAssemblerBlock extends AbstractRailBlock
 	implements ITE<CartAssemblerTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
 
-	public static final IProperty<RailShape> RAIL_SHAPE =
+	public static final Property<RailShape> RAIL_SHAPE =
 		EnumProperty.create("shape", RailShape.class, RailShape.EAST_WEST, RailShape.NORTH_SOUTH);
-	public static final IProperty<CartAssembleRailType> RAIL_TYPE =
+	public static final Property<CartAssembleRailType> RAIL_TYPE =
 		EnumProperty.create("rail_type", CartAssembleRailType.class);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -126,7 +126,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 							facing.getZOffset() * speed);
 					} else {
 						disassemble(world, pos, cart);
-						Vec3d diff = VecHelper.getCenterOf(pos)
+						Vector3d diff = VecHelper.getCenterOf(pos)
 							.subtract(cart.getPositionVec());
 						cart.setMotion(diff.x / 16f, 0, diff.z / 16f);
 					}
@@ -253,7 +253,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 
 	@Override
 	@Nonnull
-	public IProperty<RailShape> getShapeProperty() {
+	public Property<RailShape> getShapeProperty() {
 		return RAIL_SHAPE;
 	}
 
@@ -299,7 +299,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	@SuppressWarnings("deprecation")
 	@Nonnull
 	public List<ItemStack> getDrops(@Nonnull BlockState state,
-		@Nonnull net.minecraft.world.storage.loot.LootContext.Builder builder) {
+		@Nonnull net.minecraft.loot.LootContext.Builder builder) {
 		List<ItemStack> drops = super.getDrops(state, builder);
 		drops.addAll(getRailBlock(state).getDrops(builder));
 		return drops;

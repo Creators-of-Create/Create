@@ -9,15 +9,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 
 public class ContactMovementBehaviour extends MovementBehaviour {
 
 	@Override
-	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(RedstoneContactBlock.FACING).getDirectionVec()).scale(.65f);
+	public Vector3d getActiveAreaOffset(MovementContext context) {
+		return Vector3d.of(context.state.get(RedstoneContactBlock.FACING).getDirectionVec()).scale(.65f);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 		if (!AllBlocks.REDSTONE_CONTACT.has(visitedState))
 			return;
 
-		Vec3d contact = new Vec3d(block.get(RedstoneContactBlock.FACING).getDirectionVec());
+		Vector3d contact = Vector3d.of(block.get(RedstoneContactBlock.FACING).getDirectionVec());
 		contact = VecHelper.rotate(contact, context.rotation.x, context.rotation.y, context.rotation.z);
 		Direction direction = Direction.getFacingFromVector(contact.x, contact.y, contact.z);
 

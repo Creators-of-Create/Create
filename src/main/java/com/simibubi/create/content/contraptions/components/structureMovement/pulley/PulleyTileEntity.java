@@ -12,14 +12,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class PulleyTileEntity extends LinearActuatorTileEntity {
 
@@ -104,7 +104,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
             if (!removed) {
                 if (offset > 0) {
                     BlockPos magnetPos = pos.down((int) offset);
-                    IFluidState ifluidstate = world.getFluidState(magnetPos);
+                    FluidState ifluidstate = world.getFluidState(magnetPos);
                     world.destroyBlock(magnetPos, world.getBlockState(magnetPos)
                             .getCollisionShape(world, magnetPos)
                             .isEmpty());
@@ -115,7 +115,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
                 for (int i = 1; i <= ((int) offset) - 1; i++) {
                     BlockPos ropePos = pos.down(i);
-                    IFluidState ifluidstate = world.getFluidState(ropePos);
+                    FluidState ifluidstate = world.getFluidState(ropePos);
                     waterlog[i] = ifluidstate.getFluid() == Fluids.WATER;
                     world.destroyBlock(ropePos, world.getBlockState(ropePos)
                             .getCollisionShape(world, ropePos)
@@ -138,13 +138,13 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
     }
 
     @Override
-    protected Vec3d toPosition(float offset) {
+    protected Vector3d toPosition(float offset) {
         if (movedContraption.getContraption() instanceof PulleyContraption) {
             PulleyContraption contraption = (PulleyContraption) movedContraption.getContraption();
-            return new Vec3d(contraption.getAnchor()).add(0, contraption.initialOffset - offset, 0);
+            return Vector3d.of(contraption.getAnchor()).add(0, contraption.initialOffset - offset, 0);
 
         }
-        return Vec3d.ZERO;
+        return Vector3d.ZERO;
     }
 
     @Override
@@ -190,8 +190,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
     }
 
     @Override
-    protected Vec3d toMotionVector(float speed) {
-        return new Vec3d(0, -speed, 0);
+    protected Vector3d toMotionVector(float speed) {
+        return new Vector3d(0, -speed, 0);
     }
 
     @Override

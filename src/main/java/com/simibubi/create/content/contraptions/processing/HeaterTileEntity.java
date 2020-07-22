@@ -21,7 +21,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
@@ -157,22 +157,22 @@ public class HeaterTileEntity extends SmartTileEntity {
 			if (r.nextDouble() > 0.25)
 				return;
 
-			Vec3d color = randomColor(heatLevel);
+			Vector3d color = randomColor(heatLevel);
 			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.03F, 15), 0.015, 0.1);
 		} else if (heatLevel == HeaterBlock.HeatLevel.FADING) {
 			if (r.nextDouble() > 0.5)
 				return;
 
-			Vec3d color = randomColor(heatLevel);
+			Vector3d color = randomColor(heatLevel);
 			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.035F, 18), 0.03, 0.15);
 		} else if (heatLevel == HeaterBlock.HeatLevel.KINDLED) {
-			Vec3d color = randomColor(heatLevel);
+			Vector3d color = randomColor(heatLevel);
 			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.04F, 21), 0.05, 0.2);
 		}else if (heatLevel == HeaterBlock.HeatLevel.SEETHING) {
 			for (int i = 0; i < 2; i++) {
 				if (r.nextDouble() > 0.6)
 					return;
-				Vec3d color = randomColor(heatLevel);
+				Vector3d color = randomColor(heatLevel);
 				spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.045F, 24), 0.06, 0.22);
 			}
 		}
@@ -191,9 +191,9 @@ public class HeaterTileEntity extends SmartTileEntity {
 				0.0D);
 	}
 
-	private static Vec3d randomColor(HeaterBlock.HeatLevel heatLevel) {
+	private static Vector3d randomColor(HeaterBlock.HeatLevel heatLevel) {
 		if (heatLevel == HeaterBlock.HeatLevel.NONE)
-			return new Vec3d(0,0,0);
+			return new Vector3d(0,0,0);
 
 		return ColorHelper.getRGB(heatParticleColors[heatLevel.ordinal()-1][(int) (Math.random()*4)]);
 	}
@@ -212,7 +212,7 @@ public class HeaterTileEntity extends SmartTileEntity {
 		}
 
 		event.setCanceled(true);
-		event.getThrowable().setMotion(Vec3d.ZERO);
+		event.getThrowable().setMotion(Vector3d.ZERO);
 		event.getThrowable().remove();
 
 		HeaterTileEntity heater = (HeaterTileEntity) tile;

@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -119,7 +119,7 @@ public class AllIcons {
 	@OnlyIn(Dist.CLIENT)
 	public void draw(AbstractGui screen, int x, int y) {
 		bind();
-		screen.blit(x, y, iconX, iconY, 16, 16);
+		screen.drawTexture(x, y, iconX, iconY, 16, 16);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -136,12 +136,12 @@ public class AllIcons {
 		int j = i >> 16 & '\uffff';
 		int k = i & '\uffff';
 		Entry peek = ms.peek();
-		Vec3d rgb = ColorHelper.getRGB(color);
+		Vector3d rgb = ColorHelper.getRGB(color);
 
-		Vec3d vec4 = new Vec3d(1, 1, 0);
-		Vec3d vec3 = new Vec3d(0, 1, 0);
-		Vec3d vec2 = new Vec3d(0, 0, 0);
-		Vec3d vec1 = new Vec3d(1, 0, 0);
+		Vector3d vec4 = new Vector3d(1, 1, 0);
+		Vector3d vec3 = new Vector3d(0, 1, 0);
+		Vector3d vec2 = new Vector3d(0, 0, 0);
+		Vector3d vec1 = new Vector3d(1, 0, 0);
 
 		float u1 = (iconX + 16) / sheetSize;
 		float u2 = iconX / sheetSize;
@@ -155,7 +155,7 @@ public class AllIcons {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private void vertex(Entry peek, IVertexBuilder builder, int j, int k, Vec3d rgb, Vec3d vec, float u, float v) {
+	private void vertex(Entry peek, IVertexBuilder builder, int j, int k, Vector3d rgb, Vector3d vec, float u, float v) {
 		builder.vertex(peek.getModel(), (float) vec.x, (float) vec.y, (float) vec.z)
 			.color((float) rgb.x, (float) rgb.y, (float) rgb.z, 1)
 			.texture(u, v)

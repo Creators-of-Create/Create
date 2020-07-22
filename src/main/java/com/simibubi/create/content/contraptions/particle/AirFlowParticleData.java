@@ -10,7 +10,7 @@ import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -37,7 +37,7 @@ public class AirFlowParticleData implements IParticleData, ICustomParticle<AirFl
 	final int posY;
 	final int posZ;
 
-	public AirFlowParticleData(Vec3i pos) {
+	public AirFlowParticleData(Vector3i pos) {
 		this(pos.getX(), pos.getY(), pos.getZ());
 	}
 

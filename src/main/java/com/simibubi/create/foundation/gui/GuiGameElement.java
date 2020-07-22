@@ -35,7 +35,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -70,7 +70,7 @@ public class GuiGameElement {
 		double xRot, yRot, zRot;
 		double scale = 1;
 		int color = 0xFFFFFF;
-		Vec3d rotationOffset = Vec3d.ZERO;
+		Vector3d rotationOffset = Vector3d.ZERO;
 
 		public GuiRenderBuilder atLocal(double x, double y, double z) {
 			this.x = x;
@@ -107,7 +107,7 @@ public class GuiGameElement {
 			return this;
 		}
 
-		public GuiRenderBuilder withRotationOffset(Vec3d offset) {
+		public GuiRenderBuilder withRotationOffset(Vector3d offset) {
 			this.rotationOffset = offset;
 			return this;
 		}
@@ -180,7 +180,7 @@ public class GuiGameElement {
 
 		protected void renderModel(BlockRendererDispatcher blockRenderer, IRenderTypeBuffer.Impl buffer,
 			RenderType renderType, IVertexBuilder vb, MatrixStack ms) {
-			Vec3d rgb = ColorHelper.getRGB(color);
+			Vector3d rgb = ColorHelper.getRGB(color);
 			blockRenderer.getBlockModelRenderer()
 				.renderModel(ms.peek(), vb, blockState, blockmodel, (float) rgb.x, (float) rgb.y, (float) rgb.z,
 					0xF000F0, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);

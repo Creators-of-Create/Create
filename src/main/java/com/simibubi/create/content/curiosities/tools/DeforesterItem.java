@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
@@ -42,7 +42,7 @@ public class DeforesterItem extends AxeItem {
 		if (world == null)
 			return;
 
-		Vec3d vec = player.getLookVec();
+		Vector3d vec = player.getLookVec();
 		for (BlockPos log : tree.logs)
 			BlockHelper.destroyBlock(world, log, 1 / 2f, item -> {
 				if (dropBlock) {
@@ -65,10 +65,10 @@ public class DeforesterItem extends AxeItem {
 		destroyTree(heldItemMainhand, event.getWorld(), event.getState(), event.getPos(), event.getPlayer());
 	}
 
-	public static void dropItemFromCutTree(World world, BlockPos breakingPos, Vec3d fallDirection, BlockPos pos,
+	public static void dropItemFromCutTree(World world, BlockPos breakingPos, Vector3d fallDirection, BlockPos pos,
 			ItemStack stack) {
 		float distance = (float) Math.sqrt(pos.distanceSq(breakingPos));
-		Vec3d dropPos = VecHelper.getCenterOf(pos);
+		Vector3d dropPos = VecHelper.getCenterOf(pos);
 		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, stack);
 		entity.setMotion(fallDirection.scale(distance / 20f));
 		world.addEntity(entity);

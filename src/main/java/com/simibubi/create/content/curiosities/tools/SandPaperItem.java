@@ -21,7 +21,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -72,7 +72,7 @@ public class SandPaperItem extends Item {
 		if (!(raytraceresult instanceof BlockRayTraceResult))
 			return FAIL;
 		BlockRayTraceResult ray = (BlockRayTraceResult) raytraceresult;
-		Vec3d hitVec = ray.getHitVec();
+		Vector3d hitVec = ray.getHitVec();
 
 		AxisAlignedBB bb = new AxisAlignedBB(hitVec, hitVec).grow(1f);
 		ItemEntity pickUp = null;
@@ -151,9 +151,9 @@ public class SandPaperItem extends Item {
 		return stack;
 	}
 
-	public static void spawnParticles(Vec3d location, ItemStack polishedStack, World world) {
+	public static void spawnParticles(Vector3d location, ItemStack polishedStack, World world) {
 		for (int i = 0; i < 20; i++) {
-			Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, 1 / 8f);
+			Vector3d motion = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, 1 / 8f);
 			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, polishedStack), location.x, location.y,
 				location.z, motion.x, motion.y, motion.z);
 		}

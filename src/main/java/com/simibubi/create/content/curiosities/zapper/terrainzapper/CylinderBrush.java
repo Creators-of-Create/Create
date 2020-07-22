@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class CylinderBrush extends Brush {
 
@@ -47,7 +47,7 @@ public class CylinderBrush extends Brush {
 	}
 
 	@Override
-	public BlockPos getOffset(Vec3d ray, Direction face, PlacementOptions option) {
+	public BlockPos getOffset(Vector3d ray, Direction face, PlacementOptions option) {
 		if (option == PlacementOptions.Merged)
 			return BlockPos.ZERO;
 

@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.item.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.item.ItemStack;
 
 public class WrenchItemRenderer extends CustomRenderedItemModelRenderer<WrenchModel> {

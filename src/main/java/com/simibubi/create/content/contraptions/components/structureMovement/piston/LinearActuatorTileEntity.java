@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public abstract class LinearActuatorTileEntity extends KineticTileEntity implements IControlContraption {
 
@@ -64,7 +64,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 				movedContraption.setContraptionMotion(toMotionVector(syncSpeed));
 				return;
 			}
-			movedContraption.setContraptionMotion(Vec3d.ZERO);
+			movedContraption.setContraptionMotion(Vector3d.ZERO);
 			return;
 		}
 
@@ -201,9 +201,9 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 
 	protected abstract ValueBoxTransform getMovementModeSlot();
 
-	protected abstract Vec3d toMotionVector(float speed);
+	protected abstract Vector3d toMotionVector(float speed);
 
-	protected abstract Vec3d toPosition(float offset);
+	protected abstract Vector3d toPosition(float offset);
 
 	protected void visitNewPosition() {}
 
@@ -239,7 +239,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		if (movedContraption == null)
 			return;
 		if (movedContraption.isStalled()) {
-			movedContraption.setContraptionMotion(Vec3d.ZERO);
+			movedContraption.setContraptionMotion(Vector3d.ZERO);
 			return;
 		}
 		movedContraption.setContraptionMotion(getMotionVector());
@@ -248,10 +248,10 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	protected void applyContraptionPosition() {
 		if (movedContraption == null)
 			return;
-		Vec3d vec = toPosition(offset);
+		Vector3d vec = toPosition(offset);
 		movedContraption.setPosition(vec.x, vec.y, vec.z);
 		if (getSpeed() == 0 || waitingForSpeedChange)
-			movedContraption.setContraptionMotion(Vec3d.ZERO);
+			movedContraption.setContraptionMotion(Vector3d.ZERO);
 	}
 
 	public float getMovementSpeed() {
@@ -261,7 +261,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		return movementSpeed;
 	}
 
-	public Vec3d getMotionVector() {
+	public Vector3d getMotionVector() {
 		return toMotionVector(getMovementSpeed());
 	}
 

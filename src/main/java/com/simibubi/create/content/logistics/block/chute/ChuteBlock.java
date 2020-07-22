@@ -22,7 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -40,14 +40,14 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class ChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
-	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
+	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 	public static final DirectionProperty FACING = BlockStateProperties.FACING_EXCEPT_UP;
 
 	public enum Shape implements IStringSerializable {
 		START(), WINDOW_STRAIGHT(), NORMAL();
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 	}

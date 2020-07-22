@@ -11,7 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity> {
 
@@ -54,14 +54,14 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 			double cartX = MathHelper.lerp(partialTicks, cart.lastTickPosX, cart.getX());
 			double cartY = MathHelper.lerp(partialTicks, cart.lastTickPosY, cart.getY());
 			double cartZ = MathHelper.lerp(partialTicks, cart.lastTickPosZ, cart.getZ());
-			Vec3d cartPos = cart.getPos(cartX, cartY, cartZ);
+			Vector3d cartPos = cart.getPos(cartX, cartY, cartZ);
 
 			for (MatrixStack stack : matrixStacks)
 				stack.translate(-.5f, 0, -.5f);
 
 			if (cartPos != null) {
-				Vec3d cartPosFront = cart.getPosOffset(cartX, cartY, cartZ, (double) 0.3F);
-				Vec3d cartPosBack = cart.getPosOffset(cartX, cartY, cartZ, (double) -0.3F);
+				Vector3d cartPosFront = cart.getPosOffset(cartX, cartY, cartZ, (double) 0.3F);
+				Vector3d cartPosBack = cart.getPosOffset(cartX, cartY, cartZ, (double) -0.3F);
 				if (cartPosFront == null)
 					cartPosFront = cartPos;
 				if (cartPosBack == null)

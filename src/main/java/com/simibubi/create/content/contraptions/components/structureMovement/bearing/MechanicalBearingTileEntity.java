@@ -23,7 +23,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity implements IBearingTileEntity {
 
@@ -260,8 +260,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			Axis axis = getBlockState().get(FACING)
 				.getAxis();
 			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-			Vec3d vec = new Vec3d(1, 1, 1).scale(angle)
-				.mul(new Vec3d(direction.getDirectionVec()));
+			Vector3d vec = new Vector3d(1, 1, 1).scale(angle)
+				.mul(Vector3d.of(direction.getDirectionVec()));
 			movedContraption.rotateTo(vec.x, vec.y, vec.z);
 		}
 	}

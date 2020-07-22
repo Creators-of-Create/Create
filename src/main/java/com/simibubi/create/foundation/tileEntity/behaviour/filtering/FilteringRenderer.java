@@ -24,7 +24,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class FilteringRenderer {
 
@@ -61,9 +61,9 @@ public class FilteringRenderer {
 		boolean showCount = behaviour.isCountVisible();
 		String label = isFilterSlotted ? "" : Lang.translate("logistics.filter");
 		boolean hit = behaviour.slotPositioning.testHit(state, target.getHitVec()
-			.subtract(new Vec3d(pos)));
+			.subtract(Vector3d.of(pos)));
 
-		AxisAlignedBB emptyBB = new AxisAlignedBB(Vec3d.ZERO, Vec3d.ZERO);
+		AxisAlignedBB emptyBB = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO);
 		AxisAlignedBB bb = isFilterSlotted ? emptyBB.grow(.45f, .31f, .2f) : emptyBB.grow(.25f);
 
 		ValueBox box = showCount ? new ItemValueBox(label, bb, pos, filter, behaviour.scrollableValue)

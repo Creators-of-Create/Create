@@ -39,8 +39,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -301,15 +301,15 @@ public class BeltTileEntity extends KineticTileEntity {
 		return part == BeltPart.START ^ movingPositively;
 	}
 
-	public Vec3i getMovementDirection(boolean firstHalf) {
+	public Vector3i getMovementDirection(boolean firstHalf) {
 		return this.getMovementDirection(firstHalf, false);
 	}
 
-	public Vec3i getBeltChainDirection() {
+	public Vector3i getBeltChainDirection() {
 		return this.getMovementDirection(true, true);
 	}
 
-	protected Vec3i getMovementDirection(boolean firstHalf, boolean ignoreHalves) {
+	protected Vector3i getMovementDirection(boolean firstHalf, boolean ignoreHalves) {
 		if (getSpeed() == 0)
 			return BlockPos.ZERO;
 
@@ -323,7 +323,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		boolean notHorizontal = blockState.get(BeltBlock.SLOPE) != HORIZONTAL;
 		if (getSpeed() < 0)
 			movementFacing = movementFacing.getOpposite();
-		Vec3i movement = movementFacing.getDirectionVec();
+		Vector3i movement = movementFacing.getDirectionVec();
 
 		boolean slopeBeforeHalf = (part == BeltPart.END) == (beltFacing.getAxisDirection() == POSITIVE);
 		boolean onSlope = notHorizontal && (part == MIDDLE || slopeBeforeHalf == firstHalf || ignoreHalves);
@@ -332,7 +332,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (!onSlope)
 			return movement;
 
-		return new Vec3i(movement.getX(), movingUp ? 1 : -1, movement.getZ());
+		return new Vector3i(movement.getX(), movingUp ? 1 : -1, movement.getZ());
 	}
 
 	public Direction getMovementFacing() {
@@ -366,10 +366,10 @@ public class BeltTileEntity extends KineticTileEntity {
 				.applyToEachWithin(index + .5f, maxDistanceFromCenter, processFunction);
 	}
 
-	private Vec3d getWorldPositionOf(TransportedItemStack transported) {
+	private Vector3d getWorldPositionOf(TransportedItemStack transported) {
 		BeltTileEntity controllerTE = getControllerTE();
 		if (controllerTE == null)
-			return Vec3d.ZERO;
+			return Vector3d.ZERO;
 		return BeltHelper.getVectorForOffset(controllerTE, transported.beltPosition);
 	}
 

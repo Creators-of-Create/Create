@@ -17,7 +17,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class AirFlowParticle extends SimpleAnimatedParticle {
@@ -32,7 +32,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		this.maxAge = 40;
 		canCollide = false;
 		selectSprite(7);
-		Vec3d offset = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .25f);
+		Vector3d offset = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, .25f);
 		this.setPosition(posX + offset.x, posY + offset.y, posZ + offset.z);
 		this.prevPosX = posX;
 		this.prevPosY = posY;
@@ -61,12 +61,12 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 				return;
 			}
 
-			Vec3d directionVec = new Vec3d(source.airCurrent.direction.getDirectionVec());
-			Vec3d motion = directionVec.scale(1 / 8f);
+			Vector3d directionVec = Vector3d.of(source.airCurrent.direction.getDirectionVec());
+			Vector3d motion = directionVec.scale(1 / 8f);
 			if (!source.airCurrent.pushing)
 				motion = motion.scale(-1);
 
-			double distance = new Vec3d(posX, posY, posZ).subtract(VecHelper.getCenterOf(source.getPos()))
+			double distance = new Vector3d(posX, posY, posZ).subtract(VecHelper.getCenterOf(source.getPos()))
 					.mul(directionVec).length() - .5f;
 			if (distance > source.airCurrent.maxDistance + 1 || distance < -.25f) {
 				dissipate();

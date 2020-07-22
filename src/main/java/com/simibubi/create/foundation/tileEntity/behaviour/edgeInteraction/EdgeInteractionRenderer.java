@@ -18,7 +18,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class EdgeInteractionRenderer {
 
@@ -49,9 +49,9 @@ public class EdgeInteractionRenderer {
 
 		Direction closestEdge = connectiveSides.get(0);
 		double bestDistance = Double.MAX_VALUE;
-		Vec3d center = VecHelper.getCenterOf(pos);
+		Vector3d center = VecHelper.getCenterOf(pos);
 		for (Direction direction : connectiveSides) {
-			double distance = new Vec3d(direction.getDirectionVec()).subtract(target.getHitVec()
+			double distance = Vector3d.of(direction.getDirectionVec()).subtract(target.getHitVec()
 				.subtract(center))
 				.length();
 			if (distance > bestDistance)
@@ -64,7 +64,7 @@ public class EdgeInteractionRenderer {
 		boolean hit = bb.contains(target.getHitVec());
 
 		ValueBox box = new ValueBox("", bb.offset(-pos.getX(), -pos.getY(), -pos.getZ()), pos);
-		Vec3d textOffset = Vec3d.ZERO;
+		Vector3d textOffset = Vector3d.ZERO;
 
 		boolean positive = closestEdge.getAxisDirection() == AxisDirection.POSITIVE;
 		if (positive) {

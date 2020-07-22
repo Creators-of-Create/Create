@@ -5,8 +5,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.IWorld;
 
 public class BeltHelper {
@@ -40,7 +40,7 @@ public class BeltHelper {
 
 	public static BlockPos getPositionForOffset(BeltTileEntity controller, int offset) {
 		BlockPos pos = controller.getPos();
-		Vec3i vec = controller.getBeltFacing().getDirectionVec();
+		Vector3i vec = controller.getBeltFacing().getDirectionVec();
 		BeltSlope slope = controller.getBlockState().get(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 
@@ -48,7 +48,7 @@ public class BeltHelper {
 				offset * vec.getZ());
 	}
 	
-	public static Vec3d getVectorForOffset(BeltTileEntity controller, float offset) {
+	public static Vector3d getVectorForOffset(BeltTileEntity controller, float offset) {
 		BeltSlope slope = controller.getBlockState().get(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 		float verticalMovement = verticality;
@@ -56,11 +56,11 @@ public class BeltHelper {
 			verticalMovement = 0;
 		verticalMovement = verticalMovement * (Math.min(offset, controller.beltLength - .5f) - .5f);
 		
-		Vec3d vec = VecHelper.getCenterOf(controller.getPos());
-		Vec3d horizontalMovement = new Vec3d(controller.getBeltFacing().getDirectionVec()).scale(offset - .5f);
+		Vector3d vec = VecHelper.getCenterOf(controller.getPos());
+		Vector3d horizontalMovement = Vector3d.of(controller.getBeltFacing().getDirectionVec()).scale(offset - .5f);
 		
 		if (slope == BeltSlope.VERTICAL)
-			horizontalMovement = Vec3d.ZERO;
+			horizontalMovement = Vector3d.ZERO;
 		
 		vec = vec.add(horizontalMovement).add(0, verticalMovement, 0);
 		return vec;

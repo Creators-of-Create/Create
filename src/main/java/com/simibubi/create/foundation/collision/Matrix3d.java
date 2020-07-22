@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.collision;
 
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -112,11 +112,11 @@ public class Matrix3d {
 		return this;
 	}
 
-	public Vec3d transform(Vec3d vec) {
+	public Vector3d transform(Vector3d vec) {
 		double x = vec.x * m00 + vec.y * m01 + vec.z * m02;
 		double y = vec.x * m10 + vec.y * m11 + vec.z * m12;
 		double z = vec.x * m20 + vec.y * m21 + vec.z * m22;
-		return new Vec3d(x, y, z);
+		return new Vector3d(x, y, z);
 	}
 
 	public Matrix3d copy() {

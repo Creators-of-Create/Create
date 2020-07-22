@@ -20,7 +20,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
@@ -60,7 +60,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 				BooleanProperty glueableSide = getGlueableSide(state, face);
 				if (glueableSide != null && !state.get(glueableSide)) {
 					if (worldIn.isRemote) {
-						Vec3d vec = hit.getHitVec();
+						Vector3d vec = hit.getHitVec();
 						worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
 						return ActionResultType.SUCCESS;
 					}
@@ -78,7 +78,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		if (state.get(affectedSide) == isSlimeBall)
 			return ActionResultType.PASS;
 		if (worldIn.isRemote) {
-			Vec3d vec = hit.getHitVec();
+			Vector3d vec = hit.getHitVec();
 			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
 			return ActionResultType.SUCCESS;
 		}

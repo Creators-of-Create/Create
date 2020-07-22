@@ -18,7 +18,7 @@ import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -114,7 +114,7 @@ public class SchematicWorld extends WrappedWorld {
 	}
 
 	@Override
-	public IFluidState getFluidState(BlockPos pos) {
+	public FluidState getFluidState(BlockPos pos) {
 		return getBlockState(pos).getFluidState();
 	}
 

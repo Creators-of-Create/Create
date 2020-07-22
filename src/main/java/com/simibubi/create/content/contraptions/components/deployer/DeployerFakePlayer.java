@@ -27,7 +27,7 @@ import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -74,8 +74,8 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	public Vec3d getPositionVector() {
-		return new Vec3d(getX(), getY(), getZ());
+	public Vector3d getPositionVector() {
+		return new Vector3d(getX(), getY(), getZ());
 	}
 
 	@Override

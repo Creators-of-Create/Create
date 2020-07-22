@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class ChromaticCompoundItem extends Item {
@@ -73,13 +73,13 @@ public class ChromaticCompoundItem extends Item {
 		CompoundNBT itemData = entity.getItem()
 			.getOrCreateTag();
 
-		Vec3d positionVec = entity.getPositionVec();
+		Vector3d positionVec = entity.getPositionVec();
 		CCuriosities config = AllConfigs.SERVER.curiosities;
 		if (world.isRemote) {
 			int light = itemData.getInt("CollectingLight");
 			if (random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {
-				Vec3d start = VecHelper.offsetRandomly(positionVec, random, 3);
-				Vec3d motion = positionVec.subtract(start)
+				Vector3d start = VecHelper.offsetRandomly(positionVec, random, 3);
+				Vector3d motion = positionVec.subtract(start)
 					.normalize()
 					.scale(.2f);
 				world.addParticle(ParticleTypes.END_ROD, start.x, start.y, start.z, motion.x, motion.y, motion.z);

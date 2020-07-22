@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -102,8 +102,8 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 			}
 
 			@Override
-			protected Vec3d getLocalOffset(BlockState state) {
-				return new Vec3d(0.5, 13 / 16d, 0.5);
+			protected Vector3d getLocalOffset(BlockState state) {
+				return new Vector3d(0.5, 13 / 16d, 0.5);
 			}
 
 			protected float getScale() {

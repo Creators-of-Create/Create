@@ -58,7 +58,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -72,7 +72,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -762,9 +762,9 @@ public abstract class Contraption {
 		foreachActor(world, (behaviour, ctx) -> {
 			behaviour.stopMoving(ctx);
 			ctx.position = null;
-			ctx.motion = Vec3d.ZERO;
-			ctx.relativeMotion = Vec3d.ZERO;
-			ctx.rotation = Vec3d.ZERO;
+			ctx.motion = Vector3d.ZERO;
+			ctx.relativeMotion = Vector3d.ZERO;
+			ctx.rotation = Vector3d.ZERO;
 		});
 	}
 
@@ -787,12 +787,12 @@ public abstract class Contraption {
 		if (axis == Axis.Z)
 			maxDiff = Math.max(maxXDiff, maxYDiff);
 
-		Vec3d vec = new Vec3d(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
+		Vector3d vec = Vector3d.of(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
 			.getDirectionVec());
-		Vec3d planeByNormal = VecHelper.planeByNormal(vec);
-		Vec3d min = vec.mul(bb.minX, bb.minY, bb.minZ)
+		Vector3d planeByNormal = VecHelper.planeByNormal(vec);
+		Vector3d min = vec.mul(bb.minX, bb.minY, bb.minZ)
 			.add(planeByNormal.scale(-maxDiff));
-		Vec3d max = vec.mul(bb.maxX, bb.maxY, bb.maxZ)
+		Vector3d max = vec.mul(bb.maxX, bb.maxY, bb.maxZ)
 			.add(planeByNormal.scale(maxDiff + 1));
 		bounds = new AxisAlignedBB(min, max);
 	}

@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 
@@ -42,7 +42,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 
 			if (transported.insertedFrom.getAxis()
 				.isHorizontal()) {
-				Vec3d offsetVec = new Vec3d(transported.insertedFrom.getOpposite()
+				Vector3d offsetVec = Vector3d.of(transported.insertedFrom.getOpposite()
 					.getDirectionVec()).scale(.5f - offset);
 				ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 				boolean alongX = transported.insertedFrom.rotateY()

@@ -22,7 +22,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion.Mode;
 
 public class NozzleTileEntity extends SmartTileEntity {
@@ -69,12 +69,12 @@ public class NozzleTileEntity extends SmartTileEntity {
 		if (this.range != range)
 			setRange(range);
 
-		Vec3d center = VecHelper.getCenterOf(pos);
+		Vector3d center = VecHelper.getCenterOf(pos);
 		if (world.isRemote && range != 0) {
 			if (world.rand.nextInt(
 					MathHelper.clamp((AllConfigs.SERVER.kinetics.fanPushDistance.get() - (int) range), 1, 10)) == 0) {
-				Vec3d start = VecHelper.offsetRandomly(center, world.rand, pushing ? 1 : range / 2);
-				Vec3d motion = center.subtract(start).normalize()
+				Vector3d start = VecHelper.offsetRandomly(center, world.rand, pushing ? 1 : range / 2);
+				Vector3d motion = center.subtract(start).normalize()
 						.scale(MathHelper.clamp(range * (pushing ? .025f : 1f), 0, .5f) * (pushing ? -1 : 1));
 				world.addParticle(ParticleTypes.POOF, start.x, start.y, start.z, motion.x, motion.y, motion.z);
 			}
@@ -82,7 +82,7 @@ public class NozzleTileEntity extends SmartTileEntity {
 
 		for (Iterator<Entity> iterator = pushingEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
-			Vec3d diff = entity.getPositionVec().subtract(center);
+			Vector3d diff = entity.getPositionVec().subtract(center);
 
 			if (!(entity instanceof PlayerEntity) && world.isRemote)
 				continue;
@@ -98,7 +98,7 @@ public class NozzleTileEntity extends SmartTileEntity {
 				continue;
 
 			float factor = (entity instanceof ItemEntity) ? 1 / 128f : 1 / 32f;
-			Vec3d pushVec = diff.normalize().scale((range - distance) * (pushing ? 1 : -1));
+			Vector3d pushVec = diff.normalize().scale((range - distance) * (pushing ? 1 : -1));
 			entity.setMotion(entity.getMotion().add(pushVec.scale(factor)));
 			entity.fallDistance = 0;
 			entity.velocityChanged = true;
@@ -136,11 +136,11 @@ public class NozzleTileEntity extends SmartTileEntity {
 		if (range == 0)
 			return;
 
-		Vec3d center = VecHelper.getCenterOf(pos);
+		Vector3d center = VecHelper.getCenterOf(pos);
 		AxisAlignedBB bb = new AxisAlignedBB(center, center).grow(range / 2f);
 
 		for (Entity entity : world.getEntitiesWithinAABB(Entity.class, bb)) {
-			Vec3d diff = entity.getPositionVec().subtract(center);
+			Vector3d diff = entity.getPositionVec().subtract(center);
 
 			double distance = diff.length();
 			if (distance > range || entity.isSneaking()

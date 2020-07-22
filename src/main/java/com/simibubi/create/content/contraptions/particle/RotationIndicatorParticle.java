@@ -14,7 +14,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class RotationIndicatorParticle extends SimpleAnimatedParticle {
@@ -24,8 +24,8 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	protected float radius2;
 	protected float speed;
 	protected Axis axis;
-	protected Vec3d origin;
-	protected Vec3d offset;
+	protected Vector3d origin;
+	protected Vector3d offset;
 	protected boolean isVisible;
 
 	private RotationIndicatorParticle(World world, double x, double y, double z, int color, float radius1,
@@ -34,7 +34,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 		this.motionX = 0;
 		this.motionY = 0;
 		this.motionZ = 0;
-		this.origin = new Vec3d(x, y, z);
+		this.origin = new Vector3d(x, y, z);
 		this.particleScale *= 0.75F;
 		this.maxAge = lifeSpan + this.rand.nextInt(32);
 		this.setColorFade(color);
@@ -46,7 +46,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 		this.speed = speed;
 		this.axis = axis;
 		this.isVisible = isVisible;
-		this.offset = axis.isHorizontal() ? new Vec3d(0, 1, 0) : new Vec3d(1, 0, 0);
+		this.offset = axis.isHorizontal() ? new Vector3d(0, 1, 0) : new Vector3d(1, 0, 0);
 		move(0, 0, 0);
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
@@ -69,7 +69,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	public void move(double x, double y, double z) {
 		float time = AnimationTickHolder.ticks;
 		float angle = (float) ((time * speed) % 360) - (speed / 2 * age * (((float) age) / maxAge));
-		Vec3d position = VecHelper.rotate(this.offset.scale(radius), angle, axis).add(origin);
+		Vector3d position = VecHelper.rotate(this.offset.scale(radius), angle, axis).add(origin);
 		posX = position.x;
 		posY = position.y;
 		posZ = position.z;

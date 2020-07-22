@@ -37,8 +37,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.gen.feature.template.Template;
 
 public class SchematicAndQuillHandler {
@@ -62,8 +62,8 @@ public class SchematicAndQuillHandler {
 			return true;
 
 		AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos);
-		Vec3i vec = selectedFace.getDirectionVec();
-		Vec3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
+		Vector3i vec = selectedFace.getDirectionVec();
+		Vector3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
 			.getProjectedView();
 		if (bb.contains(projectedView))
 			delta *= -1;
@@ -137,7 +137,7 @@ public class SchematicAndQuillHandler {
 		if (AllKeys.ACTIVATE_TOOL.isPressed()) {
 			float pt = Minecraft.getInstance()
 				.getRenderPartialTicks();
-			Vec3d targetVec = player.getEyePosition(pt)
+			Vector3d targetVec = player.getEyePosition(pt)
 				.add(player.getLookVec()
 					.scale(range));
 			selectedPos = new BlockPos(targetVec);
@@ -162,7 +162,7 @@ public class SchematicAndQuillHandler {
 		if (secondPos != null) {
 			AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos).expand(1, 1, 1)
 				.grow(.45f);
-			Vec3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
+			Vector3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
 				.getProjectedView();
 			boolean inside = bb.contains(projectedView);
 			PredicateTraceResult result =

@@ -112,7 +112,7 @@ public enum AllGuiTextures {
 	@OnlyIn(Dist.CLIENT)
 	public void draw(AbstractGui screen, int x, int y) {
 		bind();
-		screen.blit(x, y, startX, startY, width, height);
+		screen.drawTexture(x, y, startX, startY, width, height);
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -9,14 +9,14 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class DeployerFilterSlot extends ValueBoxTransform {
 
 	@Override
-	protected Vec3d getLocalOffset(BlockState state) {
+	protected Vector3d getLocalOffset(BlockState state) {
 		Direction facing = state.get(DeployerBlock.FACING);
-		Vec3d vec = VecHelper.voxelSpace(8f, 13.5f, 11.5f);
+		Vector3d vec = VecHelper.voxelSpace(8f, 13.5f, 11.5f);
 
 		float yRot = AngleHelper.horizontalAngle(facing);
 		float zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
