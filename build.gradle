@@ -69,6 +69,10 @@ minecraft {
     }
 }
 
+compileJava {
+    options.compilerArgs = ["-Xdiags:verbose"]
+}
+
 sourceSets.main.resources {
     srcDir 'src/generated/resources'
 }

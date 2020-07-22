@@ -1,0 +1,56 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"1": "create:block/fluid_tank",
+		"3": "create:block/fluid_tank_window",
+		"particle": "create:block/fluid_tank"
+	},
+	"elements": [
+		{
+			"name": "SideRight",
+			"from": [15, 0, 0],
+			"to": [16, 16, 12],
+			"faces": {
+				"east": {"uv": [4, 0, 16, 16], "texture": "#1"},
+				"south": {"uv": [12, 0, 13, 16], "texture": "#1"},
+				"west": {"uv": [0, 0, 12, 16], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Window",
+			"from": [0, 0, 1],
+			"to": [4, 16, 1],
+			"faces": {
+				"north": {"uv": [8, 0, 12, 16], "texture": "#3"},
+				"south": {"uv": [12, 0, 16, 16], "texture": "#3"}
+			}
+		},
+		{
+			"name": "Window",
+			"from": [15, 0, 12],
+			"to": [15, 16, 16],
+			"faces": {
+				"east": {"uv": [12, 0, 16, 16], "texture": "#3"},
+				"west": {"uv": [8, 0, 12, 16], "texture": "#3"}
+			}
+		},
+		{
+			"name": "SideLeft",
+			"from": [4, 0, 0],
+			"to": [16, 16, 1],
+			"faces": {
+				"north": {"uv": [0, 0, 12, 16], "texture": "#1"},
+				"south": {"uv": [4, 0, 16, 16], "texture": "#1"},
+				"west": {"uv": [3, 0, 4, 16], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "tank",
+			"origin": [8, 8, -23],
+			"children": [0, 1, 2, 3]
+		}
+	]
+}

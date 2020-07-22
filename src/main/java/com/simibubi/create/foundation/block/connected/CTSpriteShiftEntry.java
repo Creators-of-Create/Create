@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.utility.SuperByteBuffer;
 public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 
 	int textureSheetSize;
-	
+
 	public CTSpriteShiftEntry(int sheetSize) {
 		this.textureSheetSize = sheetSize;
 	}
@@ -16,16 +16,17 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 	public float getTargetU(float localU, int index) {
 		float uOffset = (index % textureSheetSize);
 		return getTarget().getInterpolatedU(
-				(SuperByteBuffer.getUnInterpolatedU(getOriginal(), localU) + (uOffset * 16)) / ((float) textureSheetSize));
+			(SuperByteBuffer.getUnInterpolatedU(getOriginal(), localU) + (uOffset * 16)) / ((float) textureSheetSize));
 	}
 
 	public float getTargetV(float localV, int index) {
 		float vOffset = (index / textureSheetSize);
 		return getTarget().getInterpolatedV(
-				(SuperByteBuffer.getUnInterpolatedV(getOriginal(), localV) + (vOffset * 16)) / ((float) textureSheetSize));
+			(SuperByteBuffer.getUnInterpolatedV(getOriginal(), localV) + (vOffset * 16)) / ((float) textureSheetSize));
 	}
 
 	public abstract int getTextureIndex(CTContext context);
+
 	public abstract CTType getType();
 
 	public static class Horizontal extends CTSpriteShiftEntry {
@@ -60,6 +61,24 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 		@Override
 		public CTType getType() {
 			return CTType.VERTICAL;
+		}
+
+	}
+
+	public static class Cross extends CTSpriteShiftEntry {
+
+		public Cross() {
+			super(4);
+		}
+
+		@Override
+		public int getTextureIndex(CTContext context) {
+			return (context.up ? 1 : 0) + (context.down ? 2 : 0) + (context.left ? 4 : 0) + (context.right ? 8 : 0);
+		}
+
+		@Override
+		public CTType getType() {
+			return CTType.CROSS;
 		}
 
 	}
@@ -125,7 +144,7 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 
 			if (borders == 2) {
 				if ((c.up && c.left && c.topLeft) || (c.down && c.left && c.bottomLeft)
-						|| (c.up && c.right && c.topRight) || (c.down && c.right && c.bottomRight))
+					|| (c.up && c.right && c.topRight) || (c.down && c.right && c.bottomRight))
 					tileX += 3;
 			}
 

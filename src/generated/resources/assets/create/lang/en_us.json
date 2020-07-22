@@ -29,6 +29,7 @@
 	"block.create.birch_window": "Birch Window",
 	"block.create.birch_window_pane": "Birch Window Pane",
 	"block.create.black_seat": "Black Seat",
+	"block.create.blaze_heater": "Blaze Heater",
 	"block.create.blue_seat": "Blue Seat",
 	"block.create.brass_belt_funnel": "Brass Belt Funnel",
 	"block.create.brass_block": "Brass Block",
@@ -359,6 +360,7 @@
 	"block.create.zinc_ore": "Zinc Ore",
 
 	"entity.create.contraption": "Contraption",
+	"entity.create.seat": "Seat",
 	"entity.create.stationary_contraption": "Stationary Contraption",
 	"entity.create.super_glue": "Super Glue",
 
@@ -385,6 +387,7 @@
 	"item.create.empty_schematic": "Empty Schematic",
 	"item.create.extendo_grip": "Extendo Grip",
 	"item.create.filter": "Filter",
+	"item.create.fuel_pellet": "Fuel Pellet",
 	"item.create.furnace_minecart_contraption": "Furnace Minecart Contraption",
 	"item.create.goggles": "Engineer's Goggles",
 	"item.create.golden_sheet": "Golden Sheet",
@@ -863,6 +866,7 @@
 	"create.subtitle.blockzapper_confirm": "Affirmative Ding",
 	"create.subtitle.blockzapper_deny": "Declining Boop",
 	"create.subtitle.block_funnel_eat": "Funnel CHOMPS",
+	"create.subtitle.blaze_munch": "Blaze munches happily",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",
@@ -1078,6 +1082,15 @@
 
 	"block.create.basin.tooltip": "BASIN",
 	"block.create.basin.tooltip.summary": "A handy _item_ _container_ used in processing with the _Mechanical_ _Mixer_ and the _Mechanical_ _Press_. Supports _Redstone_ _Comparators_.",
+
+	"block.create.blaze_heater.tooltip": "BLAZE HEATER",
+	"block.create.blaze_heater.tooltip.summary": "A block to heat a basin when housing a tamed blaze.",
+	"block.create.blaze_heater.tooltip.condition1": "When using on a blaze or blaze spawner",
+	"block.create.blaze_heater.tooltip.behaviour1": "_Captures_ a blaze in the item",
+	"block.create.blaze_heater.tooltip.condition2": "When placed below a basin",
+	"block.create.blaze_heater.tooltip.behaviour2": "Provides _heat_ to basin recipes.",
+	"block.create.blaze_heater.tooltip.condition3": "When fuel is used on the blaze heater",
+	"block.create.blaze_heater.tooltip.behaviour3": "Increases the remaining burn time by the furnace brn time of the used item. Consumes the item. Use _special_ _fuel_ for best results.",
 
 	"block.create.reinforced_rail.tooltip": "REINFORCED RAIL",
 	"block.create.reinforced_rail.tooltip.summary": "A timber stabilized rail, _does_ _not_ _need_ _supports_.",

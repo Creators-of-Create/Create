@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "create:blaze_heater",
+    "minecraft:magma_block",
+    "minecraft:campfire",
+    "minecraft:lava",
+    "minecraft:fire"
+  ]
+}

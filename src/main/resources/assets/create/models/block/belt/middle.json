@@ -1,0 +1,30 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "create:block/belt"
+	},
+	"elements": [
+		{
+			"name": "Top",
+			"from": [1, 11, 0],
+			"to": [15, 13, 16],
+			"faces": {
+				"east": {"uv": [0, 0, 2, 16], "rotation": 270, "texture": "#0"},
+				"west": {"uv": [14, 0, 16, 16], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [1, 0, 15, 16], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [1, 0, 15, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [3, 10, 0],
+			"to": [13, 11, 16],
+			"faces": {
+				"east": {"uv": [12, 0, 13, 16], "rotation": 270, "texture": "#0"},
+				"west": {"uv": [3, 0, 4, 16], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [3, 0, 13, 16], "texture": "#0"}
+			}
+		}
+	]
+}

@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.processing;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
 import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -10,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -23,8 +26,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-
-import javax.annotation.Nonnull;
 
 public class BasinTileEntity extends SmartTileEntity implements ITickableTileEntity {
 
@@ -121,7 +122,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		super.read(compound);
 		inputItemInventory.deserializeNBT(compound.getCompound("InputItems"));
 		outputItemInventory.deserializeNBT(compound.getCompound("OutputItems"));
-		if (compound.hasUniqueId("fluids"))
+		if (compound.contains("fluids"))
 			fluidInventory
 				.ifPresent(combinedFluidHandler -> combinedFluidHandler.readFromNBT(compound.getList("fluids", 10)));
 	}
@@ -131,7 +132,10 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		super.write(compound);
 		compound.put("InputItems", inputItemInventory.serializeNBT());
 		compound.put("OutputItems", outputItemInventory.serializeNBT());
-		fluidInventory.ifPresent(combinedFuidHandler -> compound.put("fluids", combinedFuidHandler.getListNBT()));
+		fluidInventory.ifPresent(combinedFuidHandler -> {
+			ListNBT nbt = combinedFuidHandler.getListNBT();
+			compound.put("fluids", nbt);
+		});
 		return compound;
 	}
 

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.processing.HeaterBlock;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -39,6 +40,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
+import static com.simibubi.create.content.contraptions.processing.HeaterBlock.getHeaterLevel;
+
 public class InWorldProcessing {
 
 	public static class SplashingInv extends RecipeWrapper {
@@ -60,9 +63,9 @@ public class InWorldProcessing {
 			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			if (blockState.getBlock() == Blocks.FIRE
-				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)))
+				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)) || getHeaterLevel(blockState) == HeaterBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
-			if (blockState.getBlock() == Blocks.LAVA)
+			if (blockState.getBlock() == Blocks.LAVA || getHeaterLevel(blockState).min(HeaterBlock.HeatLevel.FADING))
 				return Type.BLASTING;
 			return null;
 		}
@@ -263,7 +266,7 @@ public class InWorldProcessing {
 		if (recipe instanceof ProcessingRecipe) {
 			stacks = new ArrayList<>();
 			for (int i = 0; i < stackIn.getCount(); i++) {
-				List<ItemStack> rollResults = ((ProcessingRecipe<?>) recipe).rollResults();
+				List<ItemStack> rollResults = ((ProcessingRecipe<?>) recipe).rollResults().getItemStacks();
 				for (ItemStack stack : rollResults) {
 					for (ItemStack previouslyRolled : stacks) {
 						if (stack.isEmpty())

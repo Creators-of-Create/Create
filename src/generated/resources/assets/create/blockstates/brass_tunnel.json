@@ -14,18 +14,11 @@
       "model": "create:block/brass_tunnel/window",
       "y": 90
     },
-    "axis=x,shape=halfshade": {
-      "model": "create:block/brass_tunnel/halfshade"
+    "axis=x,shape=closed": {
+      "model": "create:block/brass_tunnel/straight"
     },
-    "axis=z,shape=halfshade": {
-      "model": "create:block/brass_tunnel/halfshade",
-      "y": 90
-    },
-    "axis=x,shape=fullshade": {
-      "model": "create:block/brass_tunnel/fullshade"
-    },
-    "axis=z,shape=fullshade": {
-      "model": "create:block/brass_tunnel/fullshade",
+    "axis=z,shape=closed": {
+      "model": "create:block/brass_tunnel/straight",
       "y": 90
     },
     "axis=x,shape=t_left": {

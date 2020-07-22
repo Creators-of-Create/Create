@@ -9,7 +9,7 @@ public class BrassTunnelFilterSlot extends ValueBoxTransform.Sided {
 
 	@Override
 	protected Vec3d getSouthLocation() {
-		return VecHelper.voxelSpace(8, 12, 15.5f);
+		return VecHelper.voxelSpace(8, 13, 15.5f);
 	}
 
 }

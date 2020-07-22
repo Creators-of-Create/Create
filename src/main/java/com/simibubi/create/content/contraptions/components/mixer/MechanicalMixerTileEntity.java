@@ -1,20 +1,24 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
+import com.simibubi.create.content.contraptions.processing.CombinedItemFluidList;
+import com.simibubi.create.content.contraptions.processing.HeaterBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -30,6 +34,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.IItemHandler;
+
+import static com.simibubi.create.content.contraptions.processing.HeaterBlock.getHeaterLevel;
 
 public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
@@ -65,7 +71,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	public float getRenderedHeadOffset(float partialTicks) {
-		int localTick = 0;
+		int localTick;
 		float offset = 0;
 		if (running) {
 			if (runningTicks < 20) {
@@ -121,7 +127,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (world.isRemote && running && !basinItemInv.isPresent()) 
+		if (world != null && world.isRemote && running && !basinItemInv.isPresent())
 			updateBasin();
 	}
 	
@@ -163,7 +169,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	public void renderParticles() {
 		IItemHandler itemHandler = basinItemInv.orElse(null);
 		BasinInventory inv = (BasinInventory) itemHandler;
-		if (inv == null)
+		if (inv == null || world == null)
 			return;
 
 		for (int slot = 0; slot < inv.getInputHandler()
@@ -204,14 +210,16 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			.allMatch(ingredient -> (ingredient.isSimple() || ingredient.getMatchingStacks().length == 1)))
 			return false;
 
-		List<ItemStack> remaining = new ArrayList<>();
+		CombinedItemFluidList remaining = new CombinedItemFluidList();
 		inputs.forEachItemStack(stack -> remaining.add(stack.copy()));
+		basinFluidInv.ifPresent(
+			fluidInv -> ((CombinedFluidHandler) fluidInv).forEachTank(fluidStack -> remaining.add(fluidStack.copy())));
 
 		// sort by leniency
 		List<Ingredient> sortedIngredients = new LinkedList<>(ingredients);
 		sortedIngredients.sort(Comparator.comparingInt(i -> i.getMatchingStacks().length));
 		Ingredients: for (Ingredient ingredient : sortedIngredients) {
-			for (ItemStack stack : remaining) {
+			for (ItemStack stack : remaining.getItemStacks()) {
 				if (stack.isEmpty())
 					continue;
 				if (ingredient.test(stack)) {
@@ -221,7 +229,10 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			}
 			return false;
 		}
-		return true;
+
+		if (!(recipe instanceof MixingRecipe))
+			return true;
+		return ((MixingRecipe) recipe).getHeatLevelRequired() <= getHeatLevelApplied().ordinal();
 	}
 
 	@Override
@@ -258,4 +269,12 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		return running;
 	}
 
+	private HeaterBlock.HeatLevel getHeatLevelApplied() {
+		if (world == null)
+			return HeaterBlock.HeatLevel.NONE;
+		BlockState state = world.getBlockState(pos.down(3));
+		if (state.has(HeaterBlock.BLAZE_LEVEL))
+			return state.get(HeaterBlock.BLAZE_LEVEL);
+		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeaterBlock.HeatLevel.SMOULDERING : HeaterBlock.HeatLevel.NONE;
+	}
 }

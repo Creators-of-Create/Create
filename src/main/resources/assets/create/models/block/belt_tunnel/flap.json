@@ -1,31 +1,22 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/block",
 	"textures": {
-		"0": "create:block/brass_tunnel",
-		"particle": "create:block/brass_tunnel"
+		"4": "create:block/brass_tunnel"
 	},
 	"elements": [
 		{
 			"name": "F4",
-			"from": [14.5, -2.5, 11],
-			"to": [15.5, 8.5, 14],
-			"rotation": {"angle": 0, "axis": "y", "origin": [-24.5, -7.5, 8]},
+			"from": [11, -3, 1],
+			"to": [14, 10, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-24.5, -7.5, 9]},
 			"faces": {
-				"north": {"uv": [4, 0, 4.25, 2.5], "texture": "#0"},
-				"east": {"uv": [4, 0, 4.75, 2.5], "rotation": 180, "texture": "#0"},
-				"south": {"uv": [4.5, 0, 4.75, 2.5], "texture": "#0"},
-				"west": {"uv": [4, 0, 4.75, 2.5], "texture": "#0"},
-				"up": {"uv": [4, 1.25, 4.75, 1.5], "rotation": 90, "texture": "#0"},
-				"down": {"uv": [4, 1, 4.75, 1.25], "rotation": 270, "texture": "#0"}
+				"north": {"uv": [9.5, 14.5, 16, 16], "rotation": 90, "texture": "#4"},
+				"east": {"uv": [9.5, 15.5, 16, 16], "rotation": 90, "texture": "#4"},
+				"south": {"uv": [9.5, 16, 16, 14.5], "rotation": 90, "texture": "#4"},
+				"west": {"uv": [9.5, 14.5, 16, 15], "rotation": 90, "texture": "#4"},
+				"up": {"uv": [15.5, 14.5, 16, 16], "rotation": 270, "texture": "#4"},
+				"down": {"uv": [9.5, 14.5, 10, 16], "rotation": 270, "texture": "#4"}
 			}
-		}
-	],
-	"groups": [
-		{
-			"name": "Flap",
-			"origin": [8, 8, 8],
-			"children": [0]
 		}
 	]
 }

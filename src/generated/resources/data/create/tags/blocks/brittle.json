@@ -10,6 +10,9 @@
     "create:extractor",
     "create:vertical_extractor",
     "create:linked_extractor",
-    "create:vertical_linked_extractor"
+    "create:vertical_linked_extractor",
+    "#minecraft:doors",
+    "minecraft:flower_pot",
+    "minecraft:bell"
   ]
 }

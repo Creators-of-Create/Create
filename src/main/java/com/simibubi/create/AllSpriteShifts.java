@@ -48,10 +48,12 @@ public class AllSpriteShifts {
 	
 	public static final CTSpriteShiftEntry 
 		BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
-		FLUID_TANK = getCT(CTType.OMNIDIRECTIONAL, "fluid_tank");
+		FLUID_TANK = getCT(CTType.CROSS, "fluid_tank");
 
 	public static final SpriteShiftEntry 
 		BELT = SpriteShifter.get("block/belt", "block/belt_animated"),
+		BELT_OFFSET = SpriteShifter.get("block/belt_offset", "block/belt_animated"),
+		BELT_DIAGONAL = SpriteShifter.get("block/belt_diagonal", "block/belt_diagonal_animated"),
 		ANDESIDE_BELT_CASING = SpriteShifter.get("block/brass_casing_belt", "block/andesite_casing_belt"),
 		CRAFTER_THINGIES = SpriteShifter.get("block/crafter_thingies", "block/crafter_thingies");
 

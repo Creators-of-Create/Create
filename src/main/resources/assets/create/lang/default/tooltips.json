@@ -212,6 +212,15 @@
 	"block.create.basin.tooltip": "BASIN",
 	"block.create.basin.tooltip.summary": "A handy _item_ _container_ used in processing with the _Mechanical_ _Mixer_ and the _Mechanical_ _Press_. Supports _Redstone_ _Comparators_.",
 	
+	"block.create.blaze_heater.tooltip": "BLAZE HEATER",
+	"block.create.blaze_heater.tooltip.summary": "A block to heat a basin when housing a tamed blaze.",
+	"block.create.blaze_heater.tooltip.condition1": "When using on a blaze or blaze spawner",
+	"block.create.blaze_heater.tooltip.behaviour1": "_Captures_ a blaze in the item",
+	"block.create.blaze_heater.tooltip.condition2": "When placed below a basin",
+	"block.create.blaze_heater.tooltip.behaviour2": "Provides _heat_ to basin recipes.",
+	"block.create.blaze_heater.tooltip.condition3": "When fuel is used on the blaze heater",
+	"block.create.blaze_heater.tooltip.behaviour3": "Increases the remaining burn time by the furnace brn time of the used item. Consumes the item. Use _special_ _fuel_ for best results.",
+	
 	"block.create.reinforced_rail.tooltip": "REINFORCED RAIL",
 	"block.create.reinforced_rail.tooltip.summary": "A timber stabilized rail, _does_ _not_ _need_ _supports_.",
 	

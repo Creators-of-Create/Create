@@ -1,0 +1,7 @@
+{
+	"textures": {
+		"particle": "create:block/belt"
+	},
+	"elements": [
+	]
+}

@@ -1,0 +1,104 @@
+{
+  "pigclock": {
+    "sounds": [
+      "create:pigclock"
+    ],
+    "subtitle": "create.subtitle.pigclock"
+  },
+  "creeperclock": {
+    "sounds": [
+      "create:creeperclock"
+    ],
+    "subtitle": "create.subtitle.creeperclock"
+  },
+  "schematicannon_launch_block": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.generic.explode",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.schematicannon_launch_block"
+  },
+  "schematicannon_finish": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bell",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.schematicannon_finish"
+  },
+  "slime_added": {
+    "sounds": [
+      {
+        "name": "minecraft:block.slime_block.place",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.slime_added"
+  },
+  "mechanical_press_activation": {
+    "sounds": [
+      {
+        "name": "minecraft:block.anvil.land",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.mechanical_press_activation"
+  },
+  "mechanical_press_item_break": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.mechanical_press_item_break"
+  },
+  "blockzapper_place": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.basedrum",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.blockzapper_place"
+  },
+  "blockzapper_confirm": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bell",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.blockzapper_confirm"
+  },
+  "blockzapper_deny": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bass",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.blockzapper_deny"
+  },
+  "block_funnel_eat": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.generic.eat",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.block_funnel_eat"
+  },
+  "blaze_munch": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.generic.eat",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.blaze_munch"
+  }
+}

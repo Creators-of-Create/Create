@@ -6,15 +6,13 @@
     	},
 		{
     		"tag": "forge:ingots/zinc"
-    	},
-		{
-			"item": "minecraft:blaze_powder"
-		}
+    	}
     ], 
 	"results": [
 		{
 			"item": "create:brass_ingot",
 			"count": 2
 		}
-	]
+	],
+	"requiredHeat": 3
 }

@@ -26,7 +26,7 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		Boolean casing = state.get(BeltBlock.CASING);
 		BeltSlope slope = state.get(BeltBlock.SLOPE);
 
-		boolean flip = casing && slope == BeltSlope.UPWARD;
+		boolean flip = slope == BeltSlope.UPWARD;
 		boolean rotate = casing && slope == BeltSlope.VERTICAL;
 		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
 		return horizontalAngle(direction) + (flip ? 180 : 0) + (rotate ? 90 : 0);
@@ -36,6 +36,11 @@ public class BeltGenerator extends SpecialBlockStateGen {
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
 		Boolean casing = state.get(BeltBlock.CASING);
+
+		if (!casing)
+			return prov.models()
+				.getExistingFile(prov.modLoc("block/belt/particle"));
+		
 		BeltPart part = state.get(BeltBlock.PART);
 		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
 		BeltSlope slope = state.get(BeltBlock.SLOPE);
@@ -49,7 +54,7 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		if (!casing && pulley)
 			part = BeltPart.MIDDLE;
 
-		if ((vertical && negative || casing && downward || sideways && negative) && part != BeltPart.MIDDLE && !pulley)
+		if ((vertical && negative || downward || sideways && negative) && part != BeltPart.MIDDLE && !pulley)
 			part = part == BeltPart.END ? BeltPart.START : BeltPart.END;
 
 		if (!casing && vertical)
@@ -61,7 +66,7 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		String slopeName = slope.getName();
 		String partName = part.getName();
 
-		if (casing && diagonal)
+		if (diagonal)
 			slopeName = "diagonal";
 
 		ResourceLocation location = prov.modLoc(path + slopeName + "_" + partName);

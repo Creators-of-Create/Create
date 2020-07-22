@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.tools;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -24,6 +25,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class SandPaperItem extends Item {
 
 	public SandPaperItem(Properties properties) {
@@ -68,8 +73,6 @@ public class SandPaperItem extends Item {
 			return FAIL;
 		BlockRayTraceResult ray = (BlockRayTraceResult) raytraceresult;
 		Vec3d hitVec = ray.getHitVec();
-		if (hitVec == null)
-			return FAIL;
 
 		AxisAlignedBB bb = new AxisAlignedBB(hitVec, hitVec).grow(1f);
 		ItemEntity pickUp = null;

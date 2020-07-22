@@ -20,6 +20,7 @@ import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.contraptions.wrench.WrenchModel;
 import com.simibubi.create.content.curiosities.ChromaticCompoundColor;
 import com.simibubi.create.content.curiosities.ChromaticCompoundItem;
+import com.simibubi.create.content.curiosities.CombustibleItem;
 import com.simibubi.create.content.curiosities.RefinedRadianceItem;
 import com.simibubi.create.content.curiosities.ShadowSteelItem;
 import com.simibubi.create.content.curiosities.TreeFertilizerItem;
@@ -174,6 +175,10 @@ public class AllItems {
 	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =
 		REGISTRATE.item("tree_fertilizer", TreeFertilizerItem::new)
 			.register();
+
+	public static final ItemEntry<CombustibleItem> FUEL_PELLET = REGISTRATE.item("fuel_pellet", CombustibleItem::new)
+		// .onRegister(item -> item.setBurnTime(2048))
+		.register();
 
 	public static final ItemEntry<BlockzapperItem> BLOCKZAPPER =
 		REGISTRATE.item("handheld_blockzapper", BlockzapperItem::new)

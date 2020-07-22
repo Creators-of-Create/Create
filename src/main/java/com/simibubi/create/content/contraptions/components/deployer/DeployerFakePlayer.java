@@ -108,10 +108,13 @@ public class DeployerFakePlayer extends FakePlayer {
 		if (trueSource != null && trueSource instanceof DeployerFakePlayer) {
 			DeployerFakePlayer fakePlayer = (DeployerFakePlayer) trueSource;
 			event.getDrops()
-					.forEach(stack -> fakePlayer.inventory.placeItemBackInInventory(trueSource.world, stack.getItem()));
+				.forEach(stack -> fakePlayer.inventory.placeItemBackInInventory(trueSource.world, stack.getItem()));
 			event.setCanceled(true);
 		}
 	}
+
+	@Override
+	protected void playEquipSound(ItemStack p_184606_1_) {}
 
 	@Override
 	public void remove(boolean keepData) {
@@ -156,13 +159,11 @@ public class DeployerFakePlayer extends FakePlayer {
 		}
 
 		@Override
-		public void sendPacket(IPacket<?> packetIn) {
-		}
+		public void sendPacket(IPacket<?> packetIn) {}
 
 		@Override
 		public void sendPacket(IPacket<?> packetIn,
-				GenericFutureListener<? extends Future<? super Void>> futureListeners) {
-		}
+			GenericFutureListener<? extends Future<? super Void>> futureListeners) {}
 	}
 
 }

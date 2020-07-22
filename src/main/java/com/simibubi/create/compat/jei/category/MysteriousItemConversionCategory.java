@@ -41,7 +41,7 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, ConversionRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		List<ProcessingOutput> results = recipe.getRollableResults();
+		List<ProcessingOutput> results = recipe.getRollableItemResults();
 		itemStacks.init(0, true, 26, 16);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 		itemStacks.init(1, false, 131, 16);

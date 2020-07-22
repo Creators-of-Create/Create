@@ -43,7 +43,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, SandPaperPolishingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		List<ProcessingOutput> results = recipe.getRollableResults();
+		List<ProcessingOutput> results = recipe.getRollableItemResults();
 
 		itemStacks.init(0, true, 26, 28);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));

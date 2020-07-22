@@ -113,7 +113,10 @@ public class AllShapes {
 
 	BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 14, 14)
 		.add(2, 0, 2, 14, 2, 14)
-		.build(),
+		.build(), HEATER_BLOCK_SHAPE =
+			shape(2, 0, 2, 14, 14, 14).add(0, 0, 0, 16, 4, 16)
+				.build(),
+		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),
 		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 22, 16),
 		SEAT = cuboid(0, 0, 0, 16, 8, 16),
 		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16),

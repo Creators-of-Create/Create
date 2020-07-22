@@ -9,6 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
 import net.minecraft.util.ResourceLocation;
@@ -19,8 +20,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllSoundEvents implements IDataProvider {
 
-	CUCKOO_PIG("creeperclock"),
-	CUCKOO_CREEPER("pigclock"),
+	CUCKOO_PIG("pigclock"),
+	CUCKOO_CREEPER("creeperclock"),
 
 	SCHEMATICANNON_LAUNCH_BLOCK(SoundEvents.ENTITY_GENERIC_EXPLODE),
 	SCHEMATICANNON_FINISH(SoundEvents.BLOCK_NOTE_BLOCK_BELL),
@@ -31,11 +32,13 @@ public enum AllSoundEvents implements IDataProvider {
 	BLOCKZAPPER_CONFIRM(SoundEvents.BLOCK_NOTE_BLOCK_BELL),
 	BLOCKZAPPER_DENY(SoundEvents.BLOCK_NOTE_BLOCK_BASS),
 	BLOCK_FUNNEL_EAT(SoundEvents.ENTITY_GENERIC_EAT),
+	BLAZE_MUNCH(SoundEvents.ENTITY_GENERIC_EAT)
 
 	;
 
 	String id;
 	SoundEvent event, child;
+	private DataGenerator generator;
 
 	// For adding our own sounds at assets/create/sounds/name.ogg
 	AllSoundEvents() {
@@ -60,6 +63,11 @@ public enum AllSoundEvents implements IDataProvider {
 
 	private String getEventName() {
 		return id;
+	}
+
+	public AllSoundEvents generator(DataGenerator generator){
+		this.generator = generator;
+		return this;
 	}
 
 	public static void register(RegistryEvent.Register<SoundEvent> event) {
@@ -107,7 +115,7 @@ public enum AllSoundEvents implements IDataProvider {
 
 	@Override
 	public void act(DirectoryCache cache) throws IOException {
-
+		generate(generator.getOutputFolder(), cache);
 	}
 
 	@Override

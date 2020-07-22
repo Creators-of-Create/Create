@@ -45,7 +45,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	public enum Shape implements IStringSerializable {
-		STRAIGHT, WINDOW, HALFSHADE, FULLSHADE, T_LEFT, T_RIGHT, CROSS;
+		STRAIGHT, WINDOW, CLOSED, T_LEFT, T_RIGHT, CROSS;
 
 		@Override
 		public String getName() {
@@ -88,8 +88,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	public static boolean hasWindow(BlockState state) {
-		Shape shape = state.get(SHAPE);
-		return shape == Shape.WINDOW || shape == Shape.HALFSHADE || shape == Shape.FULLSHADE;
+		return state.get(SHAPE) == Shape.WINDOW || state.get(SHAPE) == Shape.CLOSED;
 	}
 
 	public static boolean isStraight(BlockState state) {
@@ -157,27 +156,33 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 			state = state.with(SHAPE, Shape.T_RIGHT);
 
 		if (state.get(SHAPE) == Shape.STRAIGHT) {
-			Direction fw = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-			BlockState blockState1 = reader.getBlockState(pos.offset(fw));
-			BlockState blockState2 = reader.getBlockState(pos.offset(fw.getOpposite()));
-			boolean funnel1 = blockState1.getBlock() instanceof BeltFunnelBlock
-				&& blockState1.get(BeltFunnelBlock.HORIZONTAL_FACING) == fw.getOpposite();
-			boolean funnel2 = blockState2.getBlock() instanceof BeltFunnelBlock
-				&& blockState2.get(BeltFunnelBlock.HORIZONTAL_FACING) == fw;
-			boolean valid1 = blockState1.getBlock() instanceof BeltTunnelBlock || funnel1;
-			boolean valid2 = blockState2.getBlock() instanceof BeltTunnelBlock || funnel2;
-
-			if (valid1 && valid2 && !(funnel1 && funnel2))
+			boolean canHaveWindow = canHaveWindow(reader, pos, axis);
+			if (canHaveWindow)
 				state = state.with(SHAPE, Shape.WINDOW);
 		}
 
 		return state;
 	}
 
+	protected boolean canHaveWindow(IBlockReader reader, BlockPos pos, Axis axis) {
+		Direction fw = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
+		BlockState blockState1 = reader.getBlockState(pos.offset(fw));
+		BlockState blockState2 = reader.getBlockState(pos.offset(fw.getOpposite()));
+		boolean funnel1 = blockState1.getBlock() instanceof BeltFunnelBlock
+			&& blockState1.get(BeltFunnelBlock.HORIZONTAL_FACING) == fw.getOpposite();
+		boolean funnel2 = blockState2.getBlock() instanceof BeltFunnelBlock
+			&& blockState2.get(BeltFunnelBlock.HORIZONTAL_FACING) == fw;
+		boolean valid1 = blockState1.getBlock() instanceof BeltTunnelBlock || funnel1;
+		boolean valid2 = blockState2.getBlock() instanceof BeltTunnelBlock || funnel2;
+		boolean canHaveWindow = valid1 && valid2 && !(funnel1 && funnel2);
+		return canHaveWindow;
+	}
+
 	private boolean hasValidOutput(IBlockReader world, BlockPos pos, Direction side) {
 		BlockState blockState = world.getBlockState(pos.offset(side));
 		if (AllBlocks.BELT.has(blockState))
-			return blockState.get(BeltBlock.HORIZONTAL_FACING).getAxis() == side.getAxis();
+			return blockState.get(BeltBlock.HORIZONTAL_FACING)
+				.getAxis() == side.getAxis();
 		DirectBeltInputBehaviour behaviour =
 			TileEntityBehaviour.get(world, pos.offset(side), DirectBeltInputBehaviour.TYPE);
 		return behaviour != null && behaviour.canInsertFromSide(side);
@@ -189,23 +194,11 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 			return ActionResultType.PASS;
 
 		// Toggle windows
-		Shape next = state.get(SHAPE);
-		switch (state.get(SHAPE)) {
-		case FULLSHADE:
-			next = Shape.WINDOW;
-			break;
-		case HALFSHADE:
-			next = Shape.FULLSHADE;
-			break;
-		case WINDOW:
-			next = Shape.HALFSHADE;
-			break;
-		default:
-			break;
-		}
-		if (!context.getWorld().isRemote)
-			context.getWorld()
-				.setBlockState(context.getPos(), state.with(SHAPE, next), 2);
+		Shape shape = state.get(SHAPE);
+		shape = shape == Shape.CLOSED ? Shape.WINDOW : Shape.CLOSED;
+		World world = context.getWorld();
+		if (!world.isRemote)
+			world.setBlockState(context.getPos(), state.with(SHAPE, shape), 2);
 		return ActionResultType.SUCCESS;
 	}
 
