@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -43,12 +44,11 @@ public class AllBlockPartials {
 		BELT_DIAGONAL_MIDDLE = get("belt/diagonal_middle"),
 		BELT_DIAGONAL_END = get("belt/diagonal_end"),
 
-		ENCASED_FAN_INNER = get("encased_fan/propeller"), HAND_CRANK_HANDLE = get("hand_crank/handle"),
-		MECHANICAL_PRESS_HEAD = get("mechanical_press/head"), MECHANICAL_MIXER_POLE = get("mechanical_mixer/pole"),
-		MECHANICAL_MIXER_HEAD = get("mechanical_mixer/head"), BLAZE_HEATER_BLAZE_ONE = get("blaze_heater/blaze/one"),
-		BLAZE_HEATER_BLAZE_TWO = get("blaze_heater/blaze/two"),
-		BLAZE_HEATER_BLAZE_THREE = get("blaze_heater/blaze/three"),
-		BLAZE_HEATER_BLAZE_FOUR = get("blaze_heater/blaze/four"),
+		ENCASED_FAN_INNER = get("encased_fan/propeller"), 
+		HAND_CRANK_HANDLE = get("hand_crank/handle"),
+		MECHANICAL_PRESS_HEAD = get("mechanical_press/head"), 
+		MECHANICAL_MIXER_POLE = get("mechanical_mixer/pole"),
+		MECHANICAL_MIXER_HEAD = get("mechanical_mixer/head"), 
 		MECHANICAL_CRAFTER_LID = get("mechanical_crafter/lid"),
 		MECHANICAL_CRAFTER_ARROW = get("mechanical_crafter/arrow"),
 		MECHANICAL_CRAFTER_BELT_FRAME = get("mechanical_crafter/belt"),
@@ -97,6 +97,7 @@ public class AllBlockPartials {
 		FLUID_PIPE_CASING = get("fluid_pipe/casing");
 
 	public static final Map<Direction, AllBlockPartials> PIPE_RIMS = map();
+	public static final Map<HeatLevel, AllBlockPartials> BLAZES = map();
 
 	static {
 		populateMaps();
@@ -110,8 +111,12 @@ public class AllBlockPartials {
 	private AllBlockPartials() {}
 
 	private static void populateMaps() {
-		for (Direction d : Iterate.directions) {
+		for (Direction d : Iterate.directions) 
 			PIPE_RIMS.put(d, get("fluid_pipe/rim/" + d.getName()));
+		for (HeatLevel heat : HeatLevel.values()) {
+			if (heat == HeatLevel.NONE)
+				continue;
+			BLAZES.put(heat, get("blaze_burner/blaze/" + heat.getName()));
 		}
 	}
 

@@ -20,7 +20,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPipeBlock;
-import com.simibubi.create.content.contraptions.processing.HeaterBlock;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.palettes.PavedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -213,7 +213,7 @@ public class BlockStateGen {
 			});
 	}
 	
-	public static NonNullBiConsumer<DataGenContext<Block, HeaterBlock>, RegistrateBlockstateProvider> blazeHeater(){
+	public static NonNullBiConsumer<DataGenContext<Block, BlazeBurnerBlock>, RegistrateBlockstateProvider> blazeHeater(){
 		return (c, p) -> ConfiguredModel.builder().modelFile(p.models().getExistingFile(p.modLoc("block/" + c.getName() + "/block"))).build();
 	}
 

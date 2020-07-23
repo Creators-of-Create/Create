@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 72",
+	"_": "Missing Localizations: 73",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -30,7 +30,7 @@
 	"block.create.birch_window": "白桦窗户",
 	"block.create.birch_window_pane": "白桦窗户板",
 	"block.create.black_seat": "UNLOCALIZED: Black Seat",
-	"block.create.blaze_heater": "UNLOCALIZED: Blaze Heater",
+	"block.create.blaze_burner": "UNLOCALIZED: Blaze Burner",
 	"block.create.blue_seat": "UNLOCALIZED: Blue Seat",
 	"block.create.brass_belt_funnel": "UNLOCALIZED: Brass Belt Funnel",
 	"block.create.brass_block": "黄铜块",
@@ -385,6 +385,7 @@
 	"item.create.deforester": "树林毁灭者",
 	"item.create.dough": "面团",
 	"item.create.electron_tube": "电子管",
+	"item.create.empty_blaze_burner": "UNLOCALIZED: Empty Blaze Burner",
 	"item.create.empty_schematic": "空白蓝图",
 	"item.create.extendo_grip": "伸缩机械手",
 	"item.create.filter": "过滤器",

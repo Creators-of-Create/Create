@@ -11,7 +11,7 @@ import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
 import com.simibubi.create.content.contraptions.processing.CombinedItemFluidList;
-import com.simibubi.create.content.contraptions.processing.HeaterBlock;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
@@ -34,8 +34,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.IItemHandler;
-
-import static com.simibubi.create.content.contraptions.processing.HeaterBlock.getHeaterLevel;
 
 public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
@@ -269,12 +267,12 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		return running;
 	}
 
-	private HeaterBlock.HeatLevel getHeatLevelApplied() {
+	private BlazeBurnerBlock.HeatLevel getHeatLevelApplied() {
 		if (world == null)
-			return HeaterBlock.HeatLevel.NONE;
+			return BlazeBurnerBlock.HeatLevel.NONE;
 		BlockState state = world.getBlockState(pos.down(3));
-		if (state.has(HeaterBlock.BLAZE_LEVEL))
-			return state.get(HeaterBlock.BLAZE_LEVEL);
-		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeaterBlock.HeatLevel.SMOULDERING : HeaterBlock.HeatLevel.NONE;
+		if (state.has(BlazeBurnerBlock.HEAT_LEVEL))
+			return state.get(BlazeBurnerBlock.HEAT_LEVEL);
+		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? BlazeBurnerBlock.HeatLevel.SMOULDERING : BlazeBurnerBlock.HeatLevel.NONE;
 	}
 }

@@ -2,8 +2,11 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "create:block/blaze_heater_brazier",
-		"particle": "create:block/blaze_heater_brazier"
+		"1": "create:block/blaze_burner_inner",
+		"2": "create:block/blaze_burner_side",
+		"3": "create:block/dark_metal_block",
+		"particle": "create:block/dark_metal_block",
+		"2_2": "create:block/blaze_kindled"
 	},
 	"elements": [
 		{
@@ -11,10 +14,10 @@
 			"from": [2, 5, 2],
 			"to": [14, 14, 14],
 			"faces": {
-				"north": {"uv": [1, 1, 7, 5.5], "texture": "#0"},
-				"east": {"uv": [1, 1, 7, 5.5], "texture": "#0"},
-				"south": {"uv": [1, 1, 7, 5.5], "texture": "#0"},
-				"west": {"uv": [1, 1, 7, 5.5], "texture": "#0"}
+				"north": {"uv": [0, 6, 12, 15], "texture": "#2"},
+				"east": {"uv": [0, 6, 12, 15], "texture": "#2"},
+				"south": {"uv": [0, 6, 12, 15], "texture": "#2"},
+				"west": {"uv": [0, 6, 12, 15], "texture": "#2"}
 			}
 		},
 		{
@@ -22,7 +25,7 @@
 			"from": [2, 5, 14],
 			"to": [14, 14, 15],
 			"faces": {
-				"north": {"uv": [1, 1, 7, 5.5], "texture": "#0"}
+				"north": {"uv": [12, 6, 0, 15], "texture": "#2"}
 			}
 		},
 		{
@@ -30,7 +33,7 @@
 			"from": [1, 5, 2],
 			"to": [2, 14, 14],
 			"faces": {
-				"east": {"uv": [1, 1, 7, 5.5], "texture": "#0"}
+				"east": {"uv": [12, 6, 0, 15], "texture": "#2"}
 			}
 		},
 		{
@@ -38,7 +41,7 @@
 			"from": [2, 5, 1],
 			"to": [14, 14, 2],
 			"faces": {
-				"south": {"uv": [1, 1, 7, 5.5], "texture": "#0"}
+				"south": {"uv": [12, 6, 0, 15], "texture": "#2"}
 			}
 		},
 		{
@@ -46,7 +49,7 @@
 			"from": [14, 5, 2],
 			"to": [15, 14, 14],
 			"faces": {
-				"west": {"uv": [1, 1, 7, 5.5], "texture": "#0"}
+				"west": {"uv": [12, 6, 0, 15], "texture": "#2"}
 			}
 		},
 		{
@@ -55,7 +58,7 @@
 			"to": [14, 17, 14],
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 14, 14]},
 			"faces": {
-				"south": {"uv": [8, 8, 14, 9.5], "texture": "#0"}
+				"south": {"uv": [0, 3, 12, 6], "texture": "#2"}
 			}
 		},
 		{
@@ -64,7 +67,7 @@
 			"to": [3, 17, 14],
 			"rotation": {"angle": 45, "axis": "z", "origin": [2, 14, 8]},
 			"faces": {
-				"west": {"uv": [8, 8, 14, 9.5], "texture": "#0"}
+				"west": {"uv": [0, 3, 12, 6], "texture": "#2"}
 			}
 		},
 		{
@@ -73,7 +76,7 @@
 			"to": [14, 17, 3],
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 14, 2]},
 			"faces": {
-				"north": {"uv": [8, 8, 14, 9.5], "texture": "#0"}
+				"north": {"uv": [0, 3, 12, 6], "texture": "#2"}
 			}
 		},
 		{
@@ -82,7 +85,7 @@
 			"to": [14, 17, 14],
 			"rotation": {"angle": -45, "axis": "z", "origin": [14, 14, 8]},
 			"faces": {
-				"east": {"uv": [8, 8, 14, 9.5], "texture": "#0"}
+				"east": {"uv": [0, 3, 12, 6], "texture": "#2"}
 			}
 		},
 		{
@@ -91,34 +94,34 @@
 			"to": [14, 17, 15],
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 14, 14]},
 			"faces": {
-				"north": {"uv": [8, 8, 14, 9.5], "texture": "#0"}
+				"north": {"uv": [12, 3, 0, 6], "texture": "#2"}
 			}
 		},
 		{
-			"name": "Brazier Spikes 2b",
+			"name": "Brazier Spikes 1b",
 			"from": [1, 14, 2],
 			"to": [2, 17, 14],
 			"rotation": {"angle": 45, "axis": "z", "origin": [2, 14, 8]},
 			"faces": {
-				"east": {"uv": [8, 8, 14, 9.5], "texture": "#0"}
+				"east": {"uv": [12, 3, 0, 6], "texture": "#2"}
 			}
 		},
 		{
-			"name": "Brazier Spikes 3b",
+			"name": "Brazier Spikes 1b",
 			"from": [2, 14, 1],
 			"to": [14, 17, 2],
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 14, 2]},
 			"faces": {
-				"south": {"uv": [8, 8, 14, 9.5], "texture": "#0"}
+				"south": {"uv": [12, 3, 0, 6], "texture": "#2"}
 			}
 		},
 		{
-			"name": "Brazier Spikes 4b",
+			"name": "Brazier Spikes 1b",
 			"from": [14, 14, 2],
 			"to": [15, 17, 14],
 			"rotation": {"angle": -45, "axis": "z", "origin": [14, 14, 8]},
 			"faces": {
-				"west": {"uv": [8, 8, 14, 9.5], "texture": "#0"}
+				"west": {"uv": [12, 3, 0, 6], "texture": "#2"}
 			}
 		},
 		{
@@ -127,12 +130,12 @@
 			"to": [16, 4, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0.5, 8, 0.5]},
 			"faces": {
-				"north": {"uv": [0, 6, 8, 8], "texture": "#0", "cullface": "north"},
-				"east": {"uv": [0, 6, 8, 8], "texture": "#0", "cullface": "east"},
-				"south": {"uv": [0, 6, 8, 8], "texture": "#0", "cullface": "south"},
-				"west": {"uv": [0, 6, 8, 8], "texture": "#0", "cullface": "west"},
-				"up": {"uv": [8, 0, 16, 8], "texture": "#0"},
-				"down": {"uv": [0, 8, 8, 16], "texture": "#0", "cullface": "down"}
+				"north": {"uv": [12, 0, 16, 16], "rotation": 90, "texture": "#2", "cullface": "west"},
+				"east": {"uv": [12, 0, 16, 16], "rotation": 90, "texture": "#2", "cullface": "west"},
+				"south": {"uv": [12, 0, 16, 16], "rotation": 90, "texture": "#2", "cullface": "west"},
+				"west": {"uv": [12, 0, 16, 16], "rotation": 90, "texture": "#2", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "down"}
 			}
 		},
 		{
@@ -141,11 +144,25 @@
 			"to": [14, 5, 14],
 			"rotation": {"angle": 0, "axis": "y", "origin": [2.5, 8, 2.5]},
 			"faces": {
-				"north": {"uv": [1, 5.5, 7, 6], "texture": "#0"},
-				"east": {"uv": [1, 5.5, 7, 6], "texture": "#0"},
-				"south": {"uv": [1, 5.5, 7, 6], "texture": "#0"},
-				"west": {"uv": [1, 5.5, 7, 6], "texture": "#0"},
-				"up": {"uv": [9, 1, 15, 7], "texture": "#0"}
+				"north": {"uv": [0, 15, 12, 16], "texture": "#2"},
+				"east": {"uv": [0, 15, 12, 16], "texture": "#2"},
+				"south": {"uv": [0, 15, 12, 16], "texture": "#2"},
+				"west": {"uv": [0, 15, 12, 16], "texture": "#2"},
+				"up": {"uv": [2, 2, 14, 14], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Blaze 4",
+			"from": [4, 6, 4],
+			"to": [12, 14, 12],
+			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [8, 0, 16, 8], "texture": "#2_2"},
+				"east": {"uv": [0, 0, 8, 8], "texture": "#2_2"},
+				"south": {"uv": [0, 0, 8, 8], "texture": "#2_2"},
+				"west": {"uv": [0, 0, 8, 8], "texture": "#2_2"},
+				"up": {"uv": [0, 8, 8, 16], "texture": "#2_2"},
+				"down": {"uv": [8, 8, 16, 16], "texture": "#2_2"}
 			}
 		}
 	],
@@ -166,9 +183,9 @@
 				}, 13, 14]
 		},
 		{
-			"name": "Blazes",
+			"name": "kindled",
 			"origin": [8, 8, 8],
-			"children": []
+			"children": [15]
 		}
 	]
 }

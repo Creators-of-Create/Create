@@ -59,8 +59,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidTankItem;
 import com.simibubi.create.content.contraptions.fluids.FluidTankModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
-import com.simibubi.create.content.contraptions.processing.HeaterBlock;
-import com.simibubi.create.content.contraptions.processing.HeaterBlockItem;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftGenerator;
@@ -403,13 +403,15 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	public static final BlockEntry<HeaterBlock> HEATER = REGISTRATE.block("blaze_heater", HeaterBlock::new)
+	public static final BlockEntry<BlazeBurnerBlock> BLAZE_BURNER = REGISTRATE.block("blaze_burner", BlazeBurnerBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.lightValue(12))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
+		.loot((lt, block) -> lt.registerLootTable(block, BlazeBurnerBlock.buildLootTable()))
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-		.item(HeaterBlockItem::new)
+		.item(BlazeBurnerBlockItem::withBlaze)
+		.model(AssetLookup.<BlazeBurnerBlockItem>customItemModel("blaze_burner", "block_with_blaze"))
 		.build()
 		.register();
 

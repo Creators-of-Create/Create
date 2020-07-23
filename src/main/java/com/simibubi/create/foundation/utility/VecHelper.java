@@ -13,10 +13,12 @@ import net.minecraft.util.math.Vec3i;
 
 public class VecHelper {
 
+	public static final Vec3d CENTER_OF_ORIGIN = new Vec3d(.5, .5, .5);
+
 	public static Vec3d rotate(Vec3d vec, Vec3d rotationVec) {
 		return rotate(vec, rotationVec.x, rotationVec.y, rotationVec.z);
 	}
-	
+
 	public static Vec3d rotate(Vec3d vec, double xRot, double yRot, double zRot) {
 		return rotate(rotate(rotate(vec, xRot, Axis.X), yRot, Axis.Y), zRot, Axis.Z);
 	}
@@ -54,6 +56,8 @@ public class VecHelper {
 	}
 
 	public static Vec3d getCenterOf(Vec3i pos) {
+		if (pos.equals(Vec3i.NULL_VECTOR))
+			return CENTER_OF_ORIGIN;
 		return new Vec3d(pos).add(.5f, .5f, .5f);
 	}
 

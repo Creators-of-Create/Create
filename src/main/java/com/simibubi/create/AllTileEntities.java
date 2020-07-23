@@ -50,6 +50,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
 import com.simibubi.create.content.contraptions.processing.*;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerRenderer;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerRenderer;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftTileEntity;
@@ -200,8 +202,8 @@ public class AllTileEntities {
 		register("deployer", DeployerTileEntity::new, AllBlocks.DEPLOYER);
 	public static final TileEntityEntry<BasinTileEntity> BASIN =
 		register("basin", BasinTileEntity::new, AllBlocks.BASIN);
-	public static final TileEntityEntry<HeaterTileEntity> HEATER =
-		register("blaze_heater", HeaterTileEntity::new, AllBlocks.HEATER);
+	public static final TileEntityEntry<BlazeBurnerTileEntity> HEATER =
+		register("blaze_heater", BlazeBurnerTileEntity::new, AllBlocks.BLAZE_BURNER);
 	public static final TileEntityEntry<MechanicalCrafterTileEntity> MECHANICAL_CRAFTER =
 		register("mechanical_crafter", MechanicalCrafterTileEntity::new, AllBlocks.MECHANICAL_CRAFTER);
 	public static final TileEntityEntry<SequencedGearshiftTileEntity> SEQUENCED_GEARSHIFT =
@@ -301,7 +303,7 @@ public class AllTileEntities {
 		bind(SPEEDOMETER, GaugeRenderer::speed);
 		bind(STRESSOMETER, GaugeRenderer::stress);
 		bind(BASIN, BasinRenderer::new);
-		bind(HEATER, HeaterRenderer::new);
+		bind(HEATER, BlazeBurnerRenderer::new);
 		bind(DEPLOYER, DeployerRenderer::new);
 		bind(FLYWHEEL, FlywheelRenderer::new);
 		bind(FURNACE_ENGINE, EngineRenderer::new);

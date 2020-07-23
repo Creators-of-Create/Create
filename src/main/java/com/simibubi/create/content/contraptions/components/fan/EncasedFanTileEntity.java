@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
-import com.simibubi.create.content.contraptions.processing.HeaterBlock;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
@@ -80,7 +80,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 		if (!checkState.getBlock().isIn(AllBlockTags.FAN_HEATERS.tag))
 			return false;
 
-		if (checkState.has(HeaterBlock.BLAZE_LEVEL) && !checkState.get(HeaterBlock.BLAZE_LEVEL).min(HeaterBlock.HeatLevel.FADING))
+		if (checkState.has(BlazeBurnerBlock.HEAT_LEVEL) && !checkState.get(BlazeBurnerBlock.HEAT_LEVEL).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 			return false;
 
 		if (checkState.has(BlockStateProperties.LIT) && !checkState.get(BlockStateProperties.LIT))

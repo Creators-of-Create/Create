@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.processing;
+package com.simibubi.create.content.contraptions.processing.burner;
 
 import java.util.List;
 import java.util.Random;
@@ -32,7 +32,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
-public class HeaterTileEntity extends SmartTileEntity {
+public class BlazeBurnerTileEntity extends SmartTileEntity {
 
 	private final static int[][] heatParticleColors = {
 			{0x3B141A, 0x47141A, 0x7A3B24, 0x854D26},
@@ -49,7 +49,7 @@ public class HeaterTileEntity extends SmartTileEntity {
 	// Rendering state
 	float rot, speed;
 
-	public HeaterTileEntity(TileEntityType<? extends HeaterTileEntity> tileEntityTypeIn) {
+	public BlazeBurnerTileEntity(TileEntityType<? extends BlazeBurnerTileEntity> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		activeFuel = FuelType.NONE;
 		remainingBurnTime = 0;
@@ -165,7 +165,6 @@ public class HeaterTileEntity extends SmartTileEntity {
 		activeFuel = FuelType.values()[compound.getInt("fuelLevel")];
 		remainingBurnTime = compound.getInt("burnTimeRemaining");
 		super.read(compound);
-		updateHeatLevel();
 	}
 
 	/**
@@ -198,48 +197,48 @@ public class HeaterTileEntity extends SmartTileEntity {
 		return true;
 	}
 
-	public HeaterBlock.HeatLevel getHeatLevel() {
-		return HeaterBlock.getHeaterLevel(getBlockState());
+	public BlazeBurnerBlock.HeatLevel getHeatLevel() {
+		return BlazeBurnerBlock.getHeatLevelOf(getBlockState());
 	}
 
 	private void updateHeatLevel() {
 		switch (activeFuel) {
 			case SPECIAL:
-				HeaterBlock.setBlazeLevel(world, pos, HeaterBlock.HeatLevel.SEETHING);
+				BlazeBurnerBlock.setBlazeLevel(world, pos, BlazeBurnerBlock.HeatLevel.SEETHING);
 				break;
 			case NORMAL:
 				boolean lowPercent = (double) remainingBurnTime / maxHeatCapacity < 0.1;
-				HeaterBlock.setBlazeLevel(world, pos, lowPercent ? HeaterBlock.HeatLevel.FADING : HeaterBlock.HeatLevel.KINDLED);
+				BlazeBurnerBlock.setBlazeLevel(world, pos, lowPercent ? BlazeBurnerBlock.HeatLevel.FADING : BlazeBurnerBlock.HeatLevel.KINDLED);
 				break;
 			case NONE:
-				HeaterBlock.setBlazeLevel(world, pos, HeaterBlock.HeatLevel.SMOULDERING);
+				BlazeBurnerBlock.setBlazeLevel(world, pos, BlazeBurnerBlock.HeatLevel.SMOULDERING);
 		}
 	}
 
-	private void spawnParticles(HeaterBlock.HeatLevel heatLevel) {
+	private void spawnParticles(BlazeBurnerBlock.HeatLevel heatLevel) {
 		if (world == null)
 			return;
 
-		if (heatLevel == HeaterBlock.HeatLevel.NONE)
+		if (heatLevel == BlazeBurnerBlock.HeatLevel.NONE)
 			return;
 
 		Random r = world.getRandom();
-		if (heatLevel == HeaterBlock.HeatLevel.SMOULDERING) {
+		if (heatLevel == BlazeBurnerBlock.HeatLevel.SMOULDERING) {
 			if (r.nextDouble() > 0.25)
 				return;
 
 			Vec3d color = randomColor(heatLevel);
 			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.03F, 15), 0.015, 0.1);
-		} else if (heatLevel == HeaterBlock.HeatLevel.FADING) {
+		} else if (heatLevel == BlazeBurnerBlock.HeatLevel.FADING) {
 			if (r.nextDouble() > 0.5)
 				return;
 
 			Vec3d color = randomColor(heatLevel);
 			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.035F, 18), 0.03, 0.15);
-		} else if (heatLevel == HeaterBlock.HeatLevel.KINDLED) {
+		} else if (heatLevel == BlazeBurnerBlock.HeatLevel.KINDLED) {
 			Vec3d color = randomColor(heatLevel);
 			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.04F, 21), 0.05, 0.2);
-		}else if (heatLevel == HeaterBlock.HeatLevel.SEETHING) {
+		}else if (heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING) {
 			for (int i = 0; i < 2; i++) {
 				if (r.nextDouble() > 0.6)
 					return;
@@ -262,8 +261,8 @@ public class HeaterTileEntity extends SmartTileEntity {
 				0.0D);
 	}
 
-	private static Vec3d randomColor(HeaterBlock.HeatLevel heatLevel) {
-		if (heatLevel == HeaterBlock.HeatLevel.NONE)
+	private static Vec3d randomColor(BlazeBurnerBlock.HeatLevel heatLevel) {
+		if (heatLevel == BlazeBurnerBlock.HeatLevel.NONE)
 			return new Vec3d(0,0,0);
 
 		return ColorHelper.getRGB(heatParticleColors[heatLevel.ordinal()-1][(int) (Math.random()*4)]);
@@ -278,7 +277,7 @@ public class HeaterTileEntity extends SmartTileEntity {
 			return;
 
 		TileEntity tile = event.getThrowable().world.getTileEntity(new BlockPos(event.getRayTraceResult().getHitVec()));
-		if (!(tile instanceof HeaterTileEntity)) {
+		if (!(tile instanceof BlazeBurnerTileEntity)) {
 			return;
 		}
 
@@ -286,7 +285,7 @@ public class HeaterTileEntity extends SmartTileEntity {
 		event.getThrowable().setMotion(Vec3d.ZERO);
 		event.getThrowable().remove();
 
-		HeaterTileEntity heater = (HeaterTileEntity) tile;
+		BlazeBurnerTileEntity heater = (BlazeBurnerTileEntity) tile;
 		if (heater.activeFuel != FuelType.SPECIAL) {
 			heater.activeFuel = FuelType.NORMAL;
 			heater.remainingBurnTime = MathHelper.clamp(heater.remainingBurnTime + 80, 0, maxHeatCapacity);

@@ -10,7 +10,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeHeater;
+import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
 import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
@@ -28,7 +28,7 @@ import net.minecraft.util.NonNullList;
 public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 
 	private AnimatedMixer mixer = new AnimatedMixer();
-	private AnimatedBlazeHeater heater = new AnimatedBlazeHeater(); 
+	private AnimatedBlazeBurner heater = new AnimatedBlazeBurner(); 
 
 	public MixingCategory() {
 		super("mixing", doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get()),
