@@ -406,7 +406,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<HeaterBlock> HEATER = REGISTRATE.block("blaze_heater", HeaterBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.lightValue(12))
+		.properties(p -> p.lightLevel($ -> 12))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
@@ -499,7 +499,7 @@ public class AllBlocks {
 			.loot((p, b) -> p.registerDropping(b, PISTON_EXTENSION_POLE.get()))
 			.blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, state -> p.models()
 				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.get(MechanicalPistonHeadBlock.TYPE)
-					.getName() + "/head"))))
+					.name() + "/head"))))
 			.register();
 
 	public static final BlockEntry<MechanicalBearingBlock> MECHANICAL_BEARING =
@@ -651,7 +651,7 @@ public class AllBlocks {
 
 	static {
 		for (DyeColor colour : DyeColor.values()) {
-			String colourName = colour.getName();
+			String colourName = colour.name();
 			REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
 				.initialProperties(SharedProperties::wooden)
 				.blockstate((c, p) -> {
@@ -816,7 +816,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<NixieTubeBlock> NIXIE_TUBE = REGISTRATE.block("nixie_tube", NixieTubeBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.lightValue(5))
+		.properties(p -> p.lightLevel($ -> 5))
 		.blockstate(new NixieTubeGenerator()::generate)
 		.addLayer(() -> RenderType::getTranslucent)
 		.item()

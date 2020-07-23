@@ -45,7 +45,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 
 public class AllItems {
 
@@ -235,7 +235,7 @@ public class AllItems {
 	}
 
 	@SafeVarargs
-	private static ItemEntry<Item> taggedIngredient(String name, Tag<Item>... tags) {
+	private static ItemEntry<Item> taggedIngredient(String name, ITag.INamedTag<Item>... tags) {
 		return REGISTRATE.item(name, Item::new)
 			.tag(tags)
 			.register();

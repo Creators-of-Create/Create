@@ -4,13 +4,13 @@ import com.simibubi.create.foundation.command.CreateCommand;
 
 import net.minecraft.world.IWorld;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
 @EventBusSubscriber
@@ -30,8 +30,8 @@ public class CommonEvents {
 	}
 	
 	@SubscribeEvent
-	public static void serverStarting(FMLServerStartingEvent event) {
-		new CreateCommand(event.getCommandDispatcher());
+	public static void registerCommands(RegisterCommandsEvent event) {
+		new CreateCommand(event.getDispatcher());
 	}
 
 	@SubscribeEvent

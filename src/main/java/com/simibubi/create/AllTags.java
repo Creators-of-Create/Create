@@ -3,6 +3,8 @@ package com.simibubi.create;
 import static com.simibubi.create.AllTags.NameSpace.FORGE;
 import static com.simibubi.create.AllTags.NameSpace.MOD;
 
+import java.util.function.Function;
+
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
@@ -17,9 +19,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagCollection;
 import net.minecraft.util.ResourceLocation;
 
 
@@ -34,20 +35,20 @@ public class AllTags {
 			.tag(forgeItemTag(tagName));
 	}
 
-	public static Tag<Block> forgeBlockTag(String name) {
-		return forgeTag(BlockTags.getCollection(), name);
+	public static ITag.INamedTag<Block> forgeBlockTag(String name) {
+		return forgeTag(BlockTags::makeWrapperTag, name);
 	}
 
-	public static Tag<Item> forgeItemTag(String name) {
-		return forgeTag(ItemTags.getCollection(), name);
+	public static ITag.INamedTag<Item> forgeItemTag(String name) {
+		return forgeTag(ItemTags::makeWrapperTag, name);
 	}
 
-	public static <T> Tag<T> forgeTag(TagCollection<T> collection, String name) {
-		return tag(collection, "forge", name);
+	public static <T> ITag.INamedTag<T> forgeTag(Function<String, ITag.INamedTag<T>> wrapperFactory, String name) {
+		return tag(wrapperFactory, "forge", name);
 	}
 
-	public static <T> Tag<T> tag(TagCollection<T> collection, String domain, String name) {
-		return collection.getOrCreate(new ResourceLocation(domain, name));
+	public static <T> ITag.INamedTag<T> tag(Function<String, ITag.INamedTag<T>> wrapperFactory, String domain, String name) {
+		return wrapperFactory.apply(new ResourceLocation(domain, name).toString());
 	}
 
 	public static enum NameSpace {
@@ -67,15 +68,15 @@ public class AllTags {
 
 		;
 
-		public Tag<Item> tag;
+		public ITag.INamedTag<Item> tag;
 
 		private AllItemTags(NameSpace namespace) {
 			this(namespace, "");
 		}
 
 		private AllItemTags(NameSpace namespace, String path) {
-			tag = new ItemTags.Wrapper(
-				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
+			tag = ItemTags.makeWrapperTag(
+				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
 		}
 
 		public boolean matches(ItemStack stack) {
@@ -83,8 +84,8 @@ public class AllTags {
 		}
 
 		public void includeIn(AllItemTags parent) {
-			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getBuilder(parent.tag)
-				.add(tag));
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getOrCreateTagBuilder(parent.tag)
+				.addTag(tag));
 		}
 	}
 
@@ -93,7 +94,7 @@ public class AllTags {
 
 		;
 
-		public Tag<Block> tag;
+		public ITag.INamedTag<Block> tag;
 
 		private AllBlockTags() {
 			this(MOD, "");
@@ -104,8 +105,8 @@ public class AllTags {
 		}
 		
 		private AllBlockTags(NameSpace namespace, String path) {
-			tag = new BlockTags.Wrapper(
-				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
+			tag = BlockTags.makeWrapperTag(
+				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
 		}
 
 		public boolean matches(BlockState block) {
@@ -113,16 +114,16 @@ public class AllTags {
 		}
 		
 		public void includeIn(AllBlockTags parent) {
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getBuilder(parent.tag)
-				.add(tag));
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(parent.tag)
+				.addTag(tag));
 		}
 		
-		public void includeAll(Tag<Block> child) {
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getBuilder(tag).add(child));
+		public void includeAll(ITag.INamedTag<Block> child) {
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag).addTag(child));
 		}
 		
 		public void add(Block ...values) {
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getBuilder(tag).add(values));
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag).add(values));
 		}
 	}
 
