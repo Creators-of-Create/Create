@@ -10,12 +10,15 @@ import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.ColorHelper;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.EggEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.particles.IParticleData;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -42,6 +45,9 @@ public class HeaterTileEntity extends SmartTileEntity {
 
 	private int remainingBurnTime;
 	private FuelType activeFuel;
+	
+	// Rendering state
+	float rot, speed;
 
 	public HeaterTileEntity(TileEntityType<? extends HeaterTileEntity> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
@@ -53,6 +59,9 @@ public class HeaterTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
+		if (world.isRemote) {
+			tickRotation();
+		}
 
 		spawnParticles(getHeatLevel());
 
@@ -70,6 +79,68 @@ public class HeaterTileEntity extends SmartTileEntity {
 				updateHeatLevel();
 			}
 		markDirty();
+	}
+	
+	private static final float MAX_ROT_SPEED = 5;
+	private static final float ROT_DAMPING = 15;
+	
+	private void tickRotation() {
+		ClientPlayerEntity player = Minecraft.getInstance().player;
+		Angle target;
+		if (player == null) {
+			target = new Angle(360, 0);
+		} else {
+			double dx = player.getX() - (getPos().getX() + 0.5);
+			double dz = player.getZ() - (getPos().getZ() + 0.5);
+			target = new Angle(360, (float) (MathHelper.atan2(dz, dx) * 180.0 / Math.PI + 90));
+		}
+
+		Angle current = new Angle(360, rot);
+		float diff = new Angle(180, current.get() - target.get()).get();
+		if (diff > 0.1 || diff < -0.1) {
+			// Inverse function https://www.desmos.com/calculator/kiaberb6sf
+			speed = MAX_ROT_SPEED + (-MAX_ROT_SPEED / ((Math.abs(diff) / ROT_DAMPING) + 1));
+			if (diff > 0) {
+				current.add(-Math.min(diff, speed));
+				speed = Math.min(diff, speed);
+			} else {
+				current.add(Math.min(-diff, speed));
+				speed = Math.min(-diff, -speed);
+			}
+		} else {
+			speed = 0;
+		}
+		
+		rot = current.get();
+	}
+	
+	// From EnderIO with <3
+	private static class Angle {
+		private final float offset;
+		private float a;
+
+		Angle(float offset, float a) {
+			this.offset = offset;
+			set(a);
+		}
+
+		void set(float a) {
+			while (a >= offset) {
+				a -= 360;
+			}
+			while (a < (offset - 360)) {
+				a += 360;
+			}
+			this.a = a;
+		}
+
+		void add(float b) {
+			set(a + b);
+		}
+
+		float get() {
+			return a;
+		}
 	}
 
 	@Override
