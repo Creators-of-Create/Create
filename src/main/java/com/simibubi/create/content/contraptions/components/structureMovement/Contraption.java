@@ -811,6 +811,10 @@ public abstract class Contraption {
 	public Map<UUID, Integer> getSeatMapping() {
 		return seatMapping;
 	}
+	
+	public void setSeatMapping(Map<UUID, Integer> seatMapping) {
+		this.seatMapping = seatMapping;
+	}
 
 	public List<BlockPos> getSeats() {
 		return seats;

@@ -20,6 +20,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.collision.OrientedBB;

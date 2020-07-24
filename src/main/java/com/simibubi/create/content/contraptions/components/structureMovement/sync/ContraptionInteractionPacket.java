@@ -1,7 +1,8 @@
-package com.simibubi.create.content.contraptions.components.structureMovement;
+package com.simibubi.create.content.contraptions.components.structureMovement.sync;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.entity.Entity;

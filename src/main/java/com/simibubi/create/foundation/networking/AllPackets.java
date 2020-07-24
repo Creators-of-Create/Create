@@ -5,11 +5,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.ClientMotionPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionInteractionPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueEffectPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripInteractionPacket;

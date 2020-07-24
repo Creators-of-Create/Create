@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.components.structureMovement;
+package com.simibubi.create.content.contraptions.components.structureMovement.chassis;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +14,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;

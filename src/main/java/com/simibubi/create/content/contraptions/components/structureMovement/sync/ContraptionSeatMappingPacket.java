@@ -1,10 +1,11 @@
-package com.simibubi.create.content.contraptions.components.structureMovement;
+package com.simibubi.create.content.contraptions.components.structureMovement.sync;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
@@ -44,12 +45,12 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				Entity entityByID = Minecraft.getInstance().world
-					.getEntityByID(entityID);
+				Entity entityByID = Minecraft.getInstance().world.getEntityByID(entityID);
 				if (!(entityByID instanceof ContraptionEntity))
 					return;
 				ContraptionEntity contraptionEntity = (ContraptionEntity) entityByID;
-				contraptionEntity.contraption.seatMapping = mapping;
+				contraptionEntity.getContraption()
+					.setSeatMapping(mapping);
 			});
 		context.get()
 			.setPacketHandled(true);

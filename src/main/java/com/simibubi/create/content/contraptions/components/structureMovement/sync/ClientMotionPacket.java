@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.components.structureMovement;
+package com.simibubi.create.content.contraptions.components.structureMovement.sync;
 
 import java.util.function.Supplier;
 

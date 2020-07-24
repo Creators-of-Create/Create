@@ -1,5 +1,7 @@
-package com.simibubi.create;
+package com.simibubi.create.events;
 
+import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.command.CreateCommand;
 
 import net.minecraft.world.IWorld;
@@ -20,7 +22,6 @@ public class CommonEvents {
 	public static void onTick(ServerTickEvent event) {
 		if (event.phase == Phase.END)
 			return;
-
 		Create.tick();
 	}
 

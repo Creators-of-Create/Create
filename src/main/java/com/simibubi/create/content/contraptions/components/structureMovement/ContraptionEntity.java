@@ -16,6 +16,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -69,6 +70,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected boolean stationary;
 	protected boolean initialized;
 	final List<Entity> collidingEntities = new ArrayList<>();
+	private boolean isSerializingFurnaceCart;
 
 	private static final Ingredient FUEL_ITEMS = Ingredient.fromItems(Items.COAL, Items.CHARCOAL);
 	private static final DataParameter<Boolean> STALLED =
@@ -90,6 +92,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		super(entityTypeIn, worldIn);
 		motionBeforeStall = Vec3d.ZERO;
 		stationary = entityTypeIn == AllEntityTypes.STATIONARY_CONTRAPTION.get();
+		isSerializingFurnaceCart = false;
 		forcedAngle = -1;
 	}
 
@@ -352,7 +355,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 		if (!isStalled() && (riding instanceof FurnaceMinecartEntity)) {
 			FurnaceMinecartEntity furnaceCart = (FurnaceMinecartEntity) riding;
+			
+			// Notify to not trigger serialization side-effects
+			isSerializingFurnaceCart = true;
 			CompoundNBT nbt = furnaceCart.serializeNBT();
+			isSerializingFurnaceCart = false;
+			
 			int fuel = nbt.getInt("Fuel");
 			int fuelBefore = fuel;
 			double pushX = nbt.getDouble("PushX");
@@ -672,6 +680,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	@SuppressWarnings("deprecation")
 	@Override
 	public CompoundNBT writeWithoutTypeId(CompoundNBT nbt) {
+		if (isSerializingFurnaceCart)
+			return nbt;
+		
 		Vec3d vec = getPositionVec();
 		List<Entity> passengers = getPassengers();
 
