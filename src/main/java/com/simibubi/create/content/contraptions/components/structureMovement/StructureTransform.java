@@ -69,6 +69,13 @@ public class StructureTransform {
 
 	}
 
+	public Vec3d apply(Vec3d localVec) {
+		Vec3d vec = localVec;
+		vec = VecHelper.rotateCentered(vec, angle, rotationAxis);
+		vec = vec.add(new Vec3d(offset));
+		return vec;
+	}
+	
 	public BlockPos apply(BlockPos localPos) {
 		Vec3d vec = VecHelper.getCenterOf(localPos);
 		vec = VecHelper.rotateCentered(vec, angle, rotationAxis);

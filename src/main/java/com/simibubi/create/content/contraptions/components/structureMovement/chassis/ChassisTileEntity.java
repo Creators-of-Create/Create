@@ -11,7 +11,6 @@ import java.util.Set;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
-import com.simibubi.create.content.contraptions.components.structureMovement.ChassisRangeDisplay;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;

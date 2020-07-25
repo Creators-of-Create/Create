@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.simibubi.create.AllTags;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.content.logistics.InWorldProcessing.Type;
@@ -17,7 +17,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
@@ -38,7 +37,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Tags;
 
 public class AirCurrent {
 

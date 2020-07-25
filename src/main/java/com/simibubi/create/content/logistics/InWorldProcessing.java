@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics;
 
+import static com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.getHeatLevelOf;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,8 +9,8 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
-import com.simibubi.create.content.contraptions.processing.HeaterBlock;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -40,8 +42,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-import static com.simibubi.create.content.contraptions.processing.HeaterBlock.getHeaterLevel;
-
 public class InWorldProcessing {
 
 	public static class SplashingInv extends RecipeWrapper {
@@ -63,9 +63,9 @@ public class InWorldProcessing {
 			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			if (blockState.getBlock() == Blocks.FIRE
-				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)) || getHeaterLevel(blockState) == HeaterBlock.HeatLevel.SMOULDERING)
+				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)) || getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
-			if (blockState.getBlock() == Blocks.LAVA || getHeaterLevel(blockState).min(HeaterBlock.HeatLevel.FADING))
+			if (blockState.getBlock() == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 				return Type.BLASTING;
 			return null;
 		}

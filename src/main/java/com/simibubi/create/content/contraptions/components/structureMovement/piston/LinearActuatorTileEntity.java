@@ -3,11 +3,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pi
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.CancelPlayerFallPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.IControlContraption;
-import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
@@ -42,7 +39,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		movementMode = new ScrollOptionBehaviour<>(MovementMode.class, Lang.translate("contraptions.movement_mode"),
-				this, getMovementModeSlot());
+			this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		movementMode.withCallback(t -> waitingForSpeedChange = false);
 		behaviours.add(movementMode);
@@ -53,7 +50,6 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		super.tick();
 
 		if (movedContraption != null) {
-			movedContraption.collisionTick();
 			if (!movedContraption.isAlive())
 				movedContraption = null;
 		}
@@ -209,15 +205,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 
 	protected abstract Vec3d toPosition(float offset);
 
-	protected void visitNewPosition() {
-		if (!world.isRemote)
-			return;
-		if (!ContraptionCollider.wasClientPlayerGrounded)
-			return;
-		// Send falldamage-cancel for the colliding player
-		ContraptionCollider.wasClientPlayerGrounded = false;
-		AllPackets.channel.sendToServer(new CancelPlayerFallPacket());
-	}
+	protected void visitNewPosition() {}
 
 	protected void tryDisassemble() {
 		if (removed) {

@@ -15,6 +15,7 @@ import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
+import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
@@ -58,8 +59,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidTankItem;
 import com.simibubi.create.content.contraptions.fluids.FluidTankModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
-import com.simibubi.create.content.contraptions.processing.HeaterBlock;
-import com.simibubi.create.content.contraptions.processing.HeaterBlockItem;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftGenerator;
@@ -141,6 +142,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.item.DyeColor;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction.Axis;
@@ -401,13 +403,15 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	public static final BlockEntry<HeaterBlock> HEATER = REGISTRATE.block("blaze_heater", HeaterBlock::new)
+	public static final BlockEntry<BlazeBurnerBlock> BLAZE_BURNER = REGISTRATE.block("blaze_burner", BlazeBurnerBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.lightValue(12))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
+		.loot((lt, block) -> lt.registerLootTable(block, BlazeBurnerBlock.buildLootTable()))
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-		.item(HeaterBlockItem::new)
+		.item(BlazeBurnerBlockItem::withBlaze)
+		.model(AssetLookup.<BlazeBurnerBlockItem>customItemModel("blaze_burner", "block_with_blaze"))
 		.build()
 		.register();
 
@@ -645,6 +649,22 @@ public class AllBlocks {
 			.blockstate(BlockStateGen.horizontalBlockProvider(false))
 			.simpleItem()
 			.register();
+
+	static {
+		for (DyeColor colour : DyeColor.values()) {
+			String colourName = colour.getName();
+			REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
+				.initialProperties(SharedProperties::wooden)
+				.blockstate((c, p) -> {
+					p.simpleBlock(c.get(), p.models()
+						.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
+						.texture("1", p.modLoc("block/seat/top_" + colourName))
+						.texture("2", p.modLoc("block/seat/side_" + colourName)));
+				})
+				.simpleItem()
+				.register();
+		}
+	}
 
 	public static final BlockEntry<CasingBlock> ANDESITE_CASING = REGISTRATE.block("andesite_casing", CasingBlock::new)
 		.transform(BuilderTransformers.casing(AllSpriteShifts.ANDESITE_CASING))

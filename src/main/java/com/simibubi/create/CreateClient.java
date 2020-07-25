@@ -7,8 +7,8 @@ import java.util.function.Function;
 
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
@@ -110,6 +110,7 @@ public class CreateClient {
 		KineticDebugger.tick();
 		ZapperRenderHandler.tick();
 		ExtendoGripRenderHandler.tick();
+//		CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();
 		outliner.tickOutlines();
 	}

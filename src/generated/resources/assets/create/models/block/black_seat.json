@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/seat",
+  "textures": {
+    "1": "create:block/seat/top_black",
+    "2": "create:block/seat/side_black"
+  }
+}

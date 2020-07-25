@@ -16,7 +16,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -32,7 +31,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -174,44 +172,36 @@ public class PistonContraption extends Contraption {
 	}
 
 	@Override
-	public void addGlue(SuperGlueEntity entity) {
-		BlockPos pos = entity.getHangingPosition();
-		Direction direction = entity.getFacingDirection();
-		BlockPos localPos = pos.subtract(anchor)
+	public BlockPos toLocalPos(BlockPos globalPos) {
+		return globalPos.subtract(anchor)
 			.offset(orientation, -initialExtensionProgress);
-		this.superglue.add(Pair.of(localPos, direction));
-		glueToRemove.add(entity);
 	}
 
 	@Override
-	public void addBlocksToWorld(World world, BlockPos offset, Vec3d rotation) {
-		super.addBlocksToWorld(world, offset, rotation, (pos, state) -> {
-			BlockPos pistonPos = anchor.offset(orientation, -1);
-			BlockState pistonState = world.getBlockState(pistonPos);
-			TileEntity te = world.getTileEntity(pistonPos);
-			if (pos.equals(pistonPos)) {
-				if (te == null || te.isRemoved())
-					return true;
-				if (!isExtensionPole(state) && isPiston(pistonState))
-					world.setBlockState(pistonPos, pistonState.with(MechanicalPistonBlock.STATE, PistonState.RETRACTED),
-						3 | 16);
+	protected boolean customBlockPlacement(IWorld world, BlockPos pos, BlockState state) {
+		BlockPos pistonPos = anchor.offset(orientation, -1);
+		BlockState pistonState = world.getBlockState(pistonPos);
+		TileEntity te = world.getTileEntity(pistonPos);
+		if (pos.equals(pistonPos)) {
+			if (te == null || te.isRemoved())
 				return true;
-			}
-			return false;
-		});
+			if (!isExtensionPole(state) && isPiston(pistonState))
+				world.setBlockState(pistonPos, pistonState.with(MechanicalPistonBlock.STATE, PistonState.RETRACTED),
+					3 | 16);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
-		super.removeBlocksFromWorld(world, offset, (pos, state) -> {
-			BlockPos pistonPos = anchor.offset(orientation, -1);
-			BlockState blockState = world.getBlockState(pos);
-			if (pos.equals(pistonPos) && isPiston(blockState)) {
-				world.setBlockState(pos, blockState.with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66 | 16);
-				return true;
-			}
-			return false;
-		});
+	protected boolean customBlockRemoval(IWorld world, BlockPos pos, BlockState state) {
+		BlockPos pistonPos = anchor.offset(orientation, -1);
+		BlockState blockState = world.getBlockState(pos);
+		if (pos.equals(pistonPos) && isPiston(blockState)) {
+			world.setBlockState(pos, blockState.with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66 | 16);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

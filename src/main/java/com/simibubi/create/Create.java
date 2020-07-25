@@ -89,7 +89,6 @@ public class Create {
 		if (schematicReceiver == null)
 			schematicReceiver = new ServerSchematicLoader();
 		schematicReceiver.tick();
-
 		lagger.tick();
 	}
 
