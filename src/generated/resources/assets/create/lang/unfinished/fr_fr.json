@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 413",
+	"_": "Missing Localizations: 416",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.copper_casing": "Boîtier en cuivre",
 	"block.create.copper_ore": "Minerai de cuivre",
 	"block.create.copper_shingles": "Bardeaux de cuivre",
+	"block.create.copper_tiles": "UNLOCALIZED: Copper Tiles",
 	"block.create.creative_crate": "Créateur de schémacanon",
 	"block.create.creative_motor": "Moteur",
 	"block.create.crushing_wheel": "Roue de concassage",
@@ -309,6 +310,7 @@
 	"block.create.red_seat": "UNLOCALIZED: Red Seat",
 	"block.create.redstone_contact": "redstone_contact Redstone",
 	"block.create.redstone_link": "Liaison Redstone",
+	"block.create.refined_radiance_casing": "UNLOCALIZED: Refined Radiance Casing",
 	"block.create.reinforced_rail": "UNLOCALIZED: Reinforced Rail",
 	"block.create.rope": "Corde",
 	"block.create.rope_pulley": "Poulie à corde",
@@ -327,6 +329,7 @@
 	"block.create.scoria_pillar": "Pillier de scorie",
 	"block.create.secondary_linear_chassis": "UNLOCALIZED: Secondary Linear Chassis",
 	"block.create.sequenced_gearshift": "Décaleur de rotation séquencé",
+	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Steel Casing",
 	"block.create.shaft": "Arbre mécanique",
 	"block.create.speedometer": "Compteur de vitesse",
 	"block.create.spruce_window": "UNLOCALIZED: Spruce Window",

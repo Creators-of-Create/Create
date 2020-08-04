@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 397",
+	"_": "Missing Localizations: 400",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.copper_casing": "Involucro di Rame",
 	"block.create.copper_ore": "Rame Grezzo",
 	"block.create.copper_shingles": "Tegole di Rame",
+	"block.create.copper_tiles": "UNLOCALIZED: Copper Tiles",
 	"block.create.creative_crate": "Creatore Cannoneschematico",
 	"block.create.creative_motor": "Motore",
 	"block.create.crushing_wheel": "Ruota di Frantumazione",
@@ -309,6 +310,7 @@
 	"block.create.red_seat": "UNLOCALIZED: Red Seat",
 	"block.create.redstone_contact": "Contatto Redstone",
 	"block.create.redstone_link": "Collegamento Redstone",
+	"block.create.refined_radiance_casing": "UNLOCALIZED: Refined Radiance Casing",
 	"block.create.reinforced_rail": "UNLOCALIZED: Reinforced Rail",
 	"block.create.rope": "Corda",
 	"block.create.rope_pulley": "Puleggia della Corda",
@@ -327,6 +329,7 @@
 	"block.create.scoria_pillar": "Pilastro di Scoria",
 	"block.create.secondary_linear_chassis": "UNLOCALIZED: Secondary Linear Chassis",
 	"block.create.sequenced_gearshift": "Cambio Sequenziale",
+	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Steel Casing",
 	"block.create.shaft": "Albero",
 	"block.create.speedometer": "Tachimetro",
 	"block.create.spruce_window": "UNLOCALIZED: Spruce Window",

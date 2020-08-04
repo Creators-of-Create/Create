@@ -5,6 +5,7 @@
 	"textures": {
 		"0": "create:block/axis",
 		"3": "create:block/axis_top",
+		"particle": "block/stripped_spruce_log",
 		"4": "create:block/large_cogwheel"
 	},
 	"elements": [

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 397",
+	"_": "Missing Localizations: 400",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.copper_casing": "구리 케이스",
 	"block.create.copper_ore": "구리 광석",
 	"block.create.copper_shingles": "구리 판자",
+	"block.create.copper_tiles": "UNLOCALIZED: Copper Tiles",
 	"block.create.creative_crate": "청사진 대포 지원기",
 	"block.create.creative_motor": "모터",
 	"block.create.crushing_wheel": "분쇄 휠",
@@ -309,6 +310,7 @@
 	"block.create.red_seat": "UNLOCALIZED: Red Seat",
 	"block.create.redstone_contact": "동형 감지기",
 	"block.create.redstone_link": "레드스톤 링크",
+	"block.create.refined_radiance_casing": "UNLOCALIZED: Refined Radiance Casing",
 	"block.create.reinforced_rail": "UNLOCALIZED: Reinforced Rail",
 	"block.create.rope": "밧줄",
 	"block.create.rope_pulley": "밧줄 도르래",
@@ -327,6 +329,7 @@
 	"block.create.scoria_pillar": "스코리아 기둥",
 	"block.create.secondary_linear_chassis": "UNLOCALIZED: Secondary Linear Chassis",
 	"block.create.sequenced_gearshift": "순서 기어쉬프트",
+	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Steel Casing",
 	"block.create.shaft": "축",
 	"block.create.speedometer": "속도 계측기",
 	"block.create.spruce_window": "UNLOCALIZED: Spruce Window",

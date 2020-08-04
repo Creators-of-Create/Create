@@ -59,8 +59,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidTankItem;
 import com.simibubi.create.content.contraptions.fluids.FluidTankModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftGenerator;
@@ -403,17 +403,18 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	public static final BlockEntry<BlazeBurnerBlock> BLAZE_BURNER = REGISTRATE.block("blaze_burner", BlazeBurnerBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.lightValue(12))
-		.addLayer(() -> RenderType::getCutoutMipped)
-		.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
-		.loot((lt, block) -> lt.registerLootTable(block, BlazeBurnerBlock.buildLootTable()))
-		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-		.item(BlazeBurnerBlockItem::withBlaze)
-		.model(AssetLookup.<BlazeBurnerBlockItem>customItemModel("blaze_burner", "block_with_blaze"))
-		.build()
-		.register();
+	public static final BlockEntry<BlazeBurnerBlock> BLAZE_BURNER =
+		REGISTRATE.block("blaze_burner", BlazeBurnerBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.lightValue(12))
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
+			.loot((lt, block) -> lt.registerLootTable(block, BlazeBurnerBlock.buildLootTable()))
+			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+			.item(BlazeBurnerBlockItem::withBlaze)
+			.model(AssetLookup.<BlazeBurnerBlockItem>customItemModel("blaze_burner", "block_with_blaze"))
+			.build()
+			.register();
 
 	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)
 		.initialProperties(SharedProperties::stone)
@@ -677,6 +678,17 @@ public class AllBlocks {
 	public static final BlockEntry<CasingBlock> COPPER_CASING = REGISTRATE.block("copper_casing", CasingBlock::new)
 		.transform(BuilderTransformers.casing(AllSpriteShifts.COPPER_CASING))
 		.register();
+
+	public static final BlockEntry<CasingBlock> SHADOW_STEEL_CASING =
+		REGISTRATE.block("shadow_steel_casing", CasingBlock::new)
+			.transform(BuilderTransformers.casing(AllSpriteShifts.SHADOW_STEEL_CASING))
+			.register();
+
+	public static final BlockEntry<CasingBlock> REFINED_RADIANCE_CASING =
+		REGISTRATE.block("refined_radiance_casing", CasingBlock::new)
+			.transform(BuilderTransformers.casing(AllSpriteShifts.REFINED_RADIANCE_CASING))
+			.properties(p -> p.lightValue(12))
+			.register();
 
 	public static final BlockEntry<MechanicalCrafterBlock> MECHANICAL_CRAFTER =
 		REGISTRATE.block("mechanical_crafter", MechanicalCrafterBlock::new)
@@ -1016,6 +1028,14 @@ public class AllBlocks {
 
 	public static final BlockEntry<OxidizingBlock> COPPER_SHINGLES =
 		REGISTRATE.block("copper_shingles", p -> new OxidizingBlock(p, 1 / 32f))
+			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.item()
+			.transform(oxidizedItemModel())
+			.transform(oxidizedBlockstate())
+			.register();
+
+	public static final BlockEntry<OxidizingBlock> COPPER_TILES =
+		REGISTRATE.block("copper_tiles", p -> new OxidizingBlock(p, 1 / 32f))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.item()
 			.transform(oxidizedItemModel())

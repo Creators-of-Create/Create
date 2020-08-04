@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 392",
+	"_": "Missing Localizations: 395",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.copper_casing": "銅ケーシング",
 	"block.create.copper_ore": "銅鉱石",
 	"block.create.copper_shingles": "銅のこけら板",
+	"block.create.copper_tiles": "UNLOCALIZED: Copper Tiles",
 	"block.create.creative_crate": "概略図砲クリエティフィアー",
 	"block.create.creative_motor": "モーター",
 	"block.create.crushing_wheel": "破砕ホイール",
@@ -309,6 +310,7 @@
 	"block.create.red_seat": "UNLOCALIZED: Red Seat",
 	"block.create.redstone_contact": "レッドストーンコンタクト",
 	"block.create.redstone_link": "レッドストーンリンク",
+	"block.create.refined_radiance_casing": "UNLOCALIZED: Refined Radiance Casing",
 	"block.create.reinforced_rail": "UNLOCALIZED: Reinforced Rail",
 	"block.create.rope": "ロープ",
 	"block.create.rope_pulley": "ローププーリー",
@@ -327,6 +329,7 @@
 	"block.create.scoria_pillar": "スコリアの柱",
 	"block.create.secondary_linear_chassis": "UNLOCALIZED: Secondary Linear Chassis",
 	"block.create.sequenced_gearshift": "シーケンスギアシフト",
+	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Steel Casing",
 	"block.create.shaft": "軸",
 	"block.create.speedometer": "スピードメーター",
 	"block.create.spruce_window": "UNLOCALIZED: Spruce Window",

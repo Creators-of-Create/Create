@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 73",
+	"_": "Missing Localizations: 76",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.copper_casing": "铜机壳",
 	"block.create.copper_ore": "铜矿石",
 	"block.create.copper_shingles": "铜瓦",
+	"block.create.copper_tiles": "UNLOCALIZED: Copper Tiles",
 	"block.create.creative_crate": "创造板条箱",
 	"block.create.creative_motor": "创造马达",
 	"block.create.crushing_wheel": "粉碎轮",
@@ -309,6 +310,7 @@
 	"block.create.red_seat": "UNLOCALIZED: Red Seat",
 	"block.create.redstone_contact": "信号检测器",
 	"block.create.redstone_link": "无限红石信号终端",
+	"block.create.refined_radiance_casing": "UNLOCALIZED: Refined Radiance Casing",
 	"block.create.reinforced_rail": "UNLOCALIZED: Reinforced Rail",
 	"block.create.rope": "绳索",
 	"block.create.rope_pulley": "绳索滑轮",
@@ -327,6 +329,7 @@
 	"block.create.scoria_pillar": "竖纹熔渣",
 	"block.create.secondary_linear_chassis": "机壳底盘2号",
 	"block.create.sequenced_gearshift": "可编程齿轮箱",
+	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Steel Casing",
 	"block.create.shaft": "传动杆",
 	"block.create.speedometer": "速度表",
 	"block.create.spruce_window": "云杉窗户",

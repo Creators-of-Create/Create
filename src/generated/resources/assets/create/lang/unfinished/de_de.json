@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 810",
+	"_": "Missing Localizations: 813",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.copper_casing": "UNLOCALIZED: Copper Casing",
 	"block.create.copper_ore": "UNLOCALIZED: Copper Ore",
 	"block.create.copper_shingles": "UNLOCALIZED: Copper Shingles",
+	"block.create.copper_tiles": "UNLOCALIZED: Copper Tiles",
 	"block.create.creative_crate": "Bauplankanonenmacher",
 	"block.create.creative_motor": "UNLOCALIZED: Creative Motor",
 	"block.create.crushing_wheel": "Mahlwerkrad",
@@ -309,6 +310,7 @@
 	"block.create.red_seat": "UNLOCALIZED: Red Seat",
 	"block.create.redstone_contact": "Redstone-Kontakt",
 	"block.create.redstone_link": "Redstone-Verbindung",
+	"block.create.refined_radiance_casing": "UNLOCALIZED: Refined Radiance Casing",
 	"block.create.reinforced_rail": "UNLOCALIZED: Reinforced Rail",
 	"block.create.rope": "UNLOCALIZED: Rope",
 	"block.create.rope_pulley": "UNLOCALIZED: Rope Pulley",
@@ -327,6 +329,7 @@
 	"block.create.scoria_pillar": "UNLOCALIZED: Scoria Pillar",
 	"block.create.secondary_linear_chassis": "UNLOCALIZED: Secondary Linear Chassis",
 	"block.create.sequenced_gearshift": "UNLOCALIZED: Sequenced Gearshift",
+	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Steel Casing",
 	"block.create.shaft": "Welle",
 	"block.create.speedometer": "UNLOCALIZED: Speedometer",
 	"block.create.spruce_window": "UNLOCALIZED: Spruce Window",
