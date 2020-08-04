@@ -7,6 +7,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -63,7 +64,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			tickRotation();
 		}
 
-		spawnParticles(getHeatLevel());
+		spawnParticles(getHeatLevel(), 1);
 
 		if (remainingBurnTime <= 0) {
 			return;
@@ -194,6 +195,10 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		}
 
 		updateHeatLevel();
+		HeatLevel level = getHeatLevel();
+		for (int i = 0; i < 20; i++) {
+			spawnParticles(level, 1 + (.25 * (i / 4)));
+		}
 		return true;
 	}
 
@@ -215,7 +220,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		}
 	}
 
-	private void spawnParticles(BlazeBurnerBlock.HeatLevel heatLevel) {
+	private void spawnParticles(BlazeBurnerBlock.HeatLevel heatLevel, double burstMult) {
 		if (world == null)
 			return;
 
@@ -228,22 +233,22 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 				return;
 
 			Vec3d color = randomColor(heatLevel);
-			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.03F, 15), 0.015, 0.1);
+			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.03F, 15, false), 0.015 * burstMult, 0.1 * burstMult);
 		} else if (heatLevel == BlazeBurnerBlock.HeatLevel.FADING) {
 			if (r.nextDouble() > 0.5)
 				return;
 
 			Vec3d color = randomColor(heatLevel);
-			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.035F, 18), 0.03, 0.15);
+			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.035F, 18, false), 0.03 * burstMult, 0.15 * burstMult);
 		} else if (heatLevel == BlazeBurnerBlock.HeatLevel.KINDLED) {
 			Vec3d color = randomColor(heatLevel);
-			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.04F, 21), 0.05, 0.2);
+			spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.04F, 35, true), 0.05 * burstMult, 0.2 * burstMult);
 		}else if (heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING) {
 			for (int i = 0; i < 2; i++) {
 				if (r.nextDouble() > 0.6)
 					return;
 				Vec3d color = randomColor(heatLevel);
-				spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.045F, 24), 0.06, 0.22);
+				spawnParticle(new CubeParticleData((float) color.x,(float)  color.y,(float)  color.z, 0.045F, 35, true), 0.06 * burstMult, 0.22 * burstMult);
 			}
 		}
 	}
@@ -254,7 +259,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		world.addOptionalParticle(
 				particleData,
 				(double) pos.getX() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread,
-				(double) pos.getY() + 0.6D + random.nextDouble() / 10.0,
+				(double) pos.getY() + 0.6D + (random.nextDouble() / 4.0),
 				(double) pos.getZ() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread,
 				0.0D,
 				speed,

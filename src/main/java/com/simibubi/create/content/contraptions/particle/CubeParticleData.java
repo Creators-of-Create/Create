@@ -28,12 +28,14 @@ public class CubeParticleData implements IParticleData, ICustomParticle<CubePart
 			float scale = reader.readFloat();
 			reader.expect(' ');
 			int avgAge = reader.readInt();
-			return new CubeParticleData(r, g, b, scale, avgAge);
+			reader.expect(' ');
+			boolean hot = reader.readBoolean();
+			return new CubeParticleData(r, g, b, scale, avgAge, hot);
 		}
 
 		@Override
 		public CubeParticleData read(ParticleType<CubeParticleData> type, PacketBuffer buffer) {
-			return new CubeParticleData(buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readInt());
+			return new CubeParticleData(buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readInt(), buffer.readBoolean());
 		}
 	};
 
@@ -42,17 +44,19 @@ public class CubeParticleData implements IParticleData, ICustomParticle<CubePart
 	final float b;
 	final float scale;
 	final int avgAge;
+	final boolean hot;
 
-	public CubeParticleData(float r, float g, float b, float scale, int avgAge) {
+	public CubeParticleData(float r, float g, float b, float scale, int avgAge, boolean hot) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
 		this.scale = scale;
 		this.avgAge = avgAge;
+		this.hot = hot;
 	}
 
 	public static CubeParticleData dummy() {
-		return new CubeParticleData(0, 0, 0, 0, 0);
+		return new CubeParticleData(0, 0, 0, 0, 0, false);
 	}
 
 	@Override
@@ -78,10 +82,11 @@ public class CubeParticleData implements IParticleData, ICustomParticle<CubePart
 		buffer.writeFloat(b);
 		buffer.writeFloat(scale);
 		buffer.writeInt(avgAge);
+		buffer.writeBoolean(hot);
 	}
 
 	@Override
 	public String getParameters() {
-		return String.format(Locale.ROOT, "%s %f %f %f %f %d", AllParticleTypes.CUBE.parameter(), r, g, b, scale, avgAge);
+		return String.format(Locale.ROOT, "%s %f %f %f %f %d %s", AllParticleTypes.CUBE.parameter(), r, g, b, scale, avgAge, hot);
 	}
 }
