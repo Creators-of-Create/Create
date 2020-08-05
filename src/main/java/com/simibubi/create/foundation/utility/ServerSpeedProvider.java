@@ -11,14 +11,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-@EventBusSubscriber
 public class ServerSpeedProvider {
 
 	static int clientTimer = 0;
@@ -26,31 +21,24 @@ public class ServerSpeedProvider {
 	static boolean initialized = false;
 	static InterpolatedChasingValue modifier = new InterpolatedChasingValue().withSpeed(.25f);
 
-	@SubscribeEvent
-	public static void onServerTick(TickEvent.ServerTickEvent event) {
-		if (event.phase == Phase.START)
-			return;
+	public static void serverTick() {
 		serverTimer++;
 		if (serverTimer > getSyncInterval()) {
 			AllPackets.channel.send(PacketDistributor.ALL.noArg(), new Packet());
 			serverTimer = 0;
 		}
 	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public static void clientTick() {
+		if (Minecraft.getInstance().isSingleplayer() && Minecraft.getInstance().isGamePaused())
+			return;
+		modifier.tick();
+		clientTimer++;
+	}
 
 	public static Integer getSyncInterval() {
 		return AllConfigs.SERVER.tickrateSyncTimer.get();
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	@SubscribeEvent
-	public static void onClientTick(TickEvent.ClientTickEvent event) {
-		if (event.phase == Phase.START)
-			return;
-		if (Minecraft.getInstance().isSingleplayer() && Minecraft.getInstance().isGamePaused())
-			return;
-		
-		modifier.tick();
-		clientTimer++;
 	}
 
 	public static float get() {

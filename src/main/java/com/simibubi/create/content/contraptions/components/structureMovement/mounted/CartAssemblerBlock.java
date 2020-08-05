@@ -11,6 +11,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingHandler;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -111,7 +112,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	@Override
 	public void onMinecartPass(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos,
 		AbstractMinecartEntity cart) {
-		if (!cart.canBeRidden() && !(cart instanceof FurnaceMinecartEntity))
+		if (!canAssembleTo(cart))
 			return;
 
 		withTileEntityDo(world, pos, te -> {
@@ -163,6 +164,10 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		});
 	}
 
+	public static boolean canAssembleTo(AbstractMinecartEntity cart) {
+		return cart.canBeRidden() || cart instanceof FurnaceMinecartEntity;
+	}
+
 	@Override
 	@Nonnull
 	public ActionResultType onUse(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos,
@@ -207,7 +212,12 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		float initialAngle = facing.getHorizontalAngle();
 
 		withTileEntityDo(world, pos, te -> contraption.rotationMode = CartMovementMode.values()[te.movementMode.value]);
-		ContraptionEntity entity = ContraptionEntity.createMounted(world, contraption, initialAngle, facing);
+		boolean couplingFound = contraption.connectedCart != null;
+		if (couplingFound)
+			MinecartCouplingHandler.connectCarts(null, world, cart.getEntityId(),
+				contraption.connectedCart.getEntityId());
+		ContraptionEntity entity =
+			ContraptionEntity.createMounted(world, contraption, initialAngle, facing, couplingFound);
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		world.addEntity(entity);
 		entity.startRiding(cart);

@@ -10,13 +10,16 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.renderState.RenderTypes;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.Matrix3f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public abstract class Outline {
@@ -29,6 +32,20 @@ public abstract class Outline {
 	}
 
 	public abstract void render(MatrixStack ms, SuperRenderTypeBuffer buffer);
+
+	public void renderCuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vec3d start, Vec3d end) {
+		Vec3d diff = end.subtract(start);
+		float hAngle = AngleHelper.deg(MathHelper.atan2(diff.x, diff.z));
+		float hDistance = (float) diff.mul(1, 0, 1)
+			.length();
+		float vAngle = AngleHelper.deg(MathHelper.atan2(hDistance, diff.y)) - 90;
+		ms.push();
+		MatrixStacker.of(ms)
+			.translate(start)
+			.rotateY(hAngle).rotateX(vAngle);
+		renderAACuboidLine(ms, buffer, Vec3d.ZERO, new Vec3d(0, 0, diff.length()));
+		ms.pop();
+	}
 
 	public void renderAACuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vec3d start, Vec3d end) {
 		IVertexBuilder builder = buffer.getBuffer(RenderTypes.getOutlineSolid());

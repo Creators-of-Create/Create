@@ -17,6 +17,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCoupling;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingHandler;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -30,6 +32,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.item.HangingEntity;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -69,6 +72,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected Vec3d motionBeforeStall;
 	protected boolean stationary;
 	protected boolean initialized;
+	protected boolean onCoupling;
 	final List<Entity> collidingEntities = new ArrayList<>();
 	private boolean isSerializingFurnaceCart;
 
@@ -105,10 +109,11 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public static ContraptionEntity createMounted(World world, Contraption contraption, float initialAngle,
-		Direction facing) {
+		Direction facing, boolean onCoupling) {
 		ContraptionEntity entity = createMounted(world, contraption, initialAngle);
 		entity.forcedAngle = facing.getHorizontalAngle();
 		entity.forceYaw(entity.forcedAngle);
+		entity.onCoupling = onCoupling;
 		return entity;
 	}
 
@@ -197,7 +202,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			return;
 		callback.accept(passenger, transformedVector.x, transformedVector.y, transformedVector.z);
 	}
-	
+
 	protected Vec3d getPassengerPosition(Entity passenger) {
 		AxisAlignedBB bb = passenger.getBoundingBox();
 		double ySize = bb.getYSize();
@@ -308,14 +313,33 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		boolean rotationLock = false;
 		boolean pauseWhileRotating = false;
 
-		if (contraption instanceof MountedContraption) {
-			rotationLock = ((MountedContraption) contraption).rotationMode == CartMovementMode.ROTATION_LOCKED;
-			pauseWhileRotating = ((MountedContraption) contraption).rotationMode == CartMovementMode.ROTATE_PAUSED;
-		}
-
 		Entity riding = e;
 		while (riding.getRidingEntity() != null)
 			riding = riding.getRidingEntity();
+
+		if (contraption instanceof MountedContraption) {
+			MountedContraption mountedContraption = (MountedContraption) contraption;
+			if (onCoupling && riding instanceof AbstractMinecartEntity) {
+				MinecartCoupling coupling = MinecartCouplingHandler.getCoupling(world, riding.getUniqueID());
+				if (coupling != null && coupling.areBothEndsPresent()) {
+					Vec3d positionVec = coupling.asCouple()
+						.getSecond()
+						.getPositionVec();
+					prevYaw = yaw;
+					prevPitch = pitch;
+					double diffZ = positionVec.z - getZ();
+					double diffX = positionVec.x - getX();
+					yaw = 90 + (float) (MathHelper.atan2(diffZ, diffX) * 180 / Math.PI);
+					pitch = (float) (Math.atan2(positionVec.y - getY(), Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180
+						/ Math.PI);
+					return;
+				}
+			}
+
+			rotationLock = mountedContraption.rotationMode == CartMovementMode.ROTATION_LOCKED;
+			pauseWhileRotating = mountedContraption.rotationMode == CartMovementMode.ROTATE_PAUSED;
+		}
+
 		Vec3d movementVector = riding.getMotion();
 		if (riding instanceof BoatEntity)
 			movementVector = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
@@ -355,12 +379,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 		if (!isStalled() && (riding instanceof FurnaceMinecartEntity)) {
 			FurnaceMinecartEntity furnaceCart = (FurnaceMinecartEntity) riding;
-			
+
 			// Notify to not trigger serialization side-effects
 			isSerializingFurnaceCart = true;
 			CompoundNBT nbt = furnaceCart.serializeNBT();
 			isSerializingFurnaceCart = false;
-			
+
 			int fuel = nbt.getInt("Fuel");
 			int fuelBefore = fuel;
 			double pushX = nbt.getDouble("PushX");
@@ -560,6 +584,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	@Override
 	protected void readAdditional(CompoundNBT compound) {
 		initialized = compound.getBoolean("Initialized");
+		onCoupling = compound.getBoolean("OnCoupling");
 		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"));
 		initialAngle = compound.getFloat("InitialAngle");
 		forceYaw(compound.contains("ForcedYaw") ? compound.getFloat("ForcedYaw") : initialAngle);
@@ -611,6 +636,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		compound.putFloat("InitialAngle", initialAngle);
 		compound.putBoolean("Stalled", isStalled());
 		compound.putBoolean("Initialized", initialized);
+		compound.putBoolean("OnCoupling", onCoupling);
 	}
 
 	@Override
@@ -682,7 +708,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public CompoundNBT writeWithoutTypeId(CompoundNBT nbt) {
 		if (isSerializingFurnaceCart)
 			return nbt;
-		
+
 		Vec3d vec = getPositionVec();
 		List<Entity> passengers = getPassengers();
 
@@ -801,6 +827,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		if (e.noClip)
 			return false;
 		if (e instanceof HangingEntity)
+			return false;
+		if (e instanceof AbstractMinecartEntity)
 			return false;
 		if (e instanceof SuperGlueEntity)
 			return false;

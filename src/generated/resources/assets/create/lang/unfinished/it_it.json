@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 400",
+	"_": "Missing Localizations: 401",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -402,6 +402,7 @@
 	"item.create.iron_sheet": "Lamiera di Ferro",
 	"item.create.lapis_sheet": "UNLOCALIZED: Lapis Sheet",
 	"item.create.minecart_contraption": "UNLOCALIZED: Minecart Contraption",
+	"item.create.minecart_coupling": "UNLOCALIZED: Minecart Coupling",
 	"item.create.polished_rose_quartz": "Quarzo Rosa Levigato",
 	"item.create.powdered_obsidian": "UNLOCALIZED: Powdered Obsidian",
 	"item.create.propeller": "Elica",

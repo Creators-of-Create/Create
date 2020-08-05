@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static net.minecraft.entity.Entity.collideBoundingBoxHeuristically;
 import static net.minecraft.entity.Entity.horizontalMag;
 
@@ -8,15 +7,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.google.common.base.Predicates;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingMovementBehaviour;
@@ -31,18 +27,11 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CocoaBlock;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ReuseableStream;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -54,78 +43,11 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.WorldTickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class ContraptionCollider {
 
-	public static DamageSource damageSourceContraptionSuffocate =
-		new DamageSource("create.contraption_suffocate").setDamageBypassesArmor();
-	public static boolean wasClientPlayerGrounded;
-	public static Cache<World, List<WeakReference<ContraptionEntity>>> activeContraptions = CacheBuilder.newBuilder()
-		.expireAfterAccess(400, SECONDS)
-		.build();
-
-	@SubscribeEvent
-	public static void addSpawnedContraptionsToCollisionList(EntityJoinWorldEvent event) {
-		Entity entity = event.getEntity();
-		if (!(entity instanceof ContraptionEntity))
-			return;
-		try {
-			List<WeakReference<ContraptionEntity>> list = activeContraptions.get(event.getWorld(), ArrayList::new);
-			ContraptionEntity contraption = (ContraptionEntity) entity;
-			list.add(new WeakReference<>(contraption));
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static void playerCollisionHappensOnClientTick(ClientTickEvent event) {
-		if (event.phase == Phase.START)
-			return;
-		ClientWorld world = Minecraft.getInstance().world;
-		if (world == null)
-			return;
-		runCollisions(world);
-	}
-
-	@SubscribeEvent
-	public static void entityCollisionHappensPreWorldTick(WorldTickEvent event) {
-		if (event.phase == Phase.END)
-			return;
-		World world = event.world;
-		runCollisions(world);
-	}
-
-	@SubscribeEvent
-	public static void entitiesWhoJustDismountedGetSentToTheRightLocation(LivingUpdateEvent event) {
-		LivingEntity entityLiving = event.getEntityLiving();
-		if (entityLiving == null)
-			return;
-		if (entityLiving.world.isRemote)
-			return;
-		CompoundNBT data = entityLiving.getPersistentData();
-		if (!data.contains("ContraptionDismountLocation"))
-			return;
-		Vec3d position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", NBT.TAG_DOUBLE));
-		if (entityLiving.getRidingEntity() == null)
-			entityLiving.setPositionAndUpdate(position.x, position.y, position.z);
-		data.remove("ContraptionDismountLocation");
-	}
-
-	private static void runCollisions(World world) {
-		List<WeakReference<ContraptionEntity>> list = activeContraptions.getIfPresent(world);
+	public static void runCollisions(World world) {
+		List<WeakReference<ContraptionEntity>> list = ContraptionHandler.activeContraptions.getIfPresent(world);
 		if (list == null)
 			return;
 		for (Iterator<WeakReference<ContraptionEntity>> iterator = list.iterator(); iterator.hasNext();) {
@@ -139,7 +61,7 @@ public class ContraptionCollider {
 		}
 	}
 
-	public static void collideEntities(ContraptionEntity contraptionEntity) {
+	private static void collideEntities(ContraptionEntity contraptionEntity) {
 		World world = contraptionEntity.getEntityWorld();
 		Contraption contraption = contraptionEntity.getContraption();
 		AxisAlignedBB bounds = contraptionEntity.getBoundingBox();
@@ -289,7 +211,7 @@ public class ContraptionCollider {
 				entity.fallDistance = 0;
 				entity.onGround = true;
 				contraptionEntity.collidingEntities.add(entity);
-				if (!serverPlayer) 
+				if (!serverPlayer)
 					contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
 			}
 
@@ -325,7 +247,7 @@ public class ContraptionCollider {
 			entity.setPosition(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
 				entityPosition.z + allowedMovement.z);
 			entity.setMotion(entityMotion);
-			
+
 			if (!serverPlayer && player)
 				AllPackets.channel.sendToServer(new ClientMotionPacket(entityMotion, true));
 		}
@@ -373,68 +295,7 @@ public class ContraptionCollider {
 		return vec3d;
 	}
 
-	public static void pushEntityOutOfShape(Entity entity, VoxelShape voxelShape, Vec3d positionOffset,
-		Vec3d shapeMotion) {
-		AxisAlignedBB entityBB = entity.getBoundingBox()
-			.offset(positionOffset);
-		Vec3d entityMotion = entity.getMotion();
-
-		if (!voxelShape.toBoundingBoxList()
-			.stream()
-			.anyMatch(entityBB::intersects))
-			return;
-
-		AxisAlignedBB shapeBB = voxelShape.getBoundingBox();
-		Direction bestSide = Direction.DOWN;
-		double bestOffset = 100;
-		double finalOffset = 0;
-
-		for (Direction face : Direction.values()) {
-			Axis axis = face.getAxis();
-			double d = axis == Axis.X ? entityBB.getXSize() + shapeBB.getXSize()
-				: axis == Axis.Y ? entityBB.getYSize() + shapeBB.getYSize() : entityBB.getZSize() + shapeBB.getZSize();
-			d = d + .5f;
-
-			Vec3d nudge = new Vec3d(face.getDirectionVec()).scale(d);
-			AxisAlignedBB nudgedBB = entityBB.offset(nudge.getX(), nudge.getY(), nudge.getZ());
-			double nudgeDistance = face.getAxisDirection() == AxisDirection.POSITIVE ? -d : d;
-			double offset = voxelShape.getAllowedOffset(face.getAxis(), nudgedBB, nudgeDistance);
-			double abs = Math.abs(nudgeDistance - offset);
-			if (abs < Math.abs(bestOffset) && abs != 0) {
-				bestOffset = abs;
-				finalOffset = abs;
-				bestSide = face;
-			}
-		}
-
-		if (bestOffset != 0) {
-			entity.move(MoverType.SELF, new Vec3d(bestSide.getDirectionVec()).scale(finalOffset));
-			boolean positive = bestSide.getAxisDirection() == AxisDirection.POSITIVE;
-
-			double clamped;
-			switch (bestSide.getAxis()) {
-			case X:
-				clamped = positive ? Math.max(shapeMotion.x, entityMotion.x) : Math.min(shapeMotion.x, entityMotion.x);
-				entity.setMotion(clamped, entityMotion.y, entityMotion.z);
-				break;
-			case Y:
-				clamped = positive ? Math.max(shapeMotion.y, entityMotion.y) : Math.min(shapeMotion.y, entityMotion.y);
-				if (bestSide == Direction.UP)
-					clamped = shapeMotion.y;
-				entity.setMotion(entityMotion.x, clamped, entityMotion.z);
-				entity.handleFallDamage(entity.fallDistance, 1);
-				entity.fallDistance = 0;
-				entity.onGround = true;
-				break;
-			case Z:
-				clamped = positive ? Math.max(shapeMotion.z, entityMotion.z) : Math.min(shapeMotion.z, entityMotion.z);
-				entity.setMotion(entityMotion.x, entityMotion.y, clamped);
-				break;
-			}
-		}
-	}
-
-	public static ReuseableStream<VoxelShape> getPotentiallyCollidedShapes(World world, Contraption contraption,
+	private static ReuseableStream<VoxelShape> getPotentiallyCollidedShapes(World world, Contraption contraption,
 		AxisAlignedBB localBB) {
 
 		double height = localBB.getYSize();

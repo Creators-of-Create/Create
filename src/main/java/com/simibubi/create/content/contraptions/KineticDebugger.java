@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -24,8 +25,14 @@ import net.minecraft.world.World;
 public class KineticDebugger {
 
 	public static void tick() {
-		if (!isActive())
+		if (!isActive()) {
+			if (KineticTileEntityRenderer.rainbowMode) {
+				KineticTileEntityRenderer.rainbowMode = false;
+				CreateClient.bufferCache.invalidate();
+			}			
 			return;
+		}
+		
 		KineticTileEntity te = getSelectedTE();
 		if (te == null)
 			return;

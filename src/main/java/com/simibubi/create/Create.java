@@ -26,8 +26,10 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
@@ -70,8 +72,10 @@ public class Create {
 		modEventBus.addListener(AllConfigs::onLoad);
 		modEventBus.addListener(AllConfigs::onReload);
 		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
-		CreateClient.addClientListeners(modEventBus);
+
 		AllConfigs.register();
+
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.addClientListeners(modEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
@@ -83,17 +87,6 @@ public class Create {
 		AllPackets.registerPackets();
 		AllTriggers.register();
 		AllWorldFeatures.reload();
-	}
-
-	public static void tick() {
-		if (schematicReceiver == null)
-			schematicReceiver = new ServerSchematicLoader();
-		schematicReceiver.tick();
-		lagger.tick();
-	}
-
-	public static void shutdown() {
-		schematicReceiver.shutdown();
 	}
 
 	public static CreateRegistrate registrate() {

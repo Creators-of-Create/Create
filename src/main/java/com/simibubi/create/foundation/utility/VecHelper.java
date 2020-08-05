@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
@@ -80,6 +82,8 @@ public class VecHelper {
 	}
 
 	public static Vec3d readNBT(ListNBT list) {
+		if (list.isEmpty())
+			return Vec3d.ZERO;
 		return new Vec3d(list.getDouble(0), list.getDouble(1), list.getDouble(2));
 	}
 
@@ -103,6 +107,33 @@ public class VecHelper {
 				if (getCoordinate(pos1, otherAxis) != getCoordinate(pos2, otherAxis))
 					return false;
 		return true;
+	}
+
+	public static Vec3d clamp(Vec3d vec, float maxLength) {
+		return vec.length() > maxLength ? vec.normalize()
+			.scale(maxLength) : vec;
+	}
+
+	public static Vec3d project(Vec3d vec, Vec3d ontoVec) {
+		if (ontoVec.equals(Vec3d.ZERO))
+			return Vec3d.ZERO;
+		return ontoVec.scale(vec.dotProduct(ontoVec) / ontoVec.lengthSquared());
+	}
+	
+	@Nullable
+	public static Vec3d intersectSphere(Vec3d origin, Vec3d lineDirection, Vec3d sphereCenter, double radius) {
+		if (lineDirection.equals(Vec3d.ZERO))
+			return null;
+		if (lineDirection.length() != 1)
+			lineDirection = lineDirection.normalize();
+
+		Vec3d diff = origin.subtract(sphereCenter);
+		double lineDotDiff = lineDirection.dotProduct(diff);
+		double delta = lineDotDiff * lineDotDiff - (diff.lengthSquared() - radius * radius);
+		if (delta < 0)
+			return null;
+		double t = -lineDotDiff + MathHelper.sqrt(delta);
+		return origin.add(lineDirection.scale(t));
 	}
 
 }

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 76",
+	"_": "Missing Localizations: 77",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -402,6 +402,7 @@
 	"item.create.iron_sheet": "铁板",
 	"item.create.lapis_sheet": "青金石板",
 	"item.create.minecart_contraption": "装配过的矿车",
+	"item.create.minecart_coupling": "UNLOCALIZED: Minecart Coupling",
 	"item.create.polished_rose_quartz": "磨制玫瑰石英",
 	"item.create.powdered_obsidian": "黑曜石粉末",
 	"item.create.propeller": "扇叶",

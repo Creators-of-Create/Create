@@ -94,7 +94,13 @@ public class AllBlockPartials {
 		FLAG_LONG_IN = get("mechanical_arm/flag/long_in"), FLAG_LONG_OUT = get("mechanical_arm/flag/long_out"),
 
 		MECHANICAL_PUMP_ARROW = get("mechanical_pump/arrow"), MECHANICAL_PUMP_COG = get("mechanical_pump/cog"),
-		FLUID_PIPE_CASING = get("fluid_pipe/casing");
+		FLUID_PIPE_CASING = get("fluid_pipe/casing"),
+		
+		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
+		COUPLING_RING = getEntity("minecart_coupling/ring"),
+		COUPLING_CONNECTOR = getEntity("minecart_coupling/connector")
+		
+		;
 
 	public static final Map<Direction, AllBlockPartials> PIPE_RIMS = map();
 	public static final Map<HeatLevel, AllBlockPartials> BLAZES = map();
@@ -124,6 +130,13 @@ public class AllBlockPartials {
 		return new HashMap<>();
 	}
 
+	private static AllBlockPartials getEntity(String path) {
+		AllBlockPartials partials = new AllBlockPartials();
+		partials.modelLocation = new ResourceLocation(Create.ID, "entity/" + path);
+		all.add(partials);
+		return partials;
+	}
+	
 	private static AllBlockPartials get(String path) {
 		AllBlockPartials partials = new AllBlockPartials();
 		partials.modelLocation = new ResourceLocation(Create.ID, "block/" + path);

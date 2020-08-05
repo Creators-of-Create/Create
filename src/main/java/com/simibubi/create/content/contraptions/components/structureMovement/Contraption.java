@@ -234,7 +234,7 @@ public abstract class Contraption {
 			return true;
 		if (!BlockMovementTraits.movementNecessary(world, pos))
 			return true;
-		if (!BlockMovementTraits.movementAllowed(world, pos))
+		if (!movementAllowed(world, pos))
 			return false;
 		BlockState state = world.getBlockState(pos);
 		if (isChassis(state) && !moveChassis(world, pos, forcedDirection, frontier, visited))
@@ -344,7 +344,7 @@ public abstract class Contraption {
 			BlockState blockState = world.getBlockState(offsetPos);
 			if (isAnchoringBlockAt(offsetPos))
 				continue;
-			if (!BlockMovementTraits.movementAllowed(world, offsetPos)) {
+			if (!movementAllowed(world, offsetPos)) {
 				if (offset == forcedDirection && isSlimeBlock)
 					return false;
 				continue;
@@ -365,6 +365,10 @@ public abstract class Contraption {
 
 		add(pos, capture(world, pos));
 		return blocks.size() <= AllConfigs.SERVER.kinetics.maxBlocksMoved.get();
+	}
+
+	protected boolean movementAllowed(World world, BlockPos pos) {
+		return BlockMovementTraits.movementAllowed(world, pos);
 	}
 
 	protected boolean isAnchoringBlockAt(BlockPos pos) {
