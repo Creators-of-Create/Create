@@ -595,8 +595,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	@Override
 	protected void registerData() {
 		this.dataManager.register(STALLED, false);
-		this.dataManager.register(COUPLING, null);
-		this.dataManager.register(COUPLED_CART, null);
+		this.dataManager.register(COUPLING, Optional.empty());
+		this.dataManager.register(COUPLED_CART, Optional.empty());
 	}
 
 	@Override
