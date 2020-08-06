@@ -123,7 +123,7 @@ public class MountedContraption extends Contraption {
 
 	@Override
 	protected boolean customBlockRemoval(IWorld world, BlockPos pos, BlockState state) {
-		return pos.equals(anchor);
+		return AllBlocks.MINECART_ANCHOR.has(state);
 	}
 
 }

@@ -13,9 +13,7 @@ import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
-import net.minecraft.entity.item.minecart.ContainerMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Util;
@@ -49,24 +47,24 @@ public class MinecartSim2020 {
 		});
 
 	public static Vec3d predictMotionOf(AbstractMinecartEntity cart) {
-
 		if (cart instanceof FurnaceMinecartEntity) {
 			return cart.getPositionVec()
 				.subtract(cart.lastTickPosX, cart.lastTickPosY, cart.lastTickPosZ);
 		}
-		if (cart instanceof ContainerMinecartEntity) {
-			ContainerMinecartEntity containerCart = (ContainerMinecartEntity) cart;
-			float f = 0.98F;
-			if (containerCart.isEmpty())
-				return cart.getMotion()
-					.mul(f, 0.0D, f);
-			int i = 15 - Container.calcRedstoneFromInventory(containerCart);
-			f += (float) i * 0.001F;
-			return cart.getMotion()
-				.mul(f, 0.0D, f);
-		}
-		return cart.getMotion()
-			.scale(cart.isBeingRidden() ? 0.997D : 0.96D);
+		return cart.getMotion().scale(1.03f);
+//		if (cart instanceof ContainerMinecartEntity) {
+//			ContainerMinecartEntity containerCart = (ContainerMinecartEntity) cart;
+//			float f = 0.98F;
+//			if (containerCart.isEmpty())
+//				return cart.getMotion()
+//					.mul(f, 0.0D, f);
+//			int i = 15 - Container.calcRedstoneFromInventory(containerCart);
+//			f += (float) i * 0.001F;
+//			return cart.getMotion()
+//				.mul(f, 0.0D, f);
+//		}
+//		return cart.getMotion()
+//			.scale(cart.isBeingRidden() ? 0.997D : 0.96D);
 	}
 
 	public static boolean canAddMotion(AbstractMinecartEntity c) {

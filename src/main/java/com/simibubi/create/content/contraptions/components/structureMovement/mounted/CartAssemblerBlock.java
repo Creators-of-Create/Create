@@ -46,6 +46,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -212,12 +213,24 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		float initialAngle = facing.getHorizontalAngle();
 
 		withTileEntityDo(world, pos, te -> contraption.rotationMode = CartMovementMode.values()[te.movementMode.value]);
+
 		boolean couplingFound = contraption.connectedCart != null;
-		if (couplingFound)
+		if (couplingFound) {
 			MinecartCouplingHandler.connectCarts(null, world, cart.getEntityId(),
 				contraption.connectedCart.getEntityId());
-		ContraptionEntity entity =
-			ContraptionEntity.createMounted(world, contraption, initialAngle, facing, couplingFound);
+			Vec3d diff = contraption.connectedCart.getPositionVec()
+				.subtract(cart.getPositionVec());
+			initialAngle = Direction.fromAngle(MathHelper.atan2(diff.z, diff.x) * 180 / Math.PI)
+				.getHorizontalAngle();
+		}
+
+		ContraptionEntity entity = ContraptionEntity.createMounted(world, contraption, initialAngle, facing);
+
+		if (couplingFound) {
+			entity.setCouplingId(cart.getUniqueID());
+			entity.setCoupledCart(contraption.connectedCart.getUniqueID());
+		}
+
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		world.addEntity(entity);
 		entity.startRiding(cart);

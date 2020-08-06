@@ -159,8 +159,7 @@ public class MinecartContraptionItem extends Item {
 			ContraptionEntity contraption;
 
 			if (newFacing != null)
-				contraption =
-					ContraptionEntity.createMounted(world, mountedContraption, initialAngle, newFacing, false);
+				contraption = ContraptionEntity.createMounted(world, mountedContraption, initialAngle, newFacing);
 			else
 				contraption = ContraptionEntity.createMounted(world, mountedContraption, initialAngle);
 

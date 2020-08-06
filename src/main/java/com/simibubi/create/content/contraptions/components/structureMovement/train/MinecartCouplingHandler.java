@@ -12,9 +12,11 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingSerializer.CouplingData;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -217,13 +219,13 @@ public class MinecartCouplingHandler {
 	@OnlyIn(Dist.CLIENT)
 	public static void render(MatrixStack ms, IRenderTypeBuffer buffer) {
 		ClientWorld world = Minecraft.getInstance().world;
-		if (world == null) 
+		if (world == null)
 			return;
 		loadedCouplings.get(world)
 			.values()
 			.forEach(c -> MinecartCouplingRenderer.renderCoupling(ms, buffer, c));
 	}
-	
+
 	public static void tick(World world) {
 		initQueuedCarts(world);
 		removeUnloadedCouplings(world);
@@ -367,7 +369,7 @@ public class MinecartCouplingHandler {
 		train.flip(world);
 		map.put(train.getId(), train);
 	}
-	
+
 	public static MinecartCoupling getCoupling(World world, UUID id) {
 		Map<UUID, MinecartCoupling> map = loadedCouplings.get(world);
 		return map.get(id);
@@ -376,6 +378,25 @@ public class MinecartCouplingHandler {
 	public static void flipCoupling(World world, MinecartCoupling coupling) {
 		Map<UUID, MinecartCoupling> map = loadedCouplings.get(world);
 		map.remove(coupling.getId());
+
+		if (coupling.areBothEndsPresent()) {
+			Couple<AbstractMinecartEntity> carts = coupling.asCouple();
+			Couple<UUID> ids = carts.map(Entity::getUniqueID);
+			carts.map(c -> c.isBeingRidden() ? c.getPassengers()
+				.get(0) : null)
+				.map(c -> c instanceof ContraptionEntity ? (ContraptionEntity) c : null)
+				.forEachWithContext((contraption, current) -> {
+					if (contraption == null || contraption.getCouplingId() == null)
+						return;
+					boolean switchTo = contraption.getCouplingId()
+						.equals(ids.get(current)) ? !current : current;
+					if (!carts.get(switchTo).getUniqueID().equals(contraption.getCoupledCart()))
+						return;
+					contraption.setCouplingId(ids.get(switchTo));
+					contraption.setCoupledCart(ids.get(!switchTo));
+				});
+		}
+
 		coupling.flip();
 		map.put(coupling.getId(), coupling);
 	}
