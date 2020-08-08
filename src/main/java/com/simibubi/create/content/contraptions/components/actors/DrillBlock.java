@@ -3,8 +3,6 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.Block;
@@ -25,9 +23,12 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class DrillBlock extends DirectionalKineticBlock implements IPortableBlock, ITE<DrillTileEntity> {
+import javax.annotation.ParametersAreNonnullByDefault;
+import mcp.MethodsReturnNonnullByDefault;
 
-	public static MovementBehaviour MOVEMENT = new DrillMovementBehaviour();
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTileEntity> {
 	public static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
 
 	public DrillBlock(Properties properties) {
@@ -81,11 +82,6 @@ public class DrillBlock extends DirectionalKineticBlock implements IPortableBloc
 	@Override
 	public PushReaction getPushReaction(BlockState state) {
 		return PushReaction.NORMAL;
-	}
-
-	@Override
-	public MovementBehaviour getMovementBehaviour() {
-		return MOVEMENT;
 	}
 
 	@Override

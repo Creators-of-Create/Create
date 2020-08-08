@@ -12,10 +12,16 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
+import com.simibubi.create.content.contraptions.components.actors.DrillMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
+import com.simibubi.create.content.contraptions.components.actors.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
+import com.simibubi.create.content.contraptions.components.actors.PloughMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
+import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
+import com.simibubi.create.content.contraptions.components.actors.SeatMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.actors.StorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
@@ -23,6 +29,7 @@ import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
@@ -98,6 +105,7 @@ import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterGenerator
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
 import com.simibubi.create.content.logistics.block.extractor.ExtractorBlock;
+import com.simibubi.create.content.logistics.block.extractor.ExtractorMovementBehaviour;
 import com.simibubi.create.content.logistics.block.extractor.LinkedExtractorBlock;
 import com.simibubi.create.content.logistics.block.extractor.VerticalExtractorGenerator;
 import com.simibubi.create.content.logistics.block.funnel.AndesiteBeltFunnelBlock;
@@ -114,6 +122,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
 import com.simibubi.create.content.logistics.block.packager.PackagerBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
+import com.simibubi.create.content.logistics.block.redstone.ContactMovementBehaviour;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
@@ -605,6 +614,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(StressConfigDefaults.setImpact(4.0))
+		.onRegister(AllMovementBehaviours.addMovementBehaviour(new DrillMovementBehaviour()))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -613,6 +623,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.blockstate(new SawGenerator()::generate)
 		.transform(StressConfigDefaults.setImpact(4.0))
+		.onRegister(AllMovementBehaviours.addMovementBehaviour(new SawMovementBehaviour()))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.item()
 		.model((c, p) -> p.blockItem(() -> c.getEntry()
@@ -624,6 +635,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.blockstate(BlockStateGen.directionalAxisBlockProvider())
 		.transform(StressConfigDefaults.setImpact(4.0))
+		.onRegister(AllMovementBehaviours.addMovementBehaviour(new DeployerMovementBehaviour()))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -631,6 +643,7 @@ public class AllBlocks {
 	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_STORAGE_INTERFACE =
 		REGISTRATE.block("portable_storage_interface", PortableStorageInterfaceBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.onRegister(AllMovementBehaviours.addMovementBehaviour(new StorageInterfaceMovement()))
 			.blockstate(BlockStateGen.directionalBlockProvider(false))
 			.simpleItem()
 			.register();
@@ -638,6 +651,7 @@ public class AllBlocks {
 	public static final BlockEntry<HarvesterBlock> MECHANICAL_HARVESTER =
 		REGISTRATE.block("mechanical_harvester", HarvesterBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.onRegister(AllMovementBehaviours.addMovementBehaviour(new HarvesterMovementBehaviour()))
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.item()
@@ -647,6 +661,7 @@ public class AllBlocks {
 	public static final BlockEntry<PloughBlock> MECHANICAL_PLOUGH =
 		REGISTRATE.block("mechanical_plough", PloughBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.onRegister(AllMovementBehaviours.addMovementBehaviour(new PloughMovementBehaviour()))
 			.blockstate(BlockStateGen.horizontalBlockProvider(false))
 			.simpleItem()
 			.register();
@@ -656,6 +671,7 @@ public class AllBlocks {
 			String colourName = colour.getName();
 			REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
 				.initialProperties(SharedProperties::wooden)
+				.onRegister(AllMovementBehaviours.addMovementBehaviour(new SeatMovementBehaviour()))
 				.blockstate((c, p) -> {
 					p.simpleBlock(c.get(), p.models()
 						.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
@@ -812,6 +828,7 @@ public class AllBlocks {
 	public static final BlockEntry<RedstoneContactBlock> REDSTONE_CONTACT =
 		REGISTRATE.block("redstone_contact", RedstoneContactBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.onRegister(AllMovementBehaviours.addMovementBehaviour(new ContactMovementBehaviour()))
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
 			.item()
 			.transform(customItemModel("_", "block"))
@@ -878,6 +895,7 @@ public class AllBlocks {
 	public static final BlockEntry<ExtractorBlock> EXTRACTOR = REGISTRATE.block("extractor", ExtractorBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.tag(AllBlockTags.BRITTLE.tag)
+		.onRegister(AllMovementBehaviours.addMovementBehaviour(new ExtractorMovementBehaviour()))
 		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, c.getName() + "/horizontal")))
 		.item()
 		.transform(customItemModel("_", "horizontal"))

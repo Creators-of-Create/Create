@@ -3,9 +3,6 @@ package com.simibubi.create.content.contraptions.components.saw;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
-import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -32,11 +29,15 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity>, IPortableBlock {
+import javax.annotation.ParametersAreNonnullByDefault;
+import mcp.MethodsReturnNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity> {
 
 	public static final BooleanProperty RUNNING = BooleanProperty.create("running");
 	public static DamageSource damageSourceSaw = new DamageSource("create.saw").setDamageBypassesArmor();
-	public static MovementBehaviour MOVEMENT = new SawMovementBehaviour();
 
 	public SawBlock(Properties properties) {
 		super(properties);
@@ -125,11 +126,6 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
 		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
       		worldIn.removeTileEntity(pos);
-	}
-
-	@Override
-	public MovementBehaviour getMovementBehaviour() {
-		return MOVEMENT;
 	}
 
 	@Override

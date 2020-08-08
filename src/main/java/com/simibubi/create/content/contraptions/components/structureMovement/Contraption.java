@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllMovementBehaviours;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -146,9 +147,9 @@ public abstract class Contraption {
 
 	protected static MovementBehaviour getMovement(BlockState state) {
 		Block block = state.getBlock();
-		if (!(block instanceof IPortableBlock))
+		if (!AllMovementBehaviours.hasMovementBehaviour(block))
 			return null;
-		return ((IPortableBlock) block).getMovementBehaviour();
+		return AllMovementBehaviours.getMovementBehaviour(block);
 	}
 
 	public Set<BlockPos> getColliders(World world, Direction movementDirection) {
@@ -439,7 +440,7 @@ public abstract class Contraption {
 		TileEntity te = pair.getValue();
 		if (te != null && MountedStorage.canUseAsStorage(te))
 			storage.put(localPos, new MountedStorage(te));
-		if (captured.state.getBlock() instanceof IPortableBlock)
+		if (AllMovementBehaviours.hasMovementBehaviour(captured.state.getBlock()))
 			actors.add(MutablePair.of(blockInfo, null));
 	}
 
@@ -463,7 +464,7 @@ public abstract class Contraption {
 					else
 						renderOrder.add(0, info.pos);
 					CompoundNBT tag = info.nbt;
-					if (tag == null || block instanceof IPortableBlock)
+					if (tag == null || AllMovementBehaviours.hasMovementBehaviour(block))
 						return;
 
 					tag.putInt("x", info.pos.getX());

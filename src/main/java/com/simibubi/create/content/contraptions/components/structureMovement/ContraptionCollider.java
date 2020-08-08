@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.simibubi.create.AllMovementBehaviours;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -393,11 +394,11 @@ public class ContraptionCollider {
 			BlockState collidedState = world.getBlockState(colliderPos);
 			BlockInfo blockInfo = contraption.blocks.get(pos);
 
-			if (blockInfo.state.getBlock() instanceof IPortableBlock) {
-				IPortableBlock block = (IPortableBlock) blockInfo.state.getBlock();
-				if (block.getMovementBehaviour() instanceof BlockBreakingMovementBehaviour) {
+			if (AllMovementBehaviours.hasMovementBehaviour(blockInfo.state.getBlock())) {
+				MovementBehaviour movementBehaviour = AllMovementBehaviours.getMovementBehaviour(blockInfo.state.getBlock());
+				if (movementBehaviour instanceof BlockBreakingMovementBehaviour) {
 					BlockBreakingMovementBehaviour behaviour =
-						(BlockBreakingMovementBehaviour) block.getMovementBehaviour();
+						(BlockBreakingMovementBehaviour) movementBehaviour;
 					if (!behaviour.canBreak(world, colliderPos, collidedState)
 						&& !collidedState.getCollisionShape(world, pos)
 							.isEmpty()) {

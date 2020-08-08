@@ -3,8 +3,6 @@ package com.simibubi.create.content.logistics.block.redstone;
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 
@@ -21,10 +19,15 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class RedstoneContactBlock extends ProperDirectionalBlock implements IPortableBlock, IWrenchable {
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import mcp.MethodsReturnNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class RedstoneContactBlock extends ProperDirectionalBlock implements IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-	public static MovementBehaviour MOVEMENT = new ContactMovementBehaviour();
 
 	public RedstoneContactBlock(Properties properties) {
 		super(properties);
@@ -94,7 +97,7 @@ public class RedstoneContactBlock extends ProperDirectionalBlock implements IPor
 	}
 
 	@Override
-	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
+	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, @Nullable Direction side) {
 		if (side == null)
 			return true;
 		return state.get(FACING) != side.getOpposite();
@@ -103,11 +106,6 @@ public class RedstoneContactBlock extends ProperDirectionalBlock implements IPor
 	@Override
 	public int getWeakPower(BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		return state.get(POWERED) ? 15 : 0;
-	}
-
-	@Override
-	public MovementBehaviour getMovementBehaviour() {
-		return MOVEMENT;
 	}
 
 }

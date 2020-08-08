@@ -63,6 +63,7 @@ public class Create {
 		AllPaletteBlocks.register();
 		AllEntityTypes.register();
 		AllTileEntities.register();
+		AllMovementBehaviours.register();
 
 		modEventBus.addListener(Create::init);
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipeTypes::register);

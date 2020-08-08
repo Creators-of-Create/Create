@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -18,7 +18,11 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
-public abstract class AttachedActorBlock extends HorizontalBlock implements IPortableBlock, IWrenchable {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public abstract class AttachedActorBlock extends HorizontalBlock implements IWrenchable {
 
 	protected AttachedActorBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
