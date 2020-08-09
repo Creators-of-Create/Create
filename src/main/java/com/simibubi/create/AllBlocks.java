@@ -669,9 +669,10 @@ public class AllBlocks {
 	static {
 		for (DyeColor colour : DyeColor.values()) {
 			String colourName = colour.getName();
+			SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
 			REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
 				.initialProperties(SharedProperties::wooden)
-				.onRegister(AllMovementBehaviours.addMovementBehaviour(new SeatMovementBehaviour()))
+				.onRegister(AllMovementBehaviours.addMovementBehaviour(movementBehaviour))
 				.blockstate((c, p) -> {
 					p.simpleBlock(c.get(), p.models()
 						.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))

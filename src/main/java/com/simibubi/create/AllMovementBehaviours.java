@@ -16,7 +16,9 @@ import net.minecraft.util.ResourceLocation;
 public class AllMovementBehaviours {
 	private static final HashMap<ResourceLocation, MovementBehaviour> movementBehaviours = new HashMap<>();
 
-	private static void addMovementBehaviour(ResourceLocation resourceLocation, MovementBehaviour movementBehaviour) {
+	public static void addMovementBehaviour(ResourceLocation resourceLocation, MovementBehaviour movementBehaviour) {
+		if (movementBehaviours.containsKey(resourceLocation))
+			Create.logger.warn("Movement behaviour for " + resourceLocation.toString() + " was overridden");
 		movementBehaviours.put(resourceLocation, movementBehaviour);
 	}
 
