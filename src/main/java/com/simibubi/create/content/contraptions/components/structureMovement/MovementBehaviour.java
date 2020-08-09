@@ -47,8 +47,15 @@ public abstract class MovementBehaviour {
 
 	}
 
+	public boolean hasSpecialMovementRenderer() {
+		return true;
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {}
 
+	public void onSpeedChanged(MovementContext context, Vec3d oldMotion, Vec3d motion) {
+
+	}
 }

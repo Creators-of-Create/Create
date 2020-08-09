@@ -464,7 +464,8 @@ public abstract class Contraption {
 					else
 						renderOrder.add(0, info.pos);
 					CompoundNBT tag = info.nbt;
-					if (tag == null || AllMovementBehaviours.hasMovementBehaviour(block))
+					MovementBehaviour movementBehaviour = AllMovementBehaviours.getMovementBehaviour(block);
+					if (tag == null || movementBehaviour == null || movementBehaviour.hasSpecialMovementRenderer())
 						return;
 
 					tag.putInt("x", info.pos.getX());
@@ -472,6 +473,8 @@ public abstract class Contraption {
 					tag.putInt("z", info.pos.getZ());
 
 					TileEntity te = TileEntity.create(tag);
+					if (te == null)
+						return;
 					te.setLocation(new WrappedWorld(world) {
 
 						@Override
@@ -816,7 +819,7 @@ public abstract class Contraption {
 	public Map<UUID, Integer> getSeatMapping() {
 		return seatMapping;
 	}
-	
+
 	public void setSeatMapping(Map<UUID, Integer> seatMapping) {
 		this.seatMapping = seatMapping;
 	}

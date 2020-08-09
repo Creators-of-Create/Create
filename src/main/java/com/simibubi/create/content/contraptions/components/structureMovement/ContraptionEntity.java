@@ -459,6 +459,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 			boolean newPosVisited = false;
 			BlockPos gridPosition = new BlockPos(actorPosition);
+			Vec3d oldMotion = context.motion;
 
 			if (!context.stall) {
 				Vec3d previousPosition = context.position;
@@ -500,6 +501,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 					actor.visitNewPosition(context, gridPosition);
 					context.firstMovement = false;
 				}
+				if (!oldMotion.equals(context.motion))
+					actor.onSpeedChanged(context, oldMotion, context.motion);
 				actor.tick(context);
 				contraption.stalled |= context.stall;
 			}
@@ -615,7 +618,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		}
 		if (compound.contains("Controller"))
 			controllerPos = NBTUtil.readBlockPos(compound.getCompound("Controller"));
-		
+
 		if (compound.contains("OnCoupling")) {
 			setCouplingId(NBTUtil.readUniqueId(compound.getCompound("OnCoupling")));
 			setCoupledCart(NBTUtil.readUniqueId(compound.getCompound("CoupledCart")));
@@ -661,7 +664,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		compound.putFloat("InitialAngle", initialAngle);
 		compound.putBoolean("Stalled", isStalled());
 		compound.putBoolean("Initialized", initialized);
-		
+
 		if (getCouplingId() != null) {
 			compound.put("OnCoupling", NBTUtil.writeUniqueId(getCouplingId()));
 			compound.put("CoupledCart", NBTUtil.writeUniqueId(getCoupledCart()));

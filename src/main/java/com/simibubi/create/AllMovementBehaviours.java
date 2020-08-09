@@ -1,8 +1,10 @@
 package com.simibubi.create;
 
+import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -34,5 +36,7 @@ public class AllMovementBehaviours {
 		return b -> addMovementBehaviour(b.getRegistryName(), movementBehaviour);
 	}
 
-	static void register() {}
+	static void register() {
+		addMovementBehaviour(Blocks.BELL.getRegistryName(), new BellMovementBehaviour());
+	}
 }
