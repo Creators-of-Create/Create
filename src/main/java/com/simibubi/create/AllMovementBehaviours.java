@@ -1,20 +1,27 @@
 package com.simibubi.create;
 
+import java.util.HashMap;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.actors.CampfireMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nullable;
-import java.util.HashMap;
-
 public class AllMovementBehaviours {
 	private static final HashMap<ResourceLocation, MovementBehaviour> movementBehaviours = new HashMap<>();
 
-	public static void addMovementBehaviour(ResourceLocation resourceLocation, MovementBehaviour movementBehaviour) {
+	private static void addMovementBehaviour(ResourceLocation resourceLocation, MovementBehaviour movementBehaviour) {
 		movementBehaviours.put(resourceLocation, movementBehaviour);
+	}
+
+	public static void addMovementBehaviour(Block block, MovementBehaviour movementBehaviour) {
+		addMovementBehaviour(block.getRegistryName(), movementBehaviour);
 	}
 
 	@Nullable
@@ -37,6 +44,7 @@ public class AllMovementBehaviours {
 	}
 
 	static void register() {
-		addMovementBehaviour(Blocks.BELL.getRegistryName(), new BellMovementBehaviour());
+		addMovementBehaviour(Blocks.BELL, new BellMovementBehaviour());
+		addMovementBehaviour(Blocks.CAMPFIRE, new CampfireMovementBehaviour());
 	}
 }
