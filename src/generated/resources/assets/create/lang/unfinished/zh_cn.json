@@ -525,7 +525,7 @@
 	"death.attack.create.cuckoo_clock_explosion": "%1$s 被布谷鸟钟炸得粉身碎骨",
 
 	"create.block.deployer.damage_source_name": "二五仔机械臂",
-	"create.block.cart_assembler.invalid": "放置一个矿车装配器到铁轨上",
+	"create.block.cart_assembler.invalid": "请将它放置到铁轨上",
 
 	"create.recipe.crushing": "粉碎",
 	"create.recipe.milling": "研磨",
