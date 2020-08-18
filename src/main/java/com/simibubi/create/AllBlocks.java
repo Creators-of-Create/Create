@@ -3,6 +3,7 @@ package com.simibubi.create;
 import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.BlockStateGen.oxidizedBlockstate;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
@@ -218,14 +219,15 @@ public class AllBlocks {
 			.build()
 			.register();
 
-	public static final BlockEntry<EncasedShaftBlock> ENCASED_SHAFT =
-		REGISTRATE.block("encased_shaft", EncasedShaftBlock::new)
+	public static final BlockEntry<EncasedShaftBlock> ENCASED_SHAFT = REGISTRATE.block("encased_shaft", EncasedShaftBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(Block.Properties::nonOpaque)
 			.transform(StressConfigDefaults.setNoImpact())
-			.blockstate(BlockStateGen.axisBlockProvider(true))
-			.item()
-			.transform(customItemModel())
+			//.blockstate(BlockStateGen.axisBlockProvider(true))
+			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models().getExistingFile(p.modLoc("block/encased_shaft/" + blockState.get(EncasedShaftBlock.CASING).getName()))))
+			.loot((p, b) -> p.registerDropping(b, SHAFT.get()))
+			//.item()
+			//.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<GearboxBlock> GEARBOX = REGISTRATE.block("gearbox", GearboxBlock::new)

@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/encased_shaft/base",
+	"textures": {
+		"casing": "create:block/brass_casing"
+	}
+}
