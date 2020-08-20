@@ -13,19 +13,6 @@
       "x": 90,
       "y": 180
     },
-    "axis=x,casing=copper": {
-      "model": "create:block/encased_shaft/copper",
-      "x": 90,
-      "y": 90
-    },
-    "axis=y,casing=copper": {
-      "model": "create:block/encased_shaft/copper"
-    },
-    "axis=z,casing=copper": {
-      "model": "create:block/encased_shaft/copper",
-      "x": 90,
-      "y": 180
-    },
     "axis=x,casing=brass": {
       "model": "create:block/encased_shaft/brass",
       "x": 90,

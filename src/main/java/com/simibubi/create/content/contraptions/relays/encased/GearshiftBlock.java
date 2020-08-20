@@ -23,7 +23,7 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTileEntity> {
+public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<GearshiftTileEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -46,7 +46,7 @@ public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTi
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return super.getStateForPlacement(context).with(POWERED,
-				Boolean.valueOf(context.getWorld().isBlockPowered(context.getPos())));
+				context.getWorld().isBlockPowered(context.getPos()));
 	}
 
 	@Override
@@ -60,10 +60,6 @@ public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTi
 			detachKinetics(worldIn, pos, true);
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
 		}
-	}
-
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return super.hasShaftTowards(world, pos, state, face);
 	}
 
 	@Override
@@ -90,5 +86,4 @@ public class GearshiftBlock extends EncasedShaftBlock implements ITE<GearshiftTi
 		KineticTileEntity kte = (KineticTileEntity) te;
 		RotationPropagator.handleAdded(worldIn, pos, kte);
 	}
-
 }

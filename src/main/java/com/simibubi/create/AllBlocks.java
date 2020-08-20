@@ -226,8 +226,6 @@ public class AllBlocks {
 			//.blockstate(BlockStateGen.axisBlockProvider(true))
 			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models().getExistingFile(p.modLoc("block/encased_shaft/" + blockState.get(EncasedShaftBlock.CASING).getName()))))
 			.loot((p, b) -> p.registerDropping(b, SHAFT.get()))
-			//.item()
-			//.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<GearboxBlock> GEARBOX = REGISTRATE.block("gearbox", GearboxBlock::new)
