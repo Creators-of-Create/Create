@@ -13,7 +13,7 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 	@Override
 	public void draw(int xOffset, int yOffset) {
 		RenderSystem.enableDepthTest();
-		RenderSystem.translatef(xOffset, yOffset, 300);
+		RenderSystem.translatef(xOffset, yOffset, 100);
 		RenderSystem.rotatef(-22.5f, 0, 1, 0);
 		int scale = 22;
 		

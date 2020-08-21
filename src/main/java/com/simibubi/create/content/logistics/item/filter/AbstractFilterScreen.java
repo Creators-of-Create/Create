@@ -11,6 +11,7 @@ import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Opti
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Indicator;
 import com.simibubi.create.foundation.gui.widgets.Indicator.State;
@@ -62,12 +63,18 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		font.drawString(playerInventory.getDisplayName().getFormattedText(), invX + 7, invY + 6, 0x666666);
 		font.drawString(I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 9, 0x5B5037);
 
-		RenderHelper.enableGuiDepthLighting();
+		/*RenderHelper.enableGuiDepthLighting();
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(guiLeft + background.width + 0, guiTop + background.height - 60, 0);
 		RenderSystem.scaled(5, 5, 5);
 		itemRenderer.renderItemIntoGUI(container.filterItem, 0, 0);
-		RenderSystem.popMatrix();
+		RenderSystem.popMatrix();*/
+
+		GuiGameElement.of(container.filterItem)
+				.at(guiLeft + background.width, guiTop +background.height -60)
+				.scale(5)
+				.render();
+
 	}
 
 	@Override

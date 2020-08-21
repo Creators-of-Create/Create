@@ -1,8 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
-import java.util.Vector;
-
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -11,14 +8,15 @@ import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Vector;
+
 public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
-	private final ItemStack renderedItem = new ItemStack(AllBlocks.SEQUENCED_GEARSHIFT.get());
+	private final ItemStack renderedItem = AllBlocks.SEQUENCED_GEARSHIFT.asStack();
 	private final AllGuiTextures background = AllGuiTextures.SEQUENCER;
 
 	private final String title = Lang.translate("gui.sequenced_gearshift.title");
@@ -144,12 +142,10 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		font.drawStringWithShadow(title, guiLeft - 3 + (background.width - font.getStringWidth(title)) / 2, guiTop + 10,
 				hFontColor);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(guiLeft + background.width + 20, guiTop + 50, 0);
 		GuiGameElement.of(renderedItem)
+				.at(guiLeft + background.width + 20, guiTop + 50)
 				.scale(5)
 				.render();
-		RenderSystem.popMatrix();
 	}
 
 	private void label(int x, int y, String text) {

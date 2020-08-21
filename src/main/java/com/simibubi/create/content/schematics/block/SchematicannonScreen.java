@@ -1,20 +1,13 @@
 package com.simibubi.create.content.schematics.block;
 
-import static net.minecraft.util.text.TextFormatting.GRAY;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
-
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket.Option;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Indicator;
 import com.simibubi.create.foundation.gui.widgets.Indicator.State;
@@ -22,14 +15,19 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
+import static net.minecraft.util.text.TextFormatting.GRAY;
 
 public class SchematicannonScreen extends AbstractSimiContainerScreen<SchematicannonContainer> {
 
@@ -59,6 +57,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	private final String optionEnabled = Lang.translate("gui.schematicannon.optionEnabled");
 	private final String optionDisabled = Lang.translate("gui.schematicannon.optionDisabled");
+
+	private final ItemStack renderedItem = AllBlocks.SCHEMATICANNON.asStack();
 
 	public SchematicannonScreen(SchematicannonContainer container, PlayerInventory inventory,
 			ITextComponent p_i51105_3_) {
@@ -211,7 +211,11 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		if (!te.inventory.getStackInSlot(0).isEmpty())
 			renderBlueprintHighlight();
 
-		renderCannon();
+		GuiGameElement.of(renderedItem)
+				.at(guiLeft + 240, guiTop + 120)
+				.scale(5)
+				.render();
+
 
 		font.drawString(title, guiLeft + 80, guiTop + 10, AllGuiTextures.FONT_COLOR);
 
@@ -234,23 +238,6 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		// Rectangle2d r = extraAreas.get(0);
 		// fill(r.getX() + r.getWidth(), r.getY() + r.getHeight(), r.getX(), r.getY(),
 		// 0xd3d3d3d3);
-	}
-
-	protected void renderCannon() {
-		RenderSystem.pushMatrix();
-
-		RenderSystem.enableBlend();
-		RenderSystem.enableRescaleNormal();
-		RenderSystem.enableAlphaTest();
-		RenderHelper.enableGuiDepthLighting();
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-		RenderSystem.translated(guiLeft + 240, guiTop + 120, 200);
-		RenderSystem.scaled(5, 5, 5);
-
-		itemRenderer.renderItemIntoGUI(new ItemStack(AllBlocks.SCHEMATICANNON.get()), 0, 0);
-
-		RenderSystem.popMatrix();
 	}
 
 	protected void renderBlueprintHighlight() {
