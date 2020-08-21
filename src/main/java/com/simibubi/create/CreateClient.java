@@ -68,7 +68,7 @@ public class CreateClient {
 
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();
-		AllTileEntities.registerRenderers();
+		//AllTileEntities.registerRenderers();
 		AllEntityTypes.registerRenderers();
 		getColorHandler().init();
 
