@@ -37,7 +37,7 @@ import mcp.MethodsReturnNonnullByDefault;
 public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity> {
 
 	public static final BooleanProperty RUNNING = BooleanProperty.create("running");
-	public static DamageSource damageSourceSaw = new DamageSource("create.saw").setDamageBypassesArmor();
+	public static DamageSource damageSourceSaw = new DamageSource("create.mechanical_saw").setDamageBypassesArmor();
 
 	public SawBlock(Properties properties) {
 		super(properties);

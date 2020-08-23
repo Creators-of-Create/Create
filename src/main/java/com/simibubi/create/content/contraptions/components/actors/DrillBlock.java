@@ -29,7 +29,7 @@ import mcp.MethodsReturnNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTileEntity> {
-	public static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
+	public static DamageSource damageSourceDrill = new DamageSource("create.mechanical_drill").setDamageBypassesArmor();
 
 	public DrillBlock(Properties properties) {
 		super(properties);
