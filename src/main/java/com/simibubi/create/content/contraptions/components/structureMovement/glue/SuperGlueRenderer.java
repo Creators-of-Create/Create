@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -63,7 +64,9 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		Direction face = entity.getFacingDirection();
 
 		ms.push();
-		AngleHelper.applyRotation(face, ms);
+		MatrixStacker.of(ms)
+			.rotateY(AngleHelper.horizontalAngle(face))
+			.rotateX(AngleHelper.verticalAngle(face));
 		Entry peek = ms.peek();
 
 		Vec3d[][] quads = { quad1, quad2 };
@@ -87,7 +90,7 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		Vec3d diff = new Vec3d(Direction.SOUTH.getDirectionVec());
 		Vec3d extension = diff.normalize()
 			.scale(1 / 32f - 1 / 128f);
-		Vec3d plane = VecHelper.planeByNormal(diff);
+		Vec3d plane = VecHelper.axisAlingedPlaneOf(diff);
 		Axis axis = Direction.getFacingFromVector(diff.x, diff.y, diff.z)
 			.getAxis();
 

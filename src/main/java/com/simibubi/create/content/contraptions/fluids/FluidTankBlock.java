@@ -182,7 +182,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 						return ActionResultType.SUCCESS;
 					}
 
-					controllerTE.sendData();
+					controllerTE.sendDataImmediately();
 					controllerTE.markDirty();
 				}
 			}

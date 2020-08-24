@@ -276,6 +276,7 @@ public class FluidTankConnectivityHandler {
 			}
 		}
 
+		te.fluidCapability.invalidate();
 		if (tryReconnect)
 			formTanks(world, cache == null ? new TankSearchCache() : cache, frontier);
 	}

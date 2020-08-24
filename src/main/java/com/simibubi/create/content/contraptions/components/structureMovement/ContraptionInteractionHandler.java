@@ -1,7 +1,6 @@
+package com.simibubi.create.content.contraptions.components.structureMovement;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.RaycastHelper;

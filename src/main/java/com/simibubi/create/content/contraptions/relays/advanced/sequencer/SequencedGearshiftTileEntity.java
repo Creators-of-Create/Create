@@ -103,21 +103,21 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putInt("InstructionIndex", currentInstruction);
 		compound.putInt("InstructionDuration", currentInstructionDuration);
 		compound.putInt("Timer", timer);
 		compound.put("Instructions", Instruction.serializeAll(instructions));
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		currentInstruction = compound.getInt("InstructionIndex");
 		currentInstructionDuration = compound.getInt("InstructionDuration");
 		timer = compound.getInt("Timer");
 		instructions = Instruction.deserializeAll(compound.getList("Instructions", NBT.TAG_COMPOUND));
-		super.read(compound);
+		super.read(compound, clientPacket);
 	}
 
 	@Override

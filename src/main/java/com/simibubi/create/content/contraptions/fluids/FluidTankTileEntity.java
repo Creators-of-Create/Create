@@ -48,6 +48,10 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	protected int width;
 	protected int height;
 
+	private static final int SYNC_RATE = 8;
+	protected int syncCooldown;
+	protected boolean queuedSync;
+
 	// For rendering purposes only
 	InterpolatedChasingValue fluidLevel;
 
@@ -60,6 +64,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		window = true;
 		height = 1;
 		width = 1;
+		refreshCapability();
 	}
 
 	protected void updateConnectivity() {
@@ -74,6 +79,11 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
+		if (syncCooldown > 0) {
+			syncCooldown--;
+			if (syncCooldown == 0 && queuedSync)
+				sendData();
+		}
 		if (updateConnectivity)
 			updateConnectivity();
 		if (fluidLevel != null)
@@ -96,7 +106,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
 
 		FluidAttributes attributes = newFluidStack.getFluid()
 			.getAttributes();
-		int luminosity = attributes.getLuminosity(newFluidStack) / 2;
+		int luminosity = (int) (attributes.getLuminosity(newFluidStack) / 1.2f);
 		boolean reversed = attributes.isLighterThanAir();
 		int maxY = (int) ((getFillState() * height) + 1);
 
@@ -115,6 +125,11 @@ public class FluidTankTileEntity extends SmartTileEntity {
 					tankAt.setLuminosity(actualLuminosity);
 				}
 			}
+		}
+
+		if (!world.isRemote) {
+			markDirty();
+			sendData();
 		}
 	}
 
@@ -162,6 +177,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
 			getWorld().setBlockState(pos, state, 22);
 		}
 
+		refreshCapability();
 		markDirty();
 		sendData();
 	}
@@ -171,6 +187,23 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		if (te == null)
 			return;
 		te.setWindows(!te.window);
+	}
+
+	public void sendDataImmediately() {
+		syncCooldown = 0;
+		queuedSync = false;
+		sendData();
+	}
+
+	@Override
+	public void sendData() {
+		if (syncCooldown > 0) {
+			queuedSync = true;
+			return;
+		}
+		super.sendData();
+		queuedSync = false;
+		syncCooldown = SYNC_RATE;
 	}
 
 	public void setWindows(boolean window) {
@@ -213,8 +246,16 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		if (controller.equals(this.controller))
 			return;
 		this.controller = controller;
+		refreshCapability();
 		markDirty();
 		sendData();
+	}
+
+	private void refreshCapability() {
+		LazyOptional<IFluidHandler> oldCap = fluidCapability;
+		fluidCapability = LazyOptional.of(() -> isController() ? tankInventory
+			: getControllerTE() != null ? getControllerTE().tankInventory : new FluidTank(0));
+		oldCap.invalidate();
 	}
 
 	public BlockPos getController() {
@@ -236,39 +277,38 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void read(CompoundNBT tag) {
-		super.read(tag);
-		updateConnectivity = tag.contains("Uninitialized");
-		luminosity = tag.getInt("Luminosity");
-		controller = null;
-
-		if (tag.contains("Controller"))
-			controller = NBTUtil.readBlockPos(tag.getCompound("Controller"));
-
-		if (isController()) {
-			window = tag.getBoolean("Window");
-			width = tag.getInt("Size");
-			height = tag.getInt("Height");
-			tankInventory.setCapacity(getTotalTankSize() * getCapacityMultiplier());
-			tankInventory.readFromNBT(tag.getCompound("TankContent"));
-			if (tankInventory.getSpace() < 0)
-				tankInventory.drain(-tankInventory.getSpace(), FluidAction.EXECUTE);
-		}
-
-		if (tag.contains("ForceFluidLevel") || fluidLevel == null)
-			fluidLevel = new InterpolatedChasingValue().start(getFillState())
-				.withSpeed(1 / 2f);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
+		
 		BlockPos controllerBefore = controller;
 		int prevSize = width;
 		int prevHeight = height;
 		int prevLum = luminosity;
+		
+		updateConnectivity = compound.contains("Uninitialized");
+		luminosity = compound.getInt("Luminosity");
+		controller = null;
 
-		super.readClientUpdate(tag);
+		if (compound.contains("Controller"))
+			controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 
+		if (isController()) {
+			window = compound.getBoolean("Window");
+			width = compound.getInt("Size");
+			height = compound.getInt("Height");
+			tankInventory.setCapacity(getTotalTankSize() * getCapacityMultiplier());
+			tankInventory.readFromNBT(compound.getCompound("TankContent"));
+			if (tankInventory.getSpace() < 0)
+				tankInventory.drain(-tankInventory.getSpace(), FluidAction.EXECUTE);
+		}
+
+		if (compound.contains("ForceFluidLevel") || fluidLevel == null)
+			fluidLevel = new InterpolatedChasingValue().start(getFillState())
+				.withSpeed(1 / 2f);
+		
+		if (!clientPacket)
+			return;
+		
 		boolean changeOfController =
 			controllerBefore == null ? controller != null : !controllerBefore.equals(controller);
 		if (changeOfController || prevSize != width || prevHeight != height) {
@@ -279,15 +319,17 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		}
 		if (isController()) {
 			float fillState = getFillState();
-			if (tag.contains("ForceFluidLevel") || fluidLevel == null)
-				fluidLevel = new InterpolatedChasingValue().start(fillState)
-					.withSpeed(1 / 2f);
+			if (compound.contains("ForceFluidLevel") || fluidLevel == null)
+				fluidLevel = new InterpolatedChasingValue().start(fillState);
 			fluidLevel.target(fillState);
 		}
 		if (luminosity != prevLum && hasWorld())
 			world.getChunkProvider()
-				.getLightManager()
-				.checkBlock(pos);
+			.getLightManager()
+			.checkBlock(pos);
+		
+		if (compound.contains("LazySync"))
+			fluidLevel.withSpeed(compound.contains("LazySync") ? 1 / 8f : 1 / 2f);
 	}
 
 	protected float getFillState() {
@@ -295,44 +337,42 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		if (updateConnectivity)
-			tag.putBoolean("Uninitialized", true);
+			compound.putBoolean("Uninitialized", true);
 		if (!isController())
-			tag.put("Controller", NBTUtil.writeBlockPos(controller));
+			compound.put("Controller", NBTUtil.writeBlockPos(controller));
 		if (isController()) {
-			tag.putBoolean("Window", window);
-			tag.put("TankContent", tankInventory.writeToNBT(new CompoundNBT()));
-			tag.putInt("Size", width);
-			tag.putInt("Height", height);
+			compound.putBoolean("Window", window);
+			compound.put("TankContent", tankInventory.writeToNBT(new CompoundNBT()));
+			compound.putInt("Size", width);
+			compound.putInt("Height", height);
 		}
-		tag.putInt("Luminosity", luminosity);
-		return super.write(tag);
-	}
-
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
+		compound.putInt("Luminosity", luminosity);
+		super.write(compound, clientPacket);
+		
+		if (!clientPacket)
+			return;
 		if (forceFluidLevelUpdate)
 			compound.putBoolean("ForceFluidLevel", true);
+		if (queuedSync)
+			compound.putBoolean("LazySync", true);
 		forceFluidLevelUpdate = false;
-		return super.writeToClient(compound);
 	}
 
 	@Nonnull
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			FluidTankTileEntity controller = getControllerTE();
-			if (controller != null)
-				return controller.fluidCapability.cast();
-		}
+		if (!fluidCapability.isPresent())
+			refreshCapability();
+		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) 
+			return fluidCapability.cast();
 		return super.getCapability(cap, side);
 	}
 
 	@Override
 	public void remove() {
 		super.remove();
-		fluidCapability.invalidate();
 	}
 
 	@Override

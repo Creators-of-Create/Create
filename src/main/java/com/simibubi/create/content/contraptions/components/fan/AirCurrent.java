@@ -165,7 +165,7 @@ public class AirCurrent {
 			.get(BlockStateProperties.FACING);
 		pushing = source.getAirFlowDirection() == direction;
 		Vec3d directionVec = new Vec3d(direction.getDirectionVec());
-		Vec3d planeVec = VecHelper.planeByNormal(directionVec);
+		Vec3d planeVec = VecHelper.axisAlingedPlaneOf(directionVec);
 
 		// 4 Rays test for holes in the shapes blocking the flow
 		float offsetDistance = .25f;

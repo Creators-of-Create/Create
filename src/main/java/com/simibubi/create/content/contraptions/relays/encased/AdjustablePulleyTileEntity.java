@@ -17,15 +17,15 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putInt("Signal", signal);
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		signal = compound.getInt("Signal");
-		super.read(compound);
+		super.read(compound, clientPacket);
 	}
 
 	public float getModifier() {

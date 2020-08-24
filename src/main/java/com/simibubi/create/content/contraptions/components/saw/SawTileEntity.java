@@ -94,15 +94,15 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.put("Inventory", inventory.serializeNBT());
 		compound.putInt("RecipeIndex", recipeIndex);
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
-		super.read(compound);
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		recipeIndex = compound.getInt("RecipeIndex");
 	}

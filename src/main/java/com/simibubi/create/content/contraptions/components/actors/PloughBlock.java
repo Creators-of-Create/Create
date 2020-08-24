@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.actors;
 import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;

@@ -277,22 +277,22 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.put("Item", item.serializeNBT());
 		compound.putFloat("ItemPosition", itemPosition.value);
 		compound.putFloat("Pull", pull);
 		compound.putFloat("Push", push);
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		ItemStack previousItem = item;
 		item = ItemStack.read(compound.getCompound("Item"));
 		itemPosition.lastValue = itemPosition.value = compound.getFloat("ItemPosition");
 		pull = compound.getFloat("Pull");
 		push = compound.getFloat("Push");
-		super.read(compound);
+		super.read(compound, clientPacket);
 
 		if (hasWorld() && world.isRemote && !previousItem.equals(item, false) && !item.isEmpty()) {
 			if (world.rand.nextInt(3) != 0)

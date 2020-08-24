@@ -58,7 +58,7 @@ public class BlockClusterOutline extends Outline {
 
 		Vec3d center = VecHelper.getCenterOf(pos);
 		Vec3d offset = new Vec3d(face.getDirectionVec());
-		Vec3d plane = VecHelper.planeByNormal(offset);
+		Vec3d plane = VecHelper.axisAlingedPlaneOf(offset);
 		Axis axis = face.getAxis();
 
 		offset = offset.scale(1 / 2f + 1 / 64d);

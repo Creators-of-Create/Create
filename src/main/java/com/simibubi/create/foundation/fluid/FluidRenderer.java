@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.fluid;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -62,8 +63,9 @@ public class FluidRenderer {
 						.translateBack(center);
 
 				boolean X = side.getAxis() == Axis.X;
+				int darkColor = ColorHelper.mixColors(color, 0xff000011, 1/4f);
 				renderTiledHorizontalFace(X ? xMax : zMax, side, X ? zMin : xMin, yMin, X ? zMax : xMax, yMax, builder,
-					ms, light, color, fluidTexture);
+					ms, light, darkColor, fluidTexture);
 
 				ms.pop();
 				continue;

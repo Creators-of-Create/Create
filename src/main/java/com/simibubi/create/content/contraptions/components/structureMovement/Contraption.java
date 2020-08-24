@@ -797,7 +797,7 @@ public abstract class Contraption {
 
 		Vec3d vec = new Vec3d(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
 			.getDirectionVec());
-		Vec3d planeByNormal = VecHelper.planeByNormal(vec);
+		Vec3d planeByNormal = VecHelper.axisAlingedPlaneOf(vec);
 		Vec3d min = vec.mul(bb.minX, bb.minY, bb.minZ)
 			.add(planeByNormal.scale(-maxDiff));
 		Vec3d max = vec.mul(bb.maxX, bb.maxY, bb.maxZ)

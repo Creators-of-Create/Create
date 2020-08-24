@@ -1,15 +1,24 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SixWayBlock;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.network.DebugPacketSender;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -17,141 +26,210 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.TickPriority;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-
-import javax.annotation.Nullable;
 
 public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
 
-    public FluidPipeBlock(Properties properties) {
-        super(4 / 16f, properties);
-        this.setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
-    }
+	public FluidPipeBlock(Properties properties) {
+		super(4 / 16f, properties);
+		this.setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
+	}
 
-    public static boolean isPipe(BlockState state) {
-        return state.getBlock() instanceof FluidPipeBlock;
-    }
+	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
+	}
 
-    public static boolean isTank(BlockState state, IBlockReader world, BlockPos pos, Direction blockFace) {
-        return state.hasTileEntity() && world.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite()).isPresent();
-    }
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return AllTileEntities.FLUID_PIPE.create();
+	}
 
-    // TODO: more generic pipe connection handling. Ideally without marker interface
-    public static boolean canConnectTo(ILightReader world, BlockPos pos, BlockState neighbour, Direction blockFace) {
-        if (isPipe(neighbour) || isTank(neighbour, world, pos, blockFace))
-            return true;
-        return neighbour.getBlock() instanceof PumpBlock && blockFace.getAxis() == neighbour.get(PumpBlock.FACING)
-                .getAxis();
-    }
+	@Override
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
+		if (blockTypeChanged && !world.isRemote)
+			FluidPropagator.propagateChangedPipe(world, pos, state);
+		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
+			world.removeTileEntity(pos);
+	}
 
-    public static boolean shouldDrawRim(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
-        if (!isPipe(state))
-            return false;
-        if (!state.get(FACING_TO_PROPERTY_MAP.get(direction)))
-            return false;
-        BlockPos offsetPos = pos.offset(direction);
-        BlockState facingState = world.getBlockState(offsetPos);
-        if (facingState.getBlock() instanceof PumpBlock && facingState.get(PumpBlock.FACING)
-                .getAxis() == direction.getAxis())
-            return false;
-        if (!isPipe(facingState))
-            return true;
-        if (!isCornerOrEndPipe(world, pos, state))
-            return false;
-        if (isStraightPipe(world, offsetPos, facingState))
-            return true;
-        if (!shouldDrawCasing(world, pos, state) && shouldDrawCasing(world, offsetPos, facingState))
-            return true;
-        if (isCornerOrEndPipe(world, offsetPos, facingState))
-            return direction.getAxisDirection() == AxisDirection.POSITIVE;
-        return false;
-    }
+	@Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (world.isRemote)
+			return;
+		if (state != oldState)
+			world.getPendingBlockTicks()
+				.scheduleTick(pos, this, 1, TickPriority.HIGH);
+	}
 
-    public static boolean isCornerOrEndPipe(ILightReader world, BlockPos pos, BlockState state) {
-        return isPipe(state) && !isStraightPipe(world, pos, state) && !shouldDrawCasing(world, pos, state);
-    }
+	@Override
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
+		boolean isMoving) {
+		DebugPacketSender.func_218806_a(world, pos);
+		if (world.isRemote)
+			return;
+		if (otherBlock instanceof FluidPipeBlock)
+			return;
+		if (otherBlock instanceof PumpBlock)
+			return;
+		if (otherBlock instanceof FlowingFluidBlock)
+			return;
+		if (!isStraightPipe(state))
+			return;
+		for (Direction d : Iterate.directions) {
+			if (!pos.offset(d)
+				.equals(neighborPos))
+				continue;
+			if (!isOpenAt(state, d))
+				return;
+			world.getPendingBlockTicks()
+				.scheduleTick(pos, this, 1, TickPriority.HIGH);
+		}
+	}
 
-    public static boolean isStraightPipe(ILightReader world, BlockPos pos, BlockState state) {
-        if (!isPipe(state))
-            return false;
-        boolean axisFound = false;
-        for (Axis axis : Iterate.axes) {
-            Direction d1 = Direction.getFacingFromAxis(AxisDirection.NEGATIVE, axis);
-            Direction d2 = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-            if (state.get(FACING_TO_PROPERTY_MAP.get(d1)) && state.get(FACING_TO_PROPERTY_MAP.get(d2)))
-                if (axisFound)
-                    return false;
-                else
-                    axisFound = true;
-        }
-        return axisFound;
-    }
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+		FluidPropagator.propagateChangedPipe(world, pos, state);
+	}
 
-    public static boolean shouldDrawCasing(ILightReader world, BlockPos pos, BlockState state) {
-        if (!isPipe(state))
-            return false;
-        for (Axis axis : Iterate.axes) {
-            int connections = 0;
-            for (Direction direction : Iterate.directions)
-                if (direction.getAxis() != axis && state.get(FACING_TO_PROPERTY_MAP.get(direction)))
-                    connections++;
-            if (connections > 2)
-                return true;
-        }
-        return false;
-    }
+	public static boolean isPipe(BlockState state) {
+		return state.getBlock() instanceof FluidPipeBlock;
+	}
 
-    @Override
-    protected void fillStateContainer(Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN, BlockStateProperties.WATERLOGGED);
-        super.fillStateContainer(builder);
-    }
+	public static boolean hasFluidCapability(BlockState state, IBlockReader world, BlockPos pos, Direction blockFace) {
+		return state.hasTileEntity() && world.getTileEntity(pos)
+			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite())
+			.isPresent();
+	}
 
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
-        return updateBlockState(getDefaultState(), context.getNearestLookingDirection(), null, context.getWorld(),
-                context.getPos()).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
-    }
+	public static boolean canConnectTo(ILightReader world, BlockPos pos, BlockState neighbour, Direction blockFace) {
+		if (isPipe(neighbour) || hasFluidCapability(neighbour, world, pos, blockFace))
+			return true;
+		// TODO: more generic pipe connection handling.
+		return neighbour.getBlock() instanceof PumpBlock && blockFace.getAxis() == neighbour.get(PumpBlock.FACING)
+			.getAxis();
+	}
 
-    @Override
-    public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
-                                          IWorld world, BlockPos pos, BlockPos neighbourPos) {
-        if (state.get(BlockStateProperties.WATERLOGGED)) {
-            world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
-        return updateBlockState(state, direction, direction.getOpposite(), world, pos);
-    }
+	public static boolean shouldDrawRim(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
+		if (!isPipe(state))
+			return false;
+		if (!isOpenAt(state, direction))
+			return false;
+		BlockPos offsetPos = pos.offset(direction);
+		BlockState facingState = world.getBlockState(offsetPos);
+		if (facingState.getBlock() instanceof PumpBlock && facingState.get(PumpBlock.FACING)
+			.getAxis() == direction.getAxis())
+			return false;
+		if (!isPipe(facingState))
+			return true;
+		if (!isCornerOrEndPipe(world, pos, state))
+			return false;
+		if (isStraightPipe(facingState))
+			return true;
+		if (!shouldDrawCasing(world, pos, state) && shouldDrawCasing(world, offsetPos, facingState))
+			return true;
+		if (isCornerOrEndPipe(world, offsetPos, facingState))
+			return direction.getAxisDirection() == AxisDirection.POSITIVE;
+		return false;
+	}
 
-    public BlockState updateBlockState(BlockState state, Direction preferredDirection, @Nullable Direction ignore,
-                                       ILightReader world, BlockPos pos) {
-        // Update sides that are not ignored
-        for (Direction d : Iterate.directions)
-            if (d != ignore)
-                state = state.with(FACING_TO_PROPERTY_MAP.get(d),
-                        canConnectTo(world, pos.offset(d), world.getBlockState(pos.offset(d)), d.getOpposite()));
+	private static boolean isOpenAt(BlockState state, Direction direction) {
+		return state.get(FACING_TO_PROPERTY_MAP.get(direction));
+	}
 
-        // See if it has enough connections
-        Direction connectedDirection = null;
-        for (Direction d : Iterate.directions) {
-            if (state.get(FACING_TO_PROPERTY_MAP.get(d))) {
-                if (connectedDirection != null)
-                    return state;
-                connectedDirection = d;
-            }
-        }
+	public static boolean isCornerOrEndPipe(ILightReader world, BlockPos pos, BlockState state) {
+		return isPipe(state) && !isStraightPipe(state) && !shouldDrawCasing(world, pos, state);
+	}
 
-        // Add opposite end if only one connection
-        if (connectedDirection != null)
-            return state.with(FACING_TO_PROPERTY_MAP.get(connectedDirection.getOpposite()), true);
+	public static boolean isStraightPipe(BlockState state) {
+		if (!isPipe(state))
+			return false;
+		boolean axisFound = false;
+		for (Axis axis : Iterate.axes) {
+			Direction d1 = Direction.getFacingFromAxis(AxisDirection.NEGATIVE, axis);
+			Direction d2 = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
+			if (isOpenAt(state, d1) && isOpenAt(state, d2))
+				if (axisFound)
+					return false;
+				else
+					axisFound = true;
+		}
+		return axisFound;
+	}
 
-        // Use preferred
-        return state.with(FACING_TO_PROPERTY_MAP.get(preferredDirection), true)
-                .with(FACING_TO_PROPERTY_MAP.get(preferredDirection.getOpposite()), true);
-    }
+	public static boolean shouldDrawCasing(ILightReader world, BlockPos pos, BlockState state) {
+		if (!isPipe(state))
+			return false;
+		for (Axis axis : Iterate.axes) {
+			int connections = 0;
+			for (Direction direction : Iterate.directions)
+				if (direction.getAxis() != axis && isOpenAt(state, direction))
+					connections++;
+			if (connections > 2)
+				return true;
+		}
+		return false;
+	}
 
-    @Override
-    public IFluidState getFluidState(BlockState state) {
-        return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : Fluids.EMPTY.getDefaultState();
-    }
+	@Override
+	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+		builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN, BlockStateProperties.WATERLOGGED);
+		super.fillStateContainer(builder);
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		IFluidState ifluidstate = context.getWorld()
+			.getFluidState(context.getPos());
+		return updateBlockState(getDefaultState(), context.getNearestLookingDirection(), null, context.getWorld(),
+			context.getPos()).with(BlockStateProperties.WATERLOGGED,
+				Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+	}
+
+	@Override
+	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
+		IWorld world, BlockPos pos, BlockPos neighbourPos) {
+		if (state.get(BlockStateProperties.WATERLOGGED)) {
+			world.getPendingFluidTicks()
+				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
+		return updateBlockState(state, direction, direction.getOpposite(), world, pos);
+	}
+
+	public BlockState updateBlockState(BlockState state, Direction preferredDirection, @Nullable Direction ignore,
+		ILightReader world, BlockPos pos) {
+		// Update sides that are not ignored
+		for (Direction d : Iterate.directions)
+			if (d != ignore)
+				state = state.with(FACING_TO_PROPERTY_MAP.get(d),
+					canConnectTo(world, pos.offset(d), world.getBlockState(pos.offset(d)), d.getOpposite()));
+
+		// See if it has enough connections
+		Direction connectedDirection = null;
+		for (Direction d : Iterate.directions) {
+			if (isOpenAt(state, d)) {
+				if (connectedDirection != null)
+					return state;
+				connectedDirection = d;
+			}
+		}
+
+		// Add opposite end if only one connection
+		if (connectedDirection != null)
+			return state.with(FACING_TO_PROPERTY_MAP.get(connectedDirection.getOpposite()), true);
+
+		// Use preferred
+		return state.with(FACING_TO_PROPERTY_MAP.get(preferredDirection), true)
+			.with(FACING_TO_PROPERTY_MAP.get(preferredDirection.getOpposite()), true);
+	}
+
+	@Override
+	public IFluidState getFluidState(BlockState state) {
+		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
+			: Fluids.EMPTY.getDefaultState();
+	}
 }

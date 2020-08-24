@@ -93,20 +93,20 @@ public class DepotTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		if (heldItem != null)
 			compound.put("HeldItem", heldItem.serializeNBT());
 		compound.put("OutputBuffer", processingOutputBuffer.serializeNBT());
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		heldItem = null;
 		if (compound.contains("HeldItem"))
 			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"));
 		processingOutputBuffer.deserializeNBT(compound.getCompound("OutputBuffer"));
-		super.read(compound);
+		super.read(compound, clientPacket);
 	}
 
 	@Override

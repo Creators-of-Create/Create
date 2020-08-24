@@ -52,38 +52,18 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		ListNBT flapsNBT = new ListNBT();
 		for (Direction direction : flaps.keySet())
 			flapsNBT.add(IntNBT.of(direction.getIndex()));
 		compound.put("Flaps", flapsNBT);
-		return super.write(compound);
-	}
+		super.write(compound, clientPacket);
 
-	@Override
-	public void read(CompoundNBT compound) {
-		Set<Direction> newFlaps = new HashSet<>(6);
-		ListNBT flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
-		for (INBT inbt : flapsNBT)
-			if (inbt instanceof IntNBT)
-				newFlaps.add(Direction.byIndex(((IntNBT) inbt).getInt()));
-		
-		for (Direction d : Iterate.directions) 
-			if (!newFlaps.contains(d))
-				flaps.remove(d);
-			else if (!flaps.containsKey(d))
-				flaps.put(d, new InterpolatedChasingValue().start(.25f)
-					.target(0)
-					.withSpeed(.05f));
+		if (!clientPacket)
+			return;
 
-		super.read(compound);
-	}
-
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT tag) {
-		CompoundNBT writeToClient = super.writeToClient(tag);
+		flapsNBT = new ListNBT();
 		if (!flapsToSend.isEmpty()) {
-			ListNBT flapsNBT = new ListNBT();
 			for (Pair<Direction, Boolean> pair : flapsToSend) {
 				CompoundNBT flap = new CompoundNBT();
 				flap.putInt("Flap", pair.getKey()
@@ -91,22 +71,38 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 				flap.putBoolean("FlapInward", pair.getValue());
 				flapsNBT.add(flap);
 			}
-			writeToClient.put("TriggerFlaps", flapsNBT);
+			compound.put("TriggerFlaps", flapsNBT);
 			flapsToSend.clear();
 		}
-		return writeToClient;
 	}
 
 	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		super.readClientUpdate(tag);
-		if (tag.contains("TriggerFlaps")) {
-			ListNBT flapsNBT = tag.getList("TriggerFlaps", NBT.TAG_COMPOUND);
-			for (INBT inbt : flapsNBT) {
-				CompoundNBT flap = (CompoundNBT) inbt;
-				Direction side = Direction.byIndex(flap.getInt("Flap"));
-				flap(side, flap.getBoolean("FlapInward"));
-			}
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		Set<Direction> newFlaps = new HashSet<>(6);
+		ListNBT flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
+		for (INBT inbt : flapsNBT)
+			if (inbt instanceof IntNBT)
+				newFlaps.add(Direction.byIndex(((IntNBT) inbt).getInt()));
+
+		for (Direction d : Iterate.directions)
+			if (!newFlaps.contains(d))
+				flaps.remove(d);
+			else if (!flaps.containsKey(d))
+				flaps.put(d, new InterpolatedChasingValue().start(.25f)
+					.target(0)
+					.withSpeed(.05f));
+
+		super.read(compound, clientPacket);
+
+		if (!clientPacket)
+			return;
+		if (!compound.contains("TriggerFlaps"))
+			return;
+		flapsNBT = compound.getList("TriggerFlaps", NBT.TAG_COMPOUND);
+		for (INBT inbt : flapsNBT) {
+			CompoundNBT flap = (CompoundNBT) inbt;
+			Direction side = Direction.byIndex(flap.getInt("Flap"));
+			flap(side, flap.getBoolean("FlapInward"));
 		}
 	}
 
@@ -131,12 +127,12 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 				if (!positive && shape == Shape.T_RIGHT)
 					continue;
 			}
-			
+
 			BlockState funnelState = world.getBlockState(getPos().offset(direction));
-			if (funnelState.getBlock() instanceof BeltFunnelBlock) 
+			if (funnelState.getBlock() instanceof BeltFunnelBlock)
 				if (funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) == direction.getOpposite())
 					continue;
-				
+
 			flaps.put(direction, new InterpolatedChasingValue().start(.25f)
 				.target(0)
 				.withSpeed(.05f));

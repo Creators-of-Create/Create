@@ -61,7 +61,7 @@ public abstract class Outline {
 		float lineWidth = params.getLineWidth();
 		Vec3d extension = diff.normalize()
 			.scale(lineWidth / 2);
-		Vec3d plane = VecHelper.planeByNormal(diff);
+		Vec3d plane = VecHelper.axisAlingedPlaneOf(diff);
 		Direction face = Direction.getFacingFromVector(diff.x, diff.y, diff.z);
 		Axis axis = face.getAxis();
 

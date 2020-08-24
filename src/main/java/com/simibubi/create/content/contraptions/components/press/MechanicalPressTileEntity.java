@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.entity.Entity;
@@ -25,7 +26,6 @@ import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
@@ -85,37 +85,30 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		running = compound.getBoolean("Running");
 		mode = Mode.values()[compound.getInt("Mode")];
 		finished = compound.getBoolean("Finished");
 		runningTicks = compound.getInt("Ticks");
-		super.read(compound);
+		super.read(compound, clientPacket);
+
+		if (clientPacket) {
+			NBTHelper.iterateCompoundList(compound.getList("ParticleItems", NBT.TAG_COMPOUND),
+				c -> pressedItems.add(ItemStack.read(c)));
+			spawnParticles();
+		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putInt("Mode", mode.ordinal());
 		compound.putBoolean("Finished", finished);
 		compound.putInt("Ticks", runningTicks);
-		return super.write(compound);
-	}
+		super.write(compound, clientPacket);
 
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT tag) {
-		ListNBT particleItems = new ListNBT();
-		pressedItems.forEach(stack -> particleItems.add(stack.serializeNBT()));
-		tag.put("ParticleItems", particleItems);
-		return super.writeToClient(tag);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		super.readClientUpdate(tag);
-		ListNBT particleItems = tag.getList("ParticleItems", NBT.TAG_COMPOUND);
-		particleItems.forEach(nbt -> pressedItems.add(ItemStack.read((CompoundNBT) nbt)));
-		spawnParticles();
+		if (clientPacket)
+			compound.put("ParticleItems", NBTHelper.writeCompoundList(pressedItems, ItemStack::serializeNBT));
 	}
 
 	@Override
@@ -301,7 +294,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 		CombinedItemFluidList remaining = new CombinedItemFluidList();
 		inputs.forEachItemStack(stack -> remaining.add(stack.copy()));
-		basinFluidInv.ifPresent(fluidInv -> ((CombinedFluidHandler) fluidInv).forEachTank(fluidStack -> remaining.add(fluidStack.copy())));
+		basinFluidInv.ifPresent(
+			fluidInv -> ((CombinedFluidHandler) fluidInv).forEachTank(fluidStack -> remaining.add(fluidStack.copy())));
 
 		Ingredients: for (Ingredient ingredient : ingredients) {
 			for (ItemStack stack : remaining.getItemStacks()) {

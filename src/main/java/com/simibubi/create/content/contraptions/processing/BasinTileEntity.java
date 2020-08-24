@@ -118,8 +118,8 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
-		super.read(compound);
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		inputItemInventory.deserializeNBT(compound.getCompound("InputItems"));
 		outputItemInventory.deserializeNBT(compound.getCompound("OutputItems"));
 		if (compound.contains("fluids"))
@@ -128,15 +128,14 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		super.write(compound);
+	public void write(CompoundNBT compound, boolean clientPacket) {
+		super.write(compound, clientPacket);
 		compound.put("InputItems", inputItemInventory.serializeNBT());
 		compound.put("OutputItems", outputItemInventory.serializeNBT());
 		fluidInventory.ifPresent(combinedFuidHandler -> {
 			ListNBT nbt = combinedFuidHandler.getListNBT();
 			compound.put("fluids", nbt);
 		});
-		return compound;
 	}
 
 	public void onEmptied() {

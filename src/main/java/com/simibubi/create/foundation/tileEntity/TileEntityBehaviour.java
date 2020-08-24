@@ -37,15 +37,11 @@ public abstract class TileEntityBehaviour {
 			
 	}
 
-	public void readNBT(CompoundNBT nbt) {
+	public void read(CompoundNBT nbt, boolean clientPacket) {
 
 	}
-
-	public void updateClient(CompoundNBT nbt) {
-
-	}
-
-	public void writeNBT(CompoundNBT nbt) {
+	
+	public void write(CompoundNBT nbt, boolean clientPacket) {
 
 	}
 
@@ -109,10 +105,6 @@ public abstract class TileEntityBehaviour {
 			return null;
 		SmartTileEntity ste = (SmartTileEntity) te;
 		return ste.getBehaviour(type);
-	}
-
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-		return compound;
 	}
 
 }
