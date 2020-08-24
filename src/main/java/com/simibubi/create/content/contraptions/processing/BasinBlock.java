@@ -103,11 +103,15 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock()) {
-			return;
-		}
+	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
+		ISelectionContext p_220071_4_) {
+		return AllShapes.BASIN_COLLISION_SHAPE;
+	}
 
+	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock()) 
+			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			ItemHelper.dropContents(worldIn, pos, te.inputItemInventory);
 			ItemHelper.dropContents(worldIn, pos, te.outputItemInventory);

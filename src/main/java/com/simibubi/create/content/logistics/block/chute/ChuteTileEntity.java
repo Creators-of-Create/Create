@@ -79,7 +79,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return false;
 		if (getItemMotion() > 0 && getInputChutes().isEmpty())
 			return false;
-		return blockState.get(ChuteBlock.FACING) == Direction.DOWN || blockState.get(ChuteBlock.SHAPE) == Shape.START;
+		return blockState.get(ChuteBlock.FACING) == Direction.DOWN || blockState.get(ChuteBlock.SHAPE) == Shape.INTERSECTION;
 	}
 
 	@Override

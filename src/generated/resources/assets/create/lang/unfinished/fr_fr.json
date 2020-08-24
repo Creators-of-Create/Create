@@ -463,7 +463,7 @@
 	"advancement.create.electron_tube": "UNLOCALIZED: Beep boop",
 	"advancement.create.electron_tube.desc": "UNLOCALIZED: Make some Electron Tubes, useful in crafting less primitive machinery.",
 	"advancement.create.mechanical_saw": "UNLOCALIZED: Stationary Chopping",
-	"advancement.create.mechanical_saw.desc": "UNLOCALIZED: Place and power a Mechanical mechanical_saw",
+	"advancement.create.mechanical_saw.desc": "UNLOCALIZED: Place and power a Mechanical Saw",
 	"advancement.create.basin": "UNLOCALIZED: Basin Operation",
 	"advancement.create.basin.desc": "UNLOCALIZED: Place a basin and try throwing items into it.",
 	"advancement.create.mixer": "UNLOCALIZED: Mixin' it Up",
