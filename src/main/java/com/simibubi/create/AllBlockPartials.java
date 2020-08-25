@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
@@ -30,46 +32,28 @@ public class AllBlockPartials {
 	public static final AllBlockPartials SCHEMATICANNON_CONNECTOR = get("schematicannon/connector"),
 		SCHEMATICANNON_PIPE = get("schematicannon/pipe"),
 
-		SHAFTLESS_COGWHEEL = get("cogwheel_shaftless"),
-		SHAFT_HALF = get("shaft_half"),
-		
-		BELT_PULLEY = get("belt_pulley"),
-		BELT_START = get("belt/start"),
-		BELT_MIDDLE = get("belt/middle"),
-		BELT_END = get("belt/end"),
-		BELT_START_BOTTOM = get("belt/start_bottom"),
-		BELT_MIDDLE_BOTTOM = get("belt/middle_bottom"),
-		BELT_END_BOTTOM = get("belt/end_bottom"),
-		BELT_DIAGONAL_START = get("belt/diagonal_start"),
-		BELT_DIAGONAL_MIDDLE = get("belt/diagonal_middle"),
+		SHAFTLESS_COGWHEEL = get("cogwheel_shaftless"), SHAFT_HALF = get("shaft_half"),
+
+		BELT_PULLEY = get("belt_pulley"), BELT_START = get("belt/start"), BELT_MIDDLE = get("belt/middle"),
+		BELT_END = get("belt/end"), BELT_START_BOTTOM = get("belt/start_bottom"),
+		BELT_MIDDLE_BOTTOM = get("belt/middle_bottom"), BELT_END_BOTTOM = get("belt/end_bottom"),
+		BELT_DIAGONAL_START = get("belt/diagonal_start"), BELT_DIAGONAL_MIDDLE = get("belt/diagonal_middle"),
 		BELT_DIAGONAL_END = get("belt/diagonal_end"),
 
-		ENCASED_FAN_INNER = get("encased_fan/propeller"), 
-		HAND_CRANK_HANDLE = get("hand_crank/handle"),
-		MECHANICAL_PRESS_HEAD = get("mechanical_press/head"), 
-		MECHANICAL_MIXER_POLE = get("mechanical_mixer/pole"),
-		MECHANICAL_MIXER_HEAD = get("mechanical_mixer/head"), 
-		MECHANICAL_CRAFTER_LID = get("mechanical_crafter/lid"),
+		ENCASED_FAN_INNER = get("encased_fan/propeller"), HAND_CRANK_HANDLE = get("hand_crank/handle"),
+		MECHANICAL_PRESS_HEAD = get("mechanical_press/head"), MECHANICAL_MIXER_POLE = get("mechanical_mixer/pole"),
+		MECHANICAL_MIXER_HEAD = get("mechanical_mixer/head"), MECHANICAL_CRAFTER_LID = get("mechanical_crafter/lid"),
 		MECHANICAL_CRAFTER_ARROW = get("mechanical_crafter/arrow"),
 		MECHANICAL_CRAFTER_BELT_FRAME = get("mechanical_crafter/belt"),
-		MECHANICAL_CRAFTER_BELT = get("mechanical_crafter/belt_animated"), 
-		GAUGE_DIAL = get("gauge/dial"),
-		GAUGE_INDICATOR = get("gauge/indicator"), 
-		GAUGE_HEAD_SPEED = get("gauge/speedometer/head"),
-		GAUGE_HEAD_STRESS = get("gauge/stressometer/head"), 
-		BEARING_TOP = get("bearing/top"),
-		DRILL_HEAD = get("mechanical_drill/head"), 
-		HARVESTER_BLADE = get("mechanical_harvester/blade"),
-		DEPLOYER_POLE = get("deployer/pole"), 
-		DEPLOYER_HAND_POINTING = get("deployer/hand_pointing"),
-		DEPLOYER_HAND_PUNCHING = get("deployer/hand_punching"), 
-		DEPLOYER_HAND_HOLDING = get("deployer/hand_holding"),
-		ANALOG_LEVER_HANDLE = get("analog_lever/handle"), 
-		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"),
-		BELT_FUNNEL_FLAP = get("belt_funnel/flap"), 
-		BELT_TUNNEL_FLAP = get("belt_tunnel/flap"), 
-		FLEXPEATER_INDICATOR = get("diodes/indicator"), 
-		FLYWHEEL = get("flywheel/wheel"),
+		MECHANICAL_CRAFTER_BELT = get("mechanical_crafter/belt_animated"), GAUGE_DIAL = get("gauge/dial"),
+		GAUGE_INDICATOR = get("gauge/indicator"), GAUGE_HEAD_SPEED = get("gauge/speedometer/head"),
+		GAUGE_HEAD_STRESS = get("gauge/stressometer/head"), BEARING_TOP = get("bearing/top"),
+		DRILL_HEAD = get("mechanical_drill/head"), HARVESTER_BLADE = get("mechanical_harvester/blade"),
+		DEPLOYER_POLE = get("deployer/pole"), DEPLOYER_HAND_POINTING = get("deployer/hand_pointing"),
+		DEPLOYER_HAND_PUNCHING = get("deployer/hand_punching"), DEPLOYER_HAND_HOLDING = get("deployer/hand_holding"),
+		ANALOG_LEVER_HANDLE = get("analog_lever/handle"), ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"),
+		BELT_FUNNEL_FLAP = get("belt_funnel/flap"), BELT_TUNNEL_FLAP = get("belt_tunnel/flap"),
+		FLEXPEATER_INDICATOR = get("diodes/indicator"), FLYWHEEL = get("flywheel/wheel"),
 		FLYWHEEL_UPPER_ROTATING = get("flywheel/upper_rotating_connector"),
 
 		FLYWHEEL_LOWER_ROTATING = get("flywheel/lower_rotating_connector"),
@@ -95,14 +79,14 @@ public class AllBlockPartials {
 
 		MECHANICAL_PUMP_ARROW = get("mechanical_pump/arrow"), MECHANICAL_PUMP_COG = get("mechanical_pump/cog"),
 		FLUID_PIPE_CASING = get("fluid_pipe/casing"),
-		
+
 		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
 		COUPLING_RING = getEntity("minecart_coupling/ring"),
 		COUPLING_CONNECTOR = getEntity("minecart_coupling/connector")
-		
-		;
 
-	public static final Map<Direction, AllBlockPartials> PIPE_RIMS = map();
+	;
+
+	public static final Map<AttachmentTypes, Map<Direction, AllBlockPartials>> PIPE_ATTACHMENTS = map();
 	public static final Map<HeatLevel, AllBlockPartials> BLAZES = map();
 
 	static {
@@ -117,8 +101,16 @@ public class AllBlockPartials {
 	private AllBlockPartials() {}
 
 	private static void populateMaps() {
-		for (Direction d : Iterate.directions) 
-			PIPE_RIMS.put(d, get("fluid_pipe/rim/" + d.getName()));
+		for (AttachmentTypes type : AttachmentTypes.values()) {
+			if (!type.hasModel())
+				continue;
+			Map<Direction, AllBlockPartials> map = map();
+			for (Direction d : Iterate.directions) {
+				String asId = Lang.asId(type.name());
+				map.put(d, get("fluid_pipe/" + asId + "/" + Lang.asId(d.getName())));
+			}
+			PIPE_ATTACHMENTS.put(type, map);
+		}
 		for (HeatLevel heat : HeatLevel.values()) {
 			if (heat == HeatLevel.NONE)
 				continue;
@@ -136,7 +128,7 @@ public class AllBlockPartials {
 		all.add(partials);
 		return partials;
 	}
-	
+
 	private static AllBlockPartials get(String path) {
 		AllBlockPartials partials = new AllBlockPartials();
 		partials.modelLocation = new ResourceLocation(Create.ID, "block/" + path);

@@ -61,10 +61,10 @@ class FluidNetworkFlow {
 
 	void addToSkippedConnections(IWorld world) {
 		forEachPipeFlow(world, (pipe, face, inbound) -> {
-			if (!pipe.fluid.isFluidEqual(fluidStack))
+			if (!pipe.getFluid().isFluidEqual(fluidStack))
 				return;
 			BlockFace blockFace = new BlockFace(pipe.getPos(), face);
-			this.activePipeNetwork.previousFlow.put(blockFace, pipe.fluid);
+			this.activePipeNetwork.previousFlow.put(blockFace, pipe.getFluid());
 		});
 	}
 
@@ -186,7 +186,7 @@ class FluidNetworkFlow {
 						BlockFace blockface = new BlockFace(currentPos, direction);
 
 						if (!pipe.hasStartedFlow(this, direction, inbound))
-							pipe.addFlow(this, direction, inbound);
+							pipe.addFlow(this, direction, inbound, false);
 						if (skipping && canSkip(previousFlow, blockface)) {
 							pipe.skipFlow(direction, inbound);
 							FluidPropagator.showBlockFace(blockface)

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 751",
+	"_": "Missing Localizations: 753",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -96,6 +96,7 @@
 	"block.create.dolomite_pillar": "Dolomiet Pilaar",
 	"block.create.encased_belt": "Omhulsde Transportband",
 	"block.create.encased_fan": "Omhulsde Ventilator",
+	"block.create.encased_fluid_pipe": "UNLOCALIZED: Encased Fluid Pipe",
 	"block.create.encased_shaft": "Omhulsde Drijfas",
 	"block.create.extractor": "Extractor",
 	"block.create.fancy_andesite_bricks": "UNLOCALIZED: Fancy Andesite Bricks",
@@ -152,6 +153,7 @@
 	"block.create.gabbro_pillar": "UNLOCALIZED: Gabbro Pillar",
 	"block.create.gearbox": "Versnellingsbak",
 	"block.create.gearshift": "Versnellingspook",
+	"block.create.glass_fluid_pipe": "UNLOCALIZED: Glass Fluid Pipe",
 	"block.create.granite_bricks": "Granietstenen",
 	"block.create.granite_bricks_slab": "UNLOCALIZED: Granite Bricks Slab",
 	"block.create.granite_bricks_stairs": "UNLOCALIZED: Granite Bricks Stairs",

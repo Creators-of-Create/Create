@@ -43,11 +43,13 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableTileEntity;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelTileEntity;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeTileEntity;
-import com.simibubi.create.content.contraptions.fluids.FluidTankRenderer;
-import com.simibubi.create.content.contraptions.fluids.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.TransparentStraightPipeRenderer;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankRenderer;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinRenderer;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerRenderer;
@@ -203,10 +205,21 @@ public class AllTileEntities {
 			.register();
 
 	public static final TileEntityEntry<FluidPipeTileEntity> FLUID_PIPE = Create.registrate()
-			.tileEntity("fluid_pipe", (NonNullFunction<TileEntityType<FluidPipeTileEntity>, ? extends FluidPipeTileEntity>) FluidPipeTileEntity::new)
+			.tileEntity("fluid_pipe", FluidPipeTileEntity::new)
 			.validBlocks(AllBlocks.FLUID_PIPE)
 			.register();
 	
+	public static final TileEntityEntry<StraightPipeTileEntity> ENCASED_FLUID_PIPE = Create.registrate()
+			.tileEntity("encased_fluid_pipe", StraightPipeTileEntity::new)
+			.validBlocks(AllBlocks.ENCASED_FLUID_PIPE)
+			.register();
+	
+	public static final TileEntityEntry<StraightPipeTileEntity> GLASS_FLUID_PIPE = Create.registrate()
+			.tileEntity("glass_fluid_pipe", StraightPipeTileEntity::new)
+			.validBlocks(AllBlocks.GLASS_FLUID_PIPE)
+			.renderer(() -> TransparentStraightPipeRenderer::new)
+			.register();
+		
 	public static final TileEntityEntry<FluidTankTileEntity> FLUID_TANK = Create.registrate()
 			.tileEntity("fluid_tank", (NonNullFunction<TileEntityType<FluidTankTileEntity>, ? extends FluidTankTileEntity>) FluidTankTileEntity::new)
 			.validBlocks(AllBlocks.FLUID_TANK)

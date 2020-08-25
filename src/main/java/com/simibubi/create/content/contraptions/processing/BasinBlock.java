@@ -83,10 +83,8 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		withTileEntityDo(worldIn, entityIn.getPosition(), te -> {
 			ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputItemInventory, itemEntity.getItem()
 				.copy(), false);
-
 			if (insertItem.isEmpty()) {
 				itemEntity.remove();
-
 				if (!itemEntity.world.isRemote)
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.world,
 						itemEntity.getPosition(), 3);

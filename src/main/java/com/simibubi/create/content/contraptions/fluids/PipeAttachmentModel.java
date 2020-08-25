@@ -1,11 +1,15 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour.AttachmentTypes;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.foundation.block.render.WrappedBakedModel;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
@@ -18,19 +22,22 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 
-public class FluidPipeModel extends WrappedBakedModel {
+public class PipeAttachmentModel extends WrappedBakedModel {
 
 	private static ModelProperty<PipeModelData> PIPE_PROPERTY = new ModelProperty<>();
 
-	public FluidPipeModel(IBakedModel template) {
+	public PipeAttachmentModel(IBakedModel template) {
 		super(template);
 	}
 
 	@Override
 	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
 		PipeModelData data = new PipeModelData();
-		for (Direction d : Iterate.directions)
-			data.putRim(d, FluidPipeBlock.shouldDrawRim(world, pos, state, d));
+		FluidPipeAttachmentBehaviour attachmentBehaviour =
+			TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
+		if (attachmentBehaviour != null)
+			for (Direction d : Iterate.directions)
+				data.putRim(d, attachmentBehaviour.getAttachment(world, pos, state, d));
 		data.setEncased(FluidPipeBlock.shouldDrawCasing(world, pos, state));
 		return new ModelDataMap.Builder().withInitial(PIPE_PROPERTY, data)
 			.build();
@@ -41,8 +48,10 @@ public class FluidPipeModel extends WrappedBakedModel {
 		List<BakedQuad> quads = super.getQuads(state, side, rand, data);
 		if (data instanceof ModelDataMap) {
 			ModelDataMap modelDataMap = (ModelDataMap) data;
-			if (modelDataMap.hasProperty(PIPE_PROPERTY))
+			if (modelDataMap.hasProperty(PIPE_PROPERTY)) {
+				quads = new ArrayList<>(quads);
 				addQuads(quads, state, side, rand, modelDataMap, modelDataMap.getData(PIPE_PROPERTY));
+			}
 		}
 		return quads;
 	}
@@ -50,8 +59,9 @@ public class FluidPipeModel extends WrappedBakedModel {
 	private void addQuads(List<BakedQuad> quads, BlockState state, Direction side, Random rand, IModelData data,
 		PipeModelData pipeData) {
 		for (Direction d : Iterate.directions)
-			if (pipeData.getRim(d))
-				quads.addAll(AllBlockPartials.PIPE_RIMS.get(d)
+			if (pipeData.hasRim(d))
+				quads.addAll(AllBlockPartials.PIPE_ATTACHMENTS.get(pipeData.getRim(d))
+					.get(d)
 					.get()
 					.getQuads(state, side, rand, data));
 		if (pipeData.isEncased())
@@ -60,15 +70,15 @@ public class FluidPipeModel extends WrappedBakedModel {
 	}
 
 	private class PipeModelData {
-		boolean[] rims;
+		AttachmentTypes[] rims;
 		boolean encased;
 
 		public PipeModelData() {
-			rims = new boolean[6];
-			Arrays.fill(rims, false);
+			rims = new AttachmentTypes[6];
+			Arrays.fill(rims, AttachmentTypes.NONE);
 		}
 
-		public void putRim(Direction face, boolean rim) {
+		public void putRim(Direction face, AttachmentTypes rim) {
 			rims[face.getIndex()] = rim;
 		}
 
@@ -76,7 +86,11 @@ public class FluidPipeModel extends WrappedBakedModel {
 			this.encased = encased;
 		}
 
-		public boolean getRim(Direction face) {
+		public boolean hasRim(Direction face) {
+			return rims[face.getIndex()] != AttachmentTypes.NONE;
+		}
+
+		public AttachmentTypes getRim(Direction face) {
 			return rims[face.getIndex()];
 		}
 

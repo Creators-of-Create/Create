@@ -125,6 +125,8 @@ public class OpenEndedPipe {
 				return 0;
 			if (!world.isAreaLoaded(outputPos, 0))
 				return 0;
+			if (resource.isEmpty())
+				return 0;
 			BlockState state = world.getBlockState(outputPos);
 			IFluidState fluidState = state.getFluidState();
 			if (!fluidState.isEmpty() && fluidState.getFluid() != resource.getFluid()) {

@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.fluids;
+package com.simibubi.create.content.contraptions.fluids.tank;
 
 import static java.lang.Math.abs;
 
@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.contraptions.fluids.FluidTankBlock.Shape;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;

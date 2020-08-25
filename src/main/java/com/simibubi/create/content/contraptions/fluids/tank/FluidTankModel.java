@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.fluids;
+package com.simibubi.create.content.contraptions.fluids.tank;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "side": "create:block/copper_casing",
+    "end": "create:block/encased_pipe"
+  }
+}

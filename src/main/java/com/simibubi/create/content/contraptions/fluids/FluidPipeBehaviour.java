@@ -103,7 +103,15 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 				CompoundNBT nbt = new CompoundNBT();
 				NBTHelper.writeEnum(nbt, "Face", face);
 				nbt.putBoolean("In", inbound);
+				PipeFlows pipeFlows = allFlows.get(face)
+					.get(inbound);
+				Set<FluidNetworkFlow> participants = pipeFlows.participants;
+				nbt.putBoolean("Silent", participants == null || participants.isEmpty());
 				nbt.put("Progress", flowProgress.writeNBT());
+
+				if (client)
+					nbt.putFloat("Strength", pipeFlows.bestFlowStrength);
+
 				flows.add(nbt);
 			}
 		compound.put("Flows", flows);
@@ -125,8 +133,10 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 			boolean inbound = nbt.getBoolean("In");
 			LerpedFloat progress = createFlowProgress(0);
 			progress.readNBT(nbt.getCompound("Progress"), false);
-			addFlow(null, face, inbound);
+			addFlow(null, face, inbound, nbt.getBoolean("Silent"));
 			setFlowProgress(face, inbound, progress);
+			if (client)
+				setVisualFlowStrength(face, inbound, nbt.getFloat("Strength"));
 		});
 
 		if (!client)
@@ -143,7 +153,7 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 		}
 	}
 
-	public void addFlow(@Nullable FluidNetworkFlow flow, Direction face, boolean inbound) {
+	public void addFlow(@Nullable FluidNetworkFlow flow, Direction face, boolean inbound, boolean silent) {
 		if (flow != null) {
 			FluidStack fluid = flow.getFluidStack();
 			if (!this.fluid.isEmpty() && !fluid.isFluidEqual(this.fluid)) {
@@ -155,7 +165,7 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 
 		if (!allFlows.containsKey(face)) {
 			allFlows.put(face, Couple.create(PipeFlows::new));
-			if (inbound)
+			if (inbound && !silent)
 				spawnSplashOnRim(face);
 		}
 
@@ -173,6 +183,7 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 		Couple<PipeFlows> couple = allFlows.get(face);
 		couple.get(inbound)
 			.removeFlow(flow);
+		contentsChanged();
 		if (!couple.get(true)
 			.isActive()
 			&& !couple.get(false)
@@ -180,6 +191,13 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 			allFlows.remove(face);
 		if (allFlows.isEmpty())
 			clear();
+	}
+
+	public void setVisualFlowStrength(Direction face, boolean inbound, float strength) {
+		if (!allFlows.containsKey(face))
+			return;
+		allFlows.get(face)
+			.get(inbound).bestFlowStrength = strength;
 	}
 
 	public void setFlowProgress(Direction face, boolean inbound, LerpedFloat progress) {
@@ -219,7 +237,7 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 	}
 
 	public static final int MAX_PARTICLE_RENDER_DISTANCE = 20;
-	public static final int SPLASH_PARTICLE_AMOUNT = 10;
+	public static final int SPLASH_PARTICLE_AMOUNT = 3;
 	public static final float IDLE_PARTICLE_SPAWN_CHANCE = 1 / 100f;
 	public static final Random r = new Random();
 
@@ -256,7 +274,7 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 		World world = Minecraft.getInstance().world;
 		BlockPos pos = tileEntity.getPos();
 		BlockState state = world.getBlockState(pos);
-		spawnRimParticles(world, state, fluid, face, 20);
+		spawnRimParticles(world, state, fluid, face, SPLASH_PARTICLE_AMOUNT);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -316,12 +334,14 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 				vec = vec.add(centerOf);
 				if (inbound) {
 					vec = vec.add(m);
-					m = centerOf.add(directionVec.scale(.5)).subtract(vec).scale(3);
+					m = centerOf.add(directionVec.scale(.5))
+						.subtract(vec)
+						.scale(3);
 				}
 				world.addOptionalParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);
 			}
 		});
-		
+
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -358,6 +378,28 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 			collision = null;
 			return;
 		}
+	}
+
+	public Pair<Boolean, LerpedFloat> getStrogestFlow(Direction side) {
+		Couple<PipeFlows> couple = allFlows.get(side);
+		if (couple == null)
+			return null;
+
+		PipeFlows in = couple.get(true);
+		PipeFlows out = couple.get(false);
+		Couple<LerpedFloat> progress = couple.map(pf -> pf.progress);
+		boolean inboundStronger = false;
+
+		if (in.isCompleted() != out.isCompleted()) {
+			inboundStronger = in.isCompleted();
+		} else if ((progress.get(true) == null) != (progress.get(false) == null)) {
+			inboundStronger = progress.get(true) != null;
+		} else {
+			if (progress.get(true) != null)
+				inboundStronger = in.bestFlowStrength > out.bestFlowStrength;
+		}
+
+		return Pair.of(inboundStronger, progress.get(inboundStronger));
 	}
 
 	private void clientTick() {
@@ -416,6 +458,10 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 		return LerpedFloat.linear()
 			.startWithValue(0)
 			.chase(1, speed, Chaser.LINEAR);
+	}
+
+	public FluidStack getFluid() {
+		return fluid;
 	}
 
 	class PipeFlows {

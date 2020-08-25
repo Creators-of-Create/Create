@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.fluids;
+package com.simibubi.create.content.contraptions.fluids.tank;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;

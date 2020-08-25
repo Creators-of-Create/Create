@@ -1,6 +1,6 @@
-package com.simibubi.create.content.contraptions.fluids;
+package com.simibubi.create.content.contraptions.fluids.tank;
 
-import com.simibubi.create.content.contraptions.fluids.FluidTankBlock.Shape;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;

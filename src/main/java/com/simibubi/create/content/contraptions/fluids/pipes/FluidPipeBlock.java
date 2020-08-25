@@ -1,41 +1,93 @@
-package com.simibubi.create.content.contraptions.fluids;
+package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour;
+import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SixWayBlock;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.network.DebugPacketSender;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
+public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWrenchable {
 
 	public FluidPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
 		this.setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		World world = context.getWorld();
+		BlockPos pos = context.getPos();
+		Axis axis = getAxis(world, pos, state);
+		if (axis == null)
+			return ActionResultType.PASS;
+		if (context.getFace()
+			.getAxis() == axis)
+			return ActionResultType.PASS;
+		if (!world.isRemote)
+			world.setBlockState(pos, AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
+				.with(GlassFluidPipeBlock.AXIS, axis));
+		return ActionResultType.SUCCESS;
+	}
+
+	@Override
+	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+		BlockRayTraceResult hit) {
+		if (!AllBlocks.COPPER_CASING.isIn(player.getHeldItem(hand)))
+			return ActionResultType.PASS;
+		Axis axis = getAxis(world, pos, state);
+		if (axis == null)
+			return ActionResultType.PASS;
+		if (!world.isRemote)
+			world.setBlockState(pos, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()
+				.with(EncasedPipeBlock.AXIS, axis));
+		return ActionResultType.SUCCESS;
+	}
+
+	@Nullable
+	private Axis getAxis(IBlockReader world, BlockPos pos, BlockState state) {
+		if (!FluidPropagator.isStraightPipe(state))
+			return null;
+		Axis axis = null;
+		for (Direction d : Iterate.directions) {
+			if (isOpenAt(state, d)) {
+				axis = d.getAxis();
+				break;
+			}
+		}
+		return axis;
 	}
 
 	@Override
@@ -70,25 +122,13 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
 		DebugPacketSender.func_218806_a(world, pos);
-		if (world.isRemote)
+		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
+		if (d == null)
 			return;
-		if (otherBlock instanceof FluidPipeBlock)
+		if (!isOpenAt(state, d))
 			return;
-		if (otherBlock instanceof PumpBlock)
-			return;
-		if (otherBlock instanceof FlowingFluidBlock)
-			return;
-		if (!isStraightPipe(state))
-			return;
-		for (Direction d : Iterate.directions) {
-			if (!pos.offset(d)
-				.equals(neighborPos))
-				continue;
-			if (!isOpenAt(state, d))
-				return;
-			world.getPendingBlockTicks()
-				.scheduleTick(pos, this, 1, TickPriority.HIGH);
-		}
+		world.getPendingBlockTicks()
+			.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
@@ -100,65 +140,38 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable {
 		return state.getBlock() instanceof FluidPipeBlock;
 	}
 
-	public static boolean hasFluidCapability(BlockState state, IBlockReader world, BlockPos pos, Direction blockFace) {
-		return state.hasTileEntity() && world.getTileEntity(pos)
-			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite())
-			.isPresent();
-	}
-
 	public static boolean canConnectTo(ILightReader world, BlockPos pos, BlockState neighbour, Direction blockFace) {
-		if (isPipe(neighbour) || hasFluidCapability(neighbour, world, pos, blockFace))
+		if (isPipe(neighbour) || FluidPropagator.hasFluidCapability(neighbour, world, pos, blockFace))
 			return true;
-		// TODO: more generic pipe connection handling.
-		return neighbour.getBlock() instanceof PumpBlock && blockFace.getAxis() == neighbour.get(PumpBlock.FACING)
-			.getAxis();
+		FluidPipeAttachmentBehaviour attachmentBehaviour =
+			TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
+		if (attachmentBehaviour == null)
+			return false;
+		return attachmentBehaviour.isPipeConnectedTowards(neighbour, blockFace.getOpposite());
 	}
 
 	public static boolean shouldDrawRim(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
-		if (!isPipe(state))
-			return false;
-		if (!isOpenAt(state, direction))
-			return false;
 		BlockPos offsetPos = pos.offset(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
-		if (facingState.getBlock() instanceof PumpBlock && facingState.get(PumpBlock.FACING)
-			.getAxis() == direction.getAxis())
-			return false;
 		if (!isPipe(facingState))
 			return true;
 		if (!isCornerOrEndPipe(world, pos, state))
 			return false;
-		if (isStraightPipe(facingState))
+		if (FluidPropagator.isStraightPipe(facingState))
 			return true;
 		if (!shouldDrawCasing(world, pos, state) && shouldDrawCasing(world, offsetPos, facingState))
 			return true;
 		if (isCornerOrEndPipe(world, offsetPos, facingState))
 			return direction.getAxisDirection() == AxisDirection.POSITIVE;
-		return false;
+		return true;
 	}
 
-	private static boolean isOpenAt(BlockState state, Direction direction) {
+	public static boolean isOpenAt(BlockState state, Direction direction) {
 		return state.get(FACING_TO_PROPERTY_MAP.get(direction));
 	}
 
 	public static boolean isCornerOrEndPipe(ILightReader world, BlockPos pos, BlockState state) {
-		return isPipe(state) && !isStraightPipe(state) && !shouldDrawCasing(world, pos, state);
-	}
-
-	public static boolean isStraightPipe(BlockState state) {
-		if (!isPipe(state))
-			return false;
-		boolean axisFound = false;
-		for (Axis axis : Iterate.axes) {
-			Direction d1 = Direction.getFacingFromAxis(AxisDirection.NEGATIVE, axis);
-			Direction d2 = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-			if (isOpenAt(state, d1) && isOpenAt(state, d2))
-				if (axisFound)
-					return false;
-				else
-					axisFound = true;
-		}
-		return axisFound;
+		return isPipe(state) && !FluidPropagator.isStraightPipe(state) && !shouldDrawCasing(world, pos, state);
 	}
 
 	public static boolean shouldDrawCasing(ILightReader world, BlockPos pos, BlockState state) {

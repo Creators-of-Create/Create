@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 401",
+	"_": "Missing Localizations: 403",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -96,6 +96,7 @@
 	"block.create.dolomite_pillar": "백운암 기둥",
 	"block.create.encased_belt": "덮힌 벨트",
 	"block.create.encased_fan": "덮힌 환풍기",
+	"block.create.encased_fluid_pipe": "UNLOCALIZED: Encased Fluid Pipe",
 	"block.create.encased_shaft": "덮힌 축",
 	"block.create.extractor": "추출기",
 	"block.create.fancy_andesite_bricks": "UNLOCALIZED: Fancy Andesite Bricks",
@@ -152,6 +153,7 @@
 	"block.create.gabbro_pillar": "UNLOCALIZED: Gabbro Pillar",
 	"block.create.gearbox": "기어박스",
 	"block.create.gearshift": "기어쉬프트",
+	"block.create.glass_fluid_pipe": "UNLOCALIZED: Glass Fluid Pipe",
 	"block.create.granite_bricks": "화강암 벽돌",
 	"block.create.granite_bricks_slab": "UNLOCALIZED: Granite Bricks Slab",
 	"block.create.granite_bricks_stairs": "UNLOCALIZED: Granite Bricks Stairs",

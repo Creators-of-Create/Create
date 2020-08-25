@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.fluids;
+package com.simibubi.create.content.contraptions.fluids.tank;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

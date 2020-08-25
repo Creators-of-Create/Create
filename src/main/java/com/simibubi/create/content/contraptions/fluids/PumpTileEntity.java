@@ -10,6 +10,8 @@ import java.util.Map;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -22,6 +24,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ILightReader;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -44,6 +48,12 @@ public class PumpTileEntity extends KineticTileEntity {
 		networksToUpdate = Couple.create(MutableBoolean::new);
 		openEnds = Couple.create(HashMap::new);
 		setProvidedFluid(FluidStack.EMPTY);
+	}
+	
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		behaviours.add(new PumpAttachmentBehaviour(this));
 	}
 
 	@Override
@@ -344,6 +354,27 @@ public class PumpTileEntity extends KineticTileEntity {
 
 	public void setProvidedFluid(FluidStack providedFluid) {
 		this.providedFluid = providedFluid;
+	}
+
+	class PumpAttachmentBehaviour extends FluidPipeAttachmentBehaviour {
+
+		public PumpAttachmentBehaviour(SmartTileEntity te) {
+			super(te);
+		}
+
+		@Override
+		public boolean isPipeConnectedTowards(BlockState state, Direction direction) {
+			return isSideAccessible(direction);
+		}
+
+		@Override
+		public AttachmentTypes getAttachment(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
+			AttachmentTypes attachment = super.getAttachment(world, pos, state, direction);
+			if (attachment == AttachmentTypes.RIM)
+				return AttachmentTypes.NONE;
+			return attachment;
+		}
+
 	}
 
 }
