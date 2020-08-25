@@ -465,7 +465,7 @@ public abstract class Contraption {
 						renderOrder.add(0, info.pos);
 					CompoundNBT tag = info.nbt;
 					MovementBehaviour movementBehaviour = AllMovementBehaviours.getMovementBehaviour(block);
-					if (tag == null || movementBehaviour == null || movementBehaviour.hasSpecialMovementRenderer())
+					if (tag == null || (movementBehaviour != null && movementBehaviour.hasSpecialMovementRenderer()))
 						return;
 
 					tag.putInt("x", info.pos.getX());

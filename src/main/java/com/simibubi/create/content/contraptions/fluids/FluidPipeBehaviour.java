@@ -237,8 +237,8 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 	}
 
 	public static final int MAX_PARTICLE_RENDER_DISTANCE = 20;
-	public static final int SPLASH_PARTICLE_AMOUNT = 3;
-	public static final float IDLE_PARTICLE_SPAWN_CHANCE = 1 / 100f;
+	public static final int SPLASH_PARTICLE_AMOUNT = 1;
+	public static final float IDLE_PARTICLE_SPAWN_CHANCE = 1 / 800f;
 	public static final Random r = new Random();
 
 	@OnlyIn(Dist.CLIENT)
