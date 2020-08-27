@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:air"
+          "name": "create:fluid_pipe"
         }
       ],
       "conditions": [

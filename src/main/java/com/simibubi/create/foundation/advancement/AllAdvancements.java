@@ -308,7 +308,7 @@ public class AllAdvancements implements IDataProvider {
 
 	@Override
 	public String getName() {
-		return "CreateAdvancements";
+		return "Create's Advancements";
 	}
 
 	public PlacedBlockTrigger.Instance placeBlock(Block block) {
