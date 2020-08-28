@@ -123,7 +123,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.put("Inventory", inventory.serializeNBT());
 
 		CompoundNBT inputNBT = new CompoundNBT();
@@ -138,43 +138,19 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		compound.putInt("CountDown", countDown);
 		compound.putBoolean("Cover", covered);
 
-		return super.write(compound);
-	}
-
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT tag) {
-		if (reRender) {
-			tag.putBoolean("Redraw", true);
+		super.write(compound, clientPacket);
+		
+		if (clientPacket && reRender) {
+			compound.putBoolean("Redraw", true);
 			reRender = false;
 		}
-		return super.writeToClient(tag);
 	}
 
 	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		if (tag.contains("Redraw"))
-			world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 16);
-
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		Phase phaseBefore = phase;
 		GroupedItems before = this.groupedItems;
-
-		super.readClientUpdate(tag);
-
-		if (phaseBefore != phase && phase == Phase.CRAFTING)
-			groupedItemsBeforeCraft = before;
-		if (phaseBefore == Phase.EXPORTING && phase == Phase.WAITING) {
-			Direction facing = getBlockState().get(MechanicalCrafterBlock.HORIZONTAL_FACING);
-			Vec3d vec = new Vec3d(facing.getDirectionVec()).scale(.75)
-				.add(VecHelper.getCenterOf(pos));
-			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(getBlockState());
-			vec = vec.add(new Vec3d(targetDirection.getDirectionVec()).scale(1));
-			world.addParticle(ParticleTypes.CRIT, vec.x, vec.y, vec.z, 0, 0, 0);
-		}
-
-	}
-
-	@Override
-	public void read(CompoundNBT compound) {
+		
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		input.read(compound.getCompound("ConnectedInput"));
 		groupedItems = GroupedItems.read(compound.getCompound("GroupedItems"));
@@ -186,7 +162,22 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				this.phase = phase;
 		countDown = compound.getInt("CountDown");
 		covered = compound.getBoolean("Cover");
-		super.read(compound);
+		super.read(compound, clientPacket);
+		
+		if (!clientPacket)
+			return;
+		if (compound.contains("Redraw"))
+			world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 16);
+		if (phaseBefore != phase && phase == Phase.CRAFTING)
+			groupedItemsBeforeCraft = before;
+		if (phaseBefore == Phase.EXPORTING && phase == Phase.WAITING) {
+			Direction facing = getBlockState().get(MechanicalCrafterBlock.HORIZONTAL_FACING);
+			Vec3d vec = new Vec3d(facing.getDirectionVec()).scale(.75)
+				.add(VecHelper.getCenterOf(pos));
+			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(getBlockState());
+			vec = vec.add(new Vec3d(targetDirection.getDirectionVec()).scale(1));
+			world.addParticle(ParticleTypes.CRIT, vec.x, vec.y, vec.z, 0, 0, 0);
+		}
 	}
 
 	@Override
@@ -293,7 +284,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				Vec3d vec = facingVec.scale(.65)
 					.add(VecHelper.getCenterOf(pos));
 				Vec3d offset = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
-					.mul(VecHelper.planeByNormal(facingVec))
+					.mul(VecHelper.axisAlingedPlaneOf(facingVec))
 					.normalize()
 					.scale(progress * .5f)
 					.add(vec);
@@ -307,7 +298,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 						for (int i = 0; i < 10; i++) {
 							Vec3d randVec = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
-								.mul(VecHelper.planeByNormal(facingVec))
+								.mul(VecHelper.axisAlingedPlaneOf(facingVec))
 								.normalize()
 								.scale(.25f);
 							Vec3d offset2 = randVec.add(vec);

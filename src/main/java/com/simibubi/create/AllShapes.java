@@ -6,6 +6,7 @@ import static net.minecraft.util.Direction.UP;
 
 import java.util.function.BiFunction;
 
+import com.simibubi.create.content.logistics.block.chute.ChuteShapes;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.block.Block;
@@ -28,6 +29,7 @@ public class AllShapes {
 		CASING_11PX = shape(0, 0, 0, 16, 11, 16).forDirectional(),
 		MOTOR_BLOCK = shape(3, 0, 3, 13, 14, 13).forDirectional(),
 		FOUR_VOXEL_POLE = shape(6, 0, 6, 10, 16, 10).forAxis(), SIX_VOXEL_POLE = shape(5, 0, 5, 11, 16, 11).forAxis(),
+		EIGHT_VOXEL_POLE = shape(4, 0, 4, 12, 16, 12).forAxis(),
 		EXTRACTOR = shape(4, 2, 11, 12, 10, 17).forDirectional(SOUTH)
 			.withVerticalShapes(cuboid(4, 11, 4, 12, 17, 12)),
 		TRANSPOSER = shape(4, 4, -1, 12, 12, 1).add(5, 5, 0, 11, 11, 16)
@@ -111,14 +113,16 @@ public class AllShapes {
 	// Static Block Shapes
 	public static final VoxelShape
 
-	BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 14, 14)
+	BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 16, 16).erase(2, 2, 2, 14, 16, 14)
 		.add(2, 0, 2, 14, 2, 14)
-		.build(), HEATER_BLOCK_SHAPE =
-			shape(2, 0, 2, 14, 14, 14).add(0, 0, 0, 16, 4, 16)
+		.build(), BASIN_COLLISION_SHAPE =
+			shape(0, 2, 0, 16, 16, 16).erase(2, 5, 2, 14, 16, 14)
+				.add(2, 0, 2, 14, 2, 14)
 				.build(),
+		HEATER_BLOCK_SHAPE = shape(2, 0, 2, 14, 14, 14).add(0, 0, 0, 16, 4, 16)
+			.build(),
 		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),
-		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 22, 16),
-		SEAT = cuboid(0, 0, 0, 16, 8, 16),
+		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 22, 16), SEAT = cuboid(0, 0, 0, 16, 8, 16),
 		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16),
 		MECHANICAL_PROCESSOR_SHAPE = shape(VoxelShapes.fullCube()).erase(4, 0, 4, 12, 16, 12)
 			.build(),
@@ -171,7 +175,8 @@ public class AllShapes {
 		LOGISTICS_TABLE = shape(TABLE_POLE_SHAPE).add(LOGISTICS_TABLE_SLOPE)
 			.forHorizontal(SOUTH),
 		SCHEMATICS_TABLE = shape(TABLE_POLE_SHAPE).add(SCHEMATICS_TABLE_SLOPE)
-			.forDirectional(SOUTH)
+			.forDirectional(SOUTH),
+		CHUTE_SLOPE = shape(ChuteShapes.createSlope()).forHorizontal(SOUTH)
 
 	;
 

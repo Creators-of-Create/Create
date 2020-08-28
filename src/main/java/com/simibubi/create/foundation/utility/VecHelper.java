@@ -68,9 +68,13 @@ public class VecHelper {
 			vec.z + (r.nextFloat() - .5f) * 2 * radius);
 	}
 
-	public static Vec3d planeByNormal(Vec3d vec) {
+	public static Vec3d axisAlingedPlaneOf(Vec3d vec) {
 		vec = vec.normalize();
 		return new Vec3d(1, 1, 1).subtract(Math.abs(vec.x), Math.abs(vec.y), Math.abs(vec.z));
+	}
+	
+	public static Vec3d axisAlingedPlaneOf(Direction face) {
+		return axisAlingedPlaneOf(new Vec3d(face.getDirectionVec()));
 	}
 
 	public static ListNBT writeNBT(Vec3d vec) {
@@ -114,12 +118,17 @@ public class VecHelper {
 			.scale(maxLength) : vec;
 	}
 
+	public static Vec3d clampComponentWise(Vec3d vec, float maxLength) {
+		return new Vec3d(MathHelper.clamp(vec.x, -maxLength, maxLength), MathHelper.clamp(vec.y, -maxLength, maxLength),
+			MathHelper.clamp(vec.z, -maxLength, maxLength));
+	}
+
 	public static Vec3d project(Vec3d vec, Vec3d ontoVec) {
 		if (ontoVec.equals(Vec3d.ZERO))
 			return Vec3d.ZERO;
 		return ontoVec.scale(vec.dotProduct(ontoVec) / ontoVec.lengthSquared());
 	}
-	
+
 	@Nullable
 	public static Vec3d intersectSphere(Vec3d origin, Vec3d lineDirection, Vec3d sphereCenter, double radius) {
 		if (lineDirection.equals(Vec3d.ZERO))

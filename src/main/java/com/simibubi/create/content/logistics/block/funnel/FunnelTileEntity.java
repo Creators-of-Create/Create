@@ -218,23 +218,23 @@ public class FunnelTileEntity extends SmartTileEntity {
 		return getBlockState().getBlock() instanceof BeltFunnelBlock
 			&& getBlockState().get(BeltFunnelBlock.SHAPE) == Shape.RETRACTED;
 	}
-
+	
 	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-		if (sendFlap != 0) {
+	protected void write(CompoundNBT compound, boolean clientPacket) {
+		super.write(compound, clientPacket);
+		if (clientPacket && sendFlap != 0) {
 			compound.putInt("Flap", sendFlap);
 			sendFlap = 0;
 		}
-		return super.writeToClient(compound);
 	}
-
+	
 	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		if (tag.contains("Flap")) {
-			int direction = tag.getInt("Flap");
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
+		if (clientPacket && compound.contains("Flap")) {
+			int direction = compound.getInt("Flap");
 			flap.set(direction);
 		}
-		super.readClientUpdate(tag);
 	}
 
 	@Override

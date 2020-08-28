@@ -7,9 +7,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
+import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
@@ -162,19 +162,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
-		inventory.deserializeNBT(compound.getCompound("Inventory"));
-
-		if (compound.contains("CurrentPos"))
-			currentPos = NBTUtil.readBlockPos(compound.getCompound("CurrentPos"));
-
-		readClientUpdate(compound);
-		super.read(compound);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT compound) {
-
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		if (!clientPacket) {
+			inventory.deserializeNBT(compound.getCompound("Inventory"));
+			if (compound.contains("CurrentPos"))
+				currentPos = NBTUtil.readBlockPos(compound.getCompound("CurrentPos"));
+		}
+		
 		// Gui information
 		statusMsg = compound.getString("Status");
 		schematicProgress = compound.getFloat("Progress");
@@ -184,23 +178,24 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		blocksPlaced = compound.getInt("AmountPlaced");
 		blocksToPlace = compound.getInt("AmountToPlace");
 		printingEntityIndex = compound.getInt("EntityProgress");
-
+		
 		missingItem = null;
 		if (compound.contains("MissingItem"))
 			missingItem = ItemStack.read(compound.getCompound("MissingItem"));
-
+		
 		// Settings
 		CompoundNBT options = compound.getCompound("Options");
 		replaceMode = options.getInt("ReplaceMode");
 		skipMissing = options.getBoolean("SkipMissing");
 		replaceTileEntities = options.getBoolean("ReplaceTileEntities");
-
+		
 		// Printer & Flying Blocks
 		if (compound.contains("Target"))
 			target = NBTUtil.readBlockPos(compound.getCompound("Target"));
 		if (compound.contains("FlyingBlocks"))
 			readFlyingBlocks(compound);
 
+		super.read(compound, clientPacket);
 	}
 
 	protected void readFlyingBlocks(CompoundNBT compound) {
@@ -239,22 +234,16 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		compound.put("Inventory", inventory.serializeNBT());
-
-		if (state == State.RUNNING) {
-			compound.putBoolean("Running", true);
-			if (currentPos != null)
-				compound.put("CurrentPos", NBTUtil.writeBlockPos(currentPos));
+	public void write(CompoundNBT compound, boolean clientPacket) {
+		if (!clientPacket) {
+			compound.put("Inventory", inventory.serializeNBT());
+			if (state == State.RUNNING) {
+				compound.putBoolean("Running", true);
+				if (currentPos != null)
+					compound.put("CurrentPos", NBTUtil.writeBlockPos(currentPos));
+			}
 		}
-
-		writeToClient(compound);
-		return super.write(compound);
-	}
-
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-
+		
 		// Gui information
 		compound.putFloat("Progress", schematicProgress);
 		compound.putFloat("PaperProgress", bookPrintingProgress);
@@ -264,17 +253,17 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		compound.putInt("AmountPlaced", blocksPlaced);
 		compound.putInt("AmountToPlace", blocksToPlace);
 		compound.putInt("EntityProgress", printingEntityIndex);
-
+		
 		if (missingItem != null)
 			compound.put("MissingItem", missingItem.serializeNBT());
-
+		
 		// Settings
 		CompoundNBT options = new CompoundNBT();
 		options.putInt("ReplaceMode", replaceMode);
 		options.putBoolean("SkipMissing", skipMissing);
 		options.putBoolean("ReplaceTileEntities", replaceTileEntities);
 		compound.put("Options", options);
-
+		
 		// Printer & Flying Blocks
 		if (target != null)
 			compound.put("Target", NBTUtil.writeBlockPos(target));
@@ -283,7 +272,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			tagBlocks.add(b.serializeNBT());
 		compound.put("FlyingBlocks", tagBlocks);
 
-		return compound;
+		super.write(compound, clientPacket);
 	}
 
 	@Override

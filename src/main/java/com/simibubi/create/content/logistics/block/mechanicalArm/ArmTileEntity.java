@@ -272,8 +272,8 @@ public class ArmTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		super.write(compound);
+	public void write(CompoundNBT compound, boolean clientPacket) {
+		super.write(compound, clientPacket);
 
 		ListNBT pointsNBT = new ListNBT();
 		inputs.stream()
@@ -288,32 +288,24 @@ public class ArmTileEntity extends KineticTileEntity {
 		compound.put("HeldItem", heldItem.serializeNBT());
 		compound.putInt("TargetPointIndex", chasedPointIndex);
 		compound.putFloat("MovementProgress", chasedPointProgress);
-		return compound;
 	}
 
 	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-		super.writeToClient(compound);
-		return compound;
-	}
-
-	@Override
-	public void read(CompoundNBT compound) {
-		super.read(compound);
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		int previousIndex = chasedPointIndex;
+		Phase previousPhase = phase;
+		ListNBT interactionPointTagBefore = interactionPointTag;
+		
+		super.read(compound, clientPacket);
 		heldItem = ItemStack.read(compound.getCompound("HeldItem"));
 		phase = NBTHelper.readEnum(compound, "Phase", Phase.class);
 		chasedPointIndex = compound.getInt("TargetPointIndex");
 		chasedPointProgress = compound.getFloat("MovementProgress");
 		interactionPointTag = compound.getList("InteractionPoints", NBT.TAG_COMPOUND);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		int previousIndex = chasedPointIndex;
-		Phase previousPhase = phase;
-		ListNBT interactionPointTagBefore = interactionPointTag;
-		super.readClientUpdate(tag);
-
+		
+		if (!clientPacket)
+			return;
+		
 		boolean ceiling = isOnCeiling();
 		if (interactionPointTagBefore == null || interactionPointTagBefore.size() != interactionPointTag.size())
 			updateInteractionPoints = true;

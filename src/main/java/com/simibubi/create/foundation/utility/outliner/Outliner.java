@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.utility.outliner;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -110,7 +111,7 @@ public class Outliner {
 	// Maintenance
 
 	public Outliner() {
-		outlines = new HashMap<>();
+		outlines = Collections.synchronizedMap(new HashMap<>());
 	}
 
 	public void tickOutlines() {

@@ -52,30 +52,26 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public void writeNBT(CompoundNBT nbt) {
+	public void write(CompoundNBT nbt, boolean clientPacket) {
 		nbt.put("Filter", getFilter().serializeNBT());
 		nbt.putInt("FilterAmount", count);
-		super.writeNBT(nbt);
+		
+		if (clientPacket && forceClientState) {
+			nbt.putBoolean("ForceScrollable", true);
+			forceClientState = false;
+		}
+		super.write(nbt, clientPacket);
 	}
 
 	@Override
-	public void readNBT(CompoundNBT nbt) {
+	public void read(CompoundNBT nbt, boolean clientPacket) {
 		filter = ItemStack.read(nbt.getCompound("Filter"));
 		count = nbt.getInt("FilterAmount");
 		if (nbt.contains("ForceScrollable")) {
 			scrollableValue = count;
 			ticksUntilScrollPacket = -1;
 		}
-		super.readNBT(nbt);
-	}
-
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-		if (forceClientState) {
-			compound.putBoolean("ForceScrollable", true);
-			forceClientState = false;
-		}
-		return super.writeToClient(compound);
+		super.read(nbt, clientPacket);
 	}
 
 	@Override

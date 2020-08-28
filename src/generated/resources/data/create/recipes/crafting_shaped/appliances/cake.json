@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " . ",
+    "#+#",
+    " - "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:sugar"
+    },
+    "+": {
+      "tag": "forge:eggs"
+    },
+    ".": {
+      "item": "minecraft:milk_bucket"
+    },
+    "-": {
+      "item": "create:dough"
+    }
+  },
+  "result": {
+    "item": "minecraft:cake"
+  }
+}

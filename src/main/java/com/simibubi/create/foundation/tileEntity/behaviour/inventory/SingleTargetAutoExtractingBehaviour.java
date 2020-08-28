@@ -33,15 +33,15 @@ public class SingleTargetAutoExtractingBehaviour extends AutoExtractingBehaviour
 	}
 
 	@Override
-	public void writeNBT(CompoundNBT nbt) {
+	public void write(CompoundNBT nbt, boolean clientPacket) {
 		nbt.putBoolean("Advantage", advantageOnNextSync);
-		super.writeNBT(nbt);
+		super.write(nbt, clientPacket);
 	}
 
 	@Override
-	public void readNBT(CompoundNBT nbt) {
+	public void read(CompoundNBT nbt, boolean clientPacket) {
 		advantageOnNextSync = nbt.getBoolean("Advantage");
-		super.readNBT(nbt);
+		super.read(nbt, clientPacket);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ public enum AllSpecialTextures {
 	BLANK("blank.png"),
 	CHECKERED("checkerboard.png"),
 	THIN_CHECKERED("thin_checkerboard.png"),
+	CUTOUT_CHECKERED("cutout_checkerboard.png"),
 	HIGHLIGHT_CHECKERED("highlighted_checkerboard.png"),
 	SELECTION("selection.png"),
 	

@@ -43,7 +43,7 @@ public class KineticDebugger {
 		VoxelShape shape = world.getBlockState(toOutline)
 			.getRenderShape(world, toOutline);
 
-		if (te.getTheoreticalSpeed() != 0)
+		if (te.getTheoreticalSpeed() != 0 && !shape.isEmpty())
 			CreateClient.outliner.chaseAABB("kineticSource", shape.getBoundingBox()
 				.offset(toOutline))
 				.lineWidth(1 / 16f)

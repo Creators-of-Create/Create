@@ -51,11 +51,10 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class DeployerTileEntity extends KineticTileEntity {
 
-	private static final List<Pair<BlockPos, Direction>> EXTRACTING_LOCATIONS = Arrays
-			.asList(Direction.values())
-			.stream()
-			.map(d -> Pair.of(BlockPos.ZERO.offset(d), d.getOpposite()))
-			.collect(Collectors.toList());
+	private static final List<Pair<BlockPos, Direction>> EXTRACTING_LOCATIONS = Arrays.asList(Direction.values())
+		.stream()
+		.map(d -> Pair.of(BlockPos.ZERO.offset(d), d.getOpposite()))
+		.collect(Collectors.toList());
 	private FilteringBehaviour filtering;
 	private ExtractingBehaviour extracting;
 
@@ -167,7 +166,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 				return;
 			}
 
-			if (filtering.getFilter().isEmpty() && stack.isEmpty())
+			if (filtering.getFilter()
+				.isEmpty() && stack.isEmpty())
 				extracting.extract(1);
 
 			Direction facing = getBlockState().get(FACING);
@@ -182,12 +182,16 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 			state = State.EXPANDING;
 			Vec3d movementVector = getMovementVector();
-			Vec3d rayOrigin = VecHelper.getCenterOf(pos).add(movementVector.scale(3 / 2f));
-			Vec3d rayTarget = VecHelper.getCenterOf(pos).add(movementVector.scale(5 / 2f));
+			Vec3d rayOrigin = VecHelper.getCenterOf(pos)
+				.add(movementVector.scale(3 / 2f));
+			Vec3d rayTarget = VecHelper.getCenterOf(pos)
+				.add(movementVector.scale(5 / 2f));
 			RayTraceContext rayTraceContext =
 				new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE, FluidMode.NONE, player);
 			BlockRayTraceResult result = world.rayTraceBlocks(rayTraceContext);
-			reach = (float) (.5f + Math.min(result.getHitVec().subtract(rayOrigin).length(), .75f));
+			reach = (float) (.5f + Math.min(result.getHitVec()
+				.subtract(rayOrigin)
+				.length(), .75f));
 
 			timer = 1000;
 			sendData();
@@ -226,7 +230,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 		if (!(otherTile instanceof DeployerTileEntity))
 			return false;
 		DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
-		if (world.getBlockState(otherDeployer).get(FACING).getOpposite() != facing || deployerTile.mode != Mode.PUNCH)
+		if (world.getBlockState(otherDeployer)
+			.get(FACING)
+			.getOpposite() != facing || deployerTile.mode != Mode.PUNCH)
 			return false;
 
 		boop = true;
@@ -295,13 +301,15 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	protected void tryDisposeOfItems() {
-		boolean noInv = extracting.getInventories().isEmpty();
+		boolean noInv = extracting.getInventories()
+			.isEmpty();
 		for (Iterator<ItemStack> iterator = overflowItems.iterator(); iterator.hasNext();) {
 			ItemStack itemStack = iterator.next();
 
 			if (noInv) {
 				Vec3d offset = getMovementVector();
-				Vec3d outPos = VecHelper.getCenterOf(pos).add(offset.scale(-.65f));
+				Vec3d outPos = VecHelper.getCenterOf(pos)
+					.add(offset.scale(-.65f));
 				Vec3d motion = offset.scale(-.25f);
 				ItemEntity e = new ItemEntity(world, outPos.x, outPos.y, outPos.z, itemStack.copy());
 				e.setMotion(motion);
@@ -328,11 +336,12 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected Vec3d getMovementVector() {
 		if (!AllBlocks.DEPLOYER.has(getBlockState()))
 			return Vec3d.ZERO;
-		return new Vec3d(getBlockState().get(FACING).getDirectionVec());
+		return new Vec3d(getBlockState().get(FACING)
+			.getDirectionVec());
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		mode = NBTHelper.readEnum(compound, "Mode", Mode.class);
 		timer = compound.getInt("Timer");
@@ -340,48 +349,45 @@ public class DeployerTileEntity extends KineticTileEntity {
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 		if (compound.contains("HeldItem"))
 			heldItem = ItemStack.read(compound.getCompound("HeldItem"));
-		super.read(compound);
+		super.read(compound, clientPacket);
+
+		if (!clientPacket)
+			return;
+		reach = compound.getFloat("Reach");
+		if (compound.contains("Particle")) {
+			ItemStack particleStack = ItemStack.read(compound.getCompound("Particle"));
+			SandPaperItem.spawnParticles(VecHelper.getCenterOf(pos)
+				.add(getMovementVector().scale(2f)), particleStack, this.world);
+		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		NBTHelper.writeEnum(compound, "Mode", mode);
 		NBTHelper.writeEnum(compound, "State", state);
 		compound.putInt("Timer", timer);
 		if (player != null) {
-			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
+			compound.put("HeldItem", player.getHeldItemMainhand()
+				.serializeNBT());
 			ListNBT invNBT = new ListNBT();
 			player.inventory.write(invNBT);
 			compound.put("Inventory", invNBT);
 			compound.put("Overflow", NBTHelper.writeItemList(overflowItems));
 		}
-		return super.write(compound);
-	}
+		
+		super.write(compound, clientPacket);
 
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
+		if (!clientPacket)
+			return;
 		compound.putFloat("Reach", reach);
-		if (player != null) {
-			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
-			if (player.spawnedItemEffects != null) {
-				compound.put("Particle", player.spawnedItemEffects.serializeNBT());
-				player.spawnedItemEffects = null;
-			}
+		if (player == null)
+			return;
+		compound.put("HeldItem", player.getHeldItemMainhand()
+			.serializeNBT());
+		if (player.spawnedItemEffects != null) {
+			compound.put("Particle", player.spawnedItemEffects.serializeNBT());
+			player.spawnedItemEffects = null;
 		}
-		return super.writeToClient(compound);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		reach = tag.getFloat("Reach");
-		if (tag.contains("Particle")) {
-			ItemStack particleStack = ItemStack.read(tag.getCompound("Particle"));
-			SandPaperItem
-					.spawnParticles(VecHelper.getCenterOf(pos).add(getMovementVector().scale(2f)), particleStack,
-							this.world);
-		}
-
-		super.readClientUpdate(tag);
 	}
 
 	private IItemHandlerModifiable createHandler() {
@@ -395,7 +401,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	public AllBlockPartials getHandPose() {
 		return mode == Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING
-				: heldItem.isEmpty() ? AllBlockPartials.DEPLOYER_HAND_POINTING : AllBlockPartials.DEPLOYER_HAND_HOLDING;
+			: heldItem.isEmpty() ? AllBlockPartials.DEPLOYER_HAND_POINTING : AllBlockPartials.DEPLOYER_HAND_HOLDING;
 	}
 
 	@Override

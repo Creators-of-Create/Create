@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
@@ -168,15 +169,15 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
     }
 
     @Override
-    public void read(CompoundNBT tag) {
-        initialOffset = tag.getInt("InitialOffset");
-        super.read(tag);
+    protected void read(CompoundNBT compound, boolean clientPacket) {
+        initialOffset = compound.getInt("InitialOffset");
+        super.read(compound, clientPacket);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        tag.putInt("InitialOffset", initialOffset);
-        return super.write(tag);
+    public void write(CompoundNBT compound, boolean clientPacket) {
+        compound.putInt("InitialOffset", initialOffset);
+        super.write(compound, clientPacket);
     }
 
     @Override

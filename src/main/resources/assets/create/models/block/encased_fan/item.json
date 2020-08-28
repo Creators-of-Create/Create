@@ -4,8 +4,8 @@
 	"textures": {
 		"2": "create:block/gearbox",
 		"fan_casing": "create:block/fan_casing",
-		"fan_side": "create:block/fan_side",
 		"particle": "create:block/fan_side",
+		"fan_side": "create:block/fan_side",
 		"axis_top": "create:block/axis_top",
 		"fan_blades": "create:block/fan_blades",
 		"axis": "create:block/axis"
@@ -21,7 +21,7 @@
 				"south": {"uv": [0, 14, 16, 16], "texture": "#fan_casing"},
 				"west": {"uv": [14, 0, 16, 16], "rotation": 90, "texture": "#fan_side"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#fan_side"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#fan_side"}
+				"down": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#fan_side"}
 			}
 		},
 		{
@@ -34,7 +34,7 @@
 				"south": {"uv": [0, 0, 16, 2], "texture": "#fan_casing"},
 				"west": {"uv": [14, 0, 16, 16], "rotation": 270, "texture": "#fan_side"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#fan_side"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#fan_side"}
+				"down": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#fan_side"}
 			}
 		},
 		{
@@ -54,7 +54,7 @@
 			"to": [16, 14, 16],
 			"faces": {
 				"north": {"uv": [0, 2, 2, 14], "texture": "#fan_casing"},
-				"east": {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#fan_side"},
+				"east": {"uv": [2, 0, 14, 16], "rotation": 90, "texture": "#fan_side"},
 				"south": {"uv": [14, 2, 16, 14], "texture": "#fan_casing"},
 				"west": {"uv": [14, 0, 2, 16], "rotation": 270, "texture": "#fan_side"}
 			}

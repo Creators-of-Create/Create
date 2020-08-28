@@ -102,27 +102,25 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag) {
-		tag.putBoolean("Running", running);
-		tag.putBoolean("Windmill", isWindmill);
-		tag.putFloat("Angle", angle);
-		tag.putFloat("LastGenerated", lastGeneratedSpeed);
-		return super.write(tag);
+	public void write(CompoundNBT compound, boolean clientPacket) {
+		compound.putBoolean("Running", running);
+		compound.putBoolean("Windmill", isWindmill);
+		compound.putFloat("Angle", angle);
+		compound.putFloat("LastGenerated", lastGeneratedSpeed);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT tag) {
-		running = tag.getBoolean("Running");
-		isWindmill = tag.getBoolean("Windmill");
-		angle = tag.getFloat("Angle");
-		lastGeneratedSpeed = tag.getFloat("LastGenerated");
-		super.read(tag);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		float angleBefore = angle;
-		super.readClientUpdate(tag);
+		running = compound.getBoolean("Running");
+		isWindmill = compound.getBoolean("Windmill");
+		angle = compound.getFloat("Angle");
+		lastGeneratedSpeed = compound.getFloat("LastGenerated");
+		super.read(compound, clientPacket);
+		
+		if (!clientPacket)
+			return;
 		if (running) {
 			clientAngleDiff = AngleHelper.getShortestAngleDiff(angleBefore, angle);
 			angle = angleBefore;

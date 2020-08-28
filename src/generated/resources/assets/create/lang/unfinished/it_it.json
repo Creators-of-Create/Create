@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 401",
+	"_": "Missing Localizations: 403",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -96,6 +96,7 @@
 	"block.create.dolomite_pillar": "Pilastro di Dolomite",
 	"block.create.encased_belt": "Nastro Incassato",
 	"block.create.encased_fan": "Ventilatore incassato",
+	"block.create.encased_fluid_pipe": "UNLOCALIZED: Encased Fluid Pipe",
 	"block.create.encased_shaft": "Albero Incassato",
 	"block.create.extractor": "Estrattore",
 	"block.create.fancy_andesite_bricks": "UNLOCALIZED: Fancy Andesite Bricks",
@@ -152,6 +153,7 @@
 	"block.create.gabbro_pillar": "UNLOCALIZED: Gabbro Pillar",
 	"block.create.gearbox": "Riduttore",
 	"block.create.gearshift": "Cambio",
+	"block.create.glass_fluid_pipe": "UNLOCALIZED: Glass Fluid Pipe",
 	"block.create.granite_bricks": "Mattoni di Granito",
 	"block.create.granite_bricks_slab": "UNLOCALIZED: Granite Bricks Slab",
 	"block.create.granite_bricks_stairs": "UNLOCALIZED: Granite Bricks Stairs",
@@ -463,7 +465,7 @@
 	"advancement.create.electron_tube": "UNLOCALIZED: Beep boop",
 	"advancement.create.electron_tube.desc": "UNLOCALIZED: Make some Electron Tubes, useful in crafting less primitive machinery.",
 	"advancement.create.mechanical_saw": "UNLOCALIZED: Stationary Chopping",
-	"advancement.create.mechanical_saw.desc": "UNLOCALIZED: Place and power a Mechanical mechanical_saw",
+	"advancement.create.mechanical_saw.desc": "UNLOCALIZED: Place and power a Mechanical Saw",
 	"advancement.create.basin": "UNLOCALIZED: Basin Operation",
 	"advancement.create.basin.desc": "UNLOCALIZED: Place a basin and try throwing items into it.",
 	"advancement.create.mixer": "UNLOCALIZED: Mixin' it Up",

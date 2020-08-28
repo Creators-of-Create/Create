@@ -1,6 +1,9 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -10,8 +13,6 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
-
-import javax.annotation.Nullable;
 
 @MethodsReturnNonnullByDefault
 public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBlock {
@@ -30,7 +31,6 @@ public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBloc
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public PushReaction getPushReaction(@Nullable BlockState state) {
         return PushReaction.PUSH_ONLY;
     }

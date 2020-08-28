@@ -2,7 +2,10 @@ package com.simibubi.create.foundation.fluid;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -13,6 +16,34 @@ public class FluidHelper {
 		ITEM_TO_TANK, TANK_TO_ITEM;
 	}
 
+	public static boolean isWater(Fluid fluid) {
+		return convertToStill(fluid) == Fluids.WATER;
+	}
+	
+	public static boolean isLava(Fluid fluid) {
+		return convertToStill(fluid) == Fluids.LAVA;
+	}
+	
+	public static Fluid convertToFlowing(Fluid fluid) {
+		if (fluid == Fluids.WATER)
+			return Fluids.FLOWING_WATER;
+		if (fluid == Fluids.LAVA)
+			return Fluids.FLOWING_LAVA;
+		if (fluid instanceof ForgeFlowingFluid)
+			return ((ForgeFlowingFluid) fluid).getFlowingFluid();
+		return fluid;
+	}
+	
+	public static Fluid convertToStill(Fluid fluid) {
+		if (fluid == Fluids.FLOWING_WATER)
+			return Fluids.WATER;
+		if (fluid == Fluids.FLOWING_LAVA)
+			return Fluids.LAVA;
+		if (fluid instanceof ForgeFlowingFluid)
+			return ((ForgeFlowingFluid) fluid).getStillFluid();
+		return fluid;
+	}
+	
 	@Nullable
 	public static FluidExchange exchange(IFluidHandler fluidTank, IFluidHandlerItem fluidItem, FluidExchange preferred,
 		int maxAmount) {

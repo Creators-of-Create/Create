@@ -1,0 +1,58 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "create:block/glass_fluid_pipe",
+		"particle": "#0"
+	},
+	"elements": [
+		{
+			"name": "Outer",
+			"from": [4, 0, 4],
+			"to": [12, 16, 12],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [0, 0, 16, 8], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [0, 0, 16, 8], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 8], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [0, 0, 16, 8], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "Inner",
+			"from": [4, 0, 11.5],
+			"to": [12, 16, 11.5],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [0, 0, 16, 8], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "Inner",
+			"from": [4, 0, 4.5],
+			"to": [12, 16, 4.5],
+			"shade": false,
+			"faces": {
+				"south": {"uv": [0, 0, 16, 8], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "Inner",
+			"from": [4.5, 0, 4],
+			"to": [4.5, 16, 12],
+			"shade": false,
+			"faces": {
+				"east": {"uv": [0, 0, 16, 8], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "Inner",
+			"from": [11.5, 0, 4],
+			"to": [11.5, 16, 12],
+			"shade": false,
+			"faces": {
+				"west": {"uv": [0, 0, 16, 8], "rotation": 90, "texture": "#0"}
+			}
+		}
+	]
+}

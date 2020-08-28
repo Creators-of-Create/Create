@@ -115,7 +115,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		renderBlock();
 
 		GuiGameElement.of(wand)
-				.at(guiLeft + 220, guiTop + 220)
+				.at(guiLeft + 200, guiTop + 170)
 				.scale(4)
 				.rotate(-70, 20, 20)
 				.render();

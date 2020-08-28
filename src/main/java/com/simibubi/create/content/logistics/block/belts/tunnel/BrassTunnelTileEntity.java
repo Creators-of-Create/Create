@@ -328,7 +328,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putBoolean("ConnectedLeft", connectedLeft);
 		compound.putBoolean("ConnectedRight", connectedRight);
 
@@ -344,14 +344,16 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			return nbt;
 		}));
 
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		boolean wasConnectedLeft = connectedLeft;
+		boolean wasConnectedRight = connectedRight;
+		
 		connectedLeft = compound.getBoolean("ConnectedLeft");
 		connectedRight = compound.getBoolean("ConnectedRight");
-
 		stackToDistribute = ItemStack.read(compound.getCompound("StackToDistribute"));
 		distributionProgress = compound.getFloat("DistributionProgress");
 		distributionDistanceLeft = compound.getInt("DistanceLeft");
@@ -362,14 +364,10 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			return Pair.of(pos, face);
 		});
 
-		super.read(compound);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		boolean wasConnectedLeft = connectedLeft;
-		boolean wasConnectedRight = connectedRight;
-		super.readClientUpdate(tag);
+		super.read(compound, clientPacket);
+		
+		if (!clientPacket)
+			return;
 		if (wasConnectedLeft != connectedLeft || wasConnectedRight != connectedRight) {
 			requestModelDataUpdate();
 			if (hasWorld())

@@ -476,7 +476,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 					BearingContraption bc = (BearingContraption) getContraption();
 					Direction facing = bc.getFacing();
 					Vec3d activeAreaOffset = actor.getActiveAreaOffset(context);
-					if (activeAreaOffset.mul(VecHelper.planeByNormal(new Vec3d(facing.getDirectionVec())))
+					if (activeAreaOffset.mul(VecHelper.axisAlingedPlaneOf(new Vec3d(facing.getDirectionVec())))
 						.equals(Vec3d.ZERO)) {
 						if (VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis())) {
 							context.motion = new Vec3d(facing.getDirectionVec()).scale(facing.getAxis()

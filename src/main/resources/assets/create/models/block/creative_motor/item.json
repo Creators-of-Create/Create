@@ -65,14 +65,14 @@
 		{
 			"name": "Body",
 			"from": [4, 4, 2],
-			"to": [12, 12, 10],
+			"to": [12, 12, 11],
 			"faces": {
 				"north": {"uv": [0, 4, 8, 14], "rotation": 180, "texture": "#5"},
-				"east": {"uv": [4, 3, 12, 13], "rotation": 180, "texture": "#5"},
+				"east": {"uv": [4, 3, 12, 12], "rotation": 90, "texture": "#5"},
 				"south": {"uv": [3, 3, 11, 11], "rotation": 180, "texture": "#5"},
-				"west": {"uv": [4, 3, 12, 13], "rotation": 180, "texture": "#5"},
-				"up": {"uv": [4, 3, 12, 13], "rotation": 180, "texture": "#5"},
-				"down": {"uv": [4, 3, 12, 13], "rotation": 180, "texture": "#5"}
+				"west": {"uv": [4, 3, 12, 12], "rotation": 90, "texture": "#5"},
+				"up": {"uv": [4, 3, 12, 12], "rotation": 180, "texture": "#5"},
+				"down": {"uv": [4, 3, 12, 12], "rotation": 180, "texture": "#5"}
 			}
 		},
 		{
@@ -151,18 +151,17 @@
 			}
 		}
 	],
+	"display": {
+		"gui": {
+			"rotation": [30, 45, 0],
+			"scale": [0.625, 0.625, 0.625]
+		}
+	},
 	"groups": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 		{
 			"name": "shaft",
 			"origin": [8, 8, 8],
 			"children": [10]
 		}
-	],
-	"display": {
-        "gui": {
-            "rotation": [ 30, 45, 0 ],
-            "translation": [ 0, 0, 0],
-            "scale":[ 0.625, 0.625, 0.625 ]
-        }
-	}
+	]
 }

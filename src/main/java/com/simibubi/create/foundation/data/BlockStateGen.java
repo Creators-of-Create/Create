@@ -19,7 +19,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssembleRailType;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.palettes.PavedBlock;
@@ -58,7 +58,7 @@ public class BlockStateGen {
 		boolean customItem) {
 		return (c, p) -> p.directionalBlock(c.get(), getBlockModel(customItem, c, p));
 	}
-	
+
 	public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> directionalBlockProviderIgnoresWaterlogged(
 		boolean customItem) {
 		return (c, p) -> directionalBlockIgnoresWaterlogged(c, p, getBlockModel(customItem, c, p));
@@ -212,9 +212,12 @@ public class BlockStateGen {
 					.build();
 			});
 	}
-	
-	public static NonNullBiConsumer<DataGenContext<Block, BlazeBurnerBlock>, RegistrateBlockstateProvider> blazeHeater(){
-		return (c, p) -> ConfiguredModel.builder().modelFile(p.models().getExistingFile(p.modLoc("block/" + c.getName() + "/block"))).build();
+
+	public static NonNullBiConsumer<DataGenContext<Block, BlazeBurnerBlock>, RegistrateBlockstateProvider> blazeHeater() {
+		return (c, p) -> ConfiguredModel.builder()
+			.modelFile(p.models()
+				.getExistingFile(p.modLoc("block/" + c.getName() + "/block")))
+			.build();
 	}
 
 	public static NonNullBiConsumer<DataGenContext<Block, ReinforcedRailBlock>, RegistrateBlockstateProvider> reinforcedRail() {

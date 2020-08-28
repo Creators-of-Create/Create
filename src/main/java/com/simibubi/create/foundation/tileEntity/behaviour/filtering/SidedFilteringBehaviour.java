@@ -35,12 +35,12 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 		sidedFilters = new IdentityHashMap<>();
 		updateFilterPresence();
 	}
-	
+
 	@Override
 	public void initialize() {
 		super.initialize();
 	}
-	
+
 	public FilteringBehaviour get(Direction side) {
 		return sidedFilters.get(side);
 	}
@@ -59,40 +59,27 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 	}
 
 	@Override
-	public void writeNBT(CompoundNBT nbt) {
+	public void write(CompoundNBT nbt, boolean clientPacket) {
 		nbt.put("Filters", NBTHelper.writeCompoundList(sidedFilters.entrySet(), entry -> {
 			CompoundNBT compound = new CompoundNBT();
 			compound.putInt("Side", entry.getKey()
 				.getIndex());
 			entry.getValue()
-				.writeNBT(compound);
+				.write(compound, clientPacket);
 			return compound;
 		}));
-		super.writeNBT(nbt);
+		super.write(nbt, clientPacket);
 	}
 
 	@Override
-	public void readNBT(CompoundNBT nbt) {
+	public void read(CompoundNBT nbt, boolean clientPacket) {
 		NBTHelper.iterateCompoundList(nbt.getList("Filters", NBT.TAG_COMPOUND), compound -> {
 			Direction face = Direction.byIndex(compound.getInt("Side"));
 			if (sidedFilters.containsKey(face))
 				sidedFilters.get(face)
-					.readNBT(compound);
+					.read(compound, clientPacket);
 		});
-		super.readNBT(nbt);
-	}
-
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT nbt) {
-		nbt.put("Filters", NBTHelper.writeCompoundList(sidedFilters.entrySet(), entry -> {
-			CompoundNBT compound = new CompoundNBT();
-			compound.putInt("Side", entry.getKey()
-				.getIndex());
-			entry.getValue()
-				.writeToClient(compound);
-			return compound;
-		}));
-		return super.writeToClient(nbt);
+		super.read(nbt, clientPacket);
 	}
 
 	@Override

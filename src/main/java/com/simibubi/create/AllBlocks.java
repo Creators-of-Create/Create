@@ -59,13 +59,15 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeBlock;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeModel;
-import com.simibubi.create.content.contraptions.fluids.FluidTankBlock;
-import com.simibubi.create.content.contraptions.fluids.FluidTankGenerator;
-import com.simibubi.create.content.contraptions.fluids.FluidTankItem;
-import com.simibubi.create.content.contraptions.fluids.FluidTankModel;
+import com.simibubi.create.content.contraptions.fluids.PipeAttachmentModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.GlassFluidPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankGenerator;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankItem;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankModel;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
@@ -219,12 +221,14 @@ public class AllBlocks {
 			.build()
 			.register();
 
-	public static final BlockEntry<EncasedShaftBlock> ENCASED_SHAFT = REGISTRATE.block("encased_shaft", EncasedShaftBlock::new)
+	public static final BlockEntry<EncasedShaftBlock> ENCASED_SHAFT =
+		REGISTRATE.block("encased_shaft", EncasedShaftBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(Block.Properties::nonOpaque)
 			.transform(StressConfigDefaults.setNoImpact())
-			//.blockstate(BlockStateGen.axisBlockProvider(true))
-			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models().getExistingFile(p.modLoc("block/encased_shaft/" + blockState.get(EncasedShaftBlock.CASING).getName()))))
+			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
+				.getExistingFile(p.modLoc("block/encased_shaft/" + blockState.get(EncasedShaftBlock.CASING)
+					.getName()))))
 			.loot((p, b) -> p.registerDropping(b, SHAFT.get()))
 			.register();
 
@@ -461,14 +465,34 @@ public class AllBlocks {
 	public static final BlockEntry<FluidPipeBlock> FLUID_PIPE = REGISTRATE.block("fluid_pipe", FluidPipeBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate(BlockStateGen.pipe())
-		.onRegister(CreateRegistrate.blockModel(() -> FluidPipeModel::new))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 		.item()
 		.transform(customItemModel())
 		.register();
 
+	public static final BlockEntry<EncasedPipeBlock> ENCASED_FLUID_PIPE =
+		REGISTRATE.block("encased_fluid_pipe", EncasedPipeBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, state -> p.models()
+				.cubeColumn(c.getName(), p.modLoc("block/copper_casing"), p.modLoc("block/encased_pipe"))))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+			.loot((p, b) -> p.registerDropping(b, FLUID_PIPE.get()))
+			.register();
+
+	public static final BlockEntry<GlassFluidPipeBlock> GLASS_FLUID_PIPE =
+		REGISTRATE.block("glass_fluid_pipe", GlassFluidPipeBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, s -> p.models()
+				.getExistingFile(p.modLoc("block/fluid_pipe/window" + (s.get(GlassFluidPipeBlock.ALT) ? "_alt" : "")))))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+			.loot((p, b) -> p.registerDropping(b, FLUID_PIPE.get()))
+			.register();
+
 	public static final BlockEntry<PumpBlock> MECHANICAL_PUMP = REGISTRATE.block("mechanical_pump", PumpBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(true))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 		.transform(StressConfigDefaults.setImpact(4.0))
 		.item()
 		.transform(customItemModel())

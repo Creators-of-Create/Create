@@ -21,15 +21,15 @@ public class DeferralBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public void writeNBT(CompoundNBT nbt) {
+	public void write(CompoundNBT nbt, boolean clientPacket) {
 		nbt.putBoolean("NeedsUpdate", needsUpdate);
-		super.writeNBT(nbt);
+		super.write(nbt, clientPacket);
 	}
 
 	@Override
-	public void readNBT(CompoundNBT nbt) {
+	public void read(CompoundNBT nbt, boolean clientPacket) {
 		needsUpdate = nbt.getBoolean("NeedsUpdate");
-		super.readNBT(nbt);
+		super.read(nbt, clientPacket);
 	}
 
 	@Override

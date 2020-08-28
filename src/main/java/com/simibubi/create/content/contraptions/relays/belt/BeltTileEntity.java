@@ -79,8 +79,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		behaviours.add(new DirectBeltInputBehaviour(this)
-			.setInsertionHandler(this::tryInsertingFromSide));
+		behaviours.add(new DirectBeltInputBehaviour(this).setInsertionHandler(this::tryInsertingFromSide));
 		behaviours.add(new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf));
 	}
@@ -175,7 +174,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		if (controller != null)
 			compound.put("Controller", NBTUtil.writeBlockPos(controller));
 		compound.putBoolean("IsController", isController());
@@ -186,23 +185,12 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		if (isController())
 			compound.put("Inventory", getInventory().write());
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		CasingType casingBefore = casing;
-		super.readClientUpdate(tag);
-		if (casingBefore != casing) {
-			requestModelDataUpdate();
-			if (hasWorld())
-				world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 16);
-		}
-	}
-
-	@Override
-	public void read(CompoundNBT compound) {
-		super.read(compound);
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 
 		if (compound.getBoolean("IsController"))
 			controller = pos;
@@ -219,7 +207,16 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (isController())
 			getInventory().read(compound.getCompound("Inventory"));
 
+		CasingType casingBefore = casing;
 		casing = NBTHelper.readEnum(compound, "Casing", CasingType.class);
+
+		if (!clientPacket)
+			return;
+		if (casingBefore == casing)
+			return;
+		requestModelDataUpdate();
+		if (hasWorld())
+			world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 16);
 	}
 
 	@Override
@@ -397,16 +394,17 @@ public class BeltTileEntity extends KineticTileEntity {
 		BeltTileEntity nextBeltController = getControllerTE();
 		ItemStack inserted = transportedStack.stack;
 		ItemStack empty = ItemStack.EMPTY;
-		
+
 		if (nextBeltController == null)
 			return inserted;
 		BeltInventory nextInventory = nextBeltController.getInventory();
-		
+
 		TileEntity teAbove = world.getTileEntity(pos.up());
 		if (teAbove instanceof BrassTunnelTileEntity) {
 			BrassTunnelTileEntity tunnelTE = (BrassTunnelTileEntity) teAbove;
 			if (tunnelTE.hasDistributionBehaviour()) {
-				if (!tunnelTE.getStackToDistribute().isEmpty())
+				if (!tunnelTE.getStackToDistribute()
+					.isEmpty())
 					return inserted;
 				if (!tunnelTE.testFlapFilter(side.getOpposite(), inserted))
 					return inserted;

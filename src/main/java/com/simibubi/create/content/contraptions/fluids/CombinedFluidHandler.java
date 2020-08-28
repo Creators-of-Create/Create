@@ -87,17 +87,20 @@ public class CombinedFluidHandler implements IFluidHandler {
 	@Nonnull
 	@Override
 	public FluidStack drain(int maxDrain, FluidAction action) {
-
 		FluidStack stack = new FluidStack(tanks[0].getFluid(), 0);
 
 		for (int i = 0; i < tanks.length; i++) {
-			if (tanks[i].isFluidEqual(stack)) {
+			if (stack.isEmpty() || tanks[i].isFluidEqual(stack)) {
 				int newDrainAmount = MathHelper.clamp(stack.getAmount() + tanks[i].getAmount(), 0, maxDrain);
 				if (action == FluidAction.EXECUTE) {
 					tanks[i].shrink(newDrainAmount - stack.getAmount());
 					if (tanks[i].isEmpty())
 						tanks[i] = FluidStack.EMPTY;
 				}
+				if (stack.isEmpty()) 
+					stack = tanks[i].copy();
+				if (stack.isEmpty())
+					continue;
 				stack.setAmount(newDrainAmount);
 			}
 		}
