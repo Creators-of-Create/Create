@@ -60,9 +60,10 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 							&& ((ContraptionEntity) passenger).getContraption() == context.contraption)
 						continue Entities;
 
-			float damage = (float) MathHelper.clamp(Math.abs(context.relativeMotion.length() * 10) + 1, 5, 20);
-			if (damageSource != null && !world.isRemote)
+			if (damageSource != null && !world.isRemote) {
+				float damage = (float) MathHelper.clamp(6 * Math.pow(context.relativeMotion.length(), 0.4) + 1, 2, 10);
 				entity.attackEntityFrom(damageSource, damage);
+			}
 			if (throwsEntities() && (world.isRemote == (entity instanceof PlayerEntity))) {
 				Vec3d motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
 				int maxBoost = 4;
