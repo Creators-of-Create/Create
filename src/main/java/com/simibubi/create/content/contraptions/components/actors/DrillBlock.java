@@ -29,7 +29,7 @@ import mcp.MethodsReturnNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTileEntity> {
-	public static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
+	public static DamageSource damageSourceDrill = new DamageSource("create.mechanical_drill").setDamageBypassesArmor();
 
 	public DrillBlock(Properties properties) {
 		super(properties);
@@ -49,7 +49,7 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.getSpeed() == 0)
 				return;
-			entityIn.attackEntityFrom(damageSourceDrill, MathHelper.clamp(Math.abs(te.getSpeed() / 32f) + 1, 0, 20));
+			entityIn.attackEntityFrom(damageSourceDrill, (float) getDamage(te.getSpeed()));
 		});
 	}
 
@@ -89,4 +89,11 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 		return DrillTileEntity.class;
 	}
 
+	public static double getDamage(float speed) {
+		float speedAbs = Math.abs(speed);
+		double sub1 = Math.min(speedAbs / 16, 2);
+		double sub2 = Math.min(speedAbs / 32, 4);
+		double sub3 = Math.min(speedAbs / 64, 4);
+		return MathHelper.clamp(sub1 + sub2 + sub3, 1, 10);
+	}
 }

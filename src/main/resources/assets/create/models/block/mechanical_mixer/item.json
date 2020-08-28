@@ -4,12 +4,11 @@
 	"ambientocclusion": false,
 	"texture_size": [32, 32],
 	"textures": {
-		"2": "create:block/spruce_log_top",
+		"2": "block/spruce_log_top",
 		"4": "create:block/mixer_base_side",
 		"6": "create:block/mixer_head",
 		"11": "create:block/mechanical_press_top",
 		"1_2": "create:block/cogwheel",
-		"particle": "create:block/stripped_spruce_log",
 		"mechanical_press_pole": "create:block/mechanical_press_pole"
 	},
 	"elements": [

@@ -522,8 +522,8 @@
 	"death.attack.create.crush": "%1$s was processed by Crushing Wheels",
 	"death.attack.create.fan_fire": "%1$s was burned to death by hot air",
 	"death.attack.create.fan_lava": "%1$s was burned to death by lava fan",
-	"death.attack.create.mechanical_drill": "%1$s was impaled by Mechanical mechanical_drill",
-	"death.attack.create.mechanical_saw": "%1$s got cut in half by Mechanical Saw",
+	"death.attack.create.mechanical_drill": "%1$s was impaled by a Mechanical Drill",
+	"death.attack.create.mechanical_saw": "%1$s got cut in half by a Mechanical Saw",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s was blown up by tampered cuckoo clock",
 
 	"create.block.deployer.damage_source_name": "a rogue Deployer",
