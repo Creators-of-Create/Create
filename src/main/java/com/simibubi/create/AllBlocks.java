@@ -61,6 +61,7 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableBl
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.contraptions.fluids.PipeAttachmentModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.GlassFluidPipeBlock;
@@ -507,6 +508,14 @@ public class AllBlocks {
 		.item(FluidTankItem::new)
 		.model(AssetLookup.<FluidTankItem>customItemModel("_", "block_single_window"))
 		.build()
+		.register();
+
+	public static final BlockEntry<SpoutBlock> SPOUT = REGISTRATE.block("spout", SpoutBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.item()
+		.transform(customItemModel())
 		.register();
 
 	// Contraptions

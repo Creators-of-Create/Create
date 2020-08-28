@@ -79,6 +79,10 @@ public class AllBlockPartials {
 
 		MECHANICAL_PUMP_ARROW = get("mechanical_pump/arrow"), MECHANICAL_PUMP_COG = get("mechanical_pump/cog"),
 		FLUID_PIPE_CASING = get("fluid_pipe/casing"),
+		
+		SPOUT_TOP = get("spout/top"),
+		SPOUT_MIDDLE = get("spout/middle"),
+		SPOUT_BOTTOM = get("spout/bottom"),
 
 		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
 		COUPLING_RING = getEntity("minecart_coupling/ring"),

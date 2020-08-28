@@ -8,6 +8,7 @@ import java.util.function.UnaryOperator;
 import com.google.common.base.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.utility.Lang;
@@ -64,7 +65,20 @@ public class StandardRecipes extends RecipeProvider {
 	// TODO
 
 	private Marker KINETICS = enterSection(AllSections.KINETICS);
+	
+	GeneratedRecipe BASIN = create(AllBlocks.BASIN).unlockedBy(AllItems.ANDESITE_ALLOY::get)
+		.viaShaped(b -> b.key('#', AllItems.ANDESITE_ALLOY.get())
+			.patternLine("# #")
+			.patternLine("###")),
+
+		BRASS_HAND = create(AllBlocks.SCHEMATIC_TABLE).unlockedBy(AllItems.EMPTY_SCHEMATIC::get)
+			.viaShaped(b -> b.key('#', AllItems.ANDESITE_ALLOY.get())
+				.key('+', AllTags.forgeItemTag("plates/brass"))
+				.patternLine(" # ")
+				.patternLine("+++")
+				.patternLine(" + "))
 	// TODO
+	;
 
 	private Marker LOGISTICS = enterSection(AllSections.LOGISTICS);
 	// TODO

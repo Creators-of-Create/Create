@@ -417,7 +417,7 @@ public class BeltInventory {
 				iterator.remove();
 			}
 		}
-		toBeAdded.forEach(this::insert);
+		toBeAdded.forEach(toInsert::add);
 		if (dirty) {
 			belt.markDirty();
 			belt.sendData();

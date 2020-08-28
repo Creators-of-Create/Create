@@ -31,6 +31,14 @@ public class TransportedItemStackHandlerBehaviour extends TileEntityBehaviour {
 	public void handleProcessingOnAllItems(Function<TransportedItemStack, List<TransportedItemStack>> processFunction) {
 		handleCenteredProcessingOnAllItems(.51f, processFunction);
 	}
+	
+	public void handleProcessingOnItem(TransportedItemStack item, List<TransportedItemStack> processOutput) {
+		handleCenteredProcessingOnAllItems(.51f, t -> {
+			if (t == item)
+				return processOutput;
+			return null;
+		});
+	}
 
 	public void handleCenteredProcessingOnAllItems(float maxDistanceFromCenter,
 		Function<TransportedItemStack, List<TransportedItemStack>> processFunction) {

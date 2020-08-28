@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 79",
+	"_": "Missing Localizations: 80",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -334,6 +334,7 @@
 	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Steel Casing",
 	"block.create.shaft": "传动杆",
 	"block.create.speedometer": "速度表",
+	"block.create.spout": "UNLOCALIZED: Spout",
 	"block.create.spruce_window": "云杉窗户",
 	"block.create.spruce_window_pane": "云杉窗户板",
 	"block.create.sticky_mechanical_piston": "粘性动力活塞",

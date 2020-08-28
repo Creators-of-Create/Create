@@ -156,9 +156,12 @@ public class FluidPropagator {
 	static AxisAlignedBB smallCenter = new AxisAlignedBB(BlockPos.ZERO).shrink(.25);
 
 	public static boolean hasFluidCapability(BlockState state, IBlockReader world, BlockPos pos, Direction blockFace) {
-		return state.hasTileEntity() && world.getTileEntity(pos)
-			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite())
-			.isPresent();
+		if (!state.hasTileEntity())
+			return false;
+		TileEntity tileEntity = world.getTileEntity(pos);
+		return tileEntity != null
+			&& tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite())
+				.isPresent();
 	}
 
 	public static boolean isStraightPipe(BlockState state) {

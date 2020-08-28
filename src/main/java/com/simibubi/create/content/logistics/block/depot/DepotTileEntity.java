@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -52,7 +53,7 @@ public class DepotTileEntity extends SmartTileEntity {
 		heldItem.prevSideOffset = heldItem.sideOffset;
 		float diff = .5f - heldItem.beltPosition;
 		if (diff > 1 / 512f) {
-			if (diff > 1 / 32f)
+			if (diff > 1 / 32f && !BeltHelper.isItemUpright(heldItem.stack))
 				heldItem.angle += 1;
 			heldItem.beltPosition += diff / 4f;
 		}

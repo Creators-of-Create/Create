@@ -45,6 +45,8 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableTi
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelTileEntity;
 import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutRenderer;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.TransparentStraightPipeRenderer;
@@ -224,6 +226,12 @@ public class AllTileEntities {
 			.tileEntity("fluid_tank", (NonNullFunction<TileEntityType<FluidTankTileEntity>, ? extends FluidTankTileEntity>) FluidTankTileEntity::new)
 			.validBlocks(AllBlocks.FLUID_TANK)
 			.renderer(() -> FluidTankRenderer::new)
+			.register();
+	
+	public static final TileEntityEntry<SpoutTileEntity> SPOUT = Create.registrate()
+			.tileEntity("spout", SpoutTileEntity::new)
+			.validBlocks(AllBlocks.SPOUT)
+			.renderer(() -> SpoutRenderer::new)
 			.register();
 
 	public static final TileEntityEntry<BeltTileEntity> BELT = Create.registrate()

@@ -37,7 +37,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 		float level = fluidLevel.get(partialTicks);
 		if (level < 1 / (512f * totalHeight))
 			return;
-		float clamp = MathHelper.clamp(level * totalHeight, 0, totalHeight);
+		float clampedLevel = MathHelper.clamp(level * totalHeight, 0, totalHeight);
 
 		FluidTank tank = te.tankInventory;
 		FluidStack fluidStack = tank.getFluid();
@@ -48,19 +48,19 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 
 		float xMin = tankHullWidth;
 		float xMax = xMin + te.width - 2 * tankHullWidth;
-		float yMin = totalHeight + capHeight + minPuddleHeight - clamp;
-		float yMax = yMin + clamp;
+		float yMin = totalHeight + capHeight + minPuddleHeight - clampedLevel;
+		float yMax = yMin + clampedLevel;
 
 		if (top) {
-			yMin += totalHeight - clamp;
-			yMax += totalHeight - clamp;
+			yMin += totalHeight - clampedLevel;
+			yMax += totalHeight - clampedLevel;
 		}
 
 		float zMin = tankHullWidth;
 		float zMax = zMin + te.width - 2 * tankHullWidth;
 
 		ms.push();
-		ms.translate(0, clamp - totalHeight, 0);
+		ms.translate(0, clampedLevel - totalHeight, 0);
 		FluidRenderer.renderTiledFluidBB(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false);
 		ms.pop();
 	}
