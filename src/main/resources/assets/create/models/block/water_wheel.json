@@ -7,7 +7,7 @@
 		"axis": "create:block/axis",
 		"axis_top": "create:block/axis_top",
 		"wheel": "create:block/wheel",
-		"particle": "create:block/stripped_spruce_log"
+		"particle": "block/stripped_spruce_log"
 	},
 	"elements": [
 		{

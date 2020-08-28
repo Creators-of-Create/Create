@@ -3,6 +3,7 @@
 	"parent": "block/block",
 	"textures": {
 		"redstone_antenna": "create:block/redstone_antenna",
+		"particle": "create:block/redstone_bridge",
 		"redstone_bridge": "create:block/redstone_bridge"
 	},
 	"elements": [
