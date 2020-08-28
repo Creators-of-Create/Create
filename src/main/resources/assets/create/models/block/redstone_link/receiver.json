@@ -1,66 +1,66 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
-    "parent": "block/block",
-    "display": {
-        "gui": {
-            "rotation": [ 30, 45, 0 ],
-            "translation": [ 0, 0, 0],
-            "scale":[ 0.625, 0.625, 0.625 ]
-        }
-    },
-    "textures": {
-        "redstone_antenna": "create:block/redstone_antenna",
-        "redstone_bridge": "create:block/redstone_bridge",
-        "particle": "create:block/redstone_bridge"
-    },
-    "elements": [
-        {
-            "name": "Controller",
-            "from": [ 2, 0, 2 ], 
-            "to": [ 14, 3, 14 ], 
-            "faces": {
-                "north": { "texture": "#redstone_bridge", "uv": [ 12, 0, 15, 12 ], "rotation": 90 },
-                "east": { "texture": "#redstone_bridge", "uv": [ 0, 12, 12, 15 ] },
-                "south": { "texture": "#redstone_bridge", "uv": [ 12, 0, 15, 12 ], "rotation": 90 },
-                "west": { "texture": "#redstone_bridge", "uv": [ 0, 12, 12, 15 ] },
-                "up": { "texture": "#redstone_bridge", "uv": [ 0, 0, 12, 12 ], "rotation": 270 }
-            }
-        },
-        {
-            "name": "AntennaX",
-            "from": [ 0, 1, 4 ], 
-            "to": [ 3, 11, 5 ], 
-            "faces": {
-                "north": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ] },
-                "south": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ] },
-                "down": { "texture": "#redstone_antenna", "uv": [ 0, 9, 3, 10 ] }
-            }
-        },
-        {
-            "name": "AntennaZ",
-            "from": [ 1, 1, 3 ], 
-            "to": [ 2, 11, 6 ], 
-            "faces": {
-                "east": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ] },
-                "west": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ] }
-            }
-        },
-        {
-            "name": "AntennaTop",
-            "from": [ 1, 9, 4 ], 
-            "to": [ 2, 10, 5 ], 
-            "faces": {
-                "up": { "texture": "#redstone_antenna", "uv": [ 1, 1, 2, 2 ] }
-            }
-        },
-        {
-            "name": "Dish",
-            "from": [ -1, 7, 2 ], 
-            "to": [ 4, 7, 7 ], 
-            "faces": {
-                "up": { "texture": "#redstone_antenna", "uv": [ 4, 0, 9, 5 ] },
-                "down": { "texture": "#redstone_antenna", "uv": [ 4, 0, 9, 5 ] }
-            }
-        }
-    ]
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"redstone_antenna": "create:block/redstone_antenna",
+		"particle": "create:block/redstone_bridge",
+		"redstone_bridge": "create:block/redstone_bridge"
+	},
+	"elements": [
+		{
+			"name": "Controller",
+			"from": [2, 0, 2],
+			"to": [14, 3, 14],
+			"faces": {
+				"north": {"uv": [6, 7, 7.5, 13], "rotation": 90, "texture": "#redstone_bridge"},
+				"east": {"uv": [0, 13, 6, 14.5], "texture": "#redstone_bridge"},
+				"south": {"uv": [6, 7, 7.5, 13], "rotation": 90, "texture": "#redstone_bridge"},
+				"west": {"uv": [0, 13, 6, 14.5], "texture": "#redstone_bridge"},
+				"up": {"uv": [0, 7, 6, 13], "rotation": 270, "texture": "#redstone_bridge"},
+				"down": {"uv": [5, 0, 11, 6], "rotation": 90, "texture": "#redstone_bridge"}
+			}
+		},
+		{
+			"name": "AntennaX",
+			"from": [0, 1, 4],
+			"to": [3, 11, 5],
+			"faces": {
+				"north": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
+				"south": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
+				"down": {"uv": [0, 9, 3, 10], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaZ",
+			"from": [1, 1, 3],
+			"to": [2, 11, 6],
+			"faces": {
+				"east": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
+				"west": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaTop",
+			"from": [1, 9, 4],
+			"to": [2, 10, 5],
+			"faces": {
+				"up": {"uv": [1, 1, 2, 2], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "Dish",
+			"from": [-1, 7, 2],
+			"to": [4, 7, 7],
+			"faces": {
+				"up": {"uv": [4, 0, 9, 5], "texture": "#redstone_antenna"},
+				"down": {"uv": [4, 0, 9, 5], "texture": "#redstone_antenna"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [30, 45, 0],
+			"scale": [0.625, 0.625, 0.625]
+		}
+	}
 }

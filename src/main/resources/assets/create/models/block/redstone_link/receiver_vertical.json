@@ -1,70 +1,60 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+	"credit": "Made with Blockbench",
 	"parent": "block/block",
-    "textures": {
-        "redstone_antenna": "create:block/redstone_antenna",
-        "redstone_bridge_side": "create:block/redstone_bridge_side",
-		"particle": "create:block/redstone_bridge_side"
-    },
-    "elements": [
-        {
-            "name": "Body",
-            "from": [ 3, 0, 1 ], 
-            "to": [ 13, 3, 15 ], 
-            "faces": {
-                "north": { "texture": "#redstone_bridge_side", "uv": [ 13, 2, 16, 12 ], "rotation": 90 },
-                "east": { "texture": "#redstone_bridge_side", "uv": [ 10, 0, 13, 14 ], "rotation": 90 },
-                "south": { "texture": "#redstone_bridge_side", "uv": [ 13, 2, 16, 12 ], "rotation": 90 },
-                "west": { "texture": "#redstone_bridge_side", "uv": [ 10, 0, 13, 14 ], "rotation": 90 },
-                "up": { "texture": "#redstone_bridge_side", "uv": [ 0, 0, 10, 14 ] }
-            }
-        },
-        {
-            "name": "Bottom",
-            "from": [ 3, -1, 1 ], 
-            "to": [ 13, 0, 15 ], 
-            "faces": {
-                "north": { "texture": "#redstone_bridge_side", "uv": [ 15, 1, 16, 13 ], "rotation": 270 },
-                "east": { "texture": "#redstone_bridge_side", "uv": [ 14, 0, 15, 14 ], "rotation": 270 },
-                "south": { "texture": "#redstone_bridge_side", "uv": [ 15, 1, 16, 13 ], "rotation": 90 },
-                "west": { "texture": "#redstone_bridge_side", "uv": [ 14, 0, 15, 14 ], "rotation": 90 }
-            }
-        },
-        {
-            "name": "AntennaX",
-            "from": [ 3, 3, -5 ], 
-            "to": [ 6, 4, 5 ], 
-            "faces": {
-                "south": { "texture": "#redstone_antenna", "uv": [ 0, 9, 3, 10 ] },
-                "up": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ] },
-                "down": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ], "rotation": 180 }
-            }
-        },
-        {
-            "name": "AntennaZ",
-            "from": [ 4, 2, -5 ], 
-            "to": [ 5, 5, 5 ], 
-            "faces": {
-                "east": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ], "rotation": 90 },
-                "west": { "texture": "#redstone_antenna", "uv": [ 0, 0, 3, 10 ], "rotation": 270 }
-            }
-        },
-        {
-            "name": "AntennaTop",
-            "from": [ 4, 3, -4 ], 
-            "to": [ 5, 4, -3 ], 
-            "faces": {
-                "north": { "texture": "#redstone_antenna", "uv": [ 1, 1, 2, 2 ] }
-            }
-        },
-        {
-            "name": "Dish",
-            "from": [ 2, 1, -1 ], 
-            "to": [ 7, 6, -1 ], 
-            "faces": {
-                "north": { "texture": "#redstone_antenna", "uv": [ 4, 0, 9, 5 ] },
-                "south": { "texture": "#redstone_antenna", "uv": [ 4, 0, 9, 5 ] }
-            }
-        }
-    ]
+	"textures": {
+		"redstone_antenna": "create:block/redstone_antenna",
+		"particle": "create:block/redstone_bridge",
+		"redstone_bridge_side": "create:block/redstone_bridge"
+	},
+	"elements": [
+		{
+			"name": "Body",
+			"from": [3, -1, 1],
+			"to": [13, 3, 15],
+			"faces": {
+				"north": {"uv": [7.5, 13, 12.5, 15], "texture": "#redstone_bridge_side"},
+				"east": {"uv": [12.5, 6, 14.5, 13], "rotation": 90, "texture": "#redstone_bridge_side"},
+				"south": {"uv": [7.5, 13, 12.5, 15], "texture": "#redstone_bridge_side"},
+				"west": {"uv": [12.5, 6, 14.5, 13], "rotation": 90, "texture": "#redstone_bridge_side"},
+				"up": {"uv": [7.5, 6, 12.5, 13], "texture": "#redstone_bridge_side"},
+				"down": {"uv": [0, 0, 5, 7], "texture": "#redstone_bridge_side"}
+			}
+		},
+		{
+			"name": "AntennaX",
+			"from": [3, 3, -5],
+			"to": [6, 4, 5],
+			"faces": {
+				"south": {"uv": [0, 9, 3, 10], "texture": "#redstone_antenna"},
+				"up": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
+				"down": {"uv": [0, 0, 3, 10], "rotation": 180, "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaZ",
+			"from": [4, 2, -5],
+			"to": [5, 5, 5],
+			"faces": {
+				"east": {"uv": [0, 0, 3, 10], "rotation": 90, "texture": "#redstone_antenna"},
+				"west": {"uv": [0, 0, 3, 10], "rotation": 270, "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaTop",
+			"from": [4, 3, -4],
+			"to": [5, 4, -3],
+			"faces": {
+				"north": {"uv": [1, 1, 2, 2], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "Dish",
+			"from": [2, 1, -1],
+			"to": [7, 6, -1],
+			"faces": {
+				"north": {"uv": [4, 0, 9, 5], "texture": "#redstone_antenna"},
+				"south": {"uv": [4, 0, 9, 5], "texture": "#redstone_antenna"}
+			}
+		}
+	]
 }
