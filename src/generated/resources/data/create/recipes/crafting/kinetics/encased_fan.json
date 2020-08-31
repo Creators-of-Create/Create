@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "RAR",
+    "BPB"
+  ],
+  "key": {
+    "S": {
+      "item": "create:shaft"
+    },
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "R": {
+      "tag": "minecraft:planks"
+    },
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "P": {
+      "item": "create:propeller"
+    }
+  },
+  "result": {
+    "item": "create:encased_fan"
+  }
+}

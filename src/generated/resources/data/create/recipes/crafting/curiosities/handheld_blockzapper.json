@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  E",
+    " O ",
+    "OA "
+  ],
+  "key": {
+    "E": {
+      "item": "create:refined_radiance"
+    },
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "O": {
+      "tag": "forge:obsidian"
+    }
+  },
+  "result": {
+    "item": "create:handheld_blockzapper"
+  }
+}

@@ -7,7 +7,7 @@
 		"7": "create:block/gearbox",
 		"8": "block/polished_andesite",
 		"9": "create:block/andesite_bricks",
-		"particle": "#5"
+		"particle": "texture"
 	},
 	"elements": [
 		{
@@ -28,10 +28,10 @@
 			"from": [5, 9, 5],
 			"to": [11, 13, 11],
 			"faces": {
-				"north": {"uv": [10, 6, 16, 10], "rotation": 180, "texture": "#6"},
-				"east": {"uv": [10, 6, 16, 10], "rotation": 180, "texture": "#6"},
-				"south": {"uv": [10, 6, 16, 10], "rotation": 180, "texture": "#6"},
-				"west": {"uv": [10, 6, 16, 10], "rotation": 180, "texture": "#6"},
+				"north": {"uv": [10, 6, 16, 10], "texture": "#6"},
+				"east": {"uv": [10, 6, 16, 10], "texture": "#6"},
+				"south": {"uv": [10, 6, 16, 10], "texture": "#6"},
+				"west": {"uv": [10, 6, 16, 10], "texture": "#6"},
 				"up": {"uv": [10, 0, 16, 6], "texture": "#6"},
 				"down": {"uv": [14, 4, 20, 10], "rotation": 180, "texture": "#6"}
 			}
@@ -113,10 +113,10 @@
 			"from": [3, 0.2, 3],
 			"to": [13, 4, 13],
 			"faces": {
-				"north": {"uv": [8, 0, 18, 4], "texture": "#9"},
-				"east": {"uv": [1, 0, 11, 4], "texture": "#9"},
-				"south": {"uv": [8, 0, 18, 4], "texture": "#9"},
-				"west": {"uv": [0, 0, 10, 4], "texture": "#9"},
+				"north": {"uv": [5, 0, 15, 4], "texture": "#9"},
+				"east": {"uv": [5, 0, 15, 4], "texture": "#9"},
+				"south": {"uv": [5, 0, 15, 4], "texture": "#9"},
+				"west": {"uv": [5, 0, 15, 4], "texture": "#9"},
 				"up": {"uv": [11, 14, 1, 4], "rotation": 90, "texture": "#8"},
 				"down": {"uv": [10, 10, 0, 0], "rotation": 180, "texture": "#6"}
 			}

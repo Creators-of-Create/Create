@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "CBC",
+    " C "
+  ],
+  "key": {
+    "C": {
+      "tag": "forge:gunpowder"
+    },
+    "B": {
+      "item": "create:cuckoo_clock"
+    }
+  },
+  "result": {
+    "item": "create:mysterious_cuckoo_clock"
+  }
+}

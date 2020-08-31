@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "T",
+    "P",
+    "S"
+  ],
+  "key": {
+    "T": {
+      "item": "create:fluid_tank"
+    },
+    "P": {
+      "item": "minecraft:dried_kelp"
+    },
+    "S": {
+      "tag": "forge:nuggets/copper"
+    }
+  },
+  "result": {
+    "item": "create:spout"
+  }
+}

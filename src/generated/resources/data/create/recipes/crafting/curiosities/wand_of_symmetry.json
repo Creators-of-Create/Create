@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " GE",
+    "LEG",
+    "OL "
+  ],
+  "key": {
+    "E": {
+      "item": "create:refined_radiance"
+    },
+    "G": {
+      "tag": "forge:glass_panes/white"
+    },
+    "O": {
+      "tag": "forge:obsidian"
+    },
+    "L": {
+      "tag": "forge:ingots/brass"
+    }
+  },
+  "result": {
+    "item": "create:wand_of_symmetry"
+  }
+}

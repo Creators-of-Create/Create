@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BA",
+    "AB"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:andesite"
+    },
+    "B": {
+      "tag": "forge:nuggets/iron"
+    }
+  },
+  "result": {
+    "item": "create:andesite_alloy"
+  }
+}

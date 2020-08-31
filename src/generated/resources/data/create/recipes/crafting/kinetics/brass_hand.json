@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "BBB",
+    " B "
+  ],
+  "key": {
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "B": {
+      "tag": "forge:plates/brass"
+    }
+  },
+  "result": {
+    "item": "create:brass_hand"
+  }
+}

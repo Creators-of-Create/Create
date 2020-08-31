@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:copper_shingles"
+    }
+  ],
+  "result": {
+    "item": "create:copper_tiles"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "SCS",
+    " I "
+  ],
+  "key": {
+    "B": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "create:andesite_alloy"
+    },
+    "C": {
+      "item": "create:cogwheel"
+    },
+    "I": {
+      "tag": "forge:stone"
+    }
+  },
+  "result": {
+    "item": "create:millstone"
+  }
+}

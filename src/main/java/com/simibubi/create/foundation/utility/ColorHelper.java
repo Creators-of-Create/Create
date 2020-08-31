@@ -70,7 +70,8 @@ public class ColorHelper {
 	}
 
 	public static int colorFromLong(long l) {
-		int rainbowColor = ColorHelper.rainbowColor(String.valueOf(l).hashCode());
+		int rainbowColor = ColorHelper.rainbowColor(String.valueOf(l)
+			.hashCode());
 		return ColorHelper.mixColors(rainbowColor, 0xFFFFFF, .5f);
 	}
 

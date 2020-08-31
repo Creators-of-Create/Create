@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "SCS",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "create:brass_hand"
+    },
+    "B": {
+      "item": "create:electron_tube"
+    },
+    "S": {
+      "item": "create:cogwheel"
+    },
+    "C": {
+      "item": "create:andesite_casing"
+    }
+  },
+  "result": {
+    "item": "create:deployer"
+  }
+}

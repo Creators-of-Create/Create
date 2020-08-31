@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EG",
+    "EO",
+    " O"
+  ],
+  "key": {
+    "E": {
+      "item": "create:refined_radiance"
+    },
+    "G": {
+      "item": "create:cogwheel"
+    },
+    "O": {
+      "tag": "forge:obsidian"
+    }
+  },
+  "result": {
+    "item": "create:deforester"
+  }
+}

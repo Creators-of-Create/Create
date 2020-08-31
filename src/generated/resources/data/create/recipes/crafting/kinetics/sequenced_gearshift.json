@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "SCS",
+    " I "
+  ],
+  "key": {
+    "B": {
+      "item": "create:electron_tube"
+    },
+    "S": {
+      "item": "create:cogwheel"
+    },
+    "C": {
+      "item": "create:brass_casing"
+    },
+    "I": {
+      "item": "minecraft:clock"
+    }
+  },
+  "result": {
+    "item": "create:sequenced_gearshift"
+  }
+}

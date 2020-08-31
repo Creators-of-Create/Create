@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "SCS",
+    " R "
+  ],
+  "key": {
+    "B": {
+      "item": "create:electron_tube"
+    },
+    "R": {
+      "item": "minecraft:crafting_table"
+    },
+    "C": {
+      "item": "create:brass_casing"
+    },
+    "S": {
+      "item": "create:cogwheel"
+    }
+  },
+  "result": {
+    "item": "create:mechanical_crafter",
+    "count": 3
+  }
+}

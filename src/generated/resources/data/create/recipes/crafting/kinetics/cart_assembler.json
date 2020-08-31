@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " L ",
+    "CRC",
+    "L L"
+  ],
+  "key": {
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "C": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "result": {
+    "item": "create:cart_assembler"
+  }
+}

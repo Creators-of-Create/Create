@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "SCS",
+    " I "
+  ],
+  "key": {
+    "S": {
+      "item": "create:shaft"
+    },
+    "B": {
+      "item": "create:andesite_casing"
+    },
+    "C": {
+      "tag": "minecraft:wool"
+    },
+    "I": {
+      "tag": "forge:plates/iron"
+    }
+  },
+  "result": {
+    "item": "create:rope_pulley"
+  }
+}

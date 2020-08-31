@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "SCS"
+  ],
+  "key": {
+    "B": {
+      "item": "create:integrated_circuit"
+    },
+    "C": {
+      "item": "create:brass_casing"
+    },
+    "S": {
+      "item": "create:shaft"
+    }
+  },
+  "result": {
+    "item": "create:rotation_speed_controller"
+  }
+}

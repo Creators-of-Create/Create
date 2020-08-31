@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "SCS",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "create:shaft"
+    },
+    "S": {
+      "item": "create:andesite_alloy"
+    },
+    "B": {
+      "item": "create:turntable"
+    },
+    "C": {
+      "item": "create:andesite_casing"
+    }
+  },
+  "result": {
+    "item": "create:mechanical_bearing"
+  }
+}

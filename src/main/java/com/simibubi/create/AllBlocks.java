@@ -1,6 +1,5 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
@@ -10,6 +9,7 @@ import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.ModelGen.oxidizedItemModel;
 
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
@@ -146,18 +146,23 @@ import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
+import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
-import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.item.DyeColor;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
@@ -712,7 +717,36 @@ public class AllBlocks {
 						.texture("1", p.modLoc("block/seat/top_" + colourName))
 						.texture("2", p.modLoc("block/seat/side_" + colourName)));
 				})
-				.simpleItem()
+				.recipe((c, p) -> {
+					ShapedRecipeBuilder.shapedRecipe(c.get())
+						.patternLine("#")
+						.patternLine("-")
+						.key('#', DyeHelper.getWoolOfDye(colour))
+						.key('-', ItemTags.WOODEN_SLABS)
+						.addCriterion("has_wool",
+							new InventoryChangeTrigger.Instance(MinMaxBounds.IntBound.UNBOUNDED,
+								MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED,
+								new ItemPredicate[] { ItemPredicate.Builder.create()
+									.tag(ItemTags.WOOL)
+									.build() }))
+						.build(p, Create.asResource("crafting/kinetics/" + c.getName()));
+					ShapedRecipeBuilder.shapedRecipe(c.get())
+						.patternLine("#")
+						.patternLine("-")
+						.key('#', DyeHelper.getTagOfDye(colour))
+						.key('-', AllItemTags.SEATS.tag)
+						.addCriterion("has_seat",
+							new InventoryChangeTrigger.Instance(MinMaxBounds.IntBound.UNBOUNDED,
+								MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED,
+								new ItemPredicate[] { ItemPredicate.Builder.create()
+									.tag(AllItemTags.SEATS.tag)
+									.build() }))
+						.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
+				})
+				.tag(AllBlockTags.SEATS.tag)
+				.item()
+				.tag(AllItemTags.SEATS.tag)
+				.build()
 				.register();
 		}
 	}
@@ -732,12 +766,14 @@ public class AllBlocks {
 	public static final BlockEntry<CasingBlock> SHADOW_STEEL_CASING =
 		REGISTRATE.block("shadow_steel_casing", CasingBlock::new)
 			.transform(BuilderTransformers.casing(AllSpriteShifts.SHADOW_STEEL_CASING))
+			.lang("Shadow Casing")
 			.register();
 
 	public static final BlockEntry<CasingBlock> REFINED_RADIANCE_CASING =
 		REGISTRATE.block("refined_radiance_casing", CasingBlock::new)
 			.transform(BuilderTransformers.casing(AllSpriteShifts.REFINED_RADIANCE_CASING))
 			.properties(p -> p.lightValue(12))
+			.lang("Radiant Casing")
 			.register();
 
 	public static final BlockEntry<MechanicalCrafterBlock> MECHANICAL_CRAFTER =
@@ -1074,7 +1110,6 @@ public class AllBlocks {
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.transform(tagBlockAndItem("storage_blocks/copper"))
 			.transform(oxidizedItemModel())
-			.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/copper")), ctx, false))
 			.transform(oxidizedBlockstate())
 			.register();
 
@@ -1098,7 +1133,6 @@ public class AllBlocks {
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.transform(tagBlockAndItem("storage_blocks/zinc"))
 		.build()
-		.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/zinc")), ctx, false))
 		.register();
 
 	public static final BlockEntry<MetalBlock> BRASS_BLOCK =
@@ -1106,7 +1140,6 @@ public class AllBlocks {
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.transform(tagBlockAndItem("storage_blocks/brass"))
 			.build()
-			.recipe((ctx, prov) -> prov.square(DataIngredient.tag(forgeItemTag("ingots/brass")), ctx, false))
 			.register();
 
 	// Load this class

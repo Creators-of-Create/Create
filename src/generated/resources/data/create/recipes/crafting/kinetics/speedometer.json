@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "SAS"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "A": {
+      "item": "create:andesite_casing"
+    },
+    "S": {
+      "item": "create:shaft"
+    }
+  },
+  "result": {
+    "item": "create:speedometer"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "SCS",
+    " B "
+  ],
+  "key": {
+    "B": {
+      "item": "create:copper_casing"
+    },
+    "S": {
+      "tag": "forge:nuggets/copper"
+    },
+    "C": {
+      "tag": "forge:glass"
+    }
+  },
+  "result": {
+    "item": "create:fluid_tank",
+    "count": 2
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "-"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:magenta_wool"
+    },
+    "-": {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "result": {
+    "item": "create:magenta_seat"
+  }
+}

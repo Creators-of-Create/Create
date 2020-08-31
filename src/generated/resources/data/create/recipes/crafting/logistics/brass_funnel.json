@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AEA",
+    " K "
+  ],
+  "key": {
+    "A": {
+      "tag": "forge:ingots/brass"
+    },
+    "K": {
+      "item": "minecraft:dried_kelp"
+    },
+    "E": {
+      "item": "create:electron_tube"
+    }
+  },
+  "result": {
+    "item": "create:brass_funnel",
+    "count": 2
+  }
+}

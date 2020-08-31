@@ -136,7 +136,7 @@ public class AllShapes {
 			.build(),
 		PULLEY_MAGNET = shape(3, 0, 3, 13, 2, 13).add(FOUR_VOXEL_POLE.get(UP))
 			.build(),
-		SPOUT = shape(2, 2, 2, 14, 14, 14).add(4, 0, 4, 12, 2, 12)
+		SPOUT = shape(1, 2, 1, 15, 14, 15).add(2, 0, 2, 14, 16, 14)
 			.build(),
 		MILLSTONE = shape(0, 0, 0, 16, 6, 16).add(2, 6, 2, 14, 13, 14)
 			.add(3, 13, 3, 13, 16, 13)

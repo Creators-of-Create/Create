@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:secondary_linear_chassis"
+    }
+  ],
+  "result": {
+    "item": "create:linear_chassis"
+  }
+}

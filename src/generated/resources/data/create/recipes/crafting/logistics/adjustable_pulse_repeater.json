@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SP"
+  ],
+  "key": {
+    "S": {
+      "item": "create:pulse_repeater"
+    },
+    "P": {
+      "item": "create:adjustable_repeater"
+    }
+  },
+  "result": {
+    "item": "create:adjustable_pulse_repeater"
+  }
+}

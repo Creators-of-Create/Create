@@ -43,9 +43,12 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 			ms.pop();
 		}
 
+		int processingTicks = te.processingTicks;
+		float processingPT = te.processingTicks - partialTicks;
+
 		float radius = 0;
-		if (te.processingTicks != -1) {
-			float processingProgress = 1 - ((float) te.processingTicks - 5) / 10;
+		if (processingTicks != -1) {
+			float processingProgress = 1 - (processingPT - 5) / 10;
 			processingProgress = MathHelper.clamp(processingProgress, 0, 1);
 			radius = (float) (Math.pow(((2 * processingProgress) - 1), 2) - 1) / 32f;
 			AxisAlignedBB bb = new AxisAlignedBB(0.5, .5, 0.5, 0.5, -1.2, 0.5).grow(radius);
@@ -59,7 +62,7 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 			bit.renderOn(te.getBlockState())
 				.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
-			ms.translate(0, -2 * radius, 0);
+			ms.translate(0, -3 * radius, 0);
 		}
 		ms.pop();
 

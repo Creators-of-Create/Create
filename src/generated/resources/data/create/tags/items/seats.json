@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "create:white_seat",
+    "create:orange_seat",
+    "create:magenta_seat",
+    "create:light_blue_seat",
+    "create:yellow_seat",
+    "create:lime_seat",
+    "create:pink_seat",
+    "create:gray_seat",
+    "create:light_gray_seat",
+    "create:cyan_seat",
+    "create:purple_seat",
+    "create:blue_seat",
+    "create:brown_seat",
+    "create:green_seat",
+    "create:red_seat",
+    "create:black_seat"
+  ]
+}

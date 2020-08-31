@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "create:block/large_wheels",
+	"parent": "block/block",
 	"textures": {
 		"3": "create:block/crafter_thingies",
 		"4": "create:block/crafter_side",
