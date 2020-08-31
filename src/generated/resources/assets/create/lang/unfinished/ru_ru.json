@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 818",
+	"_": "Missing Localizations: 822",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -848,6 +848,11 @@
 	"create.tooltip.analogStrength": "UNLOCALIZED: Analog Strength: %1$s/15",
 
 	"create.mechanical_mixer.min_ingredients": "UNLOCALIZED: Min. Ingredients",
+
+	"create.mechanical_arm.selection_mode": "UNLOCALIZED: Selection Mode",
+	"create.mechanical_arm.selection_mode.default": "UNLOCALIZED: First Valid Target",
+	"create.mechanical_arm.selection_mode.round_robin_soft": "UNLOCALIZED: Attempt Round Robin",
+	"create.mechanical_arm.selection_mode.round_robin_hard": "UNLOCALIZED: Enforce Round Robin",
 
 	"create.gui.config.overlay1": "UNLOCALIZED: Hi :)",
 	"create.gui.config.overlay2": "UNLOCALIZED: This is a sample overlay",
