@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.CampfireMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.actors.dispenser.DispenserMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.actors.dispenser.DropperMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
@@ -48,5 +50,9 @@ public class AllMovementBehaviours {
 	static void register() {
 		addMovementBehaviour(Blocks.BELL, new BellMovementBehaviour());
 		addMovementBehaviour(Blocks.CAMPFIRE, new CampfireMovementBehaviour());
+
+		DispenserMovementBehaviour.gatherMovedDispenseItemBehaviours();
+		addMovementBehaviour(Blocks.DISPENSER, new DispenserMovementBehaviour());
+		addMovementBehaviour(Blocks.DROPPER, new DropperMovementBehaviour());
 	}
 }
