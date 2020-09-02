@@ -1,6 +1,9 @@
 package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import net.minecraft.block.BeehiveBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.item.ExperienceBottleEntity;
 import net.minecraft.entity.item.FireworkRocketEntity;
@@ -8,6 +11,11 @@ import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.projectile.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tileentity.BeehiveTileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
@@ -15,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Random;
 
@@ -140,6 +149,34 @@ public interface IMovedDispenseItemBehaviour {
 		});
 
 
+		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.GLASS_BOTTLE, new MovedOptionalDispenseBehaviour() {
+			@Override
+			protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vec3d facing) {
+				this.successful = false;
+				BlockPos interactAt = pos.offset(getClosestFacingDirection(facing));
+				BlockState state = context.world.getBlockState(interactAt);
+				Block block = state.getBlock();
+
+				if (block.isIn(BlockTags.field_226151_aa_) && state.get(BeehiveBlock.HONEY_LEVEL) >= 5) { // Beehive -> honey bottles
+					((BeehiveBlock) block).takeHoney(context.world, state, interactAt, null, BeehiveTileEntity.State.BEE_RELEASED);
+					this.successful = true;
+					return placeItemInInventory(itemStack, new ItemStack(Items.field_226638_pX_), context, pos, facing);
+				} else if (context.world.getFluidState(interactAt).isTagged(FluidTags.WATER)) {
+					this.successful = true;
+					return placeItemInInventory(itemStack, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER), context, pos, facing);
+				} else {
+					return super.dispenseStack(itemStack, context, pos, facing);
+				}
+			}
+
+			private ItemStack placeItemInInventory(ItemStack bottles, ItemStack output, MovementContext context, BlockPos pos, Vec3d facing) {
+				bottles.shrink(1);
+				ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, output.copy(), false);
+				if (!remainder.isEmpty())
+					super.dispenseStack(output, context, pos, facing);
+				return bottles;
+			}
+		});
 	}
 
 	ItemStack dispense(ItemStack itemStack, MovementContext context, BlockPos pos);

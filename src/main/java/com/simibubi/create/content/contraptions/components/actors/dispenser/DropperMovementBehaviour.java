@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.item.ItemHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
@@ -36,9 +35,10 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 
 	private void collectItems(MovementContext context) {
 		getStacks(context).stream().filter(itemStack -> !itemStack.isEmpty() && itemStack.getItem() != Items.AIR && itemStack.getMaxStackSize() > itemStack.getCount()).forEach(itemStack -> itemStack.grow(
-			ItemHelper.extract(context.contraption.inventory, stack -> FilterItem.test(context.world, stack, itemStack), ItemHelper.ExtractionCountMode.UPTO, itemStack.getMaxStackSize() - itemStack.getCount(), false).getCount()));
+			ItemHelper.extract(context.contraption.inventory, itemStack::isItemEqual, ItemHelper.ExtractionCountMode.UPTO, itemStack.getMaxStackSize() - itemStack.getCount(), false).getCount()));
 	}
 
+	@SuppressWarnings("unchecked")
 	protected NonNullList<ItemStack> getStacks(MovementContext context) {
 		if (!(context.temporaryData instanceof NonNullList) && context.world instanceof ServerWorld) {
 			NonNullList<ItemStack> stacks = NonNullList.withSize(9, ItemStack.EMPTY);

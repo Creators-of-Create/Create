@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBehaviour {
 
-	public static void doDispense(World p_82486_0_, ItemStack p_82486_1_, int p_82486_2_, Vec3d facing, BlockPos p_82486_4_) {
+	public static void doDispense(World p_82486_0_, ItemStack p_82486_1_, int p_82486_2_, Vec3d facing, BlockPos p_82486_4_, MovementContext context) {
 		double d0 = p_82486_4_.getX() + facing.x + .5;
 		double d1 = p_82486_4_.getY() + facing.y + .5;
 		double d2 = p_82486_4_.getZ() + facing.z + .5;
@@ -25,7 +25,7 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 
 		ItemEntity itementity = new ItemEntity(p_82486_0_, d0, d1, d2, p_82486_1_);
 		double d3 = p_82486_0_.rand.nextDouble() * 0.1D + 0.2D;
-		itementity.setMotion(p_82486_0_.rand.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.getX() * d3, p_82486_0_.rand.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.getY() * d3, p_82486_0_.rand.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.getZ() * d3);
+		itementity.setMotion(p_82486_0_.rand.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.getX() * d3 + context.motion.x, p_82486_0_.rand.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.getY() * d3 + context.motion.y, p_82486_0_.rand.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.getZ() * d3 + context.motion.z);
 		p_82486_0_.addEntity(itementity);
 	}
 
@@ -46,7 +46,7 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	 */
 	protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vec3d facing) {
 		ItemStack itemstack = itemStack.split(1);
-		doDispense(context.world, itemstack, 6, facing, pos);
+		doDispense(context.world, itemstack, 6, facing, pos, context);
 		return itemStack;
 	}
 
@@ -61,6 +61,10 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	 * Order clients to display dispense particles from the specified block and facing.
 	 */
 	protected void spawnDispenseParticles(IWorld world, BlockPos pos, Vec3d facing) {
-		world.playEvent(2000, pos, Direction.getFacingFromVector(facing.x, facing.y, facing.z).getIndex());
+		world.playEvent(2000, pos, getClosestFacingDirection(facing).getIndex());
+	}
+
+	protected Direction getClosestFacingDirection(Vec3d exactFacing) {
+		return Direction.getFacingFromVector(exactFacing.x, exactFacing.y, exactFacing.z);
 	}
 }
