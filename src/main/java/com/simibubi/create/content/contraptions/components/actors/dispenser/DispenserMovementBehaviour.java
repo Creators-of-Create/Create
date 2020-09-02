@@ -39,8 +39,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 				return;
 			}
 
-
-			int count = itemstack.getCount();
+			ItemStack backup = itemstack.copy();
 			// If none is there, try vanilla registry
 			try {
 				Vec3d facingVec = new Vec3d(context.state.get(DispenserBlock.FACING).getDirectionVec());
@@ -54,7 +53,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 					return;
 				}
 			} catch (NullPointerException e) {
-				itemstack.setCount(count); // Something went wrong with the TE being null in ContraptionBlockSource, reset the stack
+				itemstack = backup; // Something went wrong with the TE being null in ContraptionBlockSource, reset the stack
 			}
 
 			defaultBehaviour.dispense(itemstack, context, pos);  // the default: launch the item
