@@ -4,7 +4,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -35,10 +37,18 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
 		facingVec.normalize();
 
-		ItemStack itemstack = this.dispenseStack(itemStack, context, pos, facingVec);
-		this.playDispenseSound(context.world, pos);
-		this.spawnDispenseParticles(context.world, pos, facingVec);
-		return itemstack;
+		Direction closestToFacing = getClosestFacingDirection(facingVec);
+		BlockPos interactAt = pos.offset(closestToFacing);
+		IInventory iinventory = HopperTileEntity.getInventoryAtPosition(context.world, interactAt);
+		if (iinventory == null) {
+			this.playDispenseSound(context.world, pos);
+			this.spawnDispenseParticles(context.world, pos, closestToFacing);
+			return this.dispenseStack(itemStack, context, pos, facingVec);
+		} else {
+			if (HopperTileEntity.putStackInInventoryAllSlots(null, iinventory, itemStack.copy().split(1), closestToFacing.getOpposite()).isEmpty())
+				itemStack.shrink(1);
+			return itemStack;
+		}
 	}
 
 	/**
@@ -61,7 +71,12 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	 * Order clients to display dispense particles from the specified block and facing.
 	 */
 	protected void spawnDispenseParticles(IWorld world, BlockPos pos, Vec3d facing) {
+		spawnDispenseParticles(world, pos, getClosestFacingDirection(facing));
 		world.playEvent(2000, pos, getClosestFacingDirection(facing).getIndex());
+	}
+
+	protected void spawnDispenseParticles(IWorld world, BlockPos pos, Direction direction) {
+		world.playEvent(2000, pos, direction.getIndex());
 	}
 
 	protected Direction getClosestFacingDirection(Vec3d exactFacing) {
