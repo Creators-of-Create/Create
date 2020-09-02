@@ -4,13 +4,17 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.item.ExperienceBottleEntity;
 import net.minecraft.entity.item.FireworkRocketEntity;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.projectile.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.tags.BlockTags;
@@ -177,6 +181,24 @@ public interface IMovedDispenseItemBehaviour {
 				return bottles;
 			}
 		});
+
+		final IMovedDispenseItemBehaviour spawnEggDispenseBehaviour = new MovedDefaultDispenseItemBehaviour() {
+			@Override
+			protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vec3d facing) {
+				if (!(itemStack.getItem() instanceof SpawnEggItem))
+					return super.dispenseStack(itemStack, context, pos, facing);
+				EntityType<?> entityType = ((SpawnEggItem) itemStack.getItem()).getType(itemStack.getTag());
+				Entity spawnedEntity = entityType.spawn(context.world, itemStack, null, pos.add(facing.x + .7, facing.y  +.7, facing.z + .7), SpawnReason.DISPENSER, facing.y < .5, false);
+				if (spawnedEntity != null)
+					spawnedEntity.setMotion(context.motion.scale(2));
+				itemStack.shrink(1);
+				return itemStack;
+			}
+		};
+
+		for (SpawnEggItem spawneggitem : SpawnEggItem.getEggs()) {
+			DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(spawneggitem, spawnEggDispenseBehaviour);
+		}
 	}
 
 	ItemStack dispense(ItemStack itemStack, MovementContext context, BlockPos pos);
