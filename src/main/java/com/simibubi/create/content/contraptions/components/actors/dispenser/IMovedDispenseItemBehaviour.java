@@ -4,6 +4,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IBucketPickupHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
@@ -12,6 +13,8 @@ import net.minecraft.entity.item.ExperienceBottleEntity;
 import net.minecraft.entity.item.FireworkRocketEntity;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.projectile.*;
+import net.minecraft.fluid.FlowingFluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
@@ -182,13 +185,36 @@ public interface IMovedDispenseItemBehaviour {
 			}
 		});
 
+		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.BUCKET, new MovedDefaultDispenseItemBehaviour() {
+			@Override
+			protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vec3d facing) {
+				BlockPos interactAt = pos.offset(getClosestFacingDirection(facing));
+				BlockState state = context.world.getBlockState(interactAt);
+				Block block = state.getBlock();
+				if (block instanceof IBucketPickupHandler) {
+					Fluid fluid = ((IBucketPickupHandler) block).pickupFluid(context.world, interactAt, state);
+					if (fluid instanceof FlowingFluid)
+						return placeItemInInventory(itemStack, new ItemStack(fluid.getFilledBucket()), context, pos, facing);
+				}
+				return super.dispenseStack(itemStack, context, pos, facing);
+			}
+
+			private ItemStack placeItemInInventory(ItemStack buckets, ItemStack output, MovementContext context, BlockPos pos, Vec3d facing) {
+				buckets.shrink(1);
+				ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, output.copy(), false);
+				if (!remainder.isEmpty())
+					super.dispenseStack(output, context, pos, facing);
+				return buckets;
+			}
+		});
+
 		final IMovedDispenseItemBehaviour spawnEggDispenseBehaviour = new MovedDefaultDispenseItemBehaviour() {
 			@Override
 			protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vec3d facing) {
 				if (!(itemStack.getItem() instanceof SpawnEggItem))
 					return super.dispenseStack(itemStack, context, pos, facing);
 				EntityType<?> entityType = ((SpawnEggItem) itemStack.getItem()).getType(itemStack.getTag());
-				Entity spawnedEntity = entityType.spawn(context.world, itemStack, null, pos.add(facing.x + .7, facing.y  +.7, facing.z + .7), SpawnReason.DISPENSER, facing.y < .5, false);
+				Entity spawnedEntity = entityType.spawn(context.world, itemStack, null, pos.add(facing.x + .7, facing.y + .7, facing.z + .7), SpawnReason.DISPENSER, facing.y < .5, false);
 				if (spawnedEntity != null)
 					spawnedEntity.setMotion(context.motion.scale(2));
 				itemStack.shrink(1);
