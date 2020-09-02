@@ -38,8 +38,7 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 		facingVec.normalize();
 
 		Direction closestToFacing = getClosestFacingDirection(facingVec);
-		BlockPos interactAt = pos.offset(closestToFacing);
-		IInventory iinventory = HopperTileEntity.getInventoryAtPosition(context.world, interactAt);
+		IInventory iinventory = HopperTileEntity.getInventoryAtPosition(context.world, pos.offset(closestToFacing));
 		if (iinventory == null) {
 			this.playDispenseSound(context.world, pos);
 			this.spawnDispenseParticles(context.world, pos, closestToFacing);
@@ -72,7 +71,6 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	 */
 	protected void spawnDispenseParticles(IWorld world, BlockPos pos, Vec3d facing) {
 		spawnDispenseParticles(world, pos, getClosestFacingDirection(facing));
-		world.playEvent(2000, pos, getClosestFacingDirection(facing).getIndex());
 	}
 
 	protected void spawnDispenseParticles(IWorld world, BlockPos pos, Direction direction) {
