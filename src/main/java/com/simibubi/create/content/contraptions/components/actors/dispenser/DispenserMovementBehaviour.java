@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
@@ -12,10 +14,12 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 
 public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_DISPENSE_ITEM_BEHAVIOURS = new HashMap<>();
+	private static final DispenserLookup BEHAVIOUR_LOOKUP = new DispenserLookup();
 
 	public static void gatherMovedDispenseItemBehaviours() {
 		IMovedDispenseItemBehaviour.init();
@@ -47,7 +51,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 				facingVec.normalize();
 				Direction clostestFacing = Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);
 				ContraptionBlockSource blockSource = new ContraptionBlockSource(context, pos, clostestFacing);
-				IDispenseItemBehavior idispenseitembehavior = ((DispenserBlock) Blocks.DISPENSER).getBehavior(itemstack);
+				IDispenseItemBehavior idispenseitembehavior = BEHAVIOUR_LOOKUP.getBehavior(itemstack);
 				if (idispenseitembehavior.getClass() != DefaultDispenseItemBehavior.class) { // There is a dispense item behaviour registered for the vanilla dispenser
 					idispenseitembehavior.dispense(blockSource, itemstack);
 					return;
@@ -57,6 +61,18 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 			}
 
 			defaultBehaviour.dispense(itemstack, context, pos);  // the default: launch the item
+		}
+	}
+
+	@ParametersAreNonnullByDefault
+	@MethodsReturnNonnullByDefault
+	private static class DispenserLookup extends DispenserBlock {
+		protected DispenserLookup() {
+			super(Block.Properties.from(Blocks.DISPENSER));
+		}
+
+		public IDispenseItemBehavior getBehavior(ItemStack itemStack) {
+			return super.getBehavior(itemStack);
 		}
 	}
 }
