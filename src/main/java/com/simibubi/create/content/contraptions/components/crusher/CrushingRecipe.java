@@ -1,21 +1,18 @@
 package com.simibubi.create.content.contraptions.components.crusher;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
-import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
-import net.minecraft.util.ResourceLocation;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
+
 import net.minecraft.world.World;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class CrushingRecipe extends AbstractCrushingRecipe {
 
-	public CrushingRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
-		List<ProcessingOutput> results, int processingDuration) {
-		super(AllRecipeTypes.CRUSHING, id, group, ingredients, results, processingDuration);
+	public CrushingRecipe(ProcessingRecipeParams params) {
+		super(AllRecipeTypes.CRUSHING, params);
 	}
 
 	@Override
@@ -25,7 +22,7 @@ public class CrushingRecipe extends AbstractCrushingRecipe {
 		return ingredients.get(0)
 			.test(inv.getStackInSlot(0));
 	}
-
+	
 	@Override
 	protected int getMaxOutputCount() {
 		return 7;

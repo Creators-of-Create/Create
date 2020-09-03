@@ -59,10 +59,10 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		if (!(recipe instanceof ProcessingRecipe))
 			return jeiSlot;
 		ProcessingRecipe<?> processingRecipe = (ProcessingRecipe<?>) recipe;
-		List<ProcessingOutput> rollableResults = processingRecipe.getRollableItemResults();
+		List<ProcessingOutput> rollableResults = processingRecipe.getRollableResults();
 		if (rollableResults.size() <= index)
 			return jeiSlot;
-		if (processingRecipe.getRollableItemResults().get(index).getChance() == 1)
+		if (processingRecipe.getRollableResults().get(index).getChance() == 1)
 			return jeiSlot;
 		return AllGuiTextures.JEI_CHANCE_SLOT;
 	}

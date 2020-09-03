@@ -63,9 +63,11 @@ public class InWorldProcessing {
 			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			if (blockState.getBlock() == Blocks.FIRE
-				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)) || getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
+				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT))
+				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
-			if (blockState.getBlock() == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
+			if (blockState.getBlock() == Blocks.LAVA
+				|| getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 				return Type.BLASTING;
 			return null;
 		}
@@ -140,8 +142,7 @@ public class InWorldProcessing {
 		}
 	}
 
-	public static List<TransportedItemStack> applyProcessing(TransportedItemStack transported,
-		World world, Type type) {
+	public static List<TransportedItemStack> applyProcessing(TransportedItemStack transported, World world, Type type) {
 		if (transported.processedBy != type) {
 			transported.processedBy = type;
 			int timeModifierForStackSize = ((transported.stack.getCount() - 1) / 16) + 1;
@@ -266,7 +267,7 @@ public class InWorldProcessing {
 		if (recipe instanceof ProcessingRecipe) {
 			stacks = new ArrayList<>();
 			for (int i = 0; i < stackIn.getCount(); i++) {
-				List<ItemStack> rollResults = ((ProcessingRecipe<?>) recipe).rollResults().getItemStacks();
+				List<ItemStack> rollResults = ((ProcessingRecipe<?>) recipe).rollResults();
 				for (ItemStack stack : rollResults) {
 					for (ItemStack previouslyRolled : stacks) {
 						if (stack.isEmpty())

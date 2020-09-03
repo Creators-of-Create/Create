@@ -1,0 +1,35 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:iron_horse_armor"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 2
+    },
+    {
+      "item": "minecraft:leather",
+      "count": 1,
+      "chance": 0.5
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 1,
+      "chance": 0.5
+    },
+    {
+      "item": "minecraft:string",
+      "count": 2,
+      "chance": 0.25
+    },
+    {
+      "item": "minecraft:iron_nugget",
+      "count": 4,
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 200
+}

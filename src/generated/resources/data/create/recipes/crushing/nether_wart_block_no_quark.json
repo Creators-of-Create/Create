@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:nether_wart_block"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:nether_wart",
+      "count": 6
+    },
+    {
+      "item": "minecraft:nether_wart",
+      "count": 2,
+      "chance": 0.5
+    }
+  ],
+  "processingTime": 150,
+  "conditions": [
+    {
+      "value": {
+        "modid": "quark",
+        "type": "forge:mod_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
+}

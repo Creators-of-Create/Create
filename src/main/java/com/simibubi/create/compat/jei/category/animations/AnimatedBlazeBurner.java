@@ -10,12 +10,14 @@ import mezz.jei.api.gui.drawable.IDrawable;
 
 public class AnimatedBlazeBurner implements IDrawable {
 
-	@Override
-	public void draw(int xOffset, int yOffset) {
-		drawWithHeatLevel(xOffset, yOffset, 3);
+	private HeatLevel heatLevel;
+
+	public AnimatedBlazeBurner withHeat(HeatLevel heatLevel) {
+		this.heatLevel = heatLevel;
+		return this;
 	}
 
-	public void drawWithHeatLevel(int xOffset, int yOffset, int heatLevel) {
+	public void draw(int xOffset, int yOffset) {
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(xOffset, yOffset, 200);
 		RenderSystem.rotatef(-15.5f, 1, 0, 0);
@@ -27,7 +29,7 @@ public class AnimatedBlazeBurner implements IDrawable {
 			.scale(scale)
 			.render();
 
-		AllBlockPartials blaze = AllBlockPartials.BLAZES.get(HeatLevel.byIndex(heatLevel));
+		AllBlockPartials blaze = AllBlockPartials.BLAZES.get(heatLevel);
 		GuiGameElement.of(blaze)
 			.atLocal(1, 1.65, 1)
 			.rotate(0, 180, 0)

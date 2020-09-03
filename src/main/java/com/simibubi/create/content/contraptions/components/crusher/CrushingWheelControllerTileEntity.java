@@ -191,7 +191,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 			inventory.clear();
 			for (int roll = 0; roll < rolls; roll++) {
 				List<ItemStack> rolledResults = recipe.get()
-					.rollResults().getItemStacks();
+					.rollResults();
 				for (int i = 0; i < rolledResults.size(); i++) {
 					ItemStack stack = rolledResults.get(i);
 					ItemHelper.addToList(stack, list);

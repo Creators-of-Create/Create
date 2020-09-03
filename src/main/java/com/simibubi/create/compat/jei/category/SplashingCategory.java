@@ -31,7 +31,7 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 	@Override
 	public void setIngredients(SplashingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getPossibleOutputs());
+		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 				.get(0)
 				.getMatchingStacks()));
 
-		List<ProcessingOutput> results = recipe.getRollableItemResults();
+		List<ProcessingOutput> results = recipe.getRollableResults();
 		boolean single = results.size() == 1;
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
 			int xOffset = outputIndex % 2 == 0 ? 0 : 19;
@@ -58,7 +58,7 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 
 	@Override
 	protected void renderWidgets(SplashingRecipe recipe, double mouseX, double mouseY) {
-		int size = recipe.getPossibleOutputs()
+		int size = recipe.getRollableResultsAsItemStacks()
 				.size();
 
 		AllGuiTextures.JEI_SLOT.draw(20, 47);

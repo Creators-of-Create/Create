@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 828",
+	"_": "Missing Localizations: 827",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -846,8 +846,6 @@
 	"create.tooltip.capacityProvided.asGenerator": "UNLOCALIZED: (As Generator)",
 	"create.tooltip.generationSpeed": "UNLOCALIZED: Generates at %1$s %2$s",
 	"create.tooltip.analogStrength": "UNLOCALIZED: Analog Strength: %1$s/15",
-
-	"create.mechanical_mixer.min_ingredients": "UNLOCALIZED: Min. Ingredients",
 
 	"create.mechanical_arm.selection_mode": "UNLOCALIZED: Selection Mode",
 	"create.mechanical_arm.selection_mode.default": "UNLOCALIZED: First Valid Target",

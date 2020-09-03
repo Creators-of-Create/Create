@@ -8,9 +8,9 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
@@ -97,17 +97,19 @@ public class ItemHelper {
 		List<Pair<Ingredient, MutableInt>> actualIngredients = new ArrayList<>();
 		Ingredients: for (Ingredient igd : recipeIngredients) {
 			for (Pair<Ingredient, MutableInt> pair : actualIngredients) {
-				ItemStack[] stacks1 = pair.getKey().getMatchingStacks();
+				ItemStack[] stacks1 = pair.getFirst()
+					.getMatchingStacks();
 				ItemStack[] stacks2 = igd.getMatchingStacks();
-				if (stacks1.length == stacks2.length) {
-					for (int i = 0; i <= stacks1.length; i++) {
-						if (i == stacks1.length) {
-							pair.getValue().increment();
-							continue Ingredients;
-						}
-						if (!ItemStack.areItemsEqual(stacks1[i], stacks2[i]))
-							break;
+				if (stacks1.length != stacks2.length)
+					continue;
+				for (int i = 0; i <= stacks1.length; i++) {
+					if (i == stacks1.length) {
+						pair.getSecond()
+							.increment();
+						continue Ingredients;
 					}
+					if (!ItemStack.areItemsEqual(stacks1[i], stacks2[i]))
+						break;
 				}
 			}
 			actualIngredients.add(Pair.of(igd, new MutableInt(1)));
@@ -133,7 +135,7 @@ public class ItemHelper {
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, boolean simulate) {
 		return extract(inv, test, ExtractionCountMode.UPTO, AllConfigs.SERVER.logistics.extractorAmount.get(),
-				simulate);
+			simulate);
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, int exactAmount, boolean simulate) {
@@ -141,7 +143,7 @@ public class ItemHelper {
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, ExtractionCountMode mode, int amount,
-			boolean simulate) {
+		boolean simulate) {
 		ItemStack extracting = ItemStack.EMPTY;
 		boolean amountRequired = mode == ExtractionCountMode.EXACTLY;
 		boolean checkHasEnoughItems = amountRequired;
@@ -203,7 +205,7 @@ public class ItemHelper {
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test,
-			Function<ItemStack, Integer> amountFunction, boolean simulate) {
+		Function<ItemStack, Integer> amountFunction, boolean simulate) {
 		ItemStack extracting = ItemStack.EMPTY;
 		int maxExtractionCount = AllConfigs.SERVER.logistics.extractorAmount.get();
 

@@ -1,0 +1,25 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:sand"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:limesand",
+      "count": 1
+    },
+    {
+      "item": "create:limesand",
+      "count": 1,
+      "chance": 0.5
+    },
+    {
+      "item": "minecraft:bone_meal",
+      "count": 1,
+      "chance": 0.05
+    }
+  ],
+  "processingTime": 150
+}

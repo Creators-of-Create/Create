@@ -32,7 +32,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 	@Override
 	public void setIngredients(AbstractCrushingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getPossibleOutputs());
+		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 		itemStacks.init(0, true, 50, 2);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
-		List<ProcessingOutput> results = recipe.getRollableItemResults();
+		List<ProcessingOutput> results = recipe.getRollableResults();
 		int size = results.size();
 		int offset = -size * 19 / 2;
 		for (int outputIndex = 0; outputIndex < size; outputIndex++) {
@@ -54,7 +54,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 
 	@Override
 	public void draw(AbstractCrushingRecipe recipe, double mouseX, double mouseY) {
-		List<ProcessingOutput> results = recipe.getRollableItemResults();
+		List<ProcessingOutput> results = recipe.getRollableResults();
 		AllGuiTextures.JEI_SLOT.draw(50, 2);
 		AllGuiTextures.JEI_DOWN_ARROW.draw(72, 7);
 

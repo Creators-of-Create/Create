@@ -1,33 +1,38 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInputInventory;
-import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
-import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
-
-import javax.annotation.Nonnull;
-import java.util.*;
 
 public class MixingRecipe extends ProcessingRecipe<BasinInputInventory> {
 
-	public MixingRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
-		List<ProcessingOutput> results, int processingDuration, List<FluidStack> fluidIngredients,
-		List<FluidStack> fluidResults, int requiredHeat) {
-		super(AllRecipeTypes.MIXING, id, group, ingredients, results, processingDuration, fluidIngredients,
-			fluidResults, requiredHeat);
+	/**
+	 * For JEI purposes only
+	 */
+	public static MixingRecipe convertShapeless(IRecipe<?> recipe) {
+		return new ProcessingRecipeBuilder<>(MixingRecipe::new, recipe.getId())
+			.withItemIngredients(recipe.getIngredients())
+			.withSingleItemOutput(recipe.getRecipeOutput())
+			.build();
 	}
 
-	public static MixingRecipe of(IRecipe<?> recipe) {
-		return new MixingRecipe(recipe.getId(), recipe.getGroup(), ProcessingIngredient.list(recipe.getIngredients()),
-			Collections.singletonList(new ProcessingOutput(recipe.getRecipeOutput(), 1)), -1, null, null, 0);
+	public MixingRecipe(ProcessingRecipeParams params) {
+		super(AllRecipeTypes.MIXING, params);
 	}
 
 	@Override
@@ -37,11 +42,21 @@ public class MixingRecipe extends ProcessingRecipe<BasinInputInventory> {
 
 	@Override
 	protected int getMaxOutputCount() {
-		return 1;
+		return 1;// TODO increase
 	}
 
 	@Override
-	protected boolean canHaveCatalysts() {
+	protected int getMaxFluidInputCount() {
+		return 2;
+	}
+
+	@Override
+	protected int getMaxFluidOutputCount() {
+		return 1;// TODO increase?
+	}
+	
+	@Override
+	protected boolean canRequireHeat() {
 		return true;
 	}
 
@@ -80,22 +95,4 @@ public class MixingRecipe extends ProcessingRecipe<BasinInputInventory> {
 		return true;
 	}
 
-	@Override
-	protected boolean canHaveFluidIngredient() {
-		return true;
-	}
-
-	@Override
-	protected boolean canHaveFluidOutput() {
-		return true;
-	}
-
-	@Override
-	protected boolean requiresHeating() {
-		return this.requiredHeat > 0;
-	}
-
-	public int getHeatLevelRequired() {
-		return requiredHeat;
-	}
 }

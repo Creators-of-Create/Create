@@ -43,7 +43,8 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		if (getSpeed() == 0)
 			return;
 		for (int i = 0; i < outputInv.getSlots(); i++)
-			if (outputInv.getStackInSlot(i).getCount() == outputInv.getSlotLimit(i))
+			if (outputInv.getStackInSlot(i)
+				.getCount() == outputInv.getSlotLimit(i))
 				return;
 
 		if (timer > 0) {
@@ -58,13 +59,14 @@ public class MillstoneTileEntity extends KineticTileEntity {
 			return;
 		}
 
-		if (inputInv.getStackInSlot(0).isEmpty())
+		if (inputInv.getStackInSlot(0)
+			.isEmpty())
 			return;
 
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
 		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, world)) {
-			Optional<MillingRecipe> recipe =
-				world.getRecipeManager().getRecipe(AllRecipeTypes.MILLING.getType(), inventoryIn, world);
+			Optional<MillingRecipe> recipe = world.getRecipeManager()
+				.getRecipe(AllRecipeTypes.MILLING.getType(), inventoryIn, world);
 			if (!recipe.isPresent()) {
 				timer = 100;
 				sendData();
@@ -84,8 +86,8 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
 
 		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, world)) {
-			Optional<MillingRecipe> recipe =
-				world.getRecipeManager().getRecipe(AllRecipeTypes.MILLING.getType(), inventoryIn, world);
+			Optional<MillingRecipe> recipe = world.getRecipeManager()
+				.getRecipe(AllRecipeTypes.MILLING.getType(), inventoryIn, world);
 			if (!recipe.isPresent())
 				return;
 			lastRecipe = recipe.get();
@@ -94,7 +96,8 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		ItemStack stackInSlot = inputInv.getStackInSlot(0);
 		stackInSlot.shrink(1);
 		inputInv.setStackInSlot(0, stackInSlot);
-		lastRecipe.rollResults().forEachItemStack(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
+		lastRecipe.rollResults()
+			.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
 		sendData();
 		markDirty();
 	}
@@ -138,7 +141,8 @@ public class MillstoneTileEntity extends KineticTileEntity {
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return LazyOptional.of(MillstoneInventoryHandler::new).cast();
+			return LazyOptional.of(MillstoneInventoryHandler::new)
+				.cast();
 		return super.getCapability(cap, side);
 	}
 
@@ -149,7 +153,9 @@ public class MillstoneTileEntity extends KineticTileEntity {
 
 		if (lastRecipe != null && lastRecipe.matches(inventoryIn, world))
 			return true;
-		return world.getRecipeManager().getRecipe(AllRecipeTypes.MILLING.getType(), inventoryIn, world).isPresent();
+		return world.getRecipeManager()
+			.getRecipe(AllRecipeTypes.MILLING.getType(), inventoryIn, world)
+			.isPresent();
 	}
 
 	private class MillstoneInventoryHandler extends CombinedInvWrapper {

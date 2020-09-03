@@ -1,5 +1,7 @@
 package com.simibubi.create;
 
+import java.util.function.Supplier;
+
 import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingRecipe;
@@ -9,12 +11,12 @@ import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer.IExtendedRecipeFactory;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer.IRecipeFactory;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperUpgradeRecipe;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -24,17 +26,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.event.RegistryEvent;
 
-import java.util.function.Supplier;
-
 public enum AllRecipeTypes {
 
 	BLOCKZAPPER_UPGRADE(BlockzapperUpgradeRecipe.Serializer::new, IRecipeType.CRAFTING),
+	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
+	
 	CONVERSION(processingSerializer(ConversionRecipe::new)),
 	CRUSHING(processingSerializer(CrushingRecipe::new)),
 	CUTTING(processingSerializer(CuttingRecipe::new)),
-	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
 	MILLING(processingSerializer(MillingRecipe::new)),
-	MIXING(extendedProcessingSerializer(MixingRecipe::new)),
+	MIXING(processingSerializer(MixingRecipe::new)),
 	PRESSING(processingSerializer(PressingRecipe::new)),
 	SANDPAPER_POLISHING(processingSerializer(SandPaperPolishingRecipe::new)),
 	SPLASHING(processingSerializer(SplashingRecipe::new)),
@@ -78,12 +79,7 @@ public enum AllRecipeTypes {
 	}
 
 	private static Supplier<IRecipeSerializer<?>> processingSerializer(
-		IRecipeFactory<? extends ProcessingRecipe<?>> factory) {
-		return () -> new ProcessingRecipeSerializer<>(factory);
-	}
-
-	private static Supplier<IRecipeSerializer<?>> extendedProcessingSerializer(
-		IExtendedRecipeFactory<? extends ProcessingRecipe<?>> factory) {
+		ProcessingRecipeFactory<? extends ProcessingRecipe<?>> factory) {
 		return () -> new ProcessingRecipeSerializer<>(factory);
 	}
 

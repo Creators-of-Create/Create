@@ -1,0 +1,25 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:nether_quartz_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:quartz",
+      "count": 2
+    },
+    {
+      "item": "minecraft:quartz",
+      "count": 4,
+      "chance": 0.5
+    },
+    {
+      "item": "minecraft:netherrack",
+      "count": 1,
+      "chance": 0.125
+    }
+  ],
+  "processingTime": 350
+}

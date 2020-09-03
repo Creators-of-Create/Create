@@ -118,7 +118,7 @@ public class CreateJEI implements IModPlugin {
 				blastingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipeTypes.MIXING), mixingCategory.getUid());
 		registration.addRecipes(findRecipes(r -> r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS
-				&& !MechanicalPressTileEntity.canCompress(r.getIngredients())).stream().map(MixingRecipe::of)
+				&& !MechanicalPressTileEntity.canCompress(r.getIngredients())).stream().map(MixingRecipe::convertShapeless)
 						.collect(Collectors.toList()),
 				mixingCategory.getUid());
 		registration.addRecipes(findRecipes(AllRecipeTypes.CUTTING), sawingCategory.getUid());

@@ -11,7 +11,10 @@ import javax.annotation.Nullable;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.profiler.IProfiler;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.world.World;
 
 /**
@@ -23,7 +26,7 @@ import net.minecraft.world.World;
  *
  */
 public class RecipeFinder {
-
+	
 	private static Cache<Object, List<IRecipe<?>>> cachedSearches = CacheBuilder.newBuilder().build();
 
 	/**
@@ -54,5 +57,20 @@ public class RecipeFinder {
 				.collect(Collectors.toList());
 		return list;
 	}
+
+
+	public static final ReloadListener<Object> LISTENER = new ReloadListener<Object>() {
+		
+		@Override
+		protected Object prepare(IResourceManager p_212854_1_, IProfiler p_212854_2_) {
+			return new Object();
+		}
+		
+		@Override
+		protected void apply(Object p_212853_1_, IResourceManager p_212853_2_, IProfiler p_212853_3_) {
+			cachedSearches.invalidateAll();
+		}
+		
+	};
 
 }

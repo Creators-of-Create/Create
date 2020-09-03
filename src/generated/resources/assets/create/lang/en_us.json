@@ -846,8 +846,6 @@
 	"create.tooltip.generationSpeed": "Generates at %1$s %2$s",
 	"create.tooltip.analogStrength": "Analog Strength: %1$s/15",
 
-	"create.mechanical_mixer.min_ingredients": "Min. Ingredients",
-
 	"create.mechanical_arm.selection_mode": "Selection Mode",
 	"create.mechanical_arm.selection_mode.default": "First Valid Target",
 	"create.mechanical_arm.selection_mode.round_robin_soft": "Attempt Round Robin",

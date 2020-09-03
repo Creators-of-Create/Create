@@ -1,0 +1,25 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "forge:ores/zinc"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:crushed_zinc_ore",
+      "count": 1
+    },
+    {
+      "item": "create:crushed_zinc_ore",
+      "count": 2,
+      "chance": 0.3
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "count": 1,
+      "chance": 0.125
+    }
+  ],
+  "processingTime": 350
+}

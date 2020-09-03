@@ -8,6 +8,7 @@ import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
+import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -21,6 +22,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
@@ -55,7 +57,7 @@ public class CommonEvents {
 			return;
 		ContraptionHandler.entitiesWhoJustDismountedGetSentToTheRightLocation(entityLiving, world);
 	}
-	
+
 	@SubscribeEvent
 	public static void onEntityAdded(EntityJoinWorldEvent event) {
 		Entity entity = event.getEntity();
@@ -67,6 +69,13 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void serverStarted(FMLServerStartingEvent event) {
 		AllCommands.register(event.getCommandDispatcher());
+	}
+
+	@SubscribeEvent
+	public static void serverAboutToStart(FMLServerAboutToStartEvent event) {
+		event.getServer()
+			.getResourceManager()
+			.addReloadListener(RecipeFinder.LISTENER);
 	}
 
 	@SubscribeEvent

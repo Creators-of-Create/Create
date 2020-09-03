@@ -847,8 +847,6 @@
 	"create.tooltip.generationSpeed": "产生 %1$s %2$s",
 	"create.tooltip.analogStrength": "调节强度: %1$s/15",
 
-	"create.mechanical_mixer.min_ingredients": "最少物品种类数",
-
 	"create.mechanical_arm.selection_mode": "UNLOCALIZED: Selection Mode",
 	"create.mechanical_arm.selection_mode.default": "UNLOCALIZED: First Valid Target",
 	"create.mechanical_arm.selection_mode.round_robin_soft": "UNLOCALIZED: Attempt Round Robin",

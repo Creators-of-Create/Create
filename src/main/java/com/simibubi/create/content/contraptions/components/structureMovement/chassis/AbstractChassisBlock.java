@@ -88,12 +88,12 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		return ActionResultType.SUCCESS;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState rotate(BlockState state, Rotation rotation) {
 		if (rotation == Rotation.NONE)
 			return state;
 
-		@SuppressWarnings("deprecation")
 		BlockState rotated = super.rotate(state, rotation);
 		for (Direction face : Direction.values()) {
 			BooleanProperty glueableSide = getGlueableSide(rotated, face);

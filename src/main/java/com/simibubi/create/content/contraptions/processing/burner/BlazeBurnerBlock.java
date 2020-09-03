@@ -47,7 +47,7 @@ import net.minecraft.world.storage.loot.conditions.SurvivesExplosion;
 @ParametersAreNonnullByDefault
 public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity> {
 
-	public static IProperty<HeatLevel> HEAT_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
+	public static final IProperty<HeatLevel> HEAT_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
 
 	public BlazeBurnerBlock(Properties properties) {
 		super(properties);

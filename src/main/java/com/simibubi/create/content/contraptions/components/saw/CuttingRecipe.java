@@ -1,22 +1,19 @@
 package com.simibubi.create.content.contraptions.components.saw;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
-import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import net.minecraft.util.ResourceLocation;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
+
 import net.minecraft.world.World;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class CuttingRecipe extends ProcessingRecipe<RecipeWrapper> {
 
-	public CuttingRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
-		List<ProcessingOutput> results, int processingDuration) {
-		super(AllRecipeTypes.CUTTING, id, group, ingredients, results, processingDuration);
+	public CuttingRecipe(ProcessingRecipeParams params) {
+		super(AllRecipeTypes.CUTTING, params);
 	}
 
 	@Override
@@ -25,6 +22,11 @@ public class CuttingRecipe extends ProcessingRecipe<RecipeWrapper> {
 			return false;
 		return ingredients.get(0)
 			.test(inv.getStackInSlot(0));
+	}
+	
+	@Override
+	protected int getMaxInputCount() {
+		return 1;
 	}
 
 	@Override
