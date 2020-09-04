@@ -135,6 +135,7 @@
 	"create.contraptions.cart_movement_mode.rotation_locked": "Lock rotation",
 	
 	"create.logistics.filter": "Filter",
+	"create.logistics.recipe_filter": "Recipe Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
 

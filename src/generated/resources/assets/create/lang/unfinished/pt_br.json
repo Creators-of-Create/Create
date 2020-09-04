@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 827",
+	"_": "Missing Localizations: 828",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -653,6 +653,7 @@
 	"create.contraptions.cart_movement_mode.rotation_locked": "UNLOCALIZED: Lock rotation",
 
 	"create.logistics.filter": "Filtros",
+	"create.logistics.recipe_filter": "UNLOCALIZED: Recipe Filter",
 	"create.logistics.firstFrequency": "UNLOCALIZED: Freq. #1",
 	"create.logistics.secondFrequency": "UNLOCALIZED: Freq. #2",
 

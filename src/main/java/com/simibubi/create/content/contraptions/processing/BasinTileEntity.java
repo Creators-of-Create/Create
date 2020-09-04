@@ -8,8 +8,12 @@ import javax.annotation.Nonnull;
 import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -17,6 +21,9 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -30,6 +37,7 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 public class BasinTileEntity extends SmartTileEntity implements ITickableTileEntity {
 
 	public boolean contentsChanged;
+	private FilteringBehaviour filtering;
 
 	protected ItemStackHandler outputItemInventory = new ItemStackHandler(9) {
 		protected void onContentsChanged(int slot) {
@@ -98,6 +106,12 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 
 	}
 
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		return 256;
+	}
+
 	protected LazyOptional<IItemHandlerModifiable> inventory =
 		LazyOptional.of(() -> new BasinInventory(inputItemInventory, outputItemInventory));
 
@@ -115,6 +129,10 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(this));
+		filtering = new FilteringBehaviour(this, new BasinValueBox()).moveText(new Vec3d(2, -8, 0))
+			.withCallback(newFilter -> contentsChanged = true)
+			.forRecipes();
+		behaviours.add(filtering);
 	}
 
 	@Override
@@ -175,6 +193,25 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		if (te instanceof BasinOperatingTileEntity)
 			return Optional.of((BasinOperatingTileEntity) te);
 		return Optional.empty();
+	}
+
+	public FilteringBehaviour getFilter() {
+		return filtering;
+	}
+
+	class BasinValueBox extends ValueBoxTransform.Sided {
+
+		@Override
+		protected Vec3d getSouthLocation() {
+			return VecHelper.voxelSpace(8, 12, 16);
+		}
+
+		@Override
+		protected boolean isSideActive(BlockState state, Direction direction) {
+			return direction.getAxis()
+				.isHorizontal();
+		}
+
 	}
 
 }

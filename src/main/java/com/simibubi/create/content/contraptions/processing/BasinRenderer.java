@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.processing;
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
+import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -17,7 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BasinRenderer extends SafeTileEntityRenderer<BasinTileEntity> {
+public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
 	public BasinRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -25,7 +25,9 @@ public class BasinRenderer extends SafeTileEntityRenderer<BasinTileEntity> {
 
 	@Override
 	protected void renderSafe(BasinTileEntity basin, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-			int light, int overlay) {
+		int light, int overlay) {
+		super.renderSafe(basin, partialTicks, ms, buffer, light, overlay);
+
 		ms.push();
 		BlockPos pos = basin.getPos();
 		ms.translate(.5, .2f, .5);
@@ -44,7 +46,9 @@ public class BasinRenderer extends SafeTileEntityRenderer<BasinTileEntity> {
 				ms.translate(vec.x, vec.y, vec.z);
 				ms.multiply(new Vector3f((float) vec2.z, (float) vec2.y, 0).getDegreesQuaternion((float) vec2.x * 180));
 
-				Minecraft.getInstance().getItemRenderer().renderItem(stack, TransformType.GROUND, light, overlay, ms, buffer);
+				Minecraft.getInstance()
+					.getItemRenderer()
+					.renderItem(stack, TransformType.GROUND, light, overlay, ms, buffer);
 				ms.pop();
 			}
 			ms.translate(0, 1 / 64f, 0);

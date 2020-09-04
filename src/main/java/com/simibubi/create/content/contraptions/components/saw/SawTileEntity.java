@@ -74,7 +74,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		filtering = new FilteringBehaviour(this, new SawFilterSlot());
+		filtering = new FilteringBehaviour(this, new SawFilterSlot()).forRecipes();
 		behaviours.add(filtering);
 		behaviours.add(new DirectBeltInputBehaviour(this));
 	}

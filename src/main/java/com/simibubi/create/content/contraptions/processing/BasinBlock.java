@@ -7,6 +7,8 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -101,15 +103,17 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
-		ISelectionContext p_220071_4_) {
-		return AllShapes.BASIN_COLLISION_SHAPE;
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext ctx) {
+		if (ctx.getEntity() instanceof ItemEntity)
+			return AllShapes.BASIN_COLLISION_SHAPE;
+		return getShape(state, reader, pos, ctx);
 	}
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock()) 
+		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
+		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 		withTileEntityDo(worldIn, pos, te -> {
 			ItemHelper.dropContents(worldIn, pos, te.inputItemInventory);
 			ItemHelper.dropContents(worldIn, pos, te.outputItemInventory);

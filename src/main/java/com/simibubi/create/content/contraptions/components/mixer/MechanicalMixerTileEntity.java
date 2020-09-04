@@ -173,13 +173,10 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
-		if (recipe == null)
+		if (!super.matchBasinRecipe(recipe))
 			return false;
+		
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		if (!ingredients.stream()
-			.allMatch(ingredient -> (ingredient.isSimple() || ingredient.getMatchingStacks().length == 1)))
-			return false;
-
 		List<ItemStack> remainingItems = new ArrayList<>();
 		itemInputs.forEach(stack -> remainingItems.add(stack.copy()));
 		List<FluidStack> remainingFluids = new ArrayList<>();

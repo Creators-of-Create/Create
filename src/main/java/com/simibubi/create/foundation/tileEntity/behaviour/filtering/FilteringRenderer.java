@@ -59,7 +59,8 @@ public class FilteringRenderer {
 		ItemStack filter = behaviour.getFilter();
 		boolean isFilterSlotted = filter.getItem() instanceof FilterItem;
 		boolean showCount = behaviour.isCountVisible();
-		String label = isFilterSlotted ? "" : Lang.translate("logistics.filter");
+		String label = isFilterSlotted ? ""
+			: Lang.translate(behaviour.recipeFilter ? "logistics.recipe_filter" : "logistics.filter");
 		boolean hit = behaviour.slotPositioning.testHit(state, target.getHitVec()
 			.subtract(new Vec3d(pos)));
 
@@ -104,7 +105,7 @@ public class FilteringRenderer {
 				ItemStack filter = behaviour.getFilter(d);
 				if (filter.isEmpty())
 					continue;
-				
+
 				sided.fromSide(d);
 				if (!slotPositioning.shouldRender(blockState))
 					continue;

@@ -282,14 +282,10 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
-		if (recipe == null)
+		if (!super.matchBasinRecipe(recipe))
 			return false;
 
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		if (!ingredients.stream()
-			.allMatch(Ingredient::isSimple))
-			return false;
-
 		List<ItemStack> remainingItems = new ArrayList<>();
 		itemInputs.forEach(stack -> remainingItems.add(stack.copy()));
 		

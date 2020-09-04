@@ -36,6 +36,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	int scrollableValue;
 	int ticksUntilScrollPacket;
 	boolean forceClientState;
+	boolean recipeFilter;
 
 	public FilteringBehaviour(SmartTileEntity te, ValueBoxTransform slot) {
 		super(te);
@@ -49,13 +50,14 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		count = 0;
 		ticksUntilScrollPacket = -1;
 		showCountPredicate = () -> showCount;
+		recipeFilter = false;
 	}
 
 	@Override
 	public void write(CompoundNBT nbt, boolean clientPacket) {
 		nbt.put("Filter", getFilter().serializeNBT());
 		nbt.putInt("FilterAmount", count);
-		
+
 		if (clientPacket && forceClientState) {
 			nbt.putBoolean("ForceScrollable", true);
 			forceClientState = false;
@@ -96,6 +98,11 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		return this;
 	}
 
+	public FilteringBehaviour forRecipes() {
+		recipeFilter = true;
+		return this;
+	}
+
 	public FilteringBehaviour onlyActiveWhen(Supplier<Boolean> condition) {
 		isActive = condition;
 		return this;
@@ -125,7 +132,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	public void setFilter(Direction face, ItemStack stack) {
 		setFilter(stack);
 	}
-	
+
 	public void setFilter(ItemStack stack) {
 		filter = stack.copy();
 		callback.accept(filter);
@@ -150,7 +157,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	public ItemStack getFilter(Direction side) {
 		return getFilter();
 	}
-	
+
 	public ItemStack getFilter() {
 		return filter.copy();
 	}

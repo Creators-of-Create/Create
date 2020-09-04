@@ -210,7 +210,24 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
 	protected abstract <C extends IInventory> boolean matchStaticFilters(IRecipe<C> recipe);
 
-	protected abstract <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe);
+	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
+		if (recipe == null)
+			return false;
+
+		Optional<BasinTileEntity> basin = getBasin();
+		if (!basin.isPresent())
+			return false;
+		BasinTileEntity basinTileEntity = basin.get();
+		if (!basinTileEntity.getFilter()
+			.test(recipe.getRecipeOutput()))
+			return false;
+
+		NonNullList<Ingredient> ingredients = recipe.getIngredients();
+		if (!ingredients.stream()
+			.allMatch(ingredient -> (ingredient.isSimple() || ingredient.getMatchingStacks().length == 1)))
+			return false;
+		return true;
+	}
 
 	protected abstract Object getRecipeCacheKey();
 
