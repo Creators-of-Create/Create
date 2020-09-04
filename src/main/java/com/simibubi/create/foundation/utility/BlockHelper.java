@@ -73,6 +73,9 @@ public class BlockHelper {
 		if (needsTwo)
 			amount *= 2;
 
+		if(block.has(BlockStateProperties.EGGS_1_4))
+			amount *= block.get(BlockStateProperties.EGGS_1_4);
+
 		{
 			// Try held Item first
 			int preferredSlot = player.inventory.currentItem;
