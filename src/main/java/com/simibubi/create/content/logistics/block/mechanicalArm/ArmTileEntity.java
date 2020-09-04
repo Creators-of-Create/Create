@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOpt
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.JukeboxBlock;
 import net.minecraft.item.ItemStack;
@@ -22,6 +23,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants.NBT;
 
 import javax.annotation.Nullable;
@@ -81,9 +83,20 @@ public class ArmTileEntity extends KineticTileEntity {
 		super.addBehaviours(behaviours);
 
 		selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class, Lang.translate("mechanical_arm.selection_mode"), this,
-				new CenteredSideValueBoxTransform((blockState, direction) -> {
-					return direction != Direction.DOWN && direction != Direction.UP;
-				}));
+				new CenteredSideValueBoxTransform((blockState, direction) -> direction != Direction.DOWN && direction != Direction.UP) {
+					@Override
+					protected Vec3d getLocalOffset(BlockState state) {
+						int yPos = state.get(ArmBlock.CEILING) ? 16 - 3 : 3;
+						Vec3d location = VecHelper.voxelSpace(8, yPos, 14.5);
+						location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Direction.Axis.Y);
+						return location;
+					}
+
+					@Override
+					protected float getScale() {
+						return .3f;
+					}
+				});
 		selectionMode.requiresWrench();
 		behaviours.add(selectionMode);
 	}

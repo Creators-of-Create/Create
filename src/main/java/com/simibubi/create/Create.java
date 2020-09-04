@@ -1,5 +1,7 @@
 package com.simibubi.create;
 
+import com.simibubi.create.foundation.command.ChunkUtil;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,6 +61,7 @@ public class Create {
 	public static RedstoneLinkNetworkHandler redstoneLinkNetworkHandler;
 	public static TorquePropagator torquePropagator;
 	public static ServerLagger lagger;
+	public static ChunkUtil chunkUtil;
 
 	private static final NonNullLazyValue<CreateRegistrate> registrate = CreateRegistrate.lazy(ID);
 
@@ -93,6 +96,10 @@ public class Create {
 		redstoneLinkNetworkHandler = new RedstoneLinkNetworkHandler();
 		torquePropagator = new TorquePropagator();
 		lagger = new ServerLagger();
+
+		chunkUtil = new ChunkUtil();
+		chunkUtil.init();
+		MinecraftForge.EVENT_BUS.register(chunkUtil);
 
 		AllPackets.registerPackets();
 		AllTriggers.register();
