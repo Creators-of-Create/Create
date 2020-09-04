@@ -1,0 +1,30 @@
+{
+  "type": "create:mechanical_crafting",
+  "pattern": [
+    "LLA",
+    "L  ",
+    "LL ",
+    " I ",
+    "RCR"
+  ],
+  "key": {
+    "L": {
+      "tag": "forge:plates/brass"
+    },
+    "R": {
+      "item": "create:cogwheel"
+    },
+    "I": {
+      "item": "create:integrated_circuit"
+    },
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "C": {
+      "item": "create:brass_casing"
+    }
+  },
+  "result": {
+    "item": "create:mechanical_arm"
+  }
+}

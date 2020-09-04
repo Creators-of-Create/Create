@@ -147,6 +147,8 @@ public class AllTags {
 
 		AllItemTags.UPRIGHT_ON_BELT.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
 
+		AllBlockTags.WINDMILL_SAILS.includeAll(BlockTags.WOOL);
+		
 		AllBlockTags.BRITTLE.includeAll(BlockTags.DOORS);
 		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL);
 

@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
+import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -112,6 +113,7 @@ public class Create {
 		gen.addProvider(new LangMerger(gen));
 		gen.addProvider(AllSoundEvents.BLAZE_MUNCH.generator(gen));
 		gen.addProvider(new StandardRecipeGen(gen));
+		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
 		ProcessingRecipeGen.registerAll(gen);
 	}
 

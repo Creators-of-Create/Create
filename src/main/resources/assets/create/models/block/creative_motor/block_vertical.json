@@ -7,7 +7,7 @@
 		"7": "create:block/gearbox",
 		"8": "block/polished_andesite",
 		"9": "create:block/andesite_bricks",
-		"particle": "texture"
+		"particle": "#5"
 	},
 	"elements": [
 		{

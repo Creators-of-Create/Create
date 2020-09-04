@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "minecraft:soul_sand"
-  },
-  "result": "create:scoria",
-  "experience": 0.1,
-  "cookingtime": 200
-}

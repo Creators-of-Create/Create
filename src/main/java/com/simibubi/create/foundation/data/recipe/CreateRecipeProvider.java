@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.Create;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
@@ -27,6 +28,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 	@Override
 	protected void registerRecipes(Consumer<IFinishedRecipe> p_200404_1_) {
 		all.forEach(c -> c.register(p_200404_1_));
+		Create.logger.info(getName() + " registered " + all.size() + " recipes");
 	}
 
 	@FunctionalInterface

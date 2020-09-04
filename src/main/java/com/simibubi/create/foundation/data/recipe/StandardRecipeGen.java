@@ -12,15 +12,20 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.foundation.utility.Lang;
+import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.data.CookingRecipeBuilder;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.CookingRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -791,7 +796,42 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.addIngredient(Items.BONE_MEAL))
 
 	;
-	
+
+	private Marker COOKING = enterFolder("/");
+
+	GeneratedRecipe
+
+	DOUGH_TO_BREAD = create(() -> Items.BREAD).viaCooking(AllItems.DOUGH::get)
+		.inSmoker(),
+
+		LIMESAND = create(AllPaletteBlocks.LIMESTONE::get).viaCooking(AllPaletteBlocks.LIMESAND::get)
+			.inFurnace(),
+		SOUL_SAND = create(AllPaletteBlocks.SCORIA::get).viaCooking(() -> Blocks.SOUL_SAND)
+			.inFurnace(),
+		DIORITE = create(AllPaletteBlocks.DOLOMITE::get).viaCooking(() -> Blocks.DIORITE)
+			.inFurnace(),
+		GRANITE = create(AllPaletteBlocks.GABBRO::get).viaCooking(() -> Blocks.GRANITE)
+			.inFurnace(),
+
+		FRAMED_GLASS = recycleGlass(AllPaletteBlocks.FRAMED_GLASS),
+		TILED_GLASS = recycleGlass(AllPaletteBlocks.TILED_GLASS),
+		VERTICAL_FRAMED_GLASS = recycleGlass(AllPaletteBlocks.VERTICAL_FRAMED_GLASS),
+		HORIZONTAL_FRAMED_GLASS = recycleGlass(AllPaletteBlocks.HORIZONTAL_FRAMED_GLASS),
+		FRAMED_GLASS_PANE = recycleGlassPane(AllPaletteBlocks.FRAMED_GLASS_PANE),
+		TILED_GLASS_PANE = recycleGlassPane(AllPaletteBlocks.TILED_GLASS_PANE),
+		VERTICAL_FRAMED_GLASS_PANE = recycleGlassPane(AllPaletteBlocks.VERTICAL_FRAMED_GLASS_PANE),
+		HORIZONTAL_FRAMED_GLASS_PANE = recycleGlassPane(AllPaletteBlocks.HORIZONTAL_FRAMED_GLASS_PANE),
+
+		COPPER_ORE = blastMetalOre(AllItems.COPPER_INGOT::get, AllTags.forgeItemTag("ores/copper")),
+		ZINC_ORE = blastMetalOre(AllItems.ZINC_INGOT::get, AllTags.forgeItemTag("ores/zinc")),
+		CRUSHED_IRON = blastCrushedMetal(() -> Items.IRON_INGOT, AllItems.CRUSHED_IRON::get),
+		CRUSHED_GOLD = blastCrushedMetal(() -> Items.GOLD_INGOT, AllItems.CRUSHED_GOLD::get),
+		CRUSHED_COPPER = blastCrushedMetal(AllItems.COPPER_INGOT::get, AllItems.CRUSHED_COPPER::get),
+		CRUSHED_ZINC = blastCrushedMetal(AllItems.ZINC_INGOT::get, AllItems.CRUSHED_ZINC::get),
+		CRUSHED_BRASS = blastCrushedMetal(AllItems.BRASS_INGOT::get, AllItems.CRUSHED_BRASS::get)
+
+	;
+
 	/*
 	 * End of recipe list
 	 */
@@ -808,8 +848,41 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		return new Marker();
 	}
 
+	GeneratedRecipeBuilder create(Supplier<IItemProvider> result) {
+		return new GeneratedRecipeBuilder(currentFolder, result);
+	}
+	
 	GeneratedRecipeBuilder create(ItemProviderEntry<? extends IItemProvider> result) {
 		return create(result::get);
+	}
+
+	GeneratedRecipe blastCrushedMetal(Supplier<? extends IItemProvider> result,
+		Supplier<? extends IItemProvider> ingredient) {
+		return create(result::get).withSuffix("_from_crushed").viaCooking(ingredient::get)
+			.rewardXP(.1f)
+			.inBlastFurnace();
+	}
+
+	GeneratedRecipe blastMetalOre(Supplier<? extends IItemProvider> result, Tag<Item> ore) {
+		return create(result::get).withSuffix("_from_ore").viaCookingTag(() -> ore)
+			.rewardXP(.1f)
+			.inBlastFurnace();
+	}
+
+	GeneratedRecipe recycleGlass(BlockEntry<? extends Block> ingredient) {
+		return create(() -> Blocks.GLASS).withSuffix("_from_" + ingredient.getId()
+			.getPath())
+			.viaCooking(ingredient::get)
+			.forDuration(50)
+			.inFurnace();
+	}
+
+	GeneratedRecipe recycleGlassPane(BlockEntry<? extends Block> ingredient) {
+		return create(() -> Blocks.GLASS_PANE).withSuffix("_from_" + ingredient.getId()
+			.getPath())
+			.viaCooking(ingredient::get)
+			.forDuration(50)
+			.inFurnace();
 	}
 
 	GeneratedRecipe metalCompacting(List<ItemProviderEntry<? extends IItemProvider>> variants,
@@ -848,19 +921,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		return result;
 	}
 
-	GeneratedRecipeBuilder create(Supplier<IItemProvider> result) {
-		return new GeneratedRecipeBuilder(currentFolder, result);
-	}
-
 	class GeneratedRecipeBuilder {
 
 		private String path;
 		private String suffix;
-		private Supplier<IItemProvider> result;
+		private Supplier<? extends IItemProvider> result;
 		private Supplier<ItemPredicate> unlockedBy;
 		private int amount;
 
-		public GeneratedRecipeBuilder(String path, Supplier<IItemProvider> result) {
+		public GeneratedRecipeBuilder(String path, Supplier<? extends IItemProvider> result) {
 			this.path = path;
 			this.suffix = "";
 			this.result = result;
@@ -872,7 +941,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			return this;
 		}
 
-		GeneratedRecipeBuilder unlockedBy(Supplier<IItemProvider> item) {
+		GeneratedRecipeBuilder unlockedBy(Supplier<? extends IItemProvider> item) {
 			this.unlockedBy = () -> ItemPredicate.Builder.create()
 				.item(item.get())
 				.build();
@@ -909,12 +978,99 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			});
 		}
 
+		private ResourceLocation createSimpleLocation(String recipeType) {
+			return Create.asResource(recipeType + "/" + result.get()
+				.asItem()
+				.getRegistryName()
+				.getPath() + suffix);
+		}
+
 		private ResourceLocation createLocation(String recipeType) {
 			return Create.asResource(recipeType + "/" + path + "/" + result.get()
 				.asItem()
 				.getRegistryName()
 				.getPath() + suffix);
 		}
+
+		GeneratedCookingRecipeBuilder viaCooking(Supplier<? extends IItemProvider> item) {
+			return unlockedBy(item).viaCookingIngredient(() -> Ingredient.fromItems(item.get()));
+		}
+
+		GeneratedCookingRecipeBuilder viaCookingTag(Supplier<Tag<Item>> tag) {
+			return unlockedByTag(tag).viaCookingIngredient(() -> Ingredient.fromTag(tag.get()));
+		}
+
+		GeneratedCookingRecipeBuilder viaCookingIngredient(Supplier<Ingredient> ingredient) {
+			return new GeneratedCookingRecipeBuilder(ingredient);
+		}
+
+		class GeneratedCookingRecipeBuilder {
+
+			private Supplier<Ingredient> ingredient;
+			private float exp;
+			private int cookingTime;
+
+			private final CookingRecipeSerializer<?> FURNACE = IRecipeSerializer.SMELTING,
+				SMOKER = IRecipeSerializer.SMOKING, BLAST = IRecipeSerializer.BLASTING,
+				CAMPFIRE = IRecipeSerializer.CAMPFIRE_COOKING;
+
+			GeneratedCookingRecipeBuilder(Supplier<Ingredient> ingredient) {
+				this.ingredient = ingredient;
+				cookingTime = 200;
+				exp = 0;
+			}
+
+			GeneratedCookingRecipeBuilder forDuration(int duration) {
+				cookingTime = duration;
+				return this;
+			}
+
+			GeneratedCookingRecipeBuilder rewardXP(float xp) {
+				exp = xp;
+				return this;
+			}
+
+			GeneratedRecipe inFurnace() {
+				return inFurnace(b -> b);
+			}
+
+			GeneratedRecipe inFurnace(UnaryOperator<CookingRecipeBuilder> builder) {
+				return create(FURNACE, builder, 1);
+			}
+
+			GeneratedRecipe inSmoker() {
+				return inSmoker(b -> b);
+			}
+
+			GeneratedRecipe inSmoker(UnaryOperator<CookingRecipeBuilder> builder) {
+				create(FURNACE, builder, 1);
+				create(CAMPFIRE, builder, 3);
+				return create(SMOKER, builder, .5f);
+			}
+
+			GeneratedRecipe inBlastFurnace() {
+				return inBlastFurnace(b -> b);
+			}
+
+			GeneratedRecipe inBlastFurnace(UnaryOperator<CookingRecipeBuilder> builder) {
+				create(FURNACE, builder, 1);
+				return create(BLAST, builder, .5f);
+			}
+
+			private GeneratedRecipe create(CookingRecipeSerializer<?> serializer,
+				UnaryOperator<CookingRecipeBuilder> builder, float cookingTimeModifier) {
+				return register(consumer -> {
+					CookingRecipeBuilder b = builder.apply(CookingRecipeBuilder.cookingRecipe(ingredient.get(),
+						result.get(), exp, (int) (cookingTime * cookingTimeModifier), serializer));
+					if (unlockedBy != null)
+						b.addCriterion("has_item", hasItem(unlockedBy.get()));
+					b.build(consumer, createSimpleLocation(serializer.getRegistryName()
+						.getPath()));
+				});
+			}
+
+		}
+
 	}
 
 	@Override
