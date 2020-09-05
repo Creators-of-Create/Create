@@ -303,8 +303,8 @@
     {
       "when": {
         "west": "false",
-        "east": "true",
         "down": "false",
+        "east": "true",
         "up": "true"
       },
       "apply": {
@@ -314,8 +314,8 @@
     {
       "when": {
         "west": "true",
-        "east": "false",
         "down": "false",
+        "east": "false",
         "up": "true"
       },
       "apply": {
@@ -325,8 +325,8 @@
     {
       "when": {
         "west": "false",
-        "east": "true",
         "down": "true",
+        "east": "true",
         "up": "false"
       },
       "apply": {
@@ -336,8 +336,8 @@
     {
       "when": {
         "west": "true",
-        "east": "false",
         "down": "true",
+        "east": "false",
         "up": "false"
       },
       "apply": {
@@ -347,8 +347,8 @@
     {
       "when": {
         "west": "false",
-        "east": "false",
         "down": "true",
+        "east": "false",
         "up": "true"
       },
       "apply": {
@@ -358,8 +358,8 @@
     {
       "when": {
         "west": "false",
-        "east": "false",
         "down": "false",
+        "east": "false",
         "up": "true"
       },
       "apply": {
@@ -369,8 +369,8 @@
     {
       "when": {
         "west": "false",
-        "east": "false",
         "down": "true",
+        "east": "false",
         "up": "false"
       },
       "apply": {
@@ -380,8 +380,8 @@
     {
       "when": {
         "west": "true",
-        "east": "true",
         "down": "false",
+        "east": "true",
         "up": "false"
       },
       "apply": {
@@ -391,8 +391,8 @@
     {
       "when": {
         "west": "false",
-        "east": "true",
         "down": "false",
+        "east": "true",
         "up": "false"
       },
       "apply": {
@@ -402,8 +402,8 @@
     {
       "when": {
         "west": "true",
-        "east": "false",
         "down": "false",
+        "east": "false",
         "up": "false"
       },
       "apply": {
@@ -413,8 +413,8 @@
     {
       "when": {
         "west": "false",
-        "east": "false",
         "down": "false",
+        "east": "false",
         "up": "false"
       },
       "apply": {
