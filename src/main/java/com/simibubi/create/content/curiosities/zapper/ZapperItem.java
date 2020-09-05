@@ -5,6 +5,7 @@ import java.util.List;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
@@ -147,6 +148,7 @@ public abstract class ZapperItem extends Item {
 		BlockState stateToUse = Blocks.AIR.getDefaultState();
 		if (nbt.contains("BlockUsed"))
 			stateToUse = NBTUtil.readBlockState(nbt.getCompound("BlockUsed"));
+		stateToUse = BlockHelper.setZeroAge(stateToUse);
 
 		// Raytrace - Find the target
 		Vec3d start = player.getPositionVec()

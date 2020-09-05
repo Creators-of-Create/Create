@@ -64,6 +64,30 @@ public class BlockHelper {
 		});
 	}
 
+	public static BlockState setZeroAge(BlockState blockState) {
+		if(blockState.has(BlockStateProperties.AGE_0_1))
+			return blockState.with(BlockStateProperties.AGE_0_1, 0);
+		if(blockState.has(BlockStateProperties.AGE_0_2))
+			return blockState.with(BlockStateProperties.AGE_0_2, 0);
+		if(blockState.has(BlockStateProperties.AGE_0_3))
+			return blockState.with(BlockStateProperties.AGE_0_3, 0);
+		if(blockState.has(BlockStateProperties.AGE_0_5))
+			return blockState.with(BlockStateProperties.AGE_0_5, 0);
+		if(blockState.has(BlockStateProperties.AGE_0_7))
+			return blockState.with(BlockStateProperties.AGE_0_7, 0);
+		if(blockState.has(BlockStateProperties.AGE_0_15))
+			return blockState.with(BlockStateProperties.AGE_0_15, 0);
+		if(blockState.has(BlockStateProperties.AGE_0_25))
+			return blockState.with(BlockStateProperties.AGE_0_25, 0);
+		if(blockState.has(BlockStateProperties.HONEY_LEVEL))
+			return blockState.with(BlockStateProperties.HONEY_LEVEL, 0);
+		if(blockState.has(BlockStateProperties.HATCH_0_2))
+			return blockState.with(BlockStateProperties.HATCH_0_2, 0);
+		if(blockState.has(BlockStateProperties.STAGE_0_1))
+			return blockState.with(BlockStateProperties.STAGE_0_1, 0);
+		return blockState;
+	}
+
 	public static int findAndRemoveInInventory(BlockState block, PlayerEntity player, int amount) {
 		int amountFound = 0;
 		Item required = getRequiredItem(block).getItem();
