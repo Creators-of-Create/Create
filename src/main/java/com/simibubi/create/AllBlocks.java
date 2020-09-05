@@ -1100,7 +1100,8 @@ public class AllBlocks {
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.GOLD_BLOCK)
 		.properties(p -> p.harvestLevel(2)
-			.harvestTool(ToolType.PICKAXE))
+			.harvestTool(ToolType.PICKAXE)
+			.sound(SoundType.STONE))
 		.transform(tagBlockAndItem("ores/zinc"))
 		.build()
 		.register();
