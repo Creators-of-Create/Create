@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.function.Consumer;
 
+import net.minecraft.item.Items;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import net.minecraft.block.Block;
@@ -115,6 +116,10 @@ public class BlockHelper {
 
 	public static ItemStack getRequiredItem(BlockState state) {
 		ItemStack itemStack = new ItemStack(state.getBlock());
+		if (itemStack.getItem() == Items.FARMLAND)
+			itemStack = new ItemStack(Items.DIRT);
+		else if (itemStack.getItem() == Items.GRASS_PATH)
+			itemStack = new ItemStack(Items.GRASS_BLOCK);
 		return itemStack;
 	}
 
