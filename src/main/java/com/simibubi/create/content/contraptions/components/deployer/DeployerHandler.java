@@ -281,8 +281,8 @@ public class DeployerHandler {
 		ActionResult<ItemStack> onItemRightClick = item.onItemRightClick(itemUseWorld, player, hand);
 		player.setHeldItem(hand, onItemRightClick.getResult());
 
-		CompoundNBT tag = stack.getOrCreateTag();
-		if (stack.getItem() instanceof SandPaperItem && tag.contains("Polishing"))
+		CompoundNBT tag = stack.getTag();
+		if (tag != null && stack.getItem() instanceof SandPaperItem && tag.contains("Polishing"))
 			player.spawnedItemEffects = ItemStack.read(tag.getCompound("Polishing"));
 
 		if (!player.getActiveItemStack()
