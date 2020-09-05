@@ -32,7 +32,7 @@ public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBloc
 
     @Override
     public PushReaction getPushReaction(@Nullable BlockState state) {
-        return PushReaction.PUSH_ONLY;
+        return PushReaction.NORMAL;
     }
 
     @Override
