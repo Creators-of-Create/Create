@@ -404,4 +404,8 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		return new ItemRequirement(ItemUseType.DAMAGE, AllItems.SUPER_GLUE.get());
 	}
 
+	@Override
+	public boolean doesEntityNotTriggerPressurePlate() {
+		return true;
+	}
 }
