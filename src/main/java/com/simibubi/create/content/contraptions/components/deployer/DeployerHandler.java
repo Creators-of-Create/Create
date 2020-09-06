@@ -6,6 +6,7 @@ import static net.minecraftforge.eventbus.api.Event.Result.DENY;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.BeehiveBlock;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
@@ -245,7 +246,7 @@ public class DeployerHandler {
 			!(player.isSneaking() && holdingSomething) || (stack.doesSneakBypassUse(world, clickedPos, player));
 
 		// Use on block
-		if (useBlock != DENY && flag1 && clickedState.onUse(world, player, hand, result) == ActionResultType.SUCCESS)
+		if (useBlock != DENY && flag1 && clickedState.getBlock() instanceof BeehiveBlock && clickedState.onUse(world, player, hand, result) == ActionResultType.SUCCESS)
 			return;
 		if (stack.isEmpty())
 			return;
