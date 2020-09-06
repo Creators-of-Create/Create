@@ -688,8 +688,17 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	protected boolean shouldPlace(BlockPos pos, BlockState state) {
+		if (world == null)
+			return false;
 		BlockState toReplace = world.getBlockState(pos);
 		boolean placingAir = state.getBlock() == Blocks.AIR;
+
+		BlockState toReplaceOther = null;
+		if (state.has(BlockStateProperties.BED_PART) && state.has(BlockStateProperties.HORIZONTAL_FACING) && state.get(BlockStateProperties.BED_PART) == BedPart.FOOT)
+			toReplaceOther = world.getBlockState(pos.offset(state.get(BlockStateProperties.HORIZONTAL_FACING)));
+		if (state.has(BlockStateProperties.DOUBLE_BLOCK_HALF)
+			&& state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER)
+			toReplaceOther = world.getBlockState(pos.up());
 
 		if (!world.isBlockPresent(pos))
 			return false;
@@ -698,11 +707,11 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			return false;
 		if (toReplace == state)
 			return false;
-		if (toReplace.getBlockHardness(world, pos) == -1)
+		if (toReplace.getBlockHardness(world, pos) == -1 || (toReplaceOther != null && toReplaceOther.getBlockHardness(world, pos) == -1))
 			return false;
 		if (pos.withinDistance(getPos(), 2f))
 			return false;
-		if (!replaceTileEntities && toReplace.hasTileEntity())
+		if (!replaceTileEntities && (toReplace.hasTileEntity() || (toReplaceOther != null && toReplaceOther.hasTileEntity())))
 			return false;
 
 		if (shouldIgnoreBlockState(state))
@@ -713,10 +722,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (replaceMode == 2 && !placingAir)
 			return true;
 		if (replaceMode == 1
-			&& (state.isNormalCube(blockReader, pos.subtract(schematicAnchor)) || !toReplace.isNormalCube(world, pos))
+			&& (state.isNormalCube(blockReader, pos.subtract(schematicAnchor)) || (!toReplace.isNormalCube(world, pos) && (toReplaceOther == null || !toReplaceOther.isNormalCube(world, pos))))
 			&& !placingAir)
 			return true;
-		if (replaceMode == 0 && !toReplace.isNormalCube(world, pos) && !placingAir)
+		if (replaceMode == 0 && !toReplace.isNormalCube(world, pos) && (toReplaceOther == null || !toReplaceOther.isNormalCube(world, pos)) && !placingAir)
 			return true;
 
 		return false;
