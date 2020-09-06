@@ -157,7 +157,7 @@ public class ExtendoGripItem extends Item {
 		if (!isHoldingExtendoGrip(player))
 			return;
 		Entity target = event.getTarget();
-		if (!target.attackEntityFrom(DamageSource.causePlayerDamage(player), 0))
+		if (target instanceof ItemFrameEntity || !target.attackEntityFrom(DamageSource.causePlayerDamage(player), 0))
 			return;
 		int strength = 2;
 		float yaw = entity.rotationYaw * ((float) Math.PI / 180F);
