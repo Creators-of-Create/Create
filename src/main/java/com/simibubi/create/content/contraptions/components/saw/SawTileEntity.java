@@ -197,7 +197,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != Direction.DOWN)
 			return invProvider.cast();
 		return super.getCapability(cap, side);
 	}
