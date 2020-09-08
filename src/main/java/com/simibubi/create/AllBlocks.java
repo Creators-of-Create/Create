@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllMovementBehaviours.addMovementBehaviour;
 import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
@@ -120,6 +121,7 @@ import com.simibubi.create.content.logistics.block.funnel.BrassBeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BrassChuteFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.ChuteFunnelGenerator;
+import com.simibubi.create.content.logistics.block.funnel.FunnelMovementBehaviour;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
@@ -652,7 +654,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(StressConfigDefaults.setImpact(4.0))
-		.onRegister(AllMovementBehaviours.addMovementBehaviour(new DrillMovementBehaviour()))
+		.onRegister(addMovementBehaviour(new DrillMovementBehaviour()))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -661,7 +663,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.blockstate(new SawGenerator()::generate)
 		.transform(StressConfigDefaults.setImpact(4.0))
-		.onRegister(AllMovementBehaviours.addMovementBehaviour(new SawMovementBehaviour()))
+		.onRegister(addMovementBehaviour(new SawMovementBehaviour()))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.item()
 		.model((c, p) -> p.blockItem(() -> c.getEntry()
@@ -673,7 +675,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.blockstate(BlockStateGen.directionalAxisBlockProvider())
 		.transform(StressConfigDefaults.setImpact(4.0))
-		.onRegister(AllMovementBehaviours.addMovementBehaviour(new DeployerMovementBehaviour()))
+		.onRegister(addMovementBehaviour(new DeployerMovementBehaviour()))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -681,7 +683,7 @@ public class AllBlocks {
 	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_STORAGE_INTERFACE =
 		REGISTRATE.block("portable_storage_interface", PortableStorageInterfaceBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.onRegister(AllMovementBehaviours.addMovementBehaviour(new StorageInterfaceMovement()))
+			.onRegister(addMovementBehaviour(new StorageInterfaceMovement()))
 			.blockstate(BlockStateGen.directionalBlockProvider(false))
 			.simpleItem()
 			.register();
@@ -689,7 +691,7 @@ public class AllBlocks {
 	public static final BlockEntry<HarvesterBlock> MECHANICAL_HARVESTER =
 		REGISTRATE.block("mechanical_harvester", HarvesterBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.onRegister(AllMovementBehaviours.addMovementBehaviour(new HarvesterMovementBehaviour()))
+			.onRegister(addMovementBehaviour(new HarvesterMovementBehaviour()))
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.item()
@@ -699,7 +701,7 @@ public class AllBlocks {
 	public static final BlockEntry<PloughBlock> MECHANICAL_PLOUGH =
 		REGISTRATE.block("mechanical_plough", PloughBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.onRegister(AllMovementBehaviours.addMovementBehaviour(new PloughMovementBehaviour()))
+			.onRegister(addMovementBehaviour(new PloughMovementBehaviour()))
 			.blockstate(BlockStateGen.horizontalBlockProvider(false))
 			.simpleItem()
 			.register();
@@ -710,7 +712,7 @@ public class AllBlocks {
 			SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
 			REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
 				.initialProperties(SharedProperties::wooden)
-				.onRegister(AllMovementBehaviours.addMovementBehaviour(movementBehaviour))
+				.onRegister(addMovementBehaviour(movementBehaviour))
 				.blockstate((c, p) -> {
 					p.simpleBlock(c.get(), p.models()
 						.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
@@ -847,6 +849,7 @@ public class AllBlocks {
 	public static final BlockEntry<AndesiteFunnelBlock> ANDESITE_FUNNEL =
 		REGISTRATE.block("andesite_funnel", AndesiteFunnelBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.onRegister(addMovementBehaviour(FunnelMovementBehaviour.andesite()))
 			.transform(BuilderTransformers.funnel("andesite", Create.asResource("block/andesite_casing")))
 			.register();
 
@@ -867,6 +870,7 @@ public class AllBlocks {
 	public static final BlockEntry<BrassFunnelBlock> BRASS_FUNNEL =
 		REGISTRATE.block("brass_funnel", BrassFunnelBlock::new)
 			.initialProperties(SharedProperties::softMetal)
+			.onRegister(addMovementBehaviour(FunnelMovementBehaviour.brass()))
 			.transform(BuilderTransformers.funnel("brass", Create.asResource("block/brass_casing")))
 			.register();
 
@@ -898,7 +902,7 @@ public class AllBlocks {
 	public static final BlockEntry<RedstoneContactBlock> REDSTONE_CONTACT =
 		REGISTRATE.block("redstone_contact", RedstoneContactBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.onRegister(AllMovementBehaviours.addMovementBehaviour(new ContactMovementBehaviour()))
+			.onRegister(addMovementBehaviour(new ContactMovementBehaviour()))
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
 			.item()
 			.transform(customItemModel("_", "block"))
@@ -965,7 +969,7 @@ public class AllBlocks {
 	public static final BlockEntry<ExtractorBlock> EXTRACTOR = REGISTRATE.block("extractor", ExtractorBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.tag(AllBlockTags.BRITTLE.tag)
-		.onRegister(AllMovementBehaviours.addMovementBehaviour(new ExtractorMovementBehaviour()))
+		.onRegister(addMovementBehaviour(new ExtractorMovementBehaviour()))
 		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, c.getName() + "/horizontal")))
 		.item()
 		.transform(customItemModel("_", "horizontal"))
