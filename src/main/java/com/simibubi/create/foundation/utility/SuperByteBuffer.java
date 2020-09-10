@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
@@ -27,16 +26,14 @@ public class SuperByteBuffer {
 		public int getPackedLight(float x, float y, float z);
 	}
 
-	public static final int FORMAT_LENGTH = DefaultVertexFormats.BLOCK.getSize();
-	protected ByteBuffer original;
-	protected ByteBuffer mutable;
+	protected ByteBuffer template;
+	protected int formatSize;
 
 	// Vertex Position
 	private MatrixStack transforms;
 
 	// Vertex Texture Coords
 	private boolean shouldShiftUV;
-	private boolean resetUV;
 	private SpriteShiftEntry spriteShift;
 	private float uTarget, vTarget;
 
@@ -52,79 +49,21 @@ public class SuperByteBuffer {
 
 	public SuperByteBuffer(BufferBuilder buf) {
 		Pair<DrawState, ByteBuffer> state = buf.popData();
-		ByteBuffer original = state.getSecond();
-		original.order(ByteOrder.nativeOrder()); // Vanilla bug, endianness does not carry over into sliced buffers
-		this.original = original;
-		this.mutable = GLAllocation.createDirectByteBuffer(state.getFirst()
-			.getCount()
-			* buf.getVertexFormat()
-				.getSize());
-		this.mutable.order(original.order());
-		this.mutable.limit(original.limit());
-		mutable.put(this.original);
-		mutable.rewind();
+		ByteBuffer rendered = state.getSecond();
+		rendered.order(ByteOrder.nativeOrder()); // Vanilla bug, endianness does not carry over into sliced buffers
+
+		formatSize = buf.getVertexFormat()
+			.getSize();
+		int size = state.getFirst()
+			.getCount() * formatSize;
+
+		template = GLAllocation.createDirectByteBuffer(size);
+		template.order(rendered.order());
+		template.limit(rendered.limit());
+		template.put(rendered);
+		template.rewind();
 
 		transforms = new MatrixStack();
-	}
-
-	public ByteBuffer build(MatrixStack view) {
-		original.rewind();
-		mutable.rewind();
-
-		Matrix4f t = view.peek()
-			.getModel()
-			.copy();
-		Matrix4f localTransforms = transforms.peek()
-			.getModel();
-
-		t.multiply(localTransforms);
-
-		for (int vertex = 0; vertex < vertexCount(original); vertex++) {
-			Vector4f pos = new Vector4f(getX(original, vertex), getY(original, vertex), getZ(original, vertex), 1F);
-			Vector4f lightPos = new Vector4f(pos.getX(), pos.getY(), pos.getZ(), pos.getW());
-
-			pos.transform(t);
-			lightPos.transform(localTransforms);
-			putPos(mutable, vertex, pos.getX(), pos.getY(), pos.getZ());
-
-			if (shouldColor) {
-				byte lumByte = getR(original, vertex);
-				float lum = (lumByte < 0 ? 255 + lumByte : lumByte) / 256f;
-				int r2 = (int) (r * lum);
-				int g2 = (int) (g * lum);
-				int b2 = (int) (b * lum);
-				putColor(mutable, vertex, (byte) r2, (byte) g2, (byte) b2, (byte) a);
-			}
-
-			if (shouldShiftUV) {
-				float u = getU(original, vertex);
-				float v = getV(original, vertex);
-				float targetU = spriteShift.getTarget()
-					.getInterpolatedU((getUnInterpolatedU(spriteShift.getOriginal(), u) / sheetSize) + uTarget * 16);
-				float targetV = spriteShift.getTarget()
-					.getInterpolatedV((getUnInterpolatedV(spriteShift.getOriginal(), v) / sheetSize) + vTarget * 16);
-				putUV(mutable, vertex, targetU, targetV);
-			}
-
-			if (resetUV)
-				putUV(mutable, vertex, getU(original, vertex), getV(original, vertex));
-
-			if (shouldLight) {
-				int light = packedLightCoords;
-				if (lightTransform != null) {
-					lightPos.transform(lightTransform);
-					light = getLight(Minecraft.getInstance().world, lightPos);
-				}
-				putLight(mutable, vertex, light);
-			}
-		}
-
-		transforms = new MatrixStack();
-		shouldShiftUV = false;
-		shouldColor = false;
-		shouldLight = false;
-		mutable.rewind();
-		return mutable;
 	}
 
 	public static float getUnInterpolatedU(TextureAtlasSprite sprite, float u) {
@@ -137,31 +76,72 @@ public class SuperByteBuffer {
 		return (v - sprite.getMinV()) / f * 16.0F;
 	}
 
-	public void renderInto(MatrixStack input, IVertexBuilder buffer) {
-		if (original.limit() == 0)
+	public void renderInto(MatrixStack input, IVertexBuilder builder) {
+		ByteBuffer buffer = template;
+		if (buffer.limit() == 0)
 			return;
-		if (!(buffer instanceof BufferBuilder)) {
-			Matrix4f t = input.peek()
-				.getModel()
-				.copy();
-			Matrix4f localTransforms = transforms.peek()
-				.getModel();
-			t.multiply(localTransforms);
+		buffer.rewind();
 
-			ByteBuffer m = mutable;
-			for (int v = 0; v < vertexCount(m); v++) {
-				Vector4f pos = new Vector4f(getX(original, v), getY(original, v), getZ(original, v), 1F);
-				pos.transform(t);
-				buffer.vertex(pos.getX(), pos.getY(), pos.getZ())
-					.color(getR(m, v), getG(m, v), getB(m, v), getA(m, v))
-					.texture(getU(m, v), getV(m, v))
-					.light(getLight(m, v))
-					.normal(getNX(m, v), getNY(m, v), getNZ(m, v))
-					.endVertex();
-			}
-			transforms = new MatrixStack();
-		} else
-			((BufferBuilder) buffer).putBulkData(build(input));
+		Matrix4f t = input.peek()
+			.getModel()
+			.copy();
+		Matrix4f localTransforms = transforms.peek()
+			.getModel();
+		t.multiply(localTransforms);
+
+		for (int i = 0; i < vertexCount(buffer); i++) {
+			float x = getX(buffer, i);
+			float y = getY(buffer, i);
+			float z = getZ(buffer, i);
+
+			Vector4f pos = new Vector4f(x, y, z, 1F);
+			Vector4f lightPos = new Vector4f(x, y, z, 1F);
+			pos.transform(t);
+			lightPos.transform(localTransforms);
+
+			builder.vertex(pos.getX(), pos.getY(), pos.getZ());
+
+			byte r = getR(buffer, i);
+			byte g = getG(buffer, i);
+			byte b = getB(buffer, i);
+			byte a = getA(buffer, i);
+
+			if (shouldColor) {
+				float lum = (r < 0 ? 255 + r : r) / 256f;
+				builder.color((int) (this.r * lum), (int) (this.g * lum), (int) (this.b * lum), this.a);
+			} else
+				builder.color(r, g, b, a);
+
+			float u = getU(buffer, i);
+			float v = getV(buffer, i);
+
+			if (shouldShiftUV) {
+				float targetU = spriteShift.getTarget()
+					.getInterpolatedU((getUnInterpolatedU(spriteShift.getOriginal(), u) / sheetSize) + uTarget * 16);
+				float targetV = spriteShift.getTarget()
+					.getInterpolatedV((getUnInterpolatedV(spriteShift.getOriginal(), v) / sheetSize) + vTarget * 16);
+				builder.texture(targetU, targetV);
+			} else
+				builder.texture(u, v);
+
+			if (shouldLight) {
+				int light = packedLightCoords;
+				if (lightTransform != null) {
+					lightPos.transform(lightTransform);
+					light = getLight(Minecraft.getInstance().world, lightPos);
+				}
+				builder.light(light);
+			} else
+				builder.light(getLight(buffer, i));
+
+			builder.normal(getNX(buffer, i), getNY(buffer, i), getNZ(buffer, i))
+				.endVertex();
+		}
+
+		transforms = new MatrixStack();
+		shouldShiftUV = false;
+		shouldColor = false;
+		shouldLight = false;
 	}
 
 	public SuperByteBuffer translate(double x, double y, double z) {
@@ -188,7 +168,6 @@ public class SuperByteBuffer {
 
 	public SuperByteBuffer shiftUV(SpriteShiftEntry entry) {
 		shouldShiftUV = true;
-		resetUV = false;
 		spriteShift = entry;
 		uTarget = 0;
 		vTarget = 0;
@@ -198,17 +177,10 @@ public class SuperByteBuffer {
 
 	public SuperByteBuffer shiftUVtoSheet(SpriteShiftEntry entry, float uTarget, float vTarget, int sheetSize) {
 		shouldShiftUV = true;
-		resetUV = false;
 		spriteShift = entry;
 		this.uTarget = uTarget;
 		this.vTarget = vTarget;
 		this.sheetSize = sheetSize;
-		return this;
-	}
-
-	public SuperByteBuffer dontShiftUV() {
-		shouldShiftUV = false;
-		resetUV = true;
 		return this;
 	}
 
@@ -235,11 +207,11 @@ public class SuperByteBuffer {
 	}
 
 	protected int vertexCount(ByteBuffer buffer) {
-		return buffer.limit() / FORMAT_LENGTH;
+		return buffer.limit() / formatSize;
 	}
 
 	protected int getBufferPosition(int vertexIndex) {
-		return vertexIndex * FORMAT_LENGTH;
+		return vertexIndex * formatSize;
 	}
 
 	protected float getX(ByteBuffer buffer, int index) {
@@ -292,32 +264,6 @@ public class SuperByteBuffer {
 
 	protected byte getNZ(ByteBuffer buffer, int index) {
 		return buffer.get(getBufferPosition(index) + 30);
-	}
-
-	protected void putPos(ByteBuffer buffer, int index, float x, float y, float z) {
-		int pos = getBufferPosition(index);
-		buffer.putFloat(pos, x);
-		buffer.putFloat(pos + 4, y);
-		buffer.putFloat(pos + 8, z);
-	}
-
-	protected void putUV(ByteBuffer buffer, int index, float u, float v) {
-		int pos = getBufferPosition(index);
-		buffer.putFloat(pos + 16, u);
-		buffer.putFloat(pos + 20, v);
-	}
-
-	protected void putLight(ByteBuffer buffer, int index, int packedLight) {
-		buffer.putShort(getBufferPosition(index) + 24, (short) (packedLight & 0xFF));
-		buffer.putShort(getBufferPosition(index) + 26, (short) ((packedLight >> 16) & 0xFF));
-	}
-
-	protected void putColor(ByteBuffer buffer, int index, byte r, byte g, byte b, byte a) {
-		int bufferPosition = getBufferPosition(index);
-		buffer.put(bufferPosition + 12, r);
-		buffer.put(bufferPosition + 13, g);
-		buffer.put(bufferPosition + 14, b);
-		buffer.put(bufferPosition + 15, a);
 	}
 
 	private static int getLight(World world, Vector4f lightPos) {

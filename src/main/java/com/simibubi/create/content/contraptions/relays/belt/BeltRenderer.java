@@ -109,9 +109,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					textureIndex += cycleLength;
 
 				beltBuffer.shiftUVtoSheet(spriteShift, (textureIndex % 4) / 4f, (textureIndex / 4) / 4f, 4);
-			} else {
-				beltBuffer.dontShiftUV();
-			}
+			} 
 
 			beltBuffer.renderInto(ms, vb);
 

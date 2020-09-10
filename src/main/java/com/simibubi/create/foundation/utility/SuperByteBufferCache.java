@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -110,14 +109,14 @@ public class SuperByteBufferCache {
 	}
 
 	private SuperByteBuffer standardModelRender(IBakedModel model, BlockState referenceState, MatrixStack ms) {
-		BlockRendererDispatcher dispatcher = Minecraft.getInstance()
-			.getBlockRendererDispatcher();
+		Minecraft mc = Minecraft.getInstance();
+		BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
 		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
-		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
-		Random random = new Random();
+		BufferBuilder builder = new BufferBuilder(512);
+
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		blockRenderer.renderModelFlat(Minecraft.getInstance().world, model, referenceState, BlockPos.ZERO.up(255), ms,
-			builder, true, random, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+		blockRenderer.renderModel(mc.world, model, referenceState, BlockPos.ZERO.up(255), ms, builder, true,
+			mc.world.rand, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
 		builder.finishDrawing();
 
 		return new SuperByteBuffer(builder);
