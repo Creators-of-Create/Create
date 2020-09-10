@@ -120,13 +120,20 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 		NonNullList<ProcessingOutput> results = NonNullList.create();
 		NonNullList<FluidStack> fluidResults = NonNullList.create();
 
-		for (int i = 0; i < buffer.readVarInt(); i++)
+		int size = buffer.readVarInt();
+		for (int i = 0; i < size; i++)
 			ingredients.add(Ingredient.read(buffer));
-		for (int i = 0; i < buffer.readVarInt(); i++)
+		
+		size = buffer.readVarInt();
+		for (int i = 0; i < size; i++)
 			fluidIngredients.add(FluidIngredient.read(buffer));
-		for (int i = 0; i < buffer.readVarInt(); i++)
+		
+		size = buffer.readVarInt();
+		for (int i = 0; i < size; i++)
 			results.add(ProcessingOutput.read(buffer));
-		for (int i = 0; i < buffer.readVarInt(); i++)
+		
+		size = buffer.readVarInt();
+		for (int i = 0; i < size; i++)
 			fluidResults.add(FluidStack.readFromPacket(buffer));
 
 		return new ProcessingRecipeBuilder<>(factory, recipeId).withItemIngredients(ingredients)
