@@ -9,13 +9,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.item.ExperienceBottleEntity;
 import net.minecraft.entity.item.FireworkRocketEntity;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.projectile.*;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
@@ -36,70 +34,6 @@ import java.util.Random;
 
 public interface IMovedDispenseItemBehaviour {
 	static void init() {
-		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.ARROW, new MovedProjectileDispenserBehaviour() {
-			@Override
-			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
-				ArrowEntity arrowEntity = new ArrowEntity(world, x, y, z);
-				arrowEntity.pickupStatus = AbstractArrowEntity.PickupStatus.ALLOWED;
-				return arrowEntity;
-			}
-		});
-
-
-		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.TIPPED_ARROW, new MovedProjectileDispenserBehaviour() {
-			@Override
-			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
-				ArrowEntity arrowEntity = new ArrowEntity(world, x, y, z);
-				arrowEntity.setPotionEffect(itemStack);
-				arrowEntity.pickupStatus = AbstractArrowEntity.PickupStatus.ALLOWED;
-				return arrowEntity;
-			}
-		});
-
-		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.SPECTRAL_ARROW, new MovedProjectileDispenserBehaviour() {
-			@Override
-			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
-				AbstractArrowEntity arrowEntity = new SpectralArrowEntity(world, x, y, z);
-				arrowEntity.pickupStatus = AbstractArrowEntity.PickupStatus.ALLOWED;
-				return arrowEntity;
-			}
-		});
-
-
-		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.EGG, new MovedProjectileDispenserBehaviour() {
-			@Override
-			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
-				return Util.make(new EggEntity(world, x, y, z), p_218408_1_ -> p_218408_1_.setItem(itemStack));
-			}
-		});
-
-
-		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.SNOWBALL, new MovedProjectileDispenserBehaviour() {
-			@Override
-			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
-				return Util.make(new SnowballEntity(world, x, y, z), p_218409_1_ -> p_218409_1_.setItem(itemStack));
-			}
-		});
-
-
-		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.EXPERIENCE_BOTTLE, new MovedProjectileDispenserBehaviour() {
-			@Override
-			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
-				return Util.make(new ExperienceBottleEntity(world, x, y, z), p_218409_1_ -> p_218409_1_.setItem(itemStack));
-			}
-
-			@Override
-			protected float getProjectileInaccuracy() {
-				return super.getProjectileInaccuracy() * 0.5F;
-			}
-
-			@Override
-			protected float getProjectileVelocity() {
-				return super.getProjectileVelocity() * 1.25F;
-			}
-		});
-
-
 		MovedProjectileDispenserBehaviour movedPotionDispenseItemBehaviour = new MovedProjectileDispenserBehaviour() {
 			@Override
 			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {

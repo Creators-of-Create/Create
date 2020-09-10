@@ -8,6 +8,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IDispenseItemBehavior;
+import net.minecraft.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -45,12 +46,20 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 			ItemStack backup = itemstack.copy();
 			// If none is there, try vanilla registry
 			try {
+				IDispenseItemBehavior idispenseitembehavior = BEHAVIOUR_LOOKUP.getBehavior(itemstack);
+				if (idispenseitembehavior instanceof ProjectileDispenseBehavior) { // Projectile behaviours can be converted most of the time
+					IMovedDispenseItemBehaviour iMovedDispenseItemBehaviour = MovedProjectileDispenserBehaviour.of((ProjectileDispenseBehavior) idispenseitembehavior);
+					setItemStackAt(location, iMovedDispenseItemBehaviour.dispense(itemstack, context, pos), context);
+					registerMovedDispenseItemBehaviour(itemstack.getItem(), iMovedDispenseItemBehaviour); // buffer conversion if successful
+					return;
+				}
+
 				Vec3d facingVec = new Vec3d(context.state.get(DispenserBlock.FACING).getDirectionVec());
 				facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
 				facingVec.normalize();
 				Direction clostestFacing = Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);
 				ContraptionBlockSource blockSource = new ContraptionBlockSource(context, pos, clostestFacing);
-				IDispenseItemBehavior idispenseitembehavior = BEHAVIOUR_LOOKUP.getBehavior(itemstack);
+
 				if (idispenseitembehavior.getClass() != DefaultDispenseItemBehavior.class) { // There is a dispense item behaviour registered for the vanilla dispenser
 					setItemStackAt(location, idispenseitembehavior.dispense(blockSource, itemstack), context);
 					return;
