@@ -20,6 +20,7 @@ import java.util.HashMap;
 
 public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_DISPENSE_ITEM_BEHAVIOURS = new HashMap<>();
+	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_PROJECTILE_DISPENSE_BEHAVIOURS = new HashMap<>();
 	private static final DispenserLookup BEHAVIOUR_LOOKUP = new DispenserLookup();
 
 	public static void gatherMovedDispenseItemBehaviours() {
@@ -46,11 +47,16 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 			ItemStack backup = itemstack.copy();
 			// If none is there, try vanilla registry
 			try {
+				if (MOVED_PROJECTILE_DISPENSE_BEHAVIOURS.containsKey(itemstack.getItem())) {
+					setItemStackAt(location, MOVED_PROJECTILE_DISPENSE_BEHAVIOURS.get(itemstack.getItem()).dispense(itemstack, context, pos), context);
+					return;
+				}
+
 				IDispenseItemBehavior idispenseitembehavior = BEHAVIOUR_LOOKUP.getBehavior(itemstack);
 				if (idispenseitembehavior instanceof ProjectileDispenseBehavior) { // Projectile behaviours can be converted most of the time
 					IMovedDispenseItemBehaviour iMovedDispenseItemBehaviour = MovedProjectileDispenserBehaviour.of((ProjectileDispenseBehavior) idispenseitembehavior);
 					setItemStackAt(location, iMovedDispenseItemBehaviour.dispense(itemstack, context, pos), context);
-					registerMovedDispenseItemBehaviour(itemstack.getItem(), iMovedDispenseItemBehaviour); // buffer conversion if successful
+					MOVED_PROJECTILE_DISPENSE_BEHAVIOURS.put(itemstack.getItem(), iMovedDispenseItemBehaviour); // buffer conversion if successful
 					return;
 				}
 
