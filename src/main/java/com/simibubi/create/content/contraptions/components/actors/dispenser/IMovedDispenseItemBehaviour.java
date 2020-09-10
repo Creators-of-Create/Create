@@ -15,6 +15,7 @@ import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.projectile.*;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
@@ -30,7 +31,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Random;
 
@@ -98,6 +98,24 @@ public interface IMovedDispenseItemBehaviour {
 				return super.getProjectileVelocity() * 1.25F;
 			}
 		});
+
+
+		MovedProjectileDispenserBehaviour movedPotionDispenseItemBehaviour = new MovedProjectileDispenserBehaviour() {
+			@Override
+			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
+				return Util.make(new PotionEntity(world, x, y, z), (p_218411_1_) -> p_218411_1_.setItem(itemStack));
+			}
+
+			protected float getProjectileInaccuracy() {
+				return super.getProjectileInaccuracy() * 0.5F;
+			}
+
+			protected float getProjectileVelocity() {
+				return super.getProjectileVelocity() * .5F;
+			}
+		};
+		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.SPLASH_POTION, movedPotionDispenseItemBehaviour);
+		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.LINGERING_POTION, movedPotionDispenseItemBehaviour);
 
 
 		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.TNT, new MovedDefaultDispenseItemBehaviour() {
@@ -175,14 +193,6 @@ public interface IMovedDispenseItemBehaviour {
 					return super.dispenseStack(itemStack, context, pos, facing);
 				}
 			}
-
-			private ItemStack placeItemInInventory(ItemStack bottles, ItemStack output, MovementContext context, BlockPos pos, Vec3d facing) {
-				bottles.shrink(1);
-				ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, output.copy(), false);
-				if (!remainder.isEmpty())
-					super.dispenseStack(output, context, pos, facing);
-				return bottles;
-			}
 		});
 
 		DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(Items.BUCKET, new MovedDefaultDispenseItemBehaviour() {
@@ -197,14 +207,6 @@ public interface IMovedDispenseItemBehaviour {
 						return placeItemInInventory(itemStack, new ItemStack(fluid.getFilledBucket()), context, pos, facing);
 				}
 				return super.dispenseStack(itemStack, context, pos, facing);
-			}
-
-			private ItemStack placeItemInInventory(ItemStack buckets, ItemStack output, MovementContext context, BlockPos pos, Vec3d facing) {
-				buckets.shrink(1);
-				ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, output.copy(), false);
-				if (!remainder.isEmpty())
-					super.dispenseStack(output, context, pos, facing);
-				return buckets;
 			}
 		});
 

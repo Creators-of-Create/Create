@@ -242,11 +242,19 @@ public class ItemHelper {
 	}
 
 	public static ItemStack findFirstMatch(IItemHandler inv, Predicate<ItemStack> test) {
-		for (int i = 0; i < inv.getSlots(); i++) {
-			ItemStack toTest = inv.getStackInSlot(i);
+		int slot = findFirstMatchingSlotIndex(inv, test);
+		if (slot == -1)
+			return ItemStack.EMPTY;
+		else
+			return inv.getStackInSlot(slot);
+	}
+
+	public static int findFirstMatchingSlotIndex(IItemHandler inv, Predicate<ItemStack> test) {
+		for (int slot = 0; slot < inv.getSlots(); slot++) {
+			ItemStack toTest = inv.getStackInSlot(slot);
 			if (test.test(toTest))
-				return toTest;
+				return slot;
 		}
-		return ItemStack.EMPTY;
+		return -1;
 	}
 }

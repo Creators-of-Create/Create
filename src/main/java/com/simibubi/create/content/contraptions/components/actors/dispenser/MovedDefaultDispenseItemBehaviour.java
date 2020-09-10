@@ -12,8 +12,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBehaviour {
+	private static final MovedDefaultDispenseItemBehaviour defaultInstance = new MovedDefaultDispenseItemBehaviour();
 
 	public static void doDispense(World p_82486_0_, ItemStack p_82486_1_, int p_82486_2_, Vec3d facing, BlockPos p_82486_4_, MovementContext context) {
 		double d0 = p_82486_4_.getX() + facing.x + .5;
@@ -79,5 +81,13 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 
 	protected Direction getClosestFacingDirection(Vec3d exactFacing) {
 		return Direction.getFacingFromVector(exactFacing.x, exactFacing.y, exactFacing.z);
+	}
+
+	protected ItemStack placeItemInInventory(ItemStack consumedFrom, ItemStack output, MovementContext context, BlockPos pos, Vec3d facing) {
+		consumedFrom.shrink(1);
+		ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, output.copy(), false);
+		if (!remainder.isEmpty())
+			defaultInstance.dispenseStack(output, context, pos, facing);
+		return consumedFrom;
 	}
 }

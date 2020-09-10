@@ -31,13 +31,14 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 
 	@Override
 	protected void activate(MovementContext context, BlockPos pos) {
-		ItemStack itemstack = getDispenseStack(context);
-		if (itemstack.isEmpty()) {
+		DispenseItemLocation location = getDispenseStack(context);
+		if (location.isEmpty()) {
 			context.world.playEvent(1001, pos, 0);
 		} else {
+			ItemStack itemstack = getItemStackAt(location, context);
 			// Special dispense item behaviour for moving contraptions
 			if (MOVED_DISPENSE_ITEM_BEHAVIOURS.containsKey(itemstack.getItem())) {
-				MOVED_DISPENSE_ITEM_BEHAVIOURS.get(itemstack.getItem()).dispense(itemstack, context, pos);
+				setItemStackAt(location, MOVED_DISPENSE_ITEM_BEHAVIOURS.get(itemstack.getItem()).dispense(itemstack, context, pos), context);
 				return;
 			}
 
@@ -51,14 +52,14 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 				ContraptionBlockSource blockSource = new ContraptionBlockSource(context, pos, clostestFacing);
 				IDispenseItemBehavior idispenseitembehavior = BEHAVIOUR_LOOKUP.getBehavior(itemstack);
 				if (idispenseitembehavior.getClass() != DefaultDispenseItemBehavior.class) { // There is a dispense item behaviour registered for the vanilla dispenser
-					idispenseitembehavior.dispense(blockSource, itemstack);
+					setItemStackAt(location, idispenseitembehavior.dispense(blockSource, itemstack), context);
 					return;
 				}
-			} catch (NullPointerException e) {
-				itemstack = backup; // Something went wrong with the TE being null in ContraptionBlockSource, reset the stack
+			} catch (NullPointerException ignored) {
+				itemstack = backup;
 			}
 
-			defaultBehaviour.dispense(itemstack, context, pos);  // the default: launch the item
+			setItemStackAt(location, defaultBehaviour.dispense(itemstack, context, pos), context);  // the default: launch the item
 		}
 	}
 

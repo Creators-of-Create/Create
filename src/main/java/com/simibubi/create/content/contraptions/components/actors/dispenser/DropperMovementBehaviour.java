@@ -19,11 +19,11 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 	private static final Random RNG = new Random();
 
 	protected void activate(MovementContext context, BlockPos pos) {
-		ItemStack itemstack = getDispenseStack(context);
-		if (itemstack.isEmpty()) {
+		DispenseItemLocation location = getDispenseStack(context);
+		if (location.isEmpty()) {
 			context.world.playEvent(1001, pos, 0);
 		} else {
-			defaultBehaviour.dispense(itemstack, context, pos);
+			setItemStackAt(location, defaultBehaviour.dispense(getItemStackAt(location, context), context, pos), context);
 		}
 	}
 
@@ -40,27 +40,34 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 			ItemHelper.extract(context.contraption.inventory, itemStack::isItemEqual, ItemHelper.ExtractionCountMode.UPTO, itemStack.getMaxStackSize() - itemStack.getCount(), false).getCount()));
 	}
 
-	@SuppressWarnings("unchecked")
-	private NonNullList<ItemStack> getStacks(MovementContext context) {
+	private void updateTemporaryData(MovementContext context) {
 		if (!(context.temporaryData instanceof NonNullList) && context.world instanceof ServerWorld) {
-			NonNullList<ItemStack> stacks = NonNullList.withSize(9, ItemStack.EMPTY);
+			NonNullList<ItemStack> stacks = NonNullList.withSize(getInvSize(), ItemStack.EMPTY);
 			ItemStackHelper.loadAllItems(context.tileData, stacks);
 			context.temporaryData = stacks;
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private NonNullList<ItemStack> getStacks(MovementContext context) {
+		updateTemporaryData(context);
 		return (NonNullList<ItemStack>) context.temporaryData;
 	}
 
-	private ArrayList<ItemStack> getUseableStacks(MovementContext context) {
-		ArrayList<ItemStack> useable = new ArrayList<>();
-		for (ItemStack testStack : getStacks(context)) {
+	private ArrayList<DispenseItemLocation> getUseableLocations(MovementContext context) {
+		ArrayList<DispenseItemLocation> useable = new ArrayList<>();
+		NonNullList<ItemStack> internalStacks = getStacks(context);
+		for (int slot = 0; slot < getInvSize(); slot++) {
+			DispenseItemLocation location = new DispenseItemLocation(true, slot);
+			ItemStack testStack = getItemStackAt(location, context);
 			if (testStack == null || testStack.isEmpty())
 				continue;
 			if (testStack.getMaxStackSize() == 1) {
-				ItemStack stack = ItemHelper.findFirstMatch(context.contraption.inventory, testStack::isItemEqual);
-				if (!stack.isEmpty())
-					useable.add(stack);
-			} else if (testStack.getCount() >= 2)
-				useable.add(testStack);
+				location = new DispenseItemLocation(false, ItemHelper.findFirstMatchingSlotIndex(context.contraption.inventory, testStack::isItemEqual));
+				if (!getItemStackAt(location, context).isEmpty())
+					useable.add(location);
+			} else if (internalStacks.get(slot).getCount() >= 2)
+				useable.add(location);
 		}
 		return useable;
 	}
@@ -79,18 +86,38 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 		writeExtraData(context);
 	}
 
-	protected ItemStack getDispenseStack(MovementContext context) {
+	protected DispenseItemLocation getDispenseStack(MovementContext context) {
 		int i = -1;
 		int j = 1;
-		List<ItemStack> stacks = getUseableStacks(context);
-		for (int k = 0; k < stacks.size(); ++k) {
+		List<DispenseItemLocation> useableLocations = getUseableLocations(context);
+		for (int k = 0; k < useableLocations.size(); ++k) {
 			if (RNG.nextInt(j++) == 0) {
 				i = k;
 			}
 		}
 		if (i < 0)
-			return ItemStack.EMPTY;
+			return DispenseItemLocation.NONE;
 		else
-			return stacks.get(i);
+			return useableLocations.get(i);
+	}
+
+	protected ItemStack getItemStackAt(DispenseItemLocation location, MovementContext context) {
+		if (location.isInternal()) {
+			return getStacks(context).get(location.getSlot());
+		} else {
+			return context.contraption.inventory.getStackInSlot(location.getSlot());
+		}
+	}
+
+	protected void setItemStackAt(DispenseItemLocation location, ItemStack stack, MovementContext context) {
+		if (location.isInternal()) {
+			getStacks(context).set(location.getSlot(), stack);
+		} else {
+			context.contraption.inventory.setStackInSlot(location.getSlot(), stack);
+		}
+	}
+
+	private static int getInvSize() {
+		return 9;
 	}
 }
