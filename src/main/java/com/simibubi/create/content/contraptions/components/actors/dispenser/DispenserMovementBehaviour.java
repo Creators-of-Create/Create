@@ -31,7 +31,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 
 	@Override
 	protected void activate(MovementContext context, BlockPos pos) {
-		DispenseItemLocation location = getDispenseStack(context);
+		DispenseItemLocation location = getDispenseLocation(context);
 		if (location.isEmpty()) {
 			context.world.playEvent(1001, pos, 0);
 		} else {
@@ -56,7 +56,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 					return;
 				}
 			} catch (NullPointerException ignored) {
-				itemstack = backup;
+				itemstack = backup; // Something went wrong with the TE being null in ContraptionBlockSource, reset the stack
 			}
 
 			setItemStackAt(location, defaultBehaviour.dispense(itemstack, context, pos), context);  // the default: launch the item

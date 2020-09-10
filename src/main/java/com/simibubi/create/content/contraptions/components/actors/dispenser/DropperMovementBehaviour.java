@@ -19,7 +19,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 	private static final Random RNG = new Random();
 
 	protected void activate(MovementContext context, BlockPos pos) {
-		DispenseItemLocation location = getDispenseStack(context);
+		DispenseItemLocation location = getDispenseLocation(context);
 		if (location.isEmpty()) {
 			context.world.playEvent(1001, pos, 0);
 		} else {
@@ -56,7 +56,6 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 
 	private ArrayList<DispenseItemLocation> getUseableLocations(MovementContext context) {
 		ArrayList<DispenseItemLocation> useable = new ArrayList<>();
-		NonNullList<ItemStack> internalStacks = getStacks(context);
 		for (int slot = 0; slot < getInvSize(); slot++) {
 			DispenseItemLocation location = new DispenseItemLocation(true, slot);
 			ItemStack testStack = getItemStackAt(location, context);
@@ -66,7 +65,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 				location = new DispenseItemLocation(false, ItemHelper.findFirstMatchingSlotIndex(context.contraption.inventory, testStack::isItemEqual));
 				if (!getItemStackAt(location, context).isEmpty())
 					useable.add(location);
-			} else if (internalStacks.get(slot).getCount() >= 2)
+			} else if (testStack.getCount() >= 2)
 				useable.add(location);
 		}
 		return useable;
@@ -86,7 +85,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 		writeExtraData(context);
 	}
 
-	protected DispenseItemLocation getDispenseStack(MovementContext context) {
+	protected DispenseItemLocation getDispenseLocation(MovementContext context) {
 		int i = -1;
 		int j = 1;
 		List<DispenseItemLocation> useableLocations = getUseableLocations(context);
