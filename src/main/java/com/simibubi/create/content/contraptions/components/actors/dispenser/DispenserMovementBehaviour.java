@@ -31,12 +31,10 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 
 	@Override
 	protected void activate(MovementContext context, BlockPos pos) {
-		int i = getDispenseSlot(context);
-		if (i < 0) {
+		ItemStack itemstack = getDispenseStack(context);
+		if (itemstack.isEmpty()) {
 			context.world.playEvent(1001, pos, 0);
 		} else {
-			ItemStack itemstack = getStacks(context).get(i);
-
 			// Special dispense item behaviour for moving contraptions
 			if (MOVED_DISPENSE_ITEM_BEHAVIOURS.containsKey(itemstack.getItem())) {
 				MOVED_DISPENSE_ITEM_BEHAVIOURS.get(itemstack.getItem()).dispense(itemstack, context, pos);

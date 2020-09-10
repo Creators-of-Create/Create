@@ -241,4 +241,12 @@ public class ItemHelper {
 		return extracting;
 	}
 
+	public static ItemStack findFirstMatch(IItemHandler inv, Predicate<ItemStack> test) {
+		for (int i = 0; i < inv.getSlots(); i++) {
+			ItemStack toTest = inv.getStackInSlot(i);
+			if (test.test(toTest))
+				return toTest;
+		}
+		return ItemStack.EMPTY;
+	}
 }

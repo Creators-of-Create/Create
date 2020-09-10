@@ -10,6 +10,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class DropperMovementBehaviour extends MovementBehaviour {
@@ -17,11 +19,11 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 	private static final Random RNG = new Random();
 
 	protected void activate(MovementContext context, BlockPos pos) {
-		int i = getDispenseSlot(context);
-		if (i < 0) {
+		ItemStack itemstack = getDispenseStack(context);
+		if (itemstack.isEmpty()) {
 			context.world.playEvent(1001, pos, 0);
 		} else {
-			defaultBehaviour.dispense(getStacks(context).get(i), context, pos);
+			defaultBehaviour.dispense(itemstack, context, pos);
 		}
 	}
 
@@ -39,13 +41,28 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected NonNullList<ItemStack> getStacks(MovementContext context) {
+	private NonNullList<ItemStack> getStacks(MovementContext context) {
 		if (!(context.temporaryData instanceof NonNullList) && context.world instanceof ServerWorld) {
 			NonNullList<ItemStack> stacks = NonNullList.withSize(9, ItemStack.EMPTY);
 			ItemStackHelper.loadAllItems(context.tileData, stacks);
 			context.temporaryData = stacks;
 		}
 		return (NonNullList<ItemStack>) context.temporaryData;
+	}
+
+	private ArrayList<ItemStack> getUseableStacks(MovementContext context) {
+		ArrayList<ItemStack> useable = new ArrayList<>();
+		for (ItemStack testStack : getStacks(context)) {
+			if (testStack == null || testStack.isEmpty())
+				continue;
+			if (testStack.getMaxStackSize() == 1) {
+				ItemStack stack = ItemHelper.findFirstMatch(context.contraption.inventory, testStack::isItemEqual);
+				if (!stack.isEmpty())
+					useable.add(stack);
+			} else if (testStack.getCount() >= 2)
+				useable.add(testStack);
+		}
+		return useable;
 	}
 
 	@Override
@@ -62,15 +79,18 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 		writeExtraData(context);
 	}
 
-	protected int getDispenseSlot(MovementContext context) {
+	protected ItemStack getDispenseStack(MovementContext context) {
 		int i = -1;
 		int j = 1;
-		NonNullList<ItemStack> stacks = getStacks(context);
+		List<ItemStack> stacks = getUseableStacks(context);
 		for (int k = 0; k < stacks.size(); ++k) {
-			if (!stacks.get(k).isEmpty() && RNG.nextInt(j++) == 0 && stacks.get(k).getCount() >= 2) {
+			if (RNG.nextInt(j++) == 0) {
 				i = k;
 			}
 		}
-		return i;
+		if (i < 0)
+			return ItemStack.EMPTY;
+		else
+			return stacks.get(i);
 	}
 }
