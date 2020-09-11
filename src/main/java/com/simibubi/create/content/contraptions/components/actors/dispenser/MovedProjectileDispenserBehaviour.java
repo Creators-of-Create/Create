@@ -53,17 +53,47 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 			@Override
 			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
 				try {
-					return (IProjectile) MovedProjectileDispenserBehaviour.getGetProjectileEntityLookup().invoke(vanillaBehaviour, world, new SimplePos(x, y, z) , itemStack);
+					return (IProjectile) MovedProjectileDispenserBehaviour.getProjectileEntityLookup().invoke(vanillaBehaviour, world, new SimplePos(x, y, z) , itemStack);
 				} catch (Throwable ignored) {
 				}
 				return null;
 			}
+
+			@Override
+			protected float getProjectileInaccuracy() {
+				try {
+					return (float) MovedProjectileDispenserBehaviour.getProjectileInaccuracyLookup().invoke(vanillaBehaviour);
+				} catch (Throwable ignored) {
+				}
+				return super.getProjectileInaccuracy();
+			}
+
+			@Override
+			protected float getProjectileVelocity() {
+				try {
+					return (float) MovedProjectileDispenserBehaviour.getProjectileVelocityLookup().invoke(vanillaBehaviour);
+				} catch (Throwable ignored) {
+				}
+				return super.getProjectileVelocity();
+			}
 		};
 	}
 
-	private static Method getGetProjectileEntityLookup() {
+	private static Method getProjectileEntityLookup() {
 		Method getProjectileEntity = ObfuscationReflectionHelper.findMethod(ProjectileDispenseBehavior.class, "func_82499_a", World.class, IPosition.class, ItemStack.class);
 		getProjectileEntity.setAccessible(true);
 		return getProjectileEntity;
+	}
+
+	private static Method getProjectileInaccuracyLookup() {
+		Method getProjectileInaccuracy = ObfuscationReflectionHelper.findMethod(ProjectileDispenseBehavior.class, "func_82498_a");
+		getProjectileInaccuracy.setAccessible(true);
+		return getProjectileInaccuracy;
+	}
+
+	private static Method getProjectileVelocityLookup() {
+		Method getProjectileVelocity = ObfuscationReflectionHelper.findMethod(ProjectileDispenseBehavior.class, "func_82500_b");
+		getProjectileVelocity.setAccessible(true);
+		return getProjectileVelocity;
 	}
 }
