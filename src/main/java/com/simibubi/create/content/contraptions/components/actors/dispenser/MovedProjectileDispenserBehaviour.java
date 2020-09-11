@@ -10,10 +10,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 
 public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDispenseItemBehaviour {
+
 	@Override
 	protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vec3d facing) {
 		double x = pos.getX() + facing.x * .7 + .5;
@@ -34,6 +37,7 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 		world.playEvent(1002, pos, 0);
 	}
 
+	@Nullable
 	protected abstract IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack);
 
 	protected float getProjectileInaccuracy() {
@@ -49,13 +53,17 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 			@Override
 			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
 				try {
-					Method projectileLookup = ProjectileDispenseBehavior.class.getDeclaredMethod("getProjectileEntity", World.class, IPosition.class, ItemStack.class);
-					projectileLookup.setAccessible(true);
-					return (IProjectile) projectileLookup.invoke(vanillaBehaviour, world, new SimplePos(x, y, z) , itemStack);
+					return (IProjectile) MovedProjectileDispenserBehaviour.getGetProjectileEntityLookup().invoke(vanillaBehaviour, world, new SimplePos(x, y, z) , itemStack);
 				} catch (Throwable ignored) {
 				}
 				return null;
 			}
 		};
+	}
+
+	private static Method getGetProjectileEntityLookup() {
+		Method getProjectileEntity = ObfuscationReflectionHelper.findMethod(ProjectileDispenseBehavior.class, "func_82499_a", World.class, IPosition.class, ItemStack.class);
+		getProjectileEntity.setAccessible(true);
+		return getProjectileEntity;
 	}
 }
