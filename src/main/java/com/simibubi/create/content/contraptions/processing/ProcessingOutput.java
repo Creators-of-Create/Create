@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.Create;
@@ -41,7 +42,11 @@ public class ProcessingOutput {
 		for (int roll = 0; roll < stack.getCount(); roll++)
 			if (r.nextFloat() > chance)
 				outputAmount--;
-		return outputAmount > 0 ? new ItemStack(stack.getItem(), outputAmount) : ItemStack.EMPTY;
+		if (outputAmount == 0)
+			return ItemStack.EMPTY;
+		ItemStack out = stack.copy();
+		out.setCount(outputAmount);
+		return out;
 	}
 
 	public JsonElement serialize() {
@@ -51,8 +56,7 @@ public class ProcessingOutput {
 			.toString());
 		json.addProperty("count", stack.getCount());
 		if (stack.hasTag())
-			json.addProperty("nbt", stack.getTag()
-				.toString());
+			json.add("nbt", new JsonParser().parse(stack.getTag().toString()));
 		if (chance != 1)
 			json.addProperty("chance", chance);
 		return json;

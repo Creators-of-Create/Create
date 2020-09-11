@@ -28,14 +28,14 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 	@Override
 	protected void registerRecipes(Consumer<IFinishedRecipe> p_200404_1_) {
 		all.forEach(c -> c.register(p_200404_1_));
-		Create.logger.info(getName() + " registered " + all.size() + " recipes");
+		Create.logger.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
 	}
 
 	@FunctionalInterface
 	interface GeneratedRecipe {
 		void register(Consumer<IFinishedRecipe> consumer);
 	}
-	
+
 	protected GeneratedRecipe register(GeneratedRecipe recipe) {
 		all.add(recipe);
 		return recipe;
@@ -53,7 +53,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static Tag<Item> gold() {
 			return AllTags.forgeItemTag("ingots/gold");
 		}
-		
+
 		static Tag<Item> goldSheet() {
 			return AllTags.forgeItemTag("plates/gold");
 		}

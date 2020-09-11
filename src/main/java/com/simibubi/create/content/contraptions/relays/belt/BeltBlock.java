@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,6 +16,7 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -248,7 +248,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			controllerBelt.getInventory()
 				.applyToEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
 					player.inventory.placeItemBackInInventory(world, transportedItemStack.stack);
-					return Collections.emptyList();
+					return TransportedResult.removeItem();
 				});
 		}
 
@@ -464,17 +464,19 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			world.playEvent(2001, currentPos, Block.getStateId(currentState));
 		}
 	}
-	
+
 	@Override
-	public BlockState updatePostPlacement(BlockState state, Direction side, BlockState p_196271_3_,
-		IWorld world, BlockPos pos, BlockPos p_196271_6_) {
-		if (side.getAxis().isHorizontal())
+	public BlockState updatePostPlacement(BlockState state, Direction side, BlockState p_196271_3_, IWorld world,
+		BlockPos pos, BlockPos p_196271_6_) {
+		if (side.getAxis()
+			.isHorizontal())
 			updateTunnelConnections(world, pos.up());
 		return state;
 	}
 
 	private void updateTunnelConnections(IWorld world, BlockPos pos) {
-		Block tunnelBlock = world.getBlockState(pos).getBlock();
+		Block tunnelBlock = world.getBlockState(pos)
+			.getBlock();
 		if (tunnelBlock instanceof BeltTunnelBlock)
 			((BeltTunnelBlock) tunnelBlock).updateTunnel(world, pos);
 	}

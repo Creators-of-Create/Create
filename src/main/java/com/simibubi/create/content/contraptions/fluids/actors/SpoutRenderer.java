@@ -45,24 +45,31 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 
 		int processingTicks = te.processingTicks;
 		float processingPT = te.processingTicks - partialTicks;
-
+		float processingProgress = 1 - (processingPT - 5) / 10;
+		processingProgress = MathHelper.clamp(processingProgress, 0, 1);
 		float radius = 0;
+
 		if (processingTicks != -1) {
-			float processingProgress = 1 - (processingPT - 5) / 10;
-			processingProgress = MathHelper.clamp(processingProgress, 0, 1);
-			radius = (float) (Math.pow(((2 * processingProgress) - 1), 2) - 1) / 32f;
-			AxisAlignedBB bb = new AxisAlignedBB(0.5, .5, 0.5, 0.5, -1.2, 0.5).grow(radius);
+			radius = (float) (Math.pow(((2 * processingProgress) - 1), 2) - 1);
+			AxisAlignedBB bb = new AxisAlignedBB(0.5, .5, 0.5, 0.5, -1.2, 0.5).grow(radius / 32f);
 			FluidRenderer.renderTiledFluidBB(fluidStack, (float) bb.minX, (float) bb.minY, (float) bb.minZ,
 				(float) bb.maxX, (float) bb.maxY, (float) bb.maxZ, buffer, ms, light, true);
-
 		}
+
+		float squeeze = radius;
+		if (processingPT < 0)
+			squeeze = 0;
+		else if (processingPT < 2)
+			squeeze = MathHelper.lerp(processingPT / 2f, 0, -1);
+		else if (processingPT < 10)
+			squeeze = -1;
 
 		ms.push();
 		for (AllBlockPartials bit : BITS) {
 			bit.renderOn(te.getBlockState())
 				.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
-			ms.translate(0, -3 * radius, 0);
+			ms.translate(0, -3 * squeeze / 32f, 0);
 		}
 		ms.pop();
 

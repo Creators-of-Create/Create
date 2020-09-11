@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.relays.belt.transport;
 
 import static com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler.flapTunnel;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,13 +11,14 @@ import java.util.function.Function;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
+import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.block.Block;
@@ -37,6 +37,7 @@ public class BeltInventory {
 	final BeltTileEntity belt;
 	private final List<TransportedItemStack> items;
 	final List<TransportedItemStack> toInsert;
+	final List<TransportedItemStack> toRemove;
 	boolean beltMovementPositive;
 	final float SEGMENT_WINDOW = .75f;
 
@@ -44,6 +45,7 @@ public class BeltInventory {
 		this.belt = te;
 		items = new LinkedList<>();
 		toInsert = new LinkedList<>();
+		toRemove = new LinkedList<>();
 	}
 
 	public void tick() {
@@ -56,10 +58,12 @@ public class BeltInventory {
 			belt.sendData();
 		}
 
-		// Add items from previous cycle
-		if (!toInsert.isEmpty()) {
+		// Added/Removed items from previous cycle
+		if (!toInsert.isEmpty() || !toRemove.isEmpty()) {
 			toInsert.forEach(this::insert);
 			toInsert.clear();
+			items.removeAll(toRemove);
+			toRemove.clear();
 			belt.markDirty();
 			belt.sendData();
 		}
@@ -248,7 +252,7 @@ public class BeltInventory {
 					return true;
 
 				if (result == ProcessingResult.HOLD) {
-					currentItem.beltPosition = segment + .5f + (beltMovementPositive ? 1 / 64f : -1 / 64f);
+					currentItem.beltPosition = segment + .5f + (beltMovementPositive ? 1 / 512f : -1 / 512f);
 					currentItem.locked = true;
 					belt.sendData();
 					return false;
@@ -400,24 +404,25 @@ public class BeltInventory {
 	}
 
 	public void applyToEachWithin(float position, float maxDistanceToPosition,
-		Function<TransportedItemStack, List<TransportedItemStack>> processFunction) {
-		List<TransportedItemStack> toBeAdded = new ArrayList<>();
+		Function<TransportedItemStack, TransportedResult> processFunction) {
 		boolean dirty = false;
-		for (Iterator<TransportedItemStack> iterator = items.iterator(); iterator.hasNext();) {
-			TransportedItemStack transportedItemStack = iterator.next();
-			ItemStack stackBefore = transportedItemStack.stack.copy();
-			if (Math.abs(position - transportedItemStack.beltPosition) < maxDistanceToPosition) {
-				List<TransportedItemStack> apply = processFunction.apply(transportedItemStack);
-				if (apply == null)
-					continue;
-				if (apply.size() == 1 && apply.get(0).stack.equals(stackBefore, false))
-					continue;
-				dirty = true;
-				toBeAdded.addAll(apply);
-				iterator.remove();
+		for (TransportedItemStack transforted : items) {
+			ItemStack stackBefore = transforted.stack.copy();
+			if (Math.abs(position - transforted.beltPosition) >= maxDistanceToPosition)
+				continue;
+			TransportedResult result = processFunction.apply(transforted);
+			if (result.didntChangeFrom(stackBefore))
+				continue;
+
+			dirty = true;
+			if (result.hasHeldOutput()) {
+				TransportedItemStack held = result.getHeldOutput();
+				held.beltPosition = ((int) position) + .5f - (beltMovementPositive ? 1 / 512f : -1 / 512f);
+				toInsert.add(held);
 			}
+			toInsert.addAll(result.getOutputs());
+			toRemove.add(transforted);
 		}
-		toBeAdded.forEach(toInsert::add);
 		if (dirty) {
 			belt.markDirty();
 			belt.sendData();

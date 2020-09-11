@@ -95,34 +95,42 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
 		boolean blockItem = itemRenderer.getItemModelWithOverrides(itemStack, null, null)
 			.isGui3d();
+		
+		ms.push();
+		msr.rotateY(angle);
+		if (!blockItem && !renderUpright) {
+			ms.translate(0, -.09375, 0);
+			msr.rotateX(90);
+		}
+		if (renderUpright) {
+			Entity renderViewEntity = Minecraft.getInstance().renderViewEntity;
+			if (renderViewEntity != null) {
+				Vec3d positionVec = renderViewEntity.getPositionVec();
+				Vec3d vectorForOffset = itemPosition;
+				Vec3d diff = vectorForOffset.subtract(positionVec);
+				float yRot = (float) MathHelper.atan2(diff.z, -diff.x);
+				ms.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion((float) (yRot - Math.PI / 2)));
+			}
+			ms.translate(0, 3 / 32d, 1/16f);
+		}
+		
 		for (int i = 0; i <= count; i++) {
 			ms.push();
-			msr.rotateY(angle);
-			if (!blockItem && !renderUpright) {
-				ms.translate(0, -.09375, 0);
-				msr.rotateX(90);
-			}
-			if (renderUpright) {
-				Entity renderViewEntity = Minecraft.getInstance().renderViewEntity;
-				if (renderViewEntity != null) {
-					Vec3d positionVec = renderViewEntity.getPositionVec();
-					Vec3d vectorForOffset = itemPosition;
-					Vec3d diff = vectorForOffset.subtract(positionVec);
-					float yRot = (float) MathHelper.atan2(diff.z, -diff.x);
-					ms.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion((float) (yRot + Math.PI / 2)));
-				}
-				ms.translate(0, 3 / 32d, 0);
-			}
 			if (blockItem)
 				ms.translate(r.nextFloat() * .0625f * i, 0, r.nextFloat() * .0625f * i);
 			ms.scale(.5f, .5f, .5f);
 			itemRenderer.renderItem(itemStack, TransformType.FIXED, light, overlay, ms, buffer);
 			ms.pop();
 
-			if (!blockItem)
-				msr.rotateY(10);
-			ms.translate(0, blockItem ? 1 / 64d : 1 / 16d, 0);
+			if (!renderUpright) {
+				if (!blockItem)
+					msr.rotateY(10);
+				ms.translate(0, blockItem ? 1 / 64d : 1 / 16d, 0);
+			} else
+				ms.translate(0, 0, -1 / 16f);
 		}
+		
+		ms.pop();
 	}
 
 }

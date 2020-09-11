@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.millstone.MillingReci
 import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
+import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
@@ -39,6 +40,7 @@ public enum AllRecipeTypes {
 	PRESSING(processingSerializer(PressingRecipe::new)),
 	SANDPAPER_POLISHING(processingSerializer(SandPaperPolishingRecipe::new)),
 	SPLASHING(processingSerializer(SplashingRecipe::new)),
+	FILLING(processingSerializer(FillingRecipe::new)),
 
 	;
 

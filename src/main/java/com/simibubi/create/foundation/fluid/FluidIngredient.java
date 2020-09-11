@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import net.minecraft.fluid.Fluid;
@@ -28,14 +29,14 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		ingredient.amountRequired = amount;
 		return ingredient;
 	}
-	
+
 	public static FluidIngredient fromFluid(Fluid fluid, int amount) {
 		FluidStackIngredient ingredient = new FluidStackIngredient();
 		ingredient.fluid = fluid;
 		ingredient.amountRequired = amount;
 		return ingredient;
 	}
-	
+
 	protected int amountRequired;
 
 	protected abstract boolean testInternal(FluidStack t);
@@ -111,7 +112,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		protected Fluid fluid;
 		protected CompoundNBT tagToMatch;
-		
+
 		public FluidStackIngredient() {
 			tagToMatch = new CompoundNBT();
 		}
@@ -150,7 +151,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		protected void writeInternal(JsonObject json) {
 			json.addProperty("fluid", fluid.getRegistryName()
 				.toString());
-			json.addProperty("nbt", tagToMatch.toString());
+			json.add("nbt", new JsonParser().parse(tagToMatch.toString()));
 		}
 
 	}

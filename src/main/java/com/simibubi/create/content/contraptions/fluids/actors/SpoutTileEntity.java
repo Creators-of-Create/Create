@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
 import com.simibubi.create.foundation.utility.Pair;
@@ -97,25 +98,25 @@ public class SpoutTileEntity extends SmartTileEntity {
 
 	protected ProcessingResult onItemReceived(TransportedItemStack transported,
 		TransportedItemStackHandlerBehaviour handler) {
-		if (!FillingBySpout.canItemBeFilled(transported.stack))
+		if (!FillingBySpout.canItemBeFilled(world, transported.stack))
 			return PASS;
 		if (tank.isEmpty())
 			return HOLD;
-		if (FillingBySpout.getRequiredAmountForItem(transported.stack, tank.getFluid()) == -1)
+		if (FillingBySpout.getRequiredAmountForItem(world, transported.stack, tank.getFluid()) == -1)
 			return PASS;
 		return HOLD;
 	}
 
 	protected ProcessingResult whenItemHeld(TransportedItemStack transported,
 		TransportedItemStackHandlerBehaviour handler) {
-		if (processingTicks > 0)
+		if (processingTicks != -1 && processingTicks != 5)
 			return HOLD;
-		if (!FillingBySpout.canItemBeFilled(transported.stack))
+		if (!FillingBySpout.canItemBeFilled(world, transported.stack))
 			return PASS;
 		if (tank.isEmpty())
 			return HOLD;
 		FluidStack fluid = tank.getFluid();
-		int requiredAmountForItem = FillingBySpout.getRequiredAmountForItem(transported.stack, fluid.copy());
+		int requiredAmountForItem = FillingBySpout.getRequiredAmountForItem(world, transported.stack, fluid.copy());
 		if (requiredAmountForItem == -1)
 			return PASS;
 		if (requiredAmountForItem > fluid.getAmount())
@@ -129,19 +130,18 @@ public class SpoutTileEntity extends SmartTileEntity {
 		}
 
 		// Process finished
-
-		processingTicks = -1;
-		ItemStack out = FillingBySpout.fillItem(requiredAmountForItem, transported.stack, fluid);
+		ItemStack out = FillingBySpout.fillItem(world, requiredAmountForItem, transported.stack, fluid);
 		if (!out.isEmpty()) {
 			List<TransportedItemStack> outList = new ArrayList<>();
-			TransportedItemStack similar = transported.copy();
-			similar.stack = out;
-			// FIXME: original stack keeps waiting
+			TransportedItemStack held = null;
+			TransportedItemStack result = transported.copy();
+			result.stack = out;
 			if (!transported.stack.isEmpty())
-				outList.add(transported.copy());
-			outList.add(similar);
-			handler.handleProcessingOnItem(transported, outList);
+				held = transported.copy();
+			outList.add(result);
+			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(outList, held));
 		}
+
 		tank.setFluid(fluid);
 		sendSplash = true;
 		markDirty();
@@ -173,14 +173,14 @@ public class SpoutTileEntity extends SmartTileEntity {
 		tank.readFromNBT(compound.getCompound("TankContent"));
 		fluidLevel.readNBT(compound.getCompound("Level"), clientPacket);
 		processingTicks = compound.getInt("ProcessingTicks");
+		if (!tank.getFluid()
+			.isEmpty())
+			renderedFluid = tank.getFluid();
 
 		if (!clientPacket)
 			return;
 		if (compound.contains("Splash"))
 			spawnSplash(renderedFluid);
-		if (!tank.getFluid()
-			.isEmpty())
-			renderedFluid = tank.getFluid();
 	}
 
 	@Override
@@ -203,9 +203,9 @@ public class SpoutTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if (processingTicks > 0)
+		if (processingTicks >= 0)
 			processingTicks--;
-		if (processingTicks >= 0 && world.isRemote)
+		if (processingTicks >= 8 && world.isRemote)
 			spawnProcessingParticles(renderedFluid);
 		if (syncCooldown > 0) {
 			syncCooldown--;

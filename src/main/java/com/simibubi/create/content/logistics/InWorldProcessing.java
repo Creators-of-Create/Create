@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.BlockState;
@@ -142,7 +143,8 @@ public class InWorldProcessing {
 		}
 	}
 
-	public static List<TransportedItemStack> applyProcessing(TransportedItemStack transported, World world, Type type) {
+	public static TransportedResult applyProcessing(TransportedItemStack transported, World world, Type type) {
+		TransportedResult ignore = TransportedResult.doNothing();
 		if (transported.processedBy != type) {
 			transported.processedBy = type;
 			int timeModifierForStackSize = ((transported.stack.getCount() - 1) / 16) + 1;
@@ -151,16 +153,16 @@ public class InWorldProcessing {
 			transported.processingTime = processingTime;
 			if (!canProcess(transported.stack, type, world))
 				transported.processingTime = -1;
-			return null;
+			return ignore;
 		}
 		if (transported.processingTime == -1)
-			return null;
+			return ignore;
 		if (transported.processingTime-- > 0)
-			return null;
+			return ignore;
 
 		List<ItemStack> stacks = process(transported.stack, type, world);
 		if (stacks == null)
-			return null;
+			return ignore;
 
 		List<TransportedItemStack> transportedStacks = new ArrayList<>();
 		for (ItemStack additional : stacks) {
@@ -168,7 +170,7 @@ public class InWorldProcessing {
 			newTransported.stack = additional.copy();
 			transportedStacks.add(newTransported);
 		}
-		return transportedStacks;
+		return TransportedResult.convertTo(transportedStacks);
 	}
 
 	private static List<ItemStack> process(ItemStack stack, Type type, World world) {

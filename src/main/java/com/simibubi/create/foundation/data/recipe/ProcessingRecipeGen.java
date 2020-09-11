@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -10,23 +13,46 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DirectoryCache;
+import net.minecraft.data.IDataProvider;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.fluids.FluidAttributes;
 
 public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 
+	protected static List<ProcessingRecipeGen> generators = new ArrayList<>();
 	protected static final int BUCKET = FluidAttributes.BUCKET_VOLUME;
 	protected static final int BOTTLE = 250;
 
 	public static void registerAll(DataGenerator gen) {
-		gen.addProvider(new CrushingRecipeGen(gen));
-		gen.addProvider(new MillingRecipeGen(gen));
-		gen.addProvider(new CuttingRecipeGen(gen));
-		gen.addProvider(new WashingRecipeGen(gen));
-		gen.addProvider(new PolishingRecipeGen(gen));
-		gen.addProvider(new MixingRecipeGen(gen));
-		gen.addProvider(new PressingRecipeGen(gen));
+		generators.add(new CrushingRecipeGen(gen));
+		generators.add(new MillingRecipeGen(gen));
+		generators.add(new CuttingRecipeGen(gen));
+		generators.add(new WashingRecipeGen(gen));
+		generators.add(new PolishingRecipeGen(gen));
+		generators.add(new MixingRecipeGen(gen));
+		generators.add(new PressingRecipeGen(gen));
+		generators.add(new FillingRecipeGen(gen));
+		
+		gen.addProvider(new IDataProvider() {
+			
+			@Override
+			public String getName() {
+				return "Create's Processing Recipes";
+			}
+			
+			@Override
+			public void act(DirectoryCache dc) throws IOException {
+				generators.forEach(g -> {
+					try {
+						g.act(dc);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
+			}
+		});
 	}
 	
 	public ProcessingRecipeGen(DataGenerator p_i48262_1_) {
