@@ -1,0 +1,21 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "minecraft:glass_bottle"
+    },
+    {
+      "fluidTag": "minecraft:water",
+      "amount": 250
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:potion",
+      "count": 1,
+      "nbt": {
+        "Potion": "minecraft:water"
+      }
+    }
+  ]
+}

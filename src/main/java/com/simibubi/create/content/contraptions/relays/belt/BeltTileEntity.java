@@ -23,6 +23,7 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileE
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -356,7 +357,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	private void applyToAllItems(float maxDistanceFromCenter,
-		Function<TransportedItemStack, List<TransportedItemStack>> processFunction) {
+		Function<TransportedItemStack, TransportedResult> processFunction) {
 		BeltTileEntity controller = getControllerTE();
 		if (controller != null)
 			controller.getInventory()

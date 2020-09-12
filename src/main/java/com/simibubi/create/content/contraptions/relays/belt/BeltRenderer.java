@@ -109,7 +109,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					textureIndex += cycleLength;
 
 				beltBuffer.shiftUVtoSheet(spriteShift, (textureIndex % 4) / 4f, (textureIndex / 4) / 4f, 4);
-			} 
+			}
 
 			beltBuffer.renderInto(ms, vb);
 
@@ -213,7 +213,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					.add(alongX ? sideOffset : 0, .39, alongX ? 0 : sideOffset));
 				ShadowRenderHelper.renderShadow(ms, buffer, shadowPos, .75f, blockItem ? .2f : .2f);
 			}
-			
+
 			if (renderUpright) {
 				Entity renderViewEntity = Minecraft.getInstance().renderViewEntity;
 				if (renderViewEntity != null) {
@@ -223,11 +223,11 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					float yRot = (float) MathHelper.atan2(diff.z, -diff.x);
 					ms.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion((float) (yRot + Math.PI / 2)));
 				}
-				ms.translate(0, 3/32d, 1/16f);
+				ms.translate(0, 3 / 32d, 1 / 16f);
 			}
-			if (!renderUpright) 
+			if (!renderUpright)
 				ms.multiply(new Vector3f(slopeAlongX ? 0 : 1, 0, slopeAlongX ? 1 : 0).getDegreesQuaternion(slopeAngle));
-			
+
 			if (onSlope)
 				ms.translate(0, 1 / 8f, 0);
 
@@ -248,9 +248,12 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				itemRenderer.renderItem(transported.stack, TransformType.FIXED, light, overlay, ms, buffer);
 				ms.pop();
 
-				if (!blockItem)
-					ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(10));
-				ms.translate(0, blockItem ? 1 / 64d : 1 / 16d, 0);
+				if (!renderUpright) {
+					if (!blockItem)
+						ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(10));
+					ms.translate(0, blockItem ? 1 / 64d : 1 / 16d, 0);
+				} else
+					ms.translate(0, 0, -1 / 16f);
 
 			}
 

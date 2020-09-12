@@ -1,6 +1,5 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -15,6 +14,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.ExtractingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
@@ -148,21 +148,22 @@ public class FunnelTileEntity extends SmartTileEntity {
 		extracting.extract();
 	}
 
-	private List<TransportedItemStack> collectFromHandler(TransportedItemStack stack) {
+	private TransportedResult collectFromHandler(TransportedItemStack stack) {
+		TransportedResult ignore = TransportedResult.doNothing();
 		ItemStack toInsert = stack.stack.copy();
 		if (!filtering.test(toInsert))
-			return null;
+			return ignore;
 		ItemStack remainder = inserting.insert(toInsert, false);
 		if (remainder.equals(stack.stack, false))
-			return null;
-		List<TransportedItemStack> list = new ArrayList<>();
+			return ignore;
+		
 		flap(true);
+		
 		if (remainder.isEmpty())
-			return list;
+			return TransportedResult.removeItem();
 		TransportedItemStack changed = stack.copy();
 		changed.stack = remainder;
-		list.add(changed);
-		return list;
+		return TransportedResult.convertTo(changed);
 	}
 
 	@Override
