@@ -25,6 +25,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.entity.item.minecart.ChestMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -166,7 +167,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	}
 
 	public static boolean canAssembleTo(AbstractMinecartEntity cart) {
-		return cart.canBeRidden() || cart instanceof FurnaceMinecartEntity;
+		return cart.canBeRidden() || cart instanceof FurnaceMinecartEntity || cart instanceof ChestMinecartEntity;
 	}
 
 	@Override

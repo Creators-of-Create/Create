@@ -828,4 +828,5 @@ public abstract class Contraption {
 		return seats;
 	}
 
+	public void addExtraInventories(Entity entity) {};
 }

@@ -27,6 +27,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class MountedContraption extends Contraption {
 
@@ -86,6 +89,7 @@ public class MountedContraption extends Contraption {
 							if (!CartAssemblerBlock.canAssembleTo(abstractMinecartEntity))
 								break;
 							connectedCart = abstractMinecartEntity;
+							addExtraInventories(abstractMinecartEntity);
 						}
 					}
 				}
@@ -126,4 +130,9 @@ public class MountedContraption extends Contraption {
 		return AllBlocks.MINECART_ANCHOR.has(state);
 	}
 
+	@Override
+	public void addExtraInventories(Entity cart) {
+		if (cart instanceof IInventory)
+			inventory = new CombinedInvWrapper(new ItemHandlerModifiableFromIInventory((IInventory) cart), inventory);
+	}
 }

@@ -77,6 +77,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected boolean initialized;
 	final List<Entity> collidingEntities = new ArrayList<>();
 	private boolean isSerializingFurnaceCart;
+	private boolean attachedExtraInventories;
 
 	private static final Ingredient FUEL_ITEMS = Ingredient.fromItems(Items.COAL, Items.CHARCOAL);
 	private static final DataParameter<Boolean> STALLED =
@@ -104,6 +105,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		motionBeforeStall = Vec3d.ZERO;
 		stationary = entityTypeIn == AllEntityTypes.STATIONARY_CONTRAPTION.get();
 		isSerializingFurnaceCart = false;
+		attachedExtraInventories = false;
 		forcedAngle = -1;
 	}
 
@@ -323,6 +325,10 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		Entity riding = e;
 		while (riding.getRidingEntity() != null)
 			riding = riding.getRidingEntity();
+		if (!attachedExtraInventories) {
+			contraption.addExtraInventories(riding);
+			attachedExtraInventories = true;
+		}
 
 		boolean isOnCoupling = false;
 		if (contraption instanceof MountedContraption) {
