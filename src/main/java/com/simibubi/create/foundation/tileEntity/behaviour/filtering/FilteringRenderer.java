@@ -117,12 +117,12 @@ public class FilteringRenderer {
 			}
 			sided.fromSide(side);
 			return;
+		} else if(slotPositioning.shouldRender(blockState)) {
+			ms.push();
+			slotPositioning.transform(blockState, ms);
+			ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter(), ms, buffer, light, overlay);
+			ms.pop();
 		}
-
-		ms.push();
-		slotPositioning.transform(blockState, ms);
-		ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter(), ms, buffer, light, overlay);
-		ms.pop();
 	}
 
 }
