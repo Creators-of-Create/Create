@@ -25,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
@@ -139,7 +140,13 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		SuperByteBuffer superBuffer;
 		Direction facing = state.get(SawBlock.FACING);
 
-		boolean horizontal = SawBlock.isHorizontal(state);
+		Vec3d facingVec = new Vec3d(context.state.get(SawBlock.FACING).getDirectionVec());
+		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
+		facingVec.normalize();
+
+		Direction closestToFacing = Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);
+
+		boolean horizontal = closestToFacing.getAxis().isHorizontal();
 		boolean backwards = VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite());
 		boolean moving = context.getAnimationSpeed() != 0;
 		boolean shouldAnimate = (context.contraption.stalled && horizontal)

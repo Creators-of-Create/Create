@@ -16,6 +16,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -39,7 +40,12 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		super.visitNewPosition(context, pos);
-		if(!SawBlock.isHorizontal(context.state) && context.data.contains("BreakingPos")) {
+		Vec3d facingVec = new Vec3d(context.state.get(SawBlock.FACING).getDirectionVec());
+		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
+		facingVec.normalize();
+
+		Direction closestToFacing = Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);
+		if(closestToFacing.getAxis().isVertical() && context.data.contains("BreakingPos")) {
 			context.data.remove("BreakingPos");
 			context.stall = false;
 		}
