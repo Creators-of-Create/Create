@@ -33,10 +33,9 @@ public class SawGenerator extends SpecialBlockStateGen {
 		String orientation = state.get(SawBlock.FACING)
 			.getAxis()
 			.isVertical() ? "vertical" : "horizontal";
-		String active = state.get(SawBlock.RUNNING) ? "" : "_inactive";
 
 		return prov.models()
-			.getExistingFile(prov.modLoc(path + orientation + active));
+			.getExistingFile(prov.modLoc(path + orientation));
 	}
 
 }
