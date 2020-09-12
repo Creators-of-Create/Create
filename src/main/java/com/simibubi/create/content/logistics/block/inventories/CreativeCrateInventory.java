@@ -1,14 +1,28 @@
 package com.simibubi.create.content.logistics.block.inventories;
 
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class CreativeCrateInventory implements IItemHandler {
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-	private CreativeCrateTileEntity te;
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class CreativeCrateInventory extends ItemStackHandler {
 
-	public CreativeCrateInventory(CreativeCrateTileEntity te) {
+	private ItemStack filter = null;
+	private final CreativeCrateTileEntity te;
+
+	public CreativeCrateInventory(@Nullable CreativeCrateTileEntity te) {
 		this.te = te;
+	}
+
+	public CreativeCrateInventory() {
+		this(null);
 	}
 
 	@Override
@@ -20,12 +34,13 @@ public class CreativeCrateInventory implements IItemHandler {
 	public ItemStack getStackInSlot(int slot) {
 		if (slot == 1)
 			return ItemStack.EMPTY;
-		ItemStack filter = te.filter.getFilter().copy();
-		if (!filter.isEmpty())
+		if (getFilter() == null)
+			return ItemStack.EMPTY;
+		if (!getFilter().isEmpty())
 			filter.setCount(filter.getMaxStackSize());
 		return filter;
 	}
-	
+
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		return ItemStack.EMPTY;
@@ -33,10 +48,11 @@ public class CreativeCrateInventory implements IItemHandler {
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		ItemStack filter = te.filter.getFilter().copy();
-		if (!filter.isEmpty())
-			filter.setCount(Math.min(filter.getMaxStackSize(), amount));
-		return filter;
+		if (getFilter() == null)
+			return ItemStack.EMPTY;
+		if (!getFilter().isEmpty())
+			filter.setCount(Math.min(getFilter().getMaxStackSize(), amount));
+		return getFilter();
 	}
 
 	@Override
@@ -49,4 +65,26 @@ public class CreativeCrateInventory implements IItemHandler {
 		return true;
 	}
 
+	@Override
+	public CompoundNBT serializeNBT() {
+		CompoundNBT nbt = new CompoundNBT();
+		nbt.putBoolean("isCreativeCrate", true);
+		if (getFilter() != null)
+			ItemStackHelper.saveAllItems(nbt, NonNullList.from(ItemStack.EMPTY, getFilter()));
+		return nbt;
+	}
+
+	@Override
+	public void deserializeNBT(CompoundNBT nbt) {
+		NonNullList<ItemStack> filterList = NonNullList.withSize(1, ItemStack.EMPTY);
+		ItemStackHelper.loadAllItems(nbt, filterList);
+		filter = filterList.get(0);
+	}
+
+	@Nullable
+	public ItemStack getFilter() {
+		if (te != null)
+			filter = te.filter.getFilter();
+		return filter;
+	}
 }

@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 
+import com.simibubi.create.content.logistics.block.inventories.CreativeCrateInventory;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -85,14 +86,17 @@ public class MountedStorage {
 	public MountedStorage(CompoundNBT nbt) {
 		handler = new ItemStackHandler();
 		working = nbt != null;
-		if (working)
+		if (working) {
+			if (nbt.contains("isCreativeCrate") && nbt.getBoolean("isCreativeCrate"))
+				handler = new CreativeCrateInventory();
 			handler.deserializeNBT(nbt);
+		}
 	}
 
 	public void fill(TileEntity te) {
 		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			.orElse(dummyHandler);
-		if (teHandler != dummyHandler && teHandler instanceof IItemHandlerModifiable) {
+		if (teHandler != dummyHandler && teHandler instanceof IItemHandlerModifiable && !(teHandler instanceof CreativeCrateInventory)) {
 			IItemHandlerModifiable inv = (IItemHandlerModifiable) teHandler;
 			for (int slot = 0; slot < Math.min(inv.getSlots(), handler.getSlots()); slot++)
 				inv.setStackInSlot(slot, handler.getStackInSlot(slot));
@@ -115,6 +119,8 @@ public class MountedStorage {
 		if (te == null)
 			return false;
 		if (AllTileEntities.ADJUSTABLE_CRATE.is(te))
+			return true;
+		if (AllTileEntities.CREATIVE_CRATE.is(te))
 			return true;
 		if (te instanceof ShulkerBoxTileEntity)
 			return true;
