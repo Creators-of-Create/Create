@@ -27,12 +27,22 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return SawBlock.isHorizontal(context.state);
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.get(SawBlock.FACING)
+			.getOpposite());
 	}
 
 	@Override
 	public Vec3d getActiveAreaOffset(MovementContext context) {
 		return new Vec3d(context.state.get(SawBlock.FACING).getDirectionVec()).scale(.65f);
+	}
+
+	@Override
+	public void visitNewPosition(MovementContext context, BlockPos pos) {
+		super.visitNewPosition(context, pos);
+		if(!SawBlock.isHorizontal(context.state) && context.data.contains("BreakingPos")) {
+			context.data.remove("BreakingPos");
+			context.stall = false;
+		}
 	}
 
 	@Override

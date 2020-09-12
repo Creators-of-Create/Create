@@ -139,10 +139,22 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		SuperByteBuffer superBuffer;
 		Direction facing = state.get(SawBlock.FACING);
 
+		boolean horizontal = SawBlock.isHorizontal(state);
+		boolean backwards = VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite());
+		boolean moving = context.getAnimationSpeed() != 0;
+		boolean shouldAnimate = (context.contraption.stalled && horizontal)
+				|| (!context.contraption.stalled && !backwards && moving);
+
 		if(SawBlock.isHorizontal(state)) {
-			superBuffer = AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE.renderOn(state);
+			if(shouldAnimate)
+				superBuffer = AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE.renderOn(state);
+			else
+				superBuffer = AllBlockPartials.SAW_BLADE_HORIZONTAL_INACTIVE.renderOn(state);
 		} else {
-			superBuffer = AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE.renderOn(state);
+			if(shouldAnimate)
+				superBuffer = AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE.renderOn(state);
+			else
+				superBuffer = AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE.renderOn(state);
 		}
 
 		for (MatrixStack m : matrixStacks) {
