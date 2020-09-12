@@ -7,10 +7,11 @@ import java.util.Optional;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
+import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -33,7 +34,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -177,13 +177,13 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 				if (!world.isRemote) {
 					pressedItems.clear();
 					applyBasinRecipe();
-					IItemHandler orElse = basinItemInv.orElse(null);
-					if (basinItemInv.isPresent() && orElse instanceof BasinInventory) {
-						BasinInventory inv = (BasinInventory) orElse;
 
-						for (int slot = 0; slot < inv.getInputHandler()
-							.getSlots(); slot++) {
-							ItemStack stackInSlot = inv.getStackInSlot(slot);
+					Optional<BasinTileEntity> basin = getBasin();
+					SmartInventory inputs = basin.get()
+						.getInputInventory();
+					if (basin.isPresent()) {
+						for (int slot = 0; slot < inputs.getSlots(); slot++) {
+							ItemStack stackInSlot = inputs.getStackInSlot(slot);
 							if (stackInSlot.isEmpty())
 								continue;
 							pressedItems.add(stackInSlot);
@@ -288,7 +288,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		List<ItemStack> remainingItems = new ArrayList<>();
 		itemInputs.forEach(stack -> remainingItems.add(stack.copy()));
-		
+
 		Ingredients: for (Ingredient ingredient : ingredients) {
 			for (ItemStack stack : remainingItems) {
 				if (stack.isEmpty())

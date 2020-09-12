@@ -17,8 +17,8 @@ import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHan
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InventoryManagementBehaviour.Attachments;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -33,6 +33,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -83,7 +84,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	protected boolean wasPoweredBefore;
 
 	protected GroupedItems groupedItemsBeforeCraft; // for rendering on client
-	private InsertingBehaviour inserting;
+	private InvManipulationBehaviour inserting;
 	private EdgeInteractionBehaviour connectivity;
 
 	public MechanicalCrafterTileEntity(TileEntityType<? extends MechanicalCrafterTileEntity> type) {
@@ -99,7 +100,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		inserting = new InsertingBehaviour(this, Attachments.toward(this::getTargetFacing));
+		inserting = new InvManipulationBehaviour(this, this::getTargetFace);
 		connectivity = new EdgeInteractionBehaviour(this, ConnectedInputHandler::toggleConnection)
 			.connectivity(ConnectedInputHandler::shouldConnect)
 			.require(AllItems.WRENCH.get());
@@ -108,13 +109,17 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	public void blockChanged() {
-		removeBehaviour(InsertingBehaviour.TYPE);
-		inserting = new InsertingBehaviour(this, Attachments.toward(this::getTargetFacing));
+		removeBehaviour(InvManipulationBehaviour.TYPE);
+		inserting = new InvManipulationBehaviour(this, this::getTargetFace);
 		putBehaviour(inserting);
 	}
 
-	public Direction getTargetFacing() {
-		return MechanicalCrafterBlock.getTargetDirection(world.getBlockState(pos));
+	public BlockFace getTargetFace(World world, BlockPos pos, BlockState state) {
+		return new BlockFace(pos, MechanicalCrafterBlock.getTargetDirection(state));
+	}
+	
+	public Direction getTargetDirection() {
+		return MechanicalCrafterBlock.getTargetDirection(getBlockState());
 	}
 
 	@Override
@@ -329,16 +334,16 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 	protected boolean isTargetingBelt() {
 		DirectBeltInputBehaviour behaviour = getTargetingBelt();
-		return behaviour != null && behaviour.canInsertFromSide(getTargetFacing());
+		return behaviour != null && behaviour.canInsertFromSide(getTargetDirection());
 	}
 
 	protected DirectBeltInputBehaviour getTargetingBelt() {
-		BlockPos targetPos = pos.offset(getTargetFacing());
+		BlockPos targetPos = pos.offset(getTargetDirection());
 		return TileEntityBehaviour.get(world, targetPos, DirectBeltInputBehaviour.TYPE);
 	}
 
 	public void tryInsert() {
-		if (inserting.getInventory() == null && !isTargetingBelt()) {
+		if (!inserting.hasInventory() && !isTargetingBelt()) {
 			ejectWholeGrid();
 			return;
 		}
@@ -350,10 +355,10 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		for (Entry<Pair<Integer, Integer>, ItemStack> entry : groupedItems.grid.entrySet()) {
 			Pair<Integer, Integer> pair = entry.getKey();
 			ItemStack stack = entry.getValue();
-			Direction facing = getTargetFacing();
+			BlockFace face = getTargetFace(world, pos, getBlockState());
 
-			ItemStack remainder = behaviour == null ? inserting.insert(stack.copy(), false)
-				: behaviour.handleInsertion(stack, facing, false);
+			ItemStack remainder = behaviour == null ? inserting.insert(stack.copy())
+				: behaviour.handleInsertion(stack, face.getFace(), false);
 			if (!remainder.isEmpty()) {
 				stack.setCount(remainder.getCount());
 				continue;

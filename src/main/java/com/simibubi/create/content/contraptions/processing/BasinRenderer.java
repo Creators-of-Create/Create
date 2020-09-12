@@ -33,7 +33,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 		ms.translate(.5, .2f, .5);
 		Random r = new Random(pos.hashCode());
 
-		IItemHandlerModifiable inv = basin.inventory.orElse(new ItemStackHandler());
+		IItemHandlerModifiable inv = basin.itemCapability.orElse(new ItemStackHandler());
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			ItemStack stack = inv.getStackInSlot(slot);
 			if (stack.isEmpty())

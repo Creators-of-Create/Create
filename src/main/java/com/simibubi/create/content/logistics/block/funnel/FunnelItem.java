@@ -5,7 +5,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -44,22 +43,10 @@ public class FunnelItem extends BlockItem {
 		FunnelBlock block = (FunnelBlock) getBlock();
 		Block beltFunnelBlock = block.getEquivalentBeltFunnel(world, pos, state)
 			.getBlock();
-		Block chuteFunnelBlock = block.getEquivalentChuteFunnel(world, pos, state)
-			.getBlock();
-
 		BlockState equivalentBeltFunnel = beltFunnelBlock.getStateForPlacement(ctx)
 			.with(BeltFunnelBlock.HORIZONTAL_FACING, direction);
-		BlockState equivalentChuteFunnel = chuteFunnelBlock.getStateForPlacement(ctx)
-			.with(ChuteFunnelBlock.HORIZONTAL_FACING, direction);
-		BlockState reversedChuteFunnel = equivalentChuteFunnel.rotate(Rotation.CLOCKWISE_180)
-			.cycle(ChuteFunnelBlock.PUSHING);
-
 		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos))
 			return BeltFunnelBlock.updateShape(equivalentBeltFunnel, world, pos);
-		if (ChuteFunnelBlock.isOnValidChute(equivalentChuteFunnel, world, pos))
-			return equivalentChuteFunnel;
-		if (ChuteFunnelBlock.isOnValidChute(reversedChuteFunnel, world, pos))
-			return reversedChuteFunnel;
 
 		return state;
 	}

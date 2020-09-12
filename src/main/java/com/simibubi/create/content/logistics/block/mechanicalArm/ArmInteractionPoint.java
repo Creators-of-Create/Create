@@ -14,7 +14,7 @@ import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -336,7 +336,7 @@ public abstract class ArmInteractionPoint {
 		@Override
 		ItemStack insert(World world, ItemStack stack, boolean simulate) {
 			FilteringBehaviour filtering = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
-			InsertingBehaviour inserter = TileEntityBehaviour.get(world, pos, InsertingBehaviour.TYPE);
+			InvManipulationBehaviour inserter = TileEntityBehaviour.get(world, pos, InvManipulationBehaviour.TYPE);
 			BlockState state = world.getBlockState(pos);
 			if (state.has(BlockStateProperties.POWERED) && state.get(BlockStateProperties.POWERED))
 				return stack;
@@ -344,7 +344,9 @@ public abstract class ArmInteractionPoint {
 				return stack;
 			if (filtering != null && !filtering.test(stack))
 				return stack;
-			return inserter.insert(stack, simulate);
+			if (simulate)
+				inserter.simulate();
+			return inserter.insert(stack);
 		}
 
 		@Override

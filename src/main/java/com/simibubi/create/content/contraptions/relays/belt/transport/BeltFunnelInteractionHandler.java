@@ -5,7 +5,7 @@ import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -49,7 +49,7 @@ public class BeltFunnelInteractionHandler {
 				return true;
 
 			FunnelTileEntity funnelTE = (FunnelTileEntity) te;
-			InsertingBehaviour inserting = TileEntityBehaviour.get(funnelTE, InsertingBehaviour.TYPE);
+			InvManipulationBehaviour inserting = TileEntityBehaviour.get(funnelTE, InvManipulationBehaviour.TYPE);
 			FilteringBehaviour filtering = TileEntityBehaviour.get(funnelTE, FilteringBehaviour.TYPE);
 
 			if (inserting == null)
@@ -58,7 +58,7 @@ public class BeltFunnelInteractionHandler {
 				return true;
 
 			ItemStack before = currentItem.stack.copy();
-			ItemStack remainder = inserting.insert(before, false);
+			ItemStack remainder = inserting.insert(before);
 			if (before.equals(remainder, false))
 				return true;
 

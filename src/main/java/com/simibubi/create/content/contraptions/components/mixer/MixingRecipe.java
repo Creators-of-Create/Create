@@ -8,10 +8,10 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInputInventory;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import com.simibubi.create.foundation.item.SmartInventory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -19,7 +19,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
-public class MixingRecipe extends ProcessingRecipe<BasinInputInventory> {
+public class MixingRecipe extends ProcessingRecipe<SmartInventory> {
 
 	/**
 	 * For JEI purposes only
@@ -61,7 +61,7 @@ public class MixingRecipe extends ProcessingRecipe<BasinInputInventory> {
 	}
 
 	@Override
-	public boolean matches(BasinInputInventory inv, @Nonnull World worldIn) {
+	public boolean matches(SmartInventory inv, @Nonnull World worldIn) {
 		if (inv.isEmpty())
 			return false;
 

@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
+import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -14,7 +15,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -29,101 +29,26 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class BasinTileEntity extends SmartTileEntity implements ITickableTileEntity {
 
-	public boolean contentsChanged;
+	public BasinInputInventory inputInventory;
+	protected SmartInventory outputInventory;
+	protected LazyOptional<IItemHandlerModifiable> itemCapability;
+	protected LazyOptional<CombinedFluidHandler> fluidCapability;
+	
+	private boolean contentsChanged;
 	private FilteringBehaviour filtering;
-
-	protected ItemStackHandler outputItemInventory = new ItemStackHandler(9) {
-		protected void onContentsChanged(int slot) {
-			sendData();
-			markDirty();
-		}
-	};
-
-	public class BasinInputInventory extends RecipeWrapper {
-		public BasinInputInventory() {
-			super(inputItemInventory);
-		}
-	}
-
-	protected ItemStackHandler inputItemInventory = new ItemStackHandler(9) {
-		protected void onContentsChanged(int slot) {
-			contentsChanged = true;
-			sendData();
-			markDirty();
-		}
-
-		@Nonnull
-		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-			for (int i = 0; i < getSlots(); i++) {
-				ItemStack stackInSlot = getStackInSlot(i);
-				if (ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
-					if (stackInSlot.getCount() == getStackLimit(i, stackInSlot))
-						return stack;
-			}
-			return super.insertItem(slot, stack, simulate);
-		}
-	};
-
-	public static class BasinInventory extends CombinedInvWrapper {
-		public BasinInventory(ItemStackHandler input, ItemStackHandler output) {
-			super(input, output);
-		}
-
-		@Nonnull
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			if (isInput(slot))
-				return ItemStack.EMPTY;
-			return super.extractItem(slot, amount, simulate);
-		}
-
-		@Nonnull
-		@Override
-		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-			if (!isInput(slot))
-				return stack;
-			return super.insertItem(slot, stack, simulate);
-		}
-
-		public boolean isInput(int slot) {
-			return getIndexForSlot(slot) == 0;
-		}
-
-		public IItemHandlerModifiable getInputHandler() {
-			return itemHandler[0];
-		}
-
-		public IItemHandlerModifiable getOutputHandler() {
-			return itemHandler[1];
-		}
-
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public double getMaxRenderDistanceSquared() {
-		return 256;
-	}
-
-	protected LazyOptional<IItemHandlerModifiable> inventory =
-		LazyOptional.of(() -> new BasinInventory(inputItemInventory, outputItemInventory));
-
-	protected LazyOptional<CombinedFluidHandler> fluidInventory =
-		LazyOptional.of(() -> new CombinedFluidHandler(9, 1000));
-
-	public BasinInputInventory recipeInventory;
 
 	public BasinTileEntity(TileEntityType<? extends BasinTileEntity> type) {
 		super(type);
+		inputInventory = new BasinInputInventory(9, this);
+		inputInventory.withMaxStackSize(8).forbidExtraction();
+		outputInventory = new SmartInventory(9, this).forbidInsertion();
+		itemCapability = LazyOptional.of(() -> new CombinedInvWrapper(inputInventory, outputInventory));
+		fluidCapability = LazyOptional.of(() -> new CombinedFluidHandler(9, 1000));
 		contentsChanged = true;
-		recipeInventory = new BasinInputInventory();
 	}
 
 	@Override
@@ -138,19 +63,19 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
-		inputItemInventory.deserializeNBT(compound.getCompound("InputItems"));
-		outputItemInventory.deserializeNBT(compound.getCompound("OutputItems"));
+		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
+		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
 		if (compound.contains("fluids"))
-			fluidInventory
+			fluidCapability
 				.ifPresent(combinedFluidHandler -> combinedFluidHandler.readFromNBT(compound.getList("fluids", 10)));
 	}
 
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
-		compound.put("InputItems", inputItemInventory.serializeNBT());
-		compound.put("OutputItems", outputItemInventory.serializeNBT());
-		fluidInventory.ifPresent(combinedFuidHandler -> {
+		compound.put("InputItems", inputInventory.serializeNBT());
+		compound.put("OutputItems", outputInventory.serializeNBT());
+		fluidCapability.ifPresent(combinedFuidHandler -> {
 			ListNBT nbt = combinedFuidHandler.getListNBT();
 			compound.put("fluids", nbt);
 		});
@@ -163,8 +88,8 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	@Override
 	public void remove() {
 		onEmptied();
-		inventory.invalidate();
-		fluidInventory.invalidate();
+		itemCapability.invalidate();
+		fluidCapability.invalidate();
 		super.remove();
 	}
 
@@ -172,9 +97,9 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return inventory.cast();
+			return itemCapability.cast();
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-			return fluidInventory.cast();
+			return fluidCapability.cast();
 		return super.getCapability(cap, side);
 	}
 
@@ -197,6 +122,24 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 
 	public FilteringBehaviour getFilter() {
 		return filtering;
+	}
+	
+	public void notifyChangeOfContents() {
+		contentsChanged = true;
+	}
+	
+	public SmartInventory getInputInventory() {
+		return inputInventory;
+	}
+	
+	public SmartInventory getOutputInventory() {
+		return outputInventory;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		return 256;
 	}
 
 	class BasinValueBox extends ValueBoxTransform.Sided {

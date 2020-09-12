@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import java.util.Iterator;
+
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
@@ -74,11 +76,48 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		if (amount == 0)
+			return ItemStack.EMPTY;
+
+		ItemStack extractedFromOverflow = ItemStack.EMPTY;
+		ItemStack returnToOverflow = ItemStack.EMPTY;
+
+		for (Iterator<ItemStack> iterator = te.overflowItems.iterator(); iterator.hasNext();) {
+			ItemStack existing = iterator.next();
+			if (existing.isEmpty()) {
+				iterator.remove();
+				continue;
+			}
+
+			int toExtract = Math.min(amount, existing.getMaxStackSize());
+			if (existing.getCount() <= toExtract) {
+				if (!simulate)
+					iterator.remove();
+				extractedFromOverflow = existing;
+				break;
+			}
+			if (!simulate) {
+				iterator.remove();
+				returnToOverflow = ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract);
+			}
+			extractedFromOverflow = ItemHandlerHelper.copyStackWithSize(existing, toExtract);
+			break;
+		}
+
+		if (!returnToOverflow.isEmpty())
+			te.overflowItems.add(returnToOverflow);
+		if (!extractedFromOverflow.isEmpty())
+			return extractedFromOverflow;
+
 		ItemStack held = getHeld();
 		if (amount == 0 || held.isEmpty())
 			return ItemStack.EMPTY;
+		if (!te.filtering.getFilter()
+			.isEmpty() && te.filtering.test(held))
+			return ItemStack.EMPTY;
 		if (simulate)
-			return held.copy().split(amount);
+			return held.copy()
+				.split(amount);
 
 		ItemStack toReturn = held.split(amount);
 		te.markDirty();

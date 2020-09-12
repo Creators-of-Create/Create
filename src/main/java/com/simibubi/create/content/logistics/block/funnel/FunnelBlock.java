@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;
@@ -106,13 +106,14 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 
 	public static ItemStack tryInsert(World worldIn, BlockPos pos, ItemStack toInsert, boolean simulate) {
 		FilteringBehaviour filter = TileEntityBehaviour.get(worldIn, pos, FilteringBehaviour.TYPE);
-		InsertingBehaviour inserter = TileEntityBehaviour.get(worldIn, pos, InsertingBehaviour.TYPE);
+		InvManipulationBehaviour inserter = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
 		if (inserter == null)
 			return toInsert;
 		if (filter != null && !filter.test(toInsert))
 			return toInsert;
-		ItemStack remainder = inserter.insert(toInsert, simulate);
-		return remainder;
+		if (simulate)
+			inserter.simulate();
+		return inserter.insert(toInsert);
 	}
 
 	@Override
@@ -148,21 +149,9 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 				if (BeltFunnelBlock.isOnValidBelt(equivalentFunnel, world, pos))
 					return BeltFunnelBlock.updateShape(equivalentFunnel, world, pos);
 			}
-			if (direction == facing) {
-				BlockState equivalentFunnel = getEquivalentChuteFunnel(null, null, state);
-				if (ChuteFunnelBlock.isOnValidChute(equivalentFunnel, world, pos))
-					return equivalentFunnel;
-			}
-			if (direction == facing.getOpposite()) {
-				BlockState equivalentFunnel = getEquivalentChuteFunnel(null, null, state);
-				if (ChuteFunnelBlock.isOnValidChute(equivalentFunnel, world, pos))
-					return equivalentFunnel;
-			}
 		}
 		return state;
 	}
-
-	public abstract BlockState getEquivalentChuteFunnel(IBlockReader world, BlockPos pos, BlockState state);
 
 	public abstract BlockState getEquivalentBeltFunnel(IBlockReader world, BlockPos pos, BlockState state);
 

@@ -147,7 +147,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 			TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
 		if (attachmentBehaviour == null)
 			return false;
-		return attachmentBehaviour.isPipeConnectedTowards(neighbour, blockFace.getOpposite());
+		return attachmentBehaviour.isPipeConnectedTowards(neighbour, blockFace);
 	}
 
 	public static boolean shouldDrawRim(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
@@ -219,7 +219,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		for (Direction d : Iterate.directions)
 			if (d != ignore)
 				state = state.with(FACING_TO_PROPERTY_MAP.get(d),
-					canConnectTo(world, pos.offset(d), world.getBlockState(pos.offset(d)), d.getOpposite()));
+					canConnectTo(world, pos.offset(d), world.getBlockState(pos.offset(d)), d));
 
 		// See if it has enough connections
 		Direction connectedDirection = null;

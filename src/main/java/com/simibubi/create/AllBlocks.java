@@ -23,7 +23,6 @@ import com.simibubi.create.content.contraptions.components.actors.PortableStorag
 import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.actors.StorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
@@ -109,24 +108,16 @@ import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterBlock;
 import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterGenerator;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
-import com.simibubi.create.content.logistics.block.extractor.ExtractorBlock;
-import com.simibubi.create.content.logistics.block.extractor.ExtractorMovementBehaviour;
-import com.simibubi.create.content.logistics.block.extractor.LinkedExtractorBlock;
-import com.simibubi.create.content.logistics.block.extractor.VerticalExtractorGenerator;
 import com.simibubi.create.content.logistics.block.funnel.AndesiteBeltFunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.AndesiteChuteFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.AndesiteFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelGenerator;
 import com.simibubi.create.content.logistics.block.funnel.BrassBeltFunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.BrassChuteFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.ChuteFunnelGenerator;
 import com.simibubi.create.content.logistics.block.funnel.FunnelMovementBehaviour;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
-import com.simibubi.create.content.logistics.block.packager.PackagerBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
 import com.simibubi.create.content.logistics.block.redstone.ContactMovementBehaviour;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
@@ -135,9 +126,6 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
-import com.simibubi.create.content.logistics.block.transposer.LinkedTransposerBlock;
-import com.simibubi.create.content.logistics.block.transposer.TransposerBlock;
-import com.simibubi.create.content.logistics.block.transposer.VerticalTransposerGenerator;
 import com.simibubi.create.content.palettes.MetalBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
@@ -165,7 +153,6 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.common.ToolType;
@@ -683,7 +670,7 @@ public class AllBlocks {
 	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_STORAGE_INTERFACE =
 		REGISTRATE.block("portable_storage_interface", PortableStorageInterfaceBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.onRegister(addMovementBehaviour(new StorageInterfaceMovement()))
+//			.onRegister(addMovementBehaviour(new StorageInterfaceMovement()))
 			.blockstate(BlockStateGen.directionalBlockProvider(false))
 			.simpleItem()
 			.register();
@@ -860,13 +847,6 @@ public class AllBlocks {
 			.loot((p, b) -> p.registerDropping(b, ANDESITE_FUNNEL.get()))
 			.register();
 
-	public static final BlockEntry<AndesiteChuteFunnelBlock> ANDESITE_CHUTE_FUNNEL =
-		REGISTRATE.block("andesite_chute_funnel", AndesiteChuteFunnelBlock::new)
-			.initialProperties(SharedProperties::stone)
-			.blockstate(new ChuteFunnelGenerator("andesite")::generate)
-			.loot((p, b) -> p.registerDropping(b, ANDESITE_FUNNEL.get()))
-			.register();
-
 	public static final BlockEntry<BrassFunnelBlock> BRASS_FUNNEL =
 		REGISTRATE.block("brass_funnel", BrassFunnelBlock::new)
 			.initialProperties(SharedProperties::softMetal)
@@ -878,13 +858,6 @@ public class AllBlocks {
 		REGISTRATE.block("brass_belt_funnel", BrassBeltFunnelBlock::new)
 			.initialProperties(SharedProperties::softMetal)
 			.blockstate(new BeltFunnelGenerator("brass")::generate)
-			.loot((p, b) -> p.registerDropping(b, BRASS_FUNNEL.get()))
-			.register();
-
-	public static final BlockEntry<BrassChuteFunnelBlock> BRASS_CHUTE_FUNNEL =
-		REGISTRATE.block("brass_chute_funnel", BrassChuteFunnelBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.blockstate(new ChuteFunnelGenerator("brass")::generate)
 			.loot((p, b) -> p.registerDropping(b, BRASS_FUNNEL.get()))
 			.register();
 
@@ -908,24 +881,13 @@ public class AllBlocks {
 			.transform(customItemModel("_", "block"))
 			.register();
 
-	public static final BlockEntry<RedstoneLinkBlock> REDSTONE_LINK =
-		REGISTRATE.block("redstone_link", RedstoneLinkBlock::new)
-			.initialProperties(SharedProperties::wooden)
-			.tag(AllBlockTags.BRITTLE.tag)
-			.blockstate(new RedstoneLinkGenerator()::generate)
-			.addLayer(() -> RenderType::getCutoutMipped)
+	public static final BlockEntry<BeltObserverBlock> BELT_OBSERVER =
+		REGISTRATE.block("belt_observer", BeltObserverBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.blockstate(BlockStateGen.beltObserver())
 			.item()
-			.transform(customItemModel("_", "transmitter"))
+			.transform(customItemModel())
 			.register();
-
-	public static final BlockEntry<NixieTubeBlock> NIXIE_TUBE = REGISTRATE.block("nixie_tube", NixieTubeBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.lightValue(5))
-		.blockstate(new NixieTubeGenerator()::generate)
-		.addLayer(() -> RenderType::getTranslucent)
-		.item()
-		.transform(customItemModel())
-		.register();
 
 	public static final BlockEntry<StockpileSwitchBlock> STOCKPILE_SWITCH =
 		REGISTRATE.block("stockpile_switch", StockpileSwitchBlock::new)
@@ -945,93 +907,23 @@ public class AllBlocks {
 			.transform(BuilderTransformers.crate("creative"))
 			.register();
 
-	public static final BlockEntry<BeltObserverBlock> BELT_OBSERVER =
-		REGISTRATE.block("belt_observer", BeltObserverBlock::new)
-			.initialProperties(SharedProperties::stone)
-			.blockstate(BlockStateGen.beltObserver())
-			.item()
-			.transform(customItemModel())
-			.register();
-
-	public static final BlockEntry<PackagerBlock> PACKAGER = REGISTRATE.block("packager", PackagerBlock::new)
+	public static final BlockEntry<NixieTubeBlock> NIXIE_TUBE = REGISTRATE.block("nixie_tube", NixieTubeBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.transform(StressConfigDefaults.setImpact(4.0))
-		.properties(Block.Properties::nonOpaque)
-		.blockstate((c, p) -> p.getVariantBuilder(c.get())
-			.forAllStates(s -> ConfiguredModel.builder()
-				.modelFile(AssetLookup.partialBaseModel(c, p))
-				.rotationY(s.get(PackagerBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
-				.build()))
+		.properties(p -> p.lightValue(5))
+		.blockstate(new NixieTubeGenerator()::generate)
+		.addLayer(() -> RenderType::getTranslucent)
 		.item()
 		.transform(customItemModel())
 		.register();
 
-	public static final BlockEntry<ExtractorBlock> EXTRACTOR = REGISTRATE.block("extractor", ExtractorBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.tag(AllBlockTags.BRITTLE.tag)
-		.onRegister(addMovementBehaviour(new ExtractorMovementBehaviour()))
-		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, c.getName() + "/horizontal")))
-		.item()
-		.transform(customItemModel("_", "horizontal"))
-		.register();
-
-	public static final BlockEntry<ExtractorBlock.Vertical> VERTICAL_EXTRACTOR =
-		REGISTRATE.block("vertical_extractor", ExtractorBlock.Vertical::new)
-			.initialProperties(SharedProperties::softMetal)
+	public static final BlockEntry<RedstoneLinkBlock> REDSTONE_LINK =
+		REGISTRATE.block("redstone_link", RedstoneLinkBlock::new)
+			.initialProperties(SharedProperties::wooden)
 			.tag(AllBlockTags.BRITTLE.tag)
-			.blockstate(new VerticalExtractorGenerator(false)::generate)
-			.loot((p, b) -> p.registerDropping(b, EXTRACTOR.get()))
-			.register();
-
-	public static final BlockEntry<LinkedExtractorBlock> LINKED_EXTRACTOR = REGISTRATE
-		.block("linked_extractor", LinkedExtractorBlock::new)
-		.tag(AllBlockTags.BRITTLE.tag)
-		.initialProperties(SharedProperties::softMetal)
-		.addLayer(() -> RenderType::getCutoutMipped)
-		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, "extractor/horizontal_linked")))
-		.item()
-		.transform(customItemModel("extractor", "horizontal_linked"))
-		.register();
-
-	public static final BlockEntry<LinkedExtractorBlock.Vertical> VERTICAL_LINKED_EXTRACTOR =
-		REGISTRATE.block("vertical_linked_extractor", LinkedExtractorBlock.Vertical::new)
-			.initialProperties(SharedProperties::softMetal)
-			.tag(AllBlockTags.BRITTLE.tag)
-			.blockstate(new VerticalExtractorGenerator(true)::generate)
-			.loot((p, b) -> p.registerDropping(b, LINKED_EXTRACTOR.get()))
+			.blockstate(new RedstoneLinkGenerator()::generate)
 			.addLayer(() -> RenderType::getCutoutMipped)
-			.register();
-
-	public static final BlockEntry<TransposerBlock> TRANSPOSER = REGISTRATE.block("transposer", TransposerBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, c.getName() + "/block"), 180))
-		.item()
-		.transform(customItemModel("_", "block"))
-		.register();
-
-	public static final BlockEntry<TransposerBlock.Vertical> VERTICAL_TRANSPOSER =
-		REGISTRATE.block("vertical_transposer", TransposerBlock.Vertical::new)
-			.initialProperties(SharedProperties::softMetal)
-			.blockstate(new VerticalTransposerGenerator(false)::generate)
-			.loot((p, b) -> p.registerDropping(b, TRANSPOSER.get()))
-			.register();
-
-	public static final BlockEntry<LinkedTransposerBlock> LINKED_TRANSPOSER =
-		REGISTRATE.block("linked_transposer", LinkedTransposerBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.addLayer(() -> RenderType::getCutoutMipped)
-			.blockstate(
-				(c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p, "transposer/horizontal_linked"), 180))
 			.item()
-			.transform(customItemModel("transposer", "horizontal_linked"))
-			.register();
-
-	public static final BlockEntry<LinkedTransposerBlock.Vertical> VERTICAL_LINKED_TRANSPOSER =
-		REGISTRATE.block("vertical_linked_transposer", LinkedTransposerBlock.Vertical::new)
-			.initialProperties(SharedProperties::softMetal)
-			.blockstate(new VerticalTransposerGenerator(true)::generate)
-			.loot((p, b) -> p.registerDropping(b, LINKED_TRANSPOSER.get()))
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.transform(customItemModel("_", "transmitter"))
 			.register();
 
 	public static final BlockEntry<AnalogLeverBlock> ANALOG_LEVER =

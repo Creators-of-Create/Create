@@ -30,11 +30,6 @@ public class AllShapes {
 		MOTOR_BLOCK = shape(3, 0, 3, 13, 14, 13).forDirectional(),
 		FOUR_VOXEL_POLE = shape(6, 0, 6, 10, 16, 10).forAxis(), SIX_VOXEL_POLE = shape(5, 0, 5, 11, 16, 11).forAxis(),
 		EIGHT_VOXEL_POLE = shape(4, 0, 4, 12, 16, 12).forAxis(),
-		EXTRACTOR = shape(4, 2, 11, 12, 10, 17).forDirectional(SOUTH)
-			.withVerticalShapes(cuboid(4, 11, 4, 12, 17, 12)),
-		TRANSPOSER = shape(4, 4, -1, 12, 12, 1).add(5, 5, 0, 11, 11, 16)
-			.add(4, 4, 11, 12, 12, 17)
-			.forDirectional(SOUTH),
 		FURNACE_ENGINE = shape(1, 1, 0, 15, 15, 16).add(0, 0, 9, 16, 16, 14)
 			.forHorizontal(Direction.SOUTH),
 		PORTABLE_STORAGE_INTERFACE = shape(0, 0, 0, 16, 12, 16).add(3, 12, 3, 13, 16, 13)
@@ -72,10 +67,6 @@ public class AllShapes {
 		FUNNEL_COLLISION = shape(3, -2, 3, 13, 2, 13).add(2, 2, 2, 14, 6, 14)
 			.add(1, 6, 1, 15, 10, 15)
 			.add(0, 10, 0, 16, 13, 16)
-			.forDirectional(UP),
-		CHUTE_FUNNEL = shape(3, -2, 3, 13, 2, 13).add(2, 2, 2, 14, 6, 14)
-			.add(0, 8, 0, 16, 14, 16)
-			.add(1, 5, 1, 15, 18, 15)
 			.forDirectional(UP),
 		BELT_FUNNEL_RETRACTED = shape(3, -5, 14, 13, 13, 19).add(0, -5, 8, 16, 16, 14)
 			.forHorizontal(NORTH),

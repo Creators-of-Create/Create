@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.SimpleTrigger;
+import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.simple.DeferralBehaviour;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
@@ -27,7 +27,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public abstract class BasinOperatingTileEntity extends KineticTileEntity {
@@ -142,9 +141,11 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		if (!basinItemInv.isPresent() || !basinFluidInv.isPresent())
 			return;
 
-		BasinInventory inv = (BasinInventory) basinItemInv.orElse(null);
-		IItemHandlerModifiable inputs = inv.getInputHandler();
-		IItemHandlerModifiable outputs = inv.getOutputHandler();
+		Optional<BasinTileEntity> basin = getBasin();
+		if (!basin.isPresent())
+			return;
+		SmartInventory inputs = basin.get().getInputInventory();
+		SmartInventory outputs = basin.get().getOutputInventory();
 		List<ItemStack> containers = new ArrayList<>();
 
 		NonNullList<Ingredient> ingredients = lastRecipe.getIngredients();
@@ -172,9 +173,11 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			AllTriggers.triggerForNearbyPlayers(trigger, world, pos, 4);
 		}
 
+		outputs.allowInsertion();
 		ItemHandlerHelper.insertItemStacked(outputs, lastRecipe.getRecipeOutput()
 			.copy(), false); // TODO only works for single item output
 		containers.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputs, stack, false));
+		outputs.forbidInsertion();
 
 		// Continue mixing
 		gatherInputs();
@@ -183,7 +186,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			sendData();
 		}
 
-		getBasin().ifPresent(te -> te.contentsChanged = true);
+		getBasin().ifPresent(BasinTileEntity::notifyChangeOfContents);
 	}
 
 	protected List<IRecipe<?>> getMatchingRecipes() {

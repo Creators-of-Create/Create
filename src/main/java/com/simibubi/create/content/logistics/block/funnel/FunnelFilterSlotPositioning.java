@@ -33,11 +33,6 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 			localOffset = VecHelper.rotateCentered(southLocation, AngleHelper.horizontalAngle(getSide()), Axis.Y);
 		}
 
-		if (AllBlocks.BRASS_CHUTE_FUNNEL.has(state)) {
-			Direction facing = state.get(ChuteFunnelBlock.HORIZONTAL_FACING);
-			localOffset = localOffset.subtract(new Vec3d(facing.getDirectionVec()).scale(2 / 16f));
-		}
-
 		return localOffset;
 	}
 

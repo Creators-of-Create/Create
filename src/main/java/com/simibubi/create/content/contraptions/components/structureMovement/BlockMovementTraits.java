@@ -18,10 +18,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
-import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
-import com.simibubi.create.content.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
-import com.simibubi.create.content.logistics.block.transposer.TransposerBlock;
 
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
@@ -95,8 +92,6 @@ public class BlockMovementTraits {
 
 		if (AllBlocks.BELT.has(blockState))
 			return true;
-		if (block instanceof ExtractorBlock)
-			return true;
 		return blockState.getPushReaction() != PushReaction.BLOCK;
 	}
 
@@ -143,8 +138,6 @@ public class BlockMovementTraits {
 			return direction == Direction.DOWN;
 		if (block instanceof DoorBlock)
 			return direction == Direction.DOWN;
-		if (block instanceof AttachedLogisticalBlock && !(block instanceof TransposerBlock))
-			return direction == AttachedLogisticalBlock.getBlockFacing(state);
 		if (block instanceof RedstoneLinkBlock)
 			return direction.getOpposite() == state.get(RedstoneLinkBlock.FACING);
 		if (block instanceof FlowerPotBlock)

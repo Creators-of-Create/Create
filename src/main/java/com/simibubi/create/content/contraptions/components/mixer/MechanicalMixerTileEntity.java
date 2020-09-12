@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
+import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -30,7 +32,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandler;
 
 public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
@@ -141,14 +142,14 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	public void renderParticles() {
-		IItemHandler itemHandler = basinItemInv.orElse(null);
-		BasinInventory inv = (BasinInventory) itemHandler;
-		if (inv == null || world == null)
+		Optional<BasinTileEntity> basin = getBasin();
+		if (!basin.isPresent() || world == null)
 			return;
 
-		for (int slot = 0; slot < inv.getInputHandler()
-			.getSlots(); slot++) {
-			ItemStack stackInSlot = itemHandler.getStackInSlot(slot);
+		SmartInventory inputs = basin.get()
+			.getInputInventory();
+		for (int slot = 0; slot < inputs.getSlots(); slot++) {
+			ItemStack stackInSlot = inputs.getStackInSlot(slot);
 			if (stackInSlot.isEmpty())
 				continue;
 
@@ -175,13 +176,13 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
 		if (!super.matchBasinRecipe(recipe))
 			return false;
-		
+
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		List<ItemStack> remainingItems = new ArrayList<>();
 		itemInputs.forEach(stack -> remainingItems.add(stack.copy()));
 		List<FluidStack> remainingFluids = new ArrayList<>();
 		fluidInputs.forEach(stack -> remainingFluids.add(stack.copy()));
-		
+
 		// TODO: match fluid inputs
 
 		// Sort by leniency

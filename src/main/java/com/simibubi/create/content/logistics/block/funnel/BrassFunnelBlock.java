@@ -56,12 +56,4 @@ public class BrassFunnelBlock extends FunnelBlock {
 			.with(POWERED, state.get(POWERED));
 	}
 
-	@Override
-	public BlockState getEquivalentChuteFunnel(IBlockReader world, BlockPos pos, BlockState state) {
-		Direction facing = state.get(FACING);
-		return AllBlocks.BRASS_CHUTE_FUNNEL.getDefaultState()
-			.with(ChuteFunnelBlock.HORIZONTAL_FACING, facing)
-			.with(POWERED, state.get(POWERED));
-	}
-
 }

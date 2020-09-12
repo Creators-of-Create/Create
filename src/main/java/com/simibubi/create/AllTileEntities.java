@@ -62,7 +62,11 @@ import com.simibubi.create.content.contraptions.relays.advanced.sequencer.Sequen
 import com.simibubi.create.content.contraptions.relays.belt.BeltRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.encased.*;
+import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.ClutchTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftRenderer;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.SplitShaftRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
@@ -81,19 +85,18 @@ import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRenderer;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterTileEntity;
-import com.simibubi.create.content.logistics.block.extractor.ExtractorTileEntity;
-import com.simibubi.create.content.logistics.block.extractor.LinkedExtractorTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelRenderer;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
-import com.simibubi.create.content.logistics.block.packager.PackagerRenderer;
-import com.simibubi.create.content.logistics.block.packager.PackagerTileEntity;
-import com.simibubi.create.content.logistics.block.redstone.*;
-import com.simibubi.create.content.logistics.block.transposer.LinkedTransposerTileEntity;
-import com.simibubi.create.content.logistics.block.transposer.TransposerTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.AnalogLeverRenderer;
+import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
@@ -447,38 +450,8 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<FunnelTileEntity> FUNNEL = Create.registrate()
 			.tileEntity("funnel", FunnelTileEntity::new)
-			.validBlocks(AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.BRASS_CHUTE_FUNNEL, AllBlocks.ANDESITE_FUNNEL, AllBlocks.ANDESITE_BELT_FUNNEL, AllBlocks.ANDESITE_CHUTE_FUNNEL)
+			.validBlocks(AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.ANDESITE_FUNNEL, AllBlocks.ANDESITE_BELT_FUNNEL)
 			.renderer(() -> FunnelRenderer::new)
-			.register();
-
-	public static final TileEntityEntry<PackagerTileEntity> PACKAGER = Create.registrate()
-			.tileEntity("packager", PackagerTileEntity::new)
-			.validBlocks(AllBlocks.PACKAGER)
-			.renderer(() -> PackagerRenderer::new)
-			.register();
-
-	public static final TileEntityEntry<ExtractorTileEntity> EXTRACTOR = Create.registrate()
-			.tileEntity("extractor", ExtractorTileEntity::new)
-			.validBlocks(AllBlocks.EXTRACTOR, AllBlocks.VERTICAL_EXTRACTOR)
-			.renderer(() -> SmartTileEntityRenderer::new)
-			.register();
-
-	public static final TileEntityEntry<LinkedExtractorTileEntity> LINKED_EXTRACTOR = Create.registrate()
-			.tileEntity("linked_extractor", LinkedExtractorTileEntity::new)
-			.validBlocks(AllBlocks.LINKED_EXTRACTOR, AllBlocks.VERTICAL_LINKED_EXTRACTOR)
-			.renderer(() -> SmartTileEntityRenderer::new)
-			.register();
-
-	public static final TileEntityEntry<TransposerTileEntity> TRANSPOSER = Create.registrate()
-			.tileEntity("transposer", TransposerTileEntity::new)
-			.validBlocks(AllBlocks.TRANSPOSER, AllBlocks.VERTICAL_TRANSPOSER)
-			.renderer(() -> SmartTileEntityRenderer::new)
-			.register();
-
-	public static final TileEntityEntry<LinkedTransposerTileEntity> LINKED_TRANSPOSER = Create.registrate()
-			.tileEntity("linked_transposer", LinkedTransposerTileEntity::new)
-			.validBlocks(AllBlocks.LINKED_TRANSPOSER, AllBlocks.VERTICAL_LINKED_TRANSPOSER)
-			.renderer(() -> SmartTileEntityRenderer::new)
 			.register();
 
 	public static final TileEntityEntry<BeltObserverTileEntity> BELT_OBSERVER = Create.registrate()
