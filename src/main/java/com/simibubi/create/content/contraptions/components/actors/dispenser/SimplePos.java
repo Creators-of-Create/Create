@@ -3,14 +3,14 @@ package com.simibubi.create.content.contraptions.components.actors.dispenser;
 import net.minecraft.dispenser.IPosition;
 
 public class SimplePos implements IPosition {
-	private final int x;
-	private final int y;
-	private final int z;
+	private final double x;
+	private final double y;
+	private final double z;
 
 	public SimplePos(double x, double y, double z) {
-		this.x = (int) Math.round(x);
-		this.y = (int) Math.round(y);
-		this.z = (int) Math.round(z);
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 	@Override
