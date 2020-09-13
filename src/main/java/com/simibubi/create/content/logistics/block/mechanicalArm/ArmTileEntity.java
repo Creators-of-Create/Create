@@ -1,5 +1,10 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Jukebox;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
@@ -14,6 +19,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.JukeboxBlock;
 import net.minecraft.item.ItemStack;
@@ -25,10 +31,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants.NBT;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ArmTileEntity extends KineticTileEntity {
 
@@ -82,21 +84,8 @@ public class ArmTileEntity extends KineticTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 
-		selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class, Lang.translate("mechanical_arm.selection_mode"), this,
-				new CenteredSideValueBoxTransform((blockState, direction) -> direction != Direction.DOWN && direction != Direction.UP) {
-					@Override
-					protected Vec3d getLocalOffset(BlockState state) {
-						int yPos = state.get(ArmBlock.CEILING) ? 16 - 3 : 3;
-						Vec3d location = VecHelper.voxelSpace(8, yPos, 14.5);
-						location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Direction.Axis.Y);
-						return location;
-					}
-
-					@Override
-					protected float getScale() {
-						return .3f;
-					}
-				});
+		selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class,
+			Lang.translate("logistics.when_multiple_outputs_available"), this, new SelectionModeValueBox());
 		selectionMode.requiresWrench();
 		behaviours.add(selectionMode);
 	}
@@ -177,7 +166,7 @@ public class ArmTileEntity extends KineticTileEntity {
 
 		lowerArmAngle.set(MathHelper.lerp(progress, previousTarget.lowerArmAngle, target.lowerArmAngle));
 		upperArmAngle.set(MathHelper.lerp(progress, previousTarget.upperArmAngle, target.upperArmAngle));
-		
+
 		headAngle.set(AngleHelper.angleLerp(progress, previousTarget.headAngle % 360, target.headAngle % 360));
 	}
 
@@ -199,11 +188,13 @@ public class ArmTileEntity extends KineticTileEntity {
 
 	protected void searchForItem() {
 		boolean foundInput = false;
-		//for round robin, we start looking after the last used index, for default we start at 0;
-		int startIndex = selectionMode.get() == SelectionMode.DEFAULT ? 0 : lastInputIndex + 1;
+		// for round robin, we start looking after the last used index, for default we
+		// start at 0;
+		int startIndex = selectionMode.get() == SelectionMode.PREFER_FIRST ? 0 : lastInputIndex + 1;
 
-		//if we enforce round robin, only look at the next input in the list, otherwise, look at all inputs
-		int scanRange = selectionMode.get() == SelectionMode.ROUND_ROBIN_HARD ? lastInputIndex + 2 : inputs.size();
+		// if we enforce round robin, only look at the next input in the list,
+		// otherwise, look at all inputs
+		int scanRange = selectionMode.get() == SelectionMode.FORCED_ROUND_ROBIN ? lastInputIndex + 2 : inputs.size();
 		if (scanRange > inputs.size())
 			scanRange = inputs.size();
 
@@ -218,12 +209,13 @@ public class ArmTileEntity extends KineticTileEntity {
 				break InteractionPoints;
 			}
 		}
-		if (!foundInput && selectionMode.get() == SelectionMode.ROUND_ROBIN_SOFT) {
-			//if we didn't find an input, but don't want to enforce round robin, reset the last index
+		if (!foundInput && selectionMode.get() == SelectionMode.ROUND_ROBIN) {
+			// if we didn't find an input, but don't want to enforce round robin, reset the
+			// last index
 			lastInputIndex = -1;
 		}
 		if (lastInputIndex == inputs.size() - 1) {
-			//if we reached the last input in the list, reset the last index
+			// if we reached the last input in the list, reset the last index
 			lastInputIndex = -1;
 		}
 	}
@@ -232,11 +224,13 @@ public class ArmTileEntity extends KineticTileEntity {
 		ItemStack held = heldItem.copy();
 
 		boolean foundOutput = false;
-		//for round robin, we start looking after the last used index, for default we start at 0;
-		int startIndex = selectionMode.get() == SelectionMode.DEFAULT ? 0 : lastOutputIndex + 1;
+		// for round robin, we start looking after the last used index, for default we
+		// start at 0;
+		int startIndex = selectionMode.get() == SelectionMode.PREFER_FIRST ? 0 : lastOutputIndex + 1;
 
-		//if we enforce round robin, only look at the next index in the list, otherwise, look at all
-		int scanRange = selectionMode.get() == SelectionMode.ROUND_ROBIN_HARD ? lastOutputIndex + 2 : outputs.size();
+		// if we enforce round robin, only look at the next index in the list,
+		// otherwise, look at all
+		int scanRange = selectionMode.get() == SelectionMode.FORCED_ROUND_ROBIN ? lastOutputIndex + 2 : outputs.size();
 		if (scanRange > outputs.size())
 			scanRange = outputs.size();
 
@@ -251,17 +245,18 @@ public class ArmTileEntity extends KineticTileEntity {
 			break;
 		}
 
-		if (!foundOutput && selectionMode.get() == SelectionMode.ROUND_ROBIN_SOFT) {
-			//if we didn't find an input, but don't want to enforce round robin, reset the last index
+		if (!foundOutput && selectionMode.get() == SelectionMode.ROUND_ROBIN) {
+			// if we didn't find an input, but don't want to enforce round robin, reset the
+			// last index
 			lastOutputIndex = -1;
 		}
 		if (lastOutputIndex == outputs.size() - 1) {
-			//if we reached the last input in the list, reset the last index
+			// if we reached the last input in the list, reset the last index
 			lastOutputIndex = -1;
 		}
 	}
 
-	//input == true => select input, false => select output
+	// input == true => select input, false => select output
 	private void selectIndex(boolean input, int index) {
 		phase = input ? Phase.MOVE_TO_INPUT : Phase.MOVE_TO_OUTPUT;
 		chasedPointIndex = index;
@@ -373,17 +368,17 @@ public class ArmTileEntity extends KineticTileEntity {
 		int previousIndex = chasedPointIndex;
 		Phase previousPhase = phase;
 		ListNBT interactionPointTagBefore = interactionPointTag;
-		
+
 		super.read(compound, clientPacket);
 		heldItem = ItemStack.read(compound.getCompound("HeldItem"));
 		phase = NBTHelper.readEnum(compound, "Phase", Phase.class);
 		chasedPointIndex = compound.getInt("TargetPointIndex");
 		chasedPointProgress = compound.getFloat("MovementProgress");
 		interactionPointTag = compound.getList("InteractionPoints", NBT.TAG_COMPOUND);
-		
+
 		if (!clientPacket)
 			return;
-		
+
 		boolean ceiling = isOnCeiling();
 		if (interactionPointTagBefore == null || interactionPointTagBefore.size() != interactionPointTag.size())
 			updateInteractionPoints = true;
@@ -400,10 +395,31 @@ public class ArmTileEntity extends KineticTileEntity {
 		}
 	}
 
+	private class SelectionModeValueBox extends CenteredSideValueBoxTransform {
+
+		public SelectionModeValueBox() {
+			super((blockState, direction) -> direction != Direction.DOWN && direction != Direction.UP);
+		}
+
+		@Override
+		protected Vec3d getLocalOffset(BlockState state) {
+			int yPos = state.get(ArmBlock.CEILING) ? 16 - 3 : 3;
+			Vec3d location = VecHelper.voxelSpace(8, yPos, 14.5);
+			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Direction.Axis.Y);
+			return location;
+		}
+
+		@Override
+		protected float getScale() {
+			return .3f;
+		}
+
+	}
+
 	public enum SelectionMode implements INamedIconOptions {
-		DEFAULT(AllIcons.I_TOOL_MIRROR),//first valid interaction points gets used
-		ROUND_ROBIN_SOFT(AllIcons.I_TOOL_ROTATE),//attempt round robin, but skip invalid points
-		ROUND_ROBIN_HARD(AllIcons.I_TOOL_ROTATE),//enforce round robin, wait for invalid points to be ready again
+		ROUND_ROBIN(AllIcons.I_ARM_ROUND_ROBIN),
+		FORCED_ROUND_ROBIN(AllIcons.I_ARM_FORCED_ROUND_ROBIN),
+		PREFER_FIRST(AllIcons.I_ARM_PREFER_FIRST),
 
 		;
 

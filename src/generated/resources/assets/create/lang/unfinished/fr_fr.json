@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 418",
+	"_": "Missing Localizations: 424",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -837,10 +837,18 @@
 	"create.tooltip.generationSpeed": "Génère à %1$s %2$s",
 	"create.tooltip.analogStrength": "Force analogique: %1$s/15",
 
-	"create.mechanical_arm.selection_mode": "UNLOCALIZED: Selection Mode",
-	"create.mechanical_arm.selection_mode.default": "UNLOCALIZED: First Valid Target",
-	"create.mechanical_arm.selection_mode.round_robin_soft": "UNLOCALIZED: Attempt Round Robin",
-	"create.mechanical_arm.selection_mode.round_robin_hard": "UNLOCALIZED: Enforce Round Robin",
+	"create.logistics.when_multiple_outputs_available": "UNLOCALIZED: When Multiple Outputs Available",
+
+	"create.mechanical_arm.selection_mode.round_robin": "UNLOCALIZED: Round Robin",
+	"create.mechanical_arm.selection_mode.forced_round_robin": "UNLOCALIZED: Forced Round Robin",
+	"create.mechanical_arm.selection_mode.prefer_first": "UNLOCALIZED: Prefer First Target",
+
+	"create.tunnel.selection_mode.split": "UNLOCALIZED: Split",
+	"create.tunnel.selection_mode.forced_split": "UNLOCALIZED: Forced Split",
+	"create.tunnel.selection_mode.round_robin": "UNLOCALIZED: Round Robin",
+	"create.tunnel.selection_mode.forced_round_robin": "UNLOCALIZED: Forced Round Robin",
+	"create.tunnel.selection_mode.prefer_nearest": "UNLOCALIZED: Prefer Nearest",
+	"create.tunnel.selection_mode.randomize": "UNLOCALIZED: Randomize",
 
 	"create.gui.config.overlay1": "UNLOCALIZED: Hi :)",
 	"create.gui.config.overlay2": "UNLOCALIZED: This is a sample overlay",

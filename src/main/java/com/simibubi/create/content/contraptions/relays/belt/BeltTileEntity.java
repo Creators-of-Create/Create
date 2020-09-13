@@ -80,7 +80,8 @@ public class BeltTileEntity extends KineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		behaviours.add(new DirectBeltInputBehaviour(this).setInsertionHandler(this::tryInsertingFromSide));
+		behaviours.add(new DirectBeltInputBehaviour(this).onlyInsertWhen(this::canInsertFrom)
+			.setInsertionHandler(this::tryInsertingFromSide));
 		behaviours.add(new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf));
 	}
@@ -383,12 +384,10 @@ public class BeltTileEntity extends KineticTileEntity {
 		sendData();
 	}
 
-	/**
-	 * always target a DirectBeltInsertionBehaviour
-	 */
-	@Deprecated
-	public boolean tryInsertingFromSide(Direction side, ItemStack stack, boolean simulate) {
-		return tryInsertingFromSide(new TransportedItemStack(stack), side, simulate).isEmpty();
+	private boolean canInsertFrom(Direction side) {
+		if (getSpeed() == 0)
+			return false;
+		return getMovementFacing() != side.getOpposite();
 	}
 
 	private ItemStack tryInsertingFromSide(TransportedItemStack transportedStack, Direction side, boolean simulate) {

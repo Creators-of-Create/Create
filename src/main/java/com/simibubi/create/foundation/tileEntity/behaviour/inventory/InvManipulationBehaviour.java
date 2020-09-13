@@ -117,7 +117,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 			findNewCapability();
 	}
 
-	protected int getAmountFromFilter() {
+	public int getAmountFromFilter() {
 		int amount = -1;
 		FilteringBehaviour filter = get(tileEntity, FilteringBehaviour.TYPE);
 		if (filter != null && !filter.anyAmount())

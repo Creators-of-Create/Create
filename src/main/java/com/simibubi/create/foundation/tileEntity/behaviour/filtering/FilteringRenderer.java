@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -75,7 +76,7 @@ public class FilteringRenderer {
 			.scrollTooltip(showCount ? "[" + Lang.translate("action.scroll") + "]" : "")
 			.passive(!hit);
 
-		CreateClient.outliner.showValueBox(pos, box.transform(behaviour.slotPositioning))
+		CreateClient.outliner.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
 			.lineWidth(1 / 64f)
 			.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
 			.highlightFace(result.getFace());

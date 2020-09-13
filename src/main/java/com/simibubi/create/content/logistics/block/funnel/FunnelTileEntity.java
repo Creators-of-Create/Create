@@ -89,8 +89,9 @@ public class FunnelTileEntity extends SmartTileEntity {
 		if (!inputBehaviour.canInsertFromSide(facing))
 			return;
 
-		ItemStack stack = invManipulation.extract(-1, s -> inputBehaviour.handleInsertion(s, facing, true)
-			.isEmpty());
+		ItemStack stack = invManipulation.extract(invManipulation.getAmountFromFilter(),
+			s -> inputBehaviour.handleInsertion(s, facing, true)
+				.isEmpty());
 		if (stack.isEmpty())
 			return;
 		flap(false);
@@ -127,7 +128,6 @@ public class FunnelTileEntity extends SmartTileEntity {
 		});
 		filtering.onlyActiveWhen(this::supportsFiltering);
 		behaviours.add(filtering);
-
 		behaviours.add(new DirectBeltInputBehaviour(this).onlyInsertWhen(this::supportsDirectBeltInput)
 			.setInsertionHandler(this::handleDirectBeltInput));
 	}

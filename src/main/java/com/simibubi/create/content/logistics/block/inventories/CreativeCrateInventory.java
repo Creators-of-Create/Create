@@ -1,28 +1,21 @@
 package com.simibubi.create.content.logistics.block.inventories;
 
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.ItemStackHandler;
-
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class CreativeCrateInventory extends ItemStackHandler {
 
-	private ItemStack filter = null;
 	private final CreativeCrateTileEntity te;
 
 	public CreativeCrateInventory(@Nullable CreativeCrateTileEntity te) {
 		this.te = te;
-	}
-
-	public CreativeCrateInventory() {
-		this(null);
 	}
 
 	@Override
@@ -32,13 +25,14 @@ public class CreativeCrateInventory extends ItemStackHandler {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
+		ItemStack stack = getProvidedItem();
 		if (slot == 1)
 			return ItemStack.EMPTY;
-		if (getFilter() == null)
+		if (stack == null)
 			return ItemStack.EMPTY;
-		if (!getFilter().isEmpty())
-			filter.setCount(filter.getMaxStackSize());
-		return filter;
+		if (!stack.isEmpty())
+			return ItemHandlerHelper.copyStackWithSize(stack, stack.getMaxStackSize());
+		return stack;
 	}
 
 	@Override
@@ -48,16 +42,14 @@ public class CreativeCrateInventory extends ItemStackHandler {
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		if (getFilter() == null)
+		ItemStack stack = getProvidedItem();
+		if (slot == 1)
 			return ItemStack.EMPTY;
-		if (!getFilter().isEmpty())
-			filter.setCount(Math.min(getFilter().getMaxStackSize(), amount));
-		return getFilter();
-	}
-
-	@Override
-	public int getSlotLimit(int slot) {
-		return getStackInSlot(slot).getMaxStackSize();
+		if (stack == null)
+			return ItemStack.EMPTY;
+		if (!stack.isEmpty())
+			return ItemHandlerHelper.copyStackWithSize(stack, Math.min(stack.getMaxStackSize(), amount));
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -65,26 +57,10 @@ public class CreativeCrateInventory extends ItemStackHandler {
 		return true;
 	}
 
-	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT nbt = new CompoundNBT();
-		nbt.putBoolean("isCreativeCrate", true);
-		if (getFilter() != null)
-			ItemStackHelper.saveAllItems(nbt, NonNullList.from(ItemStack.EMPTY, getFilter()));
-		return nbt;
-	}
-
-	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
-		NonNullList<ItemStack> filterList = NonNullList.withSize(1, ItemStack.EMPTY);
-		ItemStackHelper.loadAllItems(nbt, filterList);
-		filter = filterList.get(0);
-	}
-
 	@Nullable
-	public ItemStack getFilter() {
+	public ItemStack getProvidedItem() {
 		if (te != null)
-			filter = te.filter.getFilter();
-		return filter;
+			return te.filter.getFilter();
+		return ItemStack.EMPTY;
 	}
 }
