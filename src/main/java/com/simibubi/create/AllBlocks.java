@@ -843,7 +843,7 @@ public class AllBlocks {
 	public static final BlockEntry<AndesiteBeltFunnelBlock> ANDESITE_BELT_FUNNEL =
 		REGISTRATE.block("andesite_belt_funnel", AndesiteBeltFunnelBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.blockstate(new BeltFunnelGenerator("andesite")::generate)
+			.blockstate(new BeltFunnelGenerator("andesite", new ResourceLocation("block/polished_andesite"))::generate)
 			.loot((p, b) -> p.registerDropping(b, ANDESITE_FUNNEL.get()))
 			.register();
 
@@ -857,7 +857,7 @@ public class AllBlocks {
 	public static final BlockEntry<BrassBeltFunnelBlock> BRASS_BELT_FUNNEL =
 		REGISTRATE.block("brass_belt_funnel", BrassBeltFunnelBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.blockstate(new BeltFunnelGenerator("brass")::generate)
+			.blockstate(new BeltFunnelGenerator("brass", Create.asResource("block/brass_block"))::generate)
 			.loot((p, b) -> p.registerDropping(b, BRASS_FUNNEL.get()))
 			.register();
 

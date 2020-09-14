@@ -61,20 +61,20 @@ public class BuilderTransformers {
 						s.has(BlockStateProperties.POWERED) && s.get(BlockStateProperties.POWERED) ? "_powered" : "";
 					return p.models()
 						.withExistingParent("block/" + type + "_funnel" + powered, p.modLoc("block/funnel/block"))
-						.texture("2", p.modLoc("block/" + type + "_funnel_back"))
-						.texture("3", p.modLoc("block/" + type + "_funnel" + powered))
-						.texture("4", p.modLoc("block/" + type + "_funnel_plating"))
-						.texture("particle", particleTexture);
+						.texture("0", p.modLoc("block/" + type + "_funnel_plating"))
+						.texture("1", particleTexture)
+						.texture("2", p.modLoc("block/" + type + "_funnel" + powered))
+						.texture("3", p.modLoc("block/" + type + "_funnel_back"));
 				};
 				p.directionalBlock(c.get(), model);
 			})
 				.item(FunnelItem::new)
 				.model((c, p) -> {
 					p.withExistingParent("item/" + type + "_funnel", p.modLoc("block/funnel/item"))
-						.texture("2", p.modLoc("block/" + type + "_funnel_back"))
-						.texture("3", p.modLoc("block/" + type + "_funnel"))
-						.texture("4", p.modLoc("block/" + type + "_funnel_plating"))
-						.texture("particle", particleTexture);
+						.texture("0", p.modLoc("block/" + type + "_funnel_plating"))
+						.texture("1", particleTexture)
+						.texture("2", p.modLoc("block/" + type + "_funnel"))
+						.texture("3", p.modLoc("block/" + type + "_funnel_back"));
 				})
 				.build();
 		};

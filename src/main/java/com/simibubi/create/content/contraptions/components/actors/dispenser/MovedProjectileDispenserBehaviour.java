@@ -22,7 +22,7 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 		double x = pos.getX() + facing.x * .7 + .5;
 		double y = pos.getY() + facing.y * .7 + .5;
 		double z = pos.getZ() + facing.z * .7 + .5;
-		IProjectile iprojectile = this.getProjectileEntity(context.world, x, y, z, itemStack);
+		IProjectile iprojectile = this.getProjectileEntity(context.world, x, y, z, itemStack.copy());
 		if (iprojectile == null)
 			return itemStack;
 		Vec3d effectiveMovementVec = facing.scale(getProjectileVelocity()).add(context.motion);

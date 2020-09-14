@@ -13,6 +13,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public class NBTHelper {
 
+	public static void putMarker(CompoundNBT nbt, String marker) {
+		nbt.putBoolean(marker, true);
+	}
+	
 	public static <T extends Enum<?>> T readEnum(CompoundNBT nbt, String key, Class<T> enumClass) {
 		T[] enumConstants = enumClass.getEnumConstants();
 		String name = nbt.getString(key);

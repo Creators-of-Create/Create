@@ -6,14 +6,18 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class BeltFunnelGenerator extends SpecialBlockStateGen {
 
 	private String type;
+	private ResourceLocation materialBlockTexture;
 
-	public BeltFunnelGenerator(String type) {
+	public BeltFunnelGenerator(String type, ResourceLocation materialBlockTexture) {
 		this.type = type;
+		this.materialBlockTexture = materialBlockTexture;
 	}
 
 	@Override
@@ -30,18 +34,23 @@ public class BeltFunnelGenerator extends SpecialBlockStateGen {
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
 		boolean pushing = state.get(BeltFunnelBlock.PUSHING);
-		boolean powered = state.has(BeltFunnelBlock.POWERED) && state.get(BeltFunnelBlock.POWERED);
+		boolean powered = state.has(BlockStateProperties.POWERED) && state.get(BeltFunnelBlock.POWERED);
 		String shapeName = state.get(BeltFunnelBlock.SHAPE)
 			.getName();
-		String suffix = (pushing ? "push" : "pull") + (powered ? "_powered" : "");
-		String name = ctx.getName() + "_" + suffix;
-		String textureName = type + "_funnel_" + suffix;
+		
+		String pushingSuffix = (pushing ? "push" : "pull") ;
+		String poweredSuffix = powered ? "_powered" : "";
+		String name = ctx.getName() + "_" + pushingSuffix + poweredSuffix;
+		String textureName = type + "_funnel_" + pushingSuffix;
+		
 		return prov.models()
 			.withExistingParent(name + "_" + shapeName, prov.modLoc("block/belt_funnel/block_" + shapeName))
-			.texture("particle", prov.modLoc("block/" + type + "_casing"))
+			.texture("particle", materialBlockTexture)
 			.texture("2", prov.modLoc("block/" + textureName))
 			.texture("3", prov.modLoc("block/" + type + "_funnel_back"))
-			.texture("4", prov.modLoc("block/" + type + "_funnel_plating"));
+			.texture("5", prov.modLoc("block/" + type + "_funnel_tall" + poweredSuffix))
+			.texture("6", prov.modLoc("block/" + type + "_funnel" + poweredSuffix))
+			.texture("7", prov.modLoc("block/" + type + "_funnel_plating"));
 	}
 
 }

@@ -519,28 +519,28 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	public static boolean canAccessFromSide(Direction facing, BlockState belt) {
-		if (facing == null)
-			return true;
-		if (!belt.get(BeltBlock.CASING))
-			return false;
-		BeltPart part = belt.get(BeltBlock.PART);
-		if (part != BeltPart.MIDDLE && facing.getAxis() == belt.get(HORIZONTAL_FACING)
-			.rotateY()
-			.getAxis())
-			return false;
-
-		BeltSlope slope = belt.get(BeltBlock.SLOPE);
-		if (slope != BeltSlope.HORIZONTAL) {
-			if (slope == BeltSlope.DOWNWARD && part == BeltPart.END)
-				return true;
-			if (slope == BeltSlope.UPWARD && part == BeltPart.START)
-				return true;
-			Direction beltSide = belt.get(HORIZONTAL_FACING);
-			if (slope == BeltSlope.DOWNWARD)
-				beltSide = beltSide.getOpposite();
-			if (beltSide == facing)
-				return false;
-		}
+//		if (facing == null)
+//			return true;
+//		if (!belt.get(BeltBlock.CASING))
+//			return false;
+//		BeltPart part = belt.get(BeltBlock.PART);
+//		if (part != BeltPart.MIDDLE && facing.getAxis() == belt.get(HORIZONTAL_FACING)
+//			.rotateY()
+//			.getAxis())
+//			return false;
+//
+//		BeltSlope slope = belt.get(BeltBlock.SLOPE);
+//		if (slope != BeltSlope.HORIZONTAL) {
+//			if (slope == BeltSlope.DOWNWARD && part == BeltPart.END)
+//				return true;
+//			if (slope == BeltSlope.UPWARD && part == BeltPart.START)
+//				return true;
+//			Direction beltSide = belt.get(HORIZONTAL_FACING);
+//			if (slope == BeltSlope.DOWNWARD)
+//				beltSide = beltSide.getOpposite();
+//			if (beltSide == facing)
+//				return false;
+//		}
 
 		return true;
 	}

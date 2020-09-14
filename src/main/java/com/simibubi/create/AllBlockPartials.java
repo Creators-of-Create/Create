@@ -64,7 +64,7 @@ public class AllBlockPartials {
 		CUCKOO_RIGHT_DOOR = get("cuckoo_clock/right_door"), CUCKOO_PIG = get("cuckoo_clock/pig"),
 		CUCKOO_CREEPER = get("cuckoo_clock/creeper"), ROPE_COIL = get("rope_pulley/rope_coil"),
 		ROPE_HALF = get("rope_pulley/rope_half"), ROPE_HALF_MAGNET = get("rope_pulley/rope_half_magnet"),
-		MILLSTONE_COG = get("millstone/inner"), PACKAGER_SEALER = get("packager/sealer"),
+		MILLSTONE_COG = get("millstone/inner"),
 
 		SYMMETRY_PLANE = get("symmetry_effect/plane"), SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),
 		SYMMETRY_TRIPLEPLANE = get("symmetry_effect/tripleplane"),
@@ -79,10 +79,8 @@ public class AllBlockPartials {
 
 		MECHANICAL_PUMP_ARROW = get("mechanical_pump/arrow"), MECHANICAL_PUMP_COG = get("mechanical_pump/cog"),
 		FLUID_PIPE_CASING = get("fluid_pipe/casing"),
-		
-		SPOUT_TOP = get("spout/top"),
-		SPOUT_MIDDLE = get("spout/middle"),
-		SPOUT_BOTTOM = get("spout/bottom"),
+
+		SPOUT_TOP = get("spout/top"), SPOUT_MIDDLE = get("spout/middle"), SPOUT_BOTTOM = get("spout/bottom"),
 
 		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
 		COUPLING_RING = getEntity("minecart_coupling/ring"),

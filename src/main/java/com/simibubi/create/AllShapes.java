@@ -60,18 +60,22 @@ public class AllShapes {
 		NIXIE_TUBE_CEILING = shape(0, 12, 0, 16, 16, 16).add(9, 1, 5, 15, 16, 11)
 			.add(1, 1, 5, 7, 16, 11)
 			.forHorizontalAxis(),
-		FUNNEL = shape(3, -2, 3, 13, 2, 13).add(2, 2, 2, 14, 6, 14)
-			.add(1, 6, 1, 15, 10, 15)
+		FUNNEL = shape(2, -2, 2, 14, 2, 14).add(3, 2, 3, 13, 6, 13)
+			.add(2, 6, 2, 14, 10, 14)
 			.add(0, 10, 0, 16, 16, 16)
 			.forDirectional(UP),
-		FUNNEL_COLLISION = shape(3, -2, 3, 13, 2, 13).add(2, 2, 2, 14, 6, 14)
-			.add(1, 6, 1, 15, 10, 15)
+		FUNNEL_COLLISION = shape(2, -2, 2, 14, 2, 14).add(3, 2, 3, 13, 6, 13)
+			.add(2, 6, 2, 14, 10, 14)
 			.add(0, 10, 0, 16, 13, 16)
 			.forDirectional(UP),
-		BELT_FUNNEL_RETRACTED = shape(3, -5, 14, 13, 13, 19).add(0, -5, 8, 16, 16, 14)
+		BELT_FUNNEL_RETRACTED = 
+			shape(2, -5, 14, 12, 14, 18)
+			.add(0, -5, 8, 16, 16, 14)
 			.forHorizontal(NORTH),
-		BELT_FUNNEL_EXTENDED = shape(3, -4, 6, 13, 13, 17).add(2, -4, 10, 14, 14, 14)
-			.add(1, -4, 6, 15, 15, 10)
+		BELT_FUNNEL_EXTENDED = 
+			shape(2, -4, 14, 14, 14, 18)
+			.add(3, -4, 10, 13, 13, 14)
+			.add(2, -4, 6, 14, 14, 10)
 			.add(0, -5, 0, 16, 16, 6)
 			.forHorizontal(NORTH),
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)

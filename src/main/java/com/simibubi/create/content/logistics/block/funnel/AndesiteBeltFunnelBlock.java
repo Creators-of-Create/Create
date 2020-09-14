@@ -10,7 +10,7 @@ public class AndesiteBeltFunnelBlock extends BeltFunnelBlock {
 
 	@Override
 	public boolean hasPoweredProperty() {
-		return false;
+		return true;
 	}
 
 }

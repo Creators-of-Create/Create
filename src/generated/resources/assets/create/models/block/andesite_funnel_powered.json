@@ -3,7 +3,7 @@
   "textures": {
     "0": "create:block/andesite_funnel_plating",
     "1": "create:block/andesite_casing",
-    "2": "create:block/andesite_funnel",
+    "2": "create:block/andesite_funnel_powered",
     "3": "create:block/andesite_funnel_back"
   }
 }

@@ -55,6 +55,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
+		flap.tick();
 		Mode mode = determineCurrentMode();
 		if (mode == Mode.BELT)
 			tickAsBeltFunnel();
@@ -65,7 +66,6 @@ public class FunnelTileEntity extends SmartTileEntity {
 	public void tickAsBeltFunnel() {
 		BlockState blockState = getBlockState();
 		Direction facing = blockState.get(BeltFunnelBlock.HORIZONTAL_FACING);
-		flap.tick();
 		if (world.isRemote)
 			return;
 
@@ -134,13 +134,17 @@ public class FunnelTileEntity extends SmartTileEntity {
 
 	private boolean supportsDirectBeltInput(Direction side) {
 		BlockState blockState = getBlockState();
-		return blockState != null && blockState.getBlock() instanceof FunnelBlock
-			&& blockState.get(FunnelBlock.FACING) == Direction.UP;
+		if (blockState == null)
+			return false;
+		if (!(blockState.getBlock() instanceof FunnelBlock))
+			return false;
+		Direction direction = blockState.get(FunnelBlock.FACING);
+		return direction == Direction.UP || direction == side.getOpposite();
 	}
 
 	private boolean supportsFiltering() {
 		BlockState blockState = getBlockState();
-		return blockState != null && blockState.has(BlockStateProperties.POWERED);
+		return AllBlocks.BRASS_BELT_FUNNEL.has(blockState) || AllBlocks.BRASS_FUNNEL.has(blockState);
 	}
 
 	private ItemStack handleDirectBeltInput(TransportedItemStack stack, Direction side, boolean simulate) {

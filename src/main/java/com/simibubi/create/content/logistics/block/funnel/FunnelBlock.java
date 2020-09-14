@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -20,6 +19,8 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -38,24 +39,35 @@ import net.minecraft.world.World;
 
 public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<FunnelTileEntity> {
 
+	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+	
 	public FunnelBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
+		setDefaultState(getDefaultState().with(POWERED, false));
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction facing = context.getFace();
-		if (facing.getAxis()
-			.isVertical()
-			&& context.getWorld()
-				.getBlockState(context.getPos()
-					.offset(facing.getOpposite()))
-				.getBlock() instanceof ChuteBlock)
-			facing = facing.getOpposite();
-		return getDefaultState().with(FACING, facing);
-
+		return getDefaultState().with(FACING, facing).with(POWERED, context.getWorld()
+			.isBlockPowered(context.getPos()));
 	}
 
+	@Override
+	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+		super.fillStateContainer(builder.add(POWERED));
+	}
+
+	@Override
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+		boolean isMoving) {
+		if (worldIn.isRemote)
+			return;
+		boolean previouslyPowered = state.get(POWERED);
+		if (previouslyPowered != worldIn.isBlockPowered(pos))
+			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
+	}
+	
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
@@ -183,7 +195,7 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 	}
 
 	protected boolean canInsertIntoFunnel(BlockState state) {
-		return true;
+		return !state.get(POWERED);
 	}
 
 	@Nullable
