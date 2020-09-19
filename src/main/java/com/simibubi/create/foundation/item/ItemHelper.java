@@ -134,7 +134,7 @@ public class ItemHelper {
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, boolean simulate) {
-		return extract(inv, test, ExtractionCountMode.UPTO, AllConfigs.SERVER.logistics.extractorAmount.get(),
+		return extract(inv, test, ExtractionCountMode.UPTO, AllConfigs.SERVER.logistics.defaultExtractionLimit.get(),
 			simulate);
 	}
 
@@ -207,7 +207,7 @@ public class ItemHelper {
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test,
 		Function<ItemStack, Integer> amountFunction, boolean simulate) {
 		ItemStack extracting = ItemStack.EMPTY;
-		int maxExtractionCount = AllConfigs.SERVER.logistics.extractorAmount.get();
+		int maxExtractionCount = AllConfigs.SERVER.logistics.defaultExtractionLimit.get();
 
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			if (extracting.isEmpty()) {

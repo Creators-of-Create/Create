@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.deployer;
 
 import java.util.Iterator;
 
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.item.ItemStack;
@@ -132,7 +131,7 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
-		FilteringBehaviour filteringBehaviour = TileEntityBehaviour.get(te, FilteringBehaviour.TYPE);
+		FilteringBehaviour filteringBehaviour = te.getBehaviour(FilteringBehaviour.TYPE);
 		return filteringBehaviour == null || filteringBehaviour.test(stack);
 	}
 

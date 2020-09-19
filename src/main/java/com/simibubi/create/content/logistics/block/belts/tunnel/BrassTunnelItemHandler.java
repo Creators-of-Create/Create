@@ -31,7 +31,7 @@ public class BrassTunnelItemHandler implements IItemHandler {
 			return beltCapability.orElse(null).insertItem(slot, stack, simulate);
 		}
 		
-		if (!te.stackToDistribute.isEmpty())
+		if (!te.canTakeItems())
 			return stack;
 		if (!simulate) 
 			te.setStackToDistribute(stack);

@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.particle;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanTileEntity;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -32,7 +33,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		this.maxAge = 40;
 		canCollide = false;
 		selectSprite(7);
-		Vec3d offset = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .25f);
+		Vec3d offset = VecHelper.offsetRandomly(Vec3d.ZERO, Create.random, .25f);
 		this.setPosition(posX + offset.x, posY + offset.y, posZ + offset.z);
 		this.prevPosX = posX;
 		this.prevPosY = posY;

@@ -23,7 +23,7 @@ public class TransparentStraightPipeRenderer extends SafeTileEntityRenderer<Stra
 	@Override
 	protected void renderSafe(StraightPipeTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
-		FluidPipeBehaviour pipe = TileEntityBehaviour.get(te, FluidPipeBehaviour.TYPE);
+		FluidPipeBehaviour pipe = te.getBehaviour(FluidPipeBehaviour.TYPE);
 		if (pipe == null)
 			return;
 		FluidStack fluidStack = pipe.getFluid();

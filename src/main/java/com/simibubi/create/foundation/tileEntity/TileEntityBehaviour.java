@@ -13,13 +13,11 @@ import net.minecraft.world.World;
 public abstract class TileEntityBehaviour {
 
 	public SmartTileEntity tileEntity;
-	private boolean paused;
 	private int lazyTickRate;
 	private int lazyTickCounter;
 
 	public TileEntityBehaviour(SmartTileEntity te) {
 		tileEntity = te;
-		paused = false;
 		setLazyTickRate(10);
 	}
 
@@ -34,13 +32,13 @@ public abstract class TileEntityBehaviour {
 			lazyTickCounter = lazyTickRate;
 			lazyTick();
 		}
-			
+
 	}
 
 	public void read(CompoundNBT nbt, boolean clientPacket) {
 
 	}
-	
+
 	public void write(CompoundNBT nbt, boolean clientPacket) {
 
 	}
@@ -56,13 +54,9 @@ public abstract class TileEntityBehaviour {
 	public void remove() {
 
 	}
-	
-	public void destroy() {
-		
-	}
 
-	public boolean isPaused() {
-		return paused;
+	public void destroy() {
+
 	}
 
 	public void setLazyTickRate(int slowTickRate) {
@@ -72,10 +66,6 @@ public abstract class TileEntityBehaviour {
 
 	public void lazyTick() {
 
-	}
-
-	public void setPaused(boolean paused) {
-		this.paused = paused;
 	}
 
 	public BlockPos getPos() {

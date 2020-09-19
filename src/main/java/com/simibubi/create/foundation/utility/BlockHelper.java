@@ -16,10 +16,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.SlabType;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -65,25 +67,25 @@ public class BlockHelper {
 	}
 
 	public static BlockState setZeroAge(BlockState blockState) {
-		if(blockState.has(BlockStateProperties.AGE_0_1))
+		if (blockState.has(BlockStateProperties.AGE_0_1))
 			return blockState.with(BlockStateProperties.AGE_0_1, 0);
-		if(blockState.has(BlockStateProperties.AGE_0_2))
+		if (blockState.has(BlockStateProperties.AGE_0_2))
 			return blockState.with(BlockStateProperties.AGE_0_2, 0);
-		if(blockState.has(BlockStateProperties.AGE_0_3))
+		if (blockState.has(BlockStateProperties.AGE_0_3))
 			return blockState.with(BlockStateProperties.AGE_0_3, 0);
-		if(blockState.has(BlockStateProperties.AGE_0_5))
+		if (blockState.has(BlockStateProperties.AGE_0_5))
 			return blockState.with(BlockStateProperties.AGE_0_5, 0);
-		if(blockState.has(BlockStateProperties.AGE_0_7))
+		if (blockState.has(BlockStateProperties.AGE_0_7))
 			return blockState.with(BlockStateProperties.AGE_0_7, 0);
-		if(blockState.has(BlockStateProperties.AGE_0_15))
+		if (blockState.has(BlockStateProperties.AGE_0_15))
 			return blockState.with(BlockStateProperties.AGE_0_15, 0);
-		if(blockState.has(BlockStateProperties.AGE_0_25))
+		if (blockState.has(BlockStateProperties.AGE_0_25))
 			return blockState.with(BlockStateProperties.AGE_0_25, 0);
-		if(blockState.has(BlockStateProperties.HONEY_LEVEL))
+		if (blockState.has(BlockStateProperties.HONEY_LEVEL))
 			return blockState.with(BlockStateProperties.HONEY_LEVEL, 0);
-		if(blockState.has(BlockStateProperties.HATCH_0_2))
+		if (blockState.has(BlockStateProperties.HATCH_0_2))
 			return blockState.with(BlockStateProperties.HATCH_0_2, 0);
-		if(blockState.has(BlockStateProperties.STAGE_0_1))
+		if (blockState.has(BlockStateProperties.STAGE_0_1))
 			return blockState.with(BlockStateProperties.STAGE_0_1, 0);
 		return blockState;
 	}
@@ -98,10 +100,10 @@ public class BlockHelper {
 		if (needsTwo)
 			amount *= 2;
 
-		if(block.has(BlockStateProperties.EGGS_1_4))
+		if (block.has(BlockStateProperties.EGGS_1_4))
 			amount *= block.get(BlockStateProperties.EGGS_1_4);
 
-		if(block.has(BlockStateProperties.PICKLES_1_4))
+		if (block.has(BlockStateProperties.PICKLES_1_4))
 			amount *= block.get(BlockStateProperties.PICKLES_1_4);
 
 		{
@@ -170,6 +172,15 @@ public class BlockHelper {
 		}
 
 		world.setBlockState(pos, ifluidstate.getBlockState());
+	}
+
+	public static boolean isSolidWall(IBlockReader reader, BlockPos fromPos, Direction toDirection) {
+		return Block.hasSolidSide(reader.getBlockState(fromPos.offset(toDirection)), reader,
+			fromPos.offset(toDirection), toDirection.getOpposite());
+	}
+	
+	public static boolean noCollisionInSpace(IBlockReader reader, BlockPos pos) {
+		return reader.getBlockState(pos).getCollisionShape(reader, pos).isEmpty();
 	}
 
 }

@@ -78,7 +78,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	public final void readClientUpdate(CompoundNBT tag) {
 		read(tag, true);
 	}
-	
+
 	@Override
 	public final void read(CompoundNBT tag) {
 		read(tag, false);
@@ -99,7 +99,6 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 			.forEach(tb -> tb.read(compound, clientPacket));
 	}
 
-	
 	/**
 	 * Hook only these in future subclasses of STE
 	 */
@@ -126,13 +125,10 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 
 	protected void forEachBehaviour(Consumer<TileEntityBehaviour> action) {
 		behaviours.values()
-			.forEach(tb -> {
-				if (!tb.isPaused())
-					action.accept(tb);
-			});
+			.forEach(action);
 	}
 
-	protected void putBehaviour(TileEntityBehaviour behaviour) {
+	protected void attachBehaviourLate(TileEntityBehaviour behaviour) {
 		behaviours.put(behaviour.getType(), behaviour);
 		behaviour.initialize();
 	}
@@ -144,7 +140,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T extends TileEntityBehaviour> T getBehaviour(BehaviourType<T> type) {
+	public <T extends TileEntityBehaviour> T getBehaviour(BehaviourType<T> type) {
 		if (behaviours.containsKey(type))
 			return (T) behaviours.get(type);
 		return null;

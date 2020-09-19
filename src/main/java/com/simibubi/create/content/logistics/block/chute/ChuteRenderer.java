@@ -27,7 +27,8 @@ public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
 		BlockState blockState = te.getBlockState();
 		if (blockState.get(ChuteBlock.FACING) != Direction.DOWN)
 			return;
-		if (blockState.get(ChuteBlock.SHAPE) != Shape.WINDOW)
+		if (blockState.get(ChuteBlock.SHAPE) != Shape.WINDOW
+			&& (te.bottomPullDistance == 0 || te.itemPosition.get(partialTicks) > .5f))
 			return;
 
 		ItemRenderer itemRenderer = Minecraft.getInstance()

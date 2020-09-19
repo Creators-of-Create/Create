@@ -95,13 +95,10 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
 		boolean blockItem = itemRenderer.getItemModelWithOverrides(itemStack, null, null)
 			.isGui3d();
-		
+
 		ms.push();
 		msr.rotateY(angle);
-		if (!blockItem && !renderUpright) {
-			ms.translate(0, -.09375, 0);
-			msr.rotateX(90);
-		}
+
 		if (renderUpright) {
 			Entity renderViewEntity = Minecraft.getInstance().renderViewEntity;
 			if (renderViewEntity != null) {
@@ -111,14 +108,18 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 				float yRot = (float) MathHelper.atan2(diff.z, -diff.x);
 				ms.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion((float) (yRot - Math.PI / 2)));
 			}
-			ms.translate(0, 3 / 32d, 1/16f);
+			ms.translate(0, 3 / 32d, 1 / 16f);
 		}
-		
+
 		for (int i = 0; i <= count; i++) {
 			ms.push();
 			if (blockItem)
 				ms.translate(r.nextFloat() * .0625f * i, 0, r.nextFloat() * .0625f * i);
 			ms.scale(.5f, .5f, .5f);
+			if (!blockItem && !renderUpright) {
+				ms.translate(0, -3 / 16f, 0);
+				msr.rotateX(90);
+			}
 			itemRenderer.renderItem(itemStack, TransformType.FIXED, light, overlay, ms, buffer);
 			ms.pop();
 
@@ -129,7 +130,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 			} else
 				ms.translate(0, 0, -1 / 16f);
 		}
-		
+
 		ms.pop();
 	}
 

@@ -148,6 +148,13 @@ public class ChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntit
 	}
 
 	@Override
+	public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_,
+		BlockPos neighbourPos, boolean p_220069_6_) {
+		if (pos.down().equals(neighbourPos))
+			withTileEntityDo(world, pos, ChuteTileEntity::blockBelowChanged);
+	}
+
+	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
 		BlockState above = world.getBlockState(pos.up());
 		return !(above.getBlock() instanceof ChuteBlock) || above.get(FACING) == Direction.DOWN;
@@ -226,7 +233,7 @@ public class ChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntit
 		ISelectionContext p_220053_4_) {
 		return ChuteShapes.getShape(p_220053_1_);
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {

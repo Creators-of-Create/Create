@@ -33,6 +33,7 @@ public class DepotTileEntity extends SmartTileEntity {
 
 	DepotItemHandler itemHandler;
 	LazyOptional<DepotItemHandler> lazyItemHandler;
+	private TransportedItemStackHandlerBehaviour transportedHandler;
 
 	public DepotTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
@@ -75,9 +76,8 @@ public class DepotTileEntity extends SmartTileEntity {
 
 		boolean wasLocked = heldItem.locked;
 		ItemStack previousItem = heldItem.stack;
-		TransportedItemStackHandlerBehaviour handler = getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
-		ProcessingResult result = wasLocked ? processingBehaviour.handleHeldItem(heldItem, handler)
-			: processingBehaviour.handleReceivedItem(heldItem, handler);
+		ProcessingResult result = wasLocked ? processingBehaviour.handleHeldItem(heldItem, transportedHandler)
+			: processingBehaviour.handleReceivedItem(heldItem, transportedHandler);
 		if (result == ProcessingResult.REMOVE) {
 			heldItem = null;
 			sendData();
@@ -116,8 +116,9 @@ public class DepotTileEntity extends SmartTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(this).setInsertionHandler(this::tryInsertingFromSide));
-		behaviours.add(new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
-			.withStackPlacement(this::getWorldPositionOf));
+		transportedHandler = new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
+			.withStackPlacement(this::getWorldPositionOf);
+		behaviours.add(transportedHandler);
 	}
 
 	public ItemStack getHeldItemStack() {

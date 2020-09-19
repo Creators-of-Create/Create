@@ -101,16 +101,19 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 			return false;
 		if (!BeltBlock.canTransport(stateBelow))
 			return false;
-		if (stateBelow.get(BeltBlock.HORIZONTAL_FACING)
-			.getAxis() != state.get(HORIZONTAL_FACING)
-				.getAxis())
-			return false;
 		return true;
 	}
 
 	public static BlockState updateShape(BlockState state, IBlockReader world, BlockPos pos) {
 		state = state.with(SHAPE, Shape.RETRACTED);
-		BlockState neighbour = world.getBlockState(pos.offset(state.get(HORIZONTAL_FACING)));
+		Direction horizontalFacing = state.get(HORIZONTAL_FACING);
+		
+		BlockState below = world.getBlockState(pos.down());
+		if (below.getBlock() instanceof BeltBlock && below.get(BeltBlock.HORIZONTAL_FACING)
+			.getAxis() != horizontalFacing.getAxis())
+			return state;
+
+		BlockState neighbour = world.getBlockState(pos.offset(horizontalFacing));
 		if (canConnectTo(state, neighbour))
 			return state.with(SHAPE, Shape.EXTENDED);
 		return state;

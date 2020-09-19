@@ -87,7 +87,7 @@ public class FilteringRenderer {
 
 		if (tileEntityIn == null || tileEntityIn.isRemoved())
 			return;
-		FilteringBehaviour behaviour = TileEntityBehaviour.get(tileEntityIn, FilteringBehaviour.TYPE);
+		FilteringBehaviour behaviour = tileEntityIn.getBehaviour(FilteringBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 		if (!behaviour.isActive())

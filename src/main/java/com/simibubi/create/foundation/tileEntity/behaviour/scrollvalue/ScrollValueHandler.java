@@ -45,8 +45,8 @@ public class ScrollValueHandler {
 
 		if (scrolling instanceof BulkScrollValueBehaviour && AllKeys.ctrlDown()) {
 			BulkScrollValueBehaviour bulkScrolling = (BulkScrollValueBehaviour) scrolling;
-			for (SmartTileEntity smartTileEntity : bulkScrolling.getBulk()) {
-				ScrollValueBehaviour other = TileEntityBehaviour.get(smartTileEntity, ScrollValueBehaviour.TYPE);
+			for (SmartTileEntity te : bulkScrolling.getBulk()) {
+				ScrollValueBehaviour other = te.getBehaviour(ScrollValueBehaviour.TYPE);
 				if (other != null)
 					applyTo(delta, other);
 			}

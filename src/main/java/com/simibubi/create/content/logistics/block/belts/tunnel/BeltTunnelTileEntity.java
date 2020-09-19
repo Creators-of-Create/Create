@@ -130,7 +130,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 
 			BlockState funnelState = world.getBlockState(getPos().offset(direction));
 			if (funnelState.getBlock() instanceof BeltFunnelBlock)
-				if (funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) == direction.getOpposite())
+				if (funnelState.get(BeltFunnelBlock.SHAPE) == BeltFunnelBlock.Shape.EXTENDED
+					&& funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) == direction.getOpposite())
 					continue;
 
 			flaps.put(direction, new InterpolatedChasingValue().start(.25f)

@@ -16,10 +16,10 @@ public class FluidPipeAttachmentBehaviour extends TileEntityBehaviour {
 	public AttachmentTypes getAttachment(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
 		if (!isPipeConnectedTowards(state, direction))
 			return AttachmentTypes.NONE;
-		
+
 		BlockPos offsetPos = pos.offset(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
-		
+
 		if (facingState.getBlock() instanceof PumpBlock && facingState.get(PumpBlock.FACING)
 			.getAxis() == direction.getAxis())
 			return AttachmentTypes.NONE;
@@ -31,7 +31,7 @@ public class FluidPipeAttachmentBehaviour extends TileEntityBehaviour {
 	}
 
 	public boolean isPipeConnectedTowards(BlockState state, Direction direction) {
-		FluidPipeBehaviour fluidPipeBehaviour = TileEntityBehaviour.get(tileEntity, FluidPipeBehaviour.TYPE);
+		FluidPipeBehaviour fluidPipeBehaviour = tileEntity.getBehaviour(FluidPipeBehaviour.TYPE);
 		if (fluidPipeBehaviour == null)
 			return false;
 		return fluidPipeBehaviour.isConnectedTo(state, direction);

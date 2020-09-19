@@ -93,7 +93,7 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 			removeBehaviour(LinkBehaviour.TYPE);
 			createLink();
 			link.copyItemsFrom(prevlink);
-			putBehaviour(link);
+			attachBehaviourLate(link);
 		}
 
 		if (transmitter)

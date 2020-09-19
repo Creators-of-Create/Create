@@ -25,13 +25,33 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class InvManipulationBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<InvManipulationBehaviour> TYPE = new BehaviourType<>();
-	private InterfaceProvider target;
-	private LazyOptional<IItemHandler> targetCapability;
-	private boolean simulateNext;
+	// Extra types available for multibehaviour
+	public static BehaviourType<InvManipulationBehaviour>
 
+	TYPE = new BehaviourType<>(), EXTRACT = new BehaviourType<>(), INSERT = new BehaviourType<>();
+
+	protected InterfaceProvider target;
+	protected LazyOptional<IItemHandler> targetCapability;
+	protected boolean simulateNext;
+
+	private BehaviourType<InvManipulationBehaviour> behaviourType;
+
+	public static InvManipulationBehaviour forExtraction(SmartTileEntity te, InterfaceProvider target) {
+		return new InvManipulationBehaviour(EXTRACT, te, target);
+	}
+	
+	public static InvManipulationBehaviour forInsertion(SmartTileEntity te, InterfaceProvider target) {
+		return new InvManipulationBehaviour(INSERT, te, target);
+	}
+	
 	public InvManipulationBehaviour(SmartTileEntity te, InterfaceProvider target) {
+		this(TYPE, te, target);
+	}
+
+	private InvManipulationBehaviour(BehaviourType<InvManipulationBehaviour> type, SmartTileEntity te,
+		InterfaceProvider target) {
 		super(te);
+		behaviourType = type;
 		setLazyTickRate(40);
 		this.target = target;
 		this.targetCapability = LazyOptional.empty();
@@ -94,7 +114,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 
 	protected Predicate<ItemStack> getFilterTest(Predicate<ItemStack> customFilter) {
 		Predicate<ItemStack> test = customFilter;
-		FilteringBehaviour filter = get(tileEntity, FilteringBehaviour.TYPE);
+		FilteringBehaviour filter = tileEntity.getBehaviour(FilteringBehaviour.TYPE);
 		if (filter != null)
 			test = customFilter.and(filter::test);
 		return test;
@@ -119,7 +139,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 
 	public int getAmountFromFilter() {
 		int amount = -1;
-		FilteringBehaviour filter = get(tileEntity, FilteringBehaviour.TYPE);
+		FilteringBehaviour filter = tileEntity.getBehaviour(FilteringBehaviour.TYPE);
 		if (filter != null && !filter.anyAmount())
 			amount = filter.getAmount();
 		return amount;
@@ -146,7 +166,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public BehaviourType<?> getType() {
-		return TYPE;
+		return behaviourType;
 	}
 
 	@FunctionalInterface

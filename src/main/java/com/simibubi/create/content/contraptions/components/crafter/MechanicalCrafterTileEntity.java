@@ -111,7 +111,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	public void blockChanged() {
 		removeBehaviour(InvManipulationBehaviour.TYPE);
 		inserting = new InvManipulationBehaviour(this, this::getTargetFace);
-		putBehaviour(inserting);
+		attachBehaviourLate(inserting);
 	}
 
 	public BlockFace getTargetFace(World world, BlockPos pos, BlockState state) {

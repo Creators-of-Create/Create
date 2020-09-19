@@ -360,9 +360,11 @@ public class BeltTileEntity extends KineticTileEntity {
 	private void applyToAllItems(float maxDistanceFromCenter,
 		Function<TransportedItemStack, TransportedResult> processFunction) {
 		BeltTileEntity controller = getControllerTE();
-		if (controller != null)
-			controller.getInventory()
-				.applyToEachWithin(index + .5f, maxDistanceFromCenter, processFunction);
+		if (controller == null)
+			return;
+		BeltInventory inventory = controller.getInventory();
+		if (inventory != null)
+			inventory.applyToEachWithin(index + .5f, maxDistanceFromCenter, processFunction);
 	}
 
 	private Vec3d getWorldPositionOf(TransportedItemStack transported) {

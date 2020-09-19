@@ -158,60 +158,18 @@ public class AirCurrent {
 			bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 			return;
 		}
-
-		World world = source.getWorld();
-		BlockPos start = source.getPos();
+		
 		direction = source.getBlockState()
 			.get(BlockStateProperties.FACING);
 		pushing = source.getAirFlowDirection() == direction;
-		Vec3d directionVec = new Vec3d(direction.getDirectionVec());
-		Vec3d planeVec = VecHelper.axisAlingedPlaneOf(directionVec);
-
-		// 4 Rays test for holes in the shapes blocking the flow
-		float offsetDistance = .25f;
-		Vec3d[] offsets = new Vec3d[] { planeVec.mul(offsetDistance, offsetDistance, offsetDistance),
-			planeVec.mul(-offsetDistance, -offsetDistance, offsetDistance),
-			planeVec.mul(offsetDistance, -offsetDistance, -offsetDistance),
-			planeVec.mul(-offsetDistance, offsetDistance, -offsetDistance), };
-
 		maxDistance = source.getMaxDistance();
-		float limitedDistance = 0;
 
-		// Determine the distance of the air flow
-		Outer: for (int i = 1; i < maxDistance; i++) {
-			BlockPos currentPos = start.offset(direction, i);
-			if (!world.isBlockPresent(currentPos))
-				break;
-			BlockState state = world.getBlockState(currentPos);
-			if (shouldAlwaysPass(state))
-				continue;
-			VoxelShape voxelshape = state.getCollisionShape(world, currentPos, ISelectionContext.dummy());
-			if (voxelshape.isEmpty())
-				continue;
-			if (voxelshape == VoxelShapes.fullCube()) {
-				maxDistance = i - 1;
-				break;
-			}
-
-			for (Vec3d offset : offsets) {
-				Vec3d rayStart = VecHelper.getCenterOf(currentPos)
-					.subtract(directionVec.scale(.5f + 1 / 32f))
-					.add(offset);
-				Vec3d rayEnd = rayStart.add(directionVec.scale(1 + 1 / 32f));
-				BlockRayTraceResult blockraytraceresult =
-					world.rayTraceBlocks(rayStart, rayEnd, currentPos, voxelshape, state);
-				if (blockraytraceresult == null)
-					continue Outer;
-
-				double distance = i - 1 + blockraytraceresult.getHitVec()
-					.distanceTo(rayStart);
-				if (limitedDistance < distance)
-					limitedDistance = (float) distance;
-			}
-
-			maxDistance = limitedDistance;
-			break;
-		}
+		World world = source.getWorld();
+		BlockPos start = source.getPos();
+		float max = this.maxDistance;
+		Direction facing = direction;
+		Vec3d directionVec = new Vec3d(facing.getDirectionVec());
+		maxDistance = getFlowLimit(world, start, max, facing);
 
 		// Determine segments with transported fluids/gases
 		AirCurrentSegment currentSegment = new AirCurrentSegment();
@@ -255,6 +213,57 @@ public class AirCurrent {
 			}
 		}
 		findAffectedHandlers();
+	}
+
+	public static float getFlowLimit(World world, BlockPos start, float max, Direction facing) {
+		Vec3d directionVec = new Vec3d(facing.getDirectionVec());
+		Vec3d planeVec = VecHelper.axisAlingedPlaneOf(directionVec);
+
+		// 4 Rays test for holes in the shapes blocking the flow
+		float offsetDistance = .25f;
+		Vec3d[] offsets = new Vec3d[] { planeVec.mul(offsetDistance, offsetDistance, offsetDistance),
+			planeVec.mul(-offsetDistance, -offsetDistance, offsetDistance),
+			planeVec.mul(offsetDistance, -offsetDistance, -offsetDistance),
+			planeVec.mul(-offsetDistance, offsetDistance, -offsetDistance), };
+
+		float limitedDistance = 0;
+
+		// Determine the distance of the air flow
+		Outer: for (int i = 1; i <= max; i++) {
+			BlockPos currentPos = start.offset(facing, i);
+			if (!world.isBlockPresent(currentPos))
+				break;
+			BlockState state = world.getBlockState(currentPos);
+			if (shouldAlwaysPass(state))
+				continue;
+			VoxelShape voxelshape = state.getCollisionShape(world, currentPos, ISelectionContext.dummy());
+			if (voxelshape.isEmpty())
+				continue;
+			if (voxelshape == VoxelShapes.fullCube()) {
+				max = i - 1;
+				break;
+			}
+
+			for (Vec3d offset : offsets) {
+				Vec3d rayStart = VecHelper.getCenterOf(currentPos)
+					.subtract(directionVec.scale(.5f + 1 / 32f))
+					.add(offset);
+				Vec3d rayEnd = rayStart.add(directionVec.scale(1 + 1 / 32f));
+				BlockRayTraceResult blockraytraceresult =
+					world.rayTraceBlocks(rayStart, rayEnd, currentPos, voxelshape, state);
+				if (blockraytraceresult == null)
+					continue Outer;
+
+				double distance = i - 1 + blockraytraceresult.getHitVec()
+					.distanceTo(rayStart);
+				if (limitedDistance < distance)
+					limitedDistance = (float) distance;
+			}
+			
+			max = limitedDistance;
+			break;
+		}
+		return max;
 	}
 
 	public void findEntities() {

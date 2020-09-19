@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 738",
+	"_": "Missing Localizations: 742",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -837,6 +837,10 @@
 	"create.tooltip.generationSpeed": "UNLOCALIZED: Generates at %1$s %2$s",
 	"create.tooltip.analogStrength": "UNLOCALIZED: Analog Strength: %1$s/15",
 
+	"create.mechanical_arm.extract_from": "UNLOCALIZED: Take items from %1$s",
+	"create.mechanical_arm.deposit_to": "UNLOCALIZED: Deposit items to %1$s",
+	"create.mechanical_arm.points_outside_range": "UNLOCALIZED: %1$s selected interaction point(s) removed due to range limitations.",
+
 	"create.logistics.when_multiple_outputs_available": "UNLOCALIZED: When Multiple Outputs Available",
 
 	"create.mechanical_arm.selection_mode.round_robin": "UNLOCALIZED: Round Robin",
@@ -849,6 +853,7 @@
 	"create.tunnel.selection_mode.forced_round_robin": "UNLOCALIZED: Forced Round Robin",
 	"create.tunnel.selection_mode.prefer_nearest": "UNLOCALIZED: Prefer Nearest",
 	"create.tunnel.selection_mode.randomize": "UNLOCALIZED: Randomize",
+	"create.tunnel.selection_mode.synchronize": "UNLOCALIZED: Synchronize Inputs",
 
 	"create.gui.config.overlay1": "UNLOCALIZED: Hi :)",
 	"create.gui.config.overlay2": "UNLOCALIZED: This is a sample overlay",

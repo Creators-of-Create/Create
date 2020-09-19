@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.particle;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.IParticleFactory;
@@ -8,8 +10,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault

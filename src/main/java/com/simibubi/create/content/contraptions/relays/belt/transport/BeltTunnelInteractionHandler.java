@@ -37,8 +37,7 @@ public class BeltTunnelInteractionHandler {
 			if (nextTunnel instanceof BrassTunnelTileEntity) {
 				BrassTunnelTileEntity brassTunnel = (BrassTunnelTileEntity) nextTunnel;
 				if (brassTunnel.hasDistributionBehaviour()) {
-					if (!brassTunnel.getStackToDistribute()
-						.isEmpty())
+					if (!brassTunnel.canTakeItems())
 						return true;
 					if (onServer) {
 						brassTunnel.setStackToDistribute(current.stack);

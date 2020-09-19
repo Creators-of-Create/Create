@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Jukebox;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedAngle;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -328,6 +329,8 @@ public class ArmTileEntity extends KineticTileEntity {
 	protected void initInteractionPoints() {
 		if (!updateInteractionPoints || interactionPointTag == null)
 			return;
+		if (!world.isAreaLoaded(pos, getRange() + 1))
+			return;
 		inputs.clear();
 		outputs.clear();
 		for (INBT inbt : interactionPointTag) {
@@ -348,16 +351,21 @@ public class ArmTileEntity extends KineticTileEntity {
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
 
-		ListNBT pointsNBT = new ListNBT();
-		inputs.stream()
-			.map(ArmInteractionPoint::serialize)
-			.forEach(pointsNBT::add);
-		outputs.stream()
-			.map(ArmInteractionPoint::serialize)
-			.forEach(pointsNBT::add);
+		if (updateInteractionPoints) {
+			compound.put("InteractionPoints", interactionPointTag);
+
+		} else {
+			ListNBT pointsNBT = new ListNBT();
+			inputs.stream()
+				.map(ArmInteractionPoint::serialize)
+				.forEach(pointsNBT::add);
+			outputs.stream()
+				.map(ArmInteractionPoint::serialize)
+				.forEach(pointsNBT::add);
+			compound.put("InteractionPoints", pointsNBT);
+		}
 
 		NBTHelper.writeEnum(compound, "Phase", phase);
-		compound.put("InteractionPoints", pointsNBT);
 		compound.put("HeldItem", heldItem.serializeNBT());
 		compound.putInt("TargetPointIndex", chasedPointIndex);
 		compound.putFloat("MovementProgress", chasedPointProgress);
@@ -393,6 +401,10 @@ public class ArmTileEntity extends KineticTileEntity {
 			if (previousPoint != null)
 				previousBaseAngle = previousPoint.getTargetAngles(pos, ceiling).baseAngle;
 		}
+	}
+
+	public static int getRange() {
+		return AllConfigs.SERVER.logistics.mechanicalArmRange.get();
 	}
 
 	private class SelectionModeValueBox extends CenteredSideValueBoxTransform {

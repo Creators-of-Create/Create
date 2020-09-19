@@ -1,7 +1,7 @@
 package com.simibubi.create;
 
-import com.simibubi.create.foundation.command.ChunkUtil;
-import net.minecraftforge.common.MinecraftForge;
+import java.util.Random;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,6 +15,7 @@ import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.command.ChunkUtil;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -34,6 +35,7 @@ import net.minecraft.particles.ParticleType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -62,6 +64,7 @@ public class Create {
 	public static TorquePropagator torquePropagator;
 	public static ServerLagger lagger;
 	public static ChunkUtil chunkUtil;
+	public static Random random;
 
 	private static final NonNullLazyValue<CreateRegistrate> registrate = CreateRegistrate.lazy(ID);
 
@@ -87,6 +90,7 @@ public class Create {
 		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
 
 		AllConfigs.register();
+		random = new Random();
 
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.addClientListeners(modEventBus));
 	}
