@@ -1,8 +1,66 @@
 {
-	"parent": "create:block/redstone_link/receiver",
-    "textures": {
-    	"redstone_antenna": "create:block/redstone_antenna_powered",
-        "redstone_bridge": "create:block/redstone_bridge_powered",
-		"particle": "create:block/redstone_bridge_powered"
-    }
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"redstone_antenna": "create:block/redstone_antenna_powered",
+		"particle": "create:block/redstone_bridge_powered",
+		"redstone_bridge": "create:block/redstone_bridge_powered"
+	},
+	"elements": [
+		{
+			"name": "Controller",
+			"from": [2, 0, 2],
+			"to": [14, 3, 14],
+			"faces": {
+				"north": {"uv": [6, 7, 7.5, 13], "rotation": 90, "texture": "#redstone_bridge"},
+				"east": {"uv": [0, 13, 6, 14.5], "texture": "#redstone_bridge"},
+				"south": {"uv": [6, 7, 7.5, 13], "rotation": 90, "texture": "#redstone_bridge"},
+				"west": {"uv": [0, 13, 6, 14.5], "texture": "#redstone_bridge"},
+				"up": {"uv": [0, 7, 6, 13], "rotation": 270, "texture": "#redstone_bridge"},
+				"down": {"uv": [5, 0, 11, 6], "rotation": 90, "texture": "#redstone_bridge"}
+			}
+		},
+		{
+			"name": "AntennaX",
+			"from": [0, 1, 4],
+			"to": [3, 11, 5],
+			"faces": {
+				"north": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
+				"south": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
+				"down": {"uv": [0, 9, 3, 10], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaZ",
+			"from": [1, 1, 3],
+			"to": [2, 11, 6],
+			"faces": {
+				"east": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
+				"west": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaTop",
+			"from": [1, 9, 4],
+			"to": [2, 10, 5],
+			"faces": {
+				"up": {"uv": [1, 1, 2, 2], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "Dish",
+			"from": [-1, 7, 2],
+			"to": [4, 7, 7],
+			"faces": {
+				"up": {"uv": [4, 0, 9, 5], "texture": "#redstone_antenna"},
+				"down": {"uv": [4, 0, 9, 5], "texture": "#redstone_antenna"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [30, 45, 0],
+			"scale": [0.625, 0.625, 0.625]
+		}
+	}
 }

@@ -19,12 +19,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.FireBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Atlases;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.world.ClientWorld;
@@ -126,12 +121,10 @@ public class GuiGameElement {
 		}
 
 		protected void transform() {
-			int verticalFlip = (this instanceof GuiItemRenderBuilder) ? 1 : -1;
-
 			RenderSystem.translated(xBeforeScale, yBeforeScale, 0);
 			RenderSystem.scaled(scale, scale, scale);
 			RenderSystem.translated(x, y, z);
-			RenderSystem.scaled(1, verticalFlip, 1);
+			RenderSystem.scaled(1, -1, 1);
 			RenderSystem.translated(rotationOffset.x, rotationOffset.y, rotationOffset.z);
 			RenderSystem.rotatef((float) zRot, 0, 0, 1);
 			RenderSystem.rotatef((float) xRot, 1, 0, 0);
@@ -257,7 +250,7 @@ public class GuiGameElement {
 
 	public static class GuiItemRenderBuilder extends GuiRenderBuilder {
 
-		private ItemStack stack;
+		private final ItemStack stack;
 
 		public GuiItemRenderBuilder(ItemStack stack) {
 			this.stack = stack;
@@ -271,9 +264,9 @@ public class GuiGameElement {
 		public void render() {
 			prepare();
 			transform();
-			Minecraft.getInstance()
-				.getItemRenderer()
-				.renderItemIntoGUI(stack, 0, 0);
+			RenderSystem.scaled(1, -1, 1);
+			RenderSystem.translated(0, 0, -75);
+			Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(stack, 0, 0);
 			cleanUp();
 		}
 

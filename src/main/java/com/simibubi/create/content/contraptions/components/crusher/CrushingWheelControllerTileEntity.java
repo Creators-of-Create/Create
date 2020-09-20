@@ -191,7 +191,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 			inventory.clear();
 			for (int roll = 0; roll < rolls; roll++) {
 				List<ItemStack> rolledResults = recipe.get()
-					.rollResults().getItemStacks();
+					.rollResults();
 				for (int i = 0; i < rolledResults.size(); i++) {
 					ItemStack stack = rolledResults.get(i);
 					ItemHelper.addToList(stack, list);
@@ -215,19 +215,17 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		if (hasEntity())
 			compound.put("Entity", NBTUtil.writeUniqueId(entityUUID));
 		compound.put("Inventory", inventory.serializeNBT());
 		compound.putFloat("Speed", crushingspeed);
-
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
-		super.read(compound);
-
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		if (compound.contains("Entity") && !isFrozen() && !isOccupied()) {
 			entityUUID = NBTUtil.readUniqueId(compound.getCompound("Entity"));
 			this.searchForEntity = true;

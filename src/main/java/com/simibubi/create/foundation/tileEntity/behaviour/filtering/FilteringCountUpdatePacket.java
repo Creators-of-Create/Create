@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.tileEntity.behaviour.filtering;
 
 import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
@@ -32,7 +31,7 @@ public class FilteringCountUpdatePacket extends TileEntityConfigurationPacket<Sm
 
 	@Override
 	protected void applySettings(SmartTileEntity te) {
-		FilteringBehaviour behaviour = TileEntityBehaviour.get(te, FilteringBehaviour.TYPE);
+		FilteringBehaviour behaviour = te.getBehaviour(FilteringBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 		behaviour.forceClientState = true;

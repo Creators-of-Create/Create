@@ -5,11 +5,15 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.ClientMotionPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionInteractionPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueEffectPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingCreationPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingSyncPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.PersistantDataPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.PersistantDataPacketRequest;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripInteractionPacket;
@@ -49,6 +53,8 @@ public enum AllPackets {
 	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket::new),
 	CLIENT_MOTION(ClientMotionPacket.class, ClientMotionPacket::new),
 	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new),
+	MINECART_COUPLING_CREATION(MinecartCouplingCreationPacket.class, MinecartCouplingCreationPacket::new),
+	PERSISTANT_DATA_REQUEST(PersistantDataPacketRequest.class, PersistantDataPacketRequest::new),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),
@@ -57,7 +63,9 @@ public enum AllPackets {
 	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
 	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new),
 	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket::new),
+	MINECART_COUPLING_SYNC(MinecartCouplingSyncPacket.class, MinecartCouplingSyncPacket::new),
 	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new),
+	PERSISTANT_DATA(PersistantDataPacket.class, PersistantDataPacket::new),
 	
 	;
 

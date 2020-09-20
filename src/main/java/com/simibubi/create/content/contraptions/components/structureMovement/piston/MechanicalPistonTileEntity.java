@@ -29,15 +29,15 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	public void read(CompoundNBT tag) {
-		extensionLength = tag.getInt("ExtensionLength");
-		super.read(tag);
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		extensionLength = compound.getInt("ExtensionLength");
+		super.read(compound, clientPacket);
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag) {
+	protected void write(CompoundNBT tag, boolean clientPacket) {
 		tag.putInt("ExtensionLength", extensionLength);
-		return super.write(tag);
+		super.write(tag, clientPacket);
 	}
 
 	@Override

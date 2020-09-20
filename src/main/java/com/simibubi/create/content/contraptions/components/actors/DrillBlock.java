@@ -3,8 +3,6 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.Block;
@@ -25,10 +23,13 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class DrillBlock extends DirectionalKineticBlock implements IPortableBlock, ITE<DrillTileEntity> {
+import javax.annotation.ParametersAreNonnullByDefault;
+import mcp.MethodsReturnNonnullByDefault;
 
-	public static MovementBehaviour MOVEMENT = new DrillMovementBehaviour();
-	public static DamageSource damageSourceDrill = new DamageSource("create.drill").setDamageBypassesArmor();
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTileEntity> {
+	public static DamageSource damageSourceDrill = new DamageSource("create.mechanical_drill").setDamageBypassesArmor();
 
 	public DrillBlock(Properties properties) {
 		super(properties);
@@ -48,7 +49,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IPortableBloc
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.getSpeed() == 0)
 				return;
-			entityIn.attackEntityFrom(damageSourceDrill, MathHelper.clamp(Math.abs(te.getSpeed() / 32f) + 1, 0, 20));
+			entityIn.attackEntityFrom(damageSourceDrill, (float) getDamage(te.getSpeed()));
 		});
 	}
 
@@ -84,13 +85,15 @@ public class DrillBlock extends DirectionalKineticBlock implements IPortableBloc
 	}
 
 	@Override
-	public MovementBehaviour getMovementBehaviour() {
-		return MOVEMENT;
-	}
-
-	@Override
 	public Class<DrillTileEntity> getTileEntityClass() {
 		return DrillTileEntity.class;
 	}
 
+	public static double getDamage(float speed) {
+		float speedAbs = Math.abs(speed);
+		double sub1 = Math.min(speedAbs / 16, 2);
+		double sub2 = Math.min(speedAbs / 32, 4);
+		double sub3 = Math.min(speedAbs / 64, 4);
+		return MathHelper.clamp(sub1 + sub2 + sub3, 1, 10);
+	}
 }

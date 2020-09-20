@@ -106,12 +106,13 @@ public class ContraptionRenderer {
 			for (MatrixStack m : matrixStacks) {
 				m.push();
 				MatrixStacker.of(m)
-				.translate(blockInfo.pos);
+					.translate(blockInfo.pos);
 			}
-			
-			Contraption.getMovement(blockInfo.state)
-				.renderInContraption(context, ms, msLocal, buffer);
-			
+
+			MovementBehaviour movementBehaviour = Contraption.getMovement(blockInfo.state);
+			if (movementBehaviour != null)
+				movementBehaviour.renderInContraption(context, ms, msLocal, buffer);
+
 			for (MatrixStack m : matrixStacks)
 				m.pop();
 		}

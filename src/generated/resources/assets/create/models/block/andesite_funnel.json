@@ -1,9 +1,9 @@
 {
   "parent": "create:block/funnel/block",
   "textures": {
-    "2": "create:block/andesite_funnel_back",
-    "3": "create:block/andesite_funnel",
-    "4": "create:block/andesite_funnel_plating",
-    "particle": "create:block/andesite_casing"
+    "0": "create:block/andesite_funnel_plating",
+    "1": "create:block/andesite_casing",
+    "2": "create:block/andesite_funnel",
+    "3": "create:block/andesite_funnel_back"
   }
 }

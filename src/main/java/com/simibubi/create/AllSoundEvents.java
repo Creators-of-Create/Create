@@ -44,7 +44,7 @@ public enum AllSoundEvents implements IDataProvider {
 	AllSoundEvents() {
 		id = Lang.asId(name());
 	}
-	
+
 	AllSoundEvents(String name) {
 		id = name;
 	}
@@ -65,7 +65,7 @@ public enum AllSoundEvents implements IDataProvider {
 		return id;
 	}
 
-	public AllSoundEvents generator(DataGenerator generator){
+	public AllSoundEvents generator(DataGenerator generator) {
 		this.generator = generator;
 		return this;
 	}
@@ -83,7 +83,9 @@ public enum AllSoundEvents implements IDataProvider {
 	}
 
 	public void generate(Path path, DirectoryCache cache) {
-		Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
+		Gson GSON = (new GsonBuilder()).setPrettyPrinting()
+			.disableHtmlEscaping()
+			.create();
 		path = path.resolve("assets/create");
 
 		try {
@@ -94,7 +96,8 @@ public enum AllSoundEvents implements IDataProvider {
 				if (soundEvent.child != null) {
 					// wrapper
 					JsonObject s = new JsonObject();
-					s.addProperty("name", soundEvent.child.getName().toString());
+					s.addProperty("name", soundEvent.child.getName()
+						.toString());
 					s.addProperty("type", "event");
 					arr.add(s);
 				} else {
@@ -120,6 +123,6 @@ public enum AllSoundEvents implements IDataProvider {
 
 	@Override
 	public String getName() {
-		return null;
+		return "Create's Custom Sound: " + name();
 	}
 }

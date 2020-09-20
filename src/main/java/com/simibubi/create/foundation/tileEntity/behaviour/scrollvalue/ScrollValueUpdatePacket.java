@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 
 import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
@@ -32,7 +31,7 @@ public class ScrollValueUpdatePacket extends TileEntityConfigurationPacket<Smart
 
 	@Override
 	protected void applySettings(SmartTileEntity te) {
-		ScrollValueBehaviour behaviour = TileEntityBehaviour.get(te, ScrollValueBehaviour.TYPE);
+		ScrollValueBehaviour behaviour = te.getBehaviour(ScrollValueBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 		behaviour.setValue(value);

@@ -1,39 +1,39 @@
 {
   "variants": {
-    "facing=down,shape=start": {
-      "model": "create:block/chute/block_windowed"
+    "facing=down,shape=intersection": {
+      "model": "create:block/chute/block_intersection"
     },
-    "facing=north,shape=start": {
-      "model": "create:block/chute/block_diagonal_start",
+    "facing=north,shape=intersection": {
+      "model": "create:block/chute/block_diagonal_intersection",
       "y": 180
     },
-    "facing=south,shape=start": {
-      "model": "create:block/chute/block_diagonal_start"
+    "facing=south,shape=intersection": {
+      "model": "create:block/chute/block_diagonal_intersection"
     },
-    "facing=west,shape=start": {
-      "model": "create:block/chute/block_diagonal_start",
+    "facing=west,shape=intersection": {
+      "model": "create:block/chute/block_diagonal_intersection",
       "y": 90
     },
-    "facing=east,shape=start": {
-      "model": "create:block/chute/block_diagonal_start",
+    "facing=east,shape=intersection": {
+      "model": "create:block/chute/block_diagonal_intersection",
       "y": 270
     },
-    "facing=down,shape=window_straight": {
+    "facing=down,shape=window": {
       "model": "create:block/chute/block_windowed"
     },
-    "facing=north,shape=window_straight": {
-      "model": "create:block/chute/block_diagonal_straight",
+    "facing=north,shape=window": {
+      "model": "create:block/chute/block_diagonal",
       "y": 180
     },
-    "facing=south,shape=window_straight": {
-      "model": "create:block/chute/block_diagonal_straight"
+    "facing=south,shape=window": {
+      "model": "create:block/chute/block_diagonal"
     },
-    "facing=west,shape=window_straight": {
-      "model": "create:block/chute/block_diagonal_straight",
+    "facing=west,shape=window": {
+      "model": "create:block/chute/block_diagonal",
       "y": 90
     },
-    "facing=east,shape=window_straight": {
-      "model": "create:block/chute/block_diagonal_straight",
+    "facing=east,shape=window": {
+      "model": "create:block/chute/block_diagonal",
       "y": 270
     },
     "facing=down,shape=normal": {

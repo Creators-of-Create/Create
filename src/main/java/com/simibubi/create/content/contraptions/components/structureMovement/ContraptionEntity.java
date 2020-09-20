@@ -6,7 +6,10 @@ import static com.simibubi.create.foundation.utility.AngleHelper.getShortestAngl
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -16,6 +19,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCoupling;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingHandler;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -29,6 +35,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.item.HangingEntity;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -73,10 +80,17 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	protected boolean stationary;
 	protected boolean initialized;
 	final List<Entity> collidingEntities = new ArrayList<>();
+	private boolean isSerializingFurnaceCart;
+	private boolean attachedExtraInventories;
 
 	private static final Ingredient FUEL_ITEMS = Ingredient.fromItems(Items.COAL, Items.CHARCOAL);
 	private static final DataParameter<Boolean> STALLED =
 		EntityDataManager.createKey(ContraptionEntity.class, DataSerializers.BOOLEAN);
+
+	private static final DataParameter<Optional<UUID>> COUPLING =
+		EntityDataManager.createKey(ContraptionEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+	private static final DataParameter<Optional<UUID>> COUPLED_CART =
+		EntityDataManager.createKey(ContraptionEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
 	public float prevYaw;
 	public float prevPitch;
@@ -94,6 +108,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		super(entityTypeIn, worldIn);
 		motionBeforeStall = Vector3d.ZERO;
 		stationary = entityTypeIn == AllEntityTypes.STATIONARY_CONTRAPTION.get();
+		isSerializingFurnaceCart = false;
+		attachedExtraInventories = false;
 		forcedAngle = -1;
 	}
 
@@ -198,7 +214,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			return;
 		callback.accept(passenger, transformedVector.x, transformedVector.y, transformedVector.z);
 	}
-	
+
 	protected Vector3d getPassengerPosition(Entity passenger) {
 		AxisAlignedBB bb = passenger.getBoundingBox();
 		double ySize = bb.getYSize();
@@ -308,36 +324,69 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public void tickAsPassenger(Entity e) {
 		boolean rotationLock = false;
 		boolean pauseWhileRotating = false;
-
-		if (contraption instanceof MountedContraption) {
-			rotationLock = ((MountedContraption) contraption).rotationMode == CartMovementMode.ROTATION_LOCKED;
-			pauseWhileRotating = ((MountedContraption) contraption).rotationMode == CartMovementMode.ROTATE_PAUSED;
-		}
+		boolean rotating = false;
 
 		Entity riding = e;
 		while (riding.getRidingEntity() != null)
 			riding = riding.getRidingEntity();
-		Vector3d movementVector = riding.getMotion();
-		if (riding instanceof BoatEntity)
-			movementVector = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
-		Vector3d motion = movementVector.normalize();
-		boolean rotating = false;
+		if (!attachedExtraInventories) {
+			contraption.addExtraInventories(riding);
+			attachedExtraInventories = true;
+		}
 
-		if (!rotationLock) {
-			if (motion.length() > 0) {
-				targetYaw = yawFromVector(motion);
-				if (targetYaw < 0)
-					targetYaw += 360;
-				if (yaw < 0)
-					yaw += 360;
+		boolean isOnCoupling = false;
+		if (contraption instanceof MountedContraption) {
+			MountedContraption mountedContraption = (MountedContraption) contraption;
+			UUID couplingId = getCouplingId();
+			isOnCoupling = couplingId != null && riding instanceof AbstractMinecartEntity;
+			if (isOnCoupling) {
+				MinecartCoupling coupling = MinecartCouplingHandler.getCoupling(world, couplingId);
+				if (coupling != null && coupling.areBothEndsPresent()) {
+					boolean notOnMainCart = !coupling.getId()
+						.equals(riding.getUniqueID());
+					Vec3d positionVec = coupling.asCouple()
+						.get(notOnMainCart)
+						.getPositionVec();
+					prevYaw = yaw;
+					prevPitch = pitch;
+					double diffZ = positionVec.z - riding.getZ();
+					double diffX = positionVec.x - riding.getX();
+					yaw = (float) (MathHelper.atan2(diffZ, diffX) * 180 / Math.PI);
+					pitch = (float) (Math.atan2(positionVec.y - getY(), Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180
+						/ Math.PI);
+
+					if (notOnMainCart) {
+						yaw += 180;
+					}
+				}
 			}
 
-			prevYaw = yaw;
-			yaw = angleLerp(0.4f, yaw, targetYaw);
-			if (Math.abs(AngleHelper.getShortestAngleDiff(yaw, targetYaw)) < 1f)
-				yaw = targetYaw;
-			else
-				rotating = true;
+			rotationLock = mountedContraption.rotationMode == CartMovementMode.ROTATION_LOCKED;
+			pauseWhileRotating = mountedContraption.rotationMode == CartMovementMode.ROTATE_PAUSED;
+		}
+
+		Vec3d movementVector = riding.getMotion();
+		if (!isOnCoupling) {
+			if (riding instanceof BoatEntity)
+				movementVector = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
+			Vec3d motion = movementVector.normalize();
+
+			if (!rotationLock) {
+				if (motion.length() > 0) {
+					targetYaw = yawFromVector(motion);
+					if (targetYaw < 0)
+						targetYaw += 360;
+					if (yaw < 0)
+						yaw += 360;
+				}
+
+				prevYaw = yaw;
+				yaw = angleLerp(0.4f, yaw, targetYaw);
+				if (Math.abs(AngleHelper.getShortestAngleDiff(yaw, targetYaw)) < 1f)
+					yaw = targetYaw;
+				else
+					rotating = true;
+			}
 		}
 
 		boolean wasStalled = isStalled();
@@ -356,7 +405,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 		if (!isStalled() && (riding instanceof FurnaceMinecartEntity)) {
 			FurnaceMinecartEntity furnaceCart = (FurnaceMinecartEntity) riding;
+
+			// Notify to not trigger serialization side-effects
+			isSerializingFurnaceCart = true;
 			CompoundNBT nbt = furnaceCart.serializeNBT();
+			isSerializingFurnaceCart = false;
+
 			int fuel = nbt.getInt("Fuel");
 			int fuelBefore = fuel;
 			double pushX = nbt.getDouble("PushX");
@@ -415,6 +469,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 			boolean newPosVisited = false;
 			BlockPos gridPosition = new BlockPos(actorPosition);
+			Vec3d oldMotion = context.motion;
 
 			if (!context.stall) {
 				Vector3d previousPosition = context.position;
@@ -431,7 +486,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 					BearingContraption bc = (BearingContraption) getContraption();
 					Direction facing = bc.getFacing();
 					Vector3d activeAreaOffset = actor.getActiveAreaOffset(context);
-					if (activeAreaOffset.mul(VecHelper.planeByNormal(Vector3d.of(facing.getDirectionVec())))
+					if (activeAreaOffset.mul(VecHelper.axisAlingedPlaneOf(new Vec3d(facing.getDirectionVec())))
 						.equals(Vector3d.ZERO)) {
 						if (VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis())) {
 							context.motion = Vector3d.of(facing.getDirectionVec()).scale(facing.getAxis()
@@ -456,6 +511,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 					actor.visitNewPosition(context, gridPosition);
 					context.firstMovement = false;
 				}
+				if (!oldMotion.equals(context.motion))
+					actor.onSpeedChanged(context, oldMotion, context.motion);
 				actor.tick(context);
 				contraption.stalled |= context.stall;
 			}
@@ -551,6 +608,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	@Override
 	protected void registerData() {
 		this.dataManager.register(STALLED, false);
+		this.dataManager.register(COUPLING, Optional.empty());
+		this.dataManager.register(COUPLED_CART, Optional.empty());
 	}
 
 	@Override
@@ -569,6 +628,14 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		}
 		if (compound.contains("Controller"))
 			controllerPos = NBTUtil.readBlockPos(compound.getCompound("Controller"));
+
+		if (compound.contains("OnCoupling")) {
+			setCouplingId(NBTUtil.readUniqueId(compound.getCompound("OnCoupling")));
+			setCoupledCart(NBTUtil.readUniqueId(compound.getCompound("CoupledCart")));
+		} else {
+			setCouplingId(null);
+			setCoupledCart(null);
+		}
 	}
 
 	public void forceYaw(float forcedYaw) {
@@ -607,6 +674,11 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		compound.putFloat("InitialAngle", initialAngle);
 		compound.putBoolean("Stalled", isStalled());
 		compound.putBoolean("Initialized", initialized);
+
+		if (getCouplingId() != null) {
+			compound.put("OnCoupling", NBTUtil.writeUniqueId(getCouplingId()));
+			compound.put("CoupledCart", NBTUtil.writeUniqueId(getCoupledCart()));
+		}
 	}
 
 	@Override
@@ -676,6 +748,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	@SuppressWarnings("deprecation")
 	@Override
 	public CompoundNBT writeWithoutTypeId(CompoundNBT nbt) {
+		if (isSerializingFurnaceCart)
+			return nbt;
+
 		Vector3d vec = getPositionVec();
 		List<Entity> passengers = getPassengers();
 
@@ -795,6 +870,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			return false;
 		if (e instanceof HangingEntity)
 			return false;
+		if (e instanceof AbstractMinecartEntity)
+			return false;
 		if (e instanceof SuperGlueEntity)
 			return false;
 		if (e instanceof SeatEntity)
@@ -812,6 +889,26 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		}
 
 		return e.getPushReaction() == PushReaction.NORMAL;
+	}
+
+	@Nullable
+	public UUID getCouplingId() {
+		Optional<UUID> uuid = dataManager.get(COUPLING);
+		return uuid == null ? null : uuid.isPresent() ? uuid.get() : null;
+	}
+
+	public void setCouplingId(UUID id) {
+		dataManager.set(COUPLING, Optional.ofNullable(id));
+	}
+
+	@Nullable
+	public UUID getCoupledCart() {
+		Optional<UUID> uuid = dataManager.get(COUPLED_CART);
+		return uuid.isPresent() ? uuid.get() : null;
+	}
+
+	public void setCoupledCart(UUID id) {
+		dataManager.set(COUPLED_CART, Optional.ofNullable(id));
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics;
 
+import static com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.getHeatLevelOf;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,11 +9,12 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
-import com.simibubi.create.content.contraptions.processing.HeaterBlock;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.block.BlockState;
@@ -40,8 +43,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-import static com.simibubi.create.content.contraptions.processing.HeaterBlock.getHeaterLevel;
-
 public class InWorldProcessing {
 
 	public static class SplashingInv extends RecipeWrapper {
@@ -63,9 +64,11 @@ public class InWorldProcessing {
 			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			if (blockState.getBlock() == Blocks.FIRE
-				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT)) || getHeaterLevel(blockState) == HeaterBlock.HeatLevel.SMOULDERING)
+				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT))
+				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
-			if (blockState.getBlock() == Blocks.LAVA || getHeaterLevel(blockState).min(HeaterBlock.HeatLevel.FADING))
+			if (blockState.getBlock() == Blocks.LAVA
+				|| getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 				return Type.BLASTING;
 			return null;
 		}
@@ -140,8 +143,8 @@ public class InWorldProcessing {
 		}
 	}
 
-	public static List<TransportedItemStack> applyProcessing(TransportedItemStack transported,
-		World world, Type type) {
+	public static TransportedResult applyProcessing(TransportedItemStack transported, World world, Type type) {
+		TransportedResult ignore = TransportedResult.doNothing();
 		if (transported.processedBy != type) {
 			transported.processedBy = type;
 			int timeModifierForStackSize = ((transported.stack.getCount() - 1) / 16) + 1;
@@ -150,16 +153,16 @@ public class InWorldProcessing {
 			transported.processingTime = processingTime;
 			if (!canProcess(transported.stack, type, world))
 				transported.processingTime = -1;
-			return null;
+			return ignore;
 		}
 		if (transported.processingTime == -1)
-			return null;
+			return ignore;
 		if (transported.processingTime-- > 0)
-			return null;
+			return ignore;
 
 		List<ItemStack> stacks = process(transported.stack, type, world);
 		if (stacks == null)
-			return null;
+			return ignore;
 
 		List<TransportedItemStack> transportedStacks = new ArrayList<>();
 		for (ItemStack additional : stacks) {
@@ -167,7 +170,7 @@ public class InWorldProcessing {
 			newTransported.stack = additional.copy();
 			transportedStacks.add(newTransported);
 		}
-		return transportedStacks;
+		return TransportedResult.convertTo(transportedStacks);
 	}
 
 	private static List<ItemStack> process(ItemStack stack, Type type, World world) {
@@ -266,7 +269,7 @@ public class InWorldProcessing {
 		if (recipe instanceof ProcessingRecipe) {
 			stacks = new ArrayList<>();
 			for (int i = 0; i < stackIn.getCount(); i++) {
-				List<ItemStack> rollResults = ((ProcessingRecipe<?>) recipe).rollResults().getItemStacks();
+				List<ItemStack> rollResults = ((ProcessingRecipe<?>) recipe).rollResults();
 				for (ItemStack stack : rollResults) {
 					for (ItemStack previouslyRolled : stacks) {
 						if (stack.isEmpty())

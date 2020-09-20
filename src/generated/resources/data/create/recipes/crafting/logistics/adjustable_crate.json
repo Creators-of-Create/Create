@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    "B B",
+    "BBB"
+  ],
+  "key": {
+    "B": {
+      "item": "create:brass_casing"
+    }
+  },
+  "result": {
+    "item": "create:adjustable_crate",
+    "count": 4
+  }
+}

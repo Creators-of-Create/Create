@@ -2,15 +2,88 @@ package com.simibubi.create.foundation.fluid;
 
 import javax.annotation.Nullable;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.simibubi.create.Create;
+
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidHelper {
 
 	public static enum FluidExchange {
 		ITEM_TO_TANK, TANK_TO_ITEM;
+	}
+
+	public static boolean isWater(Fluid fluid) {
+		return convertToStill(fluid) == Fluids.WATER;
+	}
+
+	public static boolean isLava(Fluid fluid) {
+		return convertToStill(fluid) == Fluids.LAVA;
+	}
+
+	public static Fluid convertToFlowing(Fluid fluid) {
+		if (fluid == Fluids.WATER)
+			return Fluids.FLOWING_WATER;
+		if (fluid == Fluids.LAVA)
+			return Fluids.FLOWING_LAVA;
+		if (fluid instanceof ForgeFlowingFluid)
+			return ((ForgeFlowingFluid) fluid).getFlowingFluid();
+		return fluid;
+	}
+
+	public static Fluid convertToStill(Fluid fluid) {
+		if (fluid == Fluids.FLOWING_WATER)
+			return Fluids.WATER;
+		if (fluid == Fluids.FLOWING_LAVA)
+			return Fluids.LAVA;
+		if (fluid instanceof ForgeFlowingFluid)
+			return ((ForgeFlowingFluid) fluid).getStillFluid();
+		return fluid;
+	}
+
+	public static JsonElement serializeFluidStack(FluidStack stack) {
+		JsonObject json = new JsonObject();
+		json.addProperty("fluid", stack.getFluid()
+			.getRegistryName()
+			.toString());
+		json.addProperty("amount", stack.getAmount());
+		if (stack.hasTag())
+			json.addProperty("nbt", stack.getTag()
+				.toString());
+		return json;
+	}
+
+	public static FluidStack deserializeFluidStack(JsonObject json) {
+		ResourceLocation id = new ResourceLocation(JSONUtils.getString(json, "fluid"));
+		Fluid fluid = ForgeRegistries.FLUIDS.getValue(id);
+		if (fluid == null)
+			throw new JsonSyntaxException("Unknown fluid '" + id + "'");
+		int amount = JSONUtils.getInt(json, "amount");
+		FluidStack stack = new FluidStack(fluid, amount);
+
+		try {
+			JsonElement element = json.get("nbt");
+			stack.setTag(JsonToNBT.getTagFromJson(
+				element.isJsonObject() ? Create.GSON.toJson(element) : JSONUtils.getString(element, "nbt")));
+
+		} catch (CommandSyntaxException e) {
+			e.printStackTrace();
+		}
+
+		return stack;
 	}
 
 	@Nullable

@@ -1,0 +1,17 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:block/encased_fluid_pipe",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create:block/encased_fluid_pipe"
+    },
+    "axis=z": {
+      "model": "create:block/encased_fluid_pipe",
+      "x": 90,
+      "y": 180
+    }
+  }
+}

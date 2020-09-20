@@ -21,6 +21,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
@@ -146,9 +147,9 @@ public abstract class Contraption {
 
 	protected static MovementBehaviour getMovement(BlockState state) {
 		Block block = state.getBlock();
-		if (!(block instanceof IPortableBlock))
+		if (!AllMovementBehaviours.hasMovementBehaviour(block))
 			return null;
-		return ((IPortableBlock) block).getMovementBehaviour();
+		return AllMovementBehaviours.getMovementBehaviour(block);
 	}
 
 	public Set<BlockPos> getColliders(World world, Direction movementDirection) {
@@ -234,7 +235,7 @@ public abstract class Contraption {
 			return true;
 		if (!BlockMovementTraits.movementNecessary(world, pos))
 			return true;
-		if (!BlockMovementTraits.movementAllowed(world, pos))
+		if (!movementAllowed(world, pos))
 			return false;
 		BlockState state = world.getBlockState(pos);
 		if (isChassis(state) && !moveChassis(world, pos, forcedDirection, frontier, visited))
@@ -344,7 +345,7 @@ public abstract class Contraption {
 			BlockState blockState = world.getBlockState(offsetPos);
 			if (isAnchoringBlockAt(offsetPos))
 				continue;
-			if (!BlockMovementTraits.movementAllowed(world, offsetPos)) {
+			if (!movementAllowed(world, offsetPos)) {
 				if (offset == forcedDirection && isSlimeBlock)
 					return false;
 				continue;
@@ -365,6 +366,10 @@ public abstract class Contraption {
 
 		add(pos, capture(world, pos));
 		return blocks.size() <= AllConfigs.SERVER.kinetics.maxBlocksMoved.get();
+	}
+
+	protected boolean movementAllowed(World world, BlockPos pos) {
+		return BlockMovementTraits.movementAllowed(world, pos);
 	}
 
 	protected boolean isAnchoringBlockAt(BlockPos pos) {
@@ -435,7 +440,7 @@ public abstract class Contraption {
 		TileEntity te = pair.getValue();
 		if (te != null && MountedStorage.canUseAsStorage(te))
 			storage.put(localPos, new MountedStorage(te));
-		if (captured.state.getBlock() instanceof IPortableBlock)
+		if (AllMovementBehaviours.hasMovementBehaviour(captured.state.getBlock()))
 			actors.add(MutablePair.of(blockInfo, null));
 	}
 
@@ -459,7 +464,8 @@ public abstract class Contraption {
 					else
 						renderOrder.add(0, info.pos);
 					CompoundNBT tag = info.nbt;
-					if (tag == null || block instanceof IPortableBlock)
+					MovementBehaviour movementBehaviour = AllMovementBehaviours.getMovementBehaviour(block);
+					if (tag == null || (movementBehaviour != null && movementBehaviour.hasSpecialMovementRenderer()))
 						return;
 
 					tag.putInt("x", info.pos.getX());
@@ -467,6 +473,8 @@ public abstract class Contraption {
 					tag.putInt("z", info.pos.getZ());
 
 					TileEntity te = TileEntity.create(tag);
+					if (te == null)
+						return;
 					te.setLocation(new WrappedWorld(world) {
 
 						@Override
@@ -495,35 +503,28 @@ public abstract class Contraption {
 			});
 
 		superglue.clear();
-		nbt.getList("Superglue", 10)
-			.forEach(c -> {
-				CompoundNBT comp = (CompoundNBT) c;
-				superglue.add(Pair.of(NBTUtil.readBlockPos(comp.getCompound("Pos")),
-					Direction.byIndex(comp.getByte("Direction"))));
-			});
+		NBTHelper.iterateCompoundList(nbt.getList("Superglue", NBT.TAG_COMPOUND), c -> superglue
+			.add(Pair.of(NBTUtil.readBlockPos(c.getCompound("Pos")), Direction.byIndex(c.getByte("Direction")))));
+
+		seats.clear();
+		NBTHelper.iterateCompoundList(nbt.getList("Seats", NBT.TAG_COMPOUND), c -> seats.add(NBTUtil.readBlockPos(c)));
+
+		seatMapping.clear();
+		NBTHelper.iterateCompoundList(nbt.getList("Passengers", NBT.TAG_COMPOUND),
+			c -> seatMapping.put(NBTUtil.readUniqueId(c.getCompound("Id")), c.getInt("Seat")));
 
 		storage.clear();
-		nbt.getList("Storage", 10)
-			.forEach(c -> {
-				CompoundNBT comp = (CompoundNBT) c;
-				storage.put(NBTUtil.readBlockPos(comp.getCompound("Pos")),
-					new MountedStorage(comp.getCompound("Data")));
-			});
-		List<IItemHandlerModifiable> list = storage.values()
-			.stream()
-			.map(MountedStorage::getItemHandler)
-			.collect(Collectors.toList());
-		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
+		NBTHelper.iterateCompoundList(nbt.getList("Storage", NBT.TAG_COMPOUND), c -> storage
+			.put(NBTUtil.readBlockPos(c.getCompound("Pos")), MountedStorage.deserialize(c.getCompound("Data"))));
+
+		IItemHandlerModifiable[] handlers = new IItemHandlerModifiable[storage.size()];
+		int index = 0;
+		for (MountedStorage mountedStorage : storage.values())
+			handlers[index++] = mountedStorage.getItemHandler();
+		inventory = new CombinedInvWrapper(handlers);
 
 		if (nbt.contains("BoundsFront"))
 			bounds = NBTHelper.readAABB(nbt.getList("BoundsFront", 5));
-
-		getSeats().clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Seats", NBT.TAG_COMPOUND),
-			c -> getSeats().add(NBTUtil.readBlockPos(c)));
-		getSeatMapping().clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Passengers", NBT.TAG_COMPOUND),
-			c -> getSeatMapping().put(NBTUtil.readUniqueId(c.getCompound("Id")), c.getInt("Seat")));
 
 		stalled = nbt.getBoolean("Stalled");
 		anchor = NBTUtil.readBlockPos(nbt.getCompound("Anchor"));
@@ -564,7 +565,7 @@ public abstract class Contraption {
 		for (BlockPos pos : storage.keySet()) {
 			CompoundNBT c = new CompoundNBT();
 			MountedStorage mountedStorage = storage.get(pos);
-			if (!mountedStorage.isWorking())
+			if (!mountedStorage.isValid())
 				continue;
 			c.put("Pos", NBTUtil.writeBlockPos(pos));
 			c.put("Data", mountedStorage.serialize());
@@ -604,7 +605,7 @@ public abstract class Contraption {
 
 	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
 		storage.values()
-			.forEach(MountedStorage::empty);
+			.forEach(MountedStorage::removeStorageFromWorld);
 		glueToRemove.forEach(SuperGlueEntity::remove);
 
 		for (boolean brittles : Iterate.trueAndFalse) {
@@ -702,8 +703,8 @@ public abstract class Contraption {
 
 					if (storage.containsKey(block.pos)) {
 						MountedStorage mountedStorage = storage.get(block.pos);
-						if (mountedStorage.isWorking())
-							mountedStorage.fill(tileEntity);
+						if (mountedStorage.isValid())
+							mountedStorage.addStorageToWorld(tileEntity);
 					}
 				}
 			}
@@ -789,7 +790,7 @@ public abstract class Contraption {
 
 		Vector3d vec = Vector3d.of(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
 			.getDirectionVec());
-		Vector3d planeByNormal = VecHelper.planeByNormal(vec);
+		Vector3d planeByNormal = VecHelper.axisAlingedPlaneOf(vec);
 		Vector3d min = vec.mul(bb.minX, bb.minY, bb.minZ)
 			.add(planeByNormal.scale(-maxDiff));
 		Vector3d max = vec.mul(bb.maxX, bb.maxY, bb.maxZ)
@@ -812,8 +813,13 @@ public abstract class Contraption {
 		return seatMapping;
 	}
 
+	public void setSeatMapping(Map<UUID, Integer> seatMapping) {
+		this.seatMapping = seatMapping;
+	}
+
 	public List<BlockPos> getSeats() {
 		return seats;
 	}
 
+	public void addExtraInventories(Entity entity) {};
 }

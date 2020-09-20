@@ -53,30 +53,21 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-		return super.writeToClient(compound);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		super.readClientUpdate(tag);
-		visualSpeed.withSpeed(1 / 32f).target(getGeneratedSpeed());
-	}
-
-	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putFloat("GeneratedSpeed", generatedSpeed);
 		compound.putFloat("GeneratedCapacity", generatedCapacity);
 		compound.putInt("Cooldown", stoppingCooldown);
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		generatedSpeed = compound.getFloat("GeneratedSpeed");
 		generatedCapacity = compound.getFloat("GeneratedCapacity");
 		stoppingCooldown = compound.getInt("Cooldown");
-		super.read(compound);
+		super.read(compound, clientPacket);
+		if (clientPacket)
+			visualSpeed.withSpeed(1 / 32f).target(getGeneratedSpeed());
 	}
 
 	@Override

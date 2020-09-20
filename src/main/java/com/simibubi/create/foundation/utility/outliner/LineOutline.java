@@ -20,7 +20,7 @@ public class LineOutline extends Outline {
 
 	@Override
 	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
-		renderAACuboidLine(ms, buffer, start, end);
+		renderCuboidLine(ms, buffer, start, end);
 	}
 
 	public static class EndChasingLineOutline extends LineOutline {
@@ -52,7 +52,7 @@ public class LineOutline extends Outline {
 			float distanceToTarget = 1 - MathHelper.lerp(pt, prevProgress, progress);
 			Vector3d start = end.add(this.start.subtract(end)
 				.scale(distanceToTarget));
-			renderAACuboidLine(ms, buffer, start, end);
+			renderCuboidLine(ms, buffer, start, end);
 		}
 
 	}

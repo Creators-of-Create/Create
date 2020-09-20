@@ -4,8 +4,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -25,9 +23,12 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<DeployerTileEntity>, IPortableBlock {
+import javax.annotation.ParametersAreNonnullByDefault;
+import mcp.MethodsReturnNonnullByDefault;
 
-	public static MovementBehaviour MOVEMENT = new DeployerMovementBehaviour();
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<DeployerTileEntity> {
 
 	public DeployerBlock(Properties properties) {
 		super(properties);
@@ -100,11 +101,6 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 		});
 
 		return ActionResultType.SUCCESS;
-	}
-
-	@Override
-	public MovementBehaviour getMovementBehaviour() {
-		return MOVEMENT;
 	}
 
 	@Override

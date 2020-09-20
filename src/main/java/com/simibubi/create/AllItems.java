@@ -13,7 +13,9 @@ import static com.simibubi.create.content.AllSections.SCHEMATICS;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
@@ -122,8 +124,17 @@ public class AllItems {
 			.model(AssetLookup.<VerticalGearboxItem>customItemModel("gearbox", "item_vertical"))
 			.register();
 
+	public static final ItemEntry<BlazeBurnerBlockItem> EMPTY_BLAZE_BURNER =
+		REGISTRATE.item("empty_blaze_burner", BlazeBurnerBlockItem::empty)
+			.model(AssetLookup.<BlazeBurnerBlockItem>customItemModel("blaze_burner", "block"))
+			.register();
+
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
 		.register();
+
+	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =
+		REGISTRATE.item("minecart_coupling", MinecartCouplingItem::new)
+			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
 		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))

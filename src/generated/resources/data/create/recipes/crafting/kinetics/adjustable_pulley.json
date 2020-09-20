@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A",
+    "B",
+    "C"
+  ],
+  "key": {
+    "A": {
+      "item": "create:electron_tube"
+    },
+    "B": {
+      "item": "create:encased_belt"
+    },
+    "C": {
+      "item": "create:large_cogwheel"
+    }
+  },
+  "result": {
+    "item": "create:adjustable_pulley"
+  }
+}

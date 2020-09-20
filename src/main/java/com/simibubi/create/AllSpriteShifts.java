@@ -40,7 +40,9 @@ public class AllSpriteShifts {
 	public static final CTSpriteShiftEntry 
 		ANDESITE_CASING = omni("andesite_casing"),
 		BRASS_CASING = omni("brass_casing"),
-		COPPER_CASING = omni("copper_casing");
+		COPPER_CASING = omni("copper_casing"),
+		SHADOW_STEEL_CASING = omni("shadow_steel_casing"),
+		REFINED_RADIANCE_CASING = omni("refined_radiance_casing");
 	
 	public static final CTSpriteShiftEntry 
 		CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end"),

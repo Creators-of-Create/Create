@@ -3,27 +3,18 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.ExtractingBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -45,19 +36,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class DeployerTileEntity extends KineticTileEntity {
-
-	private static final List<Pair<BlockPos, Direction>> EXTRACTING_LOCATIONS = Arrays
-			.asList(Direction.values())
-			.stream()
-			.map(d -> Pair.of(BlockPos.ZERO.offset(d), d.getOpposite()))
-			.collect(Collectors.toList());
-	private FilteringBehaviour filtering;
-	private ExtractingBehaviour extracting;
 
 	protected State state;
 	protected Mode mode;
@@ -67,8 +48,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected float reach;
 	protected boolean boop = false;
 	protected List<ItemStack> overflowItems = new ArrayList<>();
-	private ListNBT deferredInventoryList;
+	protected FilteringBehaviour filtering;
 	private LazyOptional<IItemHandlerModifiable> invHandler;
+	private ListNBT deferredInventoryList;
 
 	enum State {
 		WAITING, EXPANDING, RETRACTING, DUMPING;
@@ -89,10 +71,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		filtering = new FilteringBehaviour(this, new DeployerFilterSlot());
-		extracting = new ExtractingBehaviour(this, this::getExtractingLocations, this::onExtract);
-
 		behaviours.add(filtering);
-		behaviours.add(extracting);
 	}
 
 	@Override
@@ -116,10 +95,6 @@ public class DeployerTileEntity extends KineticTileEntity {
 		player.setHeldItem(Hand.MAIN_HAND, stack.copy());
 		sendData();
 		markDirty();
-	}
-
-	protected List<Pair<BlockPos, Direction>> getExtractingLocations() {
-		return EXTRACTING_LOCATIONS;
 	}
 
 	protected int getTimerSpeed() {
@@ -148,9 +123,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		ItemStack stack = player.getHeldItemMainhand();
 		if (state == State.WAITING) {
 			if (!overflowItems.isEmpty()) {
-				tryDisposeOfItems();
-				if (!overflowItems.isEmpty())
-					timer = getTimerSpeed() * 10;
+				timer = getTimerSpeed() * 10;
 				return;
 			}
 
@@ -161,14 +134,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 					sendData();
 					return;
 				}
-				extracting.extract(1);
-				if (!filtering.test(stack))
-					timer = getTimerSpeed() * 10;
+				timer = getTimerSpeed() * 10;
 				return;
 			}
-
-			if (filtering.getFilter().isEmpty() && stack.isEmpty())
-				extracting.extract(1);
 
 			Direction facing = getBlockState().get(FACING);
 			if (mode == Mode.USE && !DeployerHandler.shouldActivate(stack, world, pos.offset(facing, 2))) {
@@ -182,12 +150,16 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 			state = State.EXPANDING;
 			Vector3d movementVector = getMovementVector();
-			Vector3d rayOrigin = VecHelper.getCenterOf(pos).add(movementVector.scale(3 / 2f));
-			Vector3d rayTarget = VecHelper.getCenterOf(pos).add(movementVector.scale(5 / 2f));
+			Vector3d rayOrigin = VecHelper.getCenterOf(pos)
+				.add(movementVector.scale(3 / 2f));
+			Vector3d rayTarget = VecHelper.getCenterOf(pos)
+				.add(movementVector.scale(5 / 2f));
 			RayTraceContext rayTraceContext =
 				new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE, FluidMode.NONE, player);
 			BlockRayTraceResult result = world.rayTraceBlocks(rayTraceContext);
-			reach = (float) (.5f + Math.min(result.getHitVec().subtract(rayOrigin).length(), .75f));
+			reach = (float) (.5f + Math.min(result.getHitVec()
+				.subtract(rayOrigin)
+				.length(), .75f));
 
 			timer = 1000;
 			sendData();
@@ -209,7 +181,6 @@ public class DeployerTileEntity extends KineticTileEntity {
 		if (state == State.RETRACTING) {
 			state = State.WAITING;
 			timer = 500;
-			returnAndDeposit();
 			sendData();
 			return;
 		}
@@ -226,7 +197,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 		if (!(otherTile instanceof DeployerTileEntity))
 			return false;
 		DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
-		if (world.getBlockState(otherDeployer).get(FACING).getOpposite() != facing || deployerTile.mode != Mode.PUNCH)
+		if (world.getBlockState(otherDeployer)
+			.get(FACING)
+			.getOpposite() != facing || deployerTile.mode != Mode.PUNCH)
 			return false;
 
 		boop = true;
@@ -274,65 +247,15 @@ public class DeployerTileEntity extends KineticTileEntity {
 			heldItem = player.getHeldItemMainhand();
 	}
 
-	protected void returnAndDeposit() {
-		PlayerInventory inv = player.inventory;
-		for (List<ItemStack> list : Arrays.asList(inv.armorInventory, inv.offHandInventory, inv.mainInventory)) {
-			for (int i = 0; i < list.size(); ++i) {
-				ItemStack itemstack = list.get(i);
-				if (itemstack.isEmpty())
-					continue;
-
-				if (list == inv.mainInventory && i == inv.currentItem && filtering.test(itemstack))
-					continue;
-
-				itemstack = insert(itemstack, false);
-				if (!itemstack.isEmpty())
-					ItemHelper.addToList(itemstack, overflowItems);
-				list.set(i, ItemStack.EMPTY);
-			}
-		}
-		heldItem = player.getHeldItemMainhand();
-	}
-
-	protected void tryDisposeOfItems() {
-		boolean noInv = extracting.getInventories().isEmpty();
-		for (Iterator<ItemStack> iterator = overflowItems.iterator(); iterator.hasNext();) {
-			ItemStack itemStack = iterator.next();
-
-			if (noInv) {
-				Vector3d offset = getMovementVector();
-				Vector3d outPos = VecHelper.getCenterOf(pos).add(offset.scale(-.65f));
-				Vector3d motion = offset.scale(-.25f);
-				ItemEntity e = new ItemEntity(world, outPos.x, outPos.y, outPos.z, itemStack.copy());
-				e.setMotion(motion);
-				world.addEntity(e);
-				iterator.remove();
-				continue;
-			}
-
-			itemStack = insert(itemStack, false);
-			if (itemStack.isEmpty())
-				iterator.remove();
-		}
-	}
-
-	protected ItemStack insert(ItemStack stack, boolean simulate) {
-		for (IItemHandler inv : extracting.getInventories()) {
-			stack = ItemHandlerHelper.insertItemStacked(inv, stack, simulate);
-			if (stack.isEmpty())
-				break;
-		}
-		return stack;
-	}
-
 	protected Vector3d getMovementVector() {
 		if (!AllBlocks.DEPLOYER.has(getBlockState()))
 			return Vector3d.ZERO;
-		return Vector3d.of(getBlockState().get(FACING).getDirectionVec());
+		return Vector3d.of(getBlockState().get(FACING)
+			.getDirectionVec());
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		mode = NBTHelper.readEnum(compound, "Mode", Mode.class);
 		timer = compound.getInt("Timer");
@@ -340,48 +263,45 @@ public class DeployerTileEntity extends KineticTileEntity {
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 		if (compound.contains("HeldItem"))
 			heldItem = ItemStack.read(compound.getCompound("HeldItem"));
-		super.read(compound);
+		super.read(compound, clientPacket);
+
+		if (!clientPacket)
+			return;
+		reach = compound.getFloat("Reach");
+		if (compound.contains("Particle")) {
+			ItemStack particleStack = ItemStack.read(compound.getCompound("Particle"));
+			SandPaperItem.spawnParticles(VecHelper.getCenterOf(pos)
+				.add(getMovementVector().scale(2f)), particleStack, this.world);
+		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		NBTHelper.writeEnum(compound, "Mode", mode);
 		NBTHelper.writeEnum(compound, "State", state);
 		compound.putInt("Timer", timer);
 		if (player != null) {
-			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
+			compound.put("HeldItem", player.getHeldItemMainhand()
+				.serializeNBT());
 			ListNBT invNBT = new ListNBT();
 			player.inventory.write(invNBT);
 			compound.put("Inventory", invNBT);
 			compound.put("Overflow", NBTHelper.writeItemList(overflowItems));
 		}
-		return super.write(compound);
-	}
 
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
+		super.write(compound, clientPacket);
+
+		if (!clientPacket)
+			return;
 		compound.putFloat("Reach", reach);
-		if (player != null) {
-			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
-			if (player.spawnedItemEffects != null) {
-				compound.put("Particle", player.spawnedItemEffects.serializeNBT());
-				player.spawnedItemEffects = null;
-			}
+		if (player == null)
+			return;
+		compound.put("HeldItem", player.getHeldItemMainhand()
+			.serializeNBT());
+		if (player.spawnedItemEffects != null) {
+			compound.put("Particle", player.spawnedItemEffects.serializeNBT());
+			player.spawnedItemEffects = null;
 		}
-		return super.writeToClient(compound);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		reach = tag.getFloat("Reach");
-		if (tag.contains("Particle")) {
-			ItemStack particleStack = ItemStack.read(tag.getCompound("Particle"));
-			SandPaperItem
-					.spawnParticles(VecHelper.getCenterOf(pos).add(getMovementVector().scale(2f)), particleStack,
-							this.world);
-		}
-
-		super.readClientUpdate(tag);
 	}
 
 	private IItemHandlerModifiable createHandler() {
@@ -395,7 +315,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	public AllBlockPartials getHandPose() {
 		return mode == Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING
-				: heldItem.isEmpty() ? AllBlockPartials.DEPLOYER_HAND_POINTING : AllBlockPartials.DEPLOYER_HAND_HOLDING;
+			: heldItem.isEmpty() ? AllBlockPartials.DEPLOYER_HAND_POINTING : AllBlockPartials.DEPLOYER_HAND_HOLDING;
 	}
 
 	@Override

@@ -2,11 +2,7 @@ package com.simibubi.create.content.curiosities.symmetry;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.content.curiosities.symmetry.mirror.CrossPlaneMirror;
-import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
-import com.simibubi.create.content.curiosities.symmetry.mirror.PlaneMirror;
-import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
-import com.simibubi.create.content.curiosities.symmetry.mirror.TriplePlaneMirror;
+import com.simibubi.create.content.curiosities.symmetry.mirror.*;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.GuiGameElement;
@@ -119,14 +115,11 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 		renderBlock();
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 0, 200);
-		RenderSystem.rotatef(-20, -3.5f, 1, 1);
 		GuiGameElement.of(wand)
-			.at(guiLeft + 220, guiTop + 220)
-			.scale(4)
-			.render();
-		RenderSystem.popMatrix();
+				.at(guiLeft + 200, guiTop + 170)
+				.scale(4)
+				.rotate(-70, 20, 20)
+				.render();
 	}
 
 	protected void renderBlock() {

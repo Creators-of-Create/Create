@@ -6,8 +6,8 @@
 	"death.attack.create.crush": "%1$s was processed by Crushing Wheels",
 	"death.attack.create.fan_fire": "%1$s was burned to death by hot air",
 	"death.attack.create.fan_lava": "%1$s was burned to death by lava fan",
-	"death.attack.create.mechanical_drill": "%1$s was impaled by Mechanical mechanical_drill",
-	"death.attack.create.mechanical_saw": "%1$s got cut in half by Mechanical mechanical_saw",
+	"death.attack.create.mechanical_drill": "%1$s was impaled by a Mechanical Drill",
+	"death.attack.create.mechanical_saw": "%1$s got cut in half by a Mechanical Saw",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s was blown up by tampered cuckoo clock",
 	"create.block.deployer.damage_source_name": "a rogue Deployer",
 	"create.block.cart_assembler.invalid": "Place your Cart Assembler on a rail block",
@@ -23,7 +23,7 @@
 	"create.recipe.pressing": "Pressing",
 	"create.recipe.mixing": "Mixing",
 	"create.recipe.packing": "Compacting",
-	"create.recipe.mechanical_sawing": "mechanical_sawing",
+	"create.recipe.mechanical_sawing": "Sawing",
 	"create.recipe.mechanical_crafting": "Mechanical Crafting",
 	"create.recipe.block_cutting": "Block Cutting",
 	"create.recipe.blockzapper_upgrade": "Handheld Blockzapper",
@@ -135,6 +135,7 @@
 	"create.contraptions.cart_movement_mode.rotation_locked": "Lock rotation",
 	
 	"create.logistics.filter": "Filter",
+	"create.logistics.recipe_filter": "Recipe Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
 
@@ -341,7 +342,24 @@
 	"create.tooltip.generationSpeed" : "Generates at %1$s %2$s",
 
 	"create.tooltip.analogStrength": "Analog Strength: %1$s/15",
-	"create.mechanical_mixer.min_ingredients": "Min. Ingredients",
+	
+	"create.mechanical_arm.extract_from": "Take items from %1$s",
+	"create.mechanical_arm.deposit_to": "Deposit items to %1$s",
+	"create.mechanical_arm.points_outside_range": "%1$s selected interaction point(s) removed due to range limitations.",
+
+	"create.logistics.when_multiple_outputs_available": "When Multiple Outputs Available",
+
+	"create.mechanical_arm.selection_mode.round_robin": "Round Robin",
+	"create.mechanical_arm.selection_mode.forced_round_robin": "Forced Round Robin",
+	"create.mechanical_arm.selection_mode.prefer_first": "Prefer First Target",
+
+	"create.tunnel.selection_mode.split": "Split",
+	"create.tunnel.selection_mode.forced_split": "Forced Split",
+	"create.tunnel.selection_mode.round_robin": "Round Robin",
+	"create.tunnel.selection_mode.forced_round_robin": "Forced Round Robin",
+	"create.tunnel.selection_mode.prefer_nearest": "Prefer Nearest",
+	"create.tunnel.selection_mode.randomize": "Randomize",
+	"create.tunnel.selection_mode.synchronize": "Synchronize Inputs",
 
 	"create.gui.config.overlay1": "Hi :)",
 	"create.gui.config.overlay2": "This is a sample overlay",

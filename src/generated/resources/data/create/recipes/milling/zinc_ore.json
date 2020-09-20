@@ -1,0 +1,15 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "forge:ores/zinc"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:crushed_zinc_ore",
+      "count": 1
+    }
+  ],
+  "processingTime": 350
+}

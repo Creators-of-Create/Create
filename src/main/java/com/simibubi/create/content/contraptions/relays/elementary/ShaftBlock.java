@@ -3,12 +3,15 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
@@ -17,15 +20,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 
 public class ShaftBlock extends RotatedPillarKineticBlock implements IWaterLoggable {
 
@@ -71,6 +78,26 @@ public class ShaftBlock extends RotatedPillarKineticBlock implements IWaterLogga
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         super.fillItemGroup(group, items);
+    }
+
+    @Override
+    public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult p_225533_6_) {
+        if (player.isSneaking() || !player.isAllowEdit())
+            return ActionResultType.PASS;
+
+        ItemStack heldItem = player.getHeldItem(hand);
+
+        for (EncasedShaftBlock.Casing casing : EncasedShaftBlock.Casing.values()) {
+            if (casing.getCasingEntry().isIn(heldItem)) {
+                if (world.isRemote)
+                    return ActionResultType.SUCCESS;
+
+                KineticTileEntity.switchToBlockState(world, pos, AllBlocks.ENCASED_SHAFT.getDefaultState().with(EncasedShaftBlock.CASING, casing).with(AXIS, state.get(AXIS)));
+                return ActionResultType.SUCCESS;
+            }
+        }
+
+        return ActionResultType.PASS;
     }
 
     // IRotate:

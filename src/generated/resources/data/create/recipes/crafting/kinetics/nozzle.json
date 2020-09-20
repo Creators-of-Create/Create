@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    " C ",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "create:andesite_alloy"
+    },
+    "C": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "result": {
+    "item": "create:nozzle"
+  }
+}

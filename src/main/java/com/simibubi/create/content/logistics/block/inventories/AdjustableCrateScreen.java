@@ -7,7 +7,6 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
@@ -32,7 +31,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 
 	private List<Rectangle2d> extraAreas;
 
-	private final ItemStack renderedItem = new ItemStack(AllBlocks.ADJUSTABLE_CRATE.get());
+	private final ItemStack renderedItem = AllBlocks.ADJUSTABLE_CRATE.asStack();
 	private final String title = Lang.translate("gui.adjustable_crate.title");
 	private final String storageSpace = Lang.translate("gui.adjustable_crate.storageSpace");
 
@@ -97,12 +96,10 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 			AllGuiTextures.FLEXCRATE_LOCKED_SLOT.draw(this, x, y);
 		}
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(guiLeft + FLEXCRATE.width + 110, guiTop + 40, 0);
 		GuiGameElement.of(renderedItem)
-			.scale(5)
-			.render();
-		RenderSystem.popMatrix();
+				.at(guiLeft + FLEXCRATE.width + 110, guiTop + 40)
+				.scale(5)
+				.render();
 	}
 
 	@Override

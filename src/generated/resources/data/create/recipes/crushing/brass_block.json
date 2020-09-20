@@ -1,0 +1,15 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "forge:storage_blocks/brass"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:crushed_brass",
+      "count": 5
+    }
+  ],
+  "processingTime": 400
+}

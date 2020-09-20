@@ -1,0 +1,14 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "minecraft:yellow_concrete_powder"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:yellow_concrete",
+      "count": 1
+    }
+  ]
+}

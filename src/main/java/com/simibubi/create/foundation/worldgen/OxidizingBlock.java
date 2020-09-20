@@ -1,12 +1,7 @@
 package com.simibubi.create.foundation.worldgen;
 
-import java.util.LinkedList;
-import java.util.OptionalDouble;
-import java.util.Random;
-
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.palettes.MetalBlock;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +15,10 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+
+import java.util.LinkedList;
+import java.util.OptionalDouble;
+import java.util.Random;
 
 public class OxidizingBlock extends MetalBlock {
 
@@ -56,6 +55,8 @@ public class OxidizingBlock extends MetalBlock {
 			LinkedList<Integer> neighbors = new LinkedList<>();
 			for (Direction facing : Direction.values()) {
 				BlockPos neighbourPos = pos.offset(facing);
+				if (!worldIn.isAreaLoaded(neighbourPos, 0))
+					continue;
 				if (!worldIn.isBlockPresent(neighbourPos))
 					continue;
 				BlockState neighborState = worldIn.getBlockState(neighbourPos);

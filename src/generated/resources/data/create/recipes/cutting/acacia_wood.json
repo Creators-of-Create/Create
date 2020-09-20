@@ -1,0 +1,15 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:acacia_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:stripped_acacia_wood",
+      "count": 1
+    }
+  ],
+  "processingTime": 50
+}

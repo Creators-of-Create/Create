@@ -6,15 +6,15 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.contraptions.fluids.CombinedFluidHandler;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity.BasinInventory;
-import com.simibubi.create.content.contraptions.processing.CombinedItemFluidList;
+import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.entity.Entity;
@@ -25,7 +25,6 @@ import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
@@ -35,7 +34,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -85,37 +83,30 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		running = compound.getBoolean("Running");
 		mode = Mode.values()[compound.getInt("Mode")];
 		finished = compound.getBoolean("Finished");
 		runningTicks = compound.getInt("Ticks");
-		super.read(compound);
+		super.read(compound, clientPacket);
+
+		if (clientPacket) {
+			NBTHelper.iterateCompoundList(compound.getList("ParticleItems", NBT.TAG_COMPOUND),
+				c -> pressedItems.add(ItemStack.read(c)));
+			spawnParticles();
+		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putInt("Mode", mode.ordinal());
 		compound.putBoolean("Finished", finished);
 		compound.putInt("Ticks", runningTicks);
-		return super.write(compound);
-	}
+		super.write(compound, clientPacket);
 
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT tag) {
-		ListNBT particleItems = new ListNBT();
-		pressedItems.forEach(stack -> particleItems.add(stack.serializeNBT()));
-		tag.put("ParticleItems", particleItems);
-		return super.writeToClient(tag);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		super.readClientUpdate(tag);
-		ListNBT particleItems = tag.getList("ParticleItems", NBT.TAG_COMPOUND);
-		particleItems.forEach(nbt -> pressedItems.add(ItemStack.read((CompoundNBT) nbt)));
-		spawnParticles();
+		if (clientPacket)
+			compound.put("ParticleItems", NBTHelper.writeCompoundList(pressedItems, ItemStack::serializeNBT));
 	}
 
 	@Override
@@ -186,13 +177,13 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 				if (!world.isRemote) {
 					pressedItems.clear();
 					applyBasinRecipe();
-					IItemHandler orElse = basinItemInv.orElse(null);
-					if (basinItemInv.isPresent() && orElse instanceof BasinInventory) {
-						BasinInventory inv = (BasinInventory) orElse;
 
-						for (int slot = 0; slot < inv.getInputHandler()
-							.getSlots(); slot++) {
-							ItemStack stackInSlot = inv.getStackInSlot(slot);
+					Optional<BasinTileEntity> basin = getBasin();
+					SmartInventory inputs = basin.get()
+						.getInputInventory();
+					if (basin.isPresent()) {
+						for (int slot = 0; slot < inputs.getSlots(); slot++) {
+							ItemStack stackInSlot = inputs.getStackInSlot(slot);
 							if (stackInSlot.isEmpty())
 								continue;
 							pressedItems.add(stackInSlot);
@@ -291,20 +282,15 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
-		if (recipe == null)
+		if (!super.matchBasinRecipe(recipe))
 			return false;
 
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		if (!ingredients.stream()
-			.allMatch(Ingredient::isSimple))
-			return false;
-
-		CombinedItemFluidList remaining = new CombinedItemFluidList();
-		inputs.forEachItemStack(stack -> remaining.add(stack.copy()));
-		basinFluidInv.ifPresent(fluidInv -> ((CombinedFluidHandler) fluidInv).forEachTank(fluidStack -> remaining.add(fluidStack.copy())));
+		List<ItemStack> remainingItems = new ArrayList<>();
+		itemInputs.forEach(stack -> remainingItems.add(stack.copy()));
 
 		Ingredients: for (Ingredient ingredient : ingredients) {
-			for (ItemStack stack : remaining.getItemStacks()) {
+			for (ItemStack stack : remainingItems) {
 				if (stack.isEmpty())
 					continue;
 				if (ingredient.test(stack)) {
@@ -331,9 +317,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	protected void basinRemoved() {
+	protected void onBasinRemoved() {
 		pressedItems.clear();
-		super.basinRemoved();
 		running = false;
 		runningTicks = 0;
 		sendData();

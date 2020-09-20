@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.belt.transport;
 
 import java.util.Random;
 
+import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 
 import net.minecraft.item.ItemStack;
@@ -9,9 +10,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 
 public class TransportedItemStack implements Comparable<TransportedItemStack> {
-	
+
 	private static Random R = new Random();
-	
+
 	public ItemStack stack;
 	public float beltPosition;
 	public float sideOffset;
@@ -28,7 +29,8 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 
 	public TransportedItemStack(ItemStack stack) {
 		this.stack = stack;
-		angle = R.nextInt(360);
+		boolean centered = BeltHelper.isItemUpright(stack);
+		angle = centered ? 180 : R.nextInt(360);
 		sideOffset = prevSideOffset = getTargetSideOffset();
 		insertedFrom = Direction.UP;
 	}
@@ -41,7 +43,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 	public int compareTo(TransportedItemStack o) {
 		return beltPosition < o.beltPosition ? 1 : beltPosition > o.beltPosition ? -1 : 0;
 	}
-	
+
 	public TransportedItemStack getSimilar() {
 		TransportedItemStack copy = new TransportedItemStack(stack.copy());
 		copy.beltPosition = beltPosition;
@@ -53,7 +55,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 		copy.processingTime = processingTime;
 		return copy;
 	}
-	
+
 	public TransportedItemStack copy() {
 		TransportedItemStack copy = getSimilar();
 		copy.angle = angle;

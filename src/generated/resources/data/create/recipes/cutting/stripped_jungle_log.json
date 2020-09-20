@@ -1,0 +1,15 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:stripped_jungle_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:jungle_planks",
+      "count": 5
+    }
+  ],
+  "processingTime": 100
+}

@@ -7,6 +7,8 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -58,7 +60,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 		try {
 			BasinTileEntity te = getTileEntity(worldIn, pos);
-			IItemHandlerModifiable inv = te.inventory.orElse(new ItemStackHandler(1));
+			IItemHandlerModifiable inv = te.itemCapability.orElse(new ItemStackHandler(1));
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
 				player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
@@ -81,12 +83,10 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			return;
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 		withTileEntityDo(worldIn, entityIn.getPosition(), te -> {
-			ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputItemInventory, itemEntity.getItem()
+			ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputInventory, itemEntity.getItem()
 				.copy(), false);
-
 			if (insertItem.isEmpty()) {
 				itemEntity.remove();
-
 				if (!itemEntity.world.isRemote)
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.world,
 						itemEntity.getPosition(), 3);
@@ -103,14 +103,20 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock()) {
-			return;
-		}
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext ctx) {
+		if (ctx.getEntity() instanceof ItemEntity)
+			return AllShapes.BASIN_COLLISION_SHAPE;
+		return getShape(state, reader, pos, ctx);
+	}
 
+	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
+			return;
+		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 		withTileEntityDo(worldIn, pos, te -> {
-			ItemHelper.dropContents(worldIn, pos, te.inputItemInventory);
-			ItemHelper.dropContents(worldIn, pos, te.outputItemInventory);
+			ItemHelper.dropContents(worldIn, pos, te.inputInventory);
+			ItemHelper.dropContents(worldIn, pos, te.outputInventory);
 		});
 		worldIn.removeTileEntity(pos);
 	}
@@ -123,7 +129,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
 		try {
-			return ItemHelper.calcRedstoneFromInventory(getTileEntity(worldIn, pos).inputItemInventory);
+			return ItemHelper.calcRedstoneFromInventory(getTileEntity(worldIn, pos).inputInventory);
 		} catch (TileEntityException e) {
 		}
 		return 0;

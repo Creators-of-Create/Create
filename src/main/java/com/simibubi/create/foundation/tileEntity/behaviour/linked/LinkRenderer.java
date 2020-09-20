@@ -57,12 +57,12 @@ public class LinkRenderer {
 		}
 	}
 
-	public static void renderOnTileEntity(SmartTileEntity tileEntityIn, float partialTicks, MatrixStack ms,
+	public static void renderOnTileEntity(SmartTileEntity te, float partialTicks, MatrixStack ms,
 		IRenderTypeBuffer buffer, int light, int overlay) {
 
-		if (tileEntityIn == null || tileEntityIn.isRemoved())
+		if (te == null || te.isRemoved())
 			return;
-		LinkBehaviour behaviour = TileEntityBehaviour.get(tileEntityIn, LinkBehaviour.TYPE);
+		LinkBehaviour behaviour = te.getBehaviour(LinkBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 
@@ -71,7 +71,7 @@ public class LinkRenderer {
 			ItemStack stack = first ? behaviour.frequencyFirst.getStack() : behaviour.frequencyLast.getStack();
 
 			ms.push();
-			transform.transform(tileEntityIn.getBlockState(), ms);
+			transform.transform(te.getBlockState(), ms);
 			ValueBoxRenderer.renderItemIntoValueBox(stack, ms, buffer, light, overlay);
 			ms.pop();
 		}

@@ -5,16 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
-import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
-import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
-import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
-import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperRenderHandler;
-import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
-import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
@@ -23,10 +15,6 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
-import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
@@ -40,14 +28,11 @@ import net.minecraft.item.Item;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CreateClient {
@@ -64,13 +49,11 @@ public class CreateClient {
 	private static AllColorHandlers colorHandlers;
 
 	public static void addClientListeners(IEventBus modEventBus) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			modEventBus.addListener(CreateClient::clientInit);
-			modEventBus.addListener(CreateClient::onModelBake);
-			modEventBus.addListener(CreateClient::onModelRegistry);
-			modEventBus.addListener(CreateClient::onTextureStitch);
-			modEventBus.addListener(AllParticleTypes::registerFactories);
-		});
+		modEventBus.addListener(CreateClient::clientInit);
+		modEventBus.addListener(CreateClient::onModelBake);
+		modEventBus.addListener(CreateClient::onModelRegistry);
+		modEventBus.addListener(CreateClient::onTextureStitch);
+		modEventBus.addListener(AllParticleTypes::registerFactories);
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
@@ -85,7 +68,7 @@ public class CreateClient {
 
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();
-		AllTileEntities.registerRenderers();
+		//AllTileEntities.registerRenderers();
 		AllEntityTypes.registerRenderers();
 		getColorHandler().init();
 
@@ -95,27 +78,6 @@ public class CreateClient {
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 	}
 
-	public static void gameTick() {
-		schematicSender.tick();
-		schematicAndQuillHandler.tick();
-		schematicHandler.tick();
-		BeltConnectorHandler.tick();
-		FilteringRenderer.tick();
-		LinkRenderer.tick();
-		ScrollValueRenderer.tick();
-		ChassisRangeDisplay.tick();
-		EdgeInteractionRenderer.tick();
-		WorldshaperRenderHandler.tick();
-		BlockzapperRenderHandler.tick();
-		KineticDebugger.tick();
-		ZapperRenderHandler.tick();
-		ExtendoGripRenderHandler.tick();
-//		CollisionDebugger.tick();
-		ArmInteractionPointHandler.tick();
-		outliner.tickOutlines();
-	}
-
-	@OnlyIn(Dist.CLIENT)
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {
 		if (!event.getMap()
 			.getId()
@@ -125,7 +87,6 @@ public class CreateClient {
 			.forEach(event::addSprite);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void onModelBake(ModelBakeEvent event) {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
 		AllBlockPartials.onModelBake(event);
@@ -140,7 +101,6 @@ public class CreateClient {
 		});
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void onModelRegistry(ModelRegistryEvent event) {
 		AllBlockPartials.onModelRegistry(event);
 
@@ -149,12 +109,10 @@ public class CreateClient {
 			.forEach(ModelLoader::addSpecialModel));
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	protected static ModelResourceLocation getItemModelLocation(Item item) {
 		return new ModelResourceLocation(item.getRegistryName(), "inventory");
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	protected static List<ModelResourceLocation> getAllBlockStateModelLocations(Block block) {
 		List<ModelResourceLocation> models = new ArrayList<>();
 		block.getStateContainer()
@@ -165,20 +123,17 @@ public class CreateClient {
 		return models;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	protected static ModelResourceLocation getBlockModelLocation(Block block, String suffix) {
 		return new ModelResourceLocation(block.getRegistryName(), suffix);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
 		List<ModelResourceLocation> locations, Function<IBakedModel, T> factory) {
 		locations.forEach(location -> {
 			swapModels(modelRegistry, location, factory);
 		});
 	}
-
-	@OnlyIn(Dist.CLIENT)
+	
 	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
 		ModelResourceLocation location, Function<IBakedModel, T> factory) {
 		modelRegistry.put(location, factory.apply(modelRegistry.get(location)));

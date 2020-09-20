@@ -5,7 +5,6 @@
 		"4": "create:block/brass_gearbox",
 		"5": "create:block/brass_casing_side",
 		"6": "create:block/brass_casing",
-		"7": "create:block/extractor",
 		"8": "create:block/encased_belt_middle",
 		"9": "create:block/brass_block",
 		"particle": "create:block/brass_casing"
@@ -74,25 +73,25 @@
 			}
 		},
 		{
-			"from": [2, 9, 5],
-			"to": [6, 14, 11],
-			"faces": {
-				"north": {"uv": [10, 1, 15, 14], "texture": "#4"},
-				"east": {"uv": [6, 9, 12, 14], "texture": "#7"},
-				"west": {"uv": [6, 9, 12, 14], "texture": "#7"},
-				"up": {"uv": [6, 8, 12, 12], "rotation": 90, "texture": "#7"},
-				"down": {"uv": [6, 8, 12, 12], "rotation": 270, "texture": "#7"}
-			}
-		},
-		{
 			"from": [10, 9, 5],
 			"to": [14, 14, 11],
 			"faces": {
 				"north": {"uv": [15, 1, 10, 14], "texture": "#4"},
-				"east": {"uv": [6, 10, 12, 15], "texture": "#7"},
-				"west": {"uv": [6, 8, 12, 13], "texture": "#7"},
-				"up": {"uv": [6, 12, 12, 8], "rotation": 90, "texture": "#7"},
-				"down": {"uv": [6, 8, 12, 12], "rotation": 270, "texture": "#7"}
+				"east": {"uv": [12, 9, 6, 14], "texture": "#5"},
+				"west": {"uv": [12, 9, 6, 14], "texture": "#5"},
+				"up": {"uv": [6, 6, 12, 2], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [6, 6, 12, 2], "rotation": 90, "texture": "#5"}
+			}
+		},
+		{
+			"from": [2, 9, 5],
+			"to": [6, 14, 11],
+			"faces": {
+				"north": {"uv": [10, 1, 15, 14], "texture": "#4"},
+				"east": {"uv": [6, 9, 12, 14], "texture": "#5"},
+				"west": {"uv": [6, 9, 12, 14], "texture": "#5"},
+				"up": {"uv": [6, 2, 12, 6], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [6, 2, 12, 6], "rotation": 90, "texture": "#5"}
 			}
 		},
 		{

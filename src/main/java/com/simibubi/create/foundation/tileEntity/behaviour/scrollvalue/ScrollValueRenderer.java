@@ -35,15 +35,14 @@ public class ScrollValueRenderer {
 		ScrollValueBehaviour behaviour = TileEntityBehaviour.get(world, pos, ScrollValueBehaviour.TYPE);
 		if (behaviour == null)
 			return;
-		if (behaviour.needsWrench
-			&& !AllItems.WRENCH.isIn(Minecraft.getInstance().player.getHeldItemMainhand()))
+		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(Minecraft.getInstance().player.getHeldItemMainhand()))
 			return;
 		boolean highlight = behaviour.testHit(target.getHitVec());
 
 		if (behaviour instanceof BulkScrollValueBehaviour && AllKeys.ctrlDown()) {
 			BulkScrollValueBehaviour bulkScrolling = (BulkScrollValueBehaviour) behaviour;
 			for (SmartTileEntity smartTileEntity : bulkScrolling.getBulk()) {
-				ScrollValueBehaviour other = TileEntityBehaviour.get(smartTileEntity, ScrollValueBehaviour.TYPE);
+				ScrollValueBehaviour other = smartTileEntity.getBehaviour(ScrollValueBehaviour.TYPE);
 				if (other != null)
 					addBox(world, smartTileEntity.getPos(), face, other, highlight);
 			}

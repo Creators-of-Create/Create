@@ -24,20 +24,18 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 
 	public CreativeCrateTileEntity(TileEntityType<? extends CreativeCrateTileEntity> type) {
 		super(type);
-		inv = new CreativeCrateInventory(this);
+		inv = new BottomlessItemHandler(filtering::getFilter);
 		itemHandler = LazyOptional.of(() -> inv);
 	}
 
-	FilteringBehaviour filter;
+	FilteringBehaviour filtering;
 	LazyOptional<IItemHandler> itemHandler;
-	private CreativeCrateInventory inv;
+	private BottomlessItemHandler inv;
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		filter = createFilter();
-		filter.onlyActiveWhen(this::filterVisible);
-		filter.withCallback(this::filterChanged);
-		behaviours.add(filter);
+		behaviours.add(filtering = createFilter().onlyActiveWhen(this::filterVisible)
+			.withCallback(this::filterChanged));
 	}
 
 	private boolean filterVisible() {
@@ -52,13 +50,14 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 		CreativeCrateTileEntity otherCrate = getOtherCrate();
 		if (otherCrate == null)
 			return;
-		if (ItemStack.areItemsEqual(filter, otherCrate.filter.getFilter()))
+		if (ItemStack.areItemsEqual(filter, otherCrate.filtering.getFilter()))
 			return;
-		otherCrate.filter.setFilter(filter);
+		otherCrate.filtering.setFilter(filter);
 	}
 
 	@Override
 	public void remove() {
+		super.remove();
 		if (itemHandler != null)
 			itemHandler.invalidate();
 	}
@@ -79,10 +78,10 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 		if (otherCrate == null)
 			return;
 
-		filter.withCallback($ -> {
+		filtering.withCallback($ -> {
 		});
-		filter.setFilter(otherCrate.filter.getFilter());
-		filter.withCallback(this::filterChanged);
+		filtering.setFilter(otherCrate.filtering.getFilter());
+		filtering.withCallback(this::filterChanged);
 	}
 
 	@Override

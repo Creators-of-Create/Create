@@ -1,0 +1,19 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_zinc_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:zinc_nugget",
+      "count": 10
+    },
+    {
+      "item": "create:zinc_nugget",
+      "count": 5,
+      "chance": 0.5
+    }
+  ]
+}

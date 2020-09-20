@@ -31,7 +31,7 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 		PumpTileEntity pump = (PumpTileEntity) te;
 		Vector3d rotationOffset = new Vector3d(.5, 14 / 16f, .5);
 		BlockState blockState = te.getBlockState();
-		float angle = MathHelper.lerp(pump.arrowDirection.get(partialTicks), 0, 90) - 90;
+		float angle = MathHelper.lerp(pump.arrowDirection.getValue(partialTicks), 0, 90) - 90;
 		for (float yRot : new float[] { 0, 90 }) {
 			ms.push();
 			SuperByteBuffer arrow = AllBlockPartials.MECHANICAL_PUMP_ARROW.renderOn(blockState);

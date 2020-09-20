@@ -3,6 +3,7 @@ package com.simibubi.create;
 import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
+import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.content.contraptions.particle.CubeParticle;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.contraptions.particle.HeaterParticleData;
@@ -26,6 +27,7 @@ public enum AllParticleTypes {
 
 	ROTATION_INDICATOR(RotationIndicatorParticleData::new),
 	AIR_FLOW(AirFlowParticleData::new),
+	AIR(AirParticleData::new),
 	HEATER_PARTICLE(HeaterParticleData::new),
 	CUBE(CubeParticleData::dummy, () -> CubeParticle.Factory::new)
 

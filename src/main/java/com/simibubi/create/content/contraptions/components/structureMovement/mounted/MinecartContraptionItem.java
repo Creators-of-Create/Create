@@ -212,8 +212,7 @@ public class MinecartContraptionItem extends Item {
 
 	public static ItemStack create(Type type, ContraptionEntity entity) {
 		ItemStack stack =
-			(type == Type.RIDEABLE ? AllItems.MINECART_CONTRAPTION : AllItems.FURNACE_MINECART_CONTRAPTION)
-				.asStack();
+			(type == Type.RIDEABLE ? AllItems.MINECART_CONTRAPTION : AllItems.FURNACE_MINECART_CONTRAPTION).asStack();
 		CompoundNBT tag = entity.getContraption()
 			.writeNBT();
 		tag.remove("UUID");

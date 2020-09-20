@@ -1,0 +1,20 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:ink_sac"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:black_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:gray_dye",
+      "count": 1,
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 100
+}

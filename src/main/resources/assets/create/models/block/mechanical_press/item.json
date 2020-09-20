@@ -4,13 +4,14 @@
 	"textures": {
 		"0": "create:block/axis",
 		"1": "create:block/axis_top",
+		"8": "create:block/mechanical_press_side",
 		"mechanical_press_head": "create:block/mechanical_press_head",
 		"gearbox_top": "create:block/gearbox_top",
 		"mechanical_press_pole": "create:block/mechanical_press_pole",
 		"gearbox": "create:block/gearbox",
 		"mechanical_press_top": "create:block/mechanical_press_top",
 		"mechanical_press_bottom": "create:block/mechanical_press_bottom",
-		"particle": "create:block/axis"
+		"particle": "create:block/mechanical_press_side"
 	},
 	"elements": [
 		{
@@ -19,9 +20,9 @@
 			"to": [16, 20, 16],
 			"faces": {
 				"north": {"uv": [0, 0, 16, 2], "texture": "#gearbox"},
-				"east": {"uv": [0, 0, 16, 2], "texture": "#gearbox"},
+				"east": {"uv": [0, 0, 16, 2], "texture": "#8"},
 				"south": {"uv": [0, 0, 16, 2], "texture": "#gearbox"},
-				"west": {"uv": [0, 0, 16, 2], "texture": "#gearbox"},
+				"west": {"uv": [0, 0, 16, 2], "texture": "#8"},
 				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#mechanical_press_top"},
 				"down": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#gearbox"}
 			}
@@ -42,9 +43,9 @@
 			"to": [16, 18, 16],
 			"faces": {
 				"north": {"uv": [0, 2, 2, 14], "texture": "#gearbox_top"},
-				"east": {"uv": [0, 4, 16, 16], "texture": "#gearbox_top"},
+				"east": {"uv": [0, 2, 16, 14], "texture": "#8"},
 				"south": {"uv": [14, 2, 16, 14], "texture": "#gearbox_top"},
-				"west": {"uv": [0, 4, 16, 16], "texture": "#gearbox_top"},
+				"west": {"uv": [0, 2, 16, 14], "texture": "#8"},
 				"down": {"uv": [0, 0, 2, 16], "rotation": 180, "texture": "#gearbox_top"}
 			}
 		},
@@ -54,9 +55,9 @@
 			"to": [2, 18, 16],
 			"faces": {
 				"north": {"uv": [14, 2, 16, 14], "texture": "#gearbox_top"},
-				"east": {"uv": [0, 4, 16, 16], "texture": "#gearbox_top"},
+				"east": {"uv": [0, 2, 16, 14], "texture": "#8"},
 				"south": {"uv": [0, 2, 2, 14], "texture": "#gearbox_top"},
-				"west": {"uv": [0, 4, 16, 16], "texture": "#gearbox_top"},
+				"west": {"uv": [0, 2, 16, 14], "texture": "#8"},
 				"down": {"uv": [14, 0, 16, 16], "rotation": 180, "texture": "#gearbox_top"}
 			}
 		},

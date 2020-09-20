@@ -1,59 +1,60 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
-    "textures": {
-        "gearbox_top": "create:block/gearbox_top",
-        "gearbox": "create:block/gearbox",
-        "mechanical_press_top": "create:block/mechanical_press_top",
-        "mechanical_press_bottom": "create:block/mechanical_press_bottom",
-		"particle": "create:block/gearbox"
-    },
-    "elements": [
-        {
-            "name": "Top",
-            "from": [ 0, 14, 0 ], 
-            "to": [ 16, 16, 16 ], 
-            "faces": {
-                "north": { "texture": "#gearbox", "uv": [ 0, 0, 16, 2 ] },
-                "east": { "texture": "#gearbox", "uv": [ 0, 0, 16, 2 ] },
-                "south": { "texture": "#gearbox", "uv": [ 0, 0, 16, 2 ] },
-                "west": { "texture": "#gearbox", "uv": [ 0, 0, 16, 2 ] },
-                "up": { "texture": "#mechanical_press_top", "uv": [ 0, 0, 16, 16 ] },
-                "down": { "texture": "#gearbox", "uv": [ 0, 0, 16, 16 ] }
-            }
-        },
-        {
-            "name": "Core",
-            "from": [ 2, 4, 1 ], 
-            "to": [ 14, 14, 15 ], 
-            "faces": {
-                "north": { "texture": "#gearbox", "uv": [ 2, 2, 14, 12 ] },
-                "south": { "texture": "#gearbox", "uv": [ 2, 2, 14, 12 ] },
-                "down": { "texture": "#mechanical_press_bottom", "uv": [ 2, 1, 14, 15 ] }
-            }
-        },
-        {
-            "name": "Side",
-            "from": [ 0, 2, 0 ], 
-            "to": [ 2, 14, 16 ], 
-            "faces": {
-                "north": { "texture": "#gearbox_top", "uv": [ 14, 2, 16, 14 ] },
-                "east": { "texture": "#gearbox_top", "uv": [ 0, 4, 16, 16 ] },
-                "south": { "texture": "#gearbox_top", "uv": [ 0, 2, 2, 14 ] },
-                "west": { "texture": "#gearbox_top", "uv": [ 0, 4, 16, 16 ] },
-                "down": { "texture": "#gearbox_top", "uv": [ 0, 0, 2, 16 ] }
-            }
-        },
-        {
-            "name": "Side",
-            "from": [ 14, 2, 0 ], 
-            "to": [ 16, 14, 16 ], 
-            "faces": {
-                "north": { "texture": "#gearbox_top", "uv": [ 0, 2, 2, 14 ] },
-                "east": { "texture": "#gearbox_top", "uv": [ 0, 4, 16, 16 ] },
-                "south": { "texture": "#gearbox_top", "uv": [ 14, 2, 16, 14 ] },
-                "west": { "texture": "#gearbox_top", "uv": [ 0, 4, 16, 16 ] },
-                "down": { "texture": "#gearbox_top", "uv": [ 14, 0, 16, 16 ] }
-            }
-        }
-    ]
+	"credit": "Made with Blockbench",
+	"textures": {
+		"4": "create:block/mechanical_press_side",
+		"gearbox_top": "create:block/gearbox_top",
+		"particle": "create:block/mechanical_press_side",
+		"gearbox": "create:block/gearbox",
+		"mechanical_press_top": "create:block/mechanical_press_top",
+		"mechanical_press_bottom": "create:block/mechanical_press_bottom"
+	},
+	"elements": [
+		{
+			"name": "Top",
+			"from": [0, 14, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#gearbox"},
+				"east": {"uv": [0, 0, 16, 2], "texture": "#4"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#gearbox"},
+				"west": {"uv": [0, 0, 16, 2], "texture": "#4"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#mechanical_press_top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#gearbox"}
+			}
+		},
+		{
+			"name": "Core",
+			"from": [2, 4, 1],
+			"to": [14, 14, 15],
+			"faces": {
+				"north": {"uv": [2, 2, 14, 12], "texture": "#gearbox"},
+				"south": {"uv": [2, 2, 14, 12], "texture": "#gearbox"},
+				"down": {"uv": [2, 1, 14, 15], "texture": "#mechanical_press_bottom"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [0, 2, 0],
+			"to": [2, 14, 16],
+			"faces": {
+				"north": {"uv": [14, 2, 16, 14], "texture": "#gearbox_top"},
+				"east": {"uv": [0, 2, 16, 14], "texture": "#4"},
+				"south": {"uv": [0, 2, 2, 14], "texture": "#gearbox_top"},
+				"west": {"uv": [0, 2, 16, 14], "texture": "#4"},
+				"down": {"uv": [0, 0, 2, 16], "texture": "#gearbox_top"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [14, 2, 0],
+			"to": [16, 14, 16],
+			"faces": {
+				"north": {"uv": [0, 2, 2, 14], "texture": "#gearbox_top"},
+				"east": {"uv": [0, 2, 16, 14], "texture": "#4"},
+				"south": {"uv": [14, 2, 16, 14], "texture": "#gearbox_top"},
+				"west": {"uv": [0, 2, 16, 14], "texture": "#4"},
+				"down": {"uv": [14, 0, 16, 16], "texture": "#gearbox_top"}
+			}
+		}
+	]
 }

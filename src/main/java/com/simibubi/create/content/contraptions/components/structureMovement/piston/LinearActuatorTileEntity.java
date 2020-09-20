@@ -145,50 +145,38 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag) {
-		tag.putBoolean("Running", running);
-		tag.putBoolean("Waiting", waitingForSpeedChange);
-		tag.putFloat("Offset", offset);
-		return super.write(tag);
-	}
-
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-		if (forceMove) {
+	protected void write(CompoundNBT compound, boolean clientPacket) {
+		compound.putBoolean("Running", running);
+		compound.putBoolean("Waiting", waitingForSpeedChange);
+		compound.putFloat("Offset", offset);
+		super.write(compound, clientPacket);
+		
+		if (clientPacket && forceMove) {
 			compound.putBoolean("ForceMovement", forceMove);
 			forceMove = false;
 		}
-		return super.writeToClient(compound);
 	}
 
 	@Override
-	public void read(CompoundNBT tag) {
-		running = tag.getBoolean("Running");
-		waitingForSpeedChange = tag.getBoolean("Waiting");
-		offset = tag.getFloat("Offset");
-		super.read(tag);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		boolean forceMovement = tag.contains("ForceMovement");
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		boolean forceMovement = compound.contains("ForceMovement");
 		float offsetBefore = offset;
-		super.readClientUpdate(tag);
 
-		if (forceMovement) {
-			if (movedContraption != null) {
-				applyContraptionPosition();
-			}
-		} else {
-			if (running) {
-				clientOffsetDiff = offset - offsetBefore;
-				offset = offsetBefore;
-			}
+		running = compound.getBoolean("Running");
+		waitingForSpeedChange = compound.getBoolean("Waiting");
+		offset = compound.getFloat("Offset");
+		super.read(compound, clientPacket);
+
+		if (!clientPacket)
+			return;
+		if (forceMovement)
+			applyContraptionPosition();
+		else if (running) {
+			clientOffsetDiff = offset - offsetBefore;
+			offset = offsetBefore;
 		}
-
 		if (!running)
 			movedContraption = null;
-
 	}
 
 	public abstract void disassemble();

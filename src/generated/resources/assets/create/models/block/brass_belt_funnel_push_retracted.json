@@ -1,9 +1,11 @@
 {
   "parent": "create:block/belt_funnel/block_retracted",
   "textures": {
-    "particle": "create:block/brass_casing",
+    "particle": "create:block/brass_block",
     "2": "create:block/brass_funnel_push",
     "3": "create:block/brass_funnel_back",
-    "4": "create:block/brass_funnel_plating"
+    "5": "create:block/brass_funnel_tall",
+    "6": "create:block/brass_funnel",
+    "7": "create:block/brass_funnel_plating"
   }
 }

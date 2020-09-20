@@ -13,14 +13,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
-import com.simibubi.create.content.logistics.block.AttachedLogisticalBlock;
-import com.simibubi.create.content.logistics.block.extractor.ExtractorBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
-import com.simibubi.create.content.logistics.block.transposer.TransposerBlock;
 
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
@@ -94,8 +92,6 @@ public class BlockMovementTraits {
 
 		if (AllBlocks.BELT.has(blockState))
 			return true;
-		if (block instanceof ExtractorBlock)
-			return true;
 		return blockState.getPushReaction() != PushReaction.BLOCK;
 	}
 
@@ -116,6 +112,8 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof HorizontalFaceBlock)
 			return true;
+		if (block instanceof CartAssemblerBlock)
+			return false;
 		if (block instanceof AbstractRailBlock)
 			return true;
 		if (block instanceof RedstoneDiodeBlock)
@@ -140,8 +138,6 @@ public class BlockMovementTraits {
 			return direction == Direction.DOWN;
 		if (block instanceof DoorBlock)
 			return direction == Direction.DOWN;
-		if (block instanceof AttachedLogisticalBlock && !(block instanceof TransposerBlock))
-			return direction == AttachedLogisticalBlock.getBlockFacing(state);
 		if (block instanceof RedstoneLinkBlock)
 			return direction.getOpposite() == state.get(RedstoneLinkBlock.FACING);
 		if (block instanceof FlowerPotBlock)
@@ -197,6 +193,8 @@ public class BlockMovementTraits {
 	public static boolean notSupportive(BlockState state, Direction facing) {
 		if (AllBlocks.MECHANICAL_DRILL.has(state))
 			return state.get(BlockStateProperties.FACING) == facing;
+		if (AllBlocks.CART_ASSEMBLER.has(state))
+			return Direction.DOWN == facing;
 		if (AllBlocks.MECHANICAL_SAW.has(state))
 			return state.get(BlockStateProperties.FACING) == facing;
 		if (AllBlocks.PORTABLE_STORAGE_INTERFACE.has(state))

@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -59,7 +60,8 @@ public class FilteringRenderer {
 		ItemStack filter = behaviour.getFilter();
 		boolean isFilterSlotted = filter.getItem() instanceof FilterItem;
 		boolean showCount = behaviour.isCountVisible();
-		String label = isFilterSlotted ? "" : Lang.translate("logistics.filter");
+		String label = isFilterSlotted ? ""
+			: Lang.translate(behaviour.recipeFilter ? "logistics.recipe_filter" : "logistics.filter");
 		boolean hit = behaviour.slotPositioning.testHit(state, target.getHitVec()
 			.subtract(Vector3d.of(pos)));
 
@@ -74,7 +76,7 @@ public class FilteringRenderer {
 			.scrollTooltip(showCount ? "[" + Lang.translate("action.scroll") + "]" : "")
 			.passive(!hit);
 
-		CreateClient.outliner.showValueBox(pos, box.transform(behaviour.slotPositioning))
+		CreateClient.outliner.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
 			.lineWidth(1 / 64f)
 			.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
 			.highlightFace(result.getFace());
@@ -85,7 +87,7 @@ public class FilteringRenderer {
 
 		if (tileEntityIn == null || tileEntityIn.isRemoved())
 			return;
-		FilteringBehaviour behaviour = TileEntityBehaviour.get(tileEntityIn, FilteringBehaviour.TYPE);
+		FilteringBehaviour behaviour = tileEntityIn.getBehaviour(FilteringBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 		if (!behaviour.isActive())
@@ -104,7 +106,7 @@ public class FilteringRenderer {
 				ItemStack filter = behaviour.getFilter(d);
 				if (filter.isEmpty())
 					continue;
-				
+
 				sided.fromSide(d);
 				if (!slotPositioning.shouldRender(blockState))
 					continue;
@@ -116,12 +118,12 @@ public class FilteringRenderer {
 			}
 			sided.fromSide(side);
 			return;
+		} else if(slotPositioning.shouldRender(blockState)) {
+			ms.push();
+			slotPositioning.transform(blockState, ms);
+			ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter(), ms, buffer, light, overlay);
+			ms.pop();
 		}
-
-		ms.push();
-		slotPositioning.transform(blockState, ms);
-		ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter(), ms, buffer, light, overlay);
-		ms.pop();
 	}
 
 }

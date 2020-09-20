@@ -74,7 +74,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		filtering = new FilteringBehaviour(this, new SawFilterSlot());
+		filtering = new FilteringBehaviour(this, new SawFilterSlot()).forRecipes();
 		behaviours.add(filtering);
 		behaviours.add(new DirectBeltInputBehaviour(this));
 	}
@@ -94,15 +94,15 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.put("Inventory", inventory.serializeNBT());
 		compound.putInt("RecipeIndex", recipeIndex);
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
-		super.read(compound);
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		recipeIndex = compound.getInt("RecipeIndex");
 	}
@@ -197,7 +197,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != Direction.DOWN)
 			return invProvider.cast();
 		return super.getCapability(cap, side);
 	}
@@ -248,7 +248,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		for (int roll = 0; roll < rolls; roll++) {
 			List<ItemStack> results = new LinkedList<ItemStack>();
 			if (recipe instanceof CuttingRecipe)
-				results = ((CuttingRecipe) recipe).rollResults().getItemStacks();
+				results = ((CuttingRecipe) recipe).rollResults();
 			else if (recipe instanceof StonecuttingRecipe)
 				results.add(recipe.getRecipeOutput()
 					.copy());

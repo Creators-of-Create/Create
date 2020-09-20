@@ -37,13 +37,13 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	@Override
 	public void setIngredients(SandPaperPolishingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getPossibleOutputs());
+		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, SandPaperPolishingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		List<ProcessingOutput> results = recipe.getRollableItemResults();
+		List<ProcessingOutput> results = recipe.getRollableResults();
 
 		itemStacks.init(0, true, 26, 28);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));

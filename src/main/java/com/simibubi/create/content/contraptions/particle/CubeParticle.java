@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -75,11 +76,13 @@ public class CubeParticle extends Particle {
 			tessellator.draw();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			RenderSystem.disableLighting();
 			RenderSystem.enableTexture();
 		}
 	};
 
 	protected float scale;
+	protected boolean hot;
 
 	public CubeParticle(World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
 		super(world, x, y, z);
@@ -92,11 +95,38 @@ public class CubeParticle extends Particle {
 
 	public void setScale(float scale) {
 		this.scale = scale;
-		this.setSize(scale, scale);
+		this.setSize(scale * 0.5f, scale * 0.5f);
 	}
 
 	public void averageAge(int age) {
 		this.maxAge = (int) (age + (rand.nextDouble() * 2D - 1D) * 8);
+	}
+	
+	public void setHot(boolean hot) {
+		this.hot = hot;
+	}
+	
+	private boolean billowing = false;
+	
+	@Override
+	public void tick() {
+		if (this.hot && this.age > 0) {
+			if (this.prevPosY == this.posY) {
+				billowing = true;
+				field_228343_B_ = false; // Prevent motion being ignored due to vertical collision
+				if (this.motionX == 0 && this.motionZ == 0) {
+					Vec3d diff = new Vec3d(new BlockPos(posX, posY, posZ)).add(0.5, 0.5, 0.5).subtract(posX, posY, posZ);
+					this.motionX = -diff.x * 0.1;
+					this.motionZ = -diff.z * 0.1;
+				}
+				this.motionX *= 1.1;
+				this.motionY *= 0.9;
+				this.motionZ *= 1.1;
+			} else if (billowing) {
+				this.motionY *= 1.2;
+			}
+		}
+		super.tick();
 	}
 
 	@Override
@@ -146,6 +176,7 @@ public class CubeParticle extends Particle {
 			particle.setColor(data.r, data.g, data.b);
 			particle.setScale(data.scale);
 			particle.averageAge(data.avgAge);
+			particle.setHot(data.hot);
 			return particle;
 		}
 	}

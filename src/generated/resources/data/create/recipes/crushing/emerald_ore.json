@@ -1,0 +1,25 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:emerald_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:emerald",
+      "count": 2
+    },
+    {
+      "item": "minecraft:emerald",
+      "count": 1,
+      "chance": 0.25
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "count": 1,
+      "chance": 0.125
+    }
+  ],
+  "processingTime": 500
+}

@@ -51,6 +51,7 @@ public class FilesHelper {
 		return Lang.asId(name)
 			.replace(' ', '_')
 			.replace('!', '_')
+			.replace(':', '_')
 			.replace('?', '_');
 	}
 

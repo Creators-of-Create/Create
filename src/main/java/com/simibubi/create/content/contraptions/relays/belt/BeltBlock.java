@@ -1,17 +1,14 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
@@ -19,6 +16,8 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
@@ -26,7 +25,6 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.particle.DiggingParticle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
@@ -52,7 +50,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -251,7 +248,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			controllerBelt.getInventory()
 				.applyToEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
 					player.inventory.placeItemBackInInventory(world, transportedItemStack.stack);
-					return Collections.emptyList();
+					return TransportedResult.removeItem();
 				});
 		}
 
@@ -327,40 +324,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
-		// From Particle Manager, but reduced density for belts with lots of boxes
-		VoxelShape voxelshape = state.getShape(world, pos);
-		MutableInt amtBoxes = new MutableInt(0);
-		voxelshape.forEachBox((x1, y1, z1, x2, y2, z2) -> amtBoxes.increment());
-		double chance = 1d / amtBoxes.getValue();
-
-		voxelshape.forEachBox((x1, y1, z1, x2, y2, z2) -> {
-			double d1 = Math.min(1.0D, x2 - x1);
-			double d2 = Math.min(1.0D, y2 - y1);
-			double d3 = Math.min(1.0D, z2 - z1);
-			int i = Math.max(2, MathHelper.ceil(d1 / 0.25D));
-			int j = Math.max(2, MathHelper.ceil(d2 / 0.25D));
-			int k = Math.max(2, MathHelper.ceil(d3 / 0.25D));
-
-			for (int l = 0; l < i; ++l) {
-				for (int i1 = 0; i1 < j; ++i1) {
-					for (int j1 = 0; j1 < k; ++j1) {
-						if (world.rand.nextDouble() > chance)
-							continue;
-
-						double d4 = ((double) l + 0.5D) / (double) i;
-						double d5 = ((double) i1 + 0.5D) / (double) j;
-						double d6 = ((double) j1 + 0.5D) / (double) k;
-						double d7 = d4 * d1 + x1;
-						double d8 = d5 * d2 + y1;
-						double d9 = d6 * d3 + z1;
-						manager
-							.addEffect((new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
-								(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).setBlockPos(pos));
-					}
-				}
-			}
-
-		});
+		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
 		return true;
 	}
 
@@ -500,17 +464,19 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			world.playEvent(2001, currentPos, Block.getStateId(currentState));
 		}
 	}
-	
+
 	@Override
-	public BlockState updatePostPlacement(BlockState state, Direction side, BlockState p_196271_3_,
-		IWorld world, BlockPos pos, BlockPos p_196271_6_) {
-		if (side.getAxis().isHorizontal())
+	public BlockState updatePostPlacement(BlockState state, Direction side, BlockState p_196271_3_, IWorld world,
+		BlockPos pos, BlockPos p_196271_6_) {
+		if (side.getAxis()
+			.isHorizontal())
 			updateTunnelConnections(world, pos.up());
 		return state;
 	}
 
 	private void updateTunnelConnections(IWorld world, BlockPos pos) {
-		Block tunnelBlock = world.getBlockState(pos).getBlock();
+		Block tunnelBlock = world.getBlockState(pos)
+			.getBlock();
 		if (tunnelBlock instanceof BeltTunnelBlock)
 			((BeltTunnelBlock) tunnelBlock).updateTunnel(world, pos);
 	}
@@ -553,28 +519,28 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	public static boolean canAccessFromSide(Direction facing, BlockState belt) {
-		if (facing == null)
-			return true;
-		if (!belt.get(BeltBlock.CASING))
-			return false;
-		BeltPart part = belt.get(BeltBlock.PART);
-		if (part != BeltPart.MIDDLE && facing.getAxis() == belt.get(HORIZONTAL_FACING)
-			.rotateY()
-			.getAxis())
-			return false;
-
-		BeltSlope slope = belt.get(BeltBlock.SLOPE);
-		if (slope != BeltSlope.HORIZONTAL) {
-			if (slope == BeltSlope.DOWNWARD && part == BeltPart.END)
-				return true;
-			if (slope == BeltSlope.UPWARD && part == BeltPart.START)
-				return true;
-			Direction beltSide = belt.get(HORIZONTAL_FACING);
-			if (slope == BeltSlope.DOWNWARD)
-				beltSide = beltSide.getOpposite();
-			if (beltSide == facing)
-				return false;
-		}
+//		if (facing == null)
+//			return true;
+//		if (!belt.get(BeltBlock.CASING))
+//			return false;
+//		BeltPart part = belt.get(BeltBlock.PART);
+//		if (part != BeltPart.MIDDLE && facing.getAxis() == belt.get(HORIZONTAL_FACING)
+//			.rotateY()
+//			.getAxis())
+//			return false;
+//
+//		BeltSlope slope = belt.get(BeltBlock.SLOPE);
+//		if (slope != BeltSlope.HORIZONTAL) {
+//			if (slope == BeltSlope.DOWNWARD && part == BeltPart.END)
+//				return true;
+//			if (slope == BeltSlope.UPWARD && part == BeltPart.START)
+//				return true;
+//			Direction beltSide = belt.get(HORIZONTAL_FACING);
+//			if (slope == BeltSlope.DOWNWARD)
+//				beltSide = beltSide.getOpposite();
+//			if (beltSide == facing)
+//				return false;
+//		}
 
 		return true;
 	}

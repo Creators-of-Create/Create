@@ -29,7 +29,7 @@ archivesBaseName = 'create'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200722-mixed-1.16.1'
+    mappings channel: 'snapshot', version: '20200920-mixed-1.16.3'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
     runs {		
@@ -107,14 +107,14 @@ configurations {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     
-    def registrate = "com.tterrag.registrate:Registrate:MC${minecraft_version}-${registrate_version}"
+    def registrate = "com.tterrag.registrate:Registrate:MC1.16.2-${registrate_version}"
     implementation fg.deobf(registrate)
     shade registrate
     
     // compile against the JEI API but do not include it at runtime
- 	compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+ 	compileOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}:api")
   	// at runtime, use the full JEI jar
-  	runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+  	runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}")
 
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")

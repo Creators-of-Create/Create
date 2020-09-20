@@ -1,0 +1,19 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_brass"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:brass_nugget",
+      "count": 10
+    },
+    {
+      "item": "create:brass_nugget",
+      "count": 5,
+      "chance": 0.5
+    }
+  ]
+}

@@ -3,8 +3,6 @@ package com.simibubi.create.content.contraptions.components.actors;
 import java.util.List;
 
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,10 +25,16 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class SeatBlock extends Block implements IPortableBlock {
 
-	public static MovementBehaviour MOVEMENT = new SeatMovementBehaviour();
-	private boolean inCreativeTab;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import mcp.MethodsReturnNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class SeatBlock extends Block {
+
+	private final boolean inCreativeTab;
 
 	public SeatBlock(Properties p_i48440_1_, boolean inCreativeTab) {
 		super(p_i48440_1_);
@@ -63,7 +67,7 @@ public class SeatBlock extends Block implements IPortableBlock {
 	}
 
 	@Override
-	public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
+	public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, @Nullable MobEntity entity) {
 		return PathNodeType.RAIL;
 	}
 
@@ -118,8 +122,4 @@ public class SeatBlock extends Block implements IPortableBlock {
 		entity.startRiding(seat, true);
 	}
 
-	@Override
-	public MovementBehaviour getMovementBehaviour() {
-		return MOVEMENT;
-	}
 }

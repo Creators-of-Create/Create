@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WDW",
+    " S ",
+    "WDW"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:dusts/redstone"
+    },
+    "D": {
+      "item": "create:brass_casing"
+    },
+    "S": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "create:redstone_contact",
+    "count": 2
+  }
+}

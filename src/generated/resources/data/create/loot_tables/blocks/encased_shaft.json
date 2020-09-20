@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create:encased_shaft"
+          "name": "create:shaft"
         }
       ],
       "conditions": [

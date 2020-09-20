@@ -2,10 +2,11 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
-import com.simibubi.create.content.contraptions.processing.HeaterBlock;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -30,21 +31,17 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		super.readClientUpdate(tag);
-		airCurrent.rebuild();
-	}
-
-	@Override
-	public void read(CompoundNBT compound) {
-		super.read(compound);
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		isGenerator = compound.getBoolean("Generating");
+		if (clientPacket)
+			airCurrent.rebuild();
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putBoolean("Generating", isGenerator);
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
@@ -77,10 +74,12 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 			return false;
 		BlockState checkState = world.getBlockState(pos.down());
 
-		if (!checkState.getBlock().isIn(AllBlockTags.FAN_HEATERS.tag))
+		if (!checkState.getBlock()
+			.isIn(AllBlockTags.FAN_HEATERS.tag))
 			return false;
 
-		if (checkState.has(HeaterBlock.BLAZE_LEVEL) && !checkState.get(HeaterBlock.BLAZE_LEVEL).min(HeaterBlock.HeatLevel.FADING))
+		if (checkState.has(BlazeBurnerBlock.HEAT_LEVEL) && !checkState.get(BlazeBurnerBlock.HEAT_LEVEL)
+			.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 			return false;
 
 		if (checkState.has(BlockStateProperties.LIT) && !checkState.get(BlockStateProperties.LIT))

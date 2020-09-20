@@ -1,0 +1,16 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:tall_grass"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:wheat_seeds",
+      "count": 1,
+      "chance": 0.5
+    }
+  ],
+  "processingTime": 100
+}

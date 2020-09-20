@@ -40,9 +40,15 @@ public class PaletteBlockPatterns {
 
 	COBBLESTONE = create("cobblestone", Suffix, AllPartials),
 
-		POLISHED = create("polished", Prefix, ForPolished).addRecipes(v -> (c,
-			p) -> p.square(DataIngredient.items(v.getBaseBlock()
-				.get()), c::get, true)),
+		POLISHED = create("polished", Prefix, ForPolished)
+			.addRecipes(v -> (c,
+			p) -> {
+				DataIngredient ingredient = DataIngredient.items(v.getBaseBlock().get());
+				ShapedRecipeBuilder.shapedRecipe(c.get(), 4).key('X', ingredient)
+						.patternLine("XX").patternLine("XX")
+						.addCriterion("has_" + p.safeName(ingredient), ingredient.getCritereon(p)).build(p, p.safeId(c.get()));
+				}
+			),
 
 		BRICKS = create("bricks", Suffix, AllPartials), FANCY_BRICKS = create("fancy_bricks", Wrap, AllPartials),
 

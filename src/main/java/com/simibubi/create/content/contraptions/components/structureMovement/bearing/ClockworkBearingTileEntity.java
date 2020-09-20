@@ -227,26 +227,26 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag) {
-		tag.putBoolean("Running", running);
-		tag.putFloat("HourAngle", hourAngle);
-		tag.putFloat("MinuteAngle", minuteAngle);
-		return super.write(tag);
+	public void write(CompoundNBT compound, boolean clientPacket) {
+		compound.putBoolean("Running", running);
+		compound.putFloat("HourAngle", hourAngle);
+		compound.putFloat("MinuteAngle", minuteAngle);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT tag) {
-		running = tag.getBoolean("Running");
-		hourAngle = tag.getFloat("HourAngle");
-		minuteAngle = tag.getFloat("MinuteAngle");
-		super.read(tag);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		float hourAngleBefore = hourAngle;
 		float minuteAngleBefore = minuteAngle;
-		super.readClientUpdate(tag);
+		
+		running = compound.getBoolean("Running");
+		hourAngle = compound.getFloat("HourAngle");
+		minuteAngle = compound.getFloat("MinuteAngle");
+		super.read(compound, clientPacket);
+		
+		if (!clientPacket)
+			return;
+		
 		if (running) {
 			clientHourAngleDiff = AngleHelper.getShortestAngleDiff(hourAngleBefore, hourAngle);
 			clientMinuteAngleDiff = AngleHelper.getShortestAngleDiff(minuteAngleBefore, minuteAngle);

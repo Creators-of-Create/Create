@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
@@ -13,10 +15,12 @@ import net.minecraft.util.math.vector.Vector3i;
 
 public class VecHelper {
 
+	public static final Vector3d CENTER_OF_ORIGIN = new Vector3d(.5, .5, .5);
+
 	public static Vector3d rotate(Vector3d vec, Vector3d rotationVec) {
 		return rotate(vec, rotationVec.x, rotationVec.y, rotationVec.z);
 	}
-	
+
 	public static Vector3d rotate(Vector3d vec, double xRot, double yRot, double zRot) {
 		return rotate(rotate(rotate(vec, xRot, Axis.X), yRot, Axis.Y), zRot, Axis.Z);
 	}
@@ -54,6 +58,8 @@ public class VecHelper {
 	}
 
 	public static Vector3d getCenterOf(Vector3i pos) {
+		if (pos.equals(Vector3i.NULL_VECTOR))
+			return CENTER_OF_ORIGIN;
 		return Vector3d.of(pos).add(.5f, .5f, .5f);
 	}
 
@@ -62,9 +68,13 @@ public class VecHelper {
 			vec.z + (r.nextFloat() - .5f) * 2 * radius);
 	}
 
-	public static Vector3d planeByNormal(Vector3d vec) {
+	public static Vector3d axisAlingedPlaneOf(Vector3d vec) {
 		vec = vec.normalize();
 		return new Vector3d(1, 1, 1).subtract(Math.abs(vec.x), Math.abs(vec.y), Math.abs(vec.z));
+	}
+	
+	public static Vector3d axisAlingedPlaneOf(Direction face) {
+		return axisAlingedPlaneOf(Vector3d.of(face.getDirectionVec()));
 	}
 
 	public static ListNBT writeNBT(Vector3d vec) {
@@ -76,6 +86,8 @@ public class VecHelper {
 	}
 
 	public static Vector3d readNBT(ListNBT list) {
+		if (list.isEmpty())
+			return Vector3d.ZERO;
 		return new Vector3d(list.getDouble(0), list.getDouble(1), list.getDouble(2));
 	}
 
@@ -99,6 +111,38 @@ public class VecHelper {
 				if (getCoordinate(pos1, otherAxis) != getCoordinate(pos2, otherAxis))
 					return false;
 		return true;
+	}
+
+	public static Vector3d clamp(Vector3d vec, float maxLength) {
+		return vec.length() > maxLength ? vec.normalize()
+			.scale(maxLength) : vec;
+	}
+
+	public static Vector3d clampComponentWise(Vector3d vec, float maxLength) {
+		return new Vector3d(MathHelper.clamp(vec.x, -maxLength, maxLength), MathHelper.clamp(vec.y, -maxLength, maxLength),
+			MathHelper.clamp(vec.z, -maxLength, maxLength));
+	}
+
+	public static Vector3d project(Vector3d vec, Vector3d ontoVec) {
+		if (ontoVec.equals(Vector3d.ZERO))
+			return Vector3d.ZERO;
+		return ontoVec.scale(vec.dotProduct(ontoVec) / ontoVec.lengthSquared());
+	}
+
+	@Nullable
+	public static Vector3d intersectSphere(Vector3d origin, Vector3d lineDirection, Vector3d sphereCenter, double radius) {
+		if (lineDirection.equals(Vector3d.ZERO))
+			return null;
+		if (lineDirection.length() != 1)
+			lineDirection = lineDirection.normalize();
+
+		Vector3d diff = origin.subtract(sphereCenter);
+		double lineDotDiff = lineDirection.dotProduct(diff);
+		double delta = lineDotDiff * lineDotDiff - (diff.lengthSquared() - radius * radius);
+		if (delta < 0)
+			return null;
+		double t = -lineDotDiff + MathHelper.sqrt(delta);
+		return origin.add(lineDirection.scale(t));
 	}
 
 }

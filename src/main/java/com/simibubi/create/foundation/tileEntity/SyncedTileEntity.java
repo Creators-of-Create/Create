@@ -54,5 +54,10 @@ public abstract class SyncedTileEntity extends TileEntity {
 	public CompoundNBT writeToClient(CompoundNBT tag) {
 		return write(tag);
 	}
+	
+	public void notifyUpdate() {
+		markDirty();
+		sendData();
+	}
 
 }

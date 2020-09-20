@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:storage_blocks/zinc"
+    }
+  ],
+  "result": {
+    "item": "create:zinc_ingot",
+    "count": 9
+  }
+}

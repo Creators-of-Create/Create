@@ -1,50 +1,47 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
-
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.ExtractingBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InsertingBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InventoryManagementBehaviour.Attachments;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour.InterfaceProvider;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 
 public class FunnelTileEntity extends SmartTileEntity {
 
 	private FilteringBehaviour filtering;
-	private InsertingBehaviour inserting;
-	private ExtractingBehaviour extracting;
-	private DirectBeltInputBehaviour beltInputBehaviour;
+	private InvManipulationBehaviour invManipulation;
+	private InvManipulationBehaviour autoExtractor;
+	private int extractionCooldown;
 
 	int sendFlap;
 	InterpolatedChasingValue flap;
 
 	static enum Mode {
-		INVALID, PAUSED, COLLECT, BELT, CHUTE_SIDE, CHUTE_END
+		INVALID, PAUSED, COLLECT, PUSHING_TO_BELT, TAKING_FROM_BELT, HOPPER
 	}
 
 	public FunnelTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
+		extractionCooldown = 0;
 		flap = new InterpolatedChasingValue().start(.25f)
 			.target(0)
 			.withSpeed(.05f);
@@ -56,148 +53,159 @@ public class FunnelTileEntity extends SmartTileEntity {
 			return Mode.INVALID;
 		if (state.has(BlockStateProperties.POWERED) && state.get(BlockStateProperties.POWERED))
 			return Mode.PAUSED;
-		if (state.getBlock() instanceof BeltFunnelBlock)
-			return Mode.BELT;
-		if (state.getBlock() instanceof ChuteFunnelBlock)
-			return Mode.CHUTE_SIDE;
-
-		Direction facing = FunnelBlock.getFunnelFacing(state);
-		BlockState input = world.getBlockState(pos.offset(facing));
-
-		if (AllBlocks.CHUTE.has(input))
-			return Mode.CHUTE_END;
+		if (FunnelBlock.getFunnelFacing(state) == Direction.UP && autoExtractor.hasInventory())
+			return Mode.HOPPER;
+		if (state.getBlock() instanceof BeltFunnelBlock) {
+			boolean pushing = state.get(BeltFunnelBlock.PUSHING);
+			return pushing ? Mode.PUSHING_TO_BELT : Mode.TAKING_FROM_BELT;
+		}
 		return Mode.COLLECT;
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		Mode mode = determineCurrentMode();
-		if (mode == Mode.BELT)
-			tickAsBeltFunnel();
-		if (world.isRemote)
-			return;
-		if (mode == Mode.CHUTE_SIDE)
-			tickAsHorizontalChuteFunnel();
-		if (mode == Mode.CHUTE_END)
-			tickAsVerticalChuteFunnel();
-	}
-
-	public void tickAsHorizontalChuteFunnel() {
-		if (!getBlockState().get(ChuteFunnelBlock.PUSHING))
-			return;
-		BlockPos chutePos = pos.offset(FunnelBlock.getFunnelFacing(getBlockState()));
-		TileEntity te = world.getTileEntity(chutePos);
-		if (!(te instanceof ChuteTileEntity))
-			return;
-		ChuteTileEntity chute = (ChuteTileEntity) te;
-		extracting.setCallback(stack -> chute.setItem(stack, .5f));
-		extracting.withAdditionalFilter(stack -> chute.getItem()
-			.isEmpty());
-		extracting.extract();
-	}
-
-	public void tickAsVerticalChuteFunnel() {
-		Direction funnelFacing = FunnelBlock.getFunnelFacing(getBlockState());
-		BlockPos chutePos = pos.offset(funnelFacing);
-		TileEntity te = world.getTileEntity(chutePos);
-		if (!(te instanceof ChuteTileEntity))
-			return;
-		ChuteTileEntity chute = (ChuteTileEntity) te;
-		if (chute.getItemMotion() > 0 != (funnelFacing == Direction.UP))
-			return;
-		extracting.setCallback(stack -> chute.setItem(stack));
-		extracting.withAdditionalFilter(stack -> chute.getItem()
-			.isEmpty());
-		extracting.extract();
-	}
-
-	public void tickAsBeltFunnel() {
-		BlockState blockState = getBlockState();
-		Direction facing = blockState.get(BeltFunnelBlock.HORIZONTAL_FACING);
 		flap.tick();
+		Mode mode = determineCurrentMode();
 		if (world.isRemote)
 			return;
 
-		if (!blockState.get(BeltFunnelBlock.PUSHING)) {
-			// Belts handle insertion from their side
-			if (AllBlocks.BELT.has(world.getBlockState(pos.down())))
-				return;
-			TransportedItemStackHandlerBehaviour handler =
-				TileEntityBehaviour.get(world, pos.down(), TransportedItemStackHandlerBehaviour.TYPE);
-			if (handler == null)
-				return;
-			handler.handleCenteredProcessingOnAllItems(1 / 32f, this::collectFromHandler);
+		// Redstone resets the extraction cooldown
+		if (mode == Mode.PAUSED)
+			extractionCooldown = 0;
+		if (mode == Mode.TAKING_FROM_BELT)
+			tickAsPullingBeltFunnel();
+
+		if (extractionCooldown > 0) {
+			extractionCooldown--;
 			return;
 		}
 
+		if (mode == Mode.PUSHING_TO_BELT)
+			activateExtractingBeltFunnel();
+		if (mode == Mode.HOPPER)
+			activateHopper();
+	}
+
+	private void activateHopper() {
+		if (!invManipulation.hasInventory())
+			return;
+		int amountToExtract = autoExtractor.getAmountFromFilter();
+		if (!filtering.isActive())
+			amountToExtract = 1;
+
+		Predicate<ItemStack> filter = s -> !filtering.isActive() || filtering.test(s);
+		Function<ItemStack, Integer> amountThreshold = s -> s.getMaxStackSize() - invManipulation.simulate()
+			.insert(s)
+			.getCount();
+
+		if (amountToExtract != -1 && !invManipulation.simulate()
+			.insert(autoExtractor.simulate()
+				.extract(amountToExtract, filter))
+			.isEmpty())
+			return;
+
+		ItemStack stack = autoExtractor.extract(amountToExtract, filter, amountThreshold);
+		if (stack.isEmpty())
+			return;
+		invManipulation.insert(stack);
+		startCooldown();
+	}
+
+	private void tickAsPullingBeltFunnel() {
+		// Belts handle insertion from their side
+		if (AllBlocks.BELT.has(world.getBlockState(pos.down())))
+			return;
+		TransportedItemStackHandlerBehaviour handler =
+			TileEntityBehaviour.get(world, pos.down(), TransportedItemStackHandlerBehaviour.TYPE);
+		if (handler == null)
+			return;
+		handler.handleCenteredProcessingOnAllItems(1 / 32f, this::collectFromHandler);
+	}
+
+	private void activateExtractingBeltFunnel() {
+		BlockState blockState = getBlockState();
+		Direction facing = blockState.get(BeltFunnelBlock.HORIZONTAL_FACING);
 		DirectBeltInputBehaviour inputBehaviour =
 			TileEntityBehaviour.get(world, pos.down(), DirectBeltInputBehaviour.TYPE);
+
 		if (inputBehaviour == null)
 			return;
 		if (!inputBehaviour.canInsertFromSide(facing))
 			return;
 
-		extracting.setCallback(stack -> {
-			flap(false);
-			inputBehaviour.handleInsertion(stack, facing, false);
-		});
-
-		extracting.withAdditionalFilter(stack -> inputBehaviour.handleInsertion(stack, facing, true)
+		int amountToExtract = invManipulation.getAmountFromFilter();
+		if (!filtering.isActive())
+			amountToExtract = 1;
+		ItemStack stack = invManipulation.extract(amountToExtract, s -> inputBehaviour.handleInsertion(s, facing, true)
 			.isEmpty());
-		extracting.extract();
+		if (stack.isEmpty())
+			return;
+		flap(false);
+		inputBehaviour.handleInsertion(stack, facing, false);
+		startCooldown();
 	}
 
-	private List<TransportedItemStack> collectFromHandler(TransportedItemStack stack) {
+	private int startCooldown() {
+		return extractionCooldown = AllConfigs.SERVER.logistics.defaultExtractionTimer.get();
+	}
+
+	private TransportedResult collectFromHandler(TransportedItemStack stack) {
+		TransportedResult ignore = TransportedResult.doNothing();
 		ItemStack toInsert = stack.stack.copy();
 		if (!filtering.test(toInsert))
-			return null;
-		ItemStack remainder = inserting.insert(toInsert, false);
+			return ignore;
+		ItemStack remainder = invManipulation.insert(toInsert);
 		if (remainder.equals(stack.stack, false))
-			return null;
-		List<TransportedItemStack> list = new ArrayList<>();
+			return ignore;
+
 		flap(true);
+
 		if (remainder.isEmpty())
-			return list;
+			return TransportedResult.removeItem();
 		TransportedItemStack changed = stack.copy();
 		changed.stack = remainder;
-		list.add(changed);
-		return list;
+		return TransportedResult.convertTo(changed);
 	}
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		Supplier<List<Pair<BlockPos, Direction>>> direction =
-			Attachments.toward(() -> FunnelBlock.getFunnelFacing(getBlockState())
-				.getOpposite());
+		invManipulation = new InvManipulationBehaviour(this, InterfaceProvider.oppositeOfBlockFacing());
+		behaviours.add(invManipulation);
+		autoExtractor = InvManipulationBehaviour.forExtraction(this, InterfaceProvider.towardBlockFacing());
+		behaviours.add(autoExtractor);
 
-		inserting = new InsertingBehaviour(this, direction);
-		extracting = new ExtractingBehaviour(this, direction);
-		behaviours.add(inserting);
-		behaviours.add(extracting);
-
-		filtering = new FilteringBehaviour(this, new FunnelFilterSlotPositioning()).showCountWhen(() -> {
-			BlockState blockState = getBlockState();
-			return blockState.getBlock() instanceof HorizontalInteractionFunnelBlock
-				&& blockState.get(HorizontalInteractionFunnelBlock.PUSHING) || determineCurrentMode() == Mode.CHUTE_END;
-		});
+		filtering = new FilteringBehaviour(this, new FunnelFilterSlotPositioning());
+		filtering.showCountWhen(this::supportsAmountOnFilter);
 		filtering.onlyActiveWhen(this::supportsFiltering);
 		behaviours.add(filtering);
 
-		beltInputBehaviour = new DirectBeltInputBehaviour(this).onlyInsertWhen(this::supportsDirectBeltInput)
-			.setInsertionHandler(this::handleDirectBeltInput);
-		behaviours.add(beltInputBehaviour);
+		behaviours.add(new DirectBeltInputBehaviour(this).onlyInsertWhen(this::supportsDirectBeltInput)
+			.setInsertionHandler(this::handleDirectBeltInput));
+	}
+
+	private boolean supportsAmountOnFilter() {
+		BlockState blockState = getBlockState();
+		boolean pushingToBelt = blockState.getBlock() instanceof HorizontalInteractionFunnelBlock
+			&& blockState.get(HorizontalInteractionFunnelBlock.PUSHING);
+		boolean hopper = FunnelBlock.getFunnelFacing(blockState) == Direction.UP && invManipulation.hasInventory()
+			&& autoExtractor.hasInventory();
+		return pushingToBelt || hopper;
 	}
 
 	private boolean supportsDirectBeltInput(Direction side) {
 		BlockState blockState = getBlockState();
-		return blockState != null && blockState.getBlock() instanceof FunnelBlock
-			&& blockState.get(FunnelBlock.FACING) == Direction.UP;
+		if (blockState == null)
+			return false;
+		if (!(blockState.getBlock() instanceof FunnelBlock))
+			return false;
+		Direction direction = blockState.get(FunnelBlock.FACING);
+		return direction == Direction.UP || direction == side.getOpposite();
 	}
 
 	private boolean supportsFiltering() {
 		BlockState blockState = getBlockState();
-		return blockState != null && blockState.has(BlockStateProperties.POWERED);
+		return AllBlocks.BRASS_BELT_FUNNEL.has(blockState) || AllBlocks.BRASS_FUNNEL.has(blockState);
 	}
 
 	private ItemStack handleDirectBeltInput(TransportedItemStack stack, Direction side, boolean simulate) {
@@ -206,7 +214,9 @@ public class FunnelTileEntity extends SmartTileEntity {
 			return inserted;
 		if (determineCurrentMode() == Mode.PAUSED)
 			return inserted;
-		return inserting.insert(inserted, simulate);
+		if (simulate)
+			invManipulation.simulate();
+		return invManipulation.insert(inserted);
 	}
 
 	public void flap(boolean inward) {
@@ -220,21 +230,23 @@ public class FunnelTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-		if (sendFlap != 0) {
+	protected void write(CompoundNBT compound, boolean clientPacket) {
+		super.write(compound, clientPacket);
+		compound.putInt("TransferCooldown", extractionCooldown);
+		if (clientPacket && sendFlap != 0) {
 			compound.putInt("Flap", sendFlap);
 			sendFlap = 0;
 		}
-		return super.writeToClient(compound);
 	}
 
 	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		if (tag.contains("Flap")) {
-			int direction = tag.getInt("Flap");
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
+		extractionCooldown = compound.getInt("TransferCooldown");
+		if (clientPacket && compound.contains("Flap")) {
+			int direction = compound.getInt("Flap");
 			flap.set(direction);
 		}
-		super.readClientUpdate(tag);
 	}
 
 	@Override

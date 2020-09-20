@@ -24,8 +24,8 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
-		super.read(compound);
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		if (compound.contains("Flows")) {
 			for (Direction d : Direction.values())
 				setFlow(d, compound.getCompound("Flows")
@@ -39,13 +39,13 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		CompoundNBT flows = new CompoundNBT();
 		for (Direction d : Direction.values())
 			flows.putFloat(d.getName(), this.flows.get(d));
 		compound.put("Flows", flows);
 
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	public void setFlow(Direction direction, float speed) {

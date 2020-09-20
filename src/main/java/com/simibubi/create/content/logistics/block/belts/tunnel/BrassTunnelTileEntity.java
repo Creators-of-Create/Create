@@ -1,7 +1,10 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -11,11 +14,16 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
+import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.SidedFilteringBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.Block;
@@ -36,6 +44,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 
@@ -49,16 +58,44 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 	List<Pair<BlockPos, Direction>> distributionTargets;
 	int distributionDistanceLeft;
 	int distributionDistanceRight;
+	int previousOutputIndex;
 
+	private boolean syncedOutputActive;
+	private Set<BrassTunnelTileEntity> syncSet;
+
+	protected ScrollOptionBehaviour<SelectionMode> selectionMode;
 	private LazyOptional<IItemHandler> beltCapability;
 	private LazyOptional<IItemHandler> tunnelCapability;
 
 	public BrassTunnelTileEntity(TileEntityType<? extends BeltTunnelTileEntity> type) {
 		super(type);
 		distributionTargets = new ArrayList<>();
+		syncSet = new HashSet<>();
 		stackToDistribute = ItemStack.EMPTY;
 		beltCapability = LazyOptional.empty();
 		tunnelCapability = LazyOptional.of(() -> new BrassTunnelItemHandler(this));
+		previousOutputIndex = 0;
+		syncedOutputActive = false;
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		behaviours.add(selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class,
+			Lang.translate("logistics.when_multiple_outputs_available"), this,
+			new CenteredSideValueBoxTransform((state, d) -> d == Direction.UP)));
+		selectionMode.requiresWrench();
+
+		// Propagate settings across connected tunnels
+		selectionMode.withCallback(setting -> {
+			for (boolean side : Iterate.trueAndFalse) {
+				if (!isConnected(side))
+					continue;
+				BrassTunnelTileEntity adjacent = getAdjacent(side);
+				if (adjacent != null)
+					adjacent.selectionMode.setValue(setting);
+			}
+		});
 	}
 
 	@Override
@@ -66,9 +103,11 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		super.tick();
 		BeltTileEntity beltBelow = BeltHelper.getSegmentTE(world, pos.down());
 
+		if (distributionProgress > 0)
+			distributionProgress--;
 		if (beltBelow == null || beltBelow.getSpeed() == 0)
 			return;
-		if (stackToDistribute.isEmpty())
+		if (stackToDistribute.isEmpty() && !syncedOutputActive)
 			return;
 		if (world.isRemote)
 			return;
@@ -77,10 +116,31 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			distributionTargets.clear();
 			distributionDistanceLeft = 0;
 			distributionDistanceRight = 0;
-			for (Pair<BrassTunnelTileEntity, Direction> pair : gatherValidOutputs()) {
+
+			syncSet.clear();
+			List<Pair<BrassTunnelTileEntity, Direction>> validOutputs = gatherValidOutputs();
+			if (selectionMode.get() == SelectionMode.SYNCHRONIZE) {
+				boolean allEmpty = true;
+				boolean allFull = true;
+				for (BrassTunnelTileEntity te : syncSet) {
+					boolean hasStack = !te.stackToDistribute.isEmpty();
+					allEmpty &= !hasStack;
+					allFull &= hasStack;
+				}
+				final boolean notifySyncedOut = !allEmpty;
+				if (allFull || allEmpty)
+					syncSet.forEach(te -> te.syncedOutputActive = notifySyncedOut);
+			}
+			
+			if (validOutputs == null)
+				return;
+			if (stackToDistribute.isEmpty())
+				return;
+
+			for (Pair<BrassTunnelTileEntity, Direction> pair : validOutputs) {
 				BrassTunnelTileEntity tunnel = pair.getKey();
 				Direction output = pair.getValue();
-				if (!insertIntoTunnel(tunnel, output, stackToDistribute, true).isEmpty())
+				if (insertIntoTunnel(tunnel, output, stackToDistribute, true) == null)
 					continue;
 				distributionTargets.add(Pair.of(tunnel.pos, output));
 				int distance = tunnel.pos.getX() + tunnel.pos.getZ() - pos.getX() - pos.getZ();
@@ -93,12 +153,13 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			if (distributionTargets.isEmpty())
 				return;
 
-			distributionProgress = 0;
-			sendData();
+			if (selectionMode.get() != SelectionMode.SYNCHRONIZE || syncedOutputActive) {
+				distributionProgress = 10;
+				sendData();
+			}
 			return;
 		}
 
-		// TODO this is instant for now
 		if (distributionProgress == 0) {
 			List<Pair<BrassTunnelTileEntity, Direction>> validTargets = new ArrayList<>();
 			for (Pair<BlockPos, Direction> pair : distributionTargets) {
@@ -110,34 +171,71 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 				validTargets.add(Pair.of((BrassTunnelTileEntity) te, output));
 			}
 
-			if (validTargets.size() == 0) {
-				distributionProgress = -1;
-				sendData();
-				return;
-			}
-
-			int stackSizeBefore = stackToDistribute.getCount();
-			int stackSizeForOutput = stackSizeBefore / validTargets.size();
-			int remainder = stackSizeBefore % validTargets.size();
-
-			for (Pair<BrassTunnelTileEntity, Direction> pair : validTargets) {
-				BrassTunnelTileEntity tunnel = pair.getKey();
-				Direction side = pair.getValue();
-				int stackSize = stackSizeForOutput + (remainder > 0 ? 1 : 0);
-				ItemStack toOutput = stackToDistribute.copy()
-					.split(stackSize);
-				if (!insertIntoTunnel(tunnel, side, toOutput, false).isEmpty())
-					continue;
-				stackToDistribute.shrink(stackSize);
-				remainder--;
-			}
-
+			distribute(validTargets);
 			distributionProgress = -1;
-			markDirty();
-			sendData();
 			return;
 		}
 
+	}
+
+	private static Random rand = new Random();
+
+	private void distribute(List<Pair<BrassTunnelTileEntity, Direction>> validTargets) {
+		final int amountTargets = validTargets.size();
+		if (amountTargets == 0)
+			return;
+
+		int indexStart = previousOutputIndex % amountTargets;
+		SelectionMode mode = selectionMode.get();
+		boolean force = mode == SelectionMode.FORCED_ROUND_ROBIN || mode == SelectionMode.FORCED_SPLIT;
+		boolean split = mode == SelectionMode.FORCED_SPLIT || mode == SelectionMode.SPLIT;
+
+		if (mode == SelectionMode.RANDOMIZE)
+			indexStart = rand.nextInt(amountTargets);
+		if (mode == SelectionMode.PREFER_NEAREST || mode == SelectionMode.SYNCHRONIZE)
+			indexStart = 0;
+
+		ItemStack toDistribute = null;
+		for (boolean simulate : Iterate.trueAndFalse) {
+			int index = indexStart;
+			int stackSize = stackToDistribute.getCount();
+			int splitStackSize = stackSize / amountTargets;
+			int splitRemainder = stackSize % amountTargets;
+			int visited = 0;
+
+			toDistribute = stackToDistribute.copy();
+			if (!force && simulate)
+				continue;
+			while (visited < amountTargets) {
+				Pair<BrassTunnelTileEntity, Direction> pair = validTargets.get(index);
+				BrassTunnelTileEntity tunnel = pair.getKey();
+				Direction side = pair.getValue();
+				index = (index + 1) % amountTargets;
+				visited++;
+
+				int count = split ? splitStackSize + (splitRemainder > 0 ? 1 : 0) : stackSize;
+				ItemStack toOutput = ItemHandlerHelper.copyStackWithSize(toDistribute, count);
+				ItemStack remainder = insertIntoTunnel(tunnel, side, toOutput, simulate);
+
+				if (remainder == null || !remainder.isEmpty()) {
+					if (force)
+						return;
+					continue;
+				}
+
+				toDistribute.shrink(count);
+				if (toDistribute.isEmpty())
+					break;
+				splitRemainder--;
+				if (!split)
+					break;
+			}
+		}
+
+		stackToDistribute = toDistribute.copy();
+		previousOutputIndex++;
+		previousOutputIndex %= amountTargets;
+		notifyUpdate();
 	}
 
 	public void setStackToDistribute(ItemStack stack) {
@@ -151,21 +249,24 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		return stackToDistribute;
 	}
 
+	@Nullable
 	protected ItemStack insertIntoTunnel(BrassTunnelTileEntity tunnel, Direction side, ItemStack stack,
 		boolean simulate) {
 		if (stack.isEmpty())
 			return stack;
 		if (!tunnel.testFlapFilter(side, stack))
-			return stack;
+			return null;
 
 		BeltTileEntity below = BeltHelper.getSegmentTE(world, tunnel.pos.down());
 		if (below == null)
-			return stack;
+			return null;
 		BlockPos offset = tunnel.getPos()
 			.down()
 			.offset(side);
 		DirectBeltInputBehaviour sideOutput = TileEntityBehaviour.get(world, offset, DirectBeltInputBehaviour.TYPE);
 		if (sideOutput != null) {
+			if (!sideOutput.canInsertFromSide(side))
+				return null;
 			ItemStack result = sideOutput.handleInsertion(stack, side, simulate);
 			if (result.isEmpty() && !simulate)
 				tunnel.flap(side, true);
@@ -177,8 +278,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			if (!Block.hasSolidSide(world.getBlockState(offset), world, offset, side.getOpposite())) {
 				BeltTileEntity controllerTE = below.getControllerTE();
 				if (controllerTE == null)
-					return stack;
-				
+					return null;
+
 				if (!simulate) {
 					tunnel.flap(side, true);
 					ItemStack ejected = stack;
@@ -195,11 +296,11 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 					entity.velocityChanged = true;
 					world.addEntity(entity);
 				}
-				
+
 				return ItemStack.EMPTY;
 			}
 
-		return stack;
+		return null;
 	}
 
 	public boolean testFlapFilter(Direction side, ItemStack stack) {
@@ -219,7 +320,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 	public void initialize() {
 		if (filtering == null) {
 			filtering = createSidedFilter();
-			putBehaviour(filtering);
+			attachBehaviourLate(filtering);
 		}
 		super.initialize();
 	}
@@ -251,22 +352,29 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 
 	private List<Pair<BrassTunnelTileEntity, Direction>> gatherValidOutputs() {
 		List<Pair<BrassTunnelTileEntity, Direction>> validOutputs = new ArrayList<>();
+		boolean synchronize = selectionMode.get() == SelectionMode.SYNCHRONIZE;
 		addValidOutputsOf(this, validOutputs);
+
 		for (boolean left : Iterate.trueAndFalse) {
 			BrassTunnelTileEntity adjacent = this;
 			while (adjacent != null) {
 				if (!world.isAreaLoaded(adjacent.getPos(), 1))
 					return null;
 				adjacent = adjacent.getAdjacent(left);
-				if (adjacent != null)
-					addValidOutputsOf(adjacent, validOutputs);
+				if (adjacent == null)
+					continue;
+				addValidOutputsOf(adjacent, validOutputs);
 			}
 		}
+
+		if (!syncedOutputActive && synchronize)
+			return null;
 		return validOutputs;
 	}
 
 	private void addValidOutputsOf(BrassTunnelTileEntity tunnelTE,
 		List<Pair<BrassTunnelTileEntity, Direction>> validOutputs) {
+		syncSet.add(tunnelTE);
 		BeltTileEntity below = BeltHelper.getSegmentTE(world, tunnelTE.pos.down());
 		if (below == null)
 			return;
@@ -328,12 +436,14 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
+		compound.putBoolean("SyncedOutput", syncedOutputActive);
 		compound.putBoolean("ConnectedLeft", connectedLeft);
 		compound.putBoolean("ConnectedRight", connectedRight);
 
 		compound.put("StackToDistribute", stackToDistribute.serializeNBT());
 		compound.putFloat("DistributionProgress", distributionProgress);
+		compound.putInt("PreviousIndex", previousOutputIndex);
 		compound.putInt("DistanceLeft", distributionDistanceLeft);
 		compound.putInt("DistanceRight", distributionDistanceRight);
 		compound.put("Targets", NBTHelper.writeCompoundList(distributionTargets, pair -> {
@@ -344,16 +454,20 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			return nbt;
 		}));
 
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		boolean wasConnectedLeft = connectedLeft;
+		boolean wasConnectedRight = connectedRight;
+
+		syncedOutputActive = compound.getBoolean("SyncedOutput");
 		connectedLeft = compound.getBoolean("ConnectedLeft");
 		connectedRight = compound.getBoolean("ConnectedRight");
-
 		stackToDistribute = ItemStack.read(compound.getCompound("StackToDistribute"));
 		distributionProgress = compound.getFloat("DistributionProgress");
+		previousOutputIndex = compound.getInt("PreviousIndex");
 		distributionDistanceLeft = compound.getInt("DistanceLeft");
 		distributionDistanceRight = compound.getInt("DistanceRight");
 		distributionTargets = NBTHelper.readCompoundList(compound.getList("Targets", NBT.TAG_COMPOUND), nbt -> {
@@ -362,14 +476,10 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			return Pair.of(pos, face);
 		});
 
-		super.read(compound);
-	}
+		super.read(compound, clientPacket);
 
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		boolean wasConnectedLeft = connectedLeft;
-		boolean wasConnectedRight = connectedRight;
-		super.readClientUpdate(tag);
+		if (!clientPacket)
+			return;
 		if (wasConnectedLeft != connectedLeft || wasConnectedRight != connectedRight) {
 			requestModelDataUpdate();
 			if (hasWorld())
@@ -393,15 +503,20 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			connectedLeft = nowConnectedLeft;
 			connectivityChanged = true;
 			BrassTunnelTileEntity adjacent = getAdjacent(true);
-			if (adjacent != null && !world.isRemote)
+			if (adjacent != null && !world.isRemote) {
 				adjacent.updateTunnelConnections();
+				adjacent.selectionMode.setValue(selectionMode.getValue());
+			}
 		}
+
 		if (connectedRight != nowConnectedRight) {
 			connectedRight = nowConnectedRight;
 			connectivityChanged = true;
 			BrassTunnelTileEntity adjacent = getAdjacent(false);
-			if (adjacent != null && !world.isRemote)
+			if (adjacent != null && !world.isRemote) {
 				adjacent.updateTunnelConnections();
+				adjacent.selectionMode.setValue(selectionMode.getValue());
+			}
 		}
 
 		if (filtering != null)
@@ -437,6 +552,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		if (adjacentBlockState.get(BrassTunnelBlock.HORIZONTAL_AXIS) != axis)
 			return null;
 		TileEntity adjacentTE = world.getTileEntity(adjacentPos);
+		if (adjacentTE.isRemoved())
+			return null;
 		if (!(adjacentTE instanceof BrassTunnelTileEntity))
 			return null;
 		return (BrassTunnelTileEntity) adjacentTE;
@@ -462,6 +579,40 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 				beltCapability = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		}
 		return beltCapability;
+	}
+
+	public enum SelectionMode implements INamedIconOptions {
+		SPLIT(AllIcons.I_TUNNEL_SPLIT),
+		FORCED_SPLIT(AllIcons.I_TUNNEL_FORCED_SPLIT),
+		ROUND_ROBIN(AllIcons.I_TUNNEL_ROUND_ROBIN),
+		FORCED_ROUND_ROBIN(AllIcons.I_TUNNEL_FORCED_ROUND_ROBIN),
+		PREFER_NEAREST(AllIcons.I_TUNNEL_PREFER_NEAREST),
+		RANDOMIZE(AllIcons.I_TUNNEL_RANDOMIZE),
+		SYNCHRONIZE(AllIcons.I_TUNNEL_SYNCHRONIZE),
+
+		;
+
+		private final String translationKey;
+		private final AllIcons icon;
+
+		SelectionMode(AllIcons icon) {
+			this.icon = icon;
+			this.translationKey = "tunnel.selection_mode." + Lang.asId(name());
+		}
+
+		@Override
+		public AllIcons getIcon() {
+			return icon;
+		}
+
+		@Override
+		public String getTranslationKey() {
+			return translationKey;
+		}
+	}
+
+	public boolean canTakeItems() {
+		return stackToDistribute.isEmpty() && !syncedOutputActive;
 	}
 
 }

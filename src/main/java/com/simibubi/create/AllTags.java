@@ -18,11 +18,11 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
-
 
 public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
@@ -64,7 +64,15 @@ public class AllTags {
 	}
 
 	public static enum AllItemTags {
-		CRUSHED_ORES(MOD), CREATE_INGOTS(MOD), BEACON_PAYMENT(FORGE), INGOTS(FORGE), NUGGETS(FORGE), PLATES(FORGE), COBBLESTONE(FORGE)
+		CRUSHED_ORES(MOD),
+		SEATS(MOD),
+		UPRIGHT_ON_BELT(MOD),
+		CREATE_INGOTS(MOD),
+		BEACON_PAYMENT(FORGE),
+		INGOTS(FORGE),
+		NUGGETS(FORGE),
+		PLATES(FORGE),
+		COBBLESTONE(FORGE)
 
 		;
 
@@ -83,6 +91,11 @@ public class AllTags {
 			return tag.contains(stack.getItem());
 		}
 
+		public void add(Item... values) {
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getOrCreateTagBuilder(tag)
+				.add(values));
+		}
+
 		public void includeIn(AllItemTags parent) {
 			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getOrCreateTagBuilder(parent.tag)
 				.addTag(tag));
@@ -90,7 +103,7 @@ public class AllTags {
 	}
 
 	public static enum AllBlockTags {
-		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE, NON_MOVABLE, BRITTLE, FAN_TRANSPARENT
+		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE, NON_MOVABLE, BRITTLE, SEATS, FAN_TRANSPARENT
 
 		;
 
@@ -99,11 +112,11 @@ public class AllTags {
 		private AllBlockTags() {
 			this(MOD, "");
 		}
-		
+
 		private AllBlockTags(NameSpace namespace) {
 			this(namespace, "");
 		}
-		
+
 		private AllBlockTags(NameSpace namespace, String path) {
 			tag = BlockTags.makeWrapperTag(
 				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
@@ -112,14 +125,15 @@ public class AllTags {
 		public boolean matches(BlockState block) {
 			return tag.contains(block.getBlock());
 		}
-		
+
 		public void includeIn(AllBlockTags parent) {
 			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(parent.tag)
 				.addTag(tag));
 		}
-		
+
 		public void includeAll(ITag.INamedTag<Block> child) {
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag).addTag(child));
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag)
+				.addTag(child));
 		}
 		
 		public void add(Block ...values) {
@@ -130,13 +144,17 @@ public class AllTags {
 	public static void register() {
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.INGOTS);
+
+		AllItemTags.UPRIGHT_ON_BELT.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
+
+		AllBlockTags.WINDMILL_SAILS.includeAll(BlockTags.WOOL);
 		
 		AllBlockTags.BRITTLE.includeAll(BlockTags.DOORS);
 		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL);
-		
+
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.FENCES);
 		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
-		
+
 		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE);
 	}
 }

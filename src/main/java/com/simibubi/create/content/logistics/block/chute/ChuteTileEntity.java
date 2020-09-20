@@ -5,18 +5,27 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.fan.AirCurrent;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.ChuteFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
+import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -31,6 +40,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -39,6 +49,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
@@ -51,6 +62,16 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	LazyOptional<IItemHandler> lazyHandler;
 	boolean canPickUpItems;
 
+	float bottomPullDistance;
+	int airCurrentUpdateCooldown;
+	int entitySearchCooldown;
+	boolean updateAirFlow;
+	TransportedItemStackHandlerBehaviour beltBelow;
+	float beltBelowOffset;
+
+	LazyOptional<IItemHandler> capAbove;
+	LazyOptional<IItemHandler> capBelow;
+
 	public ChuteTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		item = ItemStack.EMPTY;
@@ -58,6 +79,10 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		itemHandler = new ChuteItemHandler(this);
 		lazyHandler = LazyOptional.of(() -> itemHandler);
 		canPickUpItems = false;
+		capAbove = LazyOptional.empty();
+		capBelow = LazyOptional.empty();
+		bottomPullDistance = 0;
+		updateAirFlow = true;
 	}
 
 	@Override
@@ -79,29 +104,46 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return false;
 		if (getItemMotion() > 0 && getInputChutes().isEmpty())
 			return false;
-		return blockState.get(ChuteBlock.FACING) == Direction.DOWN || blockState.get(ChuteBlock.SHAPE) == Shape.START;
+		return blockState.get(ChuteBlock.FACING) == Direction.DOWN
+			|| blockState.get(ChuteBlock.SHAPE) == Shape.INTERSECTION;
 	}
 
 	@Override
 	public void initialize() {
 		super.initialize();
+		onAdded();
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return new AxisAlignedBB(pos).expand(0, -3, 0);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
+
 		canPickUpItems = canDirectlyInsert();
-		if (item.isEmpty())
-			return;
+
 		float itemMotion = getItemMotion();
+		if (itemMotion != 0 && world.isRemote)
+			spawnParticles(itemMotion);
+		if (itemMotion > 0)
+			tickAirStreamFromBelow(itemMotion);
+
+		if (item.isEmpty()) {
+			if (itemMotion < 0)
+				handleInputFromAbove();
+			if (itemMotion > 0)
+				handleInputFromBelow();
+			return;
+		}
+
 		float nextOffset = itemPosition.value + itemMotion;
 
 		if (itemMotion < 0) {
 			if (nextOffset < .5f) {
-				if (handleSideOutput())
-					return;
-				boolean success = handleDownwardOutput(true);
-				if (!success)
+				if (!handleDownwardOutput(true))
 					nextOffset = .5f;
 				else if (nextOffset < 0) {
 					handleDownwardOutput(world.isRemote);
@@ -112,10 +154,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		if (itemMotion > 0) {
 			if (nextOffset > .5f) {
-				if (handleSideOutput())
-					return;
-				boolean success = handleUpwardOutput(true);
-				if (!success)
+				if (!handleUpwardOutput(true))
 					nextOffset = .5f;
 				else if (nextOffset > 1) {
 					handleUpwardOutput(world.isRemote);
@@ -125,6 +164,143 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		}
 
 		itemPosition.set(nextOffset);
+	}
+
+	private void tickAirStreamFromBelow(float itemSpeed) {
+		if (world.isRemote)
+			return;
+
+		if (airCurrentUpdateCooldown-- <= 0) {
+			airCurrentUpdateCooldown = AllConfigs.SERVER.kinetics.fanBlockCheckRate.get();
+			updateAirFlow = true;
+		}
+
+		if (bottomPullDistance > 0 && getItem().isEmpty() && entitySearchCooldown-- <= 0) {
+			entitySearchCooldown = 5;
+			Vec3d center = VecHelper.getCenterOf(pos);
+			AxisAlignedBB searchArea =
+				new AxisAlignedBB(center.add(0, -bottomPullDistance - 0.5, 0), center.add(0, -0.5, 0)).grow(.45f);
+			for (ItemEntity itemEntity : world.getEntitiesWithinAABB(ItemEntity.class, searchArea)) {
+				setItem(itemEntity.getItem()
+					.copy(),
+					(float) (itemEntity.getBoundingBox()
+						.getCenter().y - pos.getY()));
+				itemEntity.remove();
+				break;
+			}
+		}
+
+		if (getItem().isEmpty() && beltBelow != null) {
+			beltBelow.handleCenteredProcessingOnAllItems(.5f, ts -> {
+				if (getItem().isEmpty()) {
+					setItem(ts.stack.copy(), -beltBelowOffset);
+					return TransportedResult.removeItem();
+				}
+				return TransportedResult.doNothing();
+			});
+		}
+
+		if (!updateAirFlow)
+			return;
+
+		float speed = pull - push;
+		float flowLimit = 0;
+		updateAirFlow = false;
+		beltBelow = null;
+
+		float maxPullDistance;
+		if (speed >= 128)
+			maxPullDistance = 3;
+		else if (speed >= 64)
+			maxPullDistance = 2;
+		else if (speed >= 32)
+			maxPullDistance = 1;
+		else
+			maxPullDistance = MathHelper.lerp(speed / 32, 0, 1);
+
+		if (AllBlocks.CHUTE.has(world.getBlockState(pos.down())))
+			maxPullDistance = 0;
+		flowLimit = maxPullDistance;
+		if (flowLimit > 0)
+			flowLimit = AirCurrent.getFlowLimit(world, pos, maxPullDistance, Direction.DOWN);
+
+		for (int i = 1; i <= flowLimit + 1; i++) {
+			TransportedItemStackHandlerBehaviour behaviour =
+				TileEntityBehaviour.get(world, pos.down(i), TransportedItemStackHandlerBehaviour.TYPE);
+			if (behaviour == null)
+				continue;
+			beltBelow = behaviour;
+			beltBelowOffset = i - 1;
+			break;
+		}
+
+		if (bottomPullDistance == flowLimit)
+			return;
+
+		this.bottomPullDistance = flowLimit;
+		sendData();
+	}
+
+	public void blockBelowChanged() {
+		updateAirFlow = true;
+	}
+
+	private void spawnParticles(float itemMotion) {
+		BlockState blockState = getBlockState();
+		boolean up = itemMotion > 0;
+		float absMotion = up ? itemMotion : -itemMotion;
+		if (blockState == null || !(blockState.getBlock() instanceof ChuteBlock))
+			return;
+		if (push == 0 && pull == 0)
+			return;
+
+		if (up
+			&& (blockState.get(ChuteBlock.FACING) == Direction.DOWN
+				|| blockState.get(ChuteBlock.SHAPE) == Shape.INTERSECTION)
+			&& BlockHelper.noCollisionInSpace(world, pos.up()))
+			spawnAirFlow(1, 2, absMotion, .5f);
+
+		if (blockState.get(ChuteBlock.FACING) != Direction.DOWN)
+			return;
+
+		if (blockState.get(ChuteBlock.SHAPE) == Shape.WINDOW)
+			spawnAirFlow(up ? 0 : 1, up ? 1 : 0, absMotion, 1);
+
+		if (!up && BlockHelper.noCollisionInSpace(world, pos.down()))
+			spawnAirFlow(0, -1, absMotion, .5f);
+
+		if (up && bottomPullDistance > 0) {
+			spawnAirFlow(-bottomPullDistance, 0, absMotion, 2);
+			spawnAirFlow(-bottomPullDistance, 0, absMotion, 2);
+		}
+	}
+
+	private void spawnAirFlow(float verticalStart, float verticalEnd, float motion, float drag) {
+		AirParticleData airParticleData = new AirParticleData(drag, motion);
+		Vec3d origin = new Vec3d(pos);
+		float xOff = Create.random.nextFloat() * .5f + .25f;
+		float zOff = Create.random.nextFloat() * .5f + .25f;
+		Vec3d v = origin.add(xOff, verticalStart, zOff);
+		Vec3d d = origin.add(xOff, verticalEnd, zOff)
+			.subtract(v);
+		if (Create.random.nextFloat() < 2 * motion)
+			world.addOptionalParticle(airParticleData, v.x, v.y, v.z, d.x, d.y, d.z);
+	}
+
+	private void handleInputFromAbove() {
+		if (!capAbove.isPresent())
+			capAbove = grabCapability(Direction.UP);
+		if (capAbove.isPresent())
+			item =
+				ItemHelper.extract(capAbove.orElse(null), Predicates.alwaysTrue(), ExtractionCountMode.UPTO, 16, false);
+	}
+
+	private void handleInputFromBelow() {
+		if (!capBelow.isPresent())
+			capBelow = grabCapability(Direction.DOWN);
+		if (capBelow.isPresent())
+			item =
+				ItemHelper.extract(capBelow.orElse(null), Predicates.alwaysTrue(), ExtractionCountMode.UPTO, 16, false);
 	}
 
 	private boolean handleDownwardOutput(boolean simulate) {
@@ -166,6 +342,15 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			ItemStack remainder = directInput.handleInsertion(item, Direction.UP, simulate);
 			if (!simulate)
 				setItem(remainder);
+			return remainder.isEmpty();
+		}
+
+		if (!capBelow.isPresent())
+			capBelow = grabCapability(Direction.DOWN);
+		if (capBelow.isPresent()) {
+			ItemStack remainder = ItemHandlerHelper.insertItemStacked(capBelow.orElse(null), item, simulate);
+			if (!simulate)
+				setItem(ItemStack.EMPTY);
 			return remainder.isEmpty();
 		}
 
@@ -220,6 +405,15 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return true;
 		}
 
+		if (!capAbove.isPresent())
+			capAbove = grabCapability(Direction.UP);
+		if (capAbove.isPresent()) {
+			ItemStack remainder = ItemHandlerHelper.insertItemStacked(capAbove.orElse(null), item, simulate);
+			if (!simulate)
+				setItem(ItemStack.EMPTY);
+			return remainder.isEmpty();
+		}
+
 		if (Block.hasSolidSide(stateAbove, world, pos.up(), Direction.DOWN))
 			return false;
 		if (!inputChutes.isEmpty())
@@ -237,25 +431,12 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		return true;
 	}
 
-	private boolean handleSideOutput() {
-		if (world.isRemote)
-			return false;
-		for (Direction direction : Iterate.horizontalDirections) {
-			BlockPos funnelPos = pos.offset(direction);
-			BlockState funnelState = world.getBlockState(funnelPos);
-			if (AllBlocks.BRASS_CHUTE_FUNNEL.has(funnelState)) {
-				if (funnelState.get(ChuteFunnelBlock.POWERED))
-					continue;
-				if (funnelState.get(ChuteFunnelBlock.HORIZONTAL_FACING) != direction.getOpposite())
-					continue;
-				if (funnelState.get(ChuteFunnelBlock.PUSHING))
-					continue;
-				ItemStack remainder = FunnelBlock.tryInsert(world, funnelPos, item.copy(), world.isRemote);
-				if (remainder.getCount() != item.getCount() && !world.isRemote)
-					setItem(remainder);
-			}
-		}
-		return item.isEmpty();
+	private LazyOptional<IItemHandler> grabCapability(Direction side) {
+		BlockPos pos = this.pos.offset(side);
+		TileEntity te = world.getTileEntity(pos);
+		if (te == null || te instanceof ChuteTileEntity)
+			return LazyOptional.empty();
+		return te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite());
 	}
 
 	public void setItem(ItemStack stack) {
@@ -277,22 +458,24 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.put("Item", item.serializeNBT());
 		compound.putFloat("ItemPosition", itemPosition.value);
 		compound.putFloat("Pull", pull);
 		compound.putFloat("Push", push);
-		return super.write(compound);
+		compound.putFloat("BottomAirFlowDistance", bottomPullDistance);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		ItemStack previousItem = item;
 		item = ItemStack.read(compound.getCompound("Item"));
 		itemPosition.lastValue = itemPosition.value = compound.getFloat("ItemPosition");
 		pull = compound.getFloat("Pull");
 		push = compound.getFloat("Push");
-		super.read(compound);
+		bottomPullDistance = compound.getFloat("BottomAirFlowDistance");
+		super.read(compound, clientPacket);
 
 		if (hasWorld() && world.isRemote && !previousItem.equals(item, false) && !item.isEmpty()) {
 			if (world.rand.nextInt(3) != 0)
@@ -307,11 +490,11 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	public float getItemMotion() {
 		// Chutes per second
 		final float fanSpeedModifier = 1 / 64f;
-		final float maxUpwardItemSpeed = 20f;
+		final float maxItemSpeed = 20f;
 		final float gravity = 4f;
 
-		float upwardMotion = (push + pull) * fanSpeedModifier;
-		return (upwardMotion == 0 ? -gravity : MathHelper.clamp(upwardMotion, 0, maxUpwardItemSpeed)) / 20f;
+		float motion = (push + pull) * fanSpeedModifier;
+		return (MathHelper.clamp(motion, -maxItemSpeed, maxItemSpeed) + (motion <= 0 ? -gravity : 0)) / 20f;
 	}
 
 	public void onRemoved(BlockState chuteState) {
@@ -319,7 +502,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		List<ChuteTileEntity> inputChutes = getInputChutes();
 		if (!item.isEmpty())
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), item);
-		super.remove();
+		remove();
 		if (targetChute != null) {
 			targetChute.updatePull();
 			targetChute.propagatePush();
@@ -342,6 +525,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (pull == totalPull)
 			return;
 		pull = totalPull;
+		updateAirFlow = true;
 		sendData();
 		ChuteTileEntity targetChute = getTargetChute(getBlockState());
 		if (targetChute != null)
@@ -352,6 +536,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		float totalPush = calculatePush(branchCount);
 		if (push == totalPush)
 			return;
+		updateAirFlow = true;
 		push = totalPush;
 		sendData();
 		propagatePush();
@@ -369,7 +554,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			TileEntity te = world.getTileEntity(pos.up());
 			if (te instanceof EncasedFanTileEntity && !te.isRemoved()) {
 				EncasedFanTileEntity fan = (EncasedFanTileEntity) te;
-				return Math.abs(fan.getSpeed());
+				return fan.getSpeed();
 			}
 		}
 
@@ -389,7 +574,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			TileEntity te = world.getTileEntity(pos.down());
 			if (te instanceof EncasedFanTileEntity && !te.isRemoved()) {
 				EncasedFanTileEntity fan = (EncasedFanTileEntity) te;
-				return Math.abs(fan.getSpeed());
+				return fan.getSpeed();
 			}
 		}
 

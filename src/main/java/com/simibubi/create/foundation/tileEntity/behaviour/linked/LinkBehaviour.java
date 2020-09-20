@@ -116,26 +116,26 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public void writeNBT(CompoundNBT compound) {
-		super.writeNBT(compound);
-		compound.put("FrequencyFirst", frequencyFirst.getStack()
+	public void write(CompoundNBT nbt, boolean clientPacket) {
+		super.write(nbt, clientPacket);
+		nbt.put("FrequencyFirst", frequencyFirst.getStack()
 			.write(new CompoundNBT()));
-		compound.put("FrequencyLast", frequencyLast.getStack()
+		nbt.put("FrequencyLast", frequencyLast.getStack()
 			.write(new CompoundNBT()));
-		compound.putLong("LastKnownPosition", tileEntity.getPos()
+		nbt.putLong("LastKnownPosition", tileEntity.getPos()
 			.toLong());
 	}
 
 	@Override
-	public void readNBT(CompoundNBT compound) {
+	public void read(CompoundNBT nbt, boolean clientPacket) {
 		long positionInTag = tileEntity.getPos()
 			.toLong();
-		long positionKey = compound.getLong("LastKnownPosition");
+		long positionKey = nbt.getLong("LastKnownPosition");
 		newPosition = positionInTag != positionKey;
 
-		super.readNBT(compound);
-		frequencyFirst = new Frequency(ItemStack.read(compound.getCompound("FrequencyFirst")));
-		frequencyLast = new Frequency(ItemStack.read(compound.getCompound("FrequencyLast")));
+		super.read(nbt, clientPacket);
+		frequencyFirst = new Frequency(ItemStack.read(nbt.getCompound("FrequencyFirst")));
+		frequencyLast = new Frequency(ItemStack.read(nbt.getCompound("FrequencyLast")));
 	}
 
 	public void setFrequency(boolean first, ItemStack stack) {

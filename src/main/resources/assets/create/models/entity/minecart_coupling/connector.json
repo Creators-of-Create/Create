@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:entity/coupling",
+		"particle": "create:entity/coupling"
+	},
+	"elements": [
+		{
+			"from": [0, -0.75, -1],
+			"to": [16, 0.75, 1],
+			"rotation": {"angle": 0, "axis": "y", "origin": [21, 7, 7]},
+			"faces": {
+				"north": {"uv": [5, 2, 6, 4], "texture": "#0"},
+				"east": {"uv": [5, 2, 6, 4], "texture": "#0"},
+				"south": {"uv": [5, 2, 6, 4], "texture": "#0"},
+				"west": {"uv": [5, 2, 6, 4], "texture": "#0"},
+				"up": {"uv": [5, 2, 6, 3], "texture": "#0"},
+				"down": {"uv": [5, 3, 6, 4], "texture": "#0"}
+			}
+		}
+	]
+}

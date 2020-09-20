@@ -1,8 +1,12 @@
 package com.simibubi.create.foundation.fluid;
 
+import java.util.function.Function;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -17,10 +21,61 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidRenderer {
+
+	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
+		boolean inbound, IRenderTypeBuffer buffer, MatrixStack ms, int light) {
+		Fluid fluid = fluidStack.getFluid();
+		FluidAttributes fluidAttributes = fluid.getAttributes();
+		Function<ResourceLocation, TextureAtlasSprite> spriteAtlas = Minecraft.getInstance()
+			.getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE);
+		TextureAtlasSprite flowTexture = spriteAtlas.apply(fluidAttributes.getFlowingTexture(fluidStack));
+		TextureAtlasSprite stillTexture = spriteAtlas.apply(fluidAttributes.getStillTexture(fluidStack));
+
+		int color = fluidAttributes.getColor(fluidStack);
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+		MatrixStacker msr = MatrixStacker.of(ms);
+		int blockLightIn = (light >> 4) & 0xf;
+		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
+		light = (light & 0xf00000) | luminosity << 4;
+
+		if (inbound)
+			direction = direction.getOpposite();
+
+		ms.push();
+		msr.centre()
+			.rotateY(AngleHelper.horizontalAngle(direction))
+			.rotateX(direction == Direction.UP ? 0 : direction == Direction.DOWN ? 180 : 90)
+			.unCentre();
+		ms.translate(.5, 0, .5);
+
+		float h = (float) (radius);
+		float hMin = (float) (-radius);
+		float hMax = (float) (radius);
+		float y = inbound ? 0 : .5f;
+		float yMin = y;
+		float yMax = y + MathHelper.clamp(progress * .5f - 1e-6f, 0, 1);
+
+		for (int i = 0; i < 4; i++) {
+			ms.push();
+			renderTiledHorizontalFace(h, Direction.SOUTH, hMin, yMin, hMax, yMax, builder, ms, light, color,
+				flowTexture);
+			ms.pop();
+			msr.rotateY(90);
+		}
+
+		if (progress != 1)
+			renderTiledVerticalFace(yMax, Direction.UP, hMin, hMin, hMax, hMax, builder, ms, light, color,
+				stillTexture);
+
+		ms.pop();
+
+	}
 
 	public static void renderTiledFluidBB(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
 		float yMax, float zMax, IRenderTypeBuffer buffer, MatrixStack ms, int light, boolean renderBottom) {
@@ -62,8 +117,9 @@ public class FluidRenderer {
 						.translateBack(center);
 
 				boolean X = side.getAxis() == Axis.X;
+				int darkColor = ColorHelper.mixColors(color, 0xff000011, 1 / 4f);
 				renderTiledHorizontalFace(X ? xMax : zMax, side, X ? zMin : xMin, yMin, X ? zMax : xMax, yMax, builder,
-					ms, light, color, fluidTexture);
+					ms, light, darkColor, fluidTexture);
 
 				ms.pop();
 				continue;
@@ -111,10 +167,11 @@ public class FluidRenderer {
 			for (float y1 = yMin; y1 < yMax; y1 = y2) {
 				y2 = Math.min((int) (y1 + 1), yMax);
 
-				float u1 = texture.getInterpolatedU(local(h1) * 16);
-				float v1 = texture.getInterpolatedV(local(y1) * 16);
-				float u2 = texture.getInterpolatedU(h2 == hMax ? local(h2) * 16 : 16);
-				float v2 = texture.getInterpolatedV(y2 == yMax ? local(y2) * 16 : 16);
+				int multiplier = texture.getWidth() == 32 ? 8 : 16;
+				float u1 = texture.getInterpolatedU(local(h1) * multiplier);
+				float v1 = texture.getInterpolatedV(local(y1) * multiplier);
+				float u2 = texture.getInterpolatedU(h2 == hMax ? local(h2) * multiplier : multiplier);
+				float v2 = texture.getInterpolatedV(y2 == yMax ? local(y2) * multiplier : multiplier);
 
 				float x1 = X ? h : h1;
 				float x2 = X ? h : h2;

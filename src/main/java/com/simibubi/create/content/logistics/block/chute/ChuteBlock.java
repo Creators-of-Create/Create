@@ -3,17 +3,18 @@ package com.simibubi.create.content.logistics.block.chute;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,13 +39,15 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
 	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 	public static final DirectionProperty FACING = BlockStateProperties.FACING_EXCEPT_UP;
 
 	public enum Shape implements IStringSerializable {
-		START(), WINDOW_STRAIGHT(), NORMAL();
+		INTERSECTION, WINDOW, NORMAL;
 
 		@Override
 		public String getString() {
@@ -145,6 +148,13 @@ public class ChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntit
 	}
 
 	@Override
+	public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_,
+		BlockPos neighbourPos, boolean p_220069_6_) {
+		if (pos.down().equals(neighbourPos))
+			withTileEntityDo(world, pos, ChuteTileEntity::blockBelowChanged);
+	}
+
+	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
 		BlockState above = world.getBlockState(pos.up());
 		return !(above.getBlock() instanceof ChuteBlock) || above.get(FACING) == Direction.DOWN;
@@ -170,14 +180,15 @@ public class ChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntit
 		Map<Direction, Boolean> connections = new HashMap<>();
 		int amtConnections = 0;
 		Direction facing = state.get(FACING);
+		boolean vertical = facing == Direction.DOWN;
 
-		if (facing == Direction.DOWN)
-			return state;
-		BlockState target = world.getBlockState(pos.down()
-			.offset(facing.getOpposite()));
-		if (!(target.getBlock() instanceof ChuteBlock))
-			return state.with(FACING, Direction.DOWN)
-				.with(SHAPE, Shape.NORMAL);
+		if (!vertical) {
+			BlockState target = world.getBlockState(pos.down()
+				.offset(facing.getOpposite()));
+			if (!(target.getBlock() instanceof ChuteBlock))
+				return state.with(FACING, Direction.DOWN)
+					.with(SHAPE, Shape.NORMAL);
+		}
 
 		for (Direction direction : Iterate.horizontalDirections) {
 			BlockState diagonalInputChute = world.getBlockState(pos.up()
@@ -189,31 +200,51 @@ public class ChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntit
 				amtConnections++;
 		}
 
-		if (amtConnections == 0)
-			return state.with(SHAPE, Shape.START);
+		boolean noConnections = amtConnections == 0;
+		if (vertical)
+			return state.with(SHAPE,
+				noConnections ? state.get(SHAPE) == Shape.WINDOW ? Shape.WINDOW : Shape.NORMAL : Shape.INTERSECTION);
+		if (noConnections)
+			return state.with(SHAPE, Shape.INTERSECTION);
 		if (connections.get(Direction.NORTH) && connections.get(Direction.SOUTH))
-			return state.with(SHAPE, Shape.START);
+			return state.with(SHAPE, Shape.INTERSECTION);
 		if (connections.get(Direction.EAST) && connections.get(Direction.WEST))
-			return state.with(SHAPE, Shape.START);
+			return state.with(SHAPE, Shape.INTERSECTION);
 		if (amtConnections == 1 && connections.get(facing)
 			&& !(above.getBlock() instanceof ChuteBlock && above.get(FACING) == Direction.DOWN))
-			return state.with(SHAPE, Shape.WINDOW_STRAIGHT);
-		return state.with(SHAPE, Shape.NORMAL);
+			return state.with(SHAPE, Shape.NORMAL);
+		return state.with(SHAPE, Shape.INTERSECTION);
 	}
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		if (!context.getWorld().isRemote && state.get(FACING) == Direction.DOWN)
+		Shape shape = state.get(SHAPE);
+		boolean down = state.get(FACING) == Direction.DOWN;
+		if (!context.getWorld().isRemote && down && shape != Shape.INTERSECTION) {
 			context.getWorld()
-				.setBlockState(context.getPos(), state.with(SHAPE,
-					state.get(SHAPE) == Shape.WINDOW_STRAIGHT ? Shape.NORMAL : Shape.WINDOW_STRAIGHT));
+				.setBlockState(context.getPos(),
+					state.with(SHAPE, shape == Shape.WINDOW ? Shape.NORMAL : Shape.WINDOW));
+		}
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
-		return AllShapes.CHUTE;
+		return ChuteShapes.getShape(p_220053_1_);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
+		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
+		return true;
+	}
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
+		ISelectionContext p_220071_4_) {
+		return ChuteShapes.getCollisionShape(p_220071_1_);
 	}
 
 	@Override

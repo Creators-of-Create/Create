@@ -7,6 +7,7 @@
 		"5": "create:block/brass_casing",
 		"6": "create:block/crafter_top",
 		"7": "create:block/crafter_topunderside",
+		"8": "create:block/smooth_dark_log_top",
 		"particle": "create:block/brass_casing"
 	},
 	"elements": [
@@ -28,7 +29,7 @@
 			"from": [0, 0, 10],
 			"to": [16, 16, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#5"},
+				"north": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#8"},
 				"east": {"uv": [0, 10, 16, 16], "rotation": 90, "texture": "#4"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#6"},
 				"west": {"uv": [16, 10, 0, 16], "rotation": 270, "texture": "#4"},

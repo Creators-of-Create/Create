@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "create:crushed_copper_ore"
+    },
+    {
+      "item": "create:crushed_zinc_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:crushed_brass",
+      "count": 2
+    }
+  ],
+  "heatRequirement": "heated"
+}

@@ -142,18 +142,18 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putBoolean("Main", true);
 		compound.putInt("AllowedAmount", allowedAmount);
 		compound.put("Inventory", inventory.serializeNBT());
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		allowedAmount = compound.getInt("AllowedAmount");
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		super.read(compound);
+		super.read(compound, clientPacket);
 	}
 
 	@Override

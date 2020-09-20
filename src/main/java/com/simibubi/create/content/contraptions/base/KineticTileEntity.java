@@ -178,7 +178,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	protected void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putFloat("Speed", speed);
 
 		if (needsSpeedUpdate())
@@ -202,7 +202,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			compound.put("Network", networkTag);
 		}
 
-		return super.write(compound);
+		super.write(compound, clientPacket);
 	}
 
 	public boolean needsSpeedUpdate() {
@@ -210,12 +210,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		boolean overStressedBefore = overStressed;
 		clearKineticInformation();
 
 		// DO NOT READ kinetic information when placed after movement
 		if (wasMoved) {
-			super.read(compound);
+			super.read(compound, clientPacket);
 			return;
 		}
 
@@ -235,14 +236,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			overStressed = capacity < stress && StressImpact.isEnabled();
 		}
 
-		super.read(compound);
-	}
+		super.read(compound, clientPacket);
 
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		boolean overStressedBefore = overStressed;
-		super.readClientUpdate(tag);
-		if (overStressedBefore != overStressed && speed != 0)
+		if (clientPacket && overStressedBefore != overStressed && speed != 0)
 			effects.triggerOverStressedEffect();
 	}
 
@@ -450,7 +446,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public int getFlickerScore() {
 		return flickerTally;
 	}
-	
+
 	public static float convertToDirection(float axisSpeed, Direction d) {
 		return d.getAxisDirection() == AxisDirection.POSITIVE ? axisSpeed : -axisSpeed;
 	}

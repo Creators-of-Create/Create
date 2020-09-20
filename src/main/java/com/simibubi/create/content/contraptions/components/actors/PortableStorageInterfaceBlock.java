@@ -1,8 +1,6 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 
 import net.minecraft.block.BlockState;
@@ -12,9 +10,13 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 
-public class PortableStorageInterfaceBlock extends ProperDirectionalBlock implements IPortableBlock {
 
-	public static MovementBehaviour MOVEMENT = new StorageInterfaceMovement();
+import javax.annotation.ParametersAreNonnullByDefault;
+import mcp.MethodsReturnNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class PortableStorageInterfaceBlock extends ProperDirectionalBlock {
 
 	public PortableStorageInterfaceBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
@@ -29,11 +31,6 @@ public class PortableStorageInterfaceBlock extends ProperDirectionalBlock implem
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.PORTABLE_STORAGE_INTERFACE.get(state.get(FACING));
-	}
-
-	@Override
-	public MovementBehaviour getMovementBehaviour() {
-		return MOVEMENT;
 	}
 
 }

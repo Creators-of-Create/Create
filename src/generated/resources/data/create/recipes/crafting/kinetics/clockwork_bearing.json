@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "SCS",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "create:shaft"
+    },
+    "S": {
+      "item": "create:electron_tube"
+    },
+    "B": {
+      "item": "create:turntable"
+    },
+    "C": {
+      "item": "create:brass_casing"
+    }
+  },
+  "result": {
+    "item": "create:clockwork_bearing"
+  }
+}

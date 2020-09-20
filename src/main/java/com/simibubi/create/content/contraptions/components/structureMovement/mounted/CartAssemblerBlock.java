@@ -11,6 +11,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingHandler;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -24,6 +25,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.entity.item.minecart.ChestMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -45,6 +47,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -111,7 +114,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	@Override
 	public void onMinecartPass(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos,
 		AbstractMinecartEntity cart) {
-		if (!cart.canBeRidden() && !(cart instanceof FurnaceMinecartEntity))
+		if (!canAssembleTo(cart))
 			return;
 
 		withTileEntityDo(world, pos, te -> {
@@ -163,6 +166,10 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		});
 	}
 
+	public static boolean canAssembleTo(AbstractMinecartEntity cart) {
+		return cart.canBeRidden() || cart instanceof FurnaceMinecartEntity || cart instanceof ChestMinecartEntity;
+	}
+
 	@Override
 	@Nonnull
 	public ActionResultType onUse(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos,
@@ -207,7 +214,24 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		float initialAngle = facing.getHorizontalAngle();
 
 		withTileEntityDo(world, pos, te -> contraption.rotationMode = CartMovementMode.values()[te.movementMode.value]);
+
+		boolean couplingFound = contraption.connectedCart != null;
+		if (couplingFound) {
+			MinecartCouplingHandler.connectCarts(null, world, cart.getEntityId(),
+				contraption.connectedCart.getEntityId());
+			Vec3d diff = contraption.connectedCart.getPositionVec()
+				.subtract(cart.getPositionVec());
+			initialAngle = Direction.fromAngle(MathHelper.atan2(diff.z, diff.x) * 180 / Math.PI)
+				.getHorizontalAngle();
+		}
+
 		ContraptionEntity entity = ContraptionEntity.createMounted(world, contraption, initialAngle, facing);
+
+		if (couplingFound) {
+			entity.setCouplingId(cart.getUniqueID());
+			entity.setCoupledCart(contraption.connectedCart.getUniqueID());
+		}
+
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		world.addEntity(entity);
 		entity.startRiding(cart);

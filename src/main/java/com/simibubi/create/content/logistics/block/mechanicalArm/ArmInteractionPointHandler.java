@@ -10,6 +10,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -21,6 +22,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -55,6 +59,17 @@ public class ArmInteractionPointHandler {
 		}
 
 		selected.cycleMode();
+		PlayerEntity player = event.getPlayer();
+		if (player != null) {
+			String key = selected.mode == Mode.DEPOSIT ? "mechanical_arm.deposit_to" : "mechanical_arm.extract_from";
+			TextFormatting colour = selected.mode == Mode.DEPOSIT ? TextFormatting.GOLD : TextFormatting.AQUA;
+			String translatedBlock = new TranslationTextComponent(selected.state.getBlock()
+				.getTranslationKey()).getFormattedText();
+			player.sendStatusMessage(
+				new StringTextComponent(colour + Lang.translate(key, TextFormatting.WHITE + translatedBlock + colour)),
+				true);
+		}
+
 		event.setCanceled(true);
 		event.setCancellationResult(ActionResultType.SUCCESS);
 	}
@@ -75,6 +90,20 @@ public class ArmInteractionPointHandler {
 	public static void flushSettings(BlockPos pos) {
 		if (currentItem == null)
 			return;
+
+		int removed = 0;
+		for (Iterator<ArmInteractionPoint> iterator = currentSelection.iterator(); iterator.hasNext();) {
+			ArmInteractionPoint point = iterator.next();
+			if (point.pos.withinDistance(pos, ArmTileEntity.getRange())) 
+				continue;
+			iterator.remove();
+			removed++;
+		}
+
+		if (removed > 0) 
+			Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent(
+				TextFormatting.RED + Lang.translate("mechanical_arm.points_outside_range", removed)), true);
+
 		AllPackets.channel.sendToServer(new ArmPlacementPacket(currentSelection, pos));
 		currentSelection.clear();
 		currentItem = null;

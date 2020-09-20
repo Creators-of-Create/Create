@@ -21,13 +21,12 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.Heightmap;
 
 public class ChromaticCompoundItem extends Item {
 
@@ -117,20 +116,25 @@ public class ChromaticCompoundItem extends Item {
 
 		// Is inside beacon beam?
 		boolean isOverBeacon = false;
-		BlockPos.Mutable testPos = new BlockPos.Mutable(entity.getPosition());
-		while (testPos.getY() > 0) {
-			testPos.move(Direction.DOWN);
-			BlockState state = world.getBlockState(testPos);
-			if (state.getOpacity(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
-				break;
-			if (state.getBlock() == Blocks.BEACON) {
-				TileEntity te = world.getTileEntity(testPos);
-				if (!(te instanceof BeaconTileEntity))
+		int entityX = MathHelper.floor(entity.getX());
+		int entityZ = MathHelper.floor(entity.getZ());
+		int localWorldHeight = world.getHeight(Heightmap.Type.WORLD_SURFACE, entityX, entityZ);
+		if (entity.getY() > localWorldHeight) {
+			BlockPos.Mutable testPos = new BlockPos.Mutable(entityX, localWorldHeight, entityZ);
+			while (testPos.getY() > 0) {
+				testPos.move(Direction.DOWN);
+				BlockState state = world.getBlockState(testPos);
+				if (state.getOpacity(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
 					break;
-				BeaconTileEntity bte = (BeaconTileEntity) te;
-				if (bte.getLevels() != 0)
-					isOverBeacon = true;
-				break;
+				if (state.getBlock() == Blocks.BEACON) {
+					TileEntity te = world.getTileEntity(testPos);
+					if (!(te instanceof BeaconTileEntity))
+						break;
+					BeaconTileEntity bte = (BeaconTileEntity) te;
+					if (bte.getLevels() != 0)
+						isOverBeacon = true;
+					break;
+				}
 			}
 		}
 
@@ -141,7 +145,7 @@ public class ChromaticCompoundItem extends Item {
 			entity.setItem(newStack);
 
 			List<ServerPlayerEntity> players =
-				world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(entity.getPosition()).grow(8));
+				world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(entity.getBlockPos()).grow(8));
 			players.forEach(AllTriggers.ABSORBED_LIGHT::trigger);
 
 			return false;

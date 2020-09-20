@@ -38,8 +38,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	 * Gets called just before reading tile data for behaviours. Register anything
 	 * here that depends on your custom te data.
 	 */
-	public void addBehavioursDeferred(List<TileEntityBehaviour> behaviours) {
-	}
+	public void addBehavioursDeferred(List<TileEntityBehaviour> behaviours) {}
 
 	@Override
 	public void tick() {
@@ -53,44 +52,60 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 			lazyTick();
 		}
 
-		behaviours.values().forEach(TileEntityBehaviour::tick);
+		behaviours.values()
+			.forEach(TileEntityBehaviour::tick);
 	}
 
 	public void initialize() {
-		behaviours.values().forEach(TileEntityBehaviour::initialize);
+		behaviours.values()
+			.forEach(TileEntityBehaviour::initialize);
 		lazyTick();
 	}
 
-	public void updateClient(CompoundNBT compound) {
-		behaviours.values().forEach(tb -> tb.updateClient(compound));
+	@Override
+	public final CompoundNBT write(CompoundNBT compound) {
+		write(compound, false);
+		return compound;
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		behaviours.values().forEach(tb -> tb.writeNBT(compound));
-		return super.write(compound);
-	}
-	
-	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-		behaviours.values().forEach(tb -> tb.writeToClient(compound));
-		return super.writeToClient(compound);
+	public final CompoundNBT writeToClient(CompoundNBT compound) {
+		write(compound, true);
+		return compound;
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	public final void readClientUpdate(CompoundNBT tag) {
+		read(tag, true);
+	}
+
+	@Override
+	public final void read(CompoundNBT tag) {
+		read(tag, false);
+	}
+
+	/**
+	 * Hook only these in future subclasses of STE
+	 */
+	protected void read(CompoundNBT compound, boolean clientPacket) {
 		if (firstNbtRead) {
 			firstNbtRead = false;
 			ArrayList<TileEntityBehaviour> list = new ArrayList<>();
 			addBehavioursDeferred(list);
 			list.forEach(b -> behaviours.put(b.getType(), b));
 		}
-
 		super.read(compound);
-		forEachBehaviour(tb -> tb.readNBT(compound));
-		
-		if (world != null && world.isRemote)
-			updateClient(compound);
+		behaviours.values()
+			.forEach(tb -> tb.read(compound, clientPacket));
+	}
+
+	/**
+	 * Hook only these in future subclasses of STE
+	 */
+	protected void write(CompoundNBT compound, boolean clientPacket) {
+		super.write(compound);
+		behaviours.values()
+			.forEach(tb -> tb.write(compound, clientPacket));
 	}
 
 	@Override
@@ -107,15 +122,13 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	public void lazyTick() {
 
 	}
-	
+
 	protected void forEachBehaviour(Consumer<TileEntityBehaviour> action) {
-		behaviours.values().forEach(tb -> {
-			if (!tb.isPaused())
-				action.accept(tb);
-		});
+		behaviours.values()
+			.forEach(action);
 	}
 
-	protected void putBehaviour(TileEntityBehaviour behaviour) {
+	protected void attachBehaviourLate(TileEntityBehaviour behaviour) {
 		behaviours.put(behaviour.getType(), behaviour);
 		behaviour.initialize();
 	}
@@ -127,7 +140,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T extends TileEntityBehaviour> T getBehaviour(BehaviourType<T> type) {
+	public <T extends TileEntityBehaviour> T getBehaviour(BehaviourType<T> type) {
 		if (behaviours.containsKey(type))
 			return (T) behaviours.get(type);
 		return null;

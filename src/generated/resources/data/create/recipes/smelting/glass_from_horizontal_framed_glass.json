@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "create:horizontal_framed_glass"
+  },
+  "result": "minecraft:glass",
+  "experience": 0.0,
+  "cookingtime": 50
+}

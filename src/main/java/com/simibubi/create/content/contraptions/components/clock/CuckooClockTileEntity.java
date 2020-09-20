@@ -39,23 +39,23 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		super(type);
 		animationType = Animation.NONE;
 	}
-
+	
 	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-		if (sendAnimationUpdate)
-			NBTHelper.writeEnum(compound, "Animation", animationType);
-		sendAnimationUpdate = false;
-		return super.writeToClient(compound);
-	}
-
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		if (tag.contains("Animation")) {
-			animationType = NBTHelper.readEnum(tag, "Animation", Animation.class);
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
+		if (clientPacket && compound.contains("Animation")) {
+			animationType = NBTHelper.readEnum(compound, "Animation", Animation.class);
 			animationProgress.lastValue = 0;
 			animationProgress.value = 0;
 		}
-		super.readClientUpdate(tag);
+	}
+	
+	@Override
+	public void write(CompoundNBT compound, boolean clientPacket) {
+		if (clientPacket && sendAnimationUpdate)
+			NBTHelper.writeEnum(compound, "Animation", animationType);
+		sendAnimationUpdate = false;
+		super.write(compound, clientPacket);
 	}
 
 	@Override

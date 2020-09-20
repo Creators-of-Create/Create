@@ -9,9 +9,17 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Jukebox;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedAngle;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.JukeboxBlock;
@@ -20,7 +28,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class ArmTileEntity extends KineticTileEntity {
@@ -46,6 +56,11 @@ public class ArmTileEntity extends KineticTileEntity {
 	float previousBaseAngle;
 	boolean updateInteractionPoints;
 
+	//
+	protected ScrollOptionBehaviour<SelectionMode> selectionMode;
+	protected int lastInputIndex = -1;
+	protected int lastOutputIndex = -1;
+
 	enum Phase {
 		SEARCH_INPUTS, MOVE_TO_INPUT, SEARCH_OUTPUTS, MOVE_TO_OUTPUT, DANCING
 	}
@@ -64,6 +79,16 @@ public class ArmTileEntity extends KineticTileEntity {
 		previousTarget = ArmAngleTarget.NO_TARGET;
 		previousBaseAngle = previousTarget.baseAngle;
 		updateInteractionPoints = true;
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+
+		selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class,
+			Lang.translate("logistics.when_multiple_outputs_available"), this, new SelectionModeValueBox());
+		selectionMode.requiresWrench();
+		behaviours.add(selectionMode);
 	}
 
 	@Override
@@ -142,7 +167,7 @@ public class ArmTileEntity extends KineticTileEntity {
 
 		lowerArmAngle.set(MathHelper.lerp(progress, previousTarget.lowerArmAngle, target.lowerArmAngle));
 		upperArmAngle.set(MathHelper.lerp(progress, previousTarget.upperArmAngle, target.upperArmAngle));
-		
+
 		headAngle.set(AngleHelper.angleLerp(progress, previousTarget.headAngle % 360, target.headAngle % 360));
 	}
 
@@ -163,37 +188,86 @@ public class ArmTileEntity extends KineticTileEntity {
 	}
 
 	protected void searchForItem() {
-		for (int index = 0; index < inputs.size(); index++) {
-			ArmInteractionPoint armInteractionPoint = inputs.get(index);
-			for (int i = 0; i < armInteractionPoint.getSlotCount(world); i++) {
-				if (getDistributableAmount(armInteractionPoint, i) == 0)
+		boolean foundInput = false;
+		// for round robin, we start looking after the last used index, for default we
+		// start at 0;
+		int startIndex = selectionMode.get() == SelectionMode.PREFER_FIRST ? 0 : lastInputIndex + 1;
+
+		// if we enforce round robin, only look at the next input in the list,
+		// otherwise, look at all inputs
+		int scanRange = selectionMode.get() == SelectionMode.FORCED_ROUND_ROBIN ? lastInputIndex + 2 : inputs.size();
+		if (scanRange > inputs.size())
+			scanRange = inputs.size();
+
+		InteractionPoints: for (int i = startIndex; i < scanRange; i++) {
+			ArmInteractionPoint armInteractionPoint = inputs.get(i);
+			for (int j = 0; j < armInteractionPoint.getSlotCount(world); j++) {
+				if (getDistributableAmount(armInteractionPoint, j) == 0)
 					continue;
 
-				phase = Phase.MOVE_TO_INPUT;
-				chasedPointIndex = index;
-				chasedPointProgress = 0;
-				sendData();
-				markDirty();
-				return;
+				selectIndex(true, i);
+				foundInput = true;
+				break InteractionPoints;
 			}
+		}
+		if (!foundInput && selectionMode.get() == SelectionMode.ROUND_ROBIN) {
+			// if we didn't find an input, but don't want to enforce round robin, reset the
+			// last index
+			lastInputIndex = -1;
+		}
+		if (lastInputIndex == inputs.size() - 1) {
+			// if we reached the last input in the list, reset the last index
+			lastInputIndex = -1;
 		}
 	}
 
 	protected void searchForDestination() {
 		ItemStack held = heldItem.copy();
-		for (int index = 0; index < outputs.size(); index++) {
-			ArmInteractionPoint armInteractionPoint = outputs.get(index);
+
+		boolean foundOutput = false;
+		// for round robin, we start looking after the last used index, for default we
+		// start at 0;
+		int startIndex = selectionMode.get() == SelectionMode.PREFER_FIRST ? 0 : lastOutputIndex + 1;
+
+		// if we enforce round robin, only look at the next index in the list,
+		// otherwise, look at all
+		int scanRange = selectionMode.get() == SelectionMode.FORCED_ROUND_ROBIN ? lastOutputIndex + 2 : outputs.size();
+		if (scanRange > outputs.size())
+			scanRange = outputs.size();
+
+		for (int i = startIndex; i < scanRange; i++) {
+			ArmInteractionPoint armInteractionPoint = outputs.get(i);
 			ItemStack remainder = armInteractionPoint.insert(world, held, true);
 			if (remainder.equals(heldItem, false))
 				continue;
 
-			phase = Phase.MOVE_TO_OUTPUT;
-			chasedPointIndex = index;
-			chasedPointProgress = 0;
-			sendData();
-			markDirty();
-			return;
+			selectIndex(false, i);
+			foundOutput = true;
+			break;
 		}
+
+		if (!foundOutput && selectionMode.get() == SelectionMode.ROUND_ROBIN) {
+			// if we didn't find an input, but don't want to enforce round robin, reset the
+			// last index
+			lastOutputIndex = -1;
+		}
+		if (lastOutputIndex == outputs.size() - 1) {
+			// if we reached the last input in the list, reset the last index
+			lastOutputIndex = -1;
+		}
+	}
+
+	// input == true => select input, false => select output
+	private void selectIndex(boolean input, int index) {
+		phase = input ? Phase.MOVE_TO_INPUT : Phase.MOVE_TO_OUTPUT;
+		chasedPointIndex = index;
+		chasedPointProgress = 0;
+		if (input)
+			lastInputIndex = index;
+		else
+			lastOutputIndex = index;
+		sendData();
+		markDirty();
 	}
 
 	protected int getDistributableAmount(ArmInteractionPoint armInteractionPoint, int i) {
@@ -255,6 +329,8 @@ public class ArmTileEntity extends KineticTileEntity {
 	protected void initInteractionPoints() {
 		if (!updateInteractionPoints || interactionPointTag == null)
 			return;
+		if (!world.isAreaLoaded(pos, getRange() + 1))
+			return;
 		inputs.clear();
 		outputs.clear();
 		for (INBT inbt : interactionPointTag) {
@@ -272,47 +348,44 @@ public class ArmTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		super.write(compound);
+	public void write(CompoundNBT compound, boolean clientPacket) {
+		super.write(compound, clientPacket);
 
-		ListNBT pointsNBT = new ListNBT();
-		inputs.stream()
-			.map(ArmInteractionPoint::serialize)
-			.forEach(pointsNBT::add);
-		outputs.stream()
-			.map(ArmInteractionPoint::serialize)
-			.forEach(pointsNBT::add);
+		if (updateInteractionPoints) {
+			compound.put("InteractionPoints", interactionPointTag);
+
+		} else {
+			ListNBT pointsNBT = new ListNBT();
+			inputs.stream()
+				.map(ArmInteractionPoint::serialize)
+				.forEach(pointsNBT::add);
+			outputs.stream()
+				.map(ArmInteractionPoint::serialize)
+				.forEach(pointsNBT::add);
+			compound.put("InteractionPoints", pointsNBT);
+		}
 
 		NBTHelper.writeEnum(compound, "Phase", phase);
-		compound.put("InteractionPoints", pointsNBT);
 		compound.put("HeldItem", heldItem.serializeNBT());
 		compound.putInt("TargetPointIndex", chasedPointIndex);
 		compound.putFloat("MovementProgress", chasedPointProgress);
-		return compound;
 	}
 
 	@Override
-	public CompoundNBT writeToClient(CompoundNBT compound) {
-		super.writeToClient(compound);
-		return compound;
-	}
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		int previousIndex = chasedPointIndex;
+		Phase previousPhase = phase;
+		ListNBT interactionPointTagBefore = interactionPointTag;
 
-	@Override
-	public void read(CompoundNBT compound) {
-		super.read(compound);
+		super.read(compound, clientPacket);
 		heldItem = ItemStack.read(compound.getCompound("HeldItem"));
 		phase = NBTHelper.readEnum(compound, "Phase", Phase.class);
 		chasedPointIndex = compound.getInt("TargetPointIndex");
 		chasedPointProgress = compound.getFloat("MovementProgress");
 		interactionPointTag = compound.getList("InteractionPoints", NBT.TAG_COMPOUND);
-	}
 
-	@Override
-	public void readClientUpdate(CompoundNBT tag) {
-		int previousIndex = chasedPointIndex;
-		Phase previousPhase = phase;
-		ListNBT interactionPointTagBefore = interactionPointTag;
-		super.readClientUpdate(tag);
+		if (!clientPacket)
+			return;
 
 		boolean ceiling = isOnCeiling();
 		if (interactionPointTagBefore == null || interactionPointTagBefore.size() != interactionPointTag.size())
@@ -327,6 +400,57 @@ public class ArmTileEntity extends KineticTileEntity {
 				previousPoint == null ? ArmAngleTarget.NO_TARGET : previousPoint.getTargetAngles(pos, ceiling);
 			if (previousPoint != null)
 				previousBaseAngle = previousPoint.getTargetAngles(pos, ceiling).baseAngle;
+		}
+	}
+
+	public static int getRange() {
+		return AllConfigs.SERVER.logistics.mechanicalArmRange.get();
+	}
+
+	private class SelectionModeValueBox extends CenteredSideValueBoxTransform {
+
+		public SelectionModeValueBox() {
+			super((blockState, direction) -> direction != Direction.DOWN && direction != Direction.UP);
+		}
+
+		@Override
+		protected Vec3d getLocalOffset(BlockState state) {
+			int yPos = state.get(ArmBlock.CEILING) ? 16 - 3 : 3;
+			Vec3d location = VecHelper.voxelSpace(8, yPos, 14.5);
+			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Direction.Axis.Y);
+			return location;
+		}
+
+		@Override
+		protected float getScale() {
+			return .3f;
+		}
+
+	}
+
+	public enum SelectionMode implements INamedIconOptions {
+		ROUND_ROBIN(AllIcons.I_ARM_ROUND_ROBIN),
+		FORCED_ROUND_ROBIN(AllIcons.I_ARM_FORCED_ROUND_ROBIN),
+		PREFER_FIRST(AllIcons.I_ARM_PREFER_FIRST),
+
+		;
+
+		private final String translationKey;
+		private final AllIcons icon;
+
+		SelectionMode(AllIcons icon) {
+			this.icon = icon;
+			this.translationKey = "mechanical_arm.selection_mode." + Lang.asId(name());
+		}
+
+		@Override
+		public AllIcons getIcon() {
+			return icon;
+		}
+
+		@Override
+		public String getTranslationKey() {
+			return translationKey;
 		}
 	}
 

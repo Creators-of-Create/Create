@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SDS",
+    "DCD",
+    "SDS"
+  ],
+  "key": {
+    "S": {
+      "tag": "minecraft:wooden_buttons"
+    },
+    "C": {
+      "item": "create:andesite_alloy"
+    },
+    "D": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "create:large_cogwheel",
+    "count": 2
+  }
+}

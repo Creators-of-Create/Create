@@ -6,6 +6,16 @@ import static net.minecraftforge.eventbus.api.Event.Result.DENY;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.BeehiveBlock;
+import net.minecraft.block.Block;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.stats.Stats;
+import net.minecraft.tileentity.BeehiveTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
@@ -205,7 +215,7 @@ public class DeployerHandler {
 			progress += before;
 
 			if (progress >= 1) {
-				player.interactionManager.tryHarvestBlock(clickedPos);
+				safeTryHarvestBlock(player.interactionManager, clickedPos);
 				world.sendBlockBreakProgress(player.getEntityId(), clickedPos, -1);
 				player.blockBreakingProgress = null;
 				return;
@@ -245,7 +255,7 @@ public class DeployerHandler {
 			!(player.isSneaking() && holdingSomething) || (stack.doesSneakBypassUse(world, clickedPos, player));
 
 		// Use on block
-		if (useBlock != DENY && flag1 && clickedState.onUse(world, player, hand, result) == ActionResultType.SUCCESS)
+		if (useBlock != DENY && flag1 && clickedState.getBlock() instanceof BeehiveBlock && clickedState.onUse(world, player, hand, result) == ActionResultType.SUCCESS)
 			return;
 		if (stack.isEmpty())
 			return;
@@ -281,8 +291,8 @@ public class DeployerHandler {
 		ActionResult<ItemStack> onItemRightClick = item.onItemRightClick(itemUseWorld, player, hand);
 		player.setHeldItem(hand, onItemRightClick.getResult());
 
-		CompoundNBT tag = stack.getOrCreateTag();
-		if (stack.getItem() instanceof SandPaperItem && tag.contains("Polishing"))
+		CompoundNBT tag = stack.getTag();
+		if (tag != null && stack.getItem() instanceof SandPaperItem && tag.contains("Polishing"))
 			player.spawnedItemEffects = ItemStack.read(tag.getCompound("Polishing"));
 
 		if (!player.getActiveItemStack()
@@ -292,4 +302,45 @@ public class DeployerHandler {
 		player.resetActiveHand();
 	}
 
+	private static boolean safeTryHarvestBlock(PlayerInteractionManager interactionManager, BlockPos clickedPos) {
+		BlockState state = interactionManager.world.getBlockState(clickedPos);
+		if(!(state.getBlock() instanceof BeehiveBlock))
+			return interactionManager.tryHarvestBlock(clickedPos);
+		else {
+			harvestBeehive(interactionManager, state, clickedPos);
+		}
+		return true;
+	}
+
+	private static void harvestBeehive(PlayerInteractionManager interactionManager, BlockState state, BlockPos clickedPos) {
+		// Modified code from PlayerInteractionManager, Block and BeehiveBlock to handle deployers breaking beehives without crash.
+		ItemStack itemstack = interactionManager.player.getHeldItemMainhand();
+		ItemStack itemstack1 = itemstack.copy();
+
+		boolean flag1 = state.canHarvestBlock(interactionManager.world, clickedPos, interactionManager.player);
+		itemstack.onBlockDestroyed(interactionManager.world, state, clickedPos, interactionManager.player);
+		if (itemstack.isEmpty() && !itemstack1.isEmpty())
+			net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(interactionManager.player, itemstack1, Hand.MAIN_HAND);
+
+		boolean flag = state.removedByPlayer(interactionManager.world, clickedPos, interactionManager.player, flag1, interactionManager.world.getFluidState(clickedPos));
+		if (flag)
+			state.getBlock().onPlayerDestroy(interactionManager.world, clickedPos, state);
+
+		if (flag && flag1) {
+			interactionManager.player.addStat(Stats.BLOCK_MINED.get(state.getBlock()));
+			interactionManager.player.addExhaustion(0.005F);
+			TileEntity te = interactionManager.world.getTileEntity(clickedPos);
+			ItemStack heldItem = interactionManager.player.getHeldItemMainhand();
+			Block.spawnDrops(state, interactionManager.world, clickedPos, te, interactionManager.player, heldItem);
+
+			if (!interactionManager.world.isRemote && te instanceof BeehiveTileEntity) {
+				BeehiveTileEntity beehivetileentity = (BeehiveTileEntity)te;
+				if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, heldItem) == 0) {
+					interactionManager.world.updateComparatorOutputLevel(clickedPos, state.getBlock());
+				}
+
+				CriteriaTriggers.BEE_NEST_DESTROYED.test((ServerPlayerEntity)interactionManager.player, state.getBlock(), heldItem, beehivetileentity.getBeeCount());
+			}
+		}
+	}
 }

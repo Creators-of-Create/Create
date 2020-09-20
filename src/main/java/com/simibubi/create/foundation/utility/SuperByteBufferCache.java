@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -52,17 +51,22 @@ public class SuperByteBufferCache {
 	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState) {
 		return get(PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState));
 	}
-	
-	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState, MatrixStack modelTransform) {
+
+	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState,
+		MatrixStack modelTransform) {
 		return get(PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState, modelTransform));
 	}
-	
-	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState, Direction dir) {
-		return get(DIRECTIONAL_PARTIAL, Pair.of(dir, partial), () -> standardModelRender(partial.get(), referenceState));
+
+	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState,
+		Direction dir) {
+		return get(DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
+			() -> standardModelRender(partial.get(), referenceState));
 	}
-	
-	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState, Direction dir, MatrixStack modelTransform) {
-		return get(DIRECTIONAL_PARTIAL, Pair.of(dir, partial), () -> standardModelRender(partial.get(), referenceState, modelTransform));
+
+	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState, Direction dir,
+		MatrixStack modelTransform) {
+		return get(DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
+			() -> standardModelRender(partial.get(), referenceState, modelTransform));
 	}
 
 	public SuperByteBuffer renderBlockIn(Compartment<BlockState> compartment, BlockState toRender) {
@@ -84,16 +88,19 @@ public class SuperByteBufferCache {
 	}
 
 	public void registerCompartment(Compartment<?> instance) {
-		cache.put(instance, CacheBuilder.newBuilder().build());
+		cache.put(instance, CacheBuilder.newBuilder()
+			.build());
 	}
 
-	public void registerCompartment(Compartment<?> instance, long ticksTillExpired) {
-		cache.put(instance,
-				CacheBuilder.newBuilder().expireAfterAccess(ticksTillExpired * 50, TimeUnit.MILLISECONDS).build());
+	public void registerCompartment(Compartment<?> instance, long ticksUntilExpired) {
+		cache.put(instance, CacheBuilder.newBuilder()
+			.expireAfterAccess(ticksUntilExpired * 50, TimeUnit.MILLISECONDS)
+			.build());
 	}
 
 	private SuperByteBuffer standardBlockRender(BlockState renderedState) {
-		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
+		BlockRendererDispatcher dispatcher = Minecraft.getInstance()
+			.getBlockRendererDispatcher();
 		return standardModelRender(dispatcher.getModelForState(renderedState), renderedState);
 	}
 
@@ -102,22 +109,21 @@ public class SuperByteBufferCache {
 	}
 
 	private SuperByteBuffer standardModelRender(IBakedModel model, BlockState referenceState, MatrixStack ms) {
-		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
+		Minecraft mc = Minecraft.getInstance();
+		BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
 		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
-		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
-		Random random = new Random();
+		BufferBuilder builder = new BufferBuilder(512);
+
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		blockRenderer.renderModelFlat(Minecraft.getInstance().world, model, referenceState, BlockPos.ZERO.up(255), ms,
-				builder, true, random, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+		blockRenderer.renderModel(mc.world, model, referenceState, BlockPos.ZERO.up(255), ms, builder, true,
+			mc.world.rand, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
 		builder.finishDrawing();
 
 		return new SuperByteBuffer(builder);
 	}
 
 	public void invalidate() {
-		cache.forEach((comp, cache) -> {
-			cache.invalidateAll();
-		});
+		cache.forEach((comp, cache) -> cache.invalidateAll());
 	}
 
 }

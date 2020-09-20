@@ -31,7 +31,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 	@Override
 	public void setIngredients(CuttingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getPossibleOutputs());
+		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 		itemStacks.init(0, true, 43, 4);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
-		List<ProcessingOutput> results = recipe.getRollableItemResults();
+		List<ProcessingOutput> results = recipe.getRollableResults();
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
 			int xOffset = outputIndex % 2 == 0 ? 0 : 19;
 			int yOffset = (outputIndex / 2) * -19;
@@ -55,7 +55,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 	@Override
 	public void draw(CuttingRecipe recipe, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.draw(43, 4);
-		int size = recipe.getRollableItemResults().size();
+		int size = recipe.getRollableResults().size();
 		for (int i = 0; i < size; i++) {
 			int xOffset = i % 2 == 0 ? 0 : 19;
 			int yOffset = (i / 2) * -19;

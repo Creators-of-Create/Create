@@ -3,14 +3,12 @@ package com.simibubi.create.content.contraptions.components.saw;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
-import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.IPortableBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
@@ -25,18 +23,20 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity>, IPortableBlock {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity> {
 
 	public static final BooleanProperty RUNNING = BooleanProperty.create("running");
-	public static DamageSource damageSourceSaw = new DamageSource("create.saw").setDamageBypassesArmor();
-	public static MovementBehaviour MOVEMENT = new SawMovementBehaviour();
+	public static DamageSource damageSourceSaw = new DamageSource("create.mechanical_saw").setDamageBypassesArmor();
 
 	public SawBlock(Properties properties) {
 		super(properties);
@@ -77,7 +77,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.getSpeed() == 0)
 				return;
-			entityIn.attackEntityFrom(damageSourceSaw, MathHelper.clamp(Math.abs(te.getSpeed() / 32f) + 1, 0, 20));
+			entityIn.attackEntityFrom(damageSourceSaw, (float) DrillBlock.getDamage(te.getSpeed()));
 		});
 	}
 
@@ -125,11 +125,6 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
 		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
       		worldIn.removeTileEntity(pos);
-	}
-
-	@Override
-	public MovementBehaviour getMovementBehaviour() {
-		return MOVEMENT;
 	}
 
 	@Override

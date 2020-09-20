@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "create:limesand"
+  },
+  "result": "create:limestone",
+  "experience": 0.0,
+  "cookingtime": 200
+}

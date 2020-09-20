@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  C",
+    "SIS"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:redstone_torch"
+    },
+    "S": {
+      "tag": "forge:plates/brass"
+    },
+    "I": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "create:redstone_link",
+    "count": 2
+  }
+}

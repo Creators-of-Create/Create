@@ -1,11 +1,5 @@
 package com.simibubi.create.content.schematics.block;
 
-import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE;
-import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE_PROGRESS;
-
-import java.nio.file.Paths;
-import java.util.List;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
@@ -19,12 +13,18 @@ import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+
+import java.nio.file.Paths;
+import java.util.List;
+
+import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE;
+import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE_PROGRESS;
 
 public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableContainer>
 	implements IHasContainer<SchematicTableContainer> {
@@ -40,6 +40,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	private final String finished = Lang.translate("gui.schematicTable.finished");
 	private final String noSchematics = Lang.translate("gui.schematicTable.noSchematics");
 	private final String availableSchematicsTitle = Lang.translate("gui.schematicTable.availableSchematics");
+	private final ItemStack renderedItem = AllBlocks.SCHEMATIC_TABLE.asStack();
 
 	private float progress;
 	private float chasingProgress;
@@ -110,12 +111,11 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			font.drawString(title, mainLeft + 60, mainTop + 10, AllGuiTextures.FONT_COLOR);
 		if (schematicsArea == null) 
 			font.drawStringWithShadow(noSchematics, mainLeft + 39, mainTop + 26, 0xFFDD44);
-		
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(mainLeft + 217, mainTop + 48, 200);
-		RenderSystem.scaled(3, 3, 3);
-		GuiGameElement.of(AllBlocks.SCHEMATIC_TABLE.asStack()).render();
-		RenderSystem.popMatrix();
+
+		GuiGameElement.of(renderedItem)
+				.at(mainLeft + 217, mainTop + 48)
+				.scale(3)
+				.render();
 
 		minecraft.getTextureManager()
 			.bindTexture(SCHEMATIC_TABLE_PROGRESS.location);
