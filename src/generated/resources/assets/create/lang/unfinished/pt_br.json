@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 811",
+	"_": "Missing Localizations: 812",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -25,7 +25,6 @@
 	"block.create.andesite_tunnel": "UNLOCALIZED: Andesite Tunnel",
 	"block.create.basin": "UNLOCALIZED: Basin",
 	"block.create.belt": "Esteira Mecânica",
-	"block.create.belt_observer": "Observador de Esteira",
 	"block.create.birch_window": "UNLOCALIZED: Birch Window",
 	"block.create.birch_window_pane": "UNLOCALIZED: Birch Window Pane",
 	"block.create.black_seat": "UNLOCALIZED: Black Seat",
@@ -48,6 +47,7 @@
 	"block.create.clockwork_bearing": "UNLOCALIZED: Clockwork Bearing",
 	"block.create.clutch": "Embreagem",
 	"block.create.cogwheel": "Roda Dentada",
+	"block.create.content_observer": "UNLOCALIZED: Content Observer",
 	"block.create.copper_block": "UNLOCALIZED: Copper Block",
 	"block.create.copper_casing": "UNLOCALIZED: Copper Casing",
 	"block.create.copper_ore": "UNLOCALIZED: Copper Ore",

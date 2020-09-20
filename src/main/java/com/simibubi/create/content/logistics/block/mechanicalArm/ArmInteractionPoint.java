@@ -11,6 +11,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -346,6 +347,11 @@ public abstract class ArmInteractionPoint {
 				return stack;
 			if (simulate)
 				inserter.simulate();
+			if (!simulate) {
+				TileEntity tileEntity = world.getTileEntity(pos);
+				if (tileEntity instanceof FunnelTileEntity)
+					((FunnelTileEntity) tileEntity).onTransfer(stack);
+			}
 			return inserter.insert(stack);
 		}
 

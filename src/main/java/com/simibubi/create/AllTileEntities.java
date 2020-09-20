@@ -73,8 +73,6 @@ import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEnti
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxRenderer;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearshiftTileEntity;
-import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverRenderer;
-import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
@@ -93,6 +91,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverRenderer;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
@@ -427,7 +426,7 @@ public class AllTileEntities {
 	public static final TileEntityEntry<StockpileSwitchTileEntity> STOCKPILE_SWITCH = Create.registrate()
 			.tileEntity("stockpile_switch", StockpileSwitchTileEntity::new)
 			.validBlocks(AllBlocks.STOCKPILE_SWITCH)
-			//.renderer(() -> renderer)
+			.renderer(() -> SmartTileEntityRenderer::new)
 			.register();
 
 	public static final TileEntityEntry<AdjustableCrateTileEntity> ADJUSTABLE_CRATE = Create.registrate()
@@ -454,10 +453,10 @@ public class AllTileEntities {
 			.renderer(() -> FunnelRenderer::new)
 			.register();
 
-	public static final TileEntityEntry<BeltObserverTileEntity> BELT_OBSERVER = Create.registrate()
-			.tileEntity("belt_observer", BeltObserverTileEntity::new)
-			.validBlocks(AllBlocks.BELT_OBSERVER)
-			.renderer(() -> BeltObserverRenderer::new)
+	public static final TileEntityEntry<ContentObserverTileEntity> CONTENT_OBSERVER = Create.registrate()
+			.tileEntity("content_observer", ContentObserverTileEntity::new)
+			.validBlocks(AllBlocks.CONTENT_OBSERVER)
+			.renderer(() -> SmartTileEntityRenderer::new)
 			.register();
 
 	public static final TileEntityEntry<AdjustableRepeaterTileEntity> ADJUSTABLE_REPEATER = Create.registrate()

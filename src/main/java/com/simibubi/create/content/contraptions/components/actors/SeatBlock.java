@@ -2,14 +2,19 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.AllShapes;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -24,11 +29,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-
-
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import mcp.MethodsReturnNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -56,7 +56,7 @@ public class SeatBlock extends Block {
 	@Override
 	public void onLanded(IBlockReader reader, Entity entity) {
 		BlockPos pos = entity.getPosition();
-		if (entity instanceof PlayerEntity || !(entity instanceof LivingEntity) || isSeatOccupied(entity.world, pos)) {
+		if (!canBePickedUp(entity) || isSeatOccupied(entity.world, pos)) {
 			Blocks.PINK_BED.onLanded(reader, entity);
 			return;
 		}
@@ -67,7 +67,8 @@ public class SeatBlock extends Block {
 	}
 
 	@Override
-	public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, @Nullable MobEntity entity) {
+	public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos,
+		@Nullable MobEntity entity) {
 		return PathNodeType.RAIL;
 	}
 
@@ -76,7 +77,7 @@ public class SeatBlock extends Block {
 		ISelectionContext p_220053_4_) {
 		return AllShapes.SEAT;
 	}
-	
+
 	@Override
 	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
 		ISelectionContext p_220071_4_) {
@@ -111,6 +112,11 @@ public class SeatBlock extends Block {
 	public static boolean isSeatOccupied(World world, BlockPos pos) {
 		return !world.getEntitiesWithinAABB(SeatEntity.class, new AxisAlignedBB(pos))
 			.isEmpty();
+	}
+
+	public static boolean canBePickedUp(Entity passenger) {
+		return !(passenger instanceof PlayerEntity)
+			&& (passenger instanceof LivingEntity || passenger instanceof AbstractMinecartEntity);
 	}
 
 	public static void sitDown(World world, BlockPos pos, Entity entity) {

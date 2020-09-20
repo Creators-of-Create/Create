@@ -21,7 +21,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.palettes.PavedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pointing;
@@ -231,48 +230,6 @@ public class BlockStateGen {
 					.rotationY(state.get(ReinforcedRailBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? 90 : 0)
 					.build();
 			});
-	}
-
-	public static NonNullBiConsumer<DataGenContext<Block, BeltObserverBlock>, RegistrateBlockstateProvider> beltObserver() {
-		return (c, p) -> {
-
-			Map<BeltObserverBlock.Mode, Map<String, ModelFile>> models = new IdentityHashMap<>();
-			Map<String, ResourceLocation> baseModels = new HashMap<>();
-
-			for (boolean powered : Iterate.trueAndFalse) {
-				for (boolean belt : Iterate.trueAndFalse) {
-					String suffix = (belt ? "_belt" : "") + (powered ? "_powered" : "");
-					baseModels.put(suffix, p.modLoc("block/belt_observer/base" + suffix));
-				}
-			}
-
-			for (BeltObserverBlock.Mode mode : BeltObserverBlock.Mode.values()) {
-				String modeName = mode.getName();
-				HashMap<String, ModelFile> map = new HashMap<>();
-				for (boolean powered : Iterate.trueAndFalse) {
-					for (boolean belt : Iterate.trueAndFalse) {
-						String suffix = (belt ? "_belt" : "") + (powered ? "_powered" : "");
-						map.put(suffix, p.models()
-							.withExistingParent("block/belt_observer/" + modeName + suffix, baseModels.get(suffix))
-							.texture("texture",
-								p.modLoc("block/belt_observer_" + modeName + (powered ? "_powered" : ""))));
-					}
-				}
-				models.put(mode, map);
-			}
-
-			p.getVariantBuilder(c.get())
-				.forAllStates(state -> {
-					String suffix = (state.get(BeltObserverBlock.BELT) ? "_belt" : "")
-						+ (state.get(BeltObserverBlock.POWERED) ? "_powered" : "");
-					return ConfiguredModel.builder()
-						.modelFile(models.get(state.get(BeltObserverBlock.MODE))
-							.get(suffix))
-						.rotationY((int) state.get(BeltObserverBlock.HORIZONTAL_FACING)
-							.getHorizontalAngle())
-						.build();
-				});
-		};
 	}
 
 	public static <B extends LinearChassisBlock> NonNullBiConsumer<DataGenContext<Block, B>, RegistrateBlockstateProvider> linearChassis() {

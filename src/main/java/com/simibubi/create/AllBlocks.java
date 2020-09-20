@@ -91,7 +91,6 @@ import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
-import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelCTBehaviour;
@@ -120,6 +119,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
 import com.simibubi.create.content.logistics.block.redstone.ContactMovementBehaviour;
+import com.simibubi.create.content.logistics.block.redstone.ContentObserverBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
@@ -140,9 +140,6 @@ import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
@@ -712,24 +709,14 @@ public class AllBlocks {
 						.patternLine("-")
 						.key('#', DyeHelper.getWoolOfDye(colour))
 						.key('-', ItemTags.WOODEN_SLABS)
-						.addCriterion("has_wool",
-							new InventoryChangeTrigger.Instance(MinMaxBounds.IntBound.UNBOUNDED,
-								MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED,
-								new ItemPredicate[] { ItemPredicate.Builder.create()
-									.tag(ItemTags.WOOL)
-									.build() }))
+						.addCriterion("has_wool", p.hasItem(ItemTags.WOOL))
 						.build(p, Create.asResource("crafting/kinetics/" + c.getName()));
 					ShapedRecipeBuilder.shapedRecipe(c.get())
 						.patternLine("#")
 						.patternLine("-")
 						.key('#', DyeHelper.getTagOfDye(colour))
 						.key('-', AllItemTags.SEATS.tag)
-						.addCriterion("has_seat",
-							new InventoryChangeTrigger.Instance(MinMaxBounds.IntBound.UNBOUNDED,
-								MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED,
-								new ItemPredicate[] { ItemPredicate.Builder.create()
-									.tag(AllItemTags.SEATS.tag)
-									.build() }))
+						.addCriterion("has_seat", p.hasItem(AllItemTags.SEATS.tag))
 						.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 				})
 				.tag(AllBlockTags.SEATS.tag)
@@ -881,12 +868,12 @@ public class AllBlocks {
 			.transform(customItemModel("_", "block"))
 			.register();
 
-	public static final BlockEntry<BeltObserverBlock> BELT_OBSERVER =
-		REGISTRATE.block("belt_observer", BeltObserverBlock::new)
+	public static final BlockEntry<ContentObserverBlock> CONTENT_OBSERVER =
+		REGISTRATE.block("content_observer", ContentObserverBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.blockstate(BlockStateGen.beltObserver())
+			.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p)))
 			.item()
-			.transform(customItemModel())
+			.transform(customItemModel("_", "block"))
 			.register();
 
 	public static final BlockEntry<StockpileSwitchBlock> STOCKPILE_SWITCH =

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create:belt_observer"
+          "name": "create:content_observer"
         }
       ],
       "conditions": [

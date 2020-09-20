@@ -52,7 +52,11 @@ public class AllShapes {
 			.forHorizontalAxis(),
 		STOCKPILE_SWITCH = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 16, 15)
 			.add(0, 14, 0, 16, 16, 16)
-			.add(3, 3, -1, 13, 13, 2)
+			.add(3, 3, -2, 13, 13, 2)
+			.forHorizontal(NORTH),
+		CONTENT_OBSERVER = shape(0, 0, 0, 16, 6, 16).add(1, 0, 1, 15, 16, 15)
+			.add(0, 14, 0, 16, 16, 16)
+			.add(3, 3, -2, 13, 13, 2)
 			.forHorizontal(NORTH),
 		NIXIE_TUBE = shape(0, 0, 0, 16, 4, 16).add(9, 0, 5, 15, 15, 11)
 			.add(1, 0, 5, 7, 15, 11)
@@ -68,13 +72,9 @@ public class AllShapes {
 			.add(2, 6, 2, 14, 10, 14)
 			.add(0, 10, 0, 16, 13, 16)
 			.forDirectional(UP),
-		BELT_FUNNEL_RETRACTED = 
-			shape(2, -5, 14, 12, 14, 18)
-			.add(0, -5, 8, 16, 16, 14)
+		BELT_FUNNEL_RETRACTED = shape(2, -5, 14, 12, 14, 18).add(0, -5, 8, 16, 16, 14)
 			.forHorizontal(NORTH),
-		BELT_FUNNEL_EXTENDED = 
-			shape(2, -4, 14, 14, 14, 18)
-			.add(3, -4, 10, 13, 13, 14)
+		BELT_FUNNEL_EXTENDED = shape(2, -4, 14, 14, 14, 18).add(3, -4, 10, 13, 13, 14)
 			.add(2, -4, 6, 14, 14, 10)
 			.add(0, -5, 0, 16, 16, 6)
 			.forHorizontal(NORTH),

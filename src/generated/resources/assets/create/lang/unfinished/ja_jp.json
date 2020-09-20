@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 407",
+	"_": "Missing Localizations: 408",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -25,7 +25,6 @@
 	"block.create.andesite_tunnel": "UNLOCALIZED: Andesite Tunnel",
 	"block.create.basin": "鉢",
 	"block.create.belt": "メカニカルベルト",
-	"block.create.belt_observer": "ベルトオブザーバー",
 	"block.create.birch_window": "UNLOCALIZED: Birch Window",
 	"block.create.birch_window_pane": "UNLOCALIZED: Birch Window Pane",
 	"block.create.black_seat": "UNLOCALIZED: Black Seat",
@@ -48,6 +47,7 @@
 	"block.create.clockwork_bearing": "時計仕掛けのベアリング",
 	"block.create.clutch": "クラッチ",
 	"block.create.cogwheel": "歯車",
+	"block.create.content_observer": "UNLOCALIZED: Content Observer",
 	"block.create.copper_block": "銅ブロック",
 	"block.create.copper_casing": "銅ケーシング",
 	"block.create.copper_ore": "銅鉱石",

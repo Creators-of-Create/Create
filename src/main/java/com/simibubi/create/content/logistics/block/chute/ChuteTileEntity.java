@@ -306,19 +306,19 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	private boolean handleDownwardOutput(boolean simulate) {
 		BlockState blockState = getBlockState();
 		ChuteTileEntity targetChute = getTargetChute(blockState);
+		Direction direction = blockState.get(ChuteBlock.FACING);
 
 		if (targetChute != null) {
 			boolean canInsert = targetChute.item.isEmpty();
 			if (!simulate && canInsert) {
-				targetChute.setItem(item, 1);
+				targetChute.setItem(item, direction == Direction.DOWN ? 1 : .51f);
 				setItem(ItemStack.EMPTY);
 			}
 			return canInsert;
 		}
 
 		// Diagonal chutes can only insert into other chutes
-		if (blockState.get(ChuteBlock.FACING)
-			.getAxis()
+		if (direction.getAxis()
 			.isHorizontal())
 			return false;
 

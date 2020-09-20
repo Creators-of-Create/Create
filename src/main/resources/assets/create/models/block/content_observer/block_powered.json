@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/content_observer/block",
+	"textures": {
+		"8": "create:block/content_observer_powered",
+		"9": "create:block/content_observer_inner_powered"	
+	}
+}

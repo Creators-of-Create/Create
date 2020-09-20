@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.block.belts.observer;
+package com.simibubi.create.content.logistics.block.redstone;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -10,9 +10,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.util.math.Vec3d;
 
-public class BeltObserverFilterSlot extends ValueBoxTransform {
+public class FilteredDetectorFilterSlot extends ValueBoxTransform {
 
-	Vec3d position = VecHelper.voxelSpace(8f, 14.5f, 16f);
+	Vec3d position = VecHelper.voxelSpace(8f, 15.5f, 11f);
 
 	@Override
 	protected Vec3d getLocalOffset(BlockState state) {
