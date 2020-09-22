@@ -4,6 +4,7 @@ import static com.simibubi.create.content.contraptions.components.structureMovem
 
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -51,7 +52,7 @@ public class MountedContraption extends Contraption {
 			return null;
 
 		BlockState state = world.getBlockState(pos);
-		if (!state.has(RAIL_SHAPE))
+		if (!BlockHelper.hasBlockStateProperty(state, RAIL_SHAPE))
 			return null;
 
 		MountedContraption contraption = new MountedContraption();

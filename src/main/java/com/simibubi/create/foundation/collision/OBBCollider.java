@@ -1,21 +1,23 @@
 package com.simibubi.create.foundation.collision;
 
+import net.minecraft.util.math.vector.Vector3d;
+
 import static com.simibubi.create.foundation.collision.CollisionDebugger.showDebugLine;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 
-import net.minecraft.util.math.Vec3d;
+
 
 public class OBBCollider {
 
-	static final Vec3d uA0 = new Vec3d(1, 0, 0);
-	static final Vec3d uA1 = new Vec3d(0, 1, 0);
-	static final Vec3d uA2 = new Vec3d(0, 0, 1);
+	static final Vector3d uA0 = new Vector3d(1, 0, 0);
+	static final Vector3d uA1 = new Vector3d(0, 1, 0);
+	static final Vector3d uA2 = new Vector3d(0, 0, 1);
 
-	public static Vec3d separateBBs(Vec3d cA, Vec3d cB, Vec3d eA, Vec3d eB, Matrix3d m) {
+	public static Vector3d separateBBs(Vector3d cA, Vector3d cB, Vector3d eA, Vector3d eB, Matrix3d m) {
 		SeparationManifold mf = new SeparationManifold();
 
-		Vec3d t = cB.subtract(cA);
+		Vector3d t = cB.subtract(cA);
 
 		double a00 = abs(m.m00);
 		double a01 = abs(m.m01);
@@ -27,9 +29,9 @@ public class OBBCollider {
 		double a21 = abs(m.m21);
 		double a22 = abs(m.m22);
 
-		Vec3d uB0 = new Vec3d(m.m00, m.m10, m.m20);
-		Vec3d uB1 = new Vec3d(m.m01, m.m11, m.m21);
-		Vec3d uB2 = new Vec3d(m.m02, m.m12, m.m22);
+		Vector3d uB0 = new Vector3d(m.m00, m.m10, m.m20);
+		Vector3d uB1 = new Vector3d(m.m01, m.m11, m.m21);
+		Vector3d uB2 = new Vector3d(m.m02, m.m12, m.m22);
 
 		checkCount = 0;
 
@@ -53,7 +55,7 @@ public class OBBCollider {
 
 	static int checkCount = 0;
 
-	static boolean isSeparatedAlong(SeparationManifold mf, Vec3d axis, double TL, double rA, double rB) {
+	static boolean isSeparatedAlong(SeparationManifold mf, Vector3d axis, double TL, double rA, double rB) {
 		checkCount++;
 		double distance = abs(TL);
 		double diff = distance - (rA + rB);
@@ -71,9 +73,9 @@ public class OBBCollider {
 
 			// Visualize values
 			if (CollisionDebugger.AABB != null) {
-				Vec3d normalizedAxis = axis.normalize();
-				showDebugLine(Vec3d.ZERO, normalizedAxis.scale(TL), 0xbb00bb, "tl", 4);
-				showDebugLine(Vec3d.ZERO, normalizedAxis.scale(sTL * rA), 0xff4444, "ra", 3);
+				Vector3d normalizedAxis = axis.normalize();
+				showDebugLine(Vector3d.ZERO, normalizedAxis.scale(TL), 0xbb00bb, "tl", 4);
+				showDebugLine(Vector3d.ZERO, normalizedAxis.scale(sTL * rA), 0xff4444, "ra", 3);
 				showDebugLine(normalizedAxis.scale(sTL * (distance - rB)), normalizedAxis.scale(TL), 0x4444ff, "rb", 2);
 				showDebugLine(normalizedAxis.scale(sTL * (distance - rB)),
 					normalizedAxis.scale(sTL * (distance - rB) + value), 0xff9966, "separation", 1);
@@ -85,21 +87,21 @@ public class OBBCollider {
 	}
 
 	static class SeparationManifold {
-		Vec3d axis;
+		Vector3d axis;
 		double separation;
 
 		public SeparationManifold() {
-			axis = Vec3d.ZERO;
+			axis = Vector3d.ZERO;
 			separation = Double.MAX_VALUE;
 		}
 
-		public Vec3d asSeparationVec() {
+		public Vector3d asSeparationVec() {
 			double sep = separation;
-			Vec3d axis = this.axis;
+			Vector3d axis = this.axis;
 			return createSeparationVec(sep, axis);
 		}
 
-		protected Vec3d createSeparationVec(double sep, Vec3d axis) {
+		protected Vector3d createSeparationVec(double sep, Vector3d axis) {
 			return axis.normalize()
 				.scale(signum(sep) * (abs(sep) + 1E-4));
 		}

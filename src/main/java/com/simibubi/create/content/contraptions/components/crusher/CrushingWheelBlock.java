@@ -130,7 +130,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
 		try {
 			CrushingWheelTileEntity te = getTileEntity(worldIn, pos);
-			if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.onGround)
+			if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.isOnGround())
 				return;
 
 			double x = 0;

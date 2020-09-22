@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.dispenser.IBlockSource;
@@ -8,7 +9,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 
@@ -50,7 +51,7 @@ public class ContraptionBlockSource implements IBlockSource {
 
 	@Override
 	public BlockState getBlockState() {
-		if(context.state.has(BlockStateProperties.FACING) && overrideFacing != null)
+		if(BlockHelper.hasBlockStateProperty(context.state, BlockStateProperties.FACING) && overrideFacing != null)
 			return context.state.with(BlockStateProperties.FACING, overrideFacing);
 		return context.state;
 	}
@@ -62,7 +63,7 @@ public class ContraptionBlockSource implements IBlockSource {
 	}
 
 	@Override
-	public World getWorld() {
+	public ServerWorld getWorld() {
 		return context.world;
 	}
 }

@@ -37,7 +37,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -296,15 +296,15 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 			return;
 
 		float rimRadius = getRimRadius(state, side);
-		Vec3d directionVec = new Vec3d(side.getDirectionVec());
+		Vector3d directionVec = Vector3d.of(side.getDirectionVec());
 
 		for (int i = 0; i < amount; i++) {
-			Vec3d vec = VecHelper.offsetRandomly(Vec3d.ZERO, r, 1)
+			Vector3d vec = VecHelper.offsetRandomly(Vector3d.ZERO, r, 1)
 				.normalize();
 			vec = VecHelper.clampComponentWise(vec, rimRadius)
 				.mul(VecHelper.axisAlingedPlaneOf(directionVec))
 				.add(directionVec.scale(.45 + r.nextFloat() / 16f));
-			Vec3d m = vec;
+			Vector3d m = vec;
 			vec = vec.add(VecHelper.getCenterOf(pos));
 
 			world.addOptionalParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);
@@ -317,7 +317,7 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 			.getDefaultState()
 			.getBlockState());
 		float rimRadius = getRimRadius(state, side);
-		Vec3d directionVec = new Vec3d(side.getDirectionVec());
+		Vector3d directionVec = Vector3d.of(side.getDirectionVec());
 
 		Couple<PipeFlows> couple = allFlows.get(side);
 		if (couple == null)
@@ -326,11 +326,11 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 			if (flow.progress == null)
 				return;
 			for (int i = 0; i < amount; i++) {
-				Vec3d vec = VecHelper.offsetRandomly(Vec3d.ZERO, r, rimRadius);
+				Vector3d vec = VecHelper.offsetRandomly(Vector3d.ZERO, r, rimRadius);
 				vec = vec.mul(VecHelper.axisAlingedPlaneOf(directionVec))
 					.add(directionVec.scale(.5 + r.nextFloat() / 4f));
-				Vec3d m = vec;
-				Vec3d centerOf = VecHelper.getCenterOf(tileEntity.getPos());
+				Vector3d m = vec;
+				Vector3d centerOf = VecHelper.getCenterOf(tileEntity.getPos());
 				vec = vec.add(centerOf);
 				if (inbound) {
 					vec = vec.add(m);
@@ -350,7 +350,7 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 			.getRenderViewEntity();
 		if (renderViewEntity == null)
 			return false;
-		Vec3d center = VecHelper.getCenterOf(tileEntity.getPos());
+		Vector3d center = VecHelper.getCenterOf(tileEntity.getPos());
 		if (renderViewEntity.getPositionVec()
 			.distanceTo(center) > MAX_PARTICLE_RENDER_DISTANCE)
 			return false;
@@ -411,7 +411,7 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 			return;
 		for (Entry<Direction, Couple<PipeFlows>> entry : allFlows.entrySet()) {
 			Direction face = entry.getKey();
-			Vec3d directionVec = new Vec3d(face.getDirectionVec());
+			Vector3d directionVec = Vector3d.of(face.getDirectionVec());
 			float size = 1 / 4f;
 			boolean extended = !isConnectedTo(tileEntity.getBlockState(), face.getOpposite());
 			float length = extended ? .75f : .5f;
@@ -421,11 +421,11 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 					if (flow.progress == null)
 						return;
 					float value = flow.progress.getValue();
-					Vec3d start = directionVec.scale(inbound ? .5 : .5f - length);
-					Vec3d offset = directionVec.scale(length * (inbound ? -1 : 1))
+					Vector3d start = directionVec.scale(inbound ? .5 : .5f - length);
+					Vector3d offset = directionVec.scale(length * (inbound ? -1 : 1))
 						.scale(value);
 
-					Vec3d scale = new Vec3d(1, 1, 1).subtract(directionVec.scale(face.getAxisDirection()
+					Vector3d scale = new Vector3d(1, 1, 1).subtract(directionVec.scale(face.getAxisDirection()
 						.getOffset()))
 						.scale(size);
 					AxisAlignedBB bb =

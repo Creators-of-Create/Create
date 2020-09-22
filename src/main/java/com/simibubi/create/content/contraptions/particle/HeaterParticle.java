@@ -8,6 +8,7 @@ import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -17,8 +18,8 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 
 	private final IAnimatedSprite animatedSprite;
 
-	public HeaterParticle(World worldIn, float r, float g, float b, double x, double y, double z, double vx, double vy,
-		double vz, IAnimatedSprite spriteSet) {
+	public HeaterParticle(ClientWorld worldIn, float r, float g, float b, double x, double y, double z, double vx, double vy,
+						  double vz, IAnimatedSprite spriteSet) {
 		super(worldIn, x, y, z, spriteSet, worldIn.rand.nextFloat() * .5f);
 
 		this.animatedSprite = spriteSet;
@@ -102,7 +103,7 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 		}
 
 		@Override
-		public Particle makeParticle(HeaterParticleData data, World worldIn, double x, double y, double z, double vx,
+		public Particle makeParticle(HeaterParticleData data, ClientWorld worldIn, double x, double y, double z, double vx,
 			double vy, double vz) {
 			return new HeaterParticle(worldIn, data.r, data.g, data.b, x, y, z, vx, vy, vz, this.spriteSet);
 		}

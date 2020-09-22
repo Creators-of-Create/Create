@@ -634,7 +634,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			}
 
 			currentPos = entities.get(printingEntityIndex)
-				.getPosition()
+				.getBlockPos()
 				.subtract(schematicAnchor);
 			return;
 		}
@@ -656,7 +656,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 				return;
 			}
 			currentPos = entities.get(0)
-				.getPosition()
+				.getBlockPos()
 				.subtract(schematicAnchor);
 		}
 	}

@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.zapper;
 
 import java.util.Vector;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -19,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.ITextComponent;
 
 @SuppressWarnings("deprecation")
 public class ZapperScreen extends AbstractSimiScreen {
@@ -63,7 +65,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 				PlacementPatterns pattern = PlacementPatterns.values()[id];
 				patternButtons.add(new IconButton(i + 147 + col * 18, j + 23 + row * 18, pattern.icon));
 				patternButtons.get(id)
-					.setToolTip(Lang.translate("gui.blockzapper.pattern." + pattern.translationKey));
+					.setToolTip(ITextComponent.of(Lang.translate("gui.blockzapper.pattern." + pattern.translationKey)));
 			}
 		}
 
@@ -75,14 +77,14 @@ public class ZapperScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		int i = guiLeft - 20;
 		int j = guiTop;
 
 		background.draw(this, i, j);
-		drawOnBackground(i, j);
+		drawOnBackground(matrixStack, i, j);
 
-		minecraft.getTextureManager()
+		client.getTextureManager()
 			.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		RenderSystem.enableBlend();
 
@@ -90,9 +92,9 @@ public class ZapperScreen extends AbstractSimiScreen {
 		renderZapper();
 	}
 
-	protected void drawOnBackground(int i, int j) {
-		font.drawStringWithShadow(title, i + 8, j + 10, brightColor);
-		font.drawString(patternSection, i + 148, j + 11, fontColor);
+	protected void drawOnBackground(MatrixStack matrixStack, int i, int j) {
+		textRenderer.drawWithShadow(matrixStack, title, i + 8, j + 10, brightColor);
+		textRenderer.draw(matrixStack, patternSection, i + 148, j + 11, fontColor);
 	}
 
 	@Override

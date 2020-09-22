@@ -13,7 +13,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -44,18 +44,18 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	public void setPos(double x, double y, double z) {
 		super.setPos(x, y, z);
 		AxisAlignedBB bb = getBoundingBox();
-		Vec3d diff = new Vec3d(x, y, z).subtract(bb.getCenter());
+		Vector3d diff = new Vector3d(x, y, z).subtract(bb.getCenter());
 		setBoundingBox(bb.offset(diff));
 	}
 
 	@Override
-	public void setMotion(Vec3d p_213317_1_) {}
+	public void setMotion(Vector3d p_213317_1_) {}
 
 	@Override
 	public void tick() {
 		if (world.isRemote) 
 			return;
-		boolean blockPresent = world.getBlockState(getPosition())
+		boolean blockPresent = world.getBlockState(getBlockPos())
 			.getBlock() instanceof SeatBlock;
 		if (isBeingRidden() && blockPresent)
 			return;
@@ -70,7 +70,7 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	@Override
 	protected void removePassenger(Entity entity) {
 		super.removePassenger(entity);
-		Vec3d pos = entity.getPositionVec();
+		Vector3d pos = entity.getPositionVec();
 		entity.setPosition(pos.x, pos.y + 0.85f, pos.z);
 	}
 

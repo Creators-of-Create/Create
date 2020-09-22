@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.DirectionHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -69,10 +70,10 @@ public class StructureTransform {
 
 	}
 
-	public Vec3d apply(Vec3d localVec) {
-		Vec3d vec = localVec;
+	public Vector3d apply(Vector3d localVec) {
+		Vector3d vec = localVec;
 		vec = VecHelper.rotateCentered(vec, angle, rotationAxis);
-		vec = vec.add(new Vec3d(offset));
+		vec = vec.add(Vector3d.of(offset));
 		return vec;
 	}
 	
@@ -146,33 +147,33 @@ public class StructureTransform {
 			return state;
 		}
 
-		if (state.has(FACING)) {
+		if (BlockHelper.hasBlockStateProperty(state, FACING)) {
 			Direction newFacing = transformFacing(state.get(FACING));
-			if (state.has(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE)) {
+			if (BlockHelper.hasBlockStateProperty(state, DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE)) {
 				if (rotationAxis == newFacing.getAxis() && rotation.ordinal() % 2 == 1)
 					state = state.cycle(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE);
 			}
 			state = state.with(FACING, newFacing);
 
-		} else if (state.has(AXIS)) {
+		} else if (BlockHelper.hasBlockStateProperty(state, AXIS)) {
 			state = state.with(AXIS, transformAxis(state.get(AXIS)));
 
 		} else if (halfTurn) {
 
-			if (state.has(FACING)) {
+			if (BlockHelper.hasBlockStateProperty(state, FACING)) {
 				Direction stateFacing = state.get(FACING);
 				if (stateFacing.getAxis() == rotationAxis)
 					return state;
 			}
 
-			if (state.has(HORIZONTAL_FACING)) {
+			if (BlockHelper.hasBlockStateProperty(state, HORIZONTAL_FACING)) {
 				Direction stateFacing = state.get(HORIZONTAL_FACING);
 				if (stateFacing.getAxis() == rotationAxis)
 					return state;
 			}
 
 			state = state.rotate(rotation);
-			if (state.has(SlabBlock.TYPE) && state.get(SlabBlock.TYPE) != SlabType.DOUBLE)
+			if (BlockHelper.hasBlockStateProperty(state, SlabBlock.TYPE) && state.get(SlabBlock.TYPE) != SlabType.DOUBLE)
 				state = state.with(SlabBlock.TYPE,
 					state.get(SlabBlock.TYPE) == SlabType.BOTTOM ? SlabType.TOP : SlabType.BOTTOM);
 		}

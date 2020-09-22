@@ -25,7 +25,7 @@ public class SchematicannonContainer extends Container {
 		TileEntity tileEntity = world.getTileEntity(buffer.readBlockPos());
 		if (tileEntity instanceof SchematicannonTileEntity) {
 			this.te = (SchematicannonTileEntity) tileEntity;
-			this.te.handleUpdateTag(buffer.readCompoundTag());
+			this.te.handleUpdateTag(te.getBlockState(), buffer.readCompoundTag());
 			init();
 		}
 	}

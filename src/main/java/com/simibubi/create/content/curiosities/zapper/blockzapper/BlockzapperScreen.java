@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class BlockzapperScreen extends ZapperScreen {
@@ -47,19 +48,19 @@ public class BlockzapperScreen extends ZapperScreen {
 		replaceModeButton = new IconButton(i + 51, j + 41, AllIcons.I_REPLACE_SOLID);
 		if (nbt.contains("Replace") && nbt.getBoolean("Replace"))
 			replaceModeIndicator.state = State.ON;
-		replaceModeButton.setToolTip(Lang.translate("gui.blockzapper.replaceMode"));
+		replaceModeButton.setToolTip(ITextComponent.of(Lang.translate("gui.blockzapper.replaceMode")));
 
 		spreadDiagonallyIndicator = new Indicator(i + 74, j + 36, "");
 		spreadDiagonallyButton = new IconButton(i + 74, j + 41, AllIcons.I_FOLLOW_DIAGONAL);
 		if (nbt.contains("SearchDiagonal") && nbt.getBoolean("SearchDiagonal"))
 			spreadDiagonallyIndicator.state = State.ON;
-		spreadDiagonallyButton.setToolTip(Lang.translate("gui.blockzapper.searchDiagonal"));
+		spreadDiagonallyButton.setToolTip(ITextComponent.of(Lang.translate("gui.blockzapper.searchDiagonal")));
 
 		spreadMaterialIndicator = new Indicator(i + 92, j + 36, "");
 		spreadMaterialButton = new IconButton(i + 92, j + 41, AllIcons.I_FOLLOW_MATERIAL);
 		if (nbt.contains("SearchFuzzy") && nbt.getBoolean("SearchFuzzy"))
 			spreadMaterialIndicator.state = State.ON;
-		spreadMaterialButton.setToolTip(Lang.translate("gui.blockzapper.searchFuzzy"));
+		spreadMaterialButton.setToolTip(ITextComponent.of(Lang.translate("gui.blockzapper.searchFuzzy")));
 
 		spreadRangeLabel = new Label(i + 119, j + 46, "").withShadow().withSuffix("m");
 		spreadRangeInput = new ScrollInput(i + 115, j + 43, 22, 14).withRange(1, BlockzapperItem.getMaxAoe(zapper))
@@ -68,7 +69,7 @@ public class BlockzapperScreen extends ZapperScreen {
 		if (nbt.contains("SearchDistance"))
 			spreadRangeInput.setState(nbt.getInt("SearchDistance"));
 		if (BlockzapperItem.getMaxAoe(zapper) == 2)
-			spreadRangeInput.getToolTip().add(1, TextFormatting.RED + needsUpgradedAmplifier);
+			spreadRangeInput.getToolTip().add(1, ITextComponent.of(TextFormatting.RED + needsUpgradedAmplifier));
 
 		Collections.addAll(widgets, replaceModeButton, replaceModeIndicator, spreadDiagonallyButton,
 				spreadDiagonallyIndicator, spreadMaterialButton, spreadMaterialIndicator, spreadRangeLabel,

@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.goggles;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -29,6 +30,7 @@ public class GoggleOverlayRenderer {
 
 	@SubscribeEvent
 	public static void lookingAtBlocksThroughGogglesShowsTooltip(RenderGameOverlayEvent.Post event) {
+		MatrixStack ms = event.getMatrixStack();
 		if (event.getType() != ElementType.HOTBAR)
 			return;
 
@@ -49,7 +51,7 @@ public class GoggleOverlayRenderer {
 		if (!goggleInformation && !hoveringInformation)
 			return;
 
-		List<String> tooltip = new ArrayList<>();
+		List<ITextComponent> tooltip = new ArrayList<>();
 
 		if (goggleInformation && AllItems.GOGGLES.isIn(goggles)) {
 			IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
@@ -60,7 +62,7 @@ public class GoggleOverlayRenderer {
 		if (hoveringInformation) {
 			boolean goggleAddedInformation = !tooltip.isEmpty();
 			if (goggleAddedInformation)
-				tooltip.add("");
+				tooltip.add(ITextComponent.of(""));
 			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
 			if (!hte.addToTooltip(tooltip, mc.player.isSneaking()))
 				hoveringInformation = false;
@@ -79,7 +81,7 @@ public class GoggleOverlayRenderer {
 		int posX = tooltipScreen.width / 2 + AllConfigs.CLIENT.overlayOffsetX.get();
 		int posY = tooltipScreen.height / 2 + AllConfigs.CLIENT.overlayOffsetY.get();
 		//tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
-		tooltipScreen.renderTooltip(tooltip, posX, posY);
+		tooltipScreen.renderTooltip(ms, tooltip, posX, posY);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		//GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16).render();
@@ -95,9 +97,9 @@ public class GoggleOverlayRenderer {
 
 		@Override
 		public void init(Minecraft mc, int width, int height) {
-			this.minecraft = mc;
+			this.client = mc;
 			this.itemRenderer = mc.getItemRenderer();
-			this.font = mc.fontRenderer;
+			this.textRenderer = mc.fontRenderer;
 			this.width = width;
 			this.height = height;
 		}

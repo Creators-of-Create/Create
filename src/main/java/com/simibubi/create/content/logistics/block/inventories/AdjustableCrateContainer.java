@@ -26,7 +26,7 @@ public class AdjustableCrateContainer extends Container {
 		this.playerInventory = inv;
 		if (tileEntity instanceof AdjustableCrateTileEntity) {
 			this.te = (AdjustableCrateTileEntity) tileEntity;
-			this.te.handleUpdateTag(extraData.readCompoundTag());
+			this.te.handleUpdateTag(te.getBlockState(), extraData.readCompoundTag());
 			init();
 		}
 	}

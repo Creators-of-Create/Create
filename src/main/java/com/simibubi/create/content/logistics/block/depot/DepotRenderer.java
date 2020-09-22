@@ -33,7 +33,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 
 		TransportedItemStack transported = te.heldItem;
 		MatrixStacker msr = MatrixStacker.of(ms);
-		Vec3d itemPosition = VecHelper.getCenterOf(te.getPos());
+		Vector3d itemPosition = VecHelper.getCenterOf(te.getPos());
 
 		ms.push();
 		ms.translate(.5f, 15 / 16f, .5f);
@@ -87,7 +87,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 	}
 
 	protected void renderItem(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay, ItemStack itemStack,
-		int angle, Random r, Vec3d itemPosition) {
+		int angle, Random r, Vector3d itemPosition) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 		MatrixStacker msr = MatrixStacker.of(ms);
@@ -102,9 +102,9 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 		if (renderUpright) {
 			Entity renderViewEntity = Minecraft.getInstance().renderViewEntity;
 			if (renderViewEntity != null) {
-				Vec3d positionVec = renderViewEntity.getPositionVec();
-				Vec3d vectorForOffset = itemPosition;
-				Vec3d diff = vectorForOffset.subtract(positionVec);
+				Vector3d positionVec = renderViewEntity.getPositionVec();
+				Vector3d vectorForOffset = itemPosition;
+				Vector3d diff = vectorForOffset.subtract(positionVec);
 				float yRot = (float) MathHelper.atan2(diff.z, -diff.x);
 				ms.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion((float) (yRot - Math.PI / 2)));
 			}

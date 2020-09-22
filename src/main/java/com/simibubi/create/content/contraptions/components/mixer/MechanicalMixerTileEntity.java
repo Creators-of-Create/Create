@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.item.SmartInventory;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -246,7 +247,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		if (world == null)
 			return HeatLevel.NONE;
 		BlockState state = world.getBlockState(pos.down(3));
-		if (state.has(BlazeBurnerBlock.HEAT_LEVEL))
+		if (BlockHelper.hasBlockStateProperty(state, BlazeBurnerBlock.HEAT_LEVEL))
 			return state.get(BlazeBurnerBlock.HEAT_LEVEL);
 		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
 	}

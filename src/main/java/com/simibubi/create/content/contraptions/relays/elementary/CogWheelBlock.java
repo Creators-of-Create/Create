@@ -76,9 +76,9 @@ public class CogWheelBlock extends ShaftBlock {
 
         BlockState stateBelow = world.getBlockState(context.getPos()
                 .down());
-        FluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+        FluidState FluidState = context.getWorld().getFluidState(context.getPos());
         if (AllBlocks.ROTATION_SPEED_CONTROLLER.has(stateBelow) && isLarge) {
-            return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER))
+            return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getFluid() == Fluids.WATER))
                     .with(AXIS, stateBelow.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X);
         }
 
@@ -87,10 +87,10 @@ public class CogWheelBlock extends ShaftBlock {
             Axis preferredAxis = getPreferredAxis(context);
             if (preferredAxis != null)
                 return this.getDefaultState()
-                        .with(AXIS, preferredAxis).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+                        .with(AXIS, preferredAxis).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getFluid() == Fluids.WATER));
             return this.getDefaultState()
                     .with(AXIS, context.getFace()
-                            .getAxis()).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+                            .getAxis()).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getFluid() == Fluids.WATER));
         }
 
         return getDefaultState().with(AXIS, ((IRotate) block).getRotationAxis(placedAgainst));

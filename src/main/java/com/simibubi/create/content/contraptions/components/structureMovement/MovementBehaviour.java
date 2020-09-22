@@ -55,7 +55,7 @@ public abstract class MovementBehaviour {
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {}
 
-	public void onSpeedChanged(MovementContext context, Vec3d oldMotion, Vec3d motion) {
+	public void onSpeedChanged(MovementContext context, Vector3d oldMotion, Vector3d motion) {
 
 	}
 }

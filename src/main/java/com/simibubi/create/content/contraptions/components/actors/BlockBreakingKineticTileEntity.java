@@ -135,7 +135,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	public void onBlockBroken(BlockState stateToBreak) {
-		FluidState ifluidstate = world.getFluidState(breakingPos);
+		FluidState FluidState = world.getFluidState(breakingPos);
 		world.playEvent(2001, breakingPos, Block.getStateId(stateToBreak));
 		TileEntity tileentity = stateToBreak.hasTileEntity() ? world.getTileEntity(breakingPos) : null;
 		Vector3d vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), world.rand, .125f);
@@ -149,9 +149,9 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 				world.addEntity(itementity);
 			}
 		});
-
-		stateToBreak.spawnAdditionalDrops(world, breakingPos, ItemStack.EMPTY);
-		world.setBlockState(breakingPos, ifluidstate.getBlockState(), 3);
+		if (world instanceof ServerWorld)
+			stateToBreak.spawnAdditionalDrops((ServerWorld) world, breakingPos, ItemStack.EMPTY);
+		world.setBlockState(breakingPos, FluidState.getBlockState(), 3);
 	}
 
 	protected float getBreakSpeed() {

@@ -27,7 +27,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -228,7 +228,7 @@ public class SpoutTileEntity extends SmartTileEntity {
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {
-		Vec3d vec = VecHelper.getCenterOf(pos);
+		Vector3d vec = VecHelper.getCenterOf(pos);
 		vec = vec.subtract(0, 8 / 16f, 0);
 		IParticleData particle = new BlockParticleData(ParticleTypes.BLOCK, fluid.getFluid()
 			.getDefaultState()
@@ -239,14 +239,14 @@ public class SpoutTileEntity extends SmartTileEntity {
 	protected static int SPLASH_PARTICLE_COUNT = 20;
 
 	protected void spawnSplash(FluidStack fluid) {
-		Vec3d vec = VecHelper.getCenterOf(pos);
+		Vector3d vec = VecHelper.getCenterOf(pos);
 		vec = vec.subtract(0, 2 - 5 / 16f, 0);
 		IParticleData particle = new BlockParticleData(ParticleTypes.BLOCK, fluid.getFluid()
 			.getDefaultState()
 			.getBlockState());
 		for (int i = 0; i < SPLASH_PARTICLE_COUNT; i++) {
-			Vec3d m = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, 0.25f);
-			m = new Vec3d(m.x, Math.abs(m.y), m.z);
+			Vector3d m = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, 0.25f);
+			m = new Vector3d(m.x, Math.abs(m.y), m.z);
 			world.addOptionalParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
 		}
 	}

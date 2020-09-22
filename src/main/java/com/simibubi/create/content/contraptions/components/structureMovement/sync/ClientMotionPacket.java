@@ -6,21 +6,21 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ClientMotionPacket extends SimplePacketBase {
 
-	private Vec3d motion;
+	private Vector3d motion;
 	private boolean onGround;
 
-	public ClientMotionPacket(Vec3d motion, boolean onGround) {
+	public ClientMotionPacket(Vector3d motion, boolean onGround) {
 		this.motion = motion;
 		this.onGround = onGround;
 	}
 
 	public ClientMotionPacket(PacketBuffer buffer) {
-		motion = new Vec3d(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
+		motion = new Vector3d(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
 		onGround = buffer.readBoolean();
 	}
 
@@ -41,7 +41,7 @@ public class ClientMotionPacket extends SimplePacketBase {
 				if (sender == null)
 					return;
 				sender.setMotion(motion);
-				sender.onGround = onGround;
+				sender.setOnGround(onGround);
 				if (onGround) {
 					sender.handleFallDamage(sender.fallDistance, 1);
 					sender.fallDistance = 0;

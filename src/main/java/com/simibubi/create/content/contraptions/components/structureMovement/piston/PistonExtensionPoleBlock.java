@@ -91,9 +91,9 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        FluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+        FluidState FluidState = context.getWorld().getFluidState(context.getPos());
         return getDefaultState().with(FACING, context.getFace().getOpposite())
-                .with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+                .with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getFluid() == Fluids.WATER));
     }
 
     @Override

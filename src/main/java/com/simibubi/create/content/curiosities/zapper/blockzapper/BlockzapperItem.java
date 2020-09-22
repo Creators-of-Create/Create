@@ -123,8 +123,8 @@ public class BlockzapperItem extends ZapperItem {
 					world.getBlockState(placed.offset(updateDirection)), world, placed, placed.offset(updateDirection));
 
 			BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, placed);
-			FluidState ifluidstate = world.getFluidState(placed);
-			world.setBlockState(placed, ifluidstate.getBlockState(), 18);
+			FluidState FluidState = world.getFluidState(placed);
+			world.setBlockState(placed, FluidState.getBlockState(), 18);
 			world.setBlockState(placed, selectedState);
 			if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
 				blocksnapshot.restore(true, false);

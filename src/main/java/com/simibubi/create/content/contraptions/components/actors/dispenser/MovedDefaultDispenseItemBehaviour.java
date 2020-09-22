@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -17,7 +17,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBehaviour {
 	private static final MovedDefaultDispenseItemBehaviour defaultInstance = new MovedDefaultDispenseItemBehaviour();
 
-	public static void doDispense(World p_82486_0_, ItemStack p_82486_1_, int p_82486_2_, Vec3d facing, BlockPos p_82486_4_, MovementContext context) {
+	public static void doDispense(World p_82486_0_, ItemStack p_82486_1_, int p_82486_2_, Vector3d facing, BlockPos p_82486_4_, MovementContext context) {
 		double d0 = p_82486_4_.getX() + facing.x + .5;
 		double d1 = p_82486_4_.getY() + facing.y + .5;
 		double d2 = p_82486_4_.getZ() + facing.z + .5;
@@ -35,7 +35,7 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 
 	@Override
 	public ItemStack dispense(ItemStack itemStack, MovementContext context, BlockPos pos) {
-		Vec3d facingVec = new Vec3d(context.state.get(DispenserBlock.FACING).getDirectionVec());
+		Vector3d facingVec = Vector3d.of(context.state.get(DispenserBlock.FACING).getDirectionVec());
 		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
 		facingVec.normalize();
 
@@ -55,7 +55,7 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	/**
 	 * Dispense the specified stack, play the dispense sound and spawn particles.
 	 */
-	protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vec3d facing) {
+	protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vector3d facing) {
 		ItemStack itemstack = itemStack.split(1);
 		doDispense(context.world, itemstack, 6, facing, pos, context);
 		return itemStack;
@@ -71,7 +71,7 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	/**
 	 * Order clients to display dispense particles from the specified block and facing.
 	 */
-	protected void spawnDispenseParticles(IWorld world, BlockPos pos, Vec3d facing) {
+	protected void spawnDispenseParticles(IWorld world, BlockPos pos, Vector3d facing) {
 		spawnDispenseParticles(world, pos, getClosestFacingDirection(facing));
 	}
 
@@ -79,11 +79,11 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 		world.playEvent(2000, pos, direction.getIndex());
 	}
 
-	protected Direction getClosestFacingDirection(Vec3d exactFacing) {
+	protected Direction getClosestFacingDirection(Vector3d exactFacing) {
 		return Direction.getFacingFromVector(exactFacing.x, exactFacing.y, exactFacing.z);
 	}
 
-	protected ItemStack placeItemInInventory(ItemStack consumedFrom, ItemStack output, MovementContext context, BlockPos pos, Vec3d facing) {
+	protected ItemStack placeItemInInventory(ItemStack consumedFrom, ItemStack output, MovementContext context, BlockPos pos, Vector3d facing) {
 		consumedFrom.shrink(1);
 		ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, output.copy(), false);
 		if (!remainder.isEmpty())

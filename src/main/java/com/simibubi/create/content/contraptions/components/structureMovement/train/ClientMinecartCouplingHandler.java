@@ -16,7 +16,7 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ClientMinecartCouplingHandler {
 
@@ -54,11 +54,11 @@ public class ClientMinecartCouplingHandler {
 
 	private static void spawnSelectionParticles(AxisAlignedBB axisAlignedBB, boolean highlight) {
 		ClientWorld world = Minecraft.getInstance().world;
-		Vec3d center = axisAlignedBB.getCenter();
+		Vector3d center = axisAlignedBB.getCenter();
 		int amount = highlight ? 100 : 2;
 		IParticleData particleData = highlight ? ParticleTypes.END_ROD : new RedstoneParticleData(1, 1, 1, 1);
 		for (int i = 0; i < amount; i++) {
-			Vec3d v = VecHelper.offsetRandomly(Vec3d.ZERO, r, 1);
+			Vector3d v = VecHelper.offsetRandomly(Vector3d.ZERO, r, 1);
 			double yOffset = v.y;
 			v = v.mul(1, 0, 1)
 				.normalize()

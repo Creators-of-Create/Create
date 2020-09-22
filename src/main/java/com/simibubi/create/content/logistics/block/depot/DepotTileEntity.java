@@ -191,7 +191,7 @@ public class DepotTileEntity extends SmartTileEntity {
 				continue;
 			}
 			ItemStack remainder = ItemHandlerHelper.insertItemStacked(processingOutputBuffer, added.stack, false);
-			Vec3d vec = VecHelper.getCenterOf(pos);
+			Vector3d vec = VecHelper.getCenterOf(pos);
 			InventoryHelper.spawnItemStack(world, vec.x, vec.y + .5f, vec.z, remainder);
 		}
 

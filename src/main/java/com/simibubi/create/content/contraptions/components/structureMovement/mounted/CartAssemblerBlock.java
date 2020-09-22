@@ -219,7 +219,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		if (couplingFound) {
 			MinecartCouplingHandler.connectCarts(null, world, cart.getEntityId(),
 				contraption.connectedCart.getEntityId());
-			Vec3d diff = contraption.connectedCart.getPositionVec()
+			Vector3d diff = contraption.connectedCart.getPositionVec()
 				.subtract(cart.getPositionVec());
 			initialAngle = Direction.fromAngle(MathHelper.atan2(diff.z, diff.x) * 180 / Math.PI)
 				.getHorizontalAngle();
@@ -304,10 +304,12 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		return PushReaction.BLOCK;
 	}
 
+	/* FIXME: Is there a 1.16 equivalent to be used? Or is this just removed?
 	@Override
 	public boolean isNormalCube(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
 		return false;
 	}
+	 */
 
 	@Override
 	public Class<CartAssemblerTileEntity> getTileEntityClass() {
@@ -338,10 +340,10 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	}
 
 	@SuppressWarnings("deprecation")
-	public List<ItemStack> getDropedAssembler(BlockState p_220077_0_, ServerWorld p_220077_1_, BlockPos p_220077_2_,
+	public List<ItemStack> getDropedAssembler(BlockState state, ServerWorld world, BlockPos pos,
 		@Nullable TileEntity p_220077_3_, @Nullable Entity p_220077_4_, ItemStack p_220077_5_) {
-		return super.getDrops(p_220077_0_, (new LootContext.Builder(p_220077_1_)).withRandom(p_220077_1_.rand)
-			.withParameter(LootParameters.POSITION, p_220077_2_)
+		return super.getDrops(state, (new LootContext.Builder(world)).withRandom(world.rand)
+			.withParameter(LootParameters.ORIGIN, Vector3d.of(pos))
 			.withParameter(LootParameters.TOOL, p_220077_5_)
 			.withNullableParameter(LootParameters.THIS_ENTITY, p_220077_4_)
 			.withNullableParameter(LootParameters.BLOCK_ENTITY, p_220077_3_));
@@ -360,7 +362,8 @@ public class CartAssemblerBlock extends AbstractRailBlock
 				.forEach(itemStack -> {
 					player.inventory.placeItemBackInInventory(world, itemStack);
 				});
-		state.spawnAdditionalDrops(world, pos, ItemStack.EMPTY);
+		if(world instanceof ServerWorld)
+			state.spawnAdditionalDrops((ServerWorld) world, pos, ItemStack.EMPTY);
 		world.setBlockState(pos, getRailBlock(state));
 		return ActionResultType.SUCCESS;
 	}

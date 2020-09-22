@@ -153,10 +153,10 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		FluidState ifluidstate = context.getWorld()
+		FluidState FluidState = context.getWorld()
 			.getFluidState(context.getPos());
 		return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED,
-			Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+			Boolean.valueOf(FluidState.getFluid() == Fluids.WATER));
 	}
 
 	public static boolean isPump(BlockState state) {

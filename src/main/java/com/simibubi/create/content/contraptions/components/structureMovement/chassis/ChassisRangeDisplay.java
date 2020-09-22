@@ -43,7 +43,7 @@ public class ChassisRangeDisplay {
 		}
 
 		protected Object getOutlineKey() {
-			return Pair.of(te.getPos(), new Integer(1));
+			return Pair.of(te.getPos(), 1);
 		}
 
 		protected Set<BlockPos> createSelection(ChassisTileEntity chassis) {

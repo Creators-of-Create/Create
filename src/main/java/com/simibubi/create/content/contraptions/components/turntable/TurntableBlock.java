@@ -47,7 +47,7 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 
 	@Override
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity e) {
-		if (!e.onGround)
+		if (!e.isOnGround())
 			return;
 		if (e.getMotion().y > 0)
 			return;
@@ -61,7 +61,7 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 
 			World world = e.getEntityWorld();
 			if (world.isRemote && (e instanceof PlayerEntity)) {
-				if (worldIn.getBlockState(e.getPosition()) != state) {
+				if (worldIn.getBlockState(e.getBlockPos()) != state) {
 					Vector3d origin = VecHelper.getCenterOf(pos);
 					Vector3d offset = e.getPositionVec()
 						.subtract(origin);

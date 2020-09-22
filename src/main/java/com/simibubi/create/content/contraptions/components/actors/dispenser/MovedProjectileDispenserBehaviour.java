@@ -4,10 +4,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -18,16 +18,16 @@ import java.lang.reflect.Method;
 public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDispenseItemBehaviour {
 
 	@Override
-	protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vec3d facing) {
+	protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vector3d facing) {
 		double x = pos.getX() + facing.x * .7 + .5;
 		double y = pos.getY() + facing.y * .7 + .5;
 		double z = pos.getZ() + facing.z * .7 + .5;
-		IProjectile iprojectile = this.getProjectileEntity(context.world, x, y, z, itemStack.copy());
-		if (iprojectile == null)
+		ProjectileEntity ProjectileEntity = this.getProjectileEntity(context.world, x, y, z, itemStack.copy());
+		if (ProjectileEntity == null)
 			return itemStack;
-		Vec3d effectiveMovementVec = facing.scale(getProjectileVelocity()).add(context.motion);
-		iprojectile.shoot(effectiveMovementVec.x, effectiveMovementVec.y, effectiveMovementVec.z, (float) effectiveMovementVec.length(), this.getProjectileInaccuracy());
-		context.world.addEntity((Entity) iprojectile);
+		Vector3d effectiveMovementVec = facing.scale(getProjectileVelocity()).add(context.motion);
+		ProjectileEntity.shoot(effectiveMovementVec.x, effectiveMovementVec.y, effectiveMovementVec.z, (float) effectiveMovementVec.length(), this.getProjectileInaccuracy());
+		context.world.addEntity(ProjectileEntity);
 		itemStack.shrink(1);
 		return itemStack;
 	}
@@ -38,7 +38,7 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 	}
 
 	@Nullable
-	protected abstract IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack);
+	protected abstract ProjectileEntity getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack);
 
 	protected float getProjectileInaccuracy() {
 		return 6.0F;
@@ -51,9 +51,9 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 	public static MovedProjectileDispenserBehaviour of(ProjectileDispenseBehavior vanillaBehaviour) {
 		return new MovedProjectileDispenserBehaviour() {
 			@Override
-			protected IProjectile getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
+			protected ProjectileEntity getProjectileEntity(World world, double x, double y, double z, ItemStack itemStack) {
 				try {
-					return (IProjectile) MovedProjectileDispenserBehaviour.getProjectileEntityLookup().invoke(vanillaBehaviour, world, new SimplePos(x, y, z) , itemStack);
+					return (ProjectileEntity) MovedProjectileDispenserBehaviour.getProjectileEntityLookup().invoke(vanillaBehaviour, world, new SimplePos(x, y, z) , itemStack);
 				} catch (Throwable ignored) {
 				}
 				return null;

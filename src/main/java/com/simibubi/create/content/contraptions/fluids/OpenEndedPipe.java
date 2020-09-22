@@ -3,13 +3,14 @@ package com.simibubi.create.content.contraptions.fluids;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.utility.BlockFace;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
@@ -44,8 +45,8 @@ public class OpenEndedPipe {
 		}
 
 		BlockState state = world.getBlockState(outputPos);
-		IFluidState fluidState = state.getFluidState();
-		boolean waterlog = state.has(BlockStateProperties.WATERLOGGED);
+		FluidState fluidState = state.getFluidState();
+		boolean waterlog = BlockHelper.hasBlockStateProperty(state, BlockStateProperties.WATERLOGGED);
 
 		if (!waterlog && !state.getMaterial()
 			.isReplaceable())
@@ -128,14 +129,14 @@ public class OpenEndedPipe {
 			if (resource.isEmpty())
 				return 0;
 			BlockState state = world.getBlockState(outputPos);
-			IFluidState fluidState = state.getFluidState();
+			FluidState fluidState = state.getFluidState();
 			if (!fluidState.isEmpty() && fluidState.getFluid() != resource.getFluid()) {
 				FluidReactions.handlePipeSpillCollision(world, outputPos, resource.getFluid(), fluidState);
 				return 0;
 			}
 			if (fluidState.isSource())
 				return 0;
-			if (!(state.has(BlockStateProperties.WATERLOGGED) && resource.getFluid() == Fluids.WATER)
+			if (!(BlockHelper.hasBlockStateProperty(state, BlockStateProperties.WATERLOGGED) && resource.getFluid() == Fluids.WATER)
 				&& !state.getMaterial()
 					.isReplaceable())
 				return 0;

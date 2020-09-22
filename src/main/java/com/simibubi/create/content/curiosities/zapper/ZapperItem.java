@@ -139,7 +139,7 @@ public abstract class ZapperItem extends Item {
 		// Check if can be used
 		String msg = validateUsage(item);
 		if (msg != null) {
-			world.playSound(player, player.getPosition(), AllSoundEvents.BLOCKZAPPER_DENY.get(), SoundCategory.BLOCKS,
+			world.playSound(player, player.getBlockPos(), AllSoundEvents.BLOCKZAPPER_DENY.get(), SoundCategory.BLOCKS,
 				1f, 0.5f);
 			player.sendStatusMessage(new StringTextComponent(TextFormatting.RED + msg), true);
 			return new ActionResult<ItemStack>(ActionResultType.FAIL, item);

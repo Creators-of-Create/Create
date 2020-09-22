@@ -31,7 +31,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.WeightedSpawnerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -115,20 +115,20 @@ public class BlazeBurnerBlockItem extends BlockItem {
 	}
 
 	@Override
-	public boolean itemInteractionForEntity(ItemStack heldItem, PlayerEntity player, LivingEntity entity, Hand hand) {
+	public ActionResultType itemInteractionForEntity(ItemStack heldItem, PlayerEntity player, LivingEntity entity, Hand hand) {
 		if (hasCapturedBlaze())
-			return false;
+			return ActionResultType.PASS;
 		if (!(entity instanceof BlazeEntity))
-			return false;
+			return ActionResultType.PASS;
 
 		World world = player.world;
 		spawnCaptureEffects(world, entity.getPositionVec());
 		if (world.isRemote)
-			return true;
+			return ActionResultType.FAIL;
 
 		giveBurnerItemTo(player, heldItem, hand);
 		entity.remove();
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	protected void giveBurnerItemTo(PlayerEntity player, ItemStack heldItem, Hand hand) {
@@ -142,12 +142,12 @@ public class BlazeBurnerBlockItem extends BlockItem {
 		player.inventory.placeItemBackInInventory(player.world, filled);
 	}
 
-	private void spawnCaptureEffects(World world, Vec3d vec) {
+	private void spawnCaptureEffects(World world, Vector3d vec) {
 		if (world.isRemote) {
 			for (int i = 0; i < 40; i++) {
-				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f);
+				Vector3d motion = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, .125f);
 				world.addParticle(ParticleTypes.FLAME, vec.x, vec.y, vec.z, motion.x, motion.y, motion.z);
-				Vec3d circle = motion.mul(1, 0, 1)
+				Vector3d circle = motion.mul(1, 0, 1)
 					.normalize()
 					.scale(.5f);
 				world.addParticle(ParticleTypes.SMOKE, circle.x, vec.y, circle.z, 0, -0.125, 0);

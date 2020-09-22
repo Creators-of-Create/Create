@@ -24,6 +24,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.settings.GraphicsFanciness;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -207,7 +208,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			int count = (int) (MathHelper.log2((int) (transported.stack.getCount()))) / 2;
 			Random r = new Random(transported.angle);
 
-			if (Minecraft.getInstance().gameSettings.fancyGraphics) {
+			if (Minecraft.getInstance().gameSettings.graphicsMode == GraphicsFanciness.FANCY) {
 				Vector3d shadowPos = Vector3d.of(te.getPos()).add(beltStartOffset.scale(1)
 					.add(offsetVec)
 					.add(alongX ? sideOffset : 0, .39, alongX ? 0 : sideOffset));
@@ -217,9 +218,9 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			if (renderUpright) {
 				Entity renderViewEntity = Minecraft.getInstance().renderViewEntity;
 				if (renderViewEntity != null) {
-					Vec3d positionVec = renderViewEntity.getPositionVec();
-					Vec3d vectorForOffset = BeltHelper.getVectorForOffset(te, offset);
-					Vec3d diff = vectorForOffset.subtract(positionVec);
+					Vector3d positionVec = renderViewEntity.getPositionVec();
+					Vector3d vectorForOffset = BeltHelper.getVectorForOffset(te, offset);
+					Vector3d diff = vectorForOffset.subtract(positionVec);
 					float yRot = (float) MathHelper.atan2(diff.z, -diff.x);
 					ms.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion((float) (yRot + Math.PI / 2)));
 				}

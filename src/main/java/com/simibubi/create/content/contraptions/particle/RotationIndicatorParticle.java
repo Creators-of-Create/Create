@@ -13,6 +13,7 @@ import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -28,8 +29,8 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	protected Vector3d offset;
 	protected boolean isVisible;
 
-	private RotationIndicatorParticle(World world, double x, double y, double z, int color, float radius1,
-			float radius2, float speed, Axis axis, int lifeSpan, boolean isVisible, IAnimatedSprite sprite) {
+	private RotationIndicatorParticle(ClientWorld world, double x, double y, double z, int color, float radius1,
+									  float radius2, float speed, Axis axis, int lifeSpan, boolean isVisible, IAnimatedSprite sprite) {
 		super(world, x, y, z, sprite, 0);
 		this.motionX = 0;
 		this.motionY = 0;
@@ -82,7 +83,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 			this.spriteSet = animatedSprite;
 		}
 
-		public Particle makeParticle(RotationIndicatorParticleData data, World worldIn, double x, double y, double z,
+		public Particle makeParticle(RotationIndicatorParticleData data, ClientWorld worldIn, double x, double y, double z,
 				double xSpeed, double ySpeed, double zSpeed) {
 			ClientPlayerEntity player = Minecraft.getInstance().player;
 			boolean visible = player != null && GogglesItem.canSeeParticles(player);

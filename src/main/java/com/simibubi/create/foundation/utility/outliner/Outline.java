@@ -33,8 +33,8 @@ public abstract class Outline {
 
 	public abstract void render(MatrixStack ms, SuperRenderTypeBuffer buffer);
 
-	public void renderCuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vec3d start, Vec3d end) {
-		Vec3d diff = end.subtract(start);
+	public void renderCuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vector3d start, Vector3d end) {
+		Vector3d diff = end.subtract(start);
 		float hAngle = AngleHelper.deg(MathHelper.atan2(diff.x, diff.z));
 		float hDistance = (float) diff.mul(1, 0, 1)
 			.length();
@@ -43,11 +43,11 @@ public abstract class Outline {
 		MatrixStacker.of(ms)
 			.translate(start)
 			.rotateY(hAngle).rotateX(vAngle);
-		renderAACuboidLine(ms, buffer, Vec3d.ZERO, new Vec3d(0, 0, diff.length()));
+		renderAACuboidLine(ms, buffer, Vector3d.ZERO, new Vector3d(0, 0, diff.length()));
 		ms.pop();
 	}
 
-	public void renderAACuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vec3d start, Vec3d end) {
+	public void renderAACuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vector3d start, Vector3d end) {
 		IVertexBuilder builder = buffer.getBuffer(RenderTypes.getOutlineSolid());
 
 		Vector3d diff = end.subtract(start);

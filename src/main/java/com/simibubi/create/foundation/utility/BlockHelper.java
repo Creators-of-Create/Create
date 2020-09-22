@@ -2,7 +2,10 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.function.Consumer;
 
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Items;
+import net.minecraft.state.Property;
+import net.minecraft.tags.BlockTags;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import net.minecraft.block.Block;
@@ -30,7 +33,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BlockHelper {
 
 	@OnlyIn(Dist.CLIENT)
-	public static void addReducedDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
+	public static void addReducedDestroyEffects(BlockState state, World worldIn, BlockPos pos, ParticleManager manager) {
+		if (!(worldIn instanceof ClientWorld))
+			return;
+		ClientWorld world = (ClientWorld) worldIn;
 		VoxelShape voxelshape = state.getShape(world, pos);
 		MutableInt amtBoxes = new MutableInt(0);
 		voxelshape.forEachBox((x1, y1, z1, x2, y2, z2) -> amtBoxes.increment());
@@ -67,25 +73,25 @@ public class BlockHelper {
 	}
 
 	public static BlockState setZeroAge(BlockState blockState) {
-		if (blockState.has(BlockStateProperties.AGE_0_1))
+		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_1))
 			return blockState.with(BlockStateProperties.AGE_0_1, 0);
-		if (blockState.has(BlockStateProperties.AGE_0_2))
+		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_2))
 			return blockState.with(BlockStateProperties.AGE_0_2, 0);
-		if (blockState.has(BlockStateProperties.AGE_0_3))
+		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_3))
 			return blockState.with(BlockStateProperties.AGE_0_3, 0);
-		if (blockState.has(BlockStateProperties.AGE_0_5))
+		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_5))
 			return blockState.with(BlockStateProperties.AGE_0_5, 0);
-		if (blockState.has(BlockStateProperties.AGE_0_7))
+		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_7))
 			return blockState.with(BlockStateProperties.AGE_0_7, 0);
-		if (blockState.has(BlockStateProperties.AGE_0_15))
+		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_15))
 			return blockState.with(BlockStateProperties.AGE_0_15, 0);
-		if (blockState.has(BlockStateProperties.AGE_0_25))
+		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_25))
 			return blockState.with(BlockStateProperties.AGE_0_25, 0);
-		if (blockState.has(BlockStateProperties.HONEY_LEVEL))
+		if (hasBlockStateProperty(blockState, BlockStateProperties.HONEY_LEVEL))
 			return blockState.with(BlockStateProperties.HONEY_LEVEL, 0);
-		if (blockState.has(BlockStateProperties.HATCH_0_2))
+		if (hasBlockStateProperty(blockState, BlockStateProperties.HATCH_0_2))
 			return blockState.with(BlockStateProperties.HATCH_0_2, 0);
-		if (blockState.has(BlockStateProperties.STAGE_0_1))
+		if (hasBlockStateProperty(blockState, BlockStateProperties.STAGE_0_1))
 			return blockState.with(BlockStateProperties.STAGE_0_1, 0);
 		return blockState;
 	}
@@ -95,15 +101,15 @@ public class BlockHelper {
 		Item required = getRequiredItem(block).getItem();
 
 		boolean needsTwo =
-			block.has(BlockStateProperties.SLAB_TYPE) && block.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE;
+			hasBlockStateProperty(block, BlockStateProperties.SLAB_TYPE) && block.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE;
 
 		if (needsTwo)
 			amount *= 2;
 
-		if (block.has(BlockStateProperties.EGGS_1_4))
+		if (hasBlockStateProperty(block, BlockStateProperties.EGGS_1_4))
 			amount *= block.get(BlockStateProperties.EGGS_1_4);
 
-		if (block.has(BlockStateProperties.PICKLES_1_4))
+		if (hasBlockStateProperty(block, BlockStateProperties.PICKLES_1_4))
 			amount *= block.get(BlockStateProperties.PICKLES_1_4);
 
 		{
@@ -158,24 +164,24 @@ public class BlockHelper {
 
 	public static void destroyBlock(World world, BlockPos pos, float effectChance,
 		Consumer<ItemStack> droppedItemCallback) {
-		FluidState ifluidstate = world.getFluidState(pos);
+		FluidState FluidState = world.getFluidState(pos);
 		BlockState state = world.getBlockState(pos);
 		if (world.rand.nextFloat() < effectChance)
 			world.playEvent(2001, pos, Block.getStateId(state));
 		TileEntity tileentity = state.hasTileEntity() ? world.getTileEntity(pos) : null;
 
 		if (world.getGameRules()
-			.getBoolean(GameRules.DO_TILE_DROPS) && !world.restoringBlockSnapshots) {
+			.getBoolean(GameRules.DO_TILE_DROPS) && !world.restoringBlockSnapshots && world instanceof ServerWorld) {
 			for (ItemStack itemStack : Block.getDrops(state, (ServerWorld) world, pos, tileentity))
 				droppedItemCallback.accept(itemStack);
-			state.spawnAdditionalDrops(world, pos, ItemStack.EMPTY);
+			state.spawnAdditionalDrops((ServerWorld) world, pos, ItemStack.EMPTY);
 		}
 
-		world.setBlockState(pos, ifluidstate.getBlockState());
+		world.setBlockState(pos, FluidState.getBlockState());
 	}
 
 	public static boolean isSolidWall(IBlockReader reader, BlockPos fromPos, Direction toDirection) {
-		return Block.hasSolidSide(reader.getBlockState(fromPos.offset(toDirection)), reader,
+		return hasBlockSolidSide(reader.getBlockState(fromPos.offset(toDirection)), reader,
 			fromPos.offset(toDirection), toDirection.getOpposite());
 	}
 	
@@ -183,4 +189,11 @@ public class BlockHelper {
 		return reader.getBlockState(pos).getCollisionShape(reader, pos).isEmpty();
 	}
 
+	public static boolean hasBlockStateProperty(BlockState state, Property<?> p) {
+		return state.method_28500(p).isPresent();
+	}
+
+	public static boolean hasBlockSolidSide(BlockState p_220056_0_, IBlockReader p_220056_1_, BlockPos p_220056_2_, Direction p_220056_3_) {
+		return !p_220056_0_.isIn(BlockTags.LEAVES) && Block.doesSideFillSquare(p_220056_0_.getCollisionShape(p_220056_1_, p_220056_2_), p_220056_3_);
+	}
 }

@@ -110,10 +110,11 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		return AllItems.BELT_CONNECTOR.asStack();
 	}
 
+	/* FIXME
 	@Override
 	public Material getMaterial(BlockState state) {
 		return state.get(CASING) ? Material.WOOD : Material.WOOL;
-	}
+	} */
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -142,7 +143,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	public void onLanded(IBlockReader worldIn, Entity entityIn) {
 		super.onLanded(worldIn, entityIn);
-		BlockPos entityPosition = entityIn.getPosition();
+		BlockPos entityPosition = entityIn.getBlockPos();
 		BlockPos beltPos = null;
 
 		if (AllBlocks.BELT.has(worldIn.getBlockState(entityPosition)))
@@ -196,7 +197,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return;
 		if (controller.passengers.containsKey(entityIn)) {
 			TransportedEntityInfo info = controller.passengers.get(entityIn);
-			if (info.getTicksSinceLastCollision() != 0 || pos.equals(entityIn.getPosition()))
+			if (info.getTicksSinceLastCollision() != 0 || pos.equals(entityIn.getBlockPos()))
 				info.refresh(pos, state);
 		} else {
 			controller.passengers.put(entityIn, new TransportedEntityInfo(pos, state));

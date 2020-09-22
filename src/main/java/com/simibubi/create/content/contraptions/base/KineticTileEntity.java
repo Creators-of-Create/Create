@@ -31,6 +31,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
@@ -371,31 +372,26 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
 	@Override
-	public boolean hasFastRenderer() {
-		return true;
-	}
-
-	@Override
-	public boolean addToTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+	public boolean addToTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
 		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
-			tooltip.add(spacing + GOLD + Lang.translate("gui.stressometer.overstressed"));
+			tooltip.add(ITextComponent.of(spacing + GOLD + Lang.translate("gui.stressometer.overstressed")));
 			String hint = Lang.translate("gui.contraptions.network_overstressed", I18n.format(getBlockState().getBlock()
 				.getTranslationKey()));
 			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add((i == 0 ? "" : spacing) + cutString.get(i));
+				tooltip.add(ITextComponent.of((i == 0 ? "" : spacing) + cutString.get(i)));
 			return true;
 		}
 
 		if (notFastEnough) {
-			tooltip.add(spacing + GOLD + Lang.translate("tooltip.speedRequirement"));
+			tooltip.add(ITextComponent.of(spacing + GOLD + Lang.translate("tooltip.speedRequirement")));
 			String hint = Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock()
 				.getTranslationKey()));
 			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add((i == 0 ? "" : spacing) + cutString.get(i));
+				tooltip.add(ITextComponent.of((i == 0 ? "" : spacing) + cutString.get(i)));
 			return true;
 		}
 
@@ -403,23 +399,23 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
 		boolean added = false;
 		float stressAtBase = calculateStressApplied();
 
 		if (calculateStressApplied() != 0 && StressImpact.isEnabled()) {
-			tooltip.add(spacing + Lang.translate("gui.goggles.kinetic_stats"));
-			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("tooltip.stressImpact"));
+			tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.goggles.kinetic_stats")));
+			tooltip.add(ITextComponent.of(spacing + TextFormatting.GRAY + Lang.translate("tooltip.stressImpact")));
 
 			float stressTotal = stressAtBase * Math.abs(getSpeed());
 
 			String stressString =
 				spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
 
-			tooltip.add(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressAtBase),
-				Lang.translate("gui.goggles.base_value")));
-			tooltip.add(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal),
-				Lang.translate("gui.goggles.at_current_speed")));
+			tooltip.add(ITextComponent.of(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressAtBase),
+				Lang.translate("gui.goggles.base_value"))));
+			tooltip.add(ITextComponent.of(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal),
+				Lang.translate("gui.goggles.at_current_speed"))));
 
 			added = true;
 		}

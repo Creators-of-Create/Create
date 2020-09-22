@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class AllTriggers {
@@ -55,21 +56,21 @@ public class AllTriggers {
 			trigger.trigger((ServerPlayerEntity) player);
 	}
 
-	public static void triggerForNearbyPlayers(ITriggerable trigger, World world, BlockPos pos, int range) {
+	public static void triggerForNearbyPlayers(ITriggerable trigger, IWorld world, BlockPos pos, int range) {
 		triggerForNearbyPlayers(trigger, world, pos, range, player -> true);
 	}
 
-	public static void triggerForNearbyPlayers(ITriggerable trigger, World world, BlockPos pos, int range,
+	public static void triggerForNearbyPlayers(ITriggerable trigger, IWorld world, BlockPos pos, int range,
 			Predicate<PlayerEntity> playerFilter) {
 		if (world == null)
 			return;
-		if (world.isRemote)
+		if (world.isRemote())
 			return;
 		List<ServerPlayerEntity> players = getPlayersInRange(world, pos, range);
 		players.stream().filter(playerFilter).forEach(trigger::trigger);
 	}
 
-	public static List<ServerPlayerEntity> getPlayersInRange(World world, BlockPos pos, int range) {
+	public static List<ServerPlayerEntity> getPlayersInRange(IWorld world, BlockPos pos, int range) {
 		List<ServerPlayerEntity> players =
 			world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(pos).grow(range));
 		return players;

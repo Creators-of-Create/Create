@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
@@ -71,7 +72,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
             for (int i = ((int) offset); i > 0; i--) {
                 BlockPos offset = pos.down(i);
                 BlockState oldState = world.getBlockState(offset);
-                if (oldState.getBlock() instanceof IWaterLoggable && oldState.has(BlockStateProperties.WATERLOGGED) && oldState.get(BlockStateProperties.WATERLOGGED)) {
+                if (oldState.getBlock() instanceof IWaterLoggable && BlockHelper.hasBlockStateProperty(oldState, BlockStateProperties.WATERLOGGED) && oldState.get(BlockStateProperties.WATERLOGGED)) {
                     world.setBlockState(offset, Blocks.WATER.getDefaultState(), 66);
                     continue;
                 }
@@ -105,19 +106,19 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
             if (!removed) {
                 if (offset > 0) {
                     BlockPos magnetPos = pos.down((int) offset);
-                    FluidState ifluidstate = world.getFluidState(magnetPos);
+                    FluidState FluidState = world.getFluidState(magnetPos);
                     world.destroyBlock(magnetPos, world.getBlockState(magnetPos)
                             .getCollisionShape(world, magnetPos)
                             .isEmpty());
-                    world.setBlockState(magnetPos, AllBlocks.PULLEY_MAGNET.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER)), 66);
+                    world.setBlockState(magnetPos, AllBlocks.PULLEY_MAGNET.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getFluid() == Fluids.WATER)), 66);
                 }
 
                 boolean[] waterlog = new boolean[(int) offset];
 
                 for (int i = 1; i <= ((int) offset) - 1; i++) {
                     BlockPos ropePos = pos.down(i);
-                    FluidState ifluidstate = world.getFluidState(ropePos);
-                    waterlog[i] = ifluidstate.getFluid() == Fluids.WATER;
+                    FluidState FluidState = world.getFluidState(ropePos);
+                    waterlog[i] = FluidState.getFluid() == Fluids.WATER;
                     world.destroyBlock(ropePos, world.getBlockState(ropePos)
                             .getCollisionShape(world, ropePos)
                             .isEmpty());

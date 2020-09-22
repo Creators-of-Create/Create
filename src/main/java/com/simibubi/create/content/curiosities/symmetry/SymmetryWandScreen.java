@@ -104,14 +104,14 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		AllGuiTextures.WAND_SYMMETRY.draw(this, guiLeft, guiTop);
 
 		int x = guiLeft + 63;
 		int y = guiTop + 15;
 
-		font.drawString(mirrorType, x - 5, y, AllGuiTextures.FONT_COLOR);
-		font.drawString(orientation, x - 5, y + 20, AllGuiTextures.FONT_COLOR);
+		textRenderer.draw(matrixStack, mirrorType, x - 5, y, AllGuiTextures.FONT_COLOR);
+		textRenderer.draw(matrixStack, orientation, x - 5, y + 20, AllGuiTextures.FONT_COLOR);
 
 		renderBlock();
 
@@ -140,12 +140,12 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 	@Override
 	public void removed() {
-		ItemStack heldItem = minecraft.player.getHeldItem(hand);
+		ItemStack heldItem = client.player.getHeldItem(hand);
 		CompoundNBT compound = heldItem.getTag();
 		compound.put(SymmetryWandItem.SYMMETRY, currentElement.writeToNbt());
 		heldItem.setTag(compound);
 		AllPackets.channel.send(PacketDistributor.SERVER.noArg(), new NbtPacket(heldItem, hand));
-		minecraft.player.setHeldItem(hand, heldItem);
+		client.player.setHeldItem(hand, heldItem);
 		super.removed();
 	}
 

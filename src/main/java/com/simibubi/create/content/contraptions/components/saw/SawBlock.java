@@ -89,7 +89,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 		if (entityIn.world.isRemote)
 			return;
 
-		BlockPos pos = entityIn.getPosition();
+		BlockPos pos = entityIn.getBlockPos();
 		withTileEntityDo(entityIn.world, pos, te -> {
 			if (te.getSpeed() == 0)
 				return;

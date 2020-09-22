@@ -217,7 +217,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		if (hasEntity())
-			compound.put("Entity", NBTUtil.writeUniqueId(entityUUID));
+			compound.put("Entity", NBTUtil.fromUuid(entityUUID));
 		compound.put("Inventory", inventory.serializeNBT());
 		compound.putFloat("Speed", crushingspeed);
 		super.write(compound, clientPacket);

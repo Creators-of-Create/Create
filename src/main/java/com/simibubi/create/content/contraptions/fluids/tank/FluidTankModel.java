@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 
@@ -31,7 +31,7 @@ public class FluidTankModel extends CTModel {
 	}
 
 	@Override
-	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
+	public IModelData getModelData(IBlockDisplayReader world, BlockPos pos, BlockState state, IModelData tileData) {
 		CullData cullData = new CullData();
 		for (Direction d : Iterate.horizontalDirections)
 			cullData.setCulled(d, FluidTankConnectivityHandler.isConnected(world, pos, pos.offset(d)));

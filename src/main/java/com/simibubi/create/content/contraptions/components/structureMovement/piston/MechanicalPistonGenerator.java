@@ -15,7 +15,7 @@ import net.minecraftforge.client.model.generators.ModelFile;
 
 public class MechanicalPistonGenerator extends SpecialBlockStateGen {
 
-	private PistonType type;
+	private final PistonType type;
 
 	public MechanicalPistonGenerator(PistonType type) {
 		this.type = type;
@@ -43,7 +43,7 @@ public class MechanicalPistonGenerator extends SpecialBlockStateGen {
 		PistonState pistonState = state.get(MechanicalPistonBlock.STATE);
 
 		String path = "block/mechanical_piston";
-		String folder = pistonState == PistonState.RETRACTED ? type.getName() : pistonState.getName();
+		String folder = pistonState == PistonState.RETRACTED ? type.getString() : pistonState.getString();
 		String partial = facing.getAxis() == Axis.X ^ axisAlongFirst ? "block_rotated" : "block";
 
 		return prov.models()

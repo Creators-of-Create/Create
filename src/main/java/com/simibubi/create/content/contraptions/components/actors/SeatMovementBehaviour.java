@@ -17,7 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.properties.SlabType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class SeatMovementBehaviour extends MovementBehaviour {
 
@@ -61,7 +61,7 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 			}
 			if (toDismount != null) {
 				toDismount.stopRiding();
-				Vec3d position = VecHelper.getCenterOf(pos)
+				Vector3d position = VecHelper.getCenterOf(pos)
 					.add(0, slab ? .5f : 1f, 0);
 				toDismount.setPositionAndUpdate(position.x, position.y, position.z);
 				toDismount.getPersistentData()

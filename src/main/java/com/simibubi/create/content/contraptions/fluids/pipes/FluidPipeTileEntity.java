@@ -11,7 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 
 public class FluidPipeTileEntity extends SmartTileEntity {
 
@@ -45,7 +45,7 @@ public class FluidPipeTileEntity extends SmartTileEntity {
 		}
 
 		@Override
-		public AttachmentTypes getAttachment(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
+		public AttachmentTypes getAttachment(IBlockDisplayReader world, BlockPos pos, BlockState state, Direction direction) {
 			AttachmentTypes attachment = super.getAttachment(world, pos, state, direction);
 
 			BlockPos offsetPos = pos.offset(direction);

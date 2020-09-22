@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 
@@ -42,7 +42,7 @@ public class ContraptionHandler {
 		CompoundNBT data = entityLiving.getPersistentData();
 		if (!data.contains("ContraptionDismountLocation"))
 			return;
-		Vec3d position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", NBT.TAG_DOUBLE));
+		Vector3d position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", NBT.TAG_DOUBLE));
 		if (entityLiving.getRidingEntity() == null)
 			entityLiving.setPositionAndUpdate(position.x, position.y, position.z);
 		data.remove("ContraptionDismountLocation");

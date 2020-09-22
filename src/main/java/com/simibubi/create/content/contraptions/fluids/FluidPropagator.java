@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.AllBlocks;
@@ -27,7 +28,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -73,11 +74,11 @@ public class FluidPropagator {
 		if (PumpBlock.isPump(connectedState) && connectedState.get(PumpBlock.FACING)
 			.getAxis() == side.getAxis())
 			return false;
-		if (Block.hasSolidSide(connectedState, reader, connectedPos, side.getOpposite()))
+		if (BlockHelper.hasBlockSolidSide(connectedState, reader, connectedPos, side.getOpposite()))
 			return false;
 		if (!(connectedState.getMaterial()
 			.isReplaceable() && connectedState.getBlockHardness(reader, connectedPos) != -1)
-			&& !connectedState.has(BlockStateProperties.WATERLOGGED))
+			&& !BlockHelper.hasBlockStateProperty(connectedState, BlockStateProperties.WATERLOGGED))
 			return false;
 		return true;
 	}
@@ -139,14 +140,14 @@ public class FluidPropagator {
 	public static OutlineParams showBlockFace(BlockFace face) {
 		MutableObject<OutlineParams> params = new MutableObject<>(new OutlineParams());
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			Vec3d directionVec = new Vec3d(face.getFace()
+			Vector3d directionVec = Vector3d.of(face.getFace()
 				.getDirectionVec());
-			Vec3d scaleVec = directionVec.scale(-.25f * face.getFace()
+			Vector3d scaleVec = directionVec.scale(-.25f * face.getFace()
 				.getAxisDirection()
 				.getOffset());
 			directionVec = directionVec.scale(.5f);
 			params.setValue(CreateClient.outliner.showAABB(face,
-				FluidPropagator.smallCenter.offset(directionVec.add(new Vec3d(face.getPos())))
+				FluidPropagator.smallCenter.offset(directionVec.add(Vector3d.of(face.getPos())))
 					.grow(scaleVec.x, scaleVec.y, scaleVec.z)
 					.grow(1 / 16f)));
 		});

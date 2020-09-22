@@ -108,10 +108,11 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
         return PushReaction.BLOCK;
     }
 
+    /* FIXME: Same thing as before, does this still matter? If so, what is the new way of doing it?
     @Override
     public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
-    }
+    }*/
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {

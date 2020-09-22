@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.goggles;
 
+import net.minecraft.util.text.ITextComponent;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -17,7 +19,7 @@ public interface IHaveGoggleInformation {
 	 * @return {{@code true}} if the tooltip creation was successful and should be displayed,
 	 * or {{@code false}} if the overlay should not be displayed
 	* */
-	default boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking){
+	default boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking){
 		return false;
 	}
 

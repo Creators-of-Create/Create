@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -11,6 +12,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class SpeedGaugeTileEntity extends GaugeTileEntity{
@@ -46,13 +48,13 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity{
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
-		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.speedometer.title"));
-		tooltip.add(spacing + SpeedLevel.getFormattedSpeedText(speed, overStressed));
+		tooltip.add(ITextComponent.of(spacing + TextFormatting.GRAY + Lang.translate("gui.speedometer.title")));
+		tooltip.add(ITextComponent.of(spacing + SpeedLevel.getFormattedSpeedText(speed, overStressed)));
 		if (overStressed)
-			tooltip.add(spacing + TextFormatting.DARK_RED + Lang.translate("gui.stressometer.overstressed"));
+			tooltip.add(ITextComponent.of(spacing + TextFormatting.DARK_RED + Lang.translate("gui.stressometer.overstressed")));
 
 		return true;
 	}

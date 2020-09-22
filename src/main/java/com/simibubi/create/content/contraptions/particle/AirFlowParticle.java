@@ -13,6 +13,7 @@ import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
@@ -25,8 +26,8 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 
 	private EncasedFanTileEntity source;
 
-	protected AirFlowParticle(World world, EncasedFanTileEntity source, double x, double y, double z,
-			IAnimatedSprite sprite) {
+	protected AirFlowParticle(ClientWorld world, EncasedFanTileEntity source, double x, double y, double z,
+							  IAnimatedSprite sprite) {
 		super(world, x, y, z, sprite, world.rand.nextFloat() * .5f);
 		this.source = source;
 		this.particleScale *= 0.75F;
@@ -159,7 +160,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 			this.spriteSet = animatedSprite;
 		}
 
-		public Particle makeParticle(AirFlowParticleData data, World worldIn, double x, double y, double z,
+		public Particle makeParticle(AirFlowParticleData data, ClientWorld worldIn, double x, double y, double z,
 				double xSpeed, double ySpeed, double zSpeed) {
 			TileEntity te = worldIn.getTileEntity(new BlockPos(data.posX, data.posY, data.posZ));
 			if (!(te instanceof EncasedFanTileEntity))

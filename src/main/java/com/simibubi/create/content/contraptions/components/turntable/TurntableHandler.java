@@ -13,11 +13,11 @@ public class TurntableHandler {
 
 	public static void gameRenderTick() {
 		Minecraft mc = Minecraft.getInstance();
-		BlockPos pos = mc.player.getPosition();
+		BlockPos pos = mc.player.getBlockPos();
 
 		if (!AllBlocks.TURNTABLE.has(mc.world.getBlockState(pos)))
 			return;
-		if (!mc.player.onGround)
+		if (!mc.player.isOnGround())
 			return;
 		if (mc.isGamePaused())
 			return;

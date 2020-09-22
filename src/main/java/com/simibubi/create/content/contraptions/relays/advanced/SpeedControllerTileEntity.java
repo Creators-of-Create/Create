@@ -50,11 +50,6 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		attachKinetics();
 	}
 
-	@Override
-	public boolean hasFastRenderer() {
-		return false;
-	}
-
 	public static float getConveyedSpeed(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,
 			boolean targetingController) {
 		if (!(speedControllerIn instanceof SpeedControllerTileEntity))

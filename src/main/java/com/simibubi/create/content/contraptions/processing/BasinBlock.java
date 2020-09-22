@@ -75,21 +75,21 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	@Override
 	public void onLanded(IBlockReader worldIn, Entity entityIn) {
 		super.onLanded(worldIn, entityIn);
-		if (!AllBlocks.BASIN.has(worldIn.getBlockState(entityIn.getPosition())))
+		if (!AllBlocks.BASIN.has(worldIn.getBlockState(entityIn.getBlockPos())))
 			return;
 		if (!(entityIn instanceof ItemEntity))
 			return;
 		if (!entityIn.isAlive())
 			return;
 		ItemEntity itemEntity = (ItemEntity) entityIn;
-		withTileEntityDo(worldIn, entityIn.getPosition(), te -> {
+		withTileEntityDo(worldIn, entityIn.getBlockPos(), te -> {
 			ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputInventory, itemEntity.getItem()
 				.copy(), false);
 			if (insertItem.isEmpty()) {
 				itemEntity.remove();
 				if (!itemEntity.world.isRemote)
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.world,
-						itemEntity.getPosition(), 3);
+						itemEntity.getBlockPos(), 3);
 				return;
 			}
 

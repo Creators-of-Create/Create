@@ -14,7 +14,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
@@ -37,18 +37,18 @@ public class ContraptionInteractionHandler {
 			return;
 		if (!event.isUseItem())
 			return;
-		Vec3d origin = RaycastHelper.getTraceOrigin(player);
+		Vector3d origin = RaycastHelper.getTraceOrigin(player);
 		
 		double reach = mc.playerController.getBlockReachDistance();
 		if (mc.objectMouseOver != null && mc.objectMouseOver.getHitVec() != null) 
 			reach = Math.min(mc.objectMouseOver.getHitVec().distanceTo(origin), reach);
 		
-		Vec3d target = RaycastHelper.getTraceTarget(player, reach, origin);
+		Vector3d target = RaycastHelper.getTraceTarget(player, reach, origin);
 		for (ContraptionEntity contraptionEntity : mc.world.getEntitiesWithinAABB(ContraptionEntity.class,
 			new AxisAlignedBB(origin, target))) {
 
-			Vec3d localOrigin = contraptionEntity.toLocalVector(origin);
-			Vec3d localTarget = contraptionEntity.toLocalVector(target);
+			Vector3d localOrigin = contraptionEntity.toLocalVector(origin);
+			Vector3d localTarget = contraptionEntity.toLocalVector(target);
 			Contraption contraption = contraptionEntity.getContraption();
 
 			MutableObject<BlockRayTraceResult> mutableResult = new MutableObject<>();

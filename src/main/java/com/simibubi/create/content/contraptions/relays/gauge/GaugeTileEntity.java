@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.text.ITextComponent;
 
 public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInformation {
 
@@ -44,8 +45,8 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(spacing + Lang.translate("gui.gauge.info_header"));
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.gauge.info_header")));
 
 		return true;
 	}

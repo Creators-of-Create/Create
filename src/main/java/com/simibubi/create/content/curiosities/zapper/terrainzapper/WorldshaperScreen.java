@@ -3,6 +3,7 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 import java.util.List;
 import java.util.Vector;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.curiosities.zapper.ZapperScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
@@ -17,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 
 public class WorldshaperScreen extends ZapperScreen {
 
@@ -70,7 +72,7 @@ public class WorldshaperScreen extends ZapperScreen {
 			TerrainTools tool = toolValues[id];
 			toolButtons.add(new IconButton(i + 8 + id * 18, j + 76, tool.icon));
 			toolButtons.get(id)
-				.setToolTip(Lang.translate("gui.terrainzapper.tool." + tool.translationKey));
+				.setToolTip(ITextComponent.of(Lang.translate("gui.terrainzapper.tool." + tool.translationKey)));
 		}
 
 		if (nbt.contains("Tool"))
@@ -84,7 +86,7 @@ public class WorldshaperScreen extends ZapperScreen {
 			PlacementOptions option = placementValues[id];
 			placementButtons.add(new IconButton(i + 147 + id * 18, j + 76, option.icon));
 			placementButtons.get(id)
-				.setToolTip(Lang.translate("gui.terrainzapper.placement." + option.translationKey));
+				.setToolTip(ITextComponent.of(Lang.translate("gui.terrainzapper.placement." + option.translationKey)));
 		}
 
 		if (nbt.contains("Placement"))
@@ -122,7 +124,7 @@ public class WorldshaperScreen extends ZapperScreen {
 				.writingTo(label)
 				.titled(currentBrush.getParamLabel(index))
 				.calling(state -> {
-					label.x = i + 62 + 18 * indexFinal - font.getStringWidth(label.text) / 2;
+					label.x = i + 62 + 18 * indexFinal - textRenderer.getStringWidth(label.text) / 2;
 				});
 			input.setState(params[index]);
 			input.onChanged();
@@ -171,16 +173,16 @@ public class WorldshaperScreen extends ZapperScreen {
 	}
 
 	@Override
-	protected void drawOnBackground(int i, int j) {
-		super.drawOnBackground(i, j);
+	protected void drawOnBackground(MatrixStack matrixStack, int i, int j) {
+		super.drawOnBackground(matrixStack, i, j);
 
 		Brush currentBrush = TerrainBrushes.values()[brushInput.getState()].get();
 		for (int index = 2; index >= currentBrush.amtParams; index--) {
 			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.draw(i + 55 + index * 18, j + 43);
 		}
 
-		font.drawString(toolSection, i + 8, j + 64, fontColor);
-		font.drawString(placementSection, i + 148, j + 64, fontColor);
+		textRenderer.draw(matrixStack, toolSection, i + 8, j + 64, fontColor);
+		textRenderer.draw(matrixStack, placementSection, i + 148, j + 64, fontColor);
 	}
 
 	@Override

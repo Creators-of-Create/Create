@@ -25,7 +25,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -368,7 +368,7 @@ public class PumpTileEntity extends KineticTileEntity {
 		}
 
 		@Override
-		public AttachmentTypes getAttachment(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
+		public AttachmentTypes getAttachment(IBlockDisplayReader world, BlockPos pos, BlockState state, Direction direction) {
 			AttachmentTypes attachment = super.getAttachment(world, pos, state, direction);
 			if (attachment == AttachmentTypes.RIM)
 				return AttachmentTypes.NONE;

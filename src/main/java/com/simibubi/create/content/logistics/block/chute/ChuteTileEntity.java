@@ -177,7 +177,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		if (bottomPullDistance > 0 && getItem().isEmpty() && entitySearchCooldown-- <= 0) {
 			entitySearchCooldown = 5;
-			Vec3d center = VecHelper.getCenterOf(pos);
+			Vector3d center = VecHelper.getCenterOf(pos);
 			AxisAlignedBB searchArea =
 				new AxisAlignedBB(center.add(0, -bottomPullDistance - 0.5, 0), center.add(0, -0.5, 0)).grow(.45f);
 			for (ItemEntity itemEntity : world.getEntitiesWithinAABB(ItemEntity.class, searchArea)) {
@@ -277,11 +277,11 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	private void spawnAirFlow(float verticalStart, float verticalEnd, float motion, float drag) {
 		AirParticleData airParticleData = new AirParticleData(drag, motion);
-		Vec3d origin = new Vec3d(pos);
+		Vector3d origin = new Vector3d(pos);
 		float xOff = Create.random.nextFloat() * .5f + .25f;
 		float zOff = Create.random.nextFloat() * .5f + .25f;
-		Vec3d v = origin.add(xOff, verticalStart, zOff);
-		Vec3d d = origin.add(xOff, verticalEnd, zOff)
+		Vector3d v = origin.add(xOff, verticalStart, zOff);
+		Vector3d d = origin.add(xOff, verticalEnd, zOff)
 			.subtract(v);
 		if (Create.random.nextFloat() < 2 * motion)
 			world.addOptionalParticle(airParticleData, v.x, v.y, v.z, d.x, d.y, d.z);

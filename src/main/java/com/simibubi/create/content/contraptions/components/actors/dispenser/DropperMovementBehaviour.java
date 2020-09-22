@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 	}
 
 	private void updateTemporaryData(MovementContext context) {
-		if (!(context.temporaryData instanceof NonNullList) && context.world instanceof ServerWorld) {
+		if (!(context.temporaryData instanceof NonNullList) && context.world != null) {
 			NonNullList<ItemStack> stacks = NonNullList.withSize(getInvSize(), ItemStack.EMPTY);
 			ItemStackHelper.loadAllItems(context.tileData, stacks);
 			context.temporaryData = stacks;

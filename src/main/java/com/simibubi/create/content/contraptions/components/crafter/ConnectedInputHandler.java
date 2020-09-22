@@ -1,20 +1,7 @@
 package com.simibubi.create.content.contraptions.components.crafter;
 
-import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
-
+import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -29,11 +16,17 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
+
 public class ConnectedInputHandler {
 
 	public static boolean shouldConnect(World world, BlockPos pos, Direction face, Direction direction) {
 		BlockState refState = world.getBlockState(pos);
-		if (!refState.has(HORIZONTAL_FACING))
+		if (!BlockHelper.hasBlockStateProperty(refState, HORIZONTAL_FACING))
 			return false;
 		Direction refDirection = refState.get(HORIZONTAL_FACING);
 		if (direction.getAxis() == refDirection.getAxis())
@@ -64,7 +57,7 @@ public class ConnectedInputHandler {
 			MechanicalCrafterTileEntity controller = CrafterHelper.getCrafter(world, controllerPos1);
 
 			Set<BlockPos> positions = controller.input.data.stream()
-				.map(l -> controllerPos1.add(l))
+				.map(controllerPos1::add)
 				.collect(Collectors.toSet());
 			List<BlockPos> frontier = new LinkedList<>();
 			List<BlockPos> splitGroup = new ArrayList<>();
@@ -182,7 +175,7 @@ public class ConnectedInputHandler {
 
 			List<IItemHandlerModifiable> list = data.stream()
 				.map(l -> CrafterHelper.getCrafter(world, pos.add(l)))
-				.filter(Predicates.notNull())
+				.filter(Objects::nonNull)
 				.map(crafter -> crafter.inventory)
 				.collect(Collectors.toList());
 			return new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));

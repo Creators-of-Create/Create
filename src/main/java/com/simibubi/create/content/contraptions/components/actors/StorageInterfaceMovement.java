@@ -19,7 +19,7 @@
 //import net.minecraft.util.Direction;
 //import net.minecraft.util.Direction.Axis;
 //import net.minecraft.util.math.BlockPos;
-//import net.minecraft.util.math.Vec3d;
+//import net.minecraft.util.math.vector.Vector3d;
 //import net.minecraft.world.World;
 //import net.minecraftforge.items.IItemHandlerModifiable;
 //import net.minecraftforge.items.ItemHandlerHelper;
@@ -31,8 +31,8 @@
 //	private static final String _workingPos_ = "WorkingPos";
 //
 //	@Override
-//	public Vec3d getActiveAreaOffset(MovementContext context) {
-//		return new Vec3d(context.state.get(PortableStorageInterfaceBlock.FACING).getDirectionVec()).scale(.85f);
+//	public Vector3d getActiveAreaOffset(MovementContext context) {
+//		return new Vector3d(context.state.get(PortableStorageInterfaceBlock.FACING).getDirectionVec()).scale(.85f);
 //	}
 //
 //	@Override
@@ -149,7 +149,7 @@
 //	}
 //
 //	private Direction getCurrentFacing(MovementContext context) {
-//		Vec3d directionVec = new Vec3d(context.state.get(PortableStorageInterfaceBlock.FACING).getDirectionVec());
+//		Vector3d directionVec = new Vector3d(context.state.get(PortableStorageInterfaceBlock.FACING).getDirectionVec());
 //		directionVec = VecHelper.rotate(directionVec, context.rotation.x, context.rotation.y, context.rotation.z);
 //		return Direction.getFacingFromVector(directionVec.x, directionVec.y, directionVec.z);
 //	}

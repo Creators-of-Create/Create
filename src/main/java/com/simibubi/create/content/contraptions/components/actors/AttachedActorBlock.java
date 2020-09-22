@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -49,7 +50,7 @@ public abstract class AttachedActorBlock extends HorizontalBlock implements IWre
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		Direction direction = state.get(HORIZONTAL_FACING);
 		BlockPos offset = pos.offset(direction.getOpposite());
-		return Block.hasSolidSide(worldIn.getBlockState(offset), worldIn, offset, direction);
+		return BlockHelper.hasBlockSolidSide(worldIn.getBlockState(offset), worldIn, offset, direction);
 	}
 
 	@Override

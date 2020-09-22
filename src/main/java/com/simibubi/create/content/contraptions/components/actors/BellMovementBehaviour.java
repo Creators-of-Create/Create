@@ -6,7 +6,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class BellMovementBehaviour extends MovementBehaviour {
 	@Override
@@ -15,7 +15,7 @@ public class BellMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	public void onSpeedChanged(MovementContext context, Vec3d oldMotion, Vec3d motion) {
+	public void onSpeedChanged(MovementContext context, Vector3d oldMotion, Vector3d motion) {
 		double dotProduct = oldMotion.dotProduct(motion);
 
 		if (dotProduct <= 0 && (context.relativeMotion.length() != 0 || context.rotation.length() == 0)

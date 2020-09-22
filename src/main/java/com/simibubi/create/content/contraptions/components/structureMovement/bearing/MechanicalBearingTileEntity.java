@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
@@ -269,7 +270,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		BlockState blockState = getBlockState();
 		if (!(contraption.getContraption() instanceof BearingContraption))
 			return;
-		if (!blockState.has(FACING))
+		if (!BlockHelper.hasBlockStateProperty(blockState, FACING))
 			return;
 
 		this.movedContraption = contraption;

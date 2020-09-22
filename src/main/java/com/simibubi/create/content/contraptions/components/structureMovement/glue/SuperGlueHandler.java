@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.RayTraceWorld;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,6 +24,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -63,11 +65,11 @@ public class SuperGlueHandler {
 
 	public static void glueInOffHandAppliesOnBlockPlace(EntityPlaceEvent event, BlockPos pos, PlayerEntity placer) {
 		ItemStack itemstack = placer.getHeldItemOffhand();
-		if (!AllItems.SUPER_GLUE.isIn(itemstack))
+		ModifiableAttributeInstance reachAttribute = placer.getAttribute(ForgeMod.REACH_DISTANCE.get());
+		if (!AllItems.SUPER_GLUE.isIn(itemstack) || reachAttribute == null)
 			return;
 
-		double distance = placer.getAttribute(PlayerEntity.REACH_DISTANCE)
-			.getValue();
+		double distance = reachAttribute.getValue();
 		Vector3d start = placer.getEyePosition(1);
 		Vector3d look = placer.getLook(1);
 		Vector3d end = start.add(look.x * distance, look.y * distance, look.z * distance);

@@ -8,10 +8,9 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
 
 public interface ITE<T extends TileEntity> {
 
@@ -61,10 +60,7 @@ public interface ITE<T extends TileEntity> {
 			String notAvailable = "Dim N/A";
 			if (world == null)
 				return notAvailable;
-			Dimension dimension = world.getDimension();
-			if (dimension == null)
-				return notAvailable;
-			DimensionType type = dimension.getType();
+			DimensionType type = world.getDimension();
 			if (type == null)
 				return notAvailable;
 			ResourceLocation registryName = type.getRegistryName();

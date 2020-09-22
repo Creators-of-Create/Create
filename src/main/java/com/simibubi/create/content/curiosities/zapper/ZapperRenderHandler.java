@@ -110,7 +110,7 @@ public class ZapperRenderHandler {
 			leftHandAnimation = .2f;
 			dontReequipLeft = false;
 		}
-		playSound(hand, player.getPosition());
+		playSound(hand, player.getBlockPos());
 	}
 
 	public static void playSound(Hand hand, BlockPos position) {

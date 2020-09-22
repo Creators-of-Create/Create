@@ -5,6 +5,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -110,7 +111,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
         @Override
         public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-            if (!isMoving && (!state.has(BlockStateProperties.WATERLOGGED) || !newState.has(BlockStateProperties.WATERLOGGED) || state.get(BlockStateProperties.WATERLOGGED) == newState.get(BlockStateProperties.WATERLOGGED))) {
+            if (!isMoving && (!BlockHelper.hasBlockStateProperty(state, BlockStateProperties.WATERLOGGED) || !BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.WATERLOGGED) || state.get(BlockStateProperties.WATERLOGGED) == newState.get(BlockStateProperties.WATERLOGGED))) {
                 onRopeBroken(worldIn, pos.up());
                 if (!worldIn.isRemote) {
                     BlockState above = worldIn.getBlockState(pos.up());
@@ -149,8 +150,8 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
         @Override
         public BlockState getStateForPlacement(BlockItemUseContext context) {
-            FluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
-            return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+            FluidState FluidState = context.getWorld().getFluidState(context.getPos());
+            return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getFluid() == Fluids.WATER));
         }
 
     }

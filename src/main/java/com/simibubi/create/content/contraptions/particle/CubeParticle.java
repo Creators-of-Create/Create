@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.particle;
 
+import net.minecraft.client.world.ClientWorld;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -84,7 +85,7 @@ public class CubeParticle extends Particle {
 	protected float scale;
 	protected boolean hot;
 
-	public CubeParticle(World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
+	public CubeParticle(ClientWorld world, double x, double y, double z, double motionX, double motionY, double motionZ) {
 		super(world, x, y, z);
 		this.motionX = motionX;
 		this.motionY = motionY;
@@ -113,9 +114,9 @@ public class CubeParticle extends Particle {
 		if (this.hot && this.age > 0) {
 			if (this.prevPosY == this.posY) {
 				billowing = true;
-				field_228343_B_ = false; // Prevent motion being ignored due to vertical collision
+				field_21507 = false; // Prevent motion being ignored due to vertical collision
 				if (this.motionX == 0 && this.motionZ == 0) {
-					Vec3d diff = new Vec3d(new BlockPos(posX, posY, posZ)).add(0.5, 0.5, 0.5).subtract(posX, posY, posZ);
+					Vector3d diff = Vector3d.of(new BlockPos(posX, posY, posZ)).add(0.5, 0.5, 0.5).subtract(posX, posY, posZ);
 					this.motionX = -diff.x * 0.1;
 					this.motionZ = -diff.z * 0.1;
 				}
@@ -170,7 +171,7 @@ public class CubeParticle extends Particle {
 		public Factory() {}
 
 		@Override
-		public Particle makeParticle(CubeParticleData data, World world, double x, double y, double z, double motionX,
+		public Particle makeParticle(CubeParticleData data, ClientWorld world, double x, double y, double z, double motionX,
 			double motionY, double motionZ) {
 			CubeParticle particle = new CubeParticle(world, x, y, z, motionX, motionY, motionZ);
 			particle.setColor(data.r, data.g, data.b);

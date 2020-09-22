@@ -49,7 +49,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 		BlockRayTraceResult ray = world
 			.rayTraceBlocks(new RayTraceContext(vec, vec.add(0, -1, 0), BlockMode.OUTLINE, FluidMode.NONE, player));
-		if (ray == null || ray.getType() != Type.BLOCK)
+		if (ray.getType() != Type.BLOCK)
 			return;
 
 		ItemUseContext ctx = new ItemUseContext(player, Hand.MAIN_HAND, ray);
@@ -83,7 +83,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	private PloughFakePlayer getPlayer(MovementContext context) {
-		if (!(context.temporaryData instanceof PloughFakePlayer) && context.world instanceof ServerWorld) {
+		if (!(context.temporaryData instanceof PloughFakePlayer) && context.world != null) {
 			PloughFakePlayer player = new PloughFakePlayer((ServerWorld) context.world);
 			player.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.DIAMOND_HOE));
 			context.temporaryData = player;

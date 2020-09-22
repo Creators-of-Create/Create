@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluids;
@@ -24,6 +25,10 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<WaterWheelTileEntity> {
 
 	public WaterWheelBlock(Properties properties) {
@@ -61,10 +66,9 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
 		BlockPos currentPos, BlockPos facingPos) {
-		World world = worldIn.getWorld();
-		if (world == null || worldIn instanceof WrappedWorld)
+		if (worldIn instanceof WrappedWorld)
 			return stateIn;
-		updateFlowAt(stateIn, world, currentPos, facing);
+		updateFlowAt(stateIn, worldIn, currentPos, facing);
 		updateWheelSpeed(worldIn, currentPos);
 		return stateIn;
 	}
@@ -80,7 +84,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 		updateWheelSpeed(worldIn, pos);
 	}
 
-	private void updateFlowAt(BlockState state, World world, BlockPos pos, Direction f) {
+	private void updateFlowAt(BlockState state, IWorld world, BlockPos pos, Direction f) {
 		if (f.getAxis() == state.get(HORIZONTAL_FACING)
 			.getAxis())
 			return;
@@ -113,7 +117,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 					flowStrength = flow.y > 0 ^ !clockwise ? -flow.y * clockwiseMultiplier : -flow.y;
 			}
 
-			if (te.getSpeed() == 0 && flowStrength != 0 && !world.isRemote) {
+			if (te.getSpeed() == 0 && flowStrength != 0 && !world.isRemote()) {
 				AllTriggers.triggerForNearbyPlayers(AllTriggers.WATER_WHEEL, world, pos, 5);
 				if (fluid.getFluid() == Fluids.FLOWING_LAVA || fluid.getFluid() == Fluids.LAVA)
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.LAVA_WHEEL, world, pos, 5);

@@ -7,13 +7,13 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 
 public class FluidPipeAttachmentBehaviour extends TileEntityBehaviour {
 
 	public static BehaviourType<FluidPipeAttachmentBehaviour> TYPE = new BehaviourType<>();
 
-	public AttachmentTypes getAttachment(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
+	public AttachmentTypes getAttachment(IBlockDisplayReader world, BlockPos pos, BlockState state, Direction direction) {
 		if (!isPipeConnectedTowards(state, direction))
 			return AttachmentTypes.NONE;
 

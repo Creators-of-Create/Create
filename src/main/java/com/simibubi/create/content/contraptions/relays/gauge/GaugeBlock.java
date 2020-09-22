@@ -5,6 +5,7 @@ import java.util.Random;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -69,11 +70,12 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		}
 	}
 
+	/* FIXME: Is there a new way of doing this in 1.16? Or cn we just delete it?
 	@SuppressWarnings("deprecation")
 	@Override
 	public MaterialColor getMaterialColor(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return Blocks.SPRUCE_PLANKS.getMaterialColor(state, worldIn, pos);
-	}
+	} */
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
@@ -127,7 +129,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		if (getRotationAxis(state) == Axis.Y && face != state.get(FACING))
 			return false;
 		BlockState blockState = world.getBlockState(pos.offset(face));
-		if (Block.hasSolidSide(blockState, world, pos, face.getOpposite()) && blockState.getMaterial() != Material.GLASS
+		if (BlockHelper.hasBlockSolidSide(blockState, world, pos, face.getOpposite()) && blockState.getMaterial() != Material.GLASS
 				&& !(world instanceof WrappedWorld))
 			return false;
 		return true;

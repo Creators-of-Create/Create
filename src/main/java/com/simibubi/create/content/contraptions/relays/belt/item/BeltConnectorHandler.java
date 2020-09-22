@@ -8,6 +8,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -50,8 +51,7 @@ public class BeltConnectorHandler {
 
 			BlockPos first = NBTUtil.readBlockPos(tag.getCompound("FirstPulley"));
 
-			if (!world.getBlockState(first)
-				.has(BlockStateProperties.AXIS))
+			if (!BlockHelper.hasBlockStateProperty(world.getBlockState(first), BlockStateProperties.AXIS))
 				continue;
 			Axis axis = world.getBlockState(first)
 				.get(BlockStateProperties.AXIS);

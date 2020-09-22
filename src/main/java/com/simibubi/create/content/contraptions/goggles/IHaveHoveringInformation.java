@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.goggles;
 
+import net.minecraft.util.text.ITextComponent;
+
 import java.util.List;
 
 /*
@@ -7,7 +9,7 @@ import java.util.List;
 * */
 public interface IHaveHoveringInformation {
 
-	default boolean addToTooltip(List<String> tooltip, boolean isPlayerSneaking){
+	default boolean addToTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking){
 		return false;
 	}
 

@@ -30,30 +30,28 @@ public class DeforesterItem extends AxeItem {
 	}
 
 	// Moved away from Item#onBlockDestroyed as it does not get called in Creative
-	public static void destroyTree(ItemStack stack, IWorld worldIn, BlockState state, BlockPos pos,
+	public static void destroyTree(ItemStack stack, IWorld iWorld, BlockState state, BlockPos pos,
 			PlayerEntity player) {
-		if (!state.isIn(BlockTags.LOGS) || player.isSneaking())
+		if (!state.isIn(BlockTags.LOGS) || player.isSneaking() || !(iWorld instanceof  World))
 			return;
+		World worldIn = (World) iWorld;
 		Tree tree = TreeCutter.cutTree(worldIn, pos);
 		if (tree == null)
 			return;
 		boolean dropBlock = !player.isCreative();
-		World world = worldIn.getWorld();
-		if (world == null)
-			return;
 
 		Vector3d vec = player.getLookVec();
 		for (BlockPos log : tree.logs)
-			BlockHelper.destroyBlock(world, log, 1 / 2f, item -> {
+			BlockHelper.destroyBlock(worldIn, log, 1 / 2f, item -> {
 				if (dropBlock) {
-					dropItemFromCutTree(world, pos, vec, log, item);
+					dropItemFromCutTree(worldIn, pos, vec, log, item);
 					stack.damageItem(1, player, p -> p.sendBreakAnimation(Hand.MAIN_HAND));
 				}
 			});
 		for (BlockPos leaf : tree.leaves)
-			BlockHelper.destroyBlock(world, leaf, 1 / 8f, item -> {
+			BlockHelper.destroyBlock(worldIn, leaf, 1 / 8f, item -> {
 				if (dropBlock)
-					dropItemFromCutTree(world, pos, vec, leaf, item);
+					dropItemFromCutTree(worldIn, pos, vec, leaf, item);
 			});
 	}
 

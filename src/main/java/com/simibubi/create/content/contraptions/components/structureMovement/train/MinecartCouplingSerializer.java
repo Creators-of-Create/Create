@@ -32,7 +32,7 @@ public class MinecartCouplingSerializer {
 
 	private static CompoundNBT createCouplingTag(boolean main, MinecartCoupling coupling) {
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.put("Id", NBTUtil.writeUniqueId(coupling.getId()));
+		nbt.put("Id", NBTUtil.fromUuid(coupling.getId()));
 		nbt.putBoolean("Main", main);
 		nbt.putDouble("Length", coupling.length);
 		return nbt;

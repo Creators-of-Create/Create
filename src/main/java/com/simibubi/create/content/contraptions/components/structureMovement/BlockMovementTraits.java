@@ -20,6 +20,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BellBlock;
@@ -101,7 +102,7 @@ public class BlockMovementTraits {
 	 */
 	public static boolean isBrittle(BlockState state) {
 		Block block = state.getBlock();
-		if (state.has(BlockStateProperties.HANGING))
+		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.HANGING))
 			return true;
 		
 		if (block instanceof LadderBlock)
@@ -161,7 +162,7 @@ public class BlockMovementTraits {
 			if (attachFace == AttachFace.WALL)
 				return direction.getOpposite() == state.get(HorizontalFaceBlock.HORIZONTAL_FACING);
 		}
-		if (state.has(BlockStateProperties.HANGING))
+		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.HANGING))
 			return direction == (state.get(BlockStateProperties.HANGING) ? Direction.UP : Direction.DOWN);
 		if (block instanceof AbstractRailBlock)
 			return direction == Direction.DOWN;

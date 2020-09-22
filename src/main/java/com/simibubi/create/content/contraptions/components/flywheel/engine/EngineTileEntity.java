@@ -30,11 +30,6 @@ public class EngineTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public boolean hasFastRenderer() {
-		return true;
-	}
-
-	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return super.getRenderBoundingBox().grow(1.5f);
 	}

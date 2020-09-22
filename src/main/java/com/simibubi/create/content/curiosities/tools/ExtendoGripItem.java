@@ -125,20 +125,20 @@ public class ExtendoGripItem extends Item {
 			.getValue();
 		if (!player.isCreative())
 			d0 -= 0.5f;
-		Vector3d vec3d = player.getEyePosition(mc.getRenderPartialTicks());
-		Vector3d vec3d1 = player.getLook(1.0F);
-		Vector3d vec3d2 = vec3d.add(vec3d1.x * d0, vec3d1.y * d0, vec3d1.z * d0);
+		Vector3d Vector3d = player.getEyePosition(mc.getRenderPartialTicks());
+		Vector3d Vector3d1 = player.getLook(1.0F);
+		Vector3d Vector3d2 = Vector3d.add(Vector3d1.x * d0, Vector3d1.y * d0, Vector3d1.z * d0);
 		AxisAlignedBB axisalignedbb = player.getBoundingBox()
-			.expand(vec3d1.scale(d0))
+			.expand(Vector3d1.scale(d0))
 			.grow(1.0D, 1.0D, 1.0D);
 		EntityRayTraceResult entityraytraceresult =
-			ProjectileHelper.rayTraceEntities(player, vec3d, vec3d2, axisalignedbb, (e) -> {
+			ProjectileHelper.rayTraceEntities(player, Vector3d, Vector3d2, axisalignedbb, (e) -> {
 				return !e.isSpectator() && e.canBeCollidedWith();
 			}, d0 * d0);
 		if (entityraytraceresult != null) {
 			Entity entity1 = entityraytraceresult.getEntity();
-			Vector3d vec3d3 = entityraytraceresult.getHitVec();
-			double d2 = vec3d.squareDistanceTo(vec3d3);
+			Vector3d Vector3d3 = entityraytraceresult.getHitVec();
+			double d2 = Vector3d.squareDistanceTo(Vector3d3);
 			if (d2 < d0 * d0 || mc.objectMouseOver == null || mc.objectMouseOver.getType() == Type.MISS) {
 				mc.objectMouseOver = entityraytraceresult;
 				if (entity1 instanceof LivingEntity || entity1 instanceof ItemFrameEntity)

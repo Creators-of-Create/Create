@@ -12,7 +12,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 
 public class StraightPipeTileEntity extends SmartTileEntity {
 
@@ -46,7 +46,7 @@ public class StraightPipeTileEntity extends SmartTileEntity {
 		}
 
 		@Override
-		public AttachmentTypes getAttachment(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
+		public AttachmentTypes getAttachment(IBlockDisplayReader world, BlockPos pos, BlockState state, Direction direction) {
 			AttachmentTypes attachment = super.getAttachment(world, pos, state, direction);
 			BlockState otherState = world.getBlockState(pos.offset(direction));
 			if (state.getBlock() instanceof AxisPipeBlock && otherState.getBlock() instanceof AxisPipeBlock) {

@@ -6,6 +6,7 @@ import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -43,7 +44,7 @@ public class BeltFunnelInteractionHandler {
 				return blocking;
 			if (funnelState.get(BeltFunnelBlock.PUSHING))
 				return blocking;
-			if (funnelState.has(BeltFunnelBlock.POWERED) && funnelState.get(BeltFunnelBlock.POWERED))
+			if (BlockHelper.hasBlockStateProperty(funnelState, BeltFunnelBlock.POWERED) && funnelState.get(BeltFunnelBlock.POWERED))
 				return blocking;
 
 			TileEntity te = world.getTileEntity(funnelPos);

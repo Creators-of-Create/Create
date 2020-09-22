@@ -7,6 +7,7 @@ import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -78,11 +79,11 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 			.isIn(AllBlockTags.FAN_HEATERS.tag))
 			return false;
 
-		if (checkState.has(BlazeBurnerBlock.HEAT_LEVEL) && !checkState.get(BlazeBurnerBlock.HEAT_LEVEL)
+		if (BlockHelper.hasBlockStateProperty(checkState, BlazeBurnerBlock.HEAT_LEVEL) && !checkState.get(BlazeBurnerBlock.HEAT_LEVEL)
 			.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 			return false;
 
-		if (checkState.has(BlockStateProperties.LIT) && !checkState.get(BlockStateProperties.LIT))
+		if (BlockHelper.hasBlockStateProperty(checkState, BlockStateProperties.LIT) && !checkState.get(BlockStateProperties.LIT))
 			return false;
 
 		return true;

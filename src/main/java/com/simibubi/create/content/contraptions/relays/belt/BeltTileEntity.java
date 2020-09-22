@@ -155,11 +155,6 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean hasFastRenderer() {
-		return !isController();
-	}
-
-	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			if (side == Direction.UP || BeltBlock.canAccessFromSide(side, getBlockState())) {

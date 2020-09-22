@@ -13,7 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
@@ -60,7 +60,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 					return;
 				}
 
-				Vec3d facingVec = new Vec3d(context.state.get(DispenserBlock.FACING).getDirectionVec());
+				Vector3d facingVec = Vector3d.of(context.state.get(DispenserBlock.FACING).getDirectionVec());
 				facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
 				facingVec.normalize();
 				Direction clostestFacing = Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);

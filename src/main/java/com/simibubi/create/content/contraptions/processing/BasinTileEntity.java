@@ -21,7 +21,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -54,7 +54,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(this));
-		filtering = new FilteringBehaviour(this, new BasinValueBox()).moveText(new Vec3d(2, -8, 0))
+		filtering = new FilteringBehaviour(this, new BasinValueBox()).moveText(new Vector3d(2, -8, 0))
 			.withCallback(newFilter -> contentsChanged = true)
 			.forRecipes();
 		behaviours.add(filtering);
@@ -145,7 +145,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	class BasinValueBox extends ValueBoxTransform.Sided {
 
 		@Override
-		protected Vec3d getSouthLocation() {
+		protected Vector3d getSouthLocation() {
 			return VecHelper.voxelSpace(8, 12, 16);
 		}
 

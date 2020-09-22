@@ -26,7 +26,7 @@ public class WrappedWorld extends World {
 	protected World world;
 
 	public WrappedWorld(World world) {
-		super(world.getWorldInfo(), world.getDimension().getType(), (w, d) -> world.getChunkProvider(),
+		super(world.getWorldInfo(), world.getDimension(), (w, d) -> world.getChunkProvider(),
 				world.getProfiler(), world.isRemote);
 		this.world = world;
 	}

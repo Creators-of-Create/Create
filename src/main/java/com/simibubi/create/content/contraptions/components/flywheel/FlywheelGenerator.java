@@ -25,7 +25,6 @@ public class FlywheelGenerator extends SpecialBlockStateGen {
 		BlockState state) {
 		return prov.models()
 			.getExistingFile(prov.modLoc("block/" + ctx.getName() + "/casing_" + state.get(FlywheelBlock.CONNECTION)
-				.getName()));
+				.getString()));
 	}
-
 }

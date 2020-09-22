@@ -74,7 +74,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	public Vector3d getPositionVector() {
+	public Vector3d getPositionVec() {
 		return new Vector3d(getX(), getY(), getZ());
 	}
 
@@ -94,9 +94,9 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@SubscribeEvent
-	public static void deployerHasEyesOnHisFeet(EntityEvent.EyeHeight event) {
+	public static void deployerHasEyesOnHisFeet(EntityEvent.Size event) {
 		if (event.getEntity() instanceof DeployerFakePlayer)
-			event.setNewHeight(0);
+			event.setNewEyeHeight(0);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)

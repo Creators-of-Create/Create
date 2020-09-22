@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
@@ -119,20 +120,20 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		return false;
 	}
 
-	protected abstract void renderWindow(int mouseX, int mouseY, float partialTicks);
+	protected abstract void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks);
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 	}
 
-	protected void renderWindowForeground(int mouseX, int mouseY, float partialTicks) {
-		renderHoveredToolTip(mouseX, mouseY);
+	protected void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		renderHoveredToolTip(matrixStack, mouseX, mouseY);
 		for (Widget widget : widgets) {
 			if (!widget.isHovered())
 				continue;
 
 			if (widget instanceof AbstractSimiWidget && !((AbstractSimiWidget) widget).getToolTip().isEmpty()) {
-				renderTooltip(((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
+				renderTooltip(matrixStack, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
 			}
 		}
 	}

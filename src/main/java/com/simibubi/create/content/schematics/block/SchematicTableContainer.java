@@ -28,7 +28,7 @@ public class SchematicTableContainer extends Container {
 		TileEntity tileEntity = world.getTileEntity(extraData.readBlockPos());
 		if (tileEntity instanceof SchematicTableTileEntity) {
 			this.te = (SchematicTableTileEntity) tileEntity;
-			this.te.handleUpdateTag(extraData.readCompoundTag());
+			this.te.handleUpdateTag(te.getBlockState(), extraData.readCompoundTag());
 			init();
 		}
 	}

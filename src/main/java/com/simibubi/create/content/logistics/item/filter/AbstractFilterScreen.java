@@ -6,6 +6,7 @@ import static net.minecraft.util.text.TextFormatting.GRAY;
 import java.util.Collections;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -14,6 +15,7 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Indicator;
 import com.simibubi.create.foundation.gui.widgets.Indicator.State;
+import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -49,7 +51,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 	}
 
 	@Override
-	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 		background.draw(this, x, y);
@@ -58,8 +60,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		int invY = y + background.height + 10;
 		PLAYER_INVENTORY.draw(this, invX, invY);
 
-		font.drawString(playerInventory.getDisplayName().getFormattedText(), invX + 7, invY + 6, 0x666666);
-		font.drawString(I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 9, 0x5B5037);
+		textRenderer.draw(ms, playerInventory.getDisplayName(), invX + 7, invY + 6, 0x666666);
+		textRenderer.draw(ms, I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 9, 0x5B5037);
 
 		/*RenderHelper.enableGuiDepthLighting();
 		RenderSystem.pushMatrix();
@@ -82,7 +84,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		handleIndicators();
 
 		if (!container.player.getHeldItemMainhand().equals(container.filterItem, false))
-			minecraft.player.closeScreen();
+			client.player.closeScreen();
 	}
 
 	public void handleIndicators() {
@@ -104,7 +106,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		for (IconButton button : tooltipButtons) {
 			if (!button.getToolTip().isEmpty()) {
 				button.setToolTip(button.getToolTip().get(0));
-				button.getToolTip().add(TooltipHelper.holdShift(Palette.Yellow, hasShiftDown()));
+				button.getToolTip().add(ITextComponent.of(TooltipHelper.holdShift(Palette.Yellow, hasShiftDown())));
 			}
 		}
 
@@ -126,8 +128,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 	private void fillToolTip(IconButton button, String tooltip) {
 		if (!button.isHovered())
 			return;
-		List<String> tip = button.getToolTip();
-		tip.addAll(TooltipHelper.cutString(tooltip, GRAY, GRAY));
+		List<ITextComponent> tip = button.getToolTip();
+		TooltipHelper.cutString(tooltip, GRAY, GRAY).stream().map(ITextComponent::of).forEachOrdered(tip::add);
 	}
 
 	@Override
@@ -136,7 +138,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 
 		if (button == 0) {
 			if (confirmButton.isHovered()) {
-				minecraft.player.closeScreen();
+				client.player.closeScreen();
 				return true;
 			}
 			if (resetButton.isHovered()) {

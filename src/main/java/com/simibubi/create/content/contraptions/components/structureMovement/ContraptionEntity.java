@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.entity.projectile.ProjectileEntity;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllEntityTypes;
@@ -32,7 +33,7 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.ProjectileEntity;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.item.HangingEntity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
@@ -344,7 +345,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 				if (coupling != null && coupling.areBothEndsPresent()) {
 					boolean notOnMainCart = !coupling.getId()
 						.equals(riding.getUniqueID());
-					Vec3d positionVec = coupling.asCouple()
+					Vector3d positionVec = coupling.asCouple()
 						.get(notOnMainCart)
 						.getPositionVec();
 					prevYaw = yaw;
@@ -365,11 +366,11 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			pauseWhileRotating = mountedContraption.rotationMode == CartMovementMode.ROTATE_PAUSED;
 		}
 
-		Vec3d movementVector = riding.getMotion();
+		Vector3d movementVector = riding.getMotion();
 		if (!isOnCoupling) {
 			if (riding instanceof BoatEntity)
 				movementVector = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
-			Vec3d motion = movementVector.normalize();
+			Vector3d motion = movementVector.normalize();
 
 			if (!rotationLock) {
 				if (motion.length() > 0) {
@@ -469,7 +470,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 			boolean newPosVisited = false;
 			BlockPos gridPosition = new BlockPos(actorPosition);
-			Vec3d oldMotion = context.motion;
+			Vector3d oldMotion = context.motion;
 
 			if (!context.stall) {
 				Vector3d previousPosition = context.position;
@@ -486,7 +487,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 					BearingContraption bc = (BearingContraption) getContraption();
 					Direction facing = bc.getFacing();
 					Vector3d activeAreaOffset = actor.getActiveAreaOffset(context);
-					if (activeAreaOffset.mul(VecHelper.axisAlingedPlaneOf(new Vec3d(facing.getDirectionVec())))
+					if (activeAreaOffset.mul(VecHelper.axisAlingedPlaneOf(Vector3d.of(facing.getDirectionVec())))
 						.equals(Vector3d.ZERO)) {
 						if (VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis())) {
 							context.motion = Vector3d.of(facing.getDirectionVec()).scale(facing.getAxis()
@@ -676,8 +677,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		compound.putBoolean("Initialized", initialized);
 
 		if (getCouplingId() != null) {
-			compound.put("OnCoupling", NBTUtil.writeUniqueId(getCouplingId()));
-			compound.put("CoupledCart", NBTUtil.writeUniqueId(getCoupledCart()));
+			compound.put("OnCoupling", NBTUtil.fromUuid(getCouplingId()));
+			compound.put("CoupledCart", NBTUtil.fromUuid(getCoupledCart()));
 		}
 	}
 
@@ -876,7 +877,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			return false;
 		if (e instanceof SeatEntity)
 			return false;
-		if (e instanceof IProjectile)
+		if (e instanceof ProjectileEntity)
 			return false;
 		if (e.getRidingEntity() != null)
 			return false;

@@ -107,7 +107,7 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        FluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
-        return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+        FluidState FluidState = context.getWorld().getFluidState(context.getPos());
+        return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getFluid() == Fluids.WATER));
     }
 }

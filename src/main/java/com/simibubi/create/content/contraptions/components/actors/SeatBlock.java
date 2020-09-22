@@ -55,7 +55,7 @@ public class SeatBlock extends Block {
 
 	@Override
 	public void onLanded(IBlockReader reader, Entity entity) {
-		BlockPos pos = entity.getPosition();
+		BlockPos pos = entity.getBlockPos();
 		if (entity instanceof PlayerEntity || !(entity instanceof LivingEntity) || isSeatOccupied(entity.world, pos)) {
 			Blocks.PINK_BED.onLanded(reader, entity);
 			return;

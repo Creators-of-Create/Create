@@ -1,11 +1,17 @@
 package com.simibubi.create.foundation.tileEntity;
 
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public abstract class SyncedTileEntity extends TileEntity {
 
 	public SyncedTileEntity(TileEntityType<?> tileEntityTypeIn) {
@@ -23,16 +29,18 @@ public abstract class SyncedTileEntity extends TileEntity {
 	}
 
 	@Override
-	public void handleUpdateTag(CompoundNBT tag) {
-		read(tag);
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+		fromTag(state, tag);
 	}
 
 	public void sendData() {
-		world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 2 | 4 | 16);
+		if (world != null)
+			world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 2 | 4 | 16);
 	}
 
 	public void causeBlockUpdate() {
-		world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 1);
+		if (world != null)
+			world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 1);
 	}
 	
 	@Override
@@ -42,12 +50,12 @@ public abstract class SyncedTileEntity extends TileEntity {
 
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		readClientUpdate(pkt.getNbtCompound());
+		readClientUpdate(getBlockState(), pkt.getNbtCompound());
 	}
 
 	// Special handling for client update packets
-	public void readClientUpdate(CompoundNBT tag) {
-		read(tag);
+	public void readClientUpdate(BlockState state, CompoundNBT tag) {
+		fromTag(state, tag);
 	}
 
 	// Special handling for client update packets

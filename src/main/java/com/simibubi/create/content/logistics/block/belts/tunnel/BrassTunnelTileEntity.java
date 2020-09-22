@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -275,7 +276,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 
 		Direction movementFacing = below.getMovementFacing();
 		if (side == movementFacing)
-			if (!Block.hasSolidSide(world.getBlockState(offset), world, offset, side.getOpposite())) {
+			if (!BlockHelper.hasBlockSolidSide(world.getBlockState(offset), world, offset, side.getOpposite())) {
 				BeltTileEntity controllerTE = below.getControllerTE();
 				if (controllerTE == null)
 					return null;
@@ -393,7 +394,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 					TileEntityBehaviour.get(world, offset, DirectBeltInputBehaviour.TYPE);
 				if (inputBehaviour == null) {
 					if (direction == movementFacing)
-						if (!Block.hasSolidSide(world.getBlockState(offset), world, offset, direction.getOpposite()))
+						if (!BlockHelper.hasBlockSolidSide(world.getBlockState(offset), world, offset, direction.getOpposite()))
 							validOutputs.add(Pair.of(tunnelTE, direction));
 					continue;
 				}
@@ -408,7 +409,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		BlockState funnelState = world.getBlockState(getPos().offset(side));
 		if (!(funnelState.getBlock() instanceof BeltFunnelBlock))
 			return false;
-		if (funnelState.has(BeltFunnelBlock.POWERED) && funnelState.get(BeltFunnelBlock.POWERED))
+		if (BlockHelper.hasBlockStateProperty(funnelState, BeltFunnelBlock.POWERED) && funnelState.get(BeltFunnelBlock.POWERED))
 			return false;
 		if (funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) != side.getOpposite())
 			return false;

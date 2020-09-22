@@ -177,10 +177,10 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			groupedItemsBeforeCraft = before;
 		if (phaseBefore == Phase.EXPORTING && phase == Phase.WAITING) {
 			Direction facing = getBlockState().get(MechanicalCrafterBlock.HORIZONTAL_FACING);
-			Vec3d vec = new Vec3d(facing.getDirectionVec()).scale(.75)
+			Vector3d vec = Vector3d.of(facing.getDirectionVec()).scale(.75)
 				.add(VecHelper.getCenterOf(pos));
 			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(getBlockState());
-			vec = vec.add(new Vec3d(targetDirection.getDirectionVec()).scale(1));
+			vec = vec.add(Vector3d.of(targetDirection.getDirectionVec()).scale(1));
 			world.addParticle(ParticleTypes.CRIT, vec.x, vec.y, vec.z, 0, 0, 0);
 		}
 	}

@@ -49,7 +49,7 @@ public class BeltModel extends BakedModelWrapper<IBakedModel> {
 			TextureAtlasSprite original = quad.getSprite();
 			TextureAtlasSprite target = spriteShift.getTarget();
 			BakedQuad newQuad = new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length),
-				quad.getTintIndex(), quad.getFace(), target, quad.shouldApplyDiffuseLighting());
+				quad.getTintIndex(), quad.getFace(), target, quad.hasShade());
 
 			VertexFormat format = DefaultVertexFormats.BLOCK;
 			int[] vertexData = newQuad.getVertexData();

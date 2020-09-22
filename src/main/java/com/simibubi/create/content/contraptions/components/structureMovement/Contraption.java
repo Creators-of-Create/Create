@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -472,7 +473,7 @@ public abstract class Contraption {
 					tag.putInt("y", info.pos.getY());
 					tag.putInt("z", info.pos.getZ());
 
-					TileEntity te = TileEntity.create(tag);
+					TileEntity te = TileEntity.createFromTag(info.state, tag);
 					if (te == null)
 						return;
 					te.setLocation(new WrappedWorld(world) {
@@ -575,7 +576,7 @@ public abstract class Contraption {
 		nbt.put("Seats", NBTHelper.writeCompoundList(getSeats(), NBTUtil::writeBlockPos));
 		nbt.put("Passengers", NBTHelper.writeCompoundList(getSeatMapping().entrySet(), e -> {
 			CompoundNBT tag = new CompoundNBT();
-			tag.put("Id", NBTUtil.writeUniqueId(e.getKey()));
+			tag.put("Id", NBTUtil.fromUuid(e.getKey()));
 			tag.putInt("Seat", e.getValue());
 			return tag;
 		}));
@@ -603,7 +604,7 @@ public abstract class Contraption {
 		return false;
 	}
 
-	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
+	public void removeBlocksFromWorld(World world, BlockPos offset) {
 		storage.values()
 			.forEach(MountedStorage::removeStorageFromWorld);
 		glueToRemove.forEach(SuperGlueEntity::remove);
@@ -623,14 +624,12 @@ public abstract class Contraption {
 				Block blockIn = oldState.getBlock();
 				if (block.state.getBlock() != blockIn)
 					iterator.remove();
-				world.getWorld()
-					.removeTileEntity(add);
+				world.removeTileEntity(add);
 				int flags = 67;
 				if (blockIn instanceof DoorBlock)
 					flags = flags | 32 | 16;
-				if (blockIn instanceof IWaterLoggable && oldState.has(BlockStateProperties.WATERLOGGED)
-					&& oldState.get(BlockStateProperties.WATERLOGGED)
-						.booleanValue()) {
+				if (blockIn instanceof IWaterLoggable && BlockHelper.hasBlockStateProperty(oldState, BlockStateProperties.WATERLOGGED)
+					&& oldState.get(BlockStateProperties.WATERLOGGED)) {
 					world.setBlockState(add, Blocks.WATER.getDefaultState(), flags);
 					continue;
 				}
@@ -671,10 +670,10 @@ public abstract class Contraption {
 					Block.spawnDrops(state, world, targetPos, null);
 					continue;
 				}
-				if (state.getBlock() instanceof IWaterLoggable && state.has(BlockStateProperties.WATERLOGGED)) {
-					IFluidState ifluidstate = world.getFluidState(targetPos);
+				if (state.getBlock() instanceof IWaterLoggable && BlockHelper.hasBlockStateProperty(state, BlockStateProperties.WATERLOGGED)) {
+					FluidState FluidState = world.getFluidState(targetPos);
 					state = state.with(BlockStateProperties.WATERLOGGED,
-						Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+						FluidState.getFluid() == Fluids.WATER);
 				}
 
 				world.destroyBlock(targetPos, true);
@@ -699,7 +698,7 @@ public abstract class Contraption {
 						tag.remove("InitialOffset");
 					}
 
-					tileEntity.read(tag);
+					tileEntity.fromTag(tileEntity.getBlockState(), tag);
 
 					if (storage.containsKey(block.pos)) {
 						MountedStorage mountedStorage = storage.get(block.pos);

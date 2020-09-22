@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBe
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.block.Block;
@@ -297,7 +298,7 @@ public class BeltInventory {
 		if (inputBehaviour != null)
 			return Ending.INSERT;
 
-		if (Block.hasSolidSide(world.getBlockState(nextPosition), world, nextPosition, belt.getMovementFacing()
+		if (BlockHelper.hasBlockSolidSide(world.getBlockState(nextPosition), world, nextPosition, belt.getMovementFacing()
 			.getOpposite()))
 			return Ending.BLOCKED;
 

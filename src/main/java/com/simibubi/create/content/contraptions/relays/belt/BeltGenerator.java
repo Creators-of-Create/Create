@@ -63,8 +63,8 @@ public class BeltGenerator extends SpecialBlockStateGen {
 			slope = BeltSlope.SIDEWAYS;
 
 		String path = "block/" + (casing ? "belt_casing/" : "belt/");
-		String slopeName = slope.getName();
-		String partName = part.getName();
+		String slopeName = slope.getString();
+		String partName = part.getString();
 
 		if (diagonal)
 			slopeName = "diagonal";

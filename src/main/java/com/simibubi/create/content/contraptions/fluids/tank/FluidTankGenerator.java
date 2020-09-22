@@ -38,7 +38,7 @@ public class FluidTankGenerator extends SpecialBlockStateGen {
 			shapeName = "bottom";
 
 		return AssetLookup.partialBaseModel(ctx, prov,
-			shapeName + (shape == Shape.PLAIN ? "" : "_" + shape.getName()));
+			shapeName + (shape == Shape.PLAIN ? "" : "_" + shape.getString()));
 	}
 
 }

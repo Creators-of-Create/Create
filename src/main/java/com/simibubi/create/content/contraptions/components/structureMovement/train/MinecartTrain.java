@@ -18,7 +18,7 @@ import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class MinecartTrain {
@@ -201,7 +201,7 @@ public class MinecartTrain {
 	}
 
 	public void hardCollisionStep(World world, Couple<AbstractMinecartEntity> carts, double couplingLength) {
-		Couple<Vec3d> corrections = Couple.create(null, null);
+		Couple<Vector3d> corrections = Couple.create(null, null);
 		Couple<Float> maxSpeed = carts.map(AbstractMinecartEntity::getMaxCartSpeedOnRail);
 		boolean firstLoop = true;
 		for (boolean current : new boolean[] { true, false, true }) {
@@ -220,9 +220,9 @@ public class MinecartTrain {
 				shape = block.getRailDirection(railState, world, railPosition, cart);
 			}
 
-			Vec3d correction = Vec3d.ZERO;
-			Vec3d pos = cart.getPositionVec();
-			Vec3d link = otherCart.getPositionVec()
+			Vector3d correction = Vector3d.ZERO;
+			Vector3d pos = cart.getPositionVec();
+			Vector3d link = otherCart.getPositionVec()
 				.subtract(pos);
 			float correctionMagnitude = firstLoop ? -stress / 2f : -stress;
 			correction = shape != null ? followLinkOnRail(link, pos, correctionMagnitude, shape).subtract(pos)
@@ -248,7 +248,7 @@ public class MinecartTrain {
 
 	public void softCollisionStep(World world, Couple<AbstractMinecartEntity> carts, double couplingLength) {
 
-		Couple<Vec3d> positions = carts.map(Entity::getPositionVector);
+		Couple<Vector3d> positions = carts.map(Entity::getPositionVec);
 		Couple<Float> maxSpeed = carts.map(AbstractMinecartEntity::getMaxCartSpeedOnRail);
 		Couple<Boolean> canAddmotion = carts.map(MinecartSim2020::canAddMotion);
 
@@ -261,9 +261,9 @@ public class MinecartTrain {
 			return block.getRailDirection(railState, world, railPosition, current);
 		});
 
-		Couple<Vec3d> motions = carts.map(MinecartSim2020::predictMotionOf);
-		Couple<Vec3d> nextPositions = positions.copy();
-		nextPositions.replaceWithParams(Vec3d::add, motions);
+		Couple<Vector3d> motions = carts.map(MinecartSim2020::predictMotionOf);
+		Couple<Vector3d> nextPositions = positions.copy();
+		nextPositions.replaceWithParams(Vector3d::add, motions);
 
 		float futureStress = (float) (couplingLength - nextPositions.getFirst()
 			.distanceTo(nextPositions.getSecond()));
@@ -271,9 +271,9 @@ public class MinecartTrain {
 			return;
 
 		for (boolean current : Iterate.trueAndFalse) {
-			Vec3d correction = Vec3d.ZERO;
-			Vec3d pos = nextPositions.get(current);
-			Vec3d link = nextPositions.get(!current)
+			Vector3d correction = Vector3d.ZERO;
+			Vector3d pos = nextPositions.get(current);
+			Vector3d link = nextPositions.get(!current)
 				.subtract(pos);
 			float correctionMagnitude = -futureStress / 2f;
 
@@ -293,16 +293,16 @@ public class MinecartTrain {
 		carts.forEachWithParams(Entity::setMotion, motions);
 	}
 
-	public static Vec3d followLinkOnRail(Vec3d link, Vec3d cart, float diffToReduce, RailShape shape) {
-		Vec3d railAxis = getRailVec(shape);
+	public static Vector3d followLinkOnRail(Vector3d link, Vector3d cart, float diffToReduce, RailShape shape) {
+		Vector3d railAxis = getRailVec(shape);
 		double dotProduct = railAxis.dotProduct(link);
 		if (Double.isNaN(dotProduct) || dotProduct == 0 || diffToReduce == 0)
 			return cart;
 
-		Vec3d axis = railAxis.scale(-Math.signum(dotProduct));
-		Vec3d center = cart.add(link);
+		Vector3d axis = railAxis.scale(-Math.signum(dotProduct));
+		Vector3d center = cart.add(link);
 		double radius = link.length() - diffToReduce;
-		Vec3d intersectSphere = VecHelper.intersectSphere(cart, axis, center, radius);
+		Vector3d intersectSphere = VecHelper.intersectSphere(cart, axis, center, radius);
 
 		// Cannot satisfy on current rail vector
 		if (intersectSphere == null)
@@ -311,24 +311,24 @@ public class MinecartTrain {
 		return intersectSphere;
 	}
 
-	private static Vec3d getRailVec(RailShape shape) {
+	private static Vector3d getRailVec(RailShape shape) {
 		switch (shape) {
 		case ASCENDING_NORTH:
 		case ASCENDING_SOUTH:
 		case NORTH_SOUTH:
-			return new Vec3d(0, 0, 1);
+			return new Vector3d(0, 0, 1);
 		case ASCENDING_EAST:
 		case ASCENDING_WEST:
 		case EAST_WEST:
-			return new Vec3d(1, 0, 0);
+			return new Vector3d(1, 0, 0);
 		case NORTH_EAST:
 		case SOUTH_WEST:
-			return new Vec3d(1, 0, 1).normalize();
+			return new Vector3d(1, 0, 1).normalize();
 		case NORTH_WEST:
 		case SOUTH_EAST:
-			return new Vec3d(1, 0, -1).normalize();
+			return new Vector3d(1, 0, -1).normalize();
 		default:
-			return new Vec3d(0, 1, 0);
+			return new Vector3d(0, 1, 0);
 		}
 	}
 
@@ -345,9 +345,9 @@ public class MinecartTrain {
 			return;
 
 		int yOffset = 1;
-		Vec3d mainCenter = mainCart.getPositionVec()
+		Vector3d mainCenter = mainCart.getPositionVec()
 			.add(0, yOffset, 0);
-		Vec3d connectedCenter = connectedCart.getPositionVec()
+		Vector3d connectedCenter = connectedCart.getPositionVec()
 			.add(0, yOffset, 0);
 
 		int color = ColorHelper.mixColors(0xabf0e9, 0xee8572,
@@ -357,7 +357,7 @@ public class MinecartTrain {
 			.colored(color)
 			.lineWidth(1 / 8f);
 
-		Vec3d point = mainCart.getPositionVec()
+		Vector3d point = mainCart.getPositionVec()
 			.add(0, yOffset, 0);
 		CreateClient.outliner.showLine(coupling.getId() + "" + index, point, point.add(0, 1 / 128f, 0))
 			.colored(0xffffff)

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.goggles;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -17,22 +18,22 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 
 	private int offsetX;
 	private int offsetY;
-	private final List<String> tooltip;
+	private final List<ITextComponent> tooltip;
 
 	public GoggleConfigScreen() {
 		String spacing = "    ";
 		tooltip = new ArrayList<>();
-		tooltip.add(spacing + Lang.translate("gui.config.overlay1"));
-		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.config.overlay2"));
-		tooltip.add("");
-		tooltip.add(spacing + Lang.translate("gui.config.overlay3"));
-		tooltip.add(spacing + Lang.translate("gui.config.overlay4"));
-		tooltip.add("");
-		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.config.overlay5"));
-		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.config.overlay6"));
-		tooltip.add("");
-		tooltip.add(spacing + Lang.translate("gui.config.overlay7"));
-		tooltip.add(spacing + Lang.translate("gui.config.overlay8"));
+		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.config.overlay1")));
+		tooltip.add(ITextComponent.of(spacing + TextFormatting.GRAY + Lang.translate("gui.config.overlay2")));
+		tooltip.add(ITextComponent.of(""));
+		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.config.overlay3")));
+		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.config.overlay4")));
+		tooltip.add(ITextComponent.of(""));
+		tooltip.add(ITextComponent.of(spacing + TextFormatting.GRAY + Lang.translate("gui.config.overlay5")));
+		tooltip.add(ITextComponent.of(spacing + TextFormatting.GRAY + Lang.translate("gui.config.overlay6")));
+		tooltip.add(ITextComponent.of(""));
+		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.config.overlay7")));
+		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.config.overlay8")));
 	}
 
 	@Override
@@ -71,16 +72,16 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
-		RenderSystem.pushMatrix();
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		ms.push();
 		int posX = this.width / 2 + offsetX;
 		int posY = this.height / 2 + offsetY;
 		//tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
-		renderTooltip(tooltip, posX, posY);
+		renderTooltip(ms, tooltip, posX, posY);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		//GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16).render();
 		GuiGameElement.of(item).at(posX + 10, posY - 16).render();
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 }

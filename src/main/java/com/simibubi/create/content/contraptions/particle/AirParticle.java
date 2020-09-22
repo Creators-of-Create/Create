@@ -9,10 +9,11 @@ import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class AirParticle extends SimpleAnimatedParticle {
@@ -24,8 +25,8 @@ public class AirParticle extends SimpleAnimatedParticle {
 	private float twirlRadius, twirlAngleOffset;
 	private Axis twirlAxis;
 
-	protected AirParticle(World world, AirParticleData data, double x, double y, double z, double dx, double dy,
-		double dz, IAnimatedSprite sprite) {
+	protected AirParticle(ClientWorld world, AirParticleData data, double x, double y, double z, double dx, double dy,
+						  double dz, IAnimatedSprite sprite) {
 		super(world, x, y, z, sprite, world.rand.nextFloat() * .5f);
 		particleScale *= 0.75F;
 		canCollide = false;
@@ -44,7 +45,7 @@ public class AirParticle extends SimpleAnimatedParticle {
 		twirlAxis = Create.random.nextBoolean() ? Axis.X : Axis.Z;
 
 		// speed in m/ticks
-		maxAge = Math.min((int) (new Vec3d(dx, dy, dz).length() / data.speed), 60);
+		maxAge = Math.min((int) (new Vector3d(dx, dy, dz).length() / data.speed), 60);
 		selectSprite(7);
 		setAlphaF(.25f);
 	}
@@ -65,7 +66,7 @@ public class AirParticle extends SimpleAnimatedParticle {
 
 		float progress = (float) Math.pow(((float) age) / maxAge, drag);
 		float angle = (progress * 2 * 360 + twirlAngleOffset) % 360;
-		Vec3d twirl = VecHelper.rotate(new Vec3d(0, twirlRadius, 0), angle, twirlAxis);
+		Vector3d twirl = VecHelper.rotate(new Vector3d(0, twirlRadius, 0), angle, twirlAxis);
 		
 		float x = (float) (MathHelper.lerp(progress, originX, targetX) + twirl.x);
 		float y = (float) (MathHelper.lerp(progress, originY, targetY) + twirl.y);
@@ -95,7 +96,7 @@ public class AirParticle extends SimpleAnimatedParticle {
 			this.spriteSet = animatedSprite;
 		}
 
-		public Particle makeParticle(AirParticleData data, World worldIn, double x, double y, double z, double xSpeed,
+		public Particle makeParticle(AirParticleData data, ClientWorld worldIn, double x, double y, double z, double xSpeed,
 			double ySpeed, double zSpeed) {
 			return new AirParticle(worldIn, data, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
 		}

@@ -117,13 +117,13 @@ public class AirCurrent {
 				} else {
 					switch (processingType) {
 					case BLASTING:
-						if (!entity.isImmuneToFire()) {
+						if (!entity.isFireImmune()) {
 							entity.setFire(10);
 							entity.attackEntityFrom(damageSourceLava, 4);
 						}
 						break;
 					case SMOKING:
-						if (!entity.isImmuneToFire()) {
+						if (!entity.isFireImmune()) {
 							entity.setFire(2);
 							entity.attackEntityFrom(damageSourceFire, 2);
 						}
@@ -136,7 +136,7 @@ public class AirCurrent {
 						if (!entity.isBurning())
 							break;
 						entity.extinguish();
-						world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+						world.playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 							SoundCategory.NEUTRAL, 0.7F,
 							1.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.4F);
 						break;
@@ -168,7 +168,7 @@ public class AirCurrent {
 		BlockPos start = source.getPos();
 		float max = this.maxDistance;
 		Direction facing = direction;
-		Vec3d directionVec = new Vec3d(facing.getDirectionVec());
+		Vector3d directionVec = Vector3d.of(facing.getDirectionVec());
 		maxDistance = getFlowLimit(world, start, max, facing);
 
 		// Determine segments with transported fluids/gases
@@ -216,12 +216,12 @@ public class AirCurrent {
 	}
 
 	public static float getFlowLimit(World world, BlockPos start, float max, Direction facing) {
-		Vec3d directionVec = new Vec3d(facing.getDirectionVec());
-		Vec3d planeVec = VecHelper.axisAlingedPlaneOf(directionVec);
+		Vector3d directionVec = Vector3d.of(facing.getDirectionVec());
+		Vector3d planeVec = VecHelper.axisAlingedPlaneOf(directionVec);
 
 		// 4 Rays test for holes in the shapes blocking the flow
 		float offsetDistance = .25f;
-		Vec3d[] offsets = new Vec3d[] { planeVec.mul(offsetDistance, offsetDistance, offsetDistance),
+		Vector3d[] offsets = new Vector3d[] { planeVec.mul(offsetDistance, offsetDistance, offsetDistance),
 			planeVec.mul(-offsetDistance, -offsetDistance, offsetDistance),
 			planeVec.mul(offsetDistance, -offsetDistance, -offsetDistance),
 			planeVec.mul(-offsetDistance, offsetDistance, -offsetDistance), };
@@ -244,11 +244,11 @@ public class AirCurrent {
 				break;
 			}
 
-			for (Vec3d offset : offsets) {
-				Vec3d rayStart = VecHelper.getCenterOf(currentPos)
+			for (Vector3d offset : offsets) {
+				Vector3d rayStart = VecHelper.getCenterOf(currentPos)
 					.subtract(directionVec.scale(.5f + 1 / 32f))
 					.add(offset);
-				Vec3d rayEnd = rayStart.add(directionVec.scale(1 + 1 / 32f));
+				Vector3d rayEnd = rayStart.add(directionVec.scale(1 + 1 / 32f));
 				BlockRayTraceResult blockraytraceresult =
 					world.rayTraceBlocks(rayStart, rayEnd, currentPos, voxelshape, state);
 				if (blockraytraceresult == null)

@@ -83,7 +83,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 				if (animationType == Animation.SURPRISE && animationProgress.value == 50) {
 					Vector3d center = VecHelper.getCenterOf(pos);
 					world.destroyBlock(pos, false);
-					world.createExplosion(null, CUCKOO_SURPRISE, center.x, center.y, center.z, 3, false,
+					world.createExplosion(null, CUCKOO_SURPRISE, null, center.x, center.y, center.z, 3, false,
 						Explosion.Mode.BREAK);
 				}
 

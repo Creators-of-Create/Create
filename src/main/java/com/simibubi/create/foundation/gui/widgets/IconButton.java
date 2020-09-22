@@ -1,8 +1,10 @@
 package com.simibubi.create.foundation.gui.widgets;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
+import net.minecraft.util.text.ITextComponent;
 
 public class IconButton extends AbstractSimiWidget {
 
@@ -15,17 +17,17 @@ public class IconButton extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (this.visible) {
-			this.isHovered =
+			this.hovered =
 				mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 
 			AllGuiTextures button = (pressed || !active) ? button = AllGuiTextures.BUTTON_DOWN
-				: (isHovered) ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
+				: (hovered) ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
 
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			AllGuiTextures.BUTTON.bind();
-			drawTexture(x, y, button.startX, button.startY, button.width, button.height);
+			drawTexture(matrixStack, x, y, button.startX, button.startY, button.width, button.height);
 			icon.draw(this, x + 1, y + 1);
 		}
 	}
@@ -42,7 +44,7 @@ public class IconButton extends AbstractSimiWidget {
 		this.pressed = false;
 	}
 
-	public void setToolTip(String text) {
+	public void setToolTip(ITextComponent text) {
 		toolTip.clear();
 		toolTip.add(text);
 	}

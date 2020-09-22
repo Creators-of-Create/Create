@@ -30,7 +30,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class ArmTileEntity extends KineticTileEntity {
@@ -414,9 +414,9 @@ public class ArmTileEntity extends KineticTileEntity {
 		}
 
 		@Override
-		protected Vec3d getLocalOffset(BlockState state) {
+		protected Vector3d getLocalOffset(BlockState state) {
 			int yPos = state.get(ArmBlock.CEILING) ? 16 - 3 : 3;
-			Vec3d location = VecHelper.voxelSpace(8, yPos, 14.5);
+			Vector3d location = VecHelper.voxelSpace(8, yPos, 14.5);
 			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Direction.Axis.Y);
 			return location;
 		}

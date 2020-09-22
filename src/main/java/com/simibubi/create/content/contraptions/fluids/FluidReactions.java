@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,7 +21,7 @@ public class FluidReactions {
 			world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
 	}
 
-	public static void handlePipeSpillCollision(World world, BlockPos pos, Fluid pipeFluid, IFluidState worldFluid) {
+	public static void handlePipeSpillCollision(World world, BlockPos pos, Fluid pipeFluid, FluidState worldFluid) {
 		Fluid pf = FluidHelper.convertToStill(pipeFluid);
 		Fluid wf = worldFluid.getFluid();
 		if (pf == Fluids.WATER && wf == Fluids.LAVA)

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.Validate;
 
 import com.simibubi.create.AllEntityTypes;
@@ -247,11 +248,11 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public boolean processInitialInteract(PlayerEntity player, Hand hand) {
+	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			triggerPlaceBlock(player, hand);
 		});
-		return true;
+		return ActionResultType.CONSUME;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -367,7 +368,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void onStruckByLightning(LightningBoltEntity lightningBolt) {}
+	public void onStruckByLightning(ServerWorld world, LightningBoltEntity lightningBolt) {}
 
 	@Override
 	public void recalculateSize() {}

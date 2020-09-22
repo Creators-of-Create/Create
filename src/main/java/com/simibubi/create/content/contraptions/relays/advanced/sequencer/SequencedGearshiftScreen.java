@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -111,7 +112,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		int hFontColor = 0xD3CBBE;
 		background.draw(this, guiLeft, guiTop);
 
@@ -124,14 +125,14 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 				SequencerInstructions def = instruction.instruction;
 				def.background.draw(guiLeft + 14, guiTop + 29 + yOffset);
 
-				label(32, 6 + yOffset, Lang.translate(def.translationKey));
+				label(matrixStack, 32, 6 + yOffset, Lang.translate(def.translationKey));
 				if (def.hasValueParameter) {
 					String text = def.formatValue(instruction.value);
-					int stringWidth = font.getStringWidth(text);
-					label(85 + (12 - stringWidth / 2), 6 + yOffset, text);
+					int stringWidth = textRenderer.getStringWidth(text);
+					label(matrixStack, 85 + (12 - stringWidth / 2), 6 + yOffset, text);
 				}
 				if (def.hasSpeedParameter)
-					label(120, 6 + yOffset, instruction.speedModifier.label);
+					label(matrixStack, 120, 6 + yOffset, instruction.speedModifier.label);
 
 				continue;
 			}
@@ -139,7 +140,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			toDraw.draw(guiLeft + 14, guiTop + 29 + yOffset);
 		}
 
-		font.drawStringWithShadow(title, guiLeft - 3 + (background.width - font.getStringWidth(title)) / 2, guiTop + 10,
+		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (background.width - textRenderer.getStringWidth(title)) / 2, guiTop + 10,
 				hFontColor);
 
 		GuiGameElement.of(renderedItem)
@@ -148,8 +149,8 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 				.render();
 	}
 
-	private void label(int x, int y, String text) {
-		font.drawStringWithShadow(text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
+	private void label(MatrixStack matrixStack, int x, int y, String text) {
+		textRenderer.drawWithShadow(matrixStack, text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
 	}
 
 	public void sendPacket() {

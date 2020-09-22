@@ -84,7 +84,7 @@ public class CrushingWheelControllerBlock extends Block
 			return;
 
 		try {
-			CrushingWheelControllerTileEntity te = getTileEntity(worldIn, entityIn.getPosition().down());
+			CrushingWheelControllerTileEntity te = getTileEntity(worldIn, entityIn.getBlockPos().down());
 			if (te.crushingspeed == 0)
 				return;
 			if (entityIn instanceof ItemEntity)
@@ -116,11 +116,11 @@ public class CrushingWheelControllerBlock extends Block
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
-		updateSpeed(stateIn, worldIn.getWorld(), currentPos);
+		updateSpeed(stateIn, worldIn, currentPos);
 		return stateIn;
 	}
 
-	public void updateSpeed(BlockState state, World world, BlockPos pos) {
+	public void updateSpeed(BlockState state, IWorld world, BlockPos pos) {
 		withTileEntityDo(world, pos, te -> {
 			if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen()) {
 				if (te.crushingspeed != 0) {

@@ -39,16 +39,16 @@ public class RaycastHelper {
 		float f6 = f3 * f4;
 		float f7 = f2 * f4;
 		double d3 = range;
-		Vector3d vec3d1 = origin.add((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
-		return vec3d1;
+		Vector3d Vector3d1 = origin.add((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
+		return Vector3d1;
 	}
 
 	public static Vector3d getTraceOrigin(PlayerEntity playerIn) {
 		double d0 = playerIn.getX();
 		double d1 = playerIn.getY() + (double) playerIn.getEyeHeight();
 		double d2 = playerIn.getZ();
-		Vector3d vec3d = new Vector3d(d0, d1, d2);
-		return vec3d;
+		Vector3d Vector3d = new Vector3d(d0, d1, d2);
+		return Vector3d;
 	}
 
 	public static PredicateTraceResult rayTraceUntil(Vector3d start, Vector3d end, Predicate<BlockPos> predicate) {

@@ -210,7 +210,7 @@ public class ContraptionCollider {
 			Vector3d contactPointMotion = Vector3d.ZERO;
 			if (surfaceCollision.isTrue()) {
 				entity.fallDistance = 0;
-				entity.onGround = true;
+				entity.setOnGround(true);
 				contraptionEntity.collidingEntities.add(entity);
 				if (!serverPlayer)
 					contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
@@ -273,7 +273,7 @@ public class ContraptionCollider {
 		boolean flag = movement.x != Vector3d.x;
 		boolean flag1 = movement.y != Vector3d.y;
 		boolean flag2 = movement.z != Vector3d.z;
-		boolean flag3 = e.onGround || flag1 && movement.y < 0.0D;
+		boolean flag3 = e.isOnGround() || flag1 && movement.y < 0.0D;
 		if (e.stepHeight > 0.0F && flag3 && (flag || flag2)) {
 			Vector3d Vector3d1 = collideBoundingBoxHeuristically(e, new Vector3d(movement.x, (double) e.stepHeight, movement.z),
 				bb, world, ctx, reuseablestream);

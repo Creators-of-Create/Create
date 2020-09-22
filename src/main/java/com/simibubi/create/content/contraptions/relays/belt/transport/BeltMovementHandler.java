@@ -69,7 +69,7 @@ public class BeltMovementHandler {
 		BlockPos pos = info.lastCollidedPos;
 		World world = beltTe.getWorld();
 		TileEntity te = world.getTileEntity(pos);
-		TileEntity tileEntityBelowPassenger = world.getTileEntity(entityIn.getPosition());
+		TileEntity tileEntityBelowPassenger = world.getTileEntity(entityIn.getBlockPos());
 		BlockState blockState = info.lastCollidedState;
 		Direction movementFacing =
 			Direction.getFacingFromAxisDirection(blockState.get(BlockStateProperties.HORIZONTAL_FACING).getAxis(),
@@ -172,8 +172,8 @@ public class BeltMovementHandler {
 		if (!isPlayer)
 			entityIn.stepHeight = step;
 
-		boolean movedPastEndingSlope = onSlope && (AllBlocks.BELT.has(world.getBlockState(entityIn.getPosition()))
-				|| AllBlocks.BELT.has(world.getBlockState(entityIn.getPosition().down())));
+		boolean movedPastEndingSlope = onSlope && (AllBlocks.BELT.has(world.getBlockState(entityIn.getBlockPos()))
+				|| AllBlocks.BELT.has(world.getBlockState(entityIn.getBlockPos().down())));
 
 		if (movedPastEndingSlope && !movingDown && Math.abs(movementSpeed) > 0)
 			entityIn.setPosition(entityIn.getX(), entityIn.getY() + movement.y, entityIn.getZ());

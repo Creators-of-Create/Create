@@ -70,19 +70,19 @@ public class ZapperInteractionHandler {
 			return false;
 		if (player.world.getTileEntity(pos) != null)
 			return false;
-		if (newState.has(BlockStateProperties.DOUBLE_BLOCK_HALF))
+		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.DOUBLE_BLOCK_HALF))
 			return false;
-		if (newState.has(BlockStateProperties.ATTACHED))
+		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.ATTACHED))
 			return false;
-		if (newState.has(BlockStateProperties.HANGING))
+		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.HANGING))
 			return false;
-		if (newState.has(BlockStateProperties.BED_PART))
+		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.BED_PART))
 			return false;
-		if (newState.has(BlockStateProperties.STAIRS_SHAPE))
+		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.STAIRS_SHAPE))
 			newState = newState.with(BlockStateProperties.STAIRS_SHAPE, StairsShape.STRAIGHT);
-		if (newState.has(BlockStateProperties.PERSISTENT))
+		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.PERSISTENT))
 			newState = newState.with(BlockStateProperties.PERSISTENT, true);
-		if (newState.has(BlockStateProperties.WATERLOGGED))
+		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.WATERLOGGED))
 			newState = newState.with(BlockStateProperties.WATERLOGGED, false);
 
 		CompoundNBT tag = stack.getOrCreateTag();
@@ -91,7 +91,7 @@ public class ZapperInteractionHandler {
 			return false;
 
 		tag.put("BlockUsed", NBTUtil.writeBlockState(newState));
-		player.world.playSound(player, player.getPosition(), AllSoundEvents.BLOCKZAPPER_CONFIRM.get(),
+		player.world.playSound(player, player.getBlockPos(), AllSoundEvents.BLOCKZAPPER_CONFIRM.get(),
 			SoundCategory.BLOCKS, 0.5f, 0.8f);
 		return true;
 	}
