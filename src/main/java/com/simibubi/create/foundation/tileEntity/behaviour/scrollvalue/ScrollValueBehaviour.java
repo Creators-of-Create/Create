@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 
 public class ScrollValueBehaviour extends TileEntityBehaviour {
 
@@ -27,7 +28,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	public int scrollableValue;
 	int ticksUntilScrollPacket;
 	boolean forceClientState;
-	String label;
+	ITextComponent label;
 	Consumer<Integer> callback;
 	Consumer<Integer> clientCallback;
 	Function<Integer, String> formatter;
@@ -35,7 +36,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	Function<StepContext, Integer> step;
 	boolean needsWrench;
 
-	public ScrollValueBehaviour(String label, SmartTileEntity te, ValueBoxTransform slot) {
+	public ScrollValueBehaviour(ITextComponent label, SmartTileEntity te, ValueBoxTransform slot) {
 		super(te);
 		this.setLabel(label);
 		slotPositioning = slot;
@@ -166,7 +167,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		return slotPositioning.testHit(state, localHit);
 	}
 
-	public void setLabel(String label) {
+	public void setLabel(ITextComponent label) {
 		this.label = label;
 	}
 	

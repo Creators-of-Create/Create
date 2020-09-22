@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.worldgen;
 
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
-import com.simibubi.create.content.palettes.MetalBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

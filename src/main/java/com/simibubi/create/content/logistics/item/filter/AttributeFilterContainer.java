@@ -51,7 +51,7 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 		super.init();
 		ItemStack stack = new ItemStack(Items.NAME_TAG);
 		stack.setDisplayName(
-				new StringTextComponent("Selected Tags").applyTextStyles(TextFormatting.RESET, TextFormatting.BLUE));
+				new StringTextComponent("Selected Tags").formatted(TextFormatting.RESET, TextFormatting.BLUE));
 		filterInventory.setStackInSlot(1, stack);
 	}
 

@@ -111,7 +111,7 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity> {
 	@Override
 	public void onLanded(IBlockReader worldIn, Entity entityIn) {
 		super.onLanded(worldIn, entityIn);
-		if (!AllBlocks.DEPOT.has(worldIn.getBlockState(entityIn.getPosition())))
+		if (!AllBlocks.DEPOT.has(worldIn.getBlockState(entityIn.getBlockPos())))
 			return;
 		if (!(entityIn instanceof ItemEntity))
 			return;
@@ -121,7 +121,7 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity> {
 			return;
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 		DirectBeltInputBehaviour inputBehaviour =
-			TileEntityBehaviour.get(worldIn, entityIn.getPosition(), DirectBeltInputBehaviour.TYPE);
+			TileEntityBehaviour.get(worldIn, entityIn.getBlockPos(), DirectBeltInputBehaviour.TYPE);
 		if (inputBehaviour == null)
 			return;
 		ItemStack remainder = inputBehaviour.handleInsertion(itemEntity.getItem(), Direction.DOWN, false);

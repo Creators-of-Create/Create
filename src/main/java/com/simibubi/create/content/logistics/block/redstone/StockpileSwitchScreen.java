@@ -4,6 +4,7 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.STOCKSWITCH;
 
 import java.util.Arrays;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
@@ -16,6 +17,8 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
 
 public class StockpileSwitchScreen extends AbstractSimiScreen {
 
@@ -24,13 +27,13 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 	private ScrollInput onAbove;
 	private Label onAboveLabel;
 
-	private final String title = Lang.translate("gui.stockpile_switch.title");
-	private final String startAbove = Lang.translate("gui.stockpile_switch.startAbove");
-	private final String startAt = Lang.translate("gui.stockpile_switch.startAt");
-	private final String stopBelow = Lang.translate("gui.stockpile_switch.stopBelow");
-	private final String stopAt = Lang.translate("gui.stockpile_switch.stopAt");
-	private final String lowerLimit = Lang.translate("gui.stockpile_switch.lowerLimit");
-	private final String upperLimit = Lang.translate("gui.stockpile_switch.upperLimit");
+	private final IFormattableTextComponent title = Lang.translate("gui.stockpile_switch.title");
+	private final IFormattableTextComponent startAbove = Lang.translate("gui.stockpile_switch.startAbove");
+	private final IFormattableTextComponent startAt = Lang.translate("gui.stockpile_switch.startAt");
+	private final IFormattableTextComponent stopBelow = Lang.translate("gui.stockpile_switch.stopBelow");
+	private final IFormattableTextComponent stopAt = Lang.translate("gui.stockpile_switch.stopAt");
+	private final IFormattableTextComponent lowerLimit = Lang.translate("gui.stockpile_switch.lowerLimit");
+	private final IFormattableTextComponent upperLimit = Lang.translate("gui.stockpile_switch.upperLimit");
 	private final ItemStack renderedItem = new ItemStack(AllBlocks.STOCKPILE_SWITCH.get());
 
 	private int lastModification;
@@ -83,26 +86,26 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		int hFontColor = 0xD3CBBE;
 		int fontColor = 0x4B3A22;
 		STOCKSWITCH.draw(this, guiLeft, guiTop);
-		textRenderer.drawWithShadow(title, guiLeft - 3 + (STOCKSWITCH.width - textRenderer.getStringWidth(title)) / 2,
+		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (STOCKSWITCH.width - textRenderer.getWidth(title)) / 2,
 				guiTop + 10, hFontColor);
-		textRenderer.draw(onAbove.getState() == 100 ? startAt : startAbove, guiLeft + 13, guiTop + 55, fontColor);
-		textRenderer.draw(offBelow.getState() == 0 ? stopAt : stopBelow, guiLeft + 13, guiTop + 72, fontColor);
+		textRenderer.draw(matrixStack, onAbove.getState() == 100 ? startAt : startAbove, guiLeft + 13, guiTop + 55, fontColor);
+		textRenderer.draw(matrixStack, offBelow.getState() == 0 ? stopAt : stopBelow, guiLeft + 13, guiTop + 72, fontColor);
 
 		AllGuiTextures sprite = AllGuiTextures.STOCKSWITCH_INTERVAL;
 		float lowerBound = offBelow.getState() / 100f * (sprite.width - 20) + 10;
 		float upperBound = onAbove.getState() / 100f * (sprite.width - 20) + 10;
 
 		sprite.bind();
-		drawTexture((int) (guiLeft + lowerBound), guiTop + 26, (int) (sprite.startX + lowerBound), sprite.startY,
+		drawTexture(matrixStack, (int) (guiLeft + lowerBound), guiTop + 26, (int) (sprite.startX + lowerBound), sprite.startY,
 				(int) (upperBound - lowerBound), sprite.height);
 
 		sprite = AllGuiTextures.STOCKSWITCH_INTERVAL_END;
 		sprite.bind();
-		drawTexture((int) (guiLeft + upperBound), guiTop + 26, (int) (sprite.startX + upperBound), sprite.startY,
+		drawTexture(matrixStack, (int) (guiLeft + upperBound), guiTop + 26, (int) (sprite.startX + upperBound), sprite.startY,
 				(int) (sprite.width - upperBound), sprite.height);
 
 		AllGuiTextures.STOCKSWITCH_BOUND_LEFT.draw(this, (int) (guiLeft + lowerBound) - 1, guiTop + 24);

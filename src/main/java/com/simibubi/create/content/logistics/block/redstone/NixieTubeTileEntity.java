@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 
@@ -32,10 +33,10 @@ public class NixieTubeTileEntity extends SyncedTileEntity {
 	}
 
 	@Override
-	public void read(CompoundNBT nbt) {
+	public void fromTag(BlockState state, CompoundNBT nbt) {
 		tube1 = (char) nbt.getInt("tube1");
 		tube2 = (char) nbt.getInt("tube2");
-		super.read(nbt);
+		super.fromTag(state, nbt);
 	}
 
 }

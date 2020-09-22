@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 
 public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
@@ -57,11 +58,6 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 	}
 
-	@Override
-	public boolean hasFastRenderer() {
-		return true;
-	}
-
 	public void changeState(boolean back) {
 		int prevState = state;
 		state += back ? -1 : 1;
@@ -72,8 +68,8 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(spacing + Lang.translate("tooltip.analogStrength", this.state));
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+		tooltip.add(ITextComponent.of(spacing).copy().append(Lang.translate("tooltip.analogStrength", this.state)));
 
 		return true;
 	}

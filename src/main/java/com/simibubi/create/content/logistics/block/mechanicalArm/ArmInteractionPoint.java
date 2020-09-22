@@ -338,7 +338,7 @@ public abstract class ArmInteractionPoint {
 			FilteringBehaviour filtering = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
 			InvManipulationBehaviour inserter = TileEntityBehaviour.get(world, pos, InvManipulationBehaviour.TYPE);
 			BlockState state = world.getBlockState(pos);
-			if (state.has(BlockStateProperties.POWERED) && state.get(BlockStateProperties.POWERED))
+			if (state.method_28500(BlockStateProperties.POWERED).orElse(false))
 				return stack;
 			if (inserter == null)
 				return stack;

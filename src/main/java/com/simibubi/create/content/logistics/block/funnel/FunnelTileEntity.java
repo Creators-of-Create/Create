@@ -51,7 +51,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 		BlockState state = getBlockState();
 		if (!FunnelBlock.isFunnel(state))
 			return Mode.INVALID;
-		if (state.has(BlockStateProperties.POWERED) && state.get(BlockStateProperties.POWERED))
+		if (state.method_28500(BlockStateProperties.POWERED).orElse(false))
 			return Mode.PAUSED;
 		if (FunnelBlock.getFunnelFacing(state) == Direction.UP && autoExtractor.hasInventory())
 			return Mode.HOPPER;

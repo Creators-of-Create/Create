@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 
 public class ScrollValueRenderer {
 
@@ -55,7 +56,7 @@ public class ScrollValueRenderer {
 		AxisAlignedBB bb = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).grow(.5f)
 			.contract(0, 0, -.5f)
 			.offset(0, 0, -.125f);
-		String label = behaviour.label;
+		ITextComponent label = behaviour.label;
 		ValueBox box;
 
 		if (behaviour instanceof ScrollOptionBehaviour) {

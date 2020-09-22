@@ -63,10 +63,9 @@ public class ArmInteractionPointHandler {
 		if (player != null) {
 			String key = selected.mode == Mode.DEPOSIT ? "mechanical_arm.deposit_to" : "mechanical_arm.extract_from";
 			TextFormatting colour = selected.mode == Mode.DEPOSIT ? TextFormatting.GOLD : TextFormatting.AQUA;
-			String translatedBlock = new TranslationTextComponent(selected.state.getBlock()
-				.getTranslationKey()).getFormattedText();
-			player.sendStatusMessage(
-				new StringTextComponent(colour + Lang.translate(key, TextFormatting.WHITE + translatedBlock + colour)),
+			TranslationTextComponent translatedBlock = new TranslationTextComponent(selected.state.getBlock()
+				.getTranslationKey());
+			player.sendStatusMessage((Lang.translate(key, translatedBlock.formatted(TextFormatting.WHITE, colour)).formatted(colour)),
 				true);
 		}
 
@@ -101,8 +100,7 @@ public class ArmInteractionPointHandler {
 		}
 
 		if (removed > 0) 
-			Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent(
-				TextFormatting.RED + Lang.translate("mechanical_arm.points_outside_range", removed)), true);
+			Minecraft.getInstance().player.sendStatusMessage(Lang.translate("mechanical_arm.points_outside_range", removed).formatted(TextFormatting.RED), true);
 
 		AllPackets.channel.sendToServer(new ArmPlacementPacket(currentSelection, pos));
 		currentSelection.clear();

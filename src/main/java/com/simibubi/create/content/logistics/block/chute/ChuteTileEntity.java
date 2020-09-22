@@ -44,6 +44,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -277,7 +278,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	private void spawnAirFlow(float verticalStart, float verticalEnd, float motion, float drag) {
 		AirParticleData airParticleData = new AirParticleData(drag, motion);
-		Vector3d origin = new Vector3d(pos);
+		Vector3d origin = Vector3d.of(pos);
 		float xOff = Create.random.nextFloat() * .5f + .25f;
 		float zOff = Create.random.nextFloat() * .5f + .25f;
 		Vector3d v = origin.add(xOff, verticalStart, zOff);
@@ -324,7 +325,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		BlockState stateBelow = world.getBlockState(pos.down());
 		if (stateBelow.getBlock() instanceof FunnelBlock) {
-			if (stateBelow.has(BrassFunnelBlock.POWERED) && stateBelow.get(BrassFunnelBlock.POWERED))
+			if (stateBelow.method_28500(BrassFunnelBlock.POWERED).orElse(false))
 				return false;
 			if (stateBelow.get(BrassFunnelBlock.FACING) != Direction.UP)
 				return false;
@@ -373,7 +374,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	private boolean handleUpwardOutput(boolean simulate) {
 		BlockState stateAbove = world.getBlockState(pos.up());
 		if (stateAbove.getBlock() instanceof FunnelBlock) {
-			boolean powered = stateAbove.has(BrassFunnelBlock.POWERED) && stateAbove.get(BrassFunnelBlock.POWERED);
+			boolean powered = stateAbove.method_28500(BrassFunnelBlock.POWERED).orElse(false);
 			if (!powered && stateAbove.get(BrassFunnelBlock.FACING) == Direction.DOWN) {
 				ItemStack remainder = FunnelBlock.tryInsert(world, pos.up(), item, simulate);
 				if (remainder.isEmpty()) {
@@ -414,7 +415,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return remainder.isEmpty();
 		}
 
-		if (Block.hasSolidSide(stateAbove, world, pos.up(), Direction.DOWN))
+		if (BlockHelper.hasBlockSolidSide(stateAbove, world, pos.up(), Direction.DOWN))
 			return false;
 		if (!inputChutes.isEmpty())
 			return false;
@@ -630,10 +631,10 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(spacing + TextFormatting.GOLD + "Pull: " + TextFormatting.WHITE + pull);
-		tooltip.add(spacing + TextFormatting.GOLD + "Push: " + TextFormatting.WHITE + push);
-		tooltip.add(TextFormatting.YELLOW + "-> Item Motion: " + TextFormatting.WHITE + getItemMotion());
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+		tooltip.add(ITextComponent.of(spacing + TextFormatting.GOLD + "Pull: " + TextFormatting.WHITE + pull));
+		tooltip.add(ITextComponent.of(spacing + TextFormatting.GOLD + "Push: " + TextFormatting.WHITE + push));
+		tooltip.add(ITextComponent.of(TextFormatting.YELLOW + "-> Item Motion: " + TextFormatting.WHITE + getItemMotion()));
 		return true;
 	}
 

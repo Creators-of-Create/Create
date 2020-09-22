@@ -9,6 +9,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Predicates;
@@ -95,7 +96,7 @@ public interface ItemAttribute {
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	default String format() {
+	default TranslationTextComponent format() {
 		return Lang.translate("item_attributes." + getTranslationKey(), getTranslationParameters());
 	}
 
@@ -250,8 +251,8 @@ public interface ItemAttribute {
 		}
 
 		@OnlyIn(value = Dist.CLIENT)
-		public String format() {
-			return Lang.translate("item_attributes." + getTranslationKey(), I18n.format(group.getTranslationKey()));
+		public TranslationTextComponent format() {
+			return Lang.translate("item_attributes." + getTranslationKey(), group.getTranslationKey());
 		}
 
 		@Override

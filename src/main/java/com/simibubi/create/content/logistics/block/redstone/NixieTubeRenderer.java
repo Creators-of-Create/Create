@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.util.text.Style;
 
 public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntity> {
 
@@ -53,7 +54,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 
 	private void drawTube(MatrixStack ms, IRenderTypeBuffer buffer, char c, float height) {
 		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
-		float charWidth = fontRenderer.getCharWidth(c);
+		float charWidth = getCharWidth(c, fontRenderer);
 		float shadowOffset = .5f;
 		float flicker = r.nextFloat();
 		int brightColor = 0xFF982B;
@@ -86,4 +87,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 			.getModel(), buffer, false, 0, 15728880);
 	}
 
+	private static float getCharWidth(char p_211125_1_, FontRenderer fontRenderer) {
+		return p_211125_1_ == 167 ? 0.0F : fontRenderer.getFontStorage(Style.DEFAULT_FONT_ID).getGlyph(p_211125_1_).getAdvance(false);
+	}
 }

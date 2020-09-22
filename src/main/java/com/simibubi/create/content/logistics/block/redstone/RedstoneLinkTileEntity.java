@@ -113,8 +113,8 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 		if (receivedSignalChanged) {
 			Direction attachedFace = blockState.get(RedstoneLinkBlock.FACING).getOpposite();
 			BlockPos attachedPos = pos.offset(attachedFace);
-			world.notifyNeighbors(pos, world.getBlockState(pos).getBlock());
-			world.notifyNeighbors(attachedPos, world.getBlockState(attachedPos).getBlock());
+			world.updateNeighbors(pos, world.getBlockState(pos).getBlock());
+			world.updateNeighbors(attachedPos, world.getBlockState(attachedPos).getBlock());
 		}
 	}
 

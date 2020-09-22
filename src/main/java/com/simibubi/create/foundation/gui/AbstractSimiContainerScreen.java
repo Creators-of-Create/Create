@@ -5,11 +5,13 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
@@ -26,6 +28,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public abstract class AbstractSimiContainerScreen<T extends Container> extends ContainerScreen<T> {
 
 	protected List<Widget> widgets;
@@ -41,14 +45,14 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		renderBackground();
-		renderWindow(mouseX, mouseY, partialTicks);
+	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		renderBackground(matrixStack);
+		renderWindow(matrixStack, mouseX, mouseY, partialTicks);
 		
 		for (Widget widget : widgets)
-			widget.render(mouseX, mouseY, partialTicks);
+			widget.render(matrixStack, mouseX, mouseY, partialTicks);
 		
-		super.render(mouseX, mouseY, partialTicks);
+		super.render(matrixStack, mouseX, mouseY, partialTicks);
 		
 		RenderSystem.enableAlphaTest();
 		RenderSystem.enableBlend();
@@ -56,9 +60,9 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		RenderHelper.disableStandardItemLighting();
 		RenderSystem.disableLighting();
 		RenderSystem.disableDepthTest();
-		renderWindowForeground(mouseX, mouseY, partialTicks);
+		renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
 		for (Widget widget : widgets)
-			widget.renderToolTip(mouseX, mouseY);
+			widget.renderToolTip(matrixStack, mouseX, mouseY);
 	}
 
 	@Override
@@ -123,7 +127,8 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	protected abstract void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks);
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+	protected void drawBackground(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+
 	}
 
 	protected void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -138,7 +143,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		}
 	}
 	
-	protected void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition,
+	protected void renderItemOverlayIntoGUI(MatrixStack matrixStack, FontRenderer fr, ItemStack stack, int xPosition, int yPosition,
 			@Nullable String text, int textColor) {
 		if (!stack.isEmpty()) {
 			if (stack.getItem().showDurabilityBar(stack)) {
@@ -169,14 +174,14 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 				RenderSystem.disableBlend();
 				RenderSystem.pushMatrix();
 
-				int guiScaleFactor = (int) minecraft.getWindow().getGuiScaleFactor();
+				int guiScaleFactor = (int) client.getWindow().getGuiScaleFactor();
 				RenderSystem.translated((float) (xPosition + 16.5f), (float) (yPosition + 16.5f), 0);
 				double scale = getItemCountTextScale();
 
 				RenderSystem.scaled(scale, scale, 0);
 				RenderSystem.translated(-fr.getStringWidth(s) - (guiScaleFactor > 1 ? 0 : -.5f),
-						-font.FONT_HEIGHT + (guiScaleFactor > 1 ? 1 : 1.75f), 0);
-				fr.drawStringWithShadow(s, 0, 0, textColor);
+						-textRenderer.FONT_HEIGHT + (guiScaleFactor > 1 ? 1 : 1.75f), 0);
+				fr.drawWithShadow(matrixStack, s, 0, 0, textColor);
 
 				RenderSystem.popMatrix();
 				RenderSystem.enableBlend();
@@ -188,7 +193,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	}
 
 	public double getItemCountTextScale() {
-		int guiScaleFactor = (int) minecraft.getWindow().getGuiScaleFactor();
+		int guiScaleFactor = (int) client.getWindow().getGuiScaleFactor();
 		double scale = 1;
 		switch (guiScaleFactor) {
 		case 1:

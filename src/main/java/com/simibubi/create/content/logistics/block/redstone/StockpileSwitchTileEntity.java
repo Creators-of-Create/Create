@@ -65,7 +65,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 				world.setBlockState(pos, getBlockState().with(StockpileSwitchBlock.INDICATOR, 0), 3);
 				currentLevel = -1;
 				powered = false;
-				world.notifyNeighbors(pos, getBlockState().getBlock());
+				world.updateNeighbors(pos, getBlockState().getBlock());
 			}
 			return;
 		}
@@ -101,7 +101,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 			displayLevel = (int) (currentLevel * 6);
 		world.setBlockState(pos, getBlockState().with(StockpileSwitchBlock.INDICATOR, displayLevel), update ? 3 : 2);
 		if (update)
-			world.notifyNeighbors(pos, getBlockState().getBlock());
+			world.updateNeighbors(pos, getBlockState().getBlock());
 	}
 
 	@Override

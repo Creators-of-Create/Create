@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;
@@ -177,9 +178,9 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 
 	@Nullable
 	public static Direction getFunnelFacing(BlockState state) {
-		if (state.has(FACING))
+		if (BlockHelper.hasBlockStateProperty(state, FACING))
 			return state.get(FACING);
-		if (state.has(BlockStateProperties.HORIZONTAL_FACING))
+		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.HORIZONTAL_FACING))
 			return state.get(BlockStateProperties.HORIZONTAL_FACING);
 		return null;
 	}

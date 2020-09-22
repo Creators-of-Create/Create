@@ -11,21 +11,22 @@ import com.simibubi.create.foundation.gui.widgets.Indicator;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 
 public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	private static final String PREFIX = "gui.filter.";
 
-	private String whitelistN = Lang.translate(PREFIX + "whitelist");
-	private String whitelistDESC = Lang.translate(PREFIX + "whitelist.description");
-	private String blacklistN = Lang.translate(PREFIX + "blacklist");
-	private String blacklistDESC = Lang.translate(PREFIX + "blacklist.description");
+	private ITextComponent whitelistN = Lang.translate(PREFIX + "whitelist");
+	private ITextComponent whitelistDESC = Lang.translate(PREFIX + "whitelist.description");
+	private ITextComponent blacklistN = Lang.translate(PREFIX + "blacklist");
+	private ITextComponent blacklistDESC = Lang.translate(PREFIX + "blacklist.description");
 
-	private String respectDataN = Lang.translate(PREFIX + "respect_data");
-	private String respectDataDESC = Lang.translate(PREFIX + "respect_data.description");
-	private String ignoreDataN = Lang.translate(PREFIX + "ignore_data");
-	private String ignoreDataDESC = Lang.translate(PREFIX + "ignore_data.description");
+	private ITextComponent respectDataN = Lang.translate(PREFIX + "respect_data");
+	private ITextComponent respectDataDESC = Lang.translate(PREFIX + "respect_data.description");
+	private ITextComponent ignoreDataN = Lang.translate(PREFIX + "ignore_data");
+	private ITextComponent ignoreDataDESC = Lang.translate(PREFIX + "ignore_data.description");
 
 	private IconButton whitelist, blacklist;
 	private IconButton respectNBT, ignoreNBT;
@@ -100,8 +101,8 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 	}
 
 	@Override
-	protected List<String> getTooltipDescriptions() {
-		return Arrays.asList(blacklistDESC, whitelistDESC, respectDataDESC, ignoreDataDESC);
+	protected List<IFormattableTextComponent> getTooltipDescriptions() {
+		return Arrays.asList(blacklistDESC.copy(), whitelistDESC.copy(), respectDataDESC.copy(), ignoreDataDESC.copy());
 	}
 
 	@Override

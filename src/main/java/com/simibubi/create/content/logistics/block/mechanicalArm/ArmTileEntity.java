@@ -85,7 +85,7 @@ public class ArmTileEntity extends KineticTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 
-		selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class,
+		selectionMode = new ScrollOptionBehaviour<SelectionMode>(SelectionMode.class,
 			Lang.translate("logistics.when_multiple_outputs_available"), this, new SelectionModeValueBox());
 		selectionMode.requiresWrench();
 		behaviours.add(selectionMode);
@@ -137,7 +137,7 @@ public class ArmTileEntity extends KineticTileEntity {
 			if (!(armInteractionPoint instanceof Jukebox))
 				continue;
 			BlockState state = world.getBlockState(armInteractionPoint.pos);
-			if (state.has(JukeboxBlock.HAS_RECORD) && state.get(JukeboxBlock.HAS_RECORD))
+			if (state.method_28500(JukeboxBlock.HAS_RECORD).orElse(false))
 				return true;
 		}
 		return false;
@@ -173,7 +173,7 @@ public class ArmTileEntity extends KineticTileEntity {
 
 	protected boolean isOnCeiling() {
 		BlockState state = getBlockState();
-		return hasWorld() && state != null && state.has(ArmBlock.CEILING) && state.get(ArmBlock.CEILING);
+		return hasWorld() && state.method_28500(ArmBlock.CEILING).orElse(false);
 	}
 
 	@Nullable

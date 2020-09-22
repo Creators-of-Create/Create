@@ -539,7 +539,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		schematicAnchor = anchor;
 		blockReader = new SchematicWorld(schematicAnchor, world);
 		PlacementSettings settings = SchematicItem.getSettings(blueprint);
-		activeTemplate.addBlocksToWorld(blockReader, schematicAnchor, settings);
+		activeTemplate.place(blockReader, schematicAnchor, settings);
 		schematicLoaded = true;
 		state = State.PAUSED;
 		statusMsg = "ready";

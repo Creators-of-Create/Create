@@ -34,9 +34,9 @@ public class BeltFunnelGenerator extends SpecialBlockStateGen {
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
 		boolean pushing = state.get(BeltFunnelBlock.PUSHING);
-		boolean powered = state.has(BlockStateProperties.POWERED) && state.get(BeltFunnelBlock.POWERED);
+		boolean powered = state.method_28500(BlockStateProperties.POWERED).orElse(false);
 		String shapeName = state.get(BeltFunnelBlock.SHAPE)
-			.getName();
+			.getString();
 		
 		String pushingSuffix = (pushing ? "push" : "pull") ;
 		String poweredSuffix = powered ? "_powered" : "";

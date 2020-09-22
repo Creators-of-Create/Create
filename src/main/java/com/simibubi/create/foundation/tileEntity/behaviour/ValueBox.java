@@ -18,11 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 
 public class ValueBox extends ChasingAABBOutline {
 
-	protected String label = "Value Box";
-	protected String sublabel = "";
+	protected ITextComponent label = ITextComponent.of("Value Box");
+	protected ITextComponent sublabel = ITextComponent.of("");
 	protected String scrollTooltip = "";
 	protected Vector3d labelOffset = Vector3d.ZERO;
 
@@ -34,7 +35,7 @@ public class ValueBox extends ChasingAABBOutline {
 	protected ValueBoxTransform transform;
 	protected BlockState blockState;
 
-	public ValueBox(String label, AxisAlignedBB bb, BlockPos pos) {
+	public ValueBox(ITextComponent label, AxisAlignedBB bb, BlockPos pos) {
 		super(bb);
 		this.label = label;
 		this.pos = pos;
@@ -51,7 +52,7 @@ public class ValueBox extends ChasingAABBOutline {
 		return this;
 	}
 
-	public ValueBox subLabel(String sublabel) {
+	public ValueBox subLabel(ITextComponent sublabel) {
 		this.sublabel = sublabel;
 		return this;
 	}
@@ -103,7 +104,7 @@ public class ValueBox extends ChasingAABBOutline {
 			ms.translate(labelOffset.x, labelOffset.y, labelOffset.z);
 
 			renderHoveringText(ms, buffer, label);
-			if (!sublabel.isEmpty()) {
+			if (!sublabel.toString().isEmpty()) {
 				ms.translate(0, 10, 0);
 				renderHoveringText(ms, buffer, sublabel);
 			}
@@ -162,7 +163,7 @@ public class ValueBox extends ChasingAABBOutline {
 	public static class TextValueBox extends ValueBox {
 		String text;
 
-		public TextValueBox(String label, AxisAlignedBB bb, BlockPos pos, String text) {
+		public TextValueBox(ITextComponent label, AxisAlignedBB bb, BlockPos pos, String text) {
 			super(label, bb, pos);
 			this.text = text;
 		}
@@ -185,7 +186,7 @@ public class ValueBox extends ChasingAABBOutline {
 			ms.scale(numberScale, numberScale, numberScale);
 			ms.translate(singleDigit ? stringWidth / 2 : 0, singleDigit ? -verticalMargin : verticalMargin, 0);
 
-			renderHoveringText(ms, buffer, text, 0xEDEDED, 0x4f4f4f);
+			renderHoveringText(ms, buffer, ITextComponent.of(text), 0xEDEDED, 0x4f4f4f);
 		}
 
 	}
@@ -212,11 +213,11 @@ public class ValueBox extends ChasingAABBOutline {
 
 	// util
 
-	protected void renderHoveringText(MatrixStack ms, IRenderTypeBuffer buffer, String text) {
+	protected void renderHoveringText(MatrixStack ms, IRenderTypeBuffer buffer, ITextComponent text) {
 		renderHoveringText(ms, buffer, text, highlightColor, ColorHelper.mixColors(passiveColor, 0, 0.75f));
 	}
 
-	protected void renderHoveringText(MatrixStack ms, IRenderTypeBuffer buffer, String text, int color,
+	protected void renderHoveringText(MatrixStack ms, IRenderTypeBuffer buffer, ITextComponent text, int color,
 		int shadowColor) {
 		ms.push();
 		drawString(ms, buffer, text, 0, 0, color);
@@ -225,7 +226,7 @@ public class ValueBox extends ChasingAABBOutline {
 		ms.pop();
 	}
 
-	private static void drawString(MatrixStack ms, IRenderTypeBuffer buffer, String text, float x, float y, int color) {
+	private static void drawString(MatrixStack ms, IRenderTypeBuffer buffer, ITextComponent text, float x, float y, int color) {
 		Minecraft.getInstance().fontRenderer.draw(text, x, y, color, false, ms.peek()
 			.getModel(), buffer, false, 0, 15728880);
 	}

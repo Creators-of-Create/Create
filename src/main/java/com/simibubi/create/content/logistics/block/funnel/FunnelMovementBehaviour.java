@@ -10,7 +10,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -31,8 +31,8 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(FunnelBlock.getFunnelFacing(context.state)
+	public Vector3d getActiveAreaOffset(MovementContext context) {
+		return Vector3d.of(FunnelBlock.getFunnelFacing(context.state)
 			.getDirectionVec()).scale(.65);
 	}
 

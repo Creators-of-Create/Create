@@ -11,8 +11,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class Lang {
 
-	public static String translate(String key, Object... args) {
-		return createTranslationTextComponent(key, args).getFormattedText();
+	public static TranslationTextComponent translate(String key, Object... args) {
+		return createTranslationTextComponent(key, args);
 	}
 
 	public static TranslationTextComponent createTranslationTextComponent(String key, Object... args) {
@@ -23,8 +23,8 @@ public class Lang {
 		player.sendStatusMessage(createTranslationTextComponent(key, args), true);
 	}
 
-	public static List<String> translatedOptions(String prefix, String... keys) {
-		List<String> result = new ArrayList<>(keys.length);
+	public static List<TranslationTextComponent> translatedOptions(String prefix, String... keys) {
+		List<TranslationTextComponent> result = new ArrayList<>(keys.length);
 		for (String key : keys) {
 			result.add(translate(prefix + "." + key));
 		}

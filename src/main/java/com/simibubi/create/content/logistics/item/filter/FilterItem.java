@@ -71,7 +71,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		if (!AllKeys.shiftDown()) {
-			List<String> makeSummary = makeSummary(stack);
+			List<ITextComponent> makeSummary = makeSummary(stack);
 			if (makeSummary.isEmpty())
 				return;
 			ItemDescription.add(tooltip, " ");
@@ -79,28 +79,26 @@ public class FilterItem extends Item implements INamedContainerProvider {
 		}
 	}
 
-	private List<String> makeSummary(ItemStack filter) {
-		List<String> list = new ArrayList<>();
+	private List<ITextComponent> makeSummary(ItemStack filter) {
+		List<ITextComponent> list = new ArrayList<>();
 
 		if (type == FilterType.REGULAR) {
 			ItemStackHandler filterItems = getFilterItems(filter);
 			boolean blacklist = filter.getOrCreateTag()
 				.getBoolean("Blacklist");
 
-			list.add(TextFormatting.GOLD
-				+ (blacklist ? Lang.translate("gui.filter.blacklist") : Lang.translate("gui.filter.whitelist")));
+			list.add((blacklist ? Lang.translate("gui.filter.blacklist") : Lang.translate("gui.filter.whitelist")).formatted(TextFormatting.GOLD));
 			int count = 0;
 			for (int i = 0; i < filterItems.getSlots(); i++) {
 				if (count > 3) {
-					list.add(TextFormatting.DARK_GRAY + "- ...");
+					list.add(new StringTextComponent("- ...").formatted(TextFormatting.DARK_GRAY));
 					break;
 				}
 
 				ItemStack filterStack = filterItems.getStackInSlot(i);
 				if (filterStack.isEmpty())
 					continue;
-				list.add(TextFormatting.GRAY + "- " + filterStack.getDisplayName()
-					.getFormattedText());
+				list.add(new StringTextComponent("- ").append(filterStack.getDisplayName()).formatted(TextFormatting.GRAY));
 				count++;
 			}
 
@@ -111,11 +109,11 @@ public class FilterItem extends Item implements INamedContainerProvider {
 		if (type == FilterType.ATTRIBUTE) {
 			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag()
 				.getInt("WhitelistMode")];
-			list.add(TextFormatting.GOLD + (whitelistMode == WhitelistMode.WHITELIST_CONJ
+			list.add((whitelistMode == WhitelistMode.WHITELIST_CONJ
 				? Lang.translate("gui.attribute_filter.whitelist_conjunctive")
 				: whitelistMode == WhitelistMode.WHITELIST_DISJ
 					? Lang.translate("gui.attribute_filter.whitelist_disjunctive")
-					: Lang.translate("gui.attribute_filter.blacklist")));
+					: Lang.translate("gui.attribute_filter.blacklist")).formatted(TextFormatting.GOLD));
 
 			int count = 0;
 			ListNBT attributes = filter.getOrCreateTag()
@@ -123,10 +121,10 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			for (INBT inbt : attributes) {
 				ItemAttribute attribute = ItemAttribute.fromNBT((CompoundNBT) inbt);
 				if (count > 3) {
-					list.add(TextFormatting.DARK_GRAY + "- ...");
+					list.add(new StringTextComponent("- ...").formatted(TextFormatting.DARK_GRAY));
 					break;
 				}
-				list.add(TextFormatting.GRAY + "- " + attribute.format());
+				list.add(new StringTextComponent("- ").append(attribute.format()));
 				count++;
 			}
 

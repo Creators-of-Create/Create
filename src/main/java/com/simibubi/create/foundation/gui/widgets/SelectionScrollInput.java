@@ -5,19 +5,22 @@ import java.util.List;
 
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class SelectionScrollInput extends ScrollInput {
 
-	private final String scrollToSelect = Lang.translate("gui.scrollInput.scrollToSelect");
-	protected List<String> options;
+	private final IFormattableTextComponent scrollToSelect = Lang.translate("gui.scrollInput.scrollToSelect");
+	protected List<ITextComponent> options;
 
 	public SelectionScrollInput(int xIn, int yIn, int widthIn, int heightIn) {
 		super(xIn, yIn, widthIn, heightIn);
 		options = new ArrayList<>();
 	}
 
-	public ScrollInput forOptions(List<String> options) {
+	public ScrollInput forOptions(List<ITextComponent> options) {
 		this.options = options;
 		this.max = options.size();
 		updateTooltip();
@@ -37,16 +40,14 @@ public class SelectionScrollInput extends ScrollInput {
 	@Override
 	protected void updateTooltip() {
 		toolTip.clear();
-		toolTip.add(TextFormatting.BLUE + title);
+		toolTip.add(title.formatted(TextFormatting.BLUE));
 		for (int i = min; i < max; i++) {
-			StringBuilder result = new StringBuilder();
 			if (i == state)
-				result.append(TextFormatting.WHITE).append("-> ").append(options.get(i));
+				toolTip.add(StringTextComponent.EMPTY.copy().append("-> ").append(options.get(i)).formatted(TextFormatting.WHITE));
 			else
-				result.append(TextFormatting.GRAY).append("> ").append(options.get(i));
-			toolTip.add(result.toString());
+				toolTip.add(StringTextComponent.EMPTY.copy().append("> ").append(options.get(i)).formatted(TextFormatting.GRAY));
 		}
-		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + scrollToSelect);
+		toolTip.add( StringTextComponent.EMPTY.copy().append(scrollToSelect).formatted(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
 	}
 
 }

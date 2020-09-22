@@ -38,6 +38,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -155,8 +156,8 @@ public class ItemDescription {
 			add(linesOnShift, GRAY + Lang.translate("tooltip.capacityProvided"));
 			add(linesOnShift, level);
 
-			String genSpeed = generatorSpeed(block, rpmUnit);
-			if (!genSpeed.equals("")) {
+			IFormattableTextComponent genSpeed = generatorSpeed(block, rpmUnit);
+			if (!genSpeed.getUnformattedComponentText().equals("")) {
 				add(linesOnShift, GREEN + " " + genSpeed);
 			}
 		}
@@ -251,8 +252,16 @@ public class ItemDescription {
 		textLines.forEach(s -> add(infoList, s));
 	}
 
+	public static void add(List<ITextComponent> infoList, List<ITextComponent> textLines) {
+		infoList.addAll(textLines);
+	}
+
 	public static void add(List<ITextComponent> infoList, String line) {
 		infoList.add(new StringTextComponent(line));
+	}
+
+	public static void add(List<ITextComponent> infoList, ITextComponent line) {
+		infoList.add(line);
 	}
 
 	public Palette getPalette() {
@@ -286,7 +295,7 @@ public class ItemDescription {
 		return linesOnShift;
 	}
 
-	private String generatorSpeed(Block block, String unitRPM) {
+	private IFormattableTextComponent generatorSpeed(Block block, String unitRPM) {
 		String value = "";
 
 		if (block instanceof WaterWheelBlock) {
@@ -303,7 +312,7 @@ public class ItemDescription {
 			value = baseSpeed + "-" + (baseSpeed * 2);
 		}
 
-		return !value.equals("") ? Lang.translate("tooltip.generationSpeed", value, unitRPM) : "";
+		return !value.equals("") ? Lang.translate("tooltip.generationSpeed", value, unitRPM) : StringTextComponent.EMPTY.copy();
 	}
 
 }

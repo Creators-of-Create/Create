@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -114,9 +115,9 @@ public abstract class LaunchedItem {
 		@Override
 		void place(World world) {
 			// Piston
-			if (state.has(BlockStateProperties.EXTENDED))
+			if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.EXTENDED))
 				state = state.with(BlockStateProperties.EXTENDED, Boolean.FALSE);
-			if (state.has(BlockStateProperties.WATERLOGGED))
+			if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.WATERLOGGED))
 				state = state.with(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
 
 			if (AllBlocks.BELT.has(state)) {

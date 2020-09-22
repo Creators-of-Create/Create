@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Indicator;
 import com.simibubi.create.foundation.gui.widgets.Indicator.State;
-import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -23,6 +22,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 
 public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> extends AbstractSimiContainerScreen<F> {
@@ -106,12 +106,12 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		for (IconButton button : tooltipButtons) {
 			if (!button.getToolTip().isEmpty()) {
 				button.setToolTip(button.getToolTip().get(0));
-				button.getToolTip().add(ITextComponent.of(TooltipHelper.holdShift(Palette.Yellow, hasShiftDown())));
+				button.getToolTip().add(TooltipHelper.holdShift(Palette.Yellow, hasShiftDown()));
 			}
 		}
 
 		if (hasShiftDown()) {
-			List<String> tooltipDescriptions = getTooltipDescriptions();
+			List<IFormattableTextComponent> tooltipDescriptions = getTooltipDescriptions();
 			for (int i = 0; i < tooltipButtons.size(); i++)
 				fillToolTip(tooltipButtons.get(i), tooltipDescriptions.get(i));
 		}
@@ -121,11 +121,11 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		return Collections.emptyList();
 	}
 
-	protected List<String> getTooltipDescriptions() {
+	protected List<IFormattableTextComponent> getTooltipDescriptions() {
 		return Collections.emptyList();
 	}
 
-	private void fillToolTip(IconButton button, String tooltip) {
+	private void fillToolTip(IconButton button, ITextComponent tooltip) {
 		if (!button.isHovered())
 			return;
 		List<ITextComponent> tip = button.getToolTip();

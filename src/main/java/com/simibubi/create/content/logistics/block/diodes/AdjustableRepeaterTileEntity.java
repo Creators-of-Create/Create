@@ -94,11 +94,6 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity {
 		updateState(powered, powering, atMax, atMin);
 	}
 
-	@Override
-	public boolean hasFastRenderer() {
-		return true;
-	}
-
 	protected void updateState(boolean powered, boolean powering, boolean atMax, boolean atMin) {
 		if (!charging && powered)
 			charging = true;

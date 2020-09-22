@@ -7,6 +7,7 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
@@ -64,7 +65,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 	}
 
 	@Override
-	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		int crateLeft = guiLeft + 100;
 		int crateTop = guiTop;
 		int invLeft = guiLeft + 50;
@@ -78,14 +79,13 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		} else
 			FLEXCRATE.draw(this, crateLeft, crateTop);
 
-		font.drawStringWithShadow(title, crateLeft - 3 + (FLEXCRATE.width - font.getStringWidth(title)) / 2,
+		textRenderer.drawWithShadow(matrixStack, title, crateLeft - 3 + (FLEXCRATE.width - textRenderer.getStringWidth(title)) / 2,
 			crateTop + 10, hFontColor);
 		String itemCount = "" + te.itemCount;
-		font.drawString(itemCount, guiLeft + 100 + 53 - font.getStringWidth(itemCount), crateTop + 107, fontColor);
+		textRenderer.draw(matrixStack, itemCount, guiLeft + 100 + 53 - textRenderer.getStringWidth(itemCount), crateTop + 107, fontColor);
 
 		PLAYER_INVENTORY.draw(this, invLeft, invTop);
-		font.drawString(playerInventory.getDisplayName()
-			.getFormattedText(), invLeft + 7, invTop + 6, 0x666666);
+		textRenderer.draw(matrixStack, playerInventory.getDisplayName(), invLeft + 7, invTop + 6, 0x666666);
 
 		for (int slot = 0; slot < (container.doubleCrate ? 32 : 16); slot++) {
 			if (allowedItems.getState() > slot * 64)
@@ -111,8 +111,8 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 	public void tick() {
 		super.tick();
 
-		if (!AllBlocks.ADJUSTABLE_CRATE.has(minecraft.world.getBlockState(te.getPos())))
-			minecraft.displayGuiScreen(null);
+		if (!AllBlocks.ADJUSTABLE_CRATE.has(client.world.getBlockState(te.getPos())))
+			client.displayGuiScreen(null);
 
 		if (lastModification >= 0)
 			lastModification++;

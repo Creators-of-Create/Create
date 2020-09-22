@@ -21,6 +21,7 @@ import net.minecraft.block.WallBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
@@ -73,9 +74,9 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		return builder;
 	}
 
-	protected abstract Iterable<Tag<Block>> getBlockTags();
+	protected abstract Iterable<ITag.INamedTag<Block>> getBlockTags();
 
-	protected abstract Iterable<Tag<Item>> getItemTags();
+	protected abstract Iterable<ITag.INamedTag<Item>> getItemTags();
 
 	protected abstract B createBlock(Supplier<? extends Block> block);
 
@@ -104,12 +105,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		}
 
 		@Override
-		protected Iterable<Tag<Block>> getBlockTags() {
+		protected Iterable<ITag.INamedTag<Block>> getBlockTags() {
 			return Arrays.asList(BlockTags.STAIRS);
 		}
 
 		@Override
-		protected Iterable<Tag<Item>> getItemTags() {
+		protected Iterable<ITag.INamedTag<Item>> getItemTags() {
 			return Arrays.asList(ItemTags.STAIRS);
 		}
 
@@ -164,12 +165,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		}
 
 		@Override
-		protected Iterable<Tag<Block>> getBlockTags() {
+		protected Iterable<ITag.INamedTag<Block>> getBlockTags() {
 			return Arrays.asList(BlockTags.SLABS);
 		}
 
 		@Override
-		protected Iterable<Tag<Item>> getItemTags() {
+		protected Iterable<ITag.INamedTag<Item>> getItemTags() {
 			return Arrays.asList(ItemTags.SLABS);
 		}
 
@@ -209,12 +210,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		}
 
 		@Override
-		protected Iterable<Tag<Block>> getBlockTags() {
+		protected Iterable<ITag.INamedTag<Block>> getBlockTags() {
 			return Arrays.asList(BlockTags.WALLS);
 		}
 
 		@Override
-		protected Iterable<Tag<Item>> getItemTags() {
+		protected Iterable<ITag.INamedTag<Item>> getItemTags() {
 			return Arrays.asList(ItemTags.WALLS);
 		}
 

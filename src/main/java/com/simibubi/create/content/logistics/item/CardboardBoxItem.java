@@ -101,7 +101,7 @@ public class CardboardBoxItem extends Item {
 
 		if (compoundnbt.contains("Address", Constants.NBT.TAG_STRING)) {
 			tooltip.add(new StringTextComponent("-> " + compoundnbt.getString("Address"))
-					.applyTextStyle(TextFormatting.GOLD));
+					.formatted(TextFormatting.GOLD));
 		}
 
 		if (!compoundnbt.contains("Items", Constants.NBT.TAG_LIST))
@@ -117,16 +117,15 @@ public class CardboardBoxItem extends Item {
 			++j;
 			if (i <= 4) {
 				++i;
-				ITextComponent itextcomponent = itemstack.getDisplayName().deepCopy();
-				itextcomponent.appendText(" x").appendText(String.valueOf(itemstack.getCount()))
-						.applyTextStyle(TextFormatting.GRAY);
-				tooltip.add(itextcomponent);
+				ITextComponent itextcomponent = itemstack.getDisplayName();
+				tooltip.add(itextcomponent.copy().append(" x").append(String.valueOf(itemstack.getCount()))
+					.formatted(TextFormatting.GRAY));
 			}
 		}
 
 		if (j - i > 0) {
 			tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i))
-					.applyTextStyle(TextFormatting.ITALIC));
+					.formatted(TextFormatting.ITALIC));
 		}
 	}
 

@@ -25,6 +25,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.TieredItem;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class TooltipHelper {
@@ -34,14 +36,13 @@ public class TooltipHelper {
 	public static Language cachedLanguage;
 	private static boolean gogglesMode;
 
-	public static String holdShift(Palette color, boolean highlighted) {
+	public static IFormattableTextComponent holdShift(Palette color, boolean highlighted) {
 		TextFormatting colorFormat = highlighted ? color.hColor : color.color;
-		return DARK_GRAY
-			+ Lang.translate("tooltip.holdKey", colorFormat + Lang.translate("tooltip.keyShift") + DARK_GRAY);
+		return Lang.translate("tooltip.holdKey", DARK_GRAY).append(Lang.translate("tooltip.keyShift").formatted(colorFormat));
 	}
 
-	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor) {
-		return cutString(s, defaultColor, highlightColor, 0);
+	public static List<String> cutString(ITextComponent s, TextFormatting defaultColor, TextFormatting highlightColor) {
+		return cutString(s.getUnformattedComponentText(), defaultColor, highlightColor, 0);
 	}
 
 	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor,

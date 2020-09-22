@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
@@ -167,7 +168,7 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
 		if (FunnelBlock.isFunnel(neighbour))
 			return true;
-		return Block.hasSolidSide(neighbour, worldIn, neighbourPos, state.get(FACING));
+		return BlockHelper.hasBlockSolidSide(neighbour, worldIn, neighbourPos, state.get(FACING));
 	}
 
 	@Override

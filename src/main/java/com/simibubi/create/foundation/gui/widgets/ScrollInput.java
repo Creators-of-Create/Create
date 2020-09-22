@@ -7,15 +7,17 @@ import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class ScrollInput extends AbstractSimiWidget {
 
 	protected Consumer<Integer> onScroll;
 	protected int state;
-	protected String title = Lang.translate("gui.scrollInput.defaultTitle");
-	protected final String scrollToModify = Lang.translate("gui.scrollInput.scrollToModify");
-	protected final String shiftScrollsFaster = Lang.translate("gui.scrollInput.shiftScrollsFaster");
+	protected IFormattableTextComponent title = Lang.translate("gui.scrollInput.defaultTitle");
+	protected final IFormattableTextComponent scrollToModify = Lang.translate("gui.scrollInput.scrollToModify");
+	protected final IFormattableTextComponent shiftScrollsFaster = Lang.translate("gui.scrollInput.shiftScrollsFaster");
 	protected Label displayLabel;
 
 	protected int min, max;
@@ -46,7 +48,7 @@ public class ScrollInput extends AbstractSimiWidget {
 		return this;
 	}
 
-	public ScrollInput titled(String title) {
+	public ScrollInput titled(IFormattableTextComponent title) {
 		this.title = title;
 		updateTooltip();
 		return this;
@@ -83,7 +85,7 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		if (!isHovered)
+		if (!hovered)
 			return false;
 
 		StepContext context = new StepContext();
@@ -124,14 +126,14 @@ public class ScrollInput extends AbstractSimiWidget {
 	}
 
 	protected void writeToLabel() {
-		displayLabel.text = "" + state;
+		displayLabel.text = ITextComponent.of(String.valueOf(state));
 	}
 
 	protected void updateTooltip() {
 		toolTip.clear();
-		toolTip.add(TextFormatting.BLUE + title);
-		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + scrollToModify);
-		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + shiftScrollsFaster);
+		toolTip.add(title.formatted(TextFormatting.BLUE));
+		toolTip.add(scrollToModify.formatted(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
+		toolTip.add(shiftScrollsFaster.formatted(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
 	}
 
 }

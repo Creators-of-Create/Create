@@ -2,10 +2,11 @@ package com.simibubi.create.content.logistics.item.filter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -20,7 +21,9 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterContainer> {
@@ -31,20 +34,20 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	private Indicator whitelistDisIndicator, whitelistConIndicator, blacklistIndicator;
 	private IconButton add;
 
-	private String whitelistDisN = Lang.translate(PREFIX + "whitelist_disjunctive");
-	private String whitelistDisDESC = Lang.translate(PREFIX + "whitelist_disjunctive.description");
-	private String whitelistConN = Lang.translate(PREFIX + "whitelist_conjunctive");
-	private String whitelistConDESC = Lang.translate(PREFIX + "whitelist_conjunctive.description");
-	private String blacklistN = Lang.translate(PREFIX + "blacklist");
-	private String blacklistDESC = Lang.translate(PREFIX + "blacklist.description");
+	private ITextComponent whitelistDisN = Lang.translate(PREFIX + "whitelist_disjunctive");
+	private ITextComponent whitelistDisDESC = Lang.translate(PREFIX + "whitelist_disjunctive.description");
+	private ITextComponent whitelistConN = Lang.translate(PREFIX + "whitelist_conjunctive");
+	private ITextComponent whitelistConDESC = Lang.translate(PREFIX + "whitelist_conjunctive.description");
+	private ITextComponent blacklistN = Lang.translate(PREFIX + "blacklist");
+	private ITextComponent blacklistDESC = Lang.translate(PREFIX + "blacklist.description");
 
-	private String referenceH = Lang.translate(PREFIX + "add_reference_item");
-	private String noSelectedT = Lang.translate(PREFIX + "no_selected_attributes");
-	private String selectedT = Lang.translate(PREFIX + "selected_attributes");
+	private ITextComponent referenceH = Lang.translate(PREFIX + "add_reference_item");
+	private ITextComponent noSelectedT = Lang.translate(PREFIX + "no_selected_attributes");
+	private ITextComponent selectedT = Lang.translate(PREFIX + "selected_attributes");
 
 	private ItemStack lastItemScanned = ItemStack.EMPTY;
 	private List<ItemAttribute> attributesOfItem = new ArrayList<>();
-	private List<String> selectedAttributes = new ArrayList<>();
+	private List<ITextComponent> selectedAttributes = new ArrayList<>();
 	private SelectionScrollInput attributeSelector;
 	private Label attributeSelectorLabel;
 
@@ -78,7 +81,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 		attributeSelectorLabel = new Label(x + 40, y + 27, "").colored(0xF3EBDE).withShadow();
 		attributeSelector = new SelectionScrollInput(x + 37, y + 24, 118, 14);
-		attributeSelector.forOptions(Arrays.asList(""));
+		attributeSelector.forOptions(Collections.singletonList(StringTextComponent.EMPTY));
 		attributeSelector.calling(s -> {
 		});
 		referenceItemChanged(container.filterInventory.getStackInSlot(0));
@@ -88,8 +91,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 		selectedAttributes.clear();
 		selectedAttributes
-				.add(TextFormatting.YELLOW + (container.selectedAttributes.isEmpty() ? noSelectedT : selectedT));
-		container.selectedAttributes.forEach(at -> selectedAttributes.add(TextFormatting.GRAY + "- " + at.format()));
+				.add((container.selectedAttributes.isEmpty() ? noSelectedT : selectedT).copy().formatted(TextFormatting.YELLOW));
+		container.selectedAttributes.forEach(at -> selectedAttributes.add(new StringTextComponent("- ").append(at.format()).formatted(TextFormatting.GRAY)));
 
 	}
 
@@ -99,7 +102,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		if (stack.isEmpty()) {
 			attributeSelector.active = false;
 			attributeSelector.visible = false;
-			attributeSelectorLabel.text = TextFormatting.ITALIC + referenceH;
+			attributeSelectorLabel.text = referenceH.copy().formatted(TextFormatting.ITALIC);
 			add.active = false;
 			attributeSelector.calling(s -> {
 			});
@@ -107,11 +110,11 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		}
 
 		add.active = true;
-		attributeSelector.titled(stack.getDisplayName().getFormattedText() + "...");
+		attributeSelector.titled(stack.getDisplayName().copy().append("..."));
 		attributesOfItem.clear();
 		for (ItemAttribute itemAttribute : ItemAttribute.types)
-			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack, this.minecraft.world));
-		List<String> options = attributesOfItem.stream().map(ItemAttribute::format).collect(Collectors.toList());
+			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack, this.client.world));
+		List<ITextComponent> options = attributesOfItem.stream().map(ItemAttribute::format).collect(Collectors.toList());
 		attributeSelector.forOptions(options);
 		attributeSelector.active = true;
 		attributeSelector.visible = true;
@@ -135,19 +138,19 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	}
 
 	@Override
-	public void renderWindowForeground(int mouseX, int mouseY, float partialTicks) {
+	public void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		ItemStack stack = container.filterInventory.getStackInSlot(1);
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(0.0F, 0.0F, 32.0F);
-		this.setBlitOffset(200);
+		matrixStack.push();
+		matrixStack.translate(0.0F, 0.0F, 32.0F);
+		this.setZOffset(200);
 		this.itemRenderer.zLevel = 200.0F;
-		this.itemRenderer.renderItemOverlayIntoGUI(font, stack, guiLeft + 59, guiTop + 56,
+		this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, stack, guiLeft + 59, guiTop + 56,
 				String.valueOf(selectedAttributes.size() - 1));
-		this.setBlitOffset(0);
+		this.setZOffset(0);
 		this.itemRenderer.zLevel = 0.0F;
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 
-		super.renderWindowForeground(mouseX, mouseY, partialTicks);
+		super.renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -159,16 +162,16 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	}
 
 	@Override
-	protected void renderHoveredToolTip(int mouseX, int mouseY) {
-		if (this.minecraft.player.inventory.getItemStack().isEmpty() && this.hoveredSlot != null
+	protected void drawMouseoverTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
+		if (this.client.player.inventory.getItemStack().isEmpty() && this.hoveredSlot != null
 				&& this.hoveredSlot.getHasStack()) {
 			if (this.hoveredSlot.slotNumber == 37) {
-				renderTooltip(selectedAttributes, mouseX, mouseY, font);
+				renderTooltip(matrixStack, selectedAttributes, mouseX, mouseY);
 				return;
 			}
-			this.renderTooltip(this.hoveredSlot.getStack(), mouseX, mouseY);
+			this.renderTooltip(matrixStack, this.hoveredSlot.getStack(), mouseX, mouseY);
 		}
-		super.renderHoveredToolTip(mouseX, mouseY);
+		super.drawMouseoverTooltip(matrixStack, mouseX, mouseY);
 	}
 
 	@Override
@@ -177,8 +180,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	}
 
 	@Override
-	protected List<String> getTooltipDescriptions() {
-		return Arrays.asList(blacklistDESC, whitelistConDESC, whitelistDisDESC);
+	protected List<IFormattableTextComponent> getTooltipDescriptions() {
+		return Arrays.asList(blacklistDESC.copy(), whitelistConDESC.copy(), whitelistDisDESC.copy());
 	}
 
 	@Override
@@ -216,8 +219,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 				AllPackets.channel.sendToServer(new FilterScreenPacket(Option.ADD_TAG, tag));
 				container.selectedAttributes.add(itemAttribute);
 				if (container.selectedAttributes.size() == 1)
-					selectedAttributes.set(0, TextFormatting.YELLOW + selectedT);
-				selectedAttributes.add(TextFormatting.GRAY + "- " + itemAttribute.format());
+					selectedAttributes.set(0, selectedT.copy().formatted(TextFormatting.YELLOW));
+				selectedAttributes.add(new StringTextComponent("- ").append(itemAttribute.format()).formatted(TextFormatting.GRAY));
 				return true;
 			}
 		}
@@ -228,7 +231,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	@Override
 	protected void contentsCleared() {
 		selectedAttributes.clear();
-		selectedAttributes.add(TextFormatting.YELLOW + noSelectedT);
+		selectedAttributes.add(noSelectedT.copy().formatted(TextFormatting.YELLOW));
 		if (!lastItemScanned.isEmpty())
 			add.active = true;
 	}

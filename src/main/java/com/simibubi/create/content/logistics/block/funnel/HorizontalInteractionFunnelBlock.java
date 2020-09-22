@@ -88,7 +88,7 @@ public abstract class HorizontalInteractionFunnelBlock extends HorizontalBlock i
 		BlockPos pos, BlockPos p_196271_6_) {
 		if (!canStillInteract(state, world, pos)) {
 			BlockState parentState = parent.getDefaultState();
-			if (state.has(POWERED) && state.get(POWERED))
+			if (state.method_28500(POWERED).orElse(false))
 				parentState = parentState.with(POWERED, true);
 			return parentState.with(FunnelBlock.FACING, state.get(HORIZONTAL_FACING));
 		}
