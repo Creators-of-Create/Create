@@ -91,9 +91,9 @@ public class MaterialChecklist {
 		Collections.sort(keys, (item1, item2) -> {
 			Locale locale = Locale.ENGLISH;
 			String name1 =
-				new TranslationTextComponent(((Item) item1).getTranslationKey()).getFormattedText().toLowerCase(locale);
+				new TranslationTextComponent(item1.getTranslationKey()).getFormattedText().toLowerCase(locale);
 			String name2 =
-				new TranslationTextComponent(((Item) item2).getTranslationKey()).getFormattedText().toLowerCase(locale);
+				new TranslationTextComponent(item2.getTranslationKey()).getFormattedText().toLowerCase(locale);
 			return name1.compareTo(name2);
 		});
 

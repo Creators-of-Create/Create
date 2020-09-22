@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,7 +32,7 @@ public class ClientSchematicLoader {
 
 	public static final int PACKET_DELAY = 10;
 
-	private List<String> availableSchematics;
+	private List<ITextComponent> availableSchematics;
 	private Map<String, InputStream> activeUploads;
 	private int packetCycle;
 
@@ -68,10 +69,8 @@ public class ClientSchematicLoader {
 			// Too big
 			Integer maxSize = AllConfigs.SERVER.schematics.maxTotalSchematicSize.get();
 			if (size > maxSize * 1000) {
-				Minecraft.getInstance().player.sendMessage(new StringTextComponent(
-						Lang.translate("schematics.uploadTooLarge") + " (" + size / 1000 + " KB)."));
-				Minecraft.getInstance().player.sendMessage(
-						new StringTextComponent(Lang.translate("schematics.maxAllowedSize") + " " + maxSize + " KB"));
+				Minecraft.getInstance().player.sendMessage(Lang.translate("schematics.uploadTooLarge").append(" (" + size / 1000 + " KB)."), Minecraft.getInstance().player.getUniqueID());
+				Minecraft.getInstance().player.sendMessage(Lang.translate("schematics.maxAllowedSize").append(" " + maxSize + " KB"), Minecraft.getInstance().player.getUniqueID());
 				return;
 			}
 
@@ -126,7 +125,7 @@ public class ClientSchematicLoader {
 						if (Files.isDirectory(path))
 							return;
 
-						availableSchematics.add(path.getFileName().toString());
+						availableSchematics.add(ITextComponent.of(path.getFileName().toString()));
 					});
 		} catch (NoSuchFileException e) {
 			// No Schematics created yet
@@ -136,7 +135,7 @@ public class ClientSchematicLoader {
 
 	}
 
-	public List<String> getAvailableSchematics() {
+	public List<ITextComponent> getAvailableSchematics() {
 		return availableSchematics;
 	}
 

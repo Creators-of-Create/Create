@@ -37,7 +37,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			Template t = SchematicItem.loadSchematic(stack);
 			PlacementSettings settings = SchematicItem.getSettings(stack);
 			settings.setIgnoreEntities(false);
-			t.addBlocksToWorld(player.getServerWorld(), NBTUtil.readBlockPos(stack.getTag().getCompound("Anchor")),
+			t.place(player.getServerWorld(), NBTUtil.readBlockPos(stack.getTag().getCompound("Anchor")),
 					settings);
 		});
 		context.get().setPacketHandled(true);

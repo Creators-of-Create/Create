@@ -1004,7 +1004,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_BLOCK =
-		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f, true))
+		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.transform(tagBlockAndItem("storage_blocks/copper"))
 			.transform(oxidizedItemModel())
@@ -1027,14 +1027,14 @@ public class AllBlocks {
 			.transform(oxidizedBlockstate())
 			.register();
 
-	public static final BlockEntry<MetalBlock> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new MetalBlock(p, true))
+	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new Block(p))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.transform(tagBlockAndItem("storage_blocks/zinc"))
 		.build()
 		.register();
 
-	public static final BlockEntry<MetalBlock> BRASS_BLOCK =
-		REGISTRATE.block("brass_block", p -> new MetalBlock(p, true))
+	public static final BlockEntry<Block> BRASS_BLOCK =
+		REGISTRATE.block("brass_block", p -> new Block(p))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.transform(tagBlockAndItem("storage_blocks/brass"))
 			.build()

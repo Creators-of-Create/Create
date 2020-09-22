@@ -127,11 +127,11 @@ public class SchematicHandler {
 		SchematicWorld wMirroredLR = new SchematicWorld(clientWorld);
 		PlacementSettings placementSettings = new PlacementSettings();
 
-		schematic.addBlocksToWorld(w, BlockPos.ZERO, placementSettings);
+		schematic.place(w, BlockPos.ZERO, placementSettings);
 		placementSettings.setMirror(Mirror.FRONT_BACK);
-		schematic.addBlocksToWorld(wMirroredFB, BlockPos.ZERO.east(size.getX() - 1), placementSettings);
+		schematic.place(wMirroredFB, BlockPos.ZERO.east(size.getX() - 1), placementSettings);
 		placementSettings.setMirror(Mirror.LEFT_RIGHT);
-		schematic.addBlocksToWorld(wMirroredLR, BlockPos.ZERO.south(size.getZ() - 1), placementSettings);
+		schematic.place(wMirroredLR, BlockPos.ZERO.south(size.getZ() - 1), placementSettings);
 
 		renderers.get(0)
 			.display(w);

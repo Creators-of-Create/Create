@@ -3,6 +3,7 @@ package com.simibubi.create.content.schematics.client;
 import java.util.Collections;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
@@ -19,6 +20,9 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 
 public class SchematicEditScreen extends AbstractSimiScreen {
@@ -27,13 +31,13 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	private TextFieldWidget yInput;
 	private TextFieldWidget zInput;
 
-	private final List<String> rotationOptions =
+	private final List<ITextComponent> rotationOptions =
 		Lang.translatedOptions("schematic.rotation", "none", "cw90", "cw180", "cw270");
-	private final List<String> mirrorOptions =
+	private final List<ITextComponent> mirrorOptions =
 		Lang.translatedOptions("schematic.mirror", "none", "leftRight", "frontBack");
-	private final String positionLabel = Lang.translate("schematic.position");
-	private final String rotationLabel = Lang.translate("schematic.rotation");
-	private final String mirrorLabel = Lang.translate("schematic.mirror");
+	private final ITextComponent positionLabel = Lang.translate("schematic.position");
+	private final ITextComponent rotationLabel = Lang.translate("schematic.rotation");
+	private final ITextComponent mirrorLabel = Lang.translate("schematic.mirror");
 
 	private ScrollInput rotationArea;
 	private ScrollInput mirrorArea;
@@ -46,9 +50,9 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		int y = guiTop;
 		handler = CreateClient.schematicHandler;
 
-		xInput = new TextFieldWidget(font, x + 75, y + 32, 32, 10, "");
-		yInput = new TextFieldWidget(font, x + 115, y + 32, 32, 10, "");
-		zInput = new TextFieldWidget(font, x + 155, y + 32, 32, 10, "");
+		xInput = new TextFieldWidget(textRenderer, x + 75, y + 32, 32, 10, StringTextComponent.EMPTY);
+		yInput = new TextFieldWidget(textRenderer, x + 115, y + 32, 32, 10, StringTextComponent.EMPTY);
+		zInput = new TextFieldWidget(textRenderer, x + 155, y + 32, 32, 10, StringTextComponent.EMPTY);
 
 		BlockPos anchor = handler.getTransformation().getAnchor();
 		if (handler.isDeployed()) {
@@ -56,7 +60,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			yInput.setText("" + anchor.getY());
 			zInput.setText("" + anchor.getZ());
 		} else {
-			BlockPos alt = minecraft.player.getPosition();
+			BlockPos alt = client.player.getBlockPos();
 			xInput.setText("" + alt.getX());
 			yInput.setText("" + alt.getY());
 			zInput.setText("" + alt.getZ());
@@ -82,11 +86,11 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 
 		PlacementSettings settings = handler.getTransformation().toSettings();
 		Label labelR = new Label(x + 99, y + 52, "").withShadow();
-		rotationArea = new SelectionScrollInput(x + 96, y + 49, 94, 14).forOptions(rotationOptions).titled("Rotation")
+		rotationArea = new SelectionScrollInput(x + 96, y + 49, 94, 14).forOptions(rotationOptions).titled(new StringTextComponent("Rotation"))
 				.setState(settings.getRotation().ordinal()).writingTo(labelR);
 
 		Label labelM = new Label(x + 99, y + 72, "").withShadow();
-		mirrorArea = new SelectionScrollInput(x + 96, y + 69, 94, 14).forOptions(mirrorOptions).titled("Mirror")
+		mirrorArea = new SelectionScrollInput(x + 96, y + 69, 94, 14).forOptions(mirrorOptions).titled(new StringTextComponent("Mirror"))
 				.setState(settings.getMirror().ordinal()).writingTo(labelM);
 
 		Collections.addAll(widgets, xInput, yInput, zInput);
@@ -99,7 +103,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
 
 		if (isPaste(code)) {
-			String coords = minecraft.keyboardListener.getClipboardString();
+			String coords = client.keyboardListener.getClipboardString();
 			if (coords != null && !coords.isEmpty()) {
 				coords.replaceAll(" ", "");
 				String[] split = coords.split(",");
@@ -126,17 +130,17 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 		AllGuiTextures.SCHEMATIC.draw(this, x, y);
 
-		font.drawStringWithShadow(handler.getCurrentSchematicName(),
-				x + 103 - font.getStringWidth(handler.getCurrentSchematicName()) / 2, y + 10, 0xDDEEFF);
+		textRenderer.drawWithShadow(matrixStack, handler.getCurrentSchematicName(),
+				x + 103 - textRenderer.getStringWidth(handler.getCurrentSchematicName()) / 2, y + 10, 0xDDEEFF);
 
-		font.drawString(positionLabel, x + 10, y + 32, AllGuiTextures.FONT_COLOR);
-		font.drawString(rotationLabel, x + 10, y + 52, AllGuiTextures.FONT_COLOR);
-		font.drawString(mirrorLabel, x + 10, y + 72, AllGuiTextures.FONT_COLOR);
+		textRenderer.draw(matrixStack, positionLabel, x + 10, y + 32, AllGuiTextures.FONT_COLOR);
+		textRenderer.draw(matrixStack, rotationLabel, x + 10, y + 52, AllGuiTextures.FONT_COLOR);
+		textRenderer.draw(matrixStack, mirrorLabel, x + 10, y + 72, AllGuiTextures.FONT_COLOR);
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(guiLeft + 220, guiTop + 20, 0);

@@ -68,7 +68,7 @@ public class CommonEvents {
 
 	@SubscribeEvent
 	public static void serverStarted(FMLServerStartingEvent event) {
-		AllCommands.register(event.getCommandDispatcher());
+		AllCommands.register(event.getServer().getCommandManager().getDispatcher());
 	}
 
 	@SubscribeEvent

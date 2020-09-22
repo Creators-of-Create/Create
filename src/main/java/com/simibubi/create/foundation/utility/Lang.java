@@ -7,6 +7,7 @@ import java.util.Locale;
 import com.simibubi.create.Create;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class Lang {
@@ -23,8 +24,8 @@ public class Lang {
 		player.sendStatusMessage(createTranslationTextComponent(key, args), true);
 	}
 
-	public static List<TranslationTextComponent> translatedOptions(String prefix, String... keys) {
-		List<TranslationTextComponent> result = new ArrayList<>(keys.length);
+	public static List<ITextComponent> translatedOptions(String prefix, String... keys) {
+		List<ITextComponent> result = new ArrayList<>(keys.length);
 		for (String key : keys) {
 			result.add(translate(prefix + "." + key));
 		}

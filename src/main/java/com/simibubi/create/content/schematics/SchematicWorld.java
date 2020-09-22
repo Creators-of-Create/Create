@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.Block;
@@ -24,14 +25,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.EmptyTickList;
-import net.minecraft.world.ITickList;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 
-public class SchematicWorld extends WrappedWorld {
+public class SchematicWorld extends WrappedWorld implements IServerWorld {
 
 	private Map<BlockPos, BlockState> blocks;
 	private Map<BlockPos, TileEntity> tileEntities;
@@ -102,7 +100,7 @@ public class SchematicWorld extends WrappedWorld {
 			return Blocks.GRASS_BLOCK.getDefaultState();
 		if (getBounds().isVecInside(pos) && blocks.containsKey(pos)) {
 			BlockState blockState = blocks.get(pos);
-			if (blockState.has(BlockStateProperties.LIT))
+			if (BlockHelper.hasBlockStateProperty(blockState, BlockStateProperties.LIT))
 				blockState = blockState.with(BlockStateProperties.LIT, false);
 			return blockState;
 		}

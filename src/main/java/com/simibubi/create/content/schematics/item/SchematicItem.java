@@ -77,7 +77,7 @@ public class SchematicItem extends Item {
 				tooltip.add(new StringTextComponent(TextFormatting.GOLD + stack.getTag()
 					.getString("File")));
 		} else {
-			tooltip.add(new StringTextComponent(TextFormatting.RED + Lang.translate("schematic.invalid")));
+			tooltip.add(Lang.translate("schematic.invalid").formatted(TextFormatting.RED));
 		}
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}

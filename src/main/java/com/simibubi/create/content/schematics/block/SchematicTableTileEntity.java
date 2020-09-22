@@ -2,6 +2,7 @@ package com.simibubi.create.content.schematics.block;
 
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -48,14 +49,14 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	public void fromTag(BlockState state, CompoundNBT compound) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		readClientUpdate(compound);
-		super.read(compound);
+		readClientUpdate(state, compound);
+		super.fromTag(state, compound);
 	}
 
 	@Override
-	public void readClientUpdate(CompoundNBT compound) {
+	public void readClientUpdate(BlockState state, CompoundNBT compound) {
 		if (compound.contains("Uploading")) {
 			isUploading = true;
 			uploadingSchematic = compound.getString("Schematic");

@@ -694,9 +694,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		boolean placingAir = state.getBlock() == Blocks.AIR;
 
 		BlockState toReplaceOther = null;
-		if (state.has(BlockStateProperties.BED_PART) && state.has(BlockStateProperties.HORIZONTAL_FACING) && state.get(BlockStateProperties.BED_PART) == BedPart.FOOT)
+		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.BED_PART) && BlockHelper.hasBlockStateProperty(state, BlockStateProperties.HORIZONTAL_FACING) && state.get(BlockStateProperties.BED_PART) == BedPart.FOOT)
 			toReplaceOther = world.getBlockState(pos.offset(state.get(BlockStateProperties.HORIZONTAL_FACING)));
-		if (state.has(BlockStateProperties.DOUBLE_BLOCK_HALF)
+		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.DOUBLE_BLOCK_HALF)
 			&& state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER)
 			toReplaceOther = world.getBlockState(pos.up());
 
@@ -739,10 +739,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			return true;
 
 		// Block doesnt need to be placed twice (Doors, beds, double plants)
-		if (state.has(BlockStateProperties.DOUBLE_BLOCK_HALF)
+		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.DOUBLE_BLOCK_HALF)
 			&& state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
 			return true;
-		if (state.has(BlockStateProperties.BED_PART) && state.get(BlockStateProperties.BED_PART) == BedPart.HEAD)
+		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.BED_PART) && state.get(BlockStateProperties.BED_PART) == BedPart.HEAD)
 			return true;
 		if (state.getBlock() instanceof PistonHeadBlock)
 			return true;

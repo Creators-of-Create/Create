@@ -207,7 +207,7 @@ public class SchematicAndQuillHandler {
 			new BlockPos(bb.getXSize(), bb.getYSize(), bb.getZSize()), true, Blocks.AIR);
 
 		if (string.isEmpty())
-			string = Lang.translate("schematicAndQuill.fallbackName");
+			string = Lang.translate("schematicAndQuill.fallbackName").getUnformattedComponentText();
 
 		String folderPath = "schematics";
 		FilesHelper.createFolderIfMissing(folderPath);
