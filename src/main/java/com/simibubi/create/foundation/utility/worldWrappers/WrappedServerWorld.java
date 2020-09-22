@@ -11,11 +11,10 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.scoreboard.ServerScoreboard;
-import net.minecraft.tags.NetworkTagManager;
+import net.minecraft.tags.ITagCollectionSupplier;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerTickList;
 import net.minecraft.world.server.ServerWorld;
@@ -26,12 +25,12 @@ public class WrappedServerWorld extends ServerWorld {
 	protected ServerWorld world;
 
 	public WrappedServerWorld(ServerWorld world) {
-		super(world.getServer(), world.getServer().getBackgroundExecutor(), world.getSaveHandler(), world.getWorldInfo(), world.getDimension().getType(), world.getProfiler(), null);
+		super(world.getServer(), world.getServer().getBackgroundExecutor(), world.getSaveHandler(), world.getWorldInfo(), world.getDimension(), world.getProfiler(), null);
 		this.world = world;
 	}
 
 	@Override
-	public World getWorld() {
+	public ServerWorld getWorld() {
 		return world;
 	}
 
@@ -119,13 +118,8 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
-	public NetworkTagManager getTags() {
+	public ITagCollectionSupplier getTags() {
 		return world.getTags();
-	}
-
-	@Override
-	public int getMaxHeight() {
-		return 256;
 	}
 
 	@Override

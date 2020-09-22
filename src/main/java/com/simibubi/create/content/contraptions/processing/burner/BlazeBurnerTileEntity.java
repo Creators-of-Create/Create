@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -162,10 +163,10 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		activeFuel = FuelType.values()[compound.getInt("fuelLevel")];
 		remainingBurnTime = compound.getInt("burnTimeRemaining");
-		super.fromTag(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
 
 	/**

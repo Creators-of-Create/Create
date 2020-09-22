@@ -112,13 +112,13 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		float angleBefore = angle;
 		running = compound.getBoolean("Running");
 		isWindmill = compound.getBoolean("Windmill");
 		angle = compound.getFloat("Angle");
 		lastGeneratedSpeed = compound.getFloat("LastGenerated");
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 		
 		if (!clientPacket)
 			return;

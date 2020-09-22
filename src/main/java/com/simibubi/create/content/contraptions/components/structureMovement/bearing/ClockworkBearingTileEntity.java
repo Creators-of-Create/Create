@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
+import net.minecraft.block.BlockState;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -235,14 +236,14 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		float hourAngleBefore = hourAngle;
 		float minuteAngleBefore = minuteAngle;
 		
 		running = compound.getBoolean("Running");
 		hourAngle = compound.getFloat("HourAngle");
 		minuteAngle = compound.getFloat("MinuteAngle");
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 		
 		if (!clientPacket)
 			return;

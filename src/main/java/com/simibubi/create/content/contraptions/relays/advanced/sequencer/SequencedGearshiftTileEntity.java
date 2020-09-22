@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -112,12 +113,12 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		currentInstruction = compound.getInt("InstructionIndex");
 		currentInstructionDuration = compound.getInt("InstructionDuration");
 		timer = compound.getInt("Timer");
 		instructions = Instruction.deserializeAll(compound.getList("Instructions", NBT.TAG_COMPOUND));
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
 
 	@Override

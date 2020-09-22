@@ -277,8 +277,8 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		super.fromTag(state, compound, clientPacket);
 		
 		BlockPos controllerBefore = controller;
 		int prevSize = width;

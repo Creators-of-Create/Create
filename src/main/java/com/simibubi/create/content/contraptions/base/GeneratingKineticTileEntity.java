@@ -10,6 +10,8 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
@@ -52,13 +54,13 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
 		boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
 		float stressBase = calculateAddedStressCapacity();
 		if (stressBase != 0 && IRotate.StressImpact.isEnabled()) {
-			tooltip.add(spacing + Lang.translate("gui.goggles.generator_stats"));
-			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("tooltip.capacityProvided"));
+			tooltip.add(new StringTextComponent(spacing).append(Lang.translate("gui.goggles.generator_stats")));
+			tooltip.add(new StringTextComponent(spacing).append(Lang.translate("tooltip.capacityProvided").formatted(TextFormatting.GRAY)));
 
 			float speed = getTheoreticalSpeed();
 			if (speed != getGeneratedSpeed() && speed != 0)
@@ -68,8 +70,8 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 			float stressTotal = stressBase * speed;
 
 			String stressString = spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
-			tooltip.add(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressBase), Lang.translate("gui.goggles.base_value")));
-			tooltip.add(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal), Lang.translate("gui.goggles.at_current_speed")));
+			tooltip.add(String.format(stressString, IHaveGoggleInformation.format(stressBase), Lang.translate("gui.goggles.base_value").getUnformattedComponentText()));
+			tooltip.add(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal), Lang.translate("gui.goggles.at_current_speed").getUnformattedComponentText()));
 
 			added = true;
 		}

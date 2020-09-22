@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
@@ -41,8 +42,8 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 	}
 	
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		super.fromTag(state, compound, clientPacket);
 		if (clientPacket && compound.contains("Animation")) {
 			animationType = NBTHelper.readEnum(compound, "Animation", Animation.class);
 			animationProgress.lastValue = 0;

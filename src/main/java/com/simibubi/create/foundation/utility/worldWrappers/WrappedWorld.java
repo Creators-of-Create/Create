@@ -39,10 +39,11 @@ public class WrappedWorld extends World {
 		this.world = world;
 	}
 
+	/*FIXME
 	@Override
 	public World getWorld() {
 		return world;
-	}
+	}*/
 
 	@Override
 	public BlockState getBlockState(BlockPos pos) {

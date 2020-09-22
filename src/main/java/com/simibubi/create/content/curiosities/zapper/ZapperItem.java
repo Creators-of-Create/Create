@@ -60,8 +60,8 @@ public abstract class ZapperItem extends Item {
 				.getCompound("BlockUsed"))
 				.getBlock()
 				.getTranslationKey();
-			ItemDescription.add(tooltip, TextFormatting.DARK_GRAY + Lang.translate("blockzapper.usingBlock",
-				TextFormatting.GRAY + new TranslationTextComponent(usedblock).getFormattedText()));
+			ItemDescription.add(tooltip, Lang.translate("blockzapper.usingBlock",
+				new TranslationTextComponent(usedblock).formatted(TextFormatting.GRAY)).formatted(TextFormatting.DARK_GRAY));
 		}
 	}
 
@@ -137,11 +137,11 @@ public abstract class ZapperItem extends Item {
 		player.setActiveHand(hand);
 
 		// Check if can be used
-		String msg = validateUsage(item);
+		ITextComponent msg = validateUsage(item);
 		if (msg != null) {
 			world.playSound(player, player.getBlockPos(), AllSoundEvents.BLOCKZAPPER_DENY.get(), SoundCategory.BLOCKS,
 				1f, 0.5f);
-			player.sendStatusMessage(new StringTextComponent(TextFormatting.RED + msg), true);
+			player.sendStatusMessage(msg.copy().formatted(TextFormatting.RED), true);
 			return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
 		}
 
@@ -192,11 +192,11 @@ public abstract class ZapperItem extends Item {
 		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
 	}
 
-	public String validateUsage(ItemStack item) {
+	public ITextComponent validateUsage(ItemStack item) {
 		CompoundNBT tag = item.getOrCreateTag();
 		if (!canActivateWithoutSelectedBlock(item) && !tag.contains("BlockUsed"))
 			return Lang.translate("blockzapper.leftClickToSet");
-		return null;
+		return StringTextComponent.EMPTY;
 	}
 
 	protected abstract boolean activate(World world, PlayerEntity player, ItemStack item, BlockState stateToUse,

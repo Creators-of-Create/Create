@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.inventories;
 
 import com.simibubi.create.AllBlocks;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -150,10 +151,10 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		allowedAmount = compound.getInt("AllowedAmount");
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		super.fromTag(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
 
 	@Override

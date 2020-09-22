@@ -6,6 +6,7 @@ import java.util.Map;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -24,8 +25,8 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		super.fromTag(state, compound, clientPacket);
 		if (compound.contains("Flows")) {
 			for (Direction d : Direction.values())
 				setFlow(d, compound.getCompound("Flows")

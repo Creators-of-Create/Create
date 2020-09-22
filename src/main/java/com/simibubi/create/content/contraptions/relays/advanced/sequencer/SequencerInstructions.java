@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
+import net.minecraft.util.text.ITextComponent;
 
 public enum SequencerInstructions {
 
@@ -40,8 +41,8 @@ public enum SequencerInstructions {
 		parameterKey = translationKey + "." + parameterName;
 	}
 
-	static List<String> getOptions() {
-		List<String> options = new ArrayList<>();
+	static List<ITextComponent> getOptions() {
+		List<ITextComponent> options = new ArrayList<>();
 		for (SequencerInstructions entry : values())
 			options.add(Lang.translate(entry.translationKey));
 		return options;
@@ -49,7 +50,7 @@ public enum SequencerInstructions {
 
 	String formatValue(int value) {
 		if (this == TURN_ANGLE)
-			return value + Lang.translate("generic.unit.degrees");
+			return value + Lang.translate("generic.unit.degrees").getUnformattedComponentText(); // FIXME
 		if (this == TURN_DISTANCE)
 			return value + "m";
 		if (this == WAIT) {

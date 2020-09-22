@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.BlockParticleData;
@@ -168,8 +169,8 @@ public class SpoutTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		super.fromTag(state, compound, clientPacket);
 		tank.readFromNBT(compound.getCompound("TankContent"));
 		fluidLevel.readNBT(compound.getCompound("Level"), clientPacket);
 		processingTicks = compound.getInt("ProcessingTicks");

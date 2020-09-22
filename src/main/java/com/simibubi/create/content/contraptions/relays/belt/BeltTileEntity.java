@@ -186,8 +186,8 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		super.fromTag(state, compound, clientPacket);
 
 		if (compound.getBoolean("IsController"))
 			controller = pos;

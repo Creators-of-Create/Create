@@ -163,7 +163,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
 		if (!clientPacket) {
 			inventory.deserializeNBT(compound.getCompound("Inventory"));
 			if (compound.contains("CurrentPos"))
@@ -196,7 +196,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (compound.contains("FlyingBlocks"))
 			readFlyingBlocks(compound);
 
-		super.fromTag(compound, clientPacket);
+		super.fromTag(blockState, compound, clientPacket);
 	}
 
 	protected void readFlyingBlocks(CompoundNBT compound) {

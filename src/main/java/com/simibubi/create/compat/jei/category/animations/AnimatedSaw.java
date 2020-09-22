@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category.animations;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
@@ -12,10 +13,10 @@ import net.minecraft.util.Direction.Axis;
 public class AnimatedSaw extends AnimatedKinetics {
 
 	@Override
-	public void draw(int xOffset, int yOffset) {
+	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(xOffset, yOffset, 0);
-		AllGuiTextures.JEI_SHADOW.draw(-16, 13);
+		AllGuiTextures.JEI_SHADOW.draw(matrixStack, -16, 13);
 		
 		RenderSystem.translatef(0, 0, 200);
 		RenderSystem.translatef(-6, 19, 0);

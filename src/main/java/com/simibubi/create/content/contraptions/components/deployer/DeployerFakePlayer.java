@@ -64,7 +64,7 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new StringTextComponent(Lang.translate("block.deployer.damage_source_name"));
+		return Lang.translate("block.deployer.damage_source_name");
 	}
 
 	@Override

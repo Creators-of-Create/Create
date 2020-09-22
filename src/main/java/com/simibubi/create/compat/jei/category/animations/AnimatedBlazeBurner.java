@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category.animations;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -17,9 +18,9 @@ public class AnimatedBlazeBurner implements IDrawable {
 		return this;
 	}
 
-	public void draw(int xOffset, int yOffset) {
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(xOffset, yOffset, 200);
+	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
+		matrixStack.push();
+		matrixStack.translate(xOffset, yOffset, 200);
 		RenderSystem.rotatef(-15.5f, 1, 0, 0);
 		RenderSystem.rotatef(22.5f, 0, 1, 0);
 		int scale = 23;
@@ -36,7 +37,7 @@ public class AnimatedBlazeBurner implements IDrawable {
 			.scale(scale)
 			.render();
 
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 	}
 
 	@Override

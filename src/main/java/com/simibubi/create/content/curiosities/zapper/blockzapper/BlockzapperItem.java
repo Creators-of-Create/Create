@@ -61,13 +61,13 @@ public class BlockzapperItem extends ZapperItem {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		Palette palette = Palette.Purple;
 		if (Screen.hasShiftDown()) {
-			ItemDescription.add(tooltip, palette.color + Lang.translate("blockzapper.componentUpgrades"));
+			ItemDescription.add(tooltip, Lang.translate("blockzapper.componentUpgrades").formatted(palette.color));
 
 			for (Components c : Components.values()) {
 				ComponentTier tier = getTier(c, stack);
-				String componentName =
-					TextFormatting.GRAY + Lang.translate("blockzapper.component." + Lang.asId(c.name()));
-				String tierName = tier.color + Lang.translate("blockzapper.componentTier." + Lang.asId(tier.name()));
+				ITextComponent componentName =
+					Lang.translate("blockzapper.component." + Lang.asId(c.name())).formatted(TextFormatting.GRAY);
+				ITextComponent tierName = Lang.translate("blockzapper.componentTier." + Lang.asId(tier.name())).formatted(tier.color);
 				ItemDescription.add(tooltip, "> " + componentName + ": " + tierName);
 			}
 		}
@@ -110,8 +110,7 @@ public class BlockzapperItem extends ZapperItem {
 			if (!player.isCreative() && BlockHelper.findAndRemoveInInventory(selectedState, player, 1) == 0) {
 				player.getCooldownTracker()
 					.setCooldown(stack.getItem(), 20);
-				player.sendStatusMessage(
-					new StringTextComponent(TextFormatting.RED + Lang.translate("blockzapper.empty")), true);
+				player.sendStatusMessage( Lang.translate("blockzapper.empty").formatted(TextFormatting.RED), true);
 				return false;
 			}
 
@@ -337,7 +336,7 @@ public class BlockzapperItem extends ZapperItem {
 		}
 
 		if (getTier(Components.Retriever, item) == ComponentTier.Brass)
-			Block.spawnDrops(worldIn.getBlockState(placed), worldIn, playerIn.getPosition(), tileentity);
+			Block.spawnDrops(worldIn.getBlockState(placed), worldIn, playerIn.getBlockPos(), tileentity);
 
 		if (getTier(Components.Retriever, item) == ComponentTier.Chromatic)
 			for (ItemStack stack : Block.getDrops(worldIn.getBlockState(placed), (ServerWorld) worldIn, placed,

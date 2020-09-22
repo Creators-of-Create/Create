@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.foundation.utility.Lang;
+import net.minecraft.util.text.ITextComponent;
 
 public enum InstructionSpeedModifiers {
 
@@ -21,8 +22,8 @@ public enum InstructionSpeedModifiers {
 		value = modifier;
 	}
 
-	static List<String> getOptions() {
-		List<String> options = new ArrayList<>();
+	static List<ITextComponent> getOptions() {
+		List<ITextComponent> options = new ArrayList<>();
 		for (InstructionSpeedModifiers entry : values())
 			options.add(Lang.translate(entry.translationKey));
 		return options;

@@ -207,7 +207,7 @@ public class BlockStateGen {
 				return ConfiguredModel.builder()
 					.modelFile(p.models()
 						.getExistingFile(p
-							.modLoc("block/" + c.getName() + "/block_" + type.getName() + (powered ? "_powered" : ""))))
+							.modLoc("block/" + c.getName() + "/block_" + type.getString() + (powered ? "_powered" : ""))))
 					.rotationY(shape == RailShape.EAST_WEST ? 90 : 0)
 					.build();
 			});
@@ -247,7 +247,7 @@ public class BlockStateGen {
 			}
 
 			for (BeltObserverBlock.Mode mode : BeltObserverBlock.Mode.values()) {
-				String modeName = mode.getName();
+				String modeName = mode.getString();
 				HashMap<String, ModelFile> map = new HashMap<>();
 				for (boolean powered : Iterate.trueAndFalse) {
 					for (boolean belt : Iterate.trueAndFalse) {
@@ -311,14 +311,14 @@ public class BlockStateGen {
 			Vector<ModelFile> stickyFaces = new Vector<>(3);
 
 			for (Axis axis : Iterate.axes) {
-				String suffix = "side_" + axis.getName();
+				String suffix = "side_" + axis.getString();
 				faces.add(p.models()
 					.withExistingParent("block/" + c.getName() + "_" + suffix,
 						p.modLoc(templateModelPath + "/" + suffix))
 					.texture("side", side));
 			}
 			for (Axis axis : Iterate.axes) {
-				String suffix = "side_" + axis.getName();
+				String suffix = "side_" + axis.getString();
 				stickyFaces.add(p.models()
 					.withExistingParent("block/" + c.getName() + "_" + suffix + "_sticky",
 						p.modLoc(templateModelPath + "/" + suffix))
@@ -404,14 +404,14 @@ public class BlockStateGen {
 			Map<Pair<String, Axis>, ModelFile> coreModels = new HashMap<>();
 
 			for (Axis axis : Iterate.axes)
-				coreTemplates.put(axis, p.modLoc(path + "/core_" + axis.getName()));
+				coreTemplates.put(axis, p.modLoc(path + "/core_" + axis.getString()));
 			ModelFile end = AssetLookup.partialBaseModel(c, p, "end");
 
 			for (Axis axis : Iterate.axes) {
 				ResourceLocation parent = coreTemplates.get(axis);
 				for (String s : orientations) {
 					Pair<String, Axis> key = Pair.of(s, axis);
-					String modelName = path + "/" + s + "_" + axis.getName();
+					String modelName = path + "/" + s + "_" + axis.getString();
 					coreModels.put(key, p.models()
 						.withExistingParent(modelName, parent)
 						.element()

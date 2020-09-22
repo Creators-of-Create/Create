@@ -67,12 +67,12 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		destroyProgress = compound.getInt("Progress");
 		ticksUntilNextProgress = compound.getInt("NextTick");
 		if (compound.contains("Breaking"))
 			breakingPos = NBTUtil.readBlockPos(compound.getCompound("Breaking"));
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
 
 	@Override

@@ -372,12 +372,12 @@ public class ArmTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		int previousIndex = chasedPointIndex;
 		Phase previousPhase = phase;
 		ListNBT interactionPointTagBefore = interactionPointTag;
 
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 		heldItem = ItemStack.read(compound.getCompound("HeldItem"));
 		phase = NBTHelper.readEnum(compound, "Phase", Phase.class);
 		chasedPointIndex = compound.getInt("TargetPointIndex");

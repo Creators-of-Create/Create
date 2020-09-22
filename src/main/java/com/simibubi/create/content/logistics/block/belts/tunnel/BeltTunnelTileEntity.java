@@ -77,7 +77,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		Set<Direction> newFlaps = new HashSet<>(6);
 		ListNBT flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
 		for (INBT inbt : flapsNBT)
@@ -92,7 +92,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 					.target(0)
 					.withSpeed(.05f));
 
-		super.fromTag(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 
 		if (!clientPacket)
 			return;

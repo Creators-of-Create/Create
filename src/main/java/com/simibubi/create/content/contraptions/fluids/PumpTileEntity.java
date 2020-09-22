@@ -256,10 +256,10 @@ public class PumpTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		reversed = compound.getBoolean("Reversed");
 		deserializeOpenEnds(compound);
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
 
 	public void updatePipesOnSide(Direction side) {

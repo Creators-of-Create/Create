@@ -32,7 +32,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	Consumer<Integer> callback;
 	Consumer<Integer> clientCallback;
 	Function<Integer, String> formatter;
-	Function<Integer, String> unit;
+	Function<Integer, ITextComponent> unit;
 	Function<StepContext, Integer> step;
 	boolean needsWrench;
 
@@ -119,7 +119,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		return this;
 	}
 
-	public ScrollValueBehaviour withUnit(Function<Integer, String> unit) {
+	public ScrollValueBehaviour withUnit(Function<Integer, ITextComponent> unit) {
 		this.unit = unit;
 		return this;
 	}

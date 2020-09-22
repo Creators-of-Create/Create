@@ -240,8 +240,8 @@ public class FunnelTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		super.fromTag(state, compound, clientPacket);
 		extractionCooldown = compound.getInt("TransferCooldown");
 		if (clientPacket && compound.contains("Flap")) {
 			int direction = compound.getInt("Flap");

@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -255,7 +256,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		mode = NBTHelper.readEnum(compound, "Mode", Mode.class);
 		timer = compound.getInt("Timer");
@@ -263,7 +264,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 		if (compound.contains("HeldItem"))
 			heldItem = ItemStack.read(compound.getCompound("HeldItem"));
-		super.read(compound, clientPacket);
+		super.fromTag(blockState, compound, clientPacket);
 
 		if (!clientPacket)
 			return;
@@ -306,11 +307,6 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	private IItemHandlerModifiable createHandler() {
 		return new DeployerItemHandler(this);
-	}
-
-	@Override
-	public boolean hasFastRenderer() {
-		return false;
 	}
 
 	public AllBlockPartials getHandPose() {

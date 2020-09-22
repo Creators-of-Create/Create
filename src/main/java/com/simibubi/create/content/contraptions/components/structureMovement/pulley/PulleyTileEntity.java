@@ -170,9 +170,9 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
     }
 
     @Override
-    protected void read(CompoundNBT compound, boolean clientPacket) {
+    protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
         initialOffset = compound.getInt("InitialOffset");
-        super.read(compound, clientPacket);
+        super.fromTag(state, compound, clientPacket);
     }
 
     @Override

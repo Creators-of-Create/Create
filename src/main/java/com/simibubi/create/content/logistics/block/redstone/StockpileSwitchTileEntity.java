@@ -36,13 +36,13 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		onWhenAbove = compound.getFloat("OnAbove");
 		offWhenBelow = compound.getFloat("OffBelow");
 		currentLevel = compound.getFloat("Current");
 		powered = compound.getBoolean("Powered");
 
-		super.fromTag(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
 
 	@Override

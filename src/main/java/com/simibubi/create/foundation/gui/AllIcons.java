@@ -128,14 +128,14 @@ public class AllIcons {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void draw(AbstractGui screen, int x, int y) {
+	public void draw(MatrixStack matrixStack, AbstractGui screen, int x, int y) {
 		bind();
-		screen.drawTexture(x, y, iconX, iconY, 16, 16);
+		screen.drawTexture(matrixStack, x, y, iconX, iconY, 16, 16);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void draw(int x, int y) {
-		draw(new Screen(null) {
+	public void draw(MatrixStack matrixStack, int x, int y) {
+		draw(matrixStack, new Screen(null) {
 		}, x, y);
 	}
 

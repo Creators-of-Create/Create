@@ -32,8 +32,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		super.fromTag(state, compound, clientPacket);
 		isGenerator = compound.getBoolean("Generating");
 		if (clientPacket)
 			airCurrent.rebuild();

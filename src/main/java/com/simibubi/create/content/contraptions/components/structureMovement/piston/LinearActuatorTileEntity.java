@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOpt
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
@@ -158,14 +159,14 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		boolean forceMovement = compound.contains("ForceMovement");
 		float offsetBefore = offset;
 
 		running = compound.getBoolean("Running");
 		waitingForSpeedChange = compound.getBoolean("Waiting");
 		offset = compound.getFloat("Offset");
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 
 		if (!clientPacket)
 			return;

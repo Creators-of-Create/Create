@@ -123,11 +123,6 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean hasFastRenderer() {
-		return false;
-	}
-
-	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.put("Inventory", inventory.serializeNBT());
 
@@ -152,7 +147,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		Phase phaseBefore = phase;
 		GroupedItems before = this.groupedItems;
 		
@@ -167,7 +162,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				this.phase = phase;
 		countDown = compound.getInt("CountDown");
 		covered = compound.getBoolean("Cover");
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 		
 		if (!clientPacket)
 			return;

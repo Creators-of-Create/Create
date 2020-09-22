@@ -82,7 +82,7 @@ public class ItemDescription {
 		linesOnCtrl = new ArrayList<>();
 	}
 
-	public ItemDescription withSummary(String summary) {
+	public ItemDescription withSummary(ITextComponent summary) {
 		add(linesOnShift, cutString(summary, palette.color, palette.hColor));
 		add(linesOnShift, "");
 		return this;
@@ -153,7 +153,7 @@ public class ItemDescription {
 				level +=
 					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
 
-			add(linesOnShift, GRAY + Lang.translate("tooltip.capacityProvided"));
+			add(linesOnShift, Lang.translate("tooltip.capacityProvided").formatted(GRAY));
 			add(linesOnShift, level);
 
 			IFormattableTextComponent genSpeed = generatorSpeed(block, rpmUnit);

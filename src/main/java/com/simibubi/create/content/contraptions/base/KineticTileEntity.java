@@ -32,6 +32,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
@@ -211,13 +212,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		boolean overStressedBefore = overStressed;
 		clearKineticInformation();
 
 		// DO NOT READ kinetic information when placed after movement
 		if (wasMoved) {
-			super.fromTag(compound, clientPacket);
+			super.fromTag(state, compound, clientPacket);
 			return;
 		}
 
@@ -237,7 +238,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			overStressed = capacity < stress && StressImpact.isEnabled();
 		}
 
-		super.fromTag(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 
 		if (clientPacket && overStressedBefore != overStressed && speed != 0)
 			effects.triggerOverStressedEffect();
@@ -377,9 +378,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
 			tooltip.add(ITextComponent.of(spacing + GOLD + Lang.translate("gui.stressometer.overstressed")));
-			String hint = Lang.translate("gui.contraptions.network_overstressed", I18n.format(getBlockState().getBlock()
+			ITextComponent hint = Lang.translate("gui.contraptions.network_overstressed", I18n.format(getBlockState().getBlock()
 				.getTranslationKey()));
-			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
+			List<String> cutString = TooltipHelper.cutString(new StringTextComponent(spacing).append(hint), GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add(ITextComponent.of((i == 0 ? "" : spacing) + cutString.get(i)));
 			return true;
@@ -387,9 +388,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (notFastEnough) {
 			tooltip.add(ITextComponent.of(spacing + GOLD + Lang.translate("tooltip.speedRequirement")));
-			String hint = Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock()
+			ITextComponent hint = Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock()
 				.getTranslationKey()));
-			List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
+			List<String> cutString = TooltipHelper.cutString(new StringTextComponent(spacing).append(hint), GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add(ITextComponent.of((i == 0 ? "" : spacing) + cutString.get(i)));
 			return true;

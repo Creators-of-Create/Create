@@ -22,6 +22,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 
 public abstract class SymmetryMirror {
 
@@ -41,7 +42,7 @@ public abstract class SymmetryMirror {
 		orientationIndex = 0;
 	}
 
-	public static List<String> getMirrors() {
+	public static List<ITextComponent> getMirrors() {
 		return ImmutableList.of(Lang.translate("symmetry.mirror.plane"), Lang.translate("symmetry.mirror.doublePlane"),
 			Lang.translate("symmetry.mirror.triplePlane"));
 	}

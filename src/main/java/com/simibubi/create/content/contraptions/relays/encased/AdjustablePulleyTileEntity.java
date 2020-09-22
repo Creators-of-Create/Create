@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 
@@ -23,9 +24,9 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		signal = compound.getInt("Signal");
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
 
 	public float getModifier() {

@@ -73,9 +73,9 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		transmitter = compound.getBoolean("Transmitter");
-		super.fromTag(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 		
 		receivedSignal = compound.getInt("Receive");
 		receivedSignalChanged = compound.getBoolean("ReceivedChanged");

@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,8 +51,8 @@ public class NozzleTileEntity extends SmartTileEntity {
 	}
 	
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		super.fromTag(state, compound, clientPacket);
 		if (!clientPacket)
 			return;
 		range = compound.getFloat("Range");

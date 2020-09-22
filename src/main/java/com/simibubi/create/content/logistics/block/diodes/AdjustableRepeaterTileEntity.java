@@ -11,9 +11,11 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 
 public class AdjustableRepeaterTileEntity extends SmartTileEntity {
 
@@ -43,10 +45,10 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
 		state = compound.getInt("State");
 		charging = compound.getBoolean("Charging");
-		super.fromTag(compound, clientPacket);
+		super.fromTag(blockState, compound, clientPacket);
 	}
 
 	@Override
@@ -76,7 +78,7 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity {
 		return (value / 20 / 60) + "m";
 	}
 
-	private String getUnit(int value) {
+	private ITextComponent getUnit(int value) {
 		if (value < 20)
 			return Lang.translate("generic.unit.ticks");
 		if (value < 20 * 60)

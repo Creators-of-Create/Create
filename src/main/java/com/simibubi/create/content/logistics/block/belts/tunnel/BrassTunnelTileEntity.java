@@ -459,7 +459,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		boolean wasConnectedLeft = connectedLeft;
 		boolean wasConnectedRight = connectedRight;
 
@@ -477,7 +477,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			return Pair.of(pos, face);
 		});
 
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 
 		if (!clientPacket)
 			return;
