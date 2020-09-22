@@ -196,7 +196,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (compound.contains("FlyingBlocks"))
 			readFlyingBlocks(compound);
 
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	protected void readFlyingBlocks(CompoundNBT compound) {

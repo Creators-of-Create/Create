@@ -62,7 +62,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
 		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
 		if (compound.contains("fluids"))

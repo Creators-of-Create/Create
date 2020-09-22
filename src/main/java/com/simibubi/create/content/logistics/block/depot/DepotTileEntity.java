@@ -110,7 +110,7 @@ public class DepotTileEntity extends SmartTileEntity {
 		if (compound.contains("HeldItem"))
 			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"));
 		processingOutputBuffer.deserializeNBT(compound.getCompound("OutputBuffer"));
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

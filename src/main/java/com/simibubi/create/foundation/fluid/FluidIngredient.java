@@ -14,6 +14,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +24,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	public static final FluidIngredient EMPTY = new FluidStackIngredient();
 
-	public static FluidIngredient fromTag(Tag<Fluid> tag, int amount) {
+	public static FluidIngredient fromTag(ITag.INamedTag<Fluid> tag, int amount) {
 		FluidTagIngredient ingredient = new FluidTagIngredient();
 		ingredient.tag = tag;
 		ingredient.amountRequired = amount;
@@ -158,7 +159,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	public static class FluidTagIngredient extends FluidIngredient {
 
-		protected Tag<Fluid> tag;
+		protected ITag.INamedTag<Fluid> tag;
 
 		@Override
 		protected boolean testInternal(FluidStack t) {
@@ -169,7 +170,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected void readInternal(PacketBuffer buffer) {
 			ResourceLocation resourcelocation = buffer.readResourceLocation();
-			tag = FluidTags.getContainer()
+			tag = FluidTags.func_226157_a_()
 				.get(resourcelocation);
 		}
 
@@ -181,7 +182,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected void readInternal(JsonObject json) {
 			ResourceLocation id = new ResourceLocation(JSONUtils.getString(json, "fluidTag"));
-			tag = FluidTags.getContainer()
+			tag = FluidTags.func_226157_a_()
 				.get(id);
 			if (tag == null)
 				throw new JsonSyntaxException("Unknown fluid tag '" + id + "'");

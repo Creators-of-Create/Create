@@ -13,7 +13,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
 import net.minecraft.item.Item;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.common.Tags;
 
@@ -46,19 +46,19 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 
 	protected static class I {
 
-		static Tag<Item> redstone() {
+		static ITag.INamedTag<Item> redstone() {
 			return Tags.Items.DUSTS_REDSTONE;
 		}
 
-		static Tag<Item> gold() {
+		static ITag.INamedTag<Item> gold() {
 			return AllTags.forgeItemTag("ingots/gold");
 		}
 
-		static Tag<Item> goldSheet() {
+		static ITag.INamedTag<Item> goldSheet() {
 			return AllTags.forgeItemTag("plates/gold");
 		}
 
-		static Tag<Item> stone() {
+		static ITag.INamedTag<Item> stone() {
 			return Tags.Items.STONE;
 		}
 
@@ -78,23 +78,23 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 			return AllBlocks.ANDESITE_CASING.get();
 		}
 
-		static Tag<Item> brass() {
+		static ITag.INamedTag<Item> brass() {
 			return AllTags.forgeItemTag("ingots/brass");
 		}
 
-		static Tag<Item> brassSheet() {
+		static ITag.INamedTag<Item> brassSheet() {
 			return AllTags.forgeItemTag("plates/brass");
 		}
 
-		static Tag<Item> iron() {
+		static ITag.INamedTag<Item> iron() {
 			return Tags.Items.INGOTS_IRON;
 		}
 
-		static Tag<Item> zinc() {
+		static ITag.INamedTag<Item> zinc() {
 			return AllTags.forgeItemTag("ingots/zinc");
 		}
 
-		static Tag<Item> ironSheet() {
+		static ITag.INamedTag<Item> ironSheet() {
 			return AllTags.forgeItemTag("plates/iron");
 		}
 
@@ -110,35 +110,35 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 			return AllItems.INTEGRATED_CIRCUIT.get();
 		}
 
-		static Tag<Item> copperBlock() {
+		static ITag.INamedTag<Item> copperBlock() {
 			return AllTags.forgeItemTag("storage_blocks/copper");
 		}
 
-		static Tag<Item> brassBlock() {
+		static ITag.INamedTag<Item> brassBlock() {
 			return AllTags.forgeItemTag("storage_blocks/brass");
 		}
 
-		static Tag<Item> zincBlock() {
+		static ITag.INamedTag<Item> zincBlock() {
 			return AllTags.forgeItemTag("storage_blocks/zinc");
 		}
 
-		static Tag<Item> copper() {
+		static ITag.INamedTag<Item> copper() {
 			return AllTags.forgeItemTag("ingots/copper");
 		}
 
-		static Tag<Item> copperSheet() {
+		static ITag.INamedTag<Item> copperSheet() {
 			return AllTags.forgeItemTag("plates/copper");
 		}
 
-		static Tag<Item> copperNugget() {
+		static ITag.INamedTag<Item> copperNugget() {
 			return AllTags.forgeItemTag("nuggets/copper");
 		}
 
-		static Tag<Item> brassNugget() {
+		static ITag.INamedTag<Item> brassNugget() {
 			return AllTags.forgeItemTag("nuggets/brass");
 		}
 
-		static Tag<Item> zincNugget() {
+		static ITag.INamedTag<Item> zincNugget() {
 			return AllTags.forgeItemTag("nuggets/zinc");
 		}
 

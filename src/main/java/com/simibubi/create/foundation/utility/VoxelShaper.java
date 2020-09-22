@@ -7,8 +7,6 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.simibubi.create.content.contraptions.relays.belt.Vector3i;
-
 import net.minecraft.block.Block;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;

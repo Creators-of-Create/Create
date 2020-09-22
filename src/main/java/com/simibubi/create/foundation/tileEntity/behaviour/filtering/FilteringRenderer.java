@@ -26,6 +26,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class FilteringRenderer {
 
@@ -60,7 +63,7 @@ public class FilteringRenderer {
 		ItemStack filter = behaviour.getFilter();
 		boolean isFilterSlotted = filter.getItem() instanceof FilterItem;
 		boolean showCount = behaviour.isCountVisible();
-		String label = isFilterSlotted ? ""
+		ITextComponent label = isFilterSlotted ? StringTextComponent.EMPTY
 			: Lang.translate(behaviour.recipeFilter ? "logistics.recipe_filter" : "logistics.filter");
 		boolean hit = behaviour.slotPositioning.testHit(state, target.getHitVec()
 			.subtract(Vector3d.of(pos)));
@@ -73,7 +76,7 @@ public class FilteringRenderer {
 
 		box.offsetLabel(behaviour.textShift)
 			.withColors(0x7A6A2C, 0xB79D64)
-			.scrollTooltip(showCount ? "[" + Lang.translate("action.scroll") + "]" : "")
+			.scrollTooltip(ITextComponent.of(showCount ? "[" + Lang.translate("action.scroll").getUnformattedComponentText() + "]" : ""))
 			.passive(!hit);
 
 		CreateClient.outliner.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))

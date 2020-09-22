@@ -64,10 +64,10 @@ public class ScrollValueRenderer {
 		} else {
 			box = new TextValueBox(label, bb, pos, behaviour.formatValue());
 			if (behaviour.unit != null)
-				box.subLabel("(" + behaviour.unit.apply(behaviour.scrollableValue) + ")");
+				box.subLabel(ITextComponent.of("(" + behaviour.unit.apply(behaviour.scrollableValue) + ")"));
 		}
 
-		box.scrollTooltip("[" + Lang.translate("action.scroll") + "]");
+		box.scrollTooltip(ITextComponent.of("[" + Lang.translate("action.scroll").getUnformattedComponentText() + "]"));
 		box.offsetLabel(behaviour.textShift.add(20, -10, 0))
 			.withColors(0x5A5D5A, 0xB5B7B6)
 			.passive(!highlight);

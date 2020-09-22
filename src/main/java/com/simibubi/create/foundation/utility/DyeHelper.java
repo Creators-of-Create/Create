@@ -47,7 +47,7 @@ public class DyeHelper {
 		}
 	}
 
-	public static Tag<Item> getTagOfDye(DyeColor color) {
+	public static Tags.IOptionalNamedTag<Item> getTagOfDye(DyeColor color) {
 		switch (color) {
 		case BLACK:
 			return Tags.Items.DYES_BLACK;

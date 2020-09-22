@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.tileEntity.behaviour;
 
 import java.util.function.Function;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -46,9 +47,9 @@ public abstract class ValueBoxTransform {
 
 	protected Vector3d rotateHorizontally(BlockState state, Vector3d vec) {
 		float yRot = 0;
-		if (state.has(BlockStateProperties.FACING))
+		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.FACING))
 			yRot = AngleHelper.horizontalAngle(state.get(BlockStateProperties.FACING));
-		if (state.has(BlockStateProperties.HORIZONTAL_FACING))
+		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.HORIZONTAL_FACING))
 			yRot = AngleHelper.horizontalAngle(state.get(BlockStateProperties.HORIZONTAL_FACING));
 		return VecHelper.rotateCentered(vec, yRot, Axis.Y);
 	}

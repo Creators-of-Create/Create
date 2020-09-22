@@ -46,7 +46,7 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity {
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		state = compound.getInt("State");
 		charging = compound.getBoolean("Charging");
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

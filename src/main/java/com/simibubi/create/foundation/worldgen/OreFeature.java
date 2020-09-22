@@ -66,7 +66,7 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 
 		Pair<Placement<T>, T> placement = getPlacement();
 		ConfiguredFeature<?, ?> createdFeature = Feature.ORE
-			.configure(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, block.get()
+			.configure(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, block.get()
 				.getDefaultState(), clusterSize.get()))
 			.createDecoratedFeature(placement.getKey()
 				.configure(placement.getValue()));

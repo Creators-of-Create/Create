@@ -54,7 +54,7 @@ public enum AllWorldFeatures {
 		for (AllWorldFeatures entry : AllWorldFeatures.values()) {
 			for (Biome biome : ForgeRegistries.BIOMES) {
 
-				if (biome == Biomes.THE_VOID)
+				if (biome.getRegistryName() == Biomes.THE_VOID.getRegistryName())
 					continue;
 				if (biome == Biomes.NETHER)
 					continue;

@@ -92,7 +92,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 					.target(0)
 					.withSpeed(.05f));
 
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 
 		if (!clientPacket)
 			return;

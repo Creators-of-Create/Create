@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 
 public class LinkRenderer {
 
@@ -38,12 +39,12 @@ public class LinkRenderer {
 		if (behaviour == null)
 			return;
 
-		String freq1 = Lang.translate("logistics.firstFrequency");
-		String freq2 = Lang.translate("logistics.secondFrequency");
+		ITextComponent freq1 = Lang.translate("logistics.firstFrequency");
+		ITextComponent freq2 = Lang.translate("logistics.secondFrequency");
 
 		for (boolean first : Iterate.trueAndFalse) {
 			AxisAlignedBB bb = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).grow(.25f);
-			String label = first ? freq2 : freq1;
+			ITextComponent label = first ? freq2 : freq1;
 			boolean hit = behaviour.testHit(first, target.getHitVec());
 			ValueBoxTransform transform = first ? behaviour.firstSlot : behaviour.secondSlot;
 

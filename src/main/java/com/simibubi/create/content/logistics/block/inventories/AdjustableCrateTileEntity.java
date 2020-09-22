@@ -153,7 +153,7 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		allowedAmount = compound.getInt("AllowedAmount");
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

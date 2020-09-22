@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.item.PartialItemModelRenderer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
 
@@ -12,7 +13,7 @@ public class CustomRenderedItemModelRenderer<M extends CustomRenderedItemModel> 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void render(ItemStack stack, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public void render(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		M mainModel = ((M) Minecraft.getInstance()
 			.getItemRenderer()
 			.getItemModelWithOverrides(stack, null, null));

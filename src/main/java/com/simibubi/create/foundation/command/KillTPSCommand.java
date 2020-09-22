@@ -42,11 +42,11 @@ public class KillTPSCommand {
 					}
 
 					return 1;
-				}).then(Commands.argument(Lang.translate("command.killTPSCommand.argument.tickTime"),
+				}).then(Commands.argument(Lang.translate("command.killTPSCommand.argument.tickTime").getUnformattedComponentText(),
 						IntegerArgumentType.integer(1)).executes(ctx -> {
 							// killtps start tickTime
 							int tickTime = IntegerArgumentType.getInteger(ctx,
-									Lang.translate("command.killTPSCommand.argument.tickTime"));
+									Lang.translate("command.killTPSCommand.argument.tickTime").getUnformattedComponentText());
 							Create.lagger.setTickTime(tickTime);
 							Create.lagger.setLagging(true);
 							ctx.getSource().sendFeedback((Lang.createTranslationTextComponent(

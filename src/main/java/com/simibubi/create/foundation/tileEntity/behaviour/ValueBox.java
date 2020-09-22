@@ -18,13 +18,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class ValueBox extends ChasingAABBOutline {
 
 	protected ITextComponent label = ITextComponent.of("Value Box");
 	protected ITextComponent sublabel = ITextComponent.of("");
-	protected String scrollTooltip = "";
+	protected ITextComponent scrollTooltip = StringTextComponent.EMPTY;
 	protected Vector3d labelOffset = Vector3d.ZERO;
 
 	protected int passiveColor;
@@ -57,7 +59,7 @@ public class ValueBox extends ChasingAABBOutline {
 		return this;
 	}
 
-	public ValueBox scrollTooltip(String scrollTip) {
+	public ValueBox scrollTooltip(ITextComponent scrollTip) {
 		this.scrollTooltip = scrollTip;
 		return this;
 	}
@@ -108,7 +110,7 @@ public class ValueBox extends ChasingAABBOutline {
 				ms.translate(0, 10, 0);
 				renderHoveringText(ms, buffer, sublabel);
 			}
-			if (!scrollTooltip.isEmpty()) {
+			if (!scrollTooltip.getUnformattedComponentText().isEmpty()) {
 				ms.translate(0, 10, 0);
 				renderHoveringText(ms, buffer, scrollTooltip, 0x998899, 0x111111);
 			}
@@ -125,7 +127,7 @@ public class ValueBox extends ChasingAABBOutline {
 		ItemStack stack;
 		int count;
 
-		public ItemValueBox(String label, AxisAlignedBB bb, BlockPos pos, ItemStack stack, int count) {
+		public ItemValueBox(ITextComponent label, AxisAlignedBB bb, BlockPos pos, ItemStack stack, int count) {
 			super(label, bb, pos);
 			this.stack = stack;
 			this.count = count;
@@ -135,13 +137,13 @@ public class ValueBox extends ChasingAABBOutline {
 		public void renderContents(MatrixStack ms, IRenderTypeBuffer buffer) {
 			super.renderContents(ms, buffer);
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
-			String countString = count == 0 ? "*" : count + "";
+			ITextComponent countString = ITextComponent.of(count == 0 ? "*" : count + "");
 			ms.translate(17.5f, -5f, 7f);
 
 			boolean isFilter = stack.getItem() instanceof FilterItem;
 			boolean isEmpty = stack.isEmpty();
 			float scale = 1.5f;
-			ms.translate(-font.getStringWidth(countString), 0, 0);
+			ms.translate(-font.getWidth(countString), 0, 0);
 			
 			if (isFilter)
 				ms.translate(3, 8, 7.25f);
@@ -194,7 +196,7 @@ public class ValueBox extends ChasingAABBOutline {
 	public static class IconValueBox extends ValueBox {
 		AllIcons icon;
 
-		public IconValueBox(String label, INamedIconOptions iconValue, AxisAlignedBB bb, BlockPos pos) {
+		public IconValueBox(ITextComponent label, INamedIconOptions iconValue, AxisAlignedBB bb, BlockPos pos) {
 			super(label, bb, pos);
 			subLabel(Lang.translate(iconValue.getTranslationKey()));
 			icon = iconValue.getIcon();

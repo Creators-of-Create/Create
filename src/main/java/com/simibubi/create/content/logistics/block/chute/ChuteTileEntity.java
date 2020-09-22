@@ -476,7 +476,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		pull = compound.getFloat("Pull");
 		push = compound.getFloat("Push");
 		bottomPullDistance = compound.getFloat("BottomAirFlowDistance");
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 
 		if (hasWorld() && world.isRemote && !previousItem.equals(item, false) && !item.isEmpty()) {
 			if (world.rand.nextInt(3) != 0)

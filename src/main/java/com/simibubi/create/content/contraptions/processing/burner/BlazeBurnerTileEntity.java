@@ -165,7 +165,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		activeFuel = FuelType.values()[compound.getInt("fuelLevel")];
 		remainingBurnTime = compound.getInt("burnTimeRemaining");
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	/**

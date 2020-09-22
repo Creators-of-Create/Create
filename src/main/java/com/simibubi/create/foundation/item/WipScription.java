@@ -14,7 +14,7 @@ public class WipScription extends ItemDescription {
 
 	public WipScription(Palette palette) {
 		super(palette);
-		add(getLines(), TextFormatting.RED + Lang.translate("tooltip.workInProgress"));
+		add(getLines(), Lang.translate("tooltip.workInProgress").formatted(TextFormatting.RED));
 
 		int descriptions = 0;
 		while (I18n.hasKey("create.tooltip.randomWipDescription" + descriptions++))
@@ -22,7 +22,7 @@ public class WipScription extends ItemDescription {
 
 		if (--descriptions > 0) {
 			int index = new Random().nextInt(descriptions);
-			String translate = Lang.translate("tooltip.randomWipDescription" + index);
+			ITextComponent translate = Lang.translate("tooltip.randomWipDescription" + index);
 			add(getLines(), TooltipHelper.cutString(translate, TextFormatting.DARK_RED, TextFormatting.DARK_RED));
 		}
 	}

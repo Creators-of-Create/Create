@@ -13,6 +13,7 @@ import com.simibubi.create.Create;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.criterion.CriterionInstance;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -73,8 +74,8 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 
 	protected abstract static class Instance extends CriterionInstance {
 
-		public Instance(ResourceLocation idIn) {
-			super(idIn);
+		public Instance(ResourceLocation idIn, EntityPredicate.AndPredicate p_i231464_2_) {
+			super(idIn, p_i231464_2_);
 		}
 
 		protected abstract boolean test(List<Supplier<Object>> suppliers);

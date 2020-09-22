@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.StringTextComponent;
 
 public class EdgeInteractionRenderer {
 
@@ -63,7 +64,7 @@ public class EdgeInteractionRenderer {
 		AxisAlignedBB bb = EdgeInteractionHandler.getBB(pos, closestEdge);
 		boolean hit = bb.contains(target.getHitVec());
 
-		ValueBox box = new ValueBox("", bb.offset(-pos.getX(), -pos.getY(), -pos.getZ()), pos);
+		ValueBox box = new ValueBox(StringTextComponent.EMPTY, bb.offset(-pos.getX(), -pos.getY(), -pos.getZ()), pos);
 		Vector3d textOffset = Vector3d.ZERO;
 
 		boolean positive = closestEdge.getAxisDirection() == AxisDirection.POSITIVE;

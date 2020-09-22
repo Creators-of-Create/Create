@@ -17,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.NonNullList;
@@ -103,7 +104,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 	// Datagen shortcuts
 
-	public ProcessingRecipeBuilder<T> require(Tag<Item> tag) {
+	public ProcessingRecipeBuilder<T> require(ITag.INamedTag<Item> tag) {
 		return require(Ingredient.fromTag(tag));
 	}
 
@@ -120,7 +121,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return require(FluidIngredient.fromFluid(fluid, amount));
 	}
 
-	public ProcessingRecipeBuilder<T> require(Tag<Fluid> fluidTag, int amount) {
+	public ProcessingRecipeBuilder<T> require(ITag.INamedTag<Fluid> fluidTag, int amount) {
 		return require(FluidIngredient.fromTag(fluidTag, amount));
 	}
 

@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -173,13 +174,13 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 	public interface InterfaceProvider {
 
 		public static InterfaceProvider towardBlockFacing() {
-			return (w, p, s) -> new BlockFace(p, s.has(BlockStateProperties.FACING) ? s.get(BlockStateProperties.FACING)
+			return (w, p, s) -> new BlockFace(p, BlockHelper.hasBlockStateProperty(s, BlockStateProperties.FACING) ? s.get(BlockStateProperties.FACING)
 				: s.get(BlockStateProperties.HORIZONTAL_FACING));
 		}
 
 		public static InterfaceProvider oppositeOfBlockFacing() {
 			return (w, p, s) -> new BlockFace(p,
-				(s.has(BlockStateProperties.FACING) ? s.get(BlockStateProperties.FACING)
+				(BlockHelper.hasBlockStateProperty(s, BlockStateProperties.FACING) ? s.get(BlockStateProperties.FACING)
 					: s.get(BlockStateProperties.HORIZONTAL_FACING)).getOpposite());
 		}
 

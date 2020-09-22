@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import net.minecraft.block.Block;
@@ -61,14 +62,14 @@ public class EdgeInteractionHandler {
 	public static List<Direction> getConnectiveSides(World world, BlockPos pos, Direction face,
 		EdgeInteractionBehaviour behaviour) {
 		List<Direction> sides = new ArrayList<>(6);
-		if (Block.hasSolidSide(world.getBlockState(pos.offset(face)), world, pos.offset(face), face.getOpposite()))
+		if (BlockHelper.hasBlockSolidSide(world.getBlockState(pos.offset(face)), world, pos.offset(face), face.getOpposite()))
 			return sides;
 
 		for (Direction direction : Direction.values()) {
 			if (direction.getAxis() == face.getAxis())
 				continue;
 			BlockPos neighbourPos = pos.offset(direction);
-			if (Block.hasSolidSide(world.getBlockState(neighbourPos.offset(face)), world, neighbourPos.offset(face),
+			if (BlockHelper.hasBlockSolidSide(world.getBlockState(neighbourPos.offset(face)), world, neighbourPos.offset(face),
 				face.getOpposite()))
 				continue;
 			if (!behaviour.connectivityPredicate.test(world, pos, face, direction))

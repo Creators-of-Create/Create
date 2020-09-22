@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -75,26 +76,26 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	@Override
-	public final void readClientUpdate(CompoundNBT tag) {
-		read(tag, true);
+	public final void readClientUpdate(BlockState state, CompoundNBT tag) {
+		fromTag(state, tag, true);
 	}
 
 	@Override
-	public final void read(CompoundNBT tag) {
-		read(tag, false);
+	public final void fromTag(BlockState state, CompoundNBT tag) {
+		fromTag(state, tag, false);
 	}
 
 	/**
 	 * Hook only these in future subclasses of STE
 	 */
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		if (firstNbtRead) {
 			firstNbtRead = false;
 			ArrayList<TileEntityBehaviour> list = new ArrayList<>();
 			addBehavioursDeferred(list);
 			list.forEach(b -> behaviours.put(b.getType(), b));
 		}
-		super.read(compound);
+		super.fromTag(state, compound);
 		behaviours.values()
 			.forEach(tb -> tb.read(compound, clientPacket));
 	}

@@ -92,7 +92,7 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 				continue;
 
 			BakedQuad newQuad = new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length),
-				quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting());
+				quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.hasShade());
 			VertexFormat format = DefaultVertexFormats.BLOCK;
 			int[] vertexData = newQuad.getVertexData();
 

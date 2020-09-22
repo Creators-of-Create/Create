@@ -42,7 +42,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		currentLevel = compound.getFloat("Current");
 		powered = compound.getBoolean("Powered");
 
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

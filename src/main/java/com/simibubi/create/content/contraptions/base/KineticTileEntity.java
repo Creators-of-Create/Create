@@ -217,7 +217,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		// DO NOT READ kinetic information when placed after movement
 		if (wasMoved) {
-			super.read(compound, clientPacket);
+			super.fromTag(compound, clientPacket);
 			return;
 		}
 
@@ -237,7 +237,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			overStressed = capacity < stress && StressImpact.isEnabled();
 		}
 
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 
 		if (clientPacket && overStressedBefore != overStressed && speed != 0)
 			effects.triggerOverStressedEffect();

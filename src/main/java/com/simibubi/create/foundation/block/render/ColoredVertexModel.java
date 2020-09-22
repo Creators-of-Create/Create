@@ -44,7 +44,7 @@ public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
 		for (int i = 0; i < quads.size(); i++) {
 			BakedQuad quad = quads.get(i);
 			BakedQuad newQuad = new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length),
-					quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting());
+					quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.hasShade());
 
 			VertexFormat format = DefaultVertexFormats.BLOCK;
 			int[] vertexData = newQuad.getVertexData();

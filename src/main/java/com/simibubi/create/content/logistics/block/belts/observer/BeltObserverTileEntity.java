@@ -81,7 +81,7 @@ public class BeltObserverTileEntity extends SmartTileEntity {
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		turnOffTicks = compound.getInt("TurnOff");
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 }

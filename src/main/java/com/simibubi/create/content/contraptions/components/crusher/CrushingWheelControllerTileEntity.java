@@ -225,7 +225,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 		if (compound.contains("Entity") && !isFrozen() && !isOccupied()) {
 			entityUUID = NBTUtil.readUniqueId(compound.getCompound("Entity"));
 			this.searchForEntity = true;
