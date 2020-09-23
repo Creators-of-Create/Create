@@ -81,7 +81,7 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		//GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16).render();
-		GuiGameElement.of(item).at(posX + 10, posY - 16).render();
+		GuiGameElement.of(item).at(posX + 10, posY - 16).render(ms);
 		ms.pop();
 	}
 }

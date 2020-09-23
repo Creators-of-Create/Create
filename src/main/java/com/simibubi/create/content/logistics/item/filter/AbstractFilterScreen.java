@@ -73,7 +73,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		GuiGameElement.of(container.filterItem)
 				.at(guiLeft + background.width, guiTop +background.height -60)
 				.scale(5)
-				.render();
+				.render(ms);
 
 	}
 

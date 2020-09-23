@@ -113,17 +113,17 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 
 		AllGuiTextures cursor =
 			te.powered ? AllGuiTextures.STOCKSWITCH_CURSOR_ON : AllGuiTextures.STOCKSWITCH_CURSOR_OFF;
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef((cursorPos * (sprite.width - 20) + 10), 0, 0);
+		matrixStack.push();
+		matrixStack.translate((cursorPos * (sprite.width - 20) + 10), 0, 0);
 		cursor.draw(matrixStack, this, guiLeft - 4, guiTop + 24);
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 
-		RenderSystem.pushMatrix();
+		matrixStack.push();
 		GuiGameElement.of(renderedItem)
 				.at(guiLeft + STOCKSWITCH.width + 15, guiTop + 20)
 				.scale(5)
-				.render();
-		RenderSystem.popMatrix();
+				.render(matrixStack);
+		matrixStack.pop();
 	}
 
 	@Override

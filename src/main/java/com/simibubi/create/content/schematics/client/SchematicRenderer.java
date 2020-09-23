@@ -92,7 +92,7 @@ public class SchematicRenderer {
 		Map<RenderType, BufferBuilder> buffers = new HashMap<>();
 		MatrixStack ms = new MatrixStack();
 
-		BlockPos.func_229383_a_(blockAccess.getBounds())
+		BlockPos.stream(blockAccess.getBounds())
 			.forEach(localPos -> {
 				ms.push();
 				MatrixStacker.of(ms)

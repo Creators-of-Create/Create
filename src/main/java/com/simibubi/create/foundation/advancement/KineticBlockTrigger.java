@@ -13,6 +13,7 @@ import com.simibubi.create.Create;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.loot.ConditionArrayParser;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -31,7 +32,7 @@ public class KineticBlockTrigger extends CriterionTriggerBase<KineticBlockTrigge
 	
 	@Override
 	@SuppressWarnings("deprecation")
-	public Instance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
+	public Instance conditionsFromJson(JsonObject json, ConditionArrayParser context) {
 		Block block = null;
 		if (json.has("block")) {
 			ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(json, "block"));
@@ -62,6 +63,7 @@ public class KineticBlockTrigger extends CriterionTriggerBase<KineticBlockTrigge
 			return block == suppliers.get(0).get();
 		}
 
+		/* FIXME: Does this need serialization?
 		@Override
 		@SuppressWarnings("deprecation")
 		public JsonElement serialize() {
@@ -69,7 +71,7 @@ public class KineticBlockTrigger extends CriterionTriggerBase<KineticBlockTrigge
 			if (this.block != null)
 				jsonobject.addProperty("block", Registry.BLOCK.getKey(this.block).toString());
 			return jsonobject;
-		}
+		}*/
 	}
 
 	

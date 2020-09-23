@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.Create;
@@ -53,12 +54,12 @@ public class RedstoneLinkNetworkHandler {
 
 	public void onLoadWorld(IWorld world) {
 		connections.put(world, new HashMap<>());
-		Create.logger.debug("Prepared Redstone Network Space for " + world.getDimension().getType().getRegistryName());
+		Create.logger.debug("Prepared Redstone Network Space for " + WorldHelper.getDimensionID(world));
 	}
 
 	public void onUnloadWorld(IWorld world) {
 		connections.remove(world);
-		Create.logger.debug("Removed Redstone Network Space for " + world.getDimension().getType().getRegistryName());
+		Create.logger.debug("Removed Redstone Network Space for " + WorldHelper.getDimensionID(world));
 	}
 
 	public Set<LinkBehaviour> getNetworkOf(LinkBehaviour actor) {
@@ -130,7 +131,7 @@ public class RedstoneLinkNetworkHandler {
 	public Map<Pair<Frequency, Frequency>, Set<LinkBehaviour>> networksIn(IWorld world) {
 		if (!connections.containsKey(world)) {
 			Create.logger.warn(
-					"Tried to Access unprepared network space of " + world.getDimension().getType().getRegistryName());
+					"Tried to Access unprepared network space of " + WorldHelper.getDimensionID(world));
 			return new HashMap<>();
 		}
 		return connections.get(world);

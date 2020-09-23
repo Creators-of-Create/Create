@@ -15,6 +15,8 @@ import net.minecraft.tags.ITagCollectionSupplier;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ITickList;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerTickList;
 import net.minecraft.world.server.ServerWorld;
@@ -22,9 +24,9 @@ import net.minecraft.world.storage.MapData;
 
 public class WrappedServerWorld extends ServerWorld {
 
-	protected ServerWorld world;
+	protected World world;
 
-	public WrappedServerWorld(ServerWorld world) {
+	public WrappedServerWorld(World world) {
 		super(world.getServer(), world.getServer().getBackgroundExecutor(), world.getSaveHandler(), world.getWorldInfo(), world.getDimension(), world.getProfiler(), null);
 		this.world = world;
 	}
@@ -35,7 +37,7 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
-	public float getCelestialAngle(float p_72826_1_) {
+	public float getCelestialAngleRadians(float p_72826_1_) {
 		return 0;
 	}
 	
@@ -50,12 +52,12 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
-	public ServerTickList<Block> getPendingBlockTicks() {
+	public ITickList<Block> getPendingBlockTicks() {
 		return world.getPendingBlockTicks();
 	}
 
 	@Override
-	public ServerTickList<Fluid> getPendingFluidTicks() {
+	public ITickList<Fluid> getPendingFluidTicks() {
 		return world.getPendingFluidTicks();
 	}
 

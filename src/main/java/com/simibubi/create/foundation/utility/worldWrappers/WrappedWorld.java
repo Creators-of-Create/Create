@@ -23,6 +23,7 @@ import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.AbstractChunkProvider;
+import net.minecraft.world.storage.ISpawnWorldInfo;
 import net.minecraft.world.storage.MapData;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,16 +35,16 @@ public class WrappedWorld extends World {
 	protected World world;
 
 	public WrappedWorld(World world) {
-		super(world.getWorldInfo(), world.getDimension(), (w, d) -> world.getChunkProvider(),
-				world.getProfiler(), world.isRemote);
+		super((ISpawnWorldInfo) world.getWorldInfo(), world.getRegistryKey(), world.getDimension(),
+			world::getProfiler, world.isRemote, world.isDebugWorld(), 0);
 		this.world = world;
 	}
 
-	/*FIXME
-	@Override
+	// FIXME
+	// @Override
 	public World getWorld() {
 		return world;
-	}*/
+	}
 
 	@Override
 	public BlockState getBlockState(BlockPos pos) {

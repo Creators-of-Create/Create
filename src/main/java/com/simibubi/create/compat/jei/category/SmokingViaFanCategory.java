@@ -25,7 +25,7 @@ public class SmokingViaFanCategory extends ProcessingViaFanCategory<SmokingRecip
 		GuiGameElement.of(Blocks.FIRE.getDefaultState())
 				.scale(24)
 				.atLocal(0, 0, 2)
-				.render();
+				.render(matrixStack);
 
 	}
 }

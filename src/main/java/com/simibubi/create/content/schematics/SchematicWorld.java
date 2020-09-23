@@ -28,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeRegistry;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.server.ServerTickList;
 import net.minecraft.world.server.ServerWorld;
@@ -41,11 +42,11 @@ public class SchematicWorld extends WrappedServerWorld {
 	public BlockPos anchor;
 	public boolean renderMode;
 
-	public SchematicWorld(ServerWorld original) {
+	public SchematicWorld(World original) {
 		this(BlockPos.ZERO, original);
 	}
 	
-	public SchematicWorld(BlockPos anchor, ServerWorld original) {
+	public SchematicWorld(BlockPos anchor, World original) {
 		super(original);
 		this.blocks = new HashMap<>();
 		this.tileEntities = new HashMap<>();
@@ -121,7 +122,7 @@ public class SchematicWorld extends WrappedServerWorld {
 
 	@Override
 	public Biome getBiome(BlockPos pos) {
-		return Biomes.THE_VOID;
+		return BiomeRegistry.THE_VOID;
 	}
 
 	@Override
@@ -174,7 +175,7 @@ public class SchematicWorld extends WrappedServerWorld {
 	}
 
 	@Override
-	public ServerTickList<Block> getPendingBlockTicks() {
+	public ITickList<Block> getPendingBlockTicks() {
 		return EmptyTickList.get();
 	}
 

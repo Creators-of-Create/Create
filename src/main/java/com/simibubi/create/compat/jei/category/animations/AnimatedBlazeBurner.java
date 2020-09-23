@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import mezz.jei.api.gui.drawable.IDrawable;
+import net.minecraft.util.math.vector.Quaternion;
 
 public class AnimatedBlazeBurner implements IDrawable {
 
@@ -21,21 +22,21 @@ public class AnimatedBlazeBurner implements IDrawable {
 	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
 		matrixStack.push();
 		matrixStack.translate(xOffset, yOffset, 200);
-		RenderSystem.rotatef(-15.5f, 1, 0, 0);
-		RenderSystem.rotatef(22.5f, 0, 1, 0);
+		matrixStack.multiply(new Quaternion(-15.5f, 1, 0, 0));
+		matrixStack.multiply(new Quaternion(22.5f, 0, 1, 0));
 		int scale = 23;
 
 		GuiGameElement.of(AllBlocks.BLAZE_BURNER.getDefaultState())
 			.atLocal(0, 1.65, 0)
 			.scale(scale)
-			.render();
+			.render(matrixStack);
 
 		AllBlockPartials blaze = AllBlockPartials.BLAZES.get(heatLevel);
 		GuiGameElement.of(blaze)
 			.atLocal(1, 1.65, 1)
 			.rotate(0, 180, 0)
 			.scale(scale)
-			.render();
+			.render(matrixStack);
 
 		matrixStack.pop();
 	}

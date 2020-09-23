@@ -121,7 +121,7 @@ public class BlockzapperItem extends ZapperItem {
 				selectedState = selectedState.updatePostPlacement(updateDirection,
 					world.getBlockState(placed.offset(updateDirection)), world, placed, placed.offset(updateDirection));
 
-			BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, placed);
+			BlockSnapshot blocksnapshot = BlockSnapshot.create(world.getRegistryKey(), world, placed);
 			FluidState FluidState = world.getFluidState(placed);
 			world.setBlockState(placed, FluidState.getBlockState(), 18);
 			world.setBlockState(placed, selectedState);

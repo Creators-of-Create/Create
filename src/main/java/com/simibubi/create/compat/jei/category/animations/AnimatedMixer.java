@@ -24,30 +24,30 @@ public class AnimatedMixer extends AnimatedKinetics {
 			.rotateBlock(0, getCurrentAngle() * 2, 0)
 			.atLocal(0, 0, 0)
 			.scale(scale)
-			.render();
+			.render(matrixStack);
 
 		GuiGameElement.of(AllBlocks.MECHANICAL_MIXER.getDefaultState())
 			.atLocal(0, 0, 0)
 			.scale(scale)
-			.render();
+			.render(matrixStack);
 
 		float animation = ((MathHelper.sin(AnimationTickHolder.getRenderTick() / 32f) + 1) / 5) + .5f;
 
 		GuiGameElement.of(AllBlockPartials.MECHANICAL_MIXER_POLE)
 			.atLocal(0, animation, 0)
 			.scale(scale)
-			.render();
+			.render(matrixStack);
 
 		GuiGameElement.of(AllBlockPartials.MECHANICAL_MIXER_HEAD)
 			.rotateBlock(0, getCurrentAngle() * 4, 0)
 			.atLocal(0, animation, 0)
 			.scale(scale)
-			.render();
+			.render(matrixStack);
 
 		GuiGameElement.of(AllBlocks.BASIN.getDefaultState())
 			.atLocal(0, 1.65, 0)
 			.scale(scale)
-			.render();
+			.render(matrixStack);
 
 		matrixStack.pop();
 	}

@@ -5,10 +5,12 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
@@ -63,7 +65,9 @@ public class ContraptionBlockSource implements IBlockSource {
 	}
 
 	@Override
+	@Nullable
 	public ServerWorld getWorld() {
-		return context.world;
+		MinecraftServer server = context.world.getServer();
+		return server != null ? server.getWorld(context.world.getRegistryKey()) : null;
 	}
 }

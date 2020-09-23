@@ -10,6 +10,7 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
@@ -70,10 +71,10 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 			int itemInUseCount = player.getItemInUseCount();
 			if (itemInUseCount > 0) {
 				int modifier = leftHand ? -1 : 1;
-				RenderSystem.translatef(modifier * .5f, 0, -.25f);
-				RenderSystem.rotatef(modifier * 40, 0, 0, 1);
-				RenderSystem.rotatef(modifier * 10, 1, 0, 0);
-				RenderSystem.rotatef(modifier * 90, 0, 1, 0);
+				ms.translate(modifier * .5f, 0, -.25f);
+				ms.multiply(new Quaternion(modifier * 40, 0, 0, 1));
+				ms.multiply(new Quaternion(modifier * 10, 1, 0, 0));
+				ms.multiply(new Quaternion(modifier * 90, 0, 1, 0));
 			}
 		}
 

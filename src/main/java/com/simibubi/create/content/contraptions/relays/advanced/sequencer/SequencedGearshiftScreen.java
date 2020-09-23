@@ -147,7 +147,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		GuiGameElement.of(renderedItem)
 				.at(guiLeft + background.width + 20, guiTop + 50)
 				.scale(5)
-				.render();
+				.render(matrixStack);
 	}
 
 	private void label(MatrixStack matrixStack, int x, int y, ITextComponent text) {

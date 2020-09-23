@@ -22,12 +22,12 @@ public class AnimatedCrafter extends AnimatedKinetics {
 		GuiGameElement.of(cogwheel())
 				.rotateBlock(90, 0, getCurrentAngle())
 				.scale(scale)
-				.render();
+				.render(matrixStack);
 
 		GuiGameElement.of(AllBlocks.MECHANICAL_CRAFTER.getDefaultState())
 				.rotateBlock(0, 180, 0)
 				.scale(scale)
-				.render();
+				.render(matrixStack);
 
 		matrixStack.pop();
 	}

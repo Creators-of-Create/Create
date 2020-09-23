@@ -31,22 +31,22 @@ public class AnimatedPress extends AnimatedKinetics {
 		GuiGameElement.of(shaft(Axis.Z))
 				.rotateBlock(0, 0, getCurrentAngle())
 				.scale(scale)
-				.render();
+				.render(matrixStack);
 
 		GuiGameElement.of(AllBlocks.MECHANICAL_PRESS.getDefaultState())
 				.scale(scale)
-				.render();
+				.render(matrixStack);
 
 		GuiGameElement.of(AllBlockPartials.MECHANICAL_PRESS_HEAD)
 				.atLocal(0, -getAnimatedHeadOffset(), 0)
 				.scale(scale)
-				.render();
+				.render(matrixStack);
 
 		if (basin)
 			GuiGameElement.of(AllBlocks.BASIN.getDefaultState())
 					.atLocal(0, 1.65, 0)
 					.scale(scale)
-					.render();
+					.render(matrixStack);
 
 		matrixStack.pop();
 	}

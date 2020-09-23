@@ -86,7 +86,7 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 		GuiGameElement.of(Fluids.WATER)
 				.scale(24)
 				.atLocal(0, 0, 2)
-				.render();
+				.render(matrixStack);
 
 		matrixStack.pop();
 	}

@@ -2,6 +2,7 @@ package com.simibubi.create.content.schematics.block;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -399,7 +400,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		ItemRequirement requirement;
 
 		if (entityMode) {
-			requirement = ItemRequirement.of(blockReader.getEntities()
+			requirement = ItemRequirement.of(blockReader.getEntities().collect(Collectors.toList())
 				.get(printingEntityIndex));
 
 		} else {
@@ -449,7 +450,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 		ItemStack icon = requirement.isEmpty() || requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0);
 		if (entityMode)
-			launchEntity(target, icon, blockReader.getEntities()
+			launchEntity(target, icon, blockReader.getEntities().collect(Collectors.toList())
 				.get(printingEntityIndex));
 		else if (AllBlocks.BELT.has(blockState)) {
 			TileEntity te = blockReader.getTileEntity(currentPos.add(schematicAnchor));
@@ -623,7 +624,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	protected void advanceCurrentPos() {
-		List<Entity> entities = blockReader.getEntities();
+		List<Entity> entities = blockReader.getEntities().collect(Collectors.toList());
 		if (printingEntityIndex != -1) {
 			printingEntityIndex++;
 
@@ -885,14 +886,15 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 				checklist.require(requirement);
 				blocksToPlace++;
 			}
-			for (Entity entity : blockReader.getEntities()) {
+			blockReader.getEntities().forEach(entity -> {
 				ItemRequirement requirement = ItemRequirement.of(entity);
 				if (requirement.isEmpty())
-					continue;
+					return;
 				if (requirement.isInvalid())
-					continue;
+					return;
 				checklist.require(requirement);
-			}
+			});
+
 		}
 		checklist.gathered.clear();
 		for (IItemHandler inventory : attachedInventories) {

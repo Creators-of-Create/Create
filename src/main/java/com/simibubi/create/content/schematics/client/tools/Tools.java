@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.Lang;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public enum Tools {
@@ -45,7 +46,7 @@ public enum Tools {
 		return tools;
 	}
 
-	public List<TranslationTextComponent> getDescription() {
+	public List<ITextComponent> getDescription() {
 		return Lang.translatedOptions("schematic.tool." + Lang.asId(name()) + ".description", "0", "1", "2", "3");
 	}
 

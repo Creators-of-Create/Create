@@ -38,7 +38,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			PlacementSettings settings = SchematicItem.getSettings(stack);
 			settings.setIgnoreEntities(false);
 			t.place(player.getServerWorld(), NBTUtil.readBlockPos(stack.getTag().getCompound("Anchor")),
-					settings);
+					settings, player.getRNG());
 		});
 		context.get().setPacketHandled(true);
 	}

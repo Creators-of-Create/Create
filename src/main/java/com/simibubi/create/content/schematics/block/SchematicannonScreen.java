@@ -214,7 +214,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		GuiGameElement.of(renderedItem)
 				.at(guiLeft + 240, guiTop + 120)
 				.scale(5)
-				.render();
+				.render(matrixStack);
 
 
 		textRenderer.draw(matrixStack, title, guiLeft + 80, guiTop + 10, AllGuiTextures.FONT_COLOR);

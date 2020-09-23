@@ -58,7 +58,7 @@ public class BuilderTransformers {
 			return b.blockstate((c, p) -> {
 				Function<BlockState, ModelFile> model = s -> {
 					String powered =
-						s.has(BlockStateProperties.POWERED) && s.get(BlockStateProperties.POWERED) ? "_powered" : "";
+						s.method_28500(BlockStateProperties.POWERED).orElse(false) ? "_powered" : "";
 					return p.models()
 						.withExistingParent("block/" + type + "_funnel" + powered, p.modLoc("block/funnel/block"))
 						.texture("0", p.modLoc("block/" + type + "_funnel_plating"))
@@ -90,7 +90,7 @@ public class BuilderTransformers {
 					Shape shape = state.get(BeltTunnelBlock.SHAPE);
 					if (shape == BeltTunnelBlock.Shape.CLOSED)
 						shape = BeltTunnelBlock.Shape.STRAIGHT;
-					String shapeName = shape.getName();
+					String shapeName = shape.getString();
 					return ConfiguredModel.builder()
 						.modelFile(p.models()
 							.withExistingParent(id + "/" + shapeName, p.modLoc("block/belt_tunnel/" + shapeName))
@@ -119,7 +119,7 @@ public class BuilderTransformers {
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.transform(StressConfigDefaults.setImpact(4.0))
 			.item()
-			.transform(ModelGen.customItemModel("mechanical_piston", type.getName(), "item"));
+			.transform(ModelGen.customItemModel("mechanical_piston", type.getString(), "item"));
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> bearing(String prefix,

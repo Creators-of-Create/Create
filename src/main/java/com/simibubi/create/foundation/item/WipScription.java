@@ -23,7 +23,8 @@ public class WipScription extends ItemDescription {
 		if (--descriptions > 0) {
 			int index = new Random().nextInt(descriptions);
 			ITextComponent translate = Lang.translate("tooltip.randomWipDescription" + index);
-			add(getLines(), TooltipHelper.cutString(translate, TextFormatting.DARK_RED, TextFormatting.DARK_RED));
+			List<ITextComponent> lines = getLines();
+			TooltipHelper.cutString(translate, TextFormatting.DARK_RED, TextFormatting.DARK_RED).forEach(s -> lines.add(new StringTextComponent(s).formatted(TextFormatting.DARK_RED)));
 		}
 	}
 	

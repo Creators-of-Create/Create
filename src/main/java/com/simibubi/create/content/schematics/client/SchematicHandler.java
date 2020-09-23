@@ -127,11 +127,11 @@ public class SchematicHandler {
 		SchematicWorld wMirroredLR = new SchematicWorld(clientWorld);
 		PlacementSettings placementSettings = new PlacementSettings();
 
-		schematic.place(w, BlockPos.ZERO, placementSettings);
+		schematic.place(w, BlockPos.ZERO, placementSettings, w.getRandom());
 		placementSettings.setMirror(Mirror.FRONT_BACK);
-		schematic.place(wMirroredFB, BlockPos.ZERO.east(size.getX() - 1), placementSettings);
+		schematic.place(wMirroredFB, BlockPos.ZERO.east(size.getX() - 1), placementSettings, wMirroredFB.getRandom());
 		placementSettings.setMirror(Mirror.LEFT_RIGHT);
-		schematic.place(wMirroredLR, BlockPos.ZERO.south(size.getZ() - 1), placementSettings);
+		schematic.place(wMirroredLR, BlockPos.ZERO.south(size.getZ() - 1), placementSettings, wMirroredFB.getRandom());
 
 		renderers.get(0)
 			.display(w);
@@ -186,11 +186,11 @@ public class SchematicHandler {
 		if (!active)
 			return;
 		if (activeSchematicItem != null)
-			this.overlay.renderOn(activeHotbarSlot);
+			this.overlay.renderOn(ms, activeHotbarSlot);
 
 		currentTool.getTool()
 			.renderOverlay(ms, buffer);
-		selectionScreen.renderPassive(Minecraft.getInstance()
+		selectionScreen.renderPassive(ms, Minecraft.getInstance()
 			.getRenderPartialTicks());
 	}
 

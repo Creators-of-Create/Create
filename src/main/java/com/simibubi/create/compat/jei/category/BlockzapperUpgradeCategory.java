@@ -85,12 +85,12 @@ public class BlockzapperUpgradeCategory extends CreateRecipeCategory<Blockzapper
 		font.drawWithShadow(matrixStack, text, (BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(text)) / 2, 57,
 				0x8B8B8B);
 		
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(126, 0, 0);
-		RenderSystem.scaled(3.5, 3.5, 3.5);
-		RenderSystem.translated(-10, 0, 0);
+		matrixStack.push();
+		matrixStack.translate(126, 0, 0);
+		matrixStack.scale(3.5f, 3.5f, 3.5f);
+		matrixStack.translate(-10, 0, 0);
 		RenderSystem.color3f(1, 1, 1);
-		GuiGameElement.of(recipe.getRecipeOutput()).render();
-		RenderSystem.popMatrix();
+		GuiGameElement.of(recipe.getRecipeOutput()).render(matrixStack);
+		matrixStack.pop();
 	}
 }

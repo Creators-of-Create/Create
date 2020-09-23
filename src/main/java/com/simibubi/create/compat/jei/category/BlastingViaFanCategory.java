@@ -27,7 +27,7 @@ public class BlastingViaFanCategory extends ProcessingViaFanCategory<AbstractCoo
 		GuiGameElement.of(Fluids.LAVA)
 				.scale(24)
 				.atLocal(0, 0, 2)
-				.render();
+				.render(matrixStack);
 
 		matrixStack.pop();
 	}

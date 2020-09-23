@@ -28,13 +28,13 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 		GuiGameElement.of(wheel)
 				.rotateBlock(0, 90, -getCurrentAngle())
 				.scale(scale)
-				.render();
+				.render(matrixStack);
 
 		GuiGameElement.of(wheel)
 				.rotateBlock(0, 90, getCurrentAngle())
 				.atLocal(2, 0, 0)
 				.scale(scale)
-				.render();
+				.render(matrixStack);
 	}
 
 }

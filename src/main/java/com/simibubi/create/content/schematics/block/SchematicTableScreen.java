@@ -111,7 +111,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		GuiGameElement.of(renderedItem)
 				.at(mainLeft + 217, mainTop + 48)
 				.scale(3)
-				.render();
+				.render(matrixStack);
 
 		client.getTextureManager()
 			.bindTexture(SCHEMATIC_TABLE_PROGRESS.location);

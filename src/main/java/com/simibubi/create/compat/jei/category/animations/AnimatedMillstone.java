@@ -20,12 +20,12 @@ public class AnimatedMillstone extends AnimatedKinetics {
 		GuiGameElement.of(AllBlockPartials.MILLSTONE_COG)
 			.rotateBlock(22.5, getCurrentAngle() * 2, 0)
 			.scale(scale)
-			.render();
+			.render(matrixStack);
 		
 		GuiGameElement.of(AllBlocks.MILLSTONE.getDefaultState())
 			.rotateBlock(22.5, 22.5, 0)
 			.scale(scale)
-			.render();
+			.render(matrixStack);
 
 		matrixStack.pop();
 	}

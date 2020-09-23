@@ -45,7 +45,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 			matrixStack.push();
 			matrixStack.translate(xPosition, yPosition, 0);
 			float scale = getScale(recipe);
-			RenderSystem.scaled(scale, scale, scale);
+			matrixStack.scale(scale, scale, scale);
 
 			if (ingredient != null) {
 				RenderSystem.enableDepthTest();
@@ -59,7 +59,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 				RenderHelper.disableStandardItemLighting();
 			}
 			
-			RenderSystem.popMatrix();
+			matrixStack.pop();
 		}
 
 		@Override
@@ -167,8 +167,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 128, 59);
 		crafter.draw(matrixStack, 129, 25);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 0, 300);
+		matrixStack.push();
+		matrixStack.translate(0, 0, 300);
 		
 		RenderHelper.disableStandardItemLighting();
 		int amount = 0;
@@ -180,7 +180,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 		
 		Minecraft.getInstance().fontRenderer
 				.drawWithShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 	}
 
 	@Override

@@ -75,7 +75,7 @@ public class GoggleOverlayRenderer {
 		if (tooltip.isEmpty())
 			return;
 
-		RenderSystem.pushMatrix();
+		ms.push();
 		Screen tooltipScreen = new TooltipScreen(null);
 		tooltipScreen.init(mc, mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
 		int posX = tooltipScreen.width / 2 + AllConfigs.CLIENT.overlayOffsetX.get();
@@ -85,8 +85,8 @@ public class GoggleOverlayRenderer {
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		//GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16).render();
-		GuiGameElement.of(item).at(posX + 10, posY - 16).render();
-		RenderSystem.popMatrix();
+		GuiGameElement.of(item).at(posX + 10, posY - 16).render(ms);
+		ms.pop();
 	}
 	
 

@@ -17,7 +17,7 @@ public class MovementContext {
 	public Vector3d motion;
 	public Vector3d relativeMotion;
 	public Vector3d rotation;
-	public ServerWorld world;
+	public World world;
 	public BlockState state;
 	public BlockPos localPos;
 	public CompoundNBT tileData;
@@ -28,7 +28,7 @@ public class MovementContext {
 	public Contraption contraption;
 	public Object temporaryData;
 
-	public MovementContext(ServerWorld world, BlockInfo info) {
+	public MovementContext(World world, BlockInfo info) {
 		this.world = world;
 		this.state = info.state;
 		this.tileData = info.nbt;
@@ -53,7 +53,7 @@ public class MovementContext {
 		return (((int) (length * modifier + 100 * Math.signum(length))) / 100) * 100;
 	}
 
-	public static MovementContext readNBT(ServerWorld world, BlockInfo info, CompoundNBT nbt) {
+	public static MovementContext readNBT(World world, BlockInfo info, CompoundNBT nbt) {
 		MovementContext context = new MovementContext(world, info);
 		context.motion = VecHelper.readNBT(nbt.getList("Motion", NBT.TAG_DOUBLE));
 		context.relativeMotion = VecHelper.readNBT(nbt.getList("RelativeMotion", NBT.TAG_DOUBLE));

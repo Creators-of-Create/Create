@@ -74,8 +74,7 @@ public class ToolSelectionScreen extends Screen {
 		drawTexture(matrixStack, x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
 
 		float toolTipAlpha = yOffset / 10;
-		FontRenderer font = client.fontRenderer;
-		List<TranslationTextComponent> toolTip = tools.get(selection).getDescription();
+		List<ITextComponent> toolTip = tools.get(selection).getDescription();
 		int stringAlphaComponent = ((int) (toolTipAlpha * 0xFF)) << 24;
 
 		if (toolTipAlpha > 0.25f) {
@@ -84,13 +83,13 @@ public class ToolSelectionScreen extends Screen {
 			RenderSystem.color4f(1, 1, 1, 1);
 
 			if (toolTip.size() > 0)
-				drawString(matrixStack, font, toolTip.get(0), x - 10, y + 38, 0xEEEEEE + stringAlphaComponent);
+				textRenderer.draw(matrixStack, toolTip.get(0), x - 10, y + 38, 0xEEEEEE + stringAlphaComponent);
 			if (toolTip.size() > 1)
-				drawString(matrixStack, font, toolTip.get(1), x - 10, y + 50, 0xCCDDFF + stringAlphaComponent);
+				textRenderer.draw(matrixStack, toolTip.get(1), x - 10, y + 50, 0xCCDDFF + stringAlphaComponent);
 			if (toolTip.size() > 2)
-				drawString(matrixStack, font, toolTip.get(2), x - 10, y + 60, 0xCCDDFF + stringAlphaComponent);
+				textRenderer.draw(matrixStack, toolTip.get(2), x - 10, y + 60, 0xCCDDFF + stringAlphaComponent);
 			if (toolTip.size() > 3)
-				drawString(matrixStack, font, toolTip.get(3), x - 10, y + 72, 0xCCCCDD + stringAlphaComponent);
+				textRenderer.draw(matrixStack, toolTip.get(3), x - 10, y + 72, 0xCCCCDD + stringAlphaComponent);
 		}
 
 		RenderSystem.color4f(1, 1, 1, 1);

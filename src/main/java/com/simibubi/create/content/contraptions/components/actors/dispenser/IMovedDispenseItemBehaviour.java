@@ -27,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
@@ -148,9 +149,11 @@ public interface IMovedDispenseItemBehaviour {
 				if (!(itemStack.getItem() instanceof SpawnEggItem))
 					return super.dispenseStack(itemStack, context, pos, facing);
 				EntityType<?> entityType = ((SpawnEggItem) itemStack.getItem()).getType(itemStack.getTag());
-				Entity spawnedEntity = entityType.spawn(context.world, itemStack, null, pos.add(facing.x + .7, facing.y + .7, facing.z + .7), SpawnReason.DISPENSER, facing.y < .5, false);
-				if (spawnedEntity != null)
-					spawnedEntity.setMotion(context.motion.scale(2));
+				if (context.world instanceof ServerWorld) {
+					Entity spawnedEntity = entityType.spawn((ServerWorld) context.world, itemStack, null, pos.add(facing.x + .7, facing.y + .7, facing.z + .7), SpawnReason.DISPENSER, facing.y < .5, false);
+					if (spawnedEntity != null)
+						spawnedEntity.setMotion(context.motion.scale(2));
+				}
 				itemStack.shrink(1);
 				return itemStack;
 			}

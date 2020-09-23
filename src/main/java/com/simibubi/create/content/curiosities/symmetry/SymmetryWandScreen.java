@@ -114,29 +114,26 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		textRenderer.draw(matrixStack, mirrorType, x - 5, y, AllGuiTextures.FONT_COLOR);
 		textRenderer.draw(matrixStack, orientation, x - 5, y + 20, AllGuiTextures.FONT_COLOR);
 
-		renderBlock();
+		renderBlock(matrixStack);
 
 		GuiGameElement.of(wand)
 				.at(guiLeft + 200, guiTop + 170)
 				.scale(4)
 				.rotate(-70, 20, 20)
-				.render();
+				.render(matrixStack);
 	}
 
-	protected void renderBlock() {
-		RenderSystem.pushMatrix();
-
-		MatrixStack ms = new MatrixStack();
+	protected void renderBlock(MatrixStack ms) {
+		ms.push();
 		ms.translate(guiLeft + 18, guiTop + 11, 20);
 		ms.multiply(new Vector3f(.3f, 1f, 0f).getDegreesQuaternion(-22.5f));
 		ms.scale(32, -32, 32);
 		currentElement.applyModelTransform(ms);
-		RenderSystem.multMatrix(ms.peek()
-			.getModel());
+		// RenderSystem.multMatrix(ms.peek().getModel());
 		GuiGameElement.of(currentElement.getModel())
-			.render();
+			.render(ms);
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	@Override

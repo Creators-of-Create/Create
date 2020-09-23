@@ -7,6 +7,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.loot.ConditionArrayParser;
 import net.minecraft.util.ResourceLocation;
 
 public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> implements ITriggerable {
@@ -16,7 +17,7 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 	}
 
 	@Override
-	public Instance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
+	public Instance conditionsFromJson(JsonObject json, ConditionArrayParser context) {
 		return new Instance(getId());
 	}
 

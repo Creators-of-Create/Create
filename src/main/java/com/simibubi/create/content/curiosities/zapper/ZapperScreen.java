@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -89,8 +90,8 @@ public class ZapperScreen extends AbstractSimiScreen {
 			.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		RenderSystem.enableBlend();
 
-		renderBlock();
-		renderZapper();
+		renderBlock(matrixStack);
+		renderZapper(matrixStack);
 	}
 
 	protected void drawOnBackground(MatrixStack matrixStack, int i, int j) {
@@ -129,18 +130,18 @@ public class ZapperScreen extends AbstractSimiScreen {
 		return super.mouseClicked(x, y, button);
 	}
 
-	protected void renderZapper() {
+	protected void renderZapper(MatrixStack matrixStack) {
 		GuiGameElement.of(zapper)
 			.at((this.width - this.sWidth) / 2 + 210, this.height / 2 - this.sHeight / 4)
 			.scale(4)
-			.render();
+			.render(matrixStack);
 	}
 
-	protected void renderBlock() {
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(guiLeft + 1.7f, guiTop + 48, 120);
-		RenderSystem.rotatef(-30f, .5f, .9f, -.1f);
-		RenderSystem.scaled(20, 20, 20);
+	protected void renderBlock(MatrixStack matrixStack) {
+		matrixStack.push();
+		matrixStack.translate(guiLeft + 1.7f, guiTop + 48, 120);
+		matrixStack.multiply(new Quaternion( -30f, .5f, .9f, -.1f));
+		matrixStack.scale(20, 20, 20);
 
 		BlockState state = Blocks.AIR.getDefaultState();
 		if (zapper.hasTag() && zapper.getTag()
@@ -149,8 +150,8 @@ public class ZapperScreen extends AbstractSimiScreen {
 				.getCompound("BlockUsed"));
 
 		GuiGameElement.of(state)
-			.render();
-		RenderSystem.popMatrix();
+			.render(matrixStack);
+		matrixStack.pop();
 	}
 
 	protected void writeAdditionalOptions(CompoundNBT nbt) {}

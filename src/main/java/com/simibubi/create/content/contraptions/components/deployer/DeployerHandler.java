@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.BeehiveBlock;
-import net.minecraft.block.Block;
+import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.stats.Stats;
@@ -23,8 +23,6 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -110,13 +108,13 @@ public class DeployerHandler {
 	}
 
 	static void activate(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos, Vector3d extensionVector, Mode mode) {
-		Multimap<String, AttributeModifier> attributeModifiers = player.getHeldItemMainhand()
+		Multimap<Attribute, AttributeModifier> attributeModifiers = player.getHeldItemMainhand()
 			.getAttributeModifiers(EquipmentSlotType.MAINHAND);
 		player.getAttributes()
-			.applyAttributeModifiers(attributeModifiers);
+			.addTemporaryModifiers(attributeModifiers);
 		activateInner(player, vec, clickedPos, extensionVector, mode);
 		player.getAttributes()
-			.removeAttributeModifiers(attributeModifiers);
+			.addTemporaryModifiers(attributeModifiers);
 	}
 
 	private static void activateInner(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos, Vector3d extensionVector,
@@ -147,7 +145,7 @@ public class DeployerHandler {
 					return;
 				}
 				if (cancelResult == null) {
-					if (entity.processInitialInteract(player, hand))
+					if (entity.processInitialInteract(player, hand).isAccepted())
 						success = true;
 					else if (entity instanceof LivingEntity
 						&& stack.interactWithEntity(player, (LivingEntity) entity, hand))
@@ -268,7 +266,7 @@ public class DeployerHandler {
 		if (item == Items.FLINT_AND_STEEL) {
 			Direction newFace = result.getFace();
 			BlockPos newPos = result.getPos();
-			if (!FlintAndSteelItem.canSetFire(clickedState, world, clickedPos))
+			if (!AbstractFireBlock.method_30032(world, clickedPos, newFace))
 				newFace = Direction.UP;
 			if (clickedState.getMaterial() == Material.AIR)
 				newPos = newPos.offset(face.getOpposite());

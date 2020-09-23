@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -60,8 +61,7 @@ public interface ITE<T extends TileEntity> {
 			String notAvailable = "Dim N/A";
 			if (world == null)
 				return notAvailable;
-			DimensionType type = world.getDimension();
-			ResourceLocation registryName = type.getRegistryName();
+			ResourceLocation registryName = WorldHelper.getDimensionID(world);
 			if (registryName == null)
 				return notAvailable;
 			return registryName.toString();

@@ -30,6 +30,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -107,10 +108,21 @@ public class GuiGameElement {
 			return this;
 		}
 
-		public abstract void render();
+		public abstract void render(MatrixStack matrixStack);
 
 		protected void prepare() {
 			RenderSystem.pushMatrix();
+			RenderSystem.enableBlend();
+			RenderSystem.enableRescaleNormal();
+			RenderSystem.enableAlphaTest();
+			RenderHelper.enableGuiDepthLighting();
+			RenderSystem.alphaFunc(516, 0.1F);
+			RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		}
+
+		protected void prepareMatrix(MatrixStack matrixStack) {
+			matrixStack.push();
 			RenderSystem.enableBlend();
 			RenderSystem.enableRescaleNormal();
 			RenderSystem.enableAlphaTest();
@@ -132,8 +144,26 @@ public class GuiGameElement {
 			RenderSystem.translated(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
 		}
 
+		protected void transformMatrix(MatrixStack matrixStack) {
+			matrixStack.translate(xBeforeScale, yBeforeScale, 0);
+			matrixStack.scale((float) scale, (float) scale, (float) scale);
+			matrixStack.translate(x, y, z);
+			matrixStack.scale(1, -1, 1);
+			matrixStack.translate(rotationOffset.x, rotationOffset.y, rotationOffset.z);
+			matrixStack.multiply(new Quaternion((float) zRot, 0, 0, 1));
+			matrixStack.multiply(new Quaternion((float) xRot, 1, 0, 0));
+			matrixStack.multiply(new Quaternion((float) yRot, 0, 1, 0));
+			matrixStack.translate(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
+		}
+
 		protected void cleanUp() {
 			RenderSystem.popMatrix();
+			RenderSystem.disableAlphaTest();
+			RenderSystem.disableRescaleNormal();
+		}
+
+		protected void cleanUpMatrix(MatrixStack matrixStack) {
+			matrixStack.pop();
 			RenderSystem.disableAlphaTest();
 			RenderSystem.disableRescaleNormal();
 		}
@@ -150,25 +180,24 @@ public class GuiGameElement {
 		}
 
 		@Override
-		public void render() {
-			prepare();
+		public void render(MatrixStack matrixStack) {
+			prepareMatrix(matrixStack);
 
 			Minecraft mc = Minecraft.getInstance();
 			BlockRendererDispatcher blockRenderer = mc.getBlockRendererDispatcher();
 			IRenderTypeBuffer.Impl buffer = mc.getBufferBuilders()
 				.getEntityVertexConsumers();
 			RenderType renderType = blockState.getBlock() == Blocks.AIR ? Atlases.getEntityTranslucent()
-				: RenderTypeLookup.getEntityBlockLayer(blockState);
+				: RenderTypeLookup.getEntityBlockLayer(blockState, true);
 			IVertexBuilder vb = buffer.getBuffer(renderType);
-			MatrixStack ms = new MatrixStack();
 
-			transform();
+			transformMatrix(matrixStack);
 
 			mc.getTextureManager()
 				.bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
-			renderModel(blockRenderer, buffer, renderType, vb, ms);
+			renderModel(blockRenderer, buffer, renderType, vb, matrixStack);
 
-			cleanUp();
+			cleanUpMatrix(matrixStack);
 		}
 
 		protected void renderModel(BlockRendererDispatcher blockRenderer, IRenderTypeBuffer.Impl buffer,
@@ -211,7 +240,7 @@ public class GuiGameElement {
 				if (!RenderTypeLookup.canRenderInLayer(blockState.getFluidState(), type))
 					continue;
 
-				RenderSystem.pushMatrix();
+				ms.push();
 				RenderHelper.disableStandardItemLighting();
 
 				ClientWorld world = Minecraft.getInstance().world;
@@ -223,18 +252,18 @@ public class GuiGameElement {
 					if (d.getAxisDirection() == AxisDirection.POSITIVE)
 						continue;
 					
-					RenderSystem.pushMatrix();
-					RenderSystem.translated(.5, .5, .5);
-					RenderSystem.rotatef(AngleHelper.horizontalAngle(d), 0, 1, 0);
-					RenderSystem.rotatef(AngleHelper.verticalAngle(d) - 90, 0, 0, 1);
-					RenderSystem.translated(-.5, -.5, -.5);
+					ms.push();
+					ms.translate(.5, .5, .5);
+					ms.multiply(new Quaternion(AngleHelper.horizontalAngle(d), 0, 1, 0));
+					ms.multiply(new Quaternion(AngleHelper.verticalAngle(d) - 90, 0, 0, 1));
+					ms.translate(-.5, -.5, -.5);
 					blockRenderer.renderFluid(new BlockPos(0, 1, 0), renderWorld, vb, blockState.getFluidState());
 					buffer.draw(type);
-					RenderSystem.popMatrix();
+					ms.pop();
 				}
 				
 				RenderHelper.enable();
-				RenderSystem.popMatrix();
+				ms.pop();
 				break;
 			}
 		}
@@ -261,13 +290,13 @@ public class GuiGameElement {
 		}
 
 		@Override
-		public void render() {
-			prepare();
-			transform();
-			RenderSystem.scaled(1, -1, 1);
-			RenderSystem.translated(0, 0, -75);
+		public void render(MatrixStack matrixStack) {
+			prepareMatrix(matrixStack);
+			transformMatrix(matrixStack);
+			matrixStack.scale(1, -1, 1);
+			matrixStack.translate(0, 0, -75);
 			Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(stack, 0, 0);
-			cleanUp();
+			cleanUpMatrix(matrixStack);
 		}
 
 	}

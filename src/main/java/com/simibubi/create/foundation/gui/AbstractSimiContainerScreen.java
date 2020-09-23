@@ -132,7 +132,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	}
 
 	protected void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		renderHoveredToolTip(matrixStack, mouseX, mouseY);
+		drawMouseoverTooltip(matrixStack, mouseX, mouseY);
 		for (Widget widget : widgets) {
 			if (!widget.isHovered())
 				continue;
@@ -172,18 +172,18 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 				RenderSystem.disableLighting();
 				RenderSystem.disableDepthTest();
 				RenderSystem.disableBlend();
-				RenderSystem.pushMatrix();
+				matrixStack.push();
 
 				int guiScaleFactor = (int) client.getWindow().getGuiScaleFactor();
-				RenderSystem.translated((float) (xPosition + 16.5f), (float) (yPosition + 16.5f), 0);
+				matrixStack.translate(xPosition + 16.5f, yPosition + 16.5f, 0);
 				double scale = getItemCountTextScale();
 
-				RenderSystem.scaled(scale, scale, 0);
-				RenderSystem.translated(-fr.getStringWidth(s) - (guiScaleFactor > 1 ? 0 : -.5f),
+				matrixStack.scale((float) scale, (float) scale, 0);
+				matrixStack.translate(-fr.getStringWidth(s) - (guiScaleFactor > 1 ? 0 : -.5f),
 						-textRenderer.FONT_HEIGHT + (guiScaleFactor > 1 ? 1 : 1.75f), 0);
 				fr.drawWithShadow(matrixStack, s, 0, 0, textColor);
 
-				RenderSystem.popMatrix();
+				matrixStack.pop();
 				RenderSystem.enableBlend();
 				RenderSystem.enableLighting();
 				RenderSystem.enableDepthTest();
