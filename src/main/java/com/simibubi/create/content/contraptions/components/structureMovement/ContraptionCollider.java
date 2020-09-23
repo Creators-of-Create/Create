@@ -266,7 +266,7 @@ public class ContraptionCollider {
 			VoxelShapes.compare(voxelshape, VoxelShapes.create(bb.shrink(1.0E-7D)), IBooleanFunction.AND)
 				? Stream.empty()
 				: Stream.of(voxelshape);
-		Stream<VoxelShape> stream1 = world.getEmptyCollisionShapes(e, bb.expand(movement), ImmutableSet.of());
+		Stream<VoxelShape> stream1 = world.getEntityCollisions(e, bb.expand(movement), entity -> false); // FIXME: 1.15 equivalent translated correctly?
 		ReuseableStream<VoxelShape> reuseablestream = new ReuseableStream<>(Stream.concat(stream1, stream));
 		Vector3d Vector3d = movement.lengthSquared() == 0.0D ? movement
 			: collideBoundingBoxHeuristically(e, movement, bb, world, ctx, reuseablestream);

@@ -69,7 +69,7 @@ public class TextInputPromptScreen extends AbstractSimiScreen {
 
 	@Override
 	public void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		AllGuiTextures.TEXT_INPUT.draw(this, guiLeft, guiTop);
+		AllGuiTextures.TEXT_INPUT.draw(matrixStack, this, guiLeft, guiTop);
 		textRenderer.draw(matrixStack, title, guiLeft + (sWidth / 2) - (textRenderer.getWidth(title) / 2), guiTop + 11,
 				AllGuiTextures.FONT_COLOR);
 	}

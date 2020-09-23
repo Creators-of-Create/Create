@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.loot.ConditionArrayParser;
 import net.minecraft.util.ResourceLocation;
@@ -32,7 +33,7 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 	public static class Instance extends CriterionTriggerBase.Instance {
 
 		public Instance(ResourceLocation idIn) {
-			super(idIn);
+			super(idIn, EntityPredicate.AndPredicate.EMPTY); // FIXME: Is this right?
 		}
 
 		@Override

@@ -27,6 +27,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.CookingRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
@@ -863,7 +864,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.inBlastFurnace();
 	}
 
-	GeneratedRecipe blastMetalOre(Supplier<? extends IItemProvider> result, Tag<Item> ore) {
+	GeneratedRecipe blastMetalOre(Supplier<? extends IItemProvider> result, ITag<Item> ore) {
 		return create(result::get).withSuffix("_from_ore").viaCookingTag(() -> ore)
 			.rewardXP(.1f)
 			.inBlastFurnace();
@@ -886,13 +887,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	}
 
 	GeneratedRecipe metalCompacting(List<ItemProviderEntry<? extends IItemProvider>> variants,
-		List<Supplier<Tag<Item>>> ingredients) {
+		List<Supplier<ITag<Item>>> ingredients) {
 		GeneratedRecipe result = null;
 		for (int i = 0; i + 1 < variants.size(); i++) {
 			ItemProviderEntry<? extends IItemProvider> currentEntry = variants.get(i);
 			ItemProviderEntry<? extends IItemProvider> nextEntry = variants.get(i + 1);
-			Supplier<Tag<Item>> currentIngredient = ingredients.get(i);
-			Supplier<Tag<Item>> nextIngredient = ingredients.get(i + 1);
+			Supplier<ITag<Item>> currentIngredient = ingredients.get(i);
+			Supplier<ITag<Item>> nextIngredient = ingredients.get(i + 1);
 
 			result = create(nextEntry).withSuffix("_from_compacting")
 				.unlockedBy(currentEntry::get)
@@ -948,7 +949,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			return this;
 		}
 
-		GeneratedRecipeBuilder unlockedByTag(Supplier<Tag<Item>> tag) {
+		GeneratedRecipeBuilder unlockedByTag(Supplier<ITag<Item>> tag) {
 			this.unlockedBy = () -> ItemPredicate.Builder.create()
 				.tag(tag.get())
 				.build();
@@ -996,7 +997,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			return unlockedBy(item).viaCookingIngredient(() -> Ingredient.fromItems(item.get()));
 		}
 
-		GeneratedCookingRecipeBuilder viaCookingTag(Supplier<Tag<Item>> tag) {
+		GeneratedCookingRecipeBuilder viaCookingTag(Supplier<ITag<Item>> tag) {
 			return unlockedByTag(tag).viaCookingIngredient(() -> Ingredient.fromTag(tag.get()));
 		}
 

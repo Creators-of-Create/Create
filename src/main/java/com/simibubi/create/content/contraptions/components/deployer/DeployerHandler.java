@@ -6,6 +6,7 @@ import static net.minecraftforge.eventbus.api.Event.Result.DENY;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -148,7 +149,7 @@ public class DeployerHandler {
 					if (entity.processInitialInteract(player, hand).isAccepted())
 						success = true;
 					else if (entity instanceof LivingEntity
-						&& stack.interactWithEntity(player, (LivingEntity) entity, hand))
+						&& stack.useOnEntity(player, (LivingEntity) entity, hand).isAccepted())
 						success = true;
 				}
 				if (!success && stack.isFood() && entity instanceof PlayerEntity) {
@@ -198,7 +199,7 @@ public class DeployerHandler {
 			LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, clickedPos, face);
 			if (event.isCanceled())
 				return;
-			if (world.extinguishFire(player, clickedPos, face))
+			if (BlockHelper.extinguishFire(world, player, clickedPos, face)) // FIXME: is there an equivalent in world, as there was in 1.15?
 				return;
 			if (event.getUseBlock() != DENY)
 				clickedState.onBlockClicked(world, clickedPos, player);

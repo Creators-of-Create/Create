@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.function.Consumer;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Items;
 import net.minecraft.state.Property;
@@ -29,6 +30,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
 
 public class BlockHelper {
 
@@ -195,5 +198,16 @@ public class BlockHelper {
 
 	public static boolean hasBlockSolidSide(BlockState p_220056_0_, IBlockReader p_220056_1_, BlockPos p_220056_2_, Direction p_220056_3_) {
 		return !p_220056_0_.isIn(BlockTags.LEAVES) && Block.doesSideFillSquare(p_220056_0_.getCollisionShape(p_220056_1_, p_220056_2_), p_220056_3_);
+	}
+
+	public static boolean extinguishFire(World world, @Nullable PlayerEntity p_175719_1_, BlockPos p_175719_2_, Direction p_175719_3_) {
+		p_175719_2_ = p_175719_2_.offset(p_175719_3_);
+		if (world.getBlockState(p_175719_2_).getBlock() == Blocks.FIRE) {
+			world.playEvent(p_175719_1_, 1009, p_175719_2_, 0);
+			world.removeBlock(p_175719_2_, false);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
